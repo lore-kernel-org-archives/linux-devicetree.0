@@ -1,46 +1,63 @@
-From: marek.bykowski@gmail.com
-Subject: [PATCH 2/2] Documentation: Add documentation for CCN-512 DTS binding
-Date: Mon,  7 Oct 2019 15:21:15 +0200
-Message-ID: <1570454475-2848-2-git-send-email-marek.bykowski@gmail.com>
-References: <1570454475-2848-1-git-send-email-marek.bykowski@gmail.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: light: Add binding for ADUX1020
+Date: Mon, 7 Oct 2019 13:21:50 +0000
+Message-ID: <b03c8de71e6d568d54ddfd07758c07c03c0eb89d.camel@analog.com>
+References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org>
+         <20191007101027.8383-2-manivannan.sadhasivam@linaro.org>
+         <a60fb9ea8922c1eb532e0b7ef0a69abcc9306255.camel@analog.com>
+         <4EC23AB5-B8BE-4E45-8E5B-FCCD5B1508BA@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1570454475-2848-1-git-send-email-marek.bykowski@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, will@kernel.org, pawel.moll@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Marek Bykowski <marek.bykowski@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4EC23AB5-B8BE-4E45-8E5B-FCCD5B1508BA@linaro.org>
+Content-Language: en-US
+Content-ID: <B3C73558214195469154C07F60F593A1@namprd03.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "lars@metafoo.de" <lars@metafoo.de>, "jic23@kernel.org" <jic23@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marek Bykowski <marek.bykowski@gmail.com>
-
-Indicate the arm-ccn perf back-end supports now ccn-512.
-
-Signed-off-by: Marek Bykowski <marek.bykowski@gmail.com>
----
- Documentation/devicetree/bindings/perf/arm-ccn.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/perf/arm-ccn.txt b/Documentation/devicetree/bindings/perf/arm-ccn.txt
-index 43b5a71a5a9d..1c53b5aa3317 100644
---- a/Documentation/devicetree/bindings/perf/arm-ccn.txt
-+++ b/Documentation/devicetree/bindings/perf/arm-ccn.txt
-@@ -6,6 +6,7 @@ Required properties:
- 	"arm,ccn-502"
- 	"arm,ccn-504"
- 	"arm,ccn-508"
-+	"arm,ccn-512"
- 
- - reg: (standard registers property) physical address and size
- 	(16MB) of the configuration registers block
--- 
-2.21.0.896.g6a6c0f1
+T24gTW9uLCAyMDE5LTEwLTA3IGF0IDE4OjEwICswNTMwLCBNYW5pdmFubmFuIFNhZGhhc2l2YW0g
+d3JvdGU6DQo+IFtFeHRlcm5hbF0NCj4gDQo+IEhpIEFyZGVsZWFuLCANCj4gDQo+IE9uIDcgT2N0
+b2JlciAyMDE5IDM6NTE6MTYgUE0gSVNULCAiQXJkZWxlYW4sIEFsZXhhbmRydSIgPA0KPiBhbGV4
+YW5kcnUuQXJkZWxlYW5AYW5hbG9nLmNvbT4gd3JvdGU6DQo+ID4gT24gTW9uLCAyMDE5LTEwLTA3
+IGF0IDE1OjQwICswNTMwLCBNYW5pdmFubmFuIFNhZGhhc2l2YW0gd3JvdGU6DQo+ID4gPiBbRXh0
+ZXJuYWxdDQo+ID4gPiANCj4gPiA+IEFkZCBkZXZpY2V0cmVlIGJpbmRpbmcgZm9yIEFuYWxvZyBE
+ZXZpY2VzIEFEVVgxMDIwIFBob3RvbWV0cmljDQo+ID4gPiBzZW5zb3IuDQo+ID4gPiANCj4gPiAN
+Cj4gPiBIZXksDQo+ID4gDQo+ID4gVGhhbmtzIGZvciB0aGUgcGF0Y2hlcy4NCj4gPiANCj4gPiBU
+aGlzIGR0LWJpbmRpbmcgZG9jcyBpcyBpbiB0ZXh0IGZvcm1hdC4NCj4gPiBkdC1iaW5kaW5nIGRv
+Y3Mgbm93IG5lZWQgdG8gYmUgaW4gWUFNTCBmb3JtYXQuDQo+ID4gDQo+IA0KPiBTdXJlLiBJIGNh
+biBjb252ZXJ0IHRvIFlBTUwgYmluZGluZy4gDQo+IA0KPiA+IEFsc28sIHBhdGNoZXMgZm9yIGR0
+LWJpbmRpbmdzIGRvY3MgdXN1YWxseSBjb21lIGFmdGVyIHRoZSBkcml2ZXIgaXMNCj4gPiBhZGRl
+ZC4NCj4gPiBTbywgdGhpcyBwYXRjaCBzaG91bGQgYmUgdGhlIHNlY29uZCBpbiB0aGUgc2VyaWVz
+LCBub3QgdGhlIGZpcnN0Lg0KPiA+IA0KPiANCj4gSSBkb24ndCB0aGluayBzby4gVGhlIGNvbnZl
+bnRpb24gaXMgdG8gcHV0IGR0LWJpbmRpbmdzIHBhdGNoIHVwZnJvbnQgZm9yDQo+IGFsbCBzdWJz
+eXN0ZW1zLiBOb3Qgc3VyZSBpZiBJSU8gZGlmZmVycyBoZXJlLiANCg0KTm93IHRoYXQgeW91IG1l
+bnRpb24sIEknbSBub3Qgc3VyZSBlaXRoZXIuDQpXZSB0eXBpY2FsbHkgc2VudCB0aGUgZHQtYmlu
+ZGluZ3Mgb25lIGxhc3QsIHNvIEkgYXNzdW1lZCBpdCB3YXMgdGhlDQpkZWZhdWx0Lg0KDQo+IA0K
+PiBUaGFua3MsIA0KPiBNYW5pDQo+ID4gQWxleA0KPiA+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTog
+TWFuaXZhbm5hbiBTYWRoYXNpdmFtDQo+ID4gPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8u
+b3JnPg0KPiA+ID4gLS0tDQo+ID4gPiAgLi4uL2JpbmRpbmdzL2lpby9saWdodC9hZHV4MTAyMC50
+eHQgICAgICAgICAgIHwgMjINCj4gPiArKysrKysrKysrKysrKysrKysrDQo+ID4gPiAgMSBmaWxl
+IGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykNCj4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4g
+PiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vbGlnaHQvYWR1eDEwMjAu
+dHh0DQo+ID4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvaWlvL2xpZ2h0L2FkdXgxMDIwLnR4dA0KPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaWlvL2xpZ2h0L2FkdXgxMDIwLnR4dA0KPiA+ID4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQNCj4gPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZTg5NmRkYTMwZTM2DQo+ID4g
+PiAtLS0gL2Rldi9udWxsDQo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvaWlvL2xpZ2h0L2FkdXgxMDIwLnR4dA0KPiA+ID4gQEAgLTAsMCArMSwyMiBAQA0KPiA+
+ID4gK0FuYWxvZyBEZXZpY2VzIEFEVVgxMDIwIFBob3RvbWV0cmljIHNlbnNvcg0KPiA+ID4gKw0K
+PiA+ID4gK0xpbmsgdG8gZGF0YXNoZWV0OiANCj4gPiA+IA0KPiA+IGh0dHBzOi8vd3d3LmFuYWxv
+Zy5jb20vbWVkaWEvZW4vdGVjaG5pY2FsLWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvQURVWDEw
+MjAucGRmDQo+ID4gPiArDQo+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ICsNCj4g
+PiA+ICsgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImFkaSxhZHV4MTAyMCINCj4gPiA+ICsgLSBy
+ZWc6IHRoZSBJMkMgYWRkcmVzcyBvZiB0aGUgc2Vuc29yDQo+ID4gPiArDQo+ID4gPiArT3B0aW9u
+YWwgcHJvcGVydGllczoNCj4gPiA+ICsNCj4gPiA+ICsgLSBpbnRlcnJ1cHRzOiBpbnRlcnJ1cHQg
+bWFwcGluZyBmb3IgSVJRIGFzIGRvY3VtZW50ZWQgaW4NCj4gPiA+ICsgIA0KPiA+IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pbnRlcnJ1cHRz
+LnR4dA0KPiA+ID4gKw0KPiA+ID4gK0V4YW1wbGU6DQo+ID4gPiArDQo+ID4gPiArYWR1eDEwMjBA
+NjQgew0KPiA+ID4gKwljb21wYXRpYmxlID0gImFkaSxhZHV4MTAyMCI7DQo+ID4gPiArCXJlZyA9
+IDwweDY0PjsNCj4gPiA+ICsJaW50ZXJydXB0LXBhcmVudCA9IDwmbXNtZ3Bpbz47DQo+ID4gPiAr
+CWludGVycnVwdHMgPSA8MjQgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gPiArfTsNCg==
