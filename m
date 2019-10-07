@@ -1,59 +1,50 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
-Date: Mon, 7 Oct 2019 19:58:31 +0200
-Message-ID: <20191007175831.2r2thebie6hxmxym@gilmour>
-References: <20190823103139.17687-1-megous@megous.com>
- <20191007141153.7b76t4ntdzdojj5m@core.my.home>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
+Date: Mon, 7 Oct 2019 13:04:23 -0500
+Message-ID: <CAL_JsqK-yZnPcb=YPfygK4Y+mJ=JoYq7qWbx04_roAiUD=54Sg@mail.gmail.com>
+References: <20191006142715.45k64cgw7mzlekm5@arbad> <CAL_Jsq+0SpRVmGJSm5Hw8bQ_zdeJy5wfTb9RM1r=crkiT2uM-Q@mail.gmail.com>
+ <20191007170018.673p6fs6mjokihn6@arbad>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qhahocbwdlja2oay"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191007141153.7b76t4ntdzdojj5m@core.my.home>
-Sender: netdev-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191007170018.673p6fs6mjokihn6@arbad>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---qhahocbwdlja2oay
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Oct 07, 2019 at 04:11:53PM +0200, Ond=C5=99ej Jirman wrote:
-> Hi Maxime,
+On Mon, Oct 7, 2019 at 12:00 PM Andreas Klinger <ak@it-klinger.de> wrote:
 >
-> On Fri, Aug 23, 2019 at 12:31:34PM +0200, megous hlavni wrote:
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > (Resend to add missing lists, sorry for the noise.)
-> >
-> > This series implements bluetooth support for Xunlong Orange Pi 3 board.
-> >
-> > The board uses AP6256 WiFi/BT 5.0 chip.
-> >
-> > Summary of changes:
-> >
-> > - add more delay to let initialize the chip
-> > - let the kernel detect firmware file path
-> > - add new compatible and update dt-bindings
-> > - update Orange Pi 3 / H6 DTS
+> Hi Rob,
 >
-> Please consider the DTS patches for 5.5.
+> i don't get this error. Is there anything i'm doing wrong here?
+>
+> ak@arbad:/project/opt-sw/linux-robh$ make O=3D../build-wega-robh/ dt_bind=
+ing_check
+> make[1]: Verzeichnis =E2=80=9E/project/opt-sw/build-wega-robh=E2=80=9C wi=
+rd betreten
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+>   /project/opt-sw/linux-robh/Documentation/devicetree/bindings/net/adi,ad=
+in.yaml:
+>   ignoring, error in schema 'adi,fifo-depth-bits'
+>   warning: no schema found in file:
+>   /project/opt-sw/linux-robh/Documentation/devicetree/bindings/net/adi,ad=
+in.yaml
+>   /project/opt-sw/linux-robh/Documentation/devicetree/bindings/regulator/=
+fixed-regulator.yaml:
+>   ignoring, error in schema '0'
+>   warning: no schema found in file:
+>   /project/opt-sw/linux-robh/Documentation/devicetree/bindings/regulator/=
+fixed-regulator.yaml
+>     CHKDT   Documentation/devicetree/bindings/iio/proximity/maxbotix,mb12=
+32.yaml
+>     CHKDT   [...]
 
-Can  you resend them? I don't have access to my old mailbox anymore
+It would be in the later stage when dtc builds the exmaple. The
+unrelated errors here may be making things error out before that.
 
-Maxime
+BTW, update dtschema and it will fix the first error. The 2nd one is
+pending in linux-next still.
 
---qhahocbwdlja2oay
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZt8xwAKCRDj7w1vZxhR
-xab8AQCoq16pTHJEpC+5lsSAtxuOg5ykvT6nmBObbhL8FtoOTwD+NpvLfhLVo3aM
-lI/68DRVnpx1ziS2dwVHXdvmQooJ9Qw=
-=TYcE
------END PGP SIGNATURE-----
-
---qhahocbwdlja2oay--
+Rob
