@@ -1,7 +1,7 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH v2 2/5] usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for Hisilicon Kirin Soc
-Date: Mon,  7 Oct 2019 17:55:50 +0000
-Message-ID: <20191007175553.66940-3-john.stultz@linaro.org>
+Subject: [RFC][PATCH v2 5/5] usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc Platform
+Date: Mon,  7 Oct 2019 17:55:53 +0000
+Message-ID: <20191007175553.66940-6-john.stultz@linaro.org>
 References: <20191007175553.66940-1-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191007175553.66940-1-john.stultz@linaro.org>
@@ -12,8 +12,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yu Chen <chenyu56@huawei.com>
 
-A GCTL soft reset should be executed when switch mode for dwc3 core
-of Hisilicon Kirin Soc.
+This patch adds support for the poweron and shutdown of dwc3 core
+on Hisilicon Soc Platform.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Felipe Balbi <balbi@kernel.org>
@@ -28,75 +28,30 @@ Cc: devicetree@vger.kernel.org
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- drivers/usb/dwc3/core.c | 20 ++++++++++++++++++++
- drivers/usb/dwc3/core.h |  3 +++
- 2 files changed, 23 insertions(+)
+ drivers/usb/dwc3/dwc3-of-simple.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 999ce5e84d3c..440261432421 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -112,6 +112,19 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- 	dwc->current_dr_role = mode;
- }
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+index bdac3e7d7b18..78617500edee 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -51,7 +51,8 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
+ 	 * Some controllers need to toggle the usb3-otg reset before trying to
+ 	 * initialize the PHY, otherwise the PHY times out.
+ 	 */
+-	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
++	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3") ||
++	    of_device_is_compatible(np, "hisilicon,hi3660-dwc3"))
+ 		simple->need_reset = true;
  
-+static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
-+{
-+	u32 reg;
-+
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg |= DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-+
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg &= ~DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-+}
-+
- static void __dwc3_set_mode(struct work_struct *work)
- {
- 	struct dwc3 *dwc = work_to_dwc(work);
-@@ -156,6 +169,10 @@ static void __dwc3_set_mode(struct work_struct *work)
- 
- 	dwc3_set_prtcap(dwc, dwc->desired_dr_role);
- 
-+	/* Execute a GCTL Core Soft Reset when switch mode */
-+	if (dwc->gctl_reset_quirk)
-+		dwc3_gctl_core_soft_reset(dwc);
-+
- 	spin_unlock_irqrestore(&dwc->lock, flags);
- 
- 	switch (dwc->desired_dr_role) {
-@@ -1316,6 +1333,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 	dwc->dis_metastability_quirk = device_property_read_bool(dev,
- 				"snps,dis_metastability_quirk");
- 
-+	dwc->gctl_reset_quirk = device_property_read_bool(dev,
-+				"snps,gctl-reset-quirk");
-+
- 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
- 	dwc->tx_de_emphasis = tx_de_emphasis;
- 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 1c8b349379af..b3cb6eec3f8f 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -1029,6 +1029,7 @@ struct dwc3_scratchpad_array {
-  * 	2	- No de-emphasis
-  * 	3	- Reserved
-  * @dis_metastability_quirk: set to disable metastability quirk.
-+ * @gctl_reset_quirk: set to do a gctl soft-reset while switch operation mode.
-  * @imod_interval: set the interrupt moderation interval in 250ns
-  *                 increments or 0 to disable.
-  */
-@@ -1219,6 +1220,8 @@ struct dwc3 {
- 
- 	unsigned		dis_metastability_quirk:1;
- 
-+	unsigned		gctl_reset_quirk:1;
-+
- 	u16			imod_interval;
+ 	if (of_device_is_compatible(np, "amlogic,meson-axg-dwc3") ||
+@@ -183,6 +184,7 @@ static const struct of_device_id of_dwc3_simple_match[] = {
+ 	{ .compatible = "amlogic,meson-axg-dwc3" },
+ 	{ .compatible = "amlogic,meson-gxl-dwc3" },
+ 	{ .compatible = "allwinner,sun50i-h6-dwc3" },
++	{ .compatible = "hisilicon,hi3660-dwc3" },
+ 	{ /* Sentinel */ }
  };
- 
+ MODULE_DEVICE_TABLE(of, of_dwc3_simple_match);
 -- 
 2.17.1
