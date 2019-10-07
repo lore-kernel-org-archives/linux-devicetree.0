@@ -1,21 +1,20 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/7] dt-bindings: watchdog: renesas-wdt: Document r8a774b1 support
-Date: Mon, 7 Oct 2019 13:28:07 +0200
-Message-ID: <CAMuHMdUJZGYCSV2SSqJ4BOUfP08ML+gz4_UkOx7nKqCj+vHwXg@mail.gmail.com>
-References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570178133-21532-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH 3/7] dt-bindings: PCI: rcar: Add device tree support for r8a774b1
+Date: Mon, 7 Oct 2019 13:29:25 +0200
+Message-ID: <CAMuHMdX4P_5Bu2dO_kVtFFyOOTycm2jFqk8qNAzH3XEeePfG0Q@mail.gmail.com>
+References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570178133-21532-2-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboa>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
 On Fri, Oct 4, 2019 at 10:35 AM Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> RZ/G2N (a.k.a. R8A774B1) watchdog implementation is compatible
-> with R-Car Gen3, therefore add the relevant documentation.
+> Add PCIe support for the RZ/G2N (a.k.a. R8A774B1).
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
