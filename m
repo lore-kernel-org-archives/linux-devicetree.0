@@ -1,140 +1,63 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH 1/4] ARM: dts: stm32: fix memory nodes to match with DT validation tool
-Date: Mon, 7 Oct 2019 16:33:59 +0200
-Message-ID: <20191007143402.13266-2-alexandre.torgue@st.com>
-References: <20191007143402.13266-1-alexandre.torgue@st.com>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Mon, 7 Oct 2019 10:40:48 -0400
+Message-ID: <20191007104048.66ae7e59@gandalf.local.home>
+References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
+ <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+ <20191004232955.GC12012@mit.edu>
+ <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+ <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
+ <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
+ <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org>
+ <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
+ <20191006165436.GA29585@mit.edu>
+ <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007143402.13266-1-alexandre.torgue@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, shuah <shuah@kernel.org>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
-DT validation ("make dtbs_check") has shown that some memory nodes were not
-correctly written. This commit fixes this kind of issue:
-
-"stm32f746-disco.dt.yaml: /: memory: False schema does not allow
-{'device_type': ['memory'], 'reg': [[3221225472, 8388608]]}"
-
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index ba08624c6237..36ac61d0828c 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -60,7 +60,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@00000000 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x2000000>;
- 	};
-diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
-index 2b1664884ae7..d7bb2027cfaa 100644
---- a/arch/arm/boot/dts/stm32746g-eval.dts
-+++ b/arch/arm/boot/dts/stm32746g-eval.dts
-@@ -55,7 +55,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@c0000000 {
- 		device_type = "memory";
- 		reg = <0xc0000000 0x2000000>;
- 	};
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index e19d0fe7dbda..30c0f6717871 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -59,7 +59,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@90000000 {
- 		device_type = "memory";
- 		reg = <0x90000000 0x800000>;
- 	};
-diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-index a3ff04940aec..539aa5903fdd 100644
---- a/arch/arm/boot/dts/stm32f469-disco.dts
-+++ b/arch/arm/boot/dts/stm32f469-disco.dts
-@@ -60,7 +60,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@00000000 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x1000000>;
- 	};
-diff --git a/arch/arm/boot/dts/stm32f746-disco.dts b/arch/arm/boot/dts/stm32f746-disco.dts
-index 0ba9c5b08ab9..569d23cc61e5 100644
---- a/arch/arm/boot/dts/stm32f746-disco.dts
-+++ b/arch/arm/boot/dts/stm32f746-disco.dts
-@@ -55,7 +55,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@c0000000 {
- 		device_type = "memory";
- 		reg = <0xC0000000 0x800000>;
- 	};
-diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-index 6f1d0ac8c31c..1626e00bb2cb 100644
---- a/arch/arm/boot/dts/stm32f769-disco.dts
-+++ b/arch/arm/boot/dts/stm32f769-disco.dts
-@@ -55,7 +55,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@c0000000 {
- 		device_type = "memory";
- 		reg = <0xC0000000 0x1000000>;
- 	};
-diff --git a/arch/arm/boot/dts/stm32h743i-disco.dts b/arch/arm/boot/dts/stm32h743i-disco.dts
-index 3acd2e9c434e..e446d311c520 100644
---- a/arch/arm/boot/dts/stm32h743i-disco.dts
-+++ b/arch/arm/boot/dts/stm32h743i-disco.dts
-@@ -53,7 +53,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@d0000000 {
- 		device_type = "memory";
- 		reg = <0xd0000000 0x2000000>;
- 	};
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index e4d3c58f3d97..8f398178f5e5 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -53,7 +53,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@d0000000 {
- 		device_type = "memory";
- 		reg = <0xd0000000 0x2000000>;
- 	};
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 0615d1c8a6fc..e2aa45e9ba57 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -25,6 +25,7 @@
- 	};
- 
- 	memory@c0000000 {
-+		device_type = "memory";
- 		reg = <0xc0000000 0x20000000>;
- 	};
- 
--- 
-2.17.1
+T24gU3VuLCA2IE9jdCAyMDE5IDEwOjE4OjExIC0wNzAwCkxpbnVzIFRvcnZhbGRzIDx0b3J2YWxk
+c0BsaW51eC1mb3VuZGF0aW9uLm9yZz4gd3JvdGU6Cgo+IE9uIFN1biwgT2N0IDYsIDIwMTkgYXQg
+OTo1NSBBTSBUaGVvZG9yZSBZLiBUcydvIDx0eXRzb0BtaXQuZWR1PiB3cm90ZToKPiA+Cj4gPiBX
+ZWxsLCBvbmUgdGhpbmcgd2UgKmNhbiogZG8gaXMgaWYgKGEpIGlmIHdlIGNhbiBjcmVhdGUgYSBr
+c2VsZnRlc3QKPiA+IGJyYW5jaCB3aGljaCB3ZSBrbm93IGlzIHN0YWJsZSBhbmQgd29uJ3QgY2hh
+bmdlLCBhbmQgKGIpIHdlIGNhbiBnZXQKPiA+IGFzc3VyYW5jZXMgdGhhdCBMaW51cyAqd2lsbCog
+YWNjZXB0IHRoYXQgYnJhbmNoIGR1cmluZyB0aGUgbmV4dCBtZXJnZQo+ID4gd2luZG93LCB0aG9z
+ZSBzdWJzeXN0ZW1zIHdoaWNoIHdhbnQgdG8gdXNlIGtzZWxmIHRlc3QgY2FuIHNpbXBseSBwdWxs
+Cj4gPiBpdCBpbnRvIHRoZWlyIHRyZWUuICAKPiAKPiBZZXMuCj4gCj4gQXQgdGhlIHNhbWUgdGlt
+ZSwgSSBkb24ndCB0aGluayBpdCBuZWVkcyB0byBiZSBldmVuIHRoYXQgZmFuY3kuIEV2ZW4KPiBp
+ZiBpdCdzIG5vdCBhIHN0YWJsZSBicmFuY2ggdGhhdCBnZXRzIHNoYXJlZCBiZXR3ZWVuIGRpZmZl
+cmVudAo+IGRldmVsb3BlcnMsIGl0IHdvdWxkIGJlIGdvb2QgdG8ganVzdCBoYXZlIHBlb3BsZSBk
+byBhICJsZXQncyB0cnkgdGhpcyIKPiB0aHJvdy1hd2F5IGJyYW5jaCB0byB1c2UgdGhlIGt1bml0
+IGZ1bmN0aW9uYWxpdHkgYW5kIHZlcmlmeSB0aGF0Cj4gInllYWgsIHRoaXMgaXMgZmFpcmx5IGNv
+bnZlbmllbnQgZm9yIGV4dDQiLgo+IAo+IEl0IGRvZXNuJ3QgaGF2ZSB0byBiZSBtZXJnZWQgaW4g
+dGhhdCBmb3JtLCBidXQganVzdCBjb25maXJtYXRpb24gdGhhdAo+IHRoZSBpbmZyYXN0cnVjdHVy
+ZSBpcyBoZWxwZnVsIGJlZm9yZSBpdCBnZXRzIG1lcmdlZCB3b3VsZCBiZSBnb29kLgoKQ2FuJ3Qg
+eW91IGp1c3QgY3JlYXRlIGFuIGV4dDQgYnJhbmNoIHRoYXQgaGFzIHRoZSBrc2VsZnRlc3QtbmV4
+dCBicmFuY2gKaW4gaXQsIHRoYXQgeW91IGJ1aWxkIHVwb24uIEFuZCBwdXNoIHRoYXQgYWZ0ZXIg
+dGhlIGt1bml0IHRlc3QgaXMKbWVyZ2VkPwoKSW4gdGhlIHBhc3QgSSd2ZSBoYWQgdG8gcmVseSBv
+biBvdGhlciBicmFuY2hlcyBpbiBuZXh0LCBhbmQgd291bGQganVzdApob2xkIHR3byBicmFuY2hl
+cyBteXNlbGYuIE9uZSB3aXRoIGV2ZXJ5dGhpbmcgbm90IGRlcGVuZGVudCBvbiB0aGUgb3RoZXIK
+ZGV2ZWxvcGVyJ3MgYnJhbmNoLCBhbmQgb25lIHdpdGggdGhlIHdvcmsgdGhhdCB3YXMuIEF0IHRo
+ZSBtZXJnZQp3aW5kb3csIEkgd291bGQgZWl0aGVyIG1lcmdlIHRoZSB0d28gb3IganVzdCBzZW5k
+IHR3byBwdWxsIHJlcXVlc3RzCndpdGggdGhlIHR3byBicmFuY2hlcy4KCi0tIFN0ZXZlCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
