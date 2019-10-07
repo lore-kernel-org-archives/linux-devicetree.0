@@ -1,93 +1,57 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add compatible for HiSi
-Date: Mon,  7 Oct 2019 17:55:52 +0000
-Message-ID: <20191007175553.66940-5-john.stultz@linaro.org>
-References: <20191007175553.66940-1-john.stultz@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/5] arm64: dts: qcom: sdm845: Add unit name to soc node
+Date: Mon, 7 Oct 2019 12:57:30 -0500
+Message-ID: <CAL_JsqJpAqdFQKQLjh0szD2HY23bkFSg2fioDi2VxYvZcs6wsQ@mail.gmail.com>
+References: <20190724044906.12007-1-vkoul@kernel.org> <20190724044906.12007-2-vkoul@kernel.org>
+ <CANcMJZBWsfwWmHbGCG+KG4n1kpmytw_8O4uA8HEVv8ysBxiQgw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007175553.66940-1-john.stultz@linaro.org>
+In-Reply-To: <CANcMJZBWsfwWmHbGCG+KG4n1kpmytw_8O4uA8HEVv8ysBxiQgw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Amit Pundir <amit.pundir@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add necessary compatible flag for HiSi's DWC3 so
-dwc3-of-simple will probe.
+On Mon, Oct 7, 2019 at 12:44 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Tue, Jul 23, 2019 at 9:51 PM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > We get a warning about missing unit name for soc node, so add it.
+> >
+> > arch/arm64/boot/dts/qcom/sdm845.dtsi:623.11-2814.4: Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
+> >
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index 601cfb078bd5..e81f4a6d08ce 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -620,7 +620,7 @@
+> >                 method = "smc";
+> >         };
+> >
+> > -       soc: soc {
+> > +       soc: soc@0 {
+> >                 #address-cells = <2>;
+> >                 #size-cells = <2>;
+> >                 ranges = <0 0 0 0 0x10 0>;
+>
+> So Amit Pundir noted that this patch is causing 5.4-rc to no longer
+> boot on db845 w/ AOSP, due to it changing the userland sysfs paths
+> from "/devices/platform/soc/1a00000.mdss" to
+> "/devices/platform/soc@0/1a00000.mdss"
+>
+> Is there a better solution here that might not break userspace?
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: linux-usb@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
----
- .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+Other than doing the right thing of not relying on
+/sys/devices/platform/* paths, implement per target/file DTC_FLAGS
+similar to CFLAGS. There is another want for this in order to enable
+dtc symbols for overlays on a per board basis.
 
-diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-new file mode 100644
-index 000000000000..3a3e5c320f2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-@@ -0,0 +1,52 @@
-+HiSi SuperSpeed DWC3 USB SoC controller
-+
-+Required properties:
-+- compatible:		should contain "hisilicon,hi3660-dwc3" for HiSi SoC
-+- clocks:		A list of phandle + clock-specifier pairs for the
-+			clocks listed in clock-names
-+- clock-names:		Should contain the following:
-+  "clk_abb_usb"		USB reference clk
-+  "aclk_usb3otg"	USB3 OTG aclk
-+
-+- assigned-clocks:	Should be:
-+				HI3660_ACLK_GATE_USB3OTG
-+- assigned-clock-rates: Should be:
-+				229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
-+
-+Optional properties:
-+- resets:		Phandle to reset control that resets core and wrapper.
-+
-+Required child node:
-+A child node must exist to represent the core DWC3 IP block. The name of
-+the node is not important. The content of the node is defined in dwc3.txt.
-+
-+Example device nodes:
-+
-+	usb3: hisi_dwc3 {
-+		compatible = "hisilicon,hi3660-dwc3";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-+			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-+		clock-names = "clk_abb_usb", "aclk_usb3otg";
-+
-+		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-+		assigned-clock-rates = <229 000 000>;
-+		resets = <&crg_rst 0x90 8>,
-+			 <&crg_rst 0x90 7>,
-+			 <&crg_rst 0x90 6>,
-+			 <&crg_rst 0x90 5>;
-+
-+		dwc3: dwc3@ff100000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xff100000 0x0 0x100000>;
-+			interrupts = <0 159 4>, <0 161 4>;
-+			phys = <&usb_phy>;
-+			phy-names = "usb3-phy";
-+			dr_mode = "otg";
-+
-+			...
-+		};
-+	};
--- 
-2.17.1
+
+Rob
