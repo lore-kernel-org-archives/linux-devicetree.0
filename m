@@ -1,27 +1,31 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH 0/3] dt-bindings: fix issues seen during STM32 DT validation
-Date: Mon, 7 Oct 2019 15:44:07 +0200
-Message-ID: <20191007134410.10337-1-alexandre.torgue@st.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: net: adi: Fix yaml verification issue
+Date: Mon, 7 Oct 2019 08:56:05 -0500
+Message-ID: <CAL_JsqKFUTwjJefQvQE5aFmeJButYSLKm0RSpCHjSL=7pQHtxQ@mail.gmail.com>
+References: <20191007102552.19808-1-alexandre.torgue@st.com> <20191007102552.19808-3-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191007102552.19808-3-alexandre.torgue@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-stm32@st-md-mailman.stormreply.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Maxime Ripard <mripard@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Alexandru Ardelean <alexaundru.ardelean@analog.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series updates yaml files to clean some issues seen during STM32 device
-trees validation. 
+On Mon, Oct 7, 2019 at 5:26 AM Alexandre Torgue <alexandre.torgue@st.com> wrote:
+>
+> This commit fixes an issue seen during yaml check ("make dt_binding_check").
+> Each enum were not declared as uint32.
+>
+> "Documentation/devicetree/bindings/net/adi,adin.yaml:
+> properties:adi,rx-internal-delay-ps:
+> ..., 'enum': [1600, 1800, 2000, 2200, 2400], 'default': 2000}
+> is not valid under any of the given schemas"
 
-Alexandre Torgue (3):
-  dt-bindings: arm: stm32: Add missing STM32 boards
-  dt-bindings: pinctrl: stm32: Fix 'st,syscfg' description field
-  dt-bindings: usb: generic-ehci: Add "companion" entry
+You need to update dtschema. I fixed this in the meta-schema last
+week. Any property with a standard property unit suffix has a defined
+type already, so we don't need to define it again here.
 
- .../devicetree/bindings/arm/stm32/stm32.yaml  | 27 ++++++++++++++++---
- .../bindings/pinctrl/st,stm32-pinctrl.yaml    |  7 +++--
- .../devicetree/bindings/usb/generic-ehci.yaml |  5 ++++
- 3 files changed, 31 insertions(+), 8 deletions(-)
+I also added '-bits' to standard units.
 
--- 
-2.17.1
+Rob
