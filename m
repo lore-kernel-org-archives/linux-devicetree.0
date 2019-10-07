@@ -1,213 +1,89 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH] arm64: dts: lx2160a: Correct CPU core idle state name
-Date: Mon, 7 Oct 2019 21:36:24 +0000
-Message-ID: <VE1PR04MB66874D4C179BA0AD091AC3DB8F9B0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20190917073357.5895-1-ran.wang_1@nxp.com>
- <20191007115104.GF7150@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Adam Ford <aford173@gmail.com>
+Subject: [PATCH 2/2] ARM: dts: omap3: Add cpu trips and cooling map for omap34/36 families
+Date: Mon,  7 Oct 2019 17:05:40 -0500
+Message-ID: <20191007220540.30690-2-aford173@gmail.com>
+References: <20191007220540.30690-1-aford173@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007115104.GF7150@dragon>
-Content-Language: en-US
+In-Reply-To: <20191007220540.30690-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Ran Wang <ran.wang_1@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-omap@vger.kernel.org
+Cc: adam.ford@logicpd.com, hns@goldelico.com, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
+depending on commercial or industrial temperature ratings.
 
+This patch expands the thermal information to include the limits of 90
+and 105C for alert and critical.  It sets the coolings-cells for the
+34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
 
-> -----Original Message-----
-> From: Shawn Guo <shawnguo@kernel.org>
-> Sent: Monday, October 7, 2019 6:51 AM
-> To: Ran Wang <ran.wang_1@nxp.com>; Leo Li <leoyang.li@nxp.com>
-> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] arm64: dts: lx2160a: Correct CPU core idle state nam=
-e
->=20
-> On Tue, Sep 17, 2019 at 03:33:56PM +0800, Ran Wang wrote:
-> > lx2160a support PW15 but not PW20, correct name to avoid confusing.
-> >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
->=20
-> Leo, agree?
+For boards who never use industrial temperatures, these can be
+changed on their respective device trees with something like:
 
-Ya.  The statement is correct.
+&cpu_alert0 {
+	temperature = <85000>; /* millicelsius */
+};
 
-Acked-by: Li Yang <leoyang.li@nxp.com>
+&cpu_crit {
+	temperature = <90000>; /* millicelsius */
+};
 
->=20
-> Shawn
->=20
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 36 +++++++++++++-----=
--
-> -------
-> >  1 file changed, 18 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > index 408e0ec..b032f38 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > @@ -33,7 +33,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster0_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@1 {
-> > @@ -49,7 +49,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster0_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@100 {
-> > @@ -65,7 +65,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster1_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@101 {
-> > @@ -81,7 +81,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster1_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@200 {
-> > @@ -97,7 +97,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster2_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@201 {
-> > @@ -113,7 +113,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster2_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@300 {
-> > @@ -129,7 +129,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster3_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@301 {
-> > @@ -145,7 +145,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster3_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@400 {
-> > @@ -161,7 +161,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster4_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@401 {
-> > @@ -177,7 +177,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster4_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@500 {
-> > @@ -193,7 +193,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster5_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@501 {
-> > @@ -209,7 +209,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster5_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@600 {
-> > @@ -225,7 +225,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster6_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@601 {
-> > @@ -241,7 +241,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster6_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@700 {
-> > @@ -257,7 +257,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster7_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cpu@701 {
-> > @@ -273,7 +273,7 @@
-> >  			i-cache-line-size =3D <64>;
-> >  			i-cache-sets =3D <192>;
-> >  			next-level-cache =3D <&cluster7_l2>;
-> > -			cpu-idle-states =3D <&cpu_pw20>;
-> > +			cpu-idle-states =3D <&cpu_pw15>;
-> >  		};
-> >
-> >  		cluster0_l2: l2-cache0 {
-> > @@ -340,9 +340,9 @@
-> >  			cache-level =3D <2>;
-> >  		};
-> >
-> > -		cpu_pw20: cpu-pw20 {
-> > +		cpu_pw15: cpu-pw15 {
-> >  			compatible =3D "arm,idle-state";
-> > -			idle-state-name =3D "PW20";
-> > +			idle-state-name =3D "PW15";
-> >  			arm,psci-suspend-param =3D <0x0>;
-> >  			entry-latency-us =3D <2000>;
-> >  			exit-latency-us =3D <2000>;
-> > --
-> > 2.7.4
-> >
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # on GTA04A5 with dm3730cbp100
+
+diff --git a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+index 235ecfd61e2d..dfbd0cb0b00b 100644
+--- a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
++++ b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+@@ -17,4 +17,25 @@ cpu_thermal: cpu_thermal {
+ 
+ 			/* sensor       ID */
+ 	thermal-sensors = <&bandgap     0>;
++
++	cpu_trips: trips {
++		cpu_alert0: cpu_alert {
++			temperature = <90000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		cpu_crit: cpu_crit {
++			temperature = <105000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
++
++	cpu_cooling_maps: cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device =
++				<&cpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
+ };
+diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
+index 7b09cbee8bb8..99a7161bebb2 100644
+--- a/arch/arm/boot/dts/omap34xx.dtsi
++++ b/arch/arm/boot/dts/omap34xx.dtsi
+@@ -26,6 +26,7 @@
+ 				600000  1350000
+ 			>;
+ 			clock-latency = <300000>; /* From legacy driver */
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+index 1e552f08f120..8096b6ef0ae1 100644
+--- a/arch/arm/boot/dts/omap36xx.dtsi
++++ b/arch/arm/boot/dts/omap36xx.dtsi
+@@ -28,6 +28,7 @@
+ 				800000  1325000
+ 			>;
+ 			clock-latency = <300000>; /* From legacy driver */
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
+-- 
+2.17.1
