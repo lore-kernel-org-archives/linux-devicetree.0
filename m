@@ -1,7 +1,7 @@
 From: Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v7 5/6] ad5820: DT new compatible devices
-Date: Mon,  7 Oct 2019 15:20:47 +0200
-Message-ID: <20191007132050.27298-10-ribalda@kernel.org>
+Subject: [PATCH v7 5/6] media: ad5820: DT new compatible devices
+Date: Mon,  7 Oct 2019 15:20:48 +0200
+Message-ID: <20191007132050.27298-11-ribalda@kernel.org>
 References: <20191007132050.27298-1-ribalda@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
