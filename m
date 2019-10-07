@@ -1,51 +1,68 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 7/7] dt-bindings: iio: adc: max1027: Document max12xx
- series compatibles
-Date: Mon, 7 Oct 2019 12:04:38 +0200
-Message-ID: <20191007120438.7fa72728@xps13>
-References: <20191003173401.16343-1-miquel.raynal@bootlin.com>
-        <20191003173401.16343-8-miquel.raynal@bootlin.com>
-        <20191006112751.775fc849@archlinux>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
+ binding
+Date: Mon, 7 Oct 2019 12:05:35 +0200
+Message-ID: <20191007100535.6gp6b3h6ueyeln3b@gilmour>
+References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
+ <20191003115154.6f2jgj3dnqsved2y@gilmour>
+ <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vtzhpa6icwubspzk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191006112751.775fc849@archlinux>
+Content-Disposition: inline
+In-Reply-To: <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
 
-Jonathan Cameron <jic23@kernel.org> wrote on Sun, 6 Oct 2019 11:27:51
-+0100:
+--vtzhpa6icwubspzk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Thu,  3 Oct 2019 19:34:01 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> 
-> > Update the bindings documentation with new Maxim ADCs compatibles.
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>  
-> 
-> Both DT patches look fine to me... 
-> 
-> If you happened to fancy doing the yaml conversion it would be
-> appreciated... :) 
+On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
+> On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
+> > > This new binding fails dt_binding_check due to a typo. Fix it up.
+> > >
+> > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
+> > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
+> > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
+> > > make[2]: *** Waiting for unfinished jobs....
+> > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
+> > > make[1]: *** [dt_binding_check] Error 2
+> > >
+> > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> >
+> > Thanks for your patch.
+> >
+> > It has already been submitted though:
+> > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
+> >
+> > I'm not sure why it hasn't been applied yet though :/
+>
+> Perhaps a Fixes tag will allow more attention to it?
 
-I'm being requested all the time, that would be my third yaml
-conversion, so let's go for it (if it's not overly complicated, I'll
-check first...) :)
+I've added a fixes tag and merged it through the sunxi tree.
 
-> If not we'll get to this one one day.
-> 
-> Anyhow, a few trivial bits in the earlier patches so v3 should be
-> good to go.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
+Sorry for the time it took, and thanks for sending that fix!
+Maxime
 
-Thanks,
-Miquèl
+--vtzhpa6icwubspzk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsN7wAKCRDj7w1vZxhR
+xZuhAQCdgJicTIV+SZaFXhQJ8O/6nn4LmVV2y3ElJZkaqAR2wgEAqJe2O+Nq++LE
+h2S1IrtaQMzZpcMjzksWn8n5JRZYSQA=
+=4Pja
+-----END PGP SIGNATURE-----
+
+--vtzhpa6icwubspzk--
