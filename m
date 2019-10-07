@@ -1,214 +1,120 @@
-From: Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v3 3/5] drm/rockchip: Add optional support for CRTC gamma
- LUT
-Date: Mon, 7 Oct 2019 14:54:32 -0400
-Message-ID: <20191007185432.GG126146@art_vandelay>
-References: <20190930222802.32088-1-ezequiel@collabora.com>
- <20190930222802.32088-4-ezequiel@collabora.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
+ compatible for HiSi
+Date: Mon, 7 Oct 2019 12:06:53 -0700
+Message-ID: <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
+References: <20191007175553.66940-1-john.stultz@linaro.org>
+ <20191007175553.66940-5-john.stultz@linaro.org> <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190930222802.32088-4-ezequiel@collabora.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ezequiel Garcia <ezequiel@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBTZXAgMzAsIDIwMTkgYXQgMDc6Mjg6MDBQTSAtMDMwMCwgRXplcXVpZWwgR2FyY2lh
-IHdyb3RlOgo+IEFkZCBhbiBvcHRpb25hbCBDUlRDIGdhbW1hIExVVCBzdXBwb3J0LCBhbmQgZW5h
-YmxlIGl0IG9uIFJLMzI4OC4KPiBUaGlzIGlzIGN1cnJlbnRseSBlbmFibGVkIHZpYSBhIHNlcGFy
-YXRlIGFkZHJlc3MgcmVzb3VyY2UsCj4gd2hpY2ggbmVlZHMgdG8gYmUgc3BlY2lmaWVkIGluIHRo
-ZSBkZXZpY2V0cmVlLgo+IAo+IFRoZSBhZGRyZXNzIHJlc291cmNlIGlzIHJlcXVpcmVkIGJlY2F1
-c2Ugb24gc29tZSBTb0NzLCBzdWNoIGFzCj4gUkszMjg4LCB0aGUgTFVUIGFkZHJlc3MgaXMgYWZ0
-ZXIgdGhlIE1NVSBhZGRyZXNzLCBhbmQgdGhlIGxhdHRlcgo+IGlzIHN1cHBvcnRlZCBieSBhIGRp
-ZmZlcmVudCBkcml2ZXIuIFRoaXMgcHJldmVudHMgdGhlIERSTSBkcml2ZXIKPiBmcm9tIHJlcXVl
-c3RpbmcgYW4gZW50aXJlIHJlZ2lzdGVyIHNwYWNlLgo+IAo+IFRoZSBjdXJyZW50IGltcGxlbWVu
-dGF0aW9uIHdvcmtzIGZvciBSR0IgMTAtYml0IHRhYmxlcywgYXMgdGhhdAo+IGlzIHdoYXQgc2Vl
-bXMgdG8gd29yayBvbiBSSzMyODguCj4gCj4gU2lnbmVkLW9mZi1ieTogRXplcXVpZWwgR2FyY2lh
-IDxlemVxdWllbEBjb2xsYWJvcmEuY29tPgo+IFJldmlld2VkLWJ5OiBEb3VnbGFzIEFuZGVyc29u
-IDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gUmV2aWV3ZWQtYnk6IEphY29wbyBNb25kaSA8amFj
-b3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPiAtLS0KPiBDaGFuZ2VzIGZyb20gdjI6Cj4gKiBOb25l
-Lgo+IAo+IENoYW5nZXMgZnJvbSB2MToKPiAqIGRyb3AgZXhwbGljaXQgbGluZWFyIExVVCBhZnRl
-ciBmaW5kaW5nIGEgcHJvcGVyCj4gICB3YXkgdG8gZGlzYWJsZSBnYW1tYSBjb3JyZWN0aW9uLgo+
-ICogYXZvaWQgc2V0dGluZyBnYW1tYSBpcyB0aGUgQ1JUQyBpcyBub3QgYWN0aXZlLgo+ICogcy9p
-bnQvdW5zaWduZWQgaW50IGFzIHN1Z2dlc3RlZCBieSBKYWNvcG8uCj4gKiBvbmx5IGVuYWJsZSBj
-b2xvciBtYW5hZ2VtZW50IGFuZCBzZXQgZ2FtbWEgc2l6ZQo+ICAgaWYgZ2FtbWEgTFVUIGlzIHN1
-cHBvcnRlZCwgc3VnZ2VzdGVkIGJ5IERvdWcuCj4gKiBkcm9wIHRoZSByZWctbmFtZXMgdXNhZ2Us
-IGFuZCBpbnN0ZWFkIGp1c3QgdXNlIGluZGV4ZWQgcmVnCj4gICBzcGVjaWZpZXJzLCBzdWdnZXN0
-ZWQgYnkgRG91Zy4KPiAKPiBDaGFuZ2VzIGZyb20gUkZDOgo+ICogUmVxdWVzdCAoYW4gb3B0aW9u
-YWwpIGFkZHJlc3MgcmVzb3VyY2UgZm9yIHRoZSBMVVQuCj4gKiBEcm9wIHN1cHBvcnQgZm9yIFJL
-MzM5OSwgd2hpY2ggZG9lc24ndCBzZWVtIHRvIHdvcmsKPiAgIG91dCBvZiB0aGUgYm94IGFuZCBu
-ZWVkcyBtb3JlIHJlc2VhcmNoLgo+ICogU3VwcG9ydCBwYXNzLXRocnUgc2V0dGluZyB3aGVuIEdB
-TU1BX0xVVCBpcyBOVUxMLgo+ICogQWRkIGEgY2hlY2sgZm9yIHRoZSBnYW1tYSBzaXplLCBhcyBz
-dWdnZXN0ZWQgYnkgSWxpYS4KPiAqIE1vdmUgZ2FtbWEgc2V0dGluZyB0byBhdG9taWNfY29tbWl0
-X3RhaWwsIGFzIHBvaW50ZWQKPiAgIG91dCBieSBKYWNvcG8vTGF1cmVudCwgaXMgdGhlIGNvcnJl
-Y3Qgd2F5Lgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX2Zi
-LmMgIHwgICAzICsKPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3Au
-YyB8IDExNCArKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
-cm9ja2NoaXBfZHJtX3ZvcC5oIHwgICA3ICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9y
-b2NrY2hpcF92b3BfcmVnLmMgfCAgIDIgKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDEyNiBpbnNlcnRp
-b25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hp
-cF9kcm1fZmIuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZmIuYwo+
-IGluZGV4IGRiYTM1MmVjMGVlMy4uZmQxZDk4NzY5OGFiIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZmIuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZmIuYwo+IEBAIC0xNyw2ICsxNyw3IEBACj4gICNpbmNs
-dWRlICJyb2NrY2hpcF9kcm1fZHJ2LmgiCj4gICNpbmNsdWRlICJyb2NrY2hpcF9kcm1fZmIuaCIK
-PiAgI2luY2x1ZGUgInJvY2tjaGlwX2RybV9nZW0uaCIKPiArI2luY2x1ZGUgInJvY2tjaGlwX2Ry
-bV92b3AuaCIKPiAgCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyX2Z1bmNz
-IHJvY2tjaGlwX2RybV9mYl9mdW5jcyA9IHsKPiAgCS5kZXN0cm95ICAgICAgID0gZHJtX2dlbV9m
-Yl9kZXN0cm95LAo+IEBAIC0xMTIsNiArMTEzLDggQEAgcm9ja2NoaXBfYXRvbWljX2hlbHBlcl9j
-b21taXRfdGFpbF9ycG0oc3RydWN0IGRybV9hdG9taWNfc3RhdGUgKm9sZF9zdGF0ZSkKPiAgCj4g
-IAlkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfbW9kZXNldF9kaXNhYmxlcyhkZXYsIG9sZF9zdGF0
-ZSk7Cj4gIAo+ICsJcm9ja2NoaXBfZHJtX3ZvcF9nYW1tYV9zZXQob2xkX3N0YXRlKTsKPiArCgpJ
-bnN0ZWFkIG9mIGR1cGxpY2F0aW5nIHRoZSBjb21taXRfdGFpbCBoZWxwZXIsIGNvdWxkIHlvdSBq
-dXN0IGltcGxlbWVudAouYXRvbWljX2JlZ2luKCkgYW5kIGNhbGwgdGhpcyBmcm9tIHRoZXJlPyBJ
-IHRoaW5rIHRoZSBvbmx5IGhpdGNoIGlzIGlmIHlvdQpuZWVkIHRoaXMgdG8gYmUgY29tcGxldGVk
-IGJlZm9yZSBjcnRjLT5hdG9taWNfZW5hYmxlKCksIGF0IHdoaWNoIHBvaW50IHlvdQptaWdodCBu
-ZWVkIHRvIGNhbGwgaXQgZnJvbSB2b3BfY3J0Y19hdG9taWNfZW5hYmxlKCkgYW5kIHRoZW4gZGV0
-ZWN0IHRoYXQgaW4KYXRvbWljX2JlZ2luKCkKClRoYXQgd291bGQgcHJldmVudCB0aGUgcmV2ZXJ0
-IGluIHBhdGNoIDEgYW5kIGtlZXAgcm9ja2NoaXAgb24gdGhlIGhlbHBlciB0cmFpbi4KClNlYW4K
-Cj4gIAlkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfbW9kZXNldF9lbmFibGVzKGRldiwgb2xkX3N0
-YXRlKTsKPiAgCj4gIAlkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfcGxhbmVzKGRldiwgb2xkX3N0
-YXRlLAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJt
-X3ZvcC5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuYwo+IGlu
-ZGV4IDJmODIxYzU4MDA3Yy4uM2E0OTc5NGM2YTQzIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1
-L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5jCj4gQEAgLTE0MSw2ICsxNDEsNyBAQCBzdHJ1Y3Qg
-dm9wIHsKPiAgCj4gIAl1aW50MzJfdCAqcmVnc2JhazsKPiAgCXZvaWQgX19pb21lbSAqcmVnczsK
-PiArCXZvaWQgX19pb21lbSAqbHV0X3JlZ3M7Cj4gIAo+ICAJLyogcGh5c2ljYWwgbWFwIGxlbmd0
-aCBvZiB2b3AgcmVnaXN0ZXIgKi8KPiAgCXVpbnQzMl90IGxlbjsKPiBAQCAtMTE5Myw2ICsxMTk0
-LDEwMiBAQCBzdGF0aWMgdm9pZCB2b3Bfd2FpdF9mb3JfaXJxX2hhbmRsZXIoc3RydWN0IHZvcCAq
-dm9wKQo+ICAJc3luY2hyb25pemVfaXJxKHZvcC0+aXJxKTsKPiAgfQo+ICAKPiArc3RhdGljIGJv
-b2wgdm9wX2RzcF9sdXRfaXNfZW5hYmxlKHN0cnVjdCB2b3AgKnZvcCkKPiArewo+ICsJcmV0dXJu
-IHZvcF9yZWFkX3JlZyh2b3AsIDAsICZ2b3AtPmRhdGEtPmNvbW1vbi0+ZHNwX2x1dF9lbik7Cj4g
-K30KPiArCj4gK3N0YXRpYyB2b2lkIHZvcF9jcnRjX3dyaXRlX2dhbW1hX2x1dChzdHJ1Y3Qgdm9w
-ICp2b3AsIHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKPiArewo+ICsJc3RydWN0IGRybV9jb2xvcl9s
-dXQgKmx1dCA9IGNydGMtPnN0YXRlLT5nYW1tYV9sdXQtPmRhdGE7Cj4gKwl1bnNpZ25lZCBpbnQg
-aTsKPiArCj4gKwlmb3IgKGkgPSAwOyBpIDwgY3J0Yy0+Z2FtbWFfc2l6ZTsgaSsrKSB7Cj4gKwkJ
-dTMyIHdvcmQ7Cj4gKwo+ICsJCXdvcmQgPSAoZHJtX2NvbG9yX2x1dF9leHRyYWN0KGx1dFtpXS5y
-ZWQsIDEwKSA8PCAyMCkgfAo+ICsJCSAgICAgICAoZHJtX2NvbG9yX2x1dF9leHRyYWN0KGx1dFtp
-XS5ncmVlbiwgMTApIDw8IDEwKSB8Cj4gKwkJCWRybV9jb2xvcl9sdXRfZXh0cmFjdChsdXRbaV0u
-Ymx1ZSwgMTApOwo+ICsJCXdyaXRlbCh3b3JkLCB2b3AtPmx1dF9yZWdzICsgaSAqIDQpOwo+ICsJ
-fQo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCB2b3BfY3J0Y19nYW1tYV9zZXQoc3RydWN0IHZvcCAq
-dm9wLCBzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCj4gKwkJCSAgICAgICBzdHJ1Y3QgZHJtX2NydGNf
-c3RhdGUgKm9sZF9zdGF0ZSkKPiArewo+ICsJdW5zaWduZWQgaW50IGlkbGU7Cj4gKwlpbnQgcmV0
-Owo+ICsKPiArCS8qCj4gKwkgKiBJbiBvcmRlciB0byB3cml0ZSB0aGUgTFVUIHRvIHRoZSBpbnRl
-cm5hbCBSQU0gbWVtb3J5LAo+ICsJICogd2UgbmVlZCB0byBmaXJzdCBtYWtlIHN1cmUgdGhlIGRz
-cF9sdXRfZW4gYml0IGlzIGNsZWFyZWQuCj4gKwkgKi8KPiArCXNwaW5fbG9jaygmdm9wLT5yZWdf
-bG9jayk7Cj4gKwlWT1BfUkVHX1NFVCh2b3AsIGNvbW1vbiwgZHNwX2x1dF9lbiwgMCk7Cj4gKwl2
-b3BfY2ZnX2RvbmUodm9wKTsKPiArCXNwaW5fdW5sb2NrKCZ2b3AtPnJlZ19sb2NrKTsKPiArCj4g
-KwkvKgo+ICsJICogSWYgdGhlIENSVEMgaXMgbm90IGFjdGl2ZSwgZHNwX2x1dF9lbiB3aWxsIG5v
-dCBnZXQgY2xlYXJlZC4KPiArCSAqIEFwcGFyZW50bHkgd2Ugc3RpbGwgbmVlZCB0byBkbyB0aGUg
-YWJvdmUgc3RlcCB0byBmb3IKPiArCSAqIGdhbW1hIGNvcnJlY3Rpb24gdG8gYmUgZGlzYWJsZWQu
-Cj4gKwkgKi8KPiArCWlmICghY3J0Yy0+c3RhdGUtPmFjdGl2ZSkKPiArCQlyZXR1cm47Cj4gKwo+
-ICsJcmV0ID0gcmVhZHhfcG9sbF90aW1lb3V0KHZvcF9kc3BfbHV0X2lzX2VuYWJsZSwgdm9wLAo+
-ICsJCQkJIGlkbGUsICFpZGxlLCA1LCAzMCAqIDEwMDApOwo+ICsJaWYgKHJldCkgewo+ICsJCURS
-TV9ERVZfRVJST1Iodm9wLT5kZXYsICJkaXNwbGF5IExVVCBSQU0gZW5hYmxlIHRpbWVvdXQhXG4i
-KTsKPiArCQlyZXR1cm47Cj4gKwl9Cj4gKwo+ICsJc3Bpbl9sb2NrKCZ2b3AtPnJlZ19sb2NrKTsK
-PiArCj4gKwlpZiAoY3J0Yy0+c3RhdGUtPmdhbW1hX2x1dCAmJgo+ICsJICAgKCFvbGRfc3RhdGUt
-PmdhbW1hX2x1dCB8fCAoY3J0Yy0+c3RhdGUtPmdhbW1hX2x1dC0+YmFzZS5pZCAhPQo+ICsJCQkJ
-ICAgICAgb2xkX3N0YXRlLT5nYW1tYV9sdXQtPmJhc2UuaWQpKSkKPiArCQl2b3BfY3J0Y193cml0
-ZV9nYW1tYV9sdXQodm9wLCBjcnRjKTsKPiArCj4gKwlWT1BfUkVHX1NFVCh2b3AsIGNvbW1vbiwg
-ZHNwX2x1dF9lbiwgMSk7Cj4gKwl2b3BfY2ZnX2RvbmUodm9wKTsKPiArCXNwaW5fdW5sb2NrKCZ2
-b3AtPnJlZ19sb2NrKTsKPiArfQo+ICsKPiArc3RhdGljIGludCB2b3BfY3J0Y19hdG9taWNfY2hl
-Y2soc3RydWN0IGRybV9jcnRjICpjcnRjLAo+ICsJCQkJIHN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAq
-Y3J0Y19zdGF0ZSkKPiArewo+ICsJc3RydWN0IHZvcCAqdm9wID0gdG9fdm9wKGNydGMpOwo+ICsK
-PiArCWlmICh2b3AtPmx1dF9yZWdzICYmIGNydGNfc3RhdGUtPmNvbG9yX21nbXRfY2hhbmdlZCAm
-Jgo+ICsJICAgIGNydGNfc3RhdGUtPmdhbW1hX2x1dCkgewo+ICsJCXVuc2lnbmVkIGludCBsZW47
-Cj4gKwo+ICsJCWxlbiA9IGRybV9jb2xvcl9sdXRfc2l6ZShjcnRjX3N0YXRlLT5nYW1tYV9sdXQp
-Owo+ICsJCWlmIChsZW4gIT0gY3J0Yy0+Z2FtbWFfc2l6ZSkgewo+ICsJCQlEUk1fREVCVUdfS01T
-KCJJbnZhbGlkIExVVCBzaXplOyBnb3QgJWQsIGV4cGVjdGVkICVkXG4iLAo+ICsJCQkJICAgICAg
-bGVuLCBjcnRjLT5nYW1tYV9zaXplKTsKPiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4gKwkJfQo+ICsJ
-fQo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICt2b2lkIHJvY2tjaGlwX2RybV92b3BfZ2Ft
-bWFfc2V0KHN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpzdGF0ZSkKPiArewo+ICsJc3RydWN0IGRy
-bV9jcnRjX3N0YXRlICpvbGRfY3J0Y19zdGF0ZTsKPiArCXN0cnVjdCBkcm1fY3J0YyAqY3J0YzsK
-PiArCXVuc2lnbmVkIGludCBpOwo+ICsKPiArCWZvcl9lYWNoX29sZF9jcnRjX2luX3N0YXRlKHN0
-YXRlLCBjcnRjLCBvbGRfY3J0Y19zdGF0ZSwgaSkgewo+ICsJCXN0cnVjdCB2b3AgKnZvcCA9IHRv
-X3ZvcChjcnRjKTsKPiArCj4gKwkJaWYgKHZvcC0+bHV0X3JlZ3MgJiYgY3J0Yy0+c3RhdGUtPmNv
-bG9yX21nbXRfY2hhbmdlZCkKPiArCQkJdm9wX2NydGNfZ2FtbWFfc2V0KHZvcCwgY3J0Yywgb2xk
-X2NydGNfc3RhdGUpOwo+ICsJfQo+ICt9Cj4gKwo+ICBzdGF0aWMgdm9pZCB2b3BfY3J0Y19hdG9t
-aWNfZmx1c2goc3RydWN0IGRybV9jcnRjICpjcnRjLAo+ICAJCQkJICBzdHJ1Y3QgZHJtX2NydGNf
-c3RhdGUgKm9sZF9jcnRjX3N0YXRlKQo+ICB7Cj4gQEAgLTEyNDUsNiArMTM0Miw3IEBAIHN0YXRp
-YyB2b2lkIHZvcF9jcnRjX2F0b21pY19mbHVzaChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCj4gIAo+
-ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9jcnRjX2hlbHBlcl9mdW5jcyB2b3BfY3J0Y19oZWxw
-ZXJfZnVuY3MgPSB7Cj4gIAkubW9kZV9maXh1cCA9IHZvcF9jcnRjX21vZGVfZml4dXAsCj4gKwku
-YXRvbWljX2NoZWNrID0gdm9wX2NydGNfYXRvbWljX2NoZWNrLAo+ICAJLmF0b21pY19mbHVzaCA9
-IHZvcF9jcnRjX2F0b21pY19mbHVzaCwKPiAgCS5hdG9taWNfZW5hYmxlID0gdm9wX2NydGNfYXRv
-bWljX2VuYWJsZSwKPiAgCS5hdG9taWNfZGlzYWJsZSA9IHZvcF9jcnRjX2F0b21pY19kaXNhYmxl
-LAo+IEBAIC0xMzYzLDYgKzE0NjEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9jcnRjX2Z1
-bmNzIHZvcF9jcnRjX2Z1bmNzID0gewo+ICAJLmRpc2FibGVfdmJsYW5rID0gdm9wX2NydGNfZGlz
-YWJsZV92YmxhbmssCj4gIAkuc2V0X2NyY19zb3VyY2UgPSB2b3BfY3J0Y19zZXRfY3JjX3NvdXJj
-ZSwKPiAgCS52ZXJpZnlfY3JjX3NvdXJjZSA9IHZvcF9jcnRjX3ZlcmlmeV9jcmNfc291cmNlLAo+
-ICsJLmdhbW1hX3NldCA9IGRybV9hdG9taWNfaGVscGVyX2xlZ2FjeV9nYW1tYV9zZXQsCj4gIH07
-Cj4gIAo+ICBzdGF0aWMgdm9pZCB2b3BfZmJfdW5yZWZfd29ya2VyKHN0cnVjdCBkcm1fZmxpcF93
-b3JrICp3b3JrLCB2b2lkICp2YWwpCj4gQEAgLTE1MjAsNiArMTYxOSwxMCBAQCBzdGF0aWMgaW50
-IHZvcF9jcmVhdGVfY3J0YyhzdHJ1Y3Qgdm9wICp2b3ApCj4gIAkJZ290byBlcnJfY2xlYW51cF9w
-bGFuZXM7Cj4gIAo+ICAJZHJtX2NydGNfaGVscGVyX2FkZChjcnRjLCAmdm9wX2NydGNfaGVscGVy
-X2Z1bmNzKTsKPiArCWlmICh2b3AtPmx1dF9yZWdzKSB7Cj4gKwkJZHJtX21vZGVfY3J0Y19zZXRf
-Z2FtbWFfc2l6ZShjcnRjLCB2b3BfZGF0YS0+bHV0X3NpemUpOwo+ICsJCWRybV9jcnRjX2VuYWJs
-ZV9jb2xvcl9tZ210KGNydGMsIDAsIGZhbHNlLCB2b3BfZGF0YS0+bHV0X3NpemUpOwo+ICsJfQo+
-ICAKPiAgCS8qCj4gIAkgKiBDcmVhdGUgZHJtX3BsYW5lcyBmb3Igb3ZlcmxheSB3aW5kb3dzIHdp
-dGggcG9zc2libGVfY3J0Y3MgcmVzdHJpY3RlZAo+IEBAIC0xODI1LDYgKzE5MjgsMTcgQEAgc3Rh
-dGljIGludCB2b3BfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rl
-ciwgdm9pZCAqZGF0YSkKPiAgCWlmIChJU19FUlIodm9wLT5yZWdzKSkKPiAgCQlyZXR1cm4gUFRS
-X0VSUih2b3AtPnJlZ3MpOwo+ICAKPiArCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2
-LCBJT1JFU09VUkNFX01FTSwgMSk7Cj4gKwlpZiAocmVzKSB7Cj4gKwkJaWYgKCF2b3BfZGF0YS0+
-bHV0X3NpemUpIHsKPiArCQkJRFJNX0RFVl9FUlJPUihkZXYsICJubyBnYW1tYSBMVVQgc2l6ZSBk
-ZWZpbmVkXG4iKTsKPiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4gKwkJfQo+ICsJCXZvcC0+bHV0X3Jl
-Z3MgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMpOwo+ICsJCWlmIChJU19FUlIodm9w
-LT5sdXRfcmVncykpCj4gKwkJCXJldHVybiBQVFJfRVJSKHZvcC0+bHV0X3JlZ3MpOwo+ICsJfQo+
-ICsKPiAgCXZvcC0+cmVnc2JhayA9IGRldm1fa3phbGxvYyhkZXYsIHZvcC0+bGVuLCBHRlBfS0VS
-TkVMKTsKPiAgCWlmICghdm9wLT5yZWdzYmFrKQo+ICAJCXJldHVybiAtRU5PTUVNOwo+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5oIGIvZHJp
-dmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuaAo+IGluZGV4IDIxNDlhODg5
-YzI5ZC4uYmQxYmNkNWExNGU5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
-cC9yb2NrY2hpcF9kcm1fdm9wLmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9j
-a2NoaXBfZHJtX3ZvcC5oCj4gQEAgLTcsNiArNyw4IEBACj4gICNpZm5kZWYgX1JPQ0tDSElQX0RS
-TV9WT1BfSAo+ICAjZGVmaW5lIF9ST0NLQ0hJUF9EUk1fVk9QX0gKPiAgCj4gKyNpbmNsdWRlIDxk
-cm0vZHJtX2F0b21pYy5oPgo+ICsKPiAgLyoKPiAgICogbWFqb3I6IElQIG1ham9yIHZlcnNpb24s
-IHVzZWQgZm9yIElQIHN0cnVjdHVyZQo+ICAgKiBtaW5vcjogYmlnIGZlYXR1cmUgY2hhbmdlIHVu
-ZGVyIHNhbWUgc3RydWN0dXJlCj4gQEAgLTY3LDYgKzY5LDcgQEAgc3RydWN0IHZvcF9jb21tb24g
-ewo+ICAJc3RydWN0IHZvcF9yZWcgZGl0aGVyX2Rvd25fbW9kZTsKPiAgCXN0cnVjdCB2b3BfcmVn
-IGRpdGhlcl9kb3duX2VuOwo+ICAJc3RydWN0IHZvcF9yZWcgZGl0aGVyX3VwOwo+ICsJc3RydWN0
-IHZvcF9yZWcgZHNwX2x1dF9lbjsKPiAgCXN0cnVjdCB2b3BfcmVnIGdhdGVfZW47Cj4gIAlzdHJ1
-Y3Qgdm9wX3JlZyBtbXVfZW47Cj4gIAlzdHJ1Y3Qgdm9wX3JlZyBvdXRfbW9kZTsKPiBAQCAtMTcw
-LDYgKzE3Myw3IEBAIHN0cnVjdCB2b3BfZGF0YSB7Cj4gIAljb25zdCBzdHJ1Y3Qgdm9wX3dpbl95
-dXYyeXV2X2RhdGEgKndpbl95dXYyeXV2Owo+ICAJY29uc3Qgc3RydWN0IHZvcF93aW5fZGF0YSAq
-d2luOwo+ICAJdW5zaWduZWQgaW50IHdpbl9zaXplOwo+ICsJdW5zaWduZWQgaW50IGx1dF9zaXpl
-Owo+ICAKPiAgI2RlZmluZSBWT1BfRkVBVFVSRV9PVVRQVVRfUkdCMTAJQklUKDApCj4gICNkZWZp
-bmUgVk9QX0ZFQVRVUkVfSU5URVJOQUxfUkdCCUJJVCgxKQo+IEBAIC0zNzMsNCArMzc3LDcgQEAg
-c3RhdGljIGlubGluZSBpbnQgc2NsX3ZvcF9jYWxfbGJfbW9kZShpbnQgd2lkdGgsIGJvb2wgaXNf
-eXV2KQo+ICB9Cj4gIAo+ICBleHRlcm4gY29uc3Qgc3RydWN0IGNvbXBvbmVudF9vcHMgdm9wX2Nv
-bXBvbmVudF9vcHM7Cj4gKwo+ICt2b2lkIHJvY2tjaGlwX2RybV92b3BfZ2FtbWFfc2V0KHN0cnVj
-dCBkcm1fYXRvbWljX3N0YXRlICpzdGF0ZSk7Cj4gKwo+ICAjZW5kaWYgLyogX1JPQ0tDSElQX0RS
-TV9WT1BfSCAqLwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2No
-aXBfdm9wX3JlZy5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX3ZvcF9yZWcu
-Ywo+IGluZGV4IGQxNDk0YmUxNDQ3MS4uNDJkZGNiNjk4YzgyIDEwMDY0NAo+IC0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMKPiArKysgYi9kcml2ZXJzL2dw
-dS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfdm9wX3JlZy5jCj4gQEAgLTU5OCw2ICs1OTgsNyBAQCBz
-dGF0aWMgY29uc3Qgc3RydWN0IHZvcF9jb21tb24gcmszMjg4X2NvbW1vbiA9IHsKPiAgCS5kaXRo
-ZXJfZG93bl9lbiA9IFZPUF9SRUcoUkszMjg4X0RTUF9DVFJMMSwgMHgxLCAyKSwKPiAgCS5wcmVf
-ZGl0aGVyX2Rvd24gPSBWT1BfUkVHKFJLMzI4OF9EU1BfQ1RSTDEsIDB4MSwgMSksCj4gIAkuZGl0
-aGVyX3VwID0gVk9QX1JFRyhSSzMyODhfRFNQX0NUUkwxLCAweDEsIDYpLAo+ICsJLmRzcF9sdXRf
-ZW4gPSBWT1BfUkVHKFJLMzI4OF9EU1BfQ1RSTDEsIDB4MSwgMCksCj4gIAkuZGF0YV9ibGFuayA9
-IFZPUF9SRUcoUkszMjg4X0RTUF9DVFJMMCwgMHgxLCAxOSksCj4gIAkuZHNwX2JsYW5rID0gVk9Q
-X1JFRyhSSzMyODhfRFNQX0NUUkwwLCAweDMsIDE4KSwKPiAgCS5vdXRfbW9kZSA9IFZPUF9SRUco
-UkszMjg4X0RTUF9DVFJMMCwgMHhmLCAwKSwKPiBAQCAtNjQ2LDYgKzY0Nyw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgdm9wX2RhdGEgcmszMjg4X3ZvcCA9IHsKPiAgCS5vdXRwdXQgPSAmcmszMjg4
-X291dHB1dCwKPiAgCS53aW4gPSByazMyODhfdm9wX3dpbl9kYXRhLAo+ICAJLndpbl9zaXplID0g
-QVJSQVlfU0laRShyazMyODhfdm9wX3dpbl9kYXRhKSwKPiArCS5sdXRfc2l6ZSA9IDEwMjQsCj4g
-IH07Cj4gIAo+ICBzdGF0aWMgY29uc3QgaW50IHJrMzM2OF92b3BfaW50cnNbXSA9IHsKPiAtLSAK
-PiAyLjIyLjAKPiAKCi0tIApTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBD
-aHJvbWl1bSBPUwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > Add necessary compatible flag for HiSi's DWC3 so
+> > dwc3-of-simple will probe.
+> >
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Felipe Balbi <balbi@kernel.org>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Yu Chen <chenyu56@huawei.com>
+> > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Cc: linux-usb@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
+> > ---
+> >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
+> >  1 file changed, 52 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+>
+> Can you make this a schema.
+
+Sorry, I'm not sure exactly what you're asking. I'm guessing from
+grepping around you want the bindings in yaml instead (I see a few
+examples)? Is there some pointer to documentation? The
+Documentation/devicetree/bindings/writing-bindings.txt file doesn't
+seem to say much on it.
+
+> > diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > new file mode 100644
+> > index 000000000000..3a3e5c320f2a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > @@ -0,0 +1,52 @@
+> > +HiSi SuperSpeed DWC3 USB SoC controller
+> > +
+> > +Required properties:
+> > +- compatible:          should contain "hisilicon,hi3660-dwc3" for HiSi SoC
+> > +- clocks:              A list of phandle + clock-specifier pairs for the
+> > +                       clocks listed in clock-names
+> > +- clock-names:         Should contain the following:
+> > +  "clk_abb_usb"                USB reference clk
+> > +  "aclk_usb3otg"       USB3 OTG aclk
+> > +
+> > +- assigned-clocks:     Should be:
+> > +                               HI3660_ACLK_GATE_USB3OTG
+> > +- assigned-clock-rates: Should be:
+> > +                               229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
+> > +
+> > +Optional properties:
+> > +- resets:              Phandle to reset control that resets core and wrapper.
+>
+> Looks like 4 resets though.
+
+Good point. I'll fix that up.
+
+> > +
+> > +Required child node:
+> > +A child node must exist to represent the core DWC3 IP block. The name of
+> > +the node is not important. The content of the node is defined in dwc3.txt.
+> > +
+> > +Example device nodes:
+> > +
+> > +       usb3: hisi_dwc3 {
+> > +               compatible = "hisilicon,hi3660-dwc3";
+> > +               #address-cells = <2>;
+> > +               #size-cells = <2>;
+> > +               ranges;
+> > +
+> > +               clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+> > +                        <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> > +               clock-names = "clk_abb_usb", "aclk_usb3otg";
+> > +
+> > +               assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> > +               assigned-clock-rates = <229 000 000>;
+> > +               resets = <&crg_rst 0x90 8>,
+> > +                        <&crg_rst 0x90 7>,
+> > +                        <&crg_rst 0x90 6>,
+> > +                        <&crg_rst 0x90 5>;
+> > +
+> > +               dwc3: dwc3@ff100000 {
+>
+> If it's only clocks and resets for the wrapper node, just make this
+> all one node.
+
+Just to make sure I'm following, you're suggesting I put all the
+clocks/resets in the dwc3 node (renamed to usb for the node name) and
+not add the wrapper?
+
+I'll have to see if that's possible. The generic dwc3 binding wants 3
+clocks, but I only have two in the code I've worked with (similarly it
+seems to only want two resets, not 4) so I'll have to see if I can
+figure out how to adapt that.
+
+If that approach is preferred, do I also no longer need a separate
+binding document/schema?
+
+thanks
+-john
