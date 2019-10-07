@@ -1,63 +1,66 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: light: Add binding for ADUX1020
-Date: Mon, 7 Oct 2019 13:21:50 +0000
-Message-ID: <b03c8de71e6d568d54ddfd07758c07c03c0eb89d.camel@analog.com>
-References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org>
-         <20191007101027.8383-2-manivannan.sadhasivam@linaro.org>
-         <a60fb9ea8922c1eb532e0b7ef0a69abcc9306255.camel@analog.com>
-         <4EC23AB5-B8BE-4E45-8E5B-FCCD5B1508BA@linaro.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/2] dt-bindings: nvmem: add binding for Rockchip OTP controller
+Date: Mon, 07 Oct 2019 15:26:07 +0200
+Message-ID: <2431603.e1tpym8sWD@diego>
+References: <20190925184957.14338-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4EC23AB5-B8BE-4E45-8E5B-FCCD5B1508BA@linaro.org>
-Content-Language: en-US
-Content-ID: <B3C73558214195469154C07F60F593A1@namprd03.prod.outlook.com>
+In-Reply-To: <20190925184957.14338-1-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "lars@metafoo.de" <lars@metafoo.de>, "jic23@kernel.org" <jic23@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTEwLTA3IGF0IDE4OjEwICswNTMwLCBNYW5pdmFubmFuIFNhZGhhc2l2YW0g
-d3JvdGU6DQo+IFtFeHRlcm5hbF0NCj4gDQo+IEhpIEFyZGVsZWFuLCANCj4gDQo+IE9uIDcgT2N0
-b2JlciAyMDE5IDM6NTE6MTYgUE0gSVNULCAiQXJkZWxlYW4sIEFsZXhhbmRydSIgPA0KPiBhbGV4
-YW5kcnUuQXJkZWxlYW5AYW5hbG9nLmNvbT4gd3JvdGU6DQo+ID4gT24gTW9uLCAyMDE5LTEwLTA3
-IGF0IDE1OjQwICswNTMwLCBNYW5pdmFubmFuIFNhZGhhc2l2YW0gd3JvdGU6DQo+ID4gPiBbRXh0
-ZXJuYWxdDQo+ID4gPiANCj4gPiA+IEFkZCBkZXZpY2V0cmVlIGJpbmRpbmcgZm9yIEFuYWxvZyBE
-ZXZpY2VzIEFEVVgxMDIwIFBob3RvbWV0cmljDQo+ID4gPiBzZW5zb3IuDQo+ID4gPiANCj4gPiAN
-Cj4gPiBIZXksDQo+ID4gDQo+ID4gVGhhbmtzIGZvciB0aGUgcGF0Y2hlcy4NCj4gPiANCj4gPiBU
-aGlzIGR0LWJpbmRpbmcgZG9jcyBpcyBpbiB0ZXh0IGZvcm1hdC4NCj4gPiBkdC1iaW5kaW5nIGRv
-Y3Mgbm93IG5lZWQgdG8gYmUgaW4gWUFNTCBmb3JtYXQuDQo+ID4gDQo+IA0KPiBTdXJlLiBJIGNh
-biBjb252ZXJ0IHRvIFlBTUwgYmluZGluZy4gDQo+IA0KPiA+IEFsc28sIHBhdGNoZXMgZm9yIGR0
-LWJpbmRpbmdzIGRvY3MgdXN1YWxseSBjb21lIGFmdGVyIHRoZSBkcml2ZXIgaXMNCj4gPiBhZGRl
-ZC4NCj4gPiBTbywgdGhpcyBwYXRjaCBzaG91bGQgYmUgdGhlIHNlY29uZCBpbiB0aGUgc2VyaWVz
-LCBub3QgdGhlIGZpcnN0Lg0KPiA+IA0KPiANCj4gSSBkb24ndCB0aGluayBzby4gVGhlIGNvbnZl
-bnRpb24gaXMgdG8gcHV0IGR0LWJpbmRpbmdzIHBhdGNoIHVwZnJvbnQgZm9yDQo+IGFsbCBzdWJz
-eXN0ZW1zLiBOb3Qgc3VyZSBpZiBJSU8gZGlmZmVycyBoZXJlLiANCg0KTm93IHRoYXQgeW91IG1l
-bnRpb24sIEknbSBub3Qgc3VyZSBlaXRoZXIuDQpXZSB0eXBpY2FsbHkgc2VudCB0aGUgZHQtYmlu
-ZGluZ3Mgb25lIGxhc3QsIHNvIEkgYXNzdW1lZCBpdCB3YXMgdGhlDQpkZWZhdWx0Lg0KDQo+IA0K
-PiBUaGFua3MsIA0KPiBNYW5pDQo+ID4gQWxleA0KPiA+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTog
-TWFuaXZhbm5hbiBTYWRoYXNpdmFtDQo+ID4gPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8u
-b3JnPg0KPiA+ID4gLS0tDQo+ID4gPiAgLi4uL2JpbmRpbmdzL2lpby9saWdodC9hZHV4MTAyMC50
-eHQgICAgICAgICAgIHwgMjINCj4gPiArKysrKysrKysrKysrKysrKysrDQo+ID4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykNCj4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4g
-PiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vbGlnaHQvYWR1eDEwMjAu
-dHh0DQo+ID4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvaWlvL2xpZ2h0L2FkdXgxMDIwLnR4dA0KPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaWlvL2xpZ2h0L2FkdXgxMDIwLnR4dA0KPiA+ID4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQNCj4gPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZTg5NmRkYTMwZTM2DQo+ID4g
-PiAtLS0gL2Rldi9udWxsDQo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvaWlvL2xpZ2h0L2FkdXgxMDIwLnR4dA0KPiA+ID4gQEAgLTAsMCArMSwyMiBAQA0KPiA+
-ID4gK0FuYWxvZyBEZXZpY2VzIEFEVVgxMDIwIFBob3RvbWV0cmljIHNlbnNvcg0KPiA+ID4gKw0K
-PiA+ID4gK0xpbmsgdG8gZGF0YXNoZWV0OiANCj4gPiA+IA0KPiA+IGh0dHBzOi8vd3d3LmFuYWxv
-Zy5jb20vbWVkaWEvZW4vdGVjaG5pY2FsLWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvQURVWDEw
-MjAucGRmDQo+ID4gPiArDQo+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ICsNCj4g
-PiA+ICsgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImFkaSxhZHV4MTAyMCINCj4gPiA+ICsgLSBy
-ZWc6IHRoZSBJMkMgYWRkcmVzcyBvZiB0aGUgc2Vuc29yDQo+ID4gPiArDQo+ID4gPiArT3B0aW9u
-YWwgcHJvcGVydGllczoNCj4gPiA+ICsNCj4gPiA+ICsgLSBpbnRlcnJ1cHRzOiBpbnRlcnJ1cHQg
-bWFwcGluZyBmb3IgSVJRIGFzIGRvY3VtZW50ZWQgaW4NCj4gPiA+ICsgIA0KPiA+IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pbnRlcnJ1cHRz
-LnR4dA0KPiA+ID4gKw0KPiA+ID4gK0V4YW1wbGU6DQo+ID4gPiArDQo+ID4gPiArYWR1eDEwMjBA
-NjQgew0KPiA+ID4gKwljb21wYXRpYmxlID0gImFkaSxhZHV4MTAyMCI7DQo+ID4gPiArCXJlZyA9
-IDwweDY0PjsNCj4gPiA+ICsJaW50ZXJydXB0LXBhcmVudCA9IDwmbXNtZ3Bpbz47DQo+ID4gPiAr
-CWludGVycnVwdHMgPSA8MjQgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gPiArfTsNCg==
+Hi Rob,
+
+Am Mittwoch, 25. September 2019, 20:49:56 CEST schrieb Heiko Stuebner:
+> Newer Rockchip SoCs use a different IP for accessing special one-
+> time-programmable memory, so add a binding for these controllers.
+> 
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+
+Srinivas seems to wait for an Ack on the DT-Patch - see comment on patch2.
+As this all looks pretty standard, any objections to the binding?
+
+Thanks
+Heiko
+
+> ---
+>  .../bindings/nvmem/rockchip-otp.txt           | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
+> new file mode 100644
+> index 000000000000..40f649f7c2e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
+> @@ -0,0 +1,25 @@
+> +Rockchip internal OTP (One Time Programmable) memory device tree bindings
+> +
+> +Required properties:
+> +- compatible: Should be one of the following.
+> +  - "rockchip,px30-otp" - for PX30 SoCs.
+> +  - "rockchip,rk3308-otp" - for RK3308 SoCs.
+> +- reg: Should contain the registers location and size
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +- clock-names: Should be "otp", "apb_pclk" and "phy".
+> +- resets: Must contain an entry for each entry in reset-names.
+> +  See ../../reset/reset.txt for details.
+> +- reset-names: Should be "phy".
+> +
+> +See nvmem.txt for more information.
+> +
+> +Example:
+> +	otp: otp@ff290000 {
+> +		compatible = "rockchip,px30-otp";
+> +		reg = <0x0 0xff290000 0x0 0x4000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		clocks = <&cru SCLK_OTP_USR>, <&cru PCLK_OTP_NS>,
+> +			 <&cru PCLK_OTP_PHY>;
+> +		clock-names = "otp", "apb_pclk", "phy";
+> +	};
+> 
