@@ -1,54 +1,40 @@
 From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 2/3] dt-bindings: net: adi: Fix yaml verification issue
-Date: Mon, 7 Oct 2019 16:07:17 +0200
-Message-ID: <01041a6b-7c70-bebd-d04b-9e47ce238e5e@st.com>
+Subject: Re: [PATCH 1/3] dt-bindings: media: Fix id path for sun4i-a10-csi
+Date: Mon, 7 Oct 2019 16:08:27 +0200
+Message-ID: <3d01e1b5-95ff-f4bd-f57a-a809054e0ba1@st.com>
 References: <20191007102552.19808-1-alexandre.torgue@st.com>
- <20191007102552.19808-3-alexandre.torgue@st.com>
- <CAL_JsqKFUTwjJefQvQE5aFmeJButYSLKm0RSpCHjSL=7pQHtxQ@mail.gmail.com>
+ <20191007102552.19808-2-alexandre.torgue@st.com>
+ <20191007110040.2mt5uxroos3hz6ic@gilmour>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKFUTwjJefQvQE5aFmeJButYSLKm0RSpCHjSL=7pQHtxQ@mail.gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20191007110040.2mt5uxroos3hz6ic@gilmour>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandru Ardelean <alexaundru.ardelean@analog.com>, netdev <netdev@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Maxime Ripard <mripard@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Alexandru Ardelean <alexaundru.ardelean@analog.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
 
-On 10/7/19 3:56 PM, Rob Herring wrote:
-> On Mon, Oct 7, 2019 at 5:26 AM Alexandre Torgue <alexandre.torgue@st.com> wrote:
->>
->> This commit fixes an issue seen during yaml check ("make dt_binding_check").
->> Each enum were not declared as uint32.
->>
->> "Documentation/devicetree/bindings/net/adi,adin.yaml:
->> properties:adi,rx-internal-delay-ps:
->> ..., 'enum': [1600, 1800, 2000, 2200, 2400], 'default': 2000}
->> is not valid under any of the given schemas"
+
+On 10/7/19 1:00 PM, Maxime Ripard wrote:
+> Hi Alexandre,
 > 
-> You need to update dtschema. I fixed this in the meta-schema last
-> week. Any property with a standard property unit suffix has a defined
-> type already, so we don't need to define it again here.
+> On Mon, Oct 07, 2019 at 12:25:50PM +0200, Alexandre Torgue wrote:
+>> This commit fixes id path of allwinner,sun4i-a10-csi.yaml location.
+>>
+>> Fixes: c5e8f4ccd775 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 > 
-> I also added '-bits' to standard units.
+> I just merged a patch addressing the same issue earlier today.
+> 
 
-Nice, I'm going to update my tools.
+Ok. Thanks Maxime.
 
-thanks
+Regards
 Alex
 
-> 
-> Rob
+> Thanks!
+> Maxime
 > 
