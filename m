@@ -1,50 +1,72 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v2 2/2] drivers: firmware: xilinx: Add support for versal soc
-Date: Mon,  7 Oct 2019 11:52:23 -0700
-Message-ID: <1570474343-21524-3-git-send-email-jolly.shah@xilinx.com>
+Subject: [PATCH v2 1/2] dt-bindings: firmware: Add bindings for Versal firmware
+Date: Mon,  7 Oct 2019 11:52:22 -0700
+Message-ID: <1570474343-21524-2-git-send-email-jolly.shah@xilinx.com>
 References: <1570474343-21524-1-git-send-email-jolly.shah@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1570474343-21524-1-git-send-email-jolly.shah@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jolly.shah@xilinx.com>
+Cc: Jolly Shah <jolly.shah@xilinx.com>, devicetree@vger.kernel.org, rajanv@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Versal is xilinx's next generation soc. This patch adds
-driver support required to be compatible with versal device.
+ZynqMP firmware driver can be used for versal also.
+Add versal compatible string to zynqmp firmware driver
+doc.
 
 Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
- drivers/firmware/xilinx/zynqmp.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt    | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index fd3d837..75bdfaa 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -711,8 +711,11 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
- 	int ret;
+diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+index a4fe136..18c3aea 100644
+--- a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
++++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+@@ -11,7 +11,9 @@ power management service, FPGA service and other platform management
+ services.
  
- 	np = of_find_compatible_node(NULL, NULL, "xlnx,zynqmp");
--	if (!np)
--		return 0;
-+	if (!np) {
-+		np = of_find_compatible_node(NULL, NULL, "xlnx,versal");
-+		if (!np)
-+			return 0;
-+	}
- 	of_node_put(np);
+ Required properties:
+- - compatible:	Must contain:	"xlnx,zynqmp-firmware"
++ - compatible:	Must contain any of below:
++		"xlnx,zynqmp-firmware" for Zynq Ultrascale+ MPSoC
++		"xlnx,versal-firmware" for Versal
+  - method:	The method of calling the PM-API firmware layer.
+ 		Permitted values are:
+ 		  - "smc" : SMC #0, following the SMCCC
+@@ -21,6 +23,8 @@ Required properties:
+ Example
+ -------
  
- 	ret = get_set_conduit_method(dev->of_node);
-@@ -770,6 +773,7 @@ static int zynqmp_firmware_remove(struct platform_device *pdev)
- 
- static const struct of_device_id zynqmp_firmware_of_match[] = {
- 	{.compatible = "xlnx,zynqmp-firmware"},
-+	{.compatible = "xlnx,versal-firmware"},
- 	{},
++Zynq Ultrascale+ MPSoC
++----------------------
+ firmware {
+ 	zynqmp_firmware: zynqmp-firmware {
+ 		compatible = "xlnx,zynqmp-firmware";
+@@ -28,3 +32,13 @@ firmware {
+ 		...
+ 	};
  };
- MODULE_DEVICE_TABLE(of, zynqmp_firmware_of_match);
++
++Versal
++------
++firmware {
++	versal_firmware: versal-firmware {
++		compatible = "xlnx,versal-firmware";
++		method = "smc";
++		...
++	};
++};
 -- 
 2.7.4
