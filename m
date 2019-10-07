@@ -1,145 +1,117 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
- compatible for HiSi
-Date: Mon, 7 Oct 2019 16:11:02 -0500
-Message-ID: <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
-References: <20191007175553.66940-1-john.stultz@linaro.org>
- <20191007175553.66940-5-john.stultz@linaro.org> <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
- <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [v2 1/2] arm64: dts: ls1028a: Update the clock providers for the
+ Mali DP500
+Date: Mon, 7 Oct 2019 21:29:04 +0000
+Message-ID: <VE1PR04MB66870A436BB8DC00979693D98F9B0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <20190920083419.5092-1-wen.he_1@nxp.com>
+ <20191007123203.GL7150@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191007123203.GL7150@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Wen He <wen.he_1@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 2:07 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
+
+
+> -----Original Message-----
+> From: Shawn Guo <shawnguo@kernel.org>
+> Sent: Monday, October 7, 2019 7:32 AM
+> To: Wen He <wen.he_1@nxp.com>
+> Cc: linux-devel@linux.nxdi.nxp.com; Leo Li <leoyang.li@nxp.com>; Rob
+> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [v2 1/2] arm64: dts: ls1028a: Update the clock providers for the
+> Mali DP500
+> 
+> On Fri, Sep 20, 2019 at 04:34:18PM +0800, Wen He wrote:
+> > In order to maximise performance of the LCD Controller's 64-bit AXI
+> > bus, for any give speed bin of the device, the AXI master interface
+> > clock(ACLK) clock can be up to CPU_frequency/2, which is already
+> > capable of optimal performance. In general, ACLK is always expected to
+> > be equal to CPU_frequency/2. APB slave interface clock(PCLK) and Main
+> > processing clock(PCLK) both are tied to the same clock as ACLK.
 > >
-> > On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > Add necessary compatible flag for HiSi's DWC3 so
-> > > dwc3-of-simple will probe.
-> > >
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Felipe Balbi <balbi@kernel.org>
-> > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Yu Chen <chenyu56@huawei.com>
-> > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > Cc: linux-usb@vger.kernel.org
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > ---
-> > > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
-> > > ---
-> > >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
-> > >  1 file changed, 52 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > This change followed the LS1028A Architecture Specification Manual.
 > >
-> > Can you make this a schema.
->
-> Sorry, I'm not sure exactly what you're asking. I'm guessing from
-> grepping around you want the bindings in yaml instead (I see a few
-> examples)?
+> > Signed-off-by: Wen He <wen.he_1@nxp.com>
+> 
+> @Leo, agree?
 
 Yes.
 
-> Is there some pointer to documentation? The
-> Documentation/devicetree/bindings/writing-bindings.txt file doesn't
-> seem to say much on it.
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-You mean Documentation/devicetree/writing-schemas.rst? There's that
-and Documentation/devicetree/bindings/example-schema.yaml which has a
-bunch of annotations on what each part means.
-
-> > > diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> > > new file mode 100644
-> > > index 000000000000..3a3e5c320f2a
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> > > @@ -0,0 +1,52 @@
-> > > +HiSi SuperSpeed DWC3 USB SoC controller
-> > > +
-> > > +Required properties:
-> > > +- compatible:          should contain "hisilicon,hi3660-dwc3" for HiSi SoC
-> > > +- clocks:              A list of phandle + clock-specifier pairs for the
-> > > +                       clocks listed in clock-names
-> > > +- clock-names:         Should contain the following:
-> > > +  "clk_abb_usb"                USB reference clk
-
-Probably 'ref' from dwc3.txt.
-
-> > > +  "aclk_usb3otg"       USB3 OTG aclk
-
-'bus_early'? IIRC, 'aclk' is the clock name for AXI bus clock.
-
-> > > +
-> > > +- assigned-clocks:     Should be:
-> > > +                               HI3660_ACLK_GATE_USB3OTG
-> > > +- assigned-clock-rates: Should be:
-> > > +                               229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
-> > > +
-> > > +Optional properties:
-> > > +- resets:              Phandle to reset control that resets core and wrapper.
+> 
+> Shawn
+> 
+> > ---
+> > change in v2:
+> >         - add details commit description for this change.
+> >         - v1: Link:
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore
+> > .kernel.org%2Fpatchwork%2Fpatch%2F1119145%2F&amp;data=02%7C01%
+> 7Cleoyan
 > >
-> > Looks like 4 resets though.
->
-> Good point. I'll fix that up.
->
-> > > +
-> > > +Required child node:
-> > > +A child node must exist to represent the core DWC3 IP block. The name of
-> > > +the node is not important. The content of the node is defined in dwc3.txt.
-> > > +
-> > > +Example device nodes:
-> > > +
-> > > +       usb3: hisi_dwc3 {
-> > > +               compatible = "hisilicon,hi3660-dwc3";
-> > > +               #address-cells = <2>;
-> > > +               #size-cells = <2>;
-> > > +               ranges;
-> > > +
-> > > +               clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-> > > +                        <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> > > +               clock-names = "clk_abb_usb", "aclk_usb3otg";
-> > > +
-> > > +               assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> > > +               assigned-clock-rates = <229 000 000>;
-> > > +               resets = <&crg_rst 0x90 8>,
-> > > +                        <&crg_rst 0x90 7>,
-> > > +                        <&crg_rst 0x90 6>,
-> > > +                        <&crg_rst 0x90 5>;
-> > > +
-> > > +               dwc3: dwc3@ff100000 {
+> g.li%40nxp.com%7C628134d8d86548af60ab08d74b227a54%7C686ea1d3bc2b4
+> c6fa9
 > >
-> > If it's only clocks and resets for the wrapper node, just make this
-> > all one node.
->
-> Just to make sure I'm following, you're suggesting I put all the
-> clocks/resets in the dwc3 node (renamed to usb for the node name) and
-> not add the wrapper?
-
-Yes.
-
-> I'll have to see if that's possible. The generic dwc3 binding wants 3
-> clocks, but I only have two in the code I've worked with (similarly it
-> seems to only want two resets, not 4) so I'll have to see if I can
-> figure out how to adapt that.
-
-Possible since commit fe8abf332b8f ("usb: dwc3: support clocks and
-resets for DWC3 core").
-
->
-> If that approach is preferred, do I also no longer need a separate
-> binding document/schema?
-
-Correct. And then no need to convert to schema yet (though feel free
-to convert dwc3.txt :)).
-
-Rob
+> 2cd99c5c301635%7C0%7C0%7C637060483779667257&amp;sdata=vX2DqsXlKE
+> SqesXy
+> > LwTqnBFt0GftY0XNphkmx5dR7vA%3D&amp;reserved=0
+> >
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 17 ++---------------
+> >  1 file changed, 2 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > index 72b9a75976a1..51fa8f57fdac 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > @@ -86,20 +86,6 @@
+> >  		clocks = <&osc_27m>;
+> >  	};
+> >
+> > -	aclk: clock-axi {
+> > -		compatible = "fixed-clock";
+> > -		#clock-cells = <0>;
+> > -		clock-frequency = <650000000>;
+> > -		clock-output-names= "aclk";
+> > -	};
+> > -
+> > -	pclk: clock-apb {
+> > -		compatible = "fixed-clock";
+> > -		#clock-cells = <0>;
+> > -		clock-frequency = <650000000>;
+> > -		clock-output-names= "pclk";
+> > -	};
+> > -
+> >  	reboot {
+> >  		compatible ="syscon-reboot";
+> >  		regmap = <&dcfg>;
+> > @@ -679,7 +665,8 @@
+> >  		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+> >  			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
+> >  		interrupt-names = "DE", "SE";
+> > -		clocks = <&dpclk 0>, <&aclk>, <&aclk>, <&pclk>;
+> > +		clocks = <&dpclk 0>, <&clockgen 2 2>, <&clockgen 2 2>,
+> > +			 <&clockgen 2 2>;
+> >  		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+> >  		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
+> >  		arm,malidp-arqos-value = <0xd000d000>;
+> > --
+> > 2.17.1
+> >
