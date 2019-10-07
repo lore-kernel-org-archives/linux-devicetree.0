@@ -1,15 +1,15 @@
 From: =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-Subject: Re: [PATCH net,v2 1/2] net: ethernet: mediatek: Fix MT7629 missing
- GMII mode support
-Date: Mon, 07 Oct 2019 18:29:51 +0000
-Message-ID: <20191007182951.Horde.3g45LJ1CPqFA0OM9CNZND4A@www.vdorst.com>
+Subject: Re: [PATCH net,v2 2/2] arm: dts: mediatek: Fix mt7629 dts to
+ reflect the latest dt-binding
+Date: Mon, 07 Oct 2019 18:30:28 +0000
+Message-ID: <20191007183028.Horde.dCYJA3Xp9mBh_Bs9Ixa7Sh0@www.vdorst.com>
 References: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
- <20191007070844.14212-2-Mark-MC.Lee@mediatek.com>
+ <20191007070844.14212-3-Mark-MC.Lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007070844.14212-2-Mark-MC.Lee@mediatek.com>
+In-Reply-To: <20191007070844.14212-3-Mark-MC.Lee@mediatek.com>
 Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 To: MarkLee <Mark-MC.Lee@mediatek.com>
@@ -18,31 +18,73 @@ List-Id: devicetree@vger.kernel.org
 
 Quoting MarkLee <Mark-MC.Lee@mediatek.com>:
 
-> Add missing configuration for mt7629 gmii mode support
+> * Removes mediatek,physpeed property from dtsi that is useless in PHYLINK
+> * Use the fixed-link property speed = <2500> to set the phy in 2.5Gbit.
+> * Set gmac1 to gmii mode that connect to a internal gphy
 >
-> Fixes: 7e538372694b ("net: ethernet: mediatek: Re-add support SGMII")
 > Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
 > --
 > v1->v2:
-> * no change
+> * SGMII port only support BASE-X at 2.5Gbit.
 > ---
->  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm/boot/dts/mt7629-rfb.dts | 13 ++++++++++++-
+>  arch/arm/boot/dts/mt7629.dtsi    |  2 --
+>  2 files changed, 12 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c  
-> b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> index c61069340f4f..703adb96429e 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> @@ -261,6 +261,7 @@ static void mtk_mac_config(struct phylink_config  
-> *config, unsigned int mode,
->  		ge_mode = 0;
->  		switch (state->interface) {
->  		case PHY_INTERFACE_MODE_MII:
-> +		case PHY_INTERFACE_MODE_GMII:
->  			ge_mode = 1;
->  			break;
->  		case PHY_INTERFACE_MODE_REVMII:
+> diff --git a/arch/arm/boot/dts/mt7629-rfb.dts  
+> b/arch/arm/boot/dts/mt7629-rfb.dts
+> index 3621b7d2b22a..9980c10c6e29 100644
+> --- a/arch/arm/boot/dts/mt7629-rfb.dts
+> +++ b/arch/arm/boot/dts/mt7629-rfb.dts
+> @@ -66,9 +66,21 @@
+>  	pinctrl-1 = <&ephy_leds_pins>;
+>  	status = "okay";
+>
+> +	gmac0: mac@0 {
+> +		compatible = "mediatek,eth-mac";
+> +		reg = <0>;
+> +		phy-mode = "2500base-x";
+> +		fixed-link {
+> +			speed = <2500>;
+> +			full-duplex;
+> +			pause;
+> +		};
+> +	};
+> +
+>  	gmac1: mac@1 {
+>  		compatible = "mediatek,eth-mac";
+>  		reg = <1>;
+> +		phy-mode = "gmii";
+>  		phy-handle = <&phy0>;
+>  	};
+>
+> @@ -78,7 +90,6 @@
+>
+>  		phy0: ethernet-phy@0 {
+>  			reg = <0>;
+> -			phy-mode = "gmii";
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+> index 9608bc2ccb3f..867b88103b9d 100644
+> --- a/arch/arm/boot/dts/mt7629.dtsi
+> +++ b/arch/arm/boot/dts/mt7629.dtsi
+> @@ -468,14 +468,12 @@
+>  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
+>  			reg = <0x1b128000 0x3000>;
+>  			#clock-cells = <1>;
+> -			mediatek,physpeed = "2500";
+>  		};
+>
+>  		sgmiisys1: syscon@1b130000 {
+>  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
+>  			reg = <0x1b130000 0x3000>;
+>  			#clock-cells = <1>;
+> -			mediatek,physpeed = "2500";
+>  		};
+>  	};
+>  };
 > --
 > 2.17.1
 
