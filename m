@@ -1,47 +1,51 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 1/8] iio: adc: max1027: Add debugfs register read support
-Date: Mon,  7 Oct 2019 15:26:50 +0200
-Message-ID: <20191007132657.4190-2-miquel.raynal@bootlin.com>
-References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
+From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v8 2/6] media: ad5820: DT new optional field enable-gpios
+Date: Mon,  7 Oct 2019 15:28:52 +0200
+Message-ID: <20191007132856.27948-3-ribalda@kernel.org>
+References: <20191007132856.27948-1-ribalda@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007132657.4190-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20191007132856.27948-1-ribalda@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ricardo Ribalda Delgado <ribalda@kernel.org>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Until now, only write operations were supported. Force two bytes read
-operation when reading, which should fit most of the development
-purposes. Of course, extended operations like buffered reads on
-multiple channels or even temperature + voltage reads will not be read
-entirely. Usually, just starting a new operation will work but in any
-case a software reset (done through the debufs interface too) will
-return the device in a usable state.
+Document new enable-gpio field. It can be used to disable the part
+without turning down its regulator.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/iio/adc/max1027.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/media/i2c/ad5820.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 214883458582..6cdfe9ef73fc 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -309,8 +309,11 @@ static int max1027_debugfs_reg_access(struct iio_dev *indio_dev,
- 	struct max1027_state *st = iio_priv(indio_dev);
- 	u8 *val = (u8 *)st->buffer;
+diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+index 5940ca11c021..db596e8eb0ba 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+@@ -8,6 +8,11 @@ Required Properties:
  
--	if (readval != NULL)
--		return -EINVAL;
-+	if (readval) {
-+		int ret = spi_read(st->spi, val, 2);
-+		*readval = be16_to_cpu(st->buffer[0]);
-+		return ret;
-+	}
+   - VANA-supply: supply of voltage for VANA pin
  
- 	*val = (u8)writeval;
- 	return spi_write(st->spi, val, 1);
++Optional properties:
++
++   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
++active low, a high level on the pin enables the device.
++
+ Example:
+ 
+        ad5820: coil@c {
+@@ -15,5 +20,6 @@ Example:
+                reg = <0x0c>;
+ 
+                VANA-supply = <&vaux4>;
++               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+        };
+ 
 -- 
-2.20.1
+2.23.0
