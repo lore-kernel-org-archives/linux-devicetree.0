@@ -1,79 +1,111 @@
 From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
- binding
-Date: Mon, 7 Oct 2019 12:48:35 +0200
-Message-ID: <20191007104835.v6iqpoolqtajryik@gilmour>
-References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
- <20191003115154.6f2jgj3dnqsved2y@gilmour>
- <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
- <20191007100535.6gp6b3h6ueyeln3b@gilmour>
- <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
+Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+Date: Mon, 7 Oct 2019 12:57:08 +0200
+Message-ID: <20191007105708.raxavxk4n7bvxh7x@gilmour>
+References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+ <20191005141913.22020-6-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ehz75jskqgtqpnip"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============7007235537250047114=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191005141913.22020-6-jagan@amarulasolutions.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, michael@amarulasolutions.com, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
 
---ehz75jskqgtqpnip
+--===============7007235537250047114==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="msd5tjzsj4hwrcaz"
+Content-Disposition: inline
+
+
+--msd5tjzsj4hwrcaz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Oct 07, 2019 at 03:45:29PM +0530, Amit Kucheria wrote:
-> On Mon, Oct 7, 2019 at 3:35 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
-> > > On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
-> > > > > This new binding fails dt_binding_check due to a typo. Fix it up.
-> > > > >
-> > > > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
-> > > > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
-> > > > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
-> > > > > make[2]: *** Waiting for unfinished jobs....
-> > > > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
-> > > > > make[1]: *** [dt_binding_check] Error 2
-> > > > >
-> > > > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> > > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > >
-> > > > Thanks for your patch.
-> > > >
-> > > > It has already been submitted though:
-> > > > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
-> > > >
-> > > > I'm not sure why it hasn't been applied yet though :/
-> > >
-> > > Perhaps a Fixes tag will allow more attention to it?
-> >
-> > I've added a fixes tag and merged it through the sunxi tree.
-> >
-> > Sorry for the time it took, and thanks for sending that fix!
+On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
+> Add MIPI DSI pipeline for Allwinner A64.
 >
-> Will it get merged for -rc2?
+> - dsi node, with A64 compatible since it doesn't support
+>   DSI_SCLK gating unlike A33
+> - dphy node, with A64 compatible with A33 fallback since
+>   DPHY on A64 and A33 is similar
+> - finally, attach the dsi_in to tcon0 for complete MIPI DSI
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 69128a6dfc46..ad4170b8aee0 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -382,6 +382,12 @@
+>  					#address-cells = <1>;
+>  					#size-cells = <0>;
+>  					reg = <1>;
+> +
+> +					tcon0_out_dsi: endpoint@1 {
+> +						reg = <1>;
+> +						remote-endpoint = <&dsi_in_tcon0>;
+> +						allwinner,tcon-channel = <1>;
+> +					};
+>  				};
+>  			};
+>  		};
+> @@ -1003,6 +1009,38 @@
+>  			status = "disabled";
+>  		};
+>
+> +		dsi: dsi@1ca0000 {
+> +			compatible = "allwinner,sun50i-a64-mipi-dsi";
+> +			reg = <0x01ca0000 0x1000>;
+> +			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_MIPI_DSI>;
+> +			clock-names = "bus";
 
--rc2 was released yesterday, so we're a bit late for that, but it's
- going to be in next tomorrow.
+This won't validate with the bindings you have either here, since it
+still expects bus and mod.
+
+I guess in that cas, we can just drop clock-names, which will require
+a bit of work on the driver side as well.
 
 Maxime
 
---ehz75jskqgtqpnip
+--msd5tjzsj4hwrcaz
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsYAwAKCRDj7w1vZxhR
-xWygAQDjMWzwKSR39Yk842xwupPifmf7scmW28XyHRMhu+rdLgD9FRHsp8ggeM9o
-BD7c/B1rS9r+K2HAG1lCY0LOeHQ/LAk=
-=9BMd
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsaBAAKCRDj7w1vZxhR
+xXn6AQCt+htvtym5wdP+F2AnazteXITvMk5Rfl6c9YFMfW0GswD+MILpcTLFvoCd
+opCA2BNbbbbCbvP1aXhnkHjZupGsbg4=
+=Qm2A
 -----END PGP SIGNATURE-----
 
---ehz75jskqgtqpnip--
+--msd5tjzsj4hwrcaz--
+
+
+--===============7007235537250047114==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7007235537250047114==--
