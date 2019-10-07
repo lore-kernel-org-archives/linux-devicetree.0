@@ -1,33 +1,50 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: regulator: Fix yaml verification for
- fixed-regulator schema
-Date: Mon, 7 Oct 2019 08:08:18 -0500
-Message-ID: <CAL_JsqL3sAwjKAJPZbbqg8k_R80kE9d9nbBaxWGt76RCMVMZFQ@mail.gmail.com>
-References: <20191007102552.19808-1-alexandre.torgue@st.com> <20191007102552.19808-4-alexandre.torgue@st.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
+ timer driver
+Date: Mon, 7 Oct 2019 15:14:05 +0200
+Message-ID: <20191007131348.GH4254@piout.net>
+References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
+ <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
+ <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
+ <ab7b6b45-5e6f-100d-51af-a82ac325d948@microchip.com>
+ <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007102552.19808-4-alexandre.torgue@st.com>
+Content-Disposition: inline
+In-Reply-To: <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Maxime Ripard <mripard@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Alexandru Ardelean <alexaundru.ardelean@analog.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, netdev <netdev@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Eugen.Hristev@microchip.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, wim@linux-watchdog.org, robh+dt@kernel.org, Nicolas.Ferre@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 5:26 AM Alexandre Torgue <alexandre.torgue@st.com> wrote:
->
-> This commit fixes an issue seen during yaml check ("make dt_binding_check").
-> Compatible didn't seem to be seen as a string.
->
-> Reported issue:
-> "properties:compatible:enum:0: {'const': 'regulator-fixed'}
-> is not of type 'string'"
-> And
-> "properties:compatible:enum:1: {'const': 'regulator-fixed-clock'}
-> is not of type 'string'"
->
-> Fixes: 9c86d003d620 ("dt-bindings: regulator: add regulator-fixed-clock binding")
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+On 07/10/2019 05:36:38-0700, Guenter Roeck wrote:
+> On 10/7/19 12:58 AM, Eugen.Hristev@microchip.com wrote:
+> [ ... ]
+> > Hello Guenter,
+> > 
+> > Thank you for the feedback.
+> > After reviewing this, can you please guide me towards one of the
+> > possible two directions: merge this driver with sama5d4_wdt , and have a
+> > single driver with support for both hardware blocks; or, have this
+> > driver separately , as in this patch series?
+> > 
+> 
+> I noticed the similarities. I don't know if it makes sense to reconcile
+> the two drivers; it seems to me the new chip uses the same basic core with
+> enhancements. In general, I prefer a single driver, but only if the result
+> doesn't end up being an if/else mess. Ultimately, it is really your call
+> to make.
+> 
 
-There's already a fix queued up.
+Most if not all your comments were already addressed in the other
+driver. The main difference in the register interface is the location of
+the counter that only really affects sama5d4_wdt_set_timeout and that
+could be abstracted away by using a different struct watchdog_ops.
+Interrupt enabling is also done differently, I don't think it has a huge
+impact.
 
-Rob
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
