@@ -1,66 +1,142 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 0/8] Introduce max12xx ADC support
-Date: Mon,  7 Oct 2019 15:26:49 +0200
-Message-ID: <20191007132657.4190-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 4/8] iio: adc: max1027: Prepare the introduction of different resolutions
+Date: Mon,  7 Oct 2019 15:26:53 +0200
+Message-ID: <20191007132657.4190-5-miquel.raynal@bootlin.com>
+References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191007132657.4190-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello, here is a patchset updating the existing max1027.c driver (for
-10-bit max1027/29/31 ADCs) with a few corrections/improvements and
-then introducing their 12-bit cousins named max1227/29/31.
+Maxim's max1027/29/31 series returns the measured voltages with a
+resolution of 10 bits. There is a very similar series, max1227/29/31
+which works identically but uses a resolution of 12 bits. Prepare the
+support for these chips by turning the 'depth' into a macro parameter
+instead of hardcoding it everywhere. Also reorganize just a bit the
+macros at the top to avoid repeating tens of lines when adding support
+for a new chip.
 
-As on my hardware setup the "start conversion" and "end of conversion"
-pin are not wired (which is absolutely fine for this chip), I also
-updated the driver and the bindings to support optional interrupts. In
-this case, triggered buffers are not available and the user must poll
-the value from sysfs.
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/iio/adc/max1027.c | 74 +++++++++++++++++----------------------
+ 1 file changed, 32 insertions(+), 42 deletions(-)
 
-Thanks,
-Miquèl
-
-
-Changes in v3:
-==============
-* Updated the commit message of the patch adding debugfs read access
-  to better explain why I decided to limit the number of bytes read to
-  two.
-* Updated the macros to define the number of channels per device as
-  proposed by Jonathan.
-* Re-used the realbits entry instead of adding my own (called .depth).
-* Started doing DT-bindings yaml conversion, but realized that after
-  the first patch offering the interrupt as optional, the
-  documentation was fitting pretty well the trivial devices
-  representation. Dropped the specific bindings files and updated the
-  trivial devices list instead.
-
-Changes in v2:
-==============
-* Removed the addition of three compatibles from patch 4 (the
-  preparation patch) to add these lines back in patch 5 (the actual
-  introduction).
-
-
-Miquel Raynal (8):
-  iio: adc: max1027: Add debugfs register read support
-  iio: adc: max1027: Make it optional to use interrupts
-  iio: adc: max1027: Reset the device at probe time
-  iio: adc: max1027: Prepare the introduction of different resolutions
-  iio: adc: max1027: Introduce 12-bit devices support
-  dt-bindings: iio: adc: max1027: Mark interrupts as optional
-  dt-bindings: Add 1027/1029/1031 SPI ADCs as trivial devices
-  dt-bindings: Add max12xx SPI ADC series as trivial devices
-
- .../bindings/iio/adc/max1027-adc.txt          |  12 +-
- .../devicetree/bindings/trivial-devices.yaml  |  12 ++
- drivers/iio/adc/Kconfig                       |   4 +-
- drivers/iio/adc/max1027.c                     | 180 +++++++++++-------
- 4 files changed, 135 insertions(+), 73 deletions(-)
-
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index f9b473ee6711..8b449044bef5 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -83,7 +83,7 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
+ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
+ #endif
+ 
+-#define MAX1027_V_CHAN(index)						\
++#define MAX1027_V_CHAN(index, depth)					\
+ 	{								\
+ 		.type = IIO_VOLTAGE,					\
+ 		.indexed = 1,						\
+@@ -93,7 +93,7 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
+ 		.scan_index = index + 1,				\
+ 		.scan_type = {						\
+ 			.sign = 'u',					\
+-			.realbits = 10,					\
++			.realbits = depth,				\
+ 			.storagebits = 16,				\
+ 			.shift = 2,					\
+ 			.endianness = IIO_BE,				\
+@@ -115,52 +115,42 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
+ 		},							\
+ 	}
+ 
++#define MAX1X27_CHANNELS(depth)			\
++	MAX1027_T_CHAN,				\
++	MAX1027_V_CHAN(0, depth),		\
++	MAX1027_V_CHAN(1, depth),		\
++	MAX1027_V_CHAN(2, depth),		\
++	MAX1027_V_CHAN(3, depth),		\
++	MAX1027_V_CHAN(4, depth),		\
++	MAX1027_V_CHAN(5, depth),		\
++	MAX1027_V_CHAN(6, depth),		\
++	MAX1027_V_CHAN(7, depth)
++
++#define MAX1X29_CHANNELS(depth)			\
++	MAX1X27_CHANNELS(depth),		\
++	MAX1027_V_CHAN(8, depth),		\
++	MAX1027_V_CHAN(9, depth),		\
++	MAX1027_V_CHAN(10, depth),		\
++	MAX1027_V_CHAN(11, depth)
++
++#define MAX1X31_CHANNELS(depth)			\
++	MAX1X27_CHANNELS(depth),		\
++	MAX1X29_CHANNELS(depth),		\
++	MAX1027_V_CHAN(12, depth),		\
++	MAX1027_V_CHAN(13, depth),		\
++	MAX1027_V_CHAN(14, depth),		\
++	MAX1027_V_CHAN(15, depth)
++
+ static const struct iio_chan_spec max1027_channels[] = {
+-	MAX1027_T_CHAN,
+-	MAX1027_V_CHAN(0),
+-	MAX1027_V_CHAN(1),
+-	MAX1027_V_CHAN(2),
+-	MAX1027_V_CHAN(3),
+-	MAX1027_V_CHAN(4),
+-	MAX1027_V_CHAN(5),
+-	MAX1027_V_CHAN(6),
+-	MAX1027_V_CHAN(7)
++	MAX1X27_CHANNELS(10),
+ };
+ 
+ static const struct iio_chan_spec max1029_channels[] = {
+-	MAX1027_T_CHAN,
+-	MAX1027_V_CHAN(0),
+-	MAX1027_V_CHAN(1),
+-	MAX1027_V_CHAN(2),
+-	MAX1027_V_CHAN(3),
+-	MAX1027_V_CHAN(4),
+-	MAX1027_V_CHAN(5),
+-	MAX1027_V_CHAN(6),
+-	MAX1027_V_CHAN(7),
+-	MAX1027_V_CHAN(8),
+-	MAX1027_V_CHAN(9),
+-	MAX1027_V_CHAN(10),
+-	MAX1027_V_CHAN(11)
++	MAX1X29_CHANNELS(10),
+ };
+ 
+ static const struct iio_chan_spec max1031_channels[] = {
+-	MAX1027_T_CHAN,
+-	MAX1027_V_CHAN(0),
+-	MAX1027_V_CHAN(1),
+-	MAX1027_V_CHAN(2),
+-	MAX1027_V_CHAN(3),
+-	MAX1027_V_CHAN(4),
+-	MAX1027_V_CHAN(5),
+-	MAX1027_V_CHAN(6),
+-	MAX1027_V_CHAN(7),
+-	MAX1027_V_CHAN(8),
+-	MAX1027_V_CHAN(9),
+-	MAX1027_V_CHAN(10),
+-	MAX1027_V_CHAN(11),
+-	MAX1027_V_CHAN(12),
+-	MAX1027_V_CHAN(13),
+-	MAX1027_V_CHAN(14),
+-	MAX1027_V_CHAN(15)
++	MAX1X31_CHANNELS(10),
+ };
+ 
+ static const unsigned long max1027_available_scan_masks[] = {
+@@ -284,7 +274,7 @@ static int max1027_read_raw(struct iio_dev *indio_dev,
+ 			break;
+ 		case IIO_VOLTAGE:
+ 			*val = 2500;
+-			*val2 = 10;
++			*val2 = chan->scan_type.realbits;
+ 			ret = IIO_VAL_FRACTIONAL_LOG2;
+ 			break;
+ 		default:
 -- 
 2.20.1
