@@ -1,36 +1,105 @@
-From: Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH] ARM: dts: Set status to disable for MMC3
-Date: Mon,  7 Oct 2019 10:03:39 +0200
-Message-ID: <20191007080339.57209-1-manu@freebsd.org>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Mon, 7 Oct 2019 01:20:34 -0700
+Message-ID: <CAFd5g47XogYaO24fHnRR9wyki_r4oQg0qSWo9kOgnXpyTuJAWw@mail.gmail.com>
+References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
+ <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+ <20191004232955.GC12012@mit.edu>
+ <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+ <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
+ <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
+ <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org>
+ <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
+ <20191006165436.GA29585@mit.edu>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20191006165436.GA29585@mit.edu>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, shuah <shuah@kernel.org>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Bird,
+ Timo
 List-Id: devicetree@vger.kernel.org
 
-Commit 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
-fixed the mmc instances on the l3 interconnect but removed the disabled status.
-Fix this and let boards properly define it if it have it.
-
-Fixes: 5b63fb90adb95 ("ARM: dts: Fix incomplete dts data for am3 and am4 mmc")
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
- arch/arm/boot/dts/am33xx.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index fb6b8aa12cc5..b3a1fd9e39fa 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -260,6 +260,7 @@
- 				ti,needs-special-reset;
- 				interrupts = <29>;
- 				reg = <0x0 0x1000>;
-+				status = "disabled";
- 			};
- 		};
- 
--- 
-2.22.0
+T24gU3VuLCBPY3QgNiwgMjAxOSBhdCA5OjU1IEFNIFRoZW9kb3JlIFkuIFRzJ28gPHR5dHNvQG1p
+dC5lZHU+IHdyb3RlOgo+Cj4gT24gRnJpLCBPY3QgMDQsIDIwMTkgYXQgMDY6MTg6MDRQTSAtMDcw
+MCwgQnJlbmRhbiBIaWdnaW5zIHdyb3RlOgo+ID4gPiBMZXQncyB0YWxrIGFib3V0IGN1cnJlbnQg
+c3RhdGUuIFJpZ2h0IG5vdyBrdW5pdCBpcyBpbiBsaW51eC1uZXh0IGFuZAo+ID4gPiB3ZSB3YW50
+IHRvIGFkZCBhIGZldyBtb3JlIHRlc3RzLiBXZSB3aWxsIGhhdmUgdG8gY29vcmRpbmF0ZSB0aGUg
+ZWZmb3J0Lgo+ID4gPiBPbmNlIGt1bml0IGdldCBpbnRvIG1haW5saW5lLCB0aGVuIHRoZSBuZWVk
+IGZvciB0aGlzIGNvb3JkaW5hdGlvbiBnb2VzCj4gPiA+IGRvd24uCj4gPgo+ID4gU3VyZSwgSSB3
+YXMganVzdCB0aGlua2luZyB0aGF0IGdldHRpbmcgb3RoZXIgcGVvcGxlIHRvIHdyaXRlIHRoZSB0
+ZXN0cwo+ID4gd291bGQgYmUgYmV0dGVyLiBTaW5jZSBub3Qgb25seSBpcyBpdCB0aGVuIHVzZWZ1
+bCB0byBzb21lb25lIGVsc2UsIGl0Cj4gPiBwcm92aWRlcyB0aGUgYmVzdCBwb3NzaWJsZSBleGVy
+Y2lzZSBvZiBLVW5pdC4KPgo+IFdlbGwsIG9uZSB0aGluZyB3ZSAqY2FuKiBkbyBpcyBpZiAoYSkg
+aWYgd2UgY2FuIGNyZWF0ZSBhIGtzZWxmdGVzdAo+IGJyYW5jaCB3aGljaCB3ZSBrbm93IGlzIHN0
+YWJsZSBhbmQgd29uJ3QgY2hhbmdlLCBhbmQgKGIpIHdlIGNhbiBnZXQKPiBhc3N1cmFuY2VzIHRo
+YXQgTGludXMgKndpbGwqIGFjY2VwdCB0aGF0IGJyYW5jaCBkdXJpbmcgdGhlIG5leHQgbWVyZ2UK
+PiB3aW5kb3csIHRob3NlIHN1YnN5c3RlbXMgd2hpY2ggd2FudCB0byB1c2Uga3NlbGYgdGVzdCBj
+YW4gc2ltcGx5IHB1bGwKPiBpdCBpbnRvIHRoZWlyIHRyZWUuCgpZZWFoLCBJIGNhbid0IHRoaW5r
+IG9mIGFueSByZWFzb24gdGhhdCB5b3UgaGF2ZW4ndCBvdXRsaW5lZCBhbHJlYWR5CndoeSB0aGF0
+IG1pZ2h0IG5vdCB3b3JrLCBidXQgdGhhdCBzZWVtcyBraW5kIG9mIGxpa2UgY2lyY3VtdmVudGlu
+ZwpMaW51cy4KCj4gV2UndmUgZG9uZSB0aGlzIGJlZm9yZSBpbiB0aGUgZmlsZSBzeXN0ZW0gd29y
+bGQsIHdoZW4gdGhlcmUgaGFzIGJlZW4KPiBzb21lIGNvbW1vbiBzZXQgb2YgY2hhbmdlcyBuZWVk
+ZWQgdG8gaW1wcm92ZSwgc2F5LCBEaXJlY3QgSS9PLCB3aGVyZQo+IHRoZSBjaGFuZ2VzIGFyZSBw
+dXQgaW50byBhIHN0YW5kYWxvbmUgYnJhbmNoLCBzYXksIGluIHRoZSB4ZnMgdHJlZSwKPiBhbmQg
+dGhvc2UgZmlsZSBzeXN0ZW1zIHdoaWNoIG5lZWQgaXQgYXMgYSBidWlsZGluZyBibG9jayBjYW4g
+cHVsbCBpdAo+IGludG8gdGhlaXIgdHJlZSwgYW5kIHRoZW4gYWRkIHRoZSBjaGFuZ2VzIG5lZWRl
+ZCB0byB1c2UgdGhvc2UgY2hhbmdlcwo+IGludG8gdGhlaXIgZmlsZSBzeXN0ZW0gZ2l0IHRyZWUu
+ICBUaGVzZSBjaGFuZ2VzIGFyZSBnZW5lcmFsbHkgbm90Cj4gdGVycmlibHkgY29udHJvdmVyc2lh
+bCwgYW5kIHdlJ3ZlIG5vdCBoYWQgdG8gd29ycnkgYWJvdXQgcGVvcGxlIHdhbnQKPiB0byBiaWtl
+c2hlZCB0aGUgY2hhbmdlcy4KPgo+IFRoZXJlIGlzIGEgcmlzayB3aXRoIGRvaW5nIHRoaXMgb2Yg
+Y291cnNlLCB3aGljaCBpcyB0aGF0IGlmIHRoZSBicmFuY2gKPiAqaXMqIGNvbnRyb3ZlcnNpYWws
+IG9yIGdldHMgYmlrZS1zaGVkZGVkIGZvciBzb21lIHJlYXNvbiwgdGhlbiBMaW51cwo+IGdldHMg
+dXBzZXQgYW5kIGFueSBicmFuY2hlcyB3aGljaCBkZXBlbmRlZCBvbiBzYWlkIGJyYW5jaCB3aWxs
+IGdldAo+IHJlamVjdGVkIGF0IHRoZSBuZXh0IG1lcmdlIHdpbmRvdy4gIFdoaWNoIGlzIHRoZSBy
+ZXF1aXJlbWVudCBmb3IgKGEpCj4gYW5kIChiKSBhYm92ZS4gIFByZXN1bWFibHksIHRoZSBmYWN0
+IHRoYXQgcGVvcGxlIHdlcmUgdW53aWxsaW5nIHRvIGxldAo+IEt1bml0IGxhbmQgZHVyaW5nIHRo
+aXMgbWVyZ2Ugd2luZG93IG1pZ2h0IHdpbGwgKmJlY2F1c2UqIHdlIHRoaW5rIG1vcmUKPiBjaGFu
+Z2VzIG1pZ2h0IGJlIHBlbmRpbmc/CgpNeSB1bmRlcnN0YW5kaW5nLCBiYXNlZCBvbiB3aGF0IEkg
+aGF2ZSBiZWVuIHRvbGQsIGlzIHRoYXQgd2Ugd2VyZQpzaW1wbHkgdW5sdWNreSB3aXRoIHRoZSB0
+aW1pbmcgd2hlbiBMaW51cyBwdWxsZWQgdGhlIGJyYW5jaCBpbiB0aGUKZmlyc3Qgd2VlayBvZiB0
+aGUgNS40IG1lcmdlIHdpbmRvdyAoRnJpZGF5KSwgc3VjaCB0aGF0IG9uY2UgSSBmaXhlZAp0aGUg
+ZGlyZWN0b3J5IG5hbWluZyBpc3N1ZSwgdGhlIHVwZGF0ZWQgY2hhbmdlcyBkaWRuJ3Qgc3BlbmQg
+ZW5vdWdoCnRpbWUgaW4gbGludXgtbmV4dC4gQW5kIG5vdyB3aXRoIHRoaXMgaXNzdWUgZml4ZWQg
+YW5kIEtVbml0IGJhY2sgaW4KbGludXgtbmV4dCwgaWYgbm90aGluZyBpbnRlcmVzdGluZyBoYXBw
+ZW5zIGJldHdlZW4gbm93IGFuZCA1LjUsIGl0CndpbGwgYmUgYWNjZXB0ZWQgaW4gdGhlIDUuNSBt
+ZXJnZSB3aW5kb3cuIEkgZG8gbm90IHRoaW5rIHRoYXQgYW55b25lCmlzIGV4cGVjdGluZyBhbnlt
+b3JlIGNoYW5nZXMgYmVmb3JlIG1lcmdpbmcuCgpTaHVhaCwgTGludXMsIGlzIG15IHVuZGVyc3Rh
+bmRpbmcgY29ycmVjdD8KCj4gVGhlIG90aGVyIHRoaW5nIEkgc3VwcG9zZSBJIGNhbiBkbyBpcyB0
+byBsZXQgdGhlIGV4dDQga3VuaXQgdGVzdHMgbGFuZAo+IGluIGV4dDQgdHJlZSwgYnV0IHdpdGgg
+dGhlIG5lY2Vzc2FyeSAjaWZkZWYncyBhcm91bmQgdGhpbmdzIGxpa2UKPiAiI2luY2x1ZGUgPGt1
+bml0L3Rlc3QuaD4iIHNvIHRoYXQgdGhlIGJ1aWxkIHdvbid0IGJsb3cgdXAgdy9vIGt1bml0Cj4g
+Y2hhbmdlcyBiZWluZyBpbiB0aGUgdHJlZSB0aGF0IEknbSBidWlsZGluZy4gIEl0IG1lYW5zIEkg
+d29uJ3QgYmUgYWJsZQo+IHRvIHJ1biB0aGUgdGVzdHMgd2l0aG91dCBjcmVhdGluZyBhIHRlc3Qg
+aW50ZWdyYXRpb24gYnJhbmNoIGFuZAo+IG1lcmdpbmcgaW4ga3VuaXQgYnkgaGFuZCwgd2hpY2gg
+d2lsbCBzdXBlci1hbm5veWluZywgb2YgY291cnNlLiAgQW5kCj4gaWYgc29tZSBvZiB0aGUgYmlr
+ZS1zaGVkZGluZyBpcyBpbiBLdW5pdCdzIGludGVyZmFjZXMsIHRoZW4gdGhhdAo+IGJlY29tZXMg
+cHJvYmxlbWF0aWMgYXMgd2VsbCwgc2luY2UgYW55IHRlc3RzIHRoYXQgYXJlIGluIGV4dDQuZ2l0
+IHRyZWUKPiBtaWdodCBjaGFuZ2UgaWYgcGVvcGxlIHdhbnQgdG8gcmVuYW1lIEt1bml0J3MgcHVi
+bGljYWxseSBleHBvcnRlZAo+IGZ1bmN0aW9ucyAoZm9yIGV4YW1wbGUpLgoKWWVhaCwgdGhhdCBz
+ZWVtcyBldmVuIHdvcnNlLiBJJ20gc29ycnkgdG8gaGF2ZSBjYXVzZWQgdGhpcyBmcnVzdHJhdGlv
+bi4KCj4gPiBIZXkgVGVkLCBkbyB5b3Uga25vdyBpZiB0aGF0IGV4dDQgdGltZXN0YW1wIHRlc3Qg
+Y2FuIGdvIGluIHRocm91Z2gKPiA+IGxpbnV4LWtzZWxmdGVzdD8gSXQgc2VlbWVkIGZhaXJseSBz
+ZWxmLWNvbnRhaW5lZC4gT3IgaXMgdGhhdCB3aGF0IHlvdQo+ID4gd2VyZSBzYXlpbmcgd291bGRu
+J3Qgd29yayBmb3IgeW91Pwo+Cj4gV2VsbCwgSSB3YXMgaG9waW5nIHRoYXQgd2UgbWlnaHQgc3Rh
+cnQgY3JlYXRpbmcgbW9yZSB0ZXN0cyBiZXlvbmQganVzdAo+IHRoZSBleHQ0IHRpbWVzdGFtcCB0
+ZXN0cy4uLi4KCk9rYXksIHRoYXQncyB3aGF0IEkgdGhvdWdodCAoYW5kIHdoYXQgSSBob3BlZCkg
+eW91IHdlcmUgc2F5aW5nIDotKQoKSSBob3BlIHdlIGNhbiBmaWd1cmUgb3V0IHNvbWV0aGluZyB0
+aGF0IHdpbGwgd29yayBmb3IgeW91LiBPcgpvdGhlcndpc2UgdGhhdCB5b3Ugd29uJ3QgbWluZCB3
+YWl0aW5nIHVudGlsIDUuNS4KClNvcnJ5Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
