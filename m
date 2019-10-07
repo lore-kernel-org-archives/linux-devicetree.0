@@ -1,44 +1,51 @@
-From: marek.bykowski@gmail.com
-Subject: [PATCH 1/2] bus: arm-ccn: Enable stats for CCN-512 interconnect
-Date: Mon,  7 Oct 2019 15:21:14 +0200
-Message-ID: <1570454475-2848-1-git-send-email-marek.bykowski@gmail.com>
+From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v7 2/6] media: ad5820: DT new optional field enable-gpios
+Date: Mon,  7 Oct 2019 15:20:42 +0200
+Message-ID: <20191007132050.27298-5-ribalda@kernel.org>
+References: <20191007132050.27298-1-ribalda@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, will@kernel.org, pawel.moll@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Marek Bykowski <marek.bykowski@gmail.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191007132050.27298-1-ribalda@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ricardo Ribalda Delgado <ribalda@kernel.org>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marek Bykowski <marek.bykowski@gmail.com>
+Document new enable-gpio field. It can be used to disable the part
+without turning down its regulator.
 
-Add compatible string for the ARM CCN-512 interconnect
-
-Signed-off-by: Marek Bykowski <marek.bykowski@gmail.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/perf/arm-ccn.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/media/i2c/ad5820.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-index 7dd850e02f19..b6e00f35a448 100644
---- a/drivers/perf/arm-ccn.c
-+++ b/drivers/perf/arm-ccn.c
-@@ -1545,6 +1545,7 @@ static int arm_ccn_remove(struct platform_device *pdev)
- static const struct of_device_id arm_ccn_match[] = {
- 	{ .compatible = "arm,ccn-502", },
- 	{ .compatible = "arm,ccn-504", },
-+	{ .compatible = "arm,ccn-512", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, arm_ccn_match);
+diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+index 5940ca11c021..db596e8eb0ba 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+@@ -8,6 +8,11 @@ Required Properties:
+ 
+   - VANA-supply: supply of voltage for VANA pin
+ 
++Optional properties:
++
++   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
++active low, a high level on the pin enables the device.
++
+ Example:
+ 
+        ad5820: coil@c {
+@@ -15,5 +20,6 @@ Example:
+                reg = <0x0c>;
+ 
+                VANA-supply = <&vaux4>;
++               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+        };
+ 
 -- 
-2.21.0.896.g6a6c0f1
+2.23.0
