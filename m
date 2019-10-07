@@ -1,158 +1,256 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: Add Beelink A1
-Date: Mon, 7 Oct 2019 07:53:06 -0500
-Message-ID: <CAL_JsqKBy+i+=gGyYhBgcMUYsWd_CL_GnEoQqALBb+Gy7Ogb6A@mail.gmail.com>
-References: <9037b7edbbb41cbbf699ebe3a511daf22d886e7d.1570444695.git.robin.murphy@arm.com>
+From: Talel Shenhar <talel@amazon.com>
+Subject: [PATCH v5 2/2] soc: amazon: al-pos-edac: Introduce Amazon's Annapurna Labs POS EDAC driver
+Date: Mon, 7 Oct 2019 15:47:15 +0300
+Message-ID: <1570452435-8505-3-git-send-email-talel@amazon.com>
+References: <1570452435-8505-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9037b7edbbb41cbbf699ebe3a511daf22d886e7d.1570444695.git.robin.murphy@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: devicetree@vger.kernel.org, "heiko@sntech.de" <heiko@sntech.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1570452435-8505-1-git-send-email-talel@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, maz@kernel.org, mark.rutland@arm.com, arnd@arndb.de, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, talel@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 6:33 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> Beelink A1 is a TV box implementing the higher-end options of the
-> RK3328 reference design - the DTB from the stock Android firmware is
-> clearly the "rk3328-box-plus" variant from the Rockchip 3.10 BSP with
-> minor modifications to accommodate the USB WiFi module and additional
-> VFD-style LED driver. It features:
->
-> - 4GB of 32-bit LPDDR3
-> - 16GB of HS200 eMMC (newer models with 32GB also exist)
-> - Realtek RTL8211F phy for gigabit ethernet
-> - Fn-Link 6221E-UUC module (RealTek RTL8821CU) for 11ac WiFi and Bluetooth 4.2
-> - HDMI and analog A/V
-> - 1x USB 3.0 type A host, 1x USB 2.0 type A OTG, 1x micro SD
-> - IR receiver and a neat little LED clock display.
->
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->
-> One question I'm wondering about is whether it's worth pushing the HDMI
-> and analog codec audio cards down into rk3328.dtsi (as with HDMI audio
-> on RK3399), since those audio pipelines are internal to the SoC and the
-> board only really governs whether the outputs are wired up or not.
+The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+logging unit that reports an error in case write error (e.g . Attempt to
+write to a read only register).
+This error shall be reported to EDAC subsystem as uncorrectable-error.
 
-Seems reasonable. One other candidate below.
+Signed-off-by: Talel Shenhar <talel@amazon.com>
+---
+ MAINTAINERS                |   7 ++
+ drivers/edac/Kconfig       |   6 ++
+ drivers/edac/Makefile      |   1 +
+ drivers/edac/al_pos_edac.c | 173 +++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 187 insertions(+)
+ create mode 100644 drivers/edac/al_pos_edac.c
 
->
->  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
-
-In the future, please split bindings to a separate patch.
-
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  arch/arm64/boot/dts/rockchip/rk3328-a1.dts    | 399 ++++++++++++++++++
->  3 files changed, 405 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-a1.dts
->
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index c82c5e57d44c..f27f7805f57e 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -40,6 +40,11 @@ properties:
->            - const: asus,rk3288-tinker-s
->            - const: rockchip,rk3288
->
-> +      - description: Beelink A1
-> +        items:
-> +          - const: azw,beelink-a1
-> +          - const: rockchip,rk3328
-> +
->        - description: bq Curie 2 tablet
->          items:
->            - const: mundoreader,bq-curie2
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index 1f18a9392d15..a6f250e7cde2 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-a1.dts b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
-> new file mode 100644
-> index 000000000000..03ad663ff821
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
-> @@ -0,0 +1,399 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-> +// Copyright (c) 2017-2019 Arm Ltd.
-> +
-> +/dts-v1/;
-> +#include "rk3328.dtsi"
-> +
-> +/ {
-> +       model = "Beelink A1";
-> +       compatible = "azw,beelink-a1", "rockchip,rk3328";
-> +
-> +       /*
-> +        * UART pins, as viewed with bottom of case removed:
-> +        *
-> +        *           Front
-> +        *        /-------
-> +        *  L    / o <- Gnd
-> +        *  e   / o <-- Rx
-> +        *  f  / o <--- Tx
-> +        *  t / o <---- +3.3v
-> +        *    |
-> +        */
-> +       chosen {
-> +               stdout-path = "serial2:1500000n8";
-> +       };
-> +
-> +       gmac_clkin: external-gmac-clock {
-> +               compatible = "fixed-clock";
-> +               clock-frequency = <125000000>;
-> +               clock-output-names = "gmac_clkin";
-> +               #clock-cells = <0>;
-> +       };
-> +
-> +       vcc_host_5v: usb3-current-switch {
-> +               compatible = "regulator-fixed";
-> +               enable-active-high;
-> +               gpio = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&usb30_host_drv>;
-> +               regulator-name = "vcc_host_5v";
-> +               vin-supply = <&vcc_sys>;
-> +       };
-> +
-> +       vcc_sys: vcc-sys {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vcc_sys";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +       };
-> +
-> +       cpus {
-> +               idle-states {
-> +                       entry-method = "arm,psci";
-> +
-> +                       cpu_sleep: cpu-sleep {
-> +                               compatible = "arm,idle-state";
-> +                               arm,psci-suspend-param = <0x0010000>;
-> +                               local-timer-stop;
-> +                               entry-latency-us = <120>;
-> +                               exit-latency-us = <250>;
-> +                               min-residency-us = <900>;
-
-This doesn't seem like something that's board specific, but I guess
-the regulator could have some influence on these times. If so, the
-board file could always override a default.
-
-Rob
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7a47b5..f5ce446 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -751,6 +751,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
+ F:	include/linux/altera_uart.h
+ F:	include/linux/altera_jtaguart.h
+ 
++AMAZON ANNAPURNA LABS POS EDAC DRIVER
++M:	Talel Shenhar <talel@amazon.com>
++M:	Talel Shenhar <talelshenhar@gmail.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
++F:	drivers/edac/al-pos-edac.c
++
+ AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
+ M:	Talel Shenhar <talel@amazon.com>
+ S:	Maintained
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 200c04c..bb5805f 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -100,6 +100,12 @@ config EDAC_AMD64_ERROR_INJECTION
+ 	  In addition, there are two control files, inject_read and inject_write,
+ 	  which trigger the DRAM ECC Read and Write respectively.
+ 
++config EDAC_AL_POS
++	tristate "Amazon's Annapurna Labs POS EDAC driver"
++	depends on (ARCH_ALPINE || COMPILE_TEST)
++	help
++	  Include support for the SoC POS EDAC error capability.
++
+ config EDAC_AMD76X
+ 	tristate "AMD 76x (760, 762, 768)"
+ 	depends on PCI && X86_32
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index 165ca65e..3571936 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
+ edac_mce_amd-y				:= mce_amd.o
+ obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
+ 
++obj-$(CONFIG_EDAC_AL_POS)		+= al_pos_edac.o
+ obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
+ obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
+ obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
+diff --git a/drivers/edac/al_pos_edac.c b/drivers/edac/al_pos_edac.c
+new file mode 100644
+index 00000000..a85ab67
+--- /dev/null
++++ b/drivers/edac/al_pos_edac.c
+@@ -0,0 +1,173 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++#include <linux/bitfield.h>
++#include <linux/edac.h>
++#include <linux/of_irq.h>
++#include "edac_module.h"
++
++#define DRV_NAME "al_pos_edac"
++#define AL_POS_EDAC_MSG_MAX 256
++
++/* Registers Offset */
++#define AL_POS_ERROR_LOG_1	0x0
++#define AL_POS_ERROR_LOG_0	0x4
++
++/* Registers Fields */
++#define AL_POS_ERROR_LOG_1_VALID	BIT(31)
++#define AL_POS_ERROR_LOG_1_BRESP	GENMASK(18, 17)
++#define AL_POS_ERROR_LOG_1_REQUEST_ID	GENMASK(16, 8)
++#define AL_POS_ERROR_LOG_1_ADDR_HIGH	GENMASK(7, 0)
++
++#define AL_POS_ERROR_LOG_0_ADDR_LOW	GENMASK(31, 0)
++
++struct al_pos_edac {
++	struct edac_device_ctl_info *edac_dev;
++	void __iomem *mmio_base;
++	int irq;
++};
++
++static int al_pos_handle(struct al_pos_edac *al_pos)
++{
++	u32 log0, log1;
++	u64 addr;
++	u16 request_id;
++	u8 bresp;
++	char msg[AL_POS_EDAC_MSG_MAX];
++
++	log1 = readl_relaxed(al_pos->mmio_base + AL_POS_ERROR_LOG_1);
++	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
++		return 0;
++
++	log0 = readl_relaxed(al_pos->mmio_base + AL_POS_ERROR_LOG_0);
++	writel_relaxed(0, al_pos->mmio_base + AL_POS_ERROR_LOG_1);
++
++	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
++	addr |= (((u64)FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1)) << 32);
++	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
++	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
++
++	snprintf(msg, sizeof(msg),
++		 "addr=0x%llx request_id=0x%x bresp=0x%x\n",
++		 addr, request_id, bresp);
++
++	edac_device_handle_ue(al_pos->edac_dev, 0, 0, msg);
++
++	return 1;
++}
++
++static void al_pos_edac_check(struct edac_device_ctl_info *edac_dev)
++{
++	struct al_pos_edac *al_pos = edac_dev->pvt_info;
++
++	al_pos_handle(al_pos);
++}
++
++static irqreturn_t al_pos_irq_handler(int irq, void *info)
++{
++	struct platform_device *pdev = info;
++	struct al_pos_edac *al_pos = platform_get_drvdata(pdev);
++
++	if (al_pos_handle(al_pos))
++		return IRQ_HANDLED;
++	return IRQ_NONE;
++}
++
++static int al_pos_probe(struct platform_device *pdev)
++{
++	struct edac_device_ctl_info *edac_dev;
++	struct al_pos_edac *al_pos;
++	int ret;
++
++	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_pos), DRV_NAME, 1,
++					      DRV_NAME, 1, 0, NULL, 0,
++					      edac_device_alloc_index());
++	if (!edac_dev)
++		return -ENOMEM;
++
++	al_pos = edac_dev->pvt_info;
++	al_pos->edac_dev = edac_dev;
++	platform_set_drvdata(pdev, al_pos);
++
++	al_pos->mmio_base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(al_pos->mmio_base)) {
++		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
++			PTR_ERR(al_pos->mmio_base));
++		return PTR_ERR(al_pos->mmio_base);
++	}
++
++	al_pos->irq = platform_get_irq(pdev, 0);
++	if (al_pos->irq <= 0)
++		edac_dev->edac_check = al_pos_edac_check;
++
++	edac_dev->dev = &pdev->dev;
++	edac_dev->mod_name = DRV_NAME;
++	edac_dev->dev_name = dev_name(&pdev->dev);
++	edac_dev->ctl_name = "POS";
++
++	ret = edac_device_add_device(edac_dev);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to add edac device\n");
++		goto err_free_edac;
++	}
++
++	if (al_pos->irq > 0) {
++		ret = devm_request_irq(&pdev->dev,
++				       al_pos->irq,
++				       al_pos_irq_handler,
++				       0,
++				       pdev->name,
++				       pdev);
++		if (ret != 0) {
++			dev_err(&pdev->dev,
++				"failed to register to irq %d (%d)\n",
++				al_pos->irq, ret);
++			goto err_remove_edac;
++		}
++	}
++
++	return 0;
++
++err_remove_edac:
++	edac_device_del_device(edac_dev->dev);
++err_free_edac:
++	edac_device_free_ctl_info(edac_dev);
++
++	return ret;
++}
++
++static int al_pos_remove(struct platform_device *pdev)
++{
++	struct al_pos_edac *al_pos = platform_get_drvdata(pdev);
++
++	if (al_pos->irq > 0)
++		devm_free_irq(&pdev->dev, al_pos->irq, pdev);
++
++	edac_device_del_device(al_pos->edac_dev->dev);
++	edac_device_free_ctl_info(al_pos->edac_dev);
++
++	return 0;
++}
++
++static const struct of_device_id al_pos_of_match[] = {
++	{ .compatible = "amazon,al-pos-edac", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, al_pos_of_match);
++
++static struct platform_driver al_pos_driver = {
++	.probe = al_pos_probe,
++	.remove = al_pos_remove,
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = al_pos_of_match,
++	},
++};
++
++module_platform_driver(al_pos_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Talel Shenhar");
++MODULE_DESCRIPTION("Amazon's Annapurna Labs POS driver");
+-- 
+2.7.4
