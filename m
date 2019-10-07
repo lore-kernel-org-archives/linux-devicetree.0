@@ -1,7 +1,7 @@
 From: Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v8 2/6] media: ad5820: DT new optional field enable-gpios
-Date: Mon,  7 Oct 2019 15:28:52 +0200
-Message-ID: <20191007132856.27948-3-ribalda@kernel.org>
+Subject: [PATCH v8 5/6] media: ad5820: DT new compatible devices
+Date: Mon,  7 Oct 2019 15:28:55 +0200
+Message-ID: <20191007132856.27948-6-ribalda@kernel.org>
 References: <20191007132856.27948-1-ribalda@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,43 +9,34 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191007132856.27948-1-ribalda@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ricardo Ribalda Delgado <ribalda@kernel.org>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh@kernel.org>
+Cc: Ricardo Ribalda Delgado <ribalda@kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document new enable-gpio field. It can be used to disable the part
-without turning down its regulator.
+Document new compatible devices.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- Documentation/devicetree/bindings/media/i2c/ad5820.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/media/i2c/ad5820.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-index 5940ca11c021..db596e8eb0ba 100644
+index db596e8eb0ba..5764cbedf9b7 100644
 --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
 +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-@@ -8,6 +8,11 @@ Required Properties:
+@@ -2,7 +2,10 @@
  
-   - VANA-supply: supply of voltage for VANA pin
+ Required Properties:
  
-+Optional properties:
-+
-+   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
-+active low, a high level on the pin enables the device.
-+
- Example:
+-  - compatible: Must contain "adi,ad5820"
++  - compatible: Must contain one of:
++		- "adi,ad5820"
++		- "adi,ad5821"
++		- "adi,ad5823"
  
-        ad5820: coil@c {
-@@ -15,5 +20,6 @@ Example:
-                reg = <0x0c>;
- 
-                VANA-supply = <&vaux4>;
-+               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
-        };
+   - reg: I2C slave address
  
 -- 
 2.23.0
