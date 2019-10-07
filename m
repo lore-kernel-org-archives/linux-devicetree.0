@@ -1,63 +1,59 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
- coherent
-Date: Mon, 7 Oct 2019 20:42:19 +0800
-Message-ID: <20191007124217.GO7150@dragon>
-References: <20190922102341.GO25745@shell.armlinux.org.uk>
- <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
+From: Talel Shenhar <talel@amazon.com>
+Subject: [PATCH v5 0/2] Amazon's Annapurna Labs POS Driver
+Date: Mon, 7 Oct 2019 15:47:13 +0300
+Message-ID: <1570452435-8505-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dann frazier <dann.frazier@canonical.com>, Will Deacon <will.deacon@arm.com>, Li Yang <leoyang.li@nxp.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, maz@kernel.org, mark.rutland@arm.com, arnd@arndb.de, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, talel@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 11:27:03AM +0100, Russell King wrote:
-> The LX2160A esdhc controllers are setup by the driver to be DMA
-> coherent, but without marking them as such in DT, Linux thinks they
-> are not.  This can lead to random sporadic DMA errors, even to the
-> extent of preventing boot, such as:
-> 
-> mmc0: ADMA error
-> mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-> mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
-> mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
-> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-> mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
-> mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
-> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
-> mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
-> mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
-> mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
-> mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
-> mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
-> mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
-> mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
-> mmc0: sdhci: Host ctl2: 0x00000000
-> mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
-> mmc0: sdhci: ============================================
-> mmc0: error -5 whilst initialising SD card
-> 
-> These are caused by the device's descriptor fetch hitting speculatively
-> loaded CPU cache lines that the CPU does not see through the normal,
-> non-cacheable DMA coherent mapping that it uses for non-coherent
-> devices.
-> 
-> DT and the device must agree wrt whether the device is DMA coherent or
-> not.
-> 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+logging unit that reports an error in case of write error (e.g. attempt to
+write to a read only register).
 
-Applied, thanks.
+This patch series introduces the support for this unit.
+
+Changes since v4:
+================
+- fixed dt binding according to new dt scheme
+- added back the use of _relaxed accessors
+
+Changes since v3:
+=================
+- ported to be edac device
+- converted dt-bindings to new scheme
+- added unit address to dt example
+
+Changes since v2:
+=================
+- squashed left shifting fix to the driver
+
+Changes since v1:
+=================
+- move MODULE_ to the end of the file
+- simplified resource remapping devm_platform_ioremap_resource()
+- use platform_get_irq() instead of irq_of_parse_and_map()
+- removed the use of _relaxed accessor in favor to the regular ones
+- removed driver selected based on arch
+- added casting to u64 before left shifting (reported by kbuild test robot)
+
+
+Talel Shenhar (2):
+  dt-bindings: soc: al-pos: Amazon's Annapurna Labs POS
+  soc: amazon: al-pos-edac: Introduce Amazon's Annapurna Labs POS EDAC
+    driver
+
+ .../bindings/edac/amazon,al-pos-edac.yaml          |  40 +++++
+ MAINTAINERS                                        |   7 +
+ drivers/edac/Kconfig                               |   6 +
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/al_pos_edac.c                         | 173 +++++++++++++++++++++
+ 5 files changed, 227 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+ create mode 100644 drivers/edac/al_pos_edac.c
+
+-- 
+2.7.4
