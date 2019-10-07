@@ -1,65 +1,47 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
-Date: Mon, 7 Oct 2019 16:11:53 +0200
-Message-ID: <20191007141153.7b76t4ntdzdojj5m@core.my.home>
-References: <20190823103139.17687-1-megous@megous.com>
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
+ timer driver
+Date: Mon, 7 Oct 2019 14:17:07 +0000
+Message-ID: <f07d299f-574b-8f48-9412-c9a9b50ccd3a@microchip.com>
+References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
+ <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
+ <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
+ <ab7b6b45-5e6f-100d-51af-a82ac325d948@microchip.com>
+ <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
+ <20191007131348.GH4254@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190823103139.17687-1-megous@megous.com>
+In-Reply-To: <20191007131348.GH4254@piout.net>
+Content-Language: en-US
+Content-ID: <2CADD20031B0D44993430B4B4818B0D0@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+To: alexandre.belloni@bootlin.com, linux@roeck-us.net
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, wim@linux-watchdog.org, robh+dt@kernel.org, Nicolas.Ferre@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Fri, Aug 23, 2019 at 12:31:34PM +0200, megous hlavni wrote:
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> (Resend to add missing lists, sorry for the noise.)
-> 
-> This series implements bluetooth support for Xunlong Orange Pi 3 board.
-> 
-> The board uses AP6256 WiFi/BT 5.0 chip.
-> 
-> Summary of changes:
-> 
-> - add more delay to let initialize the chip
-> - let the kernel detect firmware file path
-> - add new compatible and update dt-bindings
-> - update Orange Pi 3 / H6 DTS
-
-Please consider the DTS patches for 5.5.
-
-Thanks,
-	Ondrej
-
-> Please take a look.
-> 
-> thank you and regards,
->   Ondrej Jirman
-> 
-> Ondrej Jirman (5):
->   dt-bindings: net: Add compatible for BCM4345C5 bluetooth device
->   bluetooth: bcm: Add support for loading firmware for BCM4345C5
->   bluetooth: hci_bcm: Give more time to come out of reset
->   arm64: dts: allwinner: h6: Add pin configs for uart1
->   arm64: dts: allwinner: orange-pi-3: Enable UART1 / Bluetooth
-> 
->  .../bindings/net/broadcom-bluetooth.txt       |  1 +
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 19 +++++++++++++++++++
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 ++++++++++
->  drivers/bluetooth/btbcm.c                     |  3 +++
->  drivers/bluetooth/hci_bcm.c                   |  3 ++-
->  5 files changed, 35 insertions(+), 1 deletion(-)
-> 
-> -- 
-> 2.23.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+DQoNCk9uIDA3LjEwLjIwMTkgMTY6MTQsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KDQo+IA0K
+PiBPbiAwNy8xMC8yMDE5IDA1OjM2OjM4LTA3MDAsIEd1ZW50ZXIgUm9lY2sgd3JvdGU6DQo+PiBP
+biAxMC83LzE5IDEyOjU4IEFNLCBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+
+PiBbIC4uLiBdDQo+Pj4gSGVsbG8gR3VlbnRlciwNCj4+Pg0KPj4+IFRoYW5rIHlvdSBmb3IgdGhl
+IGZlZWRiYWNrLg0KPj4+IEFmdGVyIHJldmlld2luZyB0aGlzLCBjYW4geW91IHBsZWFzZSBndWlk
+ZSBtZSB0b3dhcmRzIG9uZSBvZiB0aGUNCj4+PiBwb3NzaWJsZSB0d28gZGlyZWN0aW9uczogbWVy
+Z2UgdGhpcyBkcml2ZXIgd2l0aCBzYW1hNWQ0X3dkdCAsIGFuZCBoYXZlIGENCj4+PiBzaW5nbGUg
+ZHJpdmVyIHdpdGggc3VwcG9ydCBmb3IgYm90aCBoYXJkd2FyZSBibG9ja3M7IG9yLCBoYXZlIHRo
+aXMNCj4+PiBkcml2ZXIgc2VwYXJhdGVseSAsIGFzIGluIHRoaXMgcGF0Y2ggc2VyaWVzPw0KPj4+
+DQo+Pg0KPj4gSSBub3RpY2VkIHRoZSBzaW1pbGFyaXRpZXMuIEkgZG9uJ3Qga25vdyBpZiBpdCBt
+YWtlcyBzZW5zZSB0byByZWNvbmNpbGUNCj4+IHRoZSB0d28gZHJpdmVyczsgaXQgc2VlbXMgdG8g
+bWUgdGhlIG5ldyBjaGlwIHVzZXMgdGhlIHNhbWUgYmFzaWMgY29yZSB3aXRoDQo+PiBlbmhhbmNl
+bWVudHMuIEluIGdlbmVyYWwsIEkgcHJlZmVyIGEgc2luZ2xlIGRyaXZlciwgYnV0IG9ubHkgaWYg
+dGhlIHJlc3VsdA0KPj4gZG9lc24ndCBlbmQgdXAgYmVpbmcgYW4gaWYvZWxzZSBtZXNzLiBVbHRp
+bWF0ZWx5LCBpdCBpcyByZWFsbHkgeW91ciBjYWxsDQo+PiB0byBtYWtlLg0KPj4NCj4gDQo+IE1v
+c3QgaWYgbm90IGFsbCB5b3VyIGNvbW1lbnRzIHdlcmUgYWxyZWFkeSBhZGRyZXNzZWQgaW4gdGhl
+IG90aGVyDQo+IGRyaXZlci4gVGhlIG1haW4gZGlmZmVyZW5jZSBpbiB0aGUgcmVnaXN0ZXIgaW50
+ZXJmYWNlIGlzIHRoZSBsb2NhdGlvbiBvZg0KPiB0aGUgY291bnRlciB0aGF0IG9ubHkgcmVhbGx5
+IGFmZmVjdHMgc2FtYTVkNF93ZHRfc2V0X3RpbWVvdXQgYW5kIHRoYXQNCj4gY291bGQgYmUgYWJz
+dHJhY3RlZCBhd2F5IGJ5IHVzaW5nIGEgZGlmZmVyZW50IHN0cnVjdCB3YXRjaGRvZ19vcHMuDQo+
+IEludGVycnVwdCBlbmFibGluZyBpcyBhbHNvIGRvbmUgZGlmZmVyZW50bHksIEkgZG9uJ3QgdGhp
+bmsgaXQgaGFzIGEgaHVnZQ0KPiBpbXBhY3QuDQo+IA0KDQpUaGFuayB5b3UgR3VlbnRlciBhbmQg
+QWxleGFuZHJlLA0KDQpJIHdpbGwgc3RhcnQgd29ya2luZyBvbiBhIHYyIHdpdGggYSBtZXJnZWQg
+ZHJpdmVyLg0KDQpUaGFua3MgYWdhaW4sDQpFdWdlbg0K
