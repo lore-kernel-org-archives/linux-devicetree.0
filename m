@@ -1,65 +1,63 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2] ARM: dts: imx7s: Correct GPT's ipg clock source
-Date: Mon,  7 Oct 2019 08:43:42 +0800
-Message-ID: <1570409022-20442-1-git-send-email-Anson.Huang@nxp.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
+Date: Mon, 7 Oct 2019 01:29:19 +0000
+Message-ID: <DB3PR0402MB3916A5821856B3FEAE9265C8F59B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
+ <20190922161415.GD1999@bug>
+ <DB3PR0402MB3916F48DA2A16E57C624432BF5850@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20191006003225.GD7150@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191006003225.GD7150@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "mripard@kernel.org" <mripard@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, jagan@amarulaso
 List-Id: devicetree@vger.kernel.org
 
-i.MX7S/D's GPT ipg clock should be from GPT clock root and
-controlled by CCM's GPT CCGR, using correct clock source for
-GPT ipg clock instead of IMX7D_CLK_DUMMY.
-
-Fixes: 3ef79ca6bd1d ("ARM: dts: imx7d: use imx7s.dtsi as base device tree")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Add Fixes tag.
----
- arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 710f850..e2e604d 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -448,7 +448,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302d0000 0x10000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT1_ROOT_CLK>,
- 					 <&clks IMX7D_GPT1_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 			};
-@@ -457,7 +457,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302e0000 0x10000>;
- 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT2_ROOT_CLK>,
- 					 <&clks IMX7D_GPT2_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
-@@ -467,7 +467,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302f0000 0x10000>;
- 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT3_ROOT_CLK>,
- 					 <&clks IMX7D_GPT3_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
-@@ -477,7 +477,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x30300000 0x10000>;
- 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT4_ROOT_CLK>,
- 					 <&clks IMX7D_GPT4_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
--- 
-2.7.4
+SGksIFNoYXduDQoNCj4gT24gTW9uLCBTZXAgMjMsIDIwMTkgYXQgMDI6MzQ6MDdBTSArMDAwMCwg
+QW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gSGksIFBhdmVsDQo+ID4NCj4gPiA+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggVjIgMS81XSBkdC1iaW5kaW5nczogZnNsOiBzY3U6IGFkZCBzY3UgcG93ZXIga2V5
+DQo+ID4gPiBiaW5kaW5nDQo+ID4gPg0KPiA+ID4gT24gVHVlIDIwMTktMDktMDMgMTA6MDM6NDAs
+IEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+ID4gPiBOWFAgaS5NWDhRWFAgaXMgYW4gQVJNdjggU29D
+IHdpdGggYSBDb3J0ZXgtTTQgY29yZSBpbnNpZGUgYXMNCj4gPiA+ID4gc3lzdGVtIGNvbnRyb2xs
+ZXIsIHRoZSBzeXN0ZW0gY29udHJvbGxlciBpcyBpbiBjaGFyZ2Ugb2Ygc3lzdGVtDQo+ID4gPiA+
+IHBvd2VyLCBjbG9jayBhbmQgcG93ZXIga2V5IGV2ZW50IGV0Yy4gbWFuYWdlbWVudCwgTGludXgg
+a2VybmVsIGhhcw0KPiA+ID4gPiB0byBjb21tdW5pY2F0ZSB3aXRoIHN5c3RlbSBjb250cm9sbGVy
+IHZpYSBNVSAobWVzc2FnZSB1bml0KSBJUEMgdG8NCj4gPiA+ID4gZ2V0IHBvd2VyIGtleSBldmVu
+dCwgYWRkIGJpbmRpbmcgZG9jIGZvciBpLk1YIHN5c3RlbSBjb250cm9sbGVyIHBvd2VyDQo+IGtl
+eSBkcml2ZXIuDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxB
+bnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gQ2hhbmdlcyBzaW5jZSBW
+MToNCj4gPiA+ID4gCS0gcmVtb3ZlICJ3YWtldXAtc291cmNlIiBwcm9wZXJ0eSwgYXMgaXQgaXMg
+Tk9UIG5lZWRlZCBmb3IgU0NVDQo+ID4gPiBpbnRlcnJ1cHQ7DQo+ID4gPiA+IAktIHJlbW92ZSAi
+c3RhdHVzIiBpbiBleGFtcGxlLg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQgICAgICAgICAgfCAxNA0KPiA+ID4g
+KysrKysrKysrKysrKysNCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCsp
+DQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQNCj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiA+ID4gPiBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0
+DQo+ID4gPiA+IGluZGV4IGMxNDlmYWQuLmY5M2UyZTQgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0
+DQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJl
+ZXNjYWxlL2ZzbCxzY3UudHh0DQo+ID4gPiA+IEBAIC0xNTcsNiArMTU3LDE1IEBAIFJlcXVpcmVk
+IHByb3BlcnRpZXM6DQo+ID4gPiA+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiAgLSB0
+aW1lb3V0LXNlYzogY29udGFpbnMgdGhlIHdhdGNoZG9nIHRpbWVvdXQgaW4gc2Vjb25kcy4NCj4g
+PiA+ID4NCj4gPiA+ID4gK1Bvd2VyIGtleSBiaW5kaW5ncyBiYXNlZCBvbiBTQ1UgTWVzc2FnZSBQ
+cm90b2NvbA0KPiA+ID4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gPiA+ICsNCj4gPiA+ID4gK1JlcXVpcmVkIHByb3Bl
+cnRpZXM6DQo+ID4gPiA+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZToNCj4gPiA+ID4gKyAgICAg
+ICAgICAgICAgImZzbCxpbXg4cXhwLXNjLXB3cmtleSINCj4gPiA+ID4gKyAgICAgICAgICAgICAg
+Zm9sbG93ZWQgYnkgImZzbCxpbXgtc2MtcHdya2V5IjsNCj4gPiA+ID4gKy0gbGludXgsa2V5Y29k
+ZXM6IFNlZQ0KPiA+ID4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0
+L2tleXMudHh0DQo+ID4gPg0KPiA+ID4gTm90ZSB5b3UgaGF2ZSBrZXljb2RlX3NfIGhlcmUsIGJ1
+dCBrZXljb2RlIGluIHRoZSBleGFtcGxlIGFuZCBpbiB0aGUNCj4gPiA+IGR0cyBwYXRjaC4NCj4g
+Pg0KPiA+IE5PVCBxdWl0ZSB1bmRlcnN0YW5kIHlvdXIgcG9pbnQsIGNvdWxkIHlvdSBwbGVhc2Ug
+cHJvdmlkZSBtb3JlIGRldGFpbHM/DQo+IA0KPiBUaGUgcHJvcGVydHkgYmVpbmcgdXNlZCBpbiBk
+cml2ZXIsIERUUywgYW5kIERUIGV4YW1wbGUgaW4gdGhlIGJpbmRpbmdzIGFyZQ0KPiBhbGwgJ2xp
+bnV4LGtleWNvZGUnIHJhdGhlciB0aGFuICdsaW51eCxrZXljb2RlcycuDQoNCkkgc2VlIG5vdywg
+c2luY2UgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L2tleXMudHh0IHVz
+ZXMgImxpbnV4LGtleWNvZGVzIiwNCnNvIEkgd2lsbCBhbHNvIHVzZSAibGludXgsa2V5Y29kZXMi
+IGZvciBkcml2ZXIsIERUUyBhbmQgRFQgZXhhbXBsZSBpbiBWMy4NCg0KVGhhbmtzLA0KQW5zb24N
+Cg==
