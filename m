@@ -1,49 +1,80 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v2 1/5] arm64: dts: qcom: sdm845: Add unit name to soc node
-Date: Mon, 7 Oct 2019 10:44:02 -0700
-Message-ID: <CANcMJZBWsfwWmHbGCG+KG4n1kpmytw_8O4uA8HEVv8ysBxiQgw@mail.gmail.com>
-References: <20190724044906.12007-1-vkoul@kernel.org> <20190724044906.12007-2-vkoul@kernel.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: Set status to disable for MMC3
+Date: Mon, 7 Oct 2019 10:46:22 -0700
+Message-ID: <20191007174622.GW5610@atomide.com>
+References: <20191007080339.57209-1-manu@freebsd.org>
+ <20191007161634.GS5610@atomide.com>
+ <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
+ <20191007165859.GV5610@atomide.com>
+ <20191007192922.7ce3423bd1fd03551487e907@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724044906.12007-2-vkoul@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191007192922.7ce3423bd1fd03551487e907@bidouilliste.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Amit Pundir <amit.pundir@linaro.org>
+To: Emmanuel Vadot <manu@bidouilliste.com>
+Cc: Emmanuel Vadot <manu@freebsd.org>, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 9:51 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> We get a warning about missing unit name for soc node, so add it.
->
-> arch/arm64/boot/dts/qcom/sdm845.dtsi:623.11-2814.4: Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
->
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 601cfb078bd5..e81f4a6d08ce 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -620,7 +620,7 @@
->                 method = "smc";
->         };
->
-> -       soc: soc {
-> +       soc: soc@0 {
->                 #address-cells = <2>;
->                 #size-cells = <2>;
->                 ranges = <0 0 0 0 0x10 0>;
+* Emmanuel Vadot <manu@bidouilliste.com> [191007 17:30]:
+> On Mon, 7 Oct 2019 09:58:59 -0700
+> Tony Lindgren <tony@atomide.com> wrote:
+> > There should be no need to do that for SoC internal devices, the
+> > the default status = "okay" should be just fine. Setting the
+> > status = "disabled" for SoC internal devices and then enabling them
+> > again for tens of board specific dts files just generates tons of
+> > pointless extra churn for the board specific configuration.
+> 
+>  Setting the status = "okay" means that you can use the device. What's
+> the point of enabling a device if you can't use it ? Or worse can't
+> probe it like i2c or spi ?
 
-So Amit Pundir noted that this patch is causing 5.4-rc to no longer
-boot on db845 w/ AOSP, due to it changing the userland sysfs paths
-from "/devices/platform/soc/1a00000.mdss" to
-"/devices/platform/soc@0/1a00000.mdss"
+The main reasons for not setting SoC internal devices with
+status = "disabled" are:
 
-Is there a better solution here that might not break userspace?
+1. The SoC internal device is there for sure and also accessible
+   for the kernel
 
-thanks
--john
+2. Setting an SoC internal device with status = "disabled" makes
+   the kernel completely ignore it and it cannot be idled for PM
+   if left on from the bootloader
+
+3. We avoid tens of lines of pointess repetive status = "okay"
+   tinkering for multiple devices per each board specic dts file
+   making them more readable and easier to maintain
+
+>  Is the plan for TI dts to have every (or almost) device tree node
+> enabled even if the device isn't usable on the board ?
+
+This has always been the case with omap3, 4, and 5. I don't
+know when folks started tagging am33xx SoC internal devices as
+disabled but that should have never been necessary.
+
+Few years back I suggested some patches for status = "incomplete"
+to deal with cases where the device is there but not pinned
+out or otherwise not complete. But so far we've gotten away
+without that, so probably not needed.
+
+> > >  In this case it's FreeBSD being  because (I think) we have bad support
+> > > for the clocks for this module so we panic when we read from it as the
+> > > module isn't clocked. And since I find it wrong to have device enabled
+> > > while it isn't present I've sent this patch.
+> > 
+> > Thanks for clarifying what happens. OK, sounds like FreeBSD might be
+> > missing clock handling for some devices then.
+> > 
+> > What Linux does is probe the internal devices and then idle the
+> > unused ones as bootloaders often leave many things enabled. Otherwise
+> > the SoC power management won't work properly because device clocks
+> > will block deeper SoC idle states.
+> 
+>  I can understand stand but then the bootload should be fixed to not
+> enable devices that aren't enabled in the DTS if it does that.
+
+This is not doable as in many cases the bootloader cannot be
+updated as it can be signed for phones like n900 and droid4.
+
+Regards,
+
+Tony
