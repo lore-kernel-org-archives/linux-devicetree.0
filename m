@@ -1,15 +1,15 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFCv1 3/5] arm64: dts: meson: Add missing regulator linked to
- VDDAO_3V3 regulator to FLASH_VDD
-Date: Mon, 7 Oct 2019 16:20:59 +0200
-Message-ID: <b73a1302-90ae-f1db-ff43-84d56ca4ba39@baylibre.com>
+Subject: Re: [RFCv1 4/5] arm64: dts: meson: Add missing regulator linked to
+ VCCV5 regulator to VDDIO_C/TF_IO
+Date: Mon, 7 Oct 2019 16:21:07 +0200
+Message-ID: <a6daf5e5-fadf-ca72-fc7b-1789abaab605@baylibre.com>
 References: <20191007131649.1768-1-linux.amoon@gmail.com>
- <20191007131649.1768-4-linux.amoon@gmail.com>
+ <20191007131649.1768-5-linux.amoon@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007131649.1768-4-linux.amoon@gmail.com>
+In-Reply-To: <20191007131649.1768-5-linux.amoon@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Anand Moon <linux.amoon@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
@@ -17,8 +17,8 @@ Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlo
 List-Id: devicetree@vger.kernel.org
 
 On 07/10/2019 15:16, Anand Moon wrote:
-> As per schematics add missing VDDAO_3V3 power supply to FLASH_VDD
-> regulator. Also add TFLASH_VDD_EN signal name to gpio pin.
+> As per schematics add missing VCCV5 power supply to VDDIO_C/TF_IO
+> regulator. Also add TF_3V3N_1V8_EN signal name to gpio pin.
 > 
 > Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
 > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
@@ -30,22 +30,24 @@ On 07/10/2019 15:16, Anand Moon wrote:
 >  1 file changed, 3 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index 66262a6ab3fe..6bd23a1e7e1d 100644
+> index 6bd23a1e7e1d..5daf176452f7 100644
 > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
 > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -51,9 +51,12 @@
->  		regulator-min-microvolt = <3300000>;
+> @@ -66,11 +66,14 @@
+>  		regulator-min-microvolt = <1800000>;
 >  		regulator-max-microvolt = <3300000>;
 >  
-> +		/* TFLASH_VDD_EN */
->  		gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
->  		enable-active-high;
->  		regulator-always-on;
-> +		/* U18 FC8731-09VF05NRR */
-> +		vin-supply = <&vddao_3v3>;
+> +		/* TF_3V3N_1V8_EN */
+>  		gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
+>  		gpios-states = <0>;
+>  
+>  		states = <3300000 0>,
+>  			 <1800000 1>;
+> +		/* U16 RT9179GB */
+> +		vin-supply = <&vcc_5v>;
 >  	};
 >  
->  	tf_io: gpio-regulator-tf_io {
+>  	flash_1v8: regulator-flash_1v8 {
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
