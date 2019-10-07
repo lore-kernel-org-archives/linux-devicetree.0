@@ -1,80 +1,175 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: Set status to disable for MMC3
-Date: Mon, 7 Oct 2019 10:46:22 -0700
-Message-ID: <20191007174622.GW5610@atomide.com>
-References: <20191007080339.57209-1-manu@freebsd.org>
- <20191007161634.GS5610@atomide.com>
- <20191007183830.71e1303d6bd713014dc36710@bidouilliste.com>
- <20191007165859.GV5610@atomide.com>
- <20191007192922.7ce3423bd1fd03551487e907@bidouilliste.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
+Date: Mon, 07 Oct 2019 19:51:13 +0200
+Message-ID: <1f6089709ec8f77d12453f08730b0058345a352b.camel@suse.de>
+References: <20190927002455.13169-1-robh@kernel.org>
+         <20190927002455.13169-6-robh@kernel.org>
+         <20190930125752.GD12051@infradead.org>
+         <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+         <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
+         <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
+         <CAL_JsqLo0jtDcCDf5VTc+_grO3fJ1MsDTE8Bj=B0J+eLk3hpZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-RfW6mXnOY9RVgKryA6oE"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191007192922.7ce3423bd1fd03551487e907@bidouilliste.com>
+In-Reply-To: <CAL_JsqLo0jtDcCDf5VTc+_grO3fJ1MsDTE8Bj=B0J+eLk3hpZg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@bidouilliste.com>
-Cc: Emmanuel Vadot <manu@freebsd.org>, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, PCI <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, Marek Vasut <marek.vasut@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms+renesas@verge.net.au>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-* Emmanuel Vadot <manu@bidouilliste.com> [191007 17:30]:
-> On Mon, 7 Oct 2019 09:58:59 -0700
-> Tony Lindgren <tony@atomide.com> wrote:
-> > There should be no need to do that for SoC internal devices, the
-> > the default status = "okay" should be just fine. Setting the
-> > status = "disabled" for SoC internal devices and then enabling them
-> > again for tens of board specific dts files just generates tons of
-> > pointless extra churn for the board specific configuration.
-> 
->  Setting the status = "okay" means that you can use the device. What's
-> the point of enabling a device if you can't use it ? Or worse can't
-> probe it like i2c or spi ?
 
-The main reasons for not setting SoC internal devices with
-status = "disabled" are:
+--=-RfW6mXnOY9RVgKryA6oE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-1. The SoC internal device is there for sure and also accessible
-   for the kernel
+On Thu, 2019-10-03 at 20:53 -0500, Rob Herring wrote:
+> > > > But I think that with this series, given the fact that we now treat=
+ the
+> > > > lack
+> > > > of
+> > > > dma-ranges as a 1:1 mapping instead of an error, we could rewrite t=
+he
+> > > > function
+> > > > like this:
+> > >=20
+> > > Now, I'm reconsidering allowing this abuse... It's better if the code
+> > > which understands the bus structure in DT for a specific bus passes i=
+n
+> > > the right thing. Maybe I should go back to Robin's version (below).
+> > > OTOH, the existing assumption that 'dma-ranges' was in the immediate
+> > > parent was an assumption on the bus structure which maybe doesn't
+> > > always apply.
+> > >=20
+> > > diff --git a/drivers/of/device.c b/drivers/of/device.c
+> > > index a45261e21144..6951450bb8f3 100644
+> > > --- a/drivers/of/device.c
+> > > +++ b/drivers/of/device.c
+> > > @@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
+> > > device_node *parent, bool force_
+> > >         u64 mask;
+> > >=20
+> > >         np =3D dev->of_node;
+> > > -       if (!np)
+> > > -               np =3D parent;
+> > > +       if (np)
+> > > +               parent =3D of_get_dma_parent(np);
+> > > +       else
+> > > +               np =3D of_node_get(parent);
+> > >         if (!np)
+> > >                 return -ENODEV;
+> > >=20
+> > > -       ret =3D of_dma_get_range(np, &dma_addr, &paddr, &size);
+> > > +       ret =3D of_dma_get_range(parent, &dma_addr, &paddr, &size);
+> > > +       of_node_put(parent);
+> > >         if (ret < 0) {
+> > >                 /*
+> > >                  * For legacy reasons, we have to assume some devices=
+ need
+> >=20
+> > I spent some time thinking about your comments and researching. I came =
+to
+> > the
+> > realization that both these solutions break the usage in
+> > drivers/gpu/drm/sun4i/sun4i_backend.c:805. In that specific case both
+> > 'dev->of_node' and 'parent' exist yet the device receiving the configur=
+ation
+> > and 'parent' aren't related in any way.
+>=20
+> I knew there was some reason I didn't like those virtual DT nodes...
+>=20
+> That does seem to be the oddest case. Several of the others are just
+> non-DT child platform devices. Perhaps we need a "copy the DMA config
+> from another struct device (or parent struct device)" function to
+> avoid using a DT function on a non-DT device.
+>=20
+> > IOW we can't just use 'dev->of_node' as a starting point to walk upward=
+s the
+> > tree. We always have to respect whatever DT node the bus provided, and =
+start
+> > there. This clashes with the current solutions, as they are based on th=
+e
+> > fact
+> > that we can use dev->of_node when present.
+>=20
+> Yes, you are right.
+>=20
+> > My guess at this point, if we're forced to honor that behaviour, is tha=
+t we
+> > have to create a new API for the PCI use case. Something the likes of
+> > of_dma_configure_parent().
+>=20
+> I think of_dma_configure just has to work with the device_node of
+> either the device or the device parent and dev->of_node is never used
+> unless the caller sets it.
 
-2. Setting an SoC internal device with status = "disabled" makes
-   the kernel completely ignore it and it cannot be idled for PM
-   if left on from the bootloader
+Fine, so given the following two distinct uses of
+of_dma_configure(struct device *dev, struct device_node *np, bool ...):
 
-3. We avoid tens of lines of pointess repetive status = "okay"
-   tinkering for multiple devices per each board specic dts file
-   making them more readable and easier to maintain
+- dev->of_node =3D=3D np: Platform bus' typical use, we imperatively have t=
+o start
+  parsing dma-ranges from np's DMA parent, as the device we're configuring
+  might be a bus containing dma-ranges himself. For example a platform PCIe=
+ bus.
 
->  Is the plan for TI dts to have every (or almost) device tree node
-> enabled even if the device isn't usable on the board ?
+- dev->of_node !=3D np: Here the bus is pulling some trick. The device migh=
+t or
+  might not be represented in DT and np might be a bus or a device. But one
+  thing I realised is that device being configured never represents a memor=
+y
+  mapped bus. Assuming this assumption is acceptable, we can traverse the D=
+T
+  tree starting from np and get a correct configuration as long as dma-rang=
+es
+  not being present is interpreted as a 1:1 mapping.
 
-This has always been the case with omap3, 4, and 5. I don't
-know when folks started tagging am33xx SoC internal devices as
-disabled but that should have never been necessary.
+The resulting code, which I tested on an RPi4, Freescale Layerscape and pas=
+ses
+OF's unit tests, looks like this:
 
-Few years back I suggested some patches for status = "incomplete"
-to deal with cases where the device is there but not pinned
-out or otherwise not complete. But so far we've gotten away
-without that, so probably not needed.
+int of_dma_configure(struct device *dev, struct device_node *np, bool force=
+_dma)
+{
+	u64 dma_addr, paddr, size =3D 0;
+	struct device_node *parent;
+	u64 mask;
+	int ret;
 
-> > >  In this case it's FreeBSD being  because (I think) we have bad support
-> > > for the clocks for this module so we panic when we read from it as the
-> > > module isn't clocked. And since I find it wrong to have device enabled
-> > > while it isn't present I've sent this patch.
-> > 
-> > Thanks for clarifying what happens. OK, sounds like FreeBSD might be
-> > missing clock handling for some devices then.
-> > 
-> > What Linux does is probe the internal devices and then idle the
-> > unused ones as bootloaders often leave many things enabled. Otherwise
-> > the SoC power management won't work properly because device clocks
-> > will block deeper SoC idle states.
-> 
->  I can understand stand but then the bootload should be fixed to not
-> enable devices that aren't enabled in the DTS if it does that.
+	if (!np)
+		return -ENODEV;
 
-This is not doable as in many cases the bootloader cannot be
-updated as it can be signed for phones like n900 and droid4.
+	parent =3D of_node_get(np);
+	if (dev->of_node =3D=3D parent)
+		parent =3D of_get_next_dma_parent(np);
+
+	ret =3D of_dma_get_range(parent, &dma_addr, &paddr, &size);
+	of_node_put(parent);
+
+	[...]
+}
+
+Would that be acceptable?
 
 Regards,
+Nicolas
 
-Tony
+
+--=-RfW6mXnOY9RVgKryA6oE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2bexEACgkQlfZmHno8
+x/4bKAf+P/rR6qUNJNu0v4BM+BoxWKPz1uoSsKaXAf/WrbARW9vSD2R+aL23gwZX
+qtjjZK0SbTy8jfEBqgzDYFd6jmOCmPJdPU81w1mfJlNcj1asQnXMa5U6YKig1Vkw
+//dDLUR0eDFAvemXBO9u9xa0j4fWr8K5ewBogDsWR2VALGeJ+v8cX6X30KDKglH+
+k/NJ4JxfMHPfwygV1JQDX+0ypNdcgX9Gdy4DHoX2HXS0d5BSKntw2qB0P595VDOo
+a3J3M1wo4f6yyxHFmtm4SWvv6ipvHKx3R409xosuaUTjiu/8RaNWtF7aTNTAwy6I
+byrfMtJMaPVwSWxJNicSDC0wWwbuYA==
+=F4oK
+-----END PGP SIGNATURE-----
+
+--=-RfW6mXnOY9RVgKryA6oE--
