@@ -1,108 +1,135 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 1/2] dt-bindings: media: sun4i-csi: Drop the module clock
-Date: Mon, 7 Oct 2019 19:11:03 +0800
-Message-ID: <CAGb2v6776fWUuE1kOtnuFVA4faFZdtkZu02WwTqHyGAPVi+G-A@mail.gmail.com>
-References: <20191003154842.248763-1-mripard@kernel.org>
- <CAGb2v66az3uQnibudKai7ATfXh+w1Y+bJ=o258RVe9SCNRpGNQ@mail.gmail.com>
- <20191003163754.26ciq2ljcbuuvcrx@gilmour>
- <CAGb2v66WOZZj15GkARRzCTsSRhZi_6aEFK4w+O+aGmYwvVYGdw@mail.gmail.com>
- <20191007110943.lyz3nep7udr6weu3@gilmour>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v11 1/7] drm/sun4i: dsi: Fix TCON DRQ set bits
+Date: Mon, 7 Oct 2019 13:19:26 +0200
+Message-ID: <20191007111926.f6cw42nd5o4hyxst@gilmour>
+References: <20191003064527.15128-1-jagan@amarulasolutions.com>
+ <20191003064527.15128-2-jagan@amarulasolutions.com>
+ <20191003131737.bvpf5quds66qtsmy@gilmour>
+ <CAMty3ZA9tV-2nNa6qCBLUwoJpqEfQVZGk1E9-_wobfx5JDjvgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191007110943.lyz3nep7udr6weu3@gilmour>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="l3v63pemkf4ztzby"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZA9tV-2nNa6qCBLUwoJpqEfQVZGk1E9-_wobfx5JDjvgw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Michael Trimarchi <michael@amarulasolutions.com>, Icenowy Zheng <icenowy@aosc.io>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 7:09 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> Hi,
->
-> On Fri, Oct 04, 2019 at 02:33:41PM +0800, Chen-Yu Tsai wrote:
-> > On Fri, Oct 4, 2019 at 12:37 AM Maxime Ripard <mripard@kernel.org> wrote:
-> > > On Thu, Oct 03, 2019 at 11:51:05PM +0800, Chen-Yu Tsai wrote:
-> > > > On Thu, Oct 3, 2019 at 11:48 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > > >
-> > > > > It turns out that what was thought to be the module clock was actually the
-> > > > > clock meant to be used by the sensor, and isn't playing any role with the
-> > > > > CSI controller itself. Let's drop that clock from our binding.
-> > > > >
-> > > > > Fixes: c5e8f4ccd775 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> > > > > Reported-by: Chen-Yu Tsai <wens@csie.org>
-> > > > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > > > > ---
-> > > > >  .../devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 7 ++-----
-> > > > >  1 file changed, 2 insertions(+), 5 deletions(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> > > > > index 5dd1cf490cd9..d3e423fcb6c2 100644
-> > > > > --- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> > > > > @@ -27,14 +27,12 @@ properties:
-> > > > >    clocks:
-> > > > >      items:
-> > > > >        - description: The CSI interface clock
-> > > > > -      - description: The CSI module clock
-> > > > >        - description: The CSI ISP clock
-> > > > >        - description: The CSI DRAM clock
-> > > > >
-> > > > >    clock-names:
-> > > > >      items:
-> > > > >        - const: bus
-> > > > > -      - const: mod
-> > > > >        - const: isp
-> > > > >        - const: ram
-> > > > >
-> > > > > @@ -89,9 +87,8 @@ examples:
-> > > > >          compatible = "allwinner,sun7i-a20-csi0";
-> > > > >          reg = <0x01c09000 0x1000>;
-> > > > >          interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > -        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
-> > > > > -                 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-> > > > > -        clock-names = "bus", "mod", "isp", "ram";
-> > > > > +        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-> > > > > +        clock-names = "bus", "isp", "ram";
-> > > >
-> > > > I believe what we thought was the ISP clock is actually the module clock
-> > > > for the whole CSI subsystem. So we should still use the module clock entry,
-> > > > and remove the ISP entry.
-> > >
-> > > I'm really not sure it is. CSI1 on the A20 (possibly the A10 as well,
-> > > I haven't checked), and the one on the A13 don't have any ISP embedded
-> > > in the CSI controller.
-> > >
-> > > It makes some difference, because according to the BSP, you can see
-> > > that the ISP clock is taken for CSI0:
-> > > https://github.com/linux-sunxi/linux-sunxi/blob/sunxi-3.4/drivers/media/video/sun4i_csi/csi0/sun4i_drv_csi.c#L389
-> > >
-> > > While for CSI1, that block is commented out, and the ISP clock never
-> > > used:
-> > > https://github.com/linux-sunxi/linux-sunxi/blob/sunxi-3.4/drivers/media/video/sun4i_csi/csi1/sun4i_drv_csi.c#L396
-> > >
-> > > So I really believe that the ISP clock is here to feed the ISP block
-> > > within the CSI controller if there's any. But it's far from always the
-> > > case, as opposed to a module clock for the whole CSI controller that
-> > > would be here in both cases.
-> >
-> > I guess we should try to test this with CSI1 one, either on a Cubieboard
-> > or OlinuXino with a simple camera like the OV7670?
-> >
-> > Do you have any hardware on hand for this? I have the Cubieboard but I
-> > need to get some proper 2.0mm connector blocks.
->
-> I've tested it with the A13 before, and it doesn't need the ISP clock
 
-OK! That clears things up!
+--l3v63pemkf4ztzby
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-ChenYu
+On Thu, Oct 03, 2019 at 08:46:31PM +0530, Jagan Teki wrote:
+> On Thu, Oct 3, 2019 at 6:47 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Thu, Oct 03, 2019 at 12:15:21PM +0530, Jagan Teki wrote:
+> > > The LCD timing definitions between Linux DRM vs Allwinner are different,
+> > > below diagram shows this clear differences.
+> > >
+> > >            Active                 Front           Sync           Back
+> > >            Region                 Porch                          Porch
+> > > <-----------------------><----------------><--------------><-------------->
+> > >   //////////////////////|
+> > >  ////////////////////// |
+> > > //////////////////////  |..................                ................
+> > >                                            ________________
+> > > <----- [hv]display ----->
+> > > <------------- [hv]sync_start ------------>
+> > > <--------------------- [hv]sync_end ---------------------->
+> > > <-------------------------------- [hv]total ------------------------------>
+> > >
+> > > <----- lcd_[xy] -------->               <- lcd_[hv]spw ->
+> > >                                         <---------- lcd_[hv]bp --------->
+> > > <-------------------------------- lcd_[hv]t ------------------------------>
+> > >
+> > > The DSI driver misinterpreted the hbp term from the BSP code to refer
+> > > only to the backporch, when in fact it was backporch + sync. Thus the
+> > > driver incorrectly used the horizontal front porch plus sync in its
+> > > calculation of the DRQ set bit value, when it should not have included
+> > > the sync timing.
+> > >
+> > > Including additional sync timings leads to flip_done timed out as:
+> > >
+> > > WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> > > [CRTC:46:crtc-0] vblank wait timed out
+> > > Modules linked in:
+> > > CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00026-g01f0c75b902d-dirty #13
+> > > Hardware name: Allwinner sun8i Family
+> > > Workqueue: events deferred_probe_work_func
+> > > [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> > > [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+> > > [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> > > [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> > > [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> > > [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> > > [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> > > [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> > > [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> > > [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+> > > [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+> > > [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+> > > [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> > > [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> > > [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> > > [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> > > [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> > > [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> > > [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> > > [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> > > [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> > > [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> > > [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> > > [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> > > [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
+> > > [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
+> > > [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+> > > [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
+> > > [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
+> > > [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
+> > > [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
+> > > [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
+> > > [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
+> > > [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
+> > > [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> > > [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> > > [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> > > [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > > Exception stack(0xde539fb0 to 0xde539ff8)
+> > > 9fa0:                                     00000000 00000000 00000000 00000000
+> > > 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > > 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > ---[ end trace b57eb1e5c64c6b8b ]---
+> > > random: fast init done
+> > > [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+> > > [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+> > > [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
+> > >
+> > > With the terms(as described in above diagram) fixed, the panel
+> > > displays correctly without any timeouts.
+> > >
+> > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> >
+> > Applied, thanks
+>
+> Thanks, would you apply the similar change in 3/7?
+
+It doesn't apply anymore, please resend it
+
+Maxime
+
+--l3v63pemkf4ztzby
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsfPgAKCRDj7w1vZxhR
+xbLJAQCvdbhBpzJtPUQ2fKFCLm3Yzjh42c6MrZ4uaM7VZluu0QD/VofkuLH7dGUX
+3zlBLpwAdNW2DzVIHGrrXNlTbMKqjAA=
+=wAnr
+-----END PGP SIGNATURE-----
+
+--l3v63pemkf4ztzby--
