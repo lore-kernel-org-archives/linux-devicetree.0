@@ -1,35 +1,63 @@
-From: Hanna Hawa <hhhawa@amazon.com>
-Subject: [PATCH v6 2/3] of: EXPORT_SYMBOL_GPL of_find_next_cache_node
-Date: Mon, 7 Oct 2019 16:17:29 +0100
-Message-ID: <20191007151730.7705-3-hhhawa@amazon.com>
-References: <20191007151730.7705-1-hhhawa@amazon.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [RFCv1 1/5] arm64: dts: meson: Add missing 5V_EN gpio signal for
+ VCC5V regulator
+Date: Mon, 7 Oct 2019 20:58:47 +0530
+Message-ID: <CANAwSgQi=56RPQK-a7CM2W9dOt3mzDzdtfNABKmpdsYRN8vLwQ@mail.gmail.com>
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-2-linux.amoon@gmail.com>
+ <c99adf31-42df-c88e-40d4-1dc383c990b1@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007151730.7705-1-hhhawa@amazon.com>
+In-Reply-To: <c99adf31-42df-c88e-40d4-1dc383c990b1@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bp@alien8.de, mchehab@kernel.org, mark.rutland@arm.com, james.morse@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, daniel@iogearbox.net, paulmck@linux.ibm.com
-Cc: linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, hhhawa@amazon.com
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Make of_find_next_cache_node() available for modules.
+Hi Neil,
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
----
- drivers/of/base.c | 1 +
- 1 file changed, 1 insertion(+)
+On Mon, 7 Oct 2019 at 19:49, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi Anand,
+>
+> On 07/10/2019 15:16, Anand Moon wrote:
+> > As per schematics add missing 5V_EN gpio signal to enable
+> > VCC5V regulator node.
+> >
+> > Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
+> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > Cc: Neil Armstrong <narmstrong@baylibre.com>
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> > index 42f15405750c..a9a661258886 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> > @@ -94,6 +94,9 @@
+> >               regulator-max-microvolt = <5000000>;
+> >               regulator-always-on;
+> >               vin-supply = <&main_12v>;
+> > +             /* U12 NB679GD 5V_EN */
+> > +             gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
+> > +             enable-active-high;
+>
+> This GPIO is handled by the BL301 SCP firmware, I'm personally against
+> adding this to the DT since it's out of control of Linux or any OS.
+>
+> Neil
+>
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 20e0e7ee4edf..fe22c7428958 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2172,6 +2172,7 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
- 
- 	return NULL;
- }
-+EXPORT_SYMBOL_GPL(of_find_next_cache_node);
- 
- /**
-  * of_find_last_cache_level - Find the level at which the last cache is
--- 
-2.17.1
+Thanks for your input.
+
+> >       };
+> >
+> >       vcc_1v8: regulator-vcc_1v8 {
+> >
+>
+
+Best Regards
+-Anand
