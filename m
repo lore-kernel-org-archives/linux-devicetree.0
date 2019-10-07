@@ -1,48 +1,34 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: light: Add binding for ADUX1020
-Date: Mon, 7 Oct 2019 10:21:16 +0000
-Message-ID: <a60fb9ea8922c1eb532e0b7ef0a69abcc9306255.camel@analog.com>
-References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org>
-         <20191007101027.8383-2-manivannan.sadhasivam@linaro.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH 0/3] Fixes for dt-bindings verification
+Date: Mon, 7 Oct 2019 12:25:49 +0200
+Message-ID: <20191007102552.19808-1-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007101027.8383-2-manivannan.sadhasivam@linaro.org>
-Content-Language: en-US
-Content-ID: <EF8A9AF77AE07E4D978E832317E57F6C@namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "lars@metafoo.de" <lars@metafoo.de>, "jic23@kernel.org" <jic23@kernel.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "knaack.h@gmx.de" <knaack.h@gmx.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+To: Maxime Ripard <mripard@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Alexandru Ardelean <alexaundru.ardelean@analog.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-media@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTEwLTA3IGF0IDE1OjQwICswNTMwLCBNYW5pdmFubmFuIFNhZGhhc2l2YW0g
-d3JvdGU6DQo+IFtFeHRlcm5hbF0NCj4gDQo+IEFkZCBkZXZpY2V0cmVlIGJpbmRpbmcgZm9yIEFu
-YWxvZyBEZXZpY2VzIEFEVVgxMDIwIFBob3RvbWV0cmljDQo+IHNlbnNvci4NCj4gDQoNCkhleSwN
-Cg0KVGhhbmtzIGZvciB0aGUgcGF0Y2hlcy4NCg0KVGhpcyBkdC1iaW5kaW5nIGRvY3MgaXMgaW4g
-dGV4dCBmb3JtYXQuDQpkdC1iaW5kaW5nIGRvY3Mgbm93IG5lZWQgdG8gYmUgaW4gWUFNTCBmb3Jt
-YXQuDQoNCkFsc28sIHBhdGNoZXMgZm9yIGR0LWJpbmRpbmdzIGRvY3MgdXN1YWxseSBjb21lIGFm
-dGVyIHRoZSBkcml2ZXIgaXMgYWRkZWQuDQpTbywgdGhpcyBwYXRjaCBzaG91bGQgYmUgdGhlIHNl
-Y29uZCBpbiB0aGUgc2VyaWVzLCBub3QgdGhlIGZpcnN0Lg0KDQpBbGV4DQoNCj4gU2lnbmVkLW9m
-Zi1ieTogTWFuaXZhbm5hbiBTYWRoYXNpdmFtIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJv
-Lm9yZz4NCj4gLS0tDQo+ICAuLi4vYmluZGluZ3MvaWlvL2xpZ2h0L2FkdXgxMDIwLnR4dCAgICAg
-ICAgICAgfCAyMiArKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5z
-ZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9paW8vbGlnaHQvYWR1eDEwMjAudHh0DQo+IA0KPiBkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9saWdodC9hZHV4MTAyMC50eHQN
-Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2xpZ2h0L2FkdXgxMDIw
-LnR4dA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLmU4OTZk
-ZGEzMGUzNg0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9paW8vbGlnaHQvYWR1eDEwMjAudHh0DQo+IEBAIC0wLDAgKzEsMjIgQEANCj4g
-K0FuYWxvZyBEZXZpY2VzIEFEVVgxMDIwIFBob3RvbWV0cmljIHNlbnNvcg0KPiArDQo+ICtMaW5r
-IHRvIGRhdGFzaGVldDogDQo+IGh0dHBzOi8vd3d3LmFuYWxvZy5jb20vbWVkaWEvZW4vdGVjaG5p
-Y2FsLWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvQURVWDEwMjAucGRmDQo+ICsNCj4gK1JlcXVp
-cmVkIHByb3BlcnRpZXM6DQo+ICsNCj4gKyAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiYWRpLGFk
-dXgxMDIwIg0KPiArIC0gcmVnOiB0aGUgSTJDIGFkZHJlc3Mgb2YgdGhlIHNlbnNvcg0KPiArDQo+
-ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiArDQo+ICsgLSBpbnRlcnJ1cHRzOiBpbnRlcnJ1cHQg
-bWFwcGluZyBmb3IgSVJRIGFzIGRvY3VtZW50ZWQgaW4NCj4gKyAgIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pbnRlcnJ1cHRzLnR4dA0KPiAr
-DQo+ICtFeGFtcGxlOg0KPiArDQo+ICthZHV4MTAyMEA2NCB7DQo+ICsJY29tcGF0aWJsZSA9ICJh
-ZGksYWR1eDEwMjAiOw0KPiArCXJlZyA9IDwweDY0PjsNCj4gKwlpbnRlcnJ1cHQtcGFyZW50ID0g
-PCZtc21ncGlvPjsNCj4gKwlpbnRlcnJ1cHRzID0gPDI0IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0K
-PiArfTsNCg==
+Using "make dt_binding_check" on top v5.4-rc1 some errors are 
+reported in several schemas. Those 3 patches allow to execute
+"make dt_binding_check" without issues. Most probably those patches
+have alread been sent.
+
+regards
+Alexandre
+
+
+Alexandre Torgue (3):
+  dt-bindings: media: Fix id path for sun4i-a10-csi
+  dt-bindings: net: adi: Fix yaml verification issue
+  dt-bindings: regulator: Fix yaml verification for fixed-regulator
+    schema
+
+ .../bindings/media/allwinner,sun4i-a10-csi.yaml        |  2 +-
+ Documentation/devicetree/bindings/net/adi,adin.yaml    |  6 ++++++
+ .../devicetree/bindings/regulator/fixed-regulator.yaml | 10 +++++++---
+ 3 files changed, 14 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
