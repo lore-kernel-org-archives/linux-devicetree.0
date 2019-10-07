@@ -1,66 +1,99 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] dt-bindings: nvmem: add binding for Rockchip OTP controller
-Date: Mon, 07 Oct 2019 15:26:07 +0200
-Message-ID: <2431603.e1tpym8sWD@diego>
-References: <20190925184957.14338-1-heiko@sntech.de>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v3 2/8] iio: adc: max1027: Make it optional to use interrupts
+Date: Mon,  7 Oct 2019 15:26:51 +0200
+Message-ID: <20191007132657.4190-3-miquel.raynal@bootlin.com>
+References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925184957.14338-1-heiko@sntech.de>
+In-Reply-To: <20191007132657.4190-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+The chip has a 'start conversion' and a 'end of conversion' pair of
+pins. They can be used but this is absolutely not mandatory as regular
+polling of the value is totally fine with the current internal
+clocking setup. Turn the interrupts optional and do not error out if
+they are not inquired in the device tree. This has the effect to
+prevent triggered buffers use though.
 
-Am Mittwoch, 25. September 2019, 20:49:56 CEST schrieb Heiko Stuebner:
-> Newer Rockchip SoCs use a different IP for accessing special one-
-> time-programmable memory, so add a binding for these controllers.
-> 
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/iio/adc/max1027.c | 57 +++++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 26 deletions(-)
 
-Srinivas seems to wait for an Ack on the DT-Patch - see comment on patch2.
-As this all looks pretty standard, any objections to the binding?
-
-Thanks
-Heiko
-
-> ---
->  .../bindings/nvmem/rockchip-otp.txt           | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
-> new file mode 100644
-> index 000000000000..40f649f7c2e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
-> @@ -0,0 +1,25 @@
-> +Rockchip internal OTP (One Time Programmable) memory device tree bindings
-> +
-> +Required properties:
-> +- compatible: Should be one of the following.
-> +  - "rockchip,px30-otp" - for PX30 SoCs.
-> +  - "rockchip,rk3308-otp" - for RK3308 SoCs.
-> +- reg: Should contain the registers location and size
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +- clock-names: Should be "otp", "apb_pclk" and "phy".
-> +- resets: Must contain an entry for each entry in reset-names.
-> +  See ../../reset/reset.txt for details.
-> +- reset-names: Should be "phy".
-> +
-> +See nvmem.txt for more information.
-> +
-> +Example:
-> +	otp: otp@ff290000 {
-> +		compatible = "rockchip,px30-otp";
-> +		reg = <0x0 0xff290000 0x0 0x4000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		clocks = <&cru SCLK_OTP_USR>, <&cru PCLK_OTP_NS>,
-> +			 <&cru PCLK_OTP_PHY>;
-> +		clock-names = "otp", "apb_pclk", "phy";
-> +	};
-> 
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index 6cdfe9ef73fc..823223b77a70 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -430,35 +430,40 @@ static int max1027_probe(struct spi_device *spi)
+ 		return -ENOMEM;
+ 	}
+ 
+-	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+-					&iio_pollfunc_store_time,
+-					&max1027_trigger_handler, NULL);
+-	if (ret < 0) {
+-		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+-		return ret;
+-	}
++	if (spi->irq) {
++		ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
++						      &iio_pollfunc_store_time,
++						      &max1027_trigger_handler,
++						      NULL);
++		if (ret < 0) {
++			dev_err(&indio_dev->dev, "Failed to setup buffer\n");
++			return ret;
++		}
+ 
+-	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
+-							indio_dev->name);
+-	if (st->trig == NULL) {
+-		ret = -ENOMEM;
+-		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
+-		return ret;
+-	}
++		st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
++						  indio_dev->name);
++		if (st->trig == NULL) {
++			ret = -ENOMEM;
++			dev_err(&indio_dev->dev,
++				"Failed to allocate iio trigger\n");
++			return ret;
++		}
+ 
+-	st->trig->ops = &max1027_trigger_ops;
+-	st->trig->dev.parent = &spi->dev;
+-	iio_trigger_set_drvdata(st->trig, indio_dev);
+-	iio_trigger_register(st->trig);
++		st->trig->ops = &max1027_trigger_ops;
++		st->trig->dev.parent = &spi->dev;
++		iio_trigger_set_drvdata(st->trig, indio_dev);
++		iio_trigger_register(st->trig);
+ 
+-	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
+-					iio_trigger_generic_data_rdy_poll,
+-					NULL,
+-					IRQF_TRIGGER_FALLING,
+-					spi->dev.driver->name, st->trig);
+-	if (ret < 0) {
+-		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+-		return ret;
++		ret = devm_request_threaded_irq(&spi->dev, spi->irq,
++						iio_trigger_generic_data_rdy_poll,
++						NULL,
++						IRQF_TRIGGER_FALLING,
++						spi->dev.driver->name,
++						st->trig);
++		if (ret < 0) {
++			dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
++			return ret;
++		}
+ 	}
+ 
+ 	/* Disable averaging */
+-- 
+2.20.1
