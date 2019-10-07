@@ -1,27 +1,17 @@
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFCv1 3/5] arm64: dts: meson: Add missing regulator linked to
- VDDAO_3V3 regulator to FLASH_VDD
-Date: Mon, 7 Oct 2019 21:23:53 +0530
-Message-ID: <CANAwSgQjKRAKV2wycZ7QFq1CS5jr_ABgvFb+pGMHWTxgFR8wPQ@mail.gmail.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com>
- <20191007131649.1768-4-linux.amoon@gmail.com>
- <b73a1302-90ae-f1db-ff43-84d56ca4ba39@baylibre.com>
+Subject: Re: [RFCv1 4/5] arm64: dts: meson: Add missing regulator linked to
+ VCCV5 regulator to VDDIO_C/TF_IO
+Date: Mon, 7 Oct 2019 21:24:41 +0530
+Message-ID: <CANAwSgQBMzkdnuHc8_hFx0+Es2PWmCwgeqykCTieZ3BtTK1W7A@mail.gmail.com>
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-5-linux.amoon@gmail.com>
+ <a6daf5e5-fadf-ca72-fc7b-1789abaab605@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b73a1302-90ae-f1db-ff43-84d56ca4ba39@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a6daf5e5-fadf-ca72-fc7b-1789abaab605@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-amlogic@lists.infradead.org, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Neil,
@@ -29,8 +19,8 @@ Hi Neil,
 On Mon, 7 Oct 2019 at 19:51, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
 > On 07/10/2019 15:16, Anand Moon wrote:
-> > As per schematics add missing VDDAO_3V3 power supply to FLASH_VDD
-> > regulator. Also add TFLASH_VDD_EN signal name to gpio pin.
+> > As per schematics add missing VCCV5 power supply to VDDIO_C/TF_IO
+> > regulator. Also add TF_3V3N_1V8_EN signal name to gpio pin.
 > >
 > > Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
 > > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
@@ -42,22 +32,24 @@ On Mon, 7 Oct 2019 at 19:51, Neil Armstrong <narmstrong@baylibre.com> wrote:
 > >  1 file changed, 3 insertions(+)
 > >
 > > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > index 66262a6ab3fe..6bd23a1e7e1d 100644
+> > index 6bd23a1e7e1d..5daf176452f7 100644
 > > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
 > > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > @@ -51,9 +51,12 @@
-> >               regulator-min-microvolt = <3300000>;
+> > @@ -66,11 +66,14 @@
+> >               regulator-min-microvolt = <1800000>;
 > >               regulator-max-microvolt = <3300000>;
 > >
-> > +             /* TFLASH_VDD_EN */
-> >               gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
-> >               enable-active-high;
-> >               regulator-always-on;
-> > +             /* U18 FC8731-09VF05NRR */
-> > +             vin-supply = <&vddao_3v3>;
+> > +             /* TF_3V3N_1V8_EN */
+> >               gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
+> >               gpios-states = <0>;
+> >
+> >               states = <3300000 0>,
+> >                        <1800000 1>;
+> > +             /* U16 RT9179GB */
+> > +             vin-supply = <&vcc_5v>;
 > >       };
 > >
-> >       tf_io: gpio-regulator-tf_io {
+> >       flash_1v8: regulator-flash_1v8 {
 > >
 >
 > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
