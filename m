@@ -1,32 +1,55 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/7] dt-bindings: PCI: rcar: Add device tree support for r8a774b1
-Date: Mon, 7 Oct 2019 13:29:25 +0200
-Message-ID: <CAMuHMdX4P_5Bu2dO_kVtFFyOOTycm2jFqk8qNAzH3XEeePfG0Q@mail.gmail.com>
-References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH] arm64: dts: rockchip: Update nanopi4 phy reset properties
+Date: Mon,  7 Oct 2019 12:33:26 +0100
+Message-ID: <4d16c24ae3651a2119cf5bb1213f46a9fce4b39a.1570444773.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 10:35 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Add PCIe support for the RZ/G2N (a.k.a. R8A774B1).
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Use the now-preferred generic phy reset properties instead of the
+dwmac-specific ones.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+index dd16c80d923e..170f7ed6d773 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+@@ -152,9 +152,6 @@
+ 	phy-handle = <&rtl8211e>;
+ 	phy-mode = "rgmii";
+ 	phy-supply = <&vcc3v3_s3>;
+-	snps,reset-active-low;
+-	snps,reset-delays-us = <0 10000 30000>;
+-	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
+ 	tx_delay = <0x28>;
+ 	rx_delay = <0x11>;
+ 	status = "okay";
+@@ -168,6 +165,9 @@
+ 			reg = <1>;
+ 			interrupt-parent = <&gpio3>;
+ 			interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
++			reset-assert-us = <10000>;
++			reset-deassert-us = <30000>;
++			reset-gpios = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
+ };
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.21.0.dirty
