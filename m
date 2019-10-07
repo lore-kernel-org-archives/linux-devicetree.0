@@ -1,49 +1,51 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 3/4] dt-bindings: rtc: s3c: Include generic dt-schema
- bindings
-Date: Mon, 7 Oct 2019 15:17:56 +0200
-Message-ID: <20191007131756.GK4254@piout.net>
-References: <20191002160744.11307-1-krzk@kernel.org>
- <20191002160744.11307-3-krzk@kernel.org>
+From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v7 2/6] ad5820: DT new optional field enable-gpios
+Date: Mon,  7 Oct 2019 15:20:41 +0200
+Message-ID: <20191007132050.27298-4-ribalda@kernel.org>
+References: <20191007132050.27298-1-ribalda@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191002160744.11307-3-krzk@kernel.org>
+In-Reply-To: <20191007132050.27298-1-ribalda@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ricardo Ribalda Delgado <ribalda@kernel.org>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2019 18:07:43+0200, Krzysztof Kozlowski wrote:
-> Include the generic rtc.yaml bindings in Samsung S3C RTC bindings.  This
-> brings the requirement of proper node names and adds parsing of
-> additional properties.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Document new enable-gpio field. It can be used to disable the part
+without turning down its regulator.
 
-> ---
->  Documentation/devicetree/bindings/rtc/s3c-rtc.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> index 4d91cdc9b998..76bbf8b7555b 100644
-> --- a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
-> @@ -48,6 +48,7 @@ properties:
->      maxItems: 2
->  
->  allOf:
-> +  - $ref: rtc.yaml#
->    - if:
->        properties:
->          compatible:
-> -- 
-> 2.17.1
-> 
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/media/i2c/ad5820.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+index 5940ca11c021..db596e8eb0ba 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+@@ -8,6 +8,11 @@ Required Properties:
+ 
+   - VANA-supply: supply of voltage for VANA pin
+ 
++Optional properties:
++
++   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
++active low, a high level on the pin enables the device.
++
+ Example:
+ 
+        ad5820: coil@c {
+@@ -15,5 +20,6 @@ Example:
+                reg = <0x0c>;
+ 
+                VANA-supply = <&vaux4>;
++               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+        };
+ 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.23.0
