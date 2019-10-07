@@ -1,69 +1,44 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFCv1 2/5] arm64: dts: meson: Add missing pwm control gpio
- signal for pwm-regulator
-Date: Mon, 7 Oct 2019 21:00:44 +0530
-Message-ID: <CANAwSgS=r_Rz0fc6GDsD7Rk6udq3LcYtB-Ag_=kjVa-EApchJQ@mail.gmail.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-3-linux.amoon@gmail.com>
- <8a74834e-5cfa-3f3b-9ba6-e88e265b67a0@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/2] Add support for ADUX1020 sensor
+Date: Mon,  7 Oct 2019 21:09:15 +0530
+Message-ID: <20191007153917.13611-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8a74834e-5cfa-3f3b-9ba6-e88e265b67a0@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: ars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org
+Cc: alexandru.Ardelean@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+Hello,
 
-On Mon, 7 Oct 2019 at 19:50, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 07/10/2019 15:16, Anand Moon wrote:
-> > As per schematics add missing VDDCPUA_PWM and VDDCPUB_PWM
-> > gpio signal use to enable/disable the pwm regulator for DVFS.
-> >
-> > Fixes: d14734a04a8a (arm64: dts: meson-g12b-odroid-n2: enable DVFS)
-> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > index a9a661258886..66262a6ab3fe 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > @@ -135,6 +135,8 @@
-> >
-> >               regulator-boot-on;
-> >               regulator-always-on;
-> > +             /* VDDCPUA_PWM */
-> > +             enable-gpios = <&gpio GPIOE_1 GPIO_ACTIVE_HIGH>;
-> >       };
-> >
-> >       vddcpu_b: regulator-vddcpu-b {
-> > @@ -154,6 +156,8 @@
-> >
-> >               regulator-boot-on;
-> >               regulator-always-on;
-> > +             /* VDDCPUB_PWM */
-> > +             enable-gpios = <&gpio GPIOE_2 GPIO_ACTIVE_HIGH>;
-> >       };
-> >
-> >       hub_5v: regulator-hub_5v {
-> >
->
-> Same as 5V_EN, This GPIO is handled by the BL301 SCP firmware, I'm personally against
-> adding this to the DT since it's out of control of Linux or any OS.
->
-> This GPIO id controlles by the PSCI call to SCP to enable/disable
-> the CPU clusters.
->
-> Neil
+This patchset adds initial IIO driver support for ADUX1020 Photometric
+sensor from Analog Devices. This sensor is usable for multiple optical
+measurement applications, including gesture control and proximity sensing.
 
-Thanks for your input's.
+This initial driver includes support for only proximity mode with event
+based interrupt. The driver validation has been performed using Shiratech
+LTE mezzanine [1] connected to 96Boards Dragonboard410c [2].
 
-Best Regards
--Anand
+Thanks,
+Mani
+
+[1] https://www.96boards.org/product/shiratech-lte/
+[2] https://www.96boards.org/product/dragonboard410c/
+
+Changes in v2:
+
+* Converted the devicetree binding to YAML
+
+Manivannan Sadhasivam (2):
+  dt-bindings: iio: light: Add binding for ADUX1020
+  iio: light: Add support for ADUX1020 sensor
+
+ .../bindings/iio/light/adux1020.yaml          |  47 ++
+ drivers/iio/light/Kconfig                     |  11 +
+ drivers/iio/light/Makefile                    |   1 +
+ drivers/iio/light/adux1020.c                  | 783 ++++++++++++++++++
+ 4 files changed, 842 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/adux1020.yaml
+ create mode 100644 drivers/iio/light/adux1020.c
+
+-- 
+2.17.1
