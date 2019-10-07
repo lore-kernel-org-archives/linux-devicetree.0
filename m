@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 10/21] media: ti-vpe: vpe: Make sure YUYV is set as default format
-Date: Mon, 7 Oct 2019 10:09:58 -0500
-Message-ID: <20191007151009.22095-11-bparrot@ti.com>
+Subject: [Patch v3 03/21] media: ti-vpe: vpe: Add missing null pointer checks
+Date: Mon, 7 Oct 2019 10:09:51 -0500
+Message-ID: <20191007151009.22095-4-bparrot@ti.com>
 References: <20191007151009.22095-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,44 +12,58 @@ To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-v4l2-compliance fails with this message:
-
-   fail: v4l2-test-formats.cpp(672): \
-	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
-   fail: v4l2-test-formats.cpp(672): \
-	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
-	...
-   test VIDIOC_TRY_FMT: FAIL
-
-Fixes: 94ed726e8e01 ("media: ti-vpe: Add support for NV21 format")
-
-The default pixel format was setup as pointing to a specific offset in
-the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
-entry. This became false after the addition on the NV21 format (see
-above commid-id)
-
-So instead of hard-coding an offset which might change over time we need
-to use a lookup helper instead so we know the default will always be what
-we intended.
+A few NULL pointer checks were missing.
+Add check with appropriate return code.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/ti-vpe/vpe.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index d3f1ae8b72fa..7aa83026fb6c 100644
+index 5ba72445584d..56f60dbea15c 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -2321,7 +2321,7 @@ static int vpe_open(struct file *file)
- 	v4l2_ctrl_handler_setup(hdl);
+@@ -1537,6 +1537,8 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ 		return -EINVAL;
  
- 	s_q_data = &ctx->q_data[Q_DATA_SRC];
--	s_q_data->fmt = &vpe_formats[2];
-+	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	s_q_data->width = 1920;
- 	s_q_data->height = 1080;
- 	s_q_data->nplanes = 1;
+ 	q_data = get_q_data(ctx, f->type);
++	if (!q_data)
++		return -EINVAL;
+ 
+ 	pix->width = q_data->width;
+ 	pix->height = q_data->height;
+@@ -2001,6 +2003,8 @@ static int vpe_queue_setup(struct vb2_queue *vq,
+ 	struct vpe_q_data *q_data;
+ 
+ 	q_data = get_q_data(ctx, vq->type);
++	if (!q_data)
++		return -EINVAL;
+ 
+ 	*nplanes = q_data->nplanes;
+ 
+@@ -2025,6 +2029,8 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
+ 	vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
+ 
+ 	q_data = get_q_data(ctx, vb->vb2_queue->type);
++	if (!q_data)
++		return -EINVAL;
+ 	num_planes = q_data->nplanes;
+ 
+ 	if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+@@ -2481,7 +2487,12 @@ static int vpe_probe(struct platform_device *pdev)
+ 	mutex_init(&dev->dev_mutex);
+ 
+ 	dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-			"vpe_top");
++						"vpe_top");
++	if (!dev->res) {
++		dev_err(&pdev->dev, "missing 'vpe_top' resources data\n");
++		return -ENODEV;
++	}
++
+ 	/*
+ 	 * HACK: we get resource info from device tree in the form of a list of
+ 	 * VPE sub blocks, the driver currently uses only the base of vpe_top
 -- 
 2.17.1
