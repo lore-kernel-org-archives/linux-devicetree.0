@@ -1,63 +1,63 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch v2 16/21] media: ti-vpe: vpe: use standard struct instead
- of duplicating fields
-Date: Mon, 7 Oct 2019 07:45:29 -0500
-Message-ID: <20191007124529.nnrzx2btnraimivq@ti.com>
-References: <20191004162952.4963-1-bparrot@ti.com>
- <20191004162952.4963-17-bparrot@ti.com>
- <cb01914f-3bca-2558-2b07-86ddbfc9626e@xs4all.nl>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
+ coherent
+Date: Mon, 7 Oct 2019 20:42:19 +0800
+Message-ID: <20191007124217.GO7150@dragon>
+References: <20190922102341.GO25745@shell.armlinux.org.uk>
+ <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <cb01914f-3bca-2558-2b07-86ddbfc9626e@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dann frazier <dann.frazier@canonical.com>, Will Deacon <will.deacon@arm.com>, Li Yang <leoyang.li@nxp.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Mon [2019-Oct-07 09:57:26 +0200]:
-> On 10/4/19 6:29 PM, Benoit Parrot wrote:
-> > For each queue we need to maintain resolutions, pixel format,
-> > bytesperline, sizeimage, colorspace, etc.
-> > 
-> > Instead of manually adding more entries in the vpe_q_data struct, it is
-> > better to just add a "struct v4l2_format" member and use that to store
-> > all needed information.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/platform/ti-vpe/vpe.c | 185 ++++++++++++++--------------
-> >  1 file changed, 91 insertions(+), 94 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-> > index d7f8eb901475..5b1e9908fff2 100644
-> > --- a/drivers/media/platform/ti-vpe/vpe.c
-> > +++ b/drivers/media/platform/ti-vpe/vpe.c
-> > @@ -319,14 +319,9 @@ static struct vpe_fmt vpe_formats[] = {
-> >   * there is one source queue and one destination queue for each m2m context.
-> >   */
-> >  struct vpe_q_data {
-> > -	unsigned int		width;				/* frame width */
-> > -	unsigned int		height;				/* frame height */
-> > -	unsigned int		nplanes;			/* Current number of planes */
-> > -	unsigned int		bytesperline[VPE_MAX_PLANES];	/* bytes per line in memory */
-> > -	enum v4l2_colorspace	colorspace;
-> > -	enum v4l2_field		field;				/* supported field value */
-> > +	/* current v4l2 format info */
-> > +	struct v4l2_format	format;
+On Sun, Sep 22, 2019 at 11:27:03AM +0100, Russell King wrote:
+> The LX2160A esdhc controllers are setup by the driver to be DMA
+> coherent, but without marking them as such in DT, Linux thinks they
+> are not.  This can lead to random sporadic DMA errors, even to the
+> extent of preventing boot, such as:
 > 
-> Wouldn't it make more sense to use struct v4l2_pix_format_mplane? That avoid having to
-> use the '.fmt.pix_mp' sequence every time you need to access it.
+> mmc0: ADMA error
+> mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
+> mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
+> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
+> mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
+> mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
+> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
+> mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
+> mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
+> mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
+> mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
+> mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
+> mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
+> mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
+> mmc0: sdhci: Host ctl2: 0x00000000
+> mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
+> mmc0: sdhci: ============================================
+> mmc0: error -5 whilst initialising SD card
+> 
+> These are caused by the device's descriptor fetch hitting speculatively
+> loaded CPU cache lines that the CPU does not see through the normal,
+> non-cacheable DMA coherent mapping that it uses for non-coherent
+> devices.
+> 
+> DT and the device must agree wrt whether the device is DMA coherent or
+> not.
+> 
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-Maybe, I chose "struct v4l2_format" because that is the parameter type used
-in all related IOCTL. But I guess I can change it, if it make the code
-cleaner :).
-
-Benoit
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
+Applied, thanks.
