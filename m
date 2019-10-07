@@ -1,120 +1,72 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
- compatible for HiSi
-Date: Mon, 7 Oct 2019 12:06:53 -0700
-Message-ID: <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
-References: <20191007175553.66940-1-john.stultz@linaro.org>
- <20191007175553.66940-5-john.stultz@linaro.org> <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+Date: Mon, 7 Oct 2019 21:53:20 +0200
+Message-ID: <CAFBinCAEzBk7tT5M-F3H4kLnKURRkK2oSSAmKkrjAn7_wdAROA@mail.gmail.com>
+References: <34336c9a-8e87-8f84-2ae8-032b7967928f@linux.intel.com>
+ <CAFBinCDfM3ssHisMBKXZUFkfoAFw51TaUuKt_aBgtD-mN+9fhg@mail.gmail.com>
+ <657d796d-cb1b-472d-fe67-f7b9bf12fd79@linux.intel.com> <CAFBinCA5sRp1-siqZqJzFL2nuD3BtjrbD65QtpWbnTgtPNXY1A@mail.gmail.com>
+ <cebd8f1d-90ab-87e7-9a34-f5c760688ce5@linux.intel.com> <CAFBinCCXo50OX6=8Fz-=nRKuELU_fMOCX=z6iwAcw0_Tfgn1ug@mail.gmail.com>
+ <da347f1c-864c-7d68-33c8-045e46651f45@linux.intel.com> <CAFBinCDhLYmiORvHdZJAN5cuUjc6eWJK5n9Qg26B0dEhhqUqVQ@mail.gmail.com>
+ <389f360a-a993-b9a8-4b50-ad87bcfec767@linux.intel.com> <CAFBinCBwrTajCrSf-UqZY5gHqUSn0UTmbc_TLPNVZrPyY5jpOA@mail.gmail.com>
+ <20191003141955.zi5wqjqf4wa7lhv7@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+In-Reply-To: <20191003141955.zi5wqjqf4wa7lhv7@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Philipp Zabel <pza@pengutronix.de>
+Cc: Dilip Kota <eswara.kota@linux.intel.com>, "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
+Hi Philipp,
+
+On Thu, Oct 3, 2019 at 4:19 PM Philipp Zabel <pza@pengutronix.de> wrote:
+[...]
+> > because the register layout was greatly simplified for the newer SoCs
+> > (for which there is reset-intel) compared to the older ones
+> > (reset-lantiq).
+> > Dilip's suggestion (in my own words) is that you take his new
+> > reset-intel driver, then we will work on porting reset-lantiq over to
+> > that so in the end we can drop the reset-lantiq driver.
 >
-> On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > Add necessary compatible flag for HiSi's DWC3 so
-> > dwc3-of-simple will probe.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Felipe Balbi <balbi@kernel.org>
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Yu Chen <chenyu56@huawei.com>
-> > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Cc: linux-usb@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
-> > ---
-> >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> Just to be sure, you are suggesting to add support for the current
+> lantiq,reset binding to the reset-intel driver at a later point? I
+> see no reason not to do that, but I'm also not quite sure what the
+> benefit will be over just keeping reset-lantiq as is?
+according to Chuan and Dilip the current reset-lantiq implementation
+is wrong [0].
+my understanding is that the Lantiq and Intel LGM reset controllers
+are identical except:
+- the Lantiq variant uses a weird register layout (reset and status
+registers not at consecutive offsets)
+- the bits of the reset and status registers sometimes don't match on
+the Lantiq variant
+- the Intel variant has a dedicated registers area for the reset
+controller registers, while the Lantiq variant mixes them with various
+other functionality (for example: USB2 PHYs)
+
+> > This approach means more work for me (as I am probably the one who
+> > then has to do the work to port reset-lantiq over to reset-intel).
 >
-> Can you make this a schema.
+> More work than what alternative?
+compared to "fixing" the existing reset-lantiq driver (reset callback)
+and then (instead of adding a new driver) integrating Intel LGM
+support into reset-lantiq
 
-Sorry, I'm not sure exactly what you're asking. I'm guessing from
-grepping around you want the bindings in yaml instead (I see a few
-examples)? Is there some pointer to documentation? The
-Documentation/devicetree/bindings/writing-bindings.txt file doesn't
-seem to say much on it.
-
-> > diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> > new file mode 100644
-> > index 000000000000..3a3e5c320f2a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> > @@ -0,0 +1,52 @@
-> > +HiSi SuperSpeed DWC3 USB SoC controller
-> > +
-> > +Required properties:
-> > +- compatible:          should contain "hisilicon,hi3660-dwc3" for HiSi SoC
-> > +- clocks:              A list of phandle + clock-specifier pairs for the
-> > +                       clocks listed in clock-names
-> > +- clock-names:         Should contain the following:
-> > +  "clk_abb_usb"                USB reference clk
-> > +  "aclk_usb3otg"       USB3 OTG aclk
-> > +
-> > +- assigned-clocks:     Should be:
-> > +                               HI3660_ACLK_GATE_USB3OTG
-> > +- assigned-clock-rates: Should be:
-> > +                               229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
-> > +
-> > +Optional properties:
-> > +- resets:              Phandle to reset control that resets core and wrapper.
+> > I'm happy to do that work if you think that it's worth following this
+> > approach.  So I want your opinion on this before I spend any effort on
+> > porting reset-lantiq over to reset-intel.
 >
-> Looks like 4 resets though.
+> Reset drivers are typically so simple, I'm not quite sure whether it is
+> worth to integrate multiple drivers if it complicates matters too much.
+> In this case though I expect it would just be adding support for a
+> custom .of_xlate and lantiq specific register property parsing?
+yes, that's how I understand the Lantiq and Intel reset controllers:
+- reset/status/assert/deassert callbacks would be shared across all variants
+- register parsing and of_xlate are SoC specific
 
-Good point. I'll fix that up.
 
-> > +
-> > +Required child node:
-> > +A child node must exist to represent the core DWC3 IP block. The name of
-> > +the node is not important. The content of the node is defined in dwc3.txt.
-> > +
-> > +Example device nodes:
-> > +
-> > +       usb3: hisi_dwc3 {
-> > +               compatible = "hisilicon,hi3660-dwc3";
-> > +               #address-cells = <2>;
-> > +               #size-cells = <2>;
-> > +               ranges;
-> > +
-> > +               clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-> > +                        <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> > +               clock-names = "clk_abb_usb", "aclk_usb3otg";
-> > +
-> > +               assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> > +               assigned-clock-rates = <229 000 000>;
-> > +               resets = <&crg_rst 0x90 8>,
-> > +                        <&crg_rst 0x90 7>,
-> > +                        <&crg_rst 0x90 6>,
-> > +                        <&crg_rst 0x90 5>;
-> > +
-> > +               dwc3: dwc3@ff100000 {
->
-> If it's only clocks and resets for the wrapper node, just make this
-> all one node.
+Martin
 
-Just to make sure I'm following, you're suggesting I put all the
-clocks/resets in the dwc3 node (renamed to usb for the node name) and
-not add the wrapper?
 
-I'll have to see if that's possible. The generic dwc3 binding wants 3
-clocks, but I only have two in the code I've worked with (similarly it
-seems to only want two resets, not 4) so I'll have to see if I can
-figure out how to adapt that.
-
-If that approach is preferred, do I also no longer need a separate
-binding document/schema?
-
-thanks
--john
+[0] https://www.spinics.net/lists/devicetree/msg305951.html
