@@ -1,7 +1,8 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 4/7] pinctrl: aspeed-g6: Fix I3C3/I3C4 pinmux configuration
-Date: Tue,  8 Oct 2019 15:11:50 +1030
-Message-ID: <20191008044153.12734-5-andrew@aj.id.au>
+Subject: [PATCH 5/7] pinctrl: aspeed-g6: Make SIG_DESC_CLEAR() behave
+ intuitively
+Date: Tue,  8 Oct 2019 15:11:51 +1030
+Message-ID: <20191008044153.12734-6-andrew@aj.id.au>
 References: <20191008044153.12734-1-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,71 +19,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-gpio@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johnny Huang <johnny_huang@aspeedtech.com>, linux-aspeed@lists.ozlabs.org, linus.walleij@linaro.org, ryanchen.aspeed@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org, linus.walleij@linaro.org, ryanchen.aspeed@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Johnny Huang <johnny_huang@aspeedtech.com>
+Signal descriptors can represent multi-bit bitfields and so have
+explicit "enable" and "disable" states. However many descriptor
+instances only describe a single bit, and so the SIG_DESC_SET() macro is
+provides an abstraction for the single-bit cases: Its expansion
+configures the "enable" state to set the bit and "disable" to clear.
 
-The documentation to configure I3C3/FSI1 and I3C4/FSI2 was initially
-unclear.
+SIG_DESC_CLEAR() was introduced to provide a similar single-bit
+abstraction for for descriptors to clear the bit of interest. However
+its behaviour was defined as the literal inverse of SIG_DESC_SET() - the
+impact is the bit of interest is set in the disable path. This behaviour
+isn't intuitive and doesn't align with how we want to use the macro in
+practice, so make it clear the bit for both the enable and disable
+paths.
 
-Fixes: 58dc52ad00a0 ("pinctrl: aspeed: Add AST2600 pinmux support")
-Signed-off-by: Johnny Huang <johnny_huang@aspeedtech.com>
-[AJ: Tweak commit message, resolve rebase conflicts]
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 24 ++++++++--------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ drivers/pinctrl/aspeed/pinmux-aspeed.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index 9079655cc818..68b066594461 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -1513,18 +1513,14 @@ FUNC_GROUP_DECL(VB, Y1, Y2, Y3, Y4);
-  * following 4 pins
+diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+index a2c0d52e4f7b..d5202241f411 100644
+--- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
++++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+@@ -508,7 +508,7 @@ struct aspeed_pin_desc {
+  * @idx: The bit index in the register
   */
- #define AF25 244
--SIG_EXPR_LIST_DECL_SEMG(AF25, I3C3SCL, I3C3, I3C3, SIG_DESC_SET(SCU438, 20),
--			SIG_DESC_SET(SCU4D8, 20));
--SIG_EXPR_LIST_DECL_SESG(AF25, FSI1CLK, FSI1, SIG_DESC_CLEAR(SCU438, 20),
--			SIG_DESC_SET(SCU4D8, 20));
-+SIG_EXPR_LIST_DECL_SEMG(AF25, I3C3SCL, I3C3, I3C3, SIG_DESC_SET(SCU438, 20));
-+SIG_EXPR_LIST_DECL_SESG(AF25, FSI1CLK, FSI1, SIG_DESC_SET(SCU4D8, 20));
- PIN_DECL_(AF25, SIG_EXPR_LIST_PTR(AF25, I3C3SCL),
- 	  SIG_EXPR_LIST_PTR(AF25, FSI1CLK));
+ #define SIG_DESC_SET(reg, idx) SIG_DESC_IP_BIT(ASPEED_IP_SCU, reg, idx, 1)
+-#define SIG_DESC_CLEAR(reg, idx) SIG_DESC_IP_BIT(ASPEED_IP_SCU, reg, idx, 0)
++#define SIG_DESC_CLEAR(reg, idx) { ASPEED_IP_SCU, reg, BIT_MASK(idx), 0, 0 }
  
- #define AE26 245
--SIG_EXPR_LIST_DECL_SEMG(AE26, I3C3SDA, I3C3, I3C3, SIG_DESC_SET(SCU438, 21),
--			SIG_DESC_SET(SCU4D8, 21));
--SIG_EXPR_LIST_DECL_SESG(AE26, FSI1DATA, FSI1, SIG_DESC_CLEAR(SCU438, 21),
--			SIG_DESC_SET(SCU4D8, 21));
-+SIG_EXPR_LIST_DECL_SEMG(AE26, I3C3SDA, I3C3, I3C3, SIG_DESC_SET(SCU438, 21));
-+SIG_EXPR_LIST_DECL_SESG(AE26, FSI1DATA, FSI1, SIG_DESC_SET(SCU4D8, 21));
- PIN_DECL_(AE26, SIG_EXPR_LIST_PTR(AE26, I3C3SDA),
- 	  SIG_EXPR_LIST_PTR(AE26, FSI1DATA));
- 
-@@ -1533,18 +1529,14 @@ FUNC_DECL_2(I3C3, HVI3C3, I3C3);
- FUNC_GROUP_DECL(FSI1, AF25, AE26);
- 
- #define AE25 246
--SIG_EXPR_LIST_DECL_SEMG(AE25, I3C4SCL, I3C4, I3C4, SIG_DESC_SET(SCU438, 22),
--			SIG_DESC_SET(SCU4D8, 22));
--SIG_EXPR_LIST_DECL_SESG(AE25, FSI2CLK, FSI2, SIG_DESC_CLEAR(SCU438, 22),
--			SIG_DESC_SET(SCU4D8, 22));
-+SIG_EXPR_LIST_DECL_SEMG(AE25, I3C4SCL, I3C4, I3C4, SIG_DESC_SET(SCU438, 22));
-+SIG_EXPR_LIST_DECL_SESG(AE25, FSI2CLK, FSI2, SIG_DESC_SET(SCU4D8, 22));
- PIN_DECL_(AE25, SIG_EXPR_LIST_PTR(AE25, I3C4SCL),
- 	  SIG_EXPR_LIST_PTR(AE25, FSI2CLK));
- 
- #define AF24 247
--SIG_EXPR_LIST_DECL_SEMG(AF24, I3C4SDA, I3C4, I3C4, SIG_DESC_SET(SCU438, 23),
--			SIG_DESC_SET(SCU4D8, 23));
--SIG_EXPR_LIST_DECL_SESG(AF24, FSI2DATA, FSI2, SIG_DESC_CLEAR(SCU438, 23),
--			SIG_DESC_SET(SCU4D8, 23));
-+SIG_EXPR_LIST_DECL_SEMG(AF24, I3C4SDA, I3C4, I3C4, SIG_DESC_SET(SCU438, 23));
-+SIG_EXPR_LIST_DECL_SESG(AF24, FSI2DATA, FSI2, SIG_DESC_SET(SCU4D8, 23));
- PIN_DECL_(AF24, SIG_EXPR_LIST_PTR(AF24, I3C4SDA),
- 	  SIG_EXPR_LIST_PTR(AF24, FSI2DATA));
- 
+ #define SIG_DESC_LIST_SYM(sig, group) sig_descs_ ## sig ## _ ## group
+ #define SIG_DESC_LIST_DECL(sig, group, ...) \
 -- 
 2.20.1
