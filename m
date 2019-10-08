@@ -1,54 +1,135 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] arm64: dts: rockchip: Fix override mode for rk3399-kevin panel
-Date: Tue,  8 Oct 2019 12:49:54 -0700
-Message-ID: <20191008124949.1.I674acd441997dd0690c86c9003743aacda1cf5dd@changeid>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
+Date: Tue,  8 Oct 2019 14:52:39 -0500
+Message-ID: <20191008195239.12852-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Douglas Anderson <dianders@chromium.org>, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Christoph Hellwig <hch@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-When I re-posted Sean's original commit to add the override mode for
-the kevin panel, for some reason I didn't notice that the pixel clock
-wasn't quite right.  Looking at /sys/kernel/debug/clk/clk_summary on
-downstream kernels it can be seen that the VOP clock is supposed to be
-266,666,667 Hz achieved by dividing the 800 MHz PLL by 3.
+From: Robin Murphy <robin.murphy@arm.com>
 
-Looking at history, it seems that even Sean's first patch [1] had this
-funny clock rate.  I'm not sure where it came from since the commit
-message specifically mentioned 26666 kHz and the Chrome OS tree [2]
-can be seen to request 266667 kHz.
+Since the "dma-ranges" property is only valid for a node representing a
+bus, of_dma_get_range() currently assumes the node passed in is a leaf
+representing a device, and starts the walk from its parent. In cases
+like PCI host controllers on typical FDT systems, however, where the PCI
+endpoints are probed dynamically the initial leaf node represents the
+'bus' itself, and this logic means we fail to consider any "dma-ranges"
+describing the host bridge itself. Rework the logic such that
+of_dma_get_range() also works correctly starting from a bus node
+containing "dma-ranges".
 
-In any case, let's fix it up.  This together with my patch [3] to do
-the proper rounding when setting the clock rate makes the VOP clock
-more proper as seen in /sys/kernel/debug/clk/clk_summary.
+While this does mean "dma-ranges" could incorrectly be in a device leaf
+node, there isn't really any way in this function to ensure that a leaf
+node is or isn't a bus node.
 
-[1] https://lore.kernel.org/r/20180206165626.37692-4-seanpaul@chromium.org
-[2] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.4/drivers/gpu/drm/panel/panel-simple.c#1172
-[3] https://lkml.kernel.org/r/20191003114726.v2.1.Ib233b3e706cf6317858384264d5b0ed35657456e@changeid
-
-Fixes: 84ebd2da6d04 ("arm64: dts: rockchip: Specify override mode for kevin panel")
-Cc: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+[robh: Allow for the bus child node to still be passed in]
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
+Resending, hit send too quickly.
 
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2:
+ - Ensure once we find dma-ranges, every parent has it.
+ - Only get the #{size,address}-cells after we find non-empty dma-ranges
+ - Add a check on the 'dma-ranges' length
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-index e152b0ca0290..b8066868a3fe 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-@@ -44,7 +44,7 @@
- 		power-supply = <&pp3300_disp>;
+This is all that remains of the dma-ranges series. I've applied the rest 
+of the series prep and fixes. I dropped "of: Ratify of_dma_configure() 
+interface" as the assertions that the node pointer being the parent only 
+when struct device doesn't have a DT node pointer is not always 
+true.
+
+I didn't include any tested-bys as this has changed a bit. A git branch 
+is here[1].
+
+Rob
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks-v2
+
+ drivers/of/address.c | 44 ++++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 5ce69d026584..99c1b8058559 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -930,47 +930,39 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	const __be32 *ranges = NULL;
+ 	int len, naddr, nsize, pna;
+ 	int ret = 0;
++	bool found_dma_ranges = false;
+ 	u64 dmaaddr;
  
- 		panel-timing {
--			clock-frequency = <266604720>;
-+			clock-frequency = <266666667>;
- 			hactive = <2400>;
- 			hfront-porch = <48>;
- 			hback-porch = <84>;
+-	if (!node)
+-		return -EINVAL;
+-
+-	while (1) {
+-		struct device_node *parent;
+-
+-		naddr = of_n_addr_cells(node);
+-		nsize = of_n_size_cells(node);
+-
+-		parent = __of_get_dma_parent(node);
+-		of_node_put(node);
+-
+-		node = parent;
+-		if (!node)
+-			break;
+-
++	while (node) {
+ 		ranges = of_get_property(node, "dma-ranges", &len);
+ 
+ 		/* Ignore empty ranges, they imply no translation required */
+ 		if (ranges && len > 0)
+ 			break;
+ 
+-		/*
+-		 * At least empty ranges has to be defined for parent node if
+-		 * DMA is supported
+-		 */
+-		if (!ranges)
+-			break;
++		/* Once we find 'dma-ranges', then a missing one is an error */
++		if (found_dma_ranges && !ranges) {
++			ret = -ENODEV;
++			goto out;
++		}
++		found_dma_ranges = true;
++
++		node = of_get_next_dma_parent(node);
+ 	}
+ 
+-	if (!ranges) {
++	if (!node || !ranges) {
+ 		pr_debug("no dma-ranges found for node(%pOF)\n", np);
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
+ 
+-	len /= sizeof(u32);
+-
++	naddr = of_bus_n_addr_cells(node);
++	nsize = of_bus_n_size_cells(node);
+ 	pna = of_n_addr_cells(node);
++	if ((len / sizeof(__be32)) % (pna + naddr + nsize)) {
++		ret = -EINVAL;
++		goto out;
++	}
+ 
+ 	/* dma-ranges format:
+ 	 * DMA addr	: naddr cells
+@@ -978,7 +970,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	 * size		: nsize cells
+ 	 */
+ 	dmaaddr = of_read_number(ranges, naddr);
+-	*paddr = of_translate_dma_address(np, ranges);
++	*paddr = of_translate_dma_address(node, ranges + naddr);
+ 	if (*paddr == OF_BAD_ADDR) {
+ 		pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
+ 		       dmaaddr, np);
 -- 
-2.23.0.581.g78d2f28ef7-goog
+2.20.1
