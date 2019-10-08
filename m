@@ -1,18 +1,16 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to
- y
-Date: Tue, 8 Oct 2019 19:40:50 +0200
-Message-ID: <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com>
- <20191007131649.1768-6-linux.amoon@gmail.com>
- <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
- <7hsgo4cgeg.fsf@baylibre.com>
- <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: s3c64xx: Fix init order of clock providers
+Date: Tue, 8 Oct 2019 19:53:30 +0200
+Message-ID: <20191008175330.GA28160@kozik-lap>
+References: <CGME20191008165931epcas3p2dd2937d851ed06948dd7746e5a2674b4@epcas3p2.samsung.com>
+ <20191008165917.23908-1-krzk@kernel.org>
+ <ceede424-e4a2-03f1-3ce0-04f405688721@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <ceede424-e4a2-03f1-3ce0-04f405688721@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,116 +20,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-amlogic@lists.infradead.org, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Lihua Yao <ylhuajnu@outlook.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
+On Tue, Oct 08, 2019 at 07:30:50PM +0200, Sylwester Nawrocki wrote:
+> On 10/8/19 18:59, Krzysztof Kozlowski wrote:
+> > From: Lihua Yao <ylhuajnu@outlook.com>
+> > 
+> > fin_pll is the parent of clock-controller@7e00f000, specify
+> > the dependency to ensure proper initialization order of clock
+> > providers.
+> 
+> > Fixes: 3f6d439f2022 ("clk: reverse default clk provider initialization order in of_clk_init()")
+> 
+> The patch looks good but I'm not sure above tag points to the right commit.
+> That commit is just a regression fix for
+> 1771b10d605d26cc "clk: respect the clock dependencies in of_clk_init"
+>  
+> How about picking some commit touching the dts files itself, e.g.
+> a43736deb47d21bd "ARM: dts: Add dts file for S3C6410-based Mini6410 board" ?
 
-On Tue, Oct 8, 2019 at 4:39 PM Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Hi Kevin / Martin,
->
-> On Tue, 8 Oct 2019 at 04:28, Kevin Hilman <khilman@baylibre.com> wrote:
-> >
-> > Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-> >
-> > > On Mon, Oct 7, 2019 at 3:17 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> > > [...]
-> > >> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > >> index c9a867ac32d4..72f6a7dca0d6 100644
-> > >> --- a/arch/arm64/configs/defconfig
-> > >> +++ b/arch/arm64/configs/defconfig
-> > >> @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
-> > >>  CONFIG_PWM=y
-> > >>  CONFIG_PWM_BCM2835=m
-> > >>  CONFIG_PWM_CROS_EC=m
-> > >> -CONFIG_PWM_MESON=m
-> > >> +CONFIG_PWM_MESON=y
-> > >
-> > > some time ago I submitted a similar patch for the 32-bit SoCs
-> > > it turned that that pwm-meson can be built as module because the
-> > > kernel will run without CPU DVFS as long as the clock and regulator
-> > > drivers are returning -EPROBE_DEFER (-517)
-> >
-> > On 64-bit SoCs, the kernel boots with PWM as a module also, but DVFS
-> > only works sometimes, and making it built-in fixes the problem.
-> > Actually, it doesn't fix, it just hides the problem, which is likely a
-> > race or timeout happening during deferred probing.
-> >
-> > > did you check whether there's some other problem like some unused
-> > > clock which is being disabled at that moment?
-> > > I've been hunting weird problems in the past where it turned out that
-> > > changing kernel config bits changed the boot timing - that masked the
-> > > original problem
-> >
-> > Right, I would definitely prefer to not make this built-in without a lot
-> > more information to *why* this is needed.  In figuring that out, we'll
-> > probably find the race/timeout that's the root cause.
-> >
-> > Kevin
-> >
-> >
->
-> Kevin,
->
-> As per my understanding from the kernelci.org logs it seen that
-> pwm-meson driver is requested more than once before it finally load the module.
->
-> [0] https://storage.kernelci.org/next/master/next-20191008/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-g12b-odroid-n2.txt
-my understanding is that:
-- the PWM regulator driver is built in (=y)
-- the Meson PWM controller driver is built as module (=m)
-- during boot the PWM regulator node is found and it has a matching
-driver (built-in)
-- the PWM regulator driver tries to find the PWM controller but cannot
-find it yet (and reports "Failed to get PWM: -517")
-- (this repeats a few times)
-- then the filesystem / initramfs is loaded where the modules are located
-- now the Meson PWM controller driver is loaded
-- the PWM regulator driver tries to find the PWM controller -> now it found it
+As I understood, the mentioned commit "reverse default clk provider"
+caused issue to appear, because of reversed order (first version of this
+patch played with the order).  Even though that commit was not strictly
+the cause, but should come proably with proper DTS change.  Therefore
+the fixes points to right moment of backports.
 
-> Hi Martin,
->
-> I have tired your Martin's patch [1] and still the boot fails to move
-> ahead with below logs.
-> [1] https://lore.kernel.org/patchwork/patch/1034186/
-this patch only silences the "Failed to get PWM: -517" message
-Mark didn't apply it back then because without that message it would
-be harder to debug these issues
+The DTS commit, at that time, was correct with bindings and with driver.
 
-> [    1.543928] xhci-hcd xhci-hcd.0.auto: Host supports USB 3.0 SuperSpeed
-> [    1.550422] usb usb2: We don't know the algorithms for LPM for this
-> host, disabling LPM.
-> [    1.558702] hub 2-0:1.0: USB hub found
-> [    1.562131] hub 2-0:1.0: 1 port detected
-> [    1.566206] dwc3-meson-g12a ffe09000.usb: switching to Device Mode
-> [    1.573252] meson-gx-mmc ffe05000.sd: Got CD GPIO
-> [    1.607405] hctosys: unable to open rtc device (rtc0)
->
-> I have put some more prints in pwm-meson.c it fails to load the module
-> as microsSD card is not completely initialized.
-what makes you think that there's a problem with pwm-meson?
+> 
+> > Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-can you please share a boot log with the command line parameter
-"initcall_debug" [0]?
-from Documentation/admin-guide/kernel-parameters.txt:
- initcall_debug [KNL] Trace initcalls as they are executed.  Useful
- for working out where the kernel is dying during
- startup.
+Thanks!
 
-you can also try the command line parameter "clk_ignore_unused" (it's
-just a gut feeling: maybe a "critical" clock is being disabled because
-it's not wired up correctly).
-
-back when I was working out the CPU clock tree for the 32-bit SoCs I
-had a bad parent clock in one of the muxes which resulted in sporadic
-lockups if CPU DVFS was enabled.
-you can try to disable CPU DVFS by dropping the OPP table and it's
-references from the .dtsi
-
-
-Martin
-
-
-[0] https://elinux.org/Initcall_Debug
+Best regards,
+Krzysztof
