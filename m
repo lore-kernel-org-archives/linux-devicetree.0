@@ -1,89 +1,40 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [RFC][PATCH v2 2/5] usb: dwc3: Execute GCTL Core Soft Reset while
- switch mdoe for Hisilicon Kirin Soc
-Date: Mon, 7 Oct 2019 16:53:33 -0700
-Message-ID: <CALAqxLWG0a_sRu08XL7q4MpD1ZfAEhVb3mKQ0FLAe8kjO2PV3A@mail.gmail.com>
-References: <20191007175553.66940-1-john.stultz@linaro.org>
- <20191007175553.66940-3-john.stultz@linaro.org> <20191007233904.GC9754@jackp-linux.qualcomm.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/3] arm64: dts: imx8mq: Use correct clock for usdhc's ipg
+ clk
+Date: Tue, 8 Oct 2019 00:58:08 +0000
+Message-ID: <AM6PR0402MB3911D80F4C96EE9500B360D2F59A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+References: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
+ <20191007121204.GI7150@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007233904.GC9754@jackp-linux.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jack Pham <jackp@codeaurora.org>
-Cc: Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>, lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191007121204.GI7150@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "angus@akkea.ca" <angus@akkea.ca>, Jacky Bai <ping.bai@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infr>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 4:39 PM Jack Pham <jackp@codeaurora.org> wrote:
->
-> Hi John, Yu, Felipe,
->
-> On Mon, Oct 07, 2019 at 05:55:50PM +0000, John Stultz wrote:
-> > From: Yu Chen <chenyu56@huawei.com>
-> >
-> > A GCTL soft reset should be executed when switch mode for dwc3 core
-> > of Hisilicon Kirin Soc.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Felipe Balbi <balbi@kernel.org>
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Yu Chen <chenyu56@huawei.com>
-> > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Cc: linux-usb@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> >  drivers/usb/dwc3/core.c | 20 ++++++++++++++++++++
-> >  drivers/usb/dwc3/core.h |  3 +++
-> >  2 files changed, 23 insertions(+)
-> >
-> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> > index 999ce5e84d3c..440261432421 100644
-> > --- a/drivers/usb/dwc3/core.c
-> > +++ b/drivers/usb/dwc3/core.c
-> > @@ -112,6 +112,19 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
-> >       dwc->current_dr_role = mode;
-> >  }
-> >
-> > +static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
-> > +{
-> > +     u32 reg;
-> > +
-> > +     reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-> > +     reg |= DWC3_GCTL_CORESOFTRESET;
-> > +     dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-> > +
-> > +     reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-> > +     reg &= ~DWC3_GCTL_CORESOFTRESET;
-> > +     dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-> > +}
-> > +
-> >  static void __dwc3_set_mode(struct work_struct *work)
-> >  {
-> >       struct dwc3 *dwc = work_to_dwc(work);
-> > @@ -156,6 +169,10 @@ static void __dwc3_set_mode(struct work_struct *work)
-> >
-> >       dwc3_set_prtcap(dwc, dwc->desired_dr_role);
-> >
-> > +     /* Execute a GCTL Core Soft Reset when switch mode */
-> > +     if (dwc->gctl_reset_quirk)
-> > +             dwc3_gctl_core_soft_reset(dwc);
-> > +
->
-> In fact it is mentioned in the Synopsys databook to perform a GCTL
-> CoreSoftReset when changing the PrtCapDir between device & host modes.
-> So I think this should apply generally without a quirk. Further, it
-> states to do this *prior* to writing PrtCapDir, so should it go before
-> dwc3_set_prtcap() instead?
+Hi, Shawn
 
-Sounds good. I have no such access to the hardware docs, so I really
-appreciate your input here!
+> On Thu, Sep 19, 2019 at 01:05:57PM +0800, Anson Huang wrote:
+> > On i.MX8MQ, usdhc's ipg clock is from IMX8MQ_CLK_IPG_ROOT, assign it
+> > explicitly instead of using IMX8MQ_CLK_DUMMY.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Fixes tag?
 
-I'll refactor it as you describe and remove the quirk flag.
+OK, added them in V2.
 
-thanks
--john
+Thanks,
+Anson
