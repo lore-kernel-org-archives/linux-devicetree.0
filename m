@@ -1,90 +1,48 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH 2/2] mmc: sdhci-of-at91: add DT property to enable calibration on full reset
-Date: Tue, 8 Oct 2019 14:34:32 +0200
-Message-ID: <d25c8f909d039938a5696e8de32396cf2aaf54b7.1570537903.git.nicolas.ferre@microchip.com>
-References: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: Add AST2500 RMII RCLK definitions
+Date: Tue, 8 Oct 2019 12:37:00 +0000
+Message-ID: <CACPK8Xf-f-r4S02GoxYdBYOJi5NGYMCOr6XGVza4vEGAsqzR9w@mail.gmail.com>
+References: <20191008113523.13601-1-andrew@aj.id.au> <20191008113523.13601-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
+In-Reply-To: <20191008113523.13601-2-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, adrian.hunter@intel.com, Nicolas Ferre <nicolas.ferre@microchip.com>
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a property to keep the analog calibration cell powered.
-This feature is specific to the Microchip SDHCI IP and outside
-of the standard SDHCI register map.
+On Tue, 8 Oct 2019 at 11:34, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The AST2500 has an explicit gate for the RMII RCLK for each of the two
+> MACs.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  include/dt-bindings/clock/aspeed-clock.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
+> index f43738607d77..64e245fb113f 100644
+> --- a/include/dt-bindings/clock/aspeed-clock.h
+> +++ b/include/dt-bindings/clock/aspeed-clock.h
+> @@ -39,6 +39,8 @@
+>  #define ASPEED_CLK_BCLK                        33
+>  #define ASPEED_CLK_MPLL                        34
+>  #define ASPEED_CLK_24M                 35
+> +#define ASPEED_CLK_GATE_MAC1RCLK       36
+> +#define ASPEED_CLK_GATE_MAC2RCLK       37
 
-By always keeping it on, after a full reset sequence, we make sure
-that this feature is activated and not disabled.
+Calling these ASPEED_CLK_GATE breaks the pattern the rest of the
+driver has in using that name for the clocks that are registered as
+struct aspeed_clk_gate clocks.
 
-We expose a hardware property to the DT as this feature can be used
-to adapt SDHCI behavior vs. how the SDCAL SoC pin is connected
-on the board.
+Do you think we should drop the GATE_ to match the existing clocks?
 
-Note that managing properly this property would reduce
-power consumption on some SAMA5D2 SiP revisions.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
- drivers/mmc/host/sdhci-of-at91.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-index e7d1920729fb..9571c4a882a9 100644
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -27,6 +27,9 @@
- #define SDMMC_CACR	0x230
- #define		SDMMC_CACR_CAPWREN	BIT(0)
- #define		SDMMC_CACR_KEY		(0x46 << 8)
-+#define SDMMC_CALCR	0x240
-+#define		SDMMC_CALCR_EN		BIT(0)
-+#define		SDMMC_CALCR_ALWYSON	BIT(4)
- 
- #define SDHCI_AT91_PRESET_COMMON_CONF	0x400 /* drv type B, programmable clock mode */
- 
-@@ -35,6 +38,7 @@ struct sdhci_at91_priv {
- 	struct clk *gck;
- 	struct clk *mainck;
- 	bool restore_needed;
-+	bool cal_always_on;
- };
- 
- static void sdhci_at91_set_force_card_detect(struct sdhci_host *host)
-@@ -116,10 +120,17 @@ static void sdhci_at91_set_uhs_signaling(struct sdhci_host *host,
- 
- static void sdhci_at91_reset(struct sdhci_host *host, u8 mask)
- {
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_at91_priv *priv = sdhci_pltfm_priv(pltfm_host);
-+
- 	sdhci_reset(host, mask);
- 
- 	if (host->mmc->caps & MMC_CAP_NONREMOVABLE)
- 		sdhci_at91_set_force_card_detect(host);
-+
-+	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL))
-+		sdhci_writel(host, SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
-+			     SDMMC_CALCR);
- }
- 
- static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
-@@ -345,6 +356,14 @@ static int sdhci_at91_probe(struct platform_device *pdev)
- 
- 	priv->restore_needed = false;
- 
-+	/*
-+	 * if SDCAL pin is wrongly connected, we must enable
-+	 * the analog calibration cell permanently.
-+	 */
-+	priv->cal_always_on =
-+		device_property_read_bool(&pdev->dev,
-+					  "microchip,sdcal-inverted");
-+
- 	ret = mmc_of_parse(host->mmc);
- 	if (ret)
- 		goto clocks_disable_unprepare;
--- 
-2.17.1
+>
+>  #define ASPEED_RESET_XDMA              0
+>  #define ASPEED_RESET_MCTP              1
+> --
+> 2.20.1
+>
