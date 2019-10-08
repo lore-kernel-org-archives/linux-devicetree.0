@@ -1,111 +1,57 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: [PATCH v9 2/7] nfc: pn532: Add uart phy docs and rename it
-Date: Tue,  8 Oct 2019 16:05:39 +0200
-Message-ID: <20191008140544.17112-3-poeschel@lemonage.de>
-References: <20191008140544.17112-1-poeschel@lemonage.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am3874-iceboard: Fix 'i2c-mux-idle-disconnect'
+ usage
+Date: Tue, 8 Oct 2019 07:16:59 -0700
+Message-ID: <20191008141659.GC5610@atomide.com>
+References: <20191004014548.29583-1-andrew.smirnov@gmail.com>
+ <c40b8414-45a8-575a-c3c8-902ed35e5764@threespeedlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191008140544.17112-1-poeschel@lemonage.de>
+Content-Disposition: inline
+In-Reply-To: <c40b8414-45a8-575a-c3c8-902ed35e5764@threespeedlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lars Poeschel <poeschel@lemonage.de>, "open list:NFC SUBSYSTEM" <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>
+To: Graeme Smecher <gsmecher@threespeedlogic.com>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds documentation about the uart phy to the pn532 binding doc. As
-the filename "pn533-i2c.txt" is not appropriate any more, rename it to
-the more general "pn532.txt".
-This also documents the deprecation of the compatible strings ending
-with "...-i2c".
+* Graeme Smecher <gsmecher@threespeedlogic.com> [191004 23:53]:
+> Hi Andrey,
+> 
+> On 2019-10-03 6:45 p.m., Andrey Smirnov wrote:
+> > According to
+> > Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt,
+> > i2c-mux-idle-disconnect is a property of a parent node since it
+> > pertains to the mux/switch as a whole, so move it there and drop all
+> > of the concurrences in child nodes.
+> > 
+> > Fixes: d031773169df ("ARM: dts: Adds device tree file for McGill's IceBoard, based on TI AM3874")
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Benoît Cousson <bcousson@baylibre.com>
+> > Cc: Tony Lindgren <tony@atomide.com>
+> > Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
+> > Cc: linux-omap@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> > 
+> > This is purely a drive-by fix, since it concerns the HW I've never
+> > heard of before. However I was working with PCA9548
+> > (vf610-zii-scu4-aib is my HW) and looking at various users in the
+> > kernel, when this code caught my eye. Apologies for the noise if this
+> > fix is somehow bogus.
+> > 
+> > In case that it matters this patch is based on top of 5.4-rc1.
+> 
+> Thanks! We do have I2C address collisions on downstream bus segments, so
+> keeping these segments isolated is important. I'm surprised this patch
+> was necessary and happy to see it.
+> 
+> Lightly tested on 5.3.
+> 
+> Tested-by: Graeme Smecher <gsmecher@threespeedlogic.com>
 
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Simon Horman <horms@verge.net.au>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
----
-Changes in v9:
-- Rebased the patch series on v5.4-rc2
-- Produce patch with -M4 to git format-patch to detect the rename
-- Change DT node name from pn532@24 to nfc@24 in example
+Applying into fixes thanks.
 
-Changes in v8:
-- Update existing binding doc instead of adding a new one:
-  - Add uart phy example
-  - Add general "pn532" compatible string
-  - Deprecate "...-i2c" compatible strings
-  - Rename file to a more general filename
-- Intentionally drop Rob's Reviewed-By as I guess this rather big change
-  requires a new review
-
-Changes in v7:
-- Accidentally lost Rob's Reviewed-By
-
-Changes in v6:
-- Rebased the patch series on v5.3-rc5
-- Picked up Rob's Reviewed-By
-
-Changes in v4:
-- Add documentation about reg property in case of i2c
-
-Changes in v3:
-- seperate binding doc instead of entry in trivial-devices.txt
-
- .../net/nfc/{pn533-i2c.txt => pn532.txt}      | 25 ++++++++++++++++---
- 1 file changed, 21 insertions(+), 4 deletions(-)
- rename Documentation/devicetree/bindings/net/nfc/{pn533-i2c.txt => pn532.txt} (42%)
-
-diff --git a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt b/Documentation/devicetree/bindings/net/nfc/pn532.txt
-similarity index 42%
-rename from Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
-rename to Documentation/devicetree/bindings/net/nfc/pn532.txt
-index 2efe3886b95b..a5507dc499bc 100644
---- a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/pn532.txt
-@@ -1,9 +1,16 @@
- * NXP Semiconductors PN532 NFC Controller
- 
- Required properties:
--- compatible: Should be "nxp,pn532-i2c" or "nxp,pn533-i2c".
-+- compatible: Should be
-+    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
-+                  where the NFC chip is connected to.
-+                  Currently the kernel has phy bindings for uart and i2c.
-+    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
-+    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
-+
-+Required properties if connected on i2c:
- - clock-frequency: I²C work frequency.
--- reg: address on the bus
-+- reg: for the I²C bus address. This is fixed at 0x24 for the PN532.
- - interrupts: GPIO interrupt to which the chip is connected
- 
- Optional SoC Specific Properties:
-@@ -15,9 +22,9 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
- &i2c2 {
- 
- 
--	pn532: pn532@24 {
-+	pn532: nfc@24 {
- 
--		compatible = "nxp,pn532-i2c";
-+		compatible = "nxp,pn532";
- 
- 		reg = <0x24>;
- 		clock-frequency = <400000>;
-@@ -27,3 +34,13 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
- 
- 	};
- };
-+
-+Example (for PN532 connected via uart):
-+
-+uart4: serial@49042000 {
-+        compatible = "ti,omap3-uart";
-+
-+        pn532: nfc {
-+                compatible = "nxp,pn532";
-+        };
-+};
--- 
-2.23.0
+Tony
