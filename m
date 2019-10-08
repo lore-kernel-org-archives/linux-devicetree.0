@@ -1,71 +1,117 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv7 8/9] soc: ti: omap-prm: add am4 PRM data
-Date: Tue, 8 Oct 2019 10:19:12 +0300
-Message-ID: <20191008071913.28740-9-t-kristo@ti.com>
-References: <20191008071913.28740-1-t-kristo@ti.com>
+From: Jack Pham <jackp@codeaurora.org>
+Subject: Re: [PATCH v2 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
+Date: Tue, 8 Oct 2019 00:46:20 -0700
+Message-ID: <20191008074619.GA20801@jackp-linux.qualcomm.com>
+References: <20190906051017.26846-1-vkoul@kernel.org>
+ <20190906051017.26846-4-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191008071913.28740-1-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-omap@vger.kernel.org, ssantosh@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190906051017.26846-4-vkoul@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PRM instance data for am4 family of SoCs. Initially this is just
-used to provide reset support.
+Hi Vinod,
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/soc/ti/omap_prm.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+On Fri, Sep 06, 2019 at 10:40:17AM +0530, Vinod Koul wrote:
+> SM8150 UFS PHY is v4 of QMP phy. Add support for V4 QMP phy register
+> defines and support for SM8150 QMP UFS PHY.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 125 ++++++++++++++++++++++++++++
+>  drivers/phy/qualcomm/phy-qcom-qmp.h |  96 +++++++++++++++++++++
+>  2 files changed, 221 insertions(+)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 34ff6434da8f..92d3048f2b36 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -164,6 +164,11 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
+>  	[QPHY_PCS_READY_STATUS]		= 0x160,
+>  };
+>  
+> +static const unsigned int sm8150_ufsphy_regs_layout[] = {
+> +	[QPHY_START_CTRL]		= 0x00,
+> +	[QPHY_PCS_READY_STATUS]		= 0x180,
+> +};
+> +
+>  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
+> @@ -878,6 +883,93 @@ static const struct qmp_phy_init_tbl msm8998_usb3_pcs_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
+>  };
+>  
+> +static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_SYSCLK_EN_SEL, 0xd9),
 
-diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
-index de11ce08ff7b..73ea64896770 100644
---- a/drivers/soc/ti/omap_prm.c
-+++ b/drivers/soc/ti/omap_prm.c
-@@ -115,10 +115,30 @@ static const struct omap_prm_data am3_prm_data[] = {
- 	{ },
- };
- 
-+static const struct omap_rst_map am4_per_rst_map[] = {
-+	{ .rst = 1, .st = 0 },
-+	{ .rst = -1 },
-+};
-+
-+static const struct omap_rst_map am4_device_rst_map[] = {
-+	{ .rst = 0, .st = 1 },
-+	{ .rst = 1, .st = 0 },
-+	{ .rst = -1 },
-+};
-+
-+static const struct omap_prm_data am4_prm_data[] = {
-+	{ .name = "gfx", .base = 0x44df0400, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_0, .clkdm_name = "gfx_l3" },
-+	{ .name = "per", .base = 0x44df0800, .rstctrl = 0x10, .rstst = 0x14, .rstmap = am4_per_rst_map, .clkdm_name = "pruss_ocp" },
-+	{ .name = "wkup", .base = 0x44df2000, .rstctrl = 0x10, .rstst = 0x14, .rstmap = am3_wkup_rst_map, .flags = OMAP_PRM_HAS_NO_CLKDM },
-+	{ .name = "device", .base = 0x44df4000, .rstctrl = 0x0, .rstst = 0x4, .rstmap = am4_device_rst_map, .flags = OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_NO_CLKDM },
-+	{ },
-+};
-+
- static const struct of_device_id omap_prm_id_table[] = {
- 	{ .compatible = "ti,omap4-prm-inst", .data = omap4_prm_data },
- 	{ .compatible = "ti,dra7-prm-inst", .data = dra7_prm_data },
- 	{ .compatible = "ti,am3-prm-inst", .data = am3_prm_data },
-+	{ .compatible = "ti,am4-prm-inst", .data = am4_prm_data },
- 	{ },
- };
- 
+QSERDES_V4_COM? See below.
+
+<snip>
+
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+> index 335ea5d7ef40..0eefd8621669 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.h
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+> @@ -313,4 +313,100 @@
+>  #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG4		0x5c
+>  #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5		0x60
+>  
+> +/* Only for QMP V4 PHY - QSERDES COM registers */
+> +#define QSERDES_COM_V4_SYSCLK_EN_SEL			0x094
+
+Should these rather be prefixed as QSERDES_V4_COM? There are already
+QSERDES_V3_COM_* in this header so the convention appears to be
+Q{SERDES,PHY}_VX_{COM,TX,RX,PCS}.
+
+> +#define QSERDES_COM_V4_HSCLK_SEL			0x158
+> +#define QSERDES_COM_V4_HSCLK_HS_SWITCH_SEL		0x15C
+> +#define QSERDES_COM_V4_LOCK_CMP_EN			0x0A4
+> +#define QSERDES_COM_V4_VCO_TUNE_MAP			0x10C
+
+Nit: sort in ascending offset order, and make the hex values lowercase?
+
+<snip>
+
+> +/* Only for QMP V4 PHY - PCS registers */
+> +#define QPHY_V4_PHY_START				0x000
+> +#define QPHY_V4_POWER_DOWN_CONTROL			0x004
+> +#define QPHY_V4_SW_RESET				0x008
+> +#define QPHY_V4_PCS_READY_STATUS			0x180
+> +#define QPHY_V4_LINECFG_DISABLE				0x148
+> +#define QPHY_V4_MULTI_LANE_CTRL1			0x1E0
+> +#define QPHY_V4_RX_SIGDET_CTRL2				0x158
+> +#define QPHY_V4_TX_LARGE_AMP_DRV_LVL			0x030
+> +#define QPHY_V4_TX_SMALL_AMP_DRV_LVL			0x038
+> +#define QPHY_V4_TX_MID_TERM_CTRL1			0x1D8
+> +#define QPHY_V4_DEBUG_BUS_CLKSEL			0x124
+> +#define QPHY_V4_PLL_CNTL				0x02C
+> +#define QPHY_V4_TIMER_20US_CORECLK_STEPS_MSB		0x00C
+> +#define QPHY_V4_TIMER_20US_CORECLK_STEPS_LSB		0x010
+> +#define QPHY_V4_TX_PWM_GEAR_BAND			0x160
+> +#define QPHY_V4_TX_HS_GEAR_BAND				0x168
+> +#define QPHY_V4_TX_HSGEAR_CAPABILITY			0x074
+> +#define QPHY_V4_RX_HSGEAR_CAPABILITY			0x0B4
+> +#define QPHY_V4_RX_MIN_HIBERN8_TIME			0x150
+> +#define QPHY_V4_BIST_FIXED_PAT_CTRL			0x060
+
+Interesting. These offsets appear to be valid only for the UFS instance
+of the QMP PHY. For PCIe and USB the PCS layout is completely different.
+Wonder if we need to add _UFS_ to  the prefix to differentiate them? Or
+can this be deferred to when PCIe/USB PHY driver support for SM8150 gets
+added?
+
+I was thinking of taking a stab at USB if I get time, not sure if that's
+already on your or somebody's (Bjorn?) radar.
+
+Thanks
+Jack
 -- 
-2.17.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
