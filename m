@@ -1,72 +1,60 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: arm: samsung: Force clkoutN names to be
- unique in PMU
-Date: Tue, 8 Oct 2019 09:17:16 -0500
-Message-ID: <CAL_JsqKBzZCShxx99aB4z15XYNbUionVicmfNNXEfq=iohWLCA@mail.gmail.com>
-References: <20191004151414.8458-1-krzk@kernel.org>
- <CAL_JsqJDTcHu5oXG6zszGHCBhTE6EW94AANUjyMV78SkKcn5yA@mail.gmail.com>
- <20191008125038.GA2550@pi3>
- <CAL_Jsq+GcsUWN6kjBLkyr1rHGh6_4=w6JL6+k7DBXkBcvHcSBw@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 0/3] reset: meson: add Meson-A1 SoC support
+Date: Tue, 08 Oct 2019 16:23:06 +0200
+Message-ID: <1570544586.18914.9.camel@pengutronix.de>
+References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_Jsq+GcsUWN6kjBLkyr1rHGh6_4=w6JL6+k7DBXkBcvHcSBw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Xingyu Chen <xingyu.chen@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgOCwgMjAxOSBhdCA5OjA1IEFNIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5l
-bC5vcmc+IHdyb3RlOgo+Cj4gT24gVHVlLCBPY3QgOCwgMjAxOSBhdCA3OjUwIEFNIEtyenlzenRv
-ZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPgo+ID4gT24gVHVlLCBPY3Qg
-MDgsIDIwMTkgYXQgMDc6Mzg6MTRBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiA+IE9u
-IEZyaSwgT2N0IDQsIDIwMTkgYXQgMTA6MTQgQU0gS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0Br
-ZXJuZWwub3JnPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IFRoZSBjbGtvdXROIG5hbWVzIG9mIGNs
-b2NrcyBtdXN0IGJlIHVuaXF1ZSBiZWNhdXNlIHRoZXkgcmVwcmVzZW50Cj4gPiA+ID4gdW5pcXVl
-IGlucHV0cyBvZiBjbG9jayBtdWx0aXBsZXhlci4KPiA+ID4gPgo+ID4gPiA+IFNpZ25lZC1vZmYt
-Ynk6IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KPiA+ID4gPiAtLS0KPiA+
-ID4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zYW1zdW5nL3BtdS55
-YW1sIHwgNiArKysrLS0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwg
-MiBkZWxldGlvbnMoLSkKPiA+ID4gPgo+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWwgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWwKPiA+ID4gPiBpbmRleCA3
-M2I1NmZjNWJmNTguLmQ4ZTAzNzE2ZjVkMiAxMDA2NDQKPiA+ID4gPiAtLS0gYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWwKPiA+ID4gPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWwK
-PiA+ID4gPiBAQCAtNTMsOCArNTMsMTAgQEAgcHJvcGVydGllczoKPiA+ID4gPiAgICAgICAgTGlz
-dCBvZiBjbG9jayBuYW1lcyBmb3IgcGFydGljdWxhciBDTEtPVVQgbXV4IGlucHV0cwo+ID4gPiA+
-ICAgICAgbWluSXRlbXM6IDEKPiA+ID4gPiAgICAgIG1heEl0ZW1zOiAzMgo+ID4gPiA+IC0gICAg
-aXRlbXM6Cj4gPiA+ID4gLSAgICAgIHBhdHRlcm46ICdeY2xrb3V0KFswLTldfFsxMl1bMC05XXwz
-WzAtMV0pJCcKPiA+ID4gPiArICAgIGFsbE9mOgo+ID4gPiA+ICsgICAgICAtIGl0ZW1zOgo+ID4g
-PiA+ICsgICAgICAgICAgcGF0dGVybjogJ15jbGtvdXQoWzAtOV18WzEyXVswLTldfDNbMC0xXSkk
-Jwo+ID4gPiA+ICsgICAgICAtIHVuaXF1ZUl0ZW1zOiB0cnVlCj4gPiA+Cj4gPiA+IFlvdSBzaG91
-bGRuJ3QgbmVlZCB0aGUgJ2FsbE9mJywganVzdCBhZGQgdW5pcXVlSXRlbXMgYXQgdGhlIHNhbWUg
-bGV2ZWwgYXMgaXRlbXMuCj4gPgo+ID4gSWYgeW91IG1lYW4gc29tZXRoaW5nIGxpa2U6Cj4gPiAg
-IDU2ICAgICB1bmlxdWVJdGVtczogdHJ1ZQo+ID4gICA1NyAgICAgaXRlbXM6Cj4gPiAgIDU4ICAg
-ICAgIHBhdHRlcm46ICdeY2xrb3V0KFswLTldfFsxMl1bMC05XXwzWzAtMV0pJCcKPiA+Cj4gPiBU
-aGVuIHRoZSBkdF9iaW5kaW5nX2NoZWNrIGZhaWxzOgo+ID4KPiA+IGRldi9saW51eC9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWw6IHByb3BlcnRp
-ZXM6Y2xvY2stbmFtZXM6Cj4gPiAndW5pcXVlSXRlbXMnIGlzIG5vdCBvbmUgb2YgWyckcmVmJywg
-J2FkZGl0aW9uYWxJdGVtcycsICdhZGRpdGlvbmFsUHJvcGVydGllcycsICdhbGxPZicsICdhbnlP
-ZicsICdjb25zdCcsICdjb250YWlucycsICdkZWZhdWx0JywgJ2RlcGVuZGVuY2llcycsICdkZXBy
-ZWNhdGVkJywgJ2Rlc2NyaXB0aW9uJywgJ2Vsc2UnLCAnZW51bScsICdpdGVtcycsICdpZicsICdt
-aW5JdGVtcycsICdtaW5pbXVtJywgJ21heEl0ZW1zJywgJ21heGltdW0nLCAnbm90JywgJ29uZU9m
-JywgJ3BhdHRlcm4nLCAncGF0dGVyblByb3BlcnRpZXMnLCAncHJvcGVydGllcycsICdyZXF1aXJl
-ZCcsICd0aGVuJywgJ3R5cGUnLCAndHlwZVNpemUnLCAndW5ldmFsdWF0ZWRQcm9wZXJ0aWVzJ10K
-Pgo+IEkgY2FuIGFkZCBpdC4KPgo+IFRoZSBvdGhlciBvcHRpb24gaXMgdG8gZml4IHRoaXMgaW4g
-dGhlIGNsb2NrIHNjaGVtYS4gSSdtIG5vdCBzdXJlIGlmCj4gdGhlcmUncyBhIG5lZWQgZm9yIGR1
-cGxpY2F0ZSBjbG9jay1uYW1lcy4gU2VlbXMgdW5saWtlbHkuIEknbGwgdGVzdAo+IHRoYXQuCgpB
-Y3R1YWxseSwgY2xvY2stbmFtZXMgaXMgYWxyZWFkeSBzZXQgdG8gYmUgdW5pcXVlLiBEaWQgeW91
-IHNlZSBvdGhlcndpc2U/CgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVs
+Hi Xingyu,
+
+On Sun, 2019-09-29 at 14:24 +0800, Xingyu Chen wrote:
+> This patchset adds support for Meson-A1 SoC Reset Controller. A new struct
+> meson_reset_param is introduced to describe the register differences between
+> Meson-A1 and previous SoCs.
+>
+> Changes since v2 at [1]:
+> - add comments in header file to indicate holes
+> - reorder the Signed-off-by and Reviewed-by
+> - remove Jianxin's Signed-off-by
+> - add Kevin's Reviewed-by
+
+Thank you, I have applied patches 2 and 3 to reset/next.
+
+regards
+Philipp
+
+> Changes since v1 at [0]:
+> - rebase on linux-next
+> - add Neil's Reviewed-by
+> 
+> [0] https://lore.kernel.org/linux-amlogic/1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com
+> [1] https://lore.kernel.org/linux-amlogic/1569227661-4261-1-git-send-email-xingyu.chen@amlogic.com
+> 
+> Xingyu Chen (3):
+>   arm64: dts: meson: add reset controller for Meson-A1 SoC
+>   dt-bindings: reset: add bindings for the Meson-A1 SoC Reset Controller
+>   reset: add support for the Meson-A1 SoC Reset Controller
+> 
+>  .../bindings/reset/amlogic,meson-reset.yaml        |  1 +
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  6 ++
+>  drivers/reset/reset-meson.c                        | 35 ++++++++--
+>  include/dt-bindings/reset/amlogic,meson-a1-reset.h | 74 ++++++++++++++++++++++
+>  4 files changed, 109 insertions(+), 7 deletions(-)
+>  create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+> 
