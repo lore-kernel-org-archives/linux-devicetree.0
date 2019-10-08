@@ -1,46 +1,29 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Convert PWM bindings to
- json-schema
-Date: Tue, 8 Oct 2019 16:46:06 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1910081643220.11044@viisi.sifive.com>
-References: <20191002164047.14499-1-krzk@kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
+Date: Tue, 8 Oct 2019 16:51:37 -0700
+Message-ID: <20191008235137.GM63675@minitux>
+References: <20190906051017.26846-1-vkoul@kernel.org>
+ <20190906051017.26846-4-vkoul@kernel.org>
+ <20191008074619.GA20801@jackp-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002164047.14499-1-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191008074619.GA20801@jackp-linux.qualcomm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
+To: Jack Pham <jackp@codeaurora.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2 Oct 2019, Krzysztof Kozlowski wrote:
-
-> Convert generic PWM bindings to DT schema format using json-schema.  The
-> consumer bindings are split to separate file.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
+On Tue 08 Oct 00:46 PDT 2019, Jack Pham wrote:
+> On Fri, Sep 06, 2019 at 10:40:17AM +0530, Vinod Koul wrote:
+[..]
+> I was thinking of taking a stab at USB if I get time, not sure if that's
+> already on your or somebody's (Bjorn?) radar.
 > 
 
-[ ... ]
+We only have remote access to the hardware, making it rather tedious to
+do USB. So it's all yours! :)
 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-> index 36447e3c9378..3d1dd7b06efc 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-> @@ -17,7 +17,7 @@ Required properties:
->    Please refer to sifive-blocks-ip-versioning.txt for details.
->  - reg: physical base address and length of the controller's registers
->  - clocks: Should contain a clock identifier for the PWM's parent clock.
-> -- #pwm-cells: Should be 3. See pwm.txt in this directory
-> +- #pwm-cells: Should be 3. See pwm.yaml in this directory
->    for a description of the cell format.
->  - interrupts: one interrupt per PWM channel
-
-For the SiFive PWM driver documentation:
-
-Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
-
-
-- Paul
+Regards,
+Bjorn
