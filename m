@@ -1,55 +1,100 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 0/3] ARM: dts: SDRAM and L2 cache EDAC for Armada SoCs
-Date: Tue, 08 Oct 2019 11:57:27 +0200
-Message-ID: <87ftk3tv94.fsf@FE-laptop>
-References: <20190926232820.27676-1-chris.packham@alliedtelesis.co.nz>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v3 00/14] dmaengine/soc: Add Texas Instruments UDMA support
+Date: Tue, 8 Oct 2019 13:09:52 +0300
+Message-ID: <7dd18208-1ca5-c902-dc11-edbd4ded51ed@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190926232820.27676-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: santosh.shilimkar@oracle.com, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, j-keerthy@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, tony@atomide.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
-
-> This series was waiting for the armada_xp edac driver to be accepted.
-> Now that it has the relevant nodes can be added to the Armada SoCs. So
-> that boards can use the EDAC driver if they have the hardware support.
->
-> The db-xc3-24g4xg.dts board doesn't have an ECC chip for it's DDR but it
-> can use the L2 cache parity and ecc support.
->
-> Chris Packham (3):
->   ARM: dts: armada-xp: enable L2 cache parity and ecc on db-xc3-24g4xg
->   ARM: dts: mvebu: add sdram controller node to Armada-38x
->   ARM: dts: armada-xp: add label to sdram-controller node
-
-Series applied on mvebu/dt
-
-Thanks,
-
-Gregory
-
-
->
->  arch/arm/boot/dts/armada-38x.dtsi             | 5 +++++
->  arch/arm/boot/dts/armada-xp-98dx3236.dtsi     | 2 +-
->  arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
->  arch/arm/boot/dts/armada-xp.dtsi              | 2 +-
->  4 files changed, 12 insertions(+), 2 deletions(-)
->
-> -- 
-> 2.23.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+SGkgU2FudG9zaCwKCk9uIDA0LzEwLzIwMTkgMTkuMzUsIHNhbnRvc2guc2hpbGlta2FyQG9yYWNs
+ZS5jb20gd3JvdGU6Cj4gT24gOS8zMC8xOSAxMToxNiBQTSwgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6
+Cj4+IEhpLAo+Pgo+PiBDaGFuZ2VzIHNpbmNlIHYyCj4+IClodHRwczovL3BhdGNod29yay5rZXJu
+ZWwub3JnL3Byb2plY3QvbGludXgtZG1hZW5naW5lL2xpc3QvP3Nlcmllcz0xNTI2MDkmc3RhdGU9
+KikKPj4KPj4gLSBCYXNlZCBvbiA1LjQtcmMxCj4+IC0gU3VwcG9ydCBmb3IgRmxvdyBvbmx5IGRh
+dGEgdHJhbnNmZXIgZm9yIHRoZSBnbHVlIGxheWVyCj4+Cj4gCj4+Cj4+IEdyeWdvcmlpIFN0cmFz
+aGtvICgzKToKPj4gwqDCoCBiaW5kaW5nczogc29jOiB0aTogYWRkIGRvY3VtZW50YXRpb24gZm9y
+IGszIHJpbmdhY2MKPj4gwqDCoCBzb2M6IHRpOiBrMzogYWRkIG5hdnNzIHJpbmdhY2MgZHJpdmVy
+Cj4+IMKgwqAgZG1hZW5naW5lOiB0aTogazMtdWRtYTogQWRkIGdsdWUgbGF5ZXIgZm9yIG5vbiBE
+TUFlbmdpbmUgdXNlcnMKPj4KPj4gUGV0ZXIgVWpmYWx1c2kgKDExKToKPj4gwqDCoCBkbWFlbmdp
+bmU6IGRvYzogQWRkIHNlY3Rpb25zIGZvciBwZXIgZGVzY3JpcHRvciBtZXRhZGF0YSBzdXBwb3J0
+Cj4+IMKgwqAgZG1hZW5naW5lOiBBZGQgbWV0YWRhdGFfb3BzIGZvciBkbWFfYXN5bmNfdHhfZGVz
+Y3JpcHRvcgo+PiDCoMKgIGRtYWVuZ2luZTogQWRkIHN1cHBvcnQgZm9yIHJlcG9ydGluZyBETUEg
+Y2FjaGVkIGRhdGEgYW1vdW50Cj4+IMKgwqAgZG1hZW5naW5lOiB0aTogQWRkIGNwcGk1IGhlYWRl
+ciBmb3IgVURNQQo+PiDCoMKgIGR0LWJpbmRpbmdzOiBkbWE6IHRpOiBBZGQgZG9jdW1lbnQgZm9y
+IEszIFVETUEKPj4gwqDCoCBkbWFlbmdpbmU6IHRpOiBOZXcgZHJpdmVyIGZvciBLMyBVRE1BIC0g
+c3BsaXQjMTogZGVmaW5lcywgc3RydWN0cywgaW8KPj4gwqDCoMKgwqAgZnVuYwo+PiDCoMKgIGRt
+YWVuZ2luZTogdGk6IE5ldyBkcml2ZXIgZm9yIEszIFVETUEgLSBzcGxpdCMyOiBwcm9iZS9yZW1v
+dmUsIHhsYXRlCj4+IMKgwqDCoMKgIGFuZCBmaWx0ZXJfZm4KPj4gwqDCoCBkbWFlbmdpbmU6IHRp
+OiBOZXcgZHJpdmVyIGZvciBLMyBVRE1BIC0gc3BsaXQjMzogYWxsb2MvZnJlZQo+PiDCoMKgwqDC
+oCBjaGFuX3Jlc291cmNlcwo+PiDCoMKgIGRtYWVuZ2luZTogdGk6IE5ldyBkcml2ZXIgZm9yIEsz
+IFVETUEgLSBzcGxpdCM0OiBkbWFfZGV2aWNlIGNhbGxiYWNrcwo+PiDCoMKgwqDCoCAxCj4+IMKg
+wqAgZG1hZW5naW5lOiB0aTogTmV3IGRyaXZlciBmb3IgSzMgVURNQSAtIHNwbGl0IzU6IGRtYV9k
+ZXZpY2UgY2FsbGJhY2tzCj4+IMKgwqDCoMKgIDIKPj4gwqDCoCBkbWFlbmdpbmU6IHRpOiBOZXcg
+ZHJpdmVyIGZvciBLMyBVRE1BIC0gc3BsaXQjNjogS2NvbmZpZyBhbmQgTWFrZWZpbGUKPj4KPj4g
+wqAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3RpL2szLXVkbWEudHh0wqDCoMKgIHzCoCAx
+ODUgKwo+PiDCoCAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvdGkvazMtcmluZ2FjYy50eHQg
+fMKgwqAgNTkgKwo+PiDCoCBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZG1hZW5naW5lL2NsaWVu
+dC5yc3QgfMKgwqAgNzUgKwo+PiDCoCAuLi4vZHJpdmVyLWFwaS9kbWFlbmdpbmUvcHJvdmlkZXIu
+cnN0wqDCoMKgwqDCoMKgwqDCoCB8wqDCoCA0NiArCj4+IMKgIGRyaXZlcnMvZG1hL2RtYWVuZ2lu
+ZS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgNzMg
+Kwo+PiDCoCBkcml2ZXJzL2RtYS9kbWFlbmdpbmUuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgwqAgOCArCj4+IMKgIGRyaXZlcnMvZG1hL3RpL0tjb25m
+aWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDIy
+ICsKPj4gwqAgZHJpdmVycy9kbWEvdGkvTWFrZWZpbGXCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIDIgKwo+PiDCoCBkcml2ZXJzL2RtYS90aS9rMy11
+ZG1hLWdsdWUuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMTIyNSArKysrKysK
+Pj4gwqAgZHJpdmVycy9kbWEvdGkvazMtdWRtYS1wcml2YXRlLmPCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCB8wqAgMTQxICsKPj4gwqAgZHJpdmVycy9kbWEvdGkvazMtdWRtYS5jwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMzUyNSArKysrKysrKysrKysrKysr
+Kwo+PiDCoCBkcml2ZXJzL2RtYS90aS9rMy11ZG1hLmjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgfMKgIDE2MSArCj4+IMKgIGRyaXZlcnMvc29jL3RpL0tjb25maWfC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDEyICsK
+Pj4gwqAgZHJpdmVycy9zb2MvdGkvTWFrZWZpbGXCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIDEgKwo+PiDCoCBkcml2ZXJzL3NvYy90aS9rMy1yaW5n
+YWNjLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCAxMTY1ICsrKysrKwo+
+PiDCoCBpbmNsdWRlL2R0LWJpbmRpbmdzL2RtYS9rMy11ZG1hLmjCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgfMKgwqAgMTAgKwo+PiDCoCBpbmNsdWRlL2xpbnV4L2RtYS9rMy11ZG1hLWdsdWUuaMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAxMzQgKwo+PiDCoCBpbmNsdWRlL2xpbnV4L2Rt
+YS90aS1jcHBpNS5owqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDEwNDkgKysr
+KysKPj4gwqAgaW5jbHVkZS9saW51eC9kbWFlbmdpbmUuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgfMKgIDExMCArCj4+IMKgIGluY2x1ZGUvbGludXgvc29jL3RpL2sz
+LXJpbmdhY2MuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMjQ1ICsrCj4+IMKgIDIwIGZp
+bGVzIGNoYW5nZWQsIDgyNDggaW5zZXJ0aW9ucygrKQo+PiDCoCBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS90aS9rMy11ZG1hLnR4dAo+PiDC
+oCBjcmVhdGUgbW9kZSAxMDA2NDQKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3NvYy90aS9rMy1yaW5nYWNjLnR4dAo+PiDCoCBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9k
+bWEvdGkvazMtdWRtYS1nbHVlLmMKPj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZG1h
+L3RpL2szLXVkbWEtcHJpdmF0ZS5jCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Rt
+YS90aS9rMy11ZG1hLmMKPj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZG1hL3RpL2sz
+LXVkbWEuaAo+PiDCoCBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvdGkvazMtcmluZ2Fj
+Yy5jCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL2RtYS9rMy11
+ZG1hLmgKPj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvZG1hL2szLXVkbWEt
+Z2x1ZS5oCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L2RtYS90aS1jcHBp
+NS5oCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L3NvYy90aS9rMy1yaW5n
+YWNjLmgKPj4KPiBDYW4geW91IHBsZWFzZSBzcGxpdCB0aGlzIHNlcmllcyBhbmQgcG9zdCBkcml2
+ZXJzL3NvYy8qIGJpdHMKPiBzZXBhcmF0ZWx5ID/CoCBJZiBpdHMgcmVhZHksIEkgY2FuIGFwcGx5
+IGszLXJpbmdhY2MuYyBjaGFuZ2VzLgoKSSdsbCB3YWl0IGNvdXBsZSBvZiBkYXlzIGZvciBndXlz
+IHRvIGNoZWNrIHRoZSBzZXJpZXMsIHRoZW4gSSBjYW4gc2VuZAp0aGUgc3BsaXQgb3V0IHJpbmdh
+Y2MgcGF0Y2hlcyBzZXBhcmF0ZWx5LgoKLSBQw6l0ZXIKClRleGFzIEluc3RydW1lbnRzIEZpbmxh
+bmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVz
+cyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
