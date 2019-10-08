@@ -1,48 +1,43 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: Add AST2500 RMII RCLK definitions
-Date: Tue, 8 Oct 2019 12:37:00 +0000
-Message-ID: <CACPK8Xf-f-r4S02GoxYdBYOJi5NGYMCOr6XGVza4vEGAsqzR9w@mail.gmail.com>
-References: <20191008113523.13601-1-andrew@aj.id.au> <20191008113523.13601-2-andrew@aj.id.au>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: samsung: Force clkoutN names to be
+ unique in PMU
+Date: Tue, 8 Oct 2019 07:38:14 -0500
+Message-ID: <CAL_JsqJDTcHu5oXG6zszGHCBhTE6EW94AANUjyMV78SkKcn5yA@mail.gmail.com>
+References: <20191004151414.8458-1-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191008113523.13601-2-andrew@aj.id.au>
+In-Reply-To: <20191004151414.8458-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Maciej Falkowski <m.falkowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 Oct 2019 at 11:34, Andrew Jeffery <andrew@aj.id.au> wrote:
+On Fri, Oct 4, 2019 at 10:14 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> The AST2500 has an explicit gate for the RMII RCLK for each of the two
-> MACs.
+> The clkoutN names of clocks must be unique because they represent
+> unique inputs of clock multiplexer.
 >
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  include/dt-bindings/clock/aspeed-clock.h | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/arm/samsung/pmu.yaml | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 >
-> diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
-> index f43738607d77..64e245fb113f 100644
-> --- a/include/dt-bindings/clock/aspeed-clock.h
-> +++ b/include/dt-bindings/clock/aspeed-clock.h
-> @@ -39,6 +39,8 @@
->  #define ASPEED_CLK_BCLK                        33
->  #define ASPEED_CLK_MPLL                        34
->  #define ASPEED_CLK_24M                 35
-> +#define ASPEED_CLK_GATE_MAC1RCLK       36
-> +#define ASPEED_CLK_GATE_MAC2RCLK       37
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> index 73b56fc5bf58..d8e03716f5d2 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> @@ -53,8 +53,10 @@ properties:
+>        List of clock names for particular CLKOUT mux inputs
+>      minItems: 1
+>      maxItems: 32
+> -    items:
+> -      pattern: '^clkout([0-9]|[12][0-9]|3[0-1])$'
+> +    allOf:
+> +      - items:
+> +          pattern: '^clkout([0-9]|[12][0-9]|3[0-1])$'
+> +      - uniqueItems: true
 
-Calling these ASPEED_CLK_GATE breaks the pattern the rest of the
-driver has in using that name for the clocks that are registered as
-struct aspeed_clk_gate clocks.
+You shouldn't need the 'allOf', just add uniqueItems at the same level as items.
 
-Do you think we should drop the GATE_ to match the existing clocks?
-
-
->
->  #define ASPEED_RESET_XDMA              0
->  #define ASPEED_RESET_MCTP              1
-> --
-> 2.20.1
->
+Rob
