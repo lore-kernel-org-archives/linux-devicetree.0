@@ -1,62 +1,32 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCHv7 3/9] soc: ti: omap-prm: poll for reset complete during
- de-assert
-Date: Tue, 08 Oct 2019 13:40:08 +0200
-Message-ID: <1570534808.18914.2.camel@pengutronix.de>
-References: <20191008071913.28740-1-t-kristo@ti.com>
- <20191008071913.28740-4-t-kristo@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 06/10] dt-bindings: usb: renesas_usb3: Document r8a774b1 support
+Date: Tue, 8 Oct 2019 13:42:41 +0200
+Message-ID: <CAMuHMdX5hkZ7kLRiA_NRrBziFsrZNgZX-cEiE+bAaubkMdX=1A@mail.gmail.com>
+References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-7-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191008071913.28740-4-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, ssantosh@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1570531132-21856-7-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-10-08 at 10:19 +0300, Tero Kristo wrote:
-> Poll for reset completion status during de-assertion of reset, otherwise
-> the IP in question might be accessed before it has left reset properly.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  drivers/soc/ti/omap_prm.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
-> index ab0b66ad715d..96fa2aad9b93 100644
-> --- a/drivers/soc/ti/omap_prm.c
-> +++ b/drivers/soc/ti/omap_prm.c
-> @@ -153,6 +153,18 @@ static int omap_reset_deassert(struct reset_controller_dev *rcdev,
->  	writel_relaxed(v, reset->prm->base + reset->prm->data->rstctrl);
->  	spin_unlock_irqrestore(&reset->lock, flags);
->  
-> +	if (!has_rstst)
-> +		return 0;
-> +
-> +	/* wait for the status to be set */
-> +	ret = readl_relaxed_poll_timeout(reset->prm->base +
-> +					 reset->prm->data->rstst,
-> +					 v, v & BIT(st_bit), 1,
-> +					 OMAP_RESET_MAX_WAIT);
-> +	if (ret)
-> +		pr_err("%s: timedout waiting for %s:%lu\n", __func__,
-> +		       reset->prm->data->name, id);
-> +
->  	return 0;
->  }
->  
+On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Document RZ/G2N (R8A774B1) SoC bindings.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-regards
-Philipp
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
