@@ -1,37 +1,32 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 1/2] dt-bindings: clock: Add AST2500 RMII RCLK definitions
-Date: Tue,  8 Oct 2019 22:05:22 +1030
-Message-ID: <20191008113523.13601-2-andrew@aj.id.au>
-References: <20191008113523.13601-1-andrew@aj.id.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 03/10] dt-bindings: usb: renesas_usbhs: Add r8a774b1 support
+Date: Tue, 8 Oct 2019 13:34:20 +0200
+Message-ID: <CAMuHMdVGcsVZoJdqaYHVYi4XHkUT24ryRBFo6cXmJ+zfYF69DQ@mail.gmail.com>
+References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191008113523.13601-1-andrew@aj.id.au>
+In-Reply-To: <1570531132-21856-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-The AST2500 has an explicit gate for the RMII RCLK for each of the two
-MACs.
+On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Document RZ/G2N (R8A774B1) SoC bindings.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- include/dt-bindings/clock/aspeed-clock.h | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
-index f43738607d77..64e245fb113f 100644
---- a/include/dt-bindings/clock/aspeed-clock.h
-+++ b/include/dt-bindings/clock/aspeed-clock.h
-@@ -39,6 +39,8 @@
- #define ASPEED_CLK_BCLK			33
- #define ASPEED_CLK_MPLL			34
- #define ASPEED_CLK_24M			35
-+#define ASPEED_CLK_GATE_MAC1RCLK	36
-+#define ASPEED_CLK_GATE_MAC2RCLK	37
- 
- #define ASPEED_RESET_XDMA		0
- #define ASPEED_RESET_MCTP		1
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
