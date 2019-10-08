@@ -1,135 +1,155 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-Date: Tue, 8 Oct 2019 20:08:49 +0530
-Message-ID: <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
- <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com> <7hsgo4cgeg.fsf@baylibre.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] userdiff: Fix some corner cases in dts regex
+Date: Tue, 08 Oct 2019 07:43:05 -0700
+Message-ID: <20191008144306.B2B0820659@mail.kernel.org>
+References: <20191004213029.145027-1-sboyd@kernel.org> <c3a054d9-2646-e440-40c5-b0aecf21e690@kdbg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hsgo4cgeg.fsf@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <git-owner@vger.kernel.org>
+In-Reply-To: <c3a054d9-2646-e440-40c5-b0aecf21e690@kdbg.org>
+Sender: git-owner@vger.kernel.org
+To: Johannes Sixt <j6t@kdbg.org>
+Cc: git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, Junio C Hamano <gitster@pobox.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin / Martin,
+Quoting Johannes Sixt (2019-10-05 07:09:11)
+> Am 04.10.19 um 23:30 schrieb Stephen Boyd:
+> > While reviewing some dts diffs recently I noticed that the hunk header
+> > logic was failing to find the containing node. This is because the regex
+> > doesn't consider properties that may span multiple lines, i.e.
+> >=20
+> >       property =3D <something>,
+> >                  <something_else>;
+>=20
+> What if the property spans more than two lines?
+>=20
+>         property =3D <something>,
+>                    more,
+>                    <something_else>;
+>=20
+> Can the second line "more," begin with a word, or are the angle brackets
+> mandatory?
 
-On Tue, 8 Oct 2019 at 04:28, Kevin Hilman <khilman@baylibre.com> wrote:
->
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
->
-> > On Mon, Oct 7, 2019 at 3:17 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> > [...]
-> >> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> >> index c9a867ac32d4..72f6a7dca0d6 100644
-> >> --- a/arch/arm64/configs/defconfig
-> >> +++ b/arch/arm64/configs/defconfig
-> >> @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
-> >>  CONFIG_PWM=y
-> >>  CONFIG_PWM_BCM2835=m
-> >>  CONFIG_PWM_CROS_EC=m
-> >> -CONFIG_PWM_MESON=m
-> >> +CONFIG_PWM_MESON=y
-> >
-> > some time ago I submitted a similar patch for the 32-bit SoCs
-> > it turned that that pwm-meson can be built as module because the
-> > kernel will run without CPU DVFS as long as the clock and regulator
-> > drivers are returning -EPROBE_DEFER (-517)
->
-> On 64-bit SoCs, the kernel boots with PWM as a module also, but DVFS
-> only works sometimes, and making it built-in fixes the problem.
-> Actually, it doesn't fix, it just hides the problem, which is likely a
-> race or timeout happening during deferred probing.
->
-> > did you check whether there's some other problem like some unused
-> > clock which is being disabled at that moment?
-> > I've been hunting weird problems in the past where it turned out that
-> > changing kernel config bits changed the boot timing - that masked the
-> > original problem
->
-> Right, I would definitely prefer to not make this built-in without a lot
-> more information to *why* this is needed.  In figuring that out, we'll
-> probably find the race/timeout that's the root cause.
->
-> Kevin
->
->
+Angle brackets aren't mandatory, but it is very odd to have a property
+with mixed numbers and strings because parsing becomes difficult.
 
-Kevin,
+>=20
+> I understand that the continuation lines can begin with a word when the
+> property is an expression that is distributed over a number of lines.
+> Such continuation lines could be picked up as hunk headers.
+>=20
+> But I don't want to complicate things: The hunk header patterns do not
+> have to be perfect; it is sufficient when they are helpful in a good
+> majority of cases that occur in practice.
+>=20
+> > and it got hung up on comments inside nodes that look like the root node
+> > because they start with '/*'. Add tests for these cases and update the
+> > regex to find them. Maybe detecting the root node is too complicated but
+> > forcing it to be a backslash with any amount of whitespace up to an open
+> > bracket seemed OK. I tried to detect that a comment is in-between the
+> > two parts but I wasn't happy so I just dropped it.
+> >=20
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> > ---
+> >  t/t4018/dts-nodes-multiline-prop | 12 ++++++++++++
+> >  t/t4018/dts-root                 |  2 +-
+> >  t/t4018/dts-root-comment         |  8 ++++++++
+> >  userdiff.c                       |  3 ++-
+> >  4 files changed, 23 insertions(+), 2 deletions(-)
+> >  create mode 100644 t/t4018/dts-nodes-multiline-prop
+> >  create mode 100644 t/t4018/dts-root-comment
+> >=20
+> > diff --git a/t/t4018/dts-nodes-multiline-prop b/t/t4018/dts-nodes-multi=
+line-prop
+> > new file mode 100644
+> > index 000000000000..f7b655935429
+> > --- /dev/null
+> > +++ b/t/t4018/dts-nodes-multiline-prop
+> > @@ -0,0 +1,12 @@
+> > +/ {
+> > +     label_1: node1@ff00 {
+> > +             RIGHT@deadf00,4000 {
+> > +                     multilineprop =3D <3>,
+> > +                                     <4>;
+>=20
+> You could insert more lines to demonstrate that "<x>," on a line by
+> itself is not picked up.
 
-As per my understanding from the kernelci.org logs it seen that
-pwm-meson driver is requested more than once before it finally load the module.
+Maybe I should add another test?
 
-[0] https://storage.kernelci.org/next/master/next-20191008/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-g12b-odroid-n2.txt
+>=20
+> > +
+> > +
+> > +> +                  ChangeMe =3D <0xffeedd00>;
+>=20
+> Sufficient distance to the incorrect candidates above. Good.
+>=20
+> > +             };
+> > +     };
+> > +};
+> > diff --git a/t/t4018/dts-root b/t/t4018/dts-root
+> > index 2ef9e6ffaa2c..4353b8220c91 100644
+> > --- a/t/t4018/dts-root
+> > +++ b/t/t4018/dts-root
+> > @@ -1,4 +1,4 @@
+> > -/RIGHT { /* Technically just supposed to be a slash */
+> > +/ { RIGHT /* Technically just supposed to be a slash and brace */
+>=20
+> Do I understand correctly that the updated form, "/ {", is the common
+> way to spell a root node, but "/" or "/word" are not?
 
-Hi Martin,
+Correct. A root node is '/' and the '{' opens the node. There is the
+possibility of something like '/delete-node nodename;' or
+'/delete-property property;', where the latter exists inside some node.
+The regex would need to avoid all of those.
 
-I have tired your Martin's patch [1] and still the boot fails to move
-ahead with below logs.
-[1] https://lore.kernel.org/patchwork/patch/1034186/
+>=20
+> >       #size-cells =3D <1>;
+> > =20
+> >       ChangeMe =3D <0xffeedd00>;
+> > diff --git a/t/t4018/dts-root-comment b/t/t4018/dts-root-comment
+> > new file mode 100644
+> > index 000000000000..333a625c7007
+> > --- /dev/null
+> > +++ b/t/t4018/dts-root-comment
+> > @@ -0,0 +1,8 @@
+> > +/ { RIGHT /* Technically just supposed to be a slash and brace */
+>=20
+> Devil's advocate here: insert ';' or '=3D' in the comment, and the line
+> would not be picked up. Does that hurt in practice?
 
-[    1.543928] xhci-hcd xhci-hcd.0.auto: Host supports USB 3.0 SuperSpeed
-[    1.550422] usb usb2: We don't know the algorithms for LPM for this
-host, disabling LPM.
-[    1.558702] hub 2-0:1.0: USB hub found
-[    1.562131] hub 2-0:1.0: 1 port detected
-[    1.566206] dwc3-meson-g12a ffe09000.usb: switching to Device Mode
-[    1.573252] meson-gx-mmc ffe05000.sd: Got CD GPIO
-[    1.607405] hctosys: unable to open rtc device (rtc0)
+I don't think it hurts in practice so I'd like to ignore it.
 
-I have put some more prints in pwm-meson.c it fails to load the module
-as microsSD card is not completely initialized.
+>=20
+> > +     #size-cells =3D <1>;
+> > +
+> > +     /* This comment should be ignored */
+> > +
+> > +     some-property =3D <40+2>;
+> > +     ChangeMe =3D <0xffeedd00>;
+> > +};
+> > diff --git a/userdiff.c b/userdiff.c
+> > index 86e3244e15dd..651b56caec56 100644
+> > --- a/userdiff.c
+> > +++ b/userdiff.c
+> > @@ -25,8 +25,9 @@ IPATTERN("ada",
+> >        "|=3D>|\\.\\.|\\*\\*|:=3D|/=3D|>=3D|<=3D|<<|>>|<>"),
+> >  PATTERNS("dts",
+> >        "!;\n"
+> > +      "!.*=3D.*\n"
+>=20
+> This behaves the same way as just
+>=20
+>         "!=3D\n"
+>=20
+> no?
+>=20
 
-Here is what I have tried to enable sd_emmc_b node, but still it fails
-to initialize this driver..
-
--       max-frequency = <50000000>;
-+       sd-uhs-sdr12;
-+       sd-uhs-sdr25;
-+       sd-uhs-sdr50;
-+       sd-uhs-ddr50;
-+       max-frequency = <100000000>;
-        disable-wp;
-
-Below are the boot logs.
-
-[    1.729877] meson-gx-mmc ffe05000.sd: Anand mmc proble start1
-[    1.734658] meson-gx-mmc ffe05000.sd: Got CD GPIO
-[    1.739237] meson-gx-mmc ffe05000.sd: Anand mmc proble start2
-[    1.744900] meson-gx-mmc ffe05000.sd: Anand mmc proble start3
-[    1.750594] meson-gx-mmc ffe05000.sd: Anand mmc proble start4
-[    1.756292] meson-gx-mmc ffe05000.sd: Anand mmc proble start5
-[    1.761987] meson-gx-mmc ffe05000.sd: Anand mmc proble start6
-[    1.767668] meson-gx-mmc ffe05000.sd: Anand mmc proble start7
-[    1.773356] meson-gx-mmc ffe05000.sd: Anand mmc proble start8
-[    1.779050] meson-gx-mmc ffe05000.sd: Anand mmc proble start9
-[    1.784748] meson-gx-mmc ffe05000.sd: Anand mmc proble start10
-[    1.790523] meson-gx-mmc ffe05000.sd: Anand mmc proble start11
-[    1.796578] meson-gx-mmc ffe05000.sd: Anand mmc proble start12
-[    1.802150] meson-gx-mmc ffe05000.sd: Anand mmc proble start13
-[    1.807980] meson-gx-mmc ffe05000.sd: Anand mmc proble start14
-[    1.813642] meson-gx-mmc ffe05000.sd: Anand mmc proble start15
-[    1.819416] meson-gx-mmc ffe05000.sd: Anand mmc proble start17
-[    1.825491] meson-gx-mmc ffe05000.sd: Anand mmc proble start18
-[    1.830984] meson-gx-mmc ffe05000.sd: Anand mmc proble start19
-[    1.862000] meson-gx-mmc ffe05000.sd: Anand mmc Final proble good to go
-[    1.863323] pwm-regulator regulator-vddcpu-a: Anand :
-dutycycle_unit 100: dutycycle_range 100:0
-[    1.871617] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
-[    1.878560] pwm-regulator regulator-vddcpu-b: Anand :
-dutycycle_unit 100: dutycycle_range 100:0
-[    1.886613] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
-[    1.894094] pwm-regulator regulator-vddcpu-a: Anand :
-dutycycle_unit 100: dutycycle_range 100:0
-[    1.901771] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
-[    1.909089] pwm-regulator regulator-vddcpu-b: Anand :
-dutycycle_unit 100: dutycycle_range 100:0
-[    1.916658] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
-[    1.924147] hctosys: unable to open rtc device (rtc0)
-
-sd_emmc_b probe function return success but still not able to progress further.
-
-Best Regards
-
--Anand
+Not exactly. Properties don't always get assigned. There are boolean
+properties that can be tested for by the presence of some string with an
+ending semi-colon, like 'this-is-true;'. If we just check for not equal
+to a line with a semicolon and newline then we'll see boolean
+properties. Should I add that as another test?
