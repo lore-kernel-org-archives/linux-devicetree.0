@@ -1,120 +1,97 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v11 3/6] of: property: Add functional dependency link from
- DT bindings
-Date: Tue, 8 Oct 2019 11:57:49 -0700
-Message-ID: <CAGETcx-FjF+bktBgL6h0ORH3MU4vMM9JNC2oB8Myn8KqvnmhDg@mail.gmail.com>
-References: <20190904211126.47518-1-saravanak@google.com> <20190904211126.47518-4-saravanak@google.com>
- <20190911102926.A9F8D2082C@mail.kernel.org> <20191004153750.GB823823@kroah.com>
- <20191008145304.2BD54205F4@mail.kernel.org>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v3 3/5] drm/rockchip: Add optional support for CRTC
+ gamma LUT
+Date: Tue, 08 Oct 2019 16:23:36 -0300
+Message-ID: <dad6ee9aa3699af0f794f467224a8a01798d86b2.camel@collabora.com>
+References: <20190930222802.32088-1-ezequiel@collabora.com>
+         <20190930222802.32088-4-ezequiel@collabora.com>
+         <20191007185432.GG126146@art_vandelay>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191008145304.2BD54205F4@mail.kernel.org>
+In-Reply-To: <20191007185432.GG126146@art_vandelay>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-acpi@vger.kernel.org, clang-built-linux <clang-built-linux@googlegroups.com>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, kbuild test robot <lkp@intel.com>
+To: Sean Paul <sean@poorly.run>
+Cc: dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 7:53 AM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Greg Kroah-Hartman (2019-10-04 08:37:50)
-> > On Wed, Sep 11, 2019 at 03:29:25AM -0700, Stephen Boyd wrote:
-> > > Quoting Saravana Kannan (2019-09-04 14:11:22)
-> > > > +       int ret = 0;
-> > > > +       struct device_node *tmp_np = sup_np;
-> > > > +
-> > > > +       of_node_get(sup_np);
-> > > > +       /*
-> > > > +        * Find the device node that contains the supplier phandle.  It may be
-> > > > +        * @sup_np or it may be an ancestor of @sup_np.
-> > > > +        */
-> > > > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
-> > > > +               sup_np = of_get_next_parent(sup_np);
-> > >
-> > > I don't get this. This is assuming that drivers are only probed for
-> > > device nodes that have a compatible string? What about drivers that make
-> > > sub-devices for clk support that have drivers in drivers/clk/ that then
-> > > attach at runtime later? This happens sometimes for MFDs that want to
-> > > split the functionality across the driver tree to the respective
-> > > subsystems.
-> >
-> > For that, the link would not be there, correct?
->
-> The parent device (MFD) would have the links because that is the device
-> node with the provider property like '#clock-cells'. The child clk
-> device that's populated by the MFD would be the one actually providing
-> the clk via a driver that may probe any time later, or never, depending
-> on if the clk driver is configured as a module or not. I fail to see how
-> this will work for these cases.
->
-> Is this logic there to find the parent of a regulator phandle and match
-> that to some driver? It looks like it.
+Hello Sean,
 
-In the case of an MFD creating "fake" children devices, the parent MFD
-device's driver is responsible for handling the sync state callback.
-It'll get the sync_state callback after all the child devices'
-consumers have probed. The MFD driver will need to do the sync state
-clean up for the children devices or pass it on to the child devices'
-drivers (whatever makes sense for that specific MFD) by whatever means
-those specific drivers talk to each other (direct calls, registering
-callbacks, etc).
+On Mon, 2019-10-07 at 14:54 -0400, Sean Paul wrote:
+> On Mon, Sep 30, 2019 at 07:28:00PM -0300, Ezequiel Garcia wrote:
+> > Add an optional CRTC gamma LUT support, and enable it on RK3288.
+> > This is currently enabled via a separate address resource,
+> > which needs to be specified in the devicetree.
+> > 
+> > The address resource is required because on some SoCs, such as
+> > RK3288, the LUT address is after the MMU address, and the latter
+> > is supported by a different driver. This prevents the DRM driver
+> > from requesting an entire register space.
+> > 
+> > The current implementation works for RGB 10-bit tables, as that
+> > is what seems to work on RK3288.
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> > Changes from v2:
+> > * None.
+> > 
+> > Changes from v1:
+> > * drop explicit linear LUT after finding a proper
+> >   way to disable gamma correction.
+> > * avoid setting gamma is the CRTC is not active.
+> > * s/int/unsigned int as suggested by Jacopo.
+> > * only enable color management and set gamma size
+> >   if gamma LUT is supported, suggested by Doug.
+> > * drop the reg-names usage, and instead just use indexed reg
+> >   specifiers, suggested by Doug.
+> > 
+> > Changes from RFC:
+> > * Request (an optional) address resource for the LUT.
+> > * Drop support for RK3399, which doesn't seem to work
+> >   out of the box and needs more research.
+> > * Support pass-thru setting when GAMMA_LUT is NULL.
+> > * Add a check for the gamma size, as suggested by Ilia.
+> > * Move gamma setting to atomic_commit_tail, as pointed
+> >   out by Jacopo/Laurent, is the correct way.
+> > ---
+> >  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   3 +
+> >  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 114 ++++++++++++++++++++
+> >  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   7 ++
+> >  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
+> >  4 files changed, 126 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > index dba352ec0ee3..fd1d987698ab 100644
+> > --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > @@ -17,6 +17,7 @@
+> >  #include "rockchip_drm_drv.h"
+> >  #include "rockchip_drm_fb.h"
+> >  #include "rockchip_drm_gem.h"
+> > +#include "rockchip_drm_vop.h"
+> >  
+> >  static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
+> >  	.destroy       = drm_gem_fb_destroy,
+> > @@ -112,6 +113,8 @@ rockchip_atomic_helper_commit_tail_rpm(struct drm_atomic_state *old_state)
+> >  
+> >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> >  
+> > +	rockchip_drm_vop_gamma_set(old_state);
+> > +
+> 
+> Instead of duplicating the commit_tail helper, could you just implement
+> .atomic_begin() and call this from there? I think the only hitch is if you
+> need this to be completed before crtc->atomic_enable(), at which point you
+> might need to call it from vop_crtc_atomic_enable() and then detect that in
+> atomic_begin()
+> 
 
-If they are real sub-devices, then they should really be captured in
-DT as child devices and then the child device's drivers will get the
-sync state callback directly.
+I think moving this to .atomic_begin might be enough. Let me send a new
+series and we can see how that goes.
 
-> >
-> > > > +static int of_link_property(struct device *dev, struct device_node *con_np,
-> > > > +                            const char *prop_name)
-> > > > +{
-> > > > +       struct device_node *phandle;
-> > > > +       const struct supplier_bindings *s = bindings;
-> > > > +       unsigned int i = 0;
-> > > > +       bool matched = false;
-> > > > +       int ret = 0;
-> > > > +
-> > > > +       /* Do not stop at first failed link, link all available suppliers. */
-> > > > +       while (!matched && s->parse_prop) {
-> > > > +               while ((phandle = s->parse_prop(con_np, prop_name, i))) {
-> > > > +                       matched = true;
-> > > > +                       i++;
-> > > > +                       if (of_link_to_phandle(dev, phandle) == -EAGAIN)
-> > > > +                               ret = -EAGAIN;
-> > >
-> > > And don't break?
-> >
-> > There was comments before about how this is not needed.  Frank asked
-> > that the comment be removed.  And now you point it out again :)
-> >
-> > Look at the comment a few lines up, we have to go through all of the
-> > suppliers.
-> >
->
-> Ok. The comment tells me what is happening but it misses the essential
-> part which is _why_ we must make links to each supplier and return
-> -EAGAIN.
-
-To be clear the -EAGAIN is only if any of the linking fails.
-
-The reason was already discussion in the email thread [1] but I agree
-it needs to be documented.
-
-I thought I had documented the _why_ in the documentation for
-fwnode.add_links(), but it's not there. I'll check to make sure I
-didn't capture it elsewhere and if not, I'll update fwnode.add_links
-documentation.
-
-To copy-paste the discussion from the earlier thread:
-
-"Actually, there is a point for this. Say Device-C depends on suppliers
-Device-S1 and Device-S2 and they are listed in DT in that order.
-
-Say, S1 gets populated after late_initcall_sync but S2 is probes way
-before that. If I don't continue past a "failed linking" to S1 and
-also link up to S2, then S2 will get a sync_state() callback before C
-is probed. So I have to go through all possible suppliers and [link] as many
-as possible."
-
--Saravana
-
-[1] - https://lore.kernel.org/lkml/CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com/
+Thanks for reviewing,
+Ezequiel
