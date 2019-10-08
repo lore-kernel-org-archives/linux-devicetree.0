@@ -1,43 +1,82 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: arm: samsung: Force clkoutN names to be
- unique in PMU
-Date: Tue, 8 Oct 2019 17:10:28 +0200
-Message-ID: <20191008151028.GA2720@pi3>
-References: <20191004151414.8458-1-krzk@kernel.org>
- <CAL_JsqJDTcHu5oXG6zszGHCBhTE6EW94AANUjyMV78SkKcn5yA@mail.gmail.com>
- <20191008125038.GA2550@pi3>
- <CAL_Jsq+GcsUWN6kjBLkyr1rHGh6_4=w6JL6+k7DBXkBcvHcSBw@mail.gmail.com>
- <CAL_JsqKBzZCShxx99aB4z15XYNbUionVicmfNNXEfq=iohWLCA@mail.gmail.com>
- <20191008142900.GA2635@pi3>
- <CAL_Jsq+ObMD=inkMFqkZbKFoKZUxw53gUMnjsC1pU5GwumK8LQ@mail.gmail.com>
- <20191008150456.GA2683@pi3>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv8 1/9] dt-bindings: omap: add new binding for PRM instances
+Date: Tue, 8 Oct 2019 17:46:55 +0200
+Message-ID: <20191008154655.u34wkbqgmelv3aea@earth.universe>
+References: <20191008125544.20679-1-t-kristo@ti.com>
+ <20191008125544.20679-2-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20191008150456.GA2683@pi3>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: multipart/mixed; boundary="===============8435942204498745943=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191008125544.20679-2-t-kristo@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: devicetree@vger.kernel.org, tony@atomide.com, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgMDgsIDIwMTkgYXQgMDU6MDQ6NTZQTSArMDIwMCwgS3J6eXN6dG9mIEtvemxv
-d3NraSB3cm90ZToKPiBPbiBUdWUsIE9jdCAwOCwgMjAxOSBhdCAwOTozODoxNUFNIC0wNTAwLCBS
-b2IgSGVycmluZyB3cm90ZToKPiA+IEFyZSB5b3UgcnVubmluZyB1c2luZyBEVF9TQ0hFTUFfRklM
-RVM/IElmIHNvLCB5b3Ugd29uJ3QgZ2V0IHRoZSBjb3JlIHNjaGVtYS4KPiAKPiBBaCwgeWVzLCBu
-b3cgSSBzZWUgcHJvcGVyIGVycm9ycy4gVGhhbmtzIGZvciBwb2ludGluZyB0aGlzLgo+IAo+IEkn
-bGwgc2VuZCBuZXh0IHZlcnNpb24gb2YgdGhpcyBwYXRjaCBvbmx5IChpZiBvdGhlcnMgYXJlIG9r
-KS4KPiAKCk9mIGNvdXJzZSwgdGhlcmUgd2lsbCBiZSBubyB2MiwgdGhpcyBwYXRjaCBjYW4gYmUg
-anVzdCBza2lwcGVkLgoKQmVzdCByZWdhcmRzLApLcnp5c3p0b2YKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+
+--===============8435942204498745943==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ctyqydaobcxcfjee"
+Content-Disposition: inline
+
+
+--ctyqydaobcxcfjee
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Tue, Oct 08, 2019 at 03:55:36PM +0300, Tero Kristo wrote:
+> +Example:
+> +
+> +prm_dsp2: prm@1b00 {
+> +	compatible = "ti,omap-prm-inst", "ti,dra7-prm-inst";
+
+Nit: compatible values are sorted the other way around (most
+specific first).
+
+-- Sebastian
+
+--ctyqydaobcxcfjee
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2cr2gACgkQ2O7X88g7
++pqWmxAAnbs6GjNR1+b2puQnzOpb3nsF6NWlckoiR/wBE5/utyC4v95yoB2Jm+sS
+c7GlleJA5DmF8E40TuOq3HL/z+dt5P/vWX9egt0um6TtHZ3Z7rMWuwvv5TK+3St8
+DF7ktlGqs2KG/E96LMf762P69CK2IccE7GUpY7N+MiFOZFuMJ7e+vUMyetuuSqeT
+1r/RxLgyNAbeM5X0l4mN95Tv6A+aeuBr0jpX+N97vsEXUtdJ+5aLrlFX+8zsc/rn
+LpexzXPaUDR5RgotC/+l9TxCAXwmHKJtPo0lLSsOWtctaD5MHYH/VkWAMCO3EGx8
+YhOTT2ZNnfsR51Nc0mee/LzhrHGVYrnh+V15riJilNypnY+2wIw+B91xbJoMBFx2
+PWLdwU+z67Cnc/+R/qaAYFNOQAfji1e+dAR5uAybReYzJGGRx+IOX/CInPuNZEdh
+YMbngcINMVVEd3PzdCHUsIUOoXTpoAl0PlLVvLcf9JMxkn+5+SD23Sk+oNEjreVD
+39Sb8bmrUG5C8DWBgddKpRE9dSbooLJhdkNApMUDdZwoluEDYeYlH2UDE+j7OkN6
+kTZXans1Iq0fkkq/w/V3AQO5Z8aP+FHIIg6j6Jy6zD3C9L7Lw4EdhWFBBPDFpWp/
+UGPs6TkWr0rre1fR657a3oKgv3OYwThEf3+bnTvbK7RiVQukc0Q=
+=qzjC
+-----END PGP SIGNATURE-----
+
+--ctyqydaobcxcfjee--
+
+
+--===============8435942204498745943==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8435942204498745943==--
