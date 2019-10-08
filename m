@@ -1,52 +1,76 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: Use interpolated brightness tables
- for veyron
-Date: Tue, 8 Oct 2019 11:05:24 -0700
-Message-ID: <CAD=FV=Xi-M=Kk0axj=ukGMDr4p0a86LRdiL-6WyPZnL2vuDZGA@mail.gmail.com>
-References: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH 1/5] dt-bindings: i2c: aspeed: add buffer and DMA mode
+ transfer support
+Date: Tue, 8 Oct 2019 11:12:13 -0700
+Message-ID: <20191008181213.GB155928@google.com>
+References: <20191007231313.4700-1-jae.hyun.yoo@linux.intel.com>
+ <20191007231313.4700-2-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20191007231313.4700-2-jae.hyun.yoo@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Tao Ren <taoren@fb.com>, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Oct 3, 2019 at 9:42 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> Use interpolated brightness tables (added by commit 573fe6d1c25
-> ("backlight: pwm_bl: Linear interpolation between
-> brightness-levels") for veyron, instead of specifying every single
-> step. Some devices/panels have intervals that are smaller than
-> the specified 'num-interpolated-steps', the driver interprets
-> these intervals as a single step.
->
-> Another option would be to switch to a perceptual brightness curve
-> (CIE 1931), with the caveat that it would change the behavior of
-> the backlight. Also the concept of a minimum brightness level is
-> currently not supported for CIE 1931 curves.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Mon, Oct 07, 2019 at 04:13:09PM -0700, Jae Hyun Yoo wrote:
+> Append bindings to support buffer mode and DMA mode transfer.
+> 
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 > ---
->
-> Changes in v2:
-> - added 0 as first step for devices/panels that require a minimum
->   PWM duty cycle
-> - increased 'num-interpolated-steps' values by one, it's not the
->   number of steps between levels, but that number +1
->
->  arch/arm/boot/dts/rk3288-veyron-edp.dtsi   | 35 ++--------------------
->  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 35 ++--------------------
->  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 35 ++--------------------
->  arch/arm/boot/dts/rk3288-veyron-tiger.dts  | 35 ++--------------------
->  4 files changed, 8 insertions(+), 132 deletions(-)
+>  .../devicetree/bindings/i2c/i2c-aspeed.txt    | 67 +++++++++++++++++--
+>  1 file changed, 60 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> index 8fbd8633a387..e40dcc108307 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> @@ -3,7 +3,10 @@ Device tree configuration for the I2C busses on the AST24XX and AST25XX SoCs.
+>  Required Properties:
+>  - #address-cells	: should be 1
+>  - #size-cells		: should be 0
+> -- reg			: address offset and range of bus
+> +- reg			: Address offset and range of bus registers.
+> +			  An additional SRAM buffer address offset and range is
+> +			  optional in case of enabling I2C dedicated SRAM for
+> +			  buffer mode transfer support.
 
-I guess if someone wanted to they could try to increase the number of
-steps and see if they got prettier backlight transition, but what's
-there now doesn't bother me and has the advantage of matching what has
-been in use forever.  Thus:
+Sorry, I am having trouble parsing this. This seems like the SRAM buffer
+is global to all busses. Can you clarify? I expect I will probably have
+some more questions elsewhere.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>  - compatible		: should be "aspeed,ast2400-i2c-bus"
+>  			  or "aspeed,ast2500-i2c-bus"
+>  - clocks		: root clock of bus, should reference the APB
+> @@ -16,6 +19,18 @@ Optional Properties:
+>  - bus-frequency	: frequency of the bus clock in Hz defaults to 100 kHz when not
+>  		  specified
+>  - multi-master	: states that there is another master active on this bus.
+> +- aspeed,dma-buf-size	: size of DMA buffer (from 2 to 4095 in case of AST2500
+> +			  or later versions).
+> +			  Only AST2500 and later versions support DMA mode
+> +			  under some limitations:
+> +			  I2C is sharing the DMA H/W with UHCI host controller
+> +			  and MCTP controller. Since those controllers operate
+> +			  with DMA mode only, I2C has to use buffer mode or byte
+> +			  mode instead if one of those controllers is enabled.
+> +			  Also make sure that if SD/eMMC or Port80 snoop uses
+> +			  DMA mode instead of PIO or FIFO respectively, I2C
+> +			  can't use DMA mode. If both DMA and buffer modes are
+> +			  enabled, DMA mode will be selected.
+
+nit: I think it makes sense to break down the exceptions into a
+bulleted list.
+
+Cheers
