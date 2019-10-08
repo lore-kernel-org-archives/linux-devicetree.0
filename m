@@ -1,45 +1,70 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v2] arm64: dts: marvell: add ESPRESSObin variants
-Date: Tue, 08 Oct 2019 14:57:27 +0200
-Message-ID: <877e5ftmx4.fsf@FE-laptop>
-References: <20190603155354.3902-1-tmn505@gmail.com> <87a7abtn0y.fsf@FE-laptop>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv8 5/9] soc: ti: omap-prm: add omap4 PRM data
+Date: Tue, 8 Oct 2019 15:55:40 +0300
+Message-ID: <20191008125544.20679-6-t-kristo@ti.com>
+References: <20191008125544.20679-1-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87a7abtn0y.fsf@FE-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Maciej Nowak <tmn505@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Konstantin Porotchkin <kostap@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191008125544.20679-1-t-kristo@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org, ssantosh@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Hi Tomasz Maciej Nowak,
->
->> This commit adds dts for different variants of ESPRESSObin board:
->>
->> ESPRESSObin with soldered eMMC,
->>
->> ESPRESSObin V7, compared to prior versions some passive elements changed
->> and ethernet ports labels positions have been reversed,
->>
->> ESPRESSObin V7 with soldered eMMC.
->>
->> Since most of elements are the same, one common dtsi is created and
->> referenced in each dts of particular variant.
->>
->> Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
->
->
-> Applied on mvebu/dt
+Add PRM data for omap4 family of SoCs. Initially this is just used to
+provide reset support.
 
-I meant mvebu/dt64
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ drivers/soc/ti/omap_prm.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
->
-> Sorry for the delay.
->
-> Thanks,
->
-> Gregory
+diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
+index 3d9393ff67e3..24b1da3492c0 100644
+--- a/drivers/soc/ti/omap_prm.c
++++ b/drivers/soc/ti/omap_prm.c
+@@ -58,7 +58,29 @@ struct omap_reset_data {
+ 
+ #define OMAP_PRM_HAS_RESETS	(OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_RSTST)
+ 
++static const struct omap_rst_map rst_map_01[] = {
++	{ .rst = 0, .st = 0 },
++	{ .rst = 1, .st = 1 },
++	{ .rst = -1 },
++};
++
++static const struct omap_rst_map rst_map_012[] = {
++	{ .rst = 0, .st = 0 },
++	{ .rst = 1, .st = 1 },
++	{ .rst = 2, .st = 2 },
++	{ .rst = -1 },
++};
++
++static const struct omap_prm_data omap4_prm_data[] = {
++	{ .name = "tesla", .base = 0x4a306400, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_01 },
++	{ .name = "core", .base = 0x4a306700, .rstctrl = 0x210, .rstst = 0x214, .clkdm_name = "ducati", .rstmap = rst_map_012 },
++	{ .name = "ivahd", .base = 0x4a306f00, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_012 },
++	{ .name = "device", .base = 0x4a307b00, .rstctrl = 0x0, .rstst = 0x4, .rstmap = rst_map_01, .flags = OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_NO_CLKDM },
++	{ },
++};
++
+ static const struct of_device_id omap_prm_id_table[] = {
++	{ .compatible = "ti,omap4-prm-inst", .data = omap4_prm_data },
+ 	{ },
+ };
+ 
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+2.17.1
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
