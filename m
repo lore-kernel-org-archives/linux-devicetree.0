@@ -1,117 +1,102 @@
-From: Jack Pham <jackp@codeaurora.org>
-Subject: Re: [PATCH v2 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
-Date: Tue, 8 Oct 2019 00:46:20 -0700
-Message-ID: <20191008074619.GA20801@jackp-linux.qualcomm.com>
-References: <20190906051017.26846-1-vkoul@kernel.org>
- <20190906051017.26846-4-vkoul@kernel.org>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH] arm64: dts: ls1028a: Add FlexSPI support for NXP LS1028
+Date: Tue, 8 Oct 2019 08:03:03 +0000
+Message-ID: <AM5PR04MB32996FD54858CCF141CBC218F59A0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <1568118055-9740-1-git-send-email-Ashish.Kumar@nxp.com>
+ <20191006032019.GP7150@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190906051017.26846-4-vkoul@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191006032019.GP7150@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Ashish Kumar <ashish.kumar@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh@kernel.org" <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-On Fri, Sep 06, 2019 at 10:40:17AM +0530, Vinod Koul wrote:
-> SM8150 UFS PHY is v4 of QMP phy. Add support for V4 QMP phy register
-> defines and support for SM8150 QMP UFS PHY.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 125 ++++++++++++++++++++++++++++
->  drivers/phy/qualcomm/phy-qcom-qmp.h |  96 +++++++++++++++++++++
->  2 files changed, 221 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 34ff6434da8f..92d3048f2b36 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -164,6 +164,11 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
->  	[QPHY_PCS_READY_STATUS]		= 0x160,
->  };
->  
-> +static const unsigned int sm8150_ufsphy_regs_layout[] = {
-> +	[QPHY_START_CTRL]		= 0x00,
-> +	[QPHY_PCS_READY_STATUS]		= 0x180,
-> +};
-> +
->  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
->  	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
->  	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
-> @@ -878,6 +883,93 @@ static const struct qmp_phy_init_tbl msm8998_usb3_pcs_tbl[] = {
->  	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
->  };
->  
-> +static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
-> +	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_SYSCLK_EN_SEL, 0xd9),
-
-QSERDES_V4_COM? See below.
-
-<snip>
-
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
-> index 335ea5d7ef40..0eefd8621669 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.h
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
-> @@ -313,4 +313,100 @@
->  #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG4		0x5c
->  #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5		0x60
->  
-> +/* Only for QMP V4 PHY - QSERDES COM registers */
-> +#define QSERDES_COM_V4_SYSCLK_EN_SEL			0x094
-
-Should these rather be prefixed as QSERDES_V4_COM? There are already
-QSERDES_V3_COM_* in this header so the convention appears to be
-Q{SERDES,PHY}_VX_{COM,TX,RX,PCS}.
-
-> +#define QSERDES_COM_V4_HSCLK_SEL			0x158
-> +#define QSERDES_COM_V4_HSCLK_HS_SWITCH_SEL		0x15C
-> +#define QSERDES_COM_V4_LOCK_CMP_EN			0x0A4
-> +#define QSERDES_COM_V4_VCO_TUNE_MAP			0x10C
-
-Nit: sort in ascending offset order, and make the hex values lowercase?
-
-<snip>
-
-> +/* Only for QMP V4 PHY - PCS registers */
-> +#define QPHY_V4_PHY_START				0x000
-> +#define QPHY_V4_POWER_DOWN_CONTROL			0x004
-> +#define QPHY_V4_SW_RESET				0x008
-> +#define QPHY_V4_PCS_READY_STATUS			0x180
-> +#define QPHY_V4_LINECFG_DISABLE				0x148
-> +#define QPHY_V4_MULTI_LANE_CTRL1			0x1E0
-> +#define QPHY_V4_RX_SIGDET_CTRL2				0x158
-> +#define QPHY_V4_TX_LARGE_AMP_DRV_LVL			0x030
-> +#define QPHY_V4_TX_SMALL_AMP_DRV_LVL			0x038
-> +#define QPHY_V4_TX_MID_TERM_CTRL1			0x1D8
-> +#define QPHY_V4_DEBUG_BUS_CLKSEL			0x124
-> +#define QPHY_V4_PLL_CNTL				0x02C
-> +#define QPHY_V4_TIMER_20US_CORECLK_STEPS_MSB		0x00C
-> +#define QPHY_V4_TIMER_20US_CORECLK_STEPS_LSB		0x010
-> +#define QPHY_V4_TX_PWM_GEAR_BAND			0x160
-> +#define QPHY_V4_TX_HS_GEAR_BAND				0x168
-> +#define QPHY_V4_TX_HSGEAR_CAPABILITY			0x074
-> +#define QPHY_V4_RX_HSGEAR_CAPABILITY			0x0B4
-> +#define QPHY_V4_RX_MIN_HIBERN8_TIME			0x150
-> +#define QPHY_V4_BIST_FIXED_PAT_CTRL			0x060
-
-Interesting. These offsets appear to be valid only for the UFS instance
-of the QMP PHY. For PCIe and USB the PCS layout is completely different.
-Wonder if we need to add _UFS_ to  the prefix to differentiate them? Or
-can this be deferred to when PCIe/USB PHY driver support for SM8150 gets
-added?
-
-I was thinking of taking a stab at USB if I get time, not sure if that's
-already on your or somebody's (Bjorn?) radar.
-
-Thanks
-Jack
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
+bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOoxMNTCNsjVIDExOjIwDQo+IFRvOiBBc2hp
+c2ggS3VtYXIgPGFzaGlzaC5rdW1hckBueHAuY29tPg0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc7IHJvYmhAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsgWGlhb3dlaQ0KPiBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFkZCBGbGV4U1BJIHN1cHBvcnQgZm9yIE5Y
+UCBMUzEwMjgNCj4gDQo+IE9uIFR1ZSwgU2VwIDEwLCAyMDE5IGF0IDA1OjUwOjUxUE0gKzA1MzAs
+IEFzaGlzaCBLdW1hciB3cm90ZToNCj4gPiBBZGQgZnNwaSBub2RlIHByb3BlcnR5IGZvciBMUzEw
+MjhBIFNvQyBmb3IgRmxleFNQSSBkcml2ZXIuDQo+ID4gUHJvcGVydHkgYWRkZWQgZm9yIEZsZXhT
+UEkgY29udHJvbGxlciBhbmQgZm9yIHRoZSBjb25uZWN0ZWQgc2xhdmUNCj4gPiBkZXZpY2UgZm9y
+IHRoZSBMUzEwMjhBUkRCIGFuZCBMUzEwMjhBUURTIHRhcmdldC4NCj4gPiBSREIgYW5kIFFEUyBp
+cyBoYXZpbmcgb25lIFNQSS1OT1IgZmxhc2ggZGV2aWNlLCBtdDM1eHUwMmcgY29ubmVjdGVkIGF0
+DQo+ID4gQ1MwLg0KPiA+IFRoaXMgZmxhc2ggZGV2aWNlICJtdDM1eHUwMmciIGlzIHRlc3RlZCBm
+b3Igb2N0YWwgcmVhZA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93
+ZWkuYmFvQG54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQXNoaXNoIEt1bWFyIDxBc2hpc2gu
+S3VtYXJAbnhwLmNvbT4NCj4gDQo+IFdoZW4geW91IHNlbmQgYSBwYXRjaCBzZXJpZXMsIHRoZSBw
+YXRjaGVzIHNob3VsZCBiZSBudW1iZXJlZCBwcm9wZXJseSBhbmQNCj4gcHJlZmVyYWJseSB3aXRo
+IGEgY292ZXItbGV0dGVyLg0KDQpHb3QgaXQsIHRoYW5rcy4NCg0KVGhhbmtzDQpYaWFvd2VpDQoN
+Cj4gDQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
+MjhhLXFkcy5kdHMgfCAxNQ0KPiA+ICsrKysrKysrKysrKysrKyAgYXJjaC9hcm02NC9ib290L2R0
+cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cyB8DQo+IDE1ICsrKysrKysrKysrKysrKw0K
+PiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpICAgIHwg
+MTMgKysrKysrKysrKysrKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKykN
+Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
+bHMxMDI4YS1xZHMuZHRzDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
+bHMxMDI4YS1xZHMuZHRzDQo+ID4gaW5kZXggNWUxNGU1YS4uNWQ0Njk5MyAxMDA2NDQNCj4gPiAt
+LS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+
+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0
+cw0KPiA+IEBAIC0xMDMsNiArMTAzLDIxIEBADQo+ID4gIAlzdGF0dXMgPSAib2theSI7DQo+ID4g
+IH07DQo+ID4NCj4gPiArJmZzcGkgew0KPiA+ICsJc3RhdHVzID0gIm9rYXkiOw0KPiANCj4gSGF2
+ZSBhIG5ld2xpbmUgYmV0d2VlbiBwcm9wZXJ0aWVzIGFuZCBjaGlsZCBub2RlLi4NCj4gDQo+ID4g
+KwlmbGFzaDA6IG10MzV4dTAyZ0AwIHsNCj4gDQo+IFVzZSBhIGdlbmVyaWMgbm9kZSBuYW1lIGFu
+ZCBzcGVjaWZpYyBsYWJlbCBuYW1lLg0KPiANCj4gPiArCQljb21wYXRpYmxlID0gIm1pY3Jvbixt
+dDM1eHUwMmciLCAiamVkZWMsc3BpLW5vciI7DQo+IA0KPiAibWljcm9uLG10MzV4dTAyZyIgaXMg
+dW5kb2N1bWVudGVkLg0KPiANCj4gU2hhd24NCj4gDQo+ID4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8
+MT47DQo+ID4gKwkJI3NpemUtY2VsbHMgPSA8MT47DQo+ID4gKwkJbTI1cCxmYXN0LXJlYWQ7DQo+
+ID4gKwkJc3BpLW1heC1mcmVxdWVuY3kgPSA8NTAwMDAwMDA+Ow0KPiA+ICsJCXJlZyA9IDwwPjsN
+Cj4gPiArCQkvKiBUaGUgZm9sbG93aW5nIHNldHRpbmcgZW5hYmxlcyAxLTEtOCAoQ01ELUFERFIt
+REFUQSkgbW9kZSAqLw0KPiA+ICsJCXNwaS1yeC1idXMtd2lkdGggPSA8OD47IC8qIDggU1BJIFJ4
+IGxpbmVzICovDQo+ID4gKwkJc3BpLXR4LWJ1cy13aWR0aCA9IDwxPjsgLyogMSBTUEkgVHggbGlu
+ZSAqLw0KPiA+ICsJfTsNCj4gPiArfTsNCj4gPiArDQo+ID4gICZpMmMwIHsNCj4gPiAgCXN0YXR1
+cyA9ICJva2F5IjsNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQo+ID4gaW5kZXggMWE2OTIyMS4uZjMzY2IyZSAx
+MDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4
+YS1yZGIuZHRzDQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
+MTAyOGEtcmRiLmR0cw0KPiA+IEBAIC05Niw2ICs5NiwyMSBAQA0KPiA+ICAJc3RhdHVzID0gIm9r
+YXkiOw0KPiA+ICB9Ow0KPiA+DQo+ID4gKyZmc3BpIHsNCj4gPiArCXN0YXR1cyA9ICJva2F5IjsN
+Cj4gPiArCWZsYXNoMDogbXQzNXh1MDJnQDAgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAibWljcm9u
+LG10MzV4dTAyZyIsICJqZWRlYyxzcGktbm9yIjsNCj4gPiArCQkjYWRkcmVzcy1jZWxscyA9IDwx
+PjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4gPiArCQltMjVwLGZhc3QtcmVhZDsNCj4g
+PiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDw1MDAwMDAwMD47DQo+ID4gKwkJcmVnID0gPDA+Ow0K
+PiA+ICsJCS8qIFRoZSBmb2xsb3dpbmcgc2V0dGluZyBlbmFibGVzIDEtMS04IChDTUQtQUREUi1E
+QVRBKSBtb2RlICovDQo+ID4gKwkJc3BpLXJ4LWJ1cy13aWR0aCA9IDw4PjsgLyogOCBTUEkgUngg
+bGluZXMgKi8NCj4gPiArCQlzcGktdHgtYnVzLXdpZHRoID0gPDE+OyAvKiAxIFNQSSBUeCBsaW5l
+ICovDQo+ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgJmkyYzAgew0KPiA+ICAJc3RhdHVz
+ID0gIm9rYXkiOw0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
+YWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiBpbmRleCBiMTM5YjI5Li40YWExODI1IDEwMDY0NA0K
+PiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kN
+Cj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNp
+DQo+ID4gQEAgLTE3NCw2ICsxNzQsMTkgQEANCj4gPiAgCQkJY2xvY2tzID0gPCZzeXNjbGs+Ow0K
+PiA+ICAJCX07DQo+ID4NCj4gPiArCQlmc3BpOiBzcGlAMjBjMDAwMCB7DQo+ID4gKwkJCWNvbXBh
+dGlibGUgPSAibnhwLGx4MjE2MGEtZnNwaSI7DQo+ID4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+
+Ow0KPiA+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiArCQkJcmVnID0gPDB4MCAweDIwYzAw
+MDAgMHgwIDB4MTAwMDA+LA0KPiA+ICsJCQkgICAgICA8MHgwIDB4MjAwMDAwMDAgMHgwIDB4MTAw
+MDAwMDA+Ow0KPiA+ICsJCQlyZWctbmFtZXMgPSAiZnNwaV9iYXNlIiwgImZzcGlfbW1hcCI7DQo+
+ID4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyNSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4g
+PiArCQkJY2xvY2tzID0gPCZjbG9ja2dlbiA0IDM+LCA8JmNsb2NrZ2VuIDQgMz47DQo+ID4gKwkJ
+CWNsb2NrLW5hbWVzID0gImZzcGlfZW4iLCAiZnNwaSI7DQo+ID4gKwkJCXN0YXR1cyA9ICJkaXNh
+YmxlZCI7DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gIAkJaTJjMDogaTJjQDIwMDAwMDAgew0KPiA+
+ICAJCQljb21wYXRpYmxlID0gImZzbCx2ZjYxMC1pMmMiOw0KPiA+ICAJCQkjYWRkcmVzcy1jZWxs
+cyA9IDwxPjsNCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
