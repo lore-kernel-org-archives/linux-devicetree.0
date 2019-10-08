@@ -1,74 +1,61 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH 2/6] dt-bindings: Add DT binding for PCIE GEN4 EP of the
- layerscape
-Date: Tue, 8 Oct 2019 01:26:15 +0000
-Message-ID: <AM5PR04MB3299504E1D4869B3B727233EF59A0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190916021742.22844-3-xiaowei.bao@nxp.com> <20190930222221.GA13251@bogus>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/2] arm64: dts: imx8mm-evk: Add i2c3 support
+Date: Tue, 8 Oct 2019 01:28:15 +0000
+Message-ID: <AM6PR0402MB3911D2C2A28C177CBA0D34AFF59A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+References: <1568886408-18168-1-git-send-email-Anson.Huang@nxp.com>
+ <20191007122313.GJ7150@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190930222221.GA13251@bogus>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191007122313.GJ7150@dragon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jun Li <jun.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOcTqMTDUwjHI1SA2OjIyDQo+IFRvOiBYaWFvd2Vp
-IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IFoucS4gSG91IDx6aGlxaWFuZy5ob3VA
-bnhwLmNvbT47IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBz
-aGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGtpc2hv
-bkB0aS5jb207IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IE0uaC4gTGlhbg0KPiA8bWluZ2h1
-YW4ubGlhbkBueHAuY29tPjsgYW5kcmV3Lm11cnJheUBhcm0uY29tOyBNaW5na2FpIEh1DQo+IDxt
-aW5na2FpLmh1QG54cC5jb20+OyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-Mi82XSBkdC1iaW5kaW5nczogQWRkIERUIGJpbmRpbmcgZm9yIFBDSUUgR0VONCBFUCBvZiB0aGUN
-Cj4gbGF5ZXJzY2FwZQ0KPiANCj4gT24gTW9uLCBTZXAgMTYsIDIwMTkgYXQgMTA6MTc6MzhBTSAr
-MDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4gQWRkIHRoZSBkb2N1bWVudGF0aW9uIGZvciB0
-aGUgRGV2aWNlIFRyZWUgYmluZGluZyBvZiB0aGUgbGF5ZXJzY2FwZQ0KPiA+IFBDSWUgR0VONCBj
-b250cm9sbGVyIHdpdGggRVAgbW9kZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkg
-QmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGNp
-L2xheWVyc2NhcGUtcGNpZS1nZW40LnR4dCAgICAgICAgICB8IDI4DQo+ICsrKysrKysrKysrKysr
-KysrKysrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2llLWdlbjQudHh0DQo+ID4gYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpZS1nZW40LnR4dA0KPiA+
-IGluZGV4IGI0MGZiNWQuLjQxNGE4NmMgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaWUtZ2VuNC50eHQNCj4gPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpZS1n
-ZW40LnR4dA0KPiA+IEBAIC0zLDYgKzMsOCBAQCBOWFAgTGF5ZXJzY2FwZSBQQ0llIEdlbjQgY29u
-dHJvbGxlciAgVGhpcyBQQ0llDQo+ID4gY29udHJvbGxlciBpcyBiYXNlZCBvbiB0aGUgTW9iaXZl
-aWwgUENJZSBJUCBhbmQgdGh1cyBpbmhlcml0cyBhbGwgIHRoZQ0KPiA+IGNvbW1vbiBwcm9wZXJ0
-aWVzIGRlZmluZWQgaW4gbW9iaXZlaWwtcGNpZS50eHQuDQo+ID4NCj4gPiArSE9TVCBNT0RFDQo+
-ID4gKz09PT09PT09PQ0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAtIGNvbXBhdGli
-bGU6IHNob3VsZCBjb250YWluIHRoZSBwbGF0Zm9ybSBpZGVudGlmaWVyIHN1Y2ggYXM6DQo+ID4g
-ICAgImZzbCxseDIxNjBhLXBjaWUiDQo+ID4gQEAgLTIzLDcgKzI1LDIwIEBAIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6DQo+ID4gIC0gbXNpLXBhcmVudCA6IFNlZSB0aGUgZ2VuZXJpYyBNU0kgYmluZGlu
-ZyBkZXNjcmliZWQgaW4NCj4gPiAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-aW50ZXJydXB0LWNvbnRyb2xsZXIvbXNpLnR4dC4NCj4gPg0KPiA+IC1FeGFtcGxlOg0KPiA+ICtE
-RVZJQ0UgTU9ERQ0KPiA+ICs9PT09PT09PT0NCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
-PiArLSBjb21wYXRpYmxlOiBzaG91bGQgY29udGFpbiB0aGUgcGxhdGZvcm0gaWRlbnRpZmllciBz
-dWNoIGFzOg0KPiA+ICsgICJmc2wsbHgyMTYwYS1wY2llLWVwIg0KPiA+ICstIHJlZzogYmFzZSBh
-ZGRyZXNzZXMgYW5kIGxlbmd0aHMgb2YgdGhlIFBDSWUgY29udHJvbGxlciByZWdpc3RlciBibG9j
-a3MuDQo+ID4gKyAgInJlZ3MiOiBQQ0llIGNvbnRyb2xsZXIgcmVnaXN0ZXJzLg0KPiA+ICsgICJh
-ZGRyX3NwYWNlIiBFUCBkZXZpY2UgQ1BVIGFkZHJlc3MuDQo+ID4gKy0gYXBpby13aW5zOiBudW1i
-ZXIgb2YgcmVxdWVzdGVkIGFwaW8gb3V0Ym91bmQgd2luZG93cy4NCj4gPiArDQo+ID4gK09wdGlv
-bmFsIFByb3BlcnR5Og0KPiA+ICstIG1heC1mdW5jdGlvbnM6IE1heGltdW0gbnVtYmVyIG9mIGZ1
-bmN0aW9ucyB0aGF0IGNhbiBiZSBjb25maWd1cmVkDQo+IChkZWZhdWx0IDEpLg0KPiA+ICsNCj4g
-PiArUkMgRXhhbXBsZToNCj4gPg0KPiA+ICAJcGNpZUAzNDAwMDAwIHsNCj4gPiAgCQljb21wYXRp
-YmxlID0gImZzbCxseDIxNjBhLXBjaWUiOw0KPiA+IEBAIC01MCwzICs2NSwxNCBAQCBFeGFtcGxl
-Og0KPiA+ICAJCQkJPDAwMDAgMCAwIDMgJmdpYyAwIDAgR0lDX1NQSSAxMTENCj4gSVJRX1RZUEVf
-TEVWRUxfSElHSD4sDQo+ID4gIAkJCQk8MDAwMCAwIDAgNCAmZ2ljIDAgMCBHSUNfU1BJIDExMg0K
-PiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiAgCX07DQo+ID4gKw0KPiA+ICtFUCBFeGFtcGxl
-Og0KPiA+ICsNCj4gPiArCXBjaWVfZXBAMzQwMDAwMCB7DQo+IA0KPiBwY2llLWVuZHBvaW50QC4u
-Lg0KPiANCj4gPiArCQljb21wYXRpYmxlID0gImZzbCxseDIxNjBhLXBjaWUtZXAiOw0KPiA+ICsJ
-CXJlZyA9IDwweDAwIDB4MDM0MDAwMDAgMHgwIDB4MDAxMDAwMDANCj4gPiArCQkgICAgICAgMHg4
-MCAweDAwMDAwMDAwIDB4OCAweDAwMDAwMDAwPjsNCj4gPiArCQlyZWctbmFtZXMgPSAicmVncyIs
-ICJhZGRyX3NwYWNlIjsNCj4gPiArCQlhcGlvLXdpbnMgPSA8OD47DQo+ID4gKwkJc3RhdHVzID0g
-ImRpc2FibGVkIjsNCj4gDQo+IERvbid0IHNob3cgc3RhdHVzIGluIGV4YW1wbGVzLg0KDQpTb3Jy
-eSwgSSB3aWxsIGFkZCBpdCwgdGhhbmtzDQoNClRoYW5rcw0KWGlhb3dlaQ0KDQo+IA0KPiA+ICsJ
-fTsNCj4gPiAtLQ0KPiA+IDIuOS41DQo+ID4NCg==
+Hi, Shawn
+
+> On Thu, Sep 19, 2019 at 05:46:47PM +0800, Anson Huang wrote:
+> > Enable i2c3 for i.MX8MM EVK board.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> > b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> > index f7a15f3..7758c1c 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> > @@ -306,6 +306,13 @@
+> >  	};
+> >  };
+> >
+> > +&i2c3 {
+> > +	clock-frequency = <400000>;
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_i2c3>;
+> > +	status = "okay";
+> > +};
+> > +
+> >  &iomuxc {
+> 
+> The iomuxc node is being put at end of file because of its huge pinctrl data.
+> I2C devices should be placed in alphabetical sort though.  Can you please
+> have a patch moving i2c1 and i2c2 to correct place first, and then add i2c3?
+
+Done in V2.
+
+Thanks,
+Anson
