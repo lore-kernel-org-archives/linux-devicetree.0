@@ -1,50 +1,23 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v4 3/3] ARM: dts: rockchip: Add RK3288 VOP gamma LUT address
-Date: Tue,  8 Oct 2019 20:00:38 -0300
-Message-ID: <20191008230038.24037-4-ezequiel@collabora.com>
-References: <20191008230038.24037-1-ezequiel@collabora.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: Re: [PATCH net,v2 0/2] Update MT7629 to support PHYLINK API
+Date: Tue, 8 Oct 2019 16:02:22 -0700
+Message-ID: <20191008160222.0bdb7f47@cakuba.netronome.com>
+References: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20191008230038.24037-1-ezequiel@collabora.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: MarkLee <Mark-MC.Lee@mediatek.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>, John Crispin <john@phrozen.org>, Nelson Chang <nelson.chang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rene van Dorst <opensource@vdorst.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UkszMjg4IFNvQyBWT1BzIGhhdmUgb3B0aW9uYWwgc3VwcG9ydCBHYW1tYSBMVVQgc2V0dGluZywK
-d2hpY2ggcmVxdWlyZXMgc3BlY2lmeWluZyB0aGUgR2FtbWEgTFVUIGFkZHJlc3MgaW4gdGhlIGRl
-dmljZXRyZWUuCgpTaWduZWQtb2ZmLWJ5OiBFemVxdWllbCBHYXJjaWEgPGV6ZXF1aWVsQGNvbGxh
-Ym9yYS5jb20+ClJldmlld2VkLWJ5OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1
-bS5vcmc+Ci0tLQpDaGFuZ2VzIGZyb20gdjM6CiogTm9uZS4KQ2hhbmdlcyBmcm9tIHYyOgoqIE5v
-bmUuCkNoYW5nZXMgZnJvbSB2MToKKiBEcm9wIHJlZy1uYW1lcywgYXMgc3VnZ2VzdGVkIGJ5IERv
-dWcuCi0tLQogYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kgfCA0ICsrLS0KIDEgZmlsZSBj
-aGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9yazMyODguZHRz
-aQppbmRleCBjYzg5M2UxNTRmZTUuLmM2ZmM2MzNhY2U4MCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvcmszMjg4LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kK
-QEAgLTEwMjMsNyArMTAyMyw3IEBACiAKIAl2b3BiOiB2b3BAZmY5MzAwMDAgewogCQljb21wYXRp
-YmxlID0gInJvY2tjaGlwLHJrMzI4OC12b3AiOwotCQlyZWcgPSA8MHgwIDB4ZmY5MzAwMDAgMHgw
-IDB4MTljPjsKKwkJcmVnID0gPDB4MCAweGZmOTMwMDAwIDB4MCAweDE5Yz4sIDwweDAgMHhmZjkz
-MTAwMCAweDAgMHgxMDAwPjsKIAkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE1IElSUV9UWVBFX0xF
-VkVMX0hJR0g+OwogCQljbG9ja3MgPSA8JmNydSBBQ0xLX1ZPUDA+LCA8JmNydSBEQ0xLX1ZPUDA+
-LCA8JmNydSBIQ0xLX1ZPUDA+OwogCQljbG9jay1uYW1lcyA9ICJhY2xrX3ZvcCIsICJkY2xrX3Zv
-cCIsICJoY2xrX3ZvcCI7CkBAIC0xMDczLDcgKzEwNzMsNyBAQAogCiAJdm9wbDogdm9wQGZmOTQw
-MDAwIHsKIAkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMyODgtdm9wIjsKLQkJcmVnID0gPDB4
-MCAweGZmOTQwMDAwIDB4MCAweDE5Yz47CisJCXJlZyA9IDwweDAgMHhmZjk0MDAwMCAweDAgMHgx
-OWM+LCA8MHgwIDB4ZmY5NDEwMDAgMHgwIDB4MTAwMD47CiAJCWludGVycnVwdHMgPSA8R0lDX1NQ
-SSAxNiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKIAkJY2xvY2tzID0gPCZjcnUgQUNMS19WT1AxPiwg
-PCZjcnUgRENMS19WT1AxPiwgPCZjcnUgSENMS19WT1AxPjsKIAkJY2xvY2stbmFtZXMgPSAiYWNs
-a192b3AiLCAiZGNsa192b3AiLCAiaGNsa192b3AiOwotLSAKMi4yMi4wCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Mon, 7 Oct 2019 15:08:42 +0800, MarkLee wrote:
+> This patch target to update mt7629 eth driver and dts to support PHYLINK
+
+Thanks for the patches Mark. The description of the set should probably
+say that it _fixes_ some issues. Right now it sounds a little bit like
+you were adding a new feature. Could you rewrite the cover letter to
+give us a better idea what issues this patch set is fixing and why
+those issues occur?
