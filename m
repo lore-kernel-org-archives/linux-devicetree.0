@@ -1,43 +1,59 @@
 From: Qianggui Song <qianggui.song@amlogic.com>
-Subject: [PATCH v2 0/3] pinctrl: meson-a1: add pinctrl driver
-Date: Tue, 8 Oct 2019 19:09:56 +0800
-Message-ID: <1570532999-23302-1-git-send-email-qianggui.song@amlogic.com>
+Subject: [PATCH v2 3/3] arm64: dts: meson: a1: add pinctrl controller support
+Date: Tue, 8 Oct 2019 19:09:59 +0800
+Message-ID: <1570532999-23302-4-git-send-email-qianggui.song@amlogic.com>
+References: <1570532999-23302-1-git-send-email-qianggui.song@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1570532999-23302-1-git-send-email-qianggui.song@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
 Cc: Qianggui Song <qianggui.song@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Xingyu Chen <xingyu.chen@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds Pin controller driver support for Meson-A1 Soc
-which shares the same register layout of pinmux with previous
-Meson-G12A, however there is difference for gpio and pin config
-registers in A1.
+add peripheral pinctrl controller to a1 soc
 
-Changes since v1 at [0]:
- - collect Reviewed-by
- - modify commit log
- - add an extra dt parser function for a1
+Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-[0] https://lore.kernel.org/linux-amlogic/1568700442-18540-1-git-send-email-qianggui.song@amlogic.com/
-
-Qianggui Song (3):
-  pinctrl: add compatible for Amlogic Meson A1 pin controller
-  pinctrl: meson-a1: add pinctrl driver for Meson A1 Soc
-  arm64: dts: meson: a1: add pinctrl controller support
-
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   1 +
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  18 +
- drivers/pinctrl/meson/Kconfig                      |   6 +
- drivers/pinctrl/meson/Makefile                     |   1 +
- drivers/pinctrl/meson/pinctrl-meson-a1.c           | 942 +++++++++++++++++++++
- drivers/pinctrl/meson/pinctrl-meson.c              |  16 +-
- drivers/pinctrl/meson/pinctrl-meson.h              |   5 +
- include/dt-bindings/gpio/meson-a1-gpio.h           |  73 ++
- 8 files changed, 1061 insertions(+), 1 deletion(-)
- create mode 100644 drivers/pinctrl/meson/pinctrl-meson-a1.c
- create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index 7210ad049d1d..0965259af869 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -5,6 +5,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/gpio/meson-a1-gpio.h>
+ 
+ / {
+ 	compatible = "amlogic,a1";
+@@ -74,6 +75,23 @@
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
+ 
++			periphs_pinctrl: pinctrl@0400 {
++				compatible = "amlogic,meson-a1-periphs-pinctrl";
++				#address-cells = <2>;
++				#size-cells = <2>;
++				ranges;
++
++				gpio: bank@0400 {
++					reg = <0x0 0x0400 0x0 0x003c>,
++					      <0x0 0x0480 0x0 0x0118>;
++					reg-names = "mux", "gpio";
++					gpio-controller;
++					#gpio-cells = <2>;
++					gpio-ranges = <&periphs_pinctrl 0 0 62>;
++				};
++
++			};
++
+ 			uart_AO: serial@1c00 {
+ 				compatible = "amlogic,meson-gx-uart",
+ 					     "amlogic,meson-ao-uart";
 -- 
 1.9.1
