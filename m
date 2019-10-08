@@ -1,63 +1,54 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 0/7] pinctrl: Fixes for AST2600 support
-Date: Tue, 8 Oct 2019 04:54:47 +0000
-Message-ID: <CACPK8XeKx_W0_b6ZLJzVdtQQOL8eZ3FcscB5TZT5NXMwRi4r6g@mail.gmail.com>
-References: <20191008044153.12734-1-andrew@aj.id.au>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [RESEND PATCH 0/2] Add bluetooth support for Orange Pi 3
+Date: Tue, 8 Oct 2019 07:58:10 +0200
+Message-ID: <20191008055810.wqkmoy63ujiagbfe@gilmour>
+References: <20191007203152.3889947-1-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ert3szapvjumxzbc"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191008044153.12734-1-andrew@aj.id.au>
+Content-Disposition: inline
+In-Reply-To: <20191007203152.3889947-1-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, johnny_huang@aspeedtech.com, Ryan Chen <ryanchen.aspeed@gmail.com>
+To: megous@megous.com
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 Oct 2019 at 04:41, Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> Hello,
->
-> This series resolves several issues found in testing by Johnny Huang from
-> ASPEED, who also contributed the patches to fix them. We'll have more patches
-> from him in the near future (which I'm pretty happy about).
 
-For the series:
+--ert3szapvjumxzbc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+On Mon, Oct 07, 2019 at 10:31:50PM +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+>
+> (Re-send for Maxime, with already applied patches dropped. Nothing new.)
+>
+> This series implements bluetooth support for Xunlong Orange Pi 3 board.
+>
+> The board uses AP6256 WiFi/BT 5.0 chip.
+>
+> Summary of changes:
+>
+> - add more delay to let initialize the chip
+> - let the kernel detect firmware file path
+> - add new compatible and update dt-bindings
+> - update Orange Pi 3 / H6 DTS
+>
+> Please take a look.
 
-These patches have been in the OpenBMC tree for a while and look good.
+Applied both, thanks!
+Maxime
 
-Cheers,
+--ert3szapvjumxzbc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Joel
+-----BEGIN PGP SIGNATURE-----
 
->
-> The major issue resolved is the way I grouped the eMMC pins. What I had was
-> ugly and I want to get rid of it before the binding is solidified with the 5.4
-> release.
->
-> The remaining fixes are minor issues that stem from lack of documentation or
-> understanding on my part, and at least one brain-fart.
->
-> Please review!
->
-> Andrew
->
-> Andrew Jeffery (4):
->   dt-bindings: pinctrl: aspeed-g6: Rework SD3 function and groups
->   pinctrl: aspeed-g6: Sort pins for sanity
->   pinctrl: aspeed-g6: Fix I2C14 SDA description
->   pinctrl: aspeed-g6: Make SIG_DESC_CLEAR() behave intuitively
->
-> Johnny Huang (3):
->   pinctrl: aspeed-g6: Fix I3C3/I3C4 pinmux configuration
->   pinctrl: aspeed-g6: Fix UART13 group pinmux
->   pinctrl: aspeed-g6: Rename SD3 to EMMC and rework pin groups
->
->  .../pinctrl/aspeed,ast2600-pinctrl.yaml       |  86 ++++++------
->  drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    | 124 ++++++++----------
->  drivers/pinctrl/aspeed/pinmux-aspeed.h        |   3 +-
->  3 files changed, 98 insertions(+), 115 deletions(-)
->
-> --
-> 2.20.1
->
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZwlcQAKCRDj7w1vZxhR
+xfZYAP9SMxqaZn19ntY7023We3X+5/xContSlxTodlVbXkTQCQEAghM2VObtw49u
+Q9P7kQeTJcnIsIbJNFymmtSCVdx+sA0=
+=ZikW
+-----END PGP SIGNATURE-----
+
+--ert3szapvjumxzbc--
