@@ -1,32 +1,35 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 02/10] dt-bindings: dmaengine: usb-dmac: Add binding for r8a774b1
-Date: Tue, 8 Oct 2019 13:32:41 +0200
-Message-ID: <CAMuHMdVgkmrDmTwZQksy_qfkk6kmshnTwCMeYXBpKb0Nk_PKLg@mail.gmail.com>
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH 0/2] clk: aspeed: Expose RMII RCLK gate for MACs 1-2 on AST2500
+Date: Tue,  8 Oct 2019 22:05:21 +1030
+Message-ID: <20191008113523.13601-1-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570531132-21856-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To: linux-clk@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> This patch adds the binding for r8a774b1 SoC (RZ/G2N).
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Hello,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This series is two small changes enable kernel support for controlling the RMII
+RCLK gate on AST2500-based systems. Previously the kernel has assumed u-boot
+has ungated RCLK for networking to function.
 
-Gr{oetje,eeting}s,
+RMII is commonly used for NCSI, which itself is commonly used for BMC-based
+designs to reduce cabling requirements for the platform.
 
-                        Geert
+Please review!
+
+Andrew
+
+Andrew Jeffery (2):
+  dt-bindings: clock: Add AST2500 RMII RCLK definitions
+  clk: aspeed: Add RMII RCLK gates for both AST2500 MACs
+
+ drivers/clk/clk-aspeed.c                 | 27 +++++++++++++++++++++++-
+ include/dt-bindings/clock/aspeed-clock.h |  2 ++
+ 2 files changed, 28 insertions(+), 1 deletion(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.20.1
