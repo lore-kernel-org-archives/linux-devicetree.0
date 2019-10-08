@@ -1,57 +1,72 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: am3874-iceboard: Fix 'i2c-mux-idle-disconnect'
- usage
-Date: Tue, 8 Oct 2019 07:16:59 -0700
-Message-ID: <20191008141659.GC5610@atomide.com>
-References: <20191004014548.29583-1-andrew.smirnov@gmail.com>
- <c40b8414-45a8-575a-c3c8-902ed35e5764@threespeedlogic.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: samsung: Force clkoutN names to be
+ unique in PMU
+Date: Tue, 8 Oct 2019 09:17:16 -0500
+Message-ID: <CAL_JsqKBzZCShxx99aB4z15XYNbUionVicmfNNXEfq=iohWLCA@mail.gmail.com>
+References: <20191004151414.8458-1-krzk@kernel.org>
+ <CAL_JsqJDTcHu5oXG6zszGHCBhTE6EW94AANUjyMV78SkKcn5yA@mail.gmail.com>
+ <20191008125038.GA2550@pi3>
+ <CAL_Jsq+GcsUWN6kjBLkyr1rHGh6_4=w6JL6+k7DBXkBcvHcSBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c40b8414-45a8-575a-c3c8-902ed35e5764@threespeedlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Graeme Smecher <gsmecher@threespeedlogic.com>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_Jsq+GcsUWN6kjBLkyr1rHGh6_4=w6JL6+k7DBXkBcvHcSBw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Graeme Smecher <gsmecher@threespeedlogic.com> [191004 23:53]:
-> Hi Andrey,
-> 
-> On 2019-10-03 6:45 p.m., Andrey Smirnov wrote:
-> > According to
-> > Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt,
-> > i2c-mux-idle-disconnect is a property of a parent node since it
-> > pertains to the mux/switch as a whole, so move it there and drop all
-> > of the concurrences in child nodes.
-> > 
-> > Fixes: d031773169df ("ARM: dts: Adds device tree file for McGill's IceBoard, based on TI AM3874")
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Benoît Cousson <bcousson@baylibre.com>
-> > Cc: Tony Lindgren <tony@atomide.com>
-> > Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
-> > Cc: linux-omap@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> > 
-> > This is purely a drive-by fix, since it concerns the HW I've never
-> > heard of before. However I was working with PCA9548
-> > (vf610-zii-scu4-aib is my HW) and looking at various users in the
-> > kernel, when this code caught my eye. Apologies for the noise if this
-> > fix is somehow bogus.
-> > 
-> > In case that it matters this patch is based on top of 5.4-rc1.
-> 
-> Thanks! We do have I2C address collisions on downstream bus segments, so
-> keeping these segments isolated is important. I'm surprised this patch
-> was necessary and happy to see it.
-> 
-> Lightly tested on 5.3.
-> 
-> Tested-by: Graeme Smecher <gsmecher@threespeedlogic.com>
-
-Applying into fixes thanks.
-
-Tony
+T24gVHVlLCBPY3QgOCwgMjAxOSBhdCA5OjA1IEFNIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5l
+bC5vcmc+IHdyb3RlOgo+Cj4gT24gVHVlLCBPY3QgOCwgMjAxOSBhdCA3OjUwIEFNIEtyenlzenRv
+ZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPgo+ID4gT24gVHVlLCBPY3Qg
+MDgsIDIwMTkgYXQgMDc6Mzg6MTRBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiA+IE9u
+IEZyaSwgT2N0IDQsIDIwMTkgYXQgMTA6MTQgQU0gS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0Br
+ZXJuZWwub3JnPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IFRoZSBjbGtvdXROIG5hbWVzIG9mIGNs
+b2NrcyBtdXN0IGJlIHVuaXF1ZSBiZWNhdXNlIHRoZXkgcmVwcmVzZW50Cj4gPiA+ID4gdW5pcXVl
+IGlucHV0cyBvZiBjbG9jayBtdWx0aXBsZXhlci4KPiA+ID4gPgo+ID4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KPiA+ID4gPiAtLS0KPiA+
+ID4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zYW1zdW5nL3BtdS55
+YW1sIHwgNiArKysrLS0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwg
+MiBkZWxldGlvbnMoLSkKPiA+ID4gPgo+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWwgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWwKPiA+ID4gPiBpbmRleCA3
+M2I1NmZjNWJmNTguLmQ4ZTAzNzE2ZjVkMiAxMDA2NDQKPiA+ID4gPiAtLS0gYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWwKPiA+ID4gPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWwK
+PiA+ID4gPiBAQCAtNTMsOCArNTMsMTAgQEAgcHJvcGVydGllczoKPiA+ID4gPiAgICAgICAgTGlz
+dCBvZiBjbG9jayBuYW1lcyBmb3IgcGFydGljdWxhciBDTEtPVVQgbXV4IGlucHV0cwo+ID4gPiA+
+ICAgICAgbWluSXRlbXM6IDEKPiA+ID4gPiAgICAgIG1heEl0ZW1zOiAzMgo+ID4gPiA+IC0gICAg
+aXRlbXM6Cj4gPiA+ID4gLSAgICAgIHBhdHRlcm46ICdeY2xrb3V0KFswLTldfFsxMl1bMC05XXwz
+WzAtMV0pJCcKPiA+ID4gPiArICAgIGFsbE9mOgo+ID4gPiA+ICsgICAgICAtIGl0ZW1zOgo+ID4g
+PiA+ICsgICAgICAgICAgcGF0dGVybjogJ15jbGtvdXQoWzAtOV18WzEyXVswLTldfDNbMC0xXSkk
+Jwo+ID4gPiA+ICsgICAgICAtIHVuaXF1ZUl0ZW1zOiB0cnVlCj4gPiA+Cj4gPiA+IFlvdSBzaG91
+bGRuJ3QgbmVlZCB0aGUgJ2FsbE9mJywganVzdCBhZGQgdW5pcXVlSXRlbXMgYXQgdGhlIHNhbWUg
+bGV2ZWwgYXMgaXRlbXMuCj4gPgo+ID4gSWYgeW91IG1lYW4gc29tZXRoaW5nIGxpa2U6Cj4gPiAg
+IDU2ICAgICB1bmlxdWVJdGVtczogdHJ1ZQo+ID4gICA1NyAgICAgaXRlbXM6Cj4gPiAgIDU4ICAg
+ICAgIHBhdHRlcm46ICdeY2xrb3V0KFswLTldfFsxMl1bMC05XXwzWzAtMV0pJCcKPiA+Cj4gPiBU
+aGVuIHRoZSBkdF9iaW5kaW5nX2NoZWNrIGZhaWxzOgo+ID4KPiA+IGRldi9saW51eC9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWw6IHByb3BlcnRp
+ZXM6Y2xvY2stbmFtZXM6Cj4gPiAndW5pcXVlSXRlbXMnIGlzIG5vdCBvbmUgb2YgWyckcmVmJywg
+J2FkZGl0aW9uYWxJdGVtcycsICdhZGRpdGlvbmFsUHJvcGVydGllcycsICdhbGxPZicsICdhbnlP
+ZicsICdjb25zdCcsICdjb250YWlucycsICdkZWZhdWx0JywgJ2RlcGVuZGVuY2llcycsICdkZXBy
+ZWNhdGVkJywgJ2Rlc2NyaXB0aW9uJywgJ2Vsc2UnLCAnZW51bScsICdpdGVtcycsICdpZicsICdt
+aW5JdGVtcycsICdtaW5pbXVtJywgJ21heEl0ZW1zJywgJ21heGltdW0nLCAnbm90JywgJ29uZU9m
+JywgJ3BhdHRlcm4nLCAncGF0dGVyblByb3BlcnRpZXMnLCAncHJvcGVydGllcycsICdyZXF1aXJl
+ZCcsICd0aGVuJywgJ3R5cGUnLCAndHlwZVNpemUnLCAndW5ldmFsdWF0ZWRQcm9wZXJ0aWVzJ10K
+Pgo+IEkgY2FuIGFkZCBpdC4KPgo+IFRoZSBvdGhlciBvcHRpb24gaXMgdG8gZml4IHRoaXMgaW4g
+dGhlIGNsb2NrIHNjaGVtYS4gSSdtIG5vdCBzdXJlIGlmCj4gdGhlcmUncyBhIG5lZWQgZm9yIGR1
+cGxpY2F0ZSBjbG9jay1uYW1lcy4gU2VlbXMgdW5saWtlbHkuIEknbGwgdGVzdAo+IHRoYXQuCgpB
+Y3R1YWxseSwgY2xvY2stbmFtZXMgaXMgYWxyZWFkeSBzZXQgdG8gYmUgdW5pcXVlLiBEaWQgeW91
+IHNlZSBvdGhlcndpc2U/CgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVs
