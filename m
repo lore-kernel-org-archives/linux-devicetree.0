@@ -1,41 +1,70 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [Patch v3 1/3] media: ov5640: add PIXEL_RATE control
-Date: Tue, 8 Oct 2019 09:58:16 +0300
-Message-ID: <20191008065816.GA24435@paasikivi.fi.intel.com>
-References: <20191004172418.2339-1-bparrot@ti.com>
- <20191004172418.2339-2-bparrot@ti.com>
- <20191007080320.GG14917@paasikivi.fi.intel.com>
- <20191007151703.z3eejxuujzt5ruth@ti.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Date: Tue, 8 Oct 2019 07:11:47 +0000
+Message-ID: <AM5PR04MB329984A4B6BAD35510310CF5F59A0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+ <20190902034319.14026-3-xiaowei.bao@nxp.com> <20191003091019.GB22491@X250>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191007151703.z3eejxuujzt5ruth@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191003091019.GB22491@X250>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Zang <roy.zang@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 10:17:03AM -0500, Benoit Parrot wrote:
-> Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Mon [2019-Oct-07 11:03:20 +0300]:
-> > On Fri, Oct 04, 2019 at 12:24:16PM -0500, Benoit Parrot wrote:
-> > > @@ -2657,6 +2669,12 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
-> > >  	/* we can use our own mutex for the ctrl lock */
-> > >  	hdl->lock = &sensor->lock;
-> > >  
-> > > +	/* Clock related controls */
-> > > +	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
-> > > +					      0, INT_MAX, 1,
-> > > +					      ov5640_calc_pixel_rate(sensor));
-> > > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> > 
-> > Please check ctrls->pixel_rate first; it may be NULL here.
-> 
-> How about I just move this line below "if (hdl->error)" instead?
-
-That's fine, too. As long as it won't oops if memory allocation fails...
-:-)
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
+bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOoxMNTCM8jVIDE3OjExDQo+IFRvOiBYaWFv
+d2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsg
+bWFyay5ydXRsYW5kQGFybS5jb207IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgTS5o
+LiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1
+QG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47DQo+IGxvcmVuem8ucGllcmFs
+aXNpQGFybS5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3Jn
+Ow0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMy8zXSBQQ0k6IGxheWVyc2NhcGU6IEFkZCBMUzEw
+MjhhIHN1cHBvcnQNCj4gDQo+IE9uIE1vbiwgU2VwIDAyLCAyMDE5IGF0IDExOjQzOjE5QU0gKzA4
+MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+IEFkZCBzdXBwb3J0IGZvciB0aGUgTFMxMDI4YSBQ
+Q0llIGNvbnRyb2xsZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlh
+b3dlaS5iYW9AbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFp
+YW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAtIE5vIGNoYW5nZS4NCj4g
+PiB2MzoNCj4gPiAgLSBSZXVzZSB0aGUgbHMyMDg4IGRyaXZlciBkYXRhIHN0cnVjdHVydC4NCj4g
+PiB2NDoNCj4gPiAgLSBObyBjaGFuZ2UuDQo+ID4gdjU6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+
+IHY2Og0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPg0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVy
+L2R3Yy9wY2ktbGF5ZXJzY2FwZS5jIHwgMSArDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2Vy
+dGlvbigrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
+L3BjaS1sYXllcnNjYXBlLmMNCj4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1s
+YXllcnNjYXBlLmMNCj4gPiBpbmRleCAzYTVmYTI2Li5mMjRmNzlhIDEwMDY0NA0KPiA+IC0tLSBh
+L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4gPiArKysgYi9k
+cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4gQEAgLTI2Myw2
+ICsyNjMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGxzX3BjaWVfZHJ2ZGF0YSBsczIwODhfZHJ2
+ZGF0YQ0KPiA+ID0geyAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbHNfcGNpZV9v
+Zl9tYXRjaFtdID0gew0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDEyYS1wY2llIiwg
+LmRhdGEgPSAmbHMxMDQ2X2RydmRhdGEgfSwNCj4gPiAgCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxz
+MTAyMWEtcGNpZSIsIC5kYXRhID0gJmxzMTAyMV9kcnZkYXRhIH0sDQo+ID4gKwl7IC5jb21wYXRp
+YmxlID0gImZzbCxsczEwMjhhLXBjaWUiLCAuZGF0YSA9ICZsczIwODhfZHJ2ZGF0YSB9LA0KPiAN
+Cj4gSSB0aGluayB5b3UgY2FuIHNhdmUgdGhpcyBkcml2ZXIgY2hhbmdlIGJ5IHVzaW5nICJmc2ws
+bHMyMDg4YS1wY2llIiBhcw0KPiBjb21wYXRpYmxlIGZhbGxiYWNrIGxpa2UgYmVsb3cuDQo+IA0K
+PiAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTAyOGEtcGNpZSIsICJmc2wsbHMyMDg4YS1wY2llIjsN
+Cg0KWWVzLCBpdCBpcyBvayB0byBkbyBzbywgYnV0IGFjY29yZGluZyB0byB0aGUgcHJldmlvdXMg
+Y29kZSwgSSB0aGluayBhZGQgYSBuZXcgY29tcGF0aWJsZSAiIGZzbCxsczEwMjhhLXBjaWUgIiB0
+byBkcml2ZXIgaXMgYmV0dGVyLg0KDQpUaGFua3MgDQpYaWFvd2VpDQoNCj4gDQo+IFNoYXduDQo+
+IA0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDQzYS1wY2llIiwgLmRhdGEgPSAmbHMx
+MDQzX2RydmRhdGEgfSwNCj4gPiAgCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTA0NmEtcGNpZSIs
+IC5kYXRhID0gJmxzMTA0Nl9kcnZkYXRhIH0sDQo+ID4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxs
+czIwODBhLXBjaWUiLCAuZGF0YSA9ICZsczIwODBfZHJ2ZGF0YSB9LA0KPiA+IC0tDQo+ID4gMi45
+LjUNCj4gPg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
