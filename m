@@ -1,104 +1,70 @@
-From: djw@t-chip.com.cn
-Subject: Re: [PATCH 1/6] arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
-Date: Tue, 08 Oct 2019 11:11:10 +0800
-Message-ID: <87eezolynl.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
-References: <20190919052822.10403-1-jagan@amarulasolutions.com>
- <20190919052822.10403-2-jagan@amarulasolutions.com>
- <6797961.eJj5WIFbM9@phil>
- <CAMty3ZDKaywoPxCSD-5N2pLjtGmZ-dZ7ZgUOJqiB1V_9rfR26A@mail.gmail.com>
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [EXT] Re: [v2 2/2] arm64: dts: ls1028a: Update the DT node
+ definition for dpclk
+Date: Tue, 8 Oct 2019 04:08:57 +0000
+Message-ID: <DB7PR04MB5195760127B83B88B68CC602E29A0@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190920083419.5092-1-wen.he_1@nxp.com>
+ <20190920083419.5092-2-wen.he_1@nxp.com> <20191007123512.GM7150@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMty3ZDKaywoPxCSD-5N2pLjtGmZ-dZ7ZgUOJqiB1V_9rfR26A@mail.gmail.com>
- (Jagan Teki's message of "Tue, 1 Oct 2019 15:56:14 +0530")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Akash Gajjar <akash@openedev.com>, Da Xue <da@lessconfused.com>, linux-amarula <linux-amarula@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191007123512.GM7150@dragon>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Jagan Teki <jagan@amarulasolutions.com> writes:
-
-> Hi Heiko,
->
-> On Mon, Sep 30, 2019 at 2:51 AM Heiko Stuebner <heiko@sntech.de> wrote:
->>
->> Hi Jagan,
->>
->> Am Donnerstag, 19. September 2019, 07:28:17 CEST schrieb Jagan Teki:
->> > ROC-PC is not able to boot linux console if PWM2_d is
->> > unattached to any pinctrl logic.
->> >
->> > To be precise the linux boot hang with last logs as,
->> > ...
->> > .....
->> > [    0.003367] Console: colour dummy device 80x25
->> > [    0.003788] printk: console [tty0] enabled
->> > [    0.004178] printk: bootconsole [uart8250] disabled
->> >
->> > In ROC-PC the PWM2_d pin is connected to LOG_DVS_PWM of
->> > VDD_LOG. So, for normal working operations this needs to
->> > active and pull-down.
->> >
->> > This patch fix, by attaching pinctrl active and pull-down
->> > the pwm2.
->>
->> This looks highly dubious on first glance. The pwm subsystem nor
->> the Rockchip pwm driver do not do any pinctrl handling.
->>
->> So I don't really see where that "active" pinctrl state is supposed
->> to come from.
->>
->> Comparing with the pwm driver in the vendor tree I see that there
->> is such a state defined there. But that code there also looks strange
->> as that driver never again leaves this active state after entering it.
->>
->> Also for example all the Gru devices run with quite a number of pwm-
->> regulators without needing additional fiddling with the pwm itself, so
->> I don't really see why that should be different here.
->
-> I deed, I was supposed to think the same. but the vendor kernel dts
-> from firefly do follow the pwm2 pinctrl [1]. I wouldn't find any
-> information other than this vensor information, ie one of the reason I
-> have marked "Levin Du" who initially supported this board.
->
-> One, think I have seen was this pinctrl active fixed the boot hang.
-> any inputs from would be very helpful.
->
-> Levin Du, any inputs?
->
-> [1] https://github.com/FireflyTeam/kernel/blob/stable-4.4-rk3399-linux/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi#L1184
->
-
-A grep of the `pwm2` shows that there's such block in rk3399-nanopi4.dtsi:
-
-    &pwm2 {
-            pinctrl-names = "active";
-            pinctrl-0 = <&pwm2_pin_pull_down>;
-            status = "okay";
-    };
-
-But last time I checked, using the mainline U-Boot (the roc-rk3399-pc is
-in mainline now) with mainline linux v5.2-rc7, no such setting is
-necessary, and the board boots happily.
-
-I cannot find the use of "active" pinctrl state in the
-`drivers/pwm/pwm-rockchip.c`. If the pinctrl state needs to be setup as
-default, the `pinctrl-names` needs to be "default" or "init" (see
-`drivers/base/pinctrl.c`) .
-
-Jagan, what version of board do you use? I checked with
-"ROC-RK3399-PC-V1.0-A 2018-07-12". 
-
-Thanks
-
---
-Levin Du
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
+bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOoxMNTCN8jVIDIwOjM1DQo+IFRvOiBXZW4g
+SGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBsaW51eC1kZXZlbEBsaW51eC5ueGRpLm54cC5j
+b207IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgUm9iIEhlcnJpbmcNCj4gPHJvYmgrZHRA
+a2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+Ow0KPiBkZXZp
+Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4g
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFtFWFRdIFJl
+OiBbdjIgMi8yXSBhcm02NDogZHRzOiBsczEwMjhhOiBVcGRhdGUgdGhlIERUIG5vZGUgZGVmaW5p
+dGlvbg0KPiBmb3IgZHBjbGsNCj4gDQo+IA0KPiBPbiBGcmksIFNlcCAyMCwgMjAxOSBhdCAwNDoz
+NDoxOVBNICswODAwLCBXZW4gSGUgd3JvdGU6DQo+ID4gVXBkYXRlIERUIG5vZGUgbmFtZSBjbG9j
+ay1jb250cm9sbGVyIHRvIGNsb2NrLWRpc3BsYXksDQo+IA0KPiBUaGUgbm9kZSBuYW1lIGNsb2Nr
+LWNvbnRyb2xsZXIgaXMgc28gZ29vZCwgYW5kIEkgZG8gbm90IHVuZGVyc3RhbmQgd2h5IHlvdQ0K
+PiBuZWVkIHRvIGNoYW5nZSBpdC4NCj4gDQoNClRoZSBub2RlIG5hbWUgY2xvY2stY29udHJvbGxl
+ciB1c2VkIGZvciB0aGUgc3lzdGVtIGNsb2NrZ2VuIGFuZCB0aGlzIGNsb2NrIG9ubHkgdXNlZCBm
+b3INCnRoZSBEaXNwbGF5IGNvcmUuIA0KVG8gY2xlYXJseSB0aGUgbm9kZSwgdGhhdCB3aHkgSSBo
+YXZlIHRvIHVzZSBjbG9jay1kaXNwbGF5IHRvIGluc3RlYWQgb2YgdGhlIGNsb2NrLWNvbnRyb2xs
+ZXINCg0KQmVzdCBSZWdhcmRzLA0KV2VuDQoNCj4gU2hhd24NCj4gDQo+ID4gYWxzbyBjaGFuZ2UN
+Cj4gPiB0aGUgcHJvcGVydHkgI2Nsb2NrLWNlbGxzIHZhbHVlIHRvIHplcm8uDQo+ID4NCj4gPiBU
+aGlzIHVwZGF0ZSBhY2NvcmRpbmcgdGhlIGZlZWRiYWNrIG9mIHRoZSBEaXNwbGF5IG91dHB1dCBp
+bnRlcmZhY2UNCj4gPiBjbG9jayBkcml2ZXIgdXBzdHJlYW0uDQo+ID4NCj4gPiBMaW5rOg0KPiA+
+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRw
+cyUzQSUyRiUyRmxvcmUNCj4gPiAua2VybmVsLm9yZyUyRnBhdGNod29yayUyRnBhdGNoJTJGMTEx
+MzgzMiUyRiZhbXA7ZGF0YT0wMiU3QzAxJQ0KPiA3Q3dlbi5oZQ0KPiA+DQo+IF8xJTQwbnhwLmNv
+bSU3QzYxOTM0MzQ2ZmE2NjQ2ZDI4YmFjMDhkNzRiMjJlMDhjJTdDNjg2ZWExZDNiYzJiDQo+IDRj
+NmZhOTJjDQo+ID4NCj4gZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzcwNjA0ODU0NzgyMTgzOTAm
+YW1wO3NkYXRhPSUyRkxHMkt2QQ0KPiBMZE9HcDZUMDYNCj4gPiAyZnVLR1FYWWVnc3dzRU9XUEF2
+elduTGtmdE0lM0QmYW1wO3Jlc2VydmVkPTANCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZW4gSGUgPHdl
+bi5oZV8xQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
+YWxlL2ZzbC1sczEwMjhhLmR0c2kgfCA2ICsrKy0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMyBp
+bnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiBpbmRleCA1MWZhOGY1
+N2ZkYWMuLmRiMWUxODYzNTJkOCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0
+cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+IEBAIC03OSwxMCArNzksMTAgQEANCj4g
+PiAgICAgICAgICAgICAgIGNsb2NrLW91dHB1dC1uYW1lcyA9ICJwaHlfMjdtIjsNCj4gPiAgICAg
+ICB9Ow0KPiA+DQo+ID4gLSAgICAgZHBjbGs6IGNsb2NrLWNvbnRyb2xsZXJAZjFmMDAwMCB7DQo+
+ID4gKyAgICAgZHBjbGs6IGNsb2NrLWRpc3BsYXlAZjFmMDAwMCB7DQo+ID4gICAgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gImZzbCxsczEwMjhhLXBsbGRpZyI7DQo+ID4gICAgICAgICAgICAgICBy
+ZWcgPSA8MHgwIDB4ZjFmMDAwMCAweDAgMHhmZmZmPjsNCj4gPiAtICAgICAgICAgICAgICNjbG9j
+ay1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAgICAgICNjbG9jay1jZWxscyA9IDwwPjsNCj4g
+PiAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmb3NjXzI3bT47DQo+ID4gICAgICAgfTsNCj4gPg0K
+PiA+IEBAIC02NjUsNyArNjY1LDcgQEANCj4gPiAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8
+MCAyMjIgSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgPDAgMjIzIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICAgICAgICAgICAgICAgaW50ZXJy
+dXB0LW5hbWVzID0gIkRFIiwgIlNFIjsNCj4gPiAtICAgICAgICAgICAgIGNsb2NrcyA9IDwmZHBj
+bGsgMD4sIDwmY2xvY2tnZW4gMiAyPiwgPCZjbG9ja2dlbiAyIDI+LA0KPiA+ICsgICAgICAgICAg
+ICAgY2xvY2tzID0gPCZkcGNsaz4sIDwmY2xvY2tnZW4gMiAyPiwgPCZjbG9ja2dlbiAyIDI+LA0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgPCZjbG9ja2dlbiAyIDI+Ow0KPiA+ICAgICAgICAg
+ICAgICAgY2xvY2stbmFtZXMgPSAicHhsY2xrIiwgIm1jbGsiLCAiYWNsayIsICJwY2xrIjsNCj4g
+PiAgICAgICAgICAgICAgIGFybSxtYWxpZHAtb3V0cHV0LXBvcnQtbGluZXMgPSAvYml0cy8gOCA8
+OCA4IDg+Ow0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
