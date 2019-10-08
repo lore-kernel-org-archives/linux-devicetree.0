@@ -1,61 +1,52 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: s3c64xx: Fix init order of clock providers
-Date: Tue, 8 Oct 2019 19:53:30 +0200
-Message-ID: <20191008175330.GA28160@kozik-lap>
-References: <CGME20191008165931epcas3p2dd2937d851ed06948dd7746e5a2674b4@epcas3p2.samsung.com>
- <20191008165917.23908-1-krzk@kernel.org>
- <ceede424-e4a2-03f1-3ce0-04f405688721@samsung.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2] ARM: dts: rockchip: Use interpolated brightness tables
+ for veyron
+Date: Tue, 8 Oct 2019 11:05:24 -0700
+Message-ID: <CAD=FV=Xi-M=Kk0axj=ukGMDr4p0a86LRdiL-6WyPZnL2vuDZGA@mail.gmail.com>
+References: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <ceede424-e4a2-03f1-3ce0-04f405688721@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Lihua Yao <ylhuajnu@outlook.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 07:30:50PM +0200, Sylwester Nawrocki wrote:
-> On 10/8/19 18:59, Krzysztof Kozlowski wrote:
-> > From: Lihua Yao <ylhuajnu@outlook.com>
-> > 
-> > fin_pll is the parent of clock-controller@7e00f000, specify
-> > the dependency to ensure proper initialization order of clock
-> > providers.
-> 
-> > Fixes: 3f6d439f2022 ("clk: reverse default clk provider initialization order in of_clk_init()")
-> 
-> The patch looks good but I'm not sure above tag points to the right commit.
-> That commit is just a regression fix for
-> 1771b10d605d26cc "clk: respect the clock dependencies in of_clk_init"
->  
-> How about picking some commit touching the dts files itself, e.g.
-> a43736deb47d21bd "ARM: dts: Add dts file for S3C6410-based Mini6410 board" ?
+Hi,
 
-As I understood, the mentioned commit "reverse default clk provider"
-caused issue to appear, because of reversed order (first version of this
-patch played with the order).  Even though that commit was not strictly
-the cause, but should come proably with proper DTS change.  Therefore
-the fixes points to right moment of backports.
+On Thu, Oct 3, 2019 at 9:42 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Use interpolated brightness tables (added by commit 573fe6d1c25
+> ("backlight: pwm_bl: Linear interpolation between
+> brightness-levels") for veyron, instead of specifying every single
+> step. Some devices/panels have intervals that are smaller than
+> the specified 'num-interpolated-steps', the driver interprets
+> these intervals as a single step.
+>
+> Another option would be to switch to a perceptual brightness curve
+> (CIE 1931), with the caveat that it would change the behavior of
+> the backlight. Also the concept of a minimum brightness level is
+> currently not supported for CIE 1931 curves.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>
+> Changes in v2:
+> - added 0 as first step for devices/panels that require a minimum
+>   PWM duty cycle
+> - increased 'num-interpolated-steps' values by one, it's not the
+>   number of steps between levels, but that number +1
+>
+>  arch/arm/boot/dts/rk3288-veyron-edp.dtsi   | 35 ++--------------------
+>  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 35 ++--------------------
+>  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 35 ++--------------------
+>  arch/arm/boot/dts/rk3288-veyron-tiger.dts  | 35 ++--------------------
+>  4 files changed, 8 insertions(+), 132 deletions(-)
 
-The DTS commit, at that time, was correct with bindings and with driver.
+I guess if someone wanted to they could try to increase the number of
+steps and see if they got prettier backlight transition, but what's
+there now doesn't bother me and has the advantage of matching what has
+been in use forever.  Thus:
 
-> 
-> > Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-
-Thanks!
-
-Best regards,
-Krzysztof
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
