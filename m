@@ -1,148 +1,185 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
-Date: Tue, 8 Oct 2019 13:36:20 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1910081329160.11044@viisi.sifive.com>
-References: <20190925131252.19359-1-robh@kernel.org> <mhng-c69fa4ff-9752-4ded-8a4f-ae86113bd9ae@palmer-si-x1e> <CAL_JsqJH59Hh6SkQyyAGkK21dR5DJxzja8GPYd3mg+kEVQ-0EQ@mail.gmail.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
+Date: Tue, 08 Oct 2019 22:51:36 +0200
+Message-ID: <4f6b26f8779a4fd98712b966bff3491dc31e26c2.camel@suse.de>
+References: <20191008195239.12852-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-8hI66HT9gbTxUxyjGifb"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJH59Hh6SkQyyAGkK21dR5DJxzja8GPYd3mg+kEVQ-0EQ@mail.gmail.com>
+In-Reply-To: <20191008195239.12852-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Palmer Dabbelt <palmer@sifive.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, Christoph Hellwig <hch@infradead.org>, Marek Vasut <marek.vasut@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org, Simon Horman <horms+renesas@verge.net.au>, Robin Murphy <robin.murphy@arm.com>, Stefan Wahren <wahrenst@gmx.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Sep 2019, Rob Herring wrote:
 
-> On Wed, Sep 25, 2019 at 4:24 PM Palmer Dabbelt <palmer@sifive.com> wrote:
-> >
-> > On Wed, 25 Sep 2019 06:12:52 PDT (-0700), robh@kernel.org wrote:
-> > > Fix the errors in the RiscV CPU DT schema:
-> > >
-> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
-> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
-> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
-> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-> > >
-> > > Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
-> > > Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> > > Cc: Palmer Dabbelt <palmer@sifive.com>
-> > > Cc: Albert Ou <aou@eecs.berkeley.edu>
-> > > Cc: linux-riscv@lists.infradead.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > v2:
-> > >  - Add timebase-frequency to simulator example.
-> > >
-> > >  .../devicetree/bindings/riscv/cpus.yaml       | 26 ++++++++++---------
-> > >  1 file changed, 14 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> > > index b261a3015f84..eb0ef19829b6 100644
-> > > --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> > > +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> > > @@ -24,15 +24,17 @@ description: |
-> > >
-> > >  properties:
-> > >    compatible:
-> > > -    items:
-> > > -      - enum:
-> > > -          - sifive,rocket0
-> > > -          - sifive,e5
-> > > -          - sifive,e51
-> > > -          - sifive,u54-mc
-> > > -          - sifive,u54
-> > > -          - sifive,u5
-> > > -      - const: riscv
-> > > +    oneOf:
-> > > +      - items:
-> > > +          - enum:
-> > > +              - sifive,rocket0
-> > > +              - sifive,e5
-> > > +              - sifive,e51
-> > > +              - sifive,u54-mc
-> > > +              - sifive,u54
-> > > +              - sifive,u5
-> > > +          - const: riscv
-> > > +      - const: riscv    # Simulator only
-> > >      description:
-> > >        Identifies that the hart uses the RISC-V instruction set
-> > >        and identifies the type of the hart.
+--=-8hI66HT9gbTxUxyjGifb
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The above part of this patch looks fine to me, and please consider that 
-portion of this patch acked.
+Hi Rob/Robin,
 
-> > > @@ -67,8 +69,6 @@ properties:
-> > >        lowercase to simplify parsing.
-> > >
-> > >    timebase-frequency:
-> > > -    type: integer
-> > > -    minimum: 1
-> > >      description:
-> > >        Specifies the clock frequency of the system timer in Hz.
-> > >        This value is common to all harts on a single system image.
-> > > @@ -102,9 +102,9 @@ examples:
-> > >      cpus {
-> > >          #address-cells = <1>;
-> > >          #size-cells = <0>;
-> > > -        timebase-frequency = <1000000>;
-> > >          cpu@0 {
-> > >                  clock-frequency = <0>;
-> > > +                timebase-frequency = <1000000>;
-> > >                  compatible = "sifive,rocket0", "riscv";
-> > >                  device_type = "cpu";
-> > >                  i-cache-block-size = <64>;
-> > > @@ -120,6 +120,7 @@ examples:
-> > >          };
-> > >          cpu@1 {
-> > >                  clock-frequency = <0>;
-> > > +                timebase-frequency = <1000000>;
-> > >                  compatible = "sifive,rocket0", "riscv";
-> > >                  d-cache-block-size = <64>;
-> > >                  d-cache-sets = <64>;
-> > > @@ -153,6 +154,7 @@ examples:
-> > >                  device_type = "cpu";
-> > >                  reg = <0>;
-> > >                  compatible = "riscv";
-> > > +                timebase-frequency = <1000000>;
-> > >                  riscv,isa = "rv64imafdc";
-> > >                  mmu-type = "riscv,sv48";
-> > >                  interrupt-controller {
-> >
-> > Looking at this spec
-> >
-> >     https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
-> >
-> > section 3.7 says
-> >
-> >     Properties that have identical values across cpu nodes may be placed in the
-> >     /cpus node instead. A client program must
-> >     first examine a specific cpu node, but if an expected property is not found
-> >     then it should look at the parent /cpus node.
-> >     This results in a less verbose representation of properties which are
-> >     identical across all CPUs.
-> 
-> The cpu sections of the spec are certainly not perfect. They are
-> largely from PPC with only the most obviously things wrong fixed...
+On Tue, 2019-10-08 at 14:52 -0500, Rob Herring wrote:
+> From: Robin Murphy <robin.murphy@arm.com>
+>=20
+> Since the "dma-ranges" property is only valid for a node representing a
+> bus, of_dma_get_range() currently assumes the node passed in is a leaf
+> representing a device, and starts the walk from its parent. In cases
+> like PCI host controllers on typical FDT systems, however, where the PCI
+> endpoints are probed dynamically the initial leaf node represents the
+> 'bus' itself, and this logic means we fail to consider any "dma-ranges"
+> describing the host bridge itself. Rework the logic such that
+> of_dma_get_range() also works correctly starting from a bus node
+> containing "dma-ranges".
+>=20
+> While this does mean "dma-ranges" could incorrectly be in a device leaf
+> node, there isn't really any way in this function to ensure that a leaf
+> node is or isn't a bus node.
 
-[ ... ]
+Sorry, I'm not totally sure if this is what you're pointing out with the la=
+st
+sentence. But, what about the case of a bus configuring a device which also
+happens to be a memory mapped bus (say a PCI platform device). It'll get it=
+'s
+dma config based on its own dma-ranges which is not what we want.
 
-> > I just bring this up because we've got an outstanding
-> > bug in our port where we're not respecting what section 3.7 says and are only
-> > looking at /cpus/timebase-frequency instead of /cpus/cpu@*/timebase-frequency,
-> > and I'm wondering if the fix should allow for looking at
-> > /cpus/timebase-frequency or just not bother.
-> 
-> It's perfectly fine for some deviation for each arch or being more
-> restrictive. For Arm, we've generally gone the direction of everything
-> goes into the cpu nodes. So tell me what you want, I just need the
-> warnings gone.
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> [robh: Allow for the bus child node to still be passed in]
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Resending, hit send too quickly.
+>=20
+> v2:
+>  - Ensure once we find dma-ranges, every parent has it.
 
-We probably should keep the timebase-frequency at the /cpus level, since 
-that's how the current public silicon behaves, and that's how our kernel 
-code currently works.  Do you want to patch the schemas for that, or would 
-you like us to?
+I like this new approach.
+
+Regards,
+Nicolas
+
+>  - Only get the #{size,address}-cells after we find non-empty dma-ranges
+>  - Add a check on the 'dma-ranges' length
+>=20
+> This is all that remains of the dma-ranges series. I've applied the rest=
+=20
+> of the series prep and fixes. I dropped "of: Ratify of_dma_configure()=
+=20
+> interface" as the assertions that the node pointer being the parent only=
+=20
+> when struct device doesn't have a DT node pointer is not always=20
+> true.
+>=20
+> I didn't include any tested-bys as this has changed a bit. A git branch=
+=20
+> is here[1].
+>=20
+> Rob
+>=20
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-mask=
+s-v2
+>=20
+>  drivers/of/address.c | 44 ++++++++++++++++++--------------------------
+>  1 file changed, 18 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 5ce69d026584..99c1b8058559 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -930,47 +930,39 @@ int of_dma_get_range(struct device_node *np, u64
+> *dma_addr, u64 *paddr, u64 *siz
+>  	const __be32 *ranges =3D NULL;
+>  	int len, naddr, nsize, pna;
+>  	int ret =3D 0;
+> +	bool found_dma_ranges =3D false;
+>  	u64 dmaaddr;
+> =20
+> -	if (!node)
+> -		return -EINVAL;
+> -
+> -	while (1) {
+> -		struct device_node *parent;
+> -
+> -		naddr =3D of_n_addr_cells(node);
+> -		nsize =3D of_n_size_cells(node);
+> -
+> -		parent =3D __of_get_dma_parent(node);
+> -		of_node_put(node);
+> -
+> -		node =3D parent;
+> -		if (!node)
+> -			break;
+> -
+> +	while (node) {
+>  		ranges =3D of_get_property(node, "dma-ranges", &len);
+> =20
+>  		/* Ignore empty ranges, they imply no translation required */
+>  		if (ranges && len > 0)
+>  			break;
+> =20
+> -		/*
+> -		 * At least empty ranges has to be defined for parent node if
+> -		 * DMA is supported
+> -		 */
+> -		if (!ranges)
+> -			break;
+> +		/* Once we find 'dma-ranges', then a missing one is an error */
+> +		if (found_dma_ranges && !ranges) {
+> +			ret =3D -ENODEV;
+> +			goto out;
+> +		}
+> +		found_dma_ranges =3D true;
+> +
+> +		node =3D of_get_next_dma_parent(node);
+>  	}
+> =20
+> -	if (!ranges) {
+> +	if (!node || !ranges) {
+>  		pr_debug("no dma-ranges found for node(%pOF)\n", np);
+>  		ret =3D -ENODEV;
+>  		goto out;
+>  	}
+> =20
+> -	len /=3D sizeof(u32);
+> -
+> +	naddr =3D of_bus_n_addr_cells(node);
+> +	nsize =3D of_bus_n_size_cells(node);
+>  	pna =3D of_n_addr_cells(node);
+> +	if ((len / sizeof(__be32)) % (pna + naddr + nsize)) {
+> +		ret =3D -EINVAL;
+> +		goto out;
+> +	}
+> =20
+>  	/* dma-ranges format:
+>  	 * DMA addr	: naddr cells
+> @@ -978,7 +970,7 @@ int of_dma_get_range(struct device_node *np, u64
+> *dma_addr, u64 *paddr, u64 *siz
+>  	 * size		: nsize cells
+>  	 */
+>  	dmaaddr =3D of_read_number(ranges, naddr);
+> -	*paddr =3D of_translate_dma_address(np, ranges);
+> +	*paddr =3D of_translate_dma_address(node, ranges + naddr);
+>  	if (*paddr =3D=3D OF_BAD_ADDR) {
+>  		pr_err("translation of DMA address(%llx) to CPU address failed
+> node(%pOF)\n",
+>  		       dmaaddr, np);
 
 
-- Paul
+--=-8hI66HT9gbTxUxyjGifb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2c9tgACgkQlfZmHno8
+x/62BQf/U0QT3ADqFU/ndfwRPioobN9ONdnh6CLT03TDkJM3U4WxCXne9c5e359z
+go9HveWafv35Jy0use3A54V0HRtUpEGiIE5TIZiZxTx/erBny0QQb9P8o/tM2Dyc
+3t0TW2FuAKLPsp5VbIJr66Afb1sUHRBsFfPrL3WFgSB1884tB75BLRaE5uX7hJ0h
+cBY2nBlQHaa+77esbmMhxgbJ8hhV4sBY4V7hbGm1WNB1HMSKfwCBifEMc/3+2iKa
+Z3trR/cfRxpPWSUAEyLQ807kvmkZyoHmIOjQr9cUB5gnxGpwA/B97OSmMCLq2RnT
+sQ/cjASfdJZbBCLCEIITZv/ZzlEOBw==
+=eTic
+-----END PGP SIGNATURE-----
+
+--=-8hI66HT9gbTxUxyjGifb--
