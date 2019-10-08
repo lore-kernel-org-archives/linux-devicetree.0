@@ -1,100 +1,62 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v3 00/14] dmaengine/soc: Add Texas Instruments UDMA support
-Date: Tue, 8 Oct 2019 13:09:52 +0300
-Message-ID: <7dd18208-1ca5-c902-dc11-edbd4ded51ed@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: krzysztof/for-next boot bisection: v5.4-rc1-48-g0bc9c79979ea on
+ peach-pi
+Date: Tue, 8 Oct 2019 12:21:01 +0200
+Message-ID: <b62e8793-a428-6a06-fb30-c0a9c1322fa9@samsung.com>
+References: <5d9a8a3c.1c69fb81.14b6f.10d1@mx.google.com>
+        <CGME20191007170946epcas3p2e91287115265a9efc7038b762cc8e17e@epcas3p2.samsung.com>
+        <CAJKOXPeZQ_hZqUdtFrr-wGiwdM4KVjD_7CArEWhZgo+1EJPqew@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPeZQ_hZqUdtFrr-wGiwdM4KVjD_7CArEWhZgo+1EJPqew@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: santosh.shilimkar@oracle.com, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
-Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, j-keerthy@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, tony@atomide.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, "kernelci.org bot" <bot@kernelci.org>
+Cc: tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com, mgalka@collabora.com, Chanwoo Choi <cw00.choi@samsung.com>, broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com, enric.balletbo@collabora.com, Kamil Konieczny <k.konieczny@partner.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FudG9zaCwKCk9uIDA0LzEwLzIwMTkgMTkuMzUsIHNhbnRvc2guc2hpbGlta2FyQG9yYWNs
-ZS5jb20gd3JvdGU6Cj4gT24gOS8zMC8xOSAxMToxNiBQTSwgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6
-Cj4+IEhpLAo+Pgo+PiBDaGFuZ2VzIHNpbmNlIHYyCj4+IClodHRwczovL3BhdGNod29yay5rZXJu
-ZWwub3JnL3Byb2plY3QvbGludXgtZG1hZW5naW5lL2xpc3QvP3Nlcmllcz0xNTI2MDkmc3RhdGU9
-KikKPj4KPj4gLSBCYXNlZCBvbiA1LjQtcmMxCj4+IC0gU3VwcG9ydCBmb3IgRmxvdyBvbmx5IGRh
-dGEgdHJhbnNmZXIgZm9yIHRoZSBnbHVlIGxheWVyCj4+Cj4gCj4+Cj4+IEdyeWdvcmlpIFN0cmFz
-aGtvICgzKToKPj4gwqDCoCBiaW5kaW5nczogc29jOiB0aTogYWRkIGRvY3VtZW50YXRpb24gZm9y
-IGszIHJpbmdhY2MKPj4gwqDCoCBzb2M6IHRpOiBrMzogYWRkIG5hdnNzIHJpbmdhY2MgZHJpdmVy
-Cj4+IMKgwqAgZG1hZW5naW5lOiB0aTogazMtdWRtYTogQWRkIGdsdWUgbGF5ZXIgZm9yIG5vbiBE
-TUFlbmdpbmUgdXNlcnMKPj4KPj4gUGV0ZXIgVWpmYWx1c2kgKDExKToKPj4gwqDCoCBkbWFlbmdp
-bmU6IGRvYzogQWRkIHNlY3Rpb25zIGZvciBwZXIgZGVzY3JpcHRvciBtZXRhZGF0YSBzdXBwb3J0
-Cj4+IMKgwqAgZG1hZW5naW5lOiBBZGQgbWV0YWRhdGFfb3BzIGZvciBkbWFfYXN5bmNfdHhfZGVz
-Y3JpcHRvcgo+PiDCoMKgIGRtYWVuZ2luZTogQWRkIHN1cHBvcnQgZm9yIHJlcG9ydGluZyBETUEg
-Y2FjaGVkIGRhdGEgYW1vdW50Cj4+IMKgwqAgZG1hZW5naW5lOiB0aTogQWRkIGNwcGk1IGhlYWRl
-ciBmb3IgVURNQQo+PiDCoMKgIGR0LWJpbmRpbmdzOiBkbWE6IHRpOiBBZGQgZG9jdW1lbnQgZm9y
-IEszIFVETUEKPj4gwqDCoCBkbWFlbmdpbmU6IHRpOiBOZXcgZHJpdmVyIGZvciBLMyBVRE1BIC0g
-c3BsaXQjMTogZGVmaW5lcywgc3RydWN0cywgaW8KPj4gwqDCoMKgwqAgZnVuYwo+PiDCoMKgIGRt
-YWVuZ2luZTogdGk6IE5ldyBkcml2ZXIgZm9yIEszIFVETUEgLSBzcGxpdCMyOiBwcm9iZS9yZW1v
-dmUsIHhsYXRlCj4+IMKgwqDCoMKgIGFuZCBmaWx0ZXJfZm4KPj4gwqDCoCBkbWFlbmdpbmU6IHRp
-OiBOZXcgZHJpdmVyIGZvciBLMyBVRE1BIC0gc3BsaXQjMzogYWxsb2MvZnJlZQo+PiDCoMKgwqDC
-oCBjaGFuX3Jlc291cmNlcwo+PiDCoMKgIGRtYWVuZ2luZTogdGk6IE5ldyBkcml2ZXIgZm9yIEsz
-IFVETUEgLSBzcGxpdCM0OiBkbWFfZGV2aWNlIGNhbGxiYWNrcwo+PiDCoMKgwqDCoCAxCj4+IMKg
-wqAgZG1hZW5naW5lOiB0aTogTmV3IGRyaXZlciBmb3IgSzMgVURNQSAtIHNwbGl0IzU6IGRtYV9k
-ZXZpY2UgY2FsbGJhY2tzCj4+IMKgwqDCoMKgIDIKPj4gwqDCoCBkbWFlbmdpbmU6IHRpOiBOZXcg
-ZHJpdmVyIGZvciBLMyBVRE1BIC0gc3BsaXQjNjogS2NvbmZpZyBhbmQgTWFrZWZpbGUKPj4KPj4g
-wqAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3RpL2szLXVkbWEudHh0wqDCoMKgIHzCoCAx
-ODUgKwo+PiDCoCAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvdGkvazMtcmluZ2FjYy50eHQg
-fMKgwqAgNTkgKwo+PiDCoCBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZG1hZW5naW5lL2NsaWVu
-dC5yc3QgfMKgwqAgNzUgKwo+PiDCoCAuLi4vZHJpdmVyLWFwaS9kbWFlbmdpbmUvcHJvdmlkZXIu
-cnN0wqDCoMKgwqDCoMKgwqDCoCB8wqDCoCA0NiArCj4+IMKgIGRyaXZlcnMvZG1hL2RtYWVuZ2lu
-ZS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgNzMg
-Kwo+PiDCoCBkcml2ZXJzL2RtYS9kbWFlbmdpbmUuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgwqAgOCArCj4+IMKgIGRyaXZlcnMvZG1hL3RpL0tjb25m
-aWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDIy
-ICsKPj4gwqAgZHJpdmVycy9kbWEvdGkvTWFrZWZpbGXCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIDIgKwo+PiDCoCBkcml2ZXJzL2RtYS90aS9rMy11
-ZG1hLWdsdWUuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMTIyNSArKysrKysK
-Pj4gwqAgZHJpdmVycy9kbWEvdGkvazMtdWRtYS1wcml2YXRlLmPCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCB8wqAgMTQxICsKPj4gwqAgZHJpdmVycy9kbWEvdGkvazMtdWRtYS5jwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMzUyNSArKysrKysrKysrKysrKysr
-Kwo+PiDCoCBkcml2ZXJzL2RtYS90aS9rMy11ZG1hLmjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgfMKgIDE2MSArCj4+IMKgIGRyaXZlcnMvc29jL3RpL0tjb25maWfC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDEyICsK
-Pj4gwqAgZHJpdmVycy9zb2MvdGkvTWFrZWZpbGXCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIDEgKwo+PiDCoCBkcml2ZXJzL3NvYy90aS9rMy1yaW5n
-YWNjLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCAxMTY1ICsrKysrKwo+
-PiDCoCBpbmNsdWRlL2R0LWJpbmRpbmdzL2RtYS9rMy11ZG1hLmjCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgfMKgwqAgMTAgKwo+PiDCoCBpbmNsdWRlL2xpbnV4L2RtYS9rMy11ZG1hLWdsdWUuaMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAxMzQgKwo+PiDCoCBpbmNsdWRlL2xpbnV4L2Rt
-YS90aS1jcHBpNS5owqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDEwNDkgKysr
-KysKPj4gwqAgaW5jbHVkZS9saW51eC9kbWFlbmdpbmUuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgfMKgIDExMCArCj4+IMKgIGluY2x1ZGUvbGludXgvc29jL3RpL2sz
-LXJpbmdhY2MuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMjQ1ICsrCj4+IMKgIDIwIGZp
-bGVzIGNoYW5nZWQsIDgyNDggaW5zZXJ0aW9ucygrKQo+PiDCoCBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS90aS9rMy11ZG1hLnR4dAo+PiDC
-oCBjcmVhdGUgbW9kZSAxMDA2NDQKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NvYy90aS9rMy1yaW5nYWNjLnR4dAo+PiDCoCBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9k
-bWEvdGkvazMtdWRtYS1nbHVlLmMKPj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZG1h
-L3RpL2szLXVkbWEtcHJpdmF0ZS5jCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Rt
-YS90aS9rMy11ZG1hLmMKPj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZG1hL3RpL2sz
-LXVkbWEuaAo+PiDCoCBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvdGkvazMtcmluZ2Fj
-Yy5jCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL2RtYS9rMy11
-ZG1hLmgKPj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvZG1hL2szLXVkbWEt
-Z2x1ZS5oCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L2RtYS90aS1jcHBp
-NS5oCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L3NvYy90aS9rMy1yaW5n
-YWNjLmgKPj4KPiBDYW4geW91IHBsZWFzZSBzcGxpdCB0aGlzIHNlcmllcyBhbmQgcG9zdCBkcml2
-ZXJzL3NvYy8qIGJpdHMKPiBzZXBhcmF0ZWx5ID/CoCBJZiBpdHMgcmVhZHksIEkgY2FuIGFwcGx5
-IGszLXJpbmdhY2MuYyBjaGFuZ2VzLgoKSSdsbCB3YWl0IGNvdXBsZSBvZiBkYXlzIGZvciBndXlz
-IHRvIGNoZWNrIHRoZSBzZXJpZXMsIHRoZW4gSSBjYW4gc2VuZAp0aGUgc3BsaXQgb3V0IHJpbmdh
-Y2MgcGF0Y2hlcyBzZXBhcmF0ZWx5LgoKLSBQw6l0ZXIKClRleGFzIEluc3RydW1lbnRzIEZpbmxh
-bmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVz
-cyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Krzysztof,
+
+On 07.10.2019 19:09, Krzysztof Kozlowski wrote:
+> On Mon, 7 Oct 2019 at 02:43, kernelci.org bot <bot@kernelci.org> wrote:
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>> * This automated bisection report was sent to you on the basis  *
+>> * that you may be involved with the breaking commit it has      *
+>> * found.  No manual investigation has been done to verify it,   *
+>> * and the root cause of the problem may be somewhere else.      *
+>> *                                                               *
+>> * If you do send a fix, please include this trailer:            *
+>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+>> *                                                               *
+>> * Hope this helps!                                              *
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>
+>> krzysztof/for-next boot bisection: v5.4-rc1-48-g0bc9c79979ea on peach-pi
+>>
+>> Summary:
+>>    Start:      0bc9c79979ea Merge branch 'for-v5.5/memory-samsung-dmc-dt' into for-next
+>>    Details:    https://protect2.fireeye.com/url?k=57d30a4c-0ab44e6a-57d28103-0cc47a31384a-5c0d93fa4eb95f2e&u=https://kernelci.org/boot/id/5d9a50af59b5141ce5857c07
+>>    Plain log:  https://protect2.fireeye.com/url?k=7e18d090-237f94b6-7e195bdf-0cc47a31384a-b693d6da384e8a14&u=https://storage.kernelci.org//krzysztof/for-next/v5.4-rc1-48-g0bc9c79979ea/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-exynos5800-peach-pi.txt
+>>    HTML log:   https://protect2.fireeye.com/url?k=e9c39b5b-b4a4df7d-e9c21014-0cc47a31384a-5f31e671f969cef8&u=https://storage.kernelci.org//krzysztof/for-next/v5.4-rc1-48-g0bc9c79979ea/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-exynos5800-peach-pi.html
+>>    Result:     0899a480ac65 ARM: dts: exynos: Add initial data for coupled regulators for Exynos5422/5800
+> Thanks for the report. Marek Szyprowski reported it on last Friday. I
+> dropped the patch as of now as it exposes some deadlock in regulator
+> code.
+
+Thanks for dropping this patch.
+
+This turned out to be an issue in the regulator core logic, not the 
+deadlock as I initially suspected. See 
+https://lkml.org/lkml/2019/10/8/265 for more details.
+
+I will send an updated version of this patch, because it turned out that 
+the v7 had incorrectly resolved conflicts and in case of Odroids 
+coupling were added to wrong regulators, what hide the issue in my 
+initial tests on Odroid XU4.
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
