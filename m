@@ -1,82 +1,108 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv8 1/9] dt-bindings: omap: add new binding for PRM instances
-Date: Tue, 8 Oct 2019 17:46:55 +0200
-Message-ID: <20191008154655.u34wkbqgmelv3aea@earth.universe>
-References: <20191008125544.20679-1-t-kristo@ti.com>
- <20191008125544.20679-2-t-kristo@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+Date: Tue, 08 Oct 2019 17:56:06 +0200
+Message-ID: <1570550166.18914.12.camel@pengutronix.de>
+References: <34336c9a-8e87-8f84-2ae8-032b7967928f@linux.intel.com>
+         <CAFBinCDfM3ssHisMBKXZUFkfoAFw51TaUuKt_aBgtD-mN+9fhg@mail.gmail.com>
+         <657d796d-cb1b-472d-fe67-f7b9bf12fd79@linux.intel.com>
+         <CAFBinCA5sRp1-siqZqJzFL2nuD3BtjrbD65QtpWbnTgtPNXY1A@mail.gmail.com>
+         <cebd8f1d-90ab-87e7-9a34-f5c760688ce5@linux.intel.com>
+         <CAFBinCCXo50OX6=8Fz-=nRKuELU_fMOCX=z6iwAcw0_Tfgn1ug@mail.gmail.com>
+         <da347f1c-864c-7d68-33c8-045e46651f45@linux.intel.com>
+         <CAFBinCDhLYmiORvHdZJAN5cuUjc6eWJK5n9Qg26B0dEhhqUqVQ@mail.gmail.com>
+         <389f360a-a993-b9a8-4b50-ad87bcfec767@linux.intel.com>
+         <CAFBinCBwrTajCrSf-UqZY5gHqUSn0UTmbc_TLPNVZrPyY5jpOA@mail.gmail.com>
+         <20191003141955.zi5wqjqf4wa7lhv7@pengutronix.de>
+         <CAFBinCAEzBk7tT5M-F3H4kLnKURRkK2oSSAmKkrjAn7_wdAROA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8435942204498745943=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191008125544.20679-2-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: devicetree@vger.kernel.org, tony@atomide.com, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCAEzBk7tT5M-F3H4kLnKURRkK2oSSAmKkrjAn7_wdAROA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Philipp Zabel <pza@pengutronix.de>
+Cc: Dilip Kota <eswara.kota@linux.intel.com>, "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi Martin,
 
---===============8435942204498745943==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ctyqydaobcxcfjee"
-Content-Disposition: inline
+On Mon, 2019-10-07 at 21:53 +0200, Martin Blumenstingl wrote:
+> Hi Philipp,
+> 
+> On Thu, Oct 3, 2019 at 4:19 PM Philipp Zabel <pza@pengutronix.de> wrote:
+> [...]
+> > > because the register layout was greatly simplified for the newer SoCs
+> > > (for which there is reset-intel) compared to the older ones
+> > > (reset-lantiq).
+> > > Dilip's suggestion (in my own words) is that you take his new
+> > > reset-intel driver, then we will work on porting reset-lantiq over to
+> > > that so in the end we can drop the reset-lantiq driver.
+> > 
+> > Just to be sure, you are suggesting to add support for the current
+> > lantiq,reset binding to the reset-intel driver at a later point? I
+> > see no reason not to do that, but I'm also not quite sure what the
+> > benefit will be over just keeping reset-lantiq as is?
+> 
+> according to Chuan and Dilip the current reset-lantiq implementation
+> is wrong [0].
 
+The only issue seems to be the .reset callback, which doesn't have any
+users anway.
 
---ctyqydaobcxcfjee
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> my understanding is that the Lantiq and Intel LGM reset controllers
+> are identical except:
+> - the Lantiq variant uses a weird register layout (reset and status
+> registers not at consecutive offsets)
+> - the bits of the reset and status registers sometimes don't match on
+> the Lantiq variant
 
-Hi,
+Thank you, so these are a good explanation for why the DT bindings
+should be different.
 
-On Tue, Oct 08, 2019 at 03:55:36PM +0300, Tero Kristo wrote:
-> +Example:
-> +
-> +prm_dsp2: prm@1b00 {
-> +	compatible = "ti,omap-prm-inst", "ti,dra7-prm-inst";
+> - the Intel variant has a dedicated registers area for the reset
+> controller registers, while the Lantiq variant mixes them with various
+> other functionality (for example: USB2 PHYs)
 
-Nit: compatible values are sorted the other way around (most
-specific first).
+I'm not quite sure I understand why the intel driver is using syscon,
+then. Either way, it shouldn't make a big difference if regmap is used
+anyway. 
 
--- Sebastian
+> > > This approach means more work for me (as I am probably the one who
+> > > then has to do the work to port reset-lantiq over to reset-intel).
+> > 
+> > More work than what alternative?
+> 
+> compared to "fixing" the existing reset-lantiq driver (reset callback)
 
---ctyqydaobcxcfjee
-Content-Type: application/pgp-signature; name="signature.asc"
+That is still something you could do, or just drop the .reset callback
+because there are no reset consumers using it anyway.
 
------BEGIN PGP SIGNATURE-----
+One correct thing to do would be to identify those self-clearing reset
+bits and to disallow calling assert/deassert on them.
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2cr2gACgkQ2O7X88g7
-+pqWmxAAnbs6GjNR1+b2puQnzOpb3nsF6NWlckoiR/wBE5/utyC4v95yoB2Jm+sS
-c7GlleJA5DmF8E40TuOq3HL/z+dt5P/vWX9egt0um6TtHZ3Z7rMWuwvv5TK+3St8
-DF7ktlGqs2KG/E96LMf762P69CK2IccE7GUpY7N+MiFOZFuMJ7e+vUMyetuuSqeT
-1r/RxLgyNAbeM5X0l4mN95Tv6A+aeuBr0jpX+N97vsEXUtdJ+5aLrlFX+8zsc/rn
-LpexzXPaUDR5RgotC/+l9TxCAXwmHKJtPo0lLSsOWtctaD5MHYH/VkWAMCO3EGx8
-YhOTT2ZNnfsR51Nc0mee/LzhrHGVYrnh+V15riJilNypnY+2wIw+B91xbJoMBFx2
-PWLdwU+z67Cnc/+R/qaAYFNOQAfji1e+dAR5uAybReYzJGGRx+IOX/CInPuNZEdh
-YMbngcINMVVEd3PzdCHUsIUOoXTpoAl0PlLVvLcf9JMxkn+5+SD23Sk+oNEjreVD
-39Sb8bmrUG5C8DWBgddKpRE9dSbooLJhdkNApMUDdZwoluEDYeYlH2UDE+j7OkN6
-kTZXans1Iq0fkkq/w/V3AQO5Z8aP+FHIIg6j6Jy6zD3C9L7Lw4EdhWFBBPDFpWp/
-UGPs6TkWr0rre1fR657a3oKgv3OYwThEf3+bnTvbK7RiVQukc0Q=
-=qzjC
------END PGP SIGNATURE-----
+> and then (instead of adding a new driver) integrating Intel LGM
+> support into reset-lantiq
 
---ctyqydaobcxcfjee--
+Since at this point I'm not even sure whether merging the two at all is
+better than keeping them separate, I have no opinion on whether merging
+intel support into the lantiq driver or the other way around is
+preferable.
 
+> > > I'm happy to do that work if you think that it's worth following this
+> > > approach.  So I want your opinion on this before I spend any effort on
+> > > porting reset-lantiq over to reset-intel.
+> > 
+> > Reset drivers are typically so simple, I'm not quite sure whether it is
+> > worth to integrate multiple drivers if it complicates matters too much.
+> > In this case though I expect it would just be adding support for a
+> > custom .of_xlate and lantiq specific register property parsing?
+> 
+> yes, that's how I understand the Lantiq and Intel reset controllers:
+> - reset/status/assert/deassert callbacks would be shared across all variants
+> - register parsing and of_xlate are SoC specific
 
---===============8435942204498745943==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Ok. If that turns out to be less rather than more boilerplate than two
+separate drivers, that should be fine.
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8435942204498745943==--
+regards
+Philipp
