@@ -1,52 +1,81 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
-Date: Tue, 8 Oct 2019 15:00:14 -0700
-Message-ID: <20191008220014.GI22365@dtor-ws>
-References: <20191007203343.101466-1-stephan@gerhold.net>
- <20191007205021.104402-1-stephan@gerhold.net>
+From: Tao Ren <taoren@fb.com>
+Subject: Re: [PATCH 3/5] i2c: aspeed: fix master pending state handling
+Date: Tue, 8 Oct 2019 22:00:46 +0000
+Message-ID: <422eea61-7cb9-e471-83fb-3f554ff5e079@fb.com>
+References: <20191007231313.4700-1-jae.hyun.yoo@linux.intel.com>
+ <20191007231313.4700-4-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191007205021.104402-1-stephan@gerhold.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephan Gerhold <stephan@gerhold.net>
-Cc: Andi Shyti <andi@etezian.org>, Simon Shields <simon@lineageos.org>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191007231313.4700-4-jae.hyun.yoo@linux.intel.com>
+Content-Language: en-US
+Content-ID: <F304E12DA9821C4995799DE8ABF9051C@namprd15.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Brendan Higgins <brendanhiggins@google.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 10:50:21PM +0200, Stephan Gerhold wrote:
-> MMS345L is another first generation touch screen from Melfas,
-> which uses the same registers as MMS152.
+On 10/7/19 4:13 PM, Jae Hyun Yoo wrote:
+> In case of master pending state, it should not trigger the master
+> command because this H/W is sharing the same data buffer for slave
+> and master operations, so this commit fixes the issue with making
+> the master command triggering happen when the state goes to active
+> state.
 > 
-> However, using I2C_M_NOSTART for it causes errors when reading:
-> 
-> 	i2c i2c-0: sendbytes: NAK bailout.
-> 	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
-> 
-> The driver works fine as soon as I2C_M_NOSTART is removed.
-> 
-> Add a separate melfas,mms345l binding, and make use of I2C_M_NOSTART
-> only for MMS114 and MMS152.
-> 
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 > ---
-> Note: I was not able to find a datasheet for any of the models,
-> so this change is merely based on testing and comparison with
-> the downstream driver [1].
+>  drivers/i2c/busses/i2c-aspeed.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> There was a related patch [2] that removes I2C_M_NOSTART for all models,
-> but it seems abandoned and I do not have any other model for testing.
-> Therefore, this patch implements the least instrusive solution
-> and only removes I2C_M_NOSTART for MMS345L.
+> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+> index fa66951b05d0..40f6cf98d32e 100644
+> --- a/drivers/i2c/busses/i2c-aspeed.c
+> +++ b/drivers/i2c/busses/i2c-aspeed.c
+> @@ -336,18 +336,19 @@ static void aspeed_i2c_do_start(struct aspeed_i2c_bus *bus)
+>  	struct i2c_msg *msg = &bus->msgs[bus->msgs_index];
+>  	u8 slave_addr = i2c_8bit_addr_from_msg(msg);
+>  
+> -	bus->master_state = ASPEED_I2C_MASTER_START;
+> -
+>  #if IS_ENABLED(CONFIG_I2C_SLAVE)
+>  	/*
+>  	 * If it's requested in the middle of a slave session, set the master
+>  	 * state to 'pending' then H/W will continue handling this master
+>  	 * command when the bus comes back to the idle state.
+>  	 */
+> -	if (bus->slave_state != ASPEED_I2C_SLAVE_INACTIVE)
+> +	if (bus->slave_state != ASPEED_I2C_SLAVE_INACTIVE) {
+>  		bus->master_state = ASPEED_I2C_MASTER_PENDING;
+> +		return;
+> +	}
+>  #endif /* CONFIG_I2C_SLAVE */
+>  
+> +	bus->master_state = ASPEED_I2C_MASTER_START;
+>  	bus->buf_index = 0;
+>  
+>  	if (msg->flags & I2C_M_RD) {
+> @@ -432,7 +433,7 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+>  		if (bus->slave_state != ASPEED_I2C_SLAVE_INACTIVE)
+>  			goto out_no_complete;
+>  
+> -		bus->master_state = ASPEED_I2C_MASTER_START;
+> +		aspeed_i2c_do_start(bus);
+>  	}
 
-Hmm,  at this point I am inclined to pick up Andi's patch since it seems
-to work for you and him and it looks like Android drivers are not using
-I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
-it was originally developed.
+Shall we move the restart-master logic from master_irq to bus_irq? The reason being:
+master transaction cannot be restarted when aspeed-i2c is running in slave state and
+receives STOP interrupt, because aspeed_i2c_master_irq won't be called in this case.
 
-Any objections?
 
-Thanks.
+Cheers,
 
--- 
-Dmitry
+Tao
