@@ -1,135 +1,133 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
-Date: Tue,  8 Oct 2019 14:52:39 -0500
-Message-ID: <20191008195239.12852-1-robh@kernel.org>
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v3 3/5] drm/rockchip: Add optional support for CRTC gamma
+ LUT
+Date: Tue, 8 Oct 2019 16:03:39 -0400
+Message-ID: <20191008200339.GD85762@art_vandelay>
+References: <20190930222802.32088-1-ezequiel@collabora.com>
+ <20190930222802.32088-4-ezequiel@collabora.com>
+ <20191007185432.GG126146@art_vandelay>
+ <dad6ee9aa3699af0f794f467224a8a01798d86b2.camel@collabora.com>
+ <9cdd23c20ed91d4c4654aaae27d8c3addfd9af3f.camel@collabora.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9cdd23c20ed91d4c4654aaae27d8c3addfd9af3f.camel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Christoph Hellwig <hch@infradead.org>
+To: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+On Tue, Oct 08, 2019 at 04:33:35PM -0300, Ezequiel Garcia wrote:
+> On Tue, 2019-10-08 at 16:23 -0300, Ezequiel Garcia wrote:
+> > Hello Sean,
+> > 
+> > On Mon, 2019-10-07 at 14:54 -0400, Sean Paul wrote:
+> > > On Mon, Sep 30, 2019 at 07:28:00PM -0300, Ezequiel Garcia wrote:
+> > > > Add an optional CRTC gamma LUT support, and enable it on RK3288.
+> > > > This is currently enabled via a separate address resource,
+> > > > which needs to be specified in the devicetree.
+> > > > 
+> > > > The address resource is required because on some SoCs, such as
+> > > > RK3288, the LUT address is after the MMU address, and the latter
+> > > > is supported by a different driver. This prevents the DRM driver
+> > > > from requesting an entire register space.
+> > > > 
+> > > > The current implementation works for RGB 10-bit tables, as that
+> > > > is what seems to work on RK3288.
+> > > > 
+> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > > > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > > ---
+> > > > Changes from v2:
+> > > > * None.
+> > > > 
+> > > > Changes from v1:
+> > > > * drop explicit linear LUT after finding a proper
+> > > >   way to disable gamma correction.
+> > > > * avoid setting gamma is the CRTC is not active.
+> > > > * s/int/unsigned int as suggested by Jacopo.
+> > > > * only enable color management and set gamma size
+> > > >   if gamma LUT is supported, suggested by Doug.
+> > > > * drop the reg-names usage, and instead just use indexed reg
+> > > >   specifiers, suggested by Doug.
+> > > > 
+> > > > Changes from RFC:
+> > > > * Request (an optional) address resource for the LUT.
+> > > > * Drop support for RK3399, which doesn't seem to work
+> > > >   out of the box and needs more research.
+> > > > * Support pass-thru setting when GAMMA_LUT is NULL.
+> > > > * Add a check for the gamma size, as suggested by Ilia.
+> > > > * Move gamma setting to atomic_commit_tail, as pointed
+> > > >   out by Jacopo/Laurent, is the correct way.
+> > > > ---
+> > > >  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   3 +
+> > > >  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 114 ++++++++++++++++++++
+> > > >  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   7 ++
+> > > >  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
+> > > >  4 files changed, 126 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > > > index dba352ec0ee3..fd1d987698ab 100644
+> > > > --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > > > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > > > @@ -17,6 +17,7 @@
+> > > >  #include "rockchip_drm_drv.h"
+> > > >  #include "rockchip_drm_fb.h"
+> > > >  #include "rockchip_drm_gem.h"
+> > > > +#include "rockchip_drm_vop.h"
+> > > >  
+> > > >  static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
+> > > >  	.destroy       = drm_gem_fb_destroy,
+> > > > @@ -112,6 +113,8 @@ rockchip_atomic_helper_commit_tail_rpm(struct drm_atomic_state *old_state)
+> > > >  
+> > > >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> > > >  
+> > > > +	rockchip_drm_vop_gamma_set(old_state);
+> > > > +
+> > > 
+> > > Instead of duplicating the commit_tail helper, could you just implement
+> > > .atomic_begin() and call this from there? I think the only hitch is if you
+> > > need this to be completed before crtc->atomic_enable(), at which point you
+> > > might need to call it from vop_crtc_atomic_enable() and then detect that in
+> > > atomic_begin()
+> > > 
+> > 
+> > I think moving this to .atomic_begin might be enough. Let me send a new
+> > series and we can see how that goes.
+> > 
+> 
+> Oh, before going forward, pleaste note that the first iteration
+> of this patch (as noted in the changelog) was applying the gamma lut
+> on .atomic_flush. However, Laurent and Jacopo pointed out that
+> it might add some tearing to do so, and that's why it was moved
+> to commit_tail.
+> 
+> I have to admit I'm not too sure about the difference between
+> applying this gamma LUT on atomic_begin or atomic_flush,
+> perhaps you can clarify that?
 
-Since the "dma-ranges" property is only valid for a node representing a
-bus, of_dma_get_range() currently assumes the node passed in is a leaf
-representing a device, and starts the walk from its parent. In cases
-like PCI host controllers on typical FDT systems, however, where the PCI
-endpoints are probed dynamically the initial leaf node represents the
-'bus' itself, and this logic means we fail to consider any "dma-ranges"
-describing the host bridge itself. Rework the logic such that
-of_dma_get_range() also works correctly starting from a bus node
-containing "dma-ranges".
+The only difference between what you have now and calling it in atomic_begin
+is that as you have it now, it's set before crtc->atomic_enable() is called.
+I think in order to address Ville's concerns on the other patch, you'll need
+to set it the lut in .atomic_enable() anyways, so here's what I would suggest:
 
-While this does mean "dma-ranges" could incorrectly be in a device leaf
-node, there isn't really any way in this function to ensure that a leaf
-node is or isn't a bus node.
+- Set the LUT in .atomic_enable() wherever it makes sense (you have it at the
+  start now)
+- Add an .atomic_begin() implementation and check state->color_mgmt_changed and
+  state->active_changed. color_mgmt_changed && !active_changed, set the lut
+- Remove patches 1 & 5
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-[robh: Allow for the bus child node to still be passed in]
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-Resending, hit send too quickly.
+...I think :-)
 
-v2:
- - Ensure once we find dma-ranges, every parent has it.
- - Only get the #{size,address}-cells after we find non-empty dma-ranges
- - Add a check on the 'dma-ranges' length
+Sean
 
-This is all that remains of the dma-ranges series. I've applied the rest 
-of the series prep and fixes. I dropped "of: Ratify of_dma_configure() 
-interface" as the assertions that the node pointer being the parent only 
-when struct device doesn't have a DT node pointer is not always 
-true.
+> 
+> Thanks!
+> Ezequiel 
+> 
+> 
 
-I didn't include any tested-bys as this has changed a bit. A git branch 
-is here[1].
-
-Rob
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks-v2
-
- drivers/of/address.c | 44 ++++++++++++++++++--------------------------
- 1 file changed, 18 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 5ce69d026584..99c1b8058559 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -930,47 +930,39 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
- 	const __be32 *ranges = NULL;
- 	int len, naddr, nsize, pna;
- 	int ret = 0;
-+	bool found_dma_ranges = false;
- 	u64 dmaaddr;
- 
--	if (!node)
--		return -EINVAL;
--
--	while (1) {
--		struct device_node *parent;
--
--		naddr = of_n_addr_cells(node);
--		nsize = of_n_size_cells(node);
--
--		parent = __of_get_dma_parent(node);
--		of_node_put(node);
--
--		node = parent;
--		if (!node)
--			break;
--
-+	while (node) {
- 		ranges = of_get_property(node, "dma-ranges", &len);
- 
- 		/* Ignore empty ranges, they imply no translation required */
- 		if (ranges && len > 0)
- 			break;
- 
--		/*
--		 * At least empty ranges has to be defined for parent node if
--		 * DMA is supported
--		 */
--		if (!ranges)
--			break;
-+		/* Once we find 'dma-ranges', then a missing one is an error */
-+		if (found_dma_ranges && !ranges) {
-+			ret = -ENODEV;
-+			goto out;
-+		}
-+		found_dma_ranges = true;
-+
-+		node = of_get_next_dma_parent(node);
- 	}
- 
--	if (!ranges) {
-+	if (!node || !ranges) {
- 		pr_debug("no dma-ranges found for node(%pOF)\n", np);
- 		ret = -ENODEV;
- 		goto out;
- 	}
- 
--	len /= sizeof(u32);
--
-+	naddr = of_bus_n_addr_cells(node);
-+	nsize = of_bus_n_size_cells(node);
- 	pna = of_n_addr_cells(node);
-+	if ((len / sizeof(__be32)) % (pna + naddr + nsize)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
- 
- 	/* dma-ranges format:
- 	 * DMA addr	: naddr cells
-@@ -978,7 +970,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
- 	 * size		: nsize cells
- 	 */
- 	dmaaddr = of_read_number(ranges, naddr);
--	*paddr = of_translate_dma_address(np, ranges);
-+	*paddr = of_translate_dma_address(node, ranges + naddr);
- 	if (*paddr == OF_BAD_ADDR) {
- 		pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
- 		       dmaaddr, np);
 -- 
-2.20.1
+Sean Paul, Software Engineer, Google / Chromium OS
