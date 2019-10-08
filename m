@@ -1,72 +1,111 @@
 From: Lars Poeschel <poeschel@lemonage.de>
-Subject: [PATCH v9 0/7] nfc: pn533: add uart phy driver
-Date: Tue,  8 Oct 2019 16:05:37 +0200
-Message-ID: <20191008140544.17112-1-poeschel@lemonage.de>
+Subject: [PATCH v9 2/7] nfc: pn532: Add uart phy docs and rename it
+Date: Tue,  8 Oct 2019 16:05:39 +0200
+Message-ID: <20191008140544.17112-3-poeschel@lemonage.de>
+References: <20191008140544.17112-1-poeschel@lemonage.de>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191008140544.17112-1-poeschel@lemonage.de>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Lars Poeschel <poeschel@lemonage.de>, Kate Stewart <kstewart@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Jilayne Lovejoy <opensource@jilayne.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Steve Winslow <swinslow@gmail.com>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Kees Cook <keescook@chromium.org>, Allison Randal <allison@lohutok.net>, Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>
+To: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lars Poeschel <poeschel@lemonage.de>, "open list:NFC SUBSYSTEM" <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-The purpose of this patch series is to add a uart phy driver to the
-pn533 nfc driver.
-It first changes the dt strings and docs. The dt compatible strings
-need to change, because I would add "pn532-uart" to the already
-existing "pn533-i2c" one. These two are now unified into just
-"pn532". Then the neccessary changes to the pn533 core driver are
-made. Then the uart phy is added.
-As the pn532 chip supports a autopoll, I wanted to use this instead
-of the software poll loop in the pn533 core driver. It is added and
-activated by the last to patches.
-The way to add the autopoll later in seperate patches is chosen, to
-show, that the uart phy driver can also work with the software poll
-loop, if someone needs that for some reason.
-This patchset is already rebased on Johans "NFC: pn533: fix
-use-after-free and memleaks" patch
-https://lore.kernel.org/netdev/20191007164059.5927-1-johan@kernel.org/
-as they would conflict.
-If for some reason Johans patch will not get merged, I can of course
-provide the patchset without depending on this patch.
+This adds documentation about the uart phy to the pn532 binding doc. As
+the filename "pn533-i2c.txt" is not appropriate any more, rename it to
+the more general "pn532.txt".
+This also documents the deprecation of the compatible strings ending
+with "...-i2c".
 
-Cc: Lars Poeschel <poeschel@lemonage.de>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jilayne Lovejoy <opensource@jilayne.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Steve Winslow <swinslow@gmail.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Allison Randal <allison@lohutok.net>
 Cc: Johan Hovold <johan@kernel.org>
 Cc: Simon Horman <horms@verge.net.au>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+Changes in v9:
+- Rebased the patch series on v5.4-rc2
+- Produce patch with -M4 to git format-patch to detect the rename
+- Change DT node name from pn532@24 to nfc@24 in example
 
-Lars Poeschel (7):
-  nfc: pn533: i2c: "pn532" as dt compatible string
-  nfc: pn532: Add uart phy docs and rename it
-  nfc: pn533: Add dev_up/dev_down hooks to phy_ops
-  nfc: pn533: Split pn533 init & nfc_register
-  nfc: pn533: add UART phy driver
-  nfc: pn533: Add autopoll capability
-  nfc: pn532_uart: Make use of pn532 autopoll
+Changes in v8:
+- Update existing binding doc instead of adding a new one:
+  - Add uart phy example
+  - Add general "pn532" compatible string
+  - Deprecate "...-i2c" compatible strings
+  - Rename file to a more general filename
+- Intentionally drop Rob's Reviewed-By as I guess this rather big change
+  requires a new review
 
- .../net/nfc/{pn533-i2c.txt => pn532.txt}      |  25 +-
- drivers/nfc/pn533/Kconfig                     |  11 +
- drivers/nfc/pn533/Makefile                    |   2 +
- drivers/nfc/pn533/i2c.c                       |  22 +-
- drivers/nfc/pn533/pn533.c                     | 271 +++++++++++++--
- drivers/nfc/pn533/pn533.h                     |  38 +-
- drivers/nfc/pn533/uart.c                      | 324 ++++++++++++++++++
- drivers/nfc/pn533/usb.c                       |  12 +-
- 8 files changed, 646 insertions(+), 59 deletions(-)
+Changes in v7:
+- Accidentally lost Rob's Reviewed-By
+
+Changes in v6:
+- Rebased the patch series on v5.3-rc5
+- Picked up Rob's Reviewed-By
+
+Changes in v4:
+- Add documentation about reg property in case of i2c
+
+Changes in v3:
+- seperate binding doc instead of entry in trivial-devices.txt
+
+ .../net/nfc/{pn533-i2c.txt => pn532.txt}      | 25 ++++++++++++++++---
+ 1 file changed, 21 insertions(+), 4 deletions(-)
  rename Documentation/devicetree/bindings/net/nfc/{pn533-i2c.txt => pn532.txt} (42%)
- create mode 100644 drivers/nfc/pn533/uart.c
 
+diff --git a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+similarity index 42%
+rename from Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
+rename to Documentation/devicetree/bindings/net/nfc/pn532.txt
+index 2efe3886b95b..a5507dc499bc 100644
+--- a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
++++ b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+@@ -1,9 +1,16 @@
+ * NXP Semiconductors PN532 NFC Controller
+ 
+ Required properties:
+-- compatible: Should be "nxp,pn532-i2c" or "nxp,pn533-i2c".
++- compatible: Should be
++    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
++                  where the NFC chip is connected to.
++                  Currently the kernel has phy bindings for uart and i2c.
++    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
++    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
++
++Required properties if connected on i2c:
+ - clock-frequency: I²C work frequency.
+-- reg: address on the bus
++- reg: for the I²C bus address. This is fixed at 0x24 for the PN532.
+ - interrupts: GPIO interrupt to which the chip is connected
+ 
+ Optional SoC Specific Properties:
+@@ -15,9 +22,9 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
+ &i2c2 {
+ 
+ 
+-	pn532: pn532@24 {
++	pn532: nfc@24 {
+ 
+-		compatible = "nxp,pn532-i2c";
++		compatible = "nxp,pn532";
+ 
+ 		reg = <0x24>;
+ 		clock-frequency = <400000>;
+@@ -27,3 +34,13 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
+ 
+ 	};
+ };
++
++Example (for PN532 connected via uart):
++
++uart4: serial@49042000 {
++        compatible = "ti,omap3-uart";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++        };
++};
 -- 
 2.23.0
