@@ -1,87 +1,46 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH 3/5] i2c: aspeed: fix master pending state handling
-Date: Tue, 8 Oct 2019 16:28:30 -0700
-Message-ID: <63e99afc-17b4-e63d-f00a-d8fd29b8e735@linux.intel.com>
-References: <20191007231313.4700-1-jae.hyun.yoo@linux.intel.com>
- <20191007231313.4700-4-jae.hyun.yoo@linux.intel.com>
- <422eea61-7cb9-e471-83fb-3f554ff5e079@fb.com>
- <6f280195-eef7-1fe7-ac42-ad6879ca9838@linux.intel.com>
- <bba604eb-4cca-257e-01d7-b2d9471e6455@fb.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Convert PWM bindings to
+ json-schema
+Date: Tue, 8 Oct 2019 16:46:06 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1910081643220.11044@viisi.sifive.com>
+References: <20191002164047.14499-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <bba604eb-4cca-257e-01d7-b2d9471e6455@fb.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tao Ren <taoren@fb.com>, Brendan Higgins <brendanhiggins@google.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191002164047.14499-1-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvOC8yMDE5IDQ6MTUgUE0sIFRhbyBSZW4gd3JvdGU6Cj4gT24gMTAvOC8xOSAzOjQ1IFBN
-LCBKYWUgSHl1biBZb28gd3JvdGU6Cj4+IEhpIFRhbywKPj4KPj4gT24gMTAvOC8yMDE5IDM6MDAg
-UE0sIFRhbyBSZW4gd3JvdGU6Cj4+PiBPbiAxMC83LzE5IDQ6MTMgUE0sIEphZSBIeXVuIFlvbyB3
-cm90ZToKPj4+PiBJbiBjYXNlIG9mIG1hc3RlciBwZW5kaW5nIHN0YXRlLCBpdCBzaG91bGQgbm90
-IHRyaWdnZXIgdGhlIG1hc3Rlcgo+Pj4+IGNvbW1hbmQgYmVjYXVzZSB0aGlzIEgvVyBpcyBzaGFy
-aW5nIHRoZSBzYW1lIGRhdGEgYnVmZmVyIGZvciBzbGF2ZQo+Pj4+IGFuZCBtYXN0ZXIgb3BlcmF0
-aW9ucywgc28gdGhpcyBjb21taXQgZml4ZXMgdGhlIGlzc3VlIHdpdGggbWFraW5nCj4+Pj4gdGhl
-IG1hc3RlciBjb21tYW5kIHRyaWdnZXJpbmcgaGFwcGVuIHdoZW4gdGhlIHN0YXRlIGdvZXMgdG8g
-YWN0aXZlCj4+Pj4gc3RhdGUuCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBKYWUgSHl1biBZb28g
-PGphZS5oeXVuLnlvb0BsaW51eC5pbnRlbC5jb20+Cj4+Pj4gLS0tCj4+Pj4gIMKgIGRyaXZlcnMv
-aTJjL2J1c3Nlcy9pMmMtYXNwZWVkLmMgfCA5ICsrKysrLS0tLQo+Pj4+ICDCoCAxIGZpbGUgY2hh
-bmdlZCwgNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtYXNwZWVkLmMgYi9kcml2ZXJzL2kyYy9idXNzZXMv
-aTJjLWFzcGVlZC5jCj4+Pj4gaW5kZXggZmE2Njk1MWIwNWQwLi40MGY2Y2Y5OGQzMmUgMTAwNjQ0
-Cj4+Pj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1hc3BlZWQuYwo+Pj4+ICsrKyBiL2Ry
-aXZlcnMvaTJjL2J1c3Nlcy9pMmMtYXNwZWVkLmMKPj4+PiBAQCAtMzM2LDE4ICszMzYsMTkgQEAg
-c3RhdGljIHZvaWQgYXNwZWVkX2kyY19kb19zdGFydChzdHJ1Y3QgYXNwZWVkX2kyY19idXMgKmJ1
-cykKPj4+PiAgwqDCoMKgwqDCoCBzdHJ1Y3QgaTJjX21zZyAqbXNnID0gJmJ1cy0+bXNnc1tidXMt
-Pm1zZ3NfaW5kZXhdOwo+Pj4+ICDCoMKgwqDCoMKgIHU4IHNsYXZlX2FkZHIgPSBpMmNfOGJpdF9h
-ZGRyX2Zyb21fbXNnKG1zZyk7Cj4+Pj4gIMKgIC3CoMKgwqAgYnVzLT5tYXN0ZXJfc3RhdGUgPSBB
-U1BFRURfSTJDX01BU1RFUl9TVEFSVDsKPj4+PiAtCj4+Pj4gIMKgICNpZiBJU19FTkFCTEVEKENP
-TkZJR19JMkNfU0xBVkUpCj4+Pj4gIMKgwqDCoMKgwqAgLyoKPj4+PiAgwqDCoMKgwqDCoMKgICog
-SWYgaXQncyByZXF1ZXN0ZWQgaW4gdGhlIG1pZGRsZSBvZiBhIHNsYXZlIHNlc3Npb24sIHNldCB0
-aGUgbWFzdGVyCj4+Pj4gIMKgwqDCoMKgwqDCoCAqIHN0YXRlIHRvICdwZW5kaW5nJyB0aGVuIEgv
-VyB3aWxsIGNvbnRpbnVlIGhhbmRsaW5nIHRoaXMgbWFzdGVyCj4+Pj4gIMKgwqDCoMKgwqDCoCAq
-IGNvbW1hbmQgd2hlbiB0aGUgYnVzIGNvbWVzIGJhY2sgdG8gdGhlIGlkbGUgc3RhdGUuCj4+Pj4g
-IMKgwqDCoMKgwqDCoCAqLwo+Pj4+IC3CoMKgwqAgaWYgKGJ1cy0+c2xhdmVfc3RhdGUgIT0gQVNQ
-RUVEX0kyQ19TTEFWRV9JTkFDVElWRSkKPj4+PiArwqDCoMKgIGlmIChidXMtPnNsYXZlX3N0YXRl
-ICE9IEFTUEVFRF9JMkNfU0xBVkVfSU5BQ1RJVkUpIHsKPj4+PiAgwqDCoMKgwqDCoMKgwqDCoMKg
-IGJ1cy0+bWFzdGVyX3N0YXRlID0gQVNQRUVEX0kyQ19NQVNURVJfUEVORElORzsKPj4+PiArwqDC
-oMKgwqDCoMKgwqAgcmV0dXJuOwo+Pj4+ICvCoMKgwqAgfQo+Pj4+ICDCoCAjZW5kaWYgLyogQ09O
-RklHX0kyQ19TTEFWRSAqLwo+Pj4+ICDCoCArwqDCoMKgIGJ1cy0+bWFzdGVyX3N0YXRlID0gQVNQ
-RUVEX0kyQ19NQVNURVJfU1RBUlQ7Cj4+Pj4gIMKgwqDCoMKgwqAgYnVzLT5idWZfaW5kZXggPSAw
-Owo+Pj4+ICDCoCDCoMKgwqDCoMKgIGlmIChtc2ctPmZsYWdzICYgSTJDX01fUkQpIHsKPj4+PiBA
-QCAtNDMyLDcgKzQzMyw3IEBAIHN0YXRpYyB1MzIgYXNwZWVkX2kyY19tYXN0ZXJfaXJxKHN0cnVj
-dCBhc3BlZWRfaTJjX2J1cyAqYnVzLCB1MzIgaXJxX3N0YXR1cykKPj4+PiAgwqDCoMKgwqDCoMKg
-wqDCoMKgIGlmIChidXMtPnNsYXZlX3N0YXRlICE9IEFTUEVFRF9JMkNfU0xBVkVfSU5BQ1RJVkUp
-Cj4+Pj4gIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdvdG8gb3V0X25vX2NvbXBsZXRlOwo+
-Pj4+ICDCoCAtwqDCoMKgwqDCoMKgwqAgYnVzLT5tYXN0ZXJfc3RhdGUgPSBBU1BFRURfSTJDX01B
-U1RFUl9TVEFSVDsKPj4+PiArwqDCoMKgwqDCoMKgwqAgYXNwZWVkX2kyY19kb19zdGFydChidXMp
-Owo+Pj4+ICDCoMKgwqDCoMKgIH0KPj4+Cj4+PiBTaGFsbCB3ZSBtb3ZlIHRoZSByZXN0YXJ0LW1h
-c3RlciBsb2dpYyBmcm9tIG1hc3Rlcl9pcnEgdG8gYnVzX2lycT8gVGhlIHJlYXNvbiBiZWluZzoK
-Pj4+IG1hc3RlciB0cmFuc2FjdGlvbiBjYW5ub3QgYmUgcmVzdGFydGVkIHdoZW4gYXNwZWVkLWky
-YyBpcyBydW5uaW5nIGluIHNsYXZlIHN0YXRlIGFuZAo+Pj4gcmVjZWl2ZXMgU1RPUCBpbnRlcnJ1
-cHQsIGJlY2F1c2UgYXNwZWVkX2kyY19tYXN0ZXJfaXJxIHdvbid0IGJlIGNhbGxlZCBpbiB0aGlz
-IGNhc2UuCj4+Cj4+IEV2ZW4gaW4gdGhhdCBjYXNlLCBtYXN0ZXIgY2FuIGJlIHJlc3RhcnRlZCBw
-cm9wZXJseSBiZWNhdXNlIHNsYXZlX2lycQo+PiB3aWxsIGJlIGNhbGxlZCBmaXJzdCBiZWNhdXNl
-IG1hc3RlciBpcyBpbiBNQVNURVJfUEVORElORyBzdGF0ZSwgc28gdGhlCj4+IHNsYXZlX2lycSBo
-YW5kbGVzIHRoZSBTVE9QIGludGVycnVwdCBhcyB3ZWxsLCBhbmQgdGhlbiBtYXN0ZXJfaXJxIHdp
-bGwKPj4gYmUgY2FsbGVkIHdpdGggU0xBVkVfSU5BQ1RJVkUgc3RhdGUgc28gdGhlIGFzcGVlZF9p
-MmNfZG9fc3RhcnQgY2FuIGJlCj4+IGNhbGxlZCBldmVudHVhbGx5Lgo+IAo+IEkgbWVhbiBtYXN0
-ZXJfaXJxIGNhbm5vdCBiZSBjYWxsZWQgd2hlbiBpcnFfcmVtYWluaW5nIGJlY29tZXMgMCBhZnRl
-ciBzbGF2ZV9pcnEuCgpBaCwgSSBzZWUuIEl0IHdvdWxkIGJlIHBvc3NpYmx5IGhhcHBlbmVkLiBQ
-cm9iYWJseSB3ZSBuZWVkIHRvIHJlbW92ZQonaWYgKGlycV9yZW1haW5pbmcpJyBjaGVja2luZyBp
-biBidXNfaXJxIHRvIG1ha2UgaXQgY2FsbCBpcnFzIGFsd2F5cy4KV2lsbCBmaXggdGhlIGlzc3Vl
-IGluIHRoZSBuZXh0IHJvdW5kLgoKVGhhbmtzLAoKSmFlCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Wed, 2 Oct 2019, Krzysztof Kozlowski wrote:
+
+> Convert generic PWM bindings to DT schema format using json-schema.  The
+> consumer bindings are split to separate file.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+
+[ ... ]
+
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> index 36447e3c9378..3d1dd7b06efc 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> @@ -17,7 +17,7 @@ Required properties:
+>    Please refer to sifive-blocks-ip-versioning.txt for details.
+>  - reg: physical base address and length of the controller's registers
+>  - clocks: Should contain a clock identifier for the PWM's parent clock.
+> -- #pwm-cells: Should be 3. See pwm.txt in this directory
+> +- #pwm-cells: Should be 3. See pwm.yaml in this directory
+>    for a description of the cell format.
+>  - interrupts: one interrupt per PWM channel
+
+For the SiFive PWM driver documentation:
+
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
+
+
+- Paul
