@@ -1,185 +1,580 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
-Date: Tue, 08 Oct 2019 22:51:36 +0200
-Message-ID: <4f6b26f8779a4fd98712b966bff3491dc31e26c2.camel@suse.de>
-References: <20191008195239.12852-1-robh@kernel.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH 4/5] i2c: aspeed: add buffer mode transfer support
+Date: Tue, 8 Oct 2019 14:10:25 -0700
+Message-ID: <29436b73-3473-d34d-0c7a-6f78ff077002@linux.intel.com>
+References: <20191007231313.4700-1-jae.hyun.yoo@linux.intel.com>
+ <20191007231313.4700-5-jae.hyun.yoo@linux.intel.com>
+ <20191008201254.GC155928@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-8hI66HT9gbTxUxyjGifb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191008195239.12852-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, Christoph Hellwig <hch@infradead.org>, Marek Vasut <marek.vasut@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org, Simon Horman <horms+renesas@verge.net.au>, Robin Murphy <robin.murphy@arm.com>, Stefan Wahren <wahrenst@gmx.net>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191008201254.GC155928@google.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Tao Ren <taoren@fb.com>, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Brendan,
 
---=-8hI66HT9gbTxUxyjGifb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 10/8/2019 1:12 PM, Brendan Higgins wrote:
+> On Mon, Oct 07, 2019 at 04:13:12PM -0700, Jae Hyun Yoo wrote:
+>> Byte mode currently this driver uses makes lots of interrupt call
+> 
+> nit: Drop "Byte mode".
 
-Hi Rob/Robin,
+'Byte mode' is one of modes which is described in the datasheet.
 
-On Tue, 2019-10-08 at 14:52 -0500, Rob Herring wrote:
-> From: Robin Murphy <robin.murphy@arm.com>
->=20
-> Since the "dma-ranges" property is only valid for a node representing a
-> bus, of_dma_get_range() currently assumes the node passed in is a leaf
-> representing a device, and starts the walk from its parent. In cases
-> like PCI host controllers on typical FDT systems, however, where the PCI
-> endpoints are probed dynamically the initial leaf node represents the
-> 'bus' itself, and this logic means we fail to consider any "dma-ranges"
-> describing the host bridge itself. Rework the logic such that
-> of_dma_get_range() also works correctly starting from a bus node
-> containing "dma-ranges".
->=20
-> While this does mean "dma-ranges" could incorrectly be in a device leaf
-> node, there isn't really any way in this function to ensure that a leaf
-> node is or isn't a bus node.
+Would it be better if I change it like below?
+"This driver uses byte mode that makes lots of interrupt call ..."
 
-Sorry, I'm not totally sure if this is what you're pointing out with the la=
-st
-sentence. But, what about the case of a bus configuring a device which also
-happens to be a memory mapped bus (say a PCI platform device). It'll get it=
-'s
-dma config based on its own dma-ranges which is not what we want.
+>> which isn't good for performance and it makes the driver very
+>> timing sensitive. To improve performance of the driver, this commit
+>> adds buffer mode transfer support which uses I2C SRAM buffer
+>> instead of using a single byte buffer.
+> 
+> nit: Please use imperative mood.
 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> [robh: Allow for the bus child node to still be passed in]
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Resending, hit send too quickly.
->=20
-> v2:
->  - Ensure once we find dma-ranges, every parent has it.
+I used imperative mood in commit title. The commit message is okay as it
+is.
 
-I like this new approach.
+>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> Tested-by: Tao Ren <taoren@fb.com>
+>> ---
+>>   drivers/i2c/busses/i2c-aspeed.c | 297 ++++++++++++++++++++++++++++----
+>>   1 file changed, 263 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+>> index 40f6cf98d32e..37d1a7fa2f87 100644
+>> --- a/drivers/i2c/busses/i2c-aspeed.c
+>> +++ b/drivers/i2c/busses/i2c-aspeed.c
+>> @@ -7,6 +7,7 @@
+>>    *  Copyright 2017 Google, Inc.
+>>    */
+>>   
+>> +#include <linux/bitfield.h>
+>>   #include <linux/clk.h>
+>>   #include <linux/completion.h>
+>>   #include <linux/err.h>
+>> @@ -19,15 +20,24 @@
+>>   #include <linux/irqchip/chained_irq.h>
+>>   #include <linux/irqdomain.h>
+>>   #include <linux/kernel.h>
+>> +#include <linux/mfd/syscon.h>
+>>   #include <linux/module.h>
+>>   #include <linux/of_address.h>
+>>   #include <linux/of_irq.h>
+>>   #include <linux/of_platform.h>
+>>   #include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>>   #include <linux/reset.h>
+>>   #include <linux/slab.h>
+>>   
+>> -/* I2C Register */
+>> +/* I2C Global Registers */
+>> +/* 0x00 : I2CG Interrupt Status Register  */
+>> +/* 0x08 : I2CG Interrupt Target Assignment  */
+>> +/* 0x0c : I2CG Global Control Register (AST2500)  */
+>> +#define ASPEED_I2CG_GLOBAL_CTRL_REG			0x0c
+>> +#define  ASPEED_I2CG_SRAM_BUFFER_EN			BIT(0)
+>> +
+>> +/* I2C Bus Registers */
+>>   #define ASPEED_I2C_FUN_CTRL_REG				0x00
+>>   #define ASPEED_I2C_AC_TIMING_REG1			0x04
+>>   #define ASPEED_I2C_AC_TIMING_REG2			0x08
+>> @@ -35,14 +45,12 @@
+>>   #define ASPEED_I2C_INTR_STS_REG				0x10
+>>   #define ASPEED_I2C_CMD_REG				0x14
+>>   #define ASPEED_I2C_DEV_ADDR_REG				0x18
+>> +#define ASPEED_I2C_BUF_CTRL_REG				0x1c
+>>   #define ASPEED_I2C_BYTE_BUF_REG				0x20
+>>   
+>> -/* Global Register Definition */
+>> -/* 0x00 : I2C Interrupt Status Register  */
+>> -/* 0x08 : I2C Interrupt Target Assignment  */
+>> -
+>>   /* Device Register Definition */
+>>   /* 0x00 : I2CD Function Control Register  */
+>> +#define ASPEED_I2CD_BUFFER_PAGE_SEL_MASK		GENMASK(22, 20)
+>>   #define ASPEED_I2CD_MULTI_MASTER_DIS			BIT(15)
+>>   #define ASPEED_I2CD_SDA_DRIVE_1T_EN			BIT(8)
+>>   #define ASPEED_I2CD_M_SDA_DRIVE_1T_EN			BIT(7)
+>> @@ -102,6 +110,8 @@
+>>   #define ASPEED_I2CD_BUS_RECOVER_CMD			BIT(11)
+>>   
+>>   /* Command Bit */
+>> +#define ASPEED_I2CD_RX_BUFF_ENABLE			BIT(7)
+>> +#define ASPEED_I2CD_TX_BUFF_ENABLE			BIT(6)
+>>   #define ASPEED_I2CD_M_STOP_CMD				BIT(5)
+>>   #define ASPEED_I2CD_M_S_RX_CMD_LAST			BIT(4)
+>>   #define ASPEED_I2CD_M_RX_CMD				BIT(3)
+>> @@ -112,6 +122,13 @@
+>>   /* 0x18 : I2CD Slave Device Address Register   */
+>>   #define ASPEED_I2CD_DEV_ADDR_MASK			GENMASK(6, 0)
+>>   
+>> +/* 0x1c : I2CD Buffer Control Register */
+>> +/* Use 8-bits or 6-bits wide bit fileds to support both AST2400 and AST2500 */
+>> +#define ASPEED_I2CD_BUF_RX_COUNT_MASK			GENMASK(31, 24)
+>> +#define ASPEED_I2CD_BUF_RX_SIZE_MASK			GENMASK(23, 16)
+>> +#define ASPEED_I2CD_BUF_TX_COUNT_MASK			GENMASK(15, 8)
+>> +#define ASPEED_I2CD_BUF_OFFSET_MASK			GENMASK(5, 0)
+>> +
+>>   enum aspeed_i2c_master_state {
+>>   	ASPEED_I2C_MASTER_INACTIVE,
+>>   	ASPEED_I2C_MASTER_PENDING,
+>> @@ -157,6 +174,11 @@ struct aspeed_i2c_bus {
+>>   	int				master_xfer_result;
+>>   	/* Multi-master */
+>>   	bool				multi_master;
+>> +	/* Buffer mode */
+>> +	void __iomem			*buf_base;
+>> +	size_t				buf_size;
+>> +	u8				buf_offset;
+>> +	u8				buf_page;
+>>   #if IS_ENABLED(CONFIG_I2C_SLAVE)
+>>   	struct i2c_client		*slave;
+>>   	enum aspeed_i2c_slave_state	slave_state;
+>> @@ -238,6 +260,7 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+>>   {
+>>   	u32 command, irq_handled = 0;
+>>   	struct i2c_client *slave = bus->slave;
+>> +	int i, len;
+>>   	u8 value;
+>>   
+>>   	if (!slave)
+>> @@ -260,7 +283,12 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+>>   
+>>   	/* Slave was sent something. */
+>>   	if (irq_status & ASPEED_I2CD_INTR_RX_DONE) {
+>> -		value = readl(bus->base + ASPEED_I2C_BYTE_BUF_REG) >> 8;
+>> +		if (bus->buf_base &&
+>> +		    bus->slave_state == ASPEED_I2C_SLAVE_WRITE_RECEIVED &&
+>> +		    !(irq_status & ASPEED_I2CD_INTR_NORMAL_STOP))
+> 
+> I think checking for the buf_base all over the place makes this really
+> complicated and hard to read.
+> 
+> It might be better to just split this out and have separate handlers
+> based on what mode the driver is running in.
 
-Regards,
-Nicolas
+I think you're saying about splitting this irq handler out to:
+aspeed_i2c_slave_byte_mode_irq()
+aspeed_i2c_slave_buffer_mode_irq()
+aspeed_i2c_slave_dma_mode_irq()
 
->  - Only get the #{size,address}-cells after we find non-empty dma-ranges
->  - Add a check on the 'dma-ranges' length
->=20
-> This is all that remains of the dma-ranges series. I've applied the rest=
-=20
-> of the series prep and fixes. I dropped "of: Ratify of_dma_configure()=
-=20
-> interface" as the assertions that the node pointer being the parent only=
-=20
-> when struct device doesn't have a DT node pointer is not always=20
-> true.
->=20
-> I didn't include any tested-bys as this has changed a bit. A git branch=
-=20
-> is here[1].
->=20
-> Rob
->=20
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-mask=
-s-v2
->=20
->  drivers/of/address.c | 44 ++++++++++++++++++--------------------------
->  1 file changed, 18 insertions(+), 26 deletions(-)
->=20
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 5ce69d026584..99c1b8058559 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -930,47 +930,39 @@ int of_dma_get_range(struct device_node *np, u64
-> *dma_addr, u64 *paddr, u64 *siz
->  	const __be32 *ranges =3D NULL;
->  	int len, naddr, nsize, pna;
->  	int ret =3D 0;
-> +	bool found_dma_ranges =3D false;
->  	u64 dmaaddr;
-> =20
-> -	if (!node)
-> -		return -EINVAL;
-> -
-> -	while (1) {
-> -		struct device_node *parent;
-> -
-> -		naddr =3D of_n_addr_cells(node);
-> -		nsize =3D of_n_size_cells(node);
-> -
-> -		parent =3D __of_get_dma_parent(node);
-> -		of_node_put(node);
-> -
-> -		node =3D parent;
-> -		if (!node)
-> -			break;
-> -
-> +	while (node) {
->  		ranges =3D of_get_property(node, "dma-ranges", &len);
-> =20
->  		/* Ignore empty ranges, they imply no translation required */
->  		if (ranges && len > 0)
->  			break;
-> =20
-> -		/*
-> -		 * At least empty ranges has to be defined for parent node if
-> -		 * DMA is supported
-> -		 */
-> -		if (!ranges)
-> -			break;
-> +		/* Once we find 'dma-ranges', then a missing one is an error */
-> +		if (found_dma_ranges && !ranges) {
-> +			ret =3D -ENODEV;
-> +			goto out;
-> +		}
-> +		found_dma_ranges =3D true;
-> +
-> +		node =3D of_get_next_dma_parent(node);
->  	}
-> =20
-> -	if (!ranges) {
-> +	if (!node || !ranges) {
->  		pr_debug("no dma-ranges found for node(%pOF)\n", np);
->  		ret =3D -ENODEV;
->  		goto out;
->  	}
-> =20
-> -	len /=3D sizeof(u32);
-> -
-> +	naddr =3D of_bus_n_addr_cells(node);
-> +	nsize =3D of_bus_n_size_cells(node);
->  	pna =3D of_n_addr_cells(node);
-> +	if ((len / sizeof(__be32)) % (pna + naddr + nsize)) {
-> +		ret =3D -EINVAL;
-> +		goto out;
-> +	}
-> =20
->  	/* dma-ranges format:
->  	 * DMA addr	: naddr cells
-> @@ -978,7 +970,7 @@ int of_dma_get_range(struct device_node *np, u64
-> *dma_addr, u64 *paddr, u64 *siz
->  	 * size		: nsize cells
->  	 */
->  	dmaaddr =3D of_read_number(ranges, naddr);
-> -	*paddr =3D of_translate_dma_address(np, ranges);
-> +	*paddr =3D of_translate_dma_address(node, ranges + naddr);
->  	if (*paddr =3D=3D OF_BAD_ADDR) {
->  		pr_err("translation of DMA address(%llx) to CPU address failed
-> node(%pOF)\n",
->  		       dmaaddr, np);
+Yes, I can do like that but it will bring us two bad things:
+1. It makes big chunks of duplicate code because most of interrupt
+    handling logic is the same.
+2. If we are going to change something in irq routine, we need to
+    touch all irq routines if the change is commonly used.
 
+I think, the way this patch uses is better.
 
---=-8hI66HT9gbTxUxyjGifb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+>> +			value = readb(bus->buf_base);
+>> +		else
+>> +			value = readl(bus->base + ASPEED_I2C_BYTE_BUF_REG) >> 8;
+>>   		/* Handle address frame. */
+>>   		if (bus->slave_state == ASPEED_I2C_SLAVE_START) {
+>>   			if (value & 0x1)
+>> @@ -275,6 +303,20 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+>>   
+>>   	/* Slave was asked to stop. */
+>>   	if (irq_status & ASPEED_I2CD_INTR_NORMAL_STOP) {
+>> +		if (bus->slave_state == ASPEED_I2C_SLAVE_WRITE_RECEIVED &&
+>> +		    irq_status & ASPEED_I2CD_INTR_RX_DONE) {
+>> +			if (bus->buf_base) {
+>> +				len = FIELD_GET(ASPEED_I2CD_BUF_RX_COUNT_MASK,
+>> +						readl(bus->base +
+>> +						      ASPEED_I2C_BUF_CTRL_REG));
+> 
+> It looks like you have a lot of improvements in here unrelated to adding
+> support for buffer mode.
+> 
+> I really appreciate the improvements, but it makes it harder to
+> understand what buffer features you are adding vs. what
+> improvments/modernizations you are making.
+> 
+> Can you split this commit up?
 
------BEGIN PGP SIGNATURE-----
+No, this isn't an improvement. This code will not be executed if
+transfer mode is byte mode. This is added because data handling pattern
+is different in buffer mode so the collected data in buffer mode should
+be sent when it recieves RX_DONE.
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2c9tgACgkQlfZmHno8
-x/62BQf/U0QT3ADqFU/ndfwRPioobN9ONdnh6CLT03TDkJM3U4WxCXne9c5e359z
-go9HveWafv35Jy0use3A54V0HRtUpEGiIE5TIZiZxTx/erBny0QQb9P8o/tM2Dyc
-3t0TW2FuAKLPsp5VbIJr66Afb1sUHRBsFfPrL3WFgSB1884tB75BLRaE5uX7hJ0h
-cBY2nBlQHaa+77esbmMhxgbJ8hhV4sBY4V7hbGm1WNB1HMSKfwCBifEMc/3+2iKa
-Z3trR/cfRxpPWSUAEyLQ807kvmkZyoHmIOjQr9cUB5gnxGpwA/B97OSmMCLq2RnT
-sQ/cjASfdJZbBCLCEIITZv/ZzlEOBw==
-=eTic
------END PGP SIGNATURE-----
+>> +				for (i = 0; i < len; i++) {
+>> +					value = readb(bus->buf_base + i);
+>> +					i2c_slave_event(slave,
+>> +							I2C_SLAVE_WRITE_RECEIVED,
+>> +							&value);
+>> +				}
+>> +			}
+>> +		}
+>>   		irq_handled |= ASPEED_I2CD_INTR_NORMAL_STOP;
+>>   		bus->slave_state = ASPEED_I2C_SLAVE_STOP;
+>>   	}
+>> @@ -307,9 +349,36 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+>>   	case ASPEED_I2C_SLAVE_WRITE_REQUESTED:
+>>   		bus->slave_state = ASPEED_I2C_SLAVE_WRITE_RECEIVED;
+>>   		i2c_slave_event(slave, I2C_SLAVE_WRITE_REQUESTED, &value);
+>> +		if (bus->buf_base) {
+>> +			writel(FIELD_PREP(ASPEED_I2CD_BUF_RX_SIZE_MASK,
+>> +					  bus->buf_size - 1) |
+>> +			       FIELD_PREP(ASPEED_I2CD_BUF_OFFSET_MASK,
+>> +					  bus->buf_offset),
+>> +			       bus->base + ASPEED_I2C_BUF_CTRL_REG);
+>> +			writel(ASPEED_I2CD_RX_BUFF_ENABLE,
+>> +			       bus->base + ASPEED_I2C_CMD_REG);
+>> +		}
+>>   		break;
+>>   	case ASPEED_I2C_SLAVE_WRITE_RECEIVED:
+>>   		i2c_slave_event(slave, I2C_SLAVE_WRITE_RECEIVED, &value);
+>> +		if (bus->buf_base) {
+>> +			len = FIELD_GET(ASPEED_I2CD_BUF_RX_COUNT_MASK,
+>> +					readl(bus->base +
+>> +					      ASPEED_I2C_BUF_CTRL_REG));
+>> +			for (i = 1; i < len; i++) {
+>> +				value = readb(bus->buf_base + i);
+>> +				i2c_slave_event(slave,
+>> +						I2C_SLAVE_WRITE_RECEIVED,
+>> +						&value);
+>> +			}
+>> +			writel(FIELD_PREP(ASPEED_I2CD_BUF_RX_SIZE_MASK,
+>> +					  bus->buf_size - 1) |
+>> +			       FIELD_PREP(ASPEED_I2CD_BUF_OFFSET_MASK,
+>> +					  bus->buf_offset),
+>> +			       bus->base + ASPEED_I2C_BUF_CTRL_REG);
+>> +			writel(ASPEED_I2CD_RX_BUFF_ENABLE,
+>> +			       bus->base + ASPEED_I2C_CMD_REG);
+>> +		}
+>>   		break;
+>>   	case ASPEED_I2C_SLAVE_STOP:
+>>   		i2c_slave_event(slave, I2C_SLAVE_STOP, &value);
+>> @@ -335,6 +404,8 @@ static void aspeed_i2c_do_start(struct aspeed_i2c_bus *bus)
+>>   	u32 command = ASPEED_I2CD_M_START_CMD | ASPEED_I2CD_M_TX_CMD;
+>>   	struct i2c_msg *msg = &bus->msgs[bus->msgs_index];
+>>   	u8 slave_addr = i2c_8bit_addr_from_msg(msg);
+>> +	u8 wbuf[4];
+>> +	int len;
+>>   
+>>   #if IS_ENABLED(CONFIG_I2C_SLAVE)
+>>   	/*
+>> @@ -353,12 +424,66 @@ static void aspeed_i2c_do_start(struct aspeed_i2c_bus *bus)
+>>   
+>>   	if (msg->flags & I2C_M_RD) {
+>>   		command |= ASPEED_I2CD_M_RX_CMD;
+>> -		/* Need to let the hardware know to NACK after RX. */
+>> -		if (msg->len == 1 && !(msg->flags & I2C_M_RECV_LEN))
+>> -			command |= ASPEED_I2CD_M_S_RX_CMD_LAST;
+>> +
+>> +		if (bus->buf_base && !(msg->flags & I2C_M_RECV_LEN)) {
+>> +			command |= ASPEED_I2CD_RX_BUFF_ENABLE;
+>> +
+>> +			if (msg->len > bus->buf_size) {
+>> +				len = bus->buf_size;
+>> +			} else {
+>> +				len = msg->len;
+>> +				command |= ASPEED_I2CD_M_S_RX_CMD_LAST;
+>> +			}
+>> +
+>> +			writel(FIELD_PREP(ASPEED_I2CD_BUF_RX_SIZE_MASK,
+>> +					  len - 1) |
+>> +			       FIELD_PREP(ASPEED_I2CD_BUF_OFFSET_MASK,
+>> +					  bus->buf_offset),
+>> +			       bus->base + ASPEED_I2C_BUF_CTRL_REG);
+>> +		} else {
+>> +			/* Need to let the hardware know to NACK after RX. */
+>> +			if (msg->len == 1 && !(msg->flags & I2C_M_RECV_LEN))
+>> +				command |= ASPEED_I2CD_M_S_RX_CMD_LAST;
+>> +		}
+>> +	} else {
+>> +		if (bus->buf_base) {
+>> +			int i;
+>> +
+>> +			command |= ASPEED_I2CD_TX_BUFF_ENABLE;
+>> +
+>> +			if (msg->len + 1 > bus->buf_size)
+>> +				len = bus->buf_size;
+>> +			else
+>> +				len = msg->len + 1;
+>> +
+>> +			/*
+>> +			 * Yeah, it looks clumsy but byte writings on a remapped
+>> +			 * I2C SRAM cause corruptions so use this way to make
+>> +			 * dword writings.
+>> +			 */
+>> +			wbuf[0] = slave_addr;
+>> +			for (i = 1; i < len; i++) {
+>> +				wbuf[i % 4] = msg->buf[i - 1];
+>> +				if (i % 4 == 3)
+>> +					writel(*(u32 *)wbuf,
+>> +					       bus->buf_base + i - 3);
+>> +			}
+>> +			if (--i % 4 != 3)
+>> +				writel(*(u32 *)wbuf,
+>> +				       bus->buf_base + i - (i % 4));
+>> +
+>> +			bus->buf_index = len - 1;
+>> +
+>> +			writel(FIELD_PREP(ASPEED_I2CD_BUF_TX_COUNT_MASK,
+>> +					  len - 1) |
+>> +			       FIELD_PREP(ASPEED_I2CD_BUF_OFFSET_MASK,
+>> +					  bus->buf_offset),
+>> +			       bus->base + ASPEED_I2C_BUF_CTRL_REG);
+>> +		}
+>>   	}
+>>   
+>> -	writel(slave_addr, bus->base + ASPEED_I2C_BYTE_BUF_REG);
+>> +	if (!(command & ASPEED_I2CD_TX_BUFF_ENABLE))
+>> +		writel(slave_addr, bus->base + ASPEED_I2C_BYTE_BUF_REG);
+>>   	writel(command, bus->base + ASPEED_I2C_CMD_REG);
+>>   }
+>>   
+>> @@ -398,7 +523,7 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+>>   	u32 irq_handled = 0, command = 0;
+>>   	struct i2c_msg *msg;
+>>   	u8 recv_byte;
+>> -	int ret;
+>> +	int ret, len;
+>>   
+>>   	if (irq_status & ASPEED_I2CD_INTR_BUS_RECOVER_DONE) {
+>>   		bus->master_state = ASPEED_I2C_MASTER_INACTIVE;
+>> @@ -511,11 +636,43 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+>>   		/* fall through */
+>>   	case ASPEED_I2C_MASTER_TX_FIRST:
+>>   		if (bus->buf_index < msg->len) {
+>> +			command = ASPEED_I2CD_M_TX_CMD;
+>> +
+>> +			if (bus->buf_base) {
+>> +				u8 wbuf[4];
+>> +				int i;
+>> +
+>> +				command |= ASPEED_I2CD_TX_BUFF_ENABLE;
+>> +
+>> +				if (msg->len - bus->buf_index > bus->buf_size)
+>> +					len = bus->buf_size;
+>> +				else
+>> +					len = msg->len - bus->buf_index;
+>> +
+>> +				for (i = 0; i < len; i++) {
+>> +					wbuf[i % 4] = msg->buf[bus->buf_index
+>> +							       + i];
+>> +					if (i % 4 == 3)
+>> +						writel(*(u32 *)wbuf,
+>> +						       bus->buf_base + i - 3);
+>> +				}
+>> +				if (--i % 4 != 3)
+>> +					writel(*(u32 *)wbuf,
+>> +					       bus->buf_base + i - (i % 4));
+>> +
+>> +				bus->buf_index += len;
+>> +
+>> +				writel(FIELD_PREP(ASPEED_I2CD_BUF_TX_COUNT_MASK,
+>> +						  len - 1) |
+>> +				       FIELD_PREP(ASPEED_I2CD_BUF_OFFSET_MASK,
+>> +						  bus->buf_offset),
+>> +				       bus->base + ASPEED_I2C_BUF_CTRL_REG);
+>> +			} else {
+>> +				writel(msg->buf[bus->buf_index++],
+>> +				       bus->base + ASPEED_I2C_BYTE_BUF_REG);
+>> +			}
+>> +			writel(command, bus->base + ASPEED_I2C_CMD_REG);
+>>   			bus->master_state = ASPEED_I2C_MASTER_TX;
+>> -			writel(msg->buf[bus->buf_index++],
+>> -			       bus->base + ASPEED_I2C_BYTE_BUF_REG);
+>> -			writel(ASPEED_I2CD_M_TX_CMD,
+>> -			       bus->base + ASPEED_I2C_CMD_REG);
+>>   		} else {
+>>   			aspeed_i2c_next_msg_or_stop(bus);
+>>   		}
+>> @@ -532,25 +689,56 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
+>>   		}
+>>   		irq_handled |= ASPEED_I2CD_INTR_RX_DONE;
+>>   
+>> -		recv_byte = readl(bus->base + ASPEED_I2C_BYTE_BUF_REG) >> 8;
+>> -		msg->buf[bus->buf_index++] = recv_byte;
+>> -
+>> -		if (msg->flags & I2C_M_RECV_LEN) {
+>> -			if (unlikely(recv_byte > I2C_SMBUS_BLOCK_MAX)) {
+>> -				bus->cmd_err = -EPROTO;
+>> -				aspeed_i2c_do_stop(bus);
+>> -				goto out_no_complete;
+>> +		if (bus->buf_base && !(msg->flags & I2C_M_RECV_LEN)) {
+>> +			len = FIELD_GET(ASPEED_I2CD_BUF_RX_COUNT_MASK,
+>> +					readl(bus->base +
+>> +					      ASPEED_I2C_BUF_CTRL_REG));
+>> +			memcpy_fromio(msg->buf + bus->buf_index,
+>> +				      bus->buf_base, len);
+>> +			bus->buf_index += len;
+>> +		} else {
+>> +			recv_byte = readl(bus->base + ASPEED_I2C_BYTE_BUF_REG)
+>> +				    >> 8;
+>> +			msg->buf[bus->buf_index++] = recv_byte;
+>> +
+>> +			if (msg->flags & I2C_M_RECV_LEN) {
+>> +				if (unlikely(recv_byte > I2C_SMBUS_BLOCK_MAX)) {
+>> +					bus->cmd_err = -EPROTO;
+>> +					aspeed_i2c_do_stop(bus);
+>> +					goto out_no_complete;
+>> +				}
+>> +				msg->len = recv_byte +
+>> +						((msg->flags & I2C_CLIENT_PEC) ?
+>> +						2 : 1);
+>> +				msg->flags &= ~I2C_M_RECV_LEN;
+>>   			}
+>> -			msg->len = recv_byte +
+>> -					((msg->flags & I2C_CLIENT_PEC) ? 2 : 1);
+>> -			msg->flags &= ~I2C_M_RECV_LEN;
+>>   		}
+>>   
+>>   		if (bus->buf_index < msg->len) {
+>> -			bus->master_state = ASPEED_I2C_MASTER_RX;
+>>   			command = ASPEED_I2CD_M_RX_CMD;
+>> -			if (bus->buf_index + 1 == msg->len)
+>> -				command |= ASPEED_I2CD_M_S_RX_CMD_LAST;
+>> +			bus->master_state = ASPEED_I2C_MASTER_RX;
+>> +			if (bus->buf_base) {
+>> +				command |= ASPEED_I2CD_RX_BUFF_ENABLE;
+>> +
+>> +				if (msg->len - bus->buf_index >
+>> +				    bus->buf_size) {
+>> +					len = bus->buf_size;
+>> +				} else {
+>> +					len = msg->len - bus->buf_index;
+>> +					command |= ASPEED_I2CD_M_S_RX_CMD_LAST;
+>> +				}
+>> +
+>> +				writel(FIELD_PREP(ASPEED_I2CD_BUF_RX_SIZE_MASK,
+>> +						  len - 1) |
+>> +				       FIELD_PREP(ASPEED_I2CD_BUF_TX_COUNT_MASK,
+>> +						  0) |
+>> +				       FIELD_PREP(ASPEED_I2CD_BUF_OFFSET_MASK,
+>> +						  bus->buf_offset),
+>> +				       bus->base + ASPEED_I2C_BUF_CTRL_REG);
+>> +			} else {
+>> +				if (bus->buf_index + 1 == msg->len)
+>> +					command |= ASPEED_I2CD_M_S_RX_CMD_LAST;
+>> +			}
+>>   			writel(command, bus->base + ASPEED_I2C_CMD_REG);
+>>   		} else {
+>>   			aspeed_i2c_next_msg_or_stop(bus);
+>> @@ -890,6 +1078,9 @@ static int aspeed_i2c_init(struct aspeed_i2c_bus *bus,
+>>   	if (ret < 0)
+>>   		return ret;
+>>   
+>> +	fun_ctrl_reg |= FIELD_PREP(ASPEED_I2CD_BUFFER_PAGE_SEL_MASK,
+>> +				   bus->buf_page);
+>> +
+>>   	if (of_property_read_bool(pdev->dev.of_node, "multi-master"))
+>>   		bus->multi_master = true;
+>>   	else
+>> @@ -947,16 +1138,15 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
+>>   {
+>>   	const struct of_device_id *match;
+>>   	struct aspeed_i2c_bus *bus;
+>> +	bool sram_enabled = true;
+>>   	struct clk *parent_clk;
+>> -	struct resource *res;
+>>   	int irq, ret;
+>>   
+>>   	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
+>>   	if (!bus)
+>>   		return -ENOMEM;
+>>   
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -	bus->base = devm_ioremap_resource(&pdev->dev, res);
+>> +	bus->base = devm_platform_ioremap_resource(pdev, 0);
+>>   	if (IS_ERR(bus->base))
+>>   		return PTR_ERR(bus->base);
+>>   
+>> @@ -990,6 +1180,45 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
+>>   		bus->get_clk_reg_val = (u32 (*)(struct device *, u32))
+>>   				match->data;
+>>   
+>> +	/*
+>> +	 * Enable I2C SRAM in case of AST2500.
+>> +	 * SRAM is enabled by default in AST2400 and AST2600.
+>> +	 */
+> 
+> This probe function is already pretty complicated as it is. Can we move
+> this to a helper function (especially since it only applies to the
+> 25xx)?
 
---=-8hI66HT9gbTxUxyjGifb--
+Okay, that would be better. I'll add this transfer mode setting logic
+as a helper function.
+
+>> +	if (of_device_is_compatible(pdev->dev.of_node,
+>> +				    "aspeed,ast2500-i2c-bus")) {
+>> +		struct regmap *gr_regmap = syscon_regmap_lookup_by_compatible("aspeed,ast2500-i2c-gr");
+> 
+> So this memory is global, right? It is shared by all the busses?
+
+Yes, this is global register area which can be shared by all busses.
+
+> If I am reading this right, then I think we need to protect so that only
+> one bus is accessing this memory at a time.
+
+It will not be accessed at run time but only at probing time. Since we
+don't use multi-threaded probing, we don't need to protect it.
+
+Thanks,
+
+Jae
+
+>> +		if (IS_ERR(gr_regmap))
+>> +			ret = PTR_ERR(gr_regmap);
+>> +		else
+>> +			ret = regmap_update_bits(gr_regmap,
+>> +						 ASPEED_I2CG_GLOBAL_CTRL_REG,
+>> +						 ASPEED_I2CG_SRAM_BUFFER_EN,
+>> +						 ASPEED_I2CG_SRAM_BUFFER_EN);
+>> +
+>> +		if (ret)
+>> +			sram_enabled = false;
+>> +	}
+>> +
+>> +	if (sram_enabled) {
+>> +		struct resource *res = platform_get_resource(pdev,
+>> +							     IORESOURCE_MEM, 1);
+>> +
+>> +		if (res && resource_size(res) >= 2)
+>> +			bus->buf_base = devm_ioremap_resource(&pdev->dev, res);
+>> +
+>> +		if (!IS_ERR_OR_NULL(bus->buf_base)) {
+>> +			bus->buf_size = resource_size(res);
+>> +			if (of_device_is_compatible(pdev->dev.of_node,
+>> +						    "aspeed,ast2400-i2c-bus")) {
+>> +				bus->buf_page = ((res->start >> 8) &
+>> +						 GENMASK(3, 0)) - 8;
+>> +				bus->buf_offset = (res->start >> 2) &
+>> +						  ASPEED_I2CD_BUF_OFFSET_MASK;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>>   	/* Initialize the I2C adapter */
+>>   	spin_lock_init(&bus->lock);
+>>   	init_completion(&bus->cmd_complete);
+>> @@ -1026,8 +1255,8 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
+>>   
+>>   	platform_set_drvdata(pdev, bus);
+>>   
+>> -	dev_info(bus->dev, "i2c bus %d registered, irq %d\n",
+>> -		 bus->adap.nr, irq);
+>> +	dev_info(bus->dev, "i2c bus %d registered (%s mode), irq %d\n",
+>> +		 bus->adap.nr, bus->buf_base ? "buffer" : "byte", irq);
+>>   
+>>   	return 0;
+>>   }
+>> -- 
+>> 2.23.0
+>>
+> 
