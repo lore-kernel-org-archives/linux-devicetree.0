@@ -1,523 +1,240 @@
-From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] pinctrl: rockchip: add rk3308 SoC support
-Date: Tue,  8 Oct 2019 16:54:07 +0800
-Message-ID: <20191008085407.22191-1-jay.xu@rock-chips.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH 2/3] mmc: sdhci-of-at91: rework clocks management to
+ support SAM9x60 device
+Date: Tue, 8 Oct 2019 11:24:05 +0200
+Message-ID: <20191008092404.goj636pffaw4ytt7@M43218.corp.atmel.com>
+References: <20190912200908.31318-1-ludovic.desroches@microchip.com>
+ <20190912200908.31318-2-ludovic.desroches@microchip.com>
+ <fb87bb5d-2853-9fed-bf34-a354996636df@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <fb87bb5d-2853-9fed-bf34-a354996636df@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, Claudiu Beznea - M18063 <Claudiu.Beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch do support pinctrl for RK3308 SoCs.
+On Fri, Sep 20, 2019 at 11:34:50AM +0200, Eugen Hristev - M18282 wrote:
+> 
+> 
+> On 12.09.2019 23:09, Ludovic Desroches wrote:
+> 
+> > 
+> > In the SAM9x60 SoC, there are only two clocks instead of three for the
+> > SDHCI device. The base clk is no longer provided, it is generated
+> > internally from the mult clk.
+> > 
+> > The values of the base clk and mul in the capabilities registers may not
+> > reflect the reality as the mult clk is a programmable clock which can take
+> > several rates. As we can't trust those values, take them from the clock
+> > tree and update the capabilities according to.
+> > 
+> > As we can have the same pitfall, in some cases, with the SAMA5D2 Soc,
+> > stop relying on capabilities too.
+> > 
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> > ---
+> >   drivers/mmc/host/sdhci-of-at91.c | 104 +++++++++++++++++--------------
+> >   1 file changed, 57 insertions(+), 47 deletions(-)
+> > 
+> > diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
+> > index e7d1920729fb..a9c126f14d85 100644
+> > --- a/drivers/mmc/host/sdhci-of-at91.c
+> > +++ b/drivers/mmc/host/sdhci-of-at91.c
+> > @@ -30,7 +30,14 @@
+> >   
+> >   #define SDHCI_AT91_PRESET_COMMON_CONF	0x400 /* drv type B, programmable clock mode */
+> >   
+> > +struct sdhci_at91_soc_data {
+> > +	const struct sdhci_pltfm_data *pdata;
+> > +	bool baseclk_is_generated_internally;
+> > +	unsigned int divider_for_baseclk;
+> > +};
+> > +
+> >   struct sdhci_at91_priv {
+> > +	const struct sdhci_at91_soc_data *soc_data;
+> >   	struct clk *hclock;
+> >   	struct clk *gck;
+> >   	struct clk *mainck;
+> > @@ -130,12 +137,24 @@ static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
+> >   	.set_power		= sdhci_at91_set_power,
+> >   };
+> >   
+> > -static const struct sdhci_pltfm_data soc_data_sama5d2 = {
+> > +static const struct sdhci_pltfm_data sdhci_sama5d2_pdata = {
+> >   	.ops = &sdhci_at91_sama5d2_ops,
+> >   };
+> >   
+> > +static const struct sdhci_at91_soc_data soc_data_sama5d2 = {
+> > +	.pdata = &sdhci_sama5d2_pdata,
+> > +	.baseclk_is_generated_internally = false,
+> > +};
+> > +
+> > +static const struct sdhci_at91_soc_data soc_data_sam9x60 = {
+> > +	.pdata = &sdhci_sama5d2_pdata,
+> > +	.baseclk_is_generated_internally = true,
+> > +	.divider_for_baseclk = 2,
+> > +};
+> > +
+> >   static const struct of_device_id sdhci_at91_dt_match[] = {
+> >   	{ .compatible = "atmel,sama5d2-sdhci", .data = &soc_data_sama5d2 },
+> > +	{ .compatible = "microchip,sam9x60-sdhci", .data = &soc_data_sam9x60 },
+> >   	{}
+> >   };
+> >   MODULE_DEVICE_TABLE(of, sdhci_at91_dt_match);
+> > @@ -145,50 +164,36 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
+> >   	struct sdhci_host *host = dev_get_drvdata(dev);
+> >   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> >   	struct sdhci_at91_priv *priv = sdhci_pltfm_priv(pltfm_host);
+> > -	int ret;
+> >   	unsigned int			caps0, caps1;
+> >   	unsigned int			clk_base, clk_mul;
+> > -	unsigned int			gck_rate, real_gck_rate;
+> > +	unsigned int			gck_rate, clk_base_rate;
+> >   	unsigned int			preset_div;
+> >   
+> > -	/*
+> > -	 * The mult clock is provided by as a generated clock by the PMC
+> > -	 * controller. In order to set the rate of gck, we have to get the
+> > -	 * base clock rate and the clock mult from capabilities.
+> > -	 */
+> >   	clk_prepare_enable(priv->hclock);
+> >   	caps0 = readl(host->ioaddr + SDHCI_CAPABILITIES);
+> >   	caps1 = readl(host->ioaddr + SDHCI_CAPABILITIES_1);
+> > -	clk_base = (caps0 & SDHCI_CLOCK_V3_BASE_MASK) >> SDHCI_CLOCK_BASE_SHIFT;
+> > -	clk_mul = (caps1 & SDHCI_CLOCK_MUL_MASK) >> SDHCI_CLOCK_MUL_SHIFT;
+> > -	gck_rate = clk_base * 1000000 * (clk_mul + 1);
+> > -	ret = clk_set_rate(priv->gck, gck_rate);
+> > -	if (ret < 0) {
+> > -		dev_err(dev, "failed to set gck");
+> > -		clk_disable_unprepare(priv->hclock);
+> > -		return ret;
+> > -	}
+> > -	/*
+> > -	 * We need to check if we have the requested rate for gck because in
+> > -	 * some cases this rate could be not supported. If it happens, the rate
+> > -	 * is the closest one gck can provide. We have to update the value
+> > -	 * of clk mul.
+> > -	 */
+> > -	real_gck_rate = clk_get_rate(priv->gck);
+> > -	if (real_gck_rate != gck_rate) {
+> > -		clk_mul = real_gck_rate / (clk_base * 1000000) - 1;
+> > -		caps1 &= (~SDHCI_CLOCK_MUL_MASK);
+> > -		caps1 |= ((clk_mul << SDHCI_CLOCK_MUL_SHIFT) &
+> > -			  SDHCI_CLOCK_MUL_MASK);
+> > -		/* Set capabilities in r/w mode. */
+> > -		writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN,
+> > -		       host->ioaddr + SDMMC_CACR);
+> > -		writel(caps1, host->ioaddr + SDHCI_CAPABILITIES_1);
+> > -		/* Set capabilities in ro mode. */
+> > -		writel(0, host->ioaddr + SDMMC_CACR);
+> > -		dev_info(dev, "update clk mul to %u as gck rate is %u Hz\n",
+> > -			 clk_mul, real_gck_rate);
+> > -	}
+> > +
+> > +	gck_rate = clk_get_rate(priv->gck);
+> > +	if (priv->soc_data->baseclk_is_generated_internally)
+> > +		clk_base_rate = gck_rate / priv->soc_data->divider_for_baseclk;
+> > +	else
+> > +		clk_base_rate = clk_get_rate(priv->mainck);
+> > +
+> > +	clk_base = clk_base_rate / 1000000;
+> > +	clk_mul = gck_rate / clk_base_rate - 1;
+> > +
+> > +	caps0 &= (~SDHCI_CLOCK_V3_BASE_MASK);
+> > +	caps0 |= ((clk_base << SDHCI_CLOCK_BASE_SHIFT) & SDHCI_CLOCK_V3_BASE_MASK);
+> > +	caps1 &= (~SDHCI_CLOCK_MUL_MASK);
+> > +	caps1 |= ((clk_mul << SDHCI_CLOCK_MUL_SHIFT) & SDHCI_CLOCK_MUL_MASK);
+> > +	/* Set capabilities in r/w mode. */
+> > +	writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN, host->ioaddr + SDMMC_CACR);
+> 
+> Hi Ludovic,
+> 
+> I have a feeling that here you may wish to also write the caps0 to the 
+> SDHC_CAPABILITIES:
+> writel(caps0, host->ioaddr + SDHCI_CAPABILITIES);
+> 
+> You are computing the caps0 but not writing them to register.
 
-Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- .../bindings/pinctrl/rockchip,pinctrl.txt     |   1 +
- drivers/pinctrl/pinctrl-rockchip.c            | 420 ++++++++++++++++++
- 2 files changed, 421 insertions(+)
+Hi Eugen,
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-index 0919db294c17..2113cfaa26e6 100644
---- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-@@ -29,6 +29,7 @@ Required properties for iomux controller:
- 		"rockchip,rk3188-pinctrl":  for Rockchip RK3188
- 		"rockchip,rk3228-pinctrl":  for Rockchip RK3228
- 		"rockchip,rk3288-pinctrl":  for Rockchip RK3288
-+		"rockchip,rk3308-pinctrl":  for Rockchip RK3308
- 		"rockchip,rk3328-pinctrl":  for Rockchip RK3328
- 		"rockchip,rk3368-pinctrl":  for Rockchip RK3368
- 		"rockchip,rk3399-pinctrl":  for Rockchip RK3399
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index dc0bbf198cbc..e91db155bd11 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -58,6 +58,7 @@ enum rockchip_pinctrl_type {
- 	RK3128,
- 	RK3188,
- 	RK3288,
-+	RK3308,
- 	RK3368,
- 	RK3399,
- };
-@@ -656,6 +657,100 @@ static  struct rockchip_mux_recalced_data rk3128_mux_recalced_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
-+	{
-+		.num = 1,
-+		.pin = 14,
-+		.reg = 0x28,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 15,
-+		.reg = 0x2c,
-+		.bit = 0,
-+		.mask = 0x3
-+	}, {
-+		.num = 1,
-+		.pin = 18,
-+		.reg = 0x30,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 19,
-+		.reg = 0x30,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 20,
-+		.reg = 0x30,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 21,
-+		.reg = 0x34,
-+		.bit = 0,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 22,
-+		.reg = 0x34,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 23,
-+		.reg = 0x34,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 12,
-+		.reg = 0x68,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 13,
-+		.reg = 0x68,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 2,
-+		.pin = 2,
-+		.reg = 0x608,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 3,
-+		.reg = 0x608,
-+		.bit = 4,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 16,
-+		.reg = 0x610,
-+		.bit = 8,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 10,
-+		.reg = 0x610,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 11,
-+		.reg = 0x610,
-+		.bit = 4,
-+		.mask = 0x7
-+	},
-+};
-+
- static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
- 	{
- 		.num = 2,
-@@ -982,6 +1077,192 @@ static struct rockchip_mux_route_data rk3288_mux_route_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_route_data rk3308_mux_route_data[] = {
-+	{
-+		/* rtc_clk */
-+		.bank_num = 0,
-+		.pin = 19,
-+		.func = 1,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 0) | BIT(0),
-+	}, {
-+		/* uart2_rxm0 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3),
-+	}, {
-+		/* uart2_rxm1 */
-+		.bank_num = 4,
-+		.pin = 26,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3) | BIT(2),
-+	}, {
-+		/* i2c3_sdam0 */
-+		.bank_num = 0,
-+		.pin = 15,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9),
-+	}, {
-+		/* i2c3_sdam1 */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(8),
-+	}, {
-+		/* i2c3_sdam2 */
-+		.bank_num = 2,
-+		.pin = 0,
-+		.func = 3,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* i2s-8ch-1-sclktxm0 */
-+		.bank_num = 1,
-+		.pin = 3,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclktxm1 */
-+		.bank_num = 1,
-+		.pin = 13,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* pdm-clkm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x308,
-+		.route_val =  BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* pdm-clkm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 4,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* pdm-clkm2 */
-+		.bank_num = 2,
-+		.pin = 6,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* pdm-clkm-m2 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x600,
-+		.route_val = BIT(16 + 2) | BIT(2),
-+	}, {
-+		/* spi1_miso */
-+		.bank_num = 3,
-+		.pin = 10,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9),
-+	}, {
-+		/* spi1_miso_m1 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* owire_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11),
-+	}, {
-+		/* owire_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 7,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(10),
-+	}, {
-+		/* owire_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(11),
-+	}, {
-+		/* can_rxd_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* can_rxd_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* can_rxd_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* mac_rxd0_m0 */
-+		.bank_num = 1,
-+		.pin = 20,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14),
-+	}, {
-+		/* mac_rxd0_m1 */
-+		.bank_num = 4,
-+		.pin = 2,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14) | BIT(14),
-+	}, {
-+		/* uart3_rx */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15),
-+	}, {
-+		/* uart3_rx_m1 */
-+		.bank_num = 0,
-+		.pin = 17,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15) | BIT(15),
-+	},
-+};
-+
- static struct rockchip_mux_route_data rk3328_mux_route_data[] = {
- 	{
- 		/* uart2dbg_rxm0 */
-@@ -1475,6 +1756,27 @@ static int rv1108_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
- 	return 0;
- }
- 
-+#define RK3308_SCHMITT_PINS_PER_REG		8
-+#define RK3308_SCHMITT_BANK_STRIDE		16
-+#define RK3308_SCHMITT_GRF_OFFSET		0x1a0
-+
-+static int rk3308_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
-+					   int pin_num,
-+					   struct regmap **regmap,
-+					   int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_SCHMITT_GRF_OFFSET;
-+
-+	*reg += bank->bank_num * RK3308_SCHMITT_BANK_STRIDE;
-+	*reg += ((pin_num / RK3308_SCHMITT_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3308_SCHMITT_PINS_PER_REG;
-+
-+	return 0;
-+}
-+
- #define RK2928_PULL_OFFSET		0x118
- #define RK2928_PULL_PINS_PER_REG	16
- #define RK2928_PULL_BANK_STRIDE		8
-@@ -1646,6 +1948,43 @@ static void rk3228_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
- 	*bit *= RK3288_DRV_BITS_PER_PIN;
- }
- 
-+#define RK3308_PULL_OFFSET		0xa0
-+
-+static void rk3308_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
-+					 int pin_num, struct regmap **regmap,
-+					 int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_PULL_OFFSET;
-+	*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
-+	*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
-+	*bit *= RK3188_PULL_BITS_PER_PIN;
-+}
-+
-+#define RK3308_DRV_GRF_OFFSET		0x100
-+
-+static enum rockchip_pin_drv_type rk3308_calc_drv_reg_and_bit(
-+				       struct rockchip_pin_bank *bank,
-+				       int pin_num, struct regmap **regmap,
-+				       int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_DRV_GRF_OFFSET;
-+	*reg += bank->bank_num * RK3288_DRV_BANK_STRIDE;
-+	*reg += ((pin_num / RK3288_DRV_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3288_DRV_PINS_PER_REG);
-+	*bit *= RK3288_DRV_BITS_PER_PIN;
-+
-+	return DRV_TYPE_IO_DEFAULT;
-+}
-+
- #define RK3368_PULL_GRF_OFFSET		0x100
- #define RK3368_PULL_PMU_OFFSET		0x10
- 
-@@ -3482,6 +3821,46 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+/* SoC data specially handle */
-+
-+/* rk3308 SoC data initialize */
-+#define RK3308_GRF_SOC_CON13			0x608
-+#define RK3308_GRF_SOC_CON15			0x610
-+
-+/* RK3308_GRF_SOC_CON13 */
-+#define RK3308_GRF_I2C3_IOFUNC_SRC_CTRL	(BIT(16 + 10) | BIT(10))
-+#define RK3308_GRF_GPIO2A3_SEL_SRC_CTRL	(BIT(16 + 7)  | BIT(7))
-+#define RK3308_GRF_GPIO2A2_SEL_SRC_CTRL	(BIT(16 + 3)  | BIT(3))
-+
-+/* RK3308_GRF_SOC_CON15 */
-+#define RK3308_GRF_GPIO2C0_SEL_SRC_CTRL	(BIT(16 + 11) | BIT(11))
-+#define RK3308_GRF_GPIO3B3_SEL_SRC_CTRL	(BIT(16 + 7)  | BIT(7))
-+#define RK3308_GRF_GPIO3B2_SEL_SRC_CTRL	(BIT(16 + 3)  | BIT(3))
-+
-+static int rk3308_soc_data_init(struct rockchip_pinctrl *info)
-+{
-+	int ret;
-+
-+	/*
-+	 * Enable the special ctrl of selected sources.
-+	 */
-+	ret = regmap_write(info->regmap_base, RK3308_GRF_SOC_CON13,
-+			   RK3308_GRF_I2C3_IOFUNC_SRC_CTRL |
-+			   RK3308_GRF_GPIO2A3_SEL_SRC_CTRL |
-+			   RK3308_GRF_GPIO2A2_SEL_SRC_CTRL);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(info->regmap_base, RK3308_GRF_SOC_CON15,
-+			   RK3308_GRF_GPIO2C0_SEL_SRC_CTRL |
-+			   RK3308_GRF_GPIO3B3_SEL_SRC_CTRL |
-+			   RK3308_GRF_GPIO3B2_SEL_SRC_CTRL);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static struct rockchip_pin_bank px30_pin_banks[] = {
- 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_SOURCE_PMU,
- 					     IOMUX_SOURCE_PMU,
-@@ -3709,6 +4088,45 @@ static struct rockchip_pin_ctrl rk3288_pin_ctrl = {
- 		.drv_calc_reg		= rk3288_calc_drv_reg_and_bit,
- };
- 
-+static struct rockchip_pin_bank rk3308_pin_banks[] = {
-+	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3", IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(4, 32, "gpio4", IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT,
-+					     IOMUX_8WIDTH_2BIT),
-+};
-+
-+static struct rockchip_pin_ctrl rk3308_pin_ctrl = {
-+		.pin_banks		= rk3308_pin_banks,
-+		.nr_banks		= ARRAY_SIZE(rk3308_pin_banks),
-+		.label			= "RK3308-GPIO",
-+		.type			= RK3308,
-+		.grf_mux_offset		= 0x0,
-+		.iomux_recalced		= rk3308_mux_recalced_data,
-+		.niomux_recalced	= ARRAY_SIZE(rk3308_mux_recalced_data),
-+		.iomux_routes		= rk3308_mux_route_data,
-+		.niomux_routes		= ARRAY_SIZE(rk3308_mux_route_data),
-+		.soc_data_init		= rk3308_soc_data_init,
-+		.pull_calc_reg		= rk3308_calc_pull_reg_and_bit,
-+		.drv_calc_reg		= rk3308_calc_drv_reg_and_bit,
-+		.schmitt_calc_reg	= rk3308_calc_schmitt_reg_and_bit,
-+};
-+
- static struct rockchip_pin_bank rk3328_pin_banks[] = {
- 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
- 	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
-@@ -3849,6 +4267,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 		.data = &rk3228_pin_ctrl },
- 	{ .compatible = "rockchip,rk3288-pinctrl",
- 		.data = &rk3288_pin_ctrl },
-+	{ .compatible = "rockchip,rk3308-pinctrl",
-+		.data = &rk3308_pin_ctrl },
- 	{ .compatible = "rockchip,rk3328-pinctrl",
- 		.data = &rk3328_pin_ctrl },
- 	{ .compatible = "rockchip,rk3368-pinctrl",
--- 
-2.17.1
+It slipped through the net as it didn't cause error when I tested it.
+Thanks, I'll fix it.
+
+Ludovic
+
+> 
+> Eugen
+> 
+> > +	writel(caps1, host->ioaddr + SDHCI_CAPABILITIES_1);
+> > +	/* Set capabilities in ro mode. */
+> > +	writel(0, host->ioaddr + SDMMC_CACR);
+> > +
+> > +	dev_info(dev, "update clk mul to %u as gck rate is %u Hz and clk base is %u Hz\n",
+> > +		 clk_mul, gck_rate, clk_base_rate);
+> >   
+> >   	/*
+> >   	 * We have to set preset values because it depends on the clk_mul
+> > @@ -196,19 +201,19 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
+> >   	 * maximum sd clock value is 120 MHz instead of 208 MHz. For that
+> >   	 * reason, we need to use presets to support SDR104.
+> >   	 */
+> > -	preset_div = DIV_ROUND_UP(real_gck_rate, 24000000) - 1;
+> > +	preset_div = DIV_ROUND_UP(gck_rate, 24000000) - 1;
+> >   	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+> >   	       host->ioaddr + SDHCI_PRESET_FOR_SDR12);
+> > -	preset_div = DIV_ROUND_UP(real_gck_rate, 50000000) - 1;
+> > +	preset_div = DIV_ROUND_UP(gck_rate, 50000000) - 1;
+> >   	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+> >   	       host->ioaddr + SDHCI_PRESET_FOR_SDR25);
+> > -	preset_div = DIV_ROUND_UP(real_gck_rate, 100000000) - 1;
+> > +	preset_div = DIV_ROUND_UP(gck_rate, 100000000) - 1;
+> >   	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+> >   	       host->ioaddr + SDHCI_PRESET_FOR_SDR50);
+> > -	preset_div = DIV_ROUND_UP(real_gck_rate, 120000000) - 1;
+> > +	preset_div = DIV_ROUND_UP(gck_rate, 120000000) - 1;
+> >   	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+> >   	       host->ioaddr + SDHCI_PRESET_FOR_SDR104);
+> > -	preset_div = DIV_ROUND_UP(real_gck_rate, 50000000) - 1;
+> > +	preset_div = DIV_ROUND_UP(gck_rate, 50000000) - 1;
+> >   	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+> >   	       host->ioaddr + SDHCI_PRESET_FOR_DDR50);
+> >   
+> > @@ -303,7 +308,7 @@ static const struct dev_pm_ops sdhci_at91_dev_pm_ops = {
+> >   static int sdhci_at91_probe(struct platform_device *pdev)
+> >   {
+> >   	const struct of_device_id	*match;
+> > -	const struct sdhci_pltfm_data	*soc_data;
+> > +	const struct sdhci_at91_soc_data	*soc_data;
+> >   	struct sdhci_host		*host;
+> >   	struct sdhci_pltfm_host		*pltfm_host;
+> >   	struct sdhci_at91_priv		*priv;
+> > @@ -314,17 +319,22 @@ static int sdhci_at91_probe(struct platform_device *pdev)
+> >   		return -EINVAL;
+> >   	soc_data = match->data;
+> >   
+> > -	host = sdhci_pltfm_init(pdev, soc_data, sizeof(*priv));
+> > +	host = sdhci_pltfm_init(pdev, soc_data->pdata, sizeof(*priv));
+> >   	if (IS_ERR(host))
+> >   		return PTR_ERR(host);
+> >   
+> >   	pltfm_host = sdhci_priv(host);
+> >   	priv = sdhci_pltfm_priv(pltfm_host);
+> > +	priv->soc_data = soc_data;
+> >   
+> >   	priv->mainck = devm_clk_get(&pdev->dev, "baseclk");
+> >   	if (IS_ERR(priv->mainck)) {
+> > -		dev_err(&pdev->dev, "failed to get baseclk\n");
+> > -		return PTR_ERR(priv->mainck);
+> > +		if (soc_data->baseclk_is_generated_internally) {
+> > +			priv->mainck = NULL;
+> > +		} else {
+> > +			dev_err(&pdev->dev, "failed to get baseclk\n");
+> > +			return PTR_ERR(priv->mainck);
+> > +		}
+> >   	}
+> >   
+> >   	priv->hclock = devm_clk_get(&pdev->dev, "hclock");
+> > 
