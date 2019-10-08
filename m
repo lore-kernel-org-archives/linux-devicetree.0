@@ -1,107 +1,31 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 3/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
-Date: Tue,  8 Oct 2019 22:21:43 +1030
-Message-ID: <20191008115143.14149-4-andrew@aj.id.au>
-References: <20191008115143.14149-1-andrew@aj.id.au>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v9 07/12] lib/vsprintf: Remove support for %pF and %pf in
+ favour of %pS and %ps
+Date: Tue, 8 Oct 2019 13:53:23 +0200
+Message-ID: <20191008115323.qgy5gq3oipcspfsz@pathway.suse.cz>
+References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
+ <20191003123219.11237-8-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20191008115143.14149-1-andrew@aj.id.au>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191003123219.11237-8-sakari.ailus@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The 50MHz RCLK has to be enabled before the RMII interface will function.
+On Thu 2019-10-03 15:32:14, Sakari Ailus wrote:
+> %pS and %ps are now the preferred conversion specifiers to print function
+> names. The functionality is equivalent; remove the old, deprecated %pF
+> and %pf support.
+> 
+> Depends-on: commit 2d44d165e939 ("scsi: lpfc: Convert existing %pf users to %ps")
+> Depends-on: commit b295c3e39c13 ("tools lib traceevent: Convert remaining %p[fF] users to %p[sS]")
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/net/ethernet/faraday/ftgmac100.c | 35 +++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 7 deletions(-)
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-index 9b7af94a40bb..9ff791fb0449 100644
---- a/drivers/net/ethernet/faraday/ftgmac100.c
-+++ b/drivers/net/ethernet/faraday/ftgmac100.c
-@@ -90,6 +90,9 @@ struct ftgmac100 {
- 	struct mii_bus *mii_bus;
- 	struct clk *clk;
- 
-+	/* 2600 RMII clock gate */
-+	struct clk *rclk;
-+
- 	/* Link management */
- 	int cur_speed;
- 	int cur_duplex;
-@@ -1718,12 +1721,14 @@ static void ftgmac100_ncsi_handler(struct ncsi_dev *nd)
- 		   nd->link_up ? "up" : "down");
- }
- 
--static void ftgmac100_setup_clk(struct ftgmac100 *priv)
-+static int ftgmac100_setup_clk(struct ftgmac100 *priv)
- {
--	priv->clk = devm_clk_get(priv->dev, NULL);
--	if (IS_ERR(priv->clk))
--		return;
-+	struct clk *clk;
- 
-+	clk = devm_clk_get(priv->dev, NULL /* MACCLK */);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+	priv->clk = clk;
- 	clk_prepare_enable(priv->clk);
- 
- 	/* Aspeed specifies a 100MHz clock is required for up to
-@@ -1732,6 +1737,14 @@ static void ftgmac100_setup_clk(struct ftgmac100 *priv)
- 	 */
- 	clk_set_rate(priv->clk, priv->use_ncsi ? FTGMAC_25MHZ :
- 			FTGMAC_100MHZ);
-+
-+	/* RCLK is for RMII, typically used for NCSI. Optional because its not
-+	 * necessary if it's the 2400 MAC or the MAC is configured for RGMII
-+	 */
-+	priv->rclk = devm_clk_get_optional(priv->dev, "RCLK");
-+	clk_prepare_enable(priv->rclk);
-+
-+	return 0;
- }
- 
- static int ftgmac100_probe(struct platform_device *pdev)
-@@ -1853,8 +1866,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
- 			goto err_setup_mdio;
- 	}
- 
--	if (priv->is_aspeed)
--		ftgmac100_setup_clk(priv);
-+	if (priv->is_aspeed) {
-+		err = ftgmac100_setup_clk(priv);
-+		if (err)
-+			goto err_ncsi_dev;
-+	}
- 
- 	/* Default ring sizes */
- 	priv->rx_q_entries = priv->new_rx_q_entries = DEF_RX_QUEUE_ENTRIES;
-@@ -1886,8 +1902,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
--err_ncsi_dev:
- err_register_netdev:
-+	if (priv->rclk)
-+		clk_disable_unprepare(priv->rclk);
-+	clk_disable_unprepare(priv->clk);
-+err_ncsi_dev:
- 	ftgmac100_destroy_mdio(netdev);
- err_setup_mdio:
- 	iounmap(priv->base);
-@@ -1909,6 +1928,8 @@ static int ftgmac100_remove(struct platform_device *pdev)
- 
- 	unregister_netdev(netdev);
- 
-+	if (priv->rclk)
-+		clk_disable_unprepare(priv->rclk);
- 	clk_disable_unprepare(priv->clk);
- 
- 	/* There's a small chance the reset task will have been re-queued,
--- 
-2.20.1
+Best Regards,
+Petr
