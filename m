@@ -1,60 +1,79 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 0/3] reset: meson: add Meson-A1 SoC support
-Date: Tue, 08 Oct 2019 16:23:06 +0200
-Message-ID: <1570544586.18914.9.camel@pengutronix.de>
-References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: samsung: Force clkoutN names to be
+ unique in PMU
+Date: Tue, 8 Oct 2019 16:29:00 +0200
+Message-ID: <20191008142900.GA2635@pi3>
+References: <20191004151414.8458-1-krzk@kernel.org>
+ <CAL_JsqJDTcHu5oXG6zszGHCBhTE6EW94AANUjyMV78SkKcn5yA@mail.gmail.com>
+ <20191008125038.GA2550@pi3>
+ <CAL_Jsq+GcsUWN6kjBLkyr1rHGh6_4=w6JL6+k7DBXkBcvHcSBw@mail.gmail.com>
+ <CAL_JsqKBzZCShxx99aB4z15XYNbUionVicmfNNXEfq=iohWLCA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Xingyu Chen <xingyu.chen@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKBzZCShxx99aB4z15XYNbUionVicmfNNXEfq=iohWLCA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene@kernel.org>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Xingyu,
-
-On Sun, 2019-09-29 at 14:24 +0800, Xingyu Chen wrote:
-> This patchset adds support for Meson-A1 SoC Reset Controller. A new struct
-> meson_reset_param is introduced to describe the register differences between
-> Meson-A1 and previous SoCs.
->
-> Changes since v2 at [1]:
-> - add comments in header file to indicate holes
-> - reorder the Signed-off-by and Reviewed-by
-> - remove Jianxin's Signed-off-by
-> - add Kevin's Reviewed-by
-
-Thank you, I have applied patches 2 and 3 to reset/next.
-
-regards
-Philipp
-
-> Changes since v1 at [0]:
-> - rebase on linux-next
-> - add Neil's Reviewed-by
-> 
-> [0] https://lore.kernel.org/linux-amlogic/1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com
-> [1] https://lore.kernel.org/linux-amlogic/1569227661-4261-1-git-send-email-xingyu.chen@amlogic.com
-> 
-> Xingyu Chen (3):
->   arm64: dts: meson: add reset controller for Meson-A1 SoC
->   dt-bindings: reset: add bindings for the Meson-A1 SoC Reset Controller
->   reset: add support for the Meson-A1 SoC Reset Controller
-> 
->  .../bindings/reset/amlogic,meson-reset.yaml        |  1 +
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  6 ++
->  drivers/reset/reset-meson.c                        | 35 ++++++++--
->  include/dt-bindings/reset/amlogic,meson-a1-reset.h | 74 ++++++++++++++++++++++
->  4 files changed, 109 insertions(+), 7 deletions(-)
->  create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
-> 
+T24gVHVlLCBPY3QgMDgsIDIwMTkgYXQgMDk6MTc6MTZBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gVHVlLCBPY3QgOCwgMjAxOSBhdCA5OjA1IEFNIFJvYiBIZXJyaW5nIDxyb2JoK2R0
+QGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4KPiA+IE9uIFR1ZSwgT2N0IDgsIDIwMTkgYXQgNzo1MCBB
+TSBLcnp5c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4gPgo+ID4g
+PiBPbiBUdWUsIE9jdCAwOCwgMjAxOSBhdCAwNzozODoxNEFNIC0wNTAwLCBSb2IgSGVycmluZyB3
+cm90ZToKPiA+ID4gPiBPbiBGcmksIE9jdCA0LCAyMDE5IGF0IDEwOjE0IEFNIEtyenlzenRvZiBL
+b3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPiA+ID4gPgo+ID4gPiA+ID4gVGhl
+IGNsa291dE4gbmFtZXMgb2YgY2xvY2tzIG11c3QgYmUgdW5pcXVlIGJlY2F1c2UgdGhleSByZXBy
+ZXNlbnQKPiA+ID4gPiA+IHVuaXF1ZSBpbnB1dHMgb2YgY2xvY2sgbXVsdGlwbGV4ZXIuCj4gPiA+
+ID4gPgo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0Br
+ZXJuZWwub3JnPgo+ID4gPiA+ID4gLS0tCj4gPiA+ID4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9zYW1zdW5nL3BtdS55YW1sIHwgNiArKysrLS0KPiA+ID4gPiA+ICAx
+IGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+ID4gPiA+ID4K
+PiA+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL3NhbXN1bmcvcG11LnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL3NhbXN1bmcvcG11LnlhbWwKPiA+ID4gPiA+IGluZGV4IDczYjU2ZmM1YmY1OC4uZDhlMDM3
+MTZmNWQyIDEwMDY0NAo+ID4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2FybS9zYW1zdW5nL3BtdS55YW1sCj4gPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NhbXN1bmcvcG11LnlhbWwKPiA+ID4gPiA+IEBAIC01
+Myw4ICs1MywxMCBAQCBwcm9wZXJ0aWVzOgo+ID4gPiA+ID4gICAgICAgIExpc3Qgb2YgY2xvY2sg
+bmFtZXMgZm9yIHBhcnRpY3VsYXIgQ0xLT1VUIG11eCBpbnB1dHMKPiA+ID4gPiA+ICAgICAgbWlu
+SXRlbXM6IDEKPiA+ID4gPiA+ICAgICAgbWF4SXRlbXM6IDMyCj4gPiA+ID4gPiAtICAgIGl0ZW1z
+Ogo+ID4gPiA+ID4gLSAgICAgIHBhdHRlcm46ICdeY2xrb3V0KFswLTldfFsxMl1bMC05XXwzWzAt
+MV0pJCcKPiA+ID4gPiA+ICsgICAgYWxsT2Y6Cj4gPiA+ID4gPiArICAgICAgLSBpdGVtczoKPiA+
+ID4gPiA+ICsgICAgICAgICAgcGF0dGVybjogJ15jbGtvdXQoWzAtOV18WzEyXVswLTldfDNbMC0x
+XSkkJwo+ID4gPiA+ID4gKyAgICAgIC0gdW5pcXVlSXRlbXM6IHRydWUKPiA+ID4gPgo+ID4gPiA+
+IFlvdSBzaG91bGRuJ3QgbmVlZCB0aGUgJ2FsbE9mJywganVzdCBhZGQgdW5pcXVlSXRlbXMgYXQg
+dGhlIHNhbWUgbGV2ZWwgYXMgaXRlbXMuCj4gPiA+Cj4gPiA+IElmIHlvdSBtZWFuIHNvbWV0aGlu
+ZyBsaWtlOgo+ID4gPiAgIDU2ICAgICB1bmlxdWVJdGVtczogdHJ1ZQo+ID4gPiAgIDU3ICAgICBp
+dGVtczoKPiA+ID4gICA1OCAgICAgICBwYXR0ZXJuOiAnXmNsa291dChbMC05XXxbMTJdWzAtOV18
+M1swLTFdKSQnCj4gPiA+Cj4gPiA+IFRoZW4gdGhlIGR0X2JpbmRpbmdfY2hlY2sgZmFpbHM6Cj4g
+PiA+Cj4gPiA+IGRldi9saW51eC9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
+L3NhbXN1bmcvcG11LnlhbWw6IHByb3BlcnRpZXM6Y2xvY2stbmFtZXM6Cj4gPiA+ICd1bmlxdWVJ
+dGVtcycgaXMgbm90IG9uZSBvZiBbJyRyZWYnLCAnYWRkaXRpb25hbEl0ZW1zJywgJ2FkZGl0aW9u
+YWxQcm9wZXJ0aWVzJywgJ2FsbE9mJywgJ2FueU9mJywgJ2NvbnN0JywgJ2NvbnRhaW5zJywgJ2Rl
+ZmF1bHQnLCAnZGVwZW5kZW5jaWVzJywgJ2RlcHJlY2F0ZWQnLCAnZGVzY3JpcHRpb24nLCAnZWxz
+ZScsICdlbnVtJywgJ2l0ZW1zJywgJ2lmJywgJ21pbkl0ZW1zJywgJ21pbmltdW0nLCAnbWF4SXRl
+bXMnLCAnbWF4aW11bScsICdub3QnLCAnb25lT2YnLCAncGF0dGVybicsICdwYXR0ZXJuUHJvcGVy
+dGllcycsICdwcm9wZXJ0aWVzJywgJ3JlcXVpcmVkJywgJ3RoZW4nLCAndHlwZScsICd0eXBlU2l6
+ZScsICd1bmV2YWx1YXRlZFByb3BlcnRpZXMnXQo+ID4KPiA+IEkgY2FuIGFkZCBpdC4KPiA+Cj4g
+PiBUaGUgb3RoZXIgb3B0aW9uIGlzIHRvIGZpeCB0aGlzIGluIHRoZSBjbG9jayBzY2hlbWEuIEkn
+bSBub3Qgc3VyZSBpZgo+ID4gdGhlcmUncyBhIG5lZWQgZm9yIGR1cGxpY2F0ZSBjbG9jay1uYW1l
+cy4gU2VlbXMgdW5saWtlbHkuIEknbGwgdGVzdAo+ID4gdGhhdC4KPiAKPiBBY3R1YWxseSwgY2xv
+Y2stbmFtZXMgaXMgYWxyZWFkeSBzZXQgdG8gYmUgdW5pcXVlLiBEaWQgeW91IHNlZSBvdGhlcndp
+c2U/CgpZZWFoLCBJIGR1cGxpY2F0ZWQgb24gcHVycG9zZSAiY2xrb3V0MSIgYW5kIGl0IHdhcyBu
+b3QgcmVwb3J0ZWQgYXMgYW4KZXJyb3IuIFRoYXQncyB3aHkgSSBhZGRlZCAidW5pcXVlSXRlbXMi
+LgoKQmVzdCByZWdhcmRzLApLcnp5c3p0b2YKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbA==
