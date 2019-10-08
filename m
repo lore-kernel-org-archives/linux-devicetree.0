@@ -1,7 +1,7 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2 3/3] arm64: dts: imx8mn: Use correct clock for usdhc's ipg clk
-Date: Tue,  8 Oct 2019 08:55:45 +0800
-Message-ID: <1570496145-11053-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's ipg clk
+Date: Tue,  8 Oct 2019 08:55:44 +0800
+Message-ID: <1570496145-11053-2-git-send-email-Anson.Huang@nxp.com>
 References: <1570496145-11053-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1570496145-11053-1-git-send-email-Anson.Huang@nxp.com>
@@ -10,48 +10,48 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengu
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On i.MX8MN, usdhc's ipg clock is from IMX8MN_CLK_IPG_ROOT,
-assign it explicitly instead of using IMX8MN_CLK_DUMMY.
+On i.MX8MM, usdhc's ipg clock is from IMX8MM_CLK_IPG_ROOT,
+assign it explicitly instead of using IMX8MM_CLK_DUMMY.
 
-Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
+Fixes: a05ea40eb384 ("arm64: dts: imx: Add i.mx8mm dtsi support")
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 Changes since V1:
 	- Add fixes tag.
 ---
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 6 +++---
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index 6cb6c9c..725a3a3 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -594,7 +594,7 @@
- 				compatible = "fsl,imx8mn-usdhc", "fsl,imx7d-usdhc";
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 7c4dcce..8aafad2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -694,7 +694,7 @@
+ 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
  				reg = <0x30b40000 0x10000>;
  				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MN_CLK_DUMMY>,
-+				clocks = <&clk IMX8MN_CLK_IPG_ROOT>,
- 					 <&clk IMX8MN_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MN_CLK_USDHC1_ROOT>;
+-				clocks = <&clk IMX8MM_CLK_DUMMY>,
++				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
+ 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
+ 					 <&clk IMX8MM_CLK_USDHC1_ROOT>;
  				clock-names = "ipg", "ahb", "per";
-@@ -610,7 +610,7 @@
- 				compatible = "fsl,imx8mn-usdhc", "fsl,imx7d-usdhc";
+@@ -710,7 +710,7 @@
+ 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
  				reg = <0x30b50000 0x10000>;
  				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MN_CLK_DUMMY>,
-+				clocks = <&clk IMX8MN_CLK_IPG_ROOT>,
- 					 <&clk IMX8MN_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MN_CLK_USDHC2_ROOT>;
+-				clocks = <&clk IMX8MM_CLK_DUMMY>,
++				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
+ 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
+ 					 <&clk IMX8MM_CLK_USDHC2_ROOT>;
  				clock-names = "ipg", "ahb", "per";
-@@ -624,7 +624,7 @@
- 				compatible = "fsl,imx8mn-usdhc", "fsl,imx7d-usdhc";
+@@ -724,7 +724,7 @@
+ 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
  				reg = <0x30b60000 0x10000>;
  				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MN_CLK_DUMMY>,
-+				clocks = <&clk IMX8MN_CLK_IPG_ROOT>,
- 					 <&clk IMX8MN_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MN_CLK_USDHC3_ROOT>;
+-				clocks = <&clk IMX8MM_CLK_DUMMY>,
++				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
+ 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
+ 					 <&clk IMX8MM_CLK_USDHC3_ROOT>;
  				clock-names = "ipg", "ahb", "per";
 -- 
 2.7.4
