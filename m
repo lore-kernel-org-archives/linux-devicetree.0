@@ -1,32 +1,34 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 06/10] dt-bindings: usb: renesas_usb3: Document r8a774b1 support
-Date: Tue, 8 Oct 2019 13:42:41 +0200
-Message-ID: <CAMuHMdX5hkZ7kLRiA_NRrBziFsrZNgZX-cEiE+bAaubkMdX=1A@mail.gmail.com>
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-7-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH 0/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
+Date: Tue,  8 Oct 2019 22:21:40 +1030
+Message-ID: <20191008115143.14149-1-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570531132-21856-7-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Document RZ/G2N (R8A774B1) SoC bindings.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Hello,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This series slightly extends the devicetree binding and driver for the
+FTGMAC100 to describe an optional RMII RCLK gate in the clocks property.
+Currently it's necessary for the kernel to ungate RCLK on the AST2600 in NCSI
+configurations as u-boot does not yet support NCSI (which uses the RMII).
 
-Gr{oetje,eeting}s,
+Please review!
 
-                        Geert
+Andrew
+
+Andrew Jeffery (3):
+  dt-bindings: net: ftgmac100: Document AST2600 compatible
+  dt-bindings: net: ftgmac100: Describe clock properties
+  net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
+
+ .../devicetree/bindings/net/ftgmac100.txt     |  7 ++++
+ drivers/net/ethernet/faraday/ftgmac100.c      | 35 +++++++++++++++----
+ 2 files changed, 35 insertions(+), 7 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.20.1
