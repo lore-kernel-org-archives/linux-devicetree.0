@@ -1,71 +1,107 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv8 8/9] soc: ti: omap-prm: add am4 PRM data
-Date: Tue, 8 Oct 2019 15:55:43 +0300
-Message-ID: <20191008125544.20679-9-t-kristo@ti.com>
-References: <20191008125544.20679-1-t-kristo@ti.com>
+From: Nayna <nayna@linux.vnet.ibm.com>
+Subject: Re: [PATCH v6 3/9] powerpc: add support to initialize ima policy
+ rules
+Date: Tue, 8 Oct 2019 09:12:09 -0400
+Message-ID: <2d4a1890-5fb0-3bef-cd78-8cb75ca73076@linux.vnet.ibm.com>
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+ <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
+ <877e5pwa1b.fsf@morokweng.localdomain>
+ <84f057d0-6a0b-d486-0eb6-f1590f32e377@linux.vnet.ibm.com>
+ <1570052950.4421.70.camel@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191008125544.20679-1-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-omap@vger.kernel.org, ssantosh@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1570052950.4421.70.camel@linux.ibm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mimi Zohar <zohar@linux.ibm.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Eric Ricther <erichte@linux.ibm.com>, linux-kernel@vger.kernel.org, Claudio Carvalho <cclaudio@linux.ibm.com>, Matthew Garret <matthew.garret@nebula.com>, linuxppc-dev@ozlabs.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>, Elaine Palmer <erpalmer@us.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, linux-integrity@vger.kernel.org, George Wilson <gcwilson@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add PRM instance data for am4 family of SoCs. Initially this is just
-used to provide reset support.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/soc/ti/omap_prm.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
-index de11ce08ff7b..73ea64896770 100644
---- a/drivers/soc/ti/omap_prm.c
-+++ b/drivers/soc/ti/omap_prm.c
-@@ -115,10 +115,30 @@ static const struct omap_prm_data am3_prm_data[] = {
- 	{ },
- };
- 
-+static const struct omap_rst_map am4_per_rst_map[] = {
-+	{ .rst = 1, .st = 0 },
-+	{ .rst = -1 },
-+};
-+
-+static const struct omap_rst_map am4_device_rst_map[] = {
-+	{ .rst = 0, .st = 1 },
-+	{ .rst = 1, .st = 0 },
-+	{ .rst = -1 },
-+};
-+
-+static const struct omap_prm_data am4_prm_data[] = {
-+	{ .name = "gfx", .base = 0x44df0400, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_0, .clkdm_name = "gfx_l3" },
-+	{ .name = "per", .base = 0x44df0800, .rstctrl = 0x10, .rstst = 0x14, .rstmap = am4_per_rst_map, .clkdm_name = "pruss_ocp" },
-+	{ .name = "wkup", .base = 0x44df2000, .rstctrl = 0x10, .rstst = 0x14, .rstmap = am3_wkup_rst_map, .flags = OMAP_PRM_HAS_NO_CLKDM },
-+	{ .name = "device", .base = 0x44df4000, .rstctrl = 0x0, .rstst = 0x4, .rstmap = am4_device_rst_map, .flags = OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_NO_CLKDM },
-+	{ },
-+};
-+
- static const struct of_device_id omap_prm_id_table[] = {
- 	{ .compatible = "ti,omap4-prm-inst", .data = omap4_prm_data },
- 	{ .compatible = "ti,dra7-prm-inst", .data = dra7_prm_data },
- 	{ .compatible = "ti,am3-prm-inst", .data = am3_prm_data },
-+	{ .compatible = "ti,am4-prm-inst", .data = am4_prm_data },
- 	{ },
- };
- 
--- 
-2.17.1
+On 10/02/2019 05:49 PM, Mimi Zohar wrote:
+> On Tue, 2019-10-01 at 12:07 -0400, Nayna wrote:
+>> On 09/30/2019 09:04 PM, Thiago Jung Bauermann wrote:
+>>> Hello,
+>> Hi,
+>>
+>>>> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+>>>> new file mode 100644
+>>>> index 000000000000..39401b67f19e
+>>>> --- /dev/null
+>>>> +++ b/arch/powerpc/kernel/ima_arch.c
+>>>> @@ -0,0 +1,33 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Copyright (C) 2019 IBM Corporation
+>>>> + * Author: Nayna Jain
+>>>> + */
+>>>> +
+>>>> +#include <linux/ima.h>
+>>>> +#include <asm/secure_boot.h>
+>>>> +
+>>>> +bool arch_ima_get_secureboot(void)
+>>>> +{
+>>>> +	return is_powerpc_os_secureboot_enabled();
+>>>> +}
+>>>> +
+>>>> +/* Defines IMA appraise rules for secureboot */
+>>>> +static const char *const arch_rules[] = {
+>>>> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+>>>> +#if !IS_ENABLED(CONFIG_MODULE_SIG)
+>>>> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+>>>> +#endif
+>>>> +	NULL
+>>>> +};
+>>>> +
+>>>> +/*
+>>>> + * Returns the relevant IMA arch policies based on the system secureboot state.
+>>>> + */
+>>>> +const char *const *arch_get_ima_policy(void)
+>>>> +{
+>>>> +	if (is_powerpc_os_secureboot_enabled())
+>>>> +		return arch_rules;
+>>>> +
+>>>> +	return NULL;
+>>>> +}
+>>> If CONFIG_MODULE_SIG is enabled but module signatures aren't enforced,
+>>> then IMA won't enforce module signature either. x86's
+>>> arch_get_ima_policy() calls set_module_sig_enforced(). Doesn't the
+>>> powerpc version need to do that as well?
+>>>
+>>> On the flip side, if module signatures are enforced by the module
+>>> subsystem then IMA will verify the signature a second time since there's
+>>> no sharing of signature verification results between the module
+>>> subsystem and IMA (this was observed by Mimi).
+>>>
+>>> IMHO this is a minor issue, since module loading isn't a hot path and
+>>> the duplicate work shouldn't impact anything. But it could be avoided by
+>>> having a NULL entry in arch_rules, which arch_get_ima_policy() would
+>>> dynamically update with the "appraise func=MODULE_CHECK" rule if
+>>> is_module_sig_enforced() is true.
+>> Thanks Thiago for reviewing.  I am wondering that this will give two
+>> meanings for NULL. Can we do something like below, there are possibly
+>> two options ?
+>>
+>> 1. Set IMA_APPRAISED in the iint->flags if is_module_sig_enforced().
+>>
+>> OR
+>>
+>> 2. Let ima_get_action() check for is_module_sig_enforced() when policy
+>> is appraise and func is MODULE_CHECK.
+> I'm a bit hesitant about mixing the module subsystem signature
+> verification method with the IMA measure "template=ima-modsig" rules.
+>   Does it actually work?
+>
+> We can at least limit verifying the same appended signature twice to
+> when "module.sig_enforce" is specified on the boot command line, by
+> changing "!IS_ENABLED(CONFIG_MODULE_SIG)" to test
+> "CONFIG_MODULE_SIG_FORCE".
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Yes this seems to be a better idea. I have implemented this in the v7 
+version of the ima_arch version.
+
+Thanks & Regards,
+      - Nayna
