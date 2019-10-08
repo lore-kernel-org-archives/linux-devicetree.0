@@ -1,109 +1,43 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: light: Add binding for ADUX1020
-Date: Tue, 8 Oct 2019 13:29:40 +0100
-Message-ID: <20191008132940.00000eca@huawei.com>
-References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org>
-        <20191007101027.8383-2-manivannan.sadhasivam@linaro.org>
-        <a60fb9ea8922c1eb532e0b7ef0a69abcc9306255.camel@analog.com>
-        <4EC23AB5-B8BE-4E45-8E5B-FCCD5B1508BA@linaro.org>
-        <b03c8de71e6d568d54ddfd07758c07c03c0eb89d.camel@analog.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH 1/2] dt-bindings: sdhci-of-at91: add the microchip,sdcal-inverted property
+Date: Tue, 8 Oct 2019 14:34:31 +0200
+Message-ID: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b03c8de71e6d568d54ddfd07758c07c03c0eb89d.camel@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc: "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "lars@metafoo.de" <lars@metafoo.de>, "jic23@kernel.org" <jic23@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+To: Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, adrian.hunter@intel.com, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 7 Oct 2019 13:21:50 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+Add the specific microchip,sdcal-inverted property to at91 sdhci
+device binding.
+This optional property describes how the SoC SDCAL pin is connected.
+It could be handled at SiP, SoM or board level.
 
-> On Mon, 2019-10-07 at 18:10 +0530, Manivannan Sadhasivam wrote:
-> > [External]
-> > 
-> > Hi Ardelean, 
-> > 
-> > On 7 October 2019 3:51:16 PM IST, "Ardelean, Alexandru" <  
-> > alexandru.Ardelean@analog.com> wrote:
-> > > On Mon, 2019-10-07 at 15:40 +0530, Manivannan Sadhasivam wrote:  
-> > > > [External]
-> > > > 
-> > > > Add devicetree binding for Analog Devices ADUX1020 Photometric
-> > > > sensor.
-> > > >   
-> > > 
-> > > Hey,
-> > > 
-> > > Thanks for the patches.
-> > > 
-> > > This dt-binding docs is in text format.
-> > > dt-binding docs now need to be in YAML format.
-> > >   
-> > 
-> > Sure. I can convert to YAML binding. 
-> >   
-> > > Also, patches for dt-bindings docs usually come after the driver is
-> > > added.
-> > > So, this patch should be the second in the series, not the first.
-> > >   
-> > 
-> > I don't think so. The convention is to put dt-bindings patch upfront for
-> > all subsystems. Not sure if IIO differs here.   
-> 
-> Now that you mention, I'm not sure either.
-> We typically sent the dt-bindings one last, so I assumed it was the
-> default.
+This property read by at91 sdhci driver will allow to put in place a
+software workaround that would reduce power consumption.
 
-I don't care either way so never comment on it :)
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-atmel.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Jonathan
-
-> 
-> > 
-> > Thanks, 
-> > Mani  
-> > > Alex
-> > >   
-> > > > Signed-off-by: Manivannan Sadhasivam  
-> > > <manivannan.sadhasivam@linaro.org>  
-> > > > ---
-> > > >  .../bindings/iio/light/adux1020.txt           | 22  
-> > > +++++++++++++++++++  
-> > > >  1 file changed, 22 insertions(+)
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/iio/light/adux1020.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/iio/light/adux1020.txt
-> > > > b/Documentation/devicetree/bindings/iio/light/adux1020.txt
-> > > > new file mode 100644
-> > > > index 000000000000..e896dda30e36
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/iio/light/adux1020.txt
-> > > > @@ -0,0 +1,22 @@
-> > > > +Analog Devices ADUX1020 Photometric sensor
-> > > > +
-> > > > +Link to datasheet: 
-> > > >   
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADUX1020.pdf  
-> > > > +
-> > > > +Required properties:
-> > > > +
-> > > > + - compatible: should be "adi,adux1020"
-> > > > + - reg: the I2C address of the sensor
-> > > > +
-> > > > +Optional properties:
-> > > > +
-> > > > + - interrupts: interrupt mapping for IRQ as documented in
-> > > > +    
-> > > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt  
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +adux1020@64 {
-> > > > +	compatible = "adi,adux1020";
-> > > > +	reg = <0x64>;
-> > > > +	interrupt-parent = <&msmgpio>;
-> > > > +	interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +};  
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+index 1b662d7171a0..503c6dbac1b2 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+@@ -9,6 +9,11 @@ Required properties:
+ - clocks:		Phandlers to the clocks.
+ - clock-names:		Must be "hclock", "multclk", "baseclk";
+ 
++Optional properties:
++- microchip,sdcal-inverted: when present, polarity on the SDCAL SoC pin is
++  inverted. The default polarity for this signal is described in the datasheet.
++  For instance on SAMA5D2, the pin is usually tied to the GND with a resistor
++  and a capacitor (see "SDMMC I/O Calibration" chapter).
+ 
+ Example:
+ 
+-- 
+2.17.1
