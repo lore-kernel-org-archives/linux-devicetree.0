@@ -1,107 +1,76 @@
-From: Nayna <nayna@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 3/9] powerpc: add support to initialize ima policy
- rules
-Date: Tue, 8 Oct 2019 09:12:09 -0400
-Message-ID: <2d4a1890-5fb0-3bef-cd78-8cb75ca73076@linux.vnet.ibm.com>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
- <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
- <877e5pwa1b.fsf@morokweng.localdomain>
- <84f057d0-6a0b-d486-0eb6-f1590f32e377@linux.vnet.ibm.com>
- <1570052950.4421.70.camel@linux.ibm.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v1 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM
+ SDXC
+Date: Tue, 8 Oct 2019 16:44:19 +0300
+Message-ID: <2cbda555-42d2-392c-0887-09cae4a35dce@intel.com>
+References: <20191003040032.37696-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191003040032.37696-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570052950.4421.70.camel@linux.ibm.com>
+In-Reply-To: <20191003040032.37696-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mimi Zohar <zohar@linux.ibm.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Eric Ricther <erichte@linux.ibm.com>, linux-kernel@vger.kernel.org, Claudio Carvalho <cclaudio@linux.ibm.com>, Matthew Garret <matthew.garret@nebula.com>, linuxppc-dev@ozlabs.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>, Elaine Palmer <erpalmer@us.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, linux-integrity@vger.kernel.org, George Wilson <gcwilson@linux.ibm.com>
+To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
+On 3/10/19 7:00 AM, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> The current arasan sdhci PHY configuration isn't compatible
+> with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
+> 
+> Therefore, add a new compatible, to adapt the Intel's LGM
+> SDXC PHY with arasan-sdhc controller to configure the PHY.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-On 10/02/2019 05:49 PM, Mimi Zohar wrote:
-> On Tue, 2019-10-01 at 12:07 -0400, Nayna wrote:
->> On 09/30/2019 09:04 PM, Thiago Jung Bauermann wrote:
->>> Hello,
->> Hi,
->>
->>>> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
->>>> new file mode 100644
->>>> index 000000000000..39401b67f19e
->>>> --- /dev/null
->>>> +++ b/arch/powerpc/kernel/ima_arch.c
->>>> @@ -0,0 +1,33 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Copyright (C) 2019 IBM Corporation
->>>> + * Author: Nayna Jain
->>>> + */
->>>> +
->>>> +#include <linux/ima.h>
->>>> +#include <asm/secure_boot.h>
->>>> +
->>>> +bool arch_ima_get_secureboot(void)
->>>> +{
->>>> +	return is_powerpc_os_secureboot_enabled();
->>>> +}
->>>> +
->>>> +/* Defines IMA appraise rules for secureboot */
->>>> +static const char *const arch_rules[] = {
->>>> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
->>>> +#if !IS_ENABLED(CONFIG_MODULE_SIG)
->>>> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
->>>> +#endif
->>>> +	NULL
->>>> +};
->>>> +
->>>> +/*
->>>> + * Returns the relevant IMA arch policies based on the system secureboot state.
->>>> + */
->>>> +const char *const *arch_get_ima_policy(void)
->>>> +{
->>>> +	if (is_powerpc_os_secureboot_enabled())
->>>> +		return arch_rules;
->>>> +
->>>> +	return NULL;
->>>> +}
->>> If CONFIG_MODULE_SIG is enabled but module signatures aren't enforced,
->>> then IMA won't enforce module signature either. x86's
->>> arch_get_ima_policy() calls set_module_sig_enforced(). Doesn't the
->>> powerpc version need to do that as well?
->>>
->>> On the flip side, if module signatures are enforced by the module
->>> subsystem then IMA will verify the signature a second time since there's
->>> no sharing of signature verification results between the module
->>> subsystem and IMA (this was observed by Mimi).
->>>
->>> IMHO this is a minor issue, since module loading isn't a hot path and
->>> the duplicate work shouldn't impact anything. But it could be avoided by
->>> having a NULL entry in arch_rules, which arch_get_ima_policy() would
->>> dynamically update with the "appraise func=MODULE_CHECK" rule if
->>> is_module_sig_enforced() is true.
->> Thanks Thiago for reviewing.  I am wondering that this will give two
->> meanings for NULL. Can we do something like below, there are possibly
->> two options ?
->>
->> 1. Set IMA_APPRAISED in the iint->flags if is_module_sig_enforced().
->>
->> OR
->>
->> 2. Let ima_get_action() check for is_module_sig_enforced() when policy
->> is appraise and func is MODULE_CHECK.
-> I'm a bit hesitant about mixing the module subsystem signature
-> verification method with the IMA measure "template=ima-modsig" rules.
->   Does it actually work?
->
-> We can at least limit verifying the same appended signature twice to
-> when "module.sig_enforce" is specified on the boot command line, by
-> changing "!IS_ENABLED(CONFIG_MODULE_SIG)" to test
-> "CONFIG_MODULE_SIG_FORCE".
-
-Yes this seems to be a better idea. I have implemented this in the v7 
-version of the ima_arch version.
-
-Thanks & Regards,
-      - Nayna
+> ---
+>  drivers/mmc/host/sdhci-of-arasan.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 7023cbec4017..55de839a8a5e 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -120,6 +120,12 @@ static const struct sdhci_arasan_soc_ctl_map intel_lgm_emmc_soc_ctl_map = {
+>  	.hiword_update = false,
+>  };
+>  
+> +static const struct sdhci_arasan_soc_ctl_map intel_lgm_sdxc_soc_ctl_map = {
+> +	.baseclkfreq = { .reg = 0x80, .width = 8, .shift = 2 },
+> +	.clockmultiplier = { .reg = 0, .width = -1, .shift = -1 },
+> +	.hiword_update = false,
+> +};
+> +
+>  /**
+>   * sdhci_arasan_syscon_write - Write to a field in soc_ctl registers
+>   *
+> @@ -384,6 +390,11 @@ static struct sdhci_arasan_of_data intel_lgm_emmc_data = {
+>  	.pdata = &sdhci_arasan_cqe_pdata,
+>  };
+>  
+> +static struct sdhci_arasan_of_data intel_lgm_sdxc_data = {
+> +	.soc_ctl_map = &intel_lgm_sdxc_soc_ctl_map,
+> +	.pdata = &sdhci_arasan_cqe_pdata,
+> +};
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>  /**
+>   * sdhci_arasan_suspend - Suspend method for the driver
+> @@ -489,6 +500,10 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
+>  		.compatible = "intel,lgm-sdhci-5.1-emmc",
+>  		.data = &intel_lgm_emmc_data,
+>  	},
+> +	{
+> +		.compatible = "intel,lgm-sdhci-5.1-sdxc",
+> +		.data = &intel_lgm_sdxc_data,
+> +	},
+>  	/* Generic compatible below here */
+>  	{
+>  		.compatible = "arasan,sdhci-8.9a",
+> 
