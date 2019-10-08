@@ -1,8 +1,7 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 5/7] pinctrl: aspeed-g6: Make SIG_DESC_CLEAR() behave
- intuitively
-Date: Tue,  8 Oct 2019 15:11:51 +1030
-Message-ID: <20191008044153.12734-6-andrew@aj.id.au>
+Subject: [PATCH 6/7] pinctrl: aspeed-g6: Fix UART13 group pinmux
+Date: Tue,  8 Oct 2019 15:11:52 +1030
+Message-ID: <20191008044153.12734-7-andrew@aj.id.au>
 References: <20191008044153.12734-1-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,40 +18,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-gpio@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org, linus.walleij@linaro.org, ryanchen.aspeed@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johnny Huang <johnny_huang@aspeedtech.com>, linux-aspeed@lists.ozlabs.org, linus.walleij@linaro.org, ryanchen.aspeed@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signal descriptors can represent multi-bit bitfields and so have
-explicit "enable" and "disable" states. However many descriptor
-instances only describe a single bit, and so the SIG_DESC_SET() macro is
-provides an abstraction for the single-bit cases: Its expansion
-configures the "enable" state to set the bit and "disable" to clear.
+From: Johnny Huang <johnny_huang@aspeedtech.com>
 
-SIG_DESC_CLEAR() was introduced to provide a similar single-bit
-abstraction for for descriptors to clear the bit of interest. However
-its behaviour was defined as the literal inverse of SIG_DESC_SET() - the
-impact is the bit of interest is set in the disable path. This behaviour
-isn't intuitive and doesn't align with how we want to use the macro in
-practice, so make it clear the bit for both the enable and disable
-paths.
+When UART13G1 is set the pinmux configuration in SCU4B8 for UART13G0
+should be cleared.
 
+Fixes: 58dc52ad00a0 ("pinctrl: aspeed: Add AST2600 pinmux support")
+Signed-off-by: Johnny Huang <johnny_huang@aspeedtech.com>
+[AJ: Tweak commit message]
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/pinctrl/aspeed/pinmux-aspeed.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-index a2c0d52e4f7b..d5202241f411 100644
---- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
-+++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
-@@ -508,7 +508,7 @@ struct aspeed_pin_desc {
-  * @idx: The bit index in the register
-  */
- #define SIG_DESC_SET(reg, idx) SIG_DESC_IP_BIT(ASPEED_IP_SCU, reg, idx, 1)
--#define SIG_DESC_CLEAR(reg, idx) SIG_DESC_IP_BIT(ASPEED_IP_SCU, reg, idx, 0)
-+#define SIG_DESC_CLEAR(reg, idx) { ASPEED_IP_SCU, reg, BIT_MASK(idx), 0, 0 }
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index 68b066594461..dc17cf3d3549 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -1262,13 +1262,13 @@ GROUP_DECL(SPI1, AB11, AC11, AA11);
+ #define AD11 206
+ SIG_EXPR_LIST_DECL_SEMG(AD11, SPI1DQ2, QSPI1, SPI1, SIG_DESC_SET(SCU438, 14));
+ SIG_EXPR_LIST_DECL_SEMG(AD11, TXD13, UART13G1, UART13,
+-			SIG_DESC_SET(SCU438, 14));
++			SIG_DESC_CLEAR(SCU4B8, 2), SIG_DESC_SET(SCU4D8, 14));
+ PIN_DECL_2(AD11, GPIOZ6, SPI1DQ2, TXD13);
  
- #define SIG_DESC_LIST_SYM(sig, group) sig_descs_ ## sig ## _ ## group
- #define SIG_DESC_LIST_DECL(sig, group, ...) \
+ #define AF10 207
+ SIG_EXPR_LIST_DECL_SEMG(AF10, SPI1DQ3, QSPI1, SPI1, SIG_DESC_SET(SCU438, 15));
+ SIG_EXPR_LIST_DECL_SEMG(AF10, RXD13, UART13G1, UART13,
+-			SIG_DESC_SET(SCU438, 15));
++			SIG_DESC_CLEAR(SCU4B8, 3), SIG_DESC_SET(SCU4D8, 15));
+ PIN_DECL_2(AF10, GPIOZ7, SPI1DQ3, RXD13);
+ 
+ GROUP_DECL(QSPI1, AB11, AC11, AA11, AD11, AF10);
 -- 
 2.20.1
