@@ -1,159 +1,50 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get() and
- reduce DT binding
-Date: Tue,  8 Oct 2019 17:11:59 -0700
-Message-ID: <20191009001159.27761-1-saravanak@google.com>
-References: <5d978bf9.1c69fb81.7b927.b6ac@mx.google.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: =?UTF-8?Q?Re:_[PATCH_2/3]_dt-bindings:_net:_ftgmac100:_Describe_clock_pr?=
+ =?UTF-8?Q?operties?=
+Date: Wed, 09 Oct 2019 10:49:45 +1030
+Message-ID: <01c7cafe-8b41-4099-af29-3593e27a1d20@www.fastmail.com>
+References: <20191008115143.14149-1-andrew@aj.id.au>
+ <20191008115143.14149-3-andrew@aj.id.au>
+ <CACPK8XcWLCGupAF1EX1LB6A=mQY0s9kjgagr3EKEKJhnbt+j0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5d978bf9.1c69fb81.7b927.b6ac@mx.google.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: swboyd@chromium.org
-Cc: devicetree@vger.kernel.org, saravanak@google.com, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, daidavid1@codeaurora.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mripard@kernel.org, kernel-team@android.com, georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACPK8XcWLCGupAF1EX1LB6A=mQY0s9kjgagr3EKEKJhnbt+j0g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Boyd:
-> Quoting David Dai (2019-09-27 10:16:07)
-> > On 9/25/2019 6:28 AM, Stephen Boyd wrote:
-> > > Quoting Bjorn Andersson (2019-09-24 22:59:33)
-> > >> On Tue 24 Sep 22:41 PDT 2019, Stephen Boyd wrote:
-> > >>
-> > >>> The DT binding could also be simplified somewhat. Currently a path needs
-> > >>> to be specified in DT for each and every use case that is possible for a
-> > >>> device to want. Typically the path is to memory, which looks to be
-> > >>> reserved for in the binding with the "dma-mem" named path, but sometimes
-> > >>> the path is from a device to the CPU or more generically from a device
-> > >>> to another device which could be a CPU, cache, DMA master, or another
-> > >>> device if some sort of DMA to DMA scenario is happening. Let's remove
-> > >>> the pair part of the binding so that we just list out a device's
-> > >>> possible endpoints on the bus or busses that it's connected to.
-> > >>>
-> > >>> If the kernel wants to figure out what the path is to memory or the CPU
-> > >>> or a cache or something else it should be able to do that by finding the
-> > >>> node for the "destination" endpoint, extracting that node's
-> > >>> "interconnects" property, and deriving the path in software. For
-> > >>> example, we shouldn't need to write out each use case path by path in DT
-> > >>> for each endpoint node that wants to set a bandwidth to memory. We
-> > >>> should just be able to indicate what endpoint(s) a device sits on based
-> > >>> on the interconnect provider in the system and then walk the various
-> > >>> interconnects to find the path from that source endpoint to the
-> > >>> destination endpoint.
-> > >>>
-> > >> But doesn't this implies that the other end of the path is always some
-> > >> specific node, e.g. DDR? With a single node how would you describe
-> > >> CPU->LLCC or GPU->OCIMEM?
-> > > By only specifying the endpoint the device uses it describes what the
-> > > hardware block interfaces with. It doesn't imply that there's only one
-> > > other end of the path. It implies that the paths should be discoverable
-> > > by walking the interconnect graph given some source device node and
-> > > target device node. In most cases the target device node will be a DDR
-> > > controller node, but sometimes it could be LLCC or OCIMEM. We may need
-> > > to add some sort of "get the DDR controller device" API or work it into
-> > > the interconnect API somehow to indicate what target endpoint is
-> > > desired. By not listing all those paths in DT we gain flexibility to add
-> > > more paths later on without having to update or tweak DT to describe
-> > > more paths/routes through the interconnect.
+
+
+On Tue, 8 Oct 2019, at 23:12, Joel Stanley wrote:
+> On Tue, 8 Oct 2019 at 11:50, Andrew Jeffery <andrew@aj.id.au> wrote:
 > >
+> > Critically, the AST2600 requires ungating the RMII RCLK if e.g. NCSI is
+> > in use.
 > >
-> > I'm unsure that using the target device node or target source device is
-> > the correct way to represent the constraints that the consumers apply on
-> > the interconnects. While it's true the traffic is intended for the
-> > targeted devices, the constraints(QoS or BW) are for the interconnect or 
-> > specifically the paths that span across the ports of various
-> > interconnects(NoC devices in this case). I think having both src and dst 
-> > properties is still the simplest way to achieve the flexibility that we
-> > require to set the constraints for ports(that may not have a target
-> > device defined in DT or exists as some intermediate port across multiple 
-> > interconnects).
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > ---
+> >  Documentation/devicetree/bindings/net/ftgmac100.txt | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/ftgmac100.txt b/Documentation/devicetree/bindings/net/ftgmac100.txt
+> > index 04cc0191b7dd..c443b0b84be5 100644
+> > --- a/Documentation/devicetree/bindings/net/ftgmac100.txt
+> > +++ b/Documentation/devicetree/bindings/net/ftgmac100.txt
+> > @@ -24,6 +24,12 @@ Optional properties:
+> >  - no-hw-checksum: Used to disable HW checksum support. Here for backward
+> >    compatibility as the driver now should have correct defaults based on
+> >    the SoC.
+> > +- clocks: In accordance with the generic clock bindings. Must describe the MAC
+> > +  IP clock, and optionally an RMII RCLK gate for the AST2600.
 > 
+>  or AST2500.
 > 
-> The need for paths described in DT may make sense for certain cases but
-> that seems to be the minority. My guess is that maybe an OPP binding
-> would need to describe the path to apply the bandwidth to. Otherwise I
-> don't see what the need is for. Maybe you can list out more scenarios?
-> 
-> Either way, the binding has been designed to cover all the possibilities
-> by just saying that we have to describe at least two points for an
-> 'interconnect'. It is a path based binding. I'd rather see us have an
-> endpoint based binding with the option to fallback to paths if we need
-> to constrain something. Maybe this can be a new property that is used
-> the majority of the time?
-> 
-> gpu@f00 {
->   interconnect-endpoints =3D <&icc GPU_SLAVE_PORT>, <&icc GPU_MASTER_PORT0>, <&icc GPU_MASTER_PORT1>;
->   interconnect-endpoint-names =3D "slave", "master0", "master1";
-> };
-> 
-> (Or we can invert it and make interconnect-paths be non-standard)
-> 
-> The property would describe what's going to this device and how it's
-> integrated into the SoC. This is similar to how we describe what port is
-> connected to a device with the of graph binding or how we only list the
-> clk or regulator that goes to a device and not the whole path to the
-> root of the respective tree.
-> 
-> There can be a driver API that gets these port numbers out and
-> constructs a path to another struct device or struct device_node. I
-> imagine that 90% of the time a driver is going to request some bandwidth
-> from their master port (or ports) to the DDR controller. We could either
-> make the DDR controller a device that can be globally acquired or
-> integrate it deeply into the API to the point that it looks for a DDR
-> controller somewhere or relies on interconnect providers to tell the
-> framework about the controller.
-> 
-> TL;DR is that I don't want to have to specify paths in each and every
-> node to say that some port on this device here is connected to some port
-> on the DDR controller and that we want to adjust the bandwidth or QoS
-> across this path. I'd like to describe a device "hermetically" by
-> listing out the ports the device has. Then we can rely on the OS to
-> figure out what paths to construct and change. If we need to constrain
-> or tweak those paths then we can do that with the existing interconnects
-> binding, but let's worry about that when we get there.
+> With that fixed you can add my ack.
 
-I think I understand what you are trying to do here. Correct me if my
-understanding is wrong. Each device just lists what interconnects (and their
-ports) it's connected to -- let's call this device endpoints.
+I'll do a v2 and fix the comments in the driver patch as well.
 
-If a device is making bandwidth votes from itself to some other device, it just
-specifies the other end point (as a device? path name?) in icc_get(). The
-interconnect framework can then figure out what two interconnect ports the
-icc_get() is about (by looking at the device endpoints info) and then construct
-the path.
+Cheers,
 
-But it's not clear how you'll handle the case where a Device-A wants to make a
-bandwidth vote from a Device-B to Device-C. This is necessary for multiple
-scenarios. Eg: booting a remote proc where the CPU needs to make sure the
-remote proc has its path to DDR active. icc_get() can't always assume the
-source is the device making the request. So, I don't think you can omit the
-source of the path in the DT binding.
-
-If we take the above into account, would the only change in your proposal be to
-list the source and destination device in DT instead of their interconnect and
-ports?  I don't have a strong opinion on whether this is necessary, but want to
-make sure that we are all talking about the same thing.
-
-Another way to look at this: There's one crucial difference between clocks and
-interconnects. Given a clock controller and it's "output port", the clock that
-you referring to doesn't change irrespective of what device is asking for it.
-But in the case of an interconnect, if you specify just a destination
-interconnect and it's port, the path that you are referring to changes based on
-which device is requesting it. And if you want a device independent of
-referring to a path, you need to specify the source and destination explicitly.
-
-Also, if a firmware isn't used, how do you see your icc_get() proposal working
-with just the "name"? In what way is it better than the current icc_get() API?
-
-Thanks,
-Saravana
-P.S: Sorry about any messy quoting/indentation. I'm hand editing the quoting
-from the raw email text and using git to send a response.
+Andrew
