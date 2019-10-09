@@ -1,105 +1,111 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] dts: Disable DMA support on the BK4 vf610 device's
- fsl_lpuart driver
-Date: Wed, 9 Oct 2019 16:15:39 +0100
-Message-ID: <34d5f652-57e5-168e-0025-38b897e88fff@arm.com>
-References: <20191009143032.9261-1-lukma@denx.de>
- <b39b6860-9e9b-5cee-a07e-7b430c2e5119@arm.com> <20191009164442.51f27b9d@jawa>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
+Date: Wed, 09 Oct 2019 17:24:33 +0200
+Message-ID: <930cb2d2d47e2785711bab59d80e8ad188bd882d.camel@suse.de>
+References: <20191008195239.12852-1-robh@kernel.org>
+         <4f6b26f8779a4fd98712b966bff3491dc31e26c2.camel@suse.de>
+         <CAL_Jsq+RjC0b1ZXzgmMdn5Gd1=3zkN62Jdq_QKeZ8-X4pCiDPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-gkzPvU3MSN8O+PY+3B0Z"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191009164442.51f27b9d@jawa>
-Content-Language: en-GB
+In-Reply-To: <CAL_Jsq+RjC0b1ZXzgmMdn5Gd1=3zkN62Jdq_QKeZ8-X4pCiDPw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, Marek Vasut <marek.vasut@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms+renesas@verge.net.au>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2019 15:44, Lukasz Majewski wrote:
-> Hi Robin,
-> 
->> On 09/10/2019 15:30, Lukasz Majewski wrote:
->>> This change disables the DMA support (RX/TX) on the NXP's fsl_lpuart
->>> driver - the PIO mode is used instead. This change is necessary for
->>> better robustness of BK4's device use cases with many potentially
->>> interrupted short serial transfers.
->>>
->>> Without it the driver hangs when some distortion happens on UART
->>> lines.
->>>
->>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
->>> ---
->>>    arch/arm/boot/dts/vf610-bk4.dts | 4 ++++
->>>    1 file changed, 4 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/vf610-bk4.dts
->>> b/arch/arm/boot/dts/vf610-bk4.dts index 0f3870d3b099..ad20f3442d40
->>> 100644 --- a/arch/arm/boot/dts/vf610-bk4.dts
->>> +++ b/arch/arm/boot/dts/vf610-bk4.dts
->>> @@ -259,24 +259,28 @@
->>>    &uart0 {
->>>    	pinctrl-names = "default";
->>>    	pinctrl-0 = <&pinctrl_uart0>;
->>> +	dma-names = "","";
->>
->> This looks like a horrible hack - is there any reason not to just
->> strip things at compile-time, i.e. "/delete-property/ dmas;"?
-> 
-> I don't want to strip the dma-names property globally. I just want to
-> adjust this particular driver mode from DMA to PIO.
 
-What do you mean by "globally"? The /delete-property/ operator just 
-removes a previously-defined property from the node in which it appears.
-> For my use cases - as written in the commit message - the PIO mode is
-> more suitable (and reliable).
+--=-gkzPvU3MSN8O+PY+3B0Z
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Right, and having invalid "dma-names" properties for this board is what 
-happens to trick Linux into not using DMA mode via 
-of_dma_request_slave_channel() failing, yes? What I'm saying is that if 
-the underlying justification is that it's not worth using DMA mode at 
-all on this board, then suppressing the actual "dmas" property it its 
-DTS such that there's no dependency on a particular driver behaviour is 
-a lot more robust.
+On Tue, 2019-10-08 at 20:03 -0500, Rob Herring wrote:
+> On Tue, Oct 8, 2019 at 3:52 PM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Hi Rob/Robin,
+> >=20
+> > On Tue, 2019-10-08 at 14:52 -0500, Rob Herring wrote:
+> > > From: Robin Murphy <robin.murphy@arm.com>
+> > >=20
+> > > Since the "dma-ranges" property is only valid for a node representing=
+ a
+> > > bus, of_dma_get_range() currently assumes the node passed in is a lea=
+f
+> > > representing a device, and starts the walk from its parent. In cases
+> > > like PCI host controllers on typical FDT systems, however, where the =
+PCI
+> > > endpoints are probed dynamically the initial leaf node represents the
+> > > 'bus' itself, and this logic means we fail to consider any "dma-range=
+s"
+> > > describing the host bridge itself. Rework the logic such that
+> > > of_dma_get_range() also works correctly starting from a bus node
+> > > containing "dma-ranges".
+> > >=20
+> > > While this does mean "dma-ranges" could incorrectly be in a device le=
+af
+> > > node, there isn't really any way in this function to ensure that a le=
+af
+> > > node is or isn't a bus node.
+> >=20
+> > Sorry, I'm not totally sure if this is what you're pointing out with th=
+e
+> > last
+> > sentence. But, what about the case of a bus configuring a device which =
+also
+> > happens to be a memory mapped bus (say a PCI platform device). It'll ge=
+t
+> > it's
+> > dma config based on its own dma-ranges which is not what we want.
+>=20
+> What I was trying to say is we just can't tell if we should be looking
+> in the current node or the parent. 'dma-ranges' in a leaf node can be
+> correct or incorrect.
+>=20
+> Your example is a bit different. I'm not sure that case is valid or
+> can ever work if it is. It's certainly valid that a PCI bridge's
+> parent has dma-ranges and now we'll actually handle any translation.
+> The bridge itself is not a DMA-capable device, but just passing thru
+> DMA.
 
-Robin.
+Yes, you're right, I hadn't thought of it from that perspective. Thanks!
 
->>>    	status = "okay";
->>>    };
->>>    
->>>    &uart1 {
->>>    	pinctrl-names = "default";
->>>    	pinctrl-0 = <&pinctrl_uart1>;
->>> +	dma-names = "","";
->>>    	status = "okay";
->>>    };
->>>    
->>>    &uart2 {
->>>    	pinctrl-names = "default";
->>>    	pinctrl-0 = <&pinctrl_uart2>;
->>> +	dma-names = "","";
->>>    	status = "okay";
->>>    };
->>>    
->>>    &uart3 {
->>>    	pinctrl-names = "default";
->>>    	pinctrl-0 = <&pinctrl_uart3>;
->>> +	dma-names = "","";
->>>    	status = "okay";
->>>    };
->>>    
->>>    
-> 
-> 
-> 
-> 
-> Best regards,
-> 
-> Lukasz Majewski
-> 
-> --
-> 
-> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-> 
+> Do we ever need to know the parent's dma-ranges in that case? Or
+> to put it another way, is looking at anything other than leaf
+> dma-ranges useful?
+
+There is no need at all indeed.
+
+With that,
+
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+and
+
+Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+On a Raspberry Pi 4 with pcie-brcmstb.c which is still work in progress but
+depends on this.
+
+Regards,
+Nicolas
+
+
+--=-gkzPvU3MSN8O+PY+3B0Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2d+7EACgkQlfZmHno8
+x/6Ougf/Vf8gS9pV6sHacKH3tBVDLky7gMGKrkyw4QWRDU3aKrGLrWgJg+5xuKcC
+fzVafJIYqaU3FkYrBVWO7NRS8juguj17xOcSplJal0y1yHuu8hbTt3E8GUh5ut26
+GZsicybI8VcxF0JEhyHAV6foKA2ZsYkPxG93XsnR7FobzIgTI84KxTlNnrZs5Ejt
+zjgjxaR1yrcT5YamAIRKy/DpmfHx3Hpf7jMsHZFKqTmSbNlyUBevpH2ok9B45+ec
+rtSa6TmEQyRrklJuXEJV4Yg1NccFffrQm3sD8AxSw+1P1nfNzVLm0NVcJjchKp11
+RawTR+PF/Z4eXnNVywKxieHo/Js+yg==
+=KQ2V
+-----END PGP SIGNATURE-----
+
+--=-gkzPvU3MSN8O+PY+3B0Z--
