@@ -1,83 +1,80 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: soc: al-pos: Amazon's Annapurna Labs
- POS
-Date: Wed, 9 Oct 2019 18:29:27 -0500
-Message-ID: <20191009232927.GA23987@bogus>
-References: <1570452435-8505-1-git-send-email-talel@amazon.com>
- <1570452435-8505-2-git-send-email-talel@amazon.com>
+Subject: Re: [PATCH V4 2/3] dt-bindings: Add Logic PD Type 28 display panel
+Date: Wed, 9 Oct 2019 18:31:30 -0500
+Message-ID: <20191009233130.GA1002@bogus>
+References: <20191001233923.16514-1-aford173@gmail.com>
+ <20191001233923.16514-5-aford173@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1570452435-8505-2-git-send-email-talel@amazon.com>
+In-Reply-To: <20191001233923.16514-5-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Talel Shenhar <talel@amazon.com>
-Cc: maz@kernel.org, mark.rutland@arm.com, arnd@arndb.de, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
+To: Adam Ford <aford173@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org, adam.ford@logicpd.com, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 03:47:14PM +0300, Talel Shenhar wrote:
-> Document Amazon's Annapurna Labs POS SoC binding.
+On Tue, Oct 01, 2019 at 06:39:22PM -0500, Adam Ford wrote:
+> This patch adds documentation of device tree bindings for the WVGA panel
+> Logic PD Type 28 display.
 > 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 > ---
->  .../bindings/edac/amazon,al-pos-edac.yaml          | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+> V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
+> V3:  Correct build errors from 'make dt_binding_check'
 
-Please fix errors with 'make dt_binding_check' and resubmit.
+The example still fails to build here.
 
-Error: Documentation/devicetree/bindings/edac/amazon,al-pos-edac.example.dts:21.28-29 syntax error
-FATAL ERROR: Unable to parse input tree
-
-Hint: You need an include.
-
+> V2:  Use YAML instead of TXT for binding
 > 
-> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+> diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
 > new file mode 100644
-> index 00000000..048c2e9
+> index 000000000000..e2c62e8f1db4
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
-> @@ -0,0 +1,40 @@
+> +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> @@ -0,0 +1,42 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/edac/amazon,al-pos-edac.yaml#
+> +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Amazon's Annapurna Labs POS
+> +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
 > +
 > +maintainers:
-> +  - Talel Shenhar <talel@amazon.com>
-> +  - Talel Shenhar <talelshenhar@gmail.com>
+> +  - Adam Ford <aford173@gmail.com>
 > +
-> +description: |
-> +  POS node is defined to describe the Point Of Serialization (POS) error
-> +  detection capability.
+> +allOf:
+> +  - $ref: panel-common.yaml#
 > +
 > +properties:
-> +
 > +  compatible:
-> +    const: "amazon,al-pos-edac"
+> +    const: logicpd,type28
 > +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: Interrupt for the error event.
-> +    maxItems: 1
+> +  power-supply: true
+> +  enable-gpios: true
+> +  backlight: true
+> +  port: true
 > +
 > +required:
 > +  - compatible
-> +  - reg
+> +
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    edac@f0070084 {
-> +      compatible = "amazon,al-pos-edac";
-> +      reg = <0x0 0xf0070084 0x0 0x00000008>;
-> +      interrupt-parent = <&amazon_system_fabric>;
-> +      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
+> +    lcd0: display {
+> +      compatible = "logicpd,type28";
+> +      enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
+> +      backlight = <&backlight>;
+> +      port {
+> +        lcd_in: endpoint {
+> +          remote-endpoint = <&dpi_out>;
+> +        };
+> +      };
 > +    };
+> +
+> +...
 > -- 
-> 2.7.4
+> 2.17.1
 > 
