@@ -1,41 +1,61 @@
-From: Andi Shyti <andi@etezian.org>
-Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
-Date: Wed, 9 Oct 2019 10:26:12 +0300
-Message-ID: <20191009072612.GA2814@jack.zhora.eu>
-References: <20191007203343.101466-1-stephan@gerhold.net>
- <20191007205021.104402-1-stephan@gerhold.net>
- <20191008220014.GI22365@dtor-ws>
+From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCHv8 1/9] dt-bindings: omap: add new binding for PRM instances
+Date: Wed, 9 Oct 2019 08:59:43 -0700
+Message-ID: <dc2a9659-8593-e5d0-54b2-44d827e76759@oracle.com>
+References: <20191008125544.20679-1-t-kristo@ti.com>
+ <20191008125544.20679-2-t-kristo@ti.com>
+ <20191008154655.u34wkbqgmelv3aea@earth.universe>
+ <115ab938-e025-98fa-3b9e-0b3ced39307d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191008220014.GI22365@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Stephan Gerhold <stephan@gerhold.net>, Andi Shyti <andi@etezian.org>, Simon Shields <simon@lineageos.org>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <115ab938-e025-98fa-3b9e-0b3ced39307d@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Sebastian Reichel <sre@kernel.org>
+Cc: devicetree@vger.kernel.org, tony@atomide.com, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
 
-> > There was a related patch [2] that removes I2C_M_NOSTART for all models,
-> > but it seems abandoned and I do not have any other model for testing.
-> > Therefore, this patch implements the least instrusive solution
-> > and only removes I2C_M_NOSTART for MMS345L.
-> 
-> Hmm,  at this point I am inclined to pick up Andi's patch since it seems
-> to work for you and him and it looks like Android drivers are not using
-> I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
-> it was originally developed.
 
-I completely forgot about that patch :)
+On 10/8/19 11:52 PM, Tero Kristo wrote:
+> On 08/10/2019 18:46, Sebastian Reichel wrote:
+>> Hi,
+>>
+>> On Tue, Oct 08, 2019 at 03:55:36PM +0300, Tero Kristo wrote:
+>>> +Example:
+>>> +
+>>> +prm_dsp2: prm@1b00 {
+>>> +=A0=A0=A0 compatible =3D "ti,omap-prm-inst", "ti,dra7-prm-inst";
+>>
+>> Nit: compatible values are sorted the other way around (most
+>> specific first).
+> =
 
-I should refresh some old work on that device which was left
-undone.
+> Hmm right, I would not like to re-post the whole series just for this =
 
-> Any objections?
+> seeing all the acks are in place already.
+> =
 
-It's OK for me. If you can just update my e-mail, please, when
-applying the patch to "andi@etezian.org". Thanks!
+> Santosh, do you want to fix this locally or shall we post a separate =
 
-Thank you,
-Andi
+> patch later on to fix this?
+> =
+
+No need. I fixed it up. Pls check.
+
+git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git =
+
+for_5.5/driver-soc
+
+Regards,
+Santosh
