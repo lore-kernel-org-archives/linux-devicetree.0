@@ -1,59 +1,34 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH] dts: Disable DMA support on the BK4 vf610 device's fsl_lpuart driver
-Date: Wed,  9 Oct 2019 16:30:32 +0200
-Message-ID: <20191009143032.9261-1-lukma@denx.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 08/10] arm64: dts: renesas: r8a774b1: Add USB-DMAC and
+ HSUSB device nodes
+Date: Wed, 9 Oct 2019 16:38:54 +0200
+Message-ID: <CAMuHMdV5x4h-DJ04Mipf_nyvv6zytX9tJgdZ9wNv4w71=nDfLQ@mail.gmail.com>
+References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-9-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1570531132-21856-9-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stefan Agner <stefan@agner.ch>, Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Lukasz Majewski <lukma@denx.de>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-This change disables the DMA support (RX/TX) on the NXP's fsl_lpuart
-driver - the PIO mode is used instead. This change is necessary for better
-robustness of BK4's device use cases with many potentially interrupted
-short serial transfers.
+On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Add usb dmac and hsusb device nodes to the RZ/G2N SoC dtsi.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Without it the driver hangs when some distortion happens on UART lines.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.5.
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
- arch/arm/boot/dts/vf610-bk4.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
-index 0f3870d3b099..ad20f3442d40 100644
---- a/arch/arm/boot/dts/vf610-bk4.dts
-+++ b/arch/arm/boot/dts/vf610-bk4.dts
-@@ -259,24 +259,28 @@
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart0>;
-+	dma-names = "","";
- 	status = "okay";
- };
- 
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-+	dma-names = "","";
- 	status = "okay";
- };
- 
- &uart2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart2>;
-+	dma-names = "","";
- 	status = "okay";
- };
- 
- &uart3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart3>;
-+	dma-names = "","";
- 	status = "okay";
- };
- 
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
