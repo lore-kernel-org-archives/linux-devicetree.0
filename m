@@ -1,70 +1,104 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Date: Wed, 9 Oct 2019 14:49:39 +0530
-Message-ID: <d17dad3d-d32c-b71c-0e56-d15cb246f742@codeaurora.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org>
- <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
- <20190924231223.9012C207FD@mail.kernel.org>
- <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
- <20190925130346.42E0820640@mail.kernel.org>
- <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
- <20191001143825.CD3212054F@mail.kernel.org>
- <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
- <20191003160130.5A19B222D0@mail.kernel.org>
- <81a2fa46-a7e6-66a2-9649-009f22813c81@codeaurora.org>
- <20191004232022.062A1215EA@mail.kernel.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5, 18/32] drm/mediatek: add gmc_bits for ovl private
+ data
+Date: Wed, 9 Oct 2019 17:19:43 +0800
+Message-ID: <1570612783.7713.3.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1567090254-15566-19-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004232022.062A1215EA@mail.kernel.org>
-Content-Language: en-US
+In-Reply-To: <1567090254-15566-19-git-send-email-yongqiang.niu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: yongqiang.niu@mediatek.com
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Hi, Yongqiang:
 
-On 10/5/2019 4:50 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-10-04 10:39:31)
->> Hi Stephen,
->>
->> On 10/3/2019 9:31 PM, Stephen Boyd wrote:
->>> Quoting Taniya Das (2019-10-03 03:31:15)
->>>> Hi Stephen,
->>>>
->>>> On 10/1/2019 8:08 PM, Stephen Boyd wrote:
->>>>>
->>>>> Why do you want to keep them critical and registered? I'm suggesting
->>>>> that any clk that is marked critical and doesn't have a parent should
->>>>> instead become a register write in probe to turn the clk on.
->>>>>
->>>> Sure, let me do a one-time enable from probe for the clocks which
->>>> doesn't have a parent.
->>>> But I would now have to educate the clients of these clocks to remove
->>>> using them.
->>>>
->>>
->>> If anyone is using these clks we can return NULL from the provider for
->>> the specifier so that we indicate there isn't support for them in the
->>> kernel. At least I hope that code path still works given all the recent
->>> changes to clk_get().
->>>
->>
->> Could you please confirm if you are referring to update the below?
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > 
-> I wasn't suggesting that explicitly but sure. Something like this would
-> be necessary to make clk_get() pass back a NULL pointer to the caller.
-> Does everything keep working with this change?
+> This patch add gmc_bits for ovl private data
+> GMC register was set RDMA ultra and pre-ultra threshold.
+> 10bit GMC register define is different with other SOC, gmc_thrshd_l not
+> used.
 > 
 
-Even if I pass back NULL, I don't see it working. Please suggest how to 
-take it forward.
+Applied to mediatek-drm-next-5.5 [1], thanks.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+[1]
+https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
 
---
+Regards,
+CK
+
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 23 +++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> index c4f07c2..82eaefd 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> @@ -31,7 +31,9 @@
+>  #define DISP_REG_OVL_ADDR_MT8173		0x0f40
+>  #define DISP_REG_OVL_ADDR(ovl, n)		((ovl)->data->addr + 0x20 * (n))
+>  
+> -#define	OVL_RDMA_MEM_GMC	0x40402020
+> +#define GMC_THRESHOLD_BITS	16
+> +#define GMC_THRESHOLD_HIGH	((1 << GMC_THRESHOLD_BITS) / 4)
+> +#define GMC_THRESHOLD_LOW	((1 << GMC_THRESHOLD_BITS) / 8)
+>  
+>  #define OVL_CON_BYTE_SWAP	BIT(24)
+>  #define OVL_CON_MTX_YUV_TO_RGB	(6 << 16)
+> @@ -49,6 +51,7 @@
+>  
+>  struct mtk_disp_ovl_data {
+>  	unsigned int addr;
+> +	unsigned int gmc_bits;
+>  	bool fmt_rgb565_is_0;
+>  };
+>  
+> @@ -132,9 +135,23 @@ static unsigned int mtk_ovl_layer_nr(struct mtk_ddp_comp *comp)
+>  static void mtk_ovl_layer_on(struct mtk_ddp_comp *comp, unsigned int idx)
+>  {
+>  	unsigned int reg;
+> +	unsigned int gmc_thrshd_l;
+> +	unsigned int gmc_thrshd_h;
+> +	unsigned int gmc_value;
+> +	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
+>  
+>  	writel(0x1, comp->regs + DISP_REG_OVL_RDMA_CTRL(idx));
+> -	writel(OVL_RDMA_MEM_GMC, comp->regs + DISP_REG_OVL_RDMA_GMC(idx));
+> +
+> +	gmc_thrshd_l = GMC_THRESHOLD_LOW >>
+> +		      (GMC_THRESHOLD_BITS - ovl->data->gmc_bits);
+> +	gmc_thrshd_h = GMC_THRESHOLD_HIGH >>
+> +		      (GMC_THRESHOLD_BITS - ovl->data->gmc_bits);
+> +	if (ovl->data->gmc_bits == 10)
+> +		gmc_value = gmc_thrshd_h | gmc_thrshd_h << 16;
+> +	else
+> +		gmc_value = gmc_thrshd_l | gmc_thrshd_l << 8 |
+> +			    gmc_thrshd_h << 16 | gmc_thrshd_h << 24;
+> +	writel(gmc_value, comp->regs + DISP_REG_OVL_RDMA_GMC(idx));
+>  
+>  	reg = readl(comp->regs + DISP_REG_OVL_SRC_CON);
+>  	reg = reg | BIT(idx);
+> @@ -316,11 +333,13 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
+>  
+>  static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
+>  	.addr = DISP_REG_OVL_ADDR_MT2701,
+> +	.gmc_bits = 8,
+>  	.fmt_rgb565_is_0 = false,
+>  };
+>  
+>  static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
+>  	.addr = DISP_REG_OVL_ADDR_MT8173,
+> +	.gmc_bits = 8,
+>  	.fmt_rgb565_is_0 = true,
+>  };
+>  
