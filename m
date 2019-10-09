@@ -1,164 +1,100 @@
-From: JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH v4 5/5] arm64: tegra: Enable XUSB host in P2972-0000 board
-Date: Wed, 9 Oct 2019 10:43:43 +0800
-Message-ID: <20191009024343.30218-6-jckuo@nvidia.com>
-References: <20191009024343.30218-1-jckuo@nvidia.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
+Date: Wed, 9 Oct 2019 03:20:28 +0000
+Message-ID: <DB8PR04MB68268ECD73BA976CB59A3EDDF1950@DB8PR04MB6826.eurprd04.prod.outlook.com>
+References: <20190712064206.48249-1-ran.wang_1@nxp.com>
+ <20190724204222.GA1234@bogus>
+ <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
+ <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
+ <CADRPPNRHOda+ZfB25CeqReXBb-MrB1oAeTHF-3muXVExn+G+Dg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191009024343.30218-1-jckuo@nvidia.com>
+In-Reply-To: <CADRPPNRHOda+ZfB25CeqReXBb-MrB1oAeTHF-3muXVExn+G+Dg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, JC Kuo <jckuo@nvidia.com>
+To: Rob Herring <robh@kernel.org>, Felipe Balbi <balbi@kernel.org>
+Cc: Yang Li <pku.leo@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit enables XUSB host and pad controller in Tegra194
-P2972-0000 board.
-
-Signed-off-by: JC Kuo <jckuo@nvidia.com>
----
-Changes in v4: none
-Changes in v3: none
-Changes in v2:
-- use capitalization of regulator names
-- fix gpio property of VDD_5V_SATA regulator
-
- .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 36 ++++++++++-
- .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 62 +++++++++++++++++++
- 2 files changed, 97 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-index 4c38426a6969..e7d5e8a30f93 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-@@ -66,6 +66,29 @@
- 			vmmc-supply = <&vdd_emmc_3v3>;
- 		};
- 
-+		padctl@3520000 {
-+			avdd-usb-supply = <&vdd_usb_3v3>;
-+			vclamp-usb-supply = <&vdd_1v8ao>;
-+
-+			ports {
-+				usb2-1 {
-+					vbus-supply = <&vdd_5v0_sys>;
-+				};
-+
-+				usb2-3 {
-+					vbus-supply = <&vdd_5v_sata>;
-+				};
-+
-+				usb3-0 {
-+					vbus-supply = <&vdd_5v0_sys>;
-+				};
-+
-+				usb3-3 {
-+					vbus-supply = <&vdd_5v0_sys>;
-+				};
-+			};
-+		};
-+
- 		rtc@c2a0000 {
- 			status = "okay";
- 		};
-@@ -229,7 +252,7 @@
- 						regulator-max-microvolt = <3300000>;
- 					};
- 
--					ldo5 {
-+					vdd_usb_3v3: ldo5 {
- 						regulator-name = "VDD_USB_3V3";
- 						regulator-min-microvolt = <3300000>;
- 						regulator-max-microvolt = <3300000>;
-@@ -313,5 +336,16 @@
- 			regulator-boot-on;
- 			enable-active-low;
- 		};
-+
-+		vdd_5v_sata: regulator@4 {
-+			compatible = "regulator-fixed";
-+			reg = <4>;
-+
-+			regulator-name = "VDD_5V_SATA";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio TEGRA194_MAIN_GPIO(Z, 1) GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index d47cd8c4dd24..b60eef64c487 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -62,6 +62,68 @@
- 							 GPIO_ACTIVE_LOW>;
- 			};
- 		};
-+		padctl@3520000 {
-+			status = "okay";
-+
-+			pads {
-+				usb2 {
-+					lanes {
-+						usb2-1 {
-+							status = "okay";
-+						};
-+
-+						usb2-3 {
-+							status = "okay";
-+						};
-+					};
-+				};
-+
-+				usb3 {
-+					lanes {
-+						usb3-0 {
-+							status = "okay";
-+						};
-+
-+						usb3-3 {
-+							status = "okay";
-+						};
-+					};
-+				};
-+			};
-+
-+			ports {
-+				usb2-1 {
-+					mode = "host";
-+					status = "okay";
-+				};
-+
-+				usb2-3 {
-+					mode = "host";
-+					status = "okay";
-+				};
-+
-+				usb3-0 {
-+					nvidia,usb2-companion = <1>;
-+					status = "okay";
-+				};
-+
-+				usb3-3 {
-+					nvidia,usb2-companion = <3>;
-+					nvidia,disable-gen2;
-+					status = "okay";
-+				};
-+			};
-+		};
-+
-+		usb@3610000 {
-+			status = "okay";
-+
-+			phys =	<&{/cbb/padctl@3520000/pads/usb2/lanes/usb2-1}>,
-+				<&{/cbb/padctl@3520000/pads/usb2/lanes/usb2-3}>,
-+				<&{/cbb/padctl@3520000/pads/usb3/lanes/usb3-0}>,
-+				<&{/cbb/padctl@3520000/pads/usb3/lanes/usb3-3}>;
-+			phy-names = "usb2-1", "usb2-3", "usb3-0", "usb3-3";
-+		};
- 	};
- 
- 	pcie@14100000 {
--- 
-2.17.1
+SGkgUm9iLCBGZWxpcGUsDQoNCk9uIFR1ZXNkYXksIFNlcHRlbWJlciAyNCwgMjAxOSAwMDozOCwg
+WWFuZyBMaSB3cm90ZToNCj4gDQo+IE9uIFRodSwgSnVsIDI1LCAyMDE5IGF0IDQ6NTYgUE0gUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBPbiBXZWQsIEp1bCAy
+NCwgMjAxOSBhdCA4OjI5IFBNIFJhbiBXYW5nIDxyYW4ud2FuZ18xQG54cC5jb20+IHdyb3RlOg0K
+PiA+ID4NCj4gPiA+IEhpIFJvYiwNCj4gPiA+DQo+ID4gPiBPbiBUaHVyc2RheSwgSnVseSAyNSwg
+MjAxOSAwNDo0MiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToNCj4gPiA+ID4N
+Cj4gPiA+ID4gT24gRnJpLCBKdWwgMTIsIDIwMTkgYXQgMDI6NDI6MDVQTSArMDgwMCwgUmFuIFdh
+bmcgd3JvdGU6DQo+ID4gPiA+ID4gU29tZSBMYXllcnNjYXBlIHBhbHRmb3JtcyAoc3VjaCBhcyBM
+UzEwODhBLCBMUzIwODhBLCBldGMpDQo+ID4gPiA+ID4gZW5jb3VudGVyIFVTQiBkZXRlY3QgZmFp
+bHVlcyB3aGVuIGFkZGluZyBkbWEtY29oZXJlbnQgdG8gRFdDMw0KPiA+ID4gPiA+IG5vZGUuIFRo
+aXMgaXMgYmVjYXVzZSB0aGUgSFcgZGVmYXVsdCBjYWNoZSB0eXBlIGNvbmZpZ3VyYXRpb24gb2YN
+Cj4gPiA+ID4gPiB0aG9zZSBTb0MgYXJlIG5vdCByaWdodCwgbmVlZCB0byBiZSB1cGRhdGVkIGlu
+IERUUy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFJhbiBXYW5nIDxyYW4u
+d2FuZ18xQG54cC5jb20+DQo+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gQ2hhbmdlIGluIHYyOg0K
+PiA+ID4gPiA+ICAgICAtIE5ldyBmaWxlLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gIERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQgfCA0Mw0KPiA+ID4gPiA+ICsr
+KysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0MyBp
+bnNlcnRpb25zKCspDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiA+IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiA+IGluZGV4
+IDhlNTI2NWUuLjdiYzFjZWYgMTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiA+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQNCj4gPiA+ID4gPiBAQCAtMTEw
+LDYgKzExMCw0MyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiA+ICAgLSBpbiBhZGRp
+dGlvbiBhbGwgcHJvcGVydGllcyBmcm9tIHVzYi14aGNpLnR4dCBmcm9tIHRoZSBjdXJyZW50IGRp
+cmVjdG9yeQ0KPiBhcmUNCj4gPiA+ID4gPiAgICAgc3VwcG9ydGVkIGFzIHdlbGwNCj4gPiA+ID4g
+Pg0KPiA+ID4gPiA+ICsqIENhY2hlIHR5cGUgbm9kZXMgKG9wdGlvbmFsKQ0KPiA+ID4gPiA+ICsN
+Cj4gPiA+ID4gPiArVGhlIENhY2hlIHR5cGUgbm9kZSBpcyB1c2VkIHRvIHRlbGwgaG93IHRvIGNv
+bmZpZ3VyZSBjYWNoZSB0eXBlDQo+ID4gPiA+ID4gK29uIDQgZGlmZmVyZW50IHRyYW5zZmVyIHR5
+cGVzOiBEYXRhIFJlYWQsIERlc2MgUmVhZCwgRGF0YSBXcml0ZQ0KPiA+ID4gPiA+ICthbmQgRGVz
+YyB3cml0ZS4gRm9yIGVhY2ggdHJlYXNmZXIgdHlwZSwgY29udHJvbGxlciBoYXMgYSA0LWJpdA0K
+PiA+ID4gPiA+ICtyZWdpc3RlciBmaWVsZCB0byBlbmFibGUgZGlmZmVyZW50IGNhY2hlIHR5cGUu
+IFF1b3RlZCBmcm9tIERXQzMNCj4gPiA+ID4gPiArZGF0YSBib29rIFRhYmxlIDYtNQ0KPiA+ID4g
+PiBDYWNoZSBUeXBlIEJpdCBBc3NpZ25tZW50czoNCj4gPiA+ID4gPiArLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4g
+PiA+ICtNQlVTX1RZUEV8IGJpdFszXSAgICAgICB8Yml0WzJdICAgICAgIHxiaXRbMV0gICAgIHxi
+aXRbMF0NCj4gPiA+ID4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiA+ICtBSEIgICAgICB8Q2FjaGVhYmxl
+ICAgICB8QnVmZmVyYWJsZSAgIHxQcml2aWxlZ2dlIHxEYXRhDQo+ID4gPiA+ID4gK0FYSTMgICAg
+IHxXcml0ZSBBbGxvY2F0ZXxSZWFkIEFsbG9jYXRlfENhY2hlYWJsZSAgfEJ1ZmZlcmFibGUNCj4g
+PiA+ID4gPiArQVhJNCAgICAgfEFsbG9jYXRlIE90aGVyfEFsbG9jYXRlICAgICB8TW9kaWZpYWJs
+ZSB8QnVmZmVyYWJsZQ0KPiA+ID4gPiA+ICtBWEk0ICAgICB8T3RoZXIgQWxsb2NhdGV8QWxsb2Nh
+dGUgICAgIHxNb2RpZmlhYmxlIHxCdWZmZXJhYmxlDQo+ID4gPiA+ID4gK05hdGl2ZSAgIHxTYW1l
+IGFzIEFYSSAgIHxTYW1lIGFzIEFYSSAgfFNhbWUgYXMgQVhJfFNhbWUgYXMgQVhJDQo+ID4gPiA+
+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLQ0KPiA+ID4gPiA+ICstDQo+ID4gPiA+ID4gK05vdGU6IFRoZSBBSEIsIEFYSTMs
+IEFYSTQsIGFuZCBQQ0llIGJ1c3NlcyB1c2UgZGlmZmVyZW50IG5hbWVzDQo+ID4gPiA+ID4gK2Zv
+ciBjZXJ0YWluIHNpZ25hbHMsIHdoaWNoIGhhdmUgdGhlIHNhbWUgbWVhbmluZzoNCj4gPiA+ID4g
+PiArICBCdWZmZXJhYmxlID0gUG9zdGVkDQo+ID4gPiA+ID4gKyAgQ2FjaGVhYmxlID0gTW9kaWZp
+YWJsZSA9IFNub29wIChuZWdhdGlvbiBvZiBObyBTbm9vcCkNCj4gPiA+ID4NCj4gPiA+ID4gVGhp
+cyBzaG91bGQgYWxsIGJlIGltcGxpZWQgZnJvbSB0aGUgU29DIHNwZWNpZmljIGNvbXBhdGlibGUg
+c3RyaW5ncy4NCj4gPiA+DQo+ID4gPiBEaWQgeW91IG1lYW4gSSBjb3VsZCBpbXBsZW1lbnQgYSBz
+b2MgZHJpdmVyIHdoaWNoIGNhbiBiZSBtYXRjaGVkIGJ5DQo+IGNvbXBhdGlibGUgb2YgJ2ZzbCxs
+czEwODhhLWR3YzMnIHdoaWNoIHdpbGwgcGFzcyBrbm93biBidXMgdHlwZSB0byBEV0MzIGRyaXZl
+cj8NCj4gSWYgeWVzLCBob3cgdG8gcGFzcz8NCj4gPg0KPiA+IFllcy4gVGhlIERUIG1hdGNoIHRh
+YmxlIGNhbiBoYXZlIGRhdGEgYXNzb2NpYXRlZCB3aXRoIHRoYXQgY29tcGF0aWJsZQ0KPiA+IHN0
+cmluZy4gQmV5b25kIHRoYXQsIEknbSBub3QgcmVhbGx5IGZhbWlsaWFyIHdpdGggdGhlIERXQzMg
+ZHJpdmVyLg0KPiANCj4gSGkgUm9iLA0KPiANCj4gSXQgbG9va3MgbGlrZSB0aGF0IHRoZSBjdXJy
+ZW50IGR3YzMgYmluZGluZyBwZXJmZXJzIHRvIGRlZmluZSBnZW5lcmFsIHF1aXJrcyBpbg0KPiBk
+ZXZpY2UgdHJlZSBwcm9wZXJ0aWVzIGluc3RlYWQgb2YgdHJ5aW5nIHRvIHJlbHkgb24gdGhlIGNv
+bXBhdGlibGUgc3RyaW5nIHRvDQo+IGRldGVybWluZSBxdWlya3MuICBJbiB0aGlzIGNhc2UsIGNh
+biB3ZSBrZWVwIGZvbGxvd2luZyB0aGUgZXhpc3RpbmcgcHJlZmVyZW5jZQ0KPiBpbnN0ZWFkIG9m
+IGNob29zaW5nIHRoZSBvdGhlciB3YXk/DQoNCkxvb2tzIGxpa2UgeW91IGhhdmUgZGlmZmVyZW50
+IG9waW5pb25zIG9uIHRoaXMgc29sdXRpb24sIHNvIEkgJ2QgbGlrZSB0byBoYXZlIGFsbCBvcGVu
+cw0KZ2V0IHNldHRsZWQgaGVyZSB0byBoZWxwIG1lIGZpbmQgYSBhY2NlcHRhYmxlIHNvbHV0aW9u
+IGZvciBib3RoIG9mIHlvdS4gDQpQbGVhc2UgbGV0IG1lIGV4cGxhaW4gbW9yZSBhYm91dCB0aGlz
+Og0KDQoxLiBUaGlzIGZlYXR1cmUgKGNvbmZpZ3VyZSBjYWNoZSB0eXBlKSBpcyBuYXRpdmVseSBm
+cm9tIERXQzMgSVAgKHdlIGNhbiBmaW5kIGl0IGZyb20gZGF0YSBib29rKSwNCiAgICBub3QgYSBT
+b0Mgc3BlY2lmaWMgZmVhdHVyZSAobW9yZSBkZXRhaWxzIHBsZWFzZSBzZWUgdjEgZGlzY3Vzc2lv
+bjogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzg1MTMwNi8pDQoNCjIu
+IEhvd2V2ZXIsIGluIG1vc3QgU29DLCB0aGUgSFcgZGVmYXVsdCBzZXR0aW5nIGxvb2tzIGZpbmUg
+KG5vIG5lZWQgZHJpdmVyIGhlbHApLCBidXQgc29tZSBjYXNlDQogICAgKGxpa2UgTGF5ZXJzY2Fw
+ZSkgbWlnaHQgbmVlZCBkcml2ZXIgdG8gZG8gc29tZSBwcm9ncmFtbWluZyB0byBmaXggVVNCIG5v
+IGRldGVjdCBpc3N1ZS4NCiAgICBUaGF0J3Mgd2h5IEkgaW1wbGVtZW50IHRoaXMgcGF0Y2guDQoN
+CjMuIEZvciBub3csIFJvYiB0aGluayB0aGlzIHNob3VsZCBiZSBoYW5kbGVkIGJ5IFNvQyBzcGVj
+aWZpYyBjb2RlIHJhdGhlciB0aGFuIGFkZGluZyBhIHByb3BlcnR5IHRvDQogICAgY29udHJvbCBp
+dCAoYnkgRFdDMyBjb3JlIGRyaXZlcikuIEFuZCBGZWxpcGUgcHJlZmVyIHRvIGF2b2lkIHVzaW5n
+IGdsdWUgZGl2ZXIuIFNvIEkgYW0gbm90IHN1cmUgaG93DQogICAgdG8gbWVldCB0aGlzIHJlcXVp
+cmVtZW50cyBhdCB0aGUgc2FtZSB0aW1lLiANCiAgIA0KQW55IGZ1cnRoZXIgc3VnZ2VzdGlvbiBh
+cmUgcmVhbGx5IGFwcHJlY2lhdGVkLiBUaGFuayB5b3UuDQoNClJlZ2FyZHMsDQpSYW4NCg==
