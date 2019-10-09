@@ -1,555 +1,218 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v3 02/14] soc: ti: k3: add navss ringacc driver
-Date: Wed, 9 Oct 2019 18:57:47 +0530
-Message-ID: <86344789-e0f4-5b29-62da-3fb08025177b@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-3-peter.ujfalusi@ti.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH 2/5] ARM: dts: aspeed: add I2C buffer mode support
+Date: Wed, 9 Oct 2019 15:32:40 +0200
+Message-ID: <6f015065-3a45-878d-86b2-0edf10f1f4cb@kaod.org>
+References: <20191007231313.4700-1-jae.hyun.yoo@linux.intel.com>
+ <20191007231313.4700-3-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001061704.2399-3-peter.ujfalusi@ti.com>
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191007231313.4700-3-jae.hyun.yoo@linux.intel.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
-Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, t-kristo@ti.com, tony@atomide.com, j-keerthy@ti.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Brendan Higgins <brendanhiggins@google.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-i2c@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/10/19 11:46 AM, Peter Ujfalusi wrote:
-> From: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
-> enable straightforward passing of work between a producer and a consumer.
-> There is one RINGACC module per NAVSS on TI AM65x SoCs.
-> 
-> The RINGACC converts constant-address read and write accesses to equivalent
-> read or write accesses to a circular data structure in memory. The RINGACC
-> eliminates the need for each DMA controller which needs to access ring
-> elements from having to know the current state of the ring (base address,
-> current offset). The DMA controller performs a read or write access to a
-> specific address range (which maps to the source interface on the RINGACC)
-> and the RINGACC replaces the address for the transaction with a new address
-> which corresponds to the head or tail element of the ring (head for reads,
-> tail for writes). Since the RINGACC maintains the state, multiple DMA
-> controllers or channels are allowed to coherently share the same rings as
-> applicable. The RINGACC is able to place data which is destined towards
-> software into cached memory directly.
-> 
-> Supported ring modes:
-> - Ring Mode
-> - Messaging Mode
-> - Credentials Mode
-> - Queue Manager Mode
-> 
-> TI-SCI integration:
-> 
-> Texas Instrument's System Control Interface (TI-SCI) Message Protocol now
-> has control over Ringacc module resources management (RM) and Rings
-> configuration.
-> 
-> The corresponding support of TI-SCI Ringacc module RM protocol
-> introduced as option through DT parameters:
-> - ti,sci: phandle on TI-SCI firmware controller DT node
-> - ti,sci-dev-id: TI-SCI device identifier as per TI-SCI firmware spec
-> 
-> if both parameters present - Ringacc driver will configure/free/reset Rings
-> using TI-SCI Message Ringacc RM Protocol.
-> 
-> The Ringacc driver manages Rings allocation by itself now and requests
-> TI-SCI firmware to allocate and configure specific Rings only. It's done
-> this way because, Linux driver implements two stage Rings allocation and
-> configuration (allocate ring and configure ring) while I-SCI Message
-> Protocol supports only one combined operation (allocate+configure).
-> 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/soc/ti/Kconfig            |   12 +
->  drivers/soc/ti/Makefile           |    1 +
->  drivers/soc/ti/k3-ringacc.c       | 1165 +++++++++++++++++++++++++++++
->  include/linux/soc/ti/k3-ringacc.h |  245 ++++++
->  4 files changed, 1423 insertions(+)
->  create mode 100644 drivers/soc/ti/k3-ringacc.c
->  create mode 100644 include/linux/soc/ti/k3-ringacc.h
-> 
-> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-> index cf545f428d03..87722d33333a 100644
-> --- a/drivers/soc/ti/Kconfig
-> +++ b/drivers/soc/ti/Kconfig
-> @@ -80,6 +80,18 @@ config TI_SCI_PM_DOMAINS
->  	  called ti_sci_pm_domains. Note this is needed early in boot before
->  	  rootfs may be available.
->  
-> +config TI_K3_RINGACC
-> +	tristate "K3 Ring accelerator Sub System"
-> +	depends on ARCH_K3 || COMPILE_TEST
-> +	depends on TI_SCI_INTA_IRQCHIP
-> +	default y
-> +	help
-> +	  Say y here to support the K3 Ring accelerator module.
-> +	  The Ring Accelerator (RINGACC or RA)  provides hardware acceleration
-> +	  to enable straightforward passing of work between a producer
-> +	  and a consumer. There is one RINGACC module per NAVSS on TI AM65x SoCs
-> +	  If unsure, say N.
-> +
->  endif # SOC_TI
->  
->  config TI_SCI_INTA_MSI_DOMAIN
-> diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
-> index b3868d392d4f..cc4bc8b08bf5 100644
-> --- a/drivers/soc/ti/Makefile
-> +++ b/drivers/soc/ti/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_AMX3_PM)			+= pm33xx.o
->  obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
->  obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
->  obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
-> +obj-$(CONFIG_TI_K3_RINGACC)		+= k3-ringacc.o
-> diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-> new file mode 100644
-> index 000000000000..4728a79fd2c0
-> --- /dev/null
-> +++ b/drivers/soc/ti/k3-ringacc.c
-> @@ -0,0 +1,1165 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TI K3 NAVSS Ring Accelerator subsystem driver
-> + *
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-> + */
-> +
-> +#include <linux/dma-mapping.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/soc/ti/k3-ringacc.h>
-> +#include <linux/soc/ti/ti_sci_protocol.h>
-> +#include <linux/soc/ti/ti_sci_inta_msi.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/irqdomain.h>
-> +
-> +static LIST_HEAD(k3_ringacc_list);
-> +static DEFINE_MUTEX(k3_ringacc_list_lock);
-> +
-> +#define K3_RINGACC_CFG_RING_SIZE_ELCNT_MASK		GENMASK(19, 0)
-> +
-> +/**
-> + * struct k3_ring_rt_regs -  The RA Control/Status Registers region
-> + */
-> +struct k3_ring_rt_regs {
-> +	u32	resv_16[4];
-> +	u32	db;		/* RT Ring N Doorbell Register */
-> +	u32	resv_4[1];
-> +	u32	occ;		/* RT Ring N Occupancy Register */
-> +	u32	indx;		/* RT Ring N Current Index Register */
-> +	u32	hwocc;		/* RT Ring N Hardware Occupancy Register */
-> +	u32	hwindx;		/* RT Ring N Current Index Register */
-> +};
-> +
-> +#define K3_RINGACC_RT_REGS_STEP	0x1000
-> +
-> +/**
-> + * struct k3_ring_fifo_regs -  The Ring Accelerator Queues Registers region
-> + */
-> +struct k3_ring_fifo_regs {
-> +	u32	head_data[128];		/* Ring Head Entry Data Registers */
-> +	u32	tail_data[128];		/* Ring Tail Entry Data Registers */
-> +	u32	peek_head_data[128];	/* Ring Peek Head Entry Data Regs */
-> +	u32	peek_tail_data[128];	/* Ring Peek Tail Entry Data Regs */
-> +};
-> +
-> +/**
-> + * struct k3_ringacc_proxy_gcfg_regs - RA Proxy Global Config MMIO Region
-> + */
-> +struct k3_ringacc_proxy_gcfg_regs {
-> +	u32	revision;	/* Revision Register */
-> +	u32	config;		/* Config Register */
-> +};
-> +
-> +#define K3_RINGACC_PROXY_CFG_THREADS_MASK		GENMASK(15, 0)
-> +
-> +/**
-> + * struct k3_ringacc_proxy_target_regs -  Proxy Datapath MMIO Region
-> + */
-> +struct k3_ringacc_proxy_target_regs {
-> +	u32	control;	/* Proxy Control Register */
-> +	u32	status;		/* Proxy Status Register */
-> +	u8	resv_512[504];
-> +	u32	data[128];	/* Proxy Data Register */
-> +};
-> +
-> +#define K3_RINGACC_PROXY_TARGET_STEP	0x1000
-> +#define K3_RINGACC_PROXY_NOT_USED	(-1)
-> +
-> +enum k3_ringacc_proxy_access_mode {
-> +	PROXY_ACCESS_MODE_HEAD = 0,
-> +	PROXY_ACCESS_MODE_TAIL = 1,
-> +	PROXY_ACCESS_MODE_PEEK_HEAD = 2,
-> +	PROXY_ACCESS_MODE_PEEK_TAIL = 3,
-> +};
-> +
-> +#define K3_RINGACC_FIFO_WINDOW_SIZE_BYTES  (512U)
-> +#define K3_RINGACC_FIFO_REGS_STEP	0x1000
-> +#define K3_RINGACC_MAX_DB_RING_CNT    (127U)
-> +
-> +/**
-> + * struct k3_ring_ops -  Ring operations
-> + */
-> +struct k3_ring_ops {
-> +	int (*push_tail)(struct k3_ring *ring, void *elm);
-> +	int (*push_head)(struct k3_ring *ring, void *elm);
-> +	int (*pop_tail)(struct k3_ring *ring, void *elm);
-> +	int (*pop_head)(struct k3_ring *ring, void *elm);
-> +};
-> +
-> +/**
-> + * struct k3_ring - RA Ring descriptor
-> + *
-> + * @rt - Ring control/status registers
-> + * @fifos - Ring queues registers
-> + * @proxy - Ring Proxy Datapath registers
-> + * @ring_mem_dma - Ring buffer dma address
-> + * @ring_mem_virt - Ring buffer virt address
-> + * @ops - Ring operations
-> + * @size - Ring size in elements
-> + * @elm_size - Size of the ring element
-> + * @mode - Ring mode
-> + * @flags - flags
-> + * @free - Number of free elements
-> + * @occ - Ring occupancy
-> + * @windex - Write index (only for @K3_RINGACC_RING_MODE_RING)
-> + * @rindex - Read index (only for @K3_RINGACC_RING_MODE_RING)
-> + * @ring_id - Ring Id
-> + * @parent - Pointer on struct @k3_ringacc
-> + * @use_count - Use count for shared rings
-> + * @proxy_id - RA Ring Proxy Id (only if @K3_RINGACC_RING_USE_PROXY)
-> + */
-> +struct k3_ring {
-> +	struct k3_ring_rt_regs __iomem *rt;
-> +	struct k3_ring_fifo_regs __iomem *fifos;
-> +	struct k3_ringacc_proxy_target_regs  __iomem *proxy;
-> +	dma_addr_t	ring_mem_dma;
-> +	void		*ring_mem_virt;
-> +	struct k3_ring_ops *ops;
-> +	u32		size;
-> +	enum k3_ring_size elm_size;
-> +	enum k3_ring_mode mode;
-> +	u32		flags;
-> +#define K3_RING_FLAG_BUSY	BIT(1)
-> +#define K3_RING_FLAG_SHARED	BIT(2)
-> +	u32		free;
-> +	u32		occ;
-> +	u32		windex;
-> +	u32		rindex;
-> +	u32		ring_id;
-> +	struct k3_ringacc	*parent;
-> +	u32		use_count;
-> +	int		proxy_id;
-> +};
-> +
-> +/**
-> + * struct k3_ringacc - Rings accelerator descriptor
-> + *
-> + * @dev - pointer on RA device
-> + * @proxy_gcfg - RA proxy global config registers
-> + * @proxy_target_base - RA proxy datapath region
-> + * @num_rings - number of ring in RA
-> + * @rings_inuse - bitfield for ring usage tracking
-> + * @rm_gp_range - general purpose rings range from tisci
-> + * @dma_ring_reset_quirk - DMA reset w/a enable
-> + * @num_proxies - number of RA proxies
-> + * @proxy_inuse - bitfield for proxy usage tracking
-> + * @rings - array of rings descriptors (struct @k3_ring)
-> + * @list - list of RAs in the system
-> + * @tisci - pointer ti-sci handle
-> + * @tisci_ring_ops - ti-sci rings ops
-> + * @tisci_dev_id - ti-sci device id
-> + */
-> +struct k3_ringacc {
-> +	struct device *dev;
-> +	struct k3_ringacc_proxy_gcfg_regs __iomem *proxy_gcfg;
-> +	void __iomem *proxy_target_base;
-> +	u32 num_rings; /* number of rings in Ringacc module */
-> +	unsigned long *rings_inuse;
-> +	struct ti_sci_resource *rm_gp_range;
-> +
-> +	bool dma_ring_reset_quirk;
-> +	u32 num_proxies;
-> +	unsigned long *proxy_inuse;
-> +
-> +	struct k3_ring *rings;
-> +	struct list_head list;
-> +	struct mutex req_lock; /* protect rings allocation */
-> +
-> +	const struct ti_sci_handle *tisci;
-> +	const struct ti_sci_rm_ringacc_ops *tisci_ring_ops;
-> +	u32  tisci_dev_id;
-
-This can be dropped no? pdev->id has it already.
-
-> +};
-> +
-> +static long k3_ringacc_ring_get_fifo_pos(struct k3_ring *ring)
-> +{
-> +	return K3_RINGACC_FIFO_WINDOW_SIZE_BYTES -
-> +	       (4 << ring->elm_size);
-> +}
-> +
-> +static void *k3_ringacc_get_elm_addr(struct k3_ring *ring, u32 idx)
-> +{
-> +	return (ring->ring_mem_virt + idx * (4 << ring->elm_size));
-> +}
-> +
-> +static int k3_ringacc_ring_push_mem(struct k3_ring *ring, void *elem);
-> +static int k3_ringacc_ring_pop_mem(struct k3_ring *ring, void *elem);
-> +
-> +static struct k3_ring_ops k3_ring_mode_ring_ops = {
-> +		.push_tail = k3_ringacc_ring_push_mem,
-> +		.pop_head = k3_ringacc_ring_pop_mem,
-> +};
-> +
-> +static int k3_ringacc_ring_push_io(struct k3_ring *ring, void *elem);
-> +static int k3_ringacc_ring_pop_io(struct k3_ring *ring, void *elem);
-> +static int k3_ringacc_ring_push_head_io(struct k3_ring *ring, void *elem);
-> +static int k3_ringacc_ring_pop_tail_io(struct k3_ring *ring, void *elem);
-> +
-> +static struct k3_ring_ops k3_ring_mode_msg_ops = {
-> +		.push_tail = k3_ringacc_ring_push_io,
-> +		.push_head = k3_ringacc_ring_push_head_io,
-> +		.pop_tail = k3_ringacc_ring_pop_tail_io,
-> +		.pop_head = k3_ringacc_ring_pop_io,
-> +};
-> +
-> +static int k3_ringacc_ring_push_head_proxy(struct k3_ring *ring, void *elem);
-> +static int k3_ringacc_ring_push_tail_proxy(struct k3_ring *ring, void *elem);
-> +static int k3_ringacc_ring_pop_head_proxy(struct k3_ring *ring, void *elem);
-> +static int k3_ringacc_ring_pop_tail_proxy(struct k3_ring *ring, void *elem);
-> +
-> +static struct k3_ring_ops k3_ring_mode_proxy_ops = {
-> +		.push_tail = k3_ringacc_ring_push_tail_proxy,
-> +		.push_head = k3_ringacc_ring_push_head_proxy,
-> +		.pop_tail = k3_ringacc_ring_pop_tail_proxy,
-> +		.pop_head = k3_ringacc_ring_pop_head_proxy,
-> +};
-> +
-> +static void k3_ringacc_ring_dump(struct k3_ring *ring)
-> +{
-> +	struct device *dev = ring->parent->dev;
-> +
-> +	dev_dbg(dev, "dump ring: %d\n", ring->ring_id);
-> +	dev_dbg(dev, "dump mem virt %p, dma %pad\n", ring->ring_mem_virt,
-> +		&ring->ring_mem_dma);
-> +	dev_dbg(dev, "dump elmsize %d, size %d, mode %d, proxy_id %d\n",
-> +		ring->elm_size, ring->size, ring->mode, ring->proxy_id);
-> +
-> +	dev_dbg(dev, "dump ring_rt_regs: db%08x\n", readl(&ring->rt->db));
-> +	dev_dbg(dev, "dump occ%08x\n", readl(&ring->rt->occ));
-> +	dev_dbg(dev, "dump indx%08x\n", readl(&ring->rt->indx));
-> +	dev_dbg(dev, "dump hwocc%08x\n", readl(&ring->rt->hwocc));
-> +	dev_dbg(dev, "dump hwindx%08x\n", readl(&ring->rt->hwindx));
-> +
-> +	if (ring->ring_mem_virt)
-> +		print_hex_dump_debug("dump ring_mem_virt ", DUMP_PREFIX_NONE,
-> +				     16, 1, ring->ring_mem_virt, 16 * 8, false);
-> +}
-> +
-> +struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
-> +					int id, u32 flags)
-> +{
-> +	int proxy_id = K3_RINGACC_PROXY_NOT_USED;
-> +
-> +	mutex_lock(&ringacc->req_lock);
-> +
-> +	if (id == K3_RINGACC_RING_ID_ANY) {
-> +		/* Request for any general purpose ring */
-> +		struct ti_sci_resource_desc *gp_rings =
-> +						&ringacc->rm_gp_range->desc[0];> +		unsigned long size;
-> +
-> +		size = gp_rings->start + gp_rings->num;
-> +		id = find_next_zero_bit(ringacc->rings_inuse, size,
-> +					gp_rings->start);
-
-ti_sci_get_free resource can be used no? In case if id is passed, that bit alone
-can be set.
-
-> +		if (id == size)
-> +			goto error;
-> +	} else if (id < 0) {
-> +		goto error;
-> +	}
-> +
-> +	if (test_bit(id, ringacc->rings_inuse) &&
-> +	    !(ringacc->rings[id].flags & K3_RING_FLAG_SHARED))
-> +		goto error;
-> +	else if (ringacc->rings[id].flags & K3_RING_FLAG_SHARED)
-> +		goto out;
-> +
-> +	if (flags & K3_RINGACC_RING_USE_PROXY) {
-> +		proxy_id = find_next_zero_bit(ringacc->proxy_inuse,
-> +					      ringacc->num_proxies, 0);
-
-May be a dump question, but how do we make sure that these proxies are not used
-by another Hosts?
-
-> +		if (proxy_id == ringacc->num_proxies)
-> +			goto error;
-> +	}
-> +
-> +	if (!try_module_get(ringacc->dev->driver->owner))
-> +		goto error;
-> +
-> +	if (proxy_id != K3_RINGACC_PROXY_NOT_USED) {
-> +		set_bit(proxy_id, ringacc->proxy_inuse);
-> +		ringacc->rings[id].proxy_id = proxy_id;
-> +		dev_dbg(ringacc->dev, "Giving ring#%d proxy#%d\n", id,
-> +			proxy_id);
-> +	} else {
-> +		dev_dbg(ringacc->dev, "Giving ring#%d\n", id);
-> +	}
-> +
-> +	set_bit(id, ringacc->rings_inuse);
-> +out:
-> +	ringacc->rings[id].use_count++;
-> +	mutex_unlock(&ringacc->req_lock);
-> +	return &ringacc->rings[id];
-> +
-> +error:
-> +	mutex_unlock(&ringacc->req_lock);
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
-> +
-
-[..snip..]
-
-> +
-> +static int k3_ringacc_probe(struct platform_device *pdev)
-> +{
-> +	struct k3_ringacc *ringacc;
-> +	void __iomem *base_fifo, *base_rt;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	int ret, i;
-> +
-> +	ringacc = devm_kzalloc(dev, sizeof(*ringacc), GFP_KERNEL);
-> +	if (!ringacc)
-> +		return -ENOMEM;
-> +
-> +	ringacc->dev = dev;
-> +	mutex_init(&ringacc->req_lock);
-> +
-> +	dev->msi_domain = of_msi_get_domain(dev, dev->of_node,
-> +					    DOMAIN_BUS_TI_SCI_INTA_MSI);
-> +	if (!dev->msi_domain) {
-> +		dev_err(dev, "Failed to get MSI domain\n");
-> +		return -EPROBE_DEFER;
-> +	}
-> +
-> +	ret = k3_ringacc_probe_dt(ringacc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rt");
-> +	base_rt = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base_rt))
-> +		return PTR_ERR(base_rt);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "fifos");
-> +	base_fifo = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base_fifo))
-> +		return PTR_ERR(base_fifo);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "proxy_gcfg");
-> +	ringacc->proxy_gcfg = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(ringacc->proxy_gcfg))
-> +		return PTR_ERR(ringacc->proxy_gcfg);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +					   "proxy_target");
-> +	ringacc->proxy_target_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(ringacc->proxy_target_base))
-> +		return PTR_ERR(ringacc->proxy_target_base);
-> +
-> +	ringacc->num_proxies = readl(&ringacc->proxy_gcfg->config) &
-> +				     K3_RINGACC_PROXY_CFG_THREADS_MASK;
-> +
-> +	ringacc->rings = devm_kzalloc(dev,
-> +				      sizeof(*ringacc->rings) *
-> +				      ringacc->num_rings,
-> +				      GFP_KERNEL);
-> +	ringacc->rings_inuse = devm_kcalloc(dev,
-> +					    BITS_TO_LONGS(ringacc->num_rings),
-> +					    sizeof(unsigned long), GFP_KERNEL);
-> +	ringacc->proxy_inuse = devm_kcalloc(dev,
-> +					    BITS_TO_LONGS(ringacc->num_proxies),
-> +					    sizeof(unsigned long), GFP_KERNEL);
-> +
-> +	if (!ringacc->rings || !ringacc->rings_inuse || !ringacc->proxy_inuse)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < ringacc->num_rings; i++) {
-> +		ringacc->rings[i].rt = base_rt +
-> +				       K3_RINGACC_RT_REGS_STEP * i;
-> +		ringacc->rings[i].fifos = base_fifo +
-> +					  K3_RINGACC_FIFO_REGS_STEP * i;
-> +		ringacc->rings[i].parent = ringacc;
-> +		ringacc->rings[i].ring_id = i;
-> +		ringacc->rings[i].proxy_id = K3_RINGACC_PROXY_NOT_USED;
-> +	}
-> +	dev_set_drvdata(dev, ringacc);
-> +
-> +	ringacc->tisci_ring_ops = &ringacc->tisci->ops.rm_ring_ops;
-> +
-> +	pm_runtime_enable(dev);
-> +	ret = pm_runtime_get_sync(dev);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(dev);
-> +		dev_err(dev, "Failed to enable pm %d\n", ret);
-> +		goto err;
-> +	}
-
-Don't you need power-domains property in DT so that pm is actually working? If
-that is populated, dev-id can be derived from power-domains rather than a
-separate dt property.
-
-[...snip..]
-
-
-> diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k3-ringacc.h
-> new file mode 100644
-> index 000000000000..526b2e38fcce
-> --- /dev/null
-> +++ b/include/linux/soc/ti/k3-ringacc.h
-> @@ -0,0 +1,245 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * K3 Ring Accelerator (RA) subsystem interface
-> + *
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-> + */
-> +
-> +#ifndef __SOC_TI_K3_RINGACC_API_H_
-> +#define __SOC_TI_K3_RINGACC_API_H_
-> +
-> +#include <linux/types.h>
-> +
-> +struct device_node;
-> +
-
-[...snip..]
-
-> +
-> +/**
-> + * k3_ringacc_ring_reset - ring reset
-> + * @ring: pointer on Ring
-> + *
-> + * Resets ring internal state ((hw)occ, (hw)idx).
-> + * TODO_GS: ? Ring can be reused without reconfiguration
-
-TODO_GS?
-
-Thanks and regards,
-Lokesh
+T24gMDgvMTAvMjAxOSAwMToxMywgSmFlIEh5dW4gWW9vIHdyb3RlOgo+IEJ5dGUgbW9kZSBjdXJy
+ZW50bHkgdGhpcyBkcml2ZXIgdXNlcyBtYWtlcyBsb3RzIG9mIGludGVycnVwdCBjYWxsCj4gd2hp
+Y2ggaXNuJ3QgZ29vZCBmb3IgcGVyZm9ybWFuY2UgYW5kIGl0IG1ha2VzIHRoZSBkcml2ZXIgdmVy
+eQo+IHRpbWluZyBzZW5zaXRpdmUuIFRvIGltcHJvdmUgcGVyZm9ybWFuY2Ugb2YgdGhlIGRyaXZl
+ciwgdGhpcyBjb21taXQKPiBhZGRzIGJ1ZmZlciBtb2RlIHRyYW5zZmVyIHN1cHBvcnQgd2hpY2gg
+dXNlcyBJMkMgU1JBTSBidWZmZXIKPiBpbnN0ZWFkIG9mIHVzaW5nIGEgc2luZ2xlIGJ5dGUgYnVm
+ZmVyLgo+IAo+IEFTVDI0MDA6Cj4gSXQgaGFzIDIgS0J5dGVzICgyNTYgQnl0ZXMgeCA4IHBhZ2Vz
+KSBvZiBJMkMgU1JBTSBidWZmZXIgcG9vbCBmcm9tCj4gMHgxZTc4YTgwMCB0byAweDFlNzhhZmZm
+IHRoYXQgY2FuIGJlIHVzZWQgZm9yIGFsbCBidXNzZXMgd2l0aAo+IGJ1ZmZlciBwb29sIG1hbmlw
+dWxhdGlvbi4gVG8gc2ltcGxpZnkgaW1wbGVtZW50YXRpb24gZm9yIHN1cHBvcnRpbmcKPiBib3Ro
+IEFTVDI0MDAgYW5kIEFTVDI1MDAsIGl0IGFzc2lnbnMgZWFjaCAxMjggQnl0ZXMgcGVyIGJ1cyB3
+aXRob3V0Cj4gdXNpbmcgYnVmZmVyIHBvb2wgbWFuaXB1bGF0aW9uIHNvIHRvdGFsIDE3OTIgQnl0
+ZXMgb2YgSTJDIFNSQU0KPiBidWZmZXIgd2lsbCBiZSB1c2VkLgo+IAo+IEFTVDI1MDA6Cj4gSXQg
+aGFzIDE2IEJ5dGVzIG9mIGluZGl2aWR1YWwgSTJDIFNSQU0gYnVmZmVyIHBlciBlYWNoIGJ1cyBh
+bmQgaXRzCj4gcmFuZ2UgaXMgZnJvbSAweDFlNzhhMjAwIHRvIDB4MWU3OGEyZGYsIHNvIGl0IGRv
+ZXNuJ3QgaGF2ZSAnYnVmZmVyCj4gcGFnZSBzZWxlY3Rpb24nIGJpdCBmaWVsZCBpbiB0aGUgRnVu
+Y3Rpb24gY29udHJvbCByZWdpc3RlciwgYW5kCj4gbmVpdGhlciAnYmFzZSBhZGRyZXNzIHBvaW50
+ZXInIGJpdCBmaWVsZCBpbiB0aGUgUG9vbCBidWZmZXIgY29udHJvbAo+IHJlZ2lzdGVyIGl0IGhh
+cy4gVG8gc2ltcGxpZnkgaW1wbGVtZW50YXRpb24gZm9yIHN1cHBvcnRpbmcgYm90aAo+IEFTVDI0
+MDAgYW5kIEFTVDI1MDAsIGl0IHdyaXRlcyB6ZXJvcyBvbiB0aG9zZSByZWdpc3RlciBiaXQgZmll
+bGRzCj4gYnV0IGl0J3Mgb2theSBiZWNhdXNlIGl0IGRvZXMgbm90aGluZyBpbiBBU1QyNTAwLgo+
+IAo+IFRoaXMgY29tbWl0IGZpeGVzIGFsbCBJMkMgYnVzIG5vZGVzIHRvIHN1cHBvcnQgYnVmZmVy
+IG1vZGUKPiB0cmFuc2Zlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKYWUgSHl1biBZb28gPGphZS5o
+eXVuLnlvb0BsaW51eC5pbnRlbC5jb20+CgoKUmV2aWV3ZWQtYnk6IEPDqWRyaWMgTGUgR29hdGVy
+IDxjbGdAa2FvZC5vcmc+Cgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzQuZHRz
+aSB8IDQ3ICsrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tCj4gIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2FzcGVlZC1nNS5kdHNpIHwgNDcgKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0K
+PiAgMiBmaWxlcyBjaGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspLCAzOCBkZWxldGlvbnMoLSkKPiAK
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc0LmR0c2kgYi9hcmNoL2Fy
+bS9ib290L2R0cy9hc3BlZWQtZzQuZHRzaQo+IGluZGV4IGRmZmI1OTVkMzBlNC4uZjUxYjAxNmFh
+NzY5IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNC5kdHNpCj4gKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc0LmR0c2kKPiBAQCAtNDIwLDEyICs0MjAsMjEg
+QEAKPiAgfTsKPiAgCj4gICZpMmMgewo+IC0JaTJjX2ljOiBpbnRlcnJ1cHQtY29udHJvbGxlckAw
+IHsKPiAtCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+IC0JCWNvbXBhdGlibGUgPSAiYXNwZWVk
+LGFzdDI0MDAtaTJjLWljIjsKPiArCWkyY19ncjogaTJjLWdsb2JhbC1yZWdzQDAgewo+ICsJCWNv
+bXBhdGlibGUgPSAiYXNwZWVkLGFzdDI0MDAtaTJjLWdyIiwgInN5c2NvbiI7Cj4gIAkJcmVnID0g
+PDB4MCAweDQwPjsKPiAtCQlpbnRlcnJ1cHRzID0gPDEyPjsKPiAtCQlpbnRlcnJ1cHQtY29udHJv
+bGxlcjsKPiArCj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJI3NpemUtY2VsbHMgPSA8
+MT47Cj4gKwkJcmFuZ2VzID0gPDB4MCAweDAgMHg0MD47Cj4gKwo+ICsJCWkyY19pYzogaW50ZXJy
+dXB0LWNvbnRyb2xsZXJAMCB7Cj4gKwkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gKwkJCWNv
+bXBhdGlibGUgPSAiYXNwZWVkLGFzdDI0MDAtaTJjLWljIjsKPiArCQkJcmVnID0gPDB4MCAweDQ+
+Owo+ICsJCQlpbnRlcnJ1cHRzID0gPDEyPjsKPiArCQkJaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4g
+KwkJfTsKPiAgCX07Cj4gIAo+ICAJaTJjMDogaTJjLWJ1c0A0MCB7Cj4gQEAgLTQzMyw3ICs0NDIs
+NyBAQAo+ICAJCSNzaXplLWNlbGxzID0gPDA+Owo+ICAJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47
+Cj4gIAo+IC0JCXJlZyA9IDwweDQwIDB4NDA+Owo+ICsJCXJlZyA9IDwweDQwIDB4NDA+LCA8MHg4
+MDAgMHg4MD47Cj4gIAkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjQwMC1pMmMtYnVzIjsKPiAg
+CQljbG9ja3MgPSA8JnN5c2NvbiBBU1BFRURfQ0xLX0FQQj47Cj4gIAkJcmVzZXRzID0gPCZzeXNj
+b24gQVNQRUVEX1JFU0VUX0kyQz47Cj4gQEAgLTQ0OSw3ICs0NTgsNyBAQAo+ICAJCSNzaXplLWNl
+bGxzID0gPDA+Owo+ICAJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gIAo+IC0JCXJlZyA9IDww
+eDgwIDB4NDA+Owo+ICsJCXJlZyA9IDwweDgwIDB4NDA+LCA8MHg4ODAgMHg4MD47Cj4gIAkJY29t
+cGF0aWJsZSA9ICJhc3BlZWQsYXN0MjQwMC1pMmMtYnVzIjsKPiAgCQljbG9ja3MgPSA8JnN5c2Nv
+biBBU1BFRURfQ0xLX0FQQj47Cj4gIAkJcmVzZXRzID0gPCZzeXNjb24gQVNQRUVEX1JFU0VUX0ky
+Qz47Cj4gQEAgLTQ2NSw3ICs0NzQsNyBAQAo+ICAJCSNzaXplLWNlbGxzID0gPDA+Owo+ICAJCSNp
+bnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gIAo+IC0JCXJlZyA9IDwweGMwIDB4NDA+Owo+ICsJCXJl
+ZyA9IDwweGMwIDB4NDA+LCA8MHg5MDAgMHg4MD47Cj4gIAkJY29tcGF0aWJsZSA9ICJhc3BlZWQs
+YXN0MjQwMC1pMmMtYnVzIjsKPiAgCQljbG9ja3MgPSA8JnN5c2NvbiBBU1BFRURfQ0xLX0FQQj47
+Cj4gIAkJcmVzZXRzID0gPCZzeXNjb24gQVNQRUVEX1JFU0VUX0kyQz47Cj4gQEAgLTQ4Miw3ICs0
+OTEsNyBAQAo+ICAJCSNzaXplLWNlbGxzID0gPDA+Owo+ICAJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8
+MT47Cj4gIAo+IC0JCXJlZyA9IDwweDEwMCAweDQwPjsKPiArCQlyZWcgPSA8MHgxMDAgMHg0MD4s
+IDwweDk4MCAweDgwPjsKPiAgCQljb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNDAwLWkyYy1idXMi
+Owo+ICAJCWNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9DTEtfQVBCPjsKPiAgCQlyZXNldHMgPSA8
+JnN5c2NvbiBBU1BFRURfUkVTRVRfSTJDPjsKPiBAQCAtNDk5LDcgKzUwOCw3IEBACj4gIAkJI3Np
+emUtY2VsbHMgPSA8MD47Cj4gIAkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiAgCj4gLQkJcmVn
+ID0gPDB4MTQwIDB4NDA+Owo+ICsJCXJlZyA9IDwweDE0MCAweDQwPiwgPDB4YTAwIDB4ODA+Owo+
+ICAJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI0MDAtaTJjLWJ1cyI7Cj4gIAkJY2xvY2tzID0g
+PCZzeXNjb24gQVNQRUVEX0NMS19BUEI+Owo+ICAJCXJlc2V0cyA9IDwmc3lzY29uIEFTUEVFRF9S
+RVNFVF9JMkM+Owo+IEBAIC01MTYsNyArNTI1LDcgQEAKPiAgCQkjc2l6ZS1jZWxscyA9IDwwPjsK
+PiAgCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ICAKPiAtCQlyZWcgPSA8MHgxODAgMHg0MD47
+Cj4gKwkJcmVnID0gPDB4MTgwIDB4NDA+LCA8MHhhODAgMHg4MD47Cj4gIAkJY29tcGF0aWJsZSA9
+ICJhc3BlZWQsYXN0MjQwMC1pMmMtYnVzIjsKPiAgCQljbG9ja3MgPSA8JnN5c2NvbiBBU1BFRURf
+Q0xLX0FQQj47Cj4gIAkJcmVzZXRzID0gPCZzeXNjb24gQVNQRUVEX1JFU0VUX0kyQz47Cj4gQEAg
+LTUzMyw3ICs1NDIsNyBAQAo+ICAJCSNzaXplLWNlbGxzID0gPDA+Owo+ICAJCSNpbnRlcnJ1cHQt
+Y2VsbHMgPSA8MT47Cj4gIAo+IC0JCXJlZyA9IDwweDFjMCAweDQwPjsKPiArCQlyZWcgPSA8MHgx
+YzAgMHg0MD4sIDwweGIwMCAweDgwPjsKPiAgCQljb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNDAw
+LWkyYy1idXMiOwo+ICAJCWNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9DTEtfQVBCPjsKPiAgCQly
+ZXNldHMgPSA8JnN5c2NvbiBBU1BFRURfUkVTRVRfSTJDPjsKPiBAQCAtNTUwLDcgKzU1OSw3IEBA
+Cj4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gIAkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiAg
+Cj4gLQkJcmVnID0gPDB4MzAwIDB4NDA+Owo+ICsJCXJlZyA9IDwweDMwMCAweDQwPiwgPDB4Yjgw
+IDB4ODA+Owo+ICAJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI0MDAtaTJjLWJ1cyI7Cj4gIAkJ
+Y2xvY2tzID0gPCZzeXNjb24gQVNQRUVEX0NMS19BUEI+Owo+ICAJCXJlc2V0cyA9IDwmc3lzY29u
+IEFTUEVFRF9SRVNFVF9JMkM+Owo+IEBAIC01NjcsNyArNTc2LDcgQEAKPiAgCQkjc2l6ZS1jZWxs
+cyA9IDwwPjsKPiAgCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ICAKPiAtCQlyZWcgPSA8MHgz
+NDAgMHg0MD47Cj4gKwkJcmVnID0gPDB4MzQwIDB4NDA+LCA8MHhjMDAgMHg4MD47Cj4gIAkJY29t
+cGF0aWJsZSA9ICJhc3BlZWQsYXN0MjQwMC1pMmMtYnVzIjsKPiAgCQljbG9ja3MgPSA8JnN5c2Nv
+biBBU1BFRURfQ0xLX0FQQj47Cj4gIAkJcmVzZXRzID0gPCZzeXNjb24gQVNQRUVEX1JFU0VUX0ky
+Qz47Cj4gQEAgLTU4NCw3ICs1OTMsNyBAQAo+ICAJCSNzaXplLWNlbGxzID0gPDA+Owo+ICAJCSNp
+bnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gIAo+IC0JCXJlZyA9IDwweDM4MCAweDQwPjsKPiArCQly
+ZWcgPSA8MHgzODAgMHg0MD4sIDwweGM4MCAweDgwPjsKPiAgCQljb21wYXRpYmxlID0gImFzcGVl
+ZCxhc3QyNDAwLWkyYy1idXMiOwo+ICAJCWNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9DTEtfQVBC
+PjsKPiAgCQlyZXNldHMgPSA8JnN5c2NvbiBBU1BFRURfUkVTRVRfSTJDPjsKPiBAQCAtNjAxLDcg
+KzYxMCw3IEBACj4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gIAkJI2ludGVycnVwdC1jZWxscyA9
+IDwxPjsKPiAgCj4gLQkJcmVnID0gPDB4M2MwIDB4NDA+Owo+ICsJCXJlZyA9IDwweDNjMCAweDQw
+PiwgPDB4ZDAwIDB4ODA+Owo+ICAJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI0MDAtaTJjLWJ1
+cyI7Cj4gIAkJY2xvY2tzID0gPCZzeXNjb24gQVNQRUVEX0NMS19BUEI+Owo+ICAJCXJlc2V0cyA9
+IDwmc3lzY29uIEFTUEVFRF9SRVNFVF9JMkM+Owo+IEBAIC02MTgsNyArNjI3LDcgQEAKPiAgCQkj
+c2l6ZS1jZWxscyA9IDwwPjsKPiAgCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ICAKPiAtCQly
+ZWcgPSA8MHg0MDAgMHg0MD47Cj4gKwkJcmVnID0gPDB4NDAwIDB4NDA+LCA8MHhkODAgMHg4MD47
+Cj4gIAkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjQwMC1pMmMtYnVzIjsKPiAgCQljbG9ja3Mg
+PSA8JnN5c2NvbiBBU1BFRURfQ0xLX0FQQj47Cj4gIAkJcmVzZXRzID0gPCZzeXNjb24gQVNQRUVE
+X1JFU0VUX0kyQz47Cj4gQEAgLTYzNSw3ICs2NDQsNyBAQAo+ICAJCSNzaXplLWNlbGxzID0gPDA+
+Owo+ICAJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gIAo+IC0JCXJlZyA9IDwweDQ0MCAweDQw
+PjsKPiArCQlyZWcgPSA8MHg0NDAgMHg0MD4sIDwweGUwMCAweDgwPjsKPiAgCQljb21wYXRpYmxl
+ID0gImFzcGVlZCxhc3QyNDAwLWkyYy1idXMiOwo+ICAJCWNsb2NrcyA9IDwmc3lzY29uIEFTUEVF
+RF9DTEtfQVBCPjsKPiAgCQlyZXNldHMgPSA8JnN5c2NvbiBBU1BFRURfUkVTRVRfSTJDPjsKPiBA
+QCAtNjUyLDcgKzY2MSw3IEBACj4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gIAkJI2ludGVycnVw
+dC1jZWxscyA9IDwxPjsKPiAgCj4gLQkJcmVnID0gPDB4NDgwIDB4NDA+Owo+ICsJCXJlZyA9IDww
+eDQ4MCAweDQwPiwgPDB4ZTgwIDB4ODA+Owo+ICAJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI0
+MDAtaTJjLWJ1cyI7Cj4gIAkJY2xvY2tzID0gPCZzeXNjb24gQVNQRUVEX0NMS19BUEI+Owo+ICAJ
+CXJlc2V0cyA9IDwmc3lzY29uIEFTUEVFRF9SRVNFVF9JMkM+Owo+IGRpZmYgLS1naXQgYS9hcmNo
+L2FybS9ib290L2R0cy9hc3BlZWQtZzUuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1n
+NS5kdHNpCj4gaW5kZXggZThmZWI4YjY2YTJmLi5jYmMzMWNlM2ZhYjIgMTAwNjQ0Cj4gLS0tIGEv
+YXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc1LmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0
+cy9hc3BlZWQtZzUuZHRzaQo+IEBAIC01MTMsMTIgKzUxMywyMSBAQAo+ICB9Owo+ICAKPiAgJmky
+YyB7Cj4gLQlpMmNfaWM6IGludGVycnVwdC1jb250cm9sbGVyQDAgewo+IC0JCSNpbnRlcnJ1cHQt
+Y2VsbHMgPSA8MT47Cj4gLQkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUwMC1pMmMtaWMiOwo+
+ICsJaTJjX2dyOiBpMmMtZ2xvYmFsLXJlZ3NAMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJhc3BlZWQs
+YXN0MjUwMC1pMmMtZ3IiLCAic3lzY29uIjsKPiAgCQlyZWcgPSA8MHgwIDB4NDA+Owo+IC0JCWlu
+dGVycnVwdHMgPSA8MTI+Owo+IC0JCWludGVycnVwdC1jb250cm9sbGVyOwo+ICsKPiArCQkjYWRk
+cmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsKPiArCQlyYW5nZXMgPSA8
+MHgwIDB4MCAweDQwPjsKPiArCj4gKwkJaTJjX2ljOiBpbnRlcnJ1cHQtY29udHJvbGxlckAwIHsK
+PiArCQkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiArCQkJY29tcGF0aWJsZSA9ICJhc3BlZWQs
+YXN0MjUwMC1pMmMtaWMiOwo+ICsJCQlyZWcgPSA8MHgwIDB4ND47Cj4gKwkJCWludGVycnVwdHMg
+PSA8MTI+Owo+ICsJCQlpbnRlcnJ1cHQtY29udHJvbGxlcjsKPiArCQl9Owo+ICAJfTsKPiAgCj4g
+IAlpMmMwOiBpMmMtYnVzQDQwIHsKPiBAQCAtNTI2LDcgKzUzNSw3IEBACj4gIAkJI3NpemUtY2Vs
+bHMgPSA8MD47Cj4gIAkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiAgCj4gLQkJcmVnID0gPDB4
+NDAgMHg0MD47Cj4gKwkJcmVnID0gPDB4NDAgMHg0MD4sIDwweDIwMCAweDEwPjsKPiAgCQljb21w
+YXRpYmxlID0gImFzcGVlZCxhc3QyNTAwLWkyYy1idXMiOwo+ICAJCWNsb2NrcyA9IDwmc3lzY29u
+IEFTUEVFRF9DTEtfQVBCPjsKPiAgCQlyZXNldHMgPSA8JnN5c2NvbiBBU1BFRURfUkVTRVRfSTJD
+PjsKPiBAQCAtNTQyLDcgKzU1MSw3IEBACj4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gIAkJI2lu
+dGVycnVwdC1jZWxscyA9IDwxPjsKPiAgCj4gLQkJcmVnID0gPDB4ODAgMHg0MD47Cj4gKwkJcmVn
+ID0gPDB4ODAgMHg0MD4sIDwweDIxMCAweDEwPjsKPiAgCQljb21wYXRpYmxlID0gImFzcGVlZCxh
+c3QyNTAwLWkyYy1idXMiOwo+ICAJCWNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9DTEtfQVBCPjsK
+PiAgCQlyZXNldHMgPSA8JnN5c2NvbiBBU1BFRURfUkVTRVRfSTJDPjsKPiBAQCAtNTU4LDcgKzU2
+Nyw3IEBACj4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gIAkJI2ludGVycnVwdC1jZWxscyA9IDwx
+PjsKPiAgCj4gLQkJcmVnID0gPDB4YzAgMHg0MD47Cj4gKwkJcmVnID0gPDB4YzAgMHg0MD4sIDww
+eDIyMCAweDEwPjsKPiAgCQljb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAwLWkyYy1idXMiOwo+
+ICAJCWNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9DTEtfQVBCPjsKPiAgCQlyZXNldHMgPSA8JnN5
+c2NvbiBBU1BFRURfUkVTRVRfSTJDPjsKPiBAQCAtNTc1LDcgKzU4NCw3IEBACj4gIAkJI3NpemUt
+Y2VsbHMgPSA8MD47Cj4gIAkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiAgCj4gLQkJcmVnID0g
+PDB4MTAwIDB4NDA+Owo+ICsJCXJlZyA9IDwweDEwMCAweDQwPiwgPDB4MjMwIDB4MTA+Owo+ICAJ
+CWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtaTJjLWJ1cyI7Cj4gIAkJY2xvY2tzID0gPCZz
+eXNjb24gQVNQRUVEX0NMS19BUEI+Owo+ICAJCXJlc2V0cyA9IDwmc3lzY29uIEFTUEVFRF9SRVNF
+VF9JMkM+Owo+IEBAIC01OTIsNyArNjAxLDcgQEAKPiAgCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiAg
+CQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ICAKPiAtCQlyZWcgPSA8MHgxNDAgMHg0MD47Cj4g
+KwkJcmVnID0gPDB4MTQwIDB4NDA+LCA8MHgyNDAgMHgxMD47Cj4gIAkJY29tcGF0aWJsZSA9ICJh
+c3BlZWQsYXN0MjUwMC1pMmMtYnVzIjsKPiAgCQljbG9ja3MgPSA8JnN5c2NvbiBBU1BFRURfQ0xL
+X0FQQj47Cj4gIAkJcmVzZXRzID0gPCZzeXNjb24gQVNQRUVEX1JFU0VUX0kyQz47Cj4gQEAgLTYw
+OSw3ICs2MTgsNyBAQAo+ICAJCSNzaXplLWNlbGxzID0gPDA+Owo+ICAJCSNpbnRlcnJ1cHQtY2Vs
+bHMgPSA8MT47Cj4gIAo+IC0JCXJlZyA9IDwweDE4MCAweDQwPjsKPiArCQlyZWcgPSA8MHgxODAg
+MHg0MD4sIDwweDI1MCAweDEwPjsKPiAgCQljb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAwLWky
+Yy1idXMiOwo+ICAJCWNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9DTEtfQVBCPjsKPiAgCQlyZXNl
+dHMgPSA8JnN5c2NvbiBBU1BFRURfUkVTRVRfSTJDPjsKPiBAQCAtNjI2LDcgKzYzNSw3IEBACj4g
+IAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gIAkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiAgCj4g
+LQkJcmVnID0gPDB4MWMwIDB4NDA+Owo+ICsJCXJlZyA9IDwweDFjMCAweDQwPiwgPDB4MjYwIDB4
+MTA+Owo+ICAJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtaTJjLWJ1cyI7Cj4gIAkJY2xv
+Y2tzID0gPCZzeXNjb24gQVNQRUVEX0NMS19BUEI+Owo+ICAJCXJlc2V0cyA9IDwmc3lzY29uIEFT
+UEVFRF9SRVNFVF9JMkM+Owo+IEBAIC02NDMsNyArNjUyLDcgQEAKPiAgCQkjc2l6ZS1jZWxscyA9
+IDwwPjsKPiAgCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ICAKPiAtCQlyZWcgPSA8MHgzMDAg
+MHg0MD47Cj4gKwkJcmVnID0gPDB4MzAwIDB4NDA+LCA8MHgyNzAgMHgxMD47Cj4gIAkJY29tcGF0
+aWJsZSA9ICJhc3BlZWQsYXN0MjUwMC1pMmMtYnVzIjsKPiAgCQljbG9ja3MgPSA8JnN5c2NvbiBB
+U1BFRURfQ0xLX0FQQj47Cj4gIAkJcmVzZXRzID0gPCZzeXNjb24gQVNQRUVEX1JFU0VUX0kyQz47
+Cj4gQEAgLTY2MCw3ICs2NjksNyBAQAo+ICAJCSNzaXplLWNlbGxzID0gPDA+Owo+ICAJCSNpbnRl
+cnJ1cHQtY2VsbHMgPSA8MT47Cj4gIAo+IC0JCXJlZyA9IDwweDM0MCAweDQwPjsKPiArCQlyZWcg
+PSA8MHgzNDAgMHg0MD4sIDwweDI4MCAweDEwPjsKPiAgCQljb21wYXRpYmxlID0gImFzcGVlZCxh
+c3QyNTAwLWkyYy1idXMiOwo+ICAJCWNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9DTEtfQVBCPjsK
+PiAgCQlyZXNldHMgPSA8JnN5c2NvbiBBU1BFRURfUkVTRVRfSTJDPjsKPiBAQCAtNjc3LDcgKzY4
+Niw3IEBACj4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gIAkJI2ludGVycnVwdC1jZWxscyA9IDwx
+PjsKPiAgCj4gLQkJcmVnID0gPDB4MzgwIDB4NDA+Owo+ICsJCXJlZyA9IDwweDM4MCAweDQwPiwg
+PDB4MjkwIDB4MTA+Owo+ICAJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtaTJjLWJ1cyI7
+Cj4gIAkJY2xvY2tzID0gPCZzeXNjb24gQVNQRUVEX0NMS19BUEI+Owo+ICAJCXJlc2V0cyA9IDwm
+c3lzY29uIEFTUEVFRF9SRVNFVF9JMkM+Owo+IEBAIC02OTQsNyArNzAzLDcgQEAKPiAgCQkjc2l6
+ZS1jZWxscyA9IDwwPjsKPiAgCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ICAKPiAtCQlyZWcg
+PSA8MHgzYzAgMHg0MD47Cj4gKwkJcmVnID0gPDB4M2MwIDB4NDA+LCA8MHgyYTAgMHgxMD47Cj4g
+IAkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUwMC1pMmMtYnVzIjsKPiAgCQljbG9ja3MgPSA8
+JnN5c2NvbiBBU1BFRURfQ0xLX0FQQj47Cj4gIAkJcmVzZXRzID0gPCZzeXNjb24gQVNQRUVEX1JF
+U0VUX0kyQz47Cj4gQEAgLTcxMSw3ICs3MjAsNyBAQAo+ICAJCSNzaXplLWNlbGxzID0gPDA+Owo+
+ICAJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gIAo+IC0JCXJlZyA9IDwweDQwMCAweDQwPjsK
+PiArCQlyZWcgPSA8MHg0MDAgMHg0MD4sIDwweDJiMCAweDEwPjsKPiAgCQljb21wYXRpYmxlID0g
+ImFzcGVlZCxhc3QyNTAwLWkyYy1idXMiOwo+ICAJCWNsb2NrcyA9IDwmc3lzY29uIEFTUEVFRF9D
+TEtfQVBCPjsKPiAgCQlyZXNldHMgPSA8JnN5c2NvbiBBU1BFRURfUkVTRVRfSTJDPjsKPiBAQCAt
+NzI4LDcgKzczNyw3IEBACj4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gIAkJI2ludGVycnVwdC1j
+ZWxscyA9IDwxPjsKPiAgCj4gLQkJcmVnID0gPDB4NDQwIDB4NDA+Owo+ICsJCXJlZyA9IDwweDQ0
+MCAweDQwPiwgPDB4MmMwIDB4MTA+Owo+ICAJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAt
+aTJjLWJ1cyI7Cj4gIAkJY2xvY2tzID0gPCZzeXNjb24gQVNQRUVEX0NMS19BUEI+Owo+ICAJCXJl
+c2V0cyA9IDwmc3lzY29uIEFTUEVFRF9SRVNFVF9JMkM+Owo+IEBAIC03NDUsNyArNzU0LDcgQEAK
+PiAgCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiAgCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ICAK
+PiAtCQlyZWcgPSA8MHg0ODAgMHg0MD47Cj4gKwkJcmVnID0gPDB4NDgwIDB4NDA+LCA8MHgyZDAg
+MHgxMD47Cj4gIAkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUwMC1pMmMtYnVzIjsKPiAgCQlj
+bG9ja3MgPSA8JnN5c2NvbiBBU1BFRURfQ0xLX0FQQj47Cj4gIAkJcmVzZXRzID0gPCZzeXNjb24g
+QVNQRUVEX1JFU0VUX0kyQz47Cj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
