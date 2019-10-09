@@ -1,149 +1,54 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
-Date: Wed, 9 Oct 2019 11:56:47 +0100
-Message-ID: <597158a7-ce42-c4d0-62b0-5aab1ead8313@arm.com>
-References: <20191008195239.12852-1-robh@kernel.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+Date: Wed, 09 Oct 2019 14:04:41 +0200
+Message-ID: <1jwode9lba.fsf@starbuckisacylon.baylibre.com>
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com> <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com> <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com> <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com> <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191008195239.12852-1-robh@kernel.org>
-Content-Language: en-GB
+In-reply-to: <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Christoph Hellwig <hch@infradead.org>
+To: Anand Moon <linux.amoon@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-10-08 8:52 pm, Rob Herring wrote:
-> From: Robin Murphy <robin.murphy@arm.com>
-> 
-> Since the "dma-ranges" property is only valid for a node representing a
-> bus, of_dma_get_range() currently assumes the node passed in is a leaf
-> representing a device, and starts the walk from its parent. In cases
-> like PCI host controllers on typical FDT systems, however, where the PCI
-> endpoints are probed dynamically the initial leaf node represents the
-> 'bus' itself, and this logic means we fail to consider any "dma-ranges"
-> describing the host bridge itself. Rework the logic such that
-> of_dma_get_range() also works correctly starting from a bus node
-> containing "dma-ranges".
-> 
-> While this does mean "dma-ranges" could incorrectly be in a device leaf
-> node, there isn't really any way in this function to ensure that a leaf
-> node is or isn't a bus node.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> [robh: Allow for the bus child node to still be passed in]
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Resending, hit send too quickly.
-> 
-> v2:
->   - Ensure once we find dma-ranges, every parent has it.
->   - Only get the #{size,address}-cells after we find non-empty dma-ranges
->   - Add a check on the 'dma-ranges' length
-> 
-> This is all that remains of the dma-ranges series. I've applied the rest
-> of the series prep and fixes. I dropped "of: Ratify of_dma_configure()
-> interface" as the assertions that the node pointer being the parent only
-> when struct device doesn't have a DT node pointer is not always
-> true.
 
-I'd still like to rework of_dma_configure() so that callers don't have 
-to pass a redundant node in the common case, but that can wait. For now, 
-this looks good enough to un-block the various 32-bit-PCI folks at 
-least, and we can consider further improvements on top. For the changes:
+On Wed 09 Oct 2019 at 10:48, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> Kernel command line: console=ttyAML0,115200n8
+> root=PARTUUID=45d7d61e-01 rw rootwait
+> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
+>
+> [0] https://pastebin.com/eBgJrSKe
+>
+>> you can also try the command line parameter "clk_ignore_unused" (it's
+>> just a gut feeling: maybe a "critical" clock is being disabled because
+>> it's not wired up correctly).
+>>
+>
+> It look like some clk issue after I added the *clk_ignore_unused* to
+> kernel command line
+> it booted further to login prompt and cpufreq DVFS seem to be loaded.
+> So I could conclude this is clk issue.below is the boot log
+>
+> Kernel command line: console=ttyAML0,115200n8
+> root=PARTUUID=45d7d61e-01 rw rootwait
+> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
+> clk_ignore_unused
+>
+> [1] https://pastebin.com/Nsk0wZQJ
+>
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Next step it to try narrow down the clock causing the issue.
+Remove clk_ignore_unused from the command line and add CLK_INGORE_UNUSED
+to the flag of some clocks your clock controller (g12a I think) until
 
-Cheers,
-Robin.
+The peripheral clock gates already have this flag (something we should
+fix someday) so don't bother looking there.
 
-> I didn't include any tested-bys as this has changed a bit. A git branch
-> is here[1].
-> 
-> Rob
-> 
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks-v2
-> 
->   drivers/of/address.c | 44 ++++++++++++++++++--------------------------
->   1 file changed, 18 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 5ce69d026584..99c1b8058559 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -930,47 +930,39 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->   	const __be32 *ranges = NULL;
->   	int len, naddr, nsize, pna;
->   	int ret = 0;
-> +	bool found_dma_ranges = false;
->   	u64 dmaaddr;
->   
-> -	if (!node)
-> -		return -EINVAL;
-> -
-> -	while (1) {
-> -		struct device_node *parent;
-> -
-> -		naddr = of_n_addr_cells(node);
-> -		nsize = of_n_size_cells(node);
-> -
-> -		parent = __of_get_dma_parent(node);
-> -		of_node_put(node);
-> -
-> -		node = parent;
-> -		if (!node)
-> -			break;
-> -
-> +	while (node) {
->   		ranges = of_get_property(node, "dma-ranges", &len);
->   
->   		/* Ignore empty ranges, they imply no translation required */
->   		if (ranges && len > 0)
->   			break;
->   
-> -		/*
-> -		 * At least empty ranges has to be defined for parent node if
-> -		 * DMA is supported
-> -		 */
-> -		if (!ranges)
-> -			break;
-> +		/* Once we find 'dma-ranges', then a missing one is an error */
-> +		if (found_dma_ranges && !ranges) {
-> +			ret = -ENODEV;
-> +			goto out;
-> +		}
-> +		found_dma_ranges = true;
-> +
-> +		node = of_get_next_dma_parent(node);
->   	}
->   
-> -	if (!ranges) {
-> +	if (!node || !ranges) {
->   		pr_debug("no dma-ranges found for node(%pOF)\n", np);
->   		ret = -ENODEV;
->   		goto out;
->   	}
->   
-> -	len /= sizeof(u32);
-> -
-> +	naddr = of_bus_n_addr_cells(node);
-> +	nsize = of_bus_n_size_cells(node);
->   	pna = of_n_addr_cells(node);
-> +	if ((len / sizeof(__be32)) % (pna + naddr + nsize)) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
->   
->   	/* dma-ranges format:
->   	 * DMA addr	: naddr cells
-> @@ -978,7 +970,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->   	 * size		: nsize cells
->   	 */
->   	dmaaddr = of_read_number(ranges, naddr);
-> -	*paddr = of_translate_dma_address(np, ranges);
-> +	*paddr = of_translate_dma_address(node, ranges + naddr);
->   	if (*paddr == OF_BAD_ADDR) {
->   		pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
->   		       dmaaddr, np);
-> 
+Most likely the source of the pwm is getting disabled between the
+late_init call and the probe of the PWM module. Since the pwm is already
+active (w/o a driver), gating the clock source shuts dowm the power to
+the cores.
+
+Looking a the possible inputs in pwm driver, I'd bet on fdiv4.
