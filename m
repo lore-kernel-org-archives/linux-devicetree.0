@@ -1,47 +1,34 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-Date: Wed, 9 Oct 2019 16:01:45 +0200
-Message-ID: <20191009140145.GE4254@piout.net>
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
- <20191002144658.7718-3-kamel.bouhara@bootlin.com>
- <20191009135500.ufkxcemccwfcfys7@M43218.corp.atmel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 07/10] arm64: dts: renesas: r8a774b1: Add USB2.0 phy and
+ host (EHCI/OHCI) device nodes
+Date: Wed, 9 Oct 2019 16:07:17 +0200
+Message-ID: <CAMuHMdV8+Rsb53dsMEoRMk3Oj7yEqbhJ7CTNz-Z90ZZaBkZV8Q@mail.gmail.com>
+References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-8-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191009135500.ufkxcemccwfcfys7@M43218.corp.atmel.com>
+In-Reply-To: <1570531132-21856-8-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kamel Bouhara <kamel.bouhara@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2019 15:55:00+0200, Ludovic Desroches wrote:
-> On Wed, Oct 02, 2019 at 04:46:56PM +0200, Kamel Bouhara wrote:
-> > External E-Mail
-> > 
-> > 
-> > Implement i2c bus recovery when slaves devices might hold SDA low.
-> > In this case re-assign SCL/SDA to gpios and issue 9 dummy clock pulses
-> > until the slave release SDA.
-> > 
-> 
-> Hi Kamel,
-> 
-> Thanks for adding this new feature. As I see patches only for sama5d3 and
-> sama5d4, I assume it has not been tested with a sama5d2, isn't it?
-> 
+On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Add USB2.0 phy and host (EHCI/OHCI) device nodes on RZ/G2N SoC dtsi.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-I there a point having it on sama5d2 as the controller already supports
-this feature?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.5.
 
-> I doubt it works with a sama5d2 because of the pinctrl. I also wonder if it can
-> work if we add .strict = true to pinmux_ops which is something plan for the
-> future...
-> 
+Gr{oetje,eeting}s,
 
-I don't see why it wouldn't work with strict as this is switching muxing
-properly instead of using the pins for two functions at the same time.
+                        Geert
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
