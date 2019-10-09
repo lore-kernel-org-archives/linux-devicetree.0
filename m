@@ -1,7 +1,7 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 8/8] clocksource/drivers/timer-atmel-tcb: add sama5d2 support
-Date: Thu, 10 Oct 2019 00:40:06 +0200
-Message-ID: <20191009224006.5021-9-alexandre.belloni@bootlin.com>
+Subject: [PATCH 5/8] clocksource/drivers/timer-atmel-tcb: fill tcb_config
+Date: Thu, 10 Oct 2019 00:40:03 +0200
+Message-ID: <20191009224006.5021-6-alexandre.belloni@bootlin.com>
 References: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,59 +12,51 @@ To: Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Nicolas Ferre <nicolas.ferre@microchip.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The first divisor for the sama5d2 is actually the gclk selector. Because
-the currently remaining divisors are fitting the use case, currently ensure
-it is skipped.
+Use the tcb_config and struct atmel_tcb_config to get the timer counter
+width. This is necessary because atmel_tcb_config will be extended later
+on.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clocksource/timer-atmel-tcb.c | 11 ++++++++++-
- include/soc/at91/atmel_tcb.h          |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/clocksource/timer-atmel-tcb.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index ccb77b9cb489..e373b02d509a 100644
+index b255a4a1a36b..423af2f9835f 100644
 --- a/drivers/clocksource/timer-atmel-tcb.c
 +++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -359,9 +359,15 @@ static struct atmel_tcb_config tcb_sam9x5_config = {
- 	.counter_width = 32,
- };
+@@ -348,9 +348,17 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
  
-+static struct atmel_tcb_config tcb_sama5d2_config = {
+ static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
+ 
++static struct atmel_tcb_config tcb_rm9200_config = {
++	.counter_width = 16,
++};
++
++static struct atmel_tcb_config tcb_sam9x5_config = {
 +	.counter_width = 32,
-+	.has_gclk = 1,
 +};
 +
  static const struct of_device_id atmel_tcb_of_match[] = {
- 	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
- 	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
-+	{ .compatible = "atmel,sama5d2-tcb", .data = &tcb_sama5d2_config, },
+-	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
+-	{ .compatible = "atmel,at91sam9x5-tcb", .data = (void *)32, },
++	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
++	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
  	{ /* sentinel */ }
  };
  
-@@ -426,7 +432,10 @@ static int __init tcb_clksrc_init(struct device_node *node)
+@@ -398,7 +406,11 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	}
  
- 	/* How fast will we be counting?  Pick something over 5 MHz.  */
- 	rate = (u32) clk_get_rate(t0_clk);
--	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
-+	i = 0;
-+	if (tc.tcb_config->has_gclk)
-+		i = 1;
-+	for (; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
- 		unsigned divisor = atmel_tcb_divisors[i];
- 		unsigned tmp;
+ 	match = of_match_node(atmel_tcb_of_match, node->parent);
+-	bits = (uintptr_t)match->data;
++	if (!match)
++		return -ENODEV;
++
++	tc.tcb_config = match->data;
++	bits = tc.tcb_config->counter_width;
  
-diff --git a/include/soc/at91/atmel_tcb.h b/include/soc/at91/atmel_tcb.h
-index c3c7200ce151..fbf5474f4484 100644
---- a/include/soc/at91/atmel_tcb.h
-+++ b/include/soc/at91/atmel_tcb.h
-@@ -39,6 +39,7 @@ struct clk;
-  */
- struct atmel_tcb_config {
- 	size_t	counter_width;
-+	unsigned int has_gclk:1;
- };
- 
- /**
+ 	for (i = 0; i < ARRAY_SIZE(tc.irq); i++)
+ 		writel(ATMEL_TC_ALL_IRQ, tc.regs + ATMEL_TC_REG(i, IDR));
 -- 
 2.21.0
