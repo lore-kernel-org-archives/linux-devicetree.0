@@ -1,41 +1,71 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH] riscv: dts: HiFive Unleashed: add default
- chosen/stdout-path
-Date: Wed, 9 Oct 2019 12:42:44 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1910091240220.11044@viisi.sifive.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v2 0/4] Add Mailbox nodes for TI K3 AM65x & J721E SoCs
+Date: Wed, 9 Oct 2019 15:19:39 -0500
+Message-ID: <e27abe06-2df0-fdae-6fe5-080a40ee3bdd@ti.com>
+References: <20190725001020.23781-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190725001020.23781-1-s-anna@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Tero,
 
-Add a default "stdout-path" to the kernel DTS file, as is present in many 
-of the board DTS files elsewhere in the kernel tree. With this line 
-present, earlyconsole can be enabled by simply passing "earlycon" on the 
-kernel command line.  No specific device details are necessary, since the 
-kernel will use the stdout-path as the default.
+On 7/24/19 7:10 PM, Suman Anna wrote:
+> Hi Tero, Nishanth,
+> 
+> The following series is a revised version of the series [1] that adds
+> the Mailbox DT nodes and the sub-mailboxes used to communicate between
+> the main MPU processor running Linux and the various R5F and DSP remote
+> processors present on the TI K3 AM65x and J721E SoC families. Patches
+> are based on v5.3-rc1 + the HwSpinlock DT node series [2], and are
+> intended for the 5.4 merge window. Functionality is verified using a
+> out-of-tree unit-test module and some additional loopback test nodes
+> available here [3] for reference.
+> 
+> Changes in v2:
+>  - All clusters are enabled by default in base dtsi files
+>  - The sub-mailboxes are moved to the actual board dts files
+>  - Unused clusters disabled in the board dts files
 
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
----
-Tested on a HiFive Unleashed using BBL.
+Looks like you missed picking this series up for 5.4. Can you please
+pick this up for 5.5? Let me know if you want me to repost the series,
+the last patch has a conflict when applying on top of 5.4-rc1 due to
+some additional nodes in the board dts file.
 
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 1 +
- 1 file changed, 1 insertion(+)
+regards
+Suman
 
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 104d334511cd..88cfcb96bf23 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -13,6 +13,7 @@
- 	compatible = "sifive,hifive-unleashed-a00", "sifive,fu540-c000";
- 
- 	chosen {
-+		stdout-path = "serial0";
- 	};
- 
- 	cpus {
--- 
-2.23.0
+> 
+> regards
+> Suman
+> 
+> [1] https://patchwork.kernel.org/cover/11053401/
+> [2] https://patchwork.kernel.org/cover/11053311/
+> [3] https://github.com/sumananna/mailbox/commits/mbox/test/5.3-rc1-k3-v2
+> 
+> Suman Anna (4):
+>   arm64: dts: ti: k3-am65-main: Add mailbox cluster nodes
+>   arm64: dts: ti: k3-am65-base-board: Add IPC sub-mailbox nodes for R5Fs
+>   arm64: dts: ti: k3-j721e-main: Add mailbox cluster nodes
+>   arm64: dts: ti: k3-j721e-common-proc-board: Add IPC sub-mailbox nodes
+> 
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 108 ++++++++++++++++++
+>  .../arm64/boot/dts/ti/k3-am654-base-board.dts |  58 ++++++++++
+>  .../dts/ti/k3-j721e-common-proc-board.dts     |  93 +++++++++++++++
+>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 108 ++++++++++++++++++
+>  4 files changed, 367 insertions(+)
+> 
