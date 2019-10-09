@@ -1,111 +1,79 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
-Date: Wed, 09 Oct 2019 17:24:33 +0200
-Message-ID: <930cb2d2d47e2785711bab59d80e8ad188bd882d.camel@suse.de>
-References: <20191008195239.12852-1-robh@kernel.org>
-         <4f6b26f8779a4fd98712b966bff3491dc31e26c2.camel@suse.de>
-         <CAL_Jsq+RjC0b1ZXzgmMdn5Gd1=3zkN62Jdq_QKeZ8-X4pCiDPw@mail.gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+Date: Wed, 9 Oct 2019 09:29:39 -0500
+Message-ID: <53bb3105-8e85-a972-fce8-a7911ae4d461@linux.intel.com>
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+ <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+ <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
+ <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
+ <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+ <20190813195804.GL5093@sirena.co.uk>
+ <20190814041142.GU12733@vkoul-mobl.Dlink>
+ <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
+ <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-gkzPvU3MSN8O+PY+3B0Z"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+RjC0b1ZXzgmMdn5Gd1=3zkN62Jdq_QKeZ8-X4pCiDPw@mail.gmail.com>
+In-Reply-To: <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, Marek Vasut <marek.vasut@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms+renesas@verge.net.au>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
 
---=-gkzPvU3MSN8O+PY+3B0Z
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-10-08 at 20:03 -0500, Rob Herring wrote:
-> On Tue, Oct 8, 2019 at 3:52 PM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > Hi Rob/Robin,
-> >=20
-> > On Tue, 2019-10-08 at 14:52 -0500, Rob Herring wrote:
-> > > From: Robin Murphy <robin.murphy@arm.com>
-> > >=20
-> > > Since the "dma-ranges" property is only valid for a node representing=
- a
-> > > bus, of_dma_get_range() currently assumes the node passed in is a lea=
-f
-> > > representing a device, and starts the walk from its parent. In cases
-> > > like PCI host controllers on typical FDT systems, however, where the =
-PCI
-> > > endpoints are probed dynamically the initial leaf node represents the
-> > > 'bus' itself, and this logic means we fail to consider any "dma-range=
-s"
-> > > describing the host bridge itself. Rework the logic such that
-> > > of_dma_get_range() also works correctly starting from a bus node
-> > > containing "dma-ranges".
-> > >=20
-> > > While this does mean "dma-ranges" could incorrectly be in a device le=
-af
-> > > node, there isn't really any way in this function to ensure that a le=
-af
-> > > node is or isn't a bus node.
-> >=20
-> > Sorry, I'm not totally sure if this is what you're pointing out with th=
-e
-> > last
-> > sentence. But, what about the case of a bus configuring a device which =
-also
-> > happens to be a memory mapped bus (say a PCI platform device). It'll ge=
-t
-> > it's
-> > dma config based on its own dma-ranges which is not what we want.
->=20
-> What I was trying to say is we just can't tell if we should be looking
-> in the current node or the parent. 'dma-ranges' in a leaf node can be
-> correct or incorrect.
->=20
-> Your example is a bit different. I'm not sure that case is valid or
-> can ever work if it is. It's certainly valid that a PCI bridge's
-> parent has dma-ranges and now we'll actually handle any translation.
-> The bridge itself is not a DMA-capable device, but just passing thru
-> DMA.
+On 10/9/19 3:32 AM, Srinivas Kandagatla wrote:
+> Hi Pierre,
+> 
+> On 14/08/2019 15:09, Pierre-Louis Bossart wrote:
+>>
+>>
+>> On 8/13/19 11:11 PM, Vinod Koul wrote:
+>>> On 13-08-19, 20:58, Mark Brown wrote:
+>>>> On Tue, Aug 13, 2019 at 02:38:53PM -0500, Pierre-Louis Bossart wrote:
+>>>>
+>>>>> Indeed. I don't have a full understanding of that part to be 
+>>>>> honest, nor why
+>>>>> we need something SoundWire-specific. We already abused the 
+>>>>> set_tdm_slot API
+>>>>> to store an HDaudio stream, now we have a rather confusing stream
+>>>>> information for SoundWire and I have about 3 other 'stream' 
+>>>>> contexts in
+>>>>> SOF... I am still doing basic cleanups but this has been on my 
+>>>>> radar for a
+>>>>> while.
+>>>>
+>>>> There is something to be said for not abusing the TDM slot API if it 
+>>>> can
+>>>> make things clearer by using bus-idiomatic mechanisms, but it does mean
+>>>> everything needs to know about each individual bus :/ .
+>>>
+>>> Here ASoC doesn't need to know about sdw bus. As Srini explained, this
+>>> helps in the case for him to get the stream context and set the stream
+>>> context from the machine driver.
+>>>
+>>> Nothing else is expected to be done from this API. We already do a set
+>>> using snd_soc_dai_set_sdw_stream(). Here we add the 
+>>> snd_soc_dai_get_sdw_stream() to query
+>>
+>> I didn't see a call to snd_soc_dai_set_sdw_stream() in Srini's code?
+> 
+> 
+> There is a snd_soc_dai_get_sdw_stream() to get stream context and we add 
+> slave streams(amplifier in this case) to that context using 
+> sdw_stream_add_slave() in machine driver[1].
+> 
+> Without this helper there is no way to link slave streams to stream 
+> context in non dai based setup like smart speaker amplifiers.
+> 
+> Currently this driver is blocked on this patch, If you think there are 
+> other ways to do this, am happy to try them out.
 
-Yes, you're right, I hadn't thought of it from that perspective. Thanks!
-
-> Do we ever need to know the parent's dma-ranges in that case? Or
-> to put it another way, is looking at anything other than leaf
-> dma-ranges useful?
-
-There is no need at all indeed.
-
-With that,
-
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-and
-
-Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-On a Raspberry Pi 4 with pcie-brcmstb.c which is still work in progress but
-depends on this.
-
-Regards,
-Nicolas
-
-
---=-gkzPvU3MSN8O+PY+3B0Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2d+7EACgkQlfZmHno8
-x/6Ougf/Vf8gS9pV6sHacKH3tBVDLky7gMGKrkyw4QWRDU3aKrGLrWgJg+5xuKcC
-fzVafJIYqaU3FkYrBVWO7NRS8juguj17xOcSplJal0y1yHuu8hbTt3E8GUh5ut26
-GZsicybI8VcxF0JEhyHAV6foKA2ZsYkPxG93XsnR7FobzIgTI84KxTlNnrZs5Ejt
-zjgjxaR1yrcT5YamAIRKy/DpmfHx3Hpf7jMsHZFKqTmSbNlyUBevpH2ok9B45+ec
-rtSa6TmEQyRrklJuXEJV4Yg1NccFffrQm3sD8AxSw+1P1nfNzVLm0NVcJjchKp11
-RawTR+PF/Z4eXnNVywKxieHo/Js+yg==
-=KQ2V
------END PGP SIGNATURE-----
-
---=-gkzPvU3MSN8O+PY+3B0Z--
+So to be clear, you are *not* using snd_soc_dai_set_sdw_stream?
