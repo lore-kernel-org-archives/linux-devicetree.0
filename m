@@ -1,55 +1,130 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5, 23/32] drm/mediatek: distinguish ovl and ovl_2l by
- layer_nr
-Date: Wed, 9 Oct 2019 17:28:20 +0800
-Message-ID: <1570613300.7713.7.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 22/32] drm/mediatek: add ovl0/ovl_2l0 usecase
+Date: Wed, 9 Oct 2019 17:29:42 +0800
+Message-ID: <1570613382.7713.9.camel@mtksdaap41>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
- <1567090254-15566-24-git-send-email-yongqiang.niu@mediatek.com>
+         <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1567090254-15566-24-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gZGlzdGluZ3Vpc2ggb3ZsIGFuZCBvdmxfMmwgYnkg
-bGF5ZXJfbnIgd2hlbiBnZXQgY29tcAo+IGlkCj4gCgpBcHBsaWVkIHRvIG1lZGlhdGVrLWRybS1u
-ZXh0LTUuNSBbMV0sIHRoYW5rcy4KClsxXQpodHRwczovL2dpdGh1Yi5jb20vY2todS1tZWRpYXRl
-ay9saW51eC5naXQtdGFncy9jb21taXRzL21lZGlhdGVrLWRybS1uZXh0LTUuNQoKUmVnYXJkcywK
-Q0sKCj4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRl
-ay5jb20+Cj4gUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+Cj4gLS0tCj4g
-IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyB8IDkgKysrKysrLS0tCj4g
-IDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyBiL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYwo+IGluZGV4IGViM2JmODUuLjUzZjM4
-ODMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5j
-Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCj4gQEAgLTMx
-OCw3ICszMTgsMTIgQEAgc3RhdGljIGludCBtdGtfZGlzcF9vdmxfcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikKPiAgCWlmIChpcnEgPCAwKQo+ICAJCXJldHVybiBpcnE7Cj4gIAo+
-IC0JY29tcF9pZCA9IG10a19kZHBfY29tcF9nZXRfaWQoZGV2LT5vZl9ub2RlLCBNVEtfRElTUF9P
-VkwpOwo+ICsJcHJpdi0+ZGF0YSA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOwo+ICsK
-PiArCWNvbXBfaWQgPSBtdGtfZGRwX2NvbXBfZ2V0X2lkKGRldi0+b2Zfbm9kZSwKPiArCQkJCSAg
-ICAgIHByaXYtPmRhdGEtPmxheWVyX25yID09IDQgPwo+ICsJCQkJICAgICAgTVRLX0RJU1BfT1ZM
-IDoKPiArCQkJCSAgICAgIE1US19ESVNQX09WTF8yTCk7Cj4gIAlpZiAoY29tcF9pZCA8IDApIHsK
-PiAgCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBpZGVudGlmeSBieSBhbGlhczogJWRcbiIsIGNv
-bXBfaWQpOwo+ICAJCXJldHVybiBjb21wX2lkOwo+IEBAIC0zMzEsOCArMzM2LDYgQEAgc3RhdGlj
-IGludCBtdGtfZGlzcF9vdmxfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAg
-CQlyZXR1cm4gcmV0Owo+ICAJfQo+ICAKPiAtCXByaXYtPmRhdGEgPSBvZl9kZXZpY2VfZ2V0X21h
-dGNoX2RhdGEoZGV2KTsKPiAtCj4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBwcml2KTsK
-PiAgCj4gIAlyZXQgPSBkZXZtX3JlcXVlc3RfaXJxKGRldiwgaXJxLCBtdGtfZGlzcF9vdmxfaXJx
-X2hhbmRsZXIsCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Hi, Yongqiang:
+
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add ovl0/ovl_2l0 usecase
+> in ovl->ovl_2l0 direct link usecase:
+> 1. the crtc support layer number will 4+2
+> 2. ovl_2l0 background color input select ovl0 when crtc init
+> and disable it when crtc finish
+> 3. config ovl_2l0 layer, if crtc config layer number is
+> bigger than ovl0 support layers(max is 4)
+> 
+
+Applied to mediatek-drm-next-5.5 [1] with some modification by my
+comment, thanks.
+
+[1]
+https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
+
+Regards,
+CK
+
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
+>  1 file changed, 36 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> index c63ff2b..b55970a 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -270,6 +270,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>  
+>  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
+>  		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
+> +		enum mtk_ddp_comp_id prev;
+> +
+> +		if (i > 0)
+> +			prev = mtk_crtc->ddp_comp[i - 1]->id;
+> +		else
+> +			prev = DDP_COMPONENT_ID_MAX;
+> +
+> +		if (prev == DDP_COMPONENT_OVL0)
+> +			mtk_ddp_comp_bgclr_in_on(comp);
+>  
+>  		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
+>  		mtk_ddp_comp_start(comp);
+> @@ -279,9 +288,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>  	for (i = 0; i < mtk_crtc->layer_nr; i++) {
+>  		struct drm_plane *plane = &mtk_crtc->planes[i];
+>  		struct mtk_plane_state *plane_state;
+> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+> +		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
+> +		unsigned int local_layer;
+>  
+>  		plane_state = to_mtk_plane_state(plane->state);
+> -		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
+> +
+> +		if (i >= comp_layer_nr) {
+> +			comp = mtk_crtc->ddp_comp[1];
+> +			local_layer = i - comp_layer_nr;
+> +		} else
+> +			local_layer = i;
+> +		mtk_ddp_comp_layer_config(comp, local_layer,
+>  					  plane_state);
+>  	}
+>  
+> @@ -307,6 +325,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+>  					   mtk_crtc->ddp_comp[i]->id);
+>  	mtk_disp_mutex_disable(mtk_crtc->mutex);
+>  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
+> +		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
+>  		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
+>  					      mtk_crtc->mmsys_reg_data,
+>  					      mtk_crtc->ddp_comp[i]->id,
+> @@ -327,6 +346,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+>  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+>  	unsigned int i;
+> +	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
+> +	unsigned int local_layer;
+>  
+>  	/*
+>  	 * TODO: instead of updating the registers here, we should prepare
+> @@ -349,7 +370,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  			plane_state = to_mtk_plane_state(plane->state);
+>  
+>  			if (plane_state->pending.config) {
+> -				mtk_ddp_comp_layer_config(comp, i, plane_state);
+> +				if (i >= comp_layer_nr) {
+> +					comp = mtk_crtc->ddp_comp[1];
+> +					local_layer = i - comp_layer_nr;
+> +				} else
+> +					local_layer = i;
+> +
+> +				mtk_ddp_comp_layer_config(comp, local_layer,
+> +							  plane_state);
+>  				plane_state->pending.config = false;
+>  			}
+>  		}
+> @@ -572,6 +600,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>  	}
+>  
+>  	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
+> +	if (mtk_crtc->ddp_comp_nr > 1) {
+> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
+> +
+> +		if (comp->funcs->bgclr_in_on)
+> +			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
+> +	}
+>  	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
+>  					sizeof(struct drm_plane),
+>  					GFP_KERNEL);
