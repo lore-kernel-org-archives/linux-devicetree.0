@@ -1,130 +1,41 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5, 17/32] drm/mediatek: add component DITHER
-Date: Wed, 9 Oct 2019 17:11:30 +0800
-Message-ID: <1570612290.3420.2.camel@mtksdaap41>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-18-git-send-email-yongqiang.niu@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V7 0/3] mmc: mmci: add busy detect for stm32 sdmmc variant
+Date: Wed, 9 Oct 2019 11:12:14 +0200
+Message-ID: <CAPDyKFrKrV3e6WmrgzUA0OV4VGm0BMXr0=orogAhHQM3nRpxqQ@mail.gmail.com>
+References: <20191008095604.20675-1-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567090254-15566-18-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <20191008095604.20675-1-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yongqiang.niu@mediatek.com
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
+On Tue, 8 Oct 2019 at 11:56, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch series adds busy detect for stm32 sdmmc variant.
+> Some adaptations are required:
+> -On sdmmc the data timer is started on data transfert
+> and busy state, so we must add hardware busy timeout support.
+> -Add busy_complete callback at mmci_host_ops to allow to define
+> a specific busy completion by variant.
+> -Add sdmmc busy_complete callback.
+>
+> V7:
+> -Patch 1/3: rephrasing like proposed (thx ulf)
+> -If busy timeout is undefined => increase to 10s
+> -Keep busy_detect.
+> -Patch 3/3: rephrasing comment header
+> -Avoid twice read of status register
+> -Avoid writing in MMCIMASK0 & MMCICLEAR if not modified
+>
 
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add component DITHER
-> 
+Applied for next, thanks!
 
-Applied to mediatek-drm-next-5.5 [1], thanks.
+[...]
 
-[1]
-https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
-
-Regards,
-CK
-
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 32 +++++++++++++++++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  2 ++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> index af8e872..8fea985 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> @@ -39,6 +39,12 @@
->  #define CCORR_RELAY_MODE			BIT(0)
->  #define DISP_CCORR_SIZE				0x0030
->  
-> +#define DISP_DITHER_EN				0x0000
-> +#define DITHER_EN				BIT(0)
-> +#define DISP_DITHER_CFG				0x0020
-> +#define DITHER_RELAY_MODE			BIT(0)
-> +#define DISP_DITHER_SIZE			0x0030
-> +
->  #define DISP_GAMMA_EN				0x0000
->  #define DISP_GAMMA_CFG				0x0020
->  #define DISP_GAMMA_SIZE				0x0030
-> @@ -147,6 +153,24 @@ static void mtk_ccorr_stop(struct mtk_ddp_comp *comp)
->  	writel_relaxed(0x0, comp->regs + DISP_CCORR_EN);
->  }
->  
-> +static void mtk_dither_config(struct mtk_ddp_comp *comp, unsigned int w,
-> +			      unsigned int h, unsigned int vrefresh,
-> +			      unsigned int bpc)
-> +{
-> +	writel(h << 16 | w, comp->regs + DISP_DITHER_SIZE);
-> +	writel(DITHER_RELAY_MODE, comp->regs + DISP_DITHER_CFG);
-> +}
-> +
-> +static void mtk_dither_start(struct mtk_ddp_comp *comp)
-> +{
-> +	writel(DITHER_EN, comp->regs + DISP_DITHER_EN);
-> +}
-> +
-> +static void mtk_dither_stop(struct mtk_ddp_comp *comp)
-> +{
-> +	writel_relaxed(0x0, comp->regs + DISP_DITHER_EN);
-> +}
-> +
->  static void mtk_gamma_config(struct mtk_ddp_comp *comp, unsigned int w,
->  			     unsigned int h, unsigned int vrefresh,
->  			     unsigned int bpc)
-> @@ -201,6 +225,12 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
->  	.stop = mtk_ccorr_stop,
->  };
->  
-> +static const struct mtk_ddp_comp_funcs ddp_dither = {
-> +	.config = mtk_dither_config,
-> +	.start = mtk_dither_start,
-> +	.stop = mtk_dither_stop,
-> +};
-> +
->  static const struct mtk_ddp_comp_funcs ddp_gamma = {
->  	.gamma_set = mtk_gamma_set,
->  	.config = mtk_gamma_config,
-> @@ -226,6 +256,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
->  	[MTK_DISP_CCORR] = "ccorr",
->  	[MTK_DISP_AAL] = "aal",
->  	[MTK_DISP_GAMMA] = "gamma",
-> +	[MTK_DISP_DITHER] = "dither",
->  	[MTK_DISP_UFOE] = "ufoe",
->  	[MTK_DSI] = "dsi",
->  	[MTK_DPI] = "dpi",
-> @@ -248,6 +279,7 @@ struct mtk_ddp_comp_match {
->  	[DDP_COMPONENT_CCORR]	= { MTK_DISP_CCORR,	0, &ddp_ccorr },
->  	[DDP_COMPONENT_COLOR0]	= { MTK_DISP_COLOR,	0, NULL },
->  	[DDP_COMPONENT_COLOR1]	= { MTK_DISP_COLOR,	1, NULL },
-> +	[DDP_COMPONENT_DITHER]	= { MTK_DISP_DITHER,	0, &ddp_dither },
->  	[DDP_COMPONENT_DPI0]	= { MTK_DPI,		0, NULL },
->  	[DDP_COMPONENT_DPI1]	= { MTK_DPI,		1, NULL },
->  	[DDP_COMPONENT_DSI0]	= { MTK_DSI,		0, NULL },
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> index 962d14a..85e096a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> @@ -22,6 +22,7 @@ enum mtk_ddp_comp_type {
->  	MTK_DISP_WDMA,
->  	MTK_DISP_COLOR,
->  	MTK_DISP_CCORR,
-> +	MTK_DISP_DITHER,
->  	MTK_DISP_AAL,
->  	MTK_DISP_GAMMA,
->  	MTK_DISP_UFOE,
-> @@ -41,6 +42,7 @@ enum mtk_ddp_comp_id {
->  	DDP_COMPONENT_CCORR,
->  	DDP_COMPONENT_COLOR0,
->  	DDP_COMPONENT_COLOR1,
-> +	DDP_COMPONENT_DITHER,
->  	DDP_COMPONENT_DPI0,
->  	DDP_COMPONENT_DPI1,
->  	DDP_COMPONENT_DSI0,
+Kind regards
+Uffe
