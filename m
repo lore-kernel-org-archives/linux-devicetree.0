@@ -1,15 +1,15 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 01/10] dt-bindings: rcar-gen3-phy-usb2: Add r8a774b1
+Subject: RE: [PATCH 03/10] dt-bindings: usb: renesas_usbhs: Add r8a774b1
  support
-Date: Wed, 9 Oct 2019 04:09:28 +0000
-Message-ID: <TYAPR01MB45446960D3BB80ADF3D90941D8950@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+Date: Wed, 9 Oct 2019 04:09:38 +0000
+Message-ID: <TYAPR01MB454435F23CF8E76F537B55D9D8950@TYAPR01MB4544.jpnprd01.prod.outlook.com>
 References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1570531132-21856-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570531132-21856-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570531132-21856-2-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570531132-21856-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
@@ -19,10 +19,10 @@ List-Id: devicetree@vger.kernel.org
 Hi Fabrizio-san,
 
 > From: Fabrizio Castro, Sent: Tuesday, October 8, 2019 7:39 PM
+>=20
 > Document RZ/G2N (R8A774B1) SoC bindings.
 >=20
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
 
 Thank you for the patch!
 
