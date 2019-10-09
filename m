@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RESEND PATCH v3 10/11] phy: phy-mtk-tphy: add a new reference clock
-Date: Wed, 9 Oct 2019 15:40:33 +0800
-Message-ID: <1570606834-5644-10-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH v3 07/11] phy: phy-mtk-tphy: add a property for internal resistance
+Date: Wed, 9 Oct 2019 15:40:30 +0800
+Message-ID: <1570606834-5644-7-git-send-email-chunfeng.yun@mediatek.com>
 References: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,71 +12,68 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Usually the digital and analog phys use the same reference clock,
-but some platforms have two separate reference clocks for each of
-them, so add another optional clock to support them.
-In order to keep the clock names consistent with PHY IP's, change
-the da_ref for analog phy and ref clock for digital phy.
+This is used to tune J-K voltage by internal R (resistance)
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v3: no changes
+v3: change commit log
 
-v2: fix typo of analog
+v2: no changes
 ---
- drivers/phy/mediatek/phy-mtk-tphy.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ drivers/phy/mediatek/phy-mtk-tphy.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index c6424fd2a06d..cdbcc49f7115 100644
+index 5afe33621dbc..4a2dc92f10f5 100644
 --- a/drivers/phy/mediatek/phy-mtk-tphy.c
 +++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -298,7 +298,8 @@ struct mtk_phy_instance {
- 		struct u2phy_banks u2_banks;
- 		struct u3phy_banks u3_banks;
- 	};
--	struct clk *ref_clk;	/* reference clock of anolog phy */
-+	struct clk *ref_clk;	/* reference clock of (digital) phy */
-+	struct clk *da_ref_clk;	/* reference clock of analog phy */
- 	u32 index;
- 	u8 type;
+@@ -43,6 +43,8 @@
+ #define PA0_RG_USB20_INTR_EN		BIT(5)
+ 
+ #define U3P_USBPHYACR1		0x004
++#define PA1_RG_INTR_CAL		GENMASK(23, 19)
++#define PA1_RG_INTR_CAL_VAL(x)	((0x1f & (x)) << 19)
+ #define PA1_RG_VRT_SEL			GENMASK(14, 12)
+ #define PA1_RG_VRT_SEL_VAL(x)	((0x7 & (x)) << 12)
+ #define PA1_RG_TERM_SEL		GENMASK(10, 8)
+@@ -302,6 +304,7 @@ struct mtk_phy_instance {
  	int eye_src;
-@@ -925,6 +926,13 @@ static int mtk_phy_init(struct phy *phy)
- 		return ret;
- 	}
- 
-+	ret = clk_prepare_enable(instance->da_ref_clk);
-+	if (ret) {
-+		dev_err(tphy->dev, "failed to enable da_ref\n");
-+		clk_disable_unprepare(instance->ref_clk);
-+		return ret;
-+	}
-+
- 	switch (instance->type) {
- 	case PHY_TYPE_USB2:
- 		u2_phy_instance_init(tphy, instance);
-@@ -984,6 +992,7 @@ static int mtk_phy_exit(struct phy *phy)
- 		u2_phy_instance_exit(tphy, instance);
- 
- 	clk_disable_unprepare(instance->ref_clk);
-+	clk_disable_unprepare(instance->da_ref_clk);
- 	return 0;
+ 	int eye_vrt;
+ 	int eye_term;
++	int intr;
+ 	int discth;
+ 	bool bc12_en;
+ };
+@@ -853,12 +856,14 @@ static void phy_parse_property(struct mtk_tphy *tphy,
+ 				 &instance->eye_vrt);
+ 	device_property_read_u32(dev, "mediatek,eye-term",
+ 				 &instance->eye_term);
++	device_property_read_u32(dev, "mediatek,intr",
++				 &instance->intr);
+ 	device_property_read_u32(dev, "mediatek,discth",
+ 				 &instance->discth);
+-	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d, disc:%d\n",
++	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d, intr:%d, disc:%d\n",
+ 		instance->bc12_en, instance->eye_src,
+ 		instance->eye_vrt, instance->eye_term,
+-		instance->discth);
++		instance->intr, instance->discth);
  }
  
-@@ -1170,6 +1179,14 @@ static int mtk_tphy_probe(struct platform_device *pdev)
- 			retval = PTR_ERR(instance->ref_clk);
- 			goto put_child;
- 		}
-+
-+		instance->da_ref_clk =
-+			devm_clk_get_optional(&phy->dev, "da_ref");
-+		if (IS_ERR(instance->da_ref_clk)) {
-+			dev_err(dev, "failed to get da_ref_clk(id-%d)\n", port);
-+			retval = PTR_ERR(instance->da_ref_clk);
-+			goto put_child;
-+		}
+ static void u2_phy_props_set(struct mtk_tphy *tphy,
+@@ -895,6 +900,13 @@ static void u2_phy_props_set(struct mtk_tphy *tphy,
+ 		writel(tmp, com + U3P_USBPHYACR1);
  	}
  
- 	provider = devm_of_phy_provider_register(dev, mtk_phy_xlate);
++	if (instance->intr) {
++		tmp = readl(com + U3P_USBPHYACR1);
++		tmp &= ~PA1_RG_INTR_CAL;
++		tmp |= PA1_RG_INTR_CAL_VAL(instance->intr);
++		writel(tmp, com + U3P_USBPHYACR1);
++	}
++
+ 	if (instance->discth) {
+ 		tmp = readl(com + U3P_USBPHYACR6);
+ 		tmp &= ~PA6_RG_U2_DISCTH;
 -- 
 2.23.0
