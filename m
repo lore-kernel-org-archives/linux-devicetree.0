@@ -1,64 +1,111 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10 4/6] dts-bindings: leds: Document the naming
- requirement for LED properties
-Date: Wed, 9 Oct 2019 14:26:28 -0500
-Message-ID: <20191009192628.GA24087@bogus>
+Subject: Re: [PATCH v10 5/6] dt-bindings: backlight: Add led-backlight binding
+Date: Wed, 9 Oct 2019 14:35:23 -0500
+Message-ID: <20191009193523.GA7094@bogus>
 References: <20191009085127.22843-1-jjhiblot@ti.com>
- <20191009085127.22843-5-jjhiblot@ti.com>
+ <20191009085127.22843-6-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191009085127.22843-5-jjhiblot@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20191009085127.22843-6-jjhiblot@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, sre@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, tomi.valkeinen@ti.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, linux-leds@vger.kernel.org, dmurphy@ti.com
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, sre@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBPY3QgMDksIDIwMTkgYXQgMTA6NTE6MjVBTSArMDIwMCwgSmVhbi1KYWNxdWVzIEhp
-YmxvdCB3cm90ZToKPiBMRUQgcHJvcGVydGllcyBtdXN0IGJlIG5hbWVkICJsZWRzIiBpbiB0aGUg
-c2FtZSB3YXkgdGhhdCBQV00sIGNsb2NrcyBvcgo+IFBIWSBwcm9wZXJ0aWVzIGFyZSBuYW1lcyBy
-ZXNwZWN0aXZlbHkgInB3bXMiLCAiY2xvY2tzIiBhbmQgInBoeXMiLgo+IAo+IENjOiBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZwo+IFNpZ25lZC1vZmYtYnk6IEplYW4tSmFjcXVlcyBIaWJsb3Qg
-PGpqaGlibG90QHRpLmNvbT4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9j
-b21tb24udHh0ICAgICAgIHwgMjAgKysrKysrKysrKysrKysrKy0tLQo+ICAxIGZpbGUgY2hhbmdl
-ZCwgMTcgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvY29tbW9uLnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2NvbW1vbi50eHQKPiBpbmRleCA5ZmE2Zjk3
-OTVkNTAuLjMxYjhjMWY2OGQyNyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbGVkcy9jb21tb24udHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2xlZHMvY29tbW9uLnR4dAo+IEBAIC0xMCw2ICsxMCw5IEBAIGNhbiBpbmZs
-dWVuY2UgdGhlIHdheSBvZiB0aGUgTEVEIGRldmljZSBpbml0aWFsaXphdGlvbiwgdGhlIExFRCBj
-b21wb25lbnRzCj4gIGhhdmUgdG8gYmUgdGlnaHRseSBjb3VwbGVkIHdpdGggdGhlIExFRCBkZXZp
-Y2UgYmluZGluZy4gVGhleSBhcmUgcmVwcmVzZW50ZWQKPiAgYnkgY2hpbGQgbm9kZXMgb2YgdGhl
-IHBhcmVudCBMRUQgZGV2aWNlIGJpbmRpbmcuCj4gIAo+ICtMRUQgcHJvcGVydGllcyBzaG91bGQg
-YmUgbmFtZWQgImxlZHMiLiBUaGUgZXhhY3QgbWVhbmluZyBvZiBlYWNoIGxlZHMKPiArcHJvcGVy
-dHkgbXVzdCBiZSBkb2N1bWVudGVkIGluIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBlYWNo
-IGRldmljZS4KPiArCgpUaGlzIGlzIHdvcmRlZCBvZGRseS4gVGhlIHByb3BlcnR5IGlzICdsZWRz
-JyBhbmQgaXQgaXMgYWx3YXlzIGEgbGlzdCBvZiAKcGhhbmRsZXMgdG8gTEVEIGRldmljZSBub2Rl
-cy4gSXQgaXMgcHJlc2VudCBpbiBhbiBMRUQgY29uc3VtZXIgZGV2aWNlLgoKPiAgCj4gIE9wdGlv
-bmFsIHByb3BlcnRpZXMgZm9yIGNoaWxkIG5vZGVzOgo+ICAtIGxlZC1zb3VyY2VzIDogTGlzdCBv
-ZiBkZXZpY2UgY3VycmVudCBvdXRwdXRzIHRoZSBMRUQgaXMgY29ubmVjdGVkIHRvLiBUaGUKPiBA
-QCAtMTY1LDkgKzE2OCwyMCBAQCBsZWQtY29udHJvbGxlckAzMCB7Cj4gIAkJZnVuY3Rpb24tZW51
-bWVyYXRvciA9IDwyPjsKPiAgICAgICAgICB9Owo+ICAKPiAtICAgICAgICBsZWRAMyB7Cj4gKyAg
-ICAgICAgYmtsX2xlZDA6IGxlZEAzIHsKPiAgCQlyZWcgPSA8Mz47Cj4gLQkJZnVuY3Rpb24gPSBM
-RURfRlVOQ1RJT05fSU5ESUNBVE9SOwo+IC0JCWZ1bmN0aW9uLWVudW1lcmF0b3IgPSA8Mz47Cj4g
-KwkJZnVuY3Rpb24gPSBMRURfRlVOQ1RJT05fQkFDS0xJR0hUOwo+ICsJCWZ1bmN0aW9uLWVudW1l
-cmF0b3IgPSA8MT47Cj4gICAgICAgICAgfTsKPiArCj4gKyAgICAgICAgYmtsX2xlZDE6IGxlZEA0
-IHsKPiArCQlyZWcgPSA8ND47Cj4gKwkJZnVuY3Rpb24gPSBMRURfRlVOQ1RJT05fQkFDS0xJR0hU
-Owo+ICsJCWZ1bmN0aW9uLWVudW1lcmF0b3IgPSA8Mj47Cj4gKyAgICAgICAgfTsKPiArfTsKPiAr
-Cj4gKwo+ICtiYWNrbGlnaHRANDAgewoKRWl0aGVyIG5lZWRzICdyZWcnIG9yIHRoZSB1bml0LWFk
-ZHJlc3MgZHJvcHBlZC4KCj4gKwlsZWRzID0gPCZia2xfbGVkMD4gLCA8JmJrbF9sZWQxPjsKCmRy
-b3AgdGhlIHNwYWNlICAgICAgICAgICAgXgoKPiAgfTsKPiAtLSAKPiAyLjE3LjEKPiAKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Wed, Oct 09, 2019 at 10:51:26AM +0200, Jean-Jacques Hiblot wrote:
+> Add DT binding for led-backlight.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> 
+> ---
+> 
+> .../leds/backlight/led-backlight.yaml         | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> new file mode 100644
+> index 000000000000..47ae3d6b4f31
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/led-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LED-based Backlight Device Tree Bindings
+> +
+> +maintainers:
+> +  - Jean-Jacques Hiblot <jjhiblot@ti.com>
+> +
+> +description: |
+> +  This binding is used to describe a basic backlight device made of LEDs.
+> +  It can also be used to describe a backlight device controlled by the
+> +  output of a LED driver.
+> +
+> +properties:
+> +  compatible:
+> +    const: led-backlight
+> +
+> +  leds:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: List of LEDs constitutive of the backlight.
+> +
+> +  default-brightness:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Default brightness level on boot.
+
+It's not clear that this is an index when 'brightness-levels' is present 
+and absolute level when not. I wonder if we've been consistent on that?
+
+> +    minimum: 0
+
+Implied by being a uint32.
+
+> +
+> +  brightness-levels:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: Array of distinct brightness levels. The levels must be in
+> +      the range accepted by the underlying LED devices. This is used to
+> +      translate a backlight brightness level into a LED brightness level. If
+> +      it is not provided, the identity mapping is used.
+> +
+> +required:
+> +  - compatible
+> +  - backlight-leds
+
+leds?
+
+
+Add 'additionalProperties: false' here.
+
+> +
+> +examples:
+> +  - |
+> +    backlight {
+
+Please also define $nodename is 'backlight'.
+
+> +      compatible = "led-backlight";
+> +      backlight-leds = <&led1>;
+
+leds?
+
+> +      brightness-levels = <0 4 8 16 32 64 128 255>;
+> +      default-brightness = <6>; /*6th level => brightness of the LEDs is 128*/
+> +    };
+> +  - |
+> +    backlight {
+> +      compatible = "led-backlight";
+> +      backlight-leds = <&led1>, <&led2>;
+> +      default-brightness = <255>;
+> +    };
+> +...
+> -- 
+> 2.17.1
+> 
