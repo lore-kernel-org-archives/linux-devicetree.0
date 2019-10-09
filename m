@@ -1,66 +1,170 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 08/14] dmaengine: ti: New driver for K3 UDMA - split#1:
- defines, structs, io func
-Date: Wed, 9 Oct 2019 16:40:59 +0300
-Message-ID: <8bd7db20-811d-b7c7-38ec-75f1c9d94b8f@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-9-peter.ujfalusi@ti.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
+Date: Wed, 9 Oct 2019 15:55:00 +0200
+Message-ID: <20191009135500.ufkxcemccwfcfys7@M43218.corp.atmel.com>
+References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+ <20191002144658.7718-3-kamel.bouhara@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191001061704.2399-9-peter.ujfalusi@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
-Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, j-keerthy@ti.com, linux-kernel@vger.kernel.org, tony@atomide.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDEvMTAvMjAxOSAwOToxNiwgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6Cj4gU3BsaXQgcGF0Y2gg
-Zm9yIHJldmlldyBjb250YWluaW5nOiBkZWZpbmVzLCBzdHJ1Y3RzLCBpbyBhbmQgbG93IGxldmVs
-Cj4gZnVuY3Rpb25zIGFuZCBpbnRlcnJ1cHQgY2FsbGJhY2tzLgo+IAo+IERNQSBkcml2ZXIgZm9y
-Cj4gVGV4YXMgSW5zdHJ1bWVudHMgSzMgTkFWU1MgVW5pZmllZCBETUEg4oCTIFBlcmlwaGVyYWwg
-Um9vdCBDb21wbGV4IChVRE1BLVApCj4gCj4gVGhlIFVETUEtUCBpcyBpbnRlbmRlZCB0byBwZXJm
-b3JtIHNpbWlsYXIgKGJ1dCBzaWduaWZpY2FudGx5IHVwZ3JhZGVkKSBmdW5jdGlvbnMKPiBhcyB0
-aGUgcGFja2V0LW9yaWVudGVkIERNQSB1c2VkIG9uIHByZXZpb3VzIFNvQyBkZXZpY2VzLiBUaGUg
-VURNQS1QIG1vZHVsZQo+IHN1cHBvcnRzIHRoZSB0cmFuc21pc3Npb24gYW5kIHJlY2VwdGlvbiBv
-ZiB2YXJpb3VzIHBhY2tldCB0eXBlcy4gVGhlIFVETUEtUCBpcwo+IGFyY2hpdGVjdGVkIHRvIGZh
-Y2lsaXRhdGUgdGhlIHNlZ21lbnRhdGlvbiBhbmQgcmVhc3NlbWJseSBvZiBTb0MgRE1BIGRhdGEK
-PiBzdHJ1Y3R1cmUgY29tcGxpYW50IHBhY2tldHMgdG8vZnJvbSBzbWFsbGVyIGRhdGEgYmxvY2tz
-IHRoYXQgYXJlIG5hdGl2ZWx5Cj4gY29tcGF0aWJsZSB3aXRoIHRoZSBzcGVjaWZpYyByZXF1aXJl
-bWVudHMgb2YgZWFjaCBjb25uZWN0ZWQgcGVyaXBoZXJhbC4gTXVsdGlwbGUKPiBUeCBhbmQgUngg
-Y2hhbm5lbHMgYXJlIHByb3ZpZGVkIHdpdGhpbiB0aGUgRE1BIHdoaWNoIGFsbG93IG11bHRpcGxl
-IHNlZ21lbnRhdGlvbgo+IG9yIHJlYXNzZW1ibHkgb3BlcmF0aW9ucyB0byBiZSBvbmdvaW5nLiBU
-aGUgRE1BIGNvbnRyb2xsZXIgbWFpbnRhaW5zIHN0YXRlCj4gaW5mb3JtYXRpb24gZm9yIGVhY2gg
-b2YgdGhlIGNoYW5uZWxzIHdoaWNoIGFsbG93cyBwYWNrZXQgc2VnbWVudGF0aW9uIGFuZAo+IHJl
-YXNzZW1ibHkgb3BlcmF0aW9ucyB0byBiZSB0aW1lIGRpdmlzaW9uIG11bHRpcGxleGVkIGJldHdl
-ZW4gY2hhbm5lbHMgaW4gb3JkZXIKPiB0byBzaGFyZSB0aGUgdW5kZXJseWluZyBETUEgaGFyZHdh
-cmUuIEFuIGV4dGVybmFsIERNQSBzY2hlZHVsZXIgaXMgdXNlZCB0bwo+IGNvbnRyb2wgdGhlIG9y
-ZGVyaW5nIGFuZCByYXRlIGF0IHdoaWNoIHRoaXMgbXVsdGlwbGV4aW5nIG9jY3VycyBmb3IgVHJh
-bnNtaXQKPiBvcGVyYXRpb25zLiBUaGUgb3JkZXJpbmcgYW5kIHJhdGUgb2YgUmVjZWl2ZSBvcGVy
-YXRpb25zIGlzIGluZGlyZWN0bHkgY29udHJvbGxlZAo+IGJ5IHRoZSBvcmRlciBpbiB3aGljaCBi
-bG9ja3MgYXJlIHB1c2hlZCBpbnRvIHRoZSBETUEgb24gdGhlIFJ4IFBTSS1MIGludGVyZmFjZS4K
-PiAKPiBUaGUgVURNQS1QIGFsc28gc3VwcG9ydHMgYWN0aW5nIGFzIGJvdGggYSBVVEMgYW5kIFVE
-TUEtQyBmb3IgaXRzIGludGVybmFsCj4gY2hhbm5lbHMuIENoYW5uZWxzIGluIHRoZSBVRE1BLVAg
-Y2FuIGJlIGNvbmZpZ3VyZWQgdG8gYmUgZWl0aGVyIFBhY2tldC1CYXNlZCBvcgo+IFRoaXJkLVBh
-cnR5IGNoYW5uZWxzIG9uIGEgY2hhbm5lbCBieSBjaGFubmVsIGJhc2lzLgo+IAo+IFRoZSBpbml0
-aWFsIGRyaXZlciBzdXBwb3J0czoKPiAtIE1FTV9UT19NRU0gKFRSIG1vZGUpCj4gLSBERVZfVE9f
-TUVNIChQYWNrZXQgLyBUUiBtb2RlKQo+IC0gTUVNX1RPX0RFViAoUGFja2V0IC8gVFIgbW9kZSkK
-PiAtIEN5Y2xpYyAoUGFja2V0IC8gVFIgbW9kZSkKPiAtIE1ldGFkYXRhIGZvciBkZXNjcmlwdG9y
-cwo+IAo+IFNpZ25lZC1vZmYtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5j
-b20+CgpEaWQgcmV2aWV3IHRoaXMgdG8gYmVzdCBvZiBteSBhYmlsaXR5IGJ1dCBjb3VsZCBub3Qg
-ZmluZCBhbnl0aGluZyAKb2J2aW91c2x5IGJyb2tlbiwgdGh1czoKClJldmlld2VkLWJ5OiBUZXJv
-IEtyaXN0byA8dC1rcmlzdG9AdGkuY29tPgoKLS0KVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBP
-eSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNzIElE
-OiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Wed, Oct 02, 2019 at 04:46:56PM +0200, Kamel Bouhara wrote:
+> External E-Mail
+> 
+> 
+> Implement i2c bus recovery when slaves devices might hold SDA low.
+> In this case re-assign SCL/SDA to gpios and issue 9 dummy clock pulses
+> until the slave release SDA.
+> 
+
+Hi Kamel,
+
+Thanks for adding this new feature. As I see patches only for sama5d3 and
+sama5d4, I assume it has not been tested with a sama5d2, isn't it?
+
+I doubt it works with a sama5d2 because of the pinctrl. I also wonder if it can
+work if we add .strict = true to pinmux_ops which is something plan for the
+future...
+
+Are you able to test these points? It would be nice to be aware of
+possible side effects.
+
+Regards
+
+Ludovic
+
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> ---
+>  drivers/i2c/busses/i2c-at91-master.c | 63 ++++++++++++++++++++++++++++
+>  drivers/i2c/busses/i2c-at91.h        |  8 ++++
+>  2 files changed, 71 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+> index a3fcc35ffd3b..df5bb93f952d 100644
+> --- a/drivers/i2c/busses/i2c-at91-master.c
+> +++ b/drivers/i2c/busses/i2c-at91-master.c
+> @@ -18,11 +18,13 @@
+>  #include <linux/dma-mapping.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/platform_data/dma-atmel.h>
+>  #include <linux/pm_runtime.h>
+> @@ -768,6 +770,63 @@ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
+>  	return ret;
+>  }
+>  
+> +static void at91_prepare_twi_recovery(struct i2c_adapter *adap)
+> +{
+> +	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
+> +
+> +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
+> +}
+> +
+> +static void at91_unprepare_twi_recovery(struct i2c_adapter *adap)
+> +{
+> +	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
+> +
+> +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
+> +}
+> +
+> +static int at91_init_twi_recovery_info(struct platform_device *pdev,
+> +				       struct at91_twi_dev *dev)
+> +{
+> +	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
+> +
+> +	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
+> +	if (!dev->pinctrl || IS_ERR(dev->pinctrl)) {
+> +		dev_info(dev->dev, "can't get pinctrl, bus recovery not supported\n");
+> +		return PTR_ERR(dev->pinctrl);
+> +	}
+> +
+> +	dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
+> +							 PINCTRL_STATE_DEFAULT);
+> +	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
+> +						      "gpio");
+> +	rinfo->sda_gpiod = devm_gpiod_get(&pdev->dev, "sda", GPIOD_IN);
+> +	if (PTR_ERR(rinfo->sda_gpiod) == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> +
+> +	rinfo->scl_gpiod = devm_gpiod_get(&pdev->dev, "scl",
+> +					  GPIOD_OUT_HIGH_OPEN_DRAIN);
+> +	if (PTR_ERR(rinfo->scl_gpiod) == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> +
+> +	if (IS_ERR(rinfo->sda_gpiod) ||
+> +		   IS_ERR(rinfo->scl_gpiod) ||
+> +		   IS_ERR(dev->pinctrl_pins_default) ||
+> +		   IS_ERR(dev->pinctrl_pins_gpio)) {
+> +		dev_info(&pdev->dev, "recovery information incomplete\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "using scl%s for recovery\n",
+> +		 rinfo->sda_gpiod ? ",sda" : "");
+> +
+> +	rinfo->prepare_recovery = at91_prepare_twi_recovery;
+> +	rinfo->unprepare_recovery = at91_unprepare_twi_recovery;
+> +	rinfo->recover_bus = i2c_generic_scl_recovery;
+> +	dev->adapter.bus_recovery_info = rinfo;
+> +
+> +	return 0;
+> +}
+> +
+>  int at91_twi_probe_master(struct platform_device *pdev,
+>  			  u32 phy_addr, struct at91_twi_dev *dev)
+>  {
+> @@ -795,6 +854,10 @@ int at91_twi_probe_master(struct platform_device *pdev,
+>  
+>  	at91_calc_twi_clock(dev);
+>  
+> +	rc = at91_init_twi_recovery_info(pdev, dev);
+> +	if (rc == -EPROBE_DEFER)
+> +		return rc;
+> +
+>  	dev->adapter.algo = &at91_twi_algorithm;
+>  	dev->adapter.quirks = &at91_twi_quirks;
+>  
+> diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
+> index 499b506f6128..b89dab55e776 100644
+> --- a/drivers/i2c/busses/i2c-at91.h
+> +++ b/drivers/i2c/busses/i2c-at91.h
+> @@ -141,6 +141,10 @@ struct at91_twi_dev {
+>  	u32 fifo_size;
+>  	struct at91_twi_dma dma;
+>  	bool slave_detected;
+> +	struct i2c_bus_recovery_info rinfo;
+> +	struct pinctrl *pinctrl;
+> +	struct pinctrl_state *pinctrl_pins_default;
+> +	struct pinctrl_state *pinctrl_pins_gpio;
+>  #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
+>  	unsigned smr;
+>  	struct i2c_client *slave;
+> @@ -158,6 +162,10 @@ void at91_init_twi_bus_master(struct at91_twi_dev *dev);
+>  int at91_twi_probe_master(struct platform_device *pdev, u32 phy_addr,
+>  			  struct at91_twi_dev *dev);
+>  
+> +void at91_twi_prepare_recovery(struct i2c_adapter *adap);
+> +void at91_twi_unprepare_recovery(struct i2c_adapter *adap);
+> +void at91_twi_init_recovery_info(struct at91_twi_dev *dev);
+> +
+>  #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
+>  void at91_init_twi_bus_slave(struct at91_twi_dev *dev);
+>  int at91_twi_probe_slave(struct platform_device *pdev, u32 phy_addr,
+> -- 
+> 2.23.0
+> 
+> 
