@@ -1,50 +1,45 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_2/3]_dt-bindings:_net:_ftgmac100:_Describe_clock_pr?=
- =?UTF-8?Q?operties?=
-Date: Wed, 09 Oct 2019 10:49:45 +1030
-Message-ID: <01c7cafe-8b41-4099-af29-3593e27a1d20@www.fastmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
+Date: Tue, 8 Oct 2019 17:38:05 -0700
+Message-ID: <938706da-d329-c4aa-fcce-2d390a4e98f7@gmail.com>
 References: <20191008115143.14149-1-andrew@aj.id.au>
- <20191008115143.14149-3-andrew@aj.id.au>
- <CACPK8XcWLCGupAF1EX1LB6A=mQY0s9kjgagr3EKEKJhnbt+j0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACPK8XcWLCGupAF1EX1LB6A=mQY0s9kjgagr3EKEKJhnbt+j0g@mail.gmail.com>
+In-Reply-To: <20191008115143.14149-1-andrew@aj.id.au>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To: Andrew Jeffery <andrew@aj.id.au>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Tue, 8 Oct 2019, at 23:12, Joel Stanley wrote:
-> On Tue, 8 Oct 2019 at 11:50, Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > Critically, the AST2600 requires ungating the RMII RCLK if e.g. NCSI is
-> > in use.
-> >
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> >  Documentation/devicetree/bindings/net/ftgmac100.txt | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/ftgmac100.txt b/Documentation/devicetree/bindings/net/ftgmac100.txt
-> > index 04cc0191b7dd..c443b0b84be5 100644
-> > --- a/Documentation/devicetree/bindings/net/ftgmac100.txt
-> > +++ b/Documentation/devicetree/bindings/net/ftgmac100.txt
-> > @@ -24,6 +24,12 @@ Optional properties:
-> >  - no-hw-checksum: Used to disable HW checksum support. Here for backward
-> >    compatibility as the driver now should have correct defaults based on
-> >    the SoC.
-> > +- clocks: In accordance with the generic clock bindings. Must describe the MAC
-> > +  IP clock, and optionally an RMII RCLK gate for the AST2600.
+On 10/8/2019 4:51 AM, Andrew Jeffery wrote:
+> Hello,
 > 
->  or AST2500.
+> This series slightly extends the devicetree binding and driver for the
+> FTGMAC100 to describe an optional RMII RCLK gate in the clocks property.
+> Currently it's necessary for the kernel to ungate RCLK on the AST2600 in NCSI
+> configurations as u-boot does not yet support NCSI (which uses the RMII).
+
+RMII as in Reduced MII or Reverse MII in that context?
+
 > 
-> With that fixed you can add my ack.
+> Please review!
+> 
+> Andrew
+> 
+> Andrew Jeffery (3):
+>   dt-bindings: net: ftgmac100: Document AST2600 compatible
+>   dt-bindings: net: ftgmac100: Describe clock properties
+>   net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
+> 
+>  .../devicetree/bindings/net/ftgmac100.txt     |  7 ++++
+>  drivers/net/ethernet/faraday/ftgmac100.c      | 35 +++++++++++++++----
+>  2 files changed, 35 insertions(+), 7 deletions(-)
+> 
 
-I'll do a v2 and fix the comments in the driver patch as well.
-
-Cheers,
-
-Andrew
+-- 
+Florian
