@@ -1,111 +1,59 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10 5/6] dt-bindings: backlight: Add led-backlight binding
-Date: Wed, 9 Oct 2019 14:35:23 -0500
-Message-ID: <20191009193523.GA7094@bogus>
-References: <20191009085127.22843-1-jjhiblot@ti.com>
- <20191009085127.22843-6-jjhiblot@ti.com>
+Subject: Re: [PATCH v9 2/7] nfc: pn532: Add uart phy docs and rename it
+Date: Wed, 9 Oct 2019 14:36:25 -0500
+Message-ID: <20191009193625.GA19348@bogus>
+References: <20191008140544.17112-1-poeschel@lemonage.de>
+ <20191008140544.17112-3-poeschel@lemonage.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191009085127.22843-6-jjhiblot@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, sre@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, devicetree@vger.kernel.org
+In-Reply-To: <20191008140544.17112-3-poeschel@lemonage.de>
+Sender: netdev-owner@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Lars Poeschel <poeschel@lemonage.de>, "open list:NFC SUBSYSTEM" <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 10:51:26AM +0200, Jean-Jacques Hiblot wrote:
-> Add DT binding for led-backlight.
+On Tue,  8 Oct 2019 16:05:39 +0200, Lars Poeschel wrote:
+> This adds documentation about the uart phy to the pn532 binding doc. As
+> the filename "pn533-i2c.txt" is not appropriate any more, rename it to
+> the more general "pn532.txt".
+> This also documents the deprecation of the compatible strings ending
+> with "...-i2c".
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> 
+> Cc: Johan Hovold <johan@kernel.org>
+> Cc: Simon Horman <horms@verge.net.au>
+> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 > ---
+> Changes in v9:
+> - Rebased the patch series on v5.4-rc2
+> - Produce patch with -M4 to git format-patch to detect the rename
+> - Change DT node name from pn532@24 to nfc@24 in example
 > 
-> .../leds/backlight/led-backlight.yaml         | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> Changes in v8:
+> - Update existing binding doc instead of adding a new one:
+>   - Add uart phy example
+>   - Add general "pn532" compatible string
+>   - Deprecate "...-i2c" compatible strings
+>   - Rename file to a more general filename
+> - Intentionally drop Rob's Reviewed-By as I guess this rather big change
+>   requires a new review
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
-> new file mode 100644
-> index 000000000000..47ae3d6b4f31
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/backlight/led-backlight.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LED-based Backlight Device Tree Bindings
-> +
-> +maintainers:
-> +  - Jean-Jacques Hiblot <jjhiblot@ti.com>
-> +
-> +description: |
-> +  This binding is used to describe a basic backlight device made of LEDs.
-> +  It can also be used to describe a backlight device controlled by the
-> +  output of a LED driver.
-> +
-> +properties:
-> +  compatible:
-> +    const: led-backlight
-> +
-> +  leds:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: List of LEDs constitutive of the backlight.
-> +
-> +  default-brightness:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Default brightness level on boot.
-
-It's not clear that this is an index when 'brightness-levels' is present 
-and absolute level when not. I wonder if we've been consistent on that?
-
-> +    minimum: 0
-
-Implied by being a uint32.
-
-> +
-> +  brightness-levels:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: Array of distinct brightness levels. The levels must be in
-> +      the range accepted by the underlying LED devices. This is used to
-> +      translate a backlight brightness level into a LED brightness level. If
-> +      it is not provided, the identity mapping is used.
-> +
-> +required:
-> +  - compatible
-> +  - backlight-leds
-
-leds?
-
-
-Add 'additionalProperties: false' here.
-
-> +
-> +examples:
-> +  - |
-> +    backlight {
-
-Please also define $nodename is 'backlight'.
-
-> +      compatible = "led-backlight";
-> +      backlight-leds = <&led1>;
-
-leds?
-
-> +      brightness-levels = <0 4 8 16 32 64 128 255>;
-> +      default-brightness = <6>; /*6th level => brightness of the LEDs is 128*/
-> +    };
-> +  - |
-> +    backlight {
-> +      compatible = "led-backlight";
-> +      backlight-leds = <&led1>, <&led2>;
-> +      default-brightness = <255>;
-> +    };
-> +...
-> -- 
-> 2.17.1
+> Changes in v7:
+> - Accidentally lost Rob's Reviewed-By
 > 
+> Changes in v6:
+> - Rebased the patch series on v5.3-rc5
+> - Picked up Rob's Reviewed-By
+> 
+> Changes in v4:
+> - Add documentation about reg property in case of i2c
+> 
+> Changes in v3:
+> - seperate binding doc instead of entry in trivial-devices.txt
+> 
+>  .../net/nfc/{pn533-i2c.txt => pn532.txt}      | 25 ++++++++++++++++---
+>  1 file changed, 21 insertions(+), 4 deletions(-)
+>  rename Documentation/devicetree/bindings/net/nfc/{pn533-i2c.txt => pn532.txt} (42%)
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
