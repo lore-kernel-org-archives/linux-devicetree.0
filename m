@@ -1,84 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-Date: Wed, 9 Oct 2019 14:16:25 -0500
-Message-ID: <20191009191625.GA8179@bogus>
-References: <1570103363-21486-1-git-send-email-talel@amazon.com>
- <1570103363-21486-2-git-send-email-talel@amazon.com>
+Subject: Re: [PATCH v10 4/6] dts-bindings: leds: Document the naming
+ requirement for LED properties
+Date: Wed, 9 Oct 2019 14:26:28 -0500
+Message-ID: <20191009192628.GA24087@bogus>
+References: <20191009085127.22843-1-jjhiblot@ti.com>
+ <20191009085127.22843-5-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1570103363-21486-2-git-send-email-talel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Talel Shenhar <talel@amazon.com>
-Cc: mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
+In-Reply-To: <20191009085127.22843-5-jjhiblot@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, sre@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, tomi.valkeinen@ti.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, linux-leds@vger.kernel.org, dmurphy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 02:49:22PM +0300, Talel Shenhar wrote:
-> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
-> 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
-> ---
->  .../bindings/edac/amazon,al-mc-edac.yaml           | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> new file mode 100644
-> index 0000000..33da051
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Amazon's Annapurna Labs Memory Controller EDAC
-> +
-> +maintainers:
-> +  - Talel Shenhar <talel@amazon.com>
-> +  - Talel Shenhar <talelshenhar@gmail.com>
-> +
-> +description: |
-> +  EDAC node is defined to describe on-chip error detection and correction for
-> +  Amazon's Annapurna Labs Memory Controller.
-> +
-> +properties:
-> +
-> +  compatible:
-> +    - const: "amazon,al-mc-edac"
-
-Fails 'make dt_binding_check'. Drop the '-' as a property is not a list.
-
-The "" are also unnecessary.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    edac@f0080000 {
-> +      compatible = "amazon,al-mc-edac";
-> +      reg = <0x0 0xf0080000 0x0 0x00010000>;
-> +      interrupt-parent = <&amazon_al_system_fabric>;
-> +      interrupt-names = "ue";
-
-Need to document the name or drop as -names on a single entry is 
-pointless.
-
-> +      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> -- 
-> 2.7.4
-> 
+T24gV2VkLCBPY3QgMDksIDIwMTkgYXQgMTA6NTE6MjVBTSArMDIwMCwgSmVhbi1KYWNxdWVzIEhp
+YmxvdCB3cm90ZToKPiBMRUQgcHJvcGVydGllcyBtdXN0IGJlIG5hbWVkICJsZWRzIiBpbiB0aGUg
+c2FtZSB3YXkgdGhhdCBQV00sIGNsb2NrcyBvcgo+IFBIWSBwcm9wZXJ0aWVzIGFyZSBuYW1lcyBy
+ZXNwZWN0aXZlbHkgInB3bXMiLCAiY2xvY2tzIiBhbmQgInBoeXMiLgo+IAo+IENjOiBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZwo+IFNpZ25lZC1vZmYtYnk6IEplYW4tSmFjcXVlcyBIaWJsb3Qg
+PGpqaGlibG90QHRpLmNvbT4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9j
+b21tb24udHh0ICAgICAgIHwgMjAgKysrKysrKysrKysrKysrKy0tLQo+ICAxIGZpbGUgY2hhbmdl
+ZCwgMTcgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvY29tbW9uLnR4dCBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2NvbW1vbi50eHQKPiBpbmRleCA5ZmE2Zjk3
+OTVkNTAuLjMxYjhjMWY2OGQyNyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbGVkcy9jb21tb24udHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2xlZHMvY29tbW9uLnR4dAo+IEBAIC0xMCw2ICsxMCw5IEBAIGNhbiBpbmZs
+dWVuY2UgdGhlIHdheSBvZiB0aGUgTEVEIGRldmljZSBpbml0aWFsaXphdGlvbiwgdGhlIExFRCBj
+b21wb25lbnRzCj4gIGhhdmUgdG8gYmUgdGlnaHRseSBjb3VwbGVkIHdpdGggdGhlIExFRCBkZXZp
+Y2UgYmluZGluZy4gVGhleSBhcmUgcmVwcmVzZW50ZWQKPiAgYnkgY2hpbGQgbm9kZXMgb2YgdGhl
+IHBhcmVudCBMRUQgZGV2aWNlIGJpbmRpbmcuCj4gIAo+ICtMRUQgcHJvcGVydGllcyBzaG91bGQg
+YmUgbmFtZWQgImxlZHMiLiBUaGUgZXhhY3QgbWVhbmluZyBvZiBlYWNoIGxlZHMKPiArcHJvcGVy
+dHkgbXVzdCBiZSBkb2N1bWVudGVkIGluIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBlYWNo
+IGRldmljZS4KPiArCgpUaGlzIGlzIHdvcmRlZCBvZGRseS4gVGhlIHByb3BlcnR5IGlzICdsZWRz
+JyBhbmQgaXQgaXMgYWx3YXlzIGEgbGlzdCBvZiAKcGhhbmRsZXMgdG8gTEVEIGRldmljZSBub2Rl
+cy4gSXQgaXMgcHJlc2VudCBpbiBhbiBMRUQgY29uc3VtZXIgZGV2aWNlLgoKPiAgCj4gIE9wdGlv
+bmFsIHByb3BlcnRpZXMgZm9yIGNoaWxkIG5vZGVzOgo+ICAtIGxlZC1zb3VyY2VzIDogTGlzdCBv
+ZiBkZXZpY2UgY3VycmVudCBvdXRwdXRzIHRoZSBMRUQgaXMgY29ubmVjdGVkIHRvLiBUaGUKPiBA
+QCAtMTY1LDkgKzE2OCwyMCBAQCBsZWQtY29udHJvbGxlckAzMCB7Cj4gIAkJZnVuY3Rpb24tZW51
+bWVyYXRvciA9IDwyPjsKPiAgICAgICAgICB9Owo+ICAKPiAtICAgICAgICBsZWRAMyB7Cj4gKyAg
+ICAgICAgYmtsX2xlZDA6IGxlZEAzIHsKPiAgCQlyZWcgPSA8Mz47Cj4gLQkJZnVuY3Rpb24gPSBM
+RURfRlVOQ1RJT05fSU5ESUNBVE9SOwo+IC0JCWZ1bmN0aW9uLWVudW1lcmF0b3IgPSA8Mz47Cj4g
+KwkJZnVuY3Rpb24gPSBMRURfRlVOQ1RJT05fQkFDS0xJR0hUOwo+ICsJCWZ1bmN0aW9uLWVudW1l
+cmF0b3IgPSA8MT47Cj4gICAgICAgICAgfTsKPiArCj4gKyAgICAgICAgYmtsX2xlZDE6IGxlZEA0
+IHsKPiArCQlyZWcgPSA8ND47Cj4gKwkJZnVuY3Rpb24gPSBMRURfRlVOQ1RJT05fQkFDS0xJR0hU
+Owo+ICsJCWZ1bmN0aW9uLWVudW1lcmF0b3IgPSA8Mj47Cj4gKyAgICAgICAgfTsKPiArfTsKPiAr
+Cj4gKwo+ICtiYWNrbGlnaHRANDAgewoKRWl0aGVyIG5lZWRzICdyZWcnIG9yIHRoZSB1bml0LWFk
+ZHJlc3MgZHJvcHBlZC4KCj4gKwlsZWRzID0gPCZia2xfbGVkMD4gLCA8JmJrbF9sZWQxPjsKCmRy
+b3AgdGhlIHNwYWNlICAgICAgICAgICAgXgoKPiAgfTsKPiAtLSAKPiAyLjE3LjEKPiAKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
