@@ -1,95 +1,49 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v7 1/2] dt-bindings: ASoC: Add WSA881x bindings
-Date: Wed,  9 Oct 2019 09:51:07 +0100
-Message-ID: <20191009085108.4950-2-srinivas.kandagatla@linaro.org>
-References: <20191009085108.4950-1-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v7 0/2] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
+Date: Wed,  9 Oct 2019 09:51:06 +0100
+Message-ID: <20191009085108.4950-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191009085108.4950-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: broonie@kernel.org
-Cc: spapothi@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, vkoul@kernel.org, pierre-louis.bossart@linux.intel.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: spapothi@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, vkoul@kernel.org, pierre-louis.bossart@linux.intel.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
-Amplifier. This Amplifier also has a simple thermal sensor for
-over temperature and speaker protection.
+This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
+Amplifier which is SoundWire interfaced.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/sound/qcom,wsa881x.yaml          | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
+This patchset along with DB845c machine driver and WCD934x codec driver
+has been tested on SDM845 SoC based DragonBoard DB845c with two
+WSA8810 and Lenovo YOGA C630 Laptop based on SDM850 with WSA8815
+speaker amplifiers.
+
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
+
+TODO:
+        Add thermal sensor support in WSA881x.
+
+Thanks,
+srini
+
+Changes since v6:
+	- Added reviewed-by tag from Pierre and Rob
+	- Removed udelay argument as suggested by Pierre.
+	- Added device id for WSA8815
+	- rebased on sound-next
+
+Srinivas Kandagatla (2):
+  dt-bindings: ASoC: Add WSA881x bindings
+  ASoC: codecs: add wsa881x amplifier support
+
+ .../bindings/sound/qcom,wsa881x.yaml          |   62 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa881x.c                    | 1113 +++++++++++++++++
+ 4 files changed, 1187 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+ create mode 100644 sound/soc/codecs/wsa881x.c
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-new file mode 100644
-index 000000000000..faa90966a33a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
-+
-+maintainers:
-+  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-+
-+description: |
-+  WSA8810 is a class-D smart speaker amplifier and WSA8815
-+  is a high-output power class-D smart speaker amplifier.
-+  Their primary operating mode uses a SoundWire digital audio
-+  interface. This binding is for SoundWire interface.
-+
-+properties:
-+  compatible:
-+    const: sdw10217201000
-+
-+  reg:
-+    maxItems: 1
-+
-+  powerdown-gpios:
-+    description: GPIO spec for Powerdown/Shutdown line to use
-+    maxItems: 1
-+
-+  '#thermal-sensor-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - powerdown-gpios
-+  - "#thermal-sensor-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    soundwire@c2d0000 {
-+        #address-cells = <2>;
-+        #size-cells = <0>;
-+        reg = <0x0c2d0000 0x2000>;
-+
-+        speaker@0,1 {
-+            compatible = "sdw10217201000";
-+            reg = <0 1>;
-+            powerdown-gpios = <&wcdpinctrl 2 0>;
-+            #thermal-sensor-cells = <0>;
-+        };
-+
-+        speaker@0,2 {
-+            compatible = "sdw10217201000";
-+            reg = <0 2>;
-+            powerdown-gpios = <&wcdpinctrl 2 0>;
-+            #thermal-sensor-cells = <0>;
-+        };
-+    };
-+
-+...
 -- 
 2.21.0
