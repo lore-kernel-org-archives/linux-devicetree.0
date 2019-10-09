@@ -1,39 +1,98 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH] arm64: dts: imx8mq-evk: VDD_ARM power rail is always ON
-Date: Wed,  9 Oct 2019 15:04:19 +0800
-Message-ID: <1570604659-28314-1-git-send-email-Anson.Huang@nxp.com>
+From: =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
+Subject: [PATCH] arm64: tegra: enable PWM fan on Jetson Nano
+Date: Wed,  9 Oct 2019 08:18:55 +0200
+Message-ID: <20191009061855.4415-1-tszucs@protonmail.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, ccaione@baylibre.com, daniel.baluta@nxp.com, andrew.smirnov@gmail.com, abel.vesa@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
 List-Id: devicetree@vger.kernel.org
 
-On i.MX8MQ EVK board, VDD_ARM is from a DC-DC converter which
-is always ON, the GPIO1_IO13 is ONLY to switch VDD_ARM's voltage
-between 0.9V and 1V for CPU DVFS, so VDD_ARM's GPIO regulator
-should be always ON to avoid below confusion after kernel boot
-up:
+Enable PWM fan and extend CPU thermal zones for monitoring and fan control.
+This will trigger the PWM fan on J15 and cool down the system if necessary.
 
-imx8mqevk login:
-[   31.776619] vdd_arm: disabling
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ .../boot/dts/nvidia/tegra210-p3450-0000.dts   | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index 6ede46f..4e0a281 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -48,6 +48,8 @@
- 		gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
- 		states = <1000000 0x0
- 			  900000 0x1>;
-+		regulator-boot-on;
-+		regulator-always-on;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+index 9d17ec707bce..43c3613e7217 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+@@ -552,6 +552,70 @@
+ 		};
  	};
  
- 	wm8524: audio-codec {
++	fan: fan {
++		compatible = "pwm-fan";
++		pwms = <&pwm 3 45334>;
++
++		cooling-levels = <0 64 128 255>;
++		#cooling-cells = <2>;
++	};
++
++	thermal-zones {
++		cpu {
++			polling-delay = <0>;
++			polling-delay-passive = <500>;
++			status = "okay";
++
++			trips {
++				cpu_trip_critical: critical {
++					temperature = <96500>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++
++				cpu_trip_hot: hot {
++					temperature = <70000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				cpu_trip_active: active {
++					temperature = <50000>;
++					hysteresis = <2000>;
++					type = "active";
++				};
++
++				cpu_trip_passive: passive {
++					temperature = <30000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++			};
++
++			cooling-maps {
++				cpu-critical {
++					cooling-device = <&fan 3 3>;
++					trip = <&cpu_trip_critical>;
++				};
++
++				cpu-hot {
++					cooling-device = <&fan 2 2>;
++					trip = <&cpu_trip_hot>;
++				};
++
++				cpu-active {
++					cooling-device = <&fan 1 1>;
++					trip = <&cpu_trip_active>;
++				};
++
++				cpu-passive {
++					cooling-device = <&fan 0 0>;
++					trip = <&cpu_trip_passive>;
++				};
++			};
++		};
++	};
++
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 
 -- 
-2.7.4
+2.20.1
