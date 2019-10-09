@@ -1,54 +1,65 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-Date: Wed, 09 Oct 2019 14:04:41 +0200
-Message-ID: <1jwode9lba.fsf@starbuckisacylon.baylibre.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com> <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com> <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com> <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com> <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
+From: Thara Gopinath <thara.gopinath@linaro.org>
+Subject: Re: [PATCH 3/5] dt-bindings: thermal: Add generic power domain
+ warming device binding
+Date: Wed, 9 Oct 2019 08:18:14 -0400
+Message-ID: <5D9DD006.8010809@linaro.org>
+References: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org>
+ <1568135676-9328-4-git-send-email-thara.gopinath@linaro.org>
+ <20190930144205.GA11539@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
+In-Reply-To: <20190930144205.GA11539@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org, daniel.lezcano@linaro.org, bjorn.andersson@linaro.org, agross@kernel.org, amit.kucheria@verdurent.com, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
+Thanks for the review
 
-On Wed 09 Oct 2019 at 10:48, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Kernel command line: console=ttyAML0,115200n8
-> root=PARTUUID=45d7d61e-01 rw rootwait
-> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
->
-> [0] https://pastebin.com/eBgJrSKe
->
->> you can also try the command line parameter "clk_ignore_unused" (it's
->> just a gut feeling: maybe a "critical" clock is being disabled because
->> it's not wired up correctly).
+On 09/30/2019 10:42 AM, Rob Herring wrote:
+> On Tue, Sep 10, 2019 at 01:14:34PM -0400, Thara Gopinath wrote:
+>> Add binding to define power domains as thermal warming
+>> devices.
 >>
->
-> It look like some clk issue after I added the *clk_ignore_unused* to
-> kernel command line
-> it booted further to login prompt and cpufreq DVFS seem to be loaded.
-> So I could conclude this is clk issue.below is the boot log
->
-> Kernel command line: console=ttyAML0,115200n8
-> root=PARTUUID=45d7d61e-01 rw rootwait
-> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
-> clk_ignore_unused
->
-> [1] https://pastebin.com/Nsk0wZQJ
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+>>  .../bindings/thermal/pwr-domain-warming.txt        | 32 ++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
+>> new file mode 100644
+>> index 0000000..25fc568
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
+>> @@ -0,0 +1,32 @@
+>> +* Generic power domain based thermal warming device.
+>> +
+>> +This binding describes the power domains that can be used as a
+>> +thermal warming device.
+> 
+> This looks like just a gathering of properties and way to instantiate 
+> some driver.
+> 
+> I think this all belongs in the power domain provider. Make it a cooling 
+> device and you should know which domains are relevant based on the 
+> compatible (though perhaps we could consider a list in DT). If you want 
+> to instantiate a separate driver to handle this, then make the power 
+> domain driver do that.
+
+This sounds fine. A list in DT might be needed though. I have a separate
+driver. I should be able to get the genpd provider driver call
+into it. I had asked this to Ulf and he seemed to be fine with it as well
+
+
+> 
+> Rob
+> 
 >
 
-Next step it to try narrow down the clock causing the issue.
-Remove clk_ignore_unused from the command line and add CLK_INGORE_UNUSED
-to the flag of some clocks your clock controller (g12a I think) until
-
-The peripheral clock gates already have this flag (something we should
-fix someday) so don't bother looking there.
-
-Most likely the source of the pwm is getting disabled between the
-late_init call and the probe of the PWM module. Since the pwm is already
-active (w/o a driver), gating the clock source shuts dowm the power to
-the cores.
-
-Looking a the possible inputs in pwm driver, I'd bet on fdiv4.
+-- 
+Regards
+Thara
