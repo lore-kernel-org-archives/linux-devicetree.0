@@ -1,292 +1,77 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] arm64: dts: meson: sei610: enable audio
-Date: Wed,  9 Oct 2019 10:27:08 +0200
-Message-ID: <20191009082708.6337-3-jbrunet@baylibre.com>
-References: <20191009082708.6337-1-jbrunet@baylibre.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+Date: Wed, 9 Oct 2019 09:32:51 +0100
+Message-ID: <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+ <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+ <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
+ <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
+ <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+ <20190813195804.GL5093@sirena.co.uk>
+ <20190814041142.GU12733@vkoul-mobl.Dlink>
+ <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191009082708.6337-1-jbrunet@baylibre.com>
+In-Reply-To: <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add and enable the audio devices on the sei610.
+Hi Pierre,
 
-The new FRDDR/TODDR D of the SM1 have been left out on purpose. The
-plaftorm has 2 possible playback interfaces and 3 possible capture
-interfaces. 3 pcm interfaces for each direction is enough.
+On 14/08/2019 15:09, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 8/13/19 11:11 PM, Vinod Koul wrote:
+>> On 13-08-19, 20:58, Mark Brown wrote:
+>>> On Tue, Aug 13, 2019 at 02:38:53PM -0500, Pierre-Louis Bossart wrote:
+>>>
+>>>> Indeed. I don't have a full understanding of that part to be honest, 
+>>>> nor why
+>>>> we need something SoundWire-specific. We already abused the 
+>>>> set_tdm_slot API
+>>>> to store an HDaudio stream, now we have a rather confusing stream
+>>>> information for SoundWire and I have about 3 other 'stream' contexts in
+>>>> SOF... I am still doing basic cleanups but this has been on my radar 
+>>>> for a
+>>>> while.
+>>>
+>>> There is something to be said for not abusing the TDM slot API if it can
+>>> make things clearer by using bus-idiomatic mechanisms, but it does mean
+>>> everything needs to know about each individual bus :/ .
+>>
+>> Here ASoC doesn't need to know about sdw bus. As Srini explained, this
+>> helps in the case for him to get the stream context and set the stream
+>> context from the machine driver.
+>>
+>> Nothing else is expected to be done from this API. We already do a set
+>> using snd_soc_dai_set_sdw_stream(). Here we add the 
+>> snd_soc_dai_get_sdw_stream() to query
+> 
+> I didn't see a call to snd_soc_dai_set_sdw_stream() in Srini's code?
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../boot/dts/amlogic/meson-sm1-sei610.dts     | 205 ++++++++++++++++++
- 1 file changed, 205 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-index 1d627f7f47b2..5bd07469766b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-@@ -9,6 +9,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
- 	compatible = "seirobotics,sei610", "amlogic,sm1";
-@@ -19,6 +20,22 @@
- 		ethernet0 = &ethmac;
- 	};
- 
-+	mono_dac: audio-codec-0 {
-+		compatible = "maxim,max98357a";
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "U16";
-+		sdmode-gpios = <&gpio GPIOX_8 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	dmics: audio-codec-1 {
-+		#sound-dai-cells = <0>;
-+		compatible = "dmic-codec";
-+		num-channels = <2>;
-+		wakeup-delay-ms = <50>;
-+		status = "okay";
-+		sound-name-prefix = "MIC";
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -179,6 +196,120 @@
- 		clock-names = "ext_clock";
- 	};
- 
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "SM1-SEI610";
-+		audio-aux-devs = <&tdmout_a>, <&tdmout_b>,
-+				 <&tdmin_a>, <&tdmin_b>;
-+		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
-+				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
-+				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
-+				"TDM_A Playback", "TDMOUT_A OUT",
-+				"TDMOUT_B IN 0", "FRDDR_A OUT 1",
-+				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-+				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT",
-+				"TODDR_A IN 4", "PDM Capture",
-+				"TODDR_B IN 4", "PDM Capture",
-+				"TODDR_C IN 4", "PDM Capture",
-+				"TDMIN_A IN 0", "TDM_A Capture",
-+				"TDMIN_A IN 3", "TDM_A Loopback",
-+				"TDMIN_B IN 0", "TDM_A Capture",
-+				"TDMIN_B IN 3", "TDM_A Loopback",
-+				"TDMIN_A IN 1", "TDM_B Capture",
-+				"TDMIN_A IN 4", "TDM_B Loopback",
-+				"TDMIN_B IN 1", "TDM_B Capture",
-+				"TDMIN_B IN 4", "TDM_B Loopback",
-+				"TODDR_A IN 0", "TDMIN_A OUT",
-+				"TODDR_B IN 0", "TDMIN_A OUT",
-+				"TODDR_C IN 0", "TDMIN_A OUT",
-+				"TODDR_A IN 1", "TDMIN_B OUT",
-+				"TODDR_B IN 1", "TDMIN_B OUT",
-+				"TODDR_C IN 1", "TDMIN_B OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		dai-link-3 {
-+			sound-dai = <&toddr_a>;
-+		};
-+
-+		dai-link-4 {
-+			sound-dai = <&toddr_b>;
-+		};
-+
-+		dai-link-5 {
-+			sound-dai = <&toddr_c>;
-+		};
-+
-+		/* internal speaker interface */
-+		dai-link-6 {
-+			sound-dai = <&tdmif_a>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&mono_dac>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
-+			};
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-7 {
-+			sound-dai = <&tdmif_b>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-+			};
-+		};
-+
-+		/* internal digital mics */
-+		dai-link-8 {
-+			sound-dai = <&pdm>;
-+
-+			codec {
-+				sound-dai = <&dmics>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-9 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+
- 	wifi32k: wifi32k {
- 		compatible = "pwm-clock";
- 		#clock-cells = <0>;
-@@ -187,6 +318,10 @@
- 	};
- };
- 
-+&arb {
-+	status = "okay";
-+};
-+
- &cec_AO {
- 	pinctrl-0 = <&cec_ao_a_h_pins>;
- 	pinctrl-names = "default";
-@@ -201,6 +336,10 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
- 
-+&clkc_audio {
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&vddcpu>;
- 	operating-points-v2 = <&cpu_opp_table>;
-@@ -235,6 +374,18 @@
- 	phy-mode = "rmii";
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &hdmi_tx {
- 	status = "okay";
- 	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-@@ -259,6 +410,12 @@
- 	pinctrl-names = "default";
- };
- 
-+&pdm {
-+	pinctrl-0 = <&pdm_din0_z_pins>, <&pdm_dclk_z_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
- &pwm_AO_ab {
- 	status = "okay";
- 	pinctrl-0 = <&pwm_ao_a_pins>;
-@@ -356,6 +513,54 @@
- 	vqmmc-supply = <&emmc_1v8>;
- };
- 
-+&tdmif_a {
-+	pinctrl-0 = <&tdm_a_dout0_pins>, <&tdm_a_fs_pins>, <&tdm_a_sclk_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	assigned-clocks = <&clkc_audio AUD_CLKID_TDM_SCLK_PAD0>,
-+			  <&clkc_audio AUD_CLKID_TDM_LRCLK_PAD0>;
-+	assigned-clock-parents = <&clkc_audio AUD_CLKID_MST_A_SCLK>,
-+				 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
-+	assigned-clock-rates = <0>, <0>;
-+};
-+
-+&tdmif_b {
-+	status = "okay";
-+};
-+
-+&tdmin_a {
-+	status = "okay";
-+};
-+
-+&tdmin_b {
-+	status = "okay";
-+};
-+
-+&tdmout_a {
-+	status = "okay";
-+};
-+
-+&tdmout_b {
-+	status = "okay";
-+};
-+
-+&toddr_a {
-+	status = "okay";
-+};
-+
-+&toddr_b {
-+	status = "okay";
-+};
-+
-+&toddr_c {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
-+
- &uart_A {
- 	status = "okay";
- 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
--- 
-2.21.0
+There is a snd_soc_dai_get_sdw_stream() to get stream context and we add 
+slave streams(amplifier in this case) to that context using 
+sdw_stream_add_slave() in machine driver[1].
+
+Without this helper there is no way to link slave streams to stream 
+context in non dai based setup like smart speaker amplifiers.
+
+Currently this driver is blocked on this patch, If you think there are 
+other ways to do this, am happy to try them out.
+
+Thanks,
+srini
+
+[1] 
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/tree/sound/soc/qcom/db845c.c?h=release/db845c/qcomlt-5.2
