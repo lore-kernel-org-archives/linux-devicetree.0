@@ -1,97 +1,42 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/8] dt-bindings: mfd: atmel,
- at91rm9200-tcb: add sama5d2 compatible
-Date: Thu, 10 Oct 2019 00:40:00 +0200
-Message-ID: <20191009224006.5021-3-alexandre.belloni@bootlin.com>
-References: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
+From: Atish Patra <Atish.Patra@wdc.com>
+Subject: Re: [PATCH] riscv: dts: HiFive Unleashed: add default
+ chosen/stdout-path
+Date: Wed, 9 Oct 2019 22:57:09 +0000
+Message-ID: <329f84a635caa92f954c8d614975f03e22158c4a.camel@wdc.com>
+References: <alpine.DEB.2.21.9999.1910091240220.11044@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1910091240220.11044@viisi.sifive.com>
+Content-Language: en-US
+Content-ID: <C7AE5B5430D9BB4D9B76E2439B320A2A@namprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
-Instead of being MCK / 2, it is the TCB GCLK.
-
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
-Cc: Rob Herring <robh+dt@kernel.org>
-
- .../bindings/mfd/atmel,at91rm9200-tcb.yaml    | 36 +++++++++++++++----
- 1 file changed, 30 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
-index 4d9247fc0593..4fc5bd34d38b 100644
---- a/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
-+++ b/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
-@@ -19,6 +19,7 @@ properties:
-       - enum:
-           - atmel,at91rm9200-tcb
-           - atmel,at91sam9x5-tcb
-+          - atmel,sama5d2-tcb
-       - const: simple-mfd
-       - const: syscon
- 
-@@ -38,12 +39,6 @@ properties:
-       t1_clk and t2_clk if a clock per channel is available.
-     minItems: 2
-     maxItems: 4
--    items:
--      enum:
--        - t0_clk
--        - t1_clk
--        - t2_clk
--        - slow_clk
- 
-   clocks:
-     minItems: 2
-@@ -55,6 +50,35 @@ properties:
-   '#size-cells':
-     const: 0
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: atmel,sama5d2-tcb
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 3
-+          maxItems: 3
-+        clock-names:
-+          items:
-+            - const: t0_clk
-+            - const: gclk
-+            - const: slow_clk
-+    else:
-+      properties:
-+        clocks:
-+          minItems: 2
-+          maxItems: 4
-+        clock-names:
-+          items:
-+            enum:
-+              - t0_clk
-+              - t1_clk
-+              - t2_clk
-+              - slow_clk
-+
- required:
-   - compatible
-   - reg
--- 
-2.21.0
+T24gV2VkLCAyMDE5LTEwLTA5IGF0IDEyOjQyIC0wNzAwLCBQYXVsIFdhbG1zbGV5IHdyb3RlOg0K
+PiBBZGQgYSBkZWZhdWx0ICJzdGRvdXQtcGF0aCIgdG8gdGhlIGtlcm5lbCBEVFMgZmlsZSwgYXMg
+aXMgcHJlc2VudCBpbg0KPiBtYW55IA0KPiBvZiB0aGUgYm9hcmQgRFRTIGZpbGVzIGVsc2V3aGVy
+ZSBpbiB0aGUga2VybmVsIHRyZWUuIFdpdGggdGhpcyBsaW5lIA0KPiBwcmVzZW50LCBlYXJseWNv
+bnNvbGUgY2FuIGJlIGVuYWJsZWQgYnkgc2ltcGx5IHBhc3NpbmcgImVhcmx5Y29uIiBvbg0KPiB0
+aGUgDQo+IGtlcm5lbCBjb21tYW5kIGxpbmUuICBObyBzcGVjaWZpYyBkZXZpY2UgZGV0YWlscyBh
+cmUgbmVjZXNzYXJ5LCBzaW5jZQ0KPiB0aGUgDQo+IGtlcm5lbCB3aWxsIHVzZSB0aGUgc3Rkb3V0
+LXBhdGggYXMgdGhlIGRlZmF1bHQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQYXVsIFdhbG1zbGV5
+IDxwYXVsLndhbG1zbGV5QHNpZml2ZS5jb20+DQo+IC0tLQ0KPiBUZXN0ZWQgb24gYSBIaUZpdmUg
+VW5sZWFzaGVkIHVzaW5nIEJCTC4NCj4gDQo+ICBhcmNoL3Jpc2N2L2Jvb3QvZHRzL3NpZml2ZS9o
+aWZpdmUtdW5sZWFzaGVkLWEwMC5kdHMgfCAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2Vy
+dGlvbigrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvcmlzY3YvYm9vdC9kdHMvc2lmaXZlL2hp
+Zml2ZS11bmxlYXNoZWQtYTAwLmR0cw0KPiBiL2FyY2gvcmlzY3YvYm9vdC9kdHMvc2lmaXZlL2hp
+Zml2ZS11bmxlYXNoZWQtYTAwLmR0cw0KPiBpbmRleCAxMDRkMzM0NTExY2QuLjg4Y2ZjYjk2YmYy
+MyAxMDA2NDQNCj4gLS0tIGEvYXJjaC9yaXNjdi9ib290L2R0cy9zaWZpdmUvaGlmaXZlLXVubGVh
+c2hlZC1hMDAuZHRzDQo+ICsrKyBiL2FyY2gvcmlzY3YvYm9vdC9kdHMvc2lmaXZlL2hpZml2ZS11
+bmxlYXNoZWQtYTAwLmR0cw0KPiBAQCAtMTMsNiArMTMsNyBAQA0KPiAgCWNvbXBhdGlibGUgPSAi
+c2lmaXZlLGhpZml2ZS11bmxlYXNoZWQtYTAwIiwgInNpZml2ZSxmdTU0MC0NCj4gYzAwMCI7DQo+
+ICANCj4gIAljaG9zZW4gew0KPiArCQlzdGRvdXQtcGF0aCA9ICJzZXJpYWwwIjsNCj4gIAl9Ow0K
+PiAgDQo+ICAJY3B1cyB7DQoNClRlc3RlZCBvbiBhIEhpRml2ZSBVbmxlYXNoZWQgdXNpbmcgT3Bl
+blNCSSArIFUtQm9vdCArIExpbnV4IGJvb3QgZmxvdy4NCg0KT25jZSB0aGlzIHBhdGNoIGlzIG1l
+cmdlZCwgd2UgY2FuIHJlbW92ZSBzdGRvdXQtcGF0aCBmaXggaW4gT3BlblNCSSBmb3INCnVubGVh
+c2hlZCBwbGF0Zm9ybSBhcyB3ZWxsLg0KDQpSZXZpZXdlZC1ieTogQXRpc2ggUGF0cmEgPGF0aXNo
+LnBhdHJhQHdkYy5jb20+DQoNCg0KLS0gDQpSZWdhcmRzLA0KQXRpc2gNCg==
