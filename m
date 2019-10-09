@@ -1,40 +1,47 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_1/3]_dt-bindings:_net:_ftgmac100:_Document_AST2600_?=
- =?UTF-8?Q?compatible?=
-Date: Wed, 09 Oct 2019 15:25:40 +1030
-Message-ID: <4998960d-6125-4402-9905-869653a84e52@www.fastmail.com>
-References: <20191008115143.14149-1-andrew@aj.id.au>
- <20191008115143.14149-2-andrew@aj.id.au>
- <75d915aec936be64ea5ebd63402efd90bb1c29d9.camel@kernel.crashing.org>
- <6f70580a-4b4b-45e0-8899-8a74f9587002@www.fastmail.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv8 1/9] dt-bindings: omap: add new binding for PRM instances
+Date: Wed, 9 Oct 2019 09:52:37 +0300
+Message-ID: <115ab938-e025-98fa-3b9e-0b3ced39307d@ti.com>
+References: <20191008125544.20679-1-t-kristo@ti.com>
+ <20191008125544.20679-2-t-kristo@ti.com>
+ <20191008154655.u34wkbqgmelv3aea@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <6f70580a-4b4b-45e0-8899-8a74f9587002@www.fastmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, netdev <netdev@vger.kernel.org>
-Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191008154655.u34wkbqgmelv3aea@earth.universe>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: devicetree@vger.kernel.org, tony@atomide.com, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Wed, 9 Oct 2019, at 15:19, Andrew Jeffery wrote:
+On 08/10/2019 18:46, Sebastian Reichel wrote:
+> Hi,
 > 
+> On Tue, Oct 08, 2019 at 03:55:36PM +0300, Tero Kristo wrote:
+>> +Example:
+>> +
+>> +prm_dsp2: prm@1b00 {
+>> +	compatible = "ti,omap-prm-inst", "ti,dra7-prm-inst";
 > 
-> On Wed, 9 Oct 2019, at 15:08, Benjamin Herrenschmidt wrote:
-> > On Tue, 2019-10-08 at 22:21 +1030, Andrew Jeffery wrote:
-> > > The AST2600 contains an FTGMAC100-compatible MAC, although it no-
-> > > longer
-> > > contains an MDIO controller.
-> > 
-> > How do you talk to the PHY then ?
-> 
-> There are still MDIO controllers, they're just not in the MAC IP on the 2600.
+> Nit: compatible values are sorted the other way around (most
+> specific first).
 
-Sorry, on reflection that description is a little ambiguous in its use of 'it'. I'll
-fix that in v2 as well. Does this read better?
+Hmm right, I would not like to re-post the whole series just for this 
+seeing all the acks are in place already.
 
-"The AST2600 contains an FTGMAC100-compatible MAC, although the MAC
-no-longer contains an MDIO controller."
+Santosh, do you want to fix this locally or shall we post a separate 
+patch later on to fix this?
 
-Andrew
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
