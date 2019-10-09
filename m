@@ -1,71 +1,48 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v2 0/4] Add Mailbox nodes for TI K3 AM65x & J721E SoCs
-Date: Wed, 9 Oct 2019 15:19:39 -0500
-Message-ID: <e27abe06-2df0-fdae-6fe5-080a40ee3bdd@ti.com>
-References: <20190725001020.23781-1-s-anna@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
+Date: Wed, 9 Oct 2019 13:40:17 -0700
+Message-ID: <20191009204017.GK22365@dtor-ws>
+References: <20191007203343.101466-1-stephan@gerhold.net>
+ <20191007205021.104402-1-stephan@gerhold.net>
+ <20191008220014.GI22365@dtor-ws>
+ <20191009072612.GA2814@jack.zhora.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190725001020.23781-1-s-anna@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191009072612.GA2814@jack.zhora.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andi Shyti <andi@etezian.org>
+Cc: Stephan Gerhold <stephan@gerhold.net>, Simon Shields <simon@lineageos.org>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tero,
+On Wed, Oct 09, 2019 at 10:26:12AM +0300, Andi Shyti wrote:
+> Hi Dmitry,
+> 
+> > > There was a related patch [2] that removes I2C_M_NOSTART for all models,
+> > > but it seems abandoned and I do not have any other model for testing.
+> > > Therefore, this patch implements the least instrusive solution
+> > > and only removes I2C_M_NOSTART for MMS345L.
+> > 
+> > Hmm,  at this point I am inclined to pick up Andi's patch since it seems
+> > to work for you and him and it looks like Android drivers are not using
+> > I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
+> > it was originally developed.
+> 
+> I completely forgot about that patch :)
+> 
+> I should refresh some old work on that device which was left
+> undone.
+> 
+> > Any objections?
+> 
+> It's OK for me. If you can just update my e-mail, please, when
+> applying the patch to "andi@etezian.org". Thanks!
 
-On 7/24/19 7:10 PM, Suman Anna wrote:
-> Hi Tero, Nishanth,
-> 
-> The following series is a revised version of the series [1] that adds
-> the Mailbox DT nodes and the sub-mailboxes used to communicate between
-> the main MPU processor running Linux and the various R5F and DSP remote
-> processors present on the TI K3 AM65x and J721E SoC families. Patches
-> are based on v5.3-rc1 + the HwSpinlock DT node series [2], and are
-> intended for the 5.4 merge window. Functionality is verified using a
-> out-of-tree unit-test module and some additional loopback test nodes
-> available here [3] for reference.
-> 
-> Changes in v2:
->  - All clusters are enabled by default in base dtsi files
->  - The sub-mailboxes are moved to the actual board dts files
->  - Unused clusters disabled in the board dts files
+Andi, any chance you could resend it with the new email? One thing that
+I try to avoid modifying whenever I can is S-O-B strings...
 
-Looks like you missed picking this series up for 5.4. Can you please
-pick this up for 5.5? Let me know if you want me to repost the series,
-the last patch has a conflict when applying on top of 5.4-rc1 due to
-some additional nodes in the board dts file.
+Thanks.
 
-regards
-Suman
-
-> 
-> regards
-> Suman
-> 
-> [1] https://patchwork.kernel.org/cover/11053401/
-> [2] https://patchwork.kernel.org/cover/11053311/
-> [3] https://github.com/sumananna/mailbox/commits/mbox/test/5.3-rc1-k3-v2
-> 
-> Suman Anna (4):
->   arm64: dts: ti: k3-am65-main: Add mailbox cluster nodes
->   arm64: dts: ti: k3-am65-base-board: Add IPC sub-mailbox nodes for R5Fs
->   arm64: dts: ti: k3-j721e-main: Add mailbox cluster nodes
->   arm64: dts: ti: k3-j721e-common-proc-board: Add IPC sub-mailbox nodes
-> 
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 108 ++++++++++++++++++
->  .../arm64/boot/dts/ti/k3-am654-base-board.dts |  58 ++++++++++
->  .../dts/ti/k3-j721e-common-proc-board.dts     |  93 +++++++++++++++
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 108 ++++++++++++++++++
->  4 files changed, 367 insertions(+)
-> 
+-- 
+Dmitry
