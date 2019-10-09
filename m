@@ -1,82 +1,65 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 05/14] dmaengine: Add support for reporting DMA cached
- data amount
-Date: Wed, 9 Oct 2019 12:17:47 +0300
-Message-ID: <b20087a9-6a1f-6e5c-9311-e921a1c63f13@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-6-peter.ujfalusi@ti.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5, 15/32] drm/mediatek: add commponent OVL_2L0
+Date: Wed, 9 Oct 2019 17:17:51 +0800
+Message-ID: <1570612671.7713.1.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-16-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001061704.2399-6-peter.ujfalusi@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
-Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, tony@atomide.com, j-keerthy@ti.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1567090254-15566-16-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/2019 09:16, Peter Ujfalusi wrote:
-> A DMA hardware can have big cache or FIFO and the amount of data sitting in
-> the DMA fabric can be an interest for the clients.
-> 
-> For example in audio we want to know the delay in the data flow and in case
-> the DMA have significantly large FIFO/cache, it can affect the latenc/delay
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-Reviewed-by: Tero Kristo <t-kristo@ti.com>
-
-> ---
->   drivers/dma/dmaengine.h   | 8 ++++++++
->   include/linux/dmaengine.h | 2 ++
->   2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
-> index 501c0b063f85..b0b97475707a 100644
-> --- a/drivers/dma/dmaengine.h
-> +++ b/drivers/dma/dmaengine.h
-> @@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
->   		state->last = complete;
->   		state->used = used;
->   		state->residue = 0;
-> +		state->in_flight_bytes = 0;
->   	}
->   	return dma_async_is_complete(cookie, complete, used);
->   }
-> @@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
->   		state->residue = residue;
->   }
->   
-> +static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
-> +					   u32 in_flight_bytes)
-> +{
-> +	if (state)
-> +		state->in_flight_bytes = in_flight_bytes;
-> +}
-> +
->   struct dmaengine_desc_callback {
->   	dma_async_tx_callback callback;
->   	dma_async_tx_callback_result callback_result;
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 40d062c3b359..02ceef95340a 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -682,11 +682,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
->    * @residue: the remaining number of bytes left to transmit
->    *	on the selected transfer for states DMA_IN_PROGRESS and
->    *	DMA_PAUSED if this is implemented in the driver, else 0
-> + * @in_flight_bytes: amount of data in bytes cached by the DMA.
->    */
->   struct dma_tx_state {
->   	dma_cookie_t last;
->   	dma_cookie_t used;
->   	u32 residue;
-> +	u32 in_flight_bytes;
->   };
->   
->   /**
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgY29tbXBvbmVudCBPVkxf
+MkwwCj4gCgpBcHBsaWVkIHRvIG1lZGlhdGVrLWRybS1uZXh0LTUuNSBbMV0sIHRoYW5rcy4KClsx
+XQpodHRwczovL2dpdGh1Yi5jb20vY2todS1tZWRpYXRlay9saW51eC5naXQtdGFncy9jb21taXRz
+L21lZGlhdGVrLWRybS1uZXh0LTUuNQoKUmVnYXJkcywKQ0sKCj4gU2lnbmVkLW9mZi1ieTogWW9u
+Z3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gUmV2aWV3ZWQtYnk6IENL
+IEh1IDxjay5odUBtZWRpYXRlay5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2RkcF9jb21wLmMgfCAyICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcF9jb21wLmggfCAyICsrCj4gIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25z
+KCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4g
+aW5kZXggYjE4YmQ2Ni4uNDIwMGY4OSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZGRwX2NvbXAuYwo+IEBAIC0yMTksNiArMjE5LDcgQEAgc3RhdGljIHZvaWQgbXRr
+X2dhbW1hX3NldChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLAo+ICAKPiAgc3RhdGljIGNvbnN0
+IGNoYXIgKiBjb25zdCBtdGtfZGRwX2NvbXBfc3RlbVtNVEtfRERQX0NPTVBfVFlQRV9NQVhdID0g
+ewo+ICAJW01US19ESVNQX09WTF0gPSAib3ZsIiwKPiArCVtNVEtfRElTUF9PVkxfMkxdID0gIm92
+bF8ybCIsCj4gIAlbTVRLX0RJU1BfUkRNQV0gPSAicmRtYSIsCj4gIAlbTVRLX0RJU1BfV0RNQV0g
+PSAid2RtYSIsCj4gIAlbTVRLX0RJU1BfQ09MT1JdID0gImNvbG9yIiwKPiBAQCAtMjU4LDYgKzI1
+OSw3IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXBfbWF0Y2ggewo+ICAJW0REUF9DT01QT05FTlRfT0Qx
+XQk9IHsgTVRLX0RJU1BfT0QsCTEsICZkZHBfb2QgfSwKPiAgCVtERFBfQ09NUE9ORU5UX09WTDBd
+CT0geyBNVEtfRElTUF9PVkwsCTAsIE5VTEwgfSwKPiAgCVtERFBfQ09NUE9ORU5UX09WTDFdCT0g
+eyBNVEtfRElTUF9PVkwsCTEsIE5VTEwgfSwKPiArCVtERFBfQ09NUE9ORU5UX09WTF8yTDBdCT0g
+eyBNVEtfRElTUF9PVkxfMkwsCTAsIE5VTEwgfSwKPiAgCVtERFBfQ09NUE9ORU5UX1BXTTBdCT0g
+eyBNVEtfRElTUF9QV00sCTAsIE5VTEwgfSwKPiAgCVtERFBfQ09NUE9ORU5UX1BXTTFdCT0geyBN
+VEtfRElTUF9QV00sCTEsIE5VTEwgfSwKPiAgCVtERFBfQ09NUE9ORU5UX1BXTTJdCT0geyBNVEtf
+RElTUF9QV00sCTIsIE5VTEwgfSwKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZGRwX2NvbXAuaCBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2RkcF9jb21wLmgKPiBpbmRleCA4ZDIyMDIyNC4uOWNhZWMyZCAxMDA2NDQKPiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oCj4gKysrIGIvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaAo+IEBAIC0xNyw2ICsxNyw3IEBACj4g
+IAo+ICBlbnVtIG10a19kZHBfY29tcF90eXBlIHsKPiAgCU1US19ESVNQX09WTCwKPiArCU1US19E
+SVNQX09WTF8yTCwKPiAgCU1US19ESVNQX1JETUEsCj4gIAlNVEtfRElTUF9XRE1BLAo+ICAJTVRL
+X0RJU1BfQ09MT1IsCj4gQEAgLTUwLDYgKzUxLDcgQEAgZW51bSBtdGtfZGRwX2NvbXBfaWQgewo+
+ICAJRERQX0NPTVBPTkVOVF9PRDAsCj4gIAlERFBfQ09NUE9ORU5UX09EMSwKPiAgCUREUF9DT01Q
+T05FTlRfT1ZMMCwKPiArCUREUF9DT01QT05FTlRfT1ZMXzJMMCwKPiAgCUREUF9DT01QT05FTlRf
+T1ZMMSwKPiAgCUREUF9DT01QT05FTlRfUFdNMCwKPiAgCUREUF9DT01QT05FTlRfUFdNMSwKCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
