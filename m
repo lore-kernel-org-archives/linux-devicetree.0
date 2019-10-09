@@ -1,115 +1,105 @@
-From: Lukasz Majewski <lukma@denx.de>
+From: Robin Murphy <robin.murphy@arm.com>
 Subject: Re: [PATCH] dts: Disable DMA support on the BK4 vf610 device's
  fsl_lpuart driver
-Date: Wed, 9 Oct 2019 16:44:42 +0200
-Message-ID: <20191009164442.51f27b9d@jawa>
+Date: Wed, 9 Oct 2019 16:15:39 +0100
+Message-ID: <34d5f652-57e5-168e-0025-38b897e88fff@arm.com>
 References: <20191009143032.9261-1-lukma@denx.de>
-        <b39b6860-9e9b-5cee-a07e-7b430c2e5119@arm.com>
+ <b39b6860-9e9b-5cee-a07e-7b430c2e5119@arm.com> <20191009164442.51f27b9d@jawa>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/Di/jFXAOICs3QlZsnoXzE2z"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b39b6860-9e9b-5cee-a07e-7b430c2e5119@arm.com>
+In-Reply-To: <20191009164442.51f27b9d@jawa>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
+To: Lukasz Majewski <lukma@denx.de>
 Cc: linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/Di/jFXAOICs3QlZsnoXzE2z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 09/10/2019 15:44, Lukasz Majewski wrote:
+> Hi Robin,
+> 
+>> On 09/10/2019 15:30, Lukasz Majewski wrote:
+>>> This change disables the DMA support (RX/TX) on the NXP's fsl_lpuart
+>>> driver - the PIO mode is used instead. This change is necessary for
+>>> better robustness of BK4's device use cases with many potentially
+>>> interrupted short serial transfers.
+>>>
+>>> Without it the driver hangs when some distortion happens on UART
+>>> lines.
+>>>
+>>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+>>> ---
+>>>    arch/arm/boot/dts/vf610-bk4.dts | 4 ++++
+>>>    1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/vf610-bk4.dts
+>>> b/arch/arm/boot/dts/vf610-bk4.dts index 0f3870d3b099..ad20f3442d40
+>>> 100644 --- a/arch/arm/boot/dts/vf610-bk4.dts
+>>> +++ b/arch/arm/boot/dts/vf610-bk4.dts
+>>> @@ -259,24 +259,28 @@
+>>>    &uart0 {
+>>>    	pinctrl-names = "default";
+>>>    	pinctrl-0 = <&pinctrl_uart0>;
+>>> +	dma-names = "","";
+>>
+>> This looks like a horrible hack - is there any reason not to just
+>> strip things at compile-time, i.e. "/delete-property/ dmas;"?
+> 
+> I don't want to strip the dma-names property globally. I just want to
+> adjust this particular driver mode from DMA to PIO.
 
-Hi Robin,
+What do you mean by "globally"? The /delete-property/ operator just 
+removes a previously-defined property from the node in which it appears.
+> For my use cases - as written in the commit message - the PIO mode is
+> more suitable (and reliable).
 
-> On 09/10/2019 15:30, Lukasz Majewski wrote:
-> > This change disables the DMA support (RX/TX) on the NXP's fsl_lpuart
-> > driver - the PIO mode is used instead. This change is necessary for
-> > better robustness of BK4's device use cases with many potentially
-> > interrupted short serial transfers.
-> >=20
-> > Without it the driver hangs when some distortion happens on UART
-> > lines.
-> >=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > ---
-> >   arch/arm/boot/dts/vf610-bk4.dts | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/vf610-bk4.dts
-> > b/arch/arm/boot/dts/vf610-bk4.dts index 0f3870d3b099..ad20f3442d40
-> > 100644 --- a/arch/arm/boot/dts/vf610-bk4.dts
-> > +++ b/arch/arm/boot/dts/vf610-bk4.dts
-> > @@ -259,24 +259,28 @@
-> >   &uart0 {
-> >   	pinctrl-names =3D "default";
-> >   	pinctrl-0 =3D <&pinctrl_uart0>;
-> > +	dma-names =3D "",""; =20
->=20
-> This looks like a horrible hack - is there any reason not to just
-> strip things at compile-time, i.e. "/delete-property/ dmas;"?
+Right, and having invalid "dma-names" properties for this board is what 
+happens to trick Linux into not using DMA mode via 
+of_dma_request_slave_channel() failing, yes? What I'm saying is that if 
+the underlying justification is that it's not worth using DMA mode at 
+all on this board, then suppressing the actual "dmas" property it its 
+DTS such that there's no dependency on a particular driver behaviour is 
+a lot more robust.
 
-I don't want to strip the dma-names property globally. I just want to
-adjust this particular driver mode from DMA to PIO.
+Robin.
 
-For my use cases - as written in the commit message - the PIO mode is
-more suitable (and reliable).=20
-
->=20
-> Robin.
->=20
-> >   	status =3D "okay";
-> >   };
-> >  =20
-> >   &uart1 {
-> >   	pinctrl-names =3D "default";
-> >   	pinctrl-0 =3D <&pinctrl_uart1>;
-> > +	dma-names =3D "","";
-> >   	status =3D "okay";
-> >   };
-> >  =20
-> >   &uart2 {
-> >   	pinctrl-names =3D "default";
-> >   	pinctrl-0 =3D <&pinctrl_uart2>;
-> > +	dma-names =3D "","";
-> >   	status =3D "okay";
-> >   };
-> >  =20
-> >   &uart3 {
-> >   	pinctrl-names =3D "default";
-> >   	pinctrl-0 =3D <&pinctrl_uart3>;
-> > +	dma-names =3D "","";
-> >   	status =3D "okay";
-> >   };
-> >  =20
-> >  =20
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/Di/jFXAOICs3QlZsnoXzE2z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2d8loACgkQAR8vZIA0
-zr2WHggAttPRl8kp+yb/oZQOEp8vg1iZdn55DoxHq2LWuWy8RIoAUnOUy9TapDZ5
-ZBQKgfDBYcD0Yawqlk9uOev6Uhe9roJRyVSdWjdPMcGdK0viwBagw8sYWxWD2TrY
-MljhCRJfoStaA/ZKClfGb2w5KddgXTgz2jqRs8CNps7aFBbjhKFtwJoKkdCjI/kl
-ADmw46QWkNmN6axoy3NKIDeP31lOfWpMcfcYw0MrLCn0+s/tfRpKqH9eRGC5vjJt
-SblR8SeFNB4oUOO1rFN9rKANzgxfqF4n06rCPORZBOK8mV5YIAA5vx7L6VOUxioj
-U57i4+VhXSCzlyh3HBGKN3//lb0xIA==
-=PTiE
------END PGP SIGNATURE-----
-
---Sig_/Di/jFXAOICs3QlZsnoXzE2z--
+>>>    	status = "okay";
+>>>    };
+>>>    
+>>>    &uart1 {
+>>>    	pinctrl-names = "default";
+>>>    	pinctrl-0 = <&pinctrl_uart1>;
+>>> +	dma-names = "","";
+>>>    	status = "okay";
+>>>    };
+>>>    
+>>>    &uart2 {
+>>>    	pinctrl-names = "default";
+>>>    	pinctrl-0 = <&pinctrl_uart2>;
+>>> +	dma-names = "","";
+>>>    	status = "okay";
+>>>    };
+>>>    
+>>>    &uart3 {
+>>>    	pinctrl-names = "default";
+>>>    	pinctrl-0 = <&pinctrl_uart3>;
+>>> +	dma-names = "","";
+>>>    	status = "okay";
+>>>    };
+>>>    
+>>>    
+> 
+> 
+> 
+> 
+> Best regards,
+> 
+> Lukasz Majewski
+> 
+> --
+> 
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+> 
