@@ -1,100 +1,32 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
-Date: Wed, 9 Oct 2019 03:20:28 +0000
-Message-ID: <DB8PR04MB68268ECD73BA976CB59A3EDDF1950@DB8PR04MB6826.eurprd04.prod.outlook.com>
-References: <20190712064206.48249-1-ran.wang_1@nxp.com>
- <20190724204222.GA1234@bogus>
- <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
- <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
- <CADRPPNRHOda+ZfB25CeqReXBb-MrB1oAeTHF-3muXVExn+G+Dg@mail.gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 01/10] dt-bindings: rcar-gen3-phy-usb2: Add r8a774b1
+ support
+Date: Wed, 9 Oct 2019 04:09:28 +0000
+Message-ID: <TYAPR01MB45446960D3BB80ADF3D90941D8950@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570531132-21856-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADRPPNRHOda+ZfB25CeqReXBb-MrB1oAeTHF-3muXVExn+G+Dg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1570531132-21856-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Felipe Balbi <balbi@kernel.org>
-Cc: Yang Li <pku.leo@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLCBGZWxpcGUsDQoNCk9uIFR1ZXNkYXksIFNlcHRlbWJlciAyNCwgMjAxOSAwMDozOCwg
-WWFuZyBMaSB3cm90ZToNCj4gDQo+IE9uIFRodSwgSnVsIDI1LCAyMDE5IGF0IDQ6NTYgUE0gUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBPbiBXZWQsIEp1bCAy
-NCwgMjAxOSBhdCA4OjI5IFBNIFJhbiBXYW5nIDxyYW4ud2FuZ18xQG54cC5jb20+IHdyb3RlOg0K
-PiA+ID4NCj4gPiA+IEhpIFJvYiwNCj4gPiA+DQo+ID4gPiBPbiBUaHVyc2RheSwgSnVseSAyNSwg
-MjAxOSAwNDo0MiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToNCj4gPiA+ID4N
-Cj4gPiA+ID4gT24gRnJpLCBKdWwgMTIsIDIwMTkgYXQgMDI6NDI6MDVQTSArMDgwMCwgUmFuIFdh
-bmcgd3JvdGU6DQo+ID4gPiA+ID4gU29tZSBMYXllcnNjYXBlIHBhbHRmb3JtcyAoc3VjaCBhcyBM
-UzEwODhBLCBMUzIwODhBLCBldGMpDQo+ID4gPiA+ID4gZW5jb3VudGVyIFVTQiBkZXRlY3QgZmFp
-bHVlcyB3aGVuIGFkZGluZyBkbWEtY29oZXJlbnQgdG8gRFdDMw0KPiA+ID4gPiA+IG5vZGUuIFRo
-aXMgaXMgYmVjYXVzZSB0aGUgSFcgZGVmYXVsdCBjYWNoZSB0eXBlIGNvbmZpZ3VyYXRpb24gb2YN
-Cj4gPiA+ID4gPiB0aG9zZSBTb0MgYXJlIG5vdCByaWdodCwgbmVlZCB0byBiZSB1cGRhdGVkIGlu
-IERUUy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFJhbiBXYW5nIDxyYW4u
-d2FuZ18xQG54cC5jb20+DQo+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gQ2hhbmdlIGluIHYyOg0K
-PiA+ID4gPiA+ICAgICAtIE5ldyBmaWxlLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gIERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQgfCA0Mw0KPiA+ID4gPiA+ICsr
-KysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0MyBp
-bnNlcnRpb25zKCspDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiA+IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiA+IGluZGV4
-IDhlNTI2NWUuLjdiYzFjZWYgMTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQNCj4gPiA+ID4gPiBAQCAtMTEw
-LDYgKzExMCw0MyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiA+ICAgLSBpbiBhZGRp
-dGlvbiBhbGwgcHJvcGVydGllcyBmcm9tIHVzYi14aGNpLnR4dCBmcm9tIHRoZSBjdXJyZW50IGRp
-cmVjdG9yeQ0KPiBhcmUNCj4gPiA+ID4gPiAgICAgc3VwcG9ydGVkIGFzIHdlbGwNCj4gPiA+ID4g
-Pg0KPiA+ID4gPiA+ICsqIENhY2hlIHR5cGUgbm9kZXMgKG9wdGlvbmFsKQ0KPiA+ID4gPiA+ICsN
-Cj4gPiA+ID4gPiArVGhlIENhY2hlIHR5cGUgbm9kZSBpcyB1c2VkIHRvIHRlbGwgaG93IHRvIGNv
-bmZpZ3VyZSBjYWNoZSB0eXBlDQo+ID4gPiA+ID4gK29uIDQgZGlmZmVyZW50IHRyYW5zZmVyIHR5
-cGVzOiBEYXRhIFJlYWQsIERlc2MgUmVhZCwgRGF0YSBXcml0ZQ0KPiA+ID4gPiA+ICthbmQgRGVz
-YyB3cml0ZS4gRm9yIGVhY2ggdHJlYXNmZXIgdHlwZSwgY29udHJvbGxlciBoYXMgYSA0LWJpdA0K
-PiA+ID4gPiA+ICtyZWdpc3RlciBmaWVsZCB0byBlbmFibGUgZGlmZmVyZW50IGNhY2hlIHR5cGUu
-IFF1b3RlZCBmcm9tIERXQzMNCj4gPiA+ID4gPiArZGF0YSBib29rIFRhYmxlIDYtNQ0KPiA+ID4g
-PiBDYWNoZSBUeXBlIEJpdCBBc3NpZ25tZW50czoNCj4gPiA+ID4gPiArLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4g
-PiA+ICtNQlVTX1RZUEV8IGJpdFszXSAgICAgICB8Yml0WzJdICAgICAgIHxiaXRbMV0gICAgIHxi
-aXRbMF0NCj4gPiA+ID4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiA+ICtBSEIgICAgICB8Q2FjaGVhYmxl
-ICAgICB8QnVmZmVyYWJsZSAgIHxQcml2aWxlZ2dlIHxEYXRhDQo+ID4gPiA+ID4gK0FYSTMgICAg
-IHxXcml0ZSBBbGxvY2F0ZXxSZWFkIEFsbG9jYXRlfENhY2hlYWJsZSAgfEJ1ZmZlcmFibGUNCj4g
-PiA+ID4gPiArQVhJNCAgICAgfEFsbG9jYXRlIE90aGVyfEFsbG9jYXRlICAgICB8TW9kaWZpYWJs
-ZSB8QnVmZmVyYWJsZQ0KPiA+ID4gPiA+ICtBWEk0ICAgICB8T3RoZXIgQWxsb2NhdGV8QWxsb2Nh
-dGUgICAgIHxNb2RpZmlhYmxlIHxCdWZmZXJhYmxlDQo+ID4gPiA+ID4gK05hdGl2ZSAgIHxTYW1l
-IGFzIEFYSSAgIHxTYW1lIGFzIEFYSSAgfFNhbWUgYXMgQVhJfFNhbWUgYXMgQVhJDQo+ID4gPiA+
-ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQ0KPiA+ID4gPiA+ICstDQo+ID4gPiA+ID4gK05vdGU6IFRoZSBBSEIsIEFYSTMs
-IEFYSTQsIGFuZCBQQ0llIGJ1c3NlcyB1c2UgZGlmZmVyZW50IG5hbWVzDQo+ID4gPiA+ID4gK2Zv
-ciBjZXJ0YWluIHNpZ25hbHMsIHdoaWNoIGhhdmUgdGhlIHNhbWUgbWVhbmluZzoNCj4gPiA+ID4g
-PiArICBCdWZmZXJhYmxlID0gUG9zdGVkDQo+ID4gPiA+ID4gKyAgQ2FjaGVhYmxlID0gTW9kaWZp
-YWJsZSA9IFNub29wIChuZWdhdGlvbiBvZiBObyBTbm9vcCkNCj4gPiA+ID4NCj4gPiA+ID4gVGhp
-cyBzaG91bGQgYWxsIGJlIGltcGxpZWQgZnJvbSB0aGUgU29DIHNwZWNpZmljIGNvbXBhdGlibGUg
-c3RyaW5ncy4NCj4gPiA+DQo+ID4gPiBEaWQgeW91IG1lYW4gSSBjb3VsZCBpbXBsZW1lbnQgYSBz
-b2MgZHJpdmVyIHdoaWNoIGNhbiBiZSBtYXRjaGVkIGJ5DQo+IGNvbXBhdGlibGUgb2YgJ2ZzbCxs
-czEwODhhLWR3YzMnIHdoaWNoIHdpbGwgcGFzcyBrbm93biBidXMgdHlwZSB0byBEV0MzIGRyaXZl
-cj8NCj4gSWYgeWVzLCBob3cgdG8gcGFzcz8NCj4gPg0KPiA+IFllcy4gVGhlIERUIG1hdGNoIHRh
-YmxlIGNhbiBoYXZlIGRhdGEgYXNzb2NpYXRlZCB3aXRoIHRoYXQgY29tcGF0aWJsZQ0KPiA+IHN0
-cmluZy4gQmV5b25kIHRoYXQsIEknbSBub3QgcmVhbGx5IGZhbWlsaWFyIHdpdGggdGhlIERXQzMg
-ZHJpdmVyLg0KPiANCj4gSGkgUm9iLA0KPiANCj4gSXQgbG9va3MgbGlrZSB0aGF0IHRoZSBjdXJy
-ZW50IGR3YzMgYmluZGluZyBwZXJmZXJzIHRvIGRlZmluZSBnZW5lcmFsIHF1aXJrcyBpbg0KPiBk
-ZXZpY2UgdHJlZSBwcm9wZXJ0aWVzIGluc3RlYWQgb2YgdHJ5aW5nIHRvIHJlbHkgb24gdGhlIGNv
-bXBhdGlibGUgc3RyaW5nIHRvDQo+IGRldGVybWluZSBxdWlya3MuICBJbiB0aGlzIGNhc2UsIGNh
-biB3ZSBrZWVwIGZvbGxvd2luZyB0aGUgZXhpc3RpbmcgcHJlZmVyZW5jZQ0KPiBpbnN0ZWFkIG9m
-IGNob29zaW5nIHRoZSBvdGhlciB3YXk/DQoNCkxvb2tzIGxpa2UgeW91IGhhdmUgZGlmZmVyZW50
-IG9waW5pb25zIG9uIHRoaXMgc29sdXRpb24sIHNvIEkgJ2QgbGlrZSB0byBoYXZlIGFsbCBvcGVu
-cw0KZ2V0IHNldHRsZWQgaGVyZSB0byBoZWxwIG1lIGZpbmQgYSBhY2NlcHRhYmxlIHNvbHV0aW9u
-IGZvciBib3RoIG9mIHlvdS4gDQpQbGVhc2UgbGV0IG1lIGV4cGxhaW4gbW9yZSBhYm91dCB0aGlz
-Og0KDQoxLiBUaGlzIGZlYXR1cmUgKGNvbmZpZ3VyZSBjYWNoZSB0eXBlKSBpcyBuYXRpdmVseSBm
-cm9tIERXQzMgSVAgKHdlIGNhbiBmaW5kIGl0IGZyb20gZGF0YSBib29rKSwNCiAgICBub3QgYSBT
-b0Mgc3BlY2lmaWMgZmVhdHVyZSAobW9yZSBkZXRhaWxzIHBsZWFzZSBzZWUgdjEgZGlzY3Vzc2lv
-bjogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzg1MTMwNi8pDQoNCjIu
-IEhvd2V2ZXIsIGluIG1vc3QgU29DLCB0aGUgSFcgZGVmYXVsdCBzZXR0aW5nIGxvb2tzIGZpbmUg
-KG5vIG5lZWQgZHJpdmVyIGhlbHApLCBidXQgc29tZSBjYXNlDQogICAgKGxpa2UgTGF5ZXJzY2Fw
-ZSkgbWlnaHQgbmVlZCBkcml2ZXIgdG8gZG8gc29tZSBwcm9ncmFtbWluZyB0byBmaXggVVNCIG5v
-IGRldGVjdCBpc3N1ZS4NCiAgICBUaGF0J3Mgd2h5IEkgaW1wbGVtZW50IHRoaXMgcGF0Y2guDQoN
-CjMuIEZvciBub3csIFJvYiB0aGluayB0aGlzIHNob3VsZCBiZSBoYW5kbGVkIGJ5IFNvQyBzcGVj
-aWZpYyBjb2RlIHJhdGhlciB0aGFuIGFkZGluZyBhIHByb3BlcnR5IHRvDQogICAgY29udHJvbCBp
-dCAoYnkgRFdDMyBjb3JlIGRyaXZlcikuIEFuZCBGZWxpcGUgcHJlZmVyIHRvIGF2b2lkIHVzaW5n
-IGdsdWUgZGl2ZXIuIFNvIEkgYW0gbm90IHN1cmUgaG93DQogICAgdG8gbWVldCB0aGlzIHJlcXVp
-cmVtZW50cyBhdCB0aGUgc2FtZSB0aW1lLiANCiAgIA0KQW55IGZ1cnRoZXIgc3VnZ2VzdGlvbiBh
-cmUgcmVhbGx5IGFwcHJlY2lhdGVkLiBUaGFuayB5b3UuDQoNClJlZ2FyZHMsDQpSYW4NCg==
+Hi Fabrizio-san,
+
+> From: Fabrizio Castro, Sent: Tuesday, October 8, 2019 7:39 PM
+> Document RZ/G2N (R8A774B1) SoC bindings.
+>=20
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+
+Thank you for the patch!
+
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
