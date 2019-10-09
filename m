@@ -1,342 +1,91 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: imx8mn-ddr4-evk: Move iomuxc node to end of file
-Date: Wed,  9 Oct 2019 10:34:39 +0800
-Message-ID: <1570588479-28009-2-git-send-email-Anson.Huang@nxp.com>
-References: <1570588479-28009-1-git-send-email-Anson.Huang@nxp.com>
+From: JC Kuo <jckuo@nvidia.com>
+Subject: [PATCH v4 0/5] add Tegra194 XUSB host and pad controller support
+Date: Wed, 9 Oct 2019 10:43:38 +0800
+Message-ID: <20191009024343.30218-1-jckuo@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570588479-28009-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, ccaione@baylibre.com, abel.vesa@nxp.com, daniel.baluta@nxp.com, andrew.smirnov@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com
+Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, JC Kuo <jckuo@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-All nodes are better to follow alphabetical sort except iomuxc
-which has huge pinctrl data, better to put it at the end of
-file.
+This series introduces support for Tegra194 XUSB host and pad
+controller. Tegra194 XUSB host and pad controller are highly
+similar to the controllers found on Tegra186. Therefore, it's
+possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 304 +++++++++++-----------
- 1 file changed, 152 insertions(+), 152 deletions(-)
+Changelog:
+v4:
+  xhci: tegra: Parameterize mailbox register addresses
+   - removed from v4 as it has been accepted in v3
+  
+  usb: host: xhci-tegra: Add Tegra194 XHCI support
+   - removed from v4 as it has been accepted in v3
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-index d78d657..1b90faac 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-@@ -43,158 +43,6 @@
- 	cpu-supply = <&buck2_reg>;
- };
- 
--&iomuxc {
--	pinctrl-names = "default";
--
--	pinctrl_fec1: fec1grp {
--		fsl,pins = <
--			MX8MN_IOMUXC_ENET_MDC_ENET1_MDC		0x3
--			MX8MN_IOMUXC_ENET_MDIO_ENET1_MDIO	0x3
--			MX8MN_IOMUXC_ENET_TD3_ENET1_RGMII_TD3	0x1f
--			MX8MN_IOMUXC_ENET_TD2_ENET1_RGMII_TD2	0x1f
--			MX8MN_IOMUXC_ENET_TD1_ENET1_RGMII_TD1	0x1f
--			MX8MN_IOMUXC_ENET_TD0_ENET1_RGMII_TD0	0x1f
--			MX8MN_IOMUXC_ENET_RD3_ENET1_RGMII_RD3	0x91
--			MX8MN_IOMUXC_ENET_RD2_ENET1_RGMII_RD2	0x91
--			MX8MN_IOMUXC_ENET_RD1_ENET1_RGMII_RD1	0x91
--			MX8MN_IOMUXC_ENET_RD0_ENET1_RGMII_RD0	0x91
--			MX8MN_IOMUXC_ENET_TXC_ENET1_RGMII_TXC	0x1f
--			MX8MN_IOMUXC_ENET_RXC_ENET1_RGMII_RXC	0x91
--			MX8MN_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
--			MX8MN_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
--			MX8MN_IOMUXC_SAI2_RXC_GPIO4_IO22	0x19
--		>;
--	};
--
--	pinctrl_gpio_led: gpioledgrp {
--		fsl,pins = <
--			MX8MN_IOMUXC_NAND_READY_B_GPIO3_IO16	0x19
--		>;
--	};
--
--	pinctrl_i2c1: i2c1grp {
--		fsl,pins = <
--			MX8MN_IOMUXC_I2C1_SCL_I2C1_SCL		0x400001c3
--			MX8MN_IOMUXC_I2C1_SDA_I2C1_SDA		0x400001c3
--		>;
--	};
--
--	pinctrl_pmic: pmicirq {
--		fsl,pins = <
--			MX8MN_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
--		>;
--	};
--
--	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
--		fsl,pins = <
--			MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
--		>;
--	};
--
--	pinctrl_uart2: uart2grp {
--		fsl,pins = <
--			MX8MN_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140
--			MX8MN_IOMUXC_UART2_TXD_UART2_DCE_TX	0x140
--		>;
--	};
--
--	pinctrl_usdhc2_gpio: usdhc2grpgpio {
--		fsl,pins = <
--			MX8MN_IOMUXC_GPIO1_IO15_GPIO1_IO15	0x1c4
--		>;
--	};
--
--	pinctrl_usdhc2: usdhc2grp {
--		fsl,pins = <
--			MX8MN_IOMUXC_SD2_CLK_USDHC2_CLK		0x190
--			MX8MN_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d0
--			MX8MN_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d0
--			MX8MN_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d0
--			MX8MN_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d0
--			MX8MN_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d0
--			MX8MN_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
--		>;
--	};
--
--	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
--		fsl,pins = <
--			MX8MN_IOMUXC_SD2_CLK_USDHC2_CLK		0x194
--			MX8MN_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d4
--			MX8MN_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d4
--			MX8MN_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d4
--			MX8MN_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d4
--			MX8MN_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d4
--			MX8MN_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
--		>;
--	};
--
--	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
--		fsl,pins = <
--			MX8MN_IOMUXC_SD2_CLK_USDHC2_CLK		0x196
--			MX8MN_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d6
--			MX8MN_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d6
--			MX8MN_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d6
--			MX8MN_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d6
--			MX8MN_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d6
--			MX8MN_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
--		>;
--	};
--
--	pinctrl_usdhc3: usdhc3grp {
--		fsl,pins = <
--			MX8MN_IOMUXC_NAND_WE_B_USDHC3_CLK		0x40000190
--			MX8MN_IOMUXC_NAND_WP_B_USDHC3_CMD		0x1d0
--			MX8MN_IOMUXC_NAND_DATA04_USDHC3_DATA0		0x1d0
--			MX8MN_IOMUXC_NAND_DATA05_USDHC3_DATA1		0x1d0
--			MX8MN_IOMUXC_NAND_DATA06_USDHC3_DATA2		0x1d0
--			MX8MN_IOMUXC_NAND_DATA07_USDHC3_DATA3		0x1d0
--			MX8MN_IOMUXC_NAND_RE_B_USDHC3_DATA4		0x1d0
--			MX8MN_IOMUXC_NAND_CE2_B_USDHC3_DATA5		0x1d0
--			MX8MN_IOMUXC_NAND_CE3_B_USDHC3_DATA6		0x1d0
--			MX8MN_IOMUXC_NAND_CLE_USDHC3_DATA7		0x1d0
--			MX8MN_IOMUXC_NAND_CE1_B_USDHC3_STROBE		0x190
--		>;
--	};
--
--	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
--		fsl,pins = <
--			MX8MN_IOMUXC_NAND_WE_B_USDHC3_CLK		0x40000194
--			MX8MN_IOMUXC_NAND_WP_B_USDHC3_CMD		0x1d4
--			MX8MN_IOMUXC_NAND_DATA04_USDHC3_DATA0		0x1d4
--			MX8MN_IOMUXC_NAND_DATA05_USDHC3_DATA1		0x1d4
--			MX8MN_IOMUXC_NAND_DATA06_USDHC3_DATA2		0x1d4
--			MX8MN_IOMUXC_NAND_DATA07_USDHC3_DATA3		0x1d4
--			MX8MN_IOMUXC_NAND_RE_B_USDHC3_DATA4		0x1d4
--			MX8MN_IOMUXC_NAND_CE2_B_USDHC3_DATA5		0x1d4
--			MX8MN_IOMUXC_NAND_CE3_B_USDHC3_DATA6		0x1d4
--			MX8MN_IOMUXC_NAND_CLE_USDHC3_DATA7		0x1d4
--			MX8MN_IOMUXC_NAND_CE1_B_USDHC3_STROBE		0x194
--		>;
--	};
--
--	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
--		fsl,pins = <
--			MX8MN_IOMUXC_NAND_WE_B_USDHC3_CLK		0x40000196
--			MX8MN_IOMUXC_NAND_WP_B_USDHC3_CMD		0x1d6
--			MX8MN_IOMUXC_NAND_DATA04_USDHC3_DATA0		0x1d6
--			MX8MN_IOMUXC_NAND_DATA05_USDHC3_DATA1		0x1d6
--			MX8MN_IOMUXC_NAND_DATA06_USDHC3_DATA2		0x1d6
--			MX8MN_IOMUXC_NAND_DATA07_USDHC3_DATA3		0x1d6
--			MX8MN_IOMUXC_NAND_RE_B_USDHC3_DATA4		0x1d6
--			MX8MN_IOMUXC_NAND_CE2_B_USDHC3_DATA5		0x1d6
--			MX8MN_IOMUXC_NAND_CE3_B_USDHC3_DATA6		0x1d6
--			MX8MN_IOMUXC_NAND_CLE_USDHC3_DATA7		0x1d6
--			MX8MN_IOMUXC_NAND_CE1_B_USDHC3_STROBE		0x196
--		>;
--	};
--
--	pinctrl_wdog: wdoggrp {
--		fsl,pins = <
--			MX8MN_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B		0xc6
--		>;
--	};
--};
--
- &fec1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_fec1>;
-@@ -364,3 +212,155 @@
- 	fsl,ext-reset-output;
- 	status = "okay";
- };
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_ENET_MDC_ENET1_MDC		0x3
-+			MX8MN_IOMUXC_ENET_MDIO_ENET1_MDIO	0x3
-+			MX8MN_IOMUXC_ENET_TD3_ENET1_RGMII_TD3	0x1f
-+			MX8MN_IOMUXC_ENET_TD2_ENET1_RGMII_TD2	0x1f
-+			MX8MN_IOMUXC_ENET_TD1_ENET1_RGMII_TD1	0x1f
-+			MX8MN_IOMUXC_ENET_TD0_ENET1_RGMII_TD0	0x1f
-+			MX8MN_IOMUXC_ENET_RD3_ENET1_RGMII_RD3	0x91
-+			MX8MN_IOMUXC_ENET_RD2_ENET1_RGMII_RD2	0x91
-+			MX8MN_IOMUXC_ENET_RD1_ENET1_RGMII_RD1	0x91
-+			MX8MN_IOMUXC_ENET_RD0_ENET1_RGMII_RD0	0x91
-+			MX8MN_IOMUXC_ENET_TXC_ENET1_RGMII_TXC	0x1f
-+			MX8MN_IOMUXC_ENET_RXC_ENET1_RGMII_RXC	0x91
-+			MX8MN_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
-+			MX8MN_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-+			MX8MN_IOMUXC_SAI2_RXC_GPIO4_IO22	0x19
-+		>;
-+	};
-+
-+	pinctrl_gpio_led: gpioledgrp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_NAND_READY_B_GPIO3_IO16	0x19
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_I2C1_SCL_I2C1_SCL		0x400001c3
-+			MX8MN_IOMUXC_I2C1_SDA_I2C1_SDA		0x400001c3
-+		>;
-+	};
-+
-+	pinctrl_pmic: pmicirq {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
-+		>;
-+	};
-+
-+	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_UART2_RXD_UART2_DCE_RX	0x140
-+			MX8MN_IOMUXC_UART2_TXD_UART2_DCE_TX	0x140
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_GPIO1_IO15_GPIO1_IO15	0x1c4
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_SD2_CLK_USDHC2_CLK		0x190
-+			MX8MN_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d0
-+			MX8MN_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d0
-+			MX8MN_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d0
-+			MX8MN_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d0
-+			MX8MN_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d0
-+			MX8MN_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_SD2_CLK_USDHC2_CLK		0x194
-+			MX8MN_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d4
-+			MX8MN_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d4
-+			MX8MN_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d4
-+			MX8MN_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d4
-+			MX8MN_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d4
-+			MX8MN_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_SD2_CLK_USDHC2_CLK		0x196
-+			MX8MN_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d6
-+			MX8MN_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d6
-+			MX8MN_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d6
-+			MX8MN_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d6
-+			MX8MN_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d6
-+			MX8MN_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_NAND_WE_B_USDHC3_CLK		0x40000190
-+			MX8MN_IOMUXC_NAND_WP_B_USDHC3_CMD		0x1d0
-+			MX8MN_IOMUXC_NAND_DATA04_USDHC3_DATA0		0x1d0
-+			MX8MN_IOMUXC_NAND_DATA05_USDHC3_DATA1		0x1d0
-+			MX8MN_IOMUXC_NAND_DATA06_USDHC3_DATA2		0x1d0
-+			MX8MN_IOMUXC_NAND_DATA07_USDHC3_DATA3		0x1d0
-+			MX8MN_IOMUXC_NAND_RE_B_USDHC3_DATA4		0x1d0
-+			MX8MN_IOMUXC_NAND_CE2_B_USDHC3_DATA5		0x1d0
-+			MX8MN_IOMUXC_NAND_CE3_B_USDHC3_DATA6		0x1d0
-+			MX8MN_IOMUXC_NAND_CLE_USDHC3_DATA7		0x1d0
-+			MX8MN_IOMUXC_NAND_CE1_B_USDHC3_STROBE		0x190
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_NAND_WE_B_USDHC3_CLK		0x40000194
-+			MX8MN_IOMUXC_NAND_WP_B_USDHC3_CMD		0x1d4
-+			MX8MN_IOMUXC_NAND_DATA04_USDHC3_DATA0		0x1d4
-+			MX8MN_IOMUXC_NAND_DATA05_USDHC3_DATA1		0x1d4
-+			MX8MN_IOMUXC_NAND_DATA06_USDHC3_DATA2		0x1d4
-+			MX8MN_IOMUXC_NAND_DATA07_USDHC3_DATA3		0x1d4
-+			MX8MN_IOMUXC_NAND_RE_B_USDHC3_DATA4		0x1d4
-+			MX8MN_IOMUXC_NAND_CE2_B_USDHC3_DATA5		0x1d4
-+			MX8MN_IOMUXC_NAND_CE3_B_USDHC3_DATA6		0x1d4
-+			MX8MN_IOMUXC_NAND_CLE_USDHC3_DATA7		0x1d4
-+			MX8MN_IOMUXC_NAND_CE1_B_USDHC3_STROBE		0x194
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_NAND_WE_B_USDHC3_CLK		0x40000196
-+			MX8MN_IOMUXC_NAND_WP_B_USDHC3_CMD		0x1d6
-+			MX8MN_IOMUXC_NAND_DATA04_USDHC3_DATA0		0x1d6
-+			MX8MN_IOMUXC_NAND_DATA05_USDHC3_DATA1		0x1d6
-+			MX8MN_IOMUXC_NAND_DATA06_USDHC3_DATA2		0x1d6
-+			MX8MN_IOMUXC_NAND_DATA07_USDHC3_DATA3		0x1d6
-+			MX8MN_IOMUXC_NAND_RE_B_USDHC3_DATA4		0x1d6
-+			MX8MN_IOMUXC_NAND_CE2_B_USDHC3_DATA5		0x1d6
-+			MX8MN_IOMUXC_NAND_CE3_B_USDHC3_DATA6		0x1d6
-+			MX8MN_IOMUXC_NAND_CLE_USDHC3_DATA7		0x1d6
-+			MX8MN_IOMUXC_NAND_CE1_B_USDHC3_STROBE		0x196
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B		0xc6
-+		>;
-+	};
-+};
+  phy: tegra: xusb: Add Tegra194 support
+   - no change
+
+  dt-bindings: phy: tegra: Add Tegra194 support
+   - no change
+
+  arm64: tegra: Add XUSB and pad controller on Tegra194
+   - no change
+
+  arm64: tegra: Add XUSB and pad controller on Tegra194
+   - no change
+
+  arm64: tegra: Enable XUSB host in P2972-0000 board
+   - no change
+
+v3:
+  add change log to cover latter
+
+v2:
+  xhci: tegra: Parameterize mailbox register addresses
+   - no change
+
+  usb: host: xhci-tegra: Add Tegra194 XHCI support
+   - no change
+
+  phy: tegra: xusb: Protect Tegra186 soc with config
+   - new patch to protect Tegra186 soc data with config
+
+  phy: tegra: xusb: Add Tegra194 support
+   - removed unnecessary #if/#endif pairs
+   - introduce new soc->supports_gen2 flag which indicate whether or not
+     a soc supports USB 3.1 Gen 2 speed
+
+  dt-bindings: phy: tegra: Add Tegra194 support
+   - fix a typo
+
+  arm64: tegra: Add XUSB and pad controller on Tegra194
+   - renamed xhci@3610000 with usb@3610000
+   - moved padctl@3520000 and usb@3610000 inside /cbb
+   - cleaned up "clocks" property of usb@3610000 node
+   - added blanks lines to visually separate blocks
+
+  arm64: tegra: Enable XUSB host in P2972-0000 board
+   - use capitalization of regulator names
+   - fix gpio property of VDD_5V_SATA regulator
+
+
+JC Kuo (5):
+  phy: tegra: xusb: Protect Tegra186 soc with config
+  phy: tegra: xusb: Add Tegra194 support
+  dt-bindings: phy: tegra: Add Tegra194 support
+  arm64: tegra: Add XUSB and pad controller on Tegra194
+  arm64: tegra: Enable XUSB host in P2972-0000 board
+
+ .../phy/nvidia,tegra124-xusb-padctl.txt       |  16 ++
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  36 ++++-
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  62 ++++++++
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 139 +++++++++++++++++
+ drivers/phy/tegra/Makefile                    |   1 +
+ drivers/phy/tegra/xusb-tegra186.c             | 144 +++++++++++++-----
+ drivers/phy/tegra/xusb.c                      |   7 +
+ drivers/phy/tegra/xusb.h                      |   6 +
+ 8 files changed, 376 insertions(+), 35 deletions(-)
+
 -- 
-2.7.4
+2.17.1
