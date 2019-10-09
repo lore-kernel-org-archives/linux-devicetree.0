@@ -1,64 +1,50 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 14/68] ARM: dts: Fix gpio0 flags for am335x-icev2
-Date: Wed,  9 Oct 2019 13:04:53 -0400
-Message-ID: <20191009170547.32204-14-sashal@kernel.org>
-References: <20191009170547.32204-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 13/26] MIPS: dts: ar9331: fix interrupt-controller size
+Date: Wed,  9 Oct 2019 13:05:45 -0400
+Message-ID: <20191009170558.32517-13-sashal@kernel.org>
+References: <20191009170558.32517-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20191009170558.32517-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit 4ef5d76b453908f21341e661a9b6f96862f6f589 ]
+[ Upstream commit 0889d07f3e4b171c453b2aaf2b257f9074cdf624 ]
 
-The ti,no-idle-on-init and ti,no-reset-on-init flags need to be at
-the interconnect target module level for the modules that have it
-defined. Otherwise we get the following warnings:
+It is two registers each of 4 byte.
 
-dts flag should be at module level for ti,no-idle-on-init
-dts flag should be at module level for ti,no-reset-on-init
-
-Fixes: 87fc89ced3a7 ("ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc")
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
-Reported-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-icev2.dts | 2 +-
- arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
-index 18f70b35da4c7..204bccfcc110a 100644
---- a/arch/arm/boot/dts/am335x-icev2.dts
-+++ b/arch/arm/boot/dts/am335x-icev2.dts
-@@ -432,7 +432,7 @@
- 	pinctrl-0 = <&mmc0_pins_default>;
- };
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index 2bae201aa3651..1c7bf11f8450b 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -99,7 +99,7 @@
  
--&gpio0 {
-+&gpio0_target {
- 	/* Do not idle the GPIO used for holding the VTT regulator */
- 	ti,no-reset-on-init;
- 	ti,no-idle-on-init;
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index 46849d6ecb3e2..1515f4f914999 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -127,7 +127,7 @@
- 			ranges = <0x0 0x5000 0x1000>;
- 		};
+ 			miscintc: interrupt-controller@18060010 {
+ 				compatible = "qca,ar7240-misc-intc";
+-				reg = <0x18060010 0x4>;
++				reg = <0x18060010 0x8>;
  
--		target-module@7000 {			/* 0x44e07000, ap 14 20.0 */
-+		gpio0_target: target-module@7000 {	/* 0x44e07000, ap 14 20.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
- 			ti,hwmods = "gpio1";
- 			reg = <0x7000 0x4>,
+ 				interrupt-parent = <&cpuintc>;
+ 				interrupts = <6>;
 -- 
 2.20.1
