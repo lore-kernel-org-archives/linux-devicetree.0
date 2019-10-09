@@ -1,69 +1,45 @@
-From: "Ramuthevar,Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v2 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM SDXC
-Date: Wed,  9 Oct 2019 09:28:18 +0800
-Message-ID: <20191009012818.32763-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20191009012818.32763-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From: JC Kuo <jckuo@nvidia.com>
+Subject: Re: [PATCH v3 0/7] add Tegra194 XUSB host and pad controller support
+Date: Wed, 9 Oct 2019 10:23:11 +0800
+Message-ID: <454e29a6-bf31-c75c-0f29-abd18a4ae071@nvidia.com>
+References: <20191004162906.4818-1-jckuo@nvidia.com>
+ <20191007110311.GA614644@kroah.com> <20191008112907.GC228118@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191009012818.32763-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20191008112907.GC228118@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, adrian.hunter@intel.com, ulf.hansson@linaro.org, michal.simek@xilinx.com, robh+dt@kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc: jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-
-The current arasan sdhci PHY configuration isn't compatible
-with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
-
-Therefore, add a new compatible, to adapt the Intel's LGM
-SDXC PHY with arasan-sdhc controller to configure the PHY.
-
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
----
- drivers/mmc/host/sdhci-of-arasan.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index 7023cbec4017..55de839a8a5e 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -120,6 +120,12 @@ static const struct sdhci_arasan_soc_ctl_map intel_lgm_emmc_soc_ctl_map = {
- 	.hiword_update = false,
- };
- 
-+static const struct sdhci_arasan_soc_ctl_map intel_lgm_sdxc_soc_ctl_map = {
-+	.baseclkfreq = { .reg = 0x80, .width = 8, .shift = 2 },
-+	.clockmultiplier = { .reg = 0, .width = -1, .shift = -1 },
-+	.hiword_update = false,
-+};
-+
- /**
-  * sdhci_arasan_syscon_write - Write to a field in soc_ctl registers
-  *
-@@ -384,6 +390,11 @@ static struct sdhci_arasan_of_data intel_lgm_emmc_data = {
- 	.pdata = &sdhci_arasan_cqe_pdata,
- };
- 
-+static struct sdhci_arasan_of_data intel_lgm_sdxc_data = {
-+	.soc_ctl_map = &intel_lgm_sdxc_soc_ctl_map,
-+	.pdata = &sdhci_arasan_cqe_pdata,
-+};
-+
- #ifdef CONFIG_PM_SLEEP
- /**
-  * sdhci_arasan_suspend - Suspend method for the driver
-@@ -489,6 +500,10 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
- 		.compatible = "intel,lgm-sdhci-5.1-emmc",
- 		.data = &intel_lgm_emmc_data,
- 	},
-+	{
-+		.compatible = "intel,lgm-sdhci-5.1-sdxc",
-+		.data = &intel_lgm_sdxc_data,
-+	},
- 	/* Generic compatible below here */
- 	{
- 		.compatible = "arasan,sdhci-8.9a",
--- 
-2.11.0
+On 10/8/19 7:29 PM, Thierry Reding wrote:
+> On Mon, Oct 07, 2019 at 01:03:11PM +0200, Greg KH wrote:
+>> On Sat, Oct 05, 2019 at 12:28:59AM +0800, JC Kuo wrote:
+>>> Hi,
+>>>
+>>> This series introduces support for Tegra194 XUSB host and pad
+>>> controller. Tegra194 XUSB host and pad controller are highly
+>>> similar to the controllers found on Tegra186. Therefore, it's
+>>> possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
+>>
+>> I've taken patches 1 and 2 through my USB tree.  If you want/need me to
+>> take the others, please get acks from those maintainers on them so I can
+>> do so.
+> 
+> I can pick up patches 6 and 7 into the Tegra tree. There are a few
+> patches in there already that conflict with the DT changes in this
+> series and those will be easier to resolve in the Tegra tree.
+> 
+> JC, I noticed that you didn't Cc Kishon as the PHY subsystem maintainer.
+> Please resend the series with Kishon added in the To: line to make sure
+> he sees them and can apply or ack them.
+> 
+> Given that Greg's already applied patches 1 and 2, maybe leave them out
+> of the series.
+Thanks Thierry. I will send v4 accordingly.
+> 
+> Thierry
+> 
