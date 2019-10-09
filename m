@@ -1,104 +1,198 @@
-From: Rong Chen <rong.a.chen@intel.com>
-Subject: Re: [kbuild-all] Re: [PATCH v2 07/10] ASoC:
- cros_ec_codec: support WoV
-Date: Wed, 9 Oct 2019 15:25:21 +0800
-Message-ID: <e02d6319-77b2-b74d-883e-7ec87c5bd1fc@intel.com>
-References: <20191005164320.07.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
- <201910060040.RXI5XB2W%lkp@intel.com>
- <CA+Px+wUqwjPKkbZAfJ0+a6JAhxRqGLqq_JRY6Qwoh49JrxKr8w@mail.gmail.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH v3 03/14] dmaengine: doc: Add sections for per descriptor
+ metadata support
+Date: Wed, 9 Oct 2019 10:30:15 +0300
+Message-ID: <6b9be9ea-551a-22e1-a86b-9e149656058f@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <20191001061704.2399-4-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CA+Px+wUqwjPKkbZAfJ0+a6JAhxRqGLqq_JRY6Qwoh49JrxKr8w@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191001061704.2399-4-peter.ujfalusi@ti.com>
 Content-Language: en-US
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Tzung-Bi Shih <tzungbi@google.com>, kbuild test robot <lkp@intel.com>, Guenter Roeck <groeck@google.com>
-Cc: Gwendal Grignou <gwendal@google.com>, devicetree@vger.kernel.org, ALSA development <alsa-devel@alsa-project.org>, Jimmy Cheng-Yi Chiang <cychiang@google.com>, Nicolas Boichat <drinkcat@google.com>, robh+dt@kernel.org, Mark Brown <broonie@kernel.org>, kbuild-all@01.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Benson Leung <bleung@google.com>, Dylan Reid <dgreid@google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, j-keerthy@ti.com, linux-kernel@vger.kernel.org, tony@atomide.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 01/10/2019 09:16, Peter Ujfalusi wrote:
+> Update the provider and client documentation with details about the
+> metadata support.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
+Couple of typos below, but they don't really change the readability of 
+the document so:
 
-On 10/7/19 3:04 PM, Tzung-Bi Shih wrote:
-> On Sun, Oct 6, 2019 at 12:54 AM kbuild test robot <lkp@intel.com> wrote:
->> url:    https://github.com/0day-ci/linux/commits/Tzung-Bi-Shih/ASoC-mediatek-mt8183-mt6358-ts3a227-max98357-support-WoV/20191005-171021
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
->> reproduce:
->>          # apt-get install sparse
->>          # sparse version: v0.6.1-rc1-42-g38eda53-dirty
->>          make ARCH=x86_64 allmodconfig
->>          make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
->>
->> If you fix the issue, kindly add following tag
->> Reported-by: kbuild test robot <lkp@intel.com>
->>
->>
->> sparse warnings: (new ones prefixed by >>)
->>
->>>> sound/soc/codecs/cros_ec_codec.c:430:39: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void * @@    got void [noderef] <asvoid * @@
->>>> sound/soc/codecs/cros_ec_codec.c:430:39: sparse:    expected void *
->>>> sound/soc/codecs/cros_ec_codec.c:430:39: sparse:    got void [noderef] <asn:2> *
->>>> sound/soc/codecs/cros_ec_codec.c:549:69: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
->>>> sound/soc/codecs/cros_ec_codec.c:549:69: sparse:    expected void const volatile [noderef] <asn:2> *
->>>> sound/soc/codecs/cros_ec_codec.c:549:69: sparse:    got unsigned char [usertype] *addr
->>>> sound/soc/codecs/cros_ec_codec.c:698:33: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
->>>> sound/soc/codecs/cros_ec_codec.c:698:33: sparse:    expected void volatile [noderef] <asn:2> *
->>>> sound/soc/codecs/cros_ec_codec.c:698:33: sparse:    got unsigned char [usertype] *wov_lang_shm_p
->>     sound/soc/codecs/cros_ec_codec.c:699:48: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
->>     sound/soc/codecs/cros_ec_codec.c:699:48: sparse:    expected void volatile [noderef] <asn:2> *
->>>> sound/soc/codecs/cros_ec_codec.c:699:48: sparse:    got unsigned char [usertype] *
-> I cannot reproduce the same sparse errors.
->
-> My commit stack: apply my patches onto broonie/sound.git for-next
-> $ git log --oneline
-> b4471777f5d8 (HEAD -> draft) ASoC: mediatek: mt8183: support WoV
-> b6bb558fa59d ASoC: dt-bindings: mt8183: add ec-codec
-> a08bede115d4 ASoC: mediatek: mt6358: support WoV
-> f67068fd0c91 ASoC: cros_ec_codec: support WoV
-> 7e11271c070e ASoC: dt-bindings: cros_ec_codec: add SHM bindings
-> fd04f20e77d3 ASoC: cros_ec_codec: read max DMIC gain from EC codec
-> c008f01d5bc3 platform/chrome: cros_ec: add common commands for EC codec
-> 50d2c1f9b1f4 ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
-> 00e5a1c121eb ASoC: cros_ec_codec: refactor I2S RX
-> 3f0c475d6ec8 platform/chrome: cros_ec: remove unused EC feature
-> 3877dcd0194c (mark/for-next, asoc-next) Merge branch 'asoc-5.5' into asoc-next
->
-> My reproduce steps:
-> $ make ARCH=x86_64 mrproper
-> $ make ARCH=x86_64 allmodconfig
-> $ make ARCH=x86_64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' -j40
-> 2>&1 | grep -v sched | tee log.txt
-> (Note: filter sched out to not get flood sparse errors)
-> $ grep cros_ec_codec log.txt
->    CHECK   sound/soc/codecs/cros_ec_codec.c
->    CC [M]  sound/soc/codecs/cros_ec_codec.o
->
-> It did not generate the same message as 0day reported.
->
-> One difference would be the sparse version (it is from "apt install"
-> in my environment):
-> $ sparse --version
-> 0.6.0 (Debian: 0.6.0-3)
-> On the other hand, 0day used "v0.6.1-rc1-42-g38eda53-dirty".
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
 
-Hi,
+> ---
+>   Documentation/driver-api/dmaengine/client.rst | 75 +++++++++++++++++++
+>   .../driver-api/dmaengine/provider.rst         | 46 ++++++++++++
+>   2 files changed, 121 insertions(+)
+> 
+> diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+> index 45953f171500..d708e46b88a2 100644
+> --- a/Documentation/driver-api/dmaengine/client.rst
+> +++ b/Documentation/driver-api/dmaengine/client.rst
+> @@ -151,6 +151,81 @@ The details of these operations are:
+>        Note that callbacks will always be invoked from the DMA
+>        engines tasklet, never from interrupt context.
+>   
+> +  Optional: per descriptor metadata
+> +  ---------------------------------
+> +  DMAengine provides two ways for metadata support.
+> +
+> +  DESC_METADATA_CLIENT
+> +
+> +    The metadata buffer is allocated/provided by the client driver and it is
+> +    attached to the descriptor.
+> +
+> +  .. code-block:: c
+> +
+> +     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
+> +				   void *data, size_t len);
+> +
+> +  DESC_METADATA_ENGINE
+> +
+> +    The metadata buffer is allocated/managed by the DMA driver. The client
+> +    driver can ask for the pointer, maximum size and the currently used size of
+> +    the metadata and can directly update or read it.
+> +
+> +  .. code-block:: c
+> +
+> +     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
+> +		size_t *payload_len, size_t *max_len);
+> +
+> +     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
+> +		size_t payload_len);
+> +
+> +  Client drivers can query if a given mode is supported with:
+> +
+> +  .. code-block:: c
+> +
+> +     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
+> +		enum dma_desc_metadata_mode mode);
+> +
+> +  Depending on the used mode client drivers must follow different flow.
+> +
+> +  DESC_METADATA_CLIENT
+> +
+> +    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
+> +      1. prepare the descriptor (dmaengine_prep_*)
+> +         construct the metadata in the client's buffer
+> +      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+> +         descriptor
+> +      3. submit the transfer
+> +    - DMA_DEV_TO_MEM:
+> +      1. prepare the descriptor (dmaengine_prep_*)
+> +      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+> +         descriptor
+> +      3. submit the transfer
+> +      4. when the transfer is completed, the metadata should be available in the
+> +         attached buffer
+> +
+> +  DESC_METADATA_ENGINE
+> +
+> +    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
+> +      1. prepare the descriptor (dmaengine_prep_*)
+> +      2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
+> +         engine's metadata area
+> +      3. update the metadata at the pointer
+> +      4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
+> +         amount of data the client has placed into the metadata buffer
+> +      5. submit the transfer
+> +    - DMA_DEV_TO_MEM:
+> +      1. prepare the descriptor (dmaengine_prep_*)
+> +      2. submit the transfer
+> +      3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
+> +         pointer to the engine's metadata are
 
-The sparse warnings could be generated by the latest sparse
-(https://github.com/lucvoo/sparse.git). Could you try again?
+are = area?
 
-Best Regards,
-Rong Chen
+> +      4. Read out the metadate from the pointer
 
->
-> Guenter, what we could do in the case?  Do you have any idea?
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+metadate = metadata?
+
+> +
+> +  .. note::
+> +
+> +     Mixed use of DESC_METADATA_CLIENT / DESC_METADATA_ENGINE is not allowed,
+> +     client drivers must use either of the modes per descriptor.
+> +
+>   4. Submit the transaction
+>   
+>      Once the descriptor has been prepared and the callback information
+> diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+> index dfc4486b5743..9e6d87b3c477 100644
+> --- a/Documentation/driver-api/dmaengine/provider.rst
+> +++ b/Documentation/driver-api/dmaengine/provider.rst
+> @@ -247,6 +247,52 @@ after each transfer. In case of a ring buffer, they may loop
+>   (DMA_CYCLIC). Addresses pointing to a device's register (e.g. a FIFO)
+>   are typically fixed.
+>   
+> +Per descriptor metadata support
+> +-------------------------------
+> +Some data movement architecure (DMA controller and peripherals) uses metadata
+
+architecure = architecture?
+
+> +associated with a transaction. The DMA controller role is to transfer the
+> +payload and the metadata alongside.
+> +The metadata itself is not used by the DMA engine itself, but it contains
+> +parameters, keys, vectors, etc for peripheral or from the peripheral.
+> +
+> +The DMAengine framework provides a generic ways to facilitate the metadata for
+> +descriptors. Depending on the architecture the DMA driver can implement either
+> +or both of the methods and it is up to the client driver to choose which one
+> +to use.
+> +
+> +- DESC_METADATA_CLIENT
+> +
+> +  The metadata buffer is allocated/provided by the client driver and it is
+> +  attached (via the dmaengine_desc_attach_metadata() helper to the descriptor.
+> +
+> +  From the DMA driver the following is expected for this mode:
+> +  - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
+> +    The data from the provided metadata buffer should be prepared for the DMA
+> +    controller to be sent alongside of the payload data. Either by copying to a
+> +    hardware descriptor, or highly coupled packet.
+> +  - DMA_DEV_TO_MEM
+> +    On transfer completion the DMA driver must copy the metadata to the client
+> +    provided metadata buffer.
+> +
+> +- DESC_METADATA_ENGINE
+> +
+> +  The metadata buffer is allocated/managed by the DMA driver. The client driver
+> +  can ask for the pointer, maximum size and the currently used size of the
+> +  metadata and can directly update or read it. dmaengine_desc_get_metadata_ptr()
+> +  and dmaengine_desc_set_metadata_len() is provided as helper functions.
+> +
+> +  From the DMA driver the following is expected for this mode:
+> +  - get_metadata_ptr
+> +    Should return a pointer for the metadata buffer, the maximum size of the
+> +    metadata buffer and the currently used / valid (if any) bytes in the buffer.
+> +  - set_metadata_len
+> +    It is called by the clients after it have placed the metadata to the buffer
+> +    to let the DMA driver know the number of valid bytes provided.
+> +
+> +  Note: since the client will ask for the metadata pointer in the completion
+> +  callback (in DMA_DEV_TO_MEM case) the DMA driver must ensure that the
+> +  descriptor is not freed up prior the callback is called.
+> +
+>   Device operations
+>   -----------------
+>   
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
