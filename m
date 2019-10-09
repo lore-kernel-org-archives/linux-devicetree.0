@@ -1,65 +1,50 @@
-From: Thara Gopinath <thara.gopinath@linaro.org>
-Subject: Re: [PATCH 3/5] dt-bindings: thermal: Add generic power domain
- warming device binding
-Date: Wed, 9 Oct 2019 08:18:14 -0400
-Message-ID: <5D9DD006.8010809@linaro.org>
-References: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org>
- <1568135676-9328-4-git-send-email-thara.gopinath@linaro.org>
- <20190930144205.GA11539@bogus>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v4 0/3] media: ov5640: updates
+Date: Wed, 9 Oct 2019 07:35:07 -0500
+Message-ID: <20191009123510.19106-1-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190930144205.GA11539@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org, daniel.lezcano@linaro.org, bjorn.andersson@linaro.org, agross@kernel.org, amit.kucheria@verdurent.com, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-Thanks for the review
+This patch series is a collection of patches we have been carrying for a
+while.
 
-On 09/30/2019 10:42 AM, Rob Herring wrote:
-> On Tue, Sep 10, 2019 at 01:14:34PM -0400, Thara Gopinath wrote:
->> Add binding to define power domains as thermal warming
->> devices.
->>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->> ---
->>  .../bindings/thermal/pwr-domain-warming.txt        | 32 ++++++++++++++++++++++
->>  1 file changed, 32 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
->> new file mode 100644
->> index 0000000..25fc568
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
->> @@ -0,0 +1,32 @@
->> +* Generic power domain based thermal warming device.
->> +
->> +This binding describes the power domains that can be used as a
->> +thermal warming device.
-> 
-> This looks like just a gathering of properties and way to instantiate 
-> some driver.
-> 
-> I think this all belongs in the power domain provider. Make it a cooling 
-> device and you should know which domains are relevant based on the 
-> compatible (though perhaps we could consider a list in DT). If you want 
-> to instantiate a separate driver to handle this, then make the power 
-> domain driver do that.
+First, it adds support for PIXEL_RATE control which is used by some
+CSI2 receiver driver to properly set-up their DPHY.
 
-This sounds fine. A list in DT might be needed though. I have a separate
-driver. I should be able to get the genpd provider driver call
-into it. I had asked this to Ulf and he seemed to be fine with it as well
+Then we fix an issue related to having extra sensor enable/disable in
+the register array for the 1920x1080 mode.
+
+Finally we restrict the largest resolution which should only be
+available at the lowest FPS.
+
+Changes since v3:
+- Fix a potential early pointer dereference in init_controls.
+  Reported by Sakari.
+
+Changes since v2:
+- Addressed comment from Sakari and Jacopo.
+- Make use of the calc_pixel_rate in set_mode also
+- Cleaned up the pixel_rate ctrl struct
+- Fix the fps condition checking for the max resolution case
+
+Changes since v1:
+- Addressed comment from Sakari.
+  added a function to calculate the pixel rate and remove the need to
+  cache its value
 
 
-> 
-> Rob
-> 
->
+Benoit Parrot (3):
+  media: ov5640: add PIXEL_RATE control
+  media: ov5640: Fix 1920x1080 mode to remove extra enable/disable
+  media: ov5640: Make 2592x1944 mode only available at 15 fps
+
+ drivers/media/i2c/ov5640.c | 33 +++++++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
 
 -- 
-Regards
-Thara
+2.17.1
