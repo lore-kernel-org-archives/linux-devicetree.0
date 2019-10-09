@@ -1,49 +1,55 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v7 0/2] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
-Date: Wed,  9 Oct 2019 09:51:06 +0100
-Message-ID: <20191009085108.4950-1-srinivas.kandagatla@linaro.org>
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH v10 4/6] dts-bindings: leds: Document the naming requirement
+ for LED properties
+Date: Wed, 9 Oct 2019 10:51:25 +0200
+Message-ID: <20191009085127.22843-5-jjhiblot@ti.com>
+References: <20191009085127.22843-1-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: spapothi@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, vkoul@kernel.org, pierre-louis.bossart@linux.intel.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20191009085127.22843-1-jjhiblot@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: jacek.anaszewski@gmail.com, pavel@ucw.cz, sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, dmurphy@ti.com, Jean-Jacques Hiblot <jjhiblot@ti.com>, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
-Amplifier which is SoundWire interfaced.
-
-This patchset along with DB845c machine driver and WCD934x codec driver
-has been tested on SDM845 SoC based DragonBoard DB845c with two
-WSA8810 and Lenovo YOGA C630 Laptop based on SDM850 with WSA8815
-speaker amplifiers.
-
-Most of the code in this driver is rework of Qualcomm downstream drivers
-used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
-
-TODO:
-        Add thermal sensor support in WSA881x.
-
-Thanks,
-srini
-
-Changes since v6:
-	- Added reviewed-by tag from Pierre and Rob
-	- Removed udelay argument as suggested by Pierre.
-	- Added device id for WSA8815
-	- rebased on sound-next
-
-Srinivas Kandagatla (2):
-  dt-bindings: ASoC: Add WSA881x bindings
-  ASoC: codecs: add wsa881x amplifier support
-
- .../bindings/sound/qcom,wsa881x.yaml          |   62 +
- sound/soc/codecs/Kconfig                      |   10 +
- sound/soc/codecs/Makefile                     |    2 +
- sound/soc/codecs/wsa881x.c                    | 1113 +++++++++++++++++
- 4 files changed, 1187 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
- create mode 100644 sound/soc/codecs/wsa881x.c
-
--- 
-2.21.0
+TEVEIHByb3BlcnRpZXMgbXVzdCBiZSBuYW1lZCAibGVkcyIgaW4gdGhlIHNhbWUgd2F5IHRoYXQg
+UFdNLCBjbG9ja3Mgb3IKUEhZIHByb3BlcnRpZXMgYXJlIG5hbWVzIHJlc3BlY3RpdmVseSAicHdt
+cyIsICJjbG9ja3MiIGFuZCAicGh5cyIuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcK
+U2lnbmVkLW9mZi1ieTogSmVhbi1KYWNxdWVzIEhpYmxvdCA8ampoaWJsb3RAdGkuY29tPgotLS0K
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvY29tbW9uLnR4dCAgICAgICB8IDIwICsrKysr
+KysrKysrKysrKystLS0KIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspLCAzIGRlbGV0
+aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9s
+ZWRzL2NvbW1vbi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9j
+b21tb24udHh0CmluZGV4IDlmYTZmOTc5NWQ1MC4uMzFiOGMxZjY4ZDI3IDEwMDY0NAotLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9jb21tb24udHh0CisrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2NvbW1vbi50eHQKQEAgLTEwLDYg
+KzEwLDkgQEAgY2FuIGluZmx1ZW5jZSB0aGUgd2F5IG9mIHRoZSBMRUQgZGV2aWNlIGluaXRpYWxp
+emF0aW9uLCB0aGUgTEVEIGNvbXBvbmVudHMKIGhhdmUgdG8gYmUgdGlnaHRseSBjb3VwbGVkIHdp
+dGggdGhlIExFRCBkZXZpY2UgYmluZGluZy4gVGhleSBhcmUgcmVwcmVzZW50ZWQKIGJ5IGNoaWxk
+IG5vZGVzIG9mIHRoZSBwYXJlbnQgTEVEIGRldmljZSBiaW5kaW5nLgogCitMRUQgcHJvcGVydGll
+cyBzaG91bGQgYmUgbmFtZWQgImxlZHMiLiBUaGUgZXhhY3QgbWVhbmluZyBvZiBlYWNoIGxlZHMK
+K3Byb3BlcnR5IG11c3QgYmUgZG9jdW1lbnRlZCBpbiB0aGUgZGV2aWNlIHRyZWUgYmluZGluZyBm
+b3IgZWFjaCBkZXZpY2UuCisKIAogT3B0aW9uYWwgcHJvcGVydGllcyBmb3IgY2hpbGQgbm9kZXM6
+CiAtIGxlZC1zb3VyY2VzIDogTGlzdCBvZiBkZXZpY2UgY3VycmVudCBvdXRwdXRzIHRoZSBMRUQg
+aXMgY29ubmVjdGVkIHRvLiBUaGUKQEAgLTE2NSw5ICsxNjgsMjAgQEAgbGVkLWNvbnRyb2xsZXJA
+MzAgewogCQlmdW5jdGlvbi1lbnVtZXJhdG9yID0gPDI+OwogICAgICAgICB9OwogCi0gICAgICAg
+IGxlZEAzIHsKKyAgICAgICAgYmtsX2xlZDA6IGxlZEAzIHsKIAkJcmVnID0gPDM+OwotCQlmdW5j
+dGlvbiA9IExFRF9GVU5DVElPTl9JTkRJQ0FUT1I7Ci0JCWZ1bmN0aW9uLWVudW1lcmF0b3IgPSA8
+Mz47CisJCWZ1bmN0aW9uID0gTEVEX0ZVTkNUSU9OX0JBQ0tMSUdIVDsKKwkJZnVuY3Rpb24tZW51
+bWVyYXRvciA9IDwxPjsKICAgICAgICAgfTsKKworICAgICAgICBia2xfbGVkMTogbGVkQDQgewor
+CQlyZWcgPSA8ND47CisJCWZ1bmN0aW9uID0gTEVEX0ZVTkNUSU9OX0JBQ0tMSUdIVDsKKwkJZnVu
+Y3Rpb24tZW51bWVyYXRvciA9IDwyPjsKKyAgICAgICAgfTsKK307CisKKworYmFja2xpZ2h0QDQw
+IHsKKwlsZWRzID0gPCZia2xfbGVkMD4gLCA8JmJrbF9sZWQxPjsKIH07Ci0tIAoyLjE3LjEKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
