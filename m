@@ -1,77 +1,50 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-Date: Wed, 9 Oct 2019 19:05:46 +0200
-Message-ID: <CAFBinCCHrvjNTruVk7qr+7Y_m7mP2BJ-0HxftJpiPXpvoD=-QQ@mail.gmail.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
- <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
- <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
- <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com> <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 06/13] MIPS: dts: ar9331: fix interrupt-controller size
+Date: Wed,  9 Oct 2019 13:06:25 -0400
+Message-ID: <20191009170635.536-6-sashal@kernel.org>
+References: <20191009170635.536-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
+In-Reply-To: <20191009170635.536-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-On Wed, Oct 9, 2019 at 10:49 AM Anand Moon <linux.amoon@gmail.com> wrote:
-[...]
-> > can you please share a boot log with the command line parameter
-> > "initcall_debug" [0]?
-> > from Documentation/admin-guide/kernel-parameters.txt:
-> >  initcall_debug [KNL] Trace initcalls as they are executed.  Useful
-> >  for working out where the kernel is dying during
-> >  startup.
-> >
->
-> Well I have tied to add this command  *initcall_debug* to kernel command prompt.
-> Here is the console log,  but I did not see any init kernel timer logs
-I don't remember from the top of my head if any additional Kconfig
-setting is needed
+[ Upstream commit 0889d07f3e4b171c453b2aaf2b257f9074cdf624 ]
 
-> Kernel command line: console=ttyAML0,115200n8
-> root=PARTUUID=45d7d61e-01 rw rootwait
-> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
->
-> [0] https://pastebin.com/eBgJrSKe
->
-> > you can also try the command line parameter "clk_ignore_unused" (it's
-> > just a gut feeling: maybe a "critical" clock is being disabled because
-> > it's not wired up correctly).
-> >
->
-> It look like some clk issue after I added the *clk_ignore_unused* to
-> kernel command line
-> it booted further to login prompt and cpufreq DVFS seem to be loaded.
-> So I could conclude this is clk issue.below is the boot log
-interesting - as Jerome suggested: the next step is to find out which
-clock is causing problems
-last time I checked there was no debug print in the code which
-disables unused clocks so I had to add that myself
+It is two registers each of 4 byte.
 
-> Kernel command line: console=ttyAML0,115200n8
-> root=PARTUUID=45d7d61e-01 rw rootwait
-> earlyprintk=serial,ttyAML0,115200 initcall_debug printk.time=y
-> clk_ignore_unused
->
-> [1] https://pastebin.com/Nsk0wZQJ
->
-> > back when I was working out the CPU clock tree for the 32-bit SoCs I
-> > had a bad parent clock in one of the muxes which resulted in sporadic
-> > lockups if CPU DVFS was enabled.
-> > you can try to disable CPU DVFS by dropping the OPP table and it's
-> > references from the .dtsi
-> >
->
-> Yep yesterday my focus was to disable PWM feature and get boot up-to
-> login prompt
-> But not I have to look into clk feature.
->
-> *Many thanks for your valuable inputs, I learned a lot of things.*
-you're welcome :-)
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Martin
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index cf47ed4d85694..1fda24fc18606 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -98,7 +98,7 @@
+ 
+ 			miscintc: interrupt-controller@18060010 {
+ 				compatible = "qca,ar7240-misc-intc";
+-				reg = <0x18060010 0x4>;
++				reg = <0x18060010 0x8>;
+ 
+ 				interrupt-parent = <&cpuintc>;
+ 				interrupts = <6>;
+-- 
+2.20.1
