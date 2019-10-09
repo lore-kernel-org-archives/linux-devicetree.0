@@ -1,40 +1,37 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RESEND PATCH v3 08/11] phy: phy-mtk-tphy: make the ref clock optional
-Date: Wed, 9 Oct 2019 15:40:31 +0800
-Message-ID: <1570606834-5644-8-git-send-email-chunfeng.yun@mediatek.com>
-References: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/2] arm64: dts: meson: sm1: add audio support
+Date: Wed,  9 Oct 2019 10:27:06 +0200
+Message-ID: <20191009082708.6337-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sometimes the reference clock of USB3 PHY comes from oscillator
-directly, and no need refer to a fixed-clock in DTS anymore
-if make it optional.
+This patchset adds audio support on the sm1 SoC family and the
+sei610 platform
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v2~3: no changes
----
- drivers/phy/mediatek/phy-mtk-tphy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Kevin, The patchset depends on:
+ - The ARB binding merged by Philipp [0]
+ - The audio clock controller bindings I just applied. A tag is
+   available for you here [1]
 
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index 4a2dc92f10f5..96c62e3a3300 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -1182,7 +1182,7 @@ static int mtk_tphy_probe(struct platform_device *pdev)
- 		if (tphy->u3phya_ref)
- 			continue;
- 
--		instance->ref_clk = devm_clk_get(&phy->dev, "ref");
-+		instance->ref_clk = devm_clk_get_optional(&phy->dev, "ref");
- 		if (IS_ERR(instance->ref_clk)) {
- 			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
- 			retval = PTR_ERR(instance->ref_clk);
+This clk-meson branch [2] has the necessary clock driver changes, if
+you want to test this.
+
+[0]: https://lkml.kernel.org/r/20190905135040.6635-1-jbrunet@baylibre.com
+[1]: git://github.com/BayLibre/clk-meson.git clk-meson-dt-v5.5-1
+[2]: git://github.com/BayLibre/clk-meson.git v5.5/drivers
+
+Jerome Brunet (2):
+  arm64: dts: meson: sm1: add audio devices
+  arm64: dts: meson: sei610: enable audio
+
+ .../boot/dts/amlogic/meson-sm1-sei610.dts     | 205 +++++++++++
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    | 327 ++++++++++++++++++
+ 2 files changed, 532 insertions(+)
+
 -- 
-2.23.0
+2.21.0
