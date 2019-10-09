@@ -1,15 +1,14 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 04/10] dt-bindings: rcar-gen3-phy-usb3: Add r8a774b1
- support
-Date: Wed, 9 Oct 2019 04:09:44 +0000
-Message-ID: <TYAPR01MB454424D47DDD0A21DD2F9FB8D8950@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+Subject: RE: [PATCH 05/10] dt-bindings: usb-xhci: Add r8a774b1 support
+Date: Wed, 9 Oct 2019 04:09:49 +0000
+Message-ID: <TYAPR01MB4544467450214C0A93307F14D8950@TYAPR01MB4544.jpnprd01.prod.outlook.com>
 References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1570531132-21856-5-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570531132-21856-6-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570531132-21856-5-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570531132-21856-6-git-send-email-fabrizio.castro@bp.renesas.com>
 Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
