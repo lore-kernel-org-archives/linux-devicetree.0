@@ -1,60 +1,33 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5, 24/32] drm/mediatek: add clock property check before
- get it
-Date: Wed, 9 Oct 2019 17:36:01 +0800
-Message-ID: <1570613761.7713.15.camel@mtksdaap41>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-25-git-send-email-yongqiang.niu@mediatek.com>
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v1 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM
+ SDXC
+Date: Wed, 9 Oct 2019 12:40:05 +0300
+Message-ID: <20191009094005.GB32742@smile.fi.intel.com>
+References: <20191003040032.37696-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191003040032.37696-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <2cbda555-42d2-392c-0887-09cae4a35dce@intel.com>
+ <38228535-8d4c-76e9-f568-c0dfdc3994b3@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567090254-15566-25-git-send-email-yongqiang.niu@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <38228535-8d4c-76e9-f568-c0dfdc3994b3@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yongqiang.niu@mediatek.com
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: "Ramuthevar, Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Wed, Oct 09, 2019 at 09:06:16AM +0800, Ramuthevar, Vadivel MuruganX wrote:
+> Hi Adrian,
 > 
-> This patch add clock property check before get it
-> 
+>     Thank you for the Acked-by, will add *Acked-by* in the next-patch.
 
-I've rewrite this patch and applied to mediatek-drm-next-5.5 [1] with
-the title "drm/mediatek: add no_clk into ddp private data", thanks.
+Please, stop top-posting.
 
-[1]
-https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
+Besides that, there is no need for next version if the only comments you got
+are ACKs. Rb:s, etc.
 
-Regards,
-CK
-
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index a5a6689..effc24a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -657,10 +657,12 @@ static int mtk_ddp_probe(struct platform_device *pdev)
->  	for (i = 0; i < 10; i++)
->  		ddp->mutex[i].id = i;
->  
-> -	ddp->clk = devm_clk_get(dev, NULL);
-> -	if (IS_ERR(ddp->clk)) {
-> -		dev_err(dev, "Failed to get clock\n");
-> -		return PTR_ERR(ddp->clk);
-> +	if (of_find_property(dev->of_node, "clocks", &i)) {
-> +		ddp->clk = devm_clk_get(dev, NULL);
-> +		if (IS_ERR(ddp->clk)) {
-> +			dev_err(dev, "Failed to get clock\n");
-> +			return PTR_ERR(ddp->clk);
-> +		}
->  	}
->  
->  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-- 
+With Best Regards,
+Andy Shevchenko
