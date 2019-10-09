@@ -1,93 +1,149 @@
-From: Stephan Gerhold <stephan@gerhold.net>
-Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
-Date: Wed, 9 Oct 2019 12:47:40 +0200
-Message-ID: <20191009104740.GA107000@gerhold.net>
-References: <20191007203343.101466-1-stephan@gerhold.net>
- <20191007205021.104402-1-stephan@gerhold.net>
- <20191008220014.GI22365@dtor-ws>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2] of: Make of_dma_get_range() work on bus nodes
+Date: Wed, 9 Oct 2019 11:56:47 +0100
+Message-ID: <597158a7-ce42-c4d0-62b0-5aab1ead8313@arm.com>
+References: <20191008195239.12852-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191008220014.GI22365@dtor-ws>
+In-Reply-To: <20191008195239.12852-1-robh@kernel.org>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andi Shyti <andi@etezian.org>, Simon Shields <simon@lineageos.org>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Christoph Hellwig <hch@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 03:00:14PM -0700, Dmitry Torokhov wrote:
-> On Mon, Oct 07, 2019 at 10:50:21PM +0200, Stephan Gerhold wrote:
-> > MMS345L is another first generation touch screen from Melfas,
-> > which uses the same registers as MMS152.
-> > 
-> > However, using I2C_M_NOSTART for it causes errors when reading:
-> > 
-> > 	i2c i2c-0: sendbytes: NAK bailout.
-> > 	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
-> > 
-> > The driver works fine as soon as I2C_M_NOSTART is removed.
-> > 
-> > Add a separate melfas,mms345l binding, and make use of I2C_M_NOSTART
-> > only for MMS114 and MMS152.
-> > 
-> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> > ---
-> > Note: I was not able to find a datasheet for any of the models,
-> > so this change is merely based on testing and comparison with
-> > the downstream driver [1].
-> > 
-> > There was a related patch [2] that removes I2C_M_NOSTART for all models,
-> > but it seems abandoned and I do not have any other model for testing.
-> > Therefore, this patch implements the least instrusive solution
-> > and only removes I2C_M_NOSTART for MMS345L.
+On 2019-10-08 8:52 pm, Rob Herring wrote:
+> From: Robin Murphy <robin.murphy@arm.com>
 > 
-> Hmm,  at this point I am inclined to pick up Andi's patch since it seems
-> to work for you and him and it looks like Android drivers are not using
-> I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
-> it was originally developed.
+> Since the "dma-ranges" property is only valid for a node representing a
+> bus, of_dma_get_range() currently assumes the node passed in is a leaf
+> representing a device, and starts the walk from its parent. In cases
+> like PCI host controllers on typical FDT systems, however, where the PCI
+> endpoints are probed dynamically the initial leaf node represents the
+> 'bus' itself, and this logic means we fail to consider any "dma-ranges"
+> describing the host bridge itself. Rework the logic such that
+> of_dma_get_range() also works correctly starting from a bus node
+> containing "dma-ranges".
 > 
-> Any objections?
+> While this does mean "dma-ranges" could incorrectly be in a device leaf
+> node, there isn't really any way in this function to ensure that a leaf
+> node is or isn't a bus node.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> [robh: Allow for the bus child node to still be passed in]
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Resending, hit send too quickly.
+> 
+> v2:
+>   - Ensure once we find dma-ranges, every parent has it.
+>   - Only get the #{size,address}-cells after we find non-empty dma-ranges
+>   - Add a check on the 'dma-ranges' length
+> 
+> This is all that remains of the dma-ranges series. I've applied the rest
+> of the series prep and fixes. I dropped "of: Ratify of_dma_configure()
+> interface" as the assertions that the node pointer being the parent only
+> when struct device doesn't have a DT node pointer is not always
+> true.
 
-I cannot really speak for any of the other models, but no objections for
-removing I2C_M_NOSTART from my side. I'm actually rather confused by it
-since it is used on the first partial message.
+I'd still like to rework of_dma_configure() so that callers don't have 
+to pass a redundant node in the common case, but that can wait. For now, 
+this looks good enough to un-block the various 32-bit-PCI folks at 
+least, and we can consider further improvements on top. For the changes:
 
-The documentation [1] says:
-  If you set the I2C_M_NOSTART variable for the first partial message,
-  we do not generate Addr, but we do generate the startbit S.
-  ** This will probably confuse all other clients on your bus,
-  so don't try this. **
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Yet, someone felt like trying this here. ;)
+Cheers,
+Robin.
 
-I have tested the following two patches from Andy on MMS345L:
-  - Input: mms114 - use smbus functions whenever possible [2]
-  - Input: mms114 - get read of custm i2c read/write functions [3]
-
-Indeed, with I2C_M_NOSTART removed I can actually use "melfas,mms152"
-and the touchscreen appears to work without further changes.
-(The only weird thing is that it displays an empty "Compat group" in
-  "TSP FW Rev: bootloader 0x6 / core 0x26 / config 0x26, Compat group: ",
- I suspect that register does not exist on MMS345L...)
-
-But there is a limitation that won't let us take these two patches as-is:
-i2c_smbus_read_i2c_block_data() is limited to I2C_SMBUS_BLOCK_MAX,
-which is: 32 /* As specified in SMBus standard */
-
-According to "Input: mms114 - use smbus functions whenever possible":
-> The exchange of data to and from the mms114 touchscreen never
-> exceeds 256 bytes. In the worst case it goes up to 80 bytes in
-> the interrupt handler while reading the events.
-
-Since i2c_smbus_read_i2c_block_data() is limited to 32, larger packets
-won't be read correctly. For example, if you use more than 4 fingers you
-can easily trigger a situation where one of the fingers gets "stuck",
-together with: mms114 4-0048: Wrong touch type (0)
-(It attempts to read uninitialized data in this case...)
-
-So we still need the custom functions for reading the touch packet,
-or maybe change the driver to use regmap instead.
-
-[1]: https://www.kernel.org/doc/html/latest/i2c/i2c-protocol.html
-[2]: https://patchwork.kernel.org/patch/10189551/
-[3]: https://patchwork.kernel.org/patch/10189541/
+> I didn't include any tested-bys as this has changed a bit. A git branch
+> is here[1].
+> 
+> Rob
+> 
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks-v2
+> 
+>   drivers/of/address.c | 44 ++++++++++++++++++--------------------------
+>   1 file changed, 18 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 5ce69d026584..99c1b8058559 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -930,47 +930,39 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+>   	const __be32 *ranges = NULL;
+>   	int len, naddr, nsize, pna;
+>   	int ret = 0;
+> +	bool found_dma_ranges = false;
+>   	u64 dmaaddr;
+>   
+> -	if (!node)
+> -		return -EINVAL;
+> -
+> -	while (1) {
+> -		struct device_node *parent;
+> -
+> -		naddr = of_n_addr_cells(node);
+> -		nsize = of_n_size_cells(node);
+> -
+> -		parent = __of_get_dma_parent(node);
+> -		of_node_put(node);
+> -
+> -		node = parent;
+> -		if (!node)
+> -			break;
+> -
+> +	while (node) {
+>   		ranges = of_get_property(node, "dma-ranges", &len);
+>   
+>   		/* Ignore empty ranges, they imply no translation required */
+>   		if (ranges && len > 0)
+>   			break;
+>   
+> -		/*
+> -		 * At least empty ranges has to be defined for parent node if
+> -		 * DMA is supported
+> -		 */
+> -		if (!ranges)
+> -			break;
+> +		/* Once we find 'dma-ranges', then a missing one is an error */
+> +		if (found_dma_ranges && !ranges) {
+> +			ret = -ENODEV;
+> +			goto out;
+> +		}
+> +		found_dma_ranges = true;
+> +
+> +		node = of_get_next_dma_parent(node);
+>   	}
+>   
+> -	if (!ranges) {
+> +	if (!node || !ranges) {
+>   		pr_debug("no dma-ranges found for node(%pOF)\n", np);
+>   		ret = -ENODEV;
+>   		goto out;
+>   	}
+>   
+> -	len /= sizeof(u32);
+> -
+> +	naddr = of_bus_n_addr_cells(node);
+> +	nsize = of_bus_n_size_cells(node);
+>   	pna = of_n_addr_cells(node);
+> +	if ((len / sizeof(__be32)) % (pna + naddr + nsize)) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+>   
+>   	/* dma-ranges format:
+>   	 * DMA addr	: naddr cells
+> @@ -978,7 +970,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+>   	 * size		: nsize cells
+>   	 */
+>   	dmaaddr = of_read_number(ranges, naddr);
+> -	*paddr = of_translate_dma_address(np, ranges);
+> +	*paddr = of_translate_dma_address(node, ranges + naddr);
+>   	if (*paddr == OF_BAD_ADDR) {
+>   		pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
+>   		       dmaaddr, np);
+> 
