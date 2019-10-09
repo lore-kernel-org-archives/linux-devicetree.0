@@ -1,202 +1,31 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 05/68] ARM: dts: Fix wrong clocks for dra7 mcasp
-Date: Wed,  9 Oct 2019 13:04:44 -0400
-Message-ID: <20191009170547.32204-5-sashal@kernel.org>
-References: <20191009170547.32204-1-sashal@kernel.org>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 0/3] ARM: dts: dra7: add vpe nodes
+Date: Wed, 9 Oct 2019 12:56:25 -0500
+Message-ID: <20191009175628.20570-1-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191009170547.32204-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+This patch series adds the needed clkctrl and ty-sysc nodes for VPE module.
+We also document the VPE DT bindings.
 
-[ Upstream commit 2d3c8ba3cffa00f76bedb713c8c2126c82d8cd13 ]
+Benoit Parrot (3):
+  dt-bindings: media: ti-vpe: Document VPE driver
+  ARM: dts: dra7: add vpe clkctrl node
+  ARM: dts: dra7: Add ti-sysc node for VPE
 
-The ahclkr clkctrl clock bit 28 only exists for mcasp 1 and 2 on dra7.
-This causes the following warning on beagle-x15:
+ .../devicetree/bindings/media/ti-vpe.txt      | 48 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ arch/arm/boot/dts/dra7-l4.dtsi                | 30 ++++++++++--
+ arch/arm/boot/dts/dra7xx-clocks.dtsi          | 18 ++++++-
+ drivers/clk/ti/clk-7xx.c                      |  6 +++
+ include/dt-bindings/clock/dra7.h              | 10 ++++
+ 6 files changed, 108 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
 
-ti-sysc 48468000.target-module: could not add child clock ahclkr: -19
-
-Also the mcasp clkctrl clock bits are wrong:
-
-For mcasp1 and 2 we have four clocks at bits 28, 24, 22 and 0:
-
-bit 28 is ahclkr
-bit 24 is ahclkx
-bit 22 is auxclk
-bit 0 is fck
-
-For mcasp3 to 8 we have three clocks at bits 24, 22 and 0.
-
-bit 24 is ahclkx
-bit 22 is auxclk
-bit 0 is fck
-
-We do not have currently mapped auxclk at bit 22 for the drivers, that can
-be added if needed.
-
-Fixes: 5241ccbf2819 ("ARM: dts: Add missing ranges for dra7 mcasp l3 ports")
-Cc: Suman Anna <s-anna@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/dra7-l4.dtsi | 48 +++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 27 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 21e5914fdd620..099d6fe2a57ad 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -2762,7 +2762,7 @@
- 				interrupt-names = "tx", "rx";
- 				dmas = <&edma_xbar 129 1>, <&edma_xbar 128 1>;
- 				dma-names = "tx", "rx";
--				clocks = <&ipu_clkctrl DRA7_IPU_MCASP1_CLKCTRL 22>,
-+				clocks = <&ipu_clkctrl DRA7_IPU_MCASP1_CLKCTRL 0>,
- 					 <&ipu_clkctrl DRA7_IPU_MCASP1_CLKCTRL 24>,
- 					 <&ipu_clkctrl DRA7_IPU_MCASP1_CLKCTRL 28>;
- 				clock-names = "fck", "ahclkx", "ahclkr";
-@@ -2799,8 +2799,8 @@
- 				interrupt-names = "tx", "rx";
- 				dmas = <&edma_xbar 131 1>, <&edma_xbar 130 1>;
- 				dma-names = "tx", "rx";
--				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP2_CLKCTRL 22>,
--					 <&l4per2_clkctrl DRA7_L4PER2_MCASP2_CLKCTRL 24>,
-+				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP2_CLKCTRL 0>,
-+					 <&ipu_clkctrl DRA7_IPU_MCASP1_CLKCTRL 24>,
- 					 <&l4per2_clkctrl DRA7_L4PER2_MCASP2_CLKCTRL 28>;
- 				clock-names = "fck", "ahclkx", "ahclkr";
- 				status = "disabled";
-@@ -2818,9 +2818,8 @@
- 					<SYSC_IDLE_SMART>;
- 			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
- 			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 0>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 24>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 28>;
--			clock-names = "fck", "ahclkx", "ahclkr";
-+				 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 24>;
-+			clock-names = "fck", "ahclkx";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x68000 0x2000>,
-@@ -2836,7 +2835,7 @@
- 				interrupt-names = "tx", "rx";
- 				dmas = <&edma_xbar 133 1>, <&edma_xbar 132 1>;
- 				dma-names = "tx", "rx";
--				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 22>,
-+				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 0>,
- 					 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 24>;
- 				clock-names = "fck", "ahclkx";
- 				status = "disabled";
-@@ -2854,9 +2853,8 @@
- 					<SYSC_IDLE_SMART>;
- 			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
- 			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 0>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 24>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 28>;
--			clock-names = "fck", "ahclkx", "ahclkr";
-+				 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 24>;
-+			clock-names = "fck", "ahclkx";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x6c000 0x2000>,
-@@ -2872,7 +2870,7 @@
- 				interrupt-names = "tx", "rx";
- 				dmas = <&edma_xbar 135 1>, <&edma_xbar 134 1>;
- 				dma-names = "tx", "rx";
--				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 22>,
-+				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 0>,
- 					 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 24>;
- 				clock-names = "fck", "ahclkx";
- 				status = "disabled";
-@@ -2890,9 +2888,8 @@
- 					<SYSC_IDLE_SMART>;
- 			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
- 			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 0>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 24>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 28>;
--			clock-names = "fck", "ahclkx", "ahclkr";
-+				 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 24>;
-+			clock-names = "fck", "ahclkx";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x70000 0x2000>,
-@@ -2908,7 +2905,7 @@
- 				interrupt-names = "tx", "rx";
- 				dmas = <&edma_xbar 137 1>, <&edma_xbar 136 1>;
- 				dma-names = "tx", "rx";
--				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 22>,
-+				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 0>,
- 					 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 24>;
- 				clock-names = "fck", "ahclkx";
- 				status = "disabled";
-@@ -2926,9 +2923,8 @@
- 					<SYSC_IDLE_SMART>;
- 			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
- 			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 0>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 24>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 28>;
--			clock-names = "fck", "ahclkx", "ahclkr";
-+				 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 24>;
-+			clock-names = "fck", "ahclkx";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x74000 0x2000>,
-@@ -2944,7 +2940,7 @@
- 				interrupt-names = "tx", "rx";
- 				dmas = <&edma_xbar 139 1>, <&edma_xbar 138 1>;
- 				dma-names = "tx", "rx";
--				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 22>,
-+				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 0>,
- 					 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 24>;
- 				clock-names = "fck", "ahclkx";
- 				status = "disabled";
-@@ -2962,9 +2958,8 @@
- 					<SYSC_IDLE_SMART>;
- 			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
- 			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 0>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 28>;
--			clock-names = "fck", "ahclkx", "ahclkr";
-+				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>;
-+			clock-names = "fck", "ahclkx";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x78000 0x2000>,
-@@ -2980,7 +2975,7 @@
- 				interrupt-names = "tx", "rx";
- 				dmas = <&edma_xbar 141 1>, <&edma_xbar 140 1>;
- 				dma-names = "tx", "rx";
--				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 22>,
-+				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 0>,
- 					 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>;
- 				clock-names = "fck", "ahclkx";
- 				status = "disabled";
-@@ -2998,9 +2993,8 @@
- 					<SYSC_IDLE_SMART>;
- 			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
- 			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP8_CLKCTRL 0>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP8_CLKCTRL 24>,
--				 <&l4per2_clkctrl DRA7_L4PER2_MCASP8_CLKCTRL 28>;
--			clock-names = "fck", "ahclkx", "ahclkr";
-+				 <&l4per2_clkctrl DRA7_L4PER2_MCASP8_CLKCTRL 24>;
-+			clock-names = "fck", "ahclkx";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x7c000 0x2000>,
-@@ -3016,7 +3010,7 @@
- 				interrupt-names = "tx", "rx";
- 				dmas = <&edma_xbar 143 1>, <&edma_xbar 142 1>;
- 				dma-names = "tx", "rx";
--				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP8_CLKCTRL 22>,
-+				clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP8_CLKCTRL 0>,
- 					 <&l4per2_clkctrl DRA7_L4PER2_MCASP8_CLKCTRL 24>;
- 				clock-names = "fck", "ahclkx";
- 				status = "disabled";
 -- 
-2.20.1
+2.17.1
