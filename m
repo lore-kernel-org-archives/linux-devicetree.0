@@ -1,92 +1,46 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
- snd_soc_dai_get_sdw_stream()
-Date: Wed, 9 Oct 2019 17:01:01 +0100
-Message-ID: <95870089-25da-11ea-19fd-0504daa98994@linaro.org>
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
- <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
- <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
- <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
- <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
- <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
- <20190813191827.GI5093@sirena.co.uk>
- <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
- <20190813195804.GL5093@sirena.co.uk>
- <20190814041142.GU12733@vkoul-mobl.Dlink>
- <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
- <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
- <53bb3105-8e85-a972-fce8-a7911ae4d461@linux.intel.com>
+From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCHv8 0/9] soc: ti: add OMAP PRM driver (for reset)
+Date: Wed, 9 Oct 2019 09:01:42 -0700
+Message-ID: <5e10f95c-7ec9-d3a7-6862-f6f07a9c1495@oracle.com>
+References: <20191008125544.20679-1-t-kristo@ti.com>
+ <20191008140002.GY5610@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53bb3105-8e85-a972-fce8-a7911ae4d461@linux.intel.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191008140002.GY5610@atomide.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, spapothi@codeaurora.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/8/19 7:00 AM, Tony Lindgren wrote:
+> * Tero Kristo <t-kristo@ti.com> [191008 05:56]:
+>> Hi,
+>>
+>> Hopefully this is the final revision of the series. Just a repost of v7
+>> with the single comment from Philipp fixed, and added reviewed by tags
+>> from him for couple of the patches.
+> 
+> Santosh, when applying these, can you please provide me an immutable
+> branch maybe against v5.4-rc1 that I can use as the base for the related
+> dts changes?
+> 
+> For the whole series where not already done, please feel free to add:
+> 
+> Reviewed-by: Tony Lindgren <tony@atomide.com>
+> 
+Pushed a branch out with series and your reviewed-by tag. I have tagged
+it yet in case Peter's soc patches get ready.
 
-
-On 09/10/2019 15:29, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 10/9/19 3:32 AM, Srinivas Kandagatla wrote:
->> Hi Pierre,
->>
->> On 14/08/2019 15:09, Pierre-Louis Bossart wrote:
->>>
->>>
->>> On 8/13/19 11:11 PM, Vinod Koul wrote:
->>>> On 13-08-19, 20:58, Mark Brown wrote:
->>>>> On Tue, Aug 13, 2019 at 02:38:53PM -0500, Pierre-Louis Bossart wrote:
->>>>>
->>>>>> Indeed. I don't have a full understanding of that part to be 
->>>>>> honest, nor why
->>>>>> we need something SoundWire-specific. We already abused the 
->>>>>> set_tdm_slot API
->>>>>> to store an HDaudio stream, now we have a rather confusing stream
->>>>>> information for SoundWire and I have about 3 other 'stream' 
->>>>>> contexts in
->>>>>> SOF... I am still doing basic cleanups but this has been on my 
->>>>>> radar for a
->>>>>> while.
->>>>>
->>>>> There is something to be said for not abusing the TDM slot API if 
->>>>> it can
->>>>> make things clearer by using bus-idiomatic mechanisms, but it does 
->>>>> mean
->>>>> everything needs to know about each individual bus :/ .
->>>>
->>>> Here ASoC doesn't need to know about sdw bus. As Srini explained, this
->>>> helps in the case for him to get the stream context and set the stream
->>>> context from the machine driver.
->>>>
->>>> Nothing else is expected to be done from this API. We already do a set
->>>> using snd_soc_dai_set_sdw_stream(). Here we add the 
->>>> snd_soc_dai_get_sdw_stream() to query
->>>
->>> I didn't see a call to snd_soc_dai_set_sdw_stream() in Srini's code?
->>
->>
->> There is a snd_soc_dai_get_sdw_stream() to get stream context and we 
->> add slave streams(amplifier in this case) to that context using 
->> sdw_stream_add_slave() in machine driver[1].
->>
->> Without this helper there is no way to link slave streams to stream 
->> context in non dai based setup like smart speaker amplifiers.
->>
->> Currently this driver is blocked on this patch, If you think there are 
->> other ways to do this, am happy to try them out.
-> 
-> So to be clear, you are *not* using snd_soc_dai_set_sdw_stream?
-Yes, am not using snd_soc_dai_set_sdw_stream().
-
---srini
-> 
-> 
-> 
-> 
-> 
+git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git 
+for_5.5/driver-soc
