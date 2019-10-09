@@ -1,45 +1,92 @@
-From: JC Kuo <jckuo@nvidia.com>
-Subject: Re: [PATCH v3 0/7] add Tegra194 XUSB host and pad controller support
-Date: Wed, 9 Oct 2019 10:23:11 +0800
-Message-ID: <454e29a6-bf31-c75c-0f29-abd18a4ae071@nvidia.com>
-References: <20191004162906.4818-1-jckuo@nvidia.com>
- <20191007110311.GA614644@kroah.com> <20191008112907.GC228118@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 1/2] arm64: dts: imx8mq-evk: Adjust nodes following alphabetical sort
+Date: Wed,  9 Oct 2019 10:34:38 +0800
+Message-ID: <1570588479-28009-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191008112907.GC228118@ulmo>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc: jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, ccaione@baylibre.com, abel.vesa@nxp.com, daniel.baluta@nxp.com, andrew.smirnov@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/8/19 7:29 PM, Thierry Reding wrote:
-> On Mon, Oct 07, 2019 at 01:03:11PM +0200, Greg KH wrote:
->> On Sat, Oct 05, 2019 at 12:28:59AM +0800, JC Kuo wrote:
->>> Hi,
->>>
->>> This series introduces support for Tegra194 XUSB host and pad
->>> controller. Tegra194 XUSB host and pad controller are highly
->>> similar to the controllers found on Tegra186. Therefore, it's
->>> possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
->>
->> I've taken patches 1 and 2 through my USB tree.  If you want/need me to
->> take the others, please get acks from those maintainers on them so I can
->> do so.
-> 
-> I can pick up patches 6 and 7 into the Tegra tree. There are a few
-> patches in there already that conflict with the DT changes in this
-> series and those will be easier to resolve in the Tegra tree.
-> 
-> JC, I noticed that you didn't Cc Kishon as the PHY subsystem maintainer.
-> Please resend the series with Kishon added in the To: line to make sure
-> he sees them and can apply or ack them.
-> 
-> Given that Greg's already applied patches 1 and 2, maybe leave them out
-> of the series.
-Thanks Thierry. I will send v4 accordingly.
-> 
-> Thierry
-> 
+Adjust some nodes to make them follow alphabetical sort except
+iomuxc node which is put at the end of file because of its huge
+pinctrl data.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 46 ++++++++++++++--------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+index 0595812..6ede46f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+@@ -115,15 +115,6 @@
+ 	};
+ };
+ 
+-&sai2 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_sai2>;
+-	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1_BYPASS>, <&clk IMX8MQ_CLK_SAI2>;
+-	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL1_OUT>;
+-	assigned-clock-rates = <0>, <24576000>;
+-	status = "okay";
+-};
+-
+ &gpio5 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_wifi_reset>;
+@@ -242,6 +233,29 @@
+ 	power-supply = <&sw1a_reg>;
+ };
+ 
++&qspi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi>;
++	status = "okay";
++
++	n25q256a: flash@0 {
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "micron,n25q256a", "jedec,spi-nor";
++		spi-max-frequency = <29000000>;
++	};
++};
++
++&sai2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_sai2>;
++	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1_BYPASS>, <&clk IMX8MQ_CLK_SAI2>;
++	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <0>, <24576000>;
++	status = "okay";
++};
++
+ &snvs_pwrkey {
+ 	status = "okay";
+ };
+@@ -261,20 +275,6 @@
+ 	status = "okay";
+ };
+ 
+-&qspi0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_qspi>;
+-	status = "okay";
+-
+-	n25q256a: flash@0 {
+-		reg = <0>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "micron,n25q256a", "jedec,spi-nor";
+-		spi-max-frequency = <29000000>;
+-	};
+-};
+-
+ &usdhc1 {
+ 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+ 	pinctrl-0 = <&pinctrl_usdhc1>;
+-- 
+2.7.4
