@@ -1,34 +1,115 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 10/10] arm64: dts: renesas: r8a774b1: Add INTC-EX device node
-Date: Wed, 9 Oct 2019 16:42:56 +0200
-Message-ID: <CAMuHMdVSqWMqTq3wS43jX5bi+RhjzfH8CEJpTz5JySUUxq_DfA@mail.gmail.com>
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-11-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] dts: Disable DMA support on the BK4 vf610 device's
+ fsl_lpuart driver
+Date: Wed, 9 Oct 2019 16:44:42 +0200
+Message-ID: <20191009164442.51f27b9d@jawa>
+References: <20191009143032.9261-1-lukma@denx.de>
+        <b39b6860-9e9b-5cee-a07e-7b430c2e5119@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/Di/jFXAOICs3QlZsnoXzE2z"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570531132-21856-11-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <b39b6860-9e9b-5cee-a07e-7b430c2e5119@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Add support for the Interrupt Controller for External Devices
-> (INTC-EX) on RZ/G2N.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+--Sig_/Di/jFXAOICs3QlZsnoXzE2z
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.5.
+Hi Robin,
 
-Gr{oetje,eeting}s,
+> On 09/10/2019 15:30, Lukasz Majewski wrote:
+> > This change disables the DMA support (RX/TX) on the NXP's fsl_lpuart
+> > driver - the PIO mode is used instead. This change is necessary for
+> > better robustness of BK4's device use cases with many potentially
+> > interrupted short serial transfers.
+> >=20
+> > Without it the driver hangs when some distortion happens on UART
+> > lines.
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > ---
+> >   arch/arm/boot/dts/vf610-bk4.dts | 4 ++++
+> >   1 file changed, 4 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/vf610-bk4.dts
+> > b/arch/arm/boot/dts/vf610-bk4.dts index 0f3870d3b099..ad20f3442d40
+> > 100644 --- a/arch/arm/boot/dts/vf610-bk4.dts
+> > +++ b/arch/arm/boot/dts/vf610-bk4.dts
+> > @@ -259,24 +259,28 @@
+> >   &uart0 {
+> >   	pinctrl-names =3D "default";
+> >   	pinctrl-0 =3D <&pinctrl_uart0>;
+> > +	dma-names =3D "",""; =20
+>=20
+> This looks like a horrible hack - is there any reason not to just
+> strip things at compile-time, i.e. "/delete-property/ dmas;"?
 
-                        Geert
+I don't want to strip the dma-names property globally. I just want to
+adjust this particular driver mode from DMA to PIO.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+For my use cases - as written in the commit message - the PIO mode is
+more suitable (and reliable).=20
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>=20
+> Robin.
+>=20
+> >   	status =3D "okay";
+> >   };
+> >  =20
+> >   &uart1 {
+> >   	pinctrl-names =3D "default";
+> >   	pinctrl-0 =3D <&pinctrl_uart1>;
+> > +	dma-names =3D "","";
+> >   	status =3D "okay";
+> >   };
+> >  =20
+> >   &uart2 {
+> >   	pinctrl-names =3D "default";
+> >   	pinctrl-0 =3D <&pinctrl_uart2>;
+> > +	dma-names =3D "","";
+> >   	status =3D "okay";
+> >   };
+> >  =20
+> >   &uart3 {
+> >   	pinctrl-names =3D "default";
+> >   	pinctrl-0 =3D <&pinctrl_uart3>;
+> > +	dma-names =3D "","";
+> >   	status =3D "okay";
+> >   };
+> >  =20
+> >  =20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/Di/jFXAOICs3QlZsnoXzE2z
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2d8loACgkQAR8vZIA0
+zr2WHggAttPRl8kp+yb/oZQOEp8vg1iZdn55DoxHq2LWuWy8RIoAUnOUy9TapDZ5
+ZBQKgfDBYcD0Yawqlk9uOev6Uhe9roJRyVSdWjdPMcGdK0viwBagw8sYWxWD2TrY
+MljhCRJfoStaA/ZKClfGb2w5KddgXTgz2jqRs8CNps7aFBbjhKFtwJoKkdCjI/kl
+ADmw46QWkNmN6axoy3NKIDeP31lOfWpMcfcYw0MrLCn0+s/tfRpKqH9eRGC5vjJt
+SblR8SeFNB4oUOO1rFN9rKANzgxfqF4n06rCPORZBOK8mV5YIAA5vx7L6VOUxioj
+U57i4+VhXSCzlyh3HBGKN3//lb0xIA==
+=PTiE
+-----END PGP SIGNATURE-----
+
+--Sig_/Di/jFXAOICs3QlZsnoXzE2z--
