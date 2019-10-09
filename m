@@ -1,42 +1,67 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 0/8] clocksource/drivers/timer-atmel-tcb: add sama5d2 support
-Date: Thu, 10 Oct 2019 00:39:58 +0200
-Message-ID: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
+Subject: [PATCH 4/8] clocksource/drivers/timer-atmel-tcb: rework 32khz clock selection
+Date: Thu, 10 Oct 2019 00:40:02 +0200
+Message-ID: <20191009224006.5021-5-alexandre.belloni@bootlin.com>
+References: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Nicolas Ferre <nicolas.ferre@microchip.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-This series mainly adds sama5d2 support where we need to avoid using
-clock index 0 because that clock is never enabled by the driver.
+On all the supported SoCs, the slow clock is always ATMEL_TC_TIMER_CLOCK5,
+avoid looking it up and pass it directly to setup_clkevents.
 
-There is also a rework of the 32khz clock handling so it is not used for
-clockevents on 32 bit counter because the increased rate improves the
-resolution and doesn't have any drawback with that counter width. This
-replaces a patch that has been carried in the linux-rt tree for a while.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/clocksource/timer-atmel-tcb.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-Alexandre Belloni (8):
-  dt-bindings: mfd: atmel-tcb: convert bindings to json-schema
-  dt-bindings: mfd: atmel,at91rm9200-tcb: add sama5d2 compatible
-  ARM: dts: at91: sama5d2: add TCB GCLK
-  clocksource/drivers/timer-atmel-tcb: rework 32khz clock selection
-  clocksource/drivers/timer-atmel-tcb: fill tcb_config
-  clocksource/drivers/timer-atmel-tcb: stop using the 32kHz for
-    clockevents
-  clocksource/drivers/timer-atmel-tcb: allow selecting first divider
-  clocksource/drivers/timer-atmel-tcb: add sama5d2 support
-
- .../bindings/mfd/atmel,at91rm9200-tcb.yaml    | 113 ++++++++++++++++++
- .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 ---------
- arch/arm/boot/dts/sama5d2.dtsi                |  12 +-
- drivers/clocksource/timer-atmel-tcb.c         | 101 +++++++++-------
- include/soc/at91/atmel_tcb.h                  |   1 +
- 5 files changed, 178 insertions(+), 105 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
- delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-
+diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
+index 7427b07495a8..b255a4a1a36b 100644
+--- a/drivers/clocksource/timer-atmel-tcb.c
++++ b/drivers/clocksource/timer-atmel-tcb.c
+@@ -346,7 +346,7 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+ 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
+ }
+ 
+-static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
++static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
+ 
+ static const struct of_device_id atmel_tcb_of_match[] = {
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
+@@ -362,7 +362,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	u64 (*tc_sched_clock)(void);
+ 	u32 rate, divided_rate = 0;
+ 	int best_divisor_idx = -1;
+-	int clk32k_divisor_idx = -1;
+ 	int bits;
+ 	int i;
+ 	int ret;
+@@ -416,12 +415,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		unsigned divisor = atmel_tcb_divisors[i];
+ 		unsigned tmp;
+ 
+-		/* remember 32 KiHz clock for later */
+-		if (!divisor) {
+-			clk32k_divisor_idx = i;
+-			continue;
+-		}
+-
+ 		tmp = rate / divisor;
+ 		pr_debug("TC: %u / %-3u [%d] --> %u\n", rate, divisor, i, tmp);
+ 		if (best_divisor_idx > 0) {
+@@ -467,7 +460,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		goto err_disable_t1;
+ 
+ 	/* channel 2:  periodic and oneshot timer support */
+-	ret = setup_clkevents(&tc, clk32k_divisor_idx);
++	ret = setup_clkevents(&tc, ATMEL_TC_TIMER_CLOCK5);
+ 	if (ret)
+ 		goto err_unregister_clksrc;
+ 
 -- 
 2.21.0
