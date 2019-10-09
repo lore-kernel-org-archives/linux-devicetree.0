@@ -1,99 +1,186 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [EXT] Re: [v4,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr1-alt-addr' property
-Date: Wed, 9 Oct 2019 07:07:31 +0000
-Message-ID: <DB7PR04MB4490AAF196950B43FA11590A8F950@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190926024118.15931-1-biwen.li@nxp.com>
- <20190926024118.15931-3-biwen.li@nxp.com> <20190927171420.GA28375@bogus>
+From: Biao Huang <biao.huang@mediatek.com>
+Subject: [v2,PATCH] arm64: dts: mt2712: add ethernet device node
+Date: Wed, 9 Oct 2019 15:10:22 +0800
+Message-ID: <20191009071022.4972-2-biao.huang@mediatek.com>
+References: <20191009071022.4972-1-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927171420.GA28375@bogus>
-Content-Language: en-US
+In-Reply-To: <20191009071022.4972-1-biao.huang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Ran Wang <ran.wang_1@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com, biao.huang@mediatek.com, jianguo.zhang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
->=20
-> On Thu, Sep 26, 2019 at 10:41:18AM +0800, Biwen Li wrote:
-> > The 'fsl,ippdexpcr1-alt-addr' property is used to handle an errata
-> > A-008646 on LS1021A
-> >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> > Change in v4:
-> >       - rename property name
-> >         fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
-> >
-> > Change in v3:
-> >       - rename property name
-> >         fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
-> >
-> > Change in v2:
-> >       - update desc of the property 'fsl,rcpm-scfg'
-> >
-> >  .../devicetree/bindings/soc/fsl/rcpm.txt      | 21
-> +++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > index 5a33619d881d..751a7655b694 100644
-> > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > @@ -34,6 +34,13 @@ Chassis Version            Example Chips
-> >  Optional properties:
-> >   - little-endian : RCPM register block is Little Endian. Without it RC=
-PM
-> >     will be Big Endian (default case).
-> > + - fsl,ippdexpcr1-alt-addr : The property is related to a hardware iss=
-ue
-> > +   on SoC LS1021A and only needed on SoC LS1021A.
-> > +   Must include 1 + 2 entries.
-> > +   The first entry must be a link to the SCFG device node.
-> > +   The non-first entry must be offset of registers of SCFG.
-> > +   The second and third entry compose an alt offset address
-> > +   for IPPDEXPCR1(SCFG_SPARECR8)
->=20
-> If only on 1 SoC, can't all this be implied by "fsl,ls1021a-rcpm"?
-Currently on SoC LS1021A. Maybe other soc need this!
->=20
-> Adding a property means you need both a new dtb and kernel to fix the
-> errata. Using the compatible string means you only need a new kernel.
-You are right, but it will be more flexible. Thanks.
->=20
-> >
-> >  Example:
-> >  The RCPM node for T4240:
-> > @@ -43,6 +50,20 @@ The RCPM node for T4240:
-> >               #fsl,rcpm-wakeup-cells =3D <2>;
-> >       };
-> >
-> > +The RCPM node for LS1021A:
-> > +     rcpm: rcpm@1ee2140 {
-> > +             compatible =3D "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
->=20
-> Both of these compatible strings aren't documented.
-These compatible strings is here: https://patchwork.kernel.org/patch/111052=
-81/
->=20
-> > +             reg =3D <0x0 0x1ee2140 0x0 0x8>;
-> > +             #fsl,rcpm-wakeup-cells =3D <2>;
-> > +
-> > +             /*
-> > +              * The second and third entry compose an alt offset
-> > +              * address for IPPDEXPCR1(SCFG_SPARECR8)
-> > +              */
-> > +             fsl,ippdexpcr1-alt-addr =3D <&scfg 0x0 0x51c>;
-> > +     };
-> > +
-> > +
-> >  * Freescale RCPM Wakeup Source Device Tree Bindings
-> >  -------------------------------------------
-> >  Required fsl,rcpm-wakeup property should be added to a device node if
-> > the device
-> > --
-> > 2.17.1
-> >
+This patch add device node for mt2712 ethernet.
+
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt2712-evb.dts | 74 +++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 65 ++++++++++++++++++
+ 2 files changed, 139 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+index 1353dad2f53c..fd6ab6cc5fe7 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+@@ -107,7 +107,81 @@
+ 	proc-supply = <&cpus_fixed_vproc1>;
+ };
+ 
++&eth {
++	phy-mode ="rgmii-rxid";
++	phy-handle = <&ethernet_phy0>;
++	mediatek,tx-delay-ps = <1530>;
++	snps,reset-gpio = <&pio 87 GPIO_ACTIVE_LOW>;
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&eth_default>;
++	pinctrl-1 = <&eth_sleep>;
++	status = "okay";
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		ethernet_phy0: ethernet-phy@5 {
++			compatible = "ethernet-phy-id0243.0d90";
++			reg = <0x5>;
++		};
++	};
++};
++
+ &pio {
++	eth_default: eth_default {
++		tx_pins {
++			pinmux = <MT2712_PIN_71_GBE_TXD3__FUNC_GBE_TXD3>,
++				 <MT2712_PIN_72_GBE_TXD2__FUNC_GBE_TXD2>,
++				 <MT2712_PIN_73_GBE_TXD1__FUNC_GBE_TXD1>,
++				 <MT2712_PIN_74_GBE_TXD0__FUNC_GBE_TXD0>,
++				 <MT2712_PIN_75_GBE_TXC__FUNC_GBE_TXC>,
++				 <MT2712_PIN_76_GBE_TXEN__FUNC_GBE_TXEN>;
++			drive-strength = <MTK_DRIVE_8mA>;
++		};
++		rx_pins {
++			pinmux = <MT2712_PIN_78_GBE_RXD3__FUNC_GBE_RXD3>,
++				 <MT2712_PIN_79_GBE_RXD2__FUNC_GBE_RXD2>,
++				 <MT2712_PIN_80_GBE_RXD1__FUNC_GBE_RXD1>,
++				 <MT2712_PIN_81_GBE_RXD0__FUNC_GBE_RXD0>,
++				 <MT2712_PIN_82_GBE_RXDV__FUNC_GBE_RXDV>,
++				 <MT2712_PIN_84_GBE_RXC__FUNC_GBE_RXC>;
++			input-enable;
++		};
++		mdio_pins {
++			pinmux = <MT2712_PIN_85_GBE_MDC__FUNC_GBE_MDC>,
++				 <MT2712_PIN_86_GBE_MDIO__FUNC_GBE_MDIO>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			input-enable;
++		};
++	};
++
++	eth_sleep: eth_sleep {
++		tx_pins {
++			pinmux = <MT2712_PIN_71_GBE_TXD3__FUNC_GPIO71>,
++				 <MT2712_PIN_72_GBE_TXD2__FUNC_GPIO72>,
++				 <MT2712_PIN_73_GBE_TXD1__FUNC_GPIO73>,
++				 <MT2712_PIN_74_GBE_TXD0__FUNC_GPIO74>,
++				 <MT2712_PIN_75_GBE_TXC__FUNC_GPIO75>,
++				 <MT2712_PIN_76_GBE_TXEN__FUNC_GPIO76>;
++		};
++		rx_pins {
++			pinmux = <MT2712_PIN_78_GBE_RXD3__FUNC_GPIO78>,
++				 <MT2712_PIN_79_GBE_RXD2__FUNC_GPIO79>,
++				 <MT2712_PIN_80_GBE_RXD1__FUNC_GPIO80>,
++				 <MT2712_PIN_81_GBE_RXD0__FUNC_GPIO81>,
++				 <MT2712_PIN_82_GBE_RXDV__FUNC_GPIO82>,
++				 <MT2712_PIN_84_GBE_RXC__FUNC_GPIO84>;
++			input-disable;
++		};
++		mdio_pins {
++			pinmux = <MT2712_PIN_85_GBE_MDC__FUNC_GPIO85>,
++				 <MT2712_PIN_86_GBE_MDIO__FUNC_GPIO86>;
++			input-disable;
++			bias-disable;
++		};
++	};
++
+ 	usb0_id_pins_float: usb0_iddig {
+ 		pins_iddig {
+ 			pinmux = <MT2712_PIN_12_IDDIG_P0__FUNC_IDDIG_A>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+index 43307bad3f0d..b2edec20c8da 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+@@ -632,6 +632,71 @@
+ 		status = "disabled";
+ 	};
+ 
++	stmmac_axi_setup: stmmac-axi-config {
++		snps,wr_osr_lmt = <0x7>;
++		snps,rd_osr_lmt = <0x7>;
++		snps,blen = <0 0 0 0 16 8 4>;
++	};
++
++	mtl_rx_setup: rx-queues-config {
++		snps,rx-queues-to-use = <1>;
++		snps,rx-sched-sp;
++		queue0 {
++			snps,dcb-algorithm;
++			snps,map-to-dma-channel = <0x0>;
++			snps,priority = <0x0>;
++		};
++	};
++
++	mtl_tx_setup: tx-queues-config {
++		snps,tx-queues-to-use = <3>;
++		snps,tx-sched-wrr;
++		queue0 {
++			snps,weight = <0x10>;
++			snps,dcb-algorithm;
++			snps,priority = <0x0>;
++		};
++		queue1 {
++			snps,weight = <0x11>;
++			snps,dcb-algorithm;
++			snps,priority = <0x1>;
++		};
++		queue2 {
++			snps,weight = <0x12>;
++			snps,dcb-algorithm;
++			snps,priority = <0x2>;
++		};
++	};
++
++	eth: ethernet@1101c000 {
++		compatible = "mediatek,mt2712-gmac";
++		reg = <0 0x1101c000 0 0x1300>;
++		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "macirq";
++		mac-address = [00 55 7b b5 7d f7];
++		clock-names = "axi",
++			      "apb",
++			      "mac_main",
++			      "ptp_ref";
++		clocks = <&pericfg CLK_PERI_GMAC>,
++			 <&pericfg CLK_PERI_GMAC_PCLK>,
++			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
++			 <&topckgen CLK_TOP_ETHER_50M_SEL>;
++		assigned-clocks = <&topckgen CLK_TOP_ETHER_125M_SEL>,
++				  <&topckgen CLK_TOP_ETHER_50M_SEL>;
++		assigned-clock-parents = <&topckgen CLK_TOP_ETHERPLL_125M>,
++					 <&topckgen CLK_TOP_APLL1_D3>;
++		power-domains = <&scpsys MT2712_POWER_DOMAIN_AUDIO>;
++		mediatek,pericfg = <&pericfg>;
++		snps,axi-config = <&stmmac_axi_setup>;
++		snps,mtl-rx-config = <&mtl_rx_setup>;
++		snps,mtl-tx-config = <&mtl_tx_setup>;
++		snps,txpbl = <1>;
++		snps,rxpbl = <1>;
++		clk_csr = <0>;
++		status = "disabled";
++	};
++
+ 	mmc0: mmc@11230000 {
+ 		compatible = "mediatek,mt2712-mmc";
+ 		reg = <0 0x11230000 0 0x1000>;
+-- 
+2.18.0
