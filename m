@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RESEND PATCH v3 11/11] arm64: dts: mt2712: use non-empty ranges for usb-phy
-Date: Wed, 9 Oct 2019 15:40:34 +0800
-Message-ID: <1570606834-5644-11-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH v3 08/11] phy: phy-mtk-tphy: make the ref clock optional
+Date: Wed, 9 Oct 2019 15:40:31 +0800
+Message-ID: <1570606834-5644-8-git-send-email-chunfeng.yun@mediatek.com>
 References: <1570606834-5644-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,106 +12,29 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use non-empty ranges for usb-phy to make the layout of
-its registers clearer;
-Replace deprecated compatible by generic
+Sometimes the reference clock of USB3 PHY comes from oscillator
+directly, and no need refer to a fixed-clock in DTS anymore
+if make it optional.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v3: no changes
-
-v2: use generic compatible
+v2~3: no changes
 ---
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 42 ++++++++++++-----------
- 1 file changed, 22 insertions(+), 20 deletions(-)
+ drivers/phy/mediatek/phy-mtk-tphy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-index 43307bad3f0d..e24f2f2f6004 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-@@ -697,30 +697,31 @@
- 	};
+diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
+index 4a2dc92f10f5..96c62e3a3300 100644
+--- a/drivers/phy/mediatek/phy-mtk-tphy.c
++++ b/drivers/phy/mediatek/phy-mtk-tphy.c
+@@ -1182,7 +1182,7 @@ static int mtk_tphy_probe(struct platform_device *pdev)
+ 		if (tphy->u3phya_ref)
+ 			continue;
  
- 	u3phy0: usb-phy@11290000 {
--		compatible = "mediatek,mt2712-u3phy";
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
-+		compatible = "mediatek,mt2712-tphy",
-+			     "mediatek,generic-tphy-v2";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0x11290000 0x9000>;
- 		status = "okay";
- 
--		u2port0: usb-phy@11290000 {
--			reg = <0 0x11290000 0 0x700>;
-+		u2port0: usb-phy@0 {
-+			reg = <0x0 0x700>;
- 			clocks = <&clk26m>;
- 			clock-names = "ref";
- 			#phy-cells = <1>;
- 			status = "okay";
- 		};
- 
--		u2port1: usb-phy@11298000 {
--			reg = <0 0x11298000 0 0x700>;
-+		u2port1: usb-phy@8000 {
-+			reg = <0x8000 0x700>;
- 			clocks = <&clk26m>;
- 			clock-names = "ref";
- 			#phy-cells = <1>;
- 			status = "okay";
- 		};
- 
--		u3port0: usb-phy@11298700 {
--			reg = <0 0x11298700 0 0x900>;
-+		u3port0: usb-phy@8700 {
-+			reg = <0x8700 0x900>;
- 			clocks = <&clk26m>;
- 			clock-names = "ref";
- 			#phy-cells = <1>;
-@@ -760,30 +761,31 @@
- 	};
- 
- 	u3phy1: usb-phy@112e0000 {
--		compatible = "mediatek,mt2712-u3phy";
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
-+		compatible = "mediatek,mt2712-tphy",
-+			     "mediatek,generic-tphy-v2";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0x112e0000 0x9000>;
- 		status = "okay";
- 
--		u2port2: usb-phy@112e0000 {
--			reg = <0 0x112e0000 0 0x700>;
-+		u2port2: usb-phy@0 {
-+			reg = <0x0 0x700>;
- 			clocks = <&clk26m>;
- 			clock-names = "ref";
- 			#phy-cells = <1>;
- 			status = "okay";
- 		};
- 
--		u2port3: usb-phy@112e8000 {
--			reg = <0 0x112e8000 0 0x700>;
-+		u2port3: usb-phy@8000 {
-+			reg = <0x8000 0x700>;
- 			clocks = <&clk26m>;
- 			clock-names = "ref";
- 			#phy-cells = <1>;
- 			status = "okay";
- 		};
- 
--		u3port1: usb-phy@112e8700 {
--			reg = <0 0x112e8700 0 0x900>;
-+		u3port1: usb-phy@8700 {
-+			reg = <0x8700 0x900>;
- 			clocks = <&clk26m>;
- 			clock-names = "ref";
- 			#phy-cells = <1>;
+-		instance->ref_clk = devm_clk_get(&phy->dev, "ref");
++		instance->ref_clk = devm_clk_get_optional(&phy->dev, "ref");
+ 		if (IS_ERR(instance->ref_clk)) {
+ 			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
+ 			retval = PTR_ERR(instance->ref_clk);
 -- 
 2.23.0
