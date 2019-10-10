@@ -1,89 +1,22 @@
-From: Tao Ren <taoren@fb.com>
-Subject: Re: [PATCH] i2c: aspeed: fix master pending state handling
-Date: Thu, 10 Oct 2019 23:24:45 +0000
-Message-ID: <dd0c44f7-4e90-998b-e8c7-d272c593f55c@fb.com>
-References: <20191009212034.20325-1-jae.hyun.yoo@linux.intel.com>
- <3ea1c0d5-47f1-bf8c-6b2d-2ea8d3f93471@fb.com>
- <637d4b8b-5113-b07b-f99f-ce66dbe6948c@linux.intel.com>
- <5ce20a28-21ed-ff0c-9e31-bcac3cd7a5fb@fb.com>
- <69296b93-8fc6-c056-ab9b-ae190dc5eea1@linux.intel.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: Add AST2500 RMII RCLK definitions
+Date: Thu, 10 Oct 2019 23:39:49 +0000
+Message-ID: <CACPK8Xc2mibu+Pqi7ejGT_M24oprgoOik3Z8=fP6NVgEQeZYZQ@mail.gmail.com>
+References: <20191010020655.3776-1-andrew@aj.id.au> <20191010020655.3776-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <69296b93-8fc6-c056-ab9b-ae190dc5eea1@linux.intel.com>
-Content-Language: en-US
-Content-ID: <5C6FCE86516E3D44B1BF2CA410337367@namprd15.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin
- Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Cedric Le Goater <clg@kaod.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191010020655.3776-2-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMTAvMTkgNDoxNiBQTSwgSmFlIEh5dW4gWW9vIHdyb3RlOg0KPiBPbiAxMC8xMC8yMDE5
-IDQ6MTEgUE0sIFRhbyBSZW4gd3JvdGU6DQo+PiBPbiAxMC8xMC8xOSAzOjA0IFBNLCBKYWUgSHl1
-biBZb28gd3JvdGU6DQo+Pj4gT24gMTAvMTAvMjAxOSAyOjIwIFBNLCBUYW8gUmVuIHdyb3RlOg0K
-Pj4+PiBPbiAxMC85LzE5IDI6MjAgUE0sIEphZSBIeXVuIFlvbyB3cm90ZToNCj4+PiBbLi4uXQ0K
-Pj4+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyoNCj4+Pj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgKiBJZiBhIHBlZXIgbWFzdGVyIHN0YXJ0cyBhIHhmZXIgaW1tZWRpYXRlbHkgYWZ0ZXIgaXQg
-cXVldWVzIGENCj4+Pj4+IC3CoMKgwqDCoMKgwqDCoMKgICogbWFzdGVyIGNvbW1hbmQsIGNoYW5n
-ZSBpdHMgc3RhdGUgdG8gJ3BlbmRpbmcnIHRoZW4gSC9XIHdpbGwNCj4+Pj4+IC3CoMKgwqDCoMKg
-wqDCoMKgICogY29udGludWUgdGhlIHF1ZXVlZCBtYXN0ZXIgeGZlciBqdXN0IGFmdGVyIGNvbXBs
-ZXRpbmcgdGhlDQo+Pj4+PiAtwqDCoMKgwqDCoMKgwqDCoCAqIHNsYXZlIG1vZGUgc2Vzc2lvbi4N
-Cj4+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgICogbWFzdGVyIGNvbW1hbmQsIGNsZWFyIHRoZSBxdWV1
-ZWQgbWFzdGVyIGNvbW1hbmQgYW5kIGNoYW5nZQ0KPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqAgKiBp
-dHMgc3RhdGUgdG8gJ3BlbmRpbmcnLiBUbyBzaW1wbGlmeSBoYW5kbGluZyBvZiBwZW5kaW5nDQo+
-Pj4+PiArwqDCoMKgwqDCoMKgwqDCoCAqIGNhc2VzLCBpdCB1c2VzIFMvVyBzb2x1dGlvbiBpbnN0
-ZWFkIG9mIEgvVyBjb21tYW5kIHF1ZXVlDQo+Pj4+PiArwqDCoMKgwqDCoMKgwqDCoCAqIGhhbmRs
-aW5nLg0KPj4+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqLw0KPj4+Pj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgaWYgKHVubGlrZWx5KGlycV9zdGF0dXMgJiBBU1BFRURfSTJDRF9JTlRSX1NMQVZF
-X01BVENIKSkgew0KPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd3JpdGVsKHJlYWRsKGJ1
-cy0+YmFzZSArIEFTUEVFRF9JMkNfQ01EX1JFRykgJg0KPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCB+QVNQRUVEX0kyQ0RfTUFTVEVSX0NNRFNfTUFTSywNCj4+Pj4+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnVzLT5iYXNlICsgQVNQRUVEX0kyQ19D
-TURfUkVHKTsNCj4+Pj4NCj4+Pj4gU29ycnkgZm9yIHRoZSBsYXRlIGNvbW1lbnRzIChqdXN0IG5v
-dGljZWQgdGhpcyBsaW5lIHdoaWxlIHRlc3RpbmcgdGhlIHBhdGNoKToNCj4+Pj4NCj4+Pj4gSSBh
-c3N1bWUgdGhpcyBsaW5lIGlzIGFpbWVkIGF0IHN0b3BwaW5nIHRoZSBydW5uaW5nIG1hc3RlciBj
-b21tYW5kcywgYnV0IGFzIHBlcg0KPj4+PiBBU1QyNTAwIGRhdGFzaGVldCwgaXQncyBOT1AgdG8g
-d3JpdGUgMCB0byBNQVNURVJfU1RPUC9NQVNURVJfUlgvTUFTVEVSX1RYIGJpdHMuDQo+Pj4+IE1h
-eWJlIGFsbCB3ZSBuZWVkIGlzIHdyaXRpbmcgMSB0byBNQVNURVJfU1RPUCBmaWVsZD8NCj4+Pg0K
-Pj4+IFRoZXJlIGNvdWxkIGJlIHR3byBwZW5kaW5nIGNhc2VzOg0KPj4+IDEuIE1hc3RlciBnb2Vz
-IHRvIHBlbmRpbmcgYmVmb3JlIGl0IHRyaWdnZXJzIGEgY29tbWFuZCBpZiBhIHNsYXZlDQo+Pj4g
-wqDCoMKgIG9wZXJhdGlvbiBpcyBhbHJlYWR5IGluaXRpYXRlZC4NCj4+PiAyLiBNYXN0ZXIgZ29l
-cyB0byBwZW5kaW5nIGFmdGVyIGl0IHRyaWdnZXJlZCBhIGNvbW1hbmQgaWYgYSBwZWVyDQo+Pj4g
-wqDCoMKgIG1hc3RlciBpbW1lZGlhdGVseSBzZW5kcyBzb21ldGhpbmcganVzdCBhZnRlciB0aGUg
-bWFzdGVyIGNvbW1hbmQNCj4+PiDCoMKgwqAgdHJpZ2dlcmluZy4NCj4+Pg0KPj4+IEFib3ZlIGNv
-ZGUgaXMgZm9yIHRoZSBsYXR0ZXIgY2FzZS4gSC9XIGhhbmRsZXMgdGhlIGNhc2UgcHJpb3JpdHkg
-YmFzZWQNCj4+PiBzbyB0aGUgc2xhdmUgZXZlbnQgd2lsbCBiZSBoYW5kbGVkIGZpcnN0LCBhbmQg
-dGhlbiB0aGUgbWFzdGVyIGNvbW1hbmQNCj4+PiB3aWxsIGJlIGhhbmRsZWQgd2hlbiB0aGUgc2xh
-dmUgb3BlcmF0aW9uIGlzIGNvbXBsZXRlZC4gUHJvYmxlbSBpcywNCj4+PiB0aGlzIEgvVyBzaGFy
-ZXMgdGhlIHNhbWUgYnVmZmVyIGZvciBtYXN0ZXIgYW5kIHNsYXZlIG9wZXJhdGlvbnMgc28NCj4+
-PiBpdCdzIHVucmVsaWFibGUuIEFib3ZlIGNvZGUganVzdCByZW1vdmVzIHRoZSBtYXN0ZXIgY29t
-bWFuZCBmcm9tIHRoZQ0KPj4+IGNvbW1hbmQgcmVnaXN0ZXIgdG8gcHJldmVudCB0aGlzIEgvVyBj
-b21tYW5kIGhhbmRsaW5nIG9mIHBlbmRpbmcgZXZlbnRzLg0KPj4+IEluc3RlYWQsIGl0IHJlc3Rh
-cnRzIHRoZSBtYXN0ZXIgY29tbWFuZCB1c2luZyBhIGNhbGwgb2YgYXNwZWVkX2kyY19kb19zdGFy
-dCB3aGVuIHRoZSBzbGF2ZSBvcGVyYXRpb24gaXMgY29tcGxldGVkLg0KPj4NCj4+IFRoYW5rcyBm
-b3IgdGhlIGNsYXJpZnksIEphZS4gSSBtZWFuIGNsZWFyaW5nIHRoZXNlIGJpdHMgaGFzIG5vIGVm
-ZmVjdCB0bw0KPj4gaGFyZHdhcmUgYWNjb3JkaW5nIHRvIGFzcGVlZCBkYXRhc2hlZXQ7IGluIG90
-aGVyIHdvcmQsIG1hc3RlciBjb21tYW5kIGNhbm5vdA0KPj4gYmUgcmVtb3ZlZCBmcm9tIGNvbW1h
-bmQgcmVnaXN0ZXIgYnkgdGhpcyBzdGF0ZW1lbnQuDQo+Pg0KPj4gRm9yIGV4YW1wbGUsIGJlbG93
-IGlzIHRoZSBkZXNjcmlwdGlvbiBmb3IgTUFTVEVSX1NUT1BfQ01EKEkyQ0QxNCwgYml0IDUpOg0K
-Pj4NCj4+IMKgwqAgMDogTk9QDQo+PiDCoMKgIDE6IElzc3VlIE1hc3RlciBTdG9wIENvbW1hbmQN
-Cj4+IMKgwqAgVGhpcyByZWdpc3RlciB3aWxsIGJlIGF1dG9tYXRpY2FsbHkgY2xlYXJlZCBieSBI
-L1cgd2hlbiBTdG9wIENvbW1hbmQgaGFzDQo+PiDCoMKgIGJlZW4gaXNzdWVzLg0KPiANCj4gSXQn
-cyByZW1vdmluZyBiZWZvcmUgSC9XIGZldGNoZXMgdGhlIHRoZSBjb21tYW5kIHNvIHRoZSBwZW5k
-aW5nIGNvbW1hbmQNCj4gaXNuJ3QgY2xlYXJlZCBieSBIL1cgYXQgdGhlIHRpbWluZy4gSWYgd2Ug
-c2VuZCBhIHN0b3AgY29tbWFuZCBhdCBoZXJlLCB0aGUgYnVzIHdpbGwgYmUgbWVzc2VkIHVwLg0K
-DQpJIHNlZS4gSSBkaWRuJ3Qga25vdyB3ZSBjb3VsZCBjbGVhciB0aGUgYml0cyBiZWZvcmUgaGFy
-ZHdhcmUgZmV0Y2hlcyB0aGVtLg0KDQoNCkNoZWVycywNCg0KVGFvDQpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Thu, 10 Oct 2019 at 02:05, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The AST2500 has an explicit gate for the RMII RCLK for each of the two
+> MACs.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+
+Reviewed-by: Joel Stanley <joel@jms.id.au>
