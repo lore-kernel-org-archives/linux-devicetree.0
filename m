@@ -1,21 +1,20 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v2 2/2] clk: ast2600: Add RMII RCLK gates for all four MACs
-Date: Thu, 10 Oct 2019 23:43:15 +0000
-Message-ID: <CACPK8XcfNWkv+iiR8xFfDV6puvRpJUAsSMeX0rPe15+N_X75Bg@mail.gmail.com>
-References: <20191010020725.3990-1-andrew@aj.id.au> <20191010020725.3990-3-andrew@aj.id.au>
+Subject: Re: [PATCH v2 3/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
+Date: Thu, 10 Oct 2019 23:44:06 +0000
+Message-ID: <CACPK8Xf8rEwCiDe1b+FgHQPscJYXuwKFzfrP1vmFeYde=uawyA@mail.gmail.com>
+References: <20191010020756.4198-1-andrew@aj.id.au> <20191010020756.4198-4-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191010020725.3990-3-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20191010020756.4198-4-andrew@aj.id.au>
+Sender: netdev-owner@vger.kernel.org
 To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Cc: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Oct 2019 at 02:06, Andrew Jeffery <andrew@aj.id.au> wrote:
+On Thu, 10 Oct 2019 at 02:07, Andrew Jeffery <andrew@aj.id.au> wrote:
 >
-> RCLK is a fixed 50MHz clock derived from HPLL/HCLK that is described by a
-> single gate for each MAC.
+> The 50MHz RCLK has to be enabled before the RMII interface will function.
 >
 > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
