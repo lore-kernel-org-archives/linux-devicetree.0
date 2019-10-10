@@ -1,28 +1,30 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH 0/8] clocksource/drivers/timer-atmel-tcb: add sama5d2
- support
-Date: Thu, 10 Oct 2019 10:26:21 +0200
-Message-ID: <20191010082602.ytfc2tilizruwrts@linutronix.de>
-References: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH v2 0/2] scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
+Date: Thu, 10 Oct 2019 14:03:55 +0530
+Message-ID: <20191010083357.28982-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, jejb@linux.ibm.com, Martin K Petersen <martin.petersen@oracle.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, Janek Kotas <jank@cadence.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 2019-10-10 00:39:58 [+0200], Alexandre Belloni wrote:
-> This series mainly adds sama5d2 support where we need to avoid using
-> clock index 0 because that clock is never enabled by the driver.
-> 
-> There is also a rework of the 32khz clock handling so it is not used for
-> clockevents on 32 bit counter because the increased rate improves the
-> resolution and doesn't have any drawback with that counter width. This
-> replaces a patch that has been carried in the linux-rt tree for a while.
+This series add DT bindings and driver for TI wrapper for Cadence UFS
+IP that is present on TI's J721e SoC
 
-Thank you for doing this!
+Vignesh Raghavendra (2):
+  dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding for TI UFS wrapper
+  scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
 
-Sebastian
+ .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 68 ++++++++++++++
+ drivers/scsi/ufs/Kconfig                      | 10 +++
+ drivers/scsi/ufs/Makefile                     |  1 +
+ drivers/scsi/ufs/ti-j721e-ufs.c               | 90 +++++++++++++++++++
+ 4 files changed, 169 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+ create mode 100644 drivers/scsi/ufs/ti-j721e-ufs.c
+
+-- 
+2.23.0
