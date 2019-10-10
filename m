@@ -1,44 +1,286 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH] i2c: aspeed: fix master pending state handling
-Date: Wed, 9 Oct 2019 17:32:34 -0700
-Message-ID: <20191010003234.GA12710@google.com>
-References: <20191009212034.20325-1-jae.hyun.yoo@linux.intel.com>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v4 2/3] drm/rockchip: Add optional support for CRTC gamma LUT
+Date: Wed, 9 Oct 2019 21:45:54 -0300
+Message-ID: <CAAEAJfDP0PsGAoRfGyDyWj7DxgP6nwwwA1_gwLQuVy-fRDa-UA@mail.gmail.com>
+References: <20191008230038.24037-1-ezequiel@collabora.com>
+ <20191008230038.24037-3-ezequiel@collabora.com> <20191009180136.GE85762@art_vandelay>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20191009212034.20325-1-jae.hyun.yoo@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, openbmc@lists.ozlabs.org, linux-i2c@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Tao Ren <taoren@fb.com>, linux-arm-kernel@lists.infradead.org, Cedric Le Goater <clg@kaod.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191009180136.GE85762@art_vandelay>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Paul <sean@poorly.run>
+Cc: Ezequiel Garcia <ezequiel@collabora.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Douglas Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 02:20:34PM -0700, Jae Hyun Yoo wrote:
-> In case of master pending state, it should not trigger a master
-> command, otherwise data could be corrupted because this H/W shares
-> the same data buffer for slave and master operations. It also means
-> that H/W command queue handling is unreliable because of the buffer
-> sharing issue. To fix this issue, it clears command queue if a
-> master command is queued in pending state to use S/W solution
-> instead of H/W command queue handling. Also, it refines restarting
-> mechanism of the pending master command.
-> 
-> Fixes: 2e57b7cebb98 ("i2c: aspeed: Add multi-master use case support")
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Hello Sean,
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Thanks for the thourough review.
 
-We don't have any multi-master setups, can we get a Tested-by?
+On Wed, 9 Oct 2019 at 15:01, Sean Paul <sean@poorly.run> wrote:
+>
+> On Tue, Oct 08, 2019 at 08:00:37PM -0300, Ezequiel Garcia wrote:
+> > Add an optional CRTC gamma LUT support, and enable it on RK3288.
+> > This is currently enabled via a separate address resource,
+> > which needs to be specified in the devicetree.
+> >
+> > The address resource is required because on some SoCs, such as
+> > RK3288, the LUT address is after the MMU address, and the latter
+> > is supported by a different driver. This prevents the DRM driver
+> > from requesting an entire register space.
+> >
+> > The current implementation works for RGB 10-bit tables, as that
+> > is what seems to work on RK3288.
+> >
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+>
+> Hey Ezequiel,
+> Just a few comments on the actual content of the patch as opposed to my higher
+> level comments yesterday. I think we're almost there, thanks for sticking this
+> out!
+>
+> > ---
+> > Changes from v3:
+> > * Move to atomic_enable and atomic_begin,
+> >   as discussed with Sean Paul.
+> > * Dropped the Reviewed-bys.
+> > Changes from v2:
+> > * None.
+> > Changes from v1:
+> > * drop explicit linear LUT after finding a proper
+> >   way to disable gamma correction.
+> > * avoid setting gamma is the CRTC is not active.
+> > * s/int/unsigned int as suggested by Jacopo.
+> > * only enable color management and set gamma size
+> >   if gamma LUT is supported, suggested by Doug.
+> > * drop the reg-names usage, and instead just use indexed reg
+> >   specifiers, suggested by Doug.
+> > Changes from RFC:
+> > * Request (an optional) address resource for the LUT.
+> > * Drop support for RK3399, which doesn't seem to work
+> >   out of the box and needs more research.
+> > * Support pass-thru setting when GAMMA_LUT is NULL.
+> > * Add a check for the gamma size, as suggested by Ilia.
+> > * Move gamma setting to atomic_commit_tail, as pointed
+> >   out by Jacopo/Laurent, is the correct way.
+> > ---
+> >  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   1 +
+> >  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 125 ++++++++++++++++++++
+> >  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   5 +
+> >  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
+> >  4 files changed, 133 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > index ca01234c037c..697ee04b85cf 100644
+> > --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > @@ -17,6 +17,7 @@
+> >  #include "rockchip_drm_drv.h"
+> >  #include "rockchip_drm_fb.h"
+> >  #include "rockchip_drm_gem.h"
+> > +#include "rockchip_drm_vop.h"
+>
+> Leftover from the previous version?
+>
 
-Wolfram, since this is a bugfix, can we get this in 5.4?
+Yup.
 
-Thanks!
+> >
+> >  static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
+> >       .destroy       = drm_gem_fb_destroy,
+> > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> > index 613404f86668..85c1269a1218 100644
+> > --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> > @@ -139,6 +139,7 @@ struct vop {
+> >
+> >       uint32_t *regsbak;
+> >       void __iomem *regs;
+> > +     void __iomem *lut_regs;
+> >
+> >       /* physical map length of vop register */
+> >       uint32_t len;
+> > @@ -1048,6 +1049,84 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+> >       return true;
+> >  }
+> >
+> > +static bool vop_dsp_lut_is_enable(struct vop *vop)
+>
+> *enabled
+>
+
+Good catch.
+
+> > +{
+> > +     return vop_read_reg(vop, 0, &vop->data->common->dsp_lut_en);
+> > +}
+> > +
+> > +static void vop_crtc_write_gamma_lut(struct vop *vop, struct drm_crtc *crtc)
+> > +{
+> > +     struct drm_color_lut *lut = crtc->state->gamma_lut->data;
+> > +     unsigned int i;
+> > +
+> > +     for (i = 0; i < crtc->gamma_size; i++) {
+> > +             u32 word;
+> > +
+> > +             word = (drm_color_lut_extract(lut[i].red, 10) << 20) |
+> > +                    (drm_color_lut_extract(lut[i].green, 10) << 10) |
+> > +                     drm_color_lut_extract(lut[i].blue, 10);
+> > +             writel(word, vop->lut_regs + i * 4);
+> > +     }
+> > +}
+> > +
+> > +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
+> > +                            struct drm_crtc_state *old_crtc_state)
+> > +{
+> > +     unsigned int idle;
+> > +     int ret;
+> > +
+>
+> How about:
+>
+>         if (!vop->lut_regs)
+>                 return;
+>
+> here and then you can remove that condition above the 2 callsites
+>
+
+Yes, sounds good.
+
+> > +     /*
+> > +      * In order to write the LUT to the internal memory,
+> > +      * we need to first make sure the dsp_lut_en bit is cleared.
+> > +      */
+> > +     spin_lock(&vop->reg_lock);
+> > +     VOP_REG_SET(vop, common, dsp_lut_en, 0);
+> > +     vop_cfg_done(vop);
+> > +     spin_unlock(&vop->reg_lock);
+> > +
+> > +     /*
+> > +      * If the CRTC is not active, dsp_lut_en will not get cleared.
+> > +      * Apparently we still need to do the above step to for
+> > +      * gamma correction to be disabled.
+> > +      */
+> > +     if (!crtc->state->active)
+> > +             return;
+> > +
+
+I have realized that the above might no longer be needed,
+given we are now using atomic_enable and atomic_begin.
+
+Not sure if the CRTC is supposed to clear its GAMMA
+when disabled.
+
+> > +     ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
+> > +                              idle, !idle, 5, 30 * 1000);
+> > +     if (ret) {
+> > +             DRM_DEV_ERROR(vop->dev, "display LUT RAM enable timeout!\n");
+> > +             return;
+> > +     }
+> > +
+> > +     if (crtc->state->gamma_lut &&
+> > +        (!old_crtc_state->gamma_lut || (crtc->state->gamma_lut->base.id !=
+> > +                                     old_crtc_state->gamma_lut->base.id))) {
+>
+> Silly question, but isn't the second part of this check redundant since you need
+> color_mgmt_changed || active_changed to get into this function?
+>
+> So maybe invert the conditional here and exit early (to save a level of
+> indentation in the block below):
+>
+
+I took this from malidp_atomic_commit_update_gamma. I _believe_
+the rational for this is that color_mgmt_changed can be set by re-setting
+the gamma property, to the same property. But I admit I haven't
+tested it's the case.
+
+OTOH, it won't really affect much to re-write the table, if the user
+requested a change.
+
+>         if (!crtc->state->gamma_lut)
+>                 return;
+>
+
+In any case, inverting the condition makes sense.
+
+>         spin_lock(&vop->reg_lock);
+>
+>         vop_crtc_write_gamma_lut(vop, crtc);
+>         VOP_REG_SET(vop, common, dsp_lut_en, 1);
+>         vop_cfg_done(vop);
+>
+>         spin_unlock(&vop->reg_lock);
+>
+> > +
+> > +             spin_lock(&vop->reg_lock);
+> > +
+> > +             vop_crtc_write_gamma_lut(vop, crtc);
+> > +             VOP_REG_SET(vop, common, dsp_lut_en, 1);
+> > +             vop_cfg_done(vop);
+> > +
+> > +             spin_unlock(&vop->reg_lock);
+> > +     }
+> > +}
+> > +
+> > +static void vop_crtc_atomic_begin(struct drm_crtc *crtc,
+> > +                                struct drm_crtc_state *old_crtc_state)
+> > +{
+> > +     struct vop *vop = to_vop(crtc);
+> > +
+> > +     /*
+> > +      * Only update GAMMA if the 'active' flag is not changed,
+> > +      * otherwise it's updated by .atomic_enable.
+> > +      */
+> > +     if (vop->lut_regs && crtc->state->color_mgmt_changed &&
+> > +         !crtc->state->active_changed)
+> > +             vop_crtc_gamma_set(vop, crtc, old_crtc_state);
+> > +}
+> > +
+> >  static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
+> >                                  struct drm_crtc_state *old_state)
+> >  {
+> > @@ -1075,6 +1154,14 @@ static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
+> >               return;
+> >       }
+> >
+> > +     /*
+> > +      * If we have a GAMMA LUT in the state, then let's make sure
+> > +      * it's updated. We might be coming out of suspend,
+> > +      * which means the LUT internal memory needs to be re-written.
+> > +      */
+> > +     if (vop->lut_regs && crtc->state->gamma_lut)
+> > +             vop_crtc_gamma_set(vop, crtc, old_state);
+> > +
+> >       mutex_lock(&vop->vop_lock);
+> >
+> >       WARN_ON(vop->event);
+> > @@ -1191,6 +1278,26 @@ static void vop_wait_for_irq_handler(struct vop *vop)
+> >       synchronize_irq(vop->irq);
+> >  }
+> >
+> > +static int vop_crtc_atomic_check(struct drm_crtc *crtc,
+> > +                              struct drm_crtc_state *crtc_state)
+> > +{
+> > +     struct vop *vop = to_vop(crtc);
+> > +
+> > +     if (vop->lut_regs && crtc_state->color_mgmt_changed &&
+> > +         crtc_state->gamma_lut) {
+> > +             unsigned int len;
+> > +
+> > +             len = drm_color_lut_size(crtc_state->gamma_lut);
+> > +             if (len != crtc->gamma_size) {
+> > +                     DRM_DEBUG_KMS("Invalid LUT size; got %d, expected %d\n",
+> > +                                   len, crtc->gamma_size);
+> > +                     return -EINVAL;
+> > +             }
+>
+> Overflow is avoided in drm_mode_gamma_set_ioctl(), so I don't think you need
+> this function.
+>
+
+But that only applies to the legacy path. Isn't this needed to ensure
+a gamma blob
+has the right size?
+
+Thanks,
+Ezequiel
