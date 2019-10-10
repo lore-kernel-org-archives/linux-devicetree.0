@@ -1,140 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: sound: Convert Samsung Exynos5433 TM2(E)
- audio complex with WM5110 codec to dt-schema
-Date: Thu, 10 Oct 2019 16:56:01 -0500
-Message-ID: <20191010215601.GA24757@bogus>
-References: <CGME20190926120221eucas1p1a11b4182b93b408d5d5507dc65c951b4@eucas1p1.samsung.com>
- <20190926120210.8544-1-m.szyprowski@samsung.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH] i2c: aspeed: fix master pending state handling
+Date: Thu, 10 Oct 2019 15:04:00 -0700
+Message-ID: <637d4b8b-5113-b07b-f99f-ce66dbe6948c@linux.intel.com>
+References: <20191009212034.20325-1-jae.hyun.yoo@linux.intel.com>
+ <3ea1c0d5-47f1-bf8c-6b2d-2ea8d3f93471@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190926120210.8544-1-m.szyprowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Maciej Falkowski <m.falkowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3ea1c0d5-47f1-bf8c-6b2d-2ea8d3f93471@fb.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tao Ren <taoren@fb.com>, Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Cedric Le Goater <clg@kaod.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 02:02:10PM +0200, Marek Szyprowski wrote:
-> From: Maciej Falkowski <m.falkowski@samsung.com>
+On 10/10/2019 2:20 PM, Tao Ren wrote:
+> On 10/9/19 2:20 PM, Jae Hyun Yoo wrote:
+[...]
+>>   		/*
+>>   		 * If a peer master starts a xfer immediately after it queues a
+>> -		 * master command, change its state to 'pending' then H/W will
+>> -		 * continue the queued master xfer just after completing the
+>> -		 * slave mode session.
+>> +		 * master command, clear the queued master command and change
+>> +		 * its state to 'pending'. To simplify handling of pending
+>> +		 * cases, it uses S/W solution instead of H/W command queue
+>> +		 * handling.
+>>   		 */
+>>   		if (unlikely(irq_status & ASPEED_I2CD_INTR_SLAVE_MATCH)) {
+>> +			writel(readl(bus->base + ASPEED_I2C_CMD_REG) &
+>> +				~ASPEED_I2CD_MASTER_CMDS_MASK,
+>> +			       bus->base + ASPEED_I2C_CMD_REG);
 > 
-> Convert Samsung Exynos5433 TM2(E) audio complex with WM5110 codec to
-> newer dt-schema format.
+> Sorry for the late comments (just noticed this line while testing the patch):
 > 
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> v2:
-> - Added type and description and removed number of items from 'model' property.
-> 
-> Best regards,
-> Maciej Falkowski
-> ---
->  .../bindings/sound/samsung,tm2-audio.txt      | 42 ----------
->  .../bindings/sound/samsung,tm2-audio.yaml     | 84 +++++++++++++++++++
->  2 files changed, 84 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
+> I assume this line is aimed at stopping the running master commands, but as per
+> AST2500 datasheet, it's NOP to write 0 to MASTER_STOP/MASTER_RX/MASTER_TX bits.
+> Maybe all we need is writing 1 to MASTER_STOP field?
 
-> diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
-> new file mode 100644
-> index 000000000000..62b5b9a1dec0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
-> @@ -0,0 +1,84 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/samsung,tm2-audio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung Exynos SoC Exynos5433 TM2(E) audio complex with WM5110 codec
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: samsung,tm2-audio
-> +
-> +  model:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description: The user-visible name of this sound complex.
-> +
-> +  audio-codec:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
-> +      - items:
+There could be two pending cases:
+1. Master goes to pending before it triggers a command if a slave
+    operation is already initiated.
+2. Master goes to pending after it triggered a command if a peer
+    master immediately sends something just after the master command
+    triggering.
 
-This way works, but we get better error messages if you move this up to 
-'allOf' level. IOW, only the $ref has to be under an 'allOf'.
+Above code is for the latter case. H/W handles the case priority based
+so the slave event will be handled first, and then the master command
+will be handled when the slave operation is completed. Problem is,
+this H/W shares the same buffer for master and slave operations so
+it's unreliable. Above code just removes the master command from the
+command register to prevent this H/W command handling of pending events.
+Instead, it restarts the master command using a call of 
+aspeed_i2c_do_start when the slave operation is completed.
 
-> +          - description: |
-> +              phandle of the wm5110 audio codec node,
-> +              as described in ../mfd/arizona.txt;
-> +          - description: phandle of the HDMI transmitter node.
-> +
-> +  i2s-controller:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
-> +      - items:
-> +          - description: phandle of the I2S0.
-> +          - description: phandle of the I2S1.
-> +
-> +  audio-amplifier:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle of the MAX98504 amplifier.
-> +
-> +  samsung,audio-routing:
-> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> +    description: |
-> +      List of the connections between audio components.
-> +      Each entry is a pair of strings, the first being the
-> +      connection's sink, the second being the connection's
-> +      source. Valid names for sources and sinks are
-> +      the WM5110's and MAX98504's pins and the jacks on the
-> +      board: HP, SPK, Main Mic, Sub Mic, Third Mic, Headset Mic.
+Thanks,
 
-Please enumerate the possible strings.
-
-> +
-> +  mic-bias-gpios:
-> +    description: GPIO pin that enables the Main Mic bias regulator.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - model
-> +  - audio-codec
-> +  - i2s-controller
-> +  - audio-amplifier
-> +  - samsung,audio-routing
-> +  - mic-bias-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    sound {
-> +        compatible = "samsung,tm2-audio";
-> +        model = "wm5110";
-> +        audio-codec = <&wm5110>, <&hdmi>;
-> +        i2s-controller = <&i2s0 0>, <&i2s1 0>;
-> +        audio-amplifier = <&max98504>;
-> +        mic-bias-gpios = <&gpr3>;
-> +        samsung,audio-routing =
-> +                "HP", "HPOUT1L",
-> +                "HP", "HPOUT1R",
-> +                "SPK", "SPKOUT",
-> +                "SPKOUT", "HPOUT2L",
-> +                "SPKOUT", "HPOUT2R",
-> +                "Main Mic", "MICBIAS2",
-> +                "IN1R", "Main Mic";
-> +    };
-> +
-> -- 
-> 2.17.1
-> 
-> 
-> 
+Jae
