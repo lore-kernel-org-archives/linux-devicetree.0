@@ -1,103 +1,136 @@
-From: Hui Song <hui.song_1@nxp.com>
-Subject: [PATCH v7] gpio/mpc8xxx: change irq handler from chained to normal
-Date: Thu, 10 Oct 2019 10:32:05 +0800
-Message-ID: <20191010023205.8071-1-hui.song_1@nxp.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: Re: [PATCH 1/3] dt-bindings: power: add Amlogic secure power domains
+ bindings
+Date: Thu, 10 Oct 2019 11:31:39 +0800
+Message-ID: <3152a4ac-5059-502b-3bf3-71f7e2d8118a@amlogic.com>
+References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
+ <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
+ <5d93ce88.1c69fb81.aec64.6b1b@mx.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5d93ce88.1c69fb81.aec64.6b1b@mx.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, Zhiqiang Liang <zhiqiang.liang@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+Hi Rob，
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
+Thanks for your review.
 
-While this will work, it will mess up userspace accounting of the number
-of interrupts per second in tools such as vmstat.  The reason is that
-for every GPIO interrupt, /proc/interrupts records the count against GIC
-interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
-interrupt, the total number of interrupts that the system has seen
-increments by two.
+I'm sorry to reply so late, for I've been on vacation in the last week.
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
-Changes in v7:
-	- make unsigned int convert to unsigned long.
-Changes in v6:
-	- change request_irq to devm_request_irq and add commit message.
-Changes in v5:
-	- add traverse every bit function.
-Changes in v4:
-	- convert 'pr_err' to 'dev_err'.
-Changes in v3:
-	- update the patch description.
-Changes in v2:
-	- delete the compatible of ls1088a.
- drivers/gpio/gpio-mpc8xxx.c | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..5a0f030 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
--	unsigned int mask;
-+	unsigned long mask;
-+	int i;
- 
- 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
- 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
--	if (mask)
-+	for_each_set_bit(i, &mask, 32)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
--						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+						     31 - i));
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
-+			       mpc8xxx_gpio_irq_cascade,
-+			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-+			       mpc8xxx_gc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
-+			np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
+On 2019/10/2 6:09, Rob Herring wrote:
+> On Thu, Sep 19, 2019 at 08:11:02AM -0400, Jianxin Pan wrote:
+>> Add the bindings for the Amlogic Secure power domains, controlling the
+>> secure power domains.
+>>
+>> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
+>> power domain registers are in secure world.
+>>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
+>> ---
+>>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 32 ++++++++++++++++++++++
+>>  include/dt-bindings/power/meson-a1-power.h         | 32 ++++++++++++++++++++++
+>>  2 files changed, 64 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>>  create mode 100644 include/dt-bindings/power/meson-a1-power.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> new file mode 100644
+>> index 00000000..327e0d9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> @@ -0,0 +1,32 @@
+>> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +# Copyright (c) 2019 Amlogic, Inc
+>> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic Meson Secure Power Domains
+>> +
+>> +maintainers:
+>> +  - Jianxin Pan <jianxin.pan@amlogic.com>
+>> +
+>> +description: |+
+>> +  A1/C1 series The Secure Power Domains node should be the child of a syscon
+>> +  node with the required property.
+> 
+> 'a syscon node' is not specific enough. It must be a specific node.
+> 
+I will fix this.
+In A1/C1, power control is in secure domain, and syscon parent is not needed.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - amlogic,meson-a1-pwrc
+>> +
+>> +required:
+>> +  - compatible
+>> +
+>> +examples:
+>> +  - |
+>> +    pwrc: power-controller {
+>> +          compatible = "amlogic,meson-a1-pwrc";
+> 
+> But why do you need this node? It has no resources.
+> 
+> #power-domain-cells needed?
+I will add #power-domain-cells and secure-monitor here.
+Thank you for the review.
+> 
+>> +    };
+>> +
+>> +
+>> diff --git a/include/dt-bindings/power/meson-a1-power.h b/include/dt-bindings/power/meson-a1-power.h
+>> new file mode 100644
+>> index 00000000..6cf50bf
+>> --- /dev/null
+>> +++ b/include/dt-bindings/power/meson-a1-power.h
+>> @@ -0,0 +1,32 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc.
+>> + * Author: Jianxin Pan <jianxin.pan@amlogic.com>
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_MESON_A1_POWER_H
+>> +#define _DT_BINDINGS_MESON_A1_POWER_H
+>> +
+>> +#define PWRC_DSPA_ID	8
+>> +#define PWRC_DSPB_ID	9
+>> +#define PWRC_UART_ID	10
+>> +#define PWRC_DMC_ID	11
+>> +#define PWRC_I2C_ID	12
+>> +#define PWRC_PSRAM_ID	13
+>> +#define PWRC_ACODEC_ID	14
+>> +#define PWRC_AUDIO_ID	15
+>> +#define PWRC_OTP_ID	16
+>> +#define PWRC_DMA_ID	17
+>> +#define PWRC_SD_EMMC_ID	18
+>> +#define PWRC_RAMA_ID	19
+>> +#define PWRC_RAMB_ID	20
+>> +#define PWRC_IR_ID	21
+>> +#define PWRC_SPICC_ID	22
+>> +#define PWRC_SPIFC_ID	23
+>> +#define PWRC_USB_ID	24
+>> +#define PWRC_NIC_ID	25
+>> +#define PWRC_PDMIN_ID	26
+>> +#define PWRC_RSA_ID	27
+>> +#define PWRC_MAX_ID	28
+>> +
+>> +#endif
+>> -- 
+>> 2.7.4
+>>
+> 
+> .
+> 
