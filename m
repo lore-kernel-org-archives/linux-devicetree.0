@@ -1,159 +1,316 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v2 2/2] scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
-Date: Thu, 10 Oct 2019 14:03:57 +0530
-Message-ID: <20191010083357.28982-3-vigneshr@ti.com>
-References: <20191010083357.28982-1-vigneshr@ti.com>
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH v2] arm64: dts: lx2160a: add tmu device node
+Date: Thu, 10 Oct 2019 16:30:22 +0800
+Message-ID: <20191010083022.6700-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191010083357.28982-1-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, jejb@linux.ibm.com, Martin K Petersen <martin.petersen@oracle.com>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, Janek Kotas <jank@cadence.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, nsekhar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-TI's J721e SoC has a Cadence UFS IP with a TI specific wrapper. This is
-a minimal driver to configure the wrapper. It releases the UFS slave
-device out of reset and sets up registers to indicate PHY reference
-clock input frequency before probing child Cadence UFS driver.
+Add the TMU (Thermal Monitoring Unit) device node to enable
+TMU feature.
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 ---
+v2:
+	- sort the node and use micro to replace hardcoded number
 
-v2: No change
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 108 +++++++++++++++---
+ 1 file changed, 92 insertions(+), 16 deletions(-)
 
- drivers/scsi/ufs/Kconfig        | 10 ++++
- drivers/scsi/ufs/Makefile       |  1 +
- drivers/scsi/ufs/ti-j721e-ufs.c | 90 +++++++++++++++++++++++++++++++++
- 3 files changed, 101 insertions(+)
- create mode 100644 drivers/scsi/ufs/ti-j721e-ufs.c
-
-diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
-index 0b845ab7c3bf..d14c2243e02a 100644
---- a/drivers/scsi/ufs/Kconfig
-+++ b/drivers/scsi/ufs/Kconfig
-@@ -132,6 +132,16 @@ config SCSI_UFS_HISI
- 	  Select this if you have UFS controller on Hisilicon chipset.
- 	  If unsure, say N.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index 80268c6ed5fb..72054fe1cafe 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -6,6 +6,7 @@
  
-+config SCSI_UFS_TI_J721E
-+	tristate "TI glue layer for Cadence UFS Controller"
-+	depends on OF && HAS_IOMEM && (ARCH_K3 || COMPILE_TEST)
-+	help
-+	  This selects driver for TI glue layer for Cadence UFS Host
-+	  Controller IP.
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ /memreserve/ 0x80000000 0x00010000;
+ 
+@@ -20,7 +21,7 @@
+ 		#size-cells = <0>;
+ 
+ 		// 8 clusters having 2 Cortex-A72 cores each
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -34,9 +35,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster0_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -50,9 +52,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster0_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@100 {
++		cpu100: cpu@100 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -66,9 +69,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster1_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@101 {
++		cpu101: cpu@101 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -82,9 +86,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster1_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@200 {
++		cpu200: cpu@200 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -98,9 +103,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster2_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@201 {
++		cpu201: cpu@201 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -114,9 +120,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster2_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@300 {
++		cpu300: cpu@300 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -130,9 +137,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster3_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@301 {
++		cpu301: cpu@301 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -146,9 +154,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster3_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@400 {
++		cpu400: cpu@400 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -162,9 +171,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster4_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@401 {
++		cpu401: cpu@401 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -178,9 +188,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster4_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@500 {
++		cpu500: cpu@500 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -194,9 +205,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster5_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@501 {
++		cpu501: cpu@501 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -210,9 +222,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster5_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@600 {
++		cpu600: cpu@600 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -226,9 +239,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster6_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@601 {
++		cpu601: cpu@601 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -242,9 +256,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster6_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@700 {
++		cpu700: cpu@700 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -258,9 +273,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster7_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@701 {
++		cpu701: cpu@701 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -274,6 +290,7 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster7_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cluster0_l2: l2-cache0 {
+@@ -418,6 +435,51 @@
+ 		clock-output-names = "sysclk";
+ 	};
+ 
++	thermal-zones {
++		core_thermal1: core-thermal1 {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&tmu 0>;
 +
-+	  Selects this if you have TI platform with UFS controller.
-+	  If unsure, say N.
++			trips {
++				core_cluster_alert: core-cluster-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
 +
- config SCSI_UFS_BSG
- 	bool "Universal Flash Storage BSG device node"
- 	depends on SCSI_UFSHCD
-diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
-index 2a9097939bcb..94c6c5d7334b 100644
---- a/drivers/scsi/ufs/Makefile
-+++ b/drivers/scsi/ufs/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
- obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
- obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o
- obj-$(CONFIG_SCSI_UFS_MEDIATEK) += ufs-mediatek.o
-+obj-$(CONFIG_SCSI_UFS_TI_J721E) += ti-j721e-ufs.o
-diff --git a/drivers/scsi/ufs/ti-j721e-ufs.c b/drivers/scsi/ufs/ti-j721e-ufs.c
-new file mode 100644
-index 000000000000..a653bf1902f3
---- /dev/null
-+++ b/drivers/scsi/ufs/ti-j721e-ufs.c
-@@ -0,0 +1,90 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+//
++				core_cluster_crit: core-cluster-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
 +
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
++			cooling-maps {
++				map0 {
++					trip = <&core_cluster_alert>;
++					cooling-device =
++						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu200 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu201 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu300 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu301 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu400 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu401 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu500 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu501 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu600 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu601 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu700 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu701 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++	};
 +
-+#define UFS_SS_CTRL		0x4
-+#define UFS_SS_RST_N_PCS	BIT(0)
-+#define UFS_SS_CLK_26MHZ	BIT(4)
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+@@ -478,6 +540,20 @@
+ 			little-endian;
+ 		};
+ 
++		tmu: tmu@1f80000 {
++			compatible = "fsl,qoriq-tmu";
++			reg = <0x0 0x1f80000 0x0 0x10000>;
++			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++			fsl,tmu-range = <0x800000e6 0x8001017d>;
++			fsl,tmu-calibration =
++				/* Calibration data group 1 */
++				<0x00000000 0x00000035
++				/* Calibration data group 2 */
++				0x00010001 0x00000154>;
++			little-endian;
++			#thermal-sensor-cells = <1>;
++		};
 +
-+static int ti_j721e_ufs_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	unsigned long clk_rate;
-+	void __iomem *regbase;
-+	struct clk *clk;
-+	u32 reg = 0;
-+	int ret;
-+
-+	regbase = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(regbase))
-+		return PTR_ERR(regbase);
-+
-+	/* Select MPHY refclk frequency */
-+	clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "Cannot claim MPHY clock.\n");
-+		return PTR_ERR(clk);
-+	}
-+	clk_rate = clk_get_rate(clk);
-+	if (clk_rate == 26000000)
-+		reg |= UFS_SS_CLK_26MHZ;
-+	devm_clk_put(dev, clk);
-+
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(dev);
-+		return ret;
-+	}
-+
-+	/*  Take UFS slave device out of reset */
-+	reg |= UFS_SS_RST_N_PCS;
-+	writel(reg, regbase + UFS_SS_CTRL);
-+
-+	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL,
-+				   dev);
-+	if (ret) {
-+		dev_err(dev, "failed to populate child nodes %d\n", ret);
-+		pm_runtime_put_sync(dev);
-+	}
-+
-+	return ret;
-+}
-+
-+static int ti_j721e_ufs_remove(struct platform_device *pdev)
-+{
-+	of_platform_depopulate(&pdev->dev);
-+	pm_runtime_put_sync(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ti_j721e_ufs_of_match[] = {
-+	{
-+		.compatible = "ti,j721e-ufs",
-+	},
-+	{ },
-+};
-+
-+static struct platform_driver ti_j721e_ufs_driver = {
-+	.probe	= ti_j721e_ufs_probe,
-+	.remove	= ti_j721e_ufs_remove,
-+	.driver	= {
-+		.name   = "ti-j721e-ufs",
-+		.of_match_table = ti_j721e_ufs_of_match,
-+	},
-+};
-+module_platform_driver(ti_j721e_ufs_driver);
-+
-+MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
-+MODULE_DESCRIPTION("TI UFS host controller glue driver");
-+MODULE_LICENSE("GPL v2");
+ 		i2c0: i2c@2000000 {
+ 			compatible = "fsl,vf610-i2c";
+ 			#address-cells = <1>;
 -- 
-2.23.0
+2.17.1
