@@ -1,93 +1,103 @@
-From: "Shenhar, Talel" <talel@amazon.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-Date: Thu, 10 Oct 2019 13:18:03 +0300
-Message-ID: <645f7af1-cefc-0af2-9fbd-e73e5305a268@amazon.com>
-References: <1570103363-21486-1-git-send-email-talel@amazon.com>
- <1570103363-21486-2-git-send-email-talel@amazon.com>
- <20191009191625.GA8179@bogus>
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: Re: [PATCH v10 4/6] dts-bindings: leds: Document the naming
+ requirement for LED properties
+Date: Thu, 10 Oct 2019 12:31:51 +0200
+Message-ID: <f281d352-ec3e-f80a-66ea-b955609f2531@ti.com>
+References: <20191009085127.22843-1-jjhiblot@ti.com>
+ <20191009085127.22843-5-jjhiblot@ti.com> <20191009192628.GA24087@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191009191625.GA8179@bogus>
+In-Reply-To: <20191009192628.GA24087@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, sre@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 10/9/2019 10:16 PM, Rob Herring wrote:
-> On Thu, Oct 03, 2019 at 02:49:22PM +0300, Talel Shenhar wrote:
->> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+On 09/10/2019 21:26, Rob Herring wrote:
+> On Wed, Oct 09, 2019 at 10:51:25AM +0200, Jean-Jacques Hiblot wrote:
+>> LED properties must be named "leds" in the same way that PWM, clocks or
+>> PHY properties are names respectively "pwms", "clocks" and "phys".
 >>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
 >> ---
->>   .../bindings/edac/amazon,al-mc-edac.yaml           | 40 ++++++++++++++++++++++
->>   1 file changed, 40 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>>   .../devicetree/bindings/leds/common.txt       | 20 ++++++++++++++++---
+>>   1 file changed, 17 insertions(+), 3 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> new file mode 100644
->> index 0000000..33da051
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->> @@ -0,0 +1,40 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>> index 9fa6f9795d50..31b8c1f68d27 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -10,6 +10,9 @@ can influence the way of the LED device initialization, the LED components
+>>   have to be tightly coupled with the LED device binding. They are represented
+>>   by child nodes of the parent LED device binding.
+>>   
+>> +LED properties should be named "leds". The exact meaning of each leds
+>> +property must be documented in the device tree binding for each device.
 >> +
->> +title: Amazon's Annapurna Labs Memory Controller EDAC
->> +
->> +maintainers:
->> +  - Talel Shenhar <talel@amazon.com>
->> +  - Talel Shenhar <talelshenhar@gmail.com>
->> +
->> +description: |
->> +  EDAC node is defined to describe on-chip error detection and correction for
->> +  Amazon's Annapurna Labs Memory Controller.
->> +
->> +properties:
->> +
->> +  compatible:
->> +    - const: "amazon,al-mc-edac"
-> Fails 'make dt_binding_check'. Drop the '-' as a property is not a list.
->
-> The "" are also unnecessary.
-ack, shall be part of v4
->
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +examples:
->> +  - |
->> +    edac@f0080000 {
->> +      compatible = "amazon,al-mc-edac";
->> +      reg = <0x0 0xf0080000 0x0 0x00010000>;
->> +      interrupt-parent = <&amazon_al_system_fabric>;
->> +      interrupt-names = "ue";
-> Need to document the name or drop as -names on a single entry is
-> pointless.
+> This is worded oddly. The property is 'leds' and it is always a list of
+> phandles to LED device nodes. It is present in an LED consumer device.
 
-actually, there are 2 interrupts possible here. so will also fix the 
-maxItems of interrupts. will also add the documentation.
+How about:
 
-shall be part of v4.
+[...]
+
+A LED consumer device has a 'leds' property. This property is always a list
+of phandles to LED nodes (child node of a LED device node).
+
+led_device {
+     ...
+
+     led0: led@0 {
+         ...
+     };
+
+     led1: led@1 {
+         ...
+     };
+};
+
+consumer {
+     ...
+     leds = <led0>, <led1>;
+};
 
 >
->> +      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
->> +    };
+>>   
+>>   Optional properties for child nodes:
+>>   - led-sources : List of device current outputs the LED is connected to. The
+>> @@ -165,9 +168,20 @@ led-controller@30 {
+>>   		function-enumerator = <2>;
+>>           };
+>>   
+>> -        led@3 {
+>> +        bkl_led0: led@3 {
+>>   		reg = <3>;
+>> -		function = LED_FUNCTION_INDICATOR;
+>> -		function-enumerator = <3>;
+>> +		function = LED_FUNCTION_BACKLIGHT;
+>> +		function-enumerator = <1>;
+>>           };
+>> +
+>> +        bkl_led1: led@4 {
+>> +		reg = <4>;
+>> +		function = LED_FUNCTION_BACKLIGHT;
+>> +		function-enumerator = <2>;
+>> +        };
+>> +};
+>> +
+>> +
+>> +backlight@40 {
+> Either needs 'reg' or the unit-address dropped.
+>
+>> +	leds = <&bkl_led0> , <&bkl_led1>;
+> drop the space            ^
+>
+>>   };
 >> -- 
->> 2.7.4
+>> 2.17.1
 >>
