@@ -1,103 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 02/10] dt-bindings: sram: Convert Samsung Exynos
- SYSRAM bindings to json-schema
-Date: Thu, 10 Oct 2019 14:33:56 -0500
-Message-ID: <20191010193356.GA9975@bogus>
-References: <20191002164316.14905-1-krzk@kernel.org>
- <20191002164316.14905-2-krzk@kernel.org>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v5 0/3] RK3288 Gamma LUT
+Date: Thu, 10 Oct 2019 16:43:48 -0300
+Message-ID: <20191010194351.17940-1-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20191002164316.14905-2-krzk@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-samsung-soc@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Jonathan Hunter <jonathanh@nvidia.com>, Kukjin Kim <kgene@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Sascha Hauer <s.hauer@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, linux-tegra@vger.kernel.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:43:08PM +0200, Krzysztof Kozlowski wrote:
-> Convert Samsung Exynos SYSRAM bindings to DT schema format using
-> json-schema.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v2:
-> 1. Use sram as name of node in example.
-> 
-> Changes since v1:
-> 1. Indent example with four spaces (more readable).
-> ---
->  .../devicetree/bindings/sram/samsung-sram.txt | 38 ------------
->  .../bindings/sram/samsung-sram.yaml           | 58 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 59 insertions(+), 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/samsung-sram.txt
->  create mode 100644 Documentation/devicetree/bindings/sram/samsung-sram.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/sram/samsung-sram.yaml b/Documentation/devicetree/bindings/sram/samsung-sram.yaml
-> new file mode 100644
-> index 000000000000..3e77c434ecca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sram/samsung-sram.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sram/samsung-sram.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung Exynos SoC SYSRAM for SMP bringup
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +description: |+
-> +  Samsung SMP-capable Exynos SoCs use part of the SYSRAM for the bringup
-> +  of the secondary cores. Once the core gets powered up it executes the
-> +  code that is residing at some specific location of the SYSRAM.
-> +
-> +  Therefore reserved section sub-nodes have to be added to the mmio-sram
-> +  declaration. These nodes are of two types depending upon secure or
-> +  non-secure execution environment.
-> +
-> +allOf:
-> +  - $ref: "sram.yaml#"
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^sysram(@.*)?"
-
-As you are renaming all the node names, this will no longer work. If you 
-change it to 'sram', that's going to match others, but would still work 
-as long as the child node names are unique to Samsung. If you change 
-them to '*-sram' then, you'd have to come up with something else. That 
-probably means using 'compatible' strings. At that point, it's kind of 
-silly to just be validating what your are using to select the schema. It 
-may be better to just add the compatible strings into sram.yaml if 
-that's the only difference.
-
-> +
-> +patternProperties:
-> +  "^([a-z]*-)?sysram@[a-f0-9]$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        description:
-> +          Depending upon boot mode
-> +        enum:
-> +          - samsung,exynos4210-sysram                 # for Secure SYSRAM
-> +          - samsung,exynos4210-sysram-ns              # for Non-secure SYSRAM
-> +
+TmV3IGl0ZXJhdGlvbiwgc2VlbXMgdGhhdCB3ZSBhcmUgZmluYWxseSBjb252ZXJnaW5nLgoKRm9y
+IHRoaXMgdjUsIHdlIGFyZSBvbmx5IGRvaW5nIHNvbWUgY2hhbmdlcyBvbgp0aGUgZ2FtbWFfc2V0
+IGltcGxlbWVudGF0aW9uLiBBcyBhIHJlc3VsdCwgdGhlIGNvZGUKaXMgbW9yZSByZWFkYWJsZS4g
+U2VlIHRoZSBjaGFuZ2Vsb2cgaW4gcGF0Y2ggMiBmb3IgbW9yZQppbmZvcm1hdGlvbi4KClRoYW5r
+cyEKCkV6ZXF1aWVsIEdhcmNpYSAoMyk6CiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IHJvY2tjaGlw
+OiBkb2N1bWVudCBWT1AgZ2FtbWEgTFVUIGFkZHJlc3MKICBkcm0vcm9ja2NoaXA6IEFkZCBvcHRp
+b25hbCBzdXBwb3J0IGZvciBDUlRDIGdhbW1hIExVVAogIEFSTTogZHRzOiByb2NrY2hpcDogQWRk
+IFJLMzI4OCBWT1AgZ2FtbWEgTFVUIGFkZHJlc3MKCiAuLi4vZGlzcGxheS9yb2NrY2hpcC9yb2Nr
+Y2hpcC12b3AudHh0ICAgICAgICAgfCAgIDYgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC5k
+dHNpICAgICAgICAgICAgICAgICB8ICAgNCArLQogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3Jv
+Y2tjaGlwX2RybV92b3AuYyAgIHwgMTIwICsrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUv
+ZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuaCAgIHwgICAyICsKIGRyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMgICB8ICAgMiArCiA1IGZpbGVzIGNoYW5nZWQs
+IDEzMSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKLS0gCjIuMjIuMAoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
