@@ -1,121 +1,50 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
-Date: Wed, 9 Oct 2019 17:08:43 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1910091657240.11044@viisi.sifive.com>
-References: <20191009234648.2271-1-robh@kernel.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 1/3] dt-bindings: net: ftgmac100: Document AST2600
+ compatible
+Date: Thu, 10 Oct 2019 11:10:44 +1100
+Message-ID: <991382b92be6b78e596b089d2c3677358afa52fc.camel@kernel.crashing.org>
+References: <20191008115143.14149-1-andrew@aj.id.au>
+         <20191008115143.14149-2-andrew@aj.id.au>
+         <75d915aec936be64ea5ebd63402efd90bb1c29d9.camel@kernel.crashing.org>
+         <6f70580a-4b4b-45e0-8899-8a74f9587002@www.fastmail.com>
+         <4998960d-6125-4402-9905-869653a84e52@www.fastmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191009234648.2271-1-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4998960d-6125-4402-9905-869653a84e52@www.fastmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, netdev <netdev@vger.kernel.org>
+Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 9 Oct 2019, Rob Herring wrote:
-
-> Fix the errors in the RiscV CPU DT schema:
+On Wed, 2019-10-09 at 15:25 +1030, Andrew Jeffery wrote:
 > 
-> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
-> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
-> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
-> Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> On Wed, 9 Oct 2019, at 15:19, Andrew Jeffery wrote:
+> > 
+> > 
+> > On Wed, 9 Oct 2019, at 15:08, Benjamin Herrenschmidt wrote:
+> > > On Tue, 2019-10-08 at 22:21 +1030, Andrew Jeffery wrote:
+> > > > The AST2600 contains an FTGMAC100-compatible MAC, although it
+> > > > no-
+> > > > longer
+> > > > contains an MDIO controller.
+> > > 
+> > > How do you talk to the PHY then ?
+> > 
+> > There are still MDIO controllers, they're just not in the MAC IP on
+> > the 2600.
 > 
-> The DT spec allows for 'timebase-frequency' to be in 'cpu' or 'cpus' node
-> and RiscV is doing nothing special with it, so just drop the definition
-> here and don't make it required.
-
-The RISC-V kernel code does in fact parse it and use it, and we currently 
-rely on it being under /cpus:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/time.c#n19
-
-The RISC-V user ISA specification also constrains the timebase-frequency 
-to be the same across all CPUs, in section 10.1:
-
-  https://github.com/riscv/riscv-isa-manual/releases/download/draft-20190608-f467e5d/riscv-spec.pdf
-
-So the right thing is to require 'timebase-frequency' at /cpus, and forbid 
-it in the individual CPU nodes. 
-
+> Sorry, on reflection that description is a little ambiguous in its
+> use of 'it'. I'll
+> fix that in v2 as well. Does this read better?
 > 
-> Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: linux-riscv@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/riscv/cpus.yaml       | 28 ++++++++-----------
->  1 file changed, 11 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> index b261a3015f84..925b531767bf 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> @@ -24,15 +24,17 @@ description: |
->  
->  properties:
->    compatible:
-> -    items:
-> -      - enum:
-> -          - sifive,rocket0
-> -          - sifive,e5
-> -          - sifive,e51
-> -          - sifive,u54-mc
-> -          - sifive,u54
-> -          - sifive,u5
-> -      - const: riscv
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - sifive,rocket0
-> +              - sifive,e5
-> +              - sifive,e51
-> +              - sifive,u54-mc
-> +              - sifive,u54
-> +              - sifive,u5
-> +          - const: riscv
-> +      - const: riscv    # Simulator only
->      description:
->        Identifies that the hart uses the RISC-V instruction set
->        and identifies the type of the hart.
-> @@ -66,13 +68,6 @@ properties:
->        insensitive, letters in the riscv,isa string must be all
->        lowercase to simplify parsing.
->  
-> -  timebase-frequency:
-> -    type: integer
-> -    minimum: 1
-> -    description:
-> -      Specifies the clock frequency of the system timer in Hz.
-> -      This value is common to all harts on a single system image.
-> -
->    interrupt-controller:
->      type: object
->      description: Describes the CPU's local interrupt controller
-> @@ -93,7 +88,6 @@ properties:
->  
->  required:
->    - riscv,isa
-> -  - timebase-frequency
->    - interrupt-controller
->  
->  examples:
-> -- 
-> 2.20.1
-> 
-> 
+> "The AST2600 contains an FTGMAC100-compatible MAC, although the MAC
+> no-longer contains an MDIO controller."
 
+That's fine. Or to be pendantic, say the MDIO controller has been moved
+of the MAC unit into its own separate block or something along those
+lines so people like me don't get anxious :)
 
-- Paul
+Cheers,
+Ben.
