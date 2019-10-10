@@ -1,78 +1,48 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v1 0/2] spi: cadence-qspi: Add cadence-qspi support for
- Intel LGM SoC
-Date: Thu, 10 Oct 2019 09:34:44 +0800
-Message-ID: <89e49834-8697-2917-d666-769969f074a4@linux.intel.com>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v2 1/2] dt-bindings: clock: Add AST2500 RMII RCLK definitions
+Date: Thu, 10 Oct 2019 12:36:54 +1030
+Message-ID: <20191010020655.3776-2-andrew@aj.id.au>
+References: <20191010020655.3776-1-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>, broonie@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191010020655.3776-1-andrew@aj.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-clk@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, sboyd@kernel.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-HI Vignesh,
+The AST2500 has an explicit gate for the RMII RCLK for each of the two
+MACs.
 
-On 17/9/2019 12:50 AM, Vignesh Raghavendra wrote:
-> Hi,
->
-> On 16/09/19 1:08 PM, Ramuthevar,Vadivel MuruganX wrote:
->> patch 1: Add YAML for cadence-qspi devicetree cdocumentation.
->> patch 2: cadence-qspi controller driver to support QSPI-NAND flash
->> using existing spi-nand framework with legacy spi protocol.
-> Nope, you cannot have two drivers for the same IP (i.e Cadence QSPI)
-> just to support to different types of SPI memories. This is the reason
-> why spi_mem_ops was introduced.
->
-> Please rewrite this driver over to use spi_mem_ops (instead of using
-> generic SPI xfers) so that same driver supports both SPI-NOR and
-> SPI-NAND flashes. Once that's done drivers/mtd/spi-nor/cadence-quadspi.c
-> can be deleted.
->
-> There are few existing examples of spi_mem_ops users in drivers/spi/
-> (git grep spi_mem_ops) and materials here on how to write such a driver:
->
-> [1]
-> https://bootlin.com/blog/spi-mem-bringing-some-consistency-to-the-spi-memory-ecosystem/
-> [2] https://www.youtube.com/watch?v=PkWbuLM_gmU
-As per Mark Brown and your suggestion,  I have started adapting 
-cadence-qaudspi driver with spi_mem_ops framework to work
-QSPI-NAND/NOR as a generic driver(completely removed the legacy 
-SPI-XFERS),  is in progress on Intel LGM SoC.
-QSPI-IP on Intel LGM  do not have DMA  support and also not part of QSPI 
-IP, so couldn't able to validate DMA related.
-will adapt the DMA things which are existing in cadence-quadspi.c as it is.
-
-currently TI and Altera SoC's use this Cadence-qspi IP , both are not 
-using DMA as per my understanding (correct me if it is wrong).
-confirmed through device tree entry.
-
-what is your opinion on DMA related stuff? also using macronix(QSPI-NOR) 
-flash/Micron(QSPI-NAND).
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
-With Regards
-Vadivel
->> Ramuthevar Vadivel Murugan (2):
->>    dt-bindings: spi: Add support for cadence-qspi IP Intel LGM SoC
->>    spi: cadence-qspi: Add QSPI support for Intel LGM SoC
->>
->>   .../devicetree/bindings/spi/cadence,qspi-nand.yaml |  84 +++
->>   drivers/spi/Kconfig                                |   9 +
->>   drivers/spi/Makefile                               |   1 +
->>   drivers/spi/spi-cadence-qspi-apb.c                 | 644 +++++++++++++++++++++
->>   drivers/spi/spi-cadence-qspi-apb.h                 | 174 ++++++
->>   drivers/spi/spi-cadence-qspi.c                     | 461 +++++++++++++++
->>   drivers/spi/spi-cadence-qspi.h                     |  73 +++
->>   7 files changed, 1446 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->>   create mode 100644 drivers/spi/spi-cadence-qspi-apb.c
->>   create mode 100644 drivers/spi/spi-cadence-qspi-apb.h
->>   create mode 100644 drivers/spi/spi-cadence-qspi.c
->>   create mode 100644 drivers/spi/spi-cadence-qspi.h
->>
+v2: Drop "_GATE" from symbol names
+
+ include/dt-bindings/clock/aspeed-clock.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
+index f43738607d77..9ff4f6e4558c 100644
+--- a/include/dt-bindings/clock/aspeed-clock.h
++++ b/include/dt-bindings/clock/aspeed-clock.h
+@@ -39,6 +39,8 @@
+ #define ASPEED_CLK_BCLK			33
+ #define ASPEED_CLK_MPLL			34
+ #define ASPEED_CLK_24M			35
++#define ASPEED_CLK_MAC1RCLK		36
++#define ASPEED_CLK_MAC2RCLK		37
+ 
+ #define ASPEED_RESET_XDMA		0
+ #define ASPEED_RESET_MCTP		1
+-- 
+2.20.1
