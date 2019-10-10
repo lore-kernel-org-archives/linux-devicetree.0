@@ -1,90 +1,74 @@
-From: Olivier Moysan <olivier.moysan@st.com>
-Subject: [PATCH] ARM: dts: stm32: add hdmi audio support to stm32mp157a-dk1
- board
-Date: Thu, 10 Oct 2019 15:02:47 +0200
-Message-ID: <20191010130247.32027-1-olivier.moysan@st.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 2/2] ASoC: codecs: add wsa881x amplifier support
+Date: Thu, 10 Oct 2019 14:23:14 +0100
+Message-ID: <20191010132314.GQ2036@sirena.org.uk>
+References: <20191009085108.4950-1-srinivas.kandagatla@linaro.org>
+ <20191009085108.4950-3-srinivas.kandagatla@linaro.org>
+ <20191009163535.GK2036@sirena.org.uk>
+ <95637c0a-8373-0eda-47e5-ac6e529019e5@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-stm32@st-md-mailman.stormreply.com, alexandre.torgue@st.com, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olivier.moysan@st.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8Km4OLyaxUtVIPha"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <95637c0a-8373-0eda-47e5-ac6e529019e5@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: spapothi@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, vkoul@kernel.org, pierre-louis.bossart@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Add HDMI audio support through Sil9022 HDMI transceiver
-on stm32mp157a-dk1 board.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+--8Km4OLyaxUtVIPha
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 5ad4cef9e971..7a20640c00a9 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -92,7 +92,7 @@
- 			"Playback" , "MCLK",
- 			"Capture" , "MCLK",
- 			"MICL" , "Mic Bias";
--		dais = <&sai2a_port &sai2b_port>;
-+		dais = <&sai2a_port &sai2b_port &i2s2_port>;
- 		status = "okay";
- 	};
- };
-@@ -173,6 +173,7 @@
- 		reset-gpios = <&gpioa 10 GPIO_ACTIVE_LOW>;
- 		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
- 		interrupt-parent = <&gpiog>;
-+		#sound-dai-cells = <0>;
- 		status = "okay";
- 
- 		ports {
-@@ -185,6 +186,13 @@
- 					remote-endpoint = <&ltdc_ep0_out>;
- 				};
- 			};
-+
-+			port@3 {
-+				reg = <3>;
-+				sii9022_tx_endpoint: endpoint {
-+					remote-endpoint = <&i2s2_endpoint>;
-+				};
-+			};
- 		};
- 	};
- 
-@@ -370,6 +378,23 @@
- 	};
- };
- 
-+&i2s2 {
-+	clocks = <&rcc SPI2>, <&rcc SPI2_K>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
-+	clock-names = "pclk", "i2sclk", "x8k", "x11k";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&i2s2_pins_a>;
-+	pinctrl-1 = <&i2s2_pins_sleep_a>;
-+	status = "okay";
-+
-+	i2s2_port: port {
-+		i2s2_endpoint: endpoint {
-+			remote-endpoint = <&sii9022_tx_endpoint>;
-+			format = "i2s";
-+			mclk-fs = <256>;
-+		};
-+	};
-+};
-+
- &ipcc {
- 	status = "okay";
- };
--- 
-2.17.1
+On Thu, Oct 10, 2019 at 10:28:04AM +0100, Srinivas Kandagatla wrote:
+> On 09/10/2019 17:35, Mark Brown wrote:
+> > On Wed, Oct 09, 2019 at 09:51:08AM +0100, Srinivas Kandagatla wrote:
+> > > +static const u8 wsa881x_reg_readable[WSA881X_CACHE_SIZE] = {
+
+> > > +static bool wsa881x_readable_register(struct device *dev, unsigned int reg)
+> > > +{
+> > > +	return wsa881x_reg_readable[reg];
+
+> > There's no bounds check and that array size is not...
+
+> I converted this now to a proper switch statement as other drivers do.
+
+> > > +static struct regmap_config wsa881x_regmap_config = {
+> > > +	.reg_bits = 32,
+> > > +	.val_bits = 8,
+> > > +	.cache_type = REGCACHE_RBTREE,
+> > > +	.reg_defaults = wsa881x_defaults,
+> > > +	.num_reg_defaults = ARRAY_SIZE(wsa881x_defaults),
+> > > +	.max_register = WSA881X_MAX_REGISTER,
+
+> > ...what regmap has as max_register.  Uusually you'd render as a
+> > switch statement (as you did for volatile) and let the compiler
+> > figure out a sensible way to do the lookup.
+
+> Sorry, I did not get your point here.
+
+> Are you saying that we can skip max_register in this regmap config ?
+> Then how would max_register in regmap be set?
+
+I'm saying that you appear to be relying on max_register to
+verify that you're not overflowing the array bounds but you
+max_register is not set to the same thing as the array size.
+
+--8Km4OLyaxUtVIPha
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2fMMIACgkQJNaLcl1U
+h9A3/Qf6Ar7ffTTO6fQ9eEU2xlK6kaCO7YSeWXTP1fKzuKvQy6Fd/XOsax1HiBF/
+8/H4lV/CNqnW88GwSAgBm7acHnRQwDrq1UkVlImEMNkslEr9q5ANt5CHrUb0DNcW
+TI6RkEi4gJj0nfkBozu9aRww71xEYNR+DPcmb/1rugVUdh1WYmFop9sAImmdn+5d
+zGGIdGTWdDu71UTPmx272j1zd6226SeJw7ONW4lmacud+HlEnAFRV3OBBc+ftGFD
+G6kIhnTS0mnSuzhmGEkyzCTHHuG6Sjv1Co/qRKrV+PdqRPhxPln10rw8N9/Wv55n
+5CXKfA5YtlVQjpfqaSr2fmE3YCtiew==
+=ZHzM
+-----END PGP SIGNATURE-----
+
+--8Km4OLyaxUtVIPha--
