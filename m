@@ -1,74 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v7 2/2] ASoC: codecs: add wsa881x amplifier support
-Date: Thu, 10 Oct 2019 14:23:14 +0100
-Message-ID: <20191010132314.GQ2036@sirena.org.uk>
-References: <20191009085108.4950-1-srinivas.kandagatla@linaro.org>
- <20191009085108.4950-3-srinivas.kandagatla@linaro.org>
- <20191009163535.GK2036@sirena.org.uk>
- <95637c0a-8373-0eda-47e5-ac6e529019e5@linaro.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH net-next 2/3] dt-bindings: can: rcar_canfd: document
+ r8a774b1 support
+Date: Thu, 10 Oct 2019 13:37:36 +0000
+Message-ID: <TY1PR01MB177051B4DCAD29E5D4954F11C0940@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1570711049-5691-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570711049-5691-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdV5XUPSrgoDm62p0f_B1TtvhMyOX3NVho=QVqdesq31jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8Km4OLyaxUtVIPha"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <95637c0a-8373-0eda-47e5-ac6e529019e5@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: spapothi@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, vkoul@kernel.org, pierre-louis.bossart@linux.intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV5XUPSrgoDm62p0f_B1TtvhMyOX3NVho=QVqdesq31jg@mail.gmail.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+r>
 List-Id: devicetree@vger.kernel.org
 
-
---8Km4OLyaxUtVIPha
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Oct 10, 2019 at 10:28:04AM +0100, Srinivas Kandagatla wrote:
-> On 09/10/2019 17:35, Mark Brown wrote:
-> > On Wed, Oct 09, 2019 at 09:51:08AM +0100, Srinivas Kandagatla wrote:
-> > > +static const u8 wsa881x_reg_readable[WSA881X_CACHE_SIZE] = {
-
-> > > +static bool wsa881x_readable_register(struct device *dev, unsigned int reg)
-> > > +{
-> > > +	return wsa881x_reg_readable[reg];
-
-> > There's no bounds check and that array size is not...
-
-> I converted this now to a proper switch statement as other drivers do.
-
-> > > +static struct regmap_config wsa881x_regmap_config = {
-> > > +	.reg_bits = 32,
-> > > +	.val_bits = 8,
-> > > +	.cache_type = REGCACHE_RBTREE,
-> > > +	.reg_defaults = wsa881x_defaults,
-> > > +	.num_reg_defaults = ARRAY_SIZE(wsa881x_defaults),
-> > > +	.max_register = WSA881X_MAX_REGISTER,
-
-> > ...what regmap has as max_register.  Uusually you'd render as a
-> > switch statement (as you did for volatile) and let the compiler
-> > figure out a sensible way to do the lookup.
-
-> Sorry, I did not get your point here.
-
-> Are you saying that we can skip max_register in this regmap config ?
-> Then how would max_register in regmap be set?
-
-I'm saying that you appear to be relying on max_register to
-verify that you're not overflowing the array bounds but you
-max_register is not set to the same thing as the array size.
-
---8Km4OLyaxUtVIPha
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2fMMIACgkQJNaLcl1U
-h9A3/Qf6Ar7ffTTO6fQ9eEU2xlK6kaCO7YSeWXTP1fKzuKvQy6Fd/XOsax1HiBF/
-8/H4lV/CNqnW88GwSAgBm7acHnRQwDrq1UkVlImEMNkslEr9q5ANt5CHrUb0DNcW
-TI6RkEi4gJj0nfkBozu9aRww71xEYNR+DPcmb/1rugVUdh1WYmFop9sAImmdn+5d
-zGGIdGTWdDu71UTPmx272j1zd6226SeJw7ONW4lmacud+HlEnAFRV3OBBc+ftGFD
-G6kIhnTS0mnSuzhmGEkyzCTHHuG6Sjv1Co/qRKrV+PdqRPhxPln10rw8N9/Wv55n
-5CXKfA5YtlVQjpfqaSr2fmE3YCtiew==
-=ZHzM
------END PGP SIGNATURE-----
-
---8Km4OLyaxUtVIPha--
+SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBHZWVy
+dCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiAxMCBPY3RvYmVy
+IDIwMTkgMTM6NDcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBuZXQtbmV4dCAyLzNdIGR0LWJpbmRp
+bmdzOiBjYW46IHJjYXJfY2FuZmQ6IGRvY3VtZW50IHI4YTc3NGIxIHN1cHBvcnQNCj4gDQo+IEhp
+IEZhYnJpemlvLA0KPiANCj4gT24gVGh1LCBPY3QgMTAsIDIwMTkgYXQgMjozNyBQTSBGYWJyaXpp
+byBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4g
+RG9jdW1lbnQgdGhlIHN1cHBvcnQgZm9yIHJjYXJfY2FuZmQgb24gUjhBNzc0QjEgU29DIGRldmlj
+ZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNh
+c3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gDQo+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4gDQo+
+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9jYW4vcmNhcl9j
+YW5mZC50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0
+L2Nhbi9yY2FyX2NhbmZkLnR4dA0KPiA+IEBAIC01LDYgKzUsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0
+aWVzOg0KPiA+ICAtIGNvbXBhdGlibGU6IE11c3QgY29udGFpbiBvbmUgb3IgbW9yZSBvZiB0aGUg
+Zm9sbG93aW5nOg0KPiA+ICAgIC0gInJlbmVzYXMscmNhci1nZW4zLWNhbmZkIiBmb3IgUi1DYXIg
+R2VuMyBhbmQgUlovRzIgY29tcGF0aWJsZSBjb250cm9sbGVycy4NCj4gPiAgICAtICJyZW5lc2Fz
+LHI4YTc3NGExLWNhbmZkIiBmb3IgUjhBNzc0QTEgKFJaL0cyTSkgY29tcGF0aWJsZSBjb250cm9s
+bGVyLg0KPiA+ICsgIC0gInJlbmVzYXMscjhhNzc0YjEtY2FuZmQiIGZvciBSOEE3NzRCMSAoUlov
+RzJOKSBjb21wYXRpYmxlIGNvbnRyb2xsZXIuDQo+ID4gICAgLSAicmVuZXNhcyxyOGE3NzRjMC1j
+YW5mZCIgZm9yIFI4QTc3NEMwIChSWi9HMkUpIGNvbXBhdGlibGUgY29udHJvbGxlci4NCj4gPiAg
+ICAtICJyZW5lc2FzLHI4YTc3OTUtY2FuZmQiIGZvciBSOEE3Nzk1IChSLUNhciBIMykgY29tcGF0
+aWJsZSBjb250cm9sbGVyLg0KPiA+ICAgIC0gInJlbmVzYXMscjhhNzc5Ni1jYW5mZCIgZm9yIFI4
+QTc3OTYgKFItQ2FyIE0zLVcpIGNvbXBhdGlibGUgY29udHJvbGxlci4NCj4gDQo+IFRoZSBhYm92
+ZSBsb29rcyBnb29kLCBidXQgSSB0aGluayB5b3UgZm9yZ290IHRvIGFkZCBSOEE3NzRCMSB0byB0
+aGUNCj4gcGFyYWdyYXBoIHRhbGtpbmcgYWJvdXQgdGhlIENBTiBGRCBjbG9jayBiZWxvdy4NCg0K
+SSBtb3N0IGNlcnRhaW5seSBkaWQgZm9yZ2V0IHRvIGFkZCB0aGUgUjhBNzc0QjEgdG8gdGhlIENB
+TiBGRCBjbG9jayBwYXJhZ3JhcGguDQpUaGFuayB5b3UgZm9yIHBvaW50aW5nIHRoaXMgb3V0LCB3
+aWxsIHNlbmQgYSB2Mi4NCg0KPiBXaXRoIHRoYXQgZml4ZWQ6DQo+IFJldmlld2VkLWJ5OiBHZWVy
+dCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPiANCj4gV2hpbGUgYXQg
+aXQsIHRoZSBleGFtcGxlIGluIHRoZSBiaW5kaW5ncyBzYXlzIHRoZSBDQU5GRCBjbG9jayBzaG91
+bGQgYmUNCj4gY29uZmlndXJlZCB0byA0MCBNSHosIHdoaWNoIG1hdGNoZXMgd2hhdCBpcyB1c2Vk
+IGluIHRoZSB2YXJpb3VzIERUUyBmaWxlcy4NCj4gSG93ZXZlciwgdGhlIEhhcmR3YXJlIFVzZXIn
+cyBNYW51YWwgc3RhdGVzIGl0IHNob3VsZCBiZSA4MCBNSHosIGV4Y2VwdA0KPiBmb3IgUi1DYXIg
+RDMuDQo+IElzIHRoYXQgY29ycmVjdD8NCg0KVGhlIG1hbnVhbCBzdGF0ZXMgODAgTUh6LCBhbmQg
+SSBkaWQgdGVzdCB0aGUgSVAgaW4gQ0FOIGFuZCBDQU4gRkQgbW9kZSBhdCA4MCBNSHoNCmEgd2hp
+bGUgYmFjaywgYnV0IFJhbWVzaCByZXBvcnRlZCBzb21lIGluc3RhYmlsaXR5IGF0IDgwIE1IeiB3
+aGVuIGhlIGZpcnN0IGJyb3VnaHQNCkNBTiBGRCB1cC4gV2UgZG9uJ3Qga25vdyBpZiB0aGUgaW5z
+dGFiaWxpdHkgd2FzIGR1ZSB0byB0aGUgSVAgb3IgdG8gdGhlIGJvYXJkIGhlIHdhcw0KdXNpbmcs
+IGF0IHNvbWUgcG9pbnQgaXQgd291bGQgYmUgbmljZSB0byByZXRlc3QgdGhlIHNhbWUgdGhpbmcg
+b24gYSBkaWZmZXJlbnQgU29DL2JvYXJkDQpjb25uZWN0ZWQgdG8gdGhlIHNhbWUgcGVyaXBoZXJh
+bCBoZSB3YXMgdXNpbmcgZm9yIHRlc3RpbmcsIGFuZCBzZWUgaWYgd2UgZ2V0IHRoZSBzYW1lDQpp
+c3N1ZXMuIEZvciB0aGUgdGltZSBiZWluZywgdG8gYmUgb24gdGhlIHNhZmUgc2lkZSBvZiB0aGlu
+Z3MsIHdlIHdvdWxkIGxpa2UgdG8ga2VlcCB0aGUNCmNsb2NrIGNvbmZpZ3VyZWQgYXQgNDBNSHou
+DQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiBUaGFua3MhDQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9
+cywNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVy
+dCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdl
+ZXJ0QGxpbnV4LW02OGsub3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGgg
+dGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdt
+IHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRo
+aW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51
+cyBUb3J2YWxkcw0K
