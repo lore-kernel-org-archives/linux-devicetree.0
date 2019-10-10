@@ -1,43 +1,80 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix override mode for rk3399-kevin panel
-Date: Thu, 10 Oct 2019 23:42:21 +0200
-Message-ID: <29647267.xx61tplHq2@phil>
-References: <20191008124949.1.I674acd441997dd0690c86c9003743aacda1cf5dd@changeid>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCHv2 1/3] dt-bindings: misc: Add dt bindings for flex
+ noc Performance Monitor
+Date: Thu, 10 Oct 2019 16:48:36 -0500
+Message-ID: <20191010214835.GA4523@bogus>
+References: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191008124949.1.I674acd441997dd0690c86c9003743aacda1cf5dd@changeid>
+Content-Disposition: inline
+In-Reply-To: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 8. Oktober 2019, 21:49:54 CEST schrieb Douglas Anderson:
-> When I re-posted Sean's original commit to add the override mode for
-> the kevin panel, for some reason I didn't notice that the pixel clock
-> wasn't quite right.  Looking at /sys/kernel/debug/clk/clk_summary on
-> downstream kernels it can be seen that the VOP clock is supposed to be
-> 266,666,667 Hz achieved by dividing the 800 MHz PLL by 3.
+On Thu, Sep 26, 2019 at 10:46:24AM +0530, Shubhrajyoti Datta wrote:
+> Add dt bindings for flexnoc Performance Monitor.
+> The flexnoc counters for read and write response and requests are
+> supported.
 > 
-> Looking at history, it seems that even Sean's first patch [1] had this
-> funny clock rate.  I'm not sure where it came from since the commit
-> message specifically mentioned 26666 kHz and the Chrome OS tree [2]
-> can be seen to request 266667 kHz.
-> 
-> In any case, let's fix it up.  This together with my patch [3] to do
-> the proper rounding when setting the clock rate makes the VOP clock
-> more proper as seen in /sys/kernel/debug/clk/clk_summary.
-> 
-> [1] https://lore.kernel.org/r/20180206165626.37692-4-seanpaul@chromium.org
-> [2] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.4/drivers/gpu/drm/panel/panel-simple.c#1172
-> [3] https://lkml.kernel.org/r/20191003114726.v2.1.Ib233b3e706cf6317858384264d5b0ed35657456e@changeid
-> 
-> Fixes: 84ebd2da6d04 ("arm64: dts: rockchip: Specify override mode for kevin panel")
-> Cc: Sean Paul <seanpaul@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+>  .../devicetree/bindings/misc/xlnx,flexnoc.txt      | 24 ++++++++++++++++++++++
 
-applied as fix for 5.4
+bindings/perf/
 
-Thanks
-Heiko
+Please convert this to a schema. See 
+Documentation/devicetree/writing-schema.rst.
+
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt b/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> new file mode 100644
+> index 0000000..6b533bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> @@ -0,0 +1,24 @@
+> +* Xilinx Flexnoc Performance Monitor driver
+
+Bindings are for h/w blocks, not drivers.
+
+> +
+> +The FlexNoc Performance Monitor has counters for monitoring
+> +the read and the write transaction counter.
+> +
+> +Required properties:
+> +- compatible: "xlnx,flexnoc-pm-2.7"
+> +- reg : Address and length of register sets for each device in
+> +       "reg-names"
+> +- reg-names : The names of the register addresses corresponding to the
+> +               registers filled in "reg"
+> +               - funnel: base address of the funnel registers
+> +               - baselpd: base address of the LPD PM registers
+> +               - basefpd: base address FPD PM registers
+
+Is this really all one h/w block.
+
+FlexNoC is an interconnect, right? Is there more to it than just 
+perfmon?
+
+> +
+> +Example:
+> +++++++++
+> +performance-monitor@f0920000 {
+> +               compatible = "xlnx,flexnoc-pm-2.7";
+> +               reg-names = "funnel", "baselpd", "basefpd";
+> +               reg = <0x0 0xf0920000 0x0 0x1000>,
+> +                       <0x0 0xf0980000 0x0 0x9000>,
+> +                       <0x0 0xf0b80000 0x0 0x9000>;
+> +};
+> --
+> 2.1.1
+> 
+> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+
+We can't accept confidential emails.
+
+Rob
