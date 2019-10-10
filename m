@@ -1,43 +1,103 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v2 2/3] dt-bindings: net: ftgmac100: Describe clock properties
-Date: Thu, 10 Oct 2019 12:37:55 +1030
-Message-ID: <20191010020756.4198-3-andrew@aj.id.au>
-References: <20191010020756.4198-1-andrew@aj.id.au>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20191010020756.4198-1-andrew@aj.id.au>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, linux-aspeed@lists.ozlabs.org
+From: Hui Song <hui.song_1@nxp.com>
+Subject: [PATCH v7] gpio/mpc8xxx: change irq handler from chained to normal
+Date: Thu, 10 Oct 2019 10:32:05 +0800
+Message-ID: <20191010023205.8071-1-hui.song_1@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Critically, the AST2600 requires ungating the RMII RCLK if e.g. NCSI is
-in use.
+From: Song Hui <hui.song_1@nxp.com>
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Acked-by: Joel Stanley <joel@jms.id.au>
+More than one gpio controllers can share one interrupt, change the
+driver to request shared irq.
+
+While this will work, it will mess up userspace accounting of the number
+of interrupts per second in tools such as vmstat.  The reason is that
+for every GPIO interrupt, /proc/interrupts records the count against GIC
+interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
+interrupt, the total number of interrupts that the system has seen
+increments by two.
+
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- Documentation/devicetree/bindings/net/ftgmac100.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+Changes in v7:
+	- make unsigned int convert to unsigned long.
+Changes in v6:
+	- change request_irq to devm_request_irq and add commit message.
+Changes in v5:
+	- add traverse every bit function.
+Changes in v4:
+	- convert 'pr_err' to 'dev_err'.
+Changes in v3:
+	- update the patch description.
+Changes in v2:
+	- delete the compatible of ls1088a.
+ drivers/gpio/gpio-mpc8xxx.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/ftgmac100.txt b/Documentation/devicetree/bindings/net/ftgmac100.txt
-index 04cc0191b7dd..f878c1103463 100644
---- a/Documentation/devicetree/bindings/net/ftgmac100.txt
-+++ b/Documentation/devicetree/bindings/net/ftgmac100.txt
-@@ -24,6 +24,13 @@ Optional properties:
- - no-hw-checksum: Used to disable HW checksum support. Here for backward
-   compatibility as the driver now should have correct defaults based on
-   the SoC.
-+- clocks: In accordance with the generic clock bindings. Must describe the MAC
-+  IP clock, and optionally an RMII RCLK gate for the AST2500/AST2600. The
-+  required MAC clock must be the first cell.
-+- clock-names:
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de..5a0f030 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -22,6 +22,7 @@
+ #include <linux/irq.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
++#include <linux/interrupt.h>
+ 
+ #define MPC8XXX_GPIO_PINS	32
+ 
+@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 		return -ENXIO;
+ }
+ 
+-static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
++static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
+ 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
+-	unsigned int mask;
++	unsigned long mask;
++	int i;
+ 
+ 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
+ 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
+-	if (mask)
++	for_each_set_bit(i, &mask, 32)
+ 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+-						     32 - ffs(mask)));
+-	if (chip->irq_eoi)
+-		chip->irq_eoi(&desc->irq_data);
++						     31 - i));
 +
-+      - "MACCLK": The MAC IP clock
-+      - "RCLK": Clock gate for the RMII RCLK
++	return IRQ_HANDLED;
+ }
  
- Example:
+ static void mpc8xxx_irq_unmask(struct irq_data *d)
+@@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (devtype->gpio_dir_in_init)
+ 		devtype->gpio_dir_in_init(gc);
  
+-	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+-					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
++	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
++			       mpc8xxx_gpio_irq_cascade,
++			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			       mpc8xxx_gc);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
++			np->full_name, mpc8xxx_gc->irqn, ret);
++		goto err;
++	}
++
+ 	return 0;
+ err:
+ 	iounmap(mpc8xxx_gc->regs);
 -- 
-2.20.1
+2.9.5
