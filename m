@@ -1,63 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
-Date: Thu, 10 Oct 2019 07:44:43 -0500
-Message-ID: <CAL_JsqK==+6QPrx3NDobYfWQwRg9m-t0LZgL=KzqfhAfbu+xTg@mail.gmail.com>
-References: <20191009234648.2271-1-robh@kernel.org>
- <alpine.DEB.2.21.9999.1910091657240.11044@viisi.sifive.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH net-next 2/3] dt-bindings: can: rcar_canfd: document
+ r8a774b1 support
+Date: Thu, 10 Oct 2019 14:46:32 +0200
+Message-ID: <CAMuHMdV5XUPSrgoDm62p0f_B1TtvhMyOX3NVho=QVqdesq31jg@mail.gmail.com>
+References: <1570711049-5691-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570711049-5691-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1910091657240.11044@viisi.sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1570711049-5691-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 7:08 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> On Wed, 9 Oct 2019, Rob Herring wrote:
->
-> > Fix the errors in the RiscV CPU DT schema:
-> >
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-> >
-> > The DT spec allows for 'timebase-frequency' to be in 'cpu' or 'cpus' node
-> > and RiscV is doing nothing special with it, so just drop the definition
-> > here and don't make it required.
->
-> The RISC-V kernel code does in fact parse it and use it, and we currently
-> rely on it being under /cpus:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/time.c#n19
->
-> The RISC-V user ISA specification also constrains the timebase-frequency
-> to be the same across all CPUs, in section 10.1:
->
->   https://github.com/riscv/riscv-isa-manual/releases/download/draft-20190608-f467e5d/riscv-spec.pdf
->
-> So the right thing is to require 'timebase-frequency' at /cpus, and forbid
-> it in the individual CPU nodes.
+Hi Fabrizio,
 
-Yes, but this schema only deals with 'cpu' nodes and we can't check
-/cpus here. We'd need to write another schema matching on a child cpu
-node having a RiscV compatible.
+On Thu, Oct 10, 2019 at 2:37 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Document the support for rcar_canfd on R8A774B1 SoC devices.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-I can change this to 'timebase-frequency: false' to ban it here. That
-doesn't add too much as any undefined name is still allowed such as
-'timbase-frequency'. There's a way to address this in json-schema
-draft8 with 'unevaluatedProperties', but that's not ready yet.
+Thanks for your patch!
 
-Rob
+> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>  - compatible: Must contain one or more of the following:
+>    - "renesas,rcar-gen3-canfd" for R-Car Gen3 and RZ/G2 compatible controllers.
+>    - "renesas,r8a774a1-canfd" for R8A774A1 (RZ/G2M) compatible controller.
+> +  - "renesas,r8a774b1-canfd" for R8A774B1 (RZ/G2N) compatible controller.
+>    - "renesas,r8a774c0-canfd" for R8A774C0 (RZ/G2E) compatible controller.
+>    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+>    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
+
+The above looks good, but I think you forgot to add R8A774B1 to the
+paragraph talking about the CAN FD clock below.
+With that fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+While at it, the example in the bindings says the CANFD clock should be
+configured to 40 MHz, which matches what is used in the various DTS files.
+However, the Hardware User's Manual states it should be 80 MHz, except
+for R-Car D3.
+Is that correct?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
