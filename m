@@ -1,55 +1,68 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-Date: Thu, 10 Oct 2019 08:54:09 +0200
-Message-ID: <20191010065408.y7i7aywdztgixv47@M43218.corp.atmel.com>
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
- <20191002144658.7718-3-kamel.bouhara@bootlin.com>
- <20191009135500.ufkxcemccwfcfys7@M43218.corp.atmel.com>
- <20191009140145.GE4254@piout.net>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv8 1/9] dt-bindings: omap: add new binding for PRM instances
+Date: Thu, 10 Oct 2019 10:13:47 +0300
+Message-ID: <95642d2d-af8e-061c-ef6a-7b615222f360@ti.com>
+References: <20191008125544.20679-1-t-kristo@ti.com>
+ <20191008125544.20679-2-t-kristo@ti.com>
+ <20191008154655.u34wkbqgmelv3aea@earth.universe>
+ <115ab938-e025-98fa-3b9e-0b3ced39307d@ti.com>
+ <dc2a9659-8593-e5d0-54b2-44d827e76759@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191009140145.GE4254@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Kamel Bouhara <kamel.bouhara@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dc2a9659-8593-e5d0-54b2-44d827e76759@oracle.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>, Sebastian Reichel <sre@kernel.org>
+Cc: devicetree@vger.kernel.org, tony@atomide.com, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 04:01:47PM +0200, Alexandre Belloni wrote:
-> 
-> On 09/10/2019 15:55:00+0200, Ludovic Desroches wrote:
-> > On Wed, Oct 02, 2019 at 04:46:56PM +0200, Kamel Bouhara wrote:
-> > > External E-Mail
-> > > 
-> > > 
-> > > Implement i2c bus recovery when slaves devices might hold SDA low.
-> > > In this case re-assign SCL/SDA to gpios and issue 9 dummy clock pulses
-> > > until the slave release SDA.
-> > > 
-> > 
-> > Hi Kamel,
-> > 
-> > Thanks for adding this new feature. As I see patches only for sama5d3 and
-> > sama5d4, I assume it has not been tested with a sama5d2, isn't it?
-> > 
-> 
-> I there a point having it on sama5d2 as the controller already supports
-> this feature?
-> 
+On 09/10/2019 18:59, santosh.shilimkar@oracle.com wrote:
+> =
 
-Right, I was focused on pinctrl and forget we have this feature
-supported by the IP.
+> =
 
-> > I doubt it works with a sama5d2 because of the pinctrl. I also wonder if it can
-> > work if we add .strict = true to pinmux_ops which is something plan for the
-> > future...
-> > 
-> 
-> I don't see why it wouldn't work with strict as this is switching muxing
-> properly instead of using the pins for two functions at the same time.
-> 
+> On 10/8/19 11:52 PM, Tero Kristo wrote:
+>> On 08/10/2019 18:46, Sebastian Reichel wrote:
+>>> Hi,
+>>>
+>>> On Tue, Oct 08, 2019 at 03:55:36PM +0300, Tero Kristo wrote:
+>>>> +Example:
+>>>> +
+>>>> +prm_dsp2: prm@1b00 {
+>>>> +=A0=A0=A0 compatible =3D "ti,omap-prm-inst", "ti,dra7-prm-inst";
+>>>
+>>> Nit: compatible values are sorted the other way around (most
+>>> specific first).
+>>
+>> Hmm right, I would not like to re-post the whole series just for this =
 
-Not sure devm_gpiod_get won't fail with strict.
+>> seeing all the acks are in place already.
+>>
+>> Santosh, do you want to fix this locally or shall we post a separate =
 
-Ludovic
+>> patch later on to fix this?
+>>
+> No need. I fixed it up. Pls check.
+> =
+
+> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git=
+ for_5.5/driver-soc =
+
+
+Yeah, looks fine to me.
+
+Thanks,
+Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Bu=
+siness ID: 0615521-4. Kotipaikka/Domicile: Helsinki
