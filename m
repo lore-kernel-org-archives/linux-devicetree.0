@@ -1,214 +1,83 @@
-From: qwang2 <quanyang.wang@windriver.com>
-Subject: Re: [PATCH] ARM: dts: zynq: enablement of coresight topology
-Date: Thu, 10 Oct 2019 15:35:48 +0800
-Message-ID: <eb198b89-3b4a-4090-acc5-db036dd0be69@windriver.com>
-References: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
+From: =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
+Subject: [PATCH v3 2/2] dt-bindings: asoc: Add ADAU7118
+	documentation
+Date: Thu, 10 Oct 2019 09:42:34 +0200
+Message-ID: <20191010074234.7344-2-nuno.sa@analog.com>
+References: <20191010074234.7344-1-nuno.sa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com
-Cc: Zumeng Chen <zumeng.chen@windriver.com>, Mark Rutland <mark.rutland@arm.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Rob Herring <robherring2@gmail.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, u-boot@lists.denx.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20191010074234.7344-1-nuno.sa@analog.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 10/9/19 10:07 PM, Michal Simek wrote:
-> From: Zumeng Chen <zumeng.chen@windriver.com>
->
-> This patch is to build the coresight topology structure of zynq-7000
-> series according to the docs of coresight and userguide of zynq-7000.
->
-> Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
-> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->
->   arch/arm/boot/dts/zynq-7000.dtsi | 158 +++++++++++++++++++++++++++++++
->   1 file changed, 158 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-> index ca6425ad794c..86430ad76fee 100644
-> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> @@ -59,6 +59,40 @@
->   		regulator-always-on;
->   	};
->   
-> +	replicator {
-> +		compatible = "arm,coresight-static-replicator";
-> +		clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +		clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +
-> +		out-ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			/* replicator output ports */
-> +			port@0 {
-> +				reg = <0>;
-> +				replicator_out_port0: endpoint {
-> +					remote-endpoint = <&tpiu_in_port>;
-> +				};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				replicator_out_port1: endpoint {
-> +					remote-endpoint = <&etb_in_port>;
-> +				};
-> +			};
-> +		};
-> +		in-ports {
-> +			/* replicator input port */
-> +			port {
-> +				replicator_in_port0: endpoint {
-> +					slave-mode;
-> +					remote-endpoint = <&funnel_out_port>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->   	amba: amba {
->   		compatible = "simple-bus";
->   		#address-cells = <1>;
-> @@ -365,5 +399,129 @@
->   			reg = <0xf8005000 0x1000>;
->   			timeout-sec = <10>;
->   		};
-> +
-> +		etb@f8801000 {
-> +			compatible = "arm,coresight-etb10", "arm,primecell";
-> +			reg = <0xf8801000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			in-ports {
-> +				port {
-> +					etb_in_port: endpoint {
-> +						remote-endpoint = <&replicator_out_port1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		tpiu@f8803000 {
-> +			compatible = "arm,coresight-tpiu", "arm,primecell";
-> +			reg = <0xf8803000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			in-ports {
-> +				port {
-> +					tpiu_in_port: endpoint {
-> +						remote-endpoint = <&replicator_out_port0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@f8804000 {
-> +			compatible = "arm,coresight-static-funnel", "arm,primecell";
-> +			reg = <0xf8804000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +
-> +			/* funnel output ports */
-> +			out-ports {
-> +				port {
-> +					funnel_out_port: endpoint {
-> +						remote-endpoint =
-> +							<&replicator_in_port0>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				/* funnel input ports */
-> +				port@0 {
-> +					reg = <0>;
-> +					funnel0_in_port0: endpoint {
-> +						remote-endpoint = <&ptm0_out_port>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					funnel0_in_port1: endpoint {
-> +						remote-endpoint = <&ptm1_out_port>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					funnel0_in_port2: endpoint {
-> +					};
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					funnel0_in_port3: endpoint {
-> +						remote-endpoint = <&itm_out_port>;
-> +					};
-> +				};
-> +				/* The other input ports are not connect to anything */
-> +			};
-> +		};
-> +
-> +		/* ITM is not supported by kernel, only leave device node here */
-> +		itm@f8805000 {
-> +			compatible = "arm,coresight-etm3x", "arm,primecell";
-
-The "arm,coresight-etm3x" shouldn't be the compatible property for ITM. 
-Had better remove it.
-
-Thanks,
-
-Quanyang
-
-> +			reg = <0xf8805000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			out-ports {
-> +				port {
-> +					itm_out_port: endpoint {
-> +						remote-endpoint = <&funnel0_in_port3>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		ptm@f889c000 {
-> +			compatible = "arm,coresight-etm3x", "arm,primecell";
-> +			reg = <0xf889c000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			cpu = <&cpu0>;
-> +			out-ports {
-> +				port {
-> +					ptm0_out_port: endpoint {
-> +						remote-endpoint = <&funnel0_in_port0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		ptm@f889d000 {
-> +			compatible = "arm,coresight-etm3x", "arm,primecell";
-> +			reg = <0xf889d000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			cpu = <&cpu1>;
-> +			out-ports {
-> +				port {
-> +					ptm1_out_port: endpoint {
-> +						remote-endpoint = <&funnel0_in_port1>;
-> +					};
-> +				};
-> +			};
-> +		};
->   	};
->   };
+RG9jdW1lbnQgdGhlIEFEQVU3MTE4IDggY2hhbm5lbCBQRE0gdG8gSTJTL1RETSBjb252ZXJ0ZXIg
+ZGV2aWNldHJlZQpiaW5kaW5ncy4KClNpZ25lZC1vZmYtYnk6IE51bm8gU8OhIDxudW5vLnNhQGFu
+YWxvZy5jb20+Ci0tLQpDaGFuZ2VzIGluIHYyOgogKiBMaXN0IHJlZ3VsYXRvcnMgYXMgcmVxdWly
+ZWQ7CgpDaGFuZ2VzIGluIHYzOgogKiBTZXQgdGhlIGNvcnJlY3QgbGljZW5zZSBmb3IgbmV3IGJp
+bmRpbmdzLgoKIC4uLi9iaW5kaW5ncy9zb3VuZC9hZGksYWRhdTcxMTgueWFtbCAgICAgICAgICB8
+IDkwICsrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA5MCBpbnNlcnRpb25zKCsp
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Nv
+dW5kL2FkaSxhZGF1NzExOC55YW1sCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sCm5ldyBmaWxlIG1vZGUgMTAw
+NjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uY2ZjZWY2MDJiM2Q5Ci0tLSAvZGV2L251bGwKKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1s
+CkBAIC0wLDAgKzEsOTAgQEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9u
+bHkgT1IgQlNELTItQ2xhdXNlKQorJVlBTUwgMS4yCistLS0KKyRpZDogaHR0cDovL2RldmljZXRy
+ZWUub3JnL3NjaGVtYXMvc291bmQvYWRpLGFkYXU3MTE4LnlhbWwjCiskc2NoZW1hOiBodHRwOi8v
+ZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKKworCit0aXRsZTogQW5hbG9n
+IERldmljZXMgQURBVTcxMTggOCBDaGFubmVsIFBETSB0byBJMlMvVERNIENvbnZlcnRlcgorCitt
+YWludGFpbmVyczoKKyAgLSBOdW5vIFPDoSA8bnVuby5zYUBhbmFsb2cuY29tPgorCitkZXNjcmlw
+dGlvbjogfAorICBBbmFsb2cgRGV2aWNlcyBBREFVNzExOCA4IENoYW5uZWwgUERNIHRvIEkyUy9U
+RE0gQ29udmVydGVyIG92ZXIgSTJDIG9yIEhXCisgIHN0YW5kYWxvbmUgbW9kZS4KKyAgaHR0cHM6
+Ly93d3cuYW5hbG9nLmNvbS9tZWRpYS9lbi90ZWNobmljYWwtZG9jdW1lbnRhdGlvbi9kYXRhLXNo
+ZWV0cy9BREFVNzExOC5wZGYKKworcHJvcGVydGllczoKKyAgY29tcGF0aWJsZToKKyAgICBlbnVt
+OgorICAgICAgLSBhZGksYWRhdTcxMTgKKworICByZWc6CisgICAgbWF4SXRlbXM6IDEKKworICAi
+I3NvdW5kLWRhaS1jZWxscyI6CisgICAgY29uc3Q6IDAKKworICBJT1ZERC1zdXBwbHk6CisgICAg
+ZGVzY3JpcHRpb246IERpZ2l0YWwgSW5wdXQvT3V0cHV0IFBvd2VyIFN1cHBseS4KKyAgICAkcmVm
+OiAiL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvcGhhbmRsZSIKKworICBEVkRELXN1
+cHBseToKKyAgICBkZXNjcmlwdGlvbjogSW50ZXJuYWwgQ29yZSBEaWdpdGFsIFBvd2VyIFN1cHBs
+eS4KKyAgICAkcmVmOiAiL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvcGhhbmRsZSIK
+KworICBhZGksZGVjaW1hdGlvbi1yYXRpbzoKKyAgICBkZXNjcmlwdGlvbjogfAorICAgICAgVGhp
+cyBwcm9wZXJ0eSBzZXQncyB0aGUgZGVjaW1hdGlvbiByYXRpbyBvZiBQRE0gdG8gUENNIGF1ZGlv
+IGRhdGEuCisgICAgYWxsT2Y6CisgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2Rl
+ZmluaXRpb25zL3VpbnQzMgorICAgICAgLSBlbnVtOiBbNjQsIDMyLCAxNl0KKyAgICAgICAgZGVm
+YXVsdDogNjQKKworICBhZGkscGRtLWNsay1tYXA6CisgICAgZGVzY3JpcHRpb246IHwKKyAgICAg
+IFRoZSBBREFVNzExOCBoYXMgdHdvIFBETSBjbG9ja3MgZm9yIHRoZSBmb3VyIElucHV0cy4gRWFj
+aCBpbnB1dCBtdXN0IGJlCisgICAgICBhc3NpZ25lZCB0byBvbmUgb2YgdGhlc2UgdHdvIGNsb2Nr
+cy4gVGhpcyBwcm9wZXJ0eSBzZXQncyB0aGUgbWFwcGluZworICAgICAgYmV0d2VlbiB0aGUgY2xv
+Y2tzIGFuZCB0aGUgaW5wdXRzLgorICAgIGFsbE9mOgorICAgICAgLSAkcmVmOiAvc2NoZW1hcy90
+eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzItYXJyYXkKKyAgICAgIC0gbWluSXRlbXM6IDQK
+KyAgICAgICAgbWF4SXRlbXM6IDQKKyAgICAgICAgaXRlbXM6CisgICAgICAgICAgbWF4aW11bTog
+MQorICAgICAgICBkZWZhdWx0OiBbMCwgMCwgMSwgMV0KKworcmVxdWlyZWQ6CisgIC0gIiNzb3Vu
+ZC1kYWktY2VsbHMiCisgIC0gY29tcGF0aWJsZQorICAtIElPVkRELXN1cHBseQorICAtIERWREQt
+c3VwcGx5CisKK2V4YW1wbGVzOgorICAtIHwKKyAgICBpMmMwIHsKKyAgICAgICAgLyogZXhhbXBs
+ZSB3aXRoIGkyYyBzdXBwb3J0ICovCisgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+OworICAg
+ICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKKyAgICAgICAgc3RhdHVzID0gIm9rYXkiOworICAgICAg
+ICBhZGF1NzExOF9jb2RlYzogYWRhdTcxMTgtY29kZWNAMTQgeworICAgICAgICAgICAgICAgIGNv
+bXBhdGlibGUgPSAiYWRpLGFkYXU3MTE4IjsKKyAgICAgICAgICAgICAgICByZWcgPSA8MTQ+Owor
+ICAgICAgICAgICAgICAgICNzb3VuZC1kYWktY2VsbHMgPSA8MD47CisgICAgICAgICAgICAgICAg
+c3RhdHVzID0gIm9rYXkiOworICAgICAgICAgICAgICAgIElPVkRELXN1cHBseSA9IDwmc3VwcGx5
+PjsKKyAgICAgICAgICAgICAgICBEVkRELXN1cHBseSA9IDwmc3VwcGx5PjsKKyAgICAgICAgICAg
+ICAgICBhZGkscGRtLWNsay1tYXAgPSA8MSAxIDAgMD47CisgICAgICAgICAgICAgICAgYWRpLGRl
+Y2ltYXRpb24tcmF0aW8gPSA8MTY+OworICAgICAgICB9OworICAgIH07CisKKyAgICAvKiBleGFt
+cGxlIHdpdGggaHcgc3RhbmRhbG9uZSBtb2RlICovCisgICAgYWRhdTcxMThfY29kZWNfaHc6IGFk
+YXU3MTE4LWNvZGVjLWh3IHsKKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFkYXU3MTE4
+IjsKKyAgICAgICAgICAgICNzb3VuZC1kYWktY2VsbHMgPSA8MD47CisgICAgICAgICAgICBzdGF0
+dXMgPSAib2theSI7CisgICAgICAgICAgICBJT1ZERC1zdXBwbHkgPSA8JnN1cHBseT47CisgICAg
+ICAgICAgICBEVkRELXN1cHBseSA9IDwmc3VwcGx5PjsKKyAgICB9OwotLSAKMi4yMy4wCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1h
+aWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cHM6Ly9tYWlsbWFuLmFs
+c2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
