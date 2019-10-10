@@ -1,158 +1,402 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
- snd_soc_dai_get_sdw_stream()
-Date: Thu, 10 Oct 2019 09:50:22 +0100
-Message-ID: <34e4cde8-f2e5-0943-115a-651d86f87c1a@linaro.org>
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
- <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
- <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
- <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
- <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
- <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
- <20190813191827.GI5093@sirena.co.uk>
- <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
- <20190813195804.GL5093@sirena.co.uk>
- <20190814041142.GU12733@vkoul-mobl.Dlink>
- <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
- <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
- <53bb3105-8e85-a972-fce8-a7911ae4d461@linux.intel.com>
- <95870089-25da-11ea-19fd-0504daa98994@linaro.org>
- <2326a155-332e-fda0-b7a2-b48f348e1911@linux.intel.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 15/16] phy: phy-mmp3-usb: add a new driver
+Date: Thu, 10 Oct 2019 14:28:22 +0530
+Message-ID: <cc2dba6e-17df-af14-c5b9-b5148a64dcfb@ti.com>
+References: <20190830220743.439670-1-lkundrak@v3.sk>
+ <20190830220743.439670-16-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2326a155-332e-fda0-b7a2-b48f348e1911@linux.intel.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190830220743.439670-16-lkundrak@v3.sk>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, plai@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, spapothi@codeaurora.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lubomir Rintel <lkundrak@v3.sk>, "To : Olof Johansson" <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, "Cc : Rob Herring" <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On 31/08/19 3:37 AM, Lubomir Rintel wrote:
 
-On 09/10/2019 19:53, Pierre-Louis Bossart wrote:
+Change the $subject to "phy: Add USB2 PHY driver for Marvell MMP3 SoC"
+> This is the USB2 PHY as found on the Marvell MMP3 SoC. Based on Marvell GPL
+> release.
+
+Just have "Add PHY driver for the USB2 PHY found on Marvell MMP3 SoC." here.
 > 
+> While at that, also add a MAINTAINERS entry including the other MMP PHY
+> driver.
+
+Adding MAINTAINERS could be a different patch.
 > 
-> On 10/9/19 11:01 AM, Srinivas Kandagatla wrote:
->>
->>
->> On 09/10/2019 15:29, Pierre-Louis Bossart wrote:
->>>
->>>
->>> On 10/9/19 3:32 AM, Srinivas Kandagatla wrote:
->>>> Hi Pierre,
->>>>
->>>> On 14/08/2019 15:09, Pierre-Louis Bossart wrote:
->>>>>
->>>>>
->>>>> On 8/13/19 11:11 PM, Vinod Koul wrote:
->>>>>> On 13-08-19, 20:58, Mark Brown wrote:
->>>>>>> On Tue, Aug 13, 2019 at 02:38:53PM -0500, Pierre-Louis Bossart 
->>>>>>> wrote:
->>>>>>>
->>>>>>>> Indeed. I don't have a full understanding of that part to be 
->>>>>>>> honest, nor why
->>>>>>>> we need something SoundWire-specific. We already abused the 
->>>>>>>> set_tdm_slot API
->>>>>>>> to store an HDaudio stream, now we have a rather confusing stream
->>>>>>>> information for SoundWire and I have about 3 other 'stream' 
->>>>>>>> contexts in
->>>>>>>> SOF... I am still doing basic cleanups but this has been on my 
->>>>>>>> radar for a
->>>>>>>> while.
->>>>>>>
->>>>>>> There is something to be said for not abusing the TDM slot API if 
->>>>>>> it can
->>>>>>> make things clearer by using bus-idiomatic mechanisms, but it 
->>>>>>> does mean
->>>>>>> everything needs to know about each individual bus :/ .
->>>>>>
->>>>>> Here ASoC doesn't need to know about sdw bus. As Srini explained, 
->>>>>> this
->>>>>> helps in the case for him to get the stream context and set the 
->>>>>> stream
->>>>>> context from the machine driver.
->>>>>>
->>>>>> Nothing else is expected to be done from this API. We already do a 
->>>>>> set
->>>>>> using snd_soc_dai_set_sdw_stream(). Here we add the 
->>>>>> snd_soc_dai_get_sdw_stream() to query
->>>>>
->>>>> I didn't see a call to snd_soc_dai_set_sdw_stream() in Srini's code?
->>>>
->>>>
->>>> There is a snd_soc_dai_get_sdw_stream() to get stream context and we 
->>>> add slave streams(amplifier in this case) to that context using 
->>>> sdw_stream_add_slave() in machine driver[1].
->>>>
->>>> Without this helper there is no way to link slave streams to stream 
->>>> context in non dai based setup like smart speaker amplifiers.
->>>>
->>>> Currently this driver is blocked on this patch, If you think there 
->>>> are other ways to do this, am happy to try them out.
->>>
->>> So to be clear, you are *not* using snd_soc_dai_set_sdw_stream?
->> Yes, am not using snd_soc_dai_set_sdw_stream().
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+
+Once the commit log is fixed:
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+Thanks
+Kishon
+> ---
+>  MAINTAINERS                        |   7 +
+>  drivers/phy/marvell/Kconfig        |  11 ++
+>  drivers/phy/marvell/Makefile       |   1 +
+>  drivers/phy/marvell/phy-mmp3-usb.c | 291 +++++++++++++++++++++++++++++
+>  4 files changed, 310 insertions(+)
+>  create mode 100644 drivers/phy/marvell/phy-mmp3-usb.c
 > 
-> It's been a while since this thread started, and I still don't quite get 
-> the concepts or logic.
-> 
-> First, I don't understand what the problem with "aux" devices is. All 
-> the SoundWire stuff is based on the concept of DAI, so I guess I am 
-
-That is the actual problem! Some aux devices does not have dais.
-
-> missing why introducing the "aux" device changes anything.
-> 
-
-Problem is that aux devices(amplifier) are dai less but connected via 
-SoundWire. So question is how do we attach those SoundWire streams to 
-SoundWire master stream?
-
-My Idea was to get handle to the SoundWire stream from controller dai 
-and adding these aux SoundWire slave devices as slave to them in machine 
-driver. This was much less intrusive than other solutions.
-
-Is there a better way to associate a dai-less codecs to SoundWire master 
-stream?
-
-> Next, a 'stream' connects multiple DAIs to transmit information from 
-> sources to sinks. A DAI in itself is created without having any notion 
-> of which stream it will be associated with. This can only be done with 
-> machine level information.
-> 
-> If you query a DAI to get a stream context, then how is this stream 
-> context allocated in the first place? It looks like a horse and cart 
-> problem. Or you are assuming that a specific DAI provides the context, 
-> and that all other DAIs do not expose this .get_sdw_stream()? What if 
-> more that 1 DAI provide a stream context?
-
-In this particular board setup. Soundwire master is allocating the 
-stream runtime for each of it dais, and this runtime is used in machine 
-driver to attach Auxdev Soundwire slaves.
-
-Other setups where the codec has dai should work as expected!
-
-
-> 
-> And last, I am even more lost since w/ the existing codec drivers we 
-> have, sdw_stream_add_slave() is called from the dai .hw_params callback, 
-> once you have information on formats/rates, etc. using 
-> sdw_stream_add_slave() from a machine driver looks like an even bigger 
-> stretch. I really thought the machine driver would only propagate the 
-> notion of stream to all DAIs that are part of the same dailink.
-> 
-> I am not trying to block the Qualcomm implementation, just would like to 
-> make sure the assumptions are clear and that we are not using the same 
-> API in completely different ways.
-
-Am open for any suggestions on dealing with dai less setups like what we 
-have on our board.
-
---srini
-> 
-> 
-> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 176ef19f0b9db..449349f8f20bf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10799,6 +10799,13 @@ F:	arch/arm/boot/dts/mmp*
+>  F:	arch/arm/mach-mmp/
+>  F:	linux/soc/mmp/
+>  
+> +MMP USB PHY DRIVERS
+> +R:	Lubomir Rintel <lkundrak@v3.sk>
+> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +S:	Maintained
+> +F:	drivers/phy/marvell/phy-mmp3-usb.c
+> +F:	drivers/phy/marvell/phy-pxa-usb.c
+> +
+>  MMU GATHER AND TLB INVALIDATION
+>  M:	Will Deacon <will@kernel.org>
+>  M:	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
+> index 0e1642419c0bf..d33ef35b3e51b 100644
+> --- a/drivers/phy/marvell/Kconfig
+> +++ b/drivers/phy/marvell/Kconfig
+> @@ -102,3 +102,14 @@ config PHY_PXA_USB
+>  	  The PHY driver will be used by Marvell udc/ehci/otg driver.
+>  
+>  	  To compile this driver as a module, choose M here.
+> +
+> +config PHY_MMP3_USB
+> +	tristate "Marvell MMP3 USB PHY Driver"
+> +	depends on MACH_MMP3_DT || COMPILE_TEST
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support Marvell MMP3 USB PHY driver for Marvell
+> +	  SoC. This driver will do the PHY initialization and shutdown.
+> +	  The PHY driver will be used by Marvell udc/ehci/otg driver.
+> +
+> +	  To compile this driver as a module, choose M here.
+> diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
+> index 434eb9ca6cc3f..5a106b1549f41 100644
+> --- a/drivers/phy/marvell/Makefile
+> +++ b/drivers/phy/marvell/Makefile
+> @@ -2,6 +2,7 @@
+>  obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+>  obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
+>  obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
+> +obj-$(CONFIG_PHY_MMP3_USB)		+= phy-mmp3-usb.o
+>  obj-$(CONFIG_PHY_MVEBU_A3700_COMPHY)	+= phy-mvebu-a3700-comphy.o
+>  obj-$(CONFIG_PHY_MVEBU_A3700_UTMI)	+= phy-mvebu-a3700-utmi.o
+>  obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+= phy-armada38x-comphy.o
+> diff --git a/drivers/phy/marvell/phy-mmp3-usb.c b/drivers/phy/marvell/phy-mmp3-usb.c
+> new file mode 100644
+> index 0000000000000..499869595a582
+> --- /dev/null
+> +++ b/drivers/phy/marvell/phy-mmp3-usb.c
+> @@ -0,0 +1,291 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2011 Marvell International Ltd. All rights reserved.
+> + * Copyright (C) 2018,2019 Lubomir Rintel <lkundrak@v3.sk>
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/soc/mmp/cputype.h>
+> +
+> +#define USB2_PLL_REG0		0x4
+> +#define USB2_PLL_REG1		0x8
+> +#define USB2_TX_REG0		0x10
+> +#define USB2_TX_REG1		0x14
+> +#define USB2_TX_REG2		0x18
+> +#define USB2_RX_REG0		0x20
+> +#define USB2_RX_REG1		0x24
+> +#define USB2_RX_REG2		0x28
+> +#define USB2_ANA_REG0		0x30
+> +#define USB2_ANA_REG1		0x34
+> +#define USB2_ANA_REG2		0x38
+> +#define USB2_DIG_REG0		0x3C
+> +#define USB2_DIG_REG1		0x40
+> +#define USB2_DIG_REG2		0x44
+> +#define USB2_DIG_REG3		0x48
+> +#define USB2_TEST_REG0		0x4C
+> +#define USB2_TEST_REG1		0x50
+> +#define USB2_TEST_REG2		0x54
+> +#define USB2_CHARGER_REG0	0x58
+> +#define USB2_OTG_REG0		0x5C
+> +#define USB2_PHY_MON0		0x60
+> +#define USB2_RESETVE_REG0	0x64
+> +#define USB2_ICID_REG0		0x78
+> +#define USB2_ICID_REG1		0x7C
+> +
+> +/* USB2_PLL_REG0 */
+> +
+> +/* This is for Ax stepping */
+> +#define USB2_PLL_FBDIV_SHIFT_MMP3		0
+> +#define USB2_PLL_FBDIV_MASK_MMP3		(0xFF << 0)
+> +
+> +#define USB2_PLL_REFDIV_SHIFT_MMP3		8
+> +#define USB2_PLL_REFDIV_MASK_MMP3		(0xF << 8)
+> +
+> +#define USB2_PLL_VDD12_SHIFT_MMP3		12
+> +#define USB2_PLL_VDD18_SHIFT_MMP3		14
+> +
+> +/* This is for B0 stepping */
+> +#define USB2_PLL_FBDIV_SHIFT_MMP3_B0		0
+> +#define USB2_PLL_REFDIV_SHIFT_MMP3_B0		9
+> +#define USB2_PLL_VDD18_SHIFT_MMP3_B0		14
+> +#define USB2_PLL_FBDIV_MASK_MMP3_B0		0x01FF
+> +#define USB2_PLL_REFDIV_MASK_MMP3_B0		0x3E00
+> +
+> +#define USB2_PLL_CAL12_SHIFT_MMP3		0
+> +#define USB2_PLL_CALI12_MASK_MMP3		(0x3 << 0)
+> +
+> +#define USB2_PLL_VCOCAL_START_SHIFT_MMP3	2
+> +
+> +#define USB2_PLL_KVCO_SHIFT_MMP3		4
+> +#define USB2_PLL_KVCO_MASK_MMP3			(0x7<<4)
+> +
+> +#define USB2_PLL_ICP_SHIFT_MMP3			8
+> +#define USB2_PLL_ICP_MASK_MMP3			(0x7<<8)
+> +
+> +#define USB2_PLL_LOCK_BYPASS_SHIFT_MMP3		12
+> +
+> +#define USB2_PLL_PU_PLL_SHIFT_MMP3		13
+> +#define USB2_PLL_PU_PLL_MASK			(0x1 << 13)
+> +
+> +#define USB2_PLL_READY_MASK_MMP3		(0x1 << 15)
+> +
+> +/* USB2_TX_REG0 */
+> +#define USB2_TX_IMPCAL_VTH_SHIFT_MMP3		8
+> +#define USB2_TX_IMPCAL_VTH_MASK_MMP3		(0x7 << 8)
+> +
+> +#define USB2_TX_RCAL_START_SHIFT_MMP3		13
+> +
+> +/* USB2_TX_REG1 */
+> +#define USB2_TX_CK60_PHSEL_SHIFT_MMP3		0
+> +#define USB2_TX_CK60_PHSEL_MASK_MMP3		(0xf << 0)
+> +
+> +#define USB2_TX_AMP_SHIFT_MMP3			4
+> +#define USB2_TX_AMP_MASK_MMP3			(0x7 << 4)
+> +
+> +#define USB2_TX_VDD12_SHIFT_MMP3		8
+> +#define USB2_TX_VDD12_MASK_MMP3			(0x3 << 8)
+> +
+> +/* USB2_TX_REG2 */
+> +#define USB2_TX_DRV_SLEWRATE_SHIFT		10
+> +
+> +/* USB2_RX_REG0 */
+> +#define USB2_RX_SQ_THRESH_SHIFT_MMP3		4
+> +#define USB2_RX_SQ_THRESH_MASK_MMP3		(0xf << 4)
+> +
+> +#define USB2_RX_SQ_LENGTH_SHIFT_MMP3		10
+> +#define USB2_RX_SQ_LENGTH_MASK_MMP3		(0x3 << 10)
+> +
+> +/* USB2_ANA_REG1*/
+> +#define USB2_ANA_PU_ANA_SHIFT_MMP3		14
+> +
+> +/* USB2_OTG_REG0 */
+> +#define USB2_OTG_PU_OTG_SHIFT_MMP3		3
+> +
+> +struct mmp3_usb_phy {
+> +	struct phy *phy;
+> +	void __iomem *base;
+> +};
+> +
+> +static unsigned int u2o_get(void __iomem *base, unsigned int offset)
+> +{
+> +	return readl_relaxed(base + offset);
+> +}
+> +
+> +static void u2o_set(void __iomem *base, unsigned int offset,
+> +		unsigned int value)
+> +{
+> +	u32 reg;
+> +
+> +	reg = readl_relaxed(base + offset);
+> +	reg |= value;
+> +	writel_relaxed(reg, base + offset);
+> +	readl_relaxed(base + offset);
+> +}
+> +
+> +static void u2o_clear(void __iomem *base, unsigned int offset,
+> +		unsigned int value)
+> +{
+> +	u32 reg;
+> +
+> +	reg = readl_relaxed(base + offset);
+> +	reg &= ~value;
+> +	writel_relaxed(reg, base + offset);
+> +	readl_relaxed(base + offset);
+> +}
+> +
+> +static int mmp3_usb_phy_init(struct phy *phy)
+> +{
+> +	struct mmp3_usb_phy *mmp3_usb_phy = phy_get_drvdata(phy);
+> +	void __iomem *base = mmp3_usb_phy->base;
+> +
+> +	if (cpu_is_mmp3_a0()) {
+> +		u2o_clear(base, USB2_PLL_REG0, (USB2_PLL_FBDIV_MASK_MMP3
+> +			| USB2_PLL_REFDIV_MASK_MMP3));
+> +		u2o_set(base, USB2_PLL_REG0,
+> +			0xd << USB2_PLL_REFDIV_SHIFT_MMP3
+> +			| 0xf0 << USB2_PLL_FBDIV_SHIFT_MMP3);
+> +	} else if (cpu_is_mmp3_b0()) {
+> +		u2o_clear(base, USB2_PLL_REG0, USB2_PLL_REFDIV_MASK_MMP3_B0
+> +			| USB2_PLL_FBDIV_MASK_MMP3_B0);
+> +		u2o_set(base, USB2_PLL_REG0,
+> +			0xd << USB2_PLL_REFDIV_SHIFT_MMP3_B0
+> +			| 0xf0 << USB2_PLL_FBDIV_SHIFT_MMP3_B0);
+> +	} else {
+> +		dev_err(&phy->dev, "unsupported silicon revision\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	u2o_clear(base, USB2_PLL_REG1, USB2_PLL_PU_PLL_MASK
+> +		| USB2_PLL_ICP_MASK_MMP3
+> +		| USB2_PLL_KVCO_MASK_MMP3
+> +		| USB2_PLL_CALI12_MASK_MMP3);
+> +	u2o_set(base, USB2_PLL_REG1, 1 << USB2_PLL_PU_PLL_SHIFT_MMP3
+> +		| 1 << USB2_PLL_LOCK_BYPASS_SHIFT_MMP3
+> +		| 3 << USB2_PLL_ICP_SHIFT_MMP3
+> +		| 3 << USB2_PLL_KVCO_SHIFT_MMP3
+> +		| 3 << USB2_PLL_CAL12_SHIFT_MMP3);
+> +
+> +	u2o_clear(base, USB2_TX_REG0, USB2_TX_IMPCAL_VTH_MASK_MMP3);
+> +	u2o_set(base, USB2_TX_REG0, 2 << USB2_TX_IMPCAL_VTH_SHIFT_MMP3);
+> +
+> +	u2o_clear(base, USB2_TX_REG1, USB2_TX_VDD12_MASK_MMP3
+> +		| USB2_TX_AMP_MASK_MMP3
+> +		| USB2_TX_CK60_PHSEL_MASK_MMP3);
+> +	u2o_set(base, USB2_TX_REG1, 3 << USB2_TX_VDD12_SHIFT_MMP3
+> +		| 4 << USB2_TX_AMP_SHIFT_MMP3
+> +		| 4 << USB2_TX_CK60_PHSEL_SHIFT_MMP3);
+> +
+> +	u2o_clear(base, USB2_TX_REG2, 3 << USB2_TX_DRV_SLEWRATE_SHIFT);
+> +	u2o_set(base, USB2_TX_REG2, 2 << USB2_TX_DRV_SLEWRATE_SHIFT);
+> +
+> +	u2o_clear(base, USB2_RX_REG0, USB2_RX_SQ_THRESH_MASK_MMP3);
+> +	u2o_set(base, USB2_RX_REG0, 0xa << USB2_RX_SQ_THRESH_SHIFT_MMP3);
+> +
+> +	u2o_set(base, USB2_ANA_REG1, 0x1 << USB2_ANA_PU_ANA_SHIFT_MMP3);
+> +
+> +	u2o_set(base, USB2_OTG_REG0, 0x1 << USB2_OTG_PU_OTG_SHIFT_MMP3);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mmp3_usb_phy_calibrate(struct phy *phy)
+> +{
+> +	struct mmp3_usb_phy *mmp3_usb_phy = phy_get_drvdata(phy);
+> +	void __iomem *base = mmp3_usb_phy->base;
+> +	int loops;
+> +
+> +	/*
+> +	 * PLL VCO and TX Impedance Calibration Timing:
+> +	 *
+> +	 *                _____________________________________
+> +	 * PU  __________|
+> +	 *                        _____________________________
+> +	 * VCOCAL START _________|
+> +	 *                                 ___
+> +	 * REG_RCAL_START ________________|   |________|_______
+> +	 *               | 200us | 400us  | 40| 400us  | USB PHY READY
+> +	 */
+> +
+> +	udelay(200);
+> +	u2o_set(base, USB2_PLL_REG1, 1 << USB2_PLL_VCOCAL_START_SHIFT_MMP3);
+> +	udelay(400);
+> +	u2o_set(base, USB2_TX_REG0, 1 << USB2_TX_RCAL_START_SHIFT_MMP3);
+> +	udelay(40);
+> +	u2o_clear(base, USB2_TX_REG0, 1 << USB2_TX_RCAL_START_SHIFT_MMP3);
+> +	udelay(400);
+> +
+> +	loops = 0;
+> +	while ((u2o_get(base, USB2_PLL_REG1) & USB2_PLL_READY_MASK_MMP3) == 0) {
+> +		mdelay(1);
+> +		loops++;
+> +		if (loops > 100) {
+> +			dev_err(&phy->dev, "PLL_READY not set after 100mS.\n");
+> +			return -ETIMEDOUT;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops mmp3_usb_phy_ops = {
+> +	.init		= mmp3_usb_phy_init,
+> +	.calibrate	= mmp3_usb_phy_calibrate,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct of_device_id mmp3_usb_phy_of_match[] = {
+> +	{ .compatible = "marvell,mmp3-usb-phy", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, mmp3_usb_phy_of_match);
+> +
+> +static int mmp3_usb_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *resource;
+> +	struct mmp3_usb_phy *mmp3_usb_phy;
+> +	struct phy_provider *provider;
+> +
+> +	mmp3_usb_phy = devm_kzalloc(dev, sizeof(*mmp3_usb_phy), GFP_KERNEL);
+> +	if (!mmp3_usb_phy)
+> +		return -ENOMEM;
+> +
+> +	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	mmp3_usb_phy->base = devm_ioremap_resource(dev, resource);
+> +	if (IS_ERR(mmp3_usb_phy->base)) {
+> +		dev_err(dev, "failed to remap PHY regs\n");
+> +		return PTR_ERR(mmp3_usb_phy->base);
+> +	}
+> +
+> +	mmp3_usb_phy->phy = devm_phy_create(dev, NULL, &mmp3_usb_phy_ops);
+> +	if (IS_ERR(mmp3_usb_phy->phy)) {
+> +		dev_err(dev, "failed to create PHY\n");
+> +		return PTR_ERR(mmp3_usb_phy->phy);
+> +	}
+> +
+> +	phy_set_drvdata(mmp3_usb_phy->phy, mmp3_usb_phy);
+> +	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	if (IS_ERR(provider)) {
+> +		dev_err(dev, "failed to register PHY provider\n");
+> +		return PTR_ERR(provider);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver mmp3_usb_phy_driver = {
+> +	.probe		= mmp3_usb_phy_probe,
+> +	.driver		= {
+> +		.name	= "mmp3-usb-phy",
+> +		.of_match_table = mmp3_usb_phy_of_match,
+> +	},
+> +};
+> +module_platform_driver(mmp3_usb_phy_driver);
+> +
+> +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
+> +MODULE_DESCRIPTION("Marvell MMP3 USB PHY Driver");
+> +MODULE_LICENSE("GPL v2");
 > 
