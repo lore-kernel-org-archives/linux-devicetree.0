@@ -1,26 +1,99 @@
-From: Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 1/3] docs: fix some broken references
-Date: Thu, 10 Oct 2019 11:28:30 -0600
-Message-ID: <20191010112830.11ce7007@lwn.net>
-References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+Subject: Re: [PATCH v4 2/3] drm/rockchip: Add optional support for CRTC gamma
+ LUT
+Date: Thu, 10 Oct 2019 20:36:07 +0300
+Message-ID: <20191010173607.GH1208@intel.com>
+References: <20191008230038.24037-1-ezequiel@collabora.com>
+ <20191008230038.24037-3-ezequiel@collabora.com>
+ <20191009180136.GE85762@art_vandelay>
+ <CAAEAJfDP0PsGAoRfGyDyWj7DxgP6nwwwA1_gwLQuVy-fRDa-UA@mail.gmail.com>
+ <20191010160059.GJ85762@art_vandelay>
+ <CAKb7UvhWWYcpmyMZgerdJiG=sZjQUBVkeEwev+PdYzBW6+xsbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKb7UvhWWYcpmyMZgerdJiG=sZjQUBVkeEwev+PdYzBW6+xsbQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Saeed Mahameed <saeedm@mellanox.com>, Leon Romanovsky <leon@kernel.org>, "David S. Miller" <davem@davemloft.net>, Shannon Nelson <snelson@pensando.io>, Pensando Drivers <drivers@pensando.io>, Steve
+To: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: Sean Paul <sean@poorly.run>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Douglas Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Sep 2019 10:01:28 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-
-> There are a number of documentation files that got moved or
-> renamed. update their references.
+On Thu, Oct 10, 2019 at 12:23:05PM -0400, Ilia Mirkin wrote:
+> On Thu, Oct 10, 2019 at 12:01 PM Sean Paul <sean@poorly.run> wrote:
+> > > > > +static int vop_crtc_atomic_check(struct drm_crtc *crtc,
+> > > > > +                              struct drm_crtc_state *crtc_state)
+> > > > > +{
+> > > > > +     struct vop *vop = to_vop(crtc);
+> > > > > +
+> > > > > +     if (vop->lut_regs && crtc_state->color_mgmt_changed &&
+> > > > > +         crtc_state->gamma_lut) {
+> > > > > +             unsigned int len;
+> > > > > +
+> > > > > +             len = drm_color_lut_size(crtc_state->gamma_lut);
+> > > > > +             if (len != crtc->gamma_size) {
+> > > > > +                     DRM_DEBUG_KMS("Invalid LUT size; got %d, expected %d\n",
+> > > > > +                                   len, crtc->gamma_size);
+> > > > > +                     return -EINVAL;
+> > > > > +             }
+> > > >
+> > > > Overflow is avoided in drm_mode_gamma_set_ioctl(), so I don't think you need
+> > > > this function.
+> > > >
+> > >
+> > > But that only applies to the legacy path. Isn't this needed to ensure
+> > > a gamma blob
+> > > has the right size?
+> >
+> > Yeah, good point, we check the element size in the atomic path, but not the max
+> > size. I haven't looked at enough color lut stuff to have an opinion whether this
+> > check would be useful in a helper function or not, something to consider, I
+> > suppose.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Some implementations support multiple sizes (e.g. 256 and 1024) but
+> not anything in between. It would be difficult to expose this
+> generically, I would imagine.
+> The 256 size is kind of special, since
+> basically all legacy usage assumes that 256 is the one true quantity
+> of LUT entries...
 
-I've applied this set, thanks.
+What we do currently in i915 is:
+crtc->gamma_size = 256
+GAMMA_LUT_SIZE = platform specific (256, 129, 257, 2^10, or 2^18+1 (lol))
+DEGAMMA_LUT_SIZE = platform specific (0, 33, 65, or 2^10)
 
-jon
+i915 will accept:
+- gamma lut of size 256, iff ctm==NULL and degamma==NULL (the so
+  called "legacy gamma" mode)
+- (de)gamma_lut of size (DE)GAMMA_LUT_SIZE if it passes the
+  checks done by drm_color_lut_check()
+
+Ie. just one or two gamma modes per platform is exposed. And that's
+about all we can do with the current uapi even though our hardware
+supports many more modes.
+
+The resulting precision, interpolation vs. truncation behaviour,
+and handling of out of gamut values are all totally unspecified
+and userspace just has to make a guess.
+
+We also cheat with the 2^10 sized LUTs a bit due to the hw sharing
+the same LUT for gamma and degamma, and so if you enable both at
+the same time we throw away every second entry and each stage
+only gets a 2^9 entry LUT in the end.
+
+Oh and for the 2^18+1 monstrosity we cheat even more and
+throw away ~99.8% of the entries :(
+
+
+This here was my idea for extending the uapi so that we
+could expose the full hw capabilities and let userspace
+decide which mode suits it best without having to guess
+what it'll get:
+https://github.com/vsyrjala/linux/commits/gamma_mode_prop
+
+Maybe in a few years I'll find time to get back to it...
+
+-- 
+Ville Syrjälä
+Intel
