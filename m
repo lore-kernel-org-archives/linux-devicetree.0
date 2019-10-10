@@ -1,34 +1,45 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: Use interpolated brightness tables for veyron
-Date: Thu, 10 Oct 2019 23:23:48 +0200
-Message-ID: <3947291.Wl2KGcTfji@phil>
-References: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: crypto: samsung: Convert SSS and SlimSSS
+ bindings to json-schema
+Date: Thu, 10 Oct 2019 16:25:25 -0500
+Message-ID: <20191010212525.GA10949@bogus>
+References: <20190920163635.9186-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
+Content-Disposition: inline
+In-Reply-To: <20190920163635.9186-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Vladimir Zapolskiy <vz@mleia.com>, Kamil Konieczny <k.konieczny@partner.samsung.com>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 3. Oktober 2019, 18:41:52 CEST schrieb Matthias Kaehlcke:
-> Use interpolated brightness tables (added by commit 573fe6d1c25
-> ("backlight: pwm_bl: Linear interpolation between
-> brightness-levels") for veyron, instead of specifying every single
-> step. Some devices/panels have intervals that are smaller than
-> the specified 'num-interpolated-steps', the driver interprets
-> these intervals as a single step.
+On Fri, 20 Sep 2019 18:36:35 +0200, Krzysztof Kozlowski wrote:
+> Convert Samsung Exynos Security SubSystem (SSS) and SlimSSS hardware
+> crypto accelerator bindings to DT schema format using json-schema.
 > 
-> Another option would be to switch to a perceptual brightness curve
-> (CIE 1931), with the caveat that it would change the behavior of
-> the backlight. Also the concept of a minimum brightness level is
-> currently not supported for CIE 1931 curves.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> 
+> Rebased on linux-next due to conflicting change in MAINTAINERS file
+> coming through arm-soc tree.
+> 
+> Changes since v1:
+> 1. Add additionalProperties:false
+> ---
+>  .../bindings/crypto/samsung-slimsss.txt       | 19 ------
+>  .../bindings/crypto/samsung-slimsss.yaml      | 47 +++++++++++++++
+>  .../bindings/crypto/samsung-sss.txt           | 32 ----------
+>  .../bindings/crypto/samsung-sss.yaml          | 58 +++++++++++++++++++
+>  MAINTAINERS                                   |  4 +-
+>  5 files changed, 107 insertions(+), 53 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/crypto/samsung-slimsss.txt
+>  create mode 100644 Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/crypto/samsung-sss.txt
+>  create mode 100644 Documentation/devicetree/bindings/crypto/samsung-sss.yaml
+> 
 
-applied for 5.5
+Applied, thanks.
 
-Thanks
-Heiko
+Rob
