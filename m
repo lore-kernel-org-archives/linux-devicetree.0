@@ -1,80 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] ASOC: Add ADAU7118 8 Channel
- PDM-to-I2S/TDM Converter driver
-Date: Thu, 10 Oct 2019 15:05:12 +0100
-Message-ID: <20191010140512.GT2036@sirena.org.uk>
-References: <20191010074234.7344-1-nuno.sa@analog.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: sdm845: Add interconnect properties
+ for Venus
+Date: Thu, 10 Oct 2019 17:24:26 +0300
+Message-ID: <3c222f45-2db7-42a7-c79a-492bb587c331@linaro.org>
+References: <20190912082948.22836-1-stanimir.varbanov@linaro.org>
+ <20190912082948.22836-3-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0006631323230166991=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20191010074234.7344-1-nuno.sa@analog.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190912082948.22836-3-stanimir.varbanov@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Vikash Garodia <vgarodia@codeaurora.org>, Andy Gross <agross@kernel.org>, David Dai <daidavid1@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On 9/12/19 11:29, Stanimir Varbanov wrote:
+> Populate Venus DT node with interconnect properties.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 0323e3da190a..567bfc89bd77 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -2039,6 +2039,9 @@
+>  			iommus = <&apps_smmu 0x10a0 0x8>,
+>  				 <&apps_smmu 0x10b0 0x0>;
+>  			memory-region = <&venus_mem>;
+> +			interconnects = <&rsc_hlos MASTER_VIDEO_P0 &rsc_hlos SLAVE_EBI1>,
+> +					<&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_VENUS_CFG>;
+> +			interconnect-names = "video-mem", "cpu-cfg";
+>  
+>  			video-core0 {
+>  				compatible = "venus-decoder";
+> 
 
---===============0006631323230166991==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ZYwTRRUThkGj9JQ7"
-Content-Disposition: inline
+The patch look fine to me, but David is currently working on some patches that
+split the rsc_hlos node into multiple DT nodes (for each NoC). So maybe wait
+until we conclude on that first and then add Venus as user in DT.
 
-
---ZYwTRRUThkGj9JQ7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Oct 10, 2019 at 09:42:33AM +0200, Nuno S=E1 wrote:
-
-> +			/* power on */
-> +			ret =3D regulator_enable(st->iovdd);
-> +			if (ret)
-> +				return ret;
-> +
-> +			/* there's no timing constraints before enabling dvdd */
-> +			ret =3D regulator_enable(st->dvdd);
-> +			if (ret) {
-> +				regulator_disable(st->iovdd);
-> +				return ret;
-> +			}
-
-You could use regulator_bulk_enable() here (and similarly on
-disable) but it doesn't fundamentally matter - they do guarantee
-that they'll do things in sequence, though they don't wait for
-the ramp to complete before kicking off the next enable in the
-sequence which can be an issue for some hardware.
-
---ZYwTRRUThkGj9JQ7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2fOpUACgkQJNaLcl1U
-h9BEPwf/VxMhiR0z6PYlab1hBh6JMo2K1WIXb2S3zahILtM5SXxYMmwRh16GuG0o
-pIrwnxc5hMD4+bqp6vYu9QaISbKB8UoBsAr+SU5b/eHsba3r0Jbl/wNdTdbgCVus
-ZCYLHYtnWZrx9okSggQ9viUDkqls7dLCPMfu/+qV5NiDAasZJZUIEjkaUdfAhYwS
-z0yrot94R5p3QdNEI5ds7y5ZuKWGDEcWJNU3PekJ+putlZyUF8qa9/nV+/uZigQ/
-hH+oMbQGEg9pgx/neQN2VxC4hIXtXcaDMT4WuEVt2HjWCK2xcFrauNzAg7HkdV0z
-EkVGgsiWwDQG59xutrTflWxmmQCOtw==
-=S+PA
------END PGP SIGNATURE-----
-
---ZYwTRRUThkGj9JQ7--
-
---===============0006631323230166991==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0006631323230166991==--
+Thanks,
+Georgi
