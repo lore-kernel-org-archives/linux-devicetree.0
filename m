@@ -1,68 +1,214 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv8 1/9] dt-bindings: omap: add new binding for PRM instances
-Date: Thu, 10 Oct 2019 10:13:47 +0300
-Message-ID: <95642d2d-af8e-061c-ef6a-7b615222f360@ti.com>
-References: <20191008125544.20679-1-t-kristo@ti.com>
- <20191008125544.20679-2-t-kristo@ti.com>
- <20191008154655.u34wkbqgmelv3aea@earth.universe>
- <115ab938-e025-98fa-3b9e-0b3ced39307d@ti.com>
- <dc2a9659-8593-e5d0-54b2-44d827e76759@oracle.com>
+From: qwang2 <quanyang.wang@windriver.com>
+Subject: Re: [PATCH] ARM: dts: zynq: enablement of coresight topology
+Date: Thu, 10 Oct 2019 15:35:48 +0800
+Message-ID: <eb198b89-3b4a-4090-acc5-db036dd0be69@windriver.com>
+References: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dc2a9659-8593-e5d0-54b2-44d827e76759@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>, Sebastian Reichel <sre@kernel.org>
-Cc: devicetree@vger.kernel.org, tony@atomide.com, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com
+Cc: Zumeng Chen <zumeng.chen@windriver.com>, Mark Rutland <mark.rutland@arm.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Rob Herring <robherring2@gmail.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, u-boot@lists.denx.de
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2019 18:59, santosh.shilimkar@oracle.com wrote:
-> =
 
-> =
+On 10/9/19 10:07 PM, Michal Simek wrote:
+> From: Zumeng Chen <zumeng.chen@windriver.com>
+>
+> This patch is to build the coresight topology structure of zynq-7000
+> series according to the docs of coresight and userguide of zynq-7000.
+>
+> Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
+> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>
+>   arch/arm/boot/dts/zynq-7000.dtsi | 158 +++++++++++++++++++++++++++++++
+>   1 file changed, 158 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index ca6425ad794c..86430ad76fee 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -59,6 +59,40 @@
+>   		regulator-always-on;
+>   	};
+>   
+> +	replicator {
+> +		compatible = "arm,coresight-static-replicator";
+> +		clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +		clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +
+> +		out-ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			/* replicator output ports */
+> +			port@0 {
+> +				reg = <0>;
+> +				replicator_out_port0: endpoint {
+> +					remote-endpoint = <&tpiu_in_port>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				replicator_out_port1: endpoint {
+> +					remote-endpoint = <&etb_in_port>;
+> +				};
+> +			};
+> +		};
+> +		in-ports {
+> +			/* replicator input port */
+> +			port {
+> +				replicator_in_port0: endpoint {
+> +					slave-mode;
+> +					remote-endpoint = <&funnel_out_port>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>   	amba: amba {
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+> @@ -365,5 +399,129 @@
+>   			reg = <0xf8005000 0x1000>;
+>   			timeout-sec = <10>;
+>   		};
+> +
+> +		etb@f8801000 {
+> +			compatible = "arm,coresight-etb10", "arm,primecell";
+> +			reg = <0xf8801000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +			in-ports {
+> +				port {
+> +					etb_in_port: endpoint {
+> +						remote-endpoint = <&replicator_out_port1>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		tpiu@f8803000 {
+> +			compatible = "arm,coresight-tpiu", "arm,primecell";
+> +			reg = <0xf8803000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +			in-ports {
+> +				port {
+> +					tpiu_in_port: endpoint {
+> +						remote-endpoint = <&replicator_out_port0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		funnel@f8804000 {
+> +			compatible = "arm,coresight-static-funnel", "arm,primecell";
+> +			reg = <0xf8804000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +
+> +			/* funnel output ports */
+> +			out-ports {
+> +				port {
+> +					funnel_out_port: endpoint {
+> +						remote-endpoint =
+> +							<&replicator_in_port0>;
+> +					};
+> +				};
+> +			};
+> +
+> +			in-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				/* funnel input ports */
+> +				port@0 {
+> +					reg = <0>;
+> +					funnel0_in_port0: endpoint {
+> +						remote-endpoint = <&ptm0_out_port>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					funnel0_in_port1: endpoint {
+> +						remote-endpoint = <&ptm1_out_port>;
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					funnel0_in_port2: endpoint {
+> +					};
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					funnel0_in_port3: endpoint {
+> +						remote-endpoint = <&itm_out_port>;
+> +					};
+> +				};
+> +				/* The other input ports are not connect to anything */
+> +			};
+> +		};
+> +
+> +		/* ITM is not supported by kernel, only leave device node here */
+> +		itm@f8805000 {
+> +			compatible = "arm,coresight-etm3x", "arm,primecell";
 
-> On 10/8/19 11:52 PM, Tero Kristo wrote:
->> On 08/10/2019 18:46, Sebastian Reichel wrote:
->>> Hi,
->>>
->>> On Tue, Oct 08, 2019 at 03:55:36PM +0300, Tero Kristo wrote:
->>>> +Example:
->>>> +
->>>> +prm_dsp2: prm@1b00 {
->>>> +=A0=A0=A0 compatible =3D "ti,omap-prm-inst", "ti,dra7-prm-inst";
->>>
->>> Nit: compatible values are sorted the other way around (most
->>> specific first).
->>
->> Hmm right, I would not like to re-post the whole series just for this =
-
->> seeing all the acks are in place already.
->>
->> Santosh, do you want to fix this locally or shall we post a separate =
-
->> patch later on to fix this?
->>
-> No need. I fixed it up. Pls check.
-> =
-
-> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git=
- for_5.5/driver-soc =
-
-
-Yeah, looks fine to me.
+The "arm,coresight-etm3x" shouldn't be the compatible property for ITM. 
+Had better remove it.
 
 Thanks,
-Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Bu=
-siness ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+Quanyang
+
+> +			reg = <0xf8805000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +			out-ports {
+> +				port {
+> +					itm_out_port: endpoint {
+> +						remote-endpoint = <&funnel0_in_port3>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		ptm@f889c000 {
+> +			compatible = "arm,coresight-etm3x", "arm,primecell";
+> +			reg = <0xf889c000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +			cpu = <&cpu0>;
+> +			out-ports {
+> +				port {
+> +					ptm0_out_port: endpoint {
+> +						remote-endpoint = <&funnel0_in_port0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		ptm@f889d000 {
+> +			compatible = "arm,coresight-etm3x", "arm,primecell";
+> +			reg = <0xf889d000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +			cpu = <&cpu1>;
+> +			out-ports {
+> +				port {
+> +					ptm1_out_port: endpoint {
+> +						remote-endpoint = <&funnel0_in_port1>;
+> +					};
+> +				};
+> +			};
+> +		};
+>   	};
+>   };
