@@ -1,41 +1,28 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH RESEND v2 4/4] arm64: dts: meson: a1: add secure power domain controller
-Date: Thu, 10 Oct 2019 04:21:18 -0400
-Message-ID: <1570695678-42623-5-git-send-email-jianxin.pan@amlogic.com>
-References: <1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 0/8] clocksource/drivers/timer-atmel-tcb: add sama5d2
+ support
+Date: Thu, 10 Oct 2019 10:26:21 +0200
+Message-ID: <20191010082602.ytfc2tilizruwrts@linutronix.de>
+References: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com>
+Content-Disposition: inline
+In-Reply-To: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable power domain controller for Meson A1 SoC.
+On 2019-10-10 00:39:58 [+0200], Alexandre Belloni wrote:
+> This series mainly adds sama5d2 support where we need to avoid using
+> clock index 0 because that clock is never enabled by the driver.
+> 
+> There is also a rework of the 32khz clock handling so it is not used for
+> clockevents on 32 bit counter because the increased rate improves the
+> resolution and doesn't have any drawback with that counter width. This
+> replaces a patch that has been carried in the linux-rt tree for a while.
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thank you for doing this!
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 7210ad0..5547913 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -93,6 +93,13 @@
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
-+
-+			pwrc: power-controller {
-+				compatible = "amlogic,meson-a1-pwrc";
-+				#power-domain-cells = <1>;
-+				secure-monitor = <&sm>;
-+				status = "okay";
-+			};
- 		};
- 
- 		gic: interrupt-controller@ff901000 {
--- 
-2.7.4
+Sebastian
