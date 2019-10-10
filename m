@@ -1,182 +1,59 @@
-From: Sean Paul <sean@poorly.run>
+From: Ilia Mirkin <imirkin@alum.mit.edu>
 Subject: Re: [PATCH v4 2/3] drm/rockchip: Add optional support for CRTC gamma
  LUT
-Date: Thu, 10 Oct 2019 12:00:59 -0400
-Message-ID: <20191010160059.GJ85762@art_vandelay>
+Date: Thu, 10 Oct 2019 12:23:05 -0400
+Message-ID: <CAKb7UvhWWYcpmyMZgerdJiG=sZjQUBVkeEwev+PdYzBW6+xsbQ@mail.gmail.com>
 References: <20191008230038.24037-1-ezequiel@collabora.com>
  <20191008230038.24037-3-ezequiel@collabora.com>
  <20191009180136.GE85762@art_vandelay>
  <CAAEAJfDP0PsGAoRfGyDyWj7DxgP6nwwwA1_gwLQuVy-fRDa-UA@mail.gmail.com>
+ <20191010160059.GJ85762@art_vandelay>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAEAJfDP0PsGAoRfGyDyWj7DxgP6nwwwA1_gwLQuVy-fRDa-UA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: Sean Paul <sean@poorly.run>, Ezequiel Garcia <ezequiel@collabora.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Douglas Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20191010160059.GJ85762@art_vandelay>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <sean@poorly.run>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Douglas Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-
-/snip
-
-> > > +static void vop_crtc_write_gamma_lut(struct vop *vop, struct drm_crtc *crtc)
-> > > +{
-> > > +     struct drm_color_lut *lut = crtc->state->gamma_lut->data;
-> > > +     unsigned int i;
-> > > +
-> > > +     for (i = 0; i < crtc->gamma_size; i++) {
-> > > +             u32 word;
-> > > +
-> > > +             word = (drm_color_lut_extract(lut[i].red, 10) << 20) |
-> > > +                    (drm_color_lut_extract(lut[i].green, 10) << 10) |
-> > > +                     drm_color_lut_extract(lut[i].blue, 10);
-> > > +             writel(word, vop->lut_regs + i * 4);
-> > > +     }
-> > > +}
-> > > +
-> > > +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
-> > > +                            struct drm_crtc_state *old_crtc_state)
-> > > +{
-> > > +     unsigned int idle;
-> > > +     int ret;
-> > > +
-> >
-> > How about:
-> >
-> >         if (!vop->lut_regs)
-> >                 return;
-> >
-> > here and then you can remove that condition above the 2 callsites
-> >
-> 
-> Yes, sounds good.
-> 
-> > > +     /*
-> > > +      * In order to write the LUT to the internal memory,
-> > > +      * we need to first make sure the dsp_lut_en bit is cleared.
-> > > +      */
-> > > +     spin_lock(&vop->reg_lock);
-> > > +     VOP_REG_SET(vop, common, dsp_lut_en, 0);
-> > > +     vop_cfg_done(vop);
-> > > +     spin_unlock(&vop->reg_lock);
-> > > +
-> > > +     /*
-> > > +      * If the CRTC is not active, dsp_lut_en will not get cleared.
-> > > +      * Apparently we still need to do the above step to for
-> > > +      * gamma correction to be disabled.
-> > > +      */
-> > > +     if (!crtc->state->active)
-> > > +             return;
-> > > +
-> 
-> I have realized that the above might no longer be needed,
-> given we are now using atomic_enable and atomic_begin.
-> 
-> Not sure if the CRTC is supposed to clear its GAMMA
-> when disabled.
-> 
-
-Yep, good catch. Since we use commit_tail_rpm, atomic_begin won't be called in
-the disable path.
-
-> > > +     ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
-> > > +                              idle, !idle, 5, 30 * 1000);
-> > > +     if (ret) {
-> > > +             DRM_DEV_ERROR(vop->dev, "display LUT RAM enable timeout!\n");
-> > > +             return;
-> > > +     }
-> > > +
-> > > +     if (crtc->state->gamma_lut &&
-> > > +        (!old_crtc_state->gamma_lut || (crtc->state->gamma_lut->base.id !=
-> > > +                                     old_crtc_state->gamma_lut->base.id))) {
-> >
-> > Silly question, but isn't the second part of this check redundant since you need
-> > color_mgmt_changed || active_changed to get into this function?
-> >
-> > So maybe invert the conditional here and exit early (to save a level of
-> > indentation in the block below):
-> >
-> 
-> I took this from malidp_atomic_commit_update_gamma. I _believe_
-> the rational for this is that color_mgmt_changed can be set by re-setting
-> the gamma property, to the same property. But I admit I haven't
-> tested it's the case.
-> 
-> OTOH, it won't really affect much to re-write the table, if the user
-> requested a change.
-> 
-
-color_mgmt_changed is based on the output of drm_property_replace_blob() which
-should return false if the blob is unchanged. So I don't think that case is
-possible. 
-
-Taking this a step further, this check could even be damaging since something
-in the atomic check path could set color_mgmt_changed in order to explicitly
-trigger a lut write and we'd be skipping it with the id check.
-
-
-> >         if (!crtc->state->gamma_lut)
-> >                 return;
-> >
-> 
-> In any case, inverting the condition makes sense.
-> 
-> >         spin_lock(&vop->reg_lock);
-> >
-> >         vop_crtc_write_gamma_lut(vop, crtc);
-> >         VOP_REG_SET(vop, common, dsp_lut_en, 1);
-> >         vop_cfg_done(vop);
-> >
-> >         spin_unlock(&vop->reg_lock);
-> >
-> > > +
-> > > +             spin_lock(&vop->reg_lock);
-> > > +
-> > > +             vop_crtc_write_gamma_lut(vop, crtc);
-> > > +             VOP_REG_SET(vop, common, dsp_lut_en, 1);
-> > > +             vop_cfg_done(vop);
-> > > +
-> > > +             spin_unlock(&vop->reg_lock);
-> > > +     }
-> > > +}
-
-/snip
-
-> > > +static int vop_crtc_atomic_check(struct drm_crtc *crtc,
-> > > +                              struct drm_crtc_state *crtc_state)
-> > > +{
-> > > +     struct vop *vop = to_vop(crtc);
-> > > +
-> > > +     if (vop->lut_regs && crtc_state->color_mgmt_changed &&
-> > > +         crtc_state->gamma_lut) {
-> > > +             unsigned int len;
-> > > +
-> > > +             len = drm_color_lut_size(crtc_state->gamma_lut);
-> > > +             if (len != crtc->gamma_size) {
-> > > +                     DRM_DEBUG_KMS("Invalid LUT size; got %d, expected %d\n",
-> > > +                                   len, crtc->gamma_size);
-> > > +                     return -EINVAL;
-> > > +             }
-> >
-> > Overflow is avoided in drm_mode_gamma_set_ioctl(), so I don't think you need
-> > this function.
-> >
-> 
-> But that only applies to the legacy path. Isn't this needed to ensure
-> a gamma blob
-> has the right size?
-
-Yeah, good point, we check the element size in the atomic path, but not the max
-size. I haven't looked at enough color lut stuff to have an opinion whether this
-check would be useful in a helper function or not, something to consider, I
-suppose.
-
-Sean
-
-> 
-> Thanks,
-> Ezequiel
-
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+T24gVGh1LCBPY3QgMTAsIDIwMTkgYXQgMTI6MDEgUE0gU2VhbiBQYXVsIDxzZWFuQHBvb3JseS5y
+dW4+IHdyb3RlOgo+ID4gPiA+ICtzdGF0aWMgaW50IHZvcF9jcnRjX2F0b21pY19jaGVjayhzdHJ1
+Y3QgZHJtX2NydGMgKmNydGMsCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqY3J0Y19zdGF0ZSkKPiA+ID4gPiArewo+ID4gPiA+ICsg
+ICAgIHN0cnVjdCB2b3AgKnZvcCA9IHRvX3ZvcChjcnRjKTsKPiA+ID4gPiArCj4gPiA+ID4gKyAg
+ICAgaWYgKHZvcC0+bHV0X3JlZ3MgJiYgY3J0Y19zdGF0ZS0+Y29sb3JfbWdtdF9jaGFuZ2VkICYm
+Cj4gPiA+ID4gKyAgICAgICAgIGNydGNfc3RhdGUtPmdhbW1hX2x1dCkgewo+ID4gPiA+ICsgICAg
+ICAgICAgICAgdW5zaWduZWQgaW50IGxlbjsKPiA+ID4gPiArCj4gPiA+ID4gKyAgICAgICAgICAg
+ICBsZW4gPSBkcm1fY29sb3JfbHV0X3NpemUoY3J0Y19zdGF0ZS0+Z2FtbWFfbHV0KTsKPiA+ID4g
+PiArICAgICAgICAgICAgIGlmIChsZW4gIT0gY3J0Yy0+Z2FtbWFfc2l6ZSkgewo+ID4gPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICBEUk1fREVCVUdfS01TKCJJbnZhbGlkIExVVCBzaXplOyBnb3Qg
+JWQsIGV4cGVjdGVkICVkXG4iLAo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGxlbiwgY3J0Yy0+Z2FtbWFfc2l6ZSk7Cj4gPiA+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgIHJldHVybiAtRUlOVkFMOwo+ID4gPiA+ICsgICAgICAgICAgICAgfQo+ID4gPgo+ID4gPiBP
+dmVyZmxvdyBpcyBhdm9pZGVkIGluIGRybV9tb2RlX2dhbW1hX3NldF9pb2N0bCgpLCBzbyBJIGRv
+bid0IHRoaW5rIHlvdSBuZWVkCj4gPiA+IHRoaXMgZnVuY3Rpb24uCj4gPiA+Cj4gPgo+ID4gQnV0
+IHRoYXQgb25seSBhcHBsaWVzIHRvIHRoZSBsZWdhY3kgcGF0aC4gSXNuJ3QgdGhpcyBuZWVkZWQg
+dG8gZW5zdXJlCj4gPiBhIGdhbW1hIGJsb2IKPiA+IGhhcyB0aGUgcmlnaHQgc2l6ZT8KPgo+IFll
+YWgsIGdvb2QgcG9pbnQsIHdlIGNoZWNrIHRoZSBlbGVtZW50IHNpemUgaW4gdGhlIGF0b21pYyBw
+YXRoLCBidXQgbm90IHRoZSBtYXgKPiBzaXplLiBJIGhhdmVuJ3QgbG9va2VkIGF0IGVub3VnaCBj
+b2xvciBsdXQgc3R1ZmYgdG8gaGF2ZSBhbiBvcGluaW9uIHdoZXRoZXIgdGhpcwo+IGNoZWNrIHdv
+dWxkIGJlIHVzZWZ1bCBpbiBhIGhlbHBlciBmdW5jdGlvbiBvciBub3QsIHNvbWV0aGluZyB0byBj
+b25zaWRlciwgSQo+IHN1cHBvc2UuCgpTb21lIGltcGxlbWVudGF0aW9ucyBzdXBwb3J0IG11bHRp
+cGxlIHNpemVzIChlLmcuIDI1NiBhbmQgMTAyNCkgYnV0Cm5vdCBhbnl0aGluZyBpbiBiZXR3ZWVu
+LiBJdCB3b3VsZCBiZSBkaWZmaWN1bHQgdG8gZXhwb3NlIHRoaXMKZ2VuZXJpY2FsbHksIEkgd291
+bGQgaW1hZ2luZS4gVGhlIDI1NiBzaXplIGlzIGtpbmQgb2Ygc3BlY2lhbCwgc2luY2UKYmFzaWNh
+bGx5IGFsbCBsZWdhY3kgdXNhZ2UgYXNzdW1lcyB0aGF0IDI1NiBpcyB0aGUgb25lIHRydWUgcXVh
+bnRpdHkKb2YgTFVUIGVudHJpZXMuLi4KCiAgLWlsaWEKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVs
