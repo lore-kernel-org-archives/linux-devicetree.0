@@ -1,44 +1,26 @@
-From: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Subject: [PATCH v6 2/5] arm64: Introduce config for S32
-Date: Thu, 10 Oct 2019 19:52:25 +0300
-Message-ID: <1570726348-6420-3-git-send-email-stefan-gabriel.mirea@nxp.com>
-References: <1570726348-6420-1-git-send-email-stefan-gabriel.mirea@nxp.com>
+From: Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 1/3] docs: fix some broken references
+Date: Thu, 10 Oct 2019 11:28:30 -0600
+Message-ID: <20191010112830.11ce7007@lwn.net>
+References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570726348-6420-1-git-send-email-stefan-gabriel.mirea@nxp.com>
+In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: corbet@lwn.net, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org, leoyang.li@nxp.com
-Cc: jslaby@suse.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Saeed Mahameed <saeedm@mellanox.com>, Leon Romanovsky <leon@kernel.org>, "David S. Miller" <davem@davemloft.net>, Shannon Nelson <snelson@pensando.io>, Pensando Drivers <drivers@pensando.io>, Steve
 List-Id: devicetree@vger.kernel.org
 
-From: Mihaela Martinas <Mihaela.Martinas@freescale.com>
+On Tue, 24 Sep 2019 10:01:28 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
-Add configuration option for the NXP S32 platform family in
-Kconfig.platforms. For starters, the only SoC supported will be Treerunner
-(S32V234), with a single execution target: the S32V234-EVB (rev 29288)
-board.
+> There are a number of documentation files that got moved or
+> renamed. update their references.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Signed-off-by: Mihaela Martinas <Mihaela.Martinas@freescale.com>
-Signed-off-by: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
-Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
----
- arch/arm64/Kconfig.platforms | 5 +++++
- 1 file changed, 5 insertions(+)
+I've applied this set, thanks.
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 16d761475a86..17f1c34ec750 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -212,6 +212,11 @@ config ARCH_ROCKCHIP
- 	  This enables support for the ARMv8 based Rockchip chipsets,
- 	  like the RK3368.
- 
-+config ARCH_S32
-+	bool "NXP S32 SoC Family"
-+	help
-+	  This enables support for the NXP S32 family of processors.
-+
- config ARCH_SEATTLE
- 	bool "AMD Seattle SoC Family"
- 	help
--- 
-2.22.0
+jon
