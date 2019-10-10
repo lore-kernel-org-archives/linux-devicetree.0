@@ -1,38 +1,59 @@
 From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v5 0/3] RK3288 Gamma LUT
-Date: Thu, 10 Oct 2019 16:43:48 -0300
-Message-ID: <20191010194351.17940-1-ezequiel@collabora.com>
+Subject: [PATCH v5 1/3] dt-bindings: display: rockchip: document VOP gamma LUT address
+Date: Thu, 10 Oct 2019 16:43:49 -0300
+Message-ID: <20191010194351.17940-2-ezequiel@collabora.com>
+References: <20191010194351.17940-1-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191010194351.17940-1-ezequiel@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>
+Cc: linux-rockchip@lists.infradead.org, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-TmV3IGl0ZXJhdGlvbiwgc2VlbXMgdGhhdCB3ZSBhcmUgZmluYWxseSBjb252ZXJnaW5nLgoKRm9y
-IHRoaXMgdjUsIHdlIGFyZSBvbmx5IGRvaW5nIHNvbWUgY2hhbmdlcyBvbgp0aGUgZ2FtbWFfc2V0
-IGltcGxlbWVudGF0aW9uLiBBcyBhIHJlc3VsdCwgdGhlIGNvZGUKaXMgbW9yZSByZWFkYWJsZS4g
-U2VlIHRoZSBjaGFuZ2Vsb2cgaW4gcGF0Y2ggMiBmb3IgbW9yZQppbmZvcm1hdGlvbi4KClRoYW5r
-cyEKCkV6ZXF1aWVsIEdhcmNpYSAoMyk6CiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IHJvY2tjaGlw
-OiBkb2N1bWVudCBWT1AgZ2FtbWEgTFVUIGFkZHJlc3MKICBkcm0vcm9ja2NoaXA6IEFkZCBvcHRp
-b25hbCBzdXBwb3J0IGZvciBDUlRDIGdhbW1hIExVVAogIEFSTTogZHRzOiByb2NrY2hpcDogQWRk
-IFJLMzI4OCBWT1AgZ2FtbWEgTFVUIGFkZHJlc3MKCiAuLi4vZGlzcGxheS9yb2NrY2hpcC9yb2Nr
-Y2hpcC12b3AudHh0ICAgICAgICAgfCAgIDYgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC5k
-dHNpICAgICAgICAgICAgICAgICB8ICAgNCArLQogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3Jv
-Y2tjaGlwX2RybV92b3AuYyAgIHwgMTIwICsrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUv
-ZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuaCAgIHwgICAyICsKIGRyaXZlcnMvZ3B1L2Ry
-bS9yb2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMgICB8ICAgMiArCiA1IGZpbGVzIGNoYW5nZWQs
-IDEzMSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKLS0gCjIuMjIuMAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Add the register specifier description for an
+optional gamma LUT address.
+
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes from v4:
+* None.
+Changes from v3:
+* None.
+Changes from v2:
+* None.
+Changes from v1:
+* Drop reg-names, suggested by Doug.
+---
+ .../devicetree/bindings/display/rockchip/rockchip-vop.txt   | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+index 4f58c5a2d195..8b3a5f514205 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+@@ -20,6 +20,10 @@ Required properties:
+ 		"rockchip,rk3228-vop";
+ 		"rockchip,rk3328-vop";
+ 
++- reg: Must contain one entry corresponding to the base address and length
++	of the register space. Can optionally contain a second entry
++	corresponding to the CRTC gamma LUT address.
++
+ - interrupts: should contain a list of all VOP IP block interrupts in the
+ 		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
+ 		 format depends on the interrupt controller used.
+@@ -48,7 +52,7 @@ Example:
+ SoC specific DT entry:
+ 	vopb: vopb@ff930000 {
+ 		compatible = "rockchip,rk3288-vop";
+-		reg = <0xff930000 0x19c>;
++		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
+ 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
+ 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+-- 
+2.22.0
