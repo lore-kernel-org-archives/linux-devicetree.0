@@ -1,13 +1,13 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 09/11] sunxi_defconfig: add new Allwinner
+Subject: [PATCH v3 10/11] arm64: defconfig: add new Allwinner
  crypto options
-Date: Thu, 10 Oct 2019 20:23:26 +0200
-Message-ID: <20191010182328.15826-10-clabbe.montjoie@gmail.com>
+Date: Thu, 10 Oct 2019 20:23:27 +0200
+Message-ID: <20191010182328.15826-11-clabbe.montjoie@gmail.com>
 References: <20191010182328.15826-1-clabbe.montjoie@gmail.com>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBRXO7XWAKGQE75B74FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBSXO7XWAKGQETCUXIUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20191010182328.15826-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,23 +20,25 @@ To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@p
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the new Allwinner crypto configs to sunxi_defconfig
+This patch adds the new allwinner crypto configs to ARM64 defconfig
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/configs/sunxi_defconfig | 2 ++
+ arch/arm64/configs/defconfig | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index df433abfcb02..d0ab8ba7710a 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -150,4 +150,6 @@ CONFIG_NLS_CODEPAGE_437=y
- CONFIG_NLS_ISO8859_1=y
- CONFIG_PRINTK_TIME=y
- CONFIG_DEBUG_FS=y
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index c9adae41bac0..c45fb6822e4a 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -114,6 +114,8 @@ CONFIG_CRYPTO_AES_ARM64_CE_CCM=y
+ CONFIG_CRYPTO_AES_ARM64_CE_BLK=y
+ CONFIG_CRYPTO_CHACHA20_NEON=m
+ CONFIG_CRYPTO_AES_ARM64_BS=m
 +CONFIG_CRYPTO_DEV_ALLWINNER=y
-+CONFIG_CRYPTO_DEV_SUN8I_CE=y
- CONFIG_CRYPTO_DEV_SUN4I_SS=y
++CONFIG_CRYPTO_DEV_SUN8I_CE=m
+ CONFIG_JUMP_LABEL=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
 -- 
 2.21.0
