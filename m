@@ -1,44 +1,44 @@
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: Re: [PATCH v9 0/7] nfc: pn533: add uart phy driver
-Date: Wed, 9 Oct 2019 17:29:07 -0700
-Message-ID: <20191009172907.2f0877f4@cakuba.netronome.com>
-References: <20191008140544.17112-1-poeschel@lemonage.de>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH] i2c: aspeed: fix master pending state handling
+Date: Wed, 9 Oct 2019 17:32:34 -0700
+Message-ID: <20191010003234.GA12710@google.com>
+References: <20191009212034.20325-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20191008140544.17112-1-poeschel@lemonage.de>
-Sender: netdev-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Jilayne Lovejoy <opensource@jilayne.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Steve Winslow <swinslow@gmail.com>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Kees Cook <keescook@chromium.org>, Allison Randal <allison@lohutok.net>, Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20191009212034.20325-1-jae.hyun.yoo@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, openbmc@lists.ozlabs.org, linux-i2c@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Tao Ren <taoren@fb.com>, linux-arm-kernel@lists.infradead.org, Cedric Le Goater <clg@kaod.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  8 Oct 2019 16:05:37 +0200, Lars Poeschel wrote:
-> The purpose of this patch series is to add a uart phy driver to the
-> pn533 nfc driver.
-> It first changes the dt strings and docs. The dt compatible strings
-> need to change, because I would add "pn532-uart" to the already
-> existing "pn533-i2c" one. These two are now unified into just
-> "pn532". Then the neccessary changes to the pn533 core driver are
-> made. Then the uart phy is added.
-> As the pn532 chip supports a autopoll, I wanted to use this instead
-> of the software poll loop in the pn533 core driver. It is added and
-> activated by the last to patches.
-> The way to add the autopoll later in seperate patches is chosen, to
-> show, that the uart phy driver can also work with the software poll
-> loop, if someone needs that for some reason.
-> This patchset is already rebased on Johans "NFC: pn533: fix
-> use-after-free and memleaks" patch
-> https://lore.kernel.org/netdev/20191007164059.5927-1-johan@kernel.org/
-> as they would conflict.
-> If for some reason Johans patch will not get merged, I can of course
-> provide the patchset without depending on this patch.
+On Wed, Oct 09, 2019 at 02:20:34PM -0700, Jae Hyun Yoo wrote:
+> In case of master pending state, it should not trigger a master
+> command, otherwise data could be corrupted because this H/W shares
+> the same data buffer for slave and master operations. It also means
+> that H/W command queue handling is unreliable because of the buffer
+> sharing issue. To fix this issue, it clears command queue if a
+> master command is queued in pending state to use S/W solution
+> instead of H/W command queue handling. Also, it refines restarting
+> mechanism of the pending master command.
+> 
+> Fixes: 2e57b7cebb98 ("i2c: aspeed: Add multi-master use case support")
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 
-The memleak patch was a fix and it's on its way to the current 5.4-rc
-releases - therefore it was merged into the net tree. Your set adds
-support for a new bus, and will go into the net-next tree.
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-It'd be best if you reposted once the net tree was merged into the
-net-next tree (which usually happens every week or two). If you'd
-rather not wait you need to rebase on top of the current net-next tree,
-and maintainers will handle the conflicts.
+We don't have any multi-master setups, can we get a Tested-by?
+
+Wolfram, since this is a bugfix, can we get this in 5.4?
+
+Thanks!
