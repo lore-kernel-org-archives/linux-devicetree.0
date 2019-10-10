@@ -1,46 +1,43 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 8/8] dt-bindings: Add max12xx SPI ADC series as
- trivial devices
-Date: Thu, 10 Oct 2019 23:31:29 +0200
-Message-ID: <20191010233129.67a1d76c@xps13>
-References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
-        <20191007132657.4190-9-miquel.raynal@bootlin.com>
-        <20191010204751.GA22206@bogus>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix override mode for rk3399-kevin panel
+Date: Thu, 10 Oct 2019 23:42:21 +0200
+Message-ID: <29647267.xx61tplHq2@phil>
+References: <20191008124949.1.I674acd441997dd0690c86c9003743aacda1cf5dd@changeid>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191010204751.GA22206@bogus>
+In-Reply-To: <20191008124949.1.I674acd441997dd0690c86c9003743aacda1cf5dd@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Rob Herring <robh@kernel.org> wrote on Thu, 10 Oct 2019 15:47:51 -0500:
-
-> On Mon, Oct 07, 2019 at 03:26:57PM +0200, Miquel Raynal wrote:
-> > Update the compatible list with three Maxim ADCs compatibles.
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > ---
-> >  .../bindings/iio/adc/max1027-adc.txt          | 28 +++++++++++++++++++
-> >  .../devicetree/bindings/trivial-devices.yaml  |  6 ++++
-> >  2 files changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt  
+Am Dienstag, 8. Oktober 2019, 21:49:54 CEST schrieb Douglas Anderson:
+> When I re-posted Sean's original commit to add the override mode for
+> the kevin panel, for some reason I didn't notice that the pixel clock
+> wasn't quite right.  Looking at /sys/kernel/debug/clk/clk_summary on
+> downstream kernels it can be seen that the VOP clock is supposed to be
+> 266,666,667 Hz achieved by dividing the 800 MHz PLL by 3.
 > 
-> Devices are supposed to be documented in one place or the other. So 
-> either make max1027-adc.txt a schema or drop it.
+> Looking at history, it seems that even Sean's first patch [1] had this
+> funny clock rate.  I'm not sure where it came from since the commit
+> message specifically mentioned 26666 kHz and the Chrome OS tree [2]
+> can be seen to request 266667 kHz.
 > 
-> I'm fine either way. Obviously, trivial-devices.yaml is trivial to add 
-> to, but it does leave some ambiguities. Like is an interrupt required, 
-> optional or non-existent? What about power supplies? Or what are allowed 
-> values for spi-max-frequency.
+> In any case, let's fix it up.  This together with my patch [3] to do
+> the proper rounding when setting the clock rate makes the VOP clock
+> more proper as seen in /sys/kernel/debug/clk/clk_summary.
+> 
+> [1] https://lore.kernel.org/r/20180206165626.37692-4-seanpaul@chromium.org
+> [2] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.4/drivers/gpu/drm/panel/panel-simple.c#1172
+> [3] https://lkml.kernel.org/r/20191003114726.v2.1.Ib233b3e706cf6317858384264d5b0ed35657456e@changeid
+> 
+> Fixes: 84ebd2da6d04 ("arm64: dts: rockchip: Specify override mode for kevin panel")
+> Cc: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Rhaaa... I obviously wanted to drop the *txt file, just forgot to do
-it. As the interrupts are optional I found the trivial device
-description accurate enough.
+applied as fix for 5.4
 
-Thanks,
-Miquèl
+Thanks
+Heiko
