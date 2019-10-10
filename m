@@ -1,42 +1,77 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH] i2c: aspeed: fix master pending state handling
-Date: Thu, 10 Oct 2019 11:22:36 -0700
-Message-ID: <8586205c-1edc-dfc2-3309-11050afbbaf8@linux.intel.com>
-References: <20191009212034.20325-1-jae.hyun.yoo@linux.intel.com>
- <CACPK8XfKCSNsQJa2J2jKZJ7LGZh3zXAOfBYnp5X0w=TH4JfSpQ@mail.gmail.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
+Date: Thu, 10 Oct 2019 11:34:55 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1910101132440.4464@viisi.sifive.com>
+References: <20191009234648.2271-1-robh@kernel.org>
+ <alpine.DEB.2.21.9999.1910091657240.11044@viisi.sifive.com>
+ <CAL_JsqK==+6QPrx3NDobYfWQwRg9m-t0LZgL=KzqfhAfbu+xTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACPK8XfKCSNsQJa2J2jKZJ7LGZh3zXAOfBYnp5X0w=TH4JfSpQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Cedric Le Goater <clg@kaod.org>, Tao Ren <taoren@fb.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-i2c@vger.kernel.org
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqK==+6QPrx3NDobYfWQwRg9m-t0LZgL=KzqfhAfbu+xTg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>
 List-Id: devicetree@vger.kernel.org
 
-> Acked-by: Joel Stanley <joel@jms.id.au>
+On Thu, 10 Oct 2019, Rob Herring wrote:
 
-Thanks!
+> On Wed, Oct 9, 2019 at 7:08 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> >
+> > On Wed, 9 Oct 2019, Rob Herring wrote:
+> >
+> > > Fix the errors in the RiscV CPU DT schema:
+> > >
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> > >
+> > > The DT spec allows for 'timebase-frequency' to be in 'cpu' or 'cpus' node
+> > > and RiscV is doing nothing special with it, so just drop the definition
+> > > here and don't make it required.
+> >
+> > The RISC-V kernel code does in fact parse it and use it, and we currently
+> > rely on it being under /cpus:
+> >
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/time.c#n19
+> >
+> > The RISC-V user ISA specification also constrains the timebase-frequency
+> > to be the same across all CPUs, in section 10.1:
+> >
+> >   https://github.com/riscv/riscv-isa-manual/releases/download/draft-20190608-f467e5d/riscv-spec.pdf
+> >
+> > So the right thing is to require 'timebase-frequency' at /cpus, and forbid
+> > it in the individual CPU nodes.
+> 
+> Yes, but this schema only deals with 'cpu' nodes and we can't check
+> /cpus here. We'd need to write another schema matching on a child cpu
+> node having a RiscV compatible.
+> 
+> I can change this to 'timebase-frequency: false' to ban it here.
 
-> While reviewing I was concerned about the locking in
-> aspeed_i2c_master_xfer. It's a bit hairy, and I am not convinced it is
-> without bugs.
+Sounds good to me.  (Might catch the occasional mistake.)  With that 
+change, the resulting patch would be
 
-The locking was already in there in aspeed_i2c_master_xfer but it
-unlocks the protection to make a waiting for a completion. This code
-is after the waiting so I added the locking to protect
-'bus->master_state' variable which can be accessed from driver context
-and from interrupt context.
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # for arch/riscv
 
-Thanks,
+and thanks indeed for cleaning this up.
 
-Jae
+> That doesn't add too much as any undefined name is still allowed such as 
+> 'timbase-frequency'. There's a way to address this in json-schema draft8 
+> with 'unevaluatedProperties', but that's not ready yet.
+
+OK
+
+
+- Paul
