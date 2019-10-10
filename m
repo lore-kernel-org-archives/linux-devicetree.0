@@ -1,146 +1,104 @@
-From: Angus Ainslie <angus@akkea.ca>
-Subject: Re: [RFCv3 3/3] interconnect: imx: Add platform driver for imx8mm
-Date: Thu, 10 Oct 2019 07:43:49 -0700
-Message-ID: <7c1452f3d8c13aeadcabf7807049092c@akkea.ca>
-References: <cover.1565088423.git.leonard.crestez@nxp.com>
- <cf265add1502a75c4d6e6261ab1570c665e82c83.1565088423.git.leonard.crestez@nxp.com>
- <a2e09a9b-574f-8410-423e-0b0d8ea5c2ab@posteo.de>
- <VI1PR04MB7023E441FEE0D9288CAC0F44EEAA0@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <be41481b-5184-7878-b25e-41b7a1e1b2d5@posteo.de>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+Date: Thu, 10 Oct 2019 15:52:56 +0100
+Message-ID: <e671930b-645a-7ee3-6926-eea39626c0a3@linaro.org>
+References: <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+ <20190813195804.GL5093@sirena.co.uk>
+ <20190814041142.GU12733@vkoul-mobl.Dlink>
+ <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
+ <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
+ <53bb3105-8e85-a972-fce8-a7911ae4d461@linux.intel.com>
+ <95870089-25da-11ea-19fd-0504daa98994@linaro.org>
+ <2326a155-332e-fda0-b7a2-b48f348e1911@linux.intel.com>
+ <34e4cde8-f2e5-0943-115a-651d86f87c1a@linaro.org>
+ <20191010120337.GB31391@ediswmail.ad.cirrus.com>
+ <22eff3aa-dfd6-1ee5-8f22-2af492286053@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <be41481b-5184-7878-b25e-41b7a1e1b2d5@posteo.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Artur_=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>, Jacky Bai <ping.bai@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Anson Huang <anson.huang@nxp.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Martin Kepplinger <martink@posteo.de>, linux-arm-kernel@lists.infradead.org, Aisheng Dong <aisheng.dong@nxp.com>, Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Georgi Djakov <georgi.d>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <22eff3aa-dfd6-1ee5-8f22-2af492286053@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, robh+dt@kernel.org, lgirdwood@gmail.com, Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Leonard,
 
-On 2019-08-21 07:26, Martin Kepplinger wrote:
-> On 21.08.19 16:21, Leonard Crestez wrote:
->> On 21.08.2019 17:03, Martin Kepplinger wrote:
->>> On 06.08.19 12:55, Leonard Crestez wrote:
->>>> This adds a platform driver for the i.MX8MM SoC.
->>>> 
->>>> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
->>>> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
->>>> ---
->>>>   drivers/interconnect/imx/Kconfig          |   4 +
->>>>   drivers/interconnect/imx/Makefile         |   1 +
->>>>   drivers/interconnect/imx/imx8mm.c         | 114 
->>>> ++++++++++++++++++++++
->>>>   include/dt-bindings/interconnect/imx8mm.h |  49 ++++++++++
->>>>   4 files changed, 168 insertions(+)
->>>>   create mode 100644 drivers/interconnect/imx/imx8mm.c
->>>>   create mode 100644 include/dt-bindings/interconnect/imx8mm.h
->>> 
->>> Do you plan to add such a driver for imx8mq too?
->> 
->> Yes! The topology is different (serving different IP blocks) but no
->> functional code changes are required between 8mm 8mn 8mq.
->> 
->> I already wrote the code and tested it but didn't post because I want 
->> to
->> get the core parts in first. I periodically push my "full"
->> work-in-progress to github:
->> 
->> https://github.com/cdleonard/linux/commits/next_imx8mm_busfreq
->> 
->> You need out-of-tree ATF changes or devfreq probe will fail:
->> 
->> https://github.com/cdleonard/arm-trusted-firmware/commits/imx_2.0.y_busfreq
->> 
+
+On 10/10/2019 15:01, Pierre-Louis Bossart wrote:
 > 
-> Thanks for the update, that's good to hear. I'll get back to you when I
-> come around to test this and wish you good progress until then :)
+>>>> It's been a while since this thread started, and I still don't
+>>>> quite get the concepts or logic.
+>>>>
+>>>> First, I don't understand what the problem with "aux" devices is.
+>>>> All the SoundWire stuff is based on the concept of DAI, so I guess
+>>>> I am
+>>>
+>>> That is the actual problem! Some aux devices does not have dais.
+>>>
+>>
+>> Usually aux devices are used for things like analog amplifiers that
+>> clearly don't have a digital interface, thus it really makes no sense
+>> to have a DAI link connecting them. So I guess my question here
+>> would be what is the thinking on making the "smart amplifier" dailess?
+>> It feels like having a CODEC to CODEC DAI between the CODEC and
+>> the AMP would be a more obvious way to connect the two devices
+>> and would presumably avoid the issues being discussed around the
+>> patch.
 > 
+> Ah, now I get it, I missed the point about not having DAIs for the 
+> amplifier.
+> 
+> I will second Charles' point, the code you have in the machine driver at 
 
-I've taken up this work while Martin is on leave.
+I agree with Charles,
 
-I've integrated your u-boot and ATF on our board and I have a couple of 
-questions. Our board is running imx8mq B0 (Rev 2.0) silicon.
+WSA8810/WSA8815 is connected via SoundWire digital interface, so I can 
+try to model this amplifier with dais and see how it ends up.
 
-It looks like this line limits the training frequencies to 800 MHz and 
-166 MHz
+I still need to figure out prefixing multiple instances of this 
+Amplifier controls with "Left" and "Right"
 
-https://source.puri.sm/Librem5/uboot-imx/blob/busfreq/board/purism/librem5_devkit/lpddr4_timing_b0.c#L1365
+> [1] gets a SoundWire stream context from the SLIMbus codec dai. It's a 
+> bit odd to mix layers this way.
 
-Does 100 MHz and 25 MHz not work on B0 ?
+Yep we have a very mixed setup on this SoC.
 
-I added the ddrc_and noc opp as well as the 166MHz opp
+So it looks like this.
+Main WCD934X Codec which is connected via SLIMBus which has SoundWire 
+Controller block along with other analog + digital blocks.
+Again the SoundWire Controller from that WCD934X codec is wired up to 
+WSA881X Smart speaker amplifiers.
 
-https://source.puri.sm/angus.ainslie/linux-next/blob/busfreq/arch/arm64/boot/dts/freescale/imx8mq.dtsi#L214
 
-I also added the interconnects ( do we need them on imx8mq ? )
-
-https://source.puri.sm/angus.ainslie/linux-next/blob/busfreq/arch/arm64/boot/dts/freescale/imx8mq.dtsi#L990
-
-I had to add a hack as the PM QoS was limiting the bus speed to 399MHz , 
-if you have any ideas why that would be appreciated.
-
-https://source.puri.sm/angus.ainslie/linux-next/blob/busfreq/drivers/devfreq/devfreq.c#L143
-
-The driver is probing
-
-[   12.136537] bus: 'platform': driver_probe_device: matched device 
-3d400000.dram-controller with driver imx-ddrc-devfrq
-[   12.147259] bus: 'platform': really_probe: probing driver 
-imx-ddrc-devfreq with device 3d400000.dram-controller
-[   12.157382] imx-ddrc-devfreq 3d400000.dram-controller: no pinctrl 
-handle
-[   12.164197] arm_smcc rate 0 800000000
-[   12.167880] arm_smcc rate 1 166750000
-[   12.171778] of: _opp_add_static_v2: turbo:0 rate:25000000 uv:0 
-uvmin:0 uvmax:0 latency:0
-[   12.179994] of: _opp_add_static_v2: turbo:0 rate:100000000 uv:0 
-uvmin:0 uvmax:0 latency:0
-[   12.188311] of: _opp_add_static_v2: turbo:0 rate:166750000 uv:0 
-uvmin:0 uvmax:0 latency:0
-[   12.196606] of: _opp_add_static_v2: turbo:0 rate:800000000 uv:0 
-uvmin:0 uvmax:0 latency:0
-[   12.204930] imx-ddrc-devfreq 3d400000.dram-controller: events from 
-pmu imx8_ddr0
-[   12.212403] Added freq 0 25000000
-[   12.215742] Added freq 1 100000000
-[   12.219177] Added freq 2 166750000
-[   12.222648] Added freq 3 800000000
-[   12.226105] device: 'devfreq0': device_add
-[   12.230287] PM: Adding info for No Bus:devfreq0
-[   12.234864] driver: 'imx-ddrc-devfreq': driver_bound: bound to device 
-'3d400000.dram-controller'
-[   12.243699] bus: 'platform': really_probe: bound device 
-3d400000.dram-controller to driver imx-ddrc-devfreq
-
-Add seems to run correctly until it tries to adjust the clock to 166MHz
-
-[   19.555482] ddrc checking rate 800000000 166750000
-[   19.555489] ddrc checking rate 166750000 166750000
-[   19.560442] bus: 'usb-serial': really_probe: bound device ttyUSB0 to 
-driver option1
-[   19.568751] imx-ddrc-devfreq 3d400000.dram-controller: ddrc about to 
-change freq 800000000 to 166750000
-
-And the board hangs there. Any ideas on how to get past this ?
-
-Thanks
-Angus
-
->                         martin
 > 
 > 
+> And if I look at the code below, taken from [1], if you have more than 
+> one codec, then your code looks problematic: data->sruntime would be 
+> overriden and you'd use the info from the last codec dai on the dailink...
+
+This code has been written very much specific to DB845c which has only 
+one codec. But I agree with your point.
+
+--srini
+
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> case SLIMBUS_0_RX...SLIMBUS_6_TX:
+>    for (i = 0 ; i < dai_link->num_codecs; i++) {
+>      [snip]
+>      data->sruntime[cpu_dai->id] =
+>      snd_soc_dai_get_sdw_stream(rtd->codec_dais[i], 0); << same 
+> destination for multiple codec_dais...
+> 
+> If you keep the amp dai-less, then the stream concept should be somehow 
+> allocated on the master (or machine) side and passed to the codec dais 
+> that are associated to the same 'stream'.
+> 
+> 
+> [1] 
+> https://git.linaro.org/people/srinivas.kandagatla/linux.git/tree/sound/soc/qcom/db845c.c?h=release/db845c/qcomlt-5.2 
+> 
+> 
