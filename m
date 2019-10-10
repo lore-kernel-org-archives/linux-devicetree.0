@@ -1,36 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 8/8] dt-bindings: Add max12xx SPI ADC series as
- trivial devices
-Date: Thu, 10 Oct 2019 15:47:51 -0500
-Message-ID: <20191010204751.GA22206@bogus>
-References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
- <20191007132657.4190-9-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3] dt-bindings: iio: maxbotix,mb1232.yaml: transform to
+ yaml
+Date: Thu, 10 Oct 2019 15:53:28 -0500
+Message-ID: <20191010205328.GA19956@bogus>
+References: <20191007170219.xfipsry5nk4raiem@arbad>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191007132657.4190-9-miquel.raynal@bootlin.com>
+In-Reply-To: <20191007170219.xfipsry5nk4raiem@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 03:26:57PM +0200, Miquel Raynal wrote:
-> Update the compatible list with three Maxim ADCs compatibles.
+On Mon, 7 Oct 2019 19:02:20 +0200, Andreas Klinger wrote:
+> transform existing documentation of maxbotix,mb1232 ultrasonic ranger
+> from text documentation format into yaml.
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Changes in v3:
+> - add a i2c node around device node to set up #address-cells and
+>   #size-cells for omitting error during make dt_binding_check
+> 
+> Changes in v2:
+> - removed description of reg property
+> - added a line:
+>   additionalProperties: false
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 > ---
->  .../bindings/iio/adc/max1027-adc.txt          | 28 +++++++++++++++++++
->  .../devicetree/bindings/trivial-devices.yaml  |  6 ++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+>  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
+>  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 60 ++++++++++++++++++++++
+>  2 files changed, 60 insertions(+), 29 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+> 
 
-Devices are supposed to be documented in one place or the other. So 
-either make max1027-adc.txt a schema or drop it.
-
-I'm fine either way. Obviously, trivial-devices.yaml is trivial to add 
-to, but it does leave some ambiguities. Like is an interrupt required, 
-optional or non-existent? What about power supplies? Or what are allowed 
-values for spi-max-frequency.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
