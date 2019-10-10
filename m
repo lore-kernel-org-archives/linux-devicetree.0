@@ -1,33 +1,106 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
-Date: Wed, 09 Oct 2019 21:16:28 -0700
-Message-ID: <20191010041629.6E771208C3@mail.kernel.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org> <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org> <20190925130346.42E0820640@mail.kernel.org> <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org> <20191001143825.CD3212054F@mail.kernel.org> <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org> <20191003160130.5A19B222D0@mail.kernel.org> <81a2fa46-a7e6-66a2-9649-009f22813c81@codeaurora.org> <20191004232022.062A1215EA@mail.kernel.org> <d17dad3d-d32c-b71c-0e56-d15cb246f742@codeaurora.org>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v1 0/2] spi: cadence-qspi: Add cadence-qspi support for
+ Intel LGM SoC
+Date: Thu, 10 Oct 2019 09:48:06 +0530
+Message-ID: <21cb17ab-b272-ce35-67fc-abce56969fee@ti.com>
+References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
+ <89e49834-8697-2917-d666-769969f074a4@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d17dad3d-d32c-b71c-0e56-d15cb246f742@codeaurora.org>
+In-Reply-To: <89e49834-8697-2917-d666-769969f074a4@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: "Ramuthevar, Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>, broonie@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2019-10-09 02:19:39)
-> Hi Stephen,
->=20
-> On 10/5/2019 4:50 AM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2019-10-04 10:39:31)
-> >>
-> >> Could you please confirm if you are referring to update the below?
-> >=20
-> > I wasn't suggesting that explicitly but sure. Something like this would
-> > be necessary to make clk_get() pass back a NULL pointer to the caller.
-> > Does everything keep working with this change?
-> >=20
->=20
-> Even if I pass back NULL, I don't see it working. Please suggest how to=20
-> take it forward.
->=20
 
-Why doesn't it work?
+
+On 10/10/19 7:04 AM, Ramuthevar, Vadivel MuruganX wrote:
+> HI Vignesh,
+> 
+> On 17/9/2019 12:50 AM, Vignesh Raghavendra wrote:
+>> Hi,
+>>
+>> On 16/09/19 1:08 PM, Ramuthevar,Vadivel MuruganX wrote:
+>>> patch 1: Add YAML for cadence-qspi devicetree cdocumentation.
+>>> patch 2: cadence-qspi controller driver to support QSPI-NAND flash
+>>> using existing spi-nand framework with legacy spi protocol.
+>> Nope, you cannot have two drivers for the same IP (i.e Cadence QSPI)
+>> just to support to different types of SPI memories. This is the reason
+>> why spi_mem_ops was introduced.
+>>
+>> Please rewrite this driver over to use spi_mem_ops (instead of using
+>> generic SPI xfers) so that same driver supports both SPI-NOR and
+>> SPI-NAND flashes. Once that's done drivers/mtd/spi-nor/cadence-quadspi.c
+>> can be deleted.
+>>
+>> There are few existing examples of spi_mem_ops users in drivers/spi/
+>> (git grep spi_mem_ops) and materials here on how to write such a driver:
+>>
+>> [1]
+>> https://bootlin.com/blog/spi-mem-bringing-some-consistency-to-the-spi-memory-ecosystem/
+>>
+>> [2] https://www.youtube.com/watch?v=PkWbuLM_gmU
+> As per Mark Brown and your suggestion,  I have started adapting
+> cadence-qaudspi driver with spi_mem_ops framework to work
+> QSPI-NAND/NOR as a generic driver(completely removed the legacy
+> SPI-XFERS),  is in progress on Intel LGM SoC.
+> QSPI-IP on Intel LGM  do not have DMA  support and also not part of QSPI
+> IP, so couldn't able to validate DMA related.
+> will adapt the DMA things which are existing in cadence-quadspi.c as it is.
+> 
+
+Great, appreciate the effort!
+
+> currently TI and Altera SoC's use this Cadence-qspi IP , both are not
+> using DMA as per my understanding (correct me if it is wrong).
+> confirmed through device tree entry.
+> 
+
+TI platforms use DMA to read data from flash in memory mapped mode
+(direct access controller) using mem-to-mem DMA channels. Mem-to-mem DMA
+channels are requested as and when needed and are not part of DT
+description (as they are not bound to a device)
+
+> what is your opinion on DMA related stuff? 
+
+Not having DMA support would be a regression. Please keep the DAC + DMA
+part as is. I can help you will all the DMA related testing...
+
+Regards
+Vignesh
+
+> also using macronix(QSPI-NOR)
+> flash/Micron(QSPI-NAND).
+> ---
+> With Regards
+> Vadivel
+>>> Ramuthevar Vadivel Murugan (2):
+>>>    dt-bindings: spi: Add support for cadence-qspi IP Intel LGM SoC
+>>>    spi: cadence-qspi: Add QSPI support for Intel LGM SoC
+>>>
+>>>   .../devicetree/bindings/spi/cadence,qspi-nand.yaml |  84 +++
+>>>   drivers/spi/Kconfig                                |   9 +
+>>>   drivers/spi/Makefile                               |   1 +
+>>>   drivers/spi/spi-cadence-qspi-apb.c                 | 644
+>>> +++++++++++++++++++++
+>>>   drivers/spi/spi-cadence-qspi-apb.h                 | 174 ++++++
+>>>   drivers/spi/spi-cadence-qspi.c                     | 461
+>>> +++++++++++++++
+>>>   drivers/spi/spi-cadence-qspi.h                     |  73 +++
+>>>   7 files changed, 1446 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+>>>   create mode 100644 drivers/spi/spi-cadence-qspi-apb.c
+>>>   create mode 100644 drivers/spi/spi-cadence-qspi-apb.h
+>>>   create mode 100644 drivers/spi/spi-cadence-qspi.c
+>>>   create mode 100644 drivers/spi/spi-cadence-qspi.h
+>>>
+
+-- 
+Regards
+Vignesh
