@@ -1,231 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: Clean-up regulator '-supply' schemas
-Date: Fri, 11 Oct 2019 14:02:31 -0500
-Message-ID: <20191011190231.9779-1-robh@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v1 1/3] dt-bindings: net: bcmgenet add property for max
+ DMA burst size
+Date: Fri, 11 Oct 2019 12:07:58 -0700
+Message-ID: <2d4be474-95f1-9ef7-4485-46f7e5565d8c@gmail.com>
+References: <20191011184822.866-1-matthias.bgg@kernel.org>
+ <20191011184822.866-2-matthias.bgg@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-iio@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191011184822.866-2-matthias.bgg@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: matthias.bgg@kernel.org, "David S . Miller" <davem@davemloft.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Stefan Wahren <wahrenst@gmx.net>
 List-Id: devicetree@vger.kernel.org
 
-Regulator '*-supply' properties are always a single phandle, so
-'maxItems: 1' or a $ref is not necessary. All that's needed is either
-'true' or an optional 'description'. Following this clean-up, the
-meta-schema will enforce this pattern.
+On 10/11/19 11:48 AM, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
+> 
+> The maximal usable DMA burst size can vary in different SoCs.
+> Add a optional property to configure the DMA channels properly.
+> 
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 
-There's one case in tree with 'innolux,n156bge-l21' having 2 phandles.
-This appears to be a mistake or abuse of simple-panel as it's 2 different
-voltage rails connected to 'power-supply'.
-
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-iio@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml   | 2 --
- Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml  | 3 +--
- Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml  | 3 +--
- Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml   | 3 +--
- Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml    | 3 ---
- Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml    | 5 +----
- Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml    | 1 -
- Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml    | 1 -
- .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml      | 4 +---
- .../devicetree/bindings/iio/chemical/plantower,pms7003.yaml  | 1 -
- Documentation/devicetree/bindings/iio/pressure/bmp085.yaml   | 2 --
- .../devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml | 1 -
- .../devicetree/bindings/regulator/fixed-regulator.yaml       | 1 -
- 13 files changed, 5 insertions(+), 25 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
-index fb747682006d..0da42ab8fd3a 100644
---- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
-+++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
-@@ -79,8 +79,6 @@ properties:
- 
-   hdmi-supply:
-     description: phandle to an external 5V regulator to power the HDMI logic
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
- 
-   port@0:
-     type: object
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-index 5f1fd6d7ee0f..e50a0cc78fff 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-@@ -37,8 +37,7 @@ properties:
-   clocks:
-     maxItems: 1
- 
--  mali-supply:
--    maxItems: 1
-+  mali-supply: true
- 
-   operating-points-v2: true
- 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-index 47bc1ac36426..5c576e5019c6 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-@@ -69,8 +69,7 @@ properties:
-       - const: core
-       - const: bus
- 
--  mali-supply:
--    maxItems: 1
-+  mali-supply: true
- 
-   resets:
-     minItems: 1
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-index c5d93c5839d3..afde81be3c29 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-@@ -97,8 +97,7 @@ properties:
- 
-   memory-region: true
- 
--  mali-supply:
--    maxItems: 1
-+  mali-supply: true
- 
-   power-domains:
-     maxItems: 1
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-index 9692b7f719f5..e932d5aed02f 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-@@ -45,15 +45,12 @@ properties:
- 
-   refin1-supply:
-     description: refin1 supply can be used as reference for conversion.
--    maxItems: 1
- 
-   refin2-supply:
-     description: refin2 supply can be used as reference for conversion.
--    maxItems: 1
- 
-   avdd-supply:
-     description: avdd supply can be used as reference for conversion.
--    maxItems: 1
- 
- required:
-   - compatible
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-index cc544fdc38be..6eb33207a167 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-@@ -31,10 +31,7 @@ properties:
- 
-   spi-cpha: true
- 
--  avcc-supply:
--    description:
--      Phandle to the Avcc power supply
--    maxItems: 1
-+  avcc-supply: true
- 
-   interrupts:
-     maxItems: 1
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-index d1109416963c..9acde6d2e2d9 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-@@ -39,7 +39,6 @@ properties:
-   avdd-supply:
-     description:
-       The regulator supply for the ADC reference voltage.
--    maxItems: 1
- 
-   powerdown-gpios:
-     description:
-diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-index d76ece97c76c..91ab9c842273 100644
---- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-@@ -41,7 +41,6 @@ properties:
-   avdd-supply:
-     description:
-       Definition of the regulator used as analog supply
--    maxItems: 1
- 
-   clock-frequency:
-     minimum: 20000
-diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-index b4c6c26681d9..9218b2efa62f 100644
---- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-@@ -46,9 +46,7 @@ properties:
-   "#io-channel-cells":
-     const: 1
- 
--  vdd-supply:
--    description: VDD input supply
--    maxItems: 1
-+  vdd-supply: true
- 
-   samsung,syscon-phandle:
-     $ref: '/schemas/types.yaml#/definitions/phandle'
-diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
-index a551d3101f93..19e53930ebf6 100644
---- a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
-+++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
-@@ -25,7 +25,6 @@ properties:
- 
-   vcc-supply:
-     description: regulator that provides power to the sensor
--    maxItems: 1
- 
-   plantower,set-gpios:
-     description: GPIO connected to the SET line
-diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
-index c6721a7e8938..519137e5c170 100644
---- a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
-+++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
-@@ -28,12 +28,10 @@ properties:
-   vddd-supply:
-     description:
-       digital voltage regulator (see regulator/regulator.txt)
--    maxItems: 1
- 
-   vdda-supply:
-     description:
-       analog voltage regulator (see regulator/regulator.txt)
--    maxItems: 1
- 
-   reset-gpios:
-     description:
-diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
-index 51254b4e65dd..57d8603076bd 100644
---- a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
-@@ -36,7 +36,6 @@ properties:
-     const: 0
- 
-   phy-supply:
--     maxItems: 1
-      description:
-        Phandle to a regulator that provides power to the PHY. This
-        regulator will be managed during the PHY power on/off sequence.
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-index a78150c47aa2..e56d97b233f4 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-@@ -64,7 +64,6 @@ properties:
- 
-   vin-supply:
-     description: Input supply phandle.
--    $ref: /schemas/types.yaml#/definitions/phandle
- 
- required:
-   - compatible
+There are enough differences in the integration of GENET in 2711 (versus
+any other STB chip where it has been used) that a brcm,bcm2711-genet-v5
+compatible string would be in order. From there, you can derive the DMA
+burst size without using additional properties.
 -- 
-2.20.1
+Florian
