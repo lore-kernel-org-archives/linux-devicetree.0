@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 8/8] dt-bindings: Add max12xx SPI ADC series as trivial devices
-Date: Fri, 11 Oct 2019 16:43:47 +0200
-Message-ID: <20191011144347.19146-9-miquel.raynal@bootlin.com>
+Subject: [PATCH v4 7/8] dt-bindings: Add 1027/1029/1031 SPI ADCs as trivial devices
+Date: Fri, 11 Oct 2019 16:43:46 +0200
+Message-ID: <20191011144347.19146-8-miquel.raynal@bootlin.com>
 References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,27 +12,58 @@ To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-
 Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the compatible list with three Maxim ADCs compatibles.
+In the same time, remove the dedicated bindings file which is now
+useless.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- Documentation/devicetree/bindings/trivial-devices.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../bindings/iio/adc/max1027-adc.txt          | 22 -------------------
+ .../devicetree/bindings/trivial-devices.yaml  |  6 +++++
+ 2 files changed, 6 insertions(+), 22 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
 
+diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+deleted file mode 100644
+index 7b23d68f655c..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-* Maxim 1027/1029/1031 Analog to Digital Converter (ADC)
+-
+-Required properties:
+-  - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
+-  - reg: SPI chip select number for the device
+-
+-Optional properties:
+-  - interrupts: IRQ line for the ADC
+-  see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+-
+-Recommended properties:
+-- spi-max-frequency: Definition as per
+-                     Documentation/devicetree/bindings/spi/spi-bus.txt
+-
+-Example:
+-adc@0 {
+-	compatible = "maxim,max1027";
+-	reg = <0>;
+-	interrupt-parent = <&gpio5>;
+-	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+-	spi-max-frequency = <1000000>;
+-};
 diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index e0095ecb472f..765fd1c170df 100644
+index 870ac52d2225..e0095ecb472f 100644
 --- a/Documentation/devicetree/bindings/trivial-devices.yaml
 +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -120,6 +120,12 @@ properties:
-           - maxim,max1029
-             # 10-bit 16 channels 300ks/s SPI ADC with temperature sensor
-           - maxim,max1031
-+            # 12-bit 8 channels 300ks/s SPI ADC with temperature sensor
-+          - maxim,max1227
-+            # 12-bit 12 channels 300ks/s SPI ADC with temperature sensor
-+          - maxim,max1229
-+            # 12-bit 16 channels 300ks/s SPI ADC with temperature sensor
-+          - maxim,max1231
+@@ -114,6 +114,12 @@ properties:
+           - isil,isl68137
+             # 5 Bit Programmable, Pulse-Width Modulator
+           - maxim,ds1050
++            # 10-bit 8 channels 300ks/s SPI ADC with temperature sensor
++          - maxim,max1027
++            # 10-bit 12 channels 300ks/s SPI ADC with temperature sensor
++          - maxim,max1029
++            # 10-bit 16 channels 300ks/s SPI ADC with temperature sensor
++          - maxim,max1031
              # Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
            - maxim,max1237
              # PECI-to-I2C translator for PECI-to-SMBus/I2C protocol conversion
