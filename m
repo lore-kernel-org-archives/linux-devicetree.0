@@ -1,776 +1,145 @@
-From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH 3/3] ARM: at91: add Overkiz KIZBOX3 board
-Date: Fri, 11 Oct 2019 14:50:22 +0200
-Message-ID: <20191011125022.16329-4-kamel.bouhara@bootlin.com>
-References: <20191011125022.16329-1-kamel.bouhara@bootlin.com>
+From: Boris Brezillon <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 2/4] media: dt-bindings: rockchip: Document
+ RK3399 Video Decoder bindings
+Date: Fri, 11 Oct 2019 14:56:25 +0200
+Message-ID: <20191011145625.694238b1@dhcp-172-31-174-146.wireless.concordia.ca>
+References: <20191011093342.3471-1-boris.brezillon@collabora.com>
+ <20191011093342.3471-3-boris.brezillon@collabora.com>
+ <CAL_JsqL_6xPyb4kTDR3dbLc4Uptwox=1F4zaGjHVmahNyk25=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011125022.16329-1-kamel.bouhara@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kamel Bouhara <kamel.bouhara@bootlin.com>, =?UTF-8?q?K=C3=A9vin=20RAYMOND?= <k.raymond@overkiz.com>, Mickael GARDET <m.gardet@overkiz.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAL_JsqL_6xPyb4kTDR3dbLc4Uptwox=1F4zaGjHVmahNyk25=w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a common DT include file for the Kizbox3 boards.
-Add the devicetree for the Kizbox3 HS board.
+On Fri, 11 Oct 2019 07:50:16 -0500
+Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
----
- arch/arm/boot/dts/Makefile                 |   1 +
- arch/arm/boot/dts/at91-kizbox3-hs.dts      | 309 ++++++++++++++++
- arch/arm/boot/dts/at91-kizbox3_common.dtsi | 412 +++++++++++++++++++++
- 3 files changed, 722 insertions(+)
- create mode 100644 arch/arm/boot/dts/at91-kizbox3-hs.dts
- create mode 100644 arch/arm/boot/dts/at91-kizbox3_common.dtsi
+> On Fri, Oct 11, 2019 at 4:33 AM Boris Brezillon
+> <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> >
+> > Document the Rockchip RK3399 Video Decoder bindings.  
+> 
+> You need some more headers for the example (or drop defines):
+> 
+> Error: Documentation/devicetree/bindings/media/rockchip,vdec.example.dts:23.28-29
+> syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:321: recipe for target
+> 'Documentation/devicetree/bindings/media/rockchip,vdec.example.dt.yaml'
+> failed
+> make[1]: *** [Documentation/devicetree/bindings/media/rockchip,vdec.example.dt.yaml]
+> Error 1
+> Makefile:1282: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b21b3a64641a..3bda216c41be 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -46,6 +46,7 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
- 	at91sam9x35ek.dtb
- dtb-$(CONFIG_SOC_SAM_V7) += \
- 	at91-kizbox2.dtb \
-+	at91-kizbox3-hs.dtb \
- 	at91-nattis-2-natte-2.dtb \
- 	at91-sama5d27_som1_ek.dtb \
- 	at91-sama5d2_ptc_ek.dtb \
-diff --git a/arch/arm/boot/dts/at91-kizbox3-hs.dts b/arch/arm/boot/dts/at91-kizbox3-hs.dts
-new file mode 100644
-index 000000000000..8734e7f8939e
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizbox3-hs.dts
-@@ -0,0 +1,309 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * at91-kizbox3-hs.dts - Device Tree file for Overkiz KIZBOX3-HS board
-+ *
-+ * Copyright (C) 2018 Overkiz SAS
-+ *
-+ * Authors: Dorian Rocipon <d.rocipon@overkiz.com>
-+ *          Kevin Carli <k.carli@overkiz.com>
-+ *          Mickael Gardet <m.gardet@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizbox3_common.dtsi"
-+
-+/ {
-+	model = "Overkiz KIZBOX3-HS";
-+	compatible = "overkiz,kizbox3-hs", "atmel,sama5d2", "atmel,sama5";
-+
-+	pwm_leds {
-+		status = "okay";
-+
-+		red {
-+			status = "okay";
-+		};
-+
-+		green {
-+			status = "okay";
-+		};
-+
-+		blue {
-+			status = "okay";
-+		};
-+
-+		white {
-+			status = "okay";
-+		};
-+	};
-+
-+	leds  {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_led_red
-+			     &pinctrl_led_white>;
-+		status = "okay";
-+
-+		red {
-+			label = "pio:red:user";
-+			gpios = <&pioA PIN_PB1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		white {
-+			label = "pio:white:user";
-+			gpios = <&pioA PIN_PB8 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default" , "default", "default",
-+				"default", "default" ;
-+		pinctrl-0 = <&pinctrl_key_gpio_default>;
-+		pinctrl-1 = <&pinctrl_pio_rf &pinctrl_pio_wifi>;
-+		pinctrl-2 = <&pinctrl_pio_io_boot
-+			     &pinctrl_pio_io_reset
-+			     &pinctrl_pio_io_test_radio>;
-+		pinctrl-3 = <&pinctrl_pio_zbe_test_radio
-+			     &pinctrl_pio_zbe_rst>;
-+		pinctrl-4 = <&pinctrl_pio_input>;
-+
-+		SW1 {
-+			label = "SW1";
-+			gpios = <&pioA PIN_PA29 GPIO_ACTIVE_LOW>;
-+			linux,code = <0x101>;
-+			wakeup-source;
-+		};
-+
-+		SW2 {
-+			label = "SW2";
-+			gpios = <&pioA PIN_PA18 GPIO_ACTIVE_LOW>;
-+			linux,code = <0x102>;
-+			wakeup-source;
-+		};
-+
-+		SW3 {
-+			label = "SW3";
-+			gpios = <&pioA PIN_PA22 GPIO_ACTIVE_LOW>;
-+			linux,code = <0x103>;
-+			wakeup-source;
-+		};
-+
-+		SW7 {
-+			label = "SW7";
-+			gpios = <&pioA PIN_PA26 GPIO_ACTIVE_LOW>;
-+			linux,code = <0x107>;
-+			wakeup-source;
-+		};
-+
-+		SW8 {
-+			label = "SW8";
-+			gpios = <&pioA PIN_PA24 GPIO_ACTIVE_LOW>;
-+			linux,code = <0x108>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	gpios {
-+		compatible = "gpio";
-+		status = "okay";
-+
-+		rf_on {
-+			label = "rf on";
-+			gpio = <&pioA PIN_PC19 GPIO_ACTIVE_HIGH>;
-+			output;
-+			init-low;
-+		};
-+
-+		wifi_on {
-+			label = "wifi on";
-+			gpio = <&pioA PIN_PC20 GPIO_ACTIVE_HIGH>;
-+			output;
-+			init-low;
-+		};
-+
-+		zbe_test_radio {
-+			label = "zbe test radio";
-+			gpio = <&pioA PIN_PB21 GPIO_ACTIVE_HIGH>;
-+			output;
-+			init-low;
-+		};
-+
-+		zbe_rst {
-+			label = "zbe rst";
-+			gpio = <&pioA PIN_PB25 GPIO_ACTIVE_HIGH>;
-+			output;
-+			init-low;
-+		};
-+
-+		io_reset {
-+			label = "io reset";
-+			gpio = <&pioA PIN_PB30 GPIO_ACTIVE_HIGH>;
-+			output;
-+			init-low;
-+		};
-+
-+		io_test_radio {
-+			label = "io test radio";
-+			gpio = <&pioA PIN_PC9 GPIO_ACTIVE_HIGH>;
-+			output;
-+			init-low;
-+		};
-+
-+		io_boot_0 {
-+			label = "io boot 0";
-+			gpio = <&pioA PIN_PC11 GPIO_ACTIVE_HIGH>;
-+			output;
-+			init-low;
-+		};
-+
-+		io_boot_1 {
-+			label = "io boot 1";
-+			gpio = <&pioA PIN_PC17 GPIO_ACTIVE_HIGH>;
-+			output;
-+			init-low;
-+		};
-+
-+		verbose_bootloader {
-+			label = "verbose bootloader";
-+			gpio = <&pioA PIN_PB11 GPIO_ACTIVE_HIGH>;
-+			input;
-+		};
-+
-+		 nail_bed_detection  {
-+			label = "nail bed detection";
-+			gpio = <&pioA PIN_PB12 GPIO_ACTIVE_HIGH>;
-+			input;
-+		};
-+
-+		 id_usba {
-+			label = "id usba";
-+			gpio = <&pioA PIN_PC0 GPIO_ACTIVE_LOW>;
-+			input;
-+		};
-+	};
-+};
-+
-+&pioA {
-+	pinctrl_key_gpio_default: key_gpio_default {
-+		pinmux=  <PIN_PA22__GPIO>,
-+		<PIN_PA24__GPIO>,
-+		<PIN_PA26__GPIO>,
-+		<PIN_PA29__GPIO>,
-+		<PIN_PA18__GPIO>;
-+		bias-disable;
-+		};
-+
-+	pinctrl_gpio {
-+		pinctrl_pio_rf: gpio_rf {
-+			pinmux = <PIN_PC19__GPIO>;
-+			bias-disable;
-+		};
-+		pinctrl_pio_wifi: gpio_wifi {
-+			pinmux = <PIN_PC20__GPIO>;
-+			bias-disable;
-+		};
-+		pinctrl_pio_io_boot: gpio_io_boot {
-+			pinmux =
-+			<PIN_PC11__GPIO>,
-+			<PIN_PC17__GPIO>;
-+			bias-disable;
-+		};
-+		pinctrl_pio_io_test_radio: gpio_io_test_radio {
-+			pinmux = <PIN_PC9__GPIO>;
-+			bias-disable;
-+		};
-+		pinctrl_pio_zbe_test_radio: gpio_zbe_test_radio {
-+			pinmux = <PIN_PB21__GPIO>;
-+			bias-disable;
-+		};
-+		pinctrl_pio_zbe_rst: gpio_zbe_rst {
-+			pinmux = <PIN_PB25__GPIO>;
-+			bias-disable;
-+		};
-+		/* stm32 reset must be open drain (internal pull up) */
-+		pinctrl_pio_io_reset: gpio_io_reset {
-+			pinmux = <PIN_PB30__GPIO>;
-+			bias-disable;
-+			drive-open-drain = <1>;
-+			output-low;
-+		};
-+		pinctrl_pio_input: gpio_input {
-+			pinmux =
-+			<PIN_PB11__GPIO>,
-+			<PIN_PB12__GPIO>,
-+			<PIN_PC0__GPIO>;
-+			bias-disable;
-+		};
-+	};
-+
-+	pinctrl_leds {
-+		pinctrl_led_red: led_red {
-+			pinmux = <PIN_PB1__GPIO>;
-+			bias-disable;
-+		};
-+		pinctrl_led_white: led_white {
-+			pinmux = <PIN_PB8__GPIO>;
-+			bias-disable;
-+		};
-+	};
-+};
-+
-+&adc {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	status = "okay";
-+};
-+
-+&flx0 {
-+	status = "okay";
-+
-+	uart5: serial@200  {
-+			status = "okay";
-+	};
-+};
-+
-+&flx3 {
-+	status = "okay";
-+	uart6: serial@200 {
-+		status = "okay";
-+	};
-+};
-+
-+&flx4 {
-+	status = "okay";
-+
-+	i2c2: i2c@600 {
-+		status = "okay";
-+	};
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&usb2 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/at91-kizbox3_common.dtsi b/arch/arm/boot/dts/at91-kizbox3_common.dtsi
-new file mode 100644
-index 000000000000..299e74d23184
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizbox3_common.dtsi
-@@ -0,0 +1,412 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * at91-kizbox3.dts - Device Tree Include file for Overkiz Kizbox 3
-+ * family SoC boards
-+ *
-+ * Copyright (C) 2018 Overkiz SAS
-+ *
-+ * Authors: Dorian Rocipon <d.rocipon@overkiz.com>
-+ *          Kevin Carli <k.carli@overkiz.com>
-+ *          Mickael Gardet <m.gardet@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "sama5d2.dtsi"
-+#include "sama5d2-pinfunc.h"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/mfd/atmel-flexcom.h>
-+#include <dt-bindings/pinctrl/at91.h>
-+#include <dt-bindings/pwm/pwm.h>
-+
-+/ {
-+	model = "Overkiz Kizbox3";
-+	compatible = "overkiz,kizbox3", "atmel,sama5d2", "atmel,sama5";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		serial4 = &uart4;
-+		serial5 = &uart5;
-+		serial6 = &uart6;
-+	};
-+
-+	chosen {
-+		bootargs = "ubi.mtd=ubi";
-+		stdout-path = "serial1:115200n8";
-+	};
-+
-+	clocks {
-+		slow_xtal {
-+			clock-frequency = <32768>;
-+		};
-+
-+		main_xtal {
-+			clock-frequency = <12000000>;
-+		};
-+	};
-+
-+	vdd_adc_vddana: supply_3v3_ana {
-+		compatible = "regulator-fixed";
-+		regulator-name = "adc-vddana";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	vdd_adc_vref: supply_3v3_ref {
-+		compatible = "regulator-fixed";
-+		regulator-name = "adc-vref";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	pwm_leds {
-+		compatible = "pwm-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pwm0_pwm_h0
-+			     &pinctrl_pwm0_pwm_h1
-+			     &pinctrl_pwm0_pwm_h2
-+			     &pinctrl_pwm0_pwm_h3>;
-+		status = "disabled";
-+
-+		red {
-+			label = "pwm:red:user";
-+			pwms = <&pwm0 0 10000000 0>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "default-on";
-+			status = "disabled";
-+		};
-+
-+		green {
-+			label = "pwm:green:user";
-+			pwms = <&pwm0 1 10000000 0>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "default-on";
-+			status = "disabled";
-+		};
-+
-+		blue {
-+			label = "pwm:blue:user";
-+			pwms = <&pwm0 2 10000000 0>;
-+			max-brightness = <255>;
-+			status = "disabled";
-+		};
-+
-+		white {
-+			label = "pwm:white:user";
-+			pwms = <&pwm0 3 10000000 0>;
-+			max-brightness = <255>;
-+			status = "disabled";
-+		};
-+	};
-+};
-+
-+&ebi {
-+	status = "okay";
-+};
-+
-+&nand_controller {
-+	status = "okay";
-+
-+	nand@3 {
-+		pinctrl-0 = <&pinctrl_ebi_nand_addr>;
-+		pinctrl-names = "default";
-+		reg = <0x3 0x0 0x800000>;
-+
-+		atmel,rb = <0>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+		nand-on-flash-bbt;
-+		label = "atmel_nand";
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			bootstrap@0 {
-+				label = "bootstrap";
-+				reg = <0x0 0x20000>;
-+			};
-+
-+			u-boot@20000 {
-+				label = "u-boot";
-+				reg = <0x20000 0x140000>;
-+			};
-+
-+			u-boot-factory@160000 {
-+				label = "u-boot-factory";
-+				reg = <0x160000 0x140000>;
-+			};
-+
-+			ubi@2A0000 {
-+				label = "ubi";
-+				reg = <0x2A0000 0x7D60000>;
-+			};
-+		};
-+
-+	};
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&pioA {
-+	pinctrl_ebi_nand_addr: ebi-addr-1 {
-+		pinmux = <PIN_PA0__D0>,
-+			<PIN_PA1__D1>,
-+			<PIN_PA2__D2>,
-+			<PIN_PA3__D3>,
-+			<PIN_PA4__D4>,
-+			<PIN_PA5__D5>,
-+			<PIN_PA6__D6>,
-+			<PIN_PA7__D7>,
-+			<PIN_PA8__NWE_NANDWE>,
-+			<PIN_PA9__NCS3>,
-+			<PIN_PA10__A21_NANDALE>,
-+			<PIN_PA11__A22_NANDCLE>,
-+			<PIN_PA21__NANDRDY>;
-+		bias-disable;
-+	};
-+
-+	pinctrl_usart {
-+		pinctrl_usart_0: usart0-0 {
-+			pinmux = < PIN_PB26__URXD0>, <PIN_PB27__UTXD0>;
-+			bias-disable;
-+		};
-+		pinctrl_usart_1: usart1-0 {
-+			pinmux = < PIN_PD2__URXD1>, <PIN_PD3__UTXD1>;
-+			bias-disable;
-+		};
-+		pinctrl_usart_2: usart2-0 {
-+			pinmux = < PIN_PD4__URXD2>, <PIN_PD5__UTXD2>;
-+			bias-disable;
-+		};
-+		pinctrl_usart_3: usart3-0 {
-+			pinmux = < PIN_PC12__URXD3>, <PIN_PC13__UTXD3>;
-+			bias-disable;
-+		};
-+		pinctrl_usart_4: usart4-0 {
-+			pinmux = < PIN_PB3__URXD4>, <PIN_PB4__UTXD4>;
-+			bias-disable;
-+		};
-+		pinctrl_flx0_default: flx0_usart_default {
-+			pinmux = <PIN_PB28__FLEXCOM0_IO0>, //TX
-+			<PIN_PB29__FLEXCOM0_IO1>; //RX
-+			bias-disable;
-+		};
-+		pinctrl_flx3_default: flx3_usart_default {
-+			pinmux = <PIN_PB22__FLEXCOM3_IO1>, //RX
-+			<PIN_PB23__FLEXCOM3_IO0>; //TX
-+			bias-disable;
-+		};
-+	};
-+
-+	pinctrl_flx4_default: flx4_i2c2_default {
-+		pinmux = <PIN_PD12__FLEXCOM4_IO0>, //DATA
-+		<PIN_PD13__FLEXCOM4_IO1>; //CLK
-+		bias-disable;
-+		drive-open-drain = <1>;
-+	};
-+
-+	pinctrl_pwm0 {
-+		pinctrl_pwm0_pwm_h0: pwm0_pwm_h0 {
-+			pinmux = <PIN_PA30__PWMH0>;
-+			bias-disable;
-+		};
-+		pinctrl_pwm0_pwm_h1: pwm0_pwmh1 {
-+			pinmux = <PIN_PB0__PWMH1>;
-+			bias-disable;
-+		};
-+		pinctrl_pwm0_pwm_h2: pwm0_pwm_h2 {
-+			pinmux = <PIN_PB5__PWMH2>;
-+			bias-disable;
-+		};
-+		pinctrl_pwm0_pwm_h3: pwm0_pwm_h3 {
-+			pinmux = <PIN_PB7__PWMH3>;
-+			bias-disable;
-+		};
-+	};
-+
-+	pinctrl_adc {
-+		pinctrl_adc2: adc2 {
-+			pinmux = <PIN_PD21__GPIO>;
-+			bias-disable;
-+		};
-+		pinctrl_adc3: adc3 {
-+			pinmux = <PIN_PD22__GPIO>;
-+			bias-disable;
-+		};
-+		pinctrl_adc4: adc4 {
-+			pinmux = <PIN_PD23__GPIO>;
-+			bias-disable;
-+		};
-+		pinctrl_adc5: adc5 {
-+			pinmux = <PIN_PD24__GPIO>;
-+			bias-disable;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usart_0>;
-+	atmel,use-dma-rx;
-+	atmel,use-dma-tx;
-+	status = "disabled";
-+};
-+
-+/* debug uart */
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usart_1>;
-+	atmel,use-dma-rx;
-+	atmel,use-dma-tx;
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usart_2>;
-+	atmel,use-dma-rx;
-+	atmel,use-dma-tx;
-+	status = "disabled";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usart_3>;
-+	atmel,use-dma-rx;
-+	atmel,use-dma-tx;
-+	status = "disabled";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usart_4>;
-+	atmel,use-dma-rx;
-+	atmel,use-dma-tx;
-+	status = "disabled";
-+};
-+
-+&flx0 {
-+	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
-+	status = "disabled";
-+
-+	uart5: serial@200  {
-+		compatible = "atmel,at91sam9260-usart";
-+		reg = <0x200 0x400>;
-+		interrupts = <19 IRQ_TYPE_LEVEL_HIGH 7>;
-+		dmas = <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+			| AT91_XDMAC_DT_PERID(11))>,
-+		       <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+			| AT91_XDMAC_DT_PERID(12))>;
-+		dma-names = "tx", "rx";
-+		clocks = <&pmc PMC_TYPE_PERIPHERAL 19>;
-+		clock-names = "usart";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_flx0_default>;
-+		atmel,fifo-size = <32>;
-+		atmel,use-dma-rx;
-+		atmel,use-dma-tx;
-+		status = "disabled";
-+	};
-+};
-+
-+&flx3 {
-+	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
-+	status = "disabled";
-+
-+	uart6: serial@200 {
-+		compatible = "atmel,at91sam9260-usart";
-+		reg = <0x200 0x400>;
-+		interrupts = <22 IRQ_TYPE_LEVEL_HIGH 7>;
-+		dmas = <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+			| AT91_XDMAC_DT_PERID(17))>,
-+		       <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+			| AT91_XDMAC_DT_PERID(18))>;
-+		dma-names = "tx", "rx";
-+		clocks = <&pmc PMC_TYPE_PERIPHERAL 22>;
-+		clock-names = "usart";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_flx3_default>;
-+		atmel,fifo-size = <32>;
-+		atmel,use-dma-rx;
-+		atmel,use-dma-tx;
-+		status = "disabled";
-+	};
-+};
-+
-+&flx4 {
-+	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_TWI>;
-+	status = "disabled";
-+
-+	i2c2: i2c@600 {
-+		compatible = "atmel,sama5d2-i2c";
-+		reg = <0x600 0x200>;
-+		interrupts = <23 IRQ_TYPE_LEVEL_HIGH 7>;
-+		dmas = <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+			| AT91_XDMAC_DT_PERID(19))>,
-+		       <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-+			| AT91_XDMAC_DT_PERID(20))>;
-+		dma-names = "tx", "rx";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&pmc PMC_TYPE_PERIPHERAL 23>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_flx4_default>;
-+		atmel,fifo-size = <16>;
-+		status = "disabled";
-+	};
-+};
-+
-+&pwm0 {
-+	status = "okay";
-+};
-+
-+&shutdown_controller {
-+	atmel,shdwc-debouncer = <976>;
-+	atmel,wakeup-rtc-timer;
-+
-+	input@0 {
-+		reg = <0>;
-+		atmel,wakeup-type = "low";
-+	};
-+};
-+
-+&watchdog {
-+	status = "okay";
-+};
-+
-+&adc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc2
-+		     &pinctrl_adc3
-+		     &pinctrl_adc4
-+		     &pinctrl_adc5>;
-+
-+	vddana-supply = <&vdd_adc_vddana>;
-+	vref-supply = <&vdd_adc_vref>;
-+	status = "disabled";
-+};
-+
-+&securam {
-+	export;
-+
-+	/* export overkiz u-boot mode/version and factory */
-+	uboot@1400 {
-+		reg = <0x1400 0x20>;
-+		export;
-+	};
-+};
--- 
-2.23.0
+Will fix that. BTW, I tried running make dtbs_check and faced a few
+errors on other yaml files (which is why I ended up sending the patch
+without fully validating the schema). Maybe those have been fixed (I'm
+based on the media tree which is based on 5.4-rc1).
+
+Oh, and I also noticed that the generated example has
+#address-cells = <1>, #size-cells = <1> in the parent node, while my
+example expects <2>. Is there any way I can specify that somewhere, or
+should I just tweak the example to use 1 cell instead?
+
+> 
+> >
+> > Signed-off-by: Boris Brezillon <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> > ---
+> >  .../bindings/media/rockchip,vdec.yaml         | 71 +++++++++++++++++++
+> >  1 file changed, 71 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> > new file mode 100644
+> > index 000000000000..7167c3d6a389
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> > @@ -0,0 +1,71 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/rockchip,vdec.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Rockchip Video Decoder (VDec) Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > +
+> > +description: |-
+> > +  The Rockchip rk3399 has a stateless Video Decoder that can decodes H.264,
+> > +  HEVC an VP9 streams.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: rockchip,rk3399-vdec
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: The Video Decoder AXI interface clock
+> > +      - description: The Video Decoder AHB interface clock
+> > +      - description: The Video Decoded CABAC clock
+> > +      - description: The Video Decoder core clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: aclk
+> > +      - const: iface
+> > +      - const: cabac
+> > +      - const: core
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +
+> > +  iommus:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +  - power-domains
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    vdec: video-codec@ff660000 {
+> > +        compatible = "rockchip,rk3399-vdec";
+> > +        reg = <0x0 0xff660000 0x0 0x400>;
+> > +        interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +        clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>,
+> > +                 <&cru SCLK_VDU_CA>, <&cru SCLK_VDU_CORE>;
+> > +        clock-names = "aclk", "iface", "cabac", "core";
+> > +        power-domains = <&power RK3399_PD_VDU>;
+> > +        iommus = <&vdec_mmu>;
+> > +    };
+> > +
+> > +...
+> > --
+> > 2.21.0
+> >  
