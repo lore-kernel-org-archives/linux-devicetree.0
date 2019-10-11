@@ -1,72 +1,205 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
- snd_soc_dai_get_sdw_stream()
-Date: Fri, 11 Oct 2019 13:30:19 +0100
-Message-ID: <dbb25f4c-7198-ef28-ec6a-9ac5676122b6@linaro.org>
-References: <20190813191827.GI5093@sirena.co.uk>
- <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
- <20190813195804.GL5093@sirena.co.uk>
- <20190814041142.GU12733@vkoul-mobl.Dlink>
- <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
- <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
- <53bb3105-8e85-a972-fce8-a7911ae4d461@linux.intel.com>
- <95870089-25da-11ea-19fd-0504daa98994@linaro.org>
- <2326a155-332e-fda0-b7a2-b48f348e1911@linux.intel.com>
- <34e4cde8-f2e5-0943-115a-651d86f87c1a@linaro.org>
- <20191010120337.GB31391@ediswmail.ad.cirrus.com>
- <22eff3aa-dfd6-1ee5-8f22-2af492286053@linux.intel.com>
- <e671930b-645a-7ee3-6926-eea39626c0a3@linaro.org>
- <c9203f7f-f360-0ede-d351-cfdbec03299c@linux.intel.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: media: Convert stm32 dcmi bindings to json-schema
+Date: Fri, 11 Oct 2019 07:35:36 -0500
+Message-ID: <CAL_JsqKW91A96NXy8kwPp2mdgiifaqJyCQ0n5Mc=zZzoU4VzDg@mail.gmail.com>
+References: <20191002151442.15428-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c9203f7f-f360-0ede-d351-cfdbec03299c@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <20191002151442.15428-1-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, robh+dt@kernel.org, lgirdwood@gmail.com, Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, spapothi@codeaurora.org
+To: Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Hugues Fruchet <hugues.fruchet@st.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 2, 2019 at 10:14 AM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
+>
+> Convert the STM32 dcmi binding to DT schema format using json-schema
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../devicetree/bindings/media/st,stm32-dcmi.txt    | 45 ----------
+>  .../devicetree/bindings/media/st,stm32-dcmi.yaml   | 97 ++++++++++++++++++++++
+>  2 files changed, 97 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+> deleted file mode 100644
+> index 3122ded82eb4..000000000000
+> --- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+> +++ /dev/null
+> @@ -1,45 +0,0 @@
+> -STMicroelectronics STM32 Digital Camera Memory Interface (DCMI)
+> -
+> -Required properties:
+> -- compatible: "st,stm32-dcmi"
+> -- reg: physical base address and length of the registers set for the device
+> -- interrupts: should contain IRQ line for the DCMI
+> -- resets: reference to a reset controller,
+> -          see Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+> -- clocks: list of clock specifiers, corresponding to entries in
+> -          the clock-names property
+> -- clock-names: must contain "mclk", which is the DCMI peripherial clock
+> -- pinctrl: the pincontrol settings to configure muxing properly
+> -           for pins that connect to DCMI device.
+> -           See Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml.
+> -- dmas: phandle to DMA controller node,
+> -        see Documentation/devicetree/bindings/dma/stm32-dma.txt
+> -- dma-names: must contain "tx", which is the transmit channel from DCMI to DMA
+> -
+> -DCMI supports a single port node with parallel bus. It should contain one
+> -'port' child node with child 'endpoint' node. Please refer to the bindings
+> -defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> -
+> -Example:
+> -
+> -       dcmi: dcmi@50050000 {
+> -               compatible = "st,stm32-dcmi";
+> -               reg = <0x50050000 0x400>;
+> -               interrupts = <78>;
+> -               resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
+> -               clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
+> -               clock-names = "mclk";
+> -               pinctrl-names = "default";
+> -               pinctrl-0 = <&dcmi_pins>;
+> -               dmas = <&dma2 1 1 0x414 0x3>;
+> -               dma-names = "tx";
+> -               port {
+> -                       dcmi_0: endpoint {
+> -                               remote-endpoint = <...>;
+> -                               bus-width = <8>;
+> -                               hsync-active = <0>;
+> -                               vsync-active = <0>;
+> -                               pclk-sample = <1>;
+> -                       };
+> -               };
+> -       };
+> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> new file mode 100644
+> index 000000000000..50e8cfed06f3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/st,stm32-dcmi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STM32 Digital Camera Memory Interface (DCMI) binding
+> +
+> +maintainers:
+> +  - Hugues Fruchet <hugues.fruchet@st.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stm32-dcmi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Module Clock
 
+'maxItems: 1' is sufficient here as the description doesn't add anything.
 
-On 10/10/2019 16:49, Pierre-Louis Bossart wrote:
-> 
-> 
->> I still need to figure out prefixing multiple instances of this 
->> Amplifier controls with "Left" and "Right"
-> 
-> FWIW we use the "snd_codec_conf" stuff to add a prefix for each 
-> amplifier, so that the controls are not mixed up between instances of 
-> the same amp, see e.g.
-> 
-Thanks Pierre for the inputs.
-Am using Documentation/devicetree/bindings/sound/name-prefix.txt for dt 
-and it works!
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mclk
+> +
+> +  pinctrl-names: true
 
-I will send new set of patches by dropping this patch!
+This gets added automatically.
 
---srini
-> 
-> static struct snd_soc_codec_conf codec_conf[] = {
->      {
->          .dev_name = "sdw:0:25d:711:0:1",
->          .name_prefix = "rt711",
->      },
->      {
->          .dev_name = "sdw:1:25d:1308:0:0",
->          .name_prefix = "rt1308-1",
->      },
->      {
->          .dev_name = "sdw:2:25d:1308:0:2",
->          .name_prefix = "rt1308-2",
->      },
->      {
->          .dev_name = "sdw:3:25d:715:0:1",
->          .name_prefix = "rt715",
->      },
-> };
-> 
-> 
-> https://github.com/thesofproject/linux/pull/1142/commits/9ff9cf9d8994333df2250641c95431261bc66d69#diff-892560f80d603420baec7395e0b45d81R212 
-> 
+> +
+> +  dmas:
+> +    description:
+> +      One DMA channel specifier following the convention outlined
+> +      in bindings/dma/dma.txt
+
+Drop this.
+
+> +    maxItems: 1
+> +
+> +  dma-names:
+> +    description:
+> +      There must be one channel named "tx" for transmit
+
+The schema says all this already.
+
+> +    maxItems: 1
+
+This is implied.
+
+> +    additionalItems: true
+
+This is wrong. You can't have more items because you set the max to 1.
+
+> +    items:
+> +      - const: tx
+> +
+> +  resets:
+> +        maxItems: 1
+
+Inconsistent indentation.
+
+> +
+> +  port:
+> +    type: object
+> +    description:
+> +      DCMI supports a single port node with parallel bus. It should contain
+> +      one 'port' child node with child 'endpoint' node. Please refer to the
+> +      bindings defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +patternProperties:
+> +  "^pinctrl-[0-9]+$": true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - dmas
+> +  - dma-names
+> +  - port
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +    #include <dt-bindings/reset/stm32mp1-resets.h>
+> +    dcmi: dcmi@4c006000 {
+> +        compatible = "st,stm32-dcmi";
+> +        reg = <0x4c006000 0x400>;
+> +        interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+> +        resets = <&rcc CAMITF_R>;
+> +        clocks = <&rcc DCMI>;
+> +        clock-names = "mclk";
+> +        dmas = <&dmamux1 75 0x400 0x0d>;
+> +        dma-names = "tx";
+> +
+> +        port {
+> +             dcmi_0: endpoint {
+> +                   remote-endpoint = <&ov5640_0>;
+> +                   bus-width = <8>;
+> +                   hsync-active = <0>;
+> +                   vsync-active = <0>;
+> +                   pclk-sample = <1>;
+> +             };
+> +        };
+> +    };
+> +
+> +...
+> --
+> 2.15.0
+>
