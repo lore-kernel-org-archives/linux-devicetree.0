@@ -1,281 +1,622 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v3 07/14] dt-bindings: dma: ti: Add document for K3 UDMA
-Date: Fri, 11 Oct 2019 10:30:55 +0300
-Message-ID: <ef07299b-eb43-d582-adb8-46f46681f9a5@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-8-peter.ujfalusi@ti.com> <20191010175232.GA24556@bogus>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/2] clk: meson: a1: add support for Amlogic A1 clock driver
+Date: Fri, 11 Oct 2019 09:39:37 +0200
+Message-ID: <1jsgnz20jq.fsf@starbuckisacylon.baylibre.com>
+References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com> <1569411888-98116-3-git-send-email-jian.hu@amlogic.com> <1j1rw4mmzw.fsf@starbuckisacylon.baylibre.com> <a830a0d1-680c-86ec-e858-4470c67865e2@amlogic.com> <1jimpd27cb.fsf@starbuckisacylon.baylibre.com> <5fd57563-0c34-be14-132a-74fd2c5a5275@amlogic.com> <052b0a5c-c913-a9ff-65b9-5b7eb0aecd6e@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191010175232.GA24556@bogus>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: nm@ti.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, j-keerthy@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, tony@atomide.com, vkoul@kernel.org, ssantosh@kernel.org, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <052b0a5c-c913-a9ff-65b9-5b7eb0aecd6e@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jian Hu <jian.hu@amlogic.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Um9iLAoKT24gMTAvMTAvMjAxOSAyMC41MiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBP
-Y3QgMDEsIDIwMTkgYXQgMDk6MTY6NTdBTSArMDMwMCwgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6Cj4+
-IE5ldyBiaW5kaW5nIGRvY3VtZW50IGZvcgo+PiBUZXhhcyBJbnN0cnVtZW50cyBLMyBOQVZTUyBV
-bmlmaWVkIERNQSDigJMgUGVyaXBoZXJhbCBSb290IENvbXBsZXggKFVETUEtUCkuCj4+Cj4+IFVE
-TUEtUCBpcyBpbnRyb2R1Y2VkIGFzIHBhcnQgb2YgdGhlIEszIGFyY2hpdGVjdHVyZSBhbmQgY2Fu
-IGJlIGZvdW5kIGluCj4+IEFNNjU0IGFuZCBqNzIxZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogUGV0
-ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4KPj4gLS0tCj4+ICAuLi4vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kbWEvdGkvazMtdWRtYS50eHQgICAgfCAxODUgKysrKysrKysrKysrKysr
-KysrCj4+ICBpbmNsdWRlL2R0LWJpbmRpbmdzL2RtYS9rMy11ZG1hLmggICAgICAgICAgICAgfCAg
-MTAgKwo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAxOTUgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvdGkvazMtdWRt
-YS50eHQKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL2RtYS9rMy11
-ZG1hLmgKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kbWEvdGkvazMtdWRtYS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZG1hL3RpL2szLXVkbWEudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAw
-MDAwMDAwMC4uM2E4ODE2ZWM5Y2UwCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS90aS9rMy11ZG1hLnR4dAo+PiBAQCAtMCwwICsx
-LDE4NSBAQAo+PiArKiBUZXhhcyBJbnN0cnVtZW50cyBLMyBOQVZTUyBVbmlmaWVkIERNQSDigJMg
-UGVyaXBoZXJhbCBSb290IENvbXBsZXggKFVETUEtUCkKPj4gKwo+PiArVGhlIFVETUEtUCBpcyBp
-bnRlbmRlZCB0byBwZXJmb3JtIHNpbWlsYXIgKGJ1dCBzaWduaWZpY2FudGx5IHVwZ3JhZGVkKSBm
-dW5jdGlvbnMKPj4gK2FzIHRoZSBwYWNrZXQtb3JpZW50ZWQgRE1BIHVzZWQgb24gcHJldmlvdXMg
-U29DIGRldmljZXMuIFRoZSBVRE1BLVAgbW9kdWxlCj4+ICtzdXBwb3J0cyB0aGUgdHJhbnNtaXNz
-aW9uIGFuZCByZWNlcHRpb24gb2YgdmFyaW91cyBwYWNrZXQgdHlwZXMuIFRoZSBVRE1BLVAgaXMK
-Pj4gK2FyY2hpdGVjdGVkIHRvIGZhY2lsaXRhdGUgdGhlIHNlZ21lbnRhdGlvbiBhbmQgcmVhc3Nl
-bWJseSBvZiBTb0MgRE1BIGRhdGEKPj4gK3N0cnVjdHVyZSBjb21wbGlhbnQgcGFja2V0cyB0by9m
-cm9tIHNtYWxsZXIgZGF0YSBibG9ja3MgdGhhdCBhcmUgbmF0aXZlbHkKPj4gK2NvbXBhdGlibGUg
-d2l0aCB0aGUgc3BlY2lmaWMgcmVxdWlyZW1lbnRzIG9mIGVhY2ggY29ubmVjdGVkIHBlcmlwaGVy
-YWwuIE11bHRpcGxlCj4+ICtUeCBhbmQgUnggY2hhbm5lbHMgYXJlIHByb3ZpZGVkIHdpdGhpbiB0
-aGUgRE1BIHdoaWNoIGFsbG93IG11bHRpcGxlIHNlZ21lbnRhdGlvbgo+PiArb3IgcmVhc3NlbWJs
-eSBvcGVyYXRpb25zIHRvIGJlIG9uZ29pbmcuIFRoZSBETUEgY29udHJvbGxlciBtYWludGFpbnMg
-c3RhdGUKPj4gK2luZm9ybWF0aW9uIGZvciBlYWNoIG9mIHRoZSBjaGFubmVscyB3aGljaCBhbGxv
-d3MgcGFja2V0IHNlZ21lbnRhdGlvbiBhbmQKPj4gK3JlYXNzZW1ibHkgb3BlcmF0aW9ucyB0byBi
-ZSB0aW1lIGRpdmlzaW9uIG11bHRpcGxleGVkIGJldHdlZW4gY2hhbm5lbHMgaW4gb3JkZXIKPj4g
-K3RvIHNoYXJlIHRoZSB1bmRlcmx5aW5nIERNQSBoYXJkd2FyZS4gQW4gZXh0ZXJuYWwgRE1BIHNj
-aGVkdWxlciBpcyB1c2VkIHRvCj4+ICtjb250cm9sIHRoZSBvcmRlcmluZyBhbmQgcmF0ZSBhdCB3
-aGljaCB0aGlzIG11bHRpcGxleGluZyBvY2N1cnMgZm9yIFRyYW5zbWl0Cj4+ICtvcGVyYXRpb25z
-LiBUaGUgb3JkZXJpbmcgYW5kIHJhdGUgb2YgUmVjZWl2ZSBvcGVyYXRpb25zIGlzIGluZGlyZWN0
-bHkgY29udHJvbGxlZAo+PiArYnkgdGhlIG9yZGVyIGluIHdoaWNoIGJsb2NrcyBhcmUgcHVzaGVk
-IGludG8gdGhlIERNQSBvbiB0aGUgUnggUFNJLUwgaW50ZXJmYWNlLgo+PiArCj4+ICtUaGUgVURN
-QS1QIGFsc28gc3VwcG9ydHMgYWN0aW5nIGFzIGJvdGggYSBVVEMgYW5kIFVETUEtQyBmb3IgaXRz
-IGludGVybmFsCj4+ICtjaGFubmVscy4gQ2hhbm5lbHMgaW4gdGhlIFVETUEtUCBjYW4gYmUgY29u
-ZmlndXJlZCB0byBiZSBlaXRoZXIgUGFja2V0LUJhc2VkIG9yCj4+ICtUaGlyZC1QYXJ0eSBjaGFu
-bmVscyBvbiBhIGNoYW5uZWwgYnkgY2hhbm5lbCBiYXNpcy4KPj4gKwo+PiArQWxsIHRyYW5zZmVy
-cyB3aXRoaW4gTkFWU1MgaXMgZG9uZSBiZXR3ZWVuIFBTSS1MIHNvdXJjZSBhbmQgZGVzdGluYXRp
-b24gdGhyZWFkcy4KPj4gK1RoZSBwZXJpcGhlcmFscyBzZXJ2aWNlZCBieSBVRE1BIGNhbiBiZSBQ
-U0ktTCBuYXRpdmUgKHNhMnVsLCBjcHN3LCBldGMpIG9yCj4+ICtsZWdhY3ksIG5vbiBQU0ktTCBu
-YXRpdmUgcGVyaXBoZXJhbHMuIEluIHRoZSBsYXRlciBjYXNlIGEgc3BlY2lhbCwgc21hbGwgUERN
-QSBpcwo+PiArdGFza2VkIHRvIGFjdCBhcyBhIGJyaWRnZSBiZXR3ZWVuIHRoZSBQU0ktTCBmYWJy
-aWMgYW5kIHRoZSBsZWdhY3kgcGVyaXBoZXJhbC4KPj4gKwo+PiArUERNQXMgY2FuIGJlIGNvbmZp
-Z3VyZWQgdmlhIFVETUFQIHBlZXIgcmVnaXN0ZXJzIHRvIG1hdGNoIHdpdGggdGhlIGNvbmZpZ3Vy
-YXRpb24KPj4gK29mIHRoZSBsZWdhY3kgcGVyaXBoZXJhbC4KPj4gKwo+PiArUmVxdWlyZWQgcHJv
-cGVydGllczoKPj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+ICstIGNvbXBhdGlibGU6CQlTaG91
-bGQgYmUKPj4gKwkJCSJ0aSxhbTY1NC1uYXZzcy1tYWluLXVkbWFwIiBmb3IgYW02NTQgbWFpbiBO
-QVZTUyBVRE1BUAo+PiArCQkJInRpLGFtNjU0LW5hdnNzLW1jdS11ZG1hcCIgZm9yIGFtNjU0IG1j
-dSBOQVZTUyBVRE1BUAo+PiArCQkJInRpLGo3MjFlLW5hdnNzLW1haW4tdWRtYXAiIGZvciBqNzIx
-ZSBtYWluIE5BVlNTIFVETUFQCj4+ICsJCQkidGksajcyMWUtbmF2c3MtbWN1LXVkbWFwIiBmb3Ig
-ajcyMWUgbWN1IE5BVlNTIFVETUFQCj4+ICstICNkbWEtY2VsbHM6CQlTaG91bGQgYmUgc2V0IHRv
-IDwzPi4KPj4gKwkJCS0gVGhlIGZpcnN0IHBhcmFtZXRlciBpcyBhIHBoYW5kbGUgdG8gdGhlIHJl
-bW90ZSBQU0ktTAo+PiArCQkJICBlbmRwb2ludAo+PiArCQkJLSBUaGUgc2Vjb25kIHBhcmFtZXRl
-ciBpcyB0aGUgdGhyZWFkIG9mZnNldCB3aXRoaW4gdGhlCj4+ICsJCQkgIHJlbW90ZSB0aHJlYWQg
-SUQgcmFuZ2UKPj4gKwkJCS0gVGhlIHRoaXJkIHBhcmFtZXRlciBpcyB0aGUgY2hhbm5lbCBkaXJl
-Y3Rpb24uCj4+ICstIHJlZzoJCQlNZW1vcnkgbWFwIG9mIFVETUFQCj4+ICstIHJlZy1uYW1lczoJ
-CSJnY2ZnIiwgInJjaGFucnQiLCAidGNoYW5ydCIKPj4gKy0gbXNpLXBhcmVudDoJCXBoYW5kbGUg
-Zm9yICJ0aSxzY2ktaW50YSIgaW50ZXJydXB0IGNvbnRyb2xsZXIKPj4gKy0gdGkscmluZ2FjYzoJ
-CXBoYW5kbGUgZm9yIHRoZSByaW5nIGFjY2VsZXJhdG9yIG5vZGUKPj4gKy0gdGkscHNpbC1iYXNl
-OgkJUFNJLUwgdGhyZWFkIElEIGJhc2Ugb2YgdGhlIFVETUFQIGNoYW5uZWxzCj4+ICstIHRpLHNj
-aToJCXBoYW5kbGUgb24gVEktU0NJIGNvbXBhdGlibGUgU3lzdGVtIGNvbnRyb2xsZXIgbm9kZQo+
-PiArLSB0aSxzY2ktZGV2LWlkOglUSS1TQ0kgZGV2aWNlIGlkCj4+ICstIHRpLHNjaS1ybS1yYW5n
-ZS10Y2hhbjogVURNQSB0Y2hhbiByZXNvdXJjZSBsaXN0IGluIHBhaXJzIG9mIHR5cGUgYW5kIHN1
-YnR5cGUKPj4gKy0gdGksc2NpLXJtLXJhbmdlLXJjaGFuOiBVRE1BIHJjaGFuIHJlc291cmNlIGxp
-c3QgaW4gcGFpcnMgb2YgdHlwZSBhbmQgc3VidHlwZQo+PiArLSB0aSxzY2ktcm0tcmFuZ2UtcmZs
-b3c6IFVETUEgcmZsb3cgcmVzb3VyY2UgbGlzdCBpbiBwYWlycyBvZiB0eXBlIGFuZCBzdWJ0eXBl
-Cj4+ICsKPj4gK0ZvciBQU0ktTCB0aHJlYWQgbWFuYWdlbWVudCB0aGUgcGFyZW50IE5BVlNTIG5v
-ZGUgbXVzdCBoYXZlOgo+PiArLSB0aSxzY2k6CQlwaGFuZGxlIG9uIFRJLVNDSSBjb21wYXRpYmxl
-IFN5c3RlbSBjb250cm9sbGVyIG5vZGUKPj4gKy0gdGksc2NpLWRldi1pZDoJVEktU0NJIGRldmlj
-ZSBpZCBvZiB0aGUgTkFWU1MgaW5zdGFuY2UKPj4gKwo+PiArUmVtb3RlIFBTSS1MIGVuZHBvaW50
-Cj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLQo+
-PiArLSB0aSxwc2lsLWJhc2U6CQlQU0ktTCB0aHJlYWQgSUQgYmFzZSBvZiB0aGUgZW5kcG9pbnQK
-Pj4gKwo+PiArV2l0aGluIHRoZSBQU0ktTCBlbmRwb2ludCBub2RlIHRocmVhZCBjb25maWd1cmF0
-aW9uIHN1Ym5vZGVzIG11c3QgcHJlc2VudCB3aXRoOgo+PiArcHNpbC1jb25maWdYIG5hbWluZyBj
-b252ZW50aW9uLCB3aGVyZSBYIGlzIHRoZSB0aHJlYWQgSUQgb2Zmc2V0Lgo+PiArCj4+ICtDb25m
-aWd1cmF0aW9uIG5vZGUgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKy0tLS0tLS0tLS0tLS0tLS0t
-LS0tCj4+ICstIHRpLHBkbWEtc3RhdGljdHItdHlwZTpJbiBjYXNlIHRoZSByZW1vdGUgZW5kcG9p
-bnQgKFBETUFzKSByZXF1aXJlcyBTdGF0aWNUUgo+PiArCQkJY29uZmlndXJhdGlvbjoKPj4gKwkJ
-CS0gUFNJTF9TVEFUSUNfVFJfWFkgKDEpOiBYWSB0eXBlIG9mIFN0YXRpY1RSCj4+ICsJCQlGb3Ig
-ZW5kcG9pbnRzIHdpdGhvdXQgU3RhdGljVFIgdGhlIHByb3BlcnR5IGlzIG5vdAo+PiArCQkJbmVl
-ZGVkIG9yIHRvIGJlIHNldCBQU0lMX1NUQVRJQ19UUl9OT05FICgwKS4KPj4gKy0gdGkscGRtYS1l
-bmFibGUtYWNjMzI6CUZvcmNlIDMyIGJpdCBhY2Nlc3Mgb24gcGVyaXBoZXJhbCBwb3J0LiBPbmx5
-IHZhbGlkIGZvcgo+PiArCQkJWFkgdHlwZSBTdGF0aWNUUiwgbm90IHN1cHBvcnRlZCBvbiBhbTY1
-NC4KPj4gKwkJCU11c3QgYmUgZW5hYmxlZCBmb3IgdGhyZWFkcyBzZXJ2aWNpbmcgTWNBU1Agd2l0
-aCBBRklGTwo+PiArCQkJYnlwYXNzIG1vZGUuCj4+ICstIHRpLHBkbWEtZW5hYmxlLWJ1cnN0OglF
-bmFibGUgYnVyc3QgYWNjZXNzIG9uIHBlcmlwaGVyYWwgcG9ydC4gT25seSB2YWxpZCBmb3IKPj4g
-KwkJCVhZIHR5cGUgU3RhdGljVFIsIG5vdCBzdXBwb3J0ZWQgb24gYW02NTQuCj4+ICstIHRpLGNo
-YW5uZWwtdHBsOglDaGFubmVsIFRocm91Z2hwdXQgbGV2ZWw6Cj4+ICsJCQkwIC8gb3Igbm90IHBy
-ZXNlbnQgLSBub3JtYWwgY2hhbm5lbAo+PiArCQkJMSAtIEhpZ2ggVGhyb3VnaHB1dCBjaGFubmVs
-Cj4+ICsJCQkyIC0gVWx0cmEgSGlnaCBUaHJvdWdocHV0IGNoYW5uZWwgKGo3MjFlIG9ubHkpCj4+
-ICstIHRpLG5lZWRzLWVwaWI6CUlmIHRoZSBlbmRwb2ludCByZXF1aXJlIEVQSUIgdG8gYmUgcHJl
-c2VudCBpbiB0aGUKPj4gKwkJCWRlc2NyaXB0b3IuCj4+ICstIHRpLHBzZC1zaXplOgkJU2l6ZSBv
-ZiB0aGUgUHJvdG9jb2wgU3BlY2lmaWMgRGF0YSBzZWN0aW9uIG9mIHRoZQo+PiArCQkJZGVzY3Jp
-cHRvci4KPj4gKy0gdGksbm90ZHBrdDoJCVRoZSBUZWFyZG93biBDb21wbGV0aW9uIE1lc3NhZ2Ug
-b24gdGhlIHRocmVhZCBtdXN0IGJlCj4+ICsJCQlzdXBwcmVzc2VkLgo+PiArCj4+ICtFeGFtcGxl
-Ogo+PiArCj4+ICttYWluX25hdnNzOiBtYWluX25hdnNzIHsKPj4gKwljb21wYXRpYmxlID0gInNp
-bXBsZS1idXMiOwo+PiArCSNhZGRyZXNzLWNlbGxzID0gPDI+Owo+PiArCSNzaXplLWNlbGxzID0g
-PDI+Owo+PiArCWRtYS1jb2hlcmVudDsKPj4gKwlkbWEtcmFuZ2VzOwo+PiArCXJhbmdlczsKPj4g
-Kwo+PiArCXRpLHNjaSA9IDwmZG1zYz47Cj4+ICsJdGksc2NpLWRldi1pZCA9IDwxMTg+Owo+PiAr
-Cj4+ICsJbWFpbl91ZG1hcDogZG1hLWNvbnRyb2xsZXJAMzExNTAwMDAgewo+PiArCQljb21wYXRp
-YmxlID0gInRpLGo3MjFlLW5hdnNzLW1haW4tdWRtYXAiOwo+PiArCQlyZWcgPQk8MHgwIDB4MzEx
-NTAwMDAgMHgwIDB4MTAwPiwKPj4gKwkJCTwweDAgMHgzNDAwMDAwMCAweDAgMHgxMDAwMDA+LAo+
-PiArCQkJPDB4MCAweDM1MDAwMDAwIDB4MCAweDEwMDAwMD47Cj4+ICsJCXJlZy1uYW1lcyA9ICJn
-Y2ZnIiwgInJjaGFucnQiLCAidGNoYW5ydCI7Cj4+ICsJCSNkbWEtY2VsbHMgPSA8Mz47Cj4+ICsK
-Pj4gKwkJdGkscmluZ2FjYyA9IDwmbWFpbl9yaW5nYWNjPjsKPj4gKwkJdGkscHNpbC1iYXNlID0g
-PDB4MTAwMD47Cj4+ICsKPj4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmbWFpbl91ZG1hc3NfaW50
-YT47Cj4+ICsKPj4gKwkJdGksc2NpID0gPCZkbXNjPjsKPj4gKwkJdGksc2NpLWRldi1pZCA9IDwy
-MTI+Owo+PiArCj4+ICsJCXRpLHNjaS1ybS1yYW5nZS10Y2hhbiA9IDwweDBkPiwgLyogVFhfQ0hB
-TiAqLwo+PiArCQkJCQk8MHgwZj4sIC8qIFRYX0hDSEFOICovCj4+ICsJCQkJCTwweDEwPjsgLyog
-VFhfVUhDSEFOICovCj4+ICsJCXRpLHNjaS1ybS1yYW5nZS1yY2hhbiA9IDwweDBhPiwgLyogUlhf
-Q0hBTiAqLwo+PiArCQkJCQk8MHgwYj4sIC8qIFJYX0hDSEFOICovCj4+ICsJCQkJCTwweDBjPjsg
-LyogUlhfVUhDSEFOICovCj4+ICsJCXRpLHNjaS1ybS1yYW5nZS1yZmxvdyA9IDwweDAwPjsgLyog
-R1AgUkZMT1cgKi8KPj4gKwl9Owo+PiArfTsKPj4gKwo+PiArcHNpbHNzQDM0MGMwMDAgewo+PiAr
-CS8qIFBTSUxTUzEgQUFTUkMgKi8KPj4gKwljb21wYXRpYmxlID0gInRpLGo3MjFlLXBzaWxzcyI7
-Cj4+ICsJcmVnID0gPDB4MCAweDAzNDBjMDAwIDB4MCAweDEwMDA+Owo+PiArCXJlZy1uYW1lcyA9
-ICJjb25maWciOwo+PiArCj4+ICsJcGRtYV9tYWluX21jYXNwX2cwOiBwZG1hX21haW5fbWNhc3Bf
-ZzAgewo+PiArCQkvKiBQRE1BNiAoUERNQV9NQ0FTUF9HMCkgKi8KPj4gKwkJdGkscHNpbC1iYXNl
-ID0gPDB4NDQwMD47Cj4+ICsKPj4gKwkJLyogcHNpbC1jb25maWcwICovCj4+ICsJCXBzaWwtY29u
-ZmlnMCB7Cj4+ICsJCQl0aSxwZG1hLXN0YXRpY3RyLXR5cGUgPSA8UERNQV9TVEFUSUNfVFJfWFk+
-Owo+PiArCQkJdGkscGRtYS1lbmFibGUtYWNjMzI7Cj4+ICsJCQl0aSxwZG1hLWVuYWJsZS1idXJz
-dDsKPj4gKwkJfTsKPj4gKwl9Owo+PiArfTsKPj4gKwo+PiArbWNhc3AwOiBtY2FzcEAwMkIwMDAw
-MCB7Cj4+ICsuLi4KPj4gKwkvKiB0eDogUERNQV9NQUlOX01DQVNQX0cwLTAsIHJ4OiBQRE1BX01B
-SU5fTUNBU1BfRzAtMCAqLwo+PiArCWRtYXMgPSA8Jm1haW5fdWRtYXAgJnBkbWFfbWFpbl9tY2Fz
-cF9nMCAwIFVETUFfRElSX1RYPiwKPj4gKwkgICAgICAgPCZtYWluX3VkbWFwICZwZG1hX21haW5f
-bWNhc3BfZzAgMCBVRE1BX0RJUl9SWD47Cj4+ICsJZG1hLW5hbWVzID0gInR4IiwgInJ4IjsKPj4g
-Ky4uLgo+PiArfTsKPj4gKwo+PiArY3J5cHRvOiBjcnlwdG9ANEUwMDAwMCB7Cj4+ICsJY29tcGF0
-aWJsZSA9ICJ0aSxzYTJ1bC1jcnlwdG8iOwo+PiArLi4uCj4+ICsKPj4gKwkvKiB0eDogY3J5cHRv
-X3BucC0xLCByeDogY3J5cHRvX3BucC0xICovCj4+ICsJZG1hcyA9IDwmbWFpbl91ZG1hcCAmY3J5
-cHRvIDAgVURNQV9ESVJfVFg+LAo+PiArCSAgICAgICA8Jm1haW5fdWRtYXAgJmNyeXB0byAwIFVE
-TUFfRElSX1JYPiwKPj4gKwkgICAgICAgPCZtYWluX3VkbWFwICZjcnlwdG8gMSBVRE1BX0RJUl9S
-WD47Cj4gCj4gSSBhc2tlZCBiZWZvcmUgaWYgdGhlIGZpcnN0IGNlbGwgaXMgdGhlIGNsaWVudCBh
-bmQgeW91IHNhaWQgbm8uCgpDb3JyZWN0LCBpdCBpcyBub3QgdGhlIGNsaWVudC4gSXQgaXMgdGhl
-IG5vZGUgb2YgdGhlIFBTSS1MIGdhc2tldCB3aGljaAppbiBjYXNlIG9mIG5hdGl2ZSBQU0ktTCBw
-ZXJpcGhlcmFscyBoYXBwZW5zIHRvIGJlIHRoZSBzYW1lIG5vZGUgYXMgdGhlCmNsaWVudCdzCklu
-IEszIERNQSBhcmNoaXRlY3R1cmUgdGhlIGRhdGEgaXMgbW92ZWQgYWxvbmcgUFNJLUwgdGhyZWFk
-cy4gVGhlCnRocmVhZHMgYXJlIGZvcm1lZCB3aGVuIHR3byBQU0ktTCAoc291cmNlIGFuZCBkZXN0
-aW5hdGlvbikgdGhyZWFkIElEIGlzCnBhaXJlZC4KU2luY2Ugc2EydWwgaXMgbmF0aXZlIFBTSS1M
-IHBlcmlwaGVyYWwsIHRoZSBmaXJzdCBjZWxsICh0aGUgcGhhbmRsZSB0bwp0aGUgUFNJLUwgcmVt
-b3ZlIGdhc2tldCBmcm9tIFVETUFQIHBvaW50IG9mIHZpZXcpIGlzIHBvaW50aW5nIHRvIGl0c2Vs
-Zi4KCk1jQVNQIG9uIHRoZSBvdGhlciBoYW5kIGlzIG5vdCBuYXRpdmUgUFNJLUwsIGl0IG5lZWRz
-IGEgUERNQSB0byBiZQpzZXJ2aWNlZCAoUERNQSBpcyBhIG5hdGl2ZSBQU0ktTCBwZXJpcGhlcmFs
-KSwgc28gdGhlIGZpcnN0IGNlbGwgZm9yCk1jQVNQIGlzIGEgcGhhbmRsZSB0byB0aGUgUERNQSBn
-YXNrZXQgd2hpY2ggaXMgdGFza2VkIHRvIHNlcnZpY2UgaXQuCgo+IEJ1dCB0aGlzIAo+IHNob3dz
-IGl0IGNsZWFybHkgaXMuIE9yICcuLi4nIG9taXRzIGEgbG90IG1vcmUgdGhhbiBqdXN0IHNvbWUg
-bm9kZSAKPiBwcm9wZXJ0aWVzIGFuZCAnZG1hcycgaXMgbm90IGEgcHJvcGVydHkgaW4gJ2NyeXB0
-bycgbm9kZS4KCkkgb25seSBvbWl0dGVkIHByb3BlcnRpZXMgbGlrZSBjbG9ja3MsIHBvd2VyLCBy
-ZWdzLiBBcyBJIHNhaWQgdGhlIGZpcnN0CmNhbGwgaXMgYSBwaGFuZGxlIHRvIHRoZSBQU0ktTCBn
-YXNrZXQgZm9yIHRoZSBwZXJpcGhlcmFsIHdoaWNoIGhhcHBlbnMKdG8gYmUgdGhlIHNhbWUgaW4g
-dGhpcyBjYXNlIGFzIGl0IGlzIGEgbmF0aXZlIFBTSS1MIHBlcmlwaGVyYWwuCgo+IEhhdmluZyB0
-aGUgY29uc3VtZXIgcGhhbmRsZSBoZXJlIGxvb2tzIGxpa2UgYSBoYWNrIHRvIG1lIGFuZCBJIGNh
-bid0IAo+IHRoaW5rIG9mIGV2ZXIgc2VlaW5nIHN1Y2ggYSBjYXNlIGJlZm9yZS4KCldlIG5ldmVy
-IGhhZCBhIERNQSBhcmNoaXRlY3R1cmUgbGlrZSB3aGF0IHdlIGhhdmUgaGVyZSBlaXRoZXIuIFRo
-ZSBETUEKZ2l2ZXMgZXh0cmVtZSBmbGV4aWJpbGl0eSBvbiBob3cgcGVyaXBoZXJhbHMgYXJlIGNv
-bmZpZ3VyZWQsIHBhcmFtZXRlcml6ZWQuClRoZSBVRE1BUCByZXBsYWNlcyB0aGUgZ2VuZXJpYyBz
-eXN0ZW0gRE1BIChFRE1BL3NETUEpIGFuZCB0aGUgcGFja2V0CmJhc2VkIG5ldHdvcmtpbmcgRE1B
-cyBhcyBhIHNpbmdsZSBlbnRpdHkuCkFsbCBjaGFubmVscyBhcmUgY2FwYWJsZSB0byBhY3Qgb24g
-YmVoYWxmIG9mIGEgY29tcGxldGVseSBkaWZmZXJlbnQgRE1BCmFuZCB0aGUgb25seSB0aGluZyB3
-aGljaCBkaWN0YXRlcyB0aGUgY2hhbm5lbCBjb25maWd1cmF0aW9uIGlzIHRoZQpwcm9wZXJ0aWVz
-IG9mIHRoZSByZW1vdGUgZW5kcG9pbnQuCgpUaGlzIGlzIG9uIGhhcmR3YXJlIGxldmVsLiBPbiB0
-b3Agb2YgdGhpcyBmbGV4aWJpbGl0eSBhbG1vc3QgZXZlcnkgdGFzawpjYW4gYmUgaW1wbGVtZW50
-ZWQgaW4gYXQgbGVhc3QgdHdvIGRpZmZlcmVudCwgYnV0IHZhbGlkIHdheXMuIEN5Y2xpYyBETUEK
-Zm9yIGF1ZGlvIGZvciBleGFtcGxlIGNhbiBiZSBpbXBsZW1lbnRlZCBpbiBmb3VyIHdheXMgYW5k
-IGFsbCBvZiB0aGVtCndvdWxkIHdvcmsganVzdCBmaW5lLgoKPiBJIGRvbid0IHRoaW5rIHdlIHdh
-bnQgdG8gc3RhcnQgbm93LiAKCkhybSwgd2UgaGF2ZSBhIGhhcmR3YXJlIHdoaWNoIGdpdmVzIGZs
-ZXhpYmlsaXR5IHRvIGh3IGRlc2lnbmVycyB0byBoYXZlCmRpZmZlcmVudCBmZWF0dXJlcyBhbmQg
-cGFyYW1ldGVycyBwZXIgUFNJLUwgcmVtb3RlIHRocmVhZCBJRHMuIE1vc3Qgb2YKdGhlIG5ldHdv
-cmtpbmcgcGVyaXBoZXJhbHMgYXJlIHVzaW5nIDE2IGJ5dGVzIG9mIFByb3RvY29sIFNwZWNpZmlj
-IGRhdGEsCnNhMnVsIHVzZXMgNjQgYnl0ZXMgZm9yIHRoZSBzYW1lLiBGb3IgbGVnYWN5IHBlcmlw
-aGVyYWxzICh2aWEgUERNQXMpIFBTCmRhdGEgaXMgbm90IHVzZWQuCkFuZCB0aGVyZSBhcmUgb3Ro
-ZXIgZmVhdHVyZXMgZm9yIHRoZSBETUEgcGVyIHRocmVhZHMgdGhhdCBzb21laG93IG5lZWRzCnRv
-IGJlIGRlc2NyaWJlZCBhbmQgbWlnaHQgYXBwbHkgb3Igbm90IGFwcGx5IGF0IGFsbCB0byBhIGdp
-dmVuIHRocmVhZC4KCj4gRmlyc3QsIGl0J3MgcmVkdW5kYW50LiBUaGUgY29kZSBwYXJzaW5nICdk
-bWFzJyBhbHJlYWR5IGtub3dzIHdoYXQgbm9kZSAKPiBpdCBpcyBpbi4gSSBndWVzcyB0aGlzIGlz
-IGxvc3QgaW4gTGludXggd2hlbiB0aGUgYXJncyBhcmUgcGFzc2VkIHRvIAo+IG1haW5fdWRtYXAn
-cyB0cmFuc2xhdGUgZnVuY3Rpb24sIGJ1dCB0aGF0J3MgTGludXgncyBwcm9ibGVtIGFuZCBub3Qg
-YSBEVCAKPiBwcm9ibGVtLiBJIGhhdmVuJ3QgbG9va2VkIGF0IHRoZSBjb2RlLCBidXQgSSdtIGd1
-ZXNzaW5nIHlvdSB3YW50IGNyeXB0byAKPiBwaGFuZGxlIHRvIGdvIHJlYWQgdGhlc2UgcHNpbC1j
-b25maWcgbm9kZXMuCgpJdCBpcyBub3QgcmVkdW5kYW50LiBNY0FTUCBmb3IgZXhhbXBsZSBpcyBu
-b3QgYSBQU0ktTCBuYXRpdmUgcGVyaXBoZXJhbCwKc28gaXQgY2FuIG5vdCBoYXZlIFBTSS1MIGNv
-bmZpZ3VyYXRpb24gbm9kZXMuIFRoZSBiaW5kaW5nIG5lZWRzIHRvIHBvaW50CnRvIHRoZSBQU0kt
-TCBnYXNrZXQncyBub2RlLCBmb3IgTWNBU1AgaXMgaXMgYSBQRE1BLCBmb3Igc2EydWwgaXQgaXMg
-aXRzZWxmLgoKPiBTZWNvbmQsIElmIHdlIGV2ZXIgcmV2IHRoZSBGRFQgZm9ybWF0IHRvIGhhdmUg
-dHlwZSBpbmZvcm1hdGlvbiAKPiBtYWludGFpbmVkLCB3ZSBjb3VsZCBmaW5kIGVhY2ggcGhhbmRs
-ZSBhbmQgbm90IGhhdmUgdG8gcGFyc2UgIyotY2VsbHMgdG8gCj4gd2FsayB0aGVzZSBwcm9wZXJ0
-aWVzLgo+IAo+IAo+PiArCWRtYS1uYW1lcyA9ICJ0eCIsICJyeDEiLCAicngyIjsKPj4gKy4uLgo+
-PiArCXBzaWwtY29uZmlnMCB7Cj4+ICsJCXRpLG5lZWRzLWVwaWI7Cj4+ICsJCXRpLHBzZC1zaXpl
-ID0gPDY0PjsKPj4gKwkJdGksbm90ZHBrdDsKPj4gKwl9Owo+IAo+IEkgc3RpbGwgZG9uJ3QgbGlr
-ZSB0aGlzIGVpdGhlci4gWW91ciBjaG9pY2VzIGFyZToKPiAKPiBQdXQgaW50byBkbWEgY2VsbHMu
-IFllcywgdGhhdCdzIG5vdCBlYXNpbHkgZXhwYW5kZWQgYXMgeW91IHNhaWQsIGJ1dCAKPiB5b3Vy
-IGJpbmRpbmdzIHNob3VsZG4ndCByZWFsbHkgYmUgZXhwYW5kaW5nIGVpdGhlci4KClRoaXMgaXMg
-bm90IGdvaW5nIHRvIHdvcmsgd2l0aCB0aGUgZmxleGliaWxpdHkgYW5kIHRoZSB3aWRlIHJhbmdl
-IG9mCmVuZHBvaW50IHBhcmFtZXRlcnMsIGNvbmZpZ3VyYXRpb24gd2UgbmVlZCBmb3IgdGhlIGNo
-YW5uZWwuCgo+IERvbid0IHB1dCBpbnRvIERULiBOb3QgZXZlcnl0aGluZyBoYXMgdG8gZ28gaW50
-byBEVC4gV2hhdCBjaGFuZ2VzIHBlciAKPiBib2FyZC9jdXN0b21lcj8gTGltaXQgRFQgZGF0YSB0
-byB0aGF0LiBXaGF0IGRhdGEgaXMgZml4ZWQgYmFzZWQgb24gdGhlIAo+IGNsaWVudCBvciBTb0M/
-IFRoYXQgY2FuIHJlc2lkZSBpbiB0aGUgZHJpdmVycy4gVGhlcmUncyBsZXNzIHZhbHVlIGluIAo+
-IHRoYXQgZGF0YSBiZWluZyBpbiBEVCB1bmxlc3MgaXQgaXMgc3RhbmRhcmQgbGlrZSBpbnRlcnJ1
-cHRzLCBjbG9ja3MsIAo+IGV0Yy4gTWF5YmUgdGhlIERNQSBhcGkgbmVlZHMgc29tZSB3YXkgZm9y
-IGNsaWVudHMgdG8gcHJvdmlkZSB0aGUgCj4gcHJvdmlkZXIgd2l0aCBhZGRpdGlvbmFsIGNvbmZp
-Z3VyYXRpb24gaW5mb3JtYXRpb24uCgpJIGhhdmUgYWxyZWFkeSBtb3ZlZCB0aGUgVFIgdnMgUGFj
-a2V0IG1vZGUgY2hhbm5lbCBzZWxlY3Rpb24sIHdoaWNoIGRvZXMKbWFrZSBzZW5zZSBhcyBpdCB3
-YXMgTGludXgncyBjaG9pY2UgdG8gdXNlIFRSIGZvciBjZXJ0YWluIGNhc2VzLgoKSWYgSSBtb3Zl
-IHRoZXNlIHRvIGNvZGUgdGhlbiB3ZSBuZWVkIHRvIGhhdmUgYmlnIHRhYmxlcwpzdHJ1Y3QgcHNp
-bF9jb25maWcgYW02NTRfcHNpbFszMjc2N10gPSB7fTsKc3RydWN0IHBzaWxfY29uZmlnIGo3MjFl
-X3BzaWxbMzI3NjddID0ge307CgphbmQgZm9yIGVhY2ggbmV3IGZhbWlseSBtZW1iZXIgYSBuZXcg
-b25lLgoKQWxzbywgaWYgd2Ugd2FudCBhZGQgRE1BIHN1cHBvcnQgZm9yIGEgbmV3IHBlcmlwaGVy
-YWwgd2Ugd291bGQgbmVlZCB0bwptb2RpZnkgdGhlIGtlcm5lbCBhbmQgdGhlIERUIGluIHN5bmMg
-KHdlbGwsIGtlcm5lbCBmaXJzdCwgdGhhbiBEVCkuCgo+IE9yIGRvIHNvbWUgY29tYmluYXRpb24g
-b2YgdGhlIGFib3ZlLiAKCldoYXQgYWJvdXQgdGhpczoKY3JlYXRlIGEgbmV3IGR0c2kgZmlsZSBw
-ZXIgU29DIChrMy1hbTY1NC1wc2lsLmR0c2ksIGszLWs3MjFlLXBzaWwuZHRzaSkKZm9yIHRoZSBQ
-U0ktTCB0aHJlYWRzIGFuZCBpbnNpZGUgc29tZXRoaW5nIGxpa2UgdGhpczoKCnBzaWwtdGhyZWFk
-czogcHNpbC10aHJlYWRzIHsKCS4uLgoJLyogU0EyVUw6IDB4NDAwMCAtIDB4NDAwMyAqLwoJdGks
-cHNpbC1jb25maWctNDAwMCB7CgkJbGludXgsdWRtYS1tb2RlID0gPFVETUFfUEtUX01PREU+OwoJ
-CXRpLG5lZWRzLWVwaWI7CgkJdGkscHNkLXNpemUgPSA8NjQ+OwoJCXRpLG5vdGRwa3Q7Cgl9OwoK
-CXRpLHBzaWwtY29uZmlnLTQwMDEgewoJCWxpbnV4LHVkbWEtbW9kZSA9IDxVRE1BX1BLVF9NT0RF
-PjsKCQl0aSxuZWVkcy1lcGliOwoJCXRpLHBzZC1zaXplID0gPDY0PjsKCQl0aSxub3RkcGt0OwoJ
-fTsKCgl0aSxwc2lsLWNvbmZpZy00MDAyIHsKCQlsaW51eCx1ZG1hLW1vZGUgPSA8VURNQV9QS1Rf
-TU9ERT47CgkJdGksbmVlZHMtZXBpYjsKCQl0aSxwc2Qtc2l6ZSA9IDw2ND47CgkJdGksbm90ZHBr
-dDsKCX07CgoJLi4uCgkvKiBQRE1BNiAoUERNQV9NQ0FTUF9HMCk6IDB4NDQwMCAtIDB4NDQwMiAq
-LwoJdGhyZWFkLTQ0MDAgewoJCXRpLHBkbWEtc3RhdGljdHItdHlwZSA9IDxQRE1BX1NUQVRJQ19U
-Ul9YWT47CgkJdGkscGRtYS1lbmFibGUtYWNjMzI7CgkJdGkscGRtYS1lbmFibGUtYnVyc3Q7Cgl9
-OwoKCXRocmVhZC00NDAxIHsKCQl0aSxwZG1hLXN0YXRpY3RyLXR5cGUgPSA8UERNQV9TVEFUSUNf
-VFJfWFk+OwoJCXRpLHBkbWEtZW5hYmxlLWFjYzMyOwoJCXRpLHBkbWEtZW5hYmxlLWJ1cnN0OwoJ
-fTsKCgl0aHJlYWQtNDQwMiB7CgkJdGkscGRtYS1zdGF0aWN0ci10eXBlID0gPFBETUFfU1RBVElD
-X1RSX1hZPjsKCQl0aSxwZG1hLWVuYWJsZS1hY2MzMjsKCQl0aSxwZG1hLWVuYWJsZS1idXJzdDsK
-CX07CgoJLi4uCn07CgpUaGVuIHRoZSBiaW5kaW5nIHdvdWxkIGxvb2sgbGlrZSB0aGlzIGZvciBz
-YTJ1bDoKCi8qIHR4OiBjcnlwdG9fcG5wLTEsIHJ4OiBjcnlwdG9fcG5wLTEgKi8KZG1hcyA9IDwm
-bWFpbl91ZG1hcCAweDQwMDAgVURNQV9ESVJfVFg+LAogICAgICAgPCZtYWluX3VkbWFwIDB4NDAw
-MCBVRE1BX0RJUl9SWD4sCiAgICAgICA8Jm1haW5fdWRtYXAgMHg0MDAxIFVETUFfRElSX1JYPjsK
-ZG1hLW5hbWVzID0gInR4IiwgInJ4MSIsICJyeDIiOwoKZm9yIE1jQVNQOgpkbWFzID0gPCZtYWlu
-X3VkbWFwIDB4NDQwMCBVRE1BX0RJUl9UWD4sCiAgICAgICA8Jm1haW5fdWRtYXAgMHg0NDAwIFVE
-TUFfRElSX1JYPjsKZG1hLW5hbWVzID0gInR4IiwgInJ4IjsKClRoZW4gZWl0aGVyIHdlIGNhbiBo
-YXZlIHBoYW5kbGUgaW4gdGhlIHVkbWFwIG5vZGVzIHRvIHRoZSBwc2lsLXRocmVhZHMsCm9yIGp1
-c3QgZmluZCBpdCBmcm9tIHRoZSByb290IHdoZW4gbmVlZGVkLgoKPiBTb3JyeSBJIGRvbid0IGhh
-dmUgc3BlY2lmaWMgc3VnZ2VzdGlvbnMsIGJ1dCBJIGp1c3Qgc2VlIGxvdHMgb2YgcHJvcGVydGll
-cyAKPiBhbmQgY29tcGxleGl0eSwgYW5kIEkgZG9uJ3QgcmVhbGx5IHVuZGVyc3RhbmQgdGhlIGgv
-dyBoZXJlLiBQdXR0aW5nIHRoZSAKPiBjb21wbGV4aXR5IGluIHdoYXQgaXMgYW4gQUJJIGlzIGdl
-bmVyYWxseSBub3QgYSBnb29kIHBsYW4uCgpUaGUgY29tcGxleGl0eSBpcyBjb21pbmcgZnJvbSB0
-aGUgaGFyZHdhcmUgaXRzZWxmLiBJZiBJIGNhbiBub3QgZGVzY3JpYmUKdGhlIGhhcmR3YXJlIHRo
-YW4gaXQgaXMgbm90IGdvaW5nIHRvIGJlIGVhc3kgZm9yIHRoZSBzb2Z0d2FyZSB0byBmaWd1cmUK
-b3V0IHdoYXQgaXQgaXMgZGVhbGluZyB3aXRoLgoKPiBBbmQgSSBkb24ndCAKPiBoYXZlIHRoZSBi
-YW5kd2lkdGggdG8gc3R1ZHkgYW5kIHVuZGVyc3RhbmQgdGhlIGNvbXBsZXhpdGllcyBvZiB5b3Vy
-IGgvdyAKPiAoYW5kIGV2ZXJ5b25lIGVsc2VzKSwgc28ganVzdCBtb3JlIGV4cGxhbmF0aW9ucyBh
-cmUgbm90IGxpa2VseSB0byByZWFsbHkgCj4gaGVscC4KClN1cmUsIEkgdW5kZXJzdGFuZC4KCi0g
-UMOpdGVyCgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAw
-MDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtr
-YS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+On Tue 08 Oct 2019 at 10:03, Jian Hu <jian.hu@amlogic.com> wrote:
+
+> Hi, Jerome
+>
+> PLL clocks and peripheral clocks rely on each other.
+>
+> for fixed_pll, we can describe its parent like this:
+>
+> xtal-->xtal_fixpll-->fixed_dco-->fixed_pll
+>
+> xtal fixpll is belong to peripheral region.
+> fixed_pll/fclk_div2/fclk_div3 is belong to PLL region.
+>
+> if PLL clocks probe first, it will fail to get xtal_fixpll.
+> we can not get fixed_dco's parent clock.
+>
+> if peripheral clocks probe first, it will fail to get
+> fixed_pll clocks. A lot of peripheral clocks parent are fclk_div2/3/5/7.
+> and we can not get fclk_div2/3/5/7 clocks.
+
+What does "fail" mean ?
+
+>
+> I can think of two solutions:
+> 1) Do not describe xtal_fixpll, xtal_hifipll.
+>    that is to say, do not decribe the SYS_OSCIN_CTRL register.
+>
+> 2) Put peripheral and pll clock driver in one driver.
+
+Those are work arounds. Actually fixing the problem is usually
+preferable.
+
+ So if rephrase your problem:
+
+ * We have 2 clock controllers (A and B)
+ * Clock are passed between the controllers using DT
+ * We have a PLL in controller B which is used by clocks in
+   controller A.
+ * the PLL parent clock is in controller A.
+
+=3D> So if I understand correctly you are saying that it will "fail"
+because there is a circular dependency between controller A and B, right
+?
+
+Do you have evidence that your problem comes from this circular
+dependency ?
+
+AFAIK, CCF will orphan the clock and continue if the parent is not
+available. Later, when the parent comes up, the orphan will be
+reparented.
+
+IOW, the problem you are reporting should already be covered by CCF.
+
+>
+> And  which sulution is better above two?
+
+Neither, I'm afraid
+
+>
+> Or maybe other good ideas for it?
+
+My bet would be that an important clocks (maybe more than 1) is being
+gated during the init process.
+
+Maybe you should try the command line parameter "clk_ignore_unused"
+until you get things running with your 2 controllers.
+
+>
+> On 2019/9/29 17:38, Jian Hu wrote:
+>>
+>>
+>> On 2019/9/27 21:32, Jerome Brunet wrote:
+>>>
+>>> On Fri 27 Sep 2019 at 11:52, Jian Hu <jian.hu@amlogic.com> wrote:
+>>>
+>>>> Hi, Jerome
+>>>>
+>>>> Thank you for review.
+>>>>
+>>>> On 2019/9/25 23:09, Jerome Brunet wrote:
+>>>>> On Wed 25 Sep 2019 at 19:44, Jian Hu <jian.hu@amlogic.com> wrote:
+>>>>>
+>>>>>> The Amlogic A1 clock includes three parts:
+>>>>>> peripheral clocks, pll clocks, CPU clocks.
+>>>>>> sys pll and CPU clocks will be sent in next patch.
+>>>>>>
+>>>>>> Unlike the previous series, there is no EE/AO domain
+>>>>>> in A1 CLK controllers.
+>>>>>>
+>>>>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>>>>>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>>>>>> ---
+>>>>>>    arch/arm64/Kconfig.platforms |    1 +
+>>>>>>    drivers/clk/meson/Kconfig    |   10 +
+>>>>>>    drivers/clk/meson/Makefile   |    1 +
+>>>>>>    drivers/clk/meson/a1.c       | 2617
+>>>>>> ++++++++++++++++++++++++++++++++++++++++++
+>>>>>>    drivers/clk/meson/a1.h       |  172 +++
+>>>>>>    5 files changed, 2801 insertions(+)
+>>>>>>    create mode 100644 drivers/clk/meson/a1.c
+>>>>>>    create mode 100644 drivers/clk/meson/a1.h
+>>>>>>
+> [...]
+>>>>>> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
+>>>>>> new file mode 100644
+>>>>>> index 0000000..26edae0f
+>>>>>> --- /dev/null
+>>>>>> +++ b/drivers/clk/meson/a1.c
+>>>>>> @@ -0,0 +1,2617 @@
+>>>>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>>>>>> +/*
+>>>>>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>>>>>> + */
+>>>>>> +
+>>>>>> +#include <linux/clk-provider.h>
+>>>>>> +#include <linux/init.h>
+>>>>>> +#include <linux/of_device.h>
+>>>>>> +#include <linux/platform_device.h>
+>>>>>> +#include <linux/of_address.h>
+>>>>>> +#include "clk-mpll.h"
+>>>>>> +#include "clk-pll.h"
+>>>>>> +#include "clk-regmap.h"
+>>>>>> +#include "vid-pll-div.h"
+>>>>>> +#include "clk-dualdiv.h"
+>>>>>> +#include "meson-eeclk.h"
+>>>>>> +#include "a1.h"
+>>>>>> +
+>>>>>> +/* PLLs clock in gates, its parent is xtal */
+>>>>>> +static struct clk_regmap a1_xtal_clktree =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D SYS_OSCIN_CTRL,
+>>>>>> +        .bit_idx =3D 0,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data) {
+>>>>>> +        .name =3D "xtal_clktree",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_data =3D &(const struct clk_parent_data) {
+>>>>>> +            .fw_name =3D "xtal",
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>
+>>>>> Is CCF even expected to touch this ever ? what about RO ops ?
+>>>>> Please review your other clocks with this in mind
+>>>>>
+>>>> the clock should not be changed at runtime.clk_regmap_gate_ro_ops
+>>>> is a good idea. Set RO ops and remove the CLK_IS_CRITICAL flag.
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_xtal_fixpll =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D SYS_OSCIN_CTRL,
+>>>>>> +        .bit_idx =3D 1,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data) {
+>>>>>> +        .name =3D "xtal_fixpll",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_data =3D &(const struct clk_parent_data) {
+>>>>>> +            .fw_name =3D "xtal",
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_xtal_usb_phy =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D SYS_OSCIN_CTRL,
+>>>>>> +        .bit_idx =3D 2,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data) {
+>>>>>> +        .name =3D "xtal_usb_phy",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_data =3D &(const struct clk_parent_data) {
+>>>>>> +            .fw_name =3D "xtal",
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>
+>>>>> How is an USB clock critical to the system ?
+>>>>> Please review your other clocks with comment in mind ...
+>>>> the usb clock does not affect the system,
+>>>> remove the CLK_IS_CRITICAL flag
+>>>>>
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_xtal_usb_ctrl =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D SYS_OSCIN_CTRL,
+>>>>>> +        .bit_idx =3D 3,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data) {
+>>>>>> +        .name =3D "xtal_usb_ctrl",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_data =3D &(const struct clk_parent_data) {
+>>>>>> +            .fw_name =3D "xtal",
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>> +    },
+>>>>>> +};
+>>>> the usb clock does not affect the system,
+>>>> remove the CLK_IS_CRITICAL flag
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_xtal_hifipll =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D SYS_OSCIN_CTRL,
+>>>>>> +        .bit_idx =3D 4,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data) {
+>>>>>> +        .name =3D "xtal_hifipll",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_data =3D &(const struct clk_parent_data) {
+>>>>>> +            .fw_name =3D "xtal",
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>> +    },
+>>>>>> +};
+>>>> CLK_IS_CRITICAL is need to lock hifi pll.
+>>>
+>>> That's not how CCF works, this falg is not ok here.
+>>> CCF will enable this clock before calling enable on your hifi pll
+>>>
+>> ok=EF=BC=8C I will remove it.
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_xtal_syspll =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D SYS_OSCIN_CTRL,
+>>>>>> +        .bit_idx =3D 5,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data) {
+>>>>>> +        .name =3D "xtal_syspll",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_data =3D &(const struct clk_parent_data) {
+>>>>>> +            .fw_name =3D "xtal",
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>> when CPU clock is at fixed clock, sys pll
+>>>> will be disabled, xtal_syspll will be disabled too.
+>>>> when setting sys pll, call clk_set_rate to lock
+>>>> sys pll, add RO ops to avoid disabling the clock
+>>>
+>>> Again not Ok.
+>>> If you mechanism to lock the PLL is properly implemented in the enable
+>>> callback of the sys pll, still kind of work around are not needed
+>>>
+>>> This has worked on the pll we had so far.
+>>>
+>> ok, I will remove it.
+>>>>
+>>>>>> +static struct clk_regmap a1_xtal_dds =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D SYS_OSCIN_CTRL,
+>>>>>> +        .bit_idx =3D 6,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data) {
+>>>>>> +        .name =3D "xtal_dds",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_data =3D &(const struct clk_parent_data) {
+>>>>>> +            .fw_name =3D "xtal",
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>> +    },
+>>>>>> +};
+>>>> CLK_IS_CRITICAL is need to lock dds
+>>>>>> +
+>>>>>> +/* fixed pll =3D 1536M
+>>>>>> + *
+>>>>>> + * fixed pll ----- fclk_div2 =3D 768M
+>>>>>> + *           |
+>>>>>> + *           ----- fclk_div3 =3D 512M
+>>>>>> + *           |
+>>>>>> + *           ----- fclk_div5 =3D 307.2M
+>>>>>> + *           |
+>>>>>> + *           ----- fclk_div7 =3D 219.4M
+>>>>>> + */
+>>>>>
+>>>>> The framework will make those calculation ... you can remove this
+>>>>>
+>>>> ok, I will remote the comment.
+>>>>>> +static struct clk_regmap a1_fixed_pll_dco =3D {
+>>>>>> +    .data =3D &(struct meson_clk_pll_data){
+>>>>>> +        .en =3D {
+>>>>>> +            .reg_off =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +            .shift   =3D 28,
+>>>>>> +            .width   =3D 1,
+>>>>>> +        },
+>>>>>> +        .m =3D {
+>>>>>> +            .reg_off =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +            .shift   =3D 0,
+>>>>>> +            .width   =3D 8,
+>>>>>> +        },
+>>>>>> +        .n =3D {
+>>>>>> +            .reg_off =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +            .shift   =3D 10,
+>>>>>> +            .width   =3D 5,
+>>>>>> +        },
+>>>>>> +        .frac =3D {
+>>>>>> +            .reg_off =3D ANACTRL_FIXPLL_CTRL1,
+>>>>>> +            .shift   =3D 0,
+>>>>>> +            .width   =3D 19,
+>>>>>> +        },
+>>>>>> +        .l =3D {
+>>>>>> +            .reg_off =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +            .shift   =3D 31,
+>>>>>> +            .width   =3D 1,
+>>>>>> +        },
+>>>>>> +        .rst =3D {
+>>>>>> +            .reg_off =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +            .shift   =3D 29,
+>>>>>> +            .width   =3D 1,
+>>>>>> +        },
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "fixed_pll_dco",
+>>>>>> +        .ops =3D &meson_clk_pll_ro_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_xtal_fixpll.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_fixed_pll =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +        .bit_idx =3D 20,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data) {
+>>>>>> +        .name =3D "fixed_pll",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_fixed_pll_dco.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        .flags =3D CLK_IGNORE_UNUSED,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static const struct pll_params_table a1_hifi_pll_params_table[] =3D=
+ {
+>>>>>> +    PLL_PARAMS(128, 5), /* DCO =3D 614.4M */
+>>>>>> +};
+>>>>>> +
+>>>>>> +static const struct reg_sequence a1_hifi_init_regs[] =3D {
+>>>>>> +    { .reg =3D ANACTRL_HIFIPLL_CTRL1,    .def =3D 0x01800000 },
+>>>>>> +    { .reg =3D ANACTRL_HIFIPLL_CTRL2,    .def =3D 0x00001100 },
+>>>>>> +    { .reg =3D ANACTRL_HIFIPLL_CTRL3,    .def =3D 0x10022200 },
+>>>>>> +    { .reg =3D ANACTRL_HIFIPLL_CTRL4,    .def =3D 0x00301000 },
+>>>>>> +    { .reg =3D ANACTRL_HIFIPLL_CTRL0, .def =3D 0x01f19480 },
+>>>>>> +    { .reg =3D ANACTRL_HIFIPLL_CTRL0, .def =3D 0x11f19480, .delay_u=
+s =3D
+>>>>>> 10 },
+>>>>>> +    { .reg =3D ANACTRL_HIFIPLL_CTRL0,    .def =3D 0x15f11480, .dela=
+y_us
+>>>>>> =3D 40 },
+>>>>>> +    { .reg =3D ANACTRL_HIFIPLL_CTRL2,    .def =3D 0x00001140 },
+>>>>>> +    { .reg =3D ANACTRL_HIFIPLL_CTRL2,    .def =3D 0x00001100 },
+>>>>>> +};
+>>>>>> +
+>>>>>> +/*
+>>>>>> + * The Meson A1 HIFI PLL is 614.4M, it requires
+>>>>>> + * a strict register sequence to enable the PLL.
+>>>>>> + * set meson_clk_pcie_pll_ops as its ops
+>>>>>> + */
+>>>>>
+>>>>> Could you elaborate on this ? What need to be done to enable the clock
+>>>>> ?
+>>>>> Also the HIFI PLL used to be able to do a *LOT* of different rate whi=
+ch
+>>>>> might be desirable for audio use case. Why is this one restricted to
+>>>>> one
+>>>>> particular rate ?
+>>>>>
+>>>> The audio working frequency are 44.1khz, 48khz and 192khz.
+>>>>
+>>>> 614.4M can meet the three frequency.
+>>>>
+>>>> after the hifi pll, there are two dividers in Audio clock.
+>>>>
+>>>> 614.4M/3200 =3D 192khz
+>>>>
+>>>> 614.4M/12800 =3D 48khz
+>>>>
+>>>> 614,4M/13932 =3D 44.0999khz
+>>>
+>>> It does not really answer my question though.
+>>> You are locking a use case here, which is 32 bit sample width
+>>>
+>>> We have other constraint with the upstream audio driver, and we usually
+>>> looking for base frequency that a multiple of 768 (24*32).
+>>>
+>>> If you need your PLL to be set to a particular rate for a use case, the
+>>> correct way is "assigned-rate" in DT
+>>>
+>>> so the question still stands, the HIFI pll before was pretty easy to set
+>>> at a wide variety of rate (same as GP0) ... is it not the case anymore ?
+>>> If yes, could you decribe the constraints.
+>>>
+>>> All this took us a long time to figure out on our own, which is why I'd
+>>> prefer to get the proper constraints in from the beginning this time
+>>>
+>> ok, I will verify it and  describe the constraints about it
+>>>
+>>>>
+>>>>>> +static struct clk_regmap a1_hifi_pll =3D {
+>>>>>> +    .data =3D &(struct meson_clk_pll_data){
+>>>>>> +        .en =3D {
+>>>>>> +            .reg_off =3D ANACTRL_HIFIPLL_CTRL0,
+>>>>>> +            .shift   =3D 28,
+>>>>>> +            .width   =3D 1,
+>>>>>> +        },
+>>>>>> +        .m =3D {
+>>>>>> +            .reg_off =3D ANACTRL_HIFIPLL_CTRL0,
+>>>>>> +            .shift   =3D 0,
+>>>>>> +            .width   =3D 8,
+>>>>>> +        },
+>>>>>> +        .n =3D {
+>>>>>> +            .reg_off =3D ANACTRL_HIFIPLL_CTRL0,
+>>>>>> +            .shift   =3D 10,
+>>>>>> +            .width   =3D 5,
+>>>>>> +        },
+>>>>>> +        .frac =3D {
+>>>>>> +            .reg_off =3D ANACTRL_HIFIPLL_CTRL1,
+>>>>>> +            .shift   =3D 0,
+>>>>>> +            .width   =3D 19,
+>>>>>> +        },
+>>>>>> +        .l =3D {
+>>>>>> +            .reg_off =3D ANACTRL_HIFIPLL_STS,
+>>>>>> +            .shift   =3D 31,
+>>>>>> +            .width   =3D 1,
+>>>>>> +        },
+>>>>>> +        .table =3D a1_hifi_pll_params_table,
+>>>>>> +        .init_regs =3D a1_hifi_init_regs,
+>>>>>> +        .init_count =3D ARRAY_SIZE(a1_hifi_init_regs),
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "hifi_pll",
+>>>>>> +        .ops =3D &meson_clk_pcie_pll_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_xtal_hifipll.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_fixed_factor a1_fclk_div2_div =3D {
+>>>>>> +    .mult =3D 1,
+>>>>>> +    .div =3D 2,
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "fclk_div2_div",
+>>>>>> +        .ops =3D &clk_fixed_factor_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_fixed_pll.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_fclk_div2 =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +        .bit_idx =3D 21,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "fclk_div2",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_fclk_div2_div.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        /*
+>>>>>> +         * add CLK_IS_CRITICAL flag to avoid being disabled by clk
+>>>>>> core
+>>>>>> +         * or its children clocks.
+>>>>>> +         */
+>>>>>
+>>>>> The meaning of this flag is already documented in clk-provider.h
+>>>>> The reason why you need this flag is lot more interesting here ...
+>>>>>
+>>>>> Same below
+>>>> ok, I will replace new comments here.
+>>>>>
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_fixed_factor a1_fclk_div3_div =3D {
+>>>>>> +    .mult =3D 1,
+>>>>>> +    .div =3D 3,
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "fclk_div3_div",
+>>>>>> +        .ops =3D &clk_fixed_factor_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_fixed_pll.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_fclk_div3 =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +        .bit_idx =3D 22,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "fclk_div3",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_fclk_div3_div.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        /*
+>>>>>> +         * add CLK_IS_CRITICAL flag to avoid being disabled by clk
+>>>>>> core
+>>>>>> +         * its children clocks.
+>>>>>> +         */
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_fixed_factor a1_fclk_div5_div =3D {
+>>>>>> +    .mult =3D 1,
+>>>>>> +    .div =3D 5,
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "fclk_div5_div",
+>>>>>> +        .ops =3D &clk_fixed_factor_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_fixed_pll.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_fclk_div5 =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +        .bit_idx =3D 23,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "fclk_div5",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_fclk_div5_div.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        /*
+>>>>>> +         * add CLK_IS_CRITICAL flag to avoid being disabled by clk
+>>>>>> core
+>>>>>> +         * its children clocks.
+>>>>>> +         */
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_fixed_factor a1_fclk_div7_div =3D {
+>>>>>> +    .mult =3D 1,
+>>>>>> +    .div =3D 7,
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "fclk_div7_div",
+>>>>>> +        .ops =3D &clk_fixed_factor_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_fixed_pll.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_regmap a1_fclk_div7 =3D {
+>>>>>> +    .data =3D &(struct clk_regmap_gate_data){
+>>>>>> +        .offset =3D ANACTRL_FIXPLL_CTRL0,
+>>>>>> +        .bit_idx =3D 23,
+>>>>>> +    },
+>>>>>> +    .hw.init =3D &(struct clk_init_data){
+>>>>>> +        .name =3D "fclk_div7",
+>>>>>> +        .ops =3D &clk_regmap_gate_ops,
+>>>>>> +        .parent_hws =3D (const struct clk_hw *[]) {
+>>>>>> +            &a1_fclk_div7_div.hw
+>>>>>> +        },
+>>>>>> +        .num_parents =3D 1,
+>>>>>> +        /*
+>>>>>> +         * add CLK_IS_CRITICAL flag to avoid being disabled by clk
+>>>>>> core
+>>>>>> +         * or its children clock.
+>>>>>> +         */
+>>>>>> +        .flags =3D CLK_IS_CRITICAL,
+>>>>>> +    },
+>>>>>> +};
+>>>>>> +
+> [...]
+>>>>>> --=20
+>>>>>> 1.9.1
+>>>>>
+>>>>> .
+>>>>>
+>>>
+>>> .
+>>>
