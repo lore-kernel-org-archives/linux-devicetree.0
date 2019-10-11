@@ -1,7 +1,7 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v1 2/3] driver: core: Improve documentation for fwnode_operations.add_links()
-Date: Fri, 11 Oct 2019 12:15:20 -0700
-Message-ID: <20191011191521.179614-3-saravanak@google.com>
+Subject: [PATCH v1 1/3] of: property: Minor code formatting/style clean ups
+Date: Fri, 11 Oct 2019 12:15:19 -0700
+Message-ID: <20191011191521.179614-2-saravanak@google.com>
 References: <20191011191521.179614-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,48 +12,67 @@ To: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Frank Ro
 Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>, kernel-team@android.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The add_links() ops shouldn't return on the first failed device link
-add. It needs to continue trying to add device links to other suppliers
-that are available. The documentation didn't explain WHY this behavior
-is necessary. So, update the documentation with an example that explains
-why this is necessary.
+Better variable and function names. Remove "," after the sentinel in an
+array initialization list.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- include/linux/fwnode.h | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ drivers/of/property.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index 6ae05b9ce359..97223e2410bd 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -71,8 +71,25 @@ struct fwnode_reference_args {
-  *		links to all the suppliers of the device that are available at
-  *		the time this function is called.  The function must NOT stop
-  *		at the first failed device link if other unlinked supplier
-- *		devices are present in the system.  If some suppliers are not
-- *		yet available, this function will be called again when other
-+ *		devices are present in the system.  This is necessary for the
-+ *		driver/bus sync_state() callbacks to work correctly.
-+ *
-+ *		For example, say Device-C depends on suppliers Device-S1 and
-+ *		Device-S2 and the dependency is listed in that order in the
-+ *		firmware.  Say, S1 gets populated from the firmware after
-+ *		late_initcall_sync().  Say S2 is populated and probed way
-+ *		before that in device_initcall(). When C is populated, if this
-+ *		add_links() function doesn't continue past a "failed linking to
-+ *		S1" and continue linking C to S2, then S2 will get a
-+ *		sync_state() callback before C is probed. This is because from
-+ *		the perspective of S2, C was never a consumer when its
-+ *		sync_state() evaluation is done. To avoid this, the add_links()
-+ *		function has to go through all available suppliers of the
-+ *		device (that corresponds to this fwnode) and link to them
-+ *		before returning.
-+ *
-+ *		If some suppliers are not yet available (indicated by an error
-+ *		return value), this function will be called again when other
-  *		devices are added to allow creating device links to any newly
-  *		available suppliers.
-  *
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 923d6f88a99c..6f6e1d9644cf 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1147,11 +1147,11 @@ struct supplier_bindings {
+ 					  const char *prop_name, int index);
+ };
+ 
+-static const struct supplier_bindings bindings[] = {
++static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{ .parse_prop = parse_clocks, },
+ 	{ .parse_prop = parse_interconnects, },
+ 	{ .parse_prop = parse_regulators, },
+-	{},
++	{}
+ };
+ 
+ /**
+@@ -1177,7 +1177,7 @@ static int of_link_property(struct device *dev, struct device_node *con_np,
+ 			     const char *prop_name)
+ {
+ 	struct device_node *phandle;
+-	const struct supplier_bindings *s = bindings;
++	const struct supplier_bindings *s = of_supplier_bindings;
+ 	unsigned int i = 0;
+ 	bool matched = false;
+ 	int ret = 0;
+@@ -1196,7 +1196,7 @@ static int of_link_property(struct device *dev, struct device_node *con_np,
+ 	return ret;
+ }
+ 
+-static int __of_link_to_suppliers(struct device *dev,
++static int of_link_to_suppliers(struct device *dev,
+ 				  struct device_node *con_np)
+ {
+ 	struct device_node *child;
+@@ -1208,7 +1208,7 @@ static int __of_link_to_suppliers(struct device *dev,
+ 			ret = -EAGAIN;
+ 
+ 	for_each_child_of_node(con_np, child)
+-		if (__of_link_to_suppliers(dev, child))
++		if (of_link_to_suppliers(dev, child))
+ 			ret = -EAGAIN;
+ 
+ 	return ret;
+@@ -1226,7 +1226,7 @@ static int of_fwnode_add_links(const struct fwnode_handle *fwnode,
+ 	if (unlikely(!is_of_node(fwnode)))
+ 		return 0;
+ 
+-	return __of_link_to_suppliers(dev, to_of_node(fwnode));
++	return of_link_to_suppliers(dev, to_of_node(fwnode));
+ }
+ 
+ const struct fwnode_operations of_fwnode_ops = {
 -- 
 2.23.0.700.g56cf767bdb-goog
