@@ -1,67 +1,96 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 09/10] ASoC: dt-bindings: mt8183: add
-	ec-codec
-Date: Fri, 11 Oct 2019 10:20:29 -0500
-Message-ID: <20191011152029.GA18877@bogus>
-References: <20191005085509.187179-1-tzungbi@google.com>
- <20191005164320.09.Iec97a3f137148cdf316056612590b3e0b302f5f3@changeid>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v3 2/3] ARM: dts: add Netronix E60K02 board common file
+Date: Fri, 11 Oct 2019 17:22:14 +0200
+Message-ID: <20191011152214.v6lq6itwf5lp6j7q@pengutronix.de>
+References: <20191010192357.27884-1-andreas@kemnade.info>
+ <20191010192357.27884-3-andreas@kemnade.info>
+ <20191011065609.6irap7elicatmsgg@pengutronix.de>
+ <20191011094148.1376430e@aktux>
+ <20191011142927.GA11490@bogus>
+ <20191011170147.1b3c4b25@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191005164320.09.Iec97a3f137148cdf316056612590b3e0b302f5f3@changeid>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Tzung-Bi Shih <tzungbi@google.com>
-Cc: gwendal@google.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, cychiang@google.com, drinkcat@google.com, broonie@kernel.org, enric.balletbo@collabora.com, bleung@google.com, dgreid@google.com
+In-Reply-To: <20191011170147.1b3c4b25@kemnade.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, marex@denx.de, devicetree@vger.kernel.org, andrew.smirnov@gmail.com, shawnguo@kernel.org, s.hauer@pengutronix.de, angus@akkea.ca, linux-kernel@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, manivannan.sadhasivam@linaro.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 04:55:08PM +0800, Tzung-Bi Shih wrote:
-> Add an optional property "ec-codec".  If specified, mt8183 could use the
-> "wake on voice" feature offered by EC codec.
+On 19-10-11 17:05, Andreas Kemnade wrote:
+> On Fri, 11 Oct 2019 09:29:27 -0500
+> Rob Herring <robh@kernel.org> wrote:
 > 
-> Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
-> ---
->  .../bindings/sound/mt8183-mt6358-ts3a227-max98357.txt          | 3 +++
->  1 file changed, 3 insertions(+)
+> > On Fri, Oct 11, 2019 at 09:41:48AM +0200, Andreas Kemnade wrote:
+> > > On Fri, 11 Oct 2019 08:56:09 +0200
+> > > Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > >   
+> > > > Hi Andreas,
+> > > > 
+> > > > On 19-10-10 21:23, Andreas Kemnade wrote:  
+> > > > > The Netronix board E60K02 can be found some several Ebook-Readers,
+> > > > > at least the Kobo Clara HD and the Tolino Shine 3. The board
+> > > > > is equipped with different SoCs requiring different pinmuxes.
+> > > > > 
+> > > > > For now the following peripherals are included:
+> > > > > - LED
+> > > > > - Power Key
+> > > > > - Cover (gpio via hall sensor)
+> > > > > - RC5T619 PMIC (the kernel misses support for rtc and charger
+> > > > >   subdevices).
+> > > > > - Backlight via lm3630a
+> > > > > - Wifi sdio chip detection (mmc-powerseq and stuff)
+> > > > > 
+> > > > > It is based on vendor kernel but heavily reworked due to many
+> > > > > changed bindings.
+> > > > > 
+> > > > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > > > ---
+> > > > > Changes in v3:
+> > > > > - better led name
+> > > > > - correct memory size
+> > > > > - comments about missing devices
+> > > > > 
+> > > > > Changes in v2:
+> > > > > - reordered, was 1/3
+> > > > > - moved pinmuxes to their actual users, not the parents
+> > > > >   of them
+> > > > > - removed some already-disabled stuff
+> > > > > - minor cleanups    
+> > > > 
+> > > > You won't change the muxing, so a this dtsi can be self contained?
+> > > >   
+> > > So you want me to put a big 
+> > > #if defined(MX6SLL)   
+> > 
+> > Not sure what the comment meant, but no, don't do this. C defines in dts 
+> > files are for symbolic names for numbers and assembling bitfields and 
+> > that's it.
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-> index 17ff3892f439..decaa013a07e 100644
-> --- a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-> +++ b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-> @@ -6,12 +6,15 @@ Required properties:
->  
->  Optional properties:
->  - mediatek,headset-codec: the phandles of ts3a227 codecs
-> +- mediatek,ec-codec: the phandle of EC codecs.
-> +                     See google,cros-ec-codec.txt for more details.
+> yes, that is also my opinion. For now, there is only one user
+> of this .dtsi, but I have another one in preparation. That is the
+> reason for splitting things between .dts and .dtsi to avoid such ugly
+> ifdefs
 
-Not the best designed audio binding here. We really should just have 
-links to codecs and then you can look at the codec nodes to determine 
-the type.
+Then IMHO the pnictrl-* entries shouldn't appear in the dsti.
 
->  
->  Example:
->  
->  	sound {
->  		compatible = "mediatek,mt8183_mt6358_ts3a227_max98357";
+Regards,
+  Marco
 
-Don't you need to add EC codec to this? Just kidding. Just highlighting 
-the weirdness of this binding.
+> Regards,
+> Andreas
 
->  		mediatek,headset-codec = <&ts3a227>;
-> +		mediatek,ec-codec = <&ec_codec>;
->  		mediatek,platform = <&afe>;
->  	};
->  
-> -- 
-> 2.23.0.581.g78d2f28ef7-goog
-> 
+
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
