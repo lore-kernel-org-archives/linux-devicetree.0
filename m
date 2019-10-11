@@ -1,218 +1,246 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: [PATCH v2 2/3] mmc: sdhci-of-at91: rework clocks management to support SAM9x60 device
-Date: Fri, 11 Oct 2019 12:33:38 +0200
-Message-ID: <20191011103340.26749-2-ludovic.desroches@microchip.com>
-References: <20191011103340.26749-1-ludovic.desroches@microchip.com>
+From: Boris Brezillon <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 3/4] media: rockchip: Add the rkvdec driver
+Date: Fri, 11 Oct 2019 13:15:40 +0200
+Message-ID: <20191011131540.002a61a9@dhcp-172-31-174-146.wireless.concordia.ca>
+References: <20191011093342.3471-1-boris.brezillon@collabora.com>
+ <20191011093342.3471-4-boris.brezillon@collabora.com>
+ <8d3abbd9-f27d-f17f-8298-b0cc7c63ab3e@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011103340.26749-1-ludovic.desroches@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: ulf.hansson@linaro.org, nicolas.ferre@microchip.com, adrian.hunter@intel.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, claudiu.beznea@microchip.com, Eugen.Hristev@microchip.com, Ludovic Desroches <ludovic.desroches@microchip.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <8d3abbd9-f27d-f17f-8298-b0cc7c63ab3e-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In the SAM9x60 SoC, there are only two clocks instead of three for the
-SDHCI device. The base clk is no longer provided, it is generated
-internally from the mult clk.
+Hi Hans,
 
-The values of the base clk and mul in the capabilities registers may not
-reflect the reality as the mult clk is a programmable clock which can take
-several rates. As we can't trust those values, take them from the clock
-tree and update the capabilities according to.
+On Fri, 11 Oct 2019 12:06:35 +0200
+Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
 
-As we can have the same pitfall, in some cases, with the SAMA5D2 Soc,
-stop relying on capabilities too.
+> > diff --git a/drivers/staging/media/rockchip/Kconfig b/drivers/staging/media/rockchip/Kconfig
+> > new file mode 100644
+> > index 000000000000..8c617ae2c84f
+> > --- /dev/null
+> > +++ b/drivers/staging/media/rockchip/Kconfig
+> > @@ -0,0 +1,16 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +config VIDEO_ROCKCHIP
+> > +	bool "Rockchip Video Devices"
+> > +	depends on ARCH_ROCKCHIP || COMPILE_TEST
+> > +	help
+> > +	  If you have a Rockchip SoC based embedding a video codec.
+> > +
+> > +	  Note that this option doesn't include new drivers in the
+> > +	  kernel: saying N will just cause Kconfig to skip all the
+> > +	  questions about Allwinner media devices.
+> > +
+> > +if VIDEO_ROCKCHIP
+> > +
+> > +source "drivers/staging/media/rockchip/vdec/Kconfig"
+> > +
+> > +endif  
+> 
+> Is this really necessary? I think the 'source' line can just be added to
+> drivers/staging/media/Kconfig. This config option here is rather vague.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
----
+I based it on the Allwinner/Cedrus model (even left an 'Allwinner' in
+the description :)), but I can definitely move the source line in
+drivers/staging/media/Kconfig or even get rid of the rockchip dir if
+you prefer.
 
-Changes:
-- v2: write caps0
+> 
+> > diff --git a/drivers/staging/media/rockchip/Makefile b/drivers/staging/media/rockchip/Makefile
+> > new file mode 100644
+> > index 000000000000..b3705b51f1b9
+> > --- /dev/null
+> > +++ b/drivers/staging/media/rockchip/Makefile
+> > @@ -0,0 +1,2 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +obj-$(CONFIG_VIDEO_ROCKCHIP_VDEC) += vdec/
+> > diff --git a/drivers/staging/media/rockchip/vdec/Kconfig b/drivers/staging/media/rockchip/vdec/Kconfig
+> > new file mode 100644
+> > index 000000000000..329b4a813c47
+> > --- /dev/null
+> > +++ b/drivers/staging/media/rockchip/vdec/Kconfig
+> > @@ -0,0 +1,14 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +config VIDEO_ROCKCHIP_VDEC
+> > +	tristate "Rockchip Video Decoder driver"
+> > +	depends on ARCH_ROCKCHIP || COMPILE_TEST
+> > +	depends on VIDEO_DEV && VIDEO_V4L2 && MEDIA_CONTROLLER
+> > +	depends on MEDIA_CONTROLLER_REQUEST_API
+> > +	select VIDEOBUF2_DMA_CONTIG
+> > +	select VIDEOBUF2_VMALLOC
+> > +	select V4L2_MEM2MEM_DEV
+> > +	help
+> > +	  Support for the Rockchip Video Decoder IP present on Rockchip SoC,
+> > +	  which accelerates video decoding.
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called hantro-vpu.  
+> 
+> hantro-vpu? Not rkvdec?
 
- drivers/mmc/host/sdhci-of-at91.c | 105 +++++++++++++++++--------------
- 1 file changed, 58 insertions(+), 47 deletions(-)
+Should be rkvdec, indeed. That's what happens when you copy things from
+an existing driver :-).
 
-diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-index e7d1920729fb..9a1ae16a5417 100644
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -30,7 +30,14 @@
- 
- #define SDHCI_AT91_PRESET_COMMON_CONF	0x400 /* drv type B, programmable clock mode */
- 
-+struct sdhci_at91_soc_data {
-+	const struct sdhci_pltfm_data *pdata;
-+	bool baseclk_is_generated_internally;
-+	unsigned int divider_for_baseclk;
-+};
-+
- struct sdhci_at91_priv {
-+	const struct sdhci_at91_soc_data *soc_data;
- 	struct clk *hclock;
- 	struct clk *gck;
- 	struct clk *mainck;
-@@ -130,12 +137,24 @@ static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
- 	.set_power		= sdhci_at91_set_power,
- };
- 
--static const struct sdhci_pltfm_data soc_data_sama5d2 = {
-+static const struct sdhci_pltfm_data sdhci_sama5d2_pdata = {
- 	.ops = &sdhci_at91_sama5d2_ops,
- };
- 
-+static const struct sdhci_at91_soc_data soc_data_sama5d2 = {
-+	.pdata = &sdhci_sama5d2_pdata,
-+	.baseclk_is_generated_internally = false,
-+};
-+
-+static const struct sdhci_at91_soc_data soc_data_sam9x60 = {
-+	.pdata = &sdhci_sama5d2_pdata,
-+	.baseclk_is_generated_internally = true,
-+	.divider_for_baseclk = 2,
-+};
-+
- static const struct of_device_id sdhci_at91_dt_match[] = {
- 	{ .compatible = "atmel,sama5d2-sdhci", .data = &soc_data_sama5d2 },
-+	{ .compatible = "microchip,sam9x60-sdhci", .data = &soc_data_sam9x60 },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, sdhci_at91_dt_match);
-@@ -145,50 +164,37 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct sdhci_at91_priv *priv = sdhci_pltfm_priv(pltfm_host);
--	int ret;
- 	unsigned int			caps0, caps1;
- 	unsigned int			clk_base, clk_mul;
--	unsigned int			gck_rate, real_gck_rate;
-+	unsigned int			gck_rate, clk_base_rate;
- 	unsigned int			preset_div;
- 
--	/*
--	 * The mult clock is provided by as a generated clock by the PMC
--	 * controller. In order to set the rate of gck, we have to get the
--	 * base clock rate and the clock mult from capabilities.
--	 */
- 	clk_prepare_enable(priv->hclock);
- 	caps0 = readl(host->ioaddr + SDHCI_CAPABILITIES);
- 	caps1 = readl(host->ioaddr + SDHCI_CAPABILITIES_1);
--	clk_base = (caps0 & SDHCI_CLOCK_V3_BASE_MASK) >> SDHCI_CLOCK_BASE_SHIFT;
--	clk_mul = (caps1 & SDHCI_CLOCK_MUL_MASK) >> SDHCI_CLOCK_MUL_SHIFT;
--	gck_rate = clk_base * 1000000 * (clk_mul + 1);
--	ret = clk_set_rate(priv->gck, gck_rate);
--	if (ret < 0) {
--		dev_err(dev, "failed to set gck");
--		clk_disable_unprepare(priv->hclock);
--		return ret;
--	}
--	/*
--	 * We need to check if we have the requested rate for gck because in
--	 * some cases this rate could be not supported. If it happens, the rate
--	 * is the closest one gck can provide. We have to update the value
--	 * of clk mul.
--	 */
--	real_gck_rate = clk_get_rate(priv->gck);
--	if (real_gck_rate != gck_rate) {
--		clk_mul = real_gck_rate / (clk_base * 1000000) - 1;
--		caps1 &= (~SDHCI_CLOCK_MUL_MASK);
--		caps1 |= ((clk_mul << SDHCI_CLOCK_MUL_SHIFT) &
--			  SDHCI_CLOCK_MUL_MASK);
--		/* Set capabilities in r/w mode. */
--		writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN,
--		       host->ioaddr + SDMMC_CACR);
--		writel(caps1, host->ioaddr + SDHCI_CAPABILITIES_1);
--		/* Set capabilities in ro mode. */
--		writel(0, host->ioaddr + SDMMC_CACR);
--		dev_info(dev, "update clk mul to %u as gck rate is %u Hz\n",
--			 clk_mul, real_gck_rate);
--	}
-+
-+	gck_rate = clk_get_rate(priv->gck);
-+	if (priv->soc_data->baseclk_is_generated_internally)
-+		clk_base_rate = gck_rate / priv->soc_data->divider_for_baseclk;
-+	else
-+		clk_base_rate = clk_get_rate(priv->mainck);
-+
-+	clk_base = clk_base_rate / 1000000;
-+	clk_mul = gck_rate / clk_base_rate - 1;
-+
-+	caps0 &= (~SDHCI_CLOCK_V3_BASE_MASK);
-+	caps0 |= ((clk_base << SDHCI_CLOCK_BASE_SHIFT) & SDHCI_CLOCK_V3_BASE_MASK);
-+	caps1 &= (~SDHCI_CLOCK_MUL_MASK);
-+	caps1 |= ((clk_mul << SDHCI_CLOCK_MUL_SHIFT) & SDHCI_CLOCK_MUL_MASK);
-+	/* Set capabilities in r/w mode. */
-+	writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN, host->ioaddr + SDMMC_CACR);
-+	writel(caps0, host->ioaddr + SDHCI_CAPABILITIES_1);
-+	writel(caps1, host->ioaddr + SDHCI_CAPABILITIES_1);
-+	/* Set capabilities in ro mode. */
-+	writel(0, host->ioaddr + SDMMC_CACR);
-+
-+	dev_info(dev, "update clk mul to %u as gck rate is %u Hz and clk base is %u Hz\n",
-+		 clk_mul, gck_rate, clk_base_rate);
- 
- 	/*
- 	 * We have to set preset values because it depends on the clk_mul
-@@ -196,19 +202,19 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
- 	 * maximum sd clock value is 120 MHz instead of 208 MHz. For that
- 	 * reason, we need to use presets to support SDR104.
- 	 */
--	preset_div = DIV_ROUND_UP(real_gck_rate, 24000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 24000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_SDR12);
--	preset_div = DIV_ROUND_UP(real_gck_rate, 50000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 50000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_SDR25);
--	preset_div = DIV_ROUND_UP(real_gck_rate, 100000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 100000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_SDR50);
--	preset_div = DIV_ROUND_UP(real_gck_rate, 120000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 120000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_SDR104);
--	preset_div = DIV_ROUND_UP(real_gck_rate, 50000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 50000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_DDR50);
- 
-@@ -303,7 +309,7 @@ static const struct dev_pm_ops sdhci_at91_dev_pm_ops = {
- static int sdhci_at91_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id	*match;
--	const struct sdhci_pltfm_data	*soc_data;
-+	const struct sdhci_at91_soc_data	*soc_data;
- 	struct sdhci_host		*host;
- 	struct sdhci_pltfm_host		*pltfm_host;
- 	struct sdhci_at91_priv		*priv;
-@@ -314,17 +320,22 @@ static int sdhci_at91_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	soc_data = match->data;
- 
--	host = sdhci_pltfm_init(pdev, soc_data, sizeof(*priv));
-+	host = sdhci_pltfm_init(pdev, soc_data->pdata, sizeof(*priv));
- 	if (IS_ERR(host))
- 		return PTR_ERR(host);
- 
- 	pltfm_host = sdhci_priv(host);
- 	priv = sdhci_pltfm_priv(pltfm_host);
-+	priv->soc_data = soc_data;
- 
- 	priv->mainck = devm_clk_get(&pdev->dev, "baseclk");
- 	if (IS_ERR(priv->mainck)) {
--		dev_err(&pdev->dev, "failed to get baseclk\n");
--		return PTR_ERR(priv->mainck);
-+		if (soc_data->baseclk_is_generated_internally) {
-+			priv->mainck = NULL;
-+		} else {
-+			dev_err(&pdev->dev, "failed to get baseclk\n");
-+			return PTR_ERR(priv->mainck);
-+		}
- 	}
- 
- 	priv->hclock = devm_clk_get(&pdev->dev, "hclock");
--- 
-2.23.0
+
+> > +
+> > +/* Constant CABAC table. */
+> > +static const u32 rkvdec_h264_cabac_table[] = {  
+> 
+> Where does this table come from? It needs some provenance.
+
+Chromeos kernels [1] and MPP code base [2]. I'll add a comment pointing
+to those trees.
+
+[...]
+
+> > +
+> > +struct rkvdec_h264_reflist_builder {
+> > +	const struct v4l2_h264_dpb_entry *dpb;
+> > +	s32 pocs[RKVDEC_H264_DPB_SIZE];
+> > +	u8 unordered_reflist[RKVDEC_H264_DPB_SIZE];
+> > +	int frame_nums[RKVDEC_H264_DPB_SIZE];
+> > +	s32 curpoc;
+> > +	u8 num_valid;
+> > +};  
+> 
+> What's a 'poc'? Perhaps this can use some comments.
+
+Picture Order Count. I'll add comment.
+
+> 
+> It looks like code is copied from hantro_h264.c. Is there anything that
+> can be reasonably shared between the two drivers?
+
+I was planning on exporting those helpers at some point, but I'd like
+the reflist creation logic to settle before doing (we still need to fix
+things for interlaced streams, which is what Jonas is working on).
+
+
+
+> > +
+> > +static int p_ref_list_cmp(const void *ptra, const void *ptrb, const void *data)
+> > +{
+> > +	const struct rkvdec_h264_reflist_builder *builder = data;
+> > +	const struct v4l2_h264_dpb_entry *a, *b;
+> > +	u8 idxa, idxb;
+> > +
+> > +	idxa = *((u8 *)ptra);
+> > +	idxb = *((u8 *)ptrb);
+> > +	a = &builder->dpb[idxa];
+> > +	b = &builder->dpb[idxb];
+> > +
+> > +	if ((a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM) !=
+> > +	    (b->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
+> > +		/* Short term pics firt. */  
+> 
+> firt -> first
+
+Will fix the typo.
+
+> 
+> > +		if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
+> > +			return -1;
+> > +		else
+> > +			return 1;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Short term pics in descending pic num order, long term ones in
+> > +	 * ascending order.
+> > +	 */
+> > +	if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
+> > +		int frame_num_a, frame_num_b;
+> > +
+> > +		frame_num_a = builder->frame_nums[idxa];
+> > +		frame_num_b = builder->frame_nums[idxb];
+> > +		return frame_num_b > frame_num_a ? 1 : -1;
+> > +	}
+> > +
+> > +	return a->pic_num > b->pic_num ? 1 : -1;
+> > +}
+> > +
+> > +static int b0_ref_list_cmp(const void *ptra, const void *ptrb, const void *data)
+> > +{
+> > +	const struct rkvdec_h264_reflist_builder *builder = data;
+> > +	const struct v4l2_h264_dpb_entry *a, *b;
+> > +	s32 poca, pocb;
+> > +	u8 idxa, idxb;
+> > +
+> > +	idxa = *((u8 *)ptra);
+> > +	idxb = *((u8 *)ptrb);
+> > +	a = &builder->dpb[idxa];
+> > +	b = &builder->dpb[idxb];
+> > +
+> > +	if ((a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM) !=
+> > +	    (b->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
+> > +		/* Short term pics firt. */  
+> 
+> Ditto. Check the code for this typo. It's in the hantro code as well.
+
+Will do.
+
+> 
+> > +		if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
+> > +			return -1;
+> > +		else
+> > +			return 1;
+> > +	}
+> > +
+> > +	/* Long term pics in ascending pic num order. */
+> > +	if (a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)
+> > +		return a->pic_num > b->pic_num ? 1 : -1;
+> > +
+> > +	poca = builder->pocs[idxa];
+> > +	pocb = builder->pocs[idxb];
+> > +
+> > +	/*
+> > +	 * Short term pics with POC < cur POC first in POC descending order
+> > +	 * followed by short term pics with POC > cur POC in POC ascending
+> > +	 * order.
+> > +	 */
+> > +	if ((poca < builder->curpoc) != (pocb < builder->curpoc))
+> > +		return poca > pocb ? 1 : -1;
+> > +	else if (poca < builder->curpoc)
+> > +		return pocb > poca ? 1 : -1;
+> > +
+> > +	return poca > pocb ? 1 : -1;
+> > +}
+
+> > +static void rkvdec_reset_fmt(struct rkvdec_ctx *ctx, struct v4l2_format *f,
+> > +			     u32 fourcc)
+> > +{
+> > +	memset(f, 0, sizeof(*f));
+> > +	f->fmt.pix_mp.pixelformat = fourcc;
+> > +	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
+> > +	f->fmt.pix_mp.colorspace = V4L2_COLORSPACE_JPEG,  
+> 
+> Don't use this colorspace. I see it is also used in the hantro driver, that should
+> be corrected as well.
+> 
+> The colorimetry comes from the stream metadata, and for a stateless driver I
+> assume that it is userspace that parses that.
+> 
+> V4L2_COLORSPACE_JPEG should only be used by (M)JPEG codecs. And even there is it
+> dubious. See section 2.17.10 in the spec for more info.
+
+What should I use when the formats are reset then?
+
+Thanks for the prompt review!
+
+Boris
+
+[1]https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.4/drivers/media/platform/rockchip-vpu/rk3399_vdec_hw_h264d.c#45
+[2]https://github.com/rockchip-linux/mpp/blob/release/mpp/hal/rkdec/h264d/hal_h264d_rkv_reg.c#L67
