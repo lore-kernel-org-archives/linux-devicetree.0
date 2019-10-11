@@ -1,40 +1,27 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: net: bcmgenet add property for max
- DMA burst size
-Date: Fri, 11 Oct 2019 12:07:58 -0700
-Message-ID: <2d4be474-95f1-9ef7-4485-46f7e5565d8c@gmail.com>
-References: <20191011184822.866-1-matthias.bgg@kernel.org>
- <20191011184822.866-2-matthias.bgg@kernel.org>
+From: Saravana Kannan <saravanak@google.com>
+Subject: [PATCH v1 0/3] Documentation/minor coding style fix ups
+Date: Fri, 11 Oct 2019 12:15:18 -0700
+Message-ID: <20191011191521.179614-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191011184822.866-2-matthias.bgg@kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: matthias.bgg@kernel.org, "David S . Miller" <davem@davemloft.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Stefan Wahren <wahrenst@gmx.net>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>, kernel-team@android.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/19 11:48 AM, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
-> 
-> The maximal usable DMA burst size can vary in different SoCs.
-> Add a optional property to configure the DMA channels properly.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+Addressing a few coding style comments and adding a bunch of
+documentation.
 
-There are enough differences in the integration of GENET in 2711 (versus
-any other STB chip where it has been used) that a brcm,bcm2711-genet-v5
-compatible string would be in order. From there, you can derive the DMA
-burst size without using additional properties.
+Saravana Kannan (3):
+  of: property: Minor code formatting/style clean ups
+  driver: core: Improve documentation for fwnode_operations.add_links()
+  docs: driver-model: Add documentation for sync_state
+
+ .../driver-api/driver-model/driver.rst        | 43 +++++++++++++++++++
+ drivers/of/property.c                         | 12 +++---
+ include/linux/fwnode.h                        | 21 ++++++++-
+ 3 files changed, 68 insertions(+), 8 deletions(-)
+
 -- 
-Florian
+2.23.0.700.g56cf767bdb-goog
