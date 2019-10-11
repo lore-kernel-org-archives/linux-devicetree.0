@@ -1,49 +1,123 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH] i2c: aspeed: fix master pending state handling
-Date: Thu, 10 Oct 2019 16:52:41 -0700
-Message-ID: <4ca4083d-23ff-0475-f5fd-ec3745b440b2@linux.intel.com>
-References: <20191009212034.20325-1-jae.hyun.yoo@linux.intel.com>
- <49244d71-cbc3-f2ae-97ac-74b5f68a4816@fb.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v7] gpio/mpc8xxx: change irq handler from chained to normal
+Date: Fri, 11 Oct 2019 02:10:41 +0200
+Message-ID: <CAMpxmJXyoMu-Z0E0wejLSrgW3aE73fHxHxS3kANBoVY+FhfmGg@mail.gmail.com>
+References: <20191010023205.8071-1-hui.song_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <49244d71-cbc3-f2ae-97ac-74b5f68a4816@fb.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tao Ren <taoren@fb.com>, Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Cedric Le Goater <clg@kaod.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191010023205.8071-1-hui.song_1@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hui Song <hui.song_1@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-gpio <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2019 4:29 PM, Tao Ren wrote:
-> On 10/9/19 2:20 PM, Jae Hyun Yoo wrote:
->> In case of master pending state, it should not trigger a master
->> command, otherwise data could be corrupted because this H/W shares
->> the same data buffer for slave and master operations. It also means
->> that H/W command queue handling is unreliable because of the buffer
->> sharing issue. To fix this issue, it clears command queue if a
->> master command is queued in pending state to use S/W solution
->> instead of H/W command queue handling. Also, it refines restarting
->> mechanism of the pending master command.
->>
->> Fixes: 2e57b7cebb98 ("i2c: aspeed: Add multi-master use case support")
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-> 
-> Tested-by: Tao Ren <taoren@fb.com>
-> 
-> Tested the patch on Facebook Minipack BMC (multi-master i2c-0 environment) and
-> everything looks good to me.
+czw., 10 pa=C5=BA 2019 o 04:42 Hui Song <hui.song_1@nxp.com> napisa=C5=82(a=
+):
+>
+> From: Song Hui <hui.song_1@nxp.com>
+>
+> More than one gpio controllers can share one interrupt, change the
+> driver to request shared irq.
+>
+> While this will work, it will mess up userspace accounting of the number
+> of interrupts per second in tools such as vmstat.  The reason is that
+> for every GPIO interrupt, /proc/interrupts records the count against GIC
+> interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
+> interrupt, the total number of interrupts that the system has seen
+> increments by two.
+>
+> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> ---
+> Changes in v7:
+>         - make unsigned int convert to unsigned long.
+> Changes in v6:
+>         - change request_irq to devm_request_irq and add commit message.
+> Changes in v5:
+>         - add traverse every bit function.
+> Changes in v4:
+>         - convert 'pr_err' to 'dev_err'.
+> Changes in v3:
+>         - update the patch description.
+> Changes in v2:
+>         - delete the compatible of ls1088a.
+>  drivers/gpio/gpio-mpc8xxx.c | 29 +++++++++++++++++++----------
+>  1 file changed, 19 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+> index 16a47de..5a0f030 100644
+> --- a/drivers/gpio/gpio-mpc8xxx.c
+> +++ b/drivers/gpio/gpio-mpc8xxx.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/bitops.h>
+> +#include <linux/interrupt.h>
+>
+>  #define MPC8XXX_GPIO_PINS      32
+>
+> @@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc=
+, unsigned offset)
+>                 return -ENXIO;
+>  }
+>
+> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+>  {
+> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D irq_desc_get_handler_dat=
+a(desc);
+> -       struct irq_chip *chip =3D irq_desc_get_chip(desc);
+> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D data;
+>         struct gpio_chip *gc =3D &mpc8xxx_gc->gc;
+> -       unsigned int mask;
+> +       unsigned long mask;
+> +       int i;
+>
+>         mask =3D gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
+>                 & gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
+> -       if (mask)
+> +       for_each_set_bit(i, &mask, 32)
+>                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+> -                                                    32 - ffs(mask)));
+> -       if (chip->irq_eoi)
+> -               chip->irq_eoi(&desc->irq_data);
+> +                                                    31 - i));
 
-Thanks for sharing the test result and your code reviews.
+This will now fit in 80 characters.
 
-Best,
+Bart
 
-Jae
+> +
+> +       return IRQ_HANDLED;
+>  }
+>
+>  static void mpc8xxx_irq_unmask(struct irq_data *d)
+> @@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pde=
+v)
+>         if (devtype->gpio_dir_in_init)
+>                 devtype->gpio_dir_in_init(gc);
+>
+> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+> -                                        mpc8xxx_gpio_irq_cascade, mpc8xx=
+x_gc);
+> +       ret =3D devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
+> +                              mpc8xxx_gpio_irq_cascade,
+> +                              IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascad=
+e",
+> +                              mpc8xxx_gc);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), =
+ret =3D %d\n",
+> +                       np->full_name, mpc8xxx_gc->irqn, ret);
+> +               goto err;
+> +       }
+> +
+>         return 0;
+>  err:
+>         iounmap(mpc8xxx_gc->regs);
+> --
+> 2.9.5
+>
