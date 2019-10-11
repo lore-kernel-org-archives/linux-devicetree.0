@@ -1,202 +1,123 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: media: Convert stm32 dcmi bindings to json-schema
-Date: Fri, 11 Oct 2019 07:35:36 -0500
-Message-ID: <CAL_JsqKW91A96NXy8kwPp2mdgiifaqJyCQ0n5Mc=zZzoU4VzDg@mail.gmail.com>
-References: <20191002151442.15428-1-benjamin.gaignard@st.com>
+Subject: Re: [PATCH] dt-bindings: hwlock: Convert stm32 hwspinlock bindings to json-schema
+Date: Fri, 11 Oct 2019 07:41:10 -0500
+Message-ID: <CAL_Jsq+p6rYun-zOwK49=QSfuJGMpiXj5UfASdXhjmOX1cudWQ@mail.gmail.com>
+References: <20191002151907.15986-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002151442.15428-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191002151907.15986-1-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Hugues Fruchet <hugues.fruchet@st.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Alexandre Torgue <alexandre.torgue@st.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 10:14 AM Benjamin Gaignard
+On Wed, Oct 2, 2019 at 10:19 AM Benjamin Gaignard
 <benjamin.gaignard@st.com> wrote:
 >
-> Convert the STM32 dcmi binding to DT schema format using json-schema
+> Convert the STM32 hwspinlock binding to DT schema format using json-schema
 >
 > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  .../devicetree/bindings/media/st,stm32-dcmi.txt    | 45 ----------
->  .../devicetree/bindings/media/st,stm32-dcmi.yaml   | 97 ++++++++++++++++++++++
->  2 files changed, 97 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
->  create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+>  .../bindings/hwlock/st,stm32-hwspinlock.txt        | 23 -----------
+>  .../bindings/hwlock/st,stm32-hwspinlock.yaml       | 48 ++++++++++++++++++++++
+>  2 files changed, 48 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
+>  create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+> diff --git a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
 > deleted file mode 100644
-> index 3122ded82eb4..000000000000
-> --- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+> index adf4f000ea3d..000000000000
+> --- a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
 > +++ /dev/null
-> @@ -1,45 +0,0 @@
-> -STMicroelectronics STM32 Digital Camera Memory Interface (DCMI)
+> @@ -1,23 +0,0 @@
+> -STM32 Hardware Spinlock Device Binding
+> --------------------------------------
 > -
-> -Required properties:
-> -- compatible: "st,stm32-dcmi"
-> -- reg: physical base address and length of the registers set for the device
-> -- interrupts: should contain IRQ line for the DCMI
-> -- resets: reference to a reset controller,
-> -          see Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
-> -- clocks: list of clock specifiers, corresponding to entries in
-> -          the clock-names property
-> -- clock-names: must contain "mclk", which is the DCMI peripherial clock
-> -- pinctrl: the pincontrol settings to configure muxing properly
-> -           for pins that connect to DCMI device.
-> -           See Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml.
-> -- dmas: phandle to DMA controller node,
-> -        see Documentation/devicetree/bindings/dma/stm32-dma.txt
-> -- dma-names: must contain "tx", which is the transmit channel from DCMI to DMA
+> -Required properties :
+> -- compatible : should be "st,stm32-hwspinlock".
+> -- reg : the register address of hwspinlock.
+> -- #hwlock-cells : hwlock users only use the hwlock id to represent a specific
+> -       hwlock, so the number of cells should be <1> here.
+> -- clock-names : Must contain "hsem".
+> -- clocks : Must contain a phandle entry for the clock in clock-names, see the
+> -       common clock bindings.
 > -
-> -DCMI supports a single port node with parallel bus. It should contain one
-> -'port' child node with child 'endpoint' node. Please refer to the bindings
-> -defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> -Please look at the generic hwlock binding for usage information for consumers,
+> -"Documentation/devicetree/bindings/hwlock/hwlock.txt"
 > -
-> -Example:
-> -
-> -       dcmi: dcmi@50050000 {
-> -               compatible = "st,stm32-dcmi";
-> -               reg = <0x50050000 0x400>;
-> -               interrupts = <78>;
-> -               resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
-> -               clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
-> -               clock-names = "mclk";
-> -               pinctrl-names = "default";
-> -               pinctrl-0 = <&dcmi_pins>;
-> -               dmas = <&dma2 1 1 0x414 0x3>;
-> -               dma-names = "tx";
-> -               port {
-> -                       dcmi_0: endpoint {
-> -                               remote-endpoint = <...>;
-> -                               bus-width = <8>;
-> -                               hsync-active = <0>;
-> -                               vsync-active = <0>;
-> -                               pclk-sample = <1>;
-> -                       };
-> -               };
+> -Example of hwlock provider:
+> -       hwspinlock@4c000000 {
+> -               compatible = "st,stm32-hwspinlock";
+> -               #hwlock-cells = <1>;
+> -               reg = <0x4c000000 0x400>;
+> -               clocks = <&rcc HSEM>;
+> -               clock-names = "hsem";
 > -       };
-> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> diff --git a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
 > new file mode 100644
-> index 000000000000..50e8cfed06f3
+> index 000000000000..64e169702515
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-> @@ -0,0 +1,97 @@
+> +++ b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
+> @@ -0,0 +1,48 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/media/st,stm32-dcmi.yaml#
+> +$id: http://devicetree.org/schemas/hwlock/st,stm32-hwspinlock.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: STMicroelectronics STM32 Digital Camera Memory Interface (DCMI) binding
+> +title: STMicroelectronics STM32 Hardware Spinlock bindings
 > +
 > +maintainers:
-> +  - Hugues Fruchet <hugues.fruchet@st.com>
+> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> +  - Fabien Dessenne <fabien.dessenne@st.com>
 > +
 > +properties:
+> +  "#hwlock-cells": true
+
+const: 1
+
+> +
 > +  compatible:
-> +    const: st,stm32-dcmi
+> +    const: st,stm32-hwspinlock
 > +
 > +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
 > +    maxItems: 1
 > +
 > +  clocks:
 > +    items:
 > +      - description: Module Clock
 
-'maxItems: 1' is sufficient here as the description doesn't add anything.
+Don't need a description for a single item.
+
+maxItems: 1
 
 > +
 > +  clock-names:
 > +    items:
-> +      - const: mclk
-> +
-> +  pinctrl-names: true
-
-This gets added automatically.
-
-> +
-> +  dmas:
-> +    description:
-> +      One DMA channel specifier following the convention outlined
-> +      in bindings/dma/dma.txt
-
-Drop this.
-
-> +    maxItems: 1
-> +
-> +  dma-names:
-> +    description:
-> +      There must be one channel named "tx" for transmit
-
-The schema says all this already.
-
-> +    maxItems: 1
-
-This is implied.
-
-> +    additionalItems: true
-
-This is wrong. You can't have more items because you set the max to 1.
-
-> +    items:
-> +      - const: tx
-> +
-> +  resets:
-> +        maxItems: 1
-
-Inconsistent indentation.
-
-> +
-> +  port:
-> +    type: object
-> +    description:
-> +      DCMI supports a single port node with parallel bus. It should contain
-> +      one 'port' child node with child 'endpoint' node. Please refer to the
-> +      bindings defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +patternProperties:
-> +  "^pinctrl-[0-9]+$": true
+> +      - const: hsem
 > +
 > +required:
+> +  - "#hwlock-cells"
 > +  - compatible
 > +  - reg
-> +  - interrupts
 > +  - clocks
 > +  - clock-names
-> +  - resets
-> +  - dmas
-> +  - dma-names
-> +  - port
+
+Add a:
+
+additionalProperties: false
+
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
 > +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    dcmi: dcmi@4c006000 {
-> +        compatible = "st,stm32-dcmi";
-> +        reg = <0x4c006000 0x400>;
-> +        interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-> +        resets = <&rcc CAMITF_R>;
-> +        clocks = <&rcc DCMI>;
-> +        clock-names = "mclk";
-> +        dmas = <&dmamux1 75 0x400 0x0d>;
-> +        dma-names = "tx";
-> +
-> +        port {
-> +             dcmi_0: endpoint {
-> +                   remote-endpoint = <&ov5640_0>;
-> +                   bus-width = <8>;
-> +                   hsync-active = <0>;
-> +                   vsync-active = <0>;
-> +                   pclk-sample = <1>;
-> +             };
-> +        };
+> +    hwspinlock@4c000000 {
+> +        compatible = "st,stm32-hwspinlock";
+> +        #hwlock-cells = <1>;
+> +        reg = <0x4c000000 0x400>;
+> +        clocks = <&rcc HSEM>;
+> +        clock-names = "hsem";
 > +    };
 > +
 > +...
