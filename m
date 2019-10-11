@@ -1,139 +1,193 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH v3 2/3] ARM: dts: add Netronix E60K02 board common file
-Date: Fri, 11 Oct 2019 18:19:38 +0200
-Message-ID: <20191011181938.185f2a00@kemnade.info>
-References: <20191010192357.27884-1-andreas@kemnade.info>
-        <20191010192357.27884-3-andreas@kemnade.info>
-        <20191011065609.6irap7elicatmsgg@pengutronix.de>
-        <20191011094148.1376430e@aktux>
-        <20191011142927.GA11490@bogus>
-        <20191011170147.1b3c4b25@kemnade.info>
-        <20191011152214.v6lq6itwf5lp6j7q@pengutronix.de>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add Beelink A1
+Date: Fri, 11 Oct 2019 17:30:00 +0100
+Message-ID: <881153a5-3baf-3af1-2960-460abc83598d@arm.com>
+References: <9037b7edbbb41cbbf699ebe3a511daf22d886e7d.1570444695.git.robin.murphy@arm.com>
+ <CAL_JsqKBy+i+=gGyYhBgcMUYsWd_CL_GnEoQqALBb+Gy7Ogb6A@mail.gmail.com>
+ <4c490e48-7a85-4ef9-771c-165defde39cc@arm.com> <5779329.sYoq9m6zvk@diego>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/xJOdSTuzcipgvT99VuhdzxO"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011152214.v6lq6itwf5lp6j7q@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, marex@denx.de, devicetree@vger.kernel.org, andrew.smirnov@gmail.com, shawnguo@kernel.org, s.hauer@pengutronix.de, angus@akkea.ca, linux-kernel@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, manivannan.sadhasivam@linaro.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5779329.sYoq9m6zvk@diego>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/xJOdSTuzcipgvT99VuhdzxO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 11/10/2019 15:19,  wrote:
+> Am Freitag, 11. Oktober 2019, 14:20:38 CEST schrieb Robin Murphy:
+>> On 07/10/2019 13:53, Rob Herring wrote:
+>>> On Mon, Oct 7, 2019 at 6:33 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>>>
+>>>> Beelink A1 is a TV box implementing the higher-end options of the
+>>>> RK3328 reference design - the DTB from the stock Android firmware is
+>>>> clearly the "rk3328-box-plus" variant from the Rockchip 3.10 BSP with
+>>>> minor modifications to accommodate the USB WiFi module and additional
+>>>> VFD-style LED driver. It features:
+>>>>
+>>>> - 4GB of 32-bit LPDDR3
+>>>> - 16GB of HS200 eMMC (newer models with 32GB also exist)
+>>>> - Realtek RTL8211F phy for gigabit ethernet
+>>>> - Fn-Link 6221E-UUC module (RealTek RTL8821CU) for 11ac WiFi and Bluetooth 4.2
+>>>> - HDMI and analog A/V
+>>>> - 1x USB 3.0 type A host, 1x USB 2.0 type A OTG, 1x micro SD
+>>>> - IR receiver and a neat little LED clock display.
+>>>>
+>>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>>>> ---
+>>>>
+>>>> One question I'm wondering about is whether it's worth pushing the HDMI
+>>>> and analog codec audio cards down into rk3328.dtsi (as with HDMI audio
+>>>> on RK3399), since those audio pipelines are internal to the SoC and the
+>>>> board only really governs whether the outputs are wired up or not.
+>>>
+>>> Seems reasonable. One other candidate below.
+>>>
+>>>>
+>>>>    .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+>>>
+>>> In the future, please split bindings to a separate patch.
+>>
+>> Ha, busted! I thought this might be trivial enough to slip through, but
+>> I'll split it out if you prefer.
+>>
+>>>>    arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>>>>    arch/arm64/boot/dts/rockchip/rk3328-a1.dts    | 399 ++++++++++++++++++
+>>>>    3 files changed, 405 insertions(+)
+>>>>    create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-a1.dts
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>>>> index c82c5e57d44c..f27f7805f57e 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+>>>> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>>>> @@ -40,6 +40,11 @@ properties:
+>>>>              - const: asus,rk3288-tinker-s
+>>>>              - const: rockchip,rk3288
+>>>>
+>>>> +      - description: Beelink A1
+>>>> +        items:
+>>>> +          - const: azw,beelink-a1
+>>>> +          - const: rockchip,rk3328
+>>>> +
+>>>>          - description: bq Curie 2 tablet
+>>>>            items:
+>>>>              - const: mundoreader,bq-curie2
+>>>> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+>>>> index 1f18a9392d15..a6f250e7cde2 100644
+>>>> --- a/arch/arm64/boot/dts/rockchip/Makefile
+>>>> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+>>>> @@ -1,5 +1,6 @@
+>>>>    # SPDX-License-Identifier: GPL-2.0
+>>>>    dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
+>>>> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
+>>>>    dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+>>>>    dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+>>>>    dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
+>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-a1.dts b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
+>>>> new file mode 100644
+>>>> index 000000000000..03ad663ff821
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
+>>>> @@ -0,0 +1,399 @@
+>>>> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+>>>> +// Copyright (c) 2017-2019 Arm Ltd.
+>>>> +
+>>>> +/dts-v1/;
+>>>> +#include "rk3328.dtsi"
+>>>> +
+>>>> +/ {
+>>>> +       model = "Beelink A1";
+>>>> +       compatible = "azw,beelink-a1", "rockchip,rk3328";
+>>>> +
+>>>> +       /*
+>>>> +        * UART pins, as viewed with bottom of case removed:
+>>>> +        *
+>>>> +        *           Front
+>>>> +        *        /-------
+>>>> +        *  L    / o <- Gnd
+>>>> +        *  e   / o <-- Rx
+>>>> +        *  f  / o <--- Tx
+>>>> +        *  t / o <---- +3.3v
+>>>> +        *    |
+>>>> +        */
+>>>> +       chosen {
+>>>> +               stdout-path = "serial2:1500000n8";
+>>>> +       };
+>>>> +
+>>>> +       gmac_clkin: external-gmac-clock {
+>>>> +               compatible = "fixed-clock";
+>>>> +               clock-frequency = <125000000>;
+>>>> +               clock-output-names = "gmac_clkin";
+>>>> +               #clock-cells = <0>;
+>>>> +       };
+>>>> +
+>>>> +       vcc_host_5v: usb3-current-switch {
+>>>> +               compatible = "regulator-fixed";
+>>>> +               enable-active-high;
+>>>> +               gpio = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
+>>>> +               pinctrl-names = "default";
+>>>> +               pinctrl-0 = <&usb30_host_drv>;
+>>>> +               regulator-name = "vcc_host_5v";
+>>>> +               vin-supply = <&vcc_sys>;
+>>>> +       };
+>>>> +
+>>>> +       vcc_sys: vcc-sys {
+>>>> +               compatible = "regulator-fixed";
+>>>> +               regulator-name = "vcc_sys";
+>>>> +               regulator-min-microvolt = <5000000>;
+>>>> +               regulator-max-microvolt = <5000000>;
+>>>> +       };
+>>>> +
+>>>> +       cpus {
+>>>> +               idle-states {
+>>>> +                       entry-method = "arm,psci";
+>>>> +
+>>>> +                       cpu_sleep: cpu-sleep {
+>>>> +                               compatible = "arm,idle-state";
+>>>> +                               arm,psci-suspend-param = <0x0010000>;
+>>>> +                               local-timer-stop;
+>>>> +                               entry-latency-us = <120>;
+>>>> +                               exit-latency-us = <250>;
+>>>> +                               min-residency-us = <900>;
+>>>
+>>> This doesn't seem like something that's board specific, but I guess
+>>> the regulator could have some influence on these times. If so, the
+>>> board file could always override a default.
+>>
+>> True, this is traceable back to the Rockchip Android BSP where it's
+>> actually applied to the entire SoC family[1]. I don't know if there's
+>> likely to be any difference between the downstream "RKTRUST" firmware
+>> binaries (which this nominally represents) and upstream ATF in terms of
+>> their PSCI implementation/performance.
+>>
+>> I've not got round to properly tinkering with suspend/resume and power
+>> management stuff yet, so I guess another option would be to just forget
+>> about this part for now - Heiko, any opinions?
+> 
+> I think nobody actually knows what goes on in Rockchip's binary ATF
+> variant, which is the reason I dislike it so much ;-) .
+> 
+> What's in the upstream sources should always take precedent. Looking
+> at rk3399 as an example where they had oversight from ChromeOS people
+> there are idle-states in rk3399.dtsi and I guess there should be a
+> counterpart int ATF.
+> 
+> The idle-state values also match rk3399's cpu-sleep, so seem pretty
+> standard. So should just go into rk3328.dtsi after someone could verify
+> that this works with upstream ATF.
 
-On Fri, 11 Oct 2019 17:22:14 +0200
-Marco Felsch <m.felsch@pengutronix.de> wrote:
+OK, I'll drop this from the board DTS and have a crack at building some 
+new firmware to investigate adding it to the SoC DTSI.
 
-> On 19-10-11 17:05, Andreas Kemnade wrote:
-> > On Fri, 11 Oct 2019 09:29:27 -0500
-> > Rob Herring <robh@kernel.org> wrote:
-> >  =20
-> > > On Fri, Oct 11, 2019 at 09:41:48AM +0200, Andreas Kemnade wrote: =20
-> > > > On Fri, 11 Oct 2019 08:56:09 +0200
-> > > > Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > > >    =20
-> > > > > Hi Andreas,
-> > > > >=20
-> > > > > On 19-10-10 21:23, Andreas Kemnade wrote:   =20
-> > > > > > The Netronix board E60K02 can be found some several Ebook-Reade=
-rs,
-> > > > > > at least the Kobo Clara HD and the Tolino Shine 3. The board
-> > > > > > is equipped with different SoCs requiring different pinmuxes.
-> > > > > >=20
-> > > > > > For now the following peripherals are included:
-> > > > > > - LED
-> > > > > > - Power Key
-> > > > > > - Cover (gpio via hall sensor)
-> > > > > > - RC5T619 PMIC (the kernel misses support for rtc and charger
-> > > > > >   subdevices).
-> > > > > > - Backlight via lm3630a
-> > > > > > - Wifi sdio chip detection (mmc-powerseq and stuff)
-> > > > > >=20
-> > > > > > It is based on vendor kernel but heavily reworked due to many
-> > > > > > changed bindings.
-> > > > > >=20
-> > > > > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > > > > ---
-> > > > > > Changes in v3:
-> > > > > > - better led name
-> > > > > > - correct memory size
-> > > > > > - comments about missing devices
-> > > > > >=20
-> > > > > > Changes in v2:
-> > > > > > - reordered, was 1/3
-> > > > > > - moved pinmuxes to their actual users, not the parents
-> > > > > >   of them
-> > > > > > - removed some already-disabled stuff
-> > > > > > - minor cleanups     =20
-> > > > >=20
-> > > > > You won't change the muxing, so a this dtsi can be self contained?
-> > > > >    =20
-> > > > So you want me to put a big=20
-> > > > #if defined(MX6SLL)    =20
-> > >=20
-> > > Not sure what the comment meant, but no, don't do this. C defines in =
-dts=20
-> > > files are for symbolic names for numbers and assembling bitfields and=
-=20
-> > > that's it. =20
-> >=20
-> > yes, that is also my opinion. For now, there is only one user
-> > of this .dtsi, but I have another one in preparation. That is the
-> > reason for splitting things between .dts and .dtsi to avoid such ugly
-> > ifdefs =20
->=20
-> Then IMHO the pnictrl-* entries shouldn't appear in the dsti.
->=20
-hmm, maybe now I understand your idea:
-You do not want only to have
-
-  pinctrl_lm3630a_bl_gpio: lm3630a_bl_gpio_grp {
-                        fsl,pins =3D <
-                                MX6SLL_PAD_EPDC_PWR_CTRL3__GPIO2_IO10   0x1=
-0059 /* HWEN */
-                        >;
-                };
-in dts, but also  do not have these in .dtsi:
-
-                pinctrl-names =3D "default";
-                pinctrl-0 =3D <&pinctrl_lm3630a_bl_gpio>;
-
-and instead have in dts:
-&lm3630a {
- 	pinctrl-names =3D "default";
-        pinctrl-0 =3D <&pinctrl_lm3630a_bl_gpio>;
-=09
-};
-
-
-just to make sure I get it right before doing the restructuring work. That =
-way of structuring things did not come to my mind, but then the .dtsi is se=
-lf-contained.
-
-Regards,
-Andreas
-
---Sig_/xJOdSTuzcipgvT99VuhdzxO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl2gq5oACgkQl4jFM1s/
-ye/5WQ//SImeJwq5R6t0iZb9z5B55KLp97kuzkBviRqa/bWog9G1ceHcKolOMpSj
-/KnN+y5Ila/ha3ncHAlp0dTUitcVSIVlho5boYhLlSzFRkxRnB0+xPsPOSdil1GG
-TwhIWKuhokxRH+LrMXfPVfEY+eM+jT3RqXxUml7JDqaia5PUdWPP5nRf2jLK+dee
-SXOv46TGfWVziN4bbZY05zAbcjUeE5IT4tGJpOqcm2Tfmeci6oRlvHzh+j6/y9LB
-lAto7x+/EuzrLaaY9nmQgzaKGjKLMwjRANPIIFumx6c9U6yvl4ptglSdBZRGtCTE
-rT+eGouNQOlG5uuDewl8tYCwDwdrg0wBj879xUr9DPogHeXFW7CMvEcMlTk33/56
-FSQ8kzz1hxK84qphq6iJyQjReCqb0H2hDgOxB2yV2q8bWxL0S0MRn1iFJ9RODOqW
-XCU9EILEsLjQbfjB6EHlvR7Gw6ETL1WJIP25drqpyy09pvCtixtLVfpaYWO18adP
-nOv27Ah/5rT9NW5OH9kzm1Mt2HR1KxDSuyki3vR4rFFuWRrZlwt99nppAXDbzKqj
-j6oBOqZkksVhsuw4S6J79ML2qRCbOZghcLyQnA50V9Pk7AQuIA+F85h/HF4p3xt/
-WfiBoU3pHAnnyk+Yj1YiRzl/YaOWnm+xb2EQCtPxeyI9qyiDuwk=
-=7ucO
------END PGP SIGNATURE-----
-
---Sig_/xJOdSTuzcipgvT99VuhdzxO--
+Cheers,
+Robin.
