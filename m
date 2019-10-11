@@ -1,101 +1,127 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 2/2] mmc: sdhci-of-at91: add DT property to enable
- calibration on full reset
-Date: Fri, 11 Oct 2019 14:41:16 +0200
-Message-ID: <20191011124115.a3qqkhxri6aaydcl@M43218.corp.atmel.com>
-References: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
- <d25c8f909d039938a5696e8de32396cf2aaf54b7.1570537903.git.nicolas.ferre@microchip.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: media: Convert stm32 cec bindings to json-schema
+Date: Fri, 11 Oct 2019 07:43:59 -0500
+Message-ID: <CAL_JsqK0hBSzn4YfhGmFyv8a5bCDtBvW0_bdhJwk0g_N7iVFtQ@mail.gmail.com>
+References: <20191002151410.15306-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d25c8f909d039938a5696e8de32396cf2aaf54b7.1570537903.git.nicolas.ferre@microchip.com>
+In-Reply-To: <20191002151410.15306-1-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, adrian.hunter@intel.com
+To: Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Yannick Fertre <yannick.fertre@st.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 02:34:32PM +0200, Nicolas Ferre wrote:
-> Add a property to keep the analog calibration cell powered.
-> This feature is specific to the Microchip SDHCI IP and outside
-> of the standard SDHCI register map.
-> 
-> By always keeping it on, after a full reset sequence, we make sure
-> that this feature is activated and not disabled.
-> 
-> We expose a hardware property to the DT as this feature can be used
-> to adapt SDHCI behavior vs. how the SDCAL SoC pin is connected
-> on the board.
-> 
-> Note that managing properly this property would reduce
-> power consumption on some SAMA5D2 SiP revisions.
-> 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+On Wed, Oct 2, 2019 at 10:14 AM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
+>
+> Convert the STM32 cec binding to DT schema format using json-schema
 
-Thanks
+Similar comments here too.
 
-Ludovic
-
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  drivers/mmc/host/sdhci-of-at91.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-> index e7d1920729fb..9571c4a882a9 100644
-> --- a/drivers/mmc/host/sdhci-of-at91.c
-> +++ b/drivers/mmc/host/sdhci-of-at91.c
-> @@ -27,6 +27,9 @@
->  #define SDMMC_CACR	0x230
->  #define		SDMMC_CACR_CAPWREN	BIT(0)
->  #define		SDMMC_CACR_KEY		(0x46 << 8)
-> +#define SDMMC_CALCR	0x240
-> +#define		SDMMC_CALCR_EN		BIT(0)
-> +#define		SDMMC_CALCR_ALWYSON	BIT(4)
->  
->  #define SDHCI_AT91_PRESET_COMMON_CONF	0x400 /* drv type B, programmable clock mode */
->  
-> @@ -35,6 +38,7 @@ struct sdhci_at91_priv {
->  	struct clk *gck;
->  	struct clk *mainck;
->  	bool restore_needed;
-> +	bool cal_always_on;
->  };
->  
->  static void sdhci_at91_set_force_card_detect(struct sdhci_host *host)
-> @@ -116,10 +120,17 @@ static void sdhci_at91_set_uhs_signaling(struct sdhci_host *host,
->  
->  static void sdhci_at91_reset(struct sdhci_host *host, u8 mask)
->  {
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_at91_priv *priv = sdhci_pltfm_priv(pltfm_host);
+>  .../devicetree/bindings/media/st,stm32-cec.txt     | 19 --------
+>  .../devicetree/bindings/media/st,stm32-cec.yaml    | 57 ++++++++++++++++++++++
+>  2 files changed, 57 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-cec.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/st,stm32-cec.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/media/st,stm32-cec.txt b/Documentation/devicetree/bindings/media/st,stm32-cec.txt
+> deleted file mode 100644
+> index 6be2381c180d..000000000000
+> --- a/Documentation/devicetree/bindings/media/st,stm32-cec.txt
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -STMicroelectronics STM32 CEC driver
+> -
+> -Required properties:
+> - - compatible : value should be "st,stm32-cec"
+> - - reg : Physical base address of the IP registers and length of memory
+> -        mapped region.
+> - - clocks : from common clock binding: handle to CEC clocks
+> - - clock-names : from common clock binding: must be "cec" and "hdmi-cec".
+> - - interrupts : CEC interrupt number to the CPU.
+> -
+> -Example for stm32f746:
+> -
+> -cec: cec@40006c00 {
+> -       compatible = "st,stm32-cec";
+> -       reg = <0x40006C00 0x400>;
+> -       interrupts = <94>;
+> -       clocks = <&rcc 0 STM32F7_APB1_CLOCK(CEC)>, <&rcc 1 CLK_HDMI_CEC>;
+> -       clock-names = "cec", "hdmi-cec";
+> -};
+> diff --git a/Documentation/devicetree/bindings/media/st,stm32-cec.yaml b/Documentation/devicetree/bindings/media/st,stm32-cec.yaml
+> new file mode 100644
+> index 000000000000..c99144107185
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/st,stm32-cec.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/st,stm32-cec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  	sdhci_reset(host, mask);
->  
->  	if (host->mmc->caps & MMC_CAP_NONREMOVABLE)
->  		sdhci_at91_set_force_card_detect(host);
+> +title: STMicroelectronics STM32 CEC bindings
 > +
-> +	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL))
-> +		sdhci_writel(host, SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
-> +			     SDMMC_CALCR);
->  }
->  
->  static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
-> @@ -345,6 +356,14 @@ static int sdhci_at91_probe(struct platform_device *pdev)
->  
->  	priv->restore_needed = false;
->  
-> +	/*
-> +	 * if SDCAL pin is wrongly connected, we must enable
-> +	 * the analog calibration cell permanently.
-> +	 */
-> +	priv->cal_always_on =
-> +		device_property_read_bool(&pdev->dev,
-> +					  "microchip,sdcal-inverted");
+> +maintainers:
+> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> +  - Yannick Fertre <yannick.fertre@st.com>
 > +
->  	ret = mmc_of_parse(host->mmc);
->  	if (ret)
->  		goto clocks_disable_unprepare;
-> -- 
-> 2.17.1
-> 
+> +properties:
+> +  compatible:
+> +    const: st,stm32-cec
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Module Clock
+> +      - description: Bus Clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: cec
+> +      - const: hdmi-cec
+> +
+> +  pinctrl-names: true
+> +
+> +patternProperties:
+> +  "^pinctrl-[0-9]+$": true
+
+You don't need to list the pinctrl properties.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +    cec: cec@40006c00 {
+> +        compatible = "st,stm32-cec";
+> +        reg = <0x40006c00 0x400>;
+> +        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&rcc CEC_K>, <&clk_lse>;
+> +        clock-names = "cec", "hdmi-cec";
+> +    };
+> +
+> +...
+> --
+> 2.15.0
+>
