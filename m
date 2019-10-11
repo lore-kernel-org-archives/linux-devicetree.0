@@ -1,45 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [v2,2/2] dt-bindings: i2c-mux-pca954x: Add optional property
- i2c-mux-never-disable
-Date: Fri, 11 Oct 2019 09:44:45 -0500
-Message-ID: <20191011144445.GA2340@bogus>
-References: <20190930032503.44425-1-biwen.li@nxp.com>
- <20190930032503.44425-2-biwen.li@nxp.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH V4 00/10] ARM: Add minimal Raspberry Pi 4 support
+Date: Fri, 11 Oct 2019 16:46:46 +0200
+Message-ID: <11857a63-252a-00d3-d777-aed1c515ec47@gmx.net>
+References: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190930032503.44425-2-biwen.li@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Biwen Li <biwen.li@nxp.com>
-Cc: peda@axentia.se, leoyang.li@nxp.com, mark.rutland@arm.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-bluetooth@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 11:25:03AM +0800, Biwen Li wrote:
-> The patch adds an optional property i2c-mux-never-disable
-> 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v2:
-> 	- update documentation
-> 
->  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> index 30ac6a60f041..71b73d0fdb62 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> @@ -34,6 +34,7 @@ Optional Properties:
->      - first cell is the pin number
->      - second cell is used to specify flags.
->      See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +  - i2c-mux-never-disable: always forces mux to be enabled.
-
-Either needs to have a vendor prefix or be documented as a common 
-property.
-
-IIRC, we already have a property for mux default state which seems like 
-that would cover this unless you need to leave it in different states.
-
-Rob
+Am 06.10.19 um 17:28 schrieb Stefan Wahren:
+> This series adds minimal support for the new Raspberry Pi 4, so we are able
+> to login via debug UART.
+>
+> Patch 1:     Bluetooth driver fix
+> Patch 2-3:   Fix some DT schema warnings
+> Patch 4-5:   Prepare DTS for the new SoC BMC2711
+> Patch 6-9:   Add Raspberry Pi 4 DTS support
+> Patch 10:    Update MAINTAINERS
+>
+> Unfortunately the Raspberry Pi Foundation didn't released a
+> peripheral documentation for the new SoC yet. So we only have a preliminary
+> datasheet [1] and reduced schematics [2].
+>
+> Known issues:
+> Since Linux 5.3-rc1 DMA doesn't work properly on that platform.
+> Nicolas Saenz Julienne investigates on that issue. As a temporary workaround
+> i reverted the following patch to test this series:
+>
+> 79a98672 "dma-mapping: remove dma_max_pfn"
+> 7559d612 "mmc: core: let the dma map ops handle bouncing"
+>
+> Changes in V4:
+> - add Rob's Reviewed-by
+> - enable ZONE_DMA for ARCH_BCM2835
+> - fix spi reference in bcm2711.dtsi
+> - fix bluetooth section in RPi 4 dts
+> - drop "always-on" for armv8-timer
+> - add necessary Bluetooth driver fix
+> - add arm64 dts link
+> - additional comments to the dts files as requested by Florian
+>
+Patches 2-10 applied so that we don't miss Linux 5.5
