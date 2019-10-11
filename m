@@ -1,259 +1,178 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 3/4] media: rockchip: Add the rkvdec driver
-Date: Fri, 11 Oct 2019 13:21:42 +0200
-Message-ID: <d689990c-e5c0-5914-fc3d-37d623b68812@xs4all.nl>
-References: <20191011093342.3471-1-boris.brezillon@collabora.com>
- <20191011093342.3471-4-boris.brezillon@collabora.com>
- <8d3abbd9-f27d-f17f-8298-b0cc7c63ab3e@xs4all.nl>
- <20191011131540.002a61a9@dhcp-172-31-174-146.wireless.concordia.ca>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add Beelink A1
+Date: Fri, 11 Oct 2019 13:20:38 +0100
+Message-ID: <4c490e48-7a85-4ef9-771c-165defde39cc@arm.com>
+References: <9037b7edbbb41cbbf699ebe3a511daf22d886e7d.1570444695.git.robin.murphy@arm.com>
+ <CAL_JsqKBy+i+=gGyYhBgcMUYsWd_CL_GnEoQqALBb+Gy7Ogb6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20191011131540.002a61a9-RcKxWJ4Cfj07VwOnMuImuy7eAjiKCowXPIyMCRxp1+LbFSlKd4bkJ/d9D2ou9A/h@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Boris Brezillon <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKBy+i+=gGyYhBgcMUYsWd_CL_GnEoQqALBb+Gy7Ogb6A@mail.gmail.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, "heiko@sntech.de" <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/19 1:15 PM, Boris Brezillon wrote:
-> Hi Hans,
-> 
-> On Fri, 11 Oct 2019 12:06:35 +0200
-> Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
-> 
->>> diff --git a/drivers/staging/media/rockchip/Kconfig b/drivers/staging/media/rockchip/Kconfig
->>> new file mode 100644
->>> index 000000000000..8c617ae2c84f
->>> --- /dev/null
->>> +++ b/drivers/staging/media/rockchip/Kconfig
->>> @@ -0,0 +1,16 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +config VIDEO_ROCKCHIP
->>> +	bool "Rockchip Video Devices"
->>> +	depends on ARCH_ROCKCHIP || COMPILE_TEST
->>> +	help
->>> +	  If you have a Rockchip SoC based embedding a video codec.
->>> +
->>> +	  Note that this option doesn't include new drivers in the
->>> +	  kernel: saying N will just cause Kconfig to skip all the
->>> +	  questions about Allwinner media devices.
->>> +
->>> +if VIDEO_ROCKCHIP
->>> +
->>> +source "drivers/staging/media/rockchip/vdec/Kconfig"
->>> +
->>> +endif  
+On 07/10/2019 13:53, Rob Herring wrote:
+> On Mon, Oct 7, 2019 at 6:33 AM Robin Murphy <robin.murphy@arm.com> wrote:
 >>
->> Is this really necessary? I think the 'source' line can just be added to
->> drivers/staging/media/Kconfig. This config option here is rather vague.
+>> Beelink A1 is a TV box implementing the higher-end options of the
+>> RK3328 reference design - the DTB from the stock Android firmware is
+>> clearly the "rk3328-box-plus" variant from the Rockchip 3.10 BSP with
+>> minor modifications to accommodate the USB WiFi module and additional
+>> VFD-style LED driver. It features:
+>>
+>> - 4GB of 32-bit LPDDR3
+>> - 16GB of HS200 eMMC (newer models with 32GB also exist)
+>> - Realtek RTL8211F phy for gigabit ethernet
+>> - Fn-Link 6221E-UUC module (RealTek RTL8821CU) for 11ac WiFi and Bluetooth 4.2
+>> - HDMI and analog A/V
+>> - 1x USB 3.0 type A host, 1x USB 2.0 type A OTG, 1x micro SD
+>> - IR receiver and a neat little LED clock display.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>
+>> One question I'm wondering about is whether it's worth pushing the HDMI
+>> and analog codec audio cards down into rk3328.dtsi (as with HDMI audio
+>> on RK3399), since those audio pipelines are internal to the SoC and the
+>> board only really governs whether the outputs are wired up or not.
 > 
-> I based it on the Allwinner/Cedrus model (even left an 'Allwinner' in
-> the description :)), but I can definitely move the source line in
-> drivers/staging/media/Kconfig or even get rid of the rockchip dir if
-> you prefer.
+> Seems reasonable. One other candidate below.
 > 
 >>
->>> diff --git a/drivers/staging/media/rockchip/Makefile b/drivers/staging/media/rockchip/Makefile
->>> new file mode 100644
->>> index 000000000000..b3705b51f1b9
->>> --- /dev/null
->>> +++ b/drivers/staging/media/rockchip/Makefile
->>> @@ -0,0 +1,2 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +obj-$(CONFIG_VIDEO_ROCKCHIP_VDEC) += vdec/
->>> diff --git a/drivers/staging/media/rockchip/vdec/Kconfig b/drivers/staging/media/rockchip/vdec/Kconfig
->>> new file mode 100644
->>> index 000000000000..329b4a813c47
->>> --- /dev/null
->>> +++ b/drivers/staging/media/rockchip/vdec/Kconfig
->>> @@ -0,0 +1,14 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +config VIDEO_ROCKCHIP_VDEC
->>> +	tristate "Rockchip Video Decoder driver"
->>> +	depends on ARCH_ROCKCHIP || COMPILE_TEST
->>> +	depends on VIDEO_DEV && VIDEO_V4L2 && MEDIA_CONTROLLER
->>> +	depends on MEDIA_CONTROLLER_REQUEST_API
->>> +	select VIDEOBUF2_DMA_CONTIG
->>> +	select VIDEOBUF2_VMALLOC
->>> +	select V4L2_MEM2MEM_DEV
->>> +	help
->>> +	  Support for the Rockchip Video Decoder IP present on Rockchip SoC,
->>> +	  which accelerates video decoding.
->>> +	  To compile this driver as a module, choose M here: the module
->>> +	  will be called hantro-vpu.  
->>
->> hantro-vpu? Not rkvdec?
+>>   .../devicetree/bindings/arm/rockchip.yaml     |   5 +
 > 
-> Should be rkvdec, indeed. That's what happens when you copy things from
-> an existing driver :-).
-> 
-> 
->>> +
->>> +/* Constant CABAC table. */
->>> +static const u32 rkvdec_h264_cabac_table[] = {  
->>
->> Where does this table come from? It needs some provenance.
-> 
-> Chromeos kernels [1] and MPP code base [2]. I'll add a comment pointing
-> to those trees.
-> 
-> [...]
-> 
->>> +
->>> +struct rkvdec_h264_reflist_builder {
->>> +	const struct v4l2_h264_dpb_entry *dpb;
->>> +	s32 pocs[RKVDEC_H264_DPB_SIZE];
->>> +	u8 unordered_reflist[RKVDEC_H264_DPB_SIZE];
->>> +	int frame_nums[RKVDEC_H264_DPB_SIZE];
->>> +	s32 curpoc;
->>> +	u8 num_valid;
->>> +};  
->>
->> What's a 'poc'? Perhaps this can use some comments.
-> 
-> Picture Order Count. I'll add comment.
-> 
->>
->> It looks like code is copied from hantro_h264.c. Is there anything that
->> can be reasonably shared between the two drivers?
-> 
-> I was planning on exporting those helpers at some point, but I'd like
-> the reflist creation logic to settle before doing (we still need to fix
-> things for interlaced streams, which is what Jonas is working on).
-> 
-> 
-> 
->>> +
->>> +static int p_ref_list_cmp(const void *ptra, const void *ptrb, const void *data)
->>> +{
->>> +	const struct rkvdec_h264_reflist_builder *builder = data;
->>> +	const struct v4l2_h264_dpb_entry *a, *b;
->>> +	u8 idxa, idxb;
->>> +
->>> +	idxa = *((u8 *)ptra);
->>> +	idxb = *((u8 *)ptrb);
->>> +	a = &builder->dpb[idxa];
->>> +	b = &builder->dpb[idxb];
->>> +
->>> +	if ((a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM) !=
->>> +	    (b->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
->>> +		/* Short term pics firt. */  
->>
->> firt -> first
-> 
-> Will fix the typo.
-> 
->>
->>> +		if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
->>> +			return -1;
->>> +		else
->>> +			return 1;
->>> +	}
->>> +
->>> +	/*
->>> +	 * Short term pics in descending pic num order, long term ones in
->>> +	 * ascending order.
->>> +	 */
->>> +	if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
->>> +		int frame_num_a, frame_num_b;
->>> +
->>> +		frame_num_a = builder->frame_nums[idxa];
->>> +		frame_num_b = builder->frame_nums[idxb];
->>> +		return frame_num_b > frame_num_a ? 1 : -1;
->>> +	}
->>> +
->>> +	return a->pic_num > b->pic_num ? 1 : -1;
->>> +}
->>> +
->>> +static int b0_ref_list_cmp(const void *ptra, const void *ptrb, const void *data)
->>> +{
->>> +	const struct rkvdec_h264_reflist_builder *builder = data;
->>> +	const struct v4l2_h264_dpb_entry *a, *b;
->>> +	s32 poca, pocb;
->>> +	u8 idxa, idxb;
->>> +
->>> +	idxa = *((u8 *)ptra);
->>> +	idxb = *((u8 *)ptrb);
->>> +	a = &builder->dpb[idxa];
->>> +	b = &builder->dpb[idxb];
->>> +
->>> +	if ((a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM) !=
->>> +	    (b->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
->>> +		/* Short term pics firt. */  
->>
->> Ditto. Check the code for this typo. It's in the hantro code as well.
-> 
-> Will do.
-> 
->>
->>> +		if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
->>> +			return -1;
->>> +		else
->>> +			return 1;
->>> +	}
->>> +
->>> +	/* Long term pics in ascending pic num order. */
->>> +	if (a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)
->>> +		return a->pic_num > b->pic_num ? 1 : -1;
->>> +
->>> +	poca = builder->pocs[idxa];
->>> +	pocb = builder->pocs[idxb];
->>> +
->>> +	/*
->>> +	 * Short term pics with POC < cur POC first in POC descending order
->>> +	 * followed by short term pics with POC > cur POC in POC ascending
->>> +	 * order.
->>> +	 */
->>> +	if ((poca < builder->curpoc) != (pocb < builder->curpoc))
->>> +		return poca > pocb ? 1 : -1;
->>> +	else if (poca < builder->curpoc)
->>> +		return pocb > poca ? 1 : -1;
->>> +
->>> +	return poca > pocb ? 1 : -1;
->>> +}
-> 
->>> +static void rkvdec_reset_fmt(struct rkvdec_ctx *ctx, struct v4l2_format *f,
->>> +			     u32 fourcc)
->>> +{
->>> +	memset(f, 0, sizeof(*f));
->>> +	f->fmt.pix_mp.pixelformat = fourcc;
->>> +	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
->>> +	f->fmt.pix_mp.colorspace = V4L2_COLORSPACE_JPEG,  
->>
->> Don't use this colorspace. I see it is also used in the hantro driver, that should
->> be corrected as well.
->>
->> The colorimetry comes from the stream metadata, and for a stateless driver I
->> assume that it is userspace that parses that.
->>
->> V4L2_COLORSPACE_JPEG should only be used by (M)JPEG codecs. And even there is it
->> dubious. See section 2.17.10 in the spec for more info.
-> 
-> What should I use when the formats are reset then?
+> In the future, please split bindings to a separate patch.
 
-Depends on the resolution: SDTV should use V4L2_COLORSPACE_SMPTE170M, others REC709.
+Ha, busted! I thought this might be trivial enough to slip through, but 
+I'll split it out if you prefer.
 
-If you don't know the resolution here, then stick to REC709.
+>>   arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>>   arch/arm64/boot/dts/rockchip/rk3328-a1.dts    | 399 ++++++++++++++++++
+>>   3 files changed, 405 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-a1.dts
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> index c82c5e57d44c..f27f7805f57e 100644
+>> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> @@ -40,6 +40,11 @@ properties:
+>>             - const: asus,rk3288-tinker-s
+>>             - const: rockchip,rk3288
+>>
+>> +      - description: Beelink A1
+>> +        items:
+>> +          - const: azw,beelink-a1
+>> +          - const: rockchip,rk3328
+>> +
+>>         - description: bq Curie 2 tablet
+>>           items:
+>>             - const: mundoreader,bq-curie2
+>> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+>> index 1f18a9392d15..a6f250e7cde2 100644
+>> --- a/arch/arm64/boot/dts/rockchip/Makefile
+>> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+>> @@ -1,5 +1,6 @@
+>>   # SPDX-License-Identifier: GPL-2.0
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
+>> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-a1.dts b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
+>> new file mode 100644
+>> index 000000000000..03ad663ff821
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
+>> @@ -0,0 +1,399 @@
+>> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+>> +// Copyright (c) 2017-2019 Arm Ltd.
+>> +
+>> +/dts-v1/;
+>> +#include "rk3328.dtsi"
+>> +
+>> +/ {
+>> +       model = "Beelink A1";
+>> +       compatible = "azw,beelink-a1", "rockchip,rk3328";
+>> +
+>> +       /*
+>> +        * UART pins, as viewed with bottom of case removed:
+>> +        *
+>> +        *           Front
+>> +        *        /-------
+>> +        *  L    / o <- Gnd
+>> +        *  e   / o <-- Rx
+>> +        *  f  / o <--- Tx
+>> +        *  t / o <---- +3.3v
+>> +        *    |
+>> +        */
+>> +       chosen {
+>> +               stdout-path = "serial2:1500000n8";
+>> +       };
+>> +
+>> +       gmac_clkin: external-gmac-clock {
+>> +               compatible = "fixed-clock";
+>> +               clock-frequency = <125000000>;
+>> +               clock-output-names = "gmac_clkin";
+>> +               #clock-cells = <0>;
+>> +       };
+>> +
+>> +       vcc_host_5v: usb3-current-switch {
+>> +               compatible = "regulator-fixed";
+>> +               enable-active-high;
+>> +               gpio = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&usb30_host_drv>;
+>> +               regulator-name = "vcc_host_5v";
+>> +               vin-supply = <&vcc_sys>;
+>> +       };
+>> +
+>> +       vcc_sys: vcc-sys {
+>> +               compatible = "regulator-fixed";
+>> +               regulator-name = "vcc_sys";
+>> +               regulator-min-microvolt = <5000000>;
+>> +               regulator-max-microvolt = <5000000>;
+>> +       };
+>> +
+>> +       cpus {
+>> +               idle-states {
+>> +                       entry-method = "arm,psci";
+>> +
+>> +                       cpu_sleep: cpu-sleep {
+>> +                               compatible = "arm,idle-state";
+>> +                               arm,psci-suspend-param = <0x0010000>;
+>> +                               local-timer-stop;
+>> +                               entry-latency-us = <120>;
+>> +                               exit-latency-us = <250>;
+>> +                               min-residency-us = <900>;
+> 
+> This doesn't seem like something that's board specific, but I guess
+> the regulator could have some influence on these times. If so, the
+> board file could always override a default.
 
-Regards,
+True, this is traceable back to the Rockchip Android BSP where it's 
+actually applied to the entire SoC family[1]. I don't know if there's 
+likely to be any difference between the downstream "RKTRUST" firmware 
+binaries (which this nominally represents) and upstream ATF in terms of 
+their PSCI implementation/performance.
 
-	Hans
+I've not got round to properly tinkering with suspend/resume and power 
+management stuff yet, so I guess another option would be to just forget 
+about this part for now - Heiko, any opinions?
 
-> 
-> Thanks for the prompt review!
-> 
-> Boris
-> 
-> [1]https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.4/drivers/media/platform/rockchip-vpu/rk3399_vdec_hw_h264d.c#45
-> [2]https://github.com/rockchip-linux/mpp/blob/release/mpp/hal/rkdec/h264d/hal_h264d_rkv_reg.c#L67
-> 
+Cheers,
+Robin.
+
+[1] 
+https://github.com/rockchip-linux/kernel/blob/release-3.10/arch/arm64/boot/dts/rk322xh.dtsi#L107-L118
