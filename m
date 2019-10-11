@@ -1,66 +1,39 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH 2/2] iommu/arm-smmu: Read optional "input-address-size" property
-Date: Thu, 10 Oct 2019 20:46:09 -0700
-Message-ID: <20191011034609.13319-3-nicoleotsuka@gmail.com>
-References: <20191011034609.13319-1-nicoleotsuka@gmail.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/2] Add IMX296 CMOS image sensor support
+Date: Fri, 11 Oct 2019 09:26:11 +0530
+Message-ID: <20191011035613.13598-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011034609.13319-1-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, will@kernel.org, robin.murphy@arm.com
-Cc: vdumpa@nvidia.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Some SMMU instances may not connect all input address lines physically
-but drive some upper address bits to logical zero, depending on their
-SoC designs. Some of them even connect only 39 bits that is not in the
-list of IAS/OAS from SMMU internal IDR registers.
+Hello,
 
-After the "input-address-size" property is added to DT bindings, this
-patch reads and applies to va_size as an input virtual address width.
+This patchset adds support for IMX296 CMOS image sensor from Sony.
+Sensor can be programmed through I2C and 4-wire interface but the
+current driver only supports I2C interface. The sensor is
+capable of outputting frames in CSI2 format (1 Lane). In the case
+of sensor resolution, driver only supports 1440x1088 at 30 FPS.
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- drivers/iommu/arm-smmu.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+The driver has been validated using Framos IMX296 module interfaced to
+96Boards Dragonboard410c.
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index b18aac4c105e..b80a869de45b 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1805,12 +1805,14 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
- 			 "failed to set DMA mask for table walker\n");
- 
- 	if (smmu->version < ARM_SMMU_V2) {
--		smmu->va_size = smmu->ipa_size;
-+		if (!smmu->va_size)
-+			smmu->va_size = smmu->ipa_size;
- 		if (smmu->version == ARM_SMMU_V1_64K)
- 			smmu->features |= ARM_SMMU_FEAT_FMT_AARCH64_64K;
- 	} else {
- 		size = FIELD_GET(ID2_UBS, id);
--		smmu->va_size = arm_smmu_id_size_to_bits(size);
-+		if (!smmu->va_size)
-+			smmu->va_size = arm_smmu_id_size_to_bits(size);
- 		if (id & ID2_PTFS_4K)
- 			smmu->features |= ARM_SMMU_FEAT_FMT_AARCH64_4K;
- 		if (id & ID2_PTFS_16K)
-@@ -1950,6 +1952,7 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
- 	const struct arm_smmu_match_data *data;
- 	struct device *dev = &pdev->dev;
- 	bool legacy_binding;
-+	u32 va_size;
- 
- 	if (of_property_read_u32(dev->of_node, "#global-interrupts",
- 				 &smmu->num_global_irqs)) {
-@@ -1976,6 +1979,9 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
- 	if (of_dma_is_coherent(dev->of_node))
- 		smmu->features |= ARM_SMMU_FEAT_COHERENT_WALK;
- 
-+	if (!of_property_read_u32(dev->of_node, "input-address-size", &va_size))
-+		smmu->va_size = va_size;
-+
- 	return 0;
- }
- 
+Thanks,
+Mani
+
+Manivannan Sadhasivam (2):
+  dt-bindings: media: i2c: Add IMX296 CMOS sensor binding
+  media: i2c: Add IMX296 CMOS image sensor driver
+
+ .../devicetree/bindings/media/i2c/imx296.txt  |  55 ++
+ MAINTAINERS                                   |   8 +
+ drivers/media/i2c/Kconfig                     |  11 +
+ drivers/media/i2c/Makefile                    |   1 +
+ drivers/media/i2c/imx296.c                    | 733 ++++++++++++++++++
+ 5 files changed, 808 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.txt
+ create mode 100644 drivers/media/i2c/imx296.c
+
 -- 
 2.17.1
