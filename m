@@ -1,82 +1,283 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
-Date: Fri, 11 Oct 2019 11:02:37 -0700
-Message-ID: <a6933fa81cf1510528ed7a4cfa55f57900800fc6.camel@perches.com>
-References: <20190913211349.28245-1-robh@kernel.org>
-         <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
-         <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
-         <7672dd2f651bfdcdb1615ab739e36a381b2535b1.camel@perches.com>
-         <CAL_JsqKAbP6KYjiJ6dLr=dpFG-j-e4rJPCKZ0+pZrDjsSPAUPQ@mail.gmail.com>
-         <CAL_JsqJiV-L14tQte0tZXq+-TRTXGOFW62EsSobu3cFGA8rJDw@mail.gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [PATCH v3 2/2] soundwire: qcom: add support for SoundWire
+ controller
+Date: Fri, 11 Oct 2019 12:50:42 -0500
+Message-ID: <9d00c94b-1bce-9fdf-55fe-ee681466a97a@linux.intel.com>
+References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
+ <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJiV-L14tQte0tZXq+-TRTXGOFW62EsSobu3cFGA8rJDw@mail.gmail.com>
+In-Reply-To: <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Whitcroft <apw@canonical.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, robh@kernel.org, vkoul@kernel.org
+Cc: broonie@kernel.org, bgoswami@codeaurora.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-10-11 at 12:56 -0500, Rob Herring wrote:
-> On Fri, Sep 27, 2019 at 10:39 AM Rob Herring <robh@kernel.org> wrote:
-> > On Fri, Sep 27, 2019 at 9:29 AM Joe Perches <joe@perches.com> wrote:
-> > > On Fri, 2019-09-27 at 09:02 -0500, Rob Herring wrote:
-> > > > On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
-> > > > > On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
-> > > > > > DT bindings are moving to using a json-schema based schema format
-> > > > > > instead of freeform text. Add a checkpatch.pl check to encourage using
-> > > > > > the schema for new bindings. It's not yet a requirement, but is
-> > > > > > progressively being required by some maintainers.
-> > > > > []
-> > > > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > > > []
-> > > > > > @@ -2822,6 +2822,14 @@ sub process {
-> > > > > >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
-> > > > > >               }
-> > > > > > 
-> > > > > > +# Check for adding new DT bindings not in schema format
-> > > > > > +             if (!$in_commit_log &&
-> > > > > > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
-> > > > > > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
-> > > > > > +                     WARN("DT_SCHEMA_BINDING_PATCH",
-> > > > > > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
-> > > > > > +             }
-> > > > > > +
-> > > > > 
-> > > > > As this already seems to be git dependent, perhaps
-> > > > 
-> > > > It's quite rare to see a non git generated diff these days.
-> > > > 
-> > > > > it's easier to read with a single line test like:
-> > > > > 
-> > > > >                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
-> > > > >                         etc...
-> > > > >                 }
-> > > > 
-> > > > I frequently do 'git show $commit | scripts/checkpatch.pl' and this
-> > > > doesn't work with that. I really should have a '--pretty=email' in
-> > > > there, but I just ignore the commit msg warnings. In any case, that
-> > > > still doesn't help because there's no diffstat. There's probably some
-> > > > way to turn that on or just use git-format-patch, but really we want
-> > > > this to work with any git diff.
-> > > 
-> > > I don't understand your argument against what I proposed at all.
-> > 
-> > It is dependent on the commit message rather than the diff itself. I
-> > want it to work with or without a diffstat.
-> > 
-> > > and btw:
-> > > 
-> > > $ git format-patch -1 --stdout <commit> | ./scripts/checkpatch.pl
-> > 
-> > Yes, I stated this was possible. My concern is there are lots of ways
-> > to generate a diff in git. My way works for *all* of them. Yours
-> > doesn't.
-> 
-> Joe, are you okay with this?
 
-Sure, Andrew Morton does most of the checkpatch upstreaming, but
-if you want to send your own pull request, I've no objection.
+> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 cmd_data,
+> +				     u8 dev_addr, u16 reg_addr)
+> +{
+> +	DECLARE_COMPLETION_ONSTACK(comp);
+> +	unsigned long flags;
+> +	u32 val;
+> +	int ret;
+> +
+> +	spin_lock_irqsave(&ctrl->comp_lock, flags);
+> +	ctrl->comp = &comp;
+> +	spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+> +	val = SWRM_REG_VAL_PACK(cmd_data, dev_addr,
+> +				SWRM_SPECIAL_CMD_ID, reg_addr);
+> +	ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
+> +	if (ret)
+> +		goto err;
+> +
+> +	ret = wait_for_completion_timeout(ctrl->comp,
+> +					  msecs_to_jiffies(TIMEOUT_MS));
+> +
+> +	if (!ret)
+> +		ret = SDW_CMD_IGNORED;
+> +	else
+> +		ret = SDW_CMD_OK;
 
-> Rob
+It's odd to report CMD_IGNORED on a timeout. CMD_IGNORED is a valid 
+answer that should be retrieved immediately. You probably need to 
+translate the soundwire errors into -ETIMEOUT or something.
+
+> +err:
+> +	spin_lock_irqsave(&ctrl->comp_lock, flags);
+> +	ctrl->comp = NULL;
+> +	spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_swrm_cmd_fifo_rd_cmd(struct qcom_swrm_ctrl *ctrl,
+> +				     u8 dev_addr, u16 reg_addr,
+> +				     u32 len, u8 *rval)
+> +{
+> +	int i, ret;
+> +	u32 val;
+> +	DECLARE_COMPLETION_ONSTACK(comp);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&ctrl->comp_lock, flags);
+> +	ctrl->comp = &comp;
+> +	spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+> +
+> +	val = SWRM_REG_VAL_PACK(len, dev_addr, SWRM_SPECIAL_CMD_ID, reg_addr);
+> +	ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_RD_CMD, val);
+> +	if (ret)
+> +		goto err;
+> +
+> +	ret = wait_for_completion_timeout(ctrl->comp,
+> +					  msecs_to_jiffies(TIMEOUT_MS));
+> +
+> +	if (!ret) {
+> +		ret = SDW_CMD_IGNORED;
+> +		goto err;
+> +	} else {
+> +		ret = SDW_CMD_OK;
+> +	}
+
+same comment on reporting SDW_CMD_IGNORED on timeout, this is very odd.
+
+> +
+> +	for (i = 0; i < len; i++) {
+> +		ret = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_RD_FIFO_ADDR, &val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		rval[i] = val & 0xFF;
+> +	}
+> +
+> +err:
+> +	spin_lock_irqsave(&ctrl->comp_lock, flags);
+> +	ctrl->comp = NULL;
+> +	spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+> +
+> +	return ret;
+> +} > +
+
+[snip]
+
+> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct qcom_swrm_ctrl *ctrl = dev_id;
+> +	u32 sts, value;
+> +	unsigned long flags;
+> +
+> +	ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
+> +		ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
+> +		dev_err_ratelimited(ctrl->dev,
+> +				    "CMD error, fifo status 0x%x\n",
+> +				     value);
+> +		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
+> +	}
+> +
+> +	if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
+> +	    sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
+> +		schedule_work(&ctrl->slave_work);
+> +
+> +	ctrl->reg_write(ctrl, SWRM_INTERRUPT_CLEAR, sts);
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED) {
+> +		spin_lock_irqsave(&ctrl->comp_lock, flags);
+> +		if (ctrl->comp)
+> +			complete(ctrl->comp);
+> +		spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+
+
+Wouldn't it be simpler if you declared the completion structure as part 
+of your controller definitions, as done for the Intel stuff?
+
+[snip]
+
+> +static void qcom_swrm_stream_free_ports(struct qcom_swrm_ctrl *ctrl,
+> +					struct sdw_stream_runtime *stream)
+> +{
+> +	struct sdw_master_runtime *m_rt;
+> +	struct sdw_port_runtime *p_rt;
+> +	unsigned long *port_mask;
+> +
+> +	mutex_lock(&ctrl->port_lock);
+
+is this lock to avoid races between alloc/free? if yes maybe document it?
+
+> +
+> +	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+> +		if (m_rt->direction == SDW_DATA_DIR_RX)
+> +			port_mask = &ctrl->dout_port_mask;
+> +		else
+> +			port_mask = &ctrl->din_port_mask;
+> +
+> +		list_for_each_entry(p_rt, &m_rt->port_list, port_node)
+> +			clear_bit(p_rt->num - 1, port_mask);
+> +	}
+> +
+> +	mutex_unlock(&ctrl->port_lock);
+> +}
+> +
+> +static int qcom_swrm_stream_alloc_ports(struct qcom_swrm_ctrl *ctrl,
+> +					struct sdw_stream_runtime *stream,
+> +				       struct snd_pcm_hw_params *params,
+> +				       int direction)
+> +{
+> +	struct sdw_port_config pconfig[QCOM_SDW_MAX_PORTS];
+> +	struct sdw_stream_config sconfig;
+> +	struct sdw_master_runtime *m_rt;
+> +	struct sdw_slave_runtime *s_rt;
+> +	struct sdw_port_runtime *p_rt;
+> +	unsigned long *port_mask;
+> +	int i, maxport, pn, nports = 0, ret = 0;
+> +
+> +	mutex_lock(&ctrl->port_lock);
+> +	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+> +		if (m_rt->direction == SDW_DATA_DIR_RX) {
+> +			maxport = ctrl->num_dout_ports;
+> +			port_mask = &ctrl->dout_port_mask;
+> +		} else {
+> +			maxport = ctrl->num_din_ports;
+> +			port_mask = &ctrl->din_port_mask;
+> +		}
+> +
+> +		list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
+> +			list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
+> +				/* Port numbers start from 1 - 14*/
+> +				pn = find_first_zero_bit(port_mask, maxport);
+> +				if (pn > (maxport - 1)) {
+> +					dev_err(ctrl->dev, "All ports busy\n");
+> +					ret = -EBUSY;
+> +					goto err;
+> +				}
+> +				set_bit(pn, port_mask);
+> +				pconfig[nports].num = pn + 1;
+> +				pconfig[nports].ch_mask = p_rt->ch_mask;
+> +				nports++;
+> +			}
+> +		}
+> +	}
+> +
+> +	if (direction == SNDRV_PCM_STREAM_CAPTURE)
+> +		sconfig.direction = SDW_DATA_DIR_TX;
+> +	else
+> +		sconfig.direction = SDW_DATA_DIR_RX;
+> +
+> +	sconfig.ch_count = 1;
+> +	sconfig.frame_rate = params_rate(params);
+> +	sconfig.type = stream->type;
+> +	sconfig.bps = 1;
+
+Should probably add a note that hw_params is ignored since it's PDM 
+content, so only 1ch 1bit data.
+
+> +	sdw_stream_add_master(&ctrl->bus, &sconfig, pconfig,
+> +			      nports, stream);
+> +err:
+> +	if (ret) {
+> +		for (i = 0; i < nports; i++)
+> +			clear_bit(pconfig[i].num - 1, port_mask);
+> +	}
+> +
+> +	mutex_unlock(&ctrl->port_lock);
+> +
+> +	return ret;
+> +}
+> +
+
+[snip]
+
+> +static int qcom_swrm_hw_free(struct snd_pcm_substream *substream,
+> +			     struct snd_soc_dai *dai)
+> +{
+> +	struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+> +	struct sdw_stream_runtime *sruntime = ctrl->sruntime[dai->id];
+> +
+> +	qcom_swrm_stream_free_ports(ctrl, sruntime);
+> +	sdw_stream_remove_master(&ctrl->bus, sruntime);
+> +	sdw_deprepare_stream(sruntime);
+> +	sdw_disable_stream(sruntime);
+
+Should is be the reverse order? Removing ports/master before disabling 
+doesn't seem too good.
+
+> +
+> +	return 0;
+> +}
+> +
+
+> +static int qcom_swrm_register_dais(struct qcom_swrm_ctrl *ctrl)
+> +{
+> +	int num_dais = ctrl->num_dout_ports + ctrl->num_din_ports;
+> +	struct snd_soc_dai_driver *dais;
+> +	struct snd_soc_pcm_stream *stream;
+> +	struct device *dev = ctrl->dev;
+> +	int i;
+> +
+> +	/* PDM dais are only tested for now */
+> +	dais = devm_kcalloc(dev, num_dais, sizeof(*dais), GFP_KERNEL);
+> +	if (!dais)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_dais; i++) {
+> +		dais[i].name = devm_kasprintf(dev, GFP_KERNEL, "SDW Pin%d", i);
+> +		if (!dais[i].name)
+> +			return -ENOMEM;
+> +
+> +		if (i < ctrl->num_dout_ports) {
+> +			stream = &dais[i].playback;
+> +			stream->stream_name = devm_kasprintf(dev, GFP_KERNEL,
+> +							     "SDW Tx%d", i);
+> +		} else {
+> +			stream = &dais[i].capture;
+> +			stream->stream_name = devm_kasprintf(dev, GFP_KERNEL,
+> +							     "SDW Rx%d", i);
+> +		}
+
+For the Intel stuff, we removed the stream_name assignment since it 
+conflicted with the DAI widgets added by the topology. Since the code 
+looks inspired by the Intel DAI handling, you should look into this.
