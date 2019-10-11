@@ -1,100 +1,231 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: asoc: Add ADAU7118
-	documentation
-Date: Fri, 11 Oct 2019 14:01:16 -0500
-Message-ID: <CAL_JsqJu06hW-VRGZ4nFx6TYtf3yVJezUVhCSyTjP+qPmG7+Gw@mail.gmail.com>
-References: <20191010074234.7344-1-nuno.sa@analog.com>
- <20191010074234.7344-2-nuno.sa@analog.com>
- <20191010210850.GA20184@bogus>
+Subject: [PATCH] dt-bindings: Clean-up regulator '-supply' schemas
+Date: Fri, 11 Oct 2019 14:02:31 -0500
+Message-ID: <20191011190231.9779-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20191010210850.GA20184@bogus>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBPY3QgMTAsIDIwMTkgYXQgNDowOCBQTSBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
-b3JnPiB3cm90ZToKPgo+IE9uIFRodSwgT2N0IDEwLCAyMDE5IGF0IDA5OjQyOjM0QU0gKzAyMDAs
-IE51bm8gU8OhIHdyb3RlOgo+ID4gRG9jdW1lbnQgdGhlIEFEQVU3MTE4IDggY2hhbm5lbCBQRE0g
-dG8gSTJTL1RETSBjb252ZXJ0ZXIgZGV2aWNldHJlZQo+ID4gYmluZGluZ3MuCj4gPgo+ID4gU2ln
-bmVkLW9mZi1ieTogTnVubyBTw6EgPG51bm8uc2FAYW5hbG9nLmNvbT4KPiA+IC0tLQo+ID4gQ2hh
-bmdlcyBpbiB2MjoKPiA+ICAqIExpc3QgcmVndWxhdG9ycyBhcyByZXF1aXJlZDsKPiA+Cj4gPiBD
-aGFuZ2VzIGluIHYzOgo+ID4gICogU2V0IHRoZSBjb3JyZWN0IGxpY2Vuc2UgZm9yIG5ldyBiaW5k
-aW5ncy4KPiA+Cj4gPiAgLi4uL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sICAgICAg
-ICAgIHwgOTAgKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5MCBpbnNl
-cnRpb25zKCspCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb3VuZC9hZGksYWRhdTcxMTgueWFtbAoKTG9va3MgbGlrZSBNYXJrIGFscmVh
-ZHkgYXBwbGllZCB0aGlzLiBQbGVhc2Ugc2VuZCBhIGZvbGxvdy11cCBwYXRjaAphZGRyZXNzaW5n
-IG15IGNvbW1lbnRzLgoKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sCj4gPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5jZmNlZjYwMmIzZDkKPiA+IC0tLSAvZGV2
-L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9h
-ZGksYWRhdTcxMTgueWFtbAo+ID4gQEAgLTAsMCArMSw5MCBAQAo+ID4gKyMgU1BEWC1MaWNlbnNl
-LUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQo+ID4gKyVZQU1MIDEu
-Mgo+ID4gKy0tLQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvc291bmQv
-YWRpLGFkYXU3MTE4LnlhbWwjCj4gPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21l
-dGEtc2NoZW1hcy9jb3JlLnlhbWwjCj4gPiArCj4gPiArCj4gPiArdGl0bGU6IEFuYWxvZyBEZXZp
-Y2VzIEFEQVU3MTE4IDggQ2hhbm5lbCBQRE0gdG8gSTJTL1RETSBDb252ZXJ0ZXIKPiA+ICsKPiA+
-ICttYWludGFpbmVyczoKPiA+ICsgIC0gTnVubyBTw6EgPG51bm8uc2FAYW5hbG9nLmNvbT4KPiA+
-ICsKPiA+ICtkZXNjcmlwdGlvbjogfAo+ID4gKyAgQW5hbG9nIERldmljZXMgQURBVTcxMTggOCBD
-aGFubmVsIFBETSB0byBJMlMvVERNIENvbnZlcnRlciBvdmVyIEkyQyBvciBIVwo+ID4gKyAgc3Rh
-bmRhbG9uZSBtb2RlLgo+ID4gKyAgaHR0cHM6Ly93d3cuYW5hbG9nLmNvbS9tZWRpYS9lbi90ZWNo
-bmljYWwtZG9jdW1lbnRhdGlvbi9kYXRhLXNoZWV0cy9BREFVNzExOC5wZGYKPiA+ICsKPiA+ICtw
-cm9wZXJ0aWVzOgo+ID4gKyAgY29tcGF0aWJsZToKPiA+ICsgICAgZW51bToKPiA+ICsgICAgICAt
-IGFkaSxhZGF1NzExOAo+ID4gKwo+ID4gKyAgcmVnOgo+ID4gKyAgICBtYXhJdGVtczogMQo+ID4g
-Kwo+ID4gKyAgIiNzb3VuZC1kYWktY2VsbHMiOgo+ID4gKyAgICBjb25zdDogMAo+ID4gKwo+ID4g
-KyAgSU9WREQtc3VwcGx5Ogo+Cj4gVXNlIGxvd2VyY2FzZSBwbGVhc2UuCj4KPiA+ICsgICAgZGVz
-Y3JpcHRpb246IERpZ2l0YWwgSW5wdXQvT3V0cHV0IFBvd2VyIFN1cHBseS4KPiA+ICsgICAgJHJl
-ZjogIi9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3BoYW5kbGUiCj4KPiAqLXN1cHBs
-eSBhbHJlYWR5IGhhcyBhIHR5cGUsIHNvIGp1c3QgYSBkZXNjcmlwdGlvbiBpcyBlbm91Z2guCj4K
-PiA+ICsKPiA+ICsgIERWREQtc3VwcGx5Ogo+ID4gKyAgICBkZXNjcmlwdGlvbjogSW50ZXJuYWwg
-Q29yZSBEaWdpdGFsIFBvd2VyIFN1cHBseS4KPiA+ICsgICAgJHJlZjogIi9zY2hlbWFzL3R5cGVz
-LnlhbWwjL2RlZmluaXRpb25zL3BoYW5kbGUiCj4KPiBTYW1lIGhlcmUuCj4KPiA+ICsKPiA+ICsg
-IGFkaSxkZWNpbWF0aW9uLXJhdGlvOgo+ID4gKyAgICBkZXNjcmlwdGlvbjogfAo+ID4gKyAgICAg
-IFRoaXMgcHJvcGVydHkgc2V0J3MgdGhlIGRlY2ltYXRpb24gcmF0aW8gb2YgUERNIHRvIFBDTSBh
-dWRpbyBkYXRhLgo+ID4gKyAgICBhbGxPZjoKPiA+ICsgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5
-cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMgo+ID4gKyAgICAgIC0gZW51bTogWzY0LCAzMiwg
-MTZdCj4gPiArICAgICAgICBkZWZhdWx0OiA2NAo+ID4gKwo+ID4gKyAgYWRpLHBkbS1jbGstbWFw
-Ogo+ID4gKyAgICBkZXNjcmlwdGlvbjogfAo+ID4gKyAgICAgIFRoZSBBREFVNzExOCBoYXMgdHdv
-IFBETSBjbG9ja3MgZm9yIHRoZSBmb3VyIElucHV0cy4gRWFjaCBpbnB1dCBtdXN0IGJlCj4gPiAr
-ICAgICAgYXNzaWduZWQgdG8gb25lIG9mIHRoZXNlIHR3byBjbG9ja3MuIFRoaXMgcHJvcGVydHkg
-c2V0J3MgdGhlIG1hcHBpbmcKPiA+ICsgICAgICBiZXR3ZWVuIHRoZSBjbG9ja3MgYW5kIHRoZSBp
-bnB1dHMuCj4gPiArICAgIGFsbE9mOgo+ID4gKyAgICAgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMu
-eWFtbCMvZGVmaW5pdGlvbnMvdWludDMyLWFycmF5Cj4gPiArICAgICAgLSBtaW5JdGVtczogNAo+
-ID4gKyAgICAgICAgbWF4SXRlbXM6IDQKPiA+ICsgICAgICAgIGl0ZW1zOgo+ID4gKyAgICAgICAg
-ICBtYXhpbXVtOiAxCj4gPiArICAgICAgICBkZWZhdWx0OiBbMCwgMCwgMSwgMV0KPiA+ICsKPiA+
-ICtyZXF1aXJlZDoKPiA+ICsgIC0gIiNzb3VuZC1kYWktY2VsbHMiCj4gPiArICAtIGNvbXBhdGli
-bGUKPiA+ICsgIC0gSU9WREQtc3VwcGx5Cj4gPiArICAtIERWREQtc3VwcGx5Cj4gPiArCj4gPiAr
-ZXhhbXBsZXM6Cj4gPiArICAtIHwKPiA+ICsgICAgaTJjMCB7Cj4KPiBpMmMgewo+Cj4gPiArICAg
-ICAgICAvKiBleGFtcGxlIHdpdGggaTJjIHN1cHBvcnQgKi8KPiA+ICsgICAgICAgICNhZGRyZXNz
-LWNlbGxzID0gPDE+Owo+ID4gKyAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gPiArICAgICAg
-ICBzdGF0dXMgPSAib2theSI7Cj4KPiBEb24ndCBzaG93IHN0YXR1cyBpbiBleGFtcGxlcy4KPgo+
-ID4gKyAgICAgICAgYWRhdTcxMThfY29kZWM6IGFkYXU3MTE4LWNvZGVjQDE0IHsKPgo+IGF1ZGlv
-LWNvZGVjQDE0Cj4KPiA+ICsgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhZGksYWRhdTcx
-MTgiOwo+ID4gKyAgICAgICAgICAgICAgICByZWcgPSA8MTQ+Owo+ID4gKyAgICAgICAgICAgICAg
-ICAjc291bmQtZGFpLWNlbGxzID0gPDA+Owo+ID4gKyAgICAgICAgICAgICAgICBzdGF0dXMgPSAi
-b2theSI7Cj4gPiArICAgICAgICAgICAgICAgIElPVkRELXN1cHBseSA9IDwmc3VwcGx5PjsKPiA+
-ICsgICAgICAgICAgICAgICAgRFZERC1zdXBwbHkgPSA8JnN1cHBseT47Cj4gPiArICAgICAgICAg
-ICAgICAgIGFkaSxwZG0tY2xrLW1hcCA9IDwxIDEgMCAwPjsKPiA+ICsgICAgICAgICAgICAgICAg
-YWRpLGRlY2ltYXRpb24tcmF0aW8gPSA8MTY+Owo+ID4gKyAgICAgICAgfTsKPiA+ICsgICAgfTsK
-PiA+ICsKPiA+ICsgICAgLyogZXhhbXBsZSB3aXRoIGh3IHN0YW5kYWxvbmUgbW9kZSAqLwo+ID4g
-KyAgICBhZGF1NzExOF9jb2RlY19odzogYWRhdTcxMTgtY29kZWMtaHcgewo+ID4gKyAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAiYWRpLGFkYXU3MTE4IjsKPiA+ICsgICAgICAgICAgICAjc291bmQt
-ZGFpLWNlbGxzID0gPDA+Owo+ID4gKyAgICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiA+ICsg
-ICAgICAgICAgICBJT1ZERC1zdXBwbHkgPSA8JnN1cHBseT47Cj4gPiArICAgICAgICAgICAgRFZE
-RC1zdXBwbHkgPSA8JnN1cHBseT47Cj4gPiArICAgIH07Cj4gPiAtLQo+ID4gMi4yMy4wCj4gPgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVs
-IG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cHM6Ly9tYWlsbWFu
-LmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+Regulator '*-supply' properties are always a single phandle, so
+'maxItems: 1' or a $ref is not necessary. All that's needed is either
+'true' or an optional 'description'. Following this clean-up, the
+meta-schema will enforce this pattern.
+
+There's one case in tree with 'innolux,n156bge-l21' having 2 phandles.
+This appears to be a mistake or abuse of simple-panel as it's 2 different
+voltage rails connected to 'power-supply'.
+
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-iio@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml   | 2 --
+ Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml  | 3 +--
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml  | 3 +--
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml   | 3 +--
+ Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml    | 3 ---
+ Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml    | 5 +----
+ Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml    | 1 -
+ Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml    | 1 -
+ .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml      | 4 +---
+ .../devicetree/bindings/iio/chemical/plantower,pms7003.yaml  | 1 -
+ Documentation/devicetree/bindings/iio/pressure/bmp085.yaml   | 2 --
+ .../devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml | 1 -
+ .../devicetree/bindings/regulator/fixed-regulator.yaml       | 1 -
+ 13 files changed, 5 insertions(+), 25 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+index fb747682006d..0da42ab8fd3a 100644
+--- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
++++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+@@ -79,8 +79,6 @@ properties:
+ 
+   hdmi-supply:
+     description: phandle to an external 5V regulator to power the HDMI logic
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   port@0:
+     type: object
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+index 5f1fd6d7ee0f..e50a0cc78fff 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+@@ -37,8 +37,7 @@ properties:
+   clocks:
+     maxItems: 1
+ 
+-  mali-supply:
+-    maxItems: 1
++  mali-supply: true
+ 
+   operating-points-v2: true
+ 
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+index 47bc1ac36426..5c576e5019c6 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+@@ -69,8 +69,7 @@ properties:
+       - const: core
+       - const: bus
+ 
+-  mali-supply:
+-    maxItems: 1
++  mali-supply: true
+ 
+   resets:
+     minItems: 1
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+index c5d93c5839d3..afde81be3c29 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+@@ -97,8 +97,7 @@ properties:
+ 
+   memory-region: true
+ 
+-  mali-supply:
+-    maxItems: 1
++  mali-supply: true
+ 
+   power-domains:
+     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+index 9692b7f719f5..e932d5aed02f 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+@@ -45,15 +45,12 @@ properties:
+ 
+   refin1-supply:
+     description: refin1 supply can be used as reference for conversion.
+-    maxItems: 1
+ 
+   refin2-supply:
+     description: refin2 supply can be used as reference for conversion.
+-    maxItems: 1
+ 
+   avdd-supply:
+     description: avdd supply can be used as reference for conversion.
+-    maxItems: 1
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+index cc544fdc38be..6eb33207a167 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+@@ -31,10 +31,7 @@ properties:
+ 
+   spi-cpha: true
+ 
+-  avcc-supply:
+-    description:
+-      Phandle to the Avcc power supply
+-    maxItems: 1
++  avcc-supply: true
+ 
+   interrupts:
+     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+index d1109416963c..9acde6d2e2d9 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+@@ -39,7 +39,6 @@ properties:
+   avdd-supply:
+     description:
+       The regulator supply for the ADC reference voltage.
+-    maxItems: 1
+ 
+   powerdown-gpios:
+     description:
+diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+index d76ece97c76c..91ab9c842273 100644
+--- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+@@ -41,7 +41,6 @@ properties:
+   avdd-supply:
+     description:
+       Definition of the regulator used as analog supply
+-    maxItems: 1
+ 
+   clock-frequency:
+     minimum: 20000
+diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+index b4c6c26681d9..9218b2efa62f 100644
+--- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+@@ -46,9 +46,7 @@ properties:
+   "#io-channel-cells":
+     const: 1
+ 
+-  vdd-supply:
+-    description: VDD input supply
+-    maxItems: 1
++  vdd-supply: true
+ 
+   samsung,syscon-phandle:
+     $ref: '/schemas/types.yaml#/definitions/phandle'
+diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+index a551d3101f93..19e53930ebf6 100644
+--- a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
++++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+@@ -25,7 +25,6 @@ properties:
+ 
+   vcc-supply:
+     description: regulator that provides power to the sensor
+-    maxItems: 1
+ 
+   plantower,set-gpios:
+     description: GPIO connected to the SET line
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+index c6721a7e8938..519137e5c170 100644
+--- a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
++++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+@@ -28,12 +28,10 @@ properties:
+   vddd-supply:
+     description:
+       digital voltage regulator (see regulator/regulator.txt)
+-    maxItems: 1
+ 
+   vdda-supply:
+     description:
+       analog voltage regulator (see regulator/regulator.txt)
+-    maxItems: 1
+ 
+   reset-gpios:
+     description:
+diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
+index 51254b4e65dd..57d8603076bd 100644
+--- a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
+@@ -36,7 +36,6 @@ properties:
+     const: 0
+ 
+   phy-supply:
+-     maxItems: 1
+      description:
+        Phandle to a regulator that provides power to the PHY. This
+        regulator will be managed during the PHY power on/off sequence.
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+index a78150c47aa2..e56d97b233f4 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+@@ -64,7 +64,6 @@ properties:
+ 
+   vin-supply:
+     description: Input supply phandle.
+-    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+ required:
+   - compatible
+-- 
+2.20.1
