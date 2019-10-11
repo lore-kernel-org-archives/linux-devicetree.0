@@ -1,178 +1,72 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Add Beelink A1
-Date: Fri, 11 Oct 2019 13:20:38 +0100
-Message-ID: <4c490e48-7a85-4ef9-771c-165defde39cc@arm.com>
-References: <9037b7edbbb41cbbf699ebe3a511daf22d886e7d.1570444695.git.robin.murphy@arm.com>
- <CAL_JsqKBy+i+=gGyYhBgcMUYsWd_CL_GnEoQqALBb+Gy7Ogb6A@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+Date: Fri, 11 Oct 2019 13:30:19 +0100
+Message-ID: <dbb25f4c-7198-ef28-ec6a-9ac5676122b6@linaro.org>
+References: <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+ <20190813195804.GL5093@sirena.co.uk>
+ <20190814041142.GU12733@vkoul-mobl.Dlink>
+ <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
+ <5e08f822-3507-6c69-5d83-4ce2a9f5c04f@linaro.org>
+ <53bb3105-8e85-a972-fce8-a7911ae4d461@linux.intel.com>
+ <95870089-25da-11ea-19fd-0504daa98994@linaro.org>
+ <2326a155-332e-fda0-b7a2-b48f348e1911@linux.intel.com>
+ <34e4cde8-f2e5-0943-115a-651d86f87c1a@linaro.org>
+ <20191010120337.GB31391@ediswmail.ad.cirrus.com>
+ <22eff3aa-dfd6-1ee5-8f22-2af492286053@linux.intel.com>
+ <e671930b-645a-7ee3-6926-eea39626c0a3@linaro.org>
+ <c9203f7f-f360-0ede-d351-cfdbec03299c@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKBy+i+=gGyYhBgcMUYsWd_CL_GnEoQqALBb+Gy7Ogb6A@mail.gmail.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, "heiko@sntech.de" <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c9203f7f-f360-0ede-d351-cfdbec03299c@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, robh+dt@kernel.org, lgirdwood@gmail.com, Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/10/2019 13:53, Rob Herring wrote:
-> On Mon, Oct 7, 2019 at 6:33 AM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> Beelink A1 is a TV box implementing the higher-end options of the
->> RK3328 reference design - the DTB from the stock Android firmware is
->> clearly the "rk3328-box-plus" variant from the Rockchip 3.10 BSP with
->> minor modifications to accommodate the USB WiFi module and additional
->> VFD-style LED driver. It features:
->>
->> - 4GB of 32-bit LPDDR3
->> - 16GB of HS200 eMMC (newer models with 32GB also exist)
->> - Realtek RTL8211F phy for gigabit ethernet
->> - Fn-Link 6221E-UUC module (RealTek RTL8821CU) for 11ac WiFi and Bluetooth 4.2
->> - HDMI and analog A/V
->> - 1x USB 3.0 type A host, 1x USB 2.0 type A OTG, 1x micro SD
->> - IR receiver and a neat little LED clock display.
->>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->>
->> One question I'm wondering about is whether it's worth pushing the HDMI
->> and analog codec audio cards down into rk3328.dtsi (as with HDMI audio
->> on RK3399), since those audio pipelines are internal to the SoC and the
->> board only really governs whether the outputs are wired up or not.
+
+
+On 10/10/2019 16:49, Pierre-Louis Bossart wrote:
 > 
-> Seems reasonable. One other candidate below.
 > 
->>
->>   .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+>> I still need to figure out prefixing multiple instances of this 
+>> Amplifier controls with "Left" and "Right"
 > 
-> In the future, please split bindings to a separate patch.
-
-Ha, busted! I thought this might be trivial enough to slip through, but 
-I'll split it out if you prefer.
-
->>   arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->>   arch/arm64/boot/dts/rockchip/rk3328-a1.dts    | 399 ++++++++++++++++++
->>   3 files changed, 405 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-a1.dts
->>
->> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> index c82c5e57d44c..f27f7805f57e 100644
->> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
->> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> @@ -40,6 +40,11 @@ properties:
->>             - const: asus,rk3288-tinker-s
->>             - const: rockchip,rk3288
->>
->> +      - description: Beelink A1
->> +        items:
->> +          - const: azw,beelink-a1
->> +          - const: rockchip,rk3328
->> +
->>         - description: bq Curie 2 tablet
->>           items:
->>             - const: mundoreader,bq-curie2
->> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
->> index 1f18a9392d15..a6f250e7cde2 100644
->> --- a/arch/arm64/boot/dts/rockchip/Makefile
->> +++ b/arch/arm64/boot/dts/rockchip/Makefile
->> @@ -1,5 +1,6 @@
->>   # SPDX-License-Identifier: GPL-2.0
->>   dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
->> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
->>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
->>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
->>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-a1.dts b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
->> new file mode 100644
->> index 000000000000..03ad663ff821
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
->> @@ -0,0 +1,399 @@
->> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
->> +// Copyright (c) 2017-2019 Arm Ltd.
->> +
->> +/dts-v1/;
->> +#include "rk3328.dtsi"
->> +
->> +/ {
->> +       model = "Beelink A1";
->> +       compatible = "azw,beelink-a1", "rockchip,rk3328";
->> +
->> +       /*
->> +        * UART pins, as viewed with bottom of case removed:
->> +        *
->> +        *           Front
->> +        *        /-------
->> +        *  L    / o <- Gnd
->> +        *  e   / o <-- Rx
->> +        *  f  / o <--- Tx
->> +        *  t / o <---- +3.3v
->> +        *    |
->> +        */
->> +       chosen {
->> +               stdout-path = "serial2:1500000n8";
->> +       };
->> +
->> +       gmac_clkin: external-gmac-clock {
->> +               compatible = "fixed-clock";
->> +               clock-frequency = <125000000>;
->> +               clock-output-names = "gmac_clkin";
->> +               #clock-cells = <0>;
->> +       };
->> +
->> +       vcc_host_5v: usb3-current-switch {
->> +               compatible = "regulator-fixed";
->> +               enable-active-high;
->> +               gpio = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&usb30_host_drv>;
->> +               regulator-name = "vcc_host_5v";
->> +               vin-supply = <&vcc_sys>;
->> +       };
->> +
->> +       vcc_sys: vcc-sys {
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "vcc_sys";
->> +               regulator-min-microvolt = <5000000>;
->> +               regulator-max-microvolt = <5000000>;
->> +       };
->> +
->> +       cpus {
->> +               idle-states {
->> +                       entry-method = "arm,psci";
->> +
->> +                       cpu_sleep: cpu-sleep {
->> +                               compatible = "arm,idle-state";
->> +                               arm,psci-suspend-param = <0x0010000>;
->> +                               local-timer-stop;
->> +                               entry-latency-us = <120>;
->> +                               exit-latency-us = <250>;
->> +                               min-residency-us = <900>;
+> FWIW we use the "snd_codec_conf" stuff to add a prefix for each 
+> amplifier, so that the controls are not mixed up between instances of 
+> the same amp, see e.g.
 > 
-> This doesn't seem like something that's board specific, but I guess
-> the regulator could have some influence on these times. If so, the
-> board file could always override a default.
+Thanks Pierre for the inputs.
+Am using Documentation/devicetree/bindings/sound/name-prefix.txt for dt 
+and it works!
 
-True, this is traceable back to the Rockchip Android BSP where it's 
-actually applied to the entire SoC family[1]. I don't know if there's 
-likely to be any difference between the downstream "RKTRUST" firmware 
-binaries (which this nominally represents) and upstream ATF in terms of 
-their PSCI implementation/performance.
+I will send new set of patches by dropping this patch!
 
-I've not got round to properly tinkering with suspend/resume and power 
-management stuff yet, so I guess another option would be to just forget 
-about this part for now - Heiko, any opinions?
-
-Cheers,
-Robin.
-
-[1] 
-https://github.com/rockchip-linux/kernel/blob/release-3.10/arch/arm64/boot/dts/rk322xh.dtsi#L107-L118
+--srini
+> 
+> static struct snd_soc_codec_conf codec_conf[] = {
+>      {
+>          .dev_name = "sdw:0:25d:711:0:1",
+>          .name_prefix = "rt711",
+>      },
+>      {
+>          .dev_name = "sdw:1:25d:1308:0:0",
+>          .name_prefix = "rt1308-1",
+>      },
+>      {
+>          .dev_name = "sdw:2:25d:1308:0:2",
+>          .name_prefix = "rt1308-2",
+>      },
+>      {
+>          .dev_name = "sdw:3:25d:715:0:1",
+>          .name_prefix = "rt715",
+>      },
+> };
+> 
+> 
+> https://github.com/thesofproject/linux/pull/1142/commits/9ff9cf9d8994333df2250641c95431261bc66d69#diff-892560f80d603420baec7395e0b45d81R212 
+> 
