@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 6/8] dt-bindings: iio: adc: max1027: Mark interrupts as optional
-Date: Fri, 11 Oct 2019 16:43:45 +0200
-Message-ID: <20191011144347.19146-7-miquel.raynal@bootlin.com>
+Subject: [PATCH v4 8/8] dt-bindings: Add max12xx SPI ADC series as trivial devices
+Date: Fri, 11 Oct 2019 16:43:47 +0200
+Message-ID: <20191011144347.19146-9-miquel.raynal@bootlin.com>
 References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,37 +12,29 @@ To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-
 Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The chips have a 'start conversion' and a 'end of conversion' pair of
-pins. They can be used but this is absolutely not mandatory as regular
-polling is supported by the chip depending on its internal clocking
-setup.
-
-There is no physical reason to force the use of interrupts so turn
-them optional.
-
-Also, once the interrupt turned optional, these devices fit perfectly
-the "trivial devices" described in the generic (yaml) bindings file, so
-instead of converting this text file to json schema, we can just add
-the relevant compatibles in:
-Documentation/devicetree/bindings/trivial-devices.yaml.
+Update the compatible list with three Maxim ADCs compatibles.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- Documentation/devicetree/bindings/iio/adc/max1027-adc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/trivial-devices.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-index e680c61dfb84..7b23d68f655c 100644
---- a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-@@ -3,6 +3,8 @@
- Required properties:
-   - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
-   - reg: SPI chip select number for the device
-+
-+Optional properties:
-   - interrupts: IRQ line for the ADC
-   see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- 
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index e0095ecb472f..765fd1c170df 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -120,6 +120,12 @@ properties:
+           - maxim,max1029
+             # 10-bit 16 channels 300ks/s SPI ADC with temperature sensor
+           - maxim,max1031
++            # 12-bit 8 channels 300ks/s SPI ADC with temperature sensor
++          - maxim,max1227
++            # 12-bit 12 channels 300ks/s SPI ADC with temperature sensor
++          - maxim,max1229
++            # 12-bit 16 channels 300ks/s SPI ADC with temperature sensor
++          - maxim,max1231
+             # Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
+           - maxim,max1237
+             # PECI-to-I2C translator for PECI-to-SMBus/I2C protocol conversion
 -- 
 2.20.1
