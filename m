@@ -1,126 +1,101 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: hwlock: Convert stm32 hwspinlock bindings to json-schema
-Date: Fri, 11 Oct 2019 07:41:10 -0500
-Message-ID: <CAL_Jsq+p6rYun-zOwK49=QSfuJGMpiXj5UfASdXhjmOX1cudWQ@mail.gmail.com>
-References: <20191002151907.15986-1-benjamin.gaignard@st.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH 2/2] mmc: sdhci-of-at91: add DT property to enable
+ calibration on full reset
+Date: Fri, 11 Oct 2019 14:41:16 +0200
+Message-ID: <20191011124115.a3qqkhxri6aaydcl@M43218.corp.atmel.com>
+References: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
+ <d25c8f909d039938a5696e8de32396cf2aaf54b7.1570537903.git.nicolas.ferre@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002151907.15986-1-benjamin.gaignard@st.com>
+Content-Disposition: inline
+In-Reply-To: <d25c8f909d039938a5696e8de32396cf2aaf54b7.1570537903.git.nicolas.ferre@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Alexandre Torgue <alexandre.torgue@st.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, adrian.hunter@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 10:19 AM Benjamin Gaignard
-<benjamin.gaignard@st.com> wrote:
->
-> Convert the STM32 hwspinlock binding to DT schema format using json-schema
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+On Tue, Oct 08, 2019 at 02:34:32PM +0200, Nicolas Ferre wrote:
+> Add a property to keep the analog calibration cell powered.
+> This feature is specific to the Microchip SDHCI IP and outside
+> of the standard SDHCI register map.
+> 
+> By always keeping it on, after a full reset sequence, we make sure
+> that this feature is activated and not disabled.
+> 
+> We expose a hardware property to the DT as this feature can be used
+> to adapt SDHCI behavior vs. how the SDCAL SoC pin is connected
+> on the board.
+> 
+> Note that managing properly this property would reduce
+> power consumption on some SAMA5D2 SiP revisions.
+> 
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+
+Thanks
+
+Ludovic
+
 > ---
->  .../bindings/hwlock/st,stm32-hwspinlock.txt        | 23 -----------
->  .../bindings/hwlock/st,stm32-hwspinlock.yaml       | 48 ++++++++++++++++++++++
->  2 files changed, 48 insertions(+), 23 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
->  create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
->
-> diff --git a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
-> deleted file mode 100644
-> index adf4f000ea3d..000000000000
-> --- a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
-> +++ /dev/null
-> @@ -1,23 +0,0 @@
-> -STM32 Hardware Spinlock Device Binding
-> --------------------------------------
-> -
-> -Required properties :
-> -- compatible : should be "st,stm32-hwspinlock".
-> -- reg : the register address of hwspinlock.
-> -- #hwlock-cells : hwlock users only use the hwlock id to represent a specific
-> -       hwlock, so the number of cells should be <1> here.
-> -- clock-names : Must contain "hsem".
-> -- clocks : Must contain a phandle entry for the clock in clock-names, see the
-> -       common clock bindings.
-> -
-> -Please look at the generic hwlock binding for usage information for consumers,
-> -"Documentation/devicetree/bindings/hwlock/hwlock.txt"
-> -
-> -Example of hwlock provider:
-> -       hwspinlock@4c000000 {
-> -               compatible = "st,stm32-hwspinlock";
-> -               #hwlock-cells = <1>;
-> -               reg = <0x4c000000 0x400>;
-> -               clocks = <&rcc HSEM>;
-> -               clock-names = "hsem";
-> -       };
-> diff --git a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
-> new file mode 100644
-> index 000000000000..64e169702515
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwlock/st,stm32-hwspinlock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/mmc/host/sdhci-of-at91.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
+> index e7d1920729fb..9571c4a882a9 100644
+> --- a/drivers/mmc/host/sdhci-of-at91.c
+> +++ b/drivers/mmc/host/sdhci-of-at91.c
+> @@ -27,6 +27,9 @@
+>  #define SDMMC_CACR	0x230
+>  #define		SDMMC_CACR_CAPWREN	BIT(0)
+>  #define		SDMMC_CACR_KEY		(0x46 << 8)
+> +#define SDMMC_CALCR	0x240
+> +#define		SDMMC_CALCR_EN		BIT(0)
+> +#define		SDMMC_CALCR_ALWYSON	BIT(4)
+>  
+>  #define SDHCI_AT91_PRESET_COMMON_CONF	0x400 /* drv type B, programmable clock mode */
+>  
+> @@ -35,6 +38,7 @@ struct sdhci_at91_priv {
+>  	struct clk *gck;
+>  	struct clk *mainck;
+>  	bool restore_needed;
+> +	bool cal_always_on;
+>  };
+>  
+>  static void sdhci_at91_set_force_card_detect(struct sdhci_host *host)
+> @@ -116,10 +120,17 @@ static void sdhci_at91_set_uhs_signaling(struct sdhci_host *host,
+>  
+>  static void sdhci_at91_reset(struct sdhci_host *host, u8 mask)
+>  {
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_at91_priv *priv = sdhci_pltfm_priv(pltfm_host);
 > +
-> +title: STMicroelectronics STM32 Hardware Spinlock bindings
+>  	sdhci_reset(host, mask);
+>  
+>  	if (host->mmc->caps & MMC_CAP_NONREMOVABLE)
+>  		sdhci_at91_set_force_card_detect(host);
 > +
-> +maintainers:
-> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> +  - Fabien Dessenne <fabien.dessenne@st.com>
+> +	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL))
+> +		sdhci_writel(host, SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
+> +			     SDMMC_CALCR);
+>  }
+>  
+>  static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
+> @@ -345,6 +356,14 @@ static int sdhci_at91_probe(struct platform_device *pdev)
+>  
+>  	priv->restore_needed = false;
+>  
+> +	/*
+> +	 * if SDCAL pin is wrongly connected, we must enable
+> +	 * the analog calibration cell permanently.
+> +	 */
+> +	priv->cal_always_on =
+> +		device_property_read_bool(&pdev->dev,
+> +					  "microchip,sdcal-inverted");
 > +
-> +properties:
-> +  "#hwlock-cells": true
-
-const: 1
-
-> +
-> +  compatible:
-> +    const: st,stm32-hwspinlock
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module Clock
-
-Don't need a description for a single item.
-
-maxItems: 1
-
-> +
-> +  clock-names:
-> +    items:
-> +      - const: hsem
-> +
-> +required:
-> +  - "#hwlock-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-
-Add a:
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    hwspinlock@4c000000 {
-> +        compatible = "st,stm32-hwspinlock";
-> +        #hwlock-cells = <1>;
-> +        reg = <0x4c000000 0x400>;
-> +        clocks = <&rcc HSEM>;
-> +        clock-names = "hsem";
-> +    };
-> +
-> +...
-> --
-> 2.15.0
->
+>  	ret = mmc_of_parse(host->mmc);
+>  	if (ret)
+>  		goto clocks_disable_unprepare;
+> -- 
+> 2.17.1
+> 
