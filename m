@@ -1,67 +1,76 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 2/4] media: dt-bindings: rockchip: Document
- RK3399 Video Decoder bindings
-Date: Fri, 11 Oct 2019 12:37:57 -0500
-Message-ID: <CAL_JsqJYs3RaVqeFFuMbCSJMrWY7t=S=wWWpo5syL2ONag_woA@mail.gmail.com>
-References: <20191011093342.3471-1-boris.brezillon@collabora.com>
- <20191011093342.3471-3-boris.brezillon@collabora.com>
- <CAL_JsqL_6xPyb4kTDR3dbLc4Uptwox=1F4zaGjHVmahNyk25=w@mail.gmail.com>
- <20191011145625.694238b1@dhcp-172-31-174-146.wireless.concordia.ca>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
+Date: Fri, 11 Oct 2019 12:56:54 -0500
+Message-ID: <CAL_JsqJiV-L14tQte0tZXq+-TRTXGOFW62EsSobu3cFGA8rJDw@mail.gmail.com>
+References: <20190913211349.28245-1-robh@kernel.org> <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
+ <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
+ <7672dd2f651bfdcdb1615ab739e36a381b2535b1.camel@perches.com> <CAL_JsqKAbP6KYjiJ6dLr=dpFG-j-e4rJPCKZ0+pZrDjsSPAUPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20191011145625.694238b1-RcKxWJ4Cfj07VwOnMuImuy7eAjiKCowXPIyMCRxp1+LbFSlKd4bkJ/d9D2ou9A/h@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Boris Brezillon <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKAbP6KYjiJ6dLr=dpFG-j-e4rJPCKZ0+pZrDjsSPAUPQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Whitcroft <apw@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 7:56 AM Boris Brezillon
-<boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+On Fri, Sep 27, 2019 at 10:39 AM Rob Herring <robh@kernel.org> wrote:
 >
-> On Fri, 11 Oct 2019 07:50:16 -0500
-> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> > On Fri, Oct 11, 2019 at 4:33 AM Boris Brezillon
-> > <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> On Fri, Sep 27, 2019 at 9:29 AM Joe Perches <joe@perches.com> wrote:
+> >
+> > On Fri, 2019-09-27 at 09:02 -0500, Rob Herring wrote:
+> > > On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
+> > > > On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
+> > > > > DT bindings are moving to using a json-schema based schema format
+> > > > > instead of freeform text. Add a checkpatch.pl check to encourage using
+> > > > > the schema for new bindings. It's not yet a requirement, but is
+> > > > > progressively being required by some maintainers.
+> > > > []
+> > > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > > []
+> > > > > @@ -2822,6 +2822,14 @@ sub process {
+> > > > >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
+> > > > >               }
+> > > > >
+> > > > > +# Check for adding new DT bindings not in schema format
+> > > > > +             if (!$in_commit_log &&
+> > > > > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
+> > > > > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
+> > > > > +                     WARN("DT_SCHEMA_BINDING_PATCH",
+> > > > > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
+> > > > > +             }
+> > > > > +
+> > > >
+> > > > As this already seems to be git dependent, perhaps
 > > >
-> > > Document the Rockchip RK3399 Video Decoder bindings.
+> > > It's quite rare to see a non git generated diff these days.
+> > >
+> > > > it's easier to read with a single line test like:
+> > > >
+> > > >                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
+> > > >                         etc...
+> > > >                 }
+> > >
+> > > I frequently do 'git show $commit | scripts/checkpatch.pl' and this
+> > > doesn't work with that. I really should have a '--pretty=email' in
+> > > there, but I just ignore the commit msg warnings. In any case, that
+> > > still doesn't help because there's no diffstat. There's probably some
+> > > way to turn that on or just use git-format-patch, but really we want
+> > > this to work with any git diff.
 > >
-> > You need some more headers for the example (or drop defines):
-> >
-> > Error: Documentation/devicetree/bindings/media/rockchip,vdec.example.dts:23.28-29
-> > syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > scripts/Makefile.lib:321: recipe for target
-> > 'Documentation/devicetree/bindings/media/rockchip,vdec.example.dt.yaml'
-> > failed
-> > make[1]: *** [Documentation/devicetree/bindings/media/rockchip,vdec.example.dt.yaml]
-> > Error 1
-> > Makefile:1282: recipe for target 'dt_binding_check' failed
-> > make: *** [dt_binding_check] Error 2
+> > I don't understand your argument against what I proposed at all.
 >
-> Will fix that. BTW, I tried running make dtbs_check and faced a few
-> errors on other yaml files (which is why I ended up sending the patch
-> without fully validating the schema). Maybe those have been fixed (I'm
-> based on the media tree which is based on 5.4-rc1).
+> It is dependent on the commit message rather than the diff itself. I
+> want it to work with or without a diffstat.
+>
+> > and btw:
+> >
+> > $ git format-patch -1 --stdout <commit> | ./scripts/checkpatch.pl
+>
+> Yes, I stated this was possible. My concern is there are lots of ways
+> to generate a diff in git. My way works for *all* of them. Yours
+> doesn't.
 
-Several fixes went into -rc2, but there's 2 fixes not in -rc2 (but are in next).
-
-> Oh, and I also noticed that the generated example has
-> #address-cells = <1>, #size-cells = <1> in the parent node, while my
-> example expects <2>. Is there any way I can specify that somewhere, or
-> should I just tweak the example to use 1 cell instead?
-
-I think you can override it just adding '#address-cells = <2>;' or
-tweak the example.
+Joe, are you okay with this?
 
 Rob
