@@ -1,27 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/2] dt-bindings: soc: al-pos: Amazon's Annapurna Labs
- POS
-Date: Fri, 11 Oct 2019 08:42:23 -0500
-Message-ID: <20191011134223.GA11275@bogus>
-References: <1570707681-865-1-git-send-email-talel@amazon.com>
- <1570707681-865-2-git-send-email-talel@amazon.com>
+From: Pascal Paillet <p.paillet@st.com>
+Subject: [PATCH 0/4] update regulator configuration for stm32mp157 boards
+Date: Fri, 11 Oct 2019 16:04:41 +0200
+Message-ID: <20191011140445.32288-1-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1570707681-865-2-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, maz@kernel.org, mark.rutland@arm.com, arnd@arndb.de, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, talel@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
+To: mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: p.paillet@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Oct 2019 14:41:20 +0300, Talel Shenhar wrote:
-> Document Amazon's Annapurna Labs POS SoC binding.
-> 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
-> ---
->  .../bindings/edac/amazon,al-pos-edac.yaml          | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
-> 
+The goal of this patch-set is to
+- add support of PWR blok regulators on the stm32mp157 boards
+- undapte various regulator configurations
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Pascal Paillet (4):
+  ARM: dts: stm32: add PWR regulators support on stm32mp157
+  ARM: dts: stm32: change default minimal buck1 value on stm32mp157
+  ARM: dts: stm32: Fix active discharge usage on stm32mp157
+  ARM: dts: stm32: disable active-discharge for vbus_otg on
+    stm32mp157a-avenger96
+
+ arch/arm/boot/dts/stm32mp157a-avenger96.dts |  8 +++++--
+ arch/arm/boot/dts/stm32mp157a-dk1.dts       |  9 ++++++--
+ arch/arm/boot/dts/stm32mp157c-dk2.dts       |  8 -------
+ arch/arm/boot/dts/stm32mp157c-ed1.dts       | 25 ++++++---------------
+ arch/arm/boot/dts/stm32mp157c.dtsi          | 23 +++++++++++++++++++
+ 5 files changed, 43 insertions(+), 30 deletions(-)
+
+-- 
+2.17.1
