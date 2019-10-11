@@ -1,104 +1,54 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v8 1/3] dt-bindings: ASoC: Add WSA881x bindings
-Date: Fri, 11 Oct 2019 16:24:44 +0100
-Message-ID: <20191011152446.5925-2-srinivas.kandagatla@linaro.org>
-References: <20191011152446.5925-1-srinivas.kandagatla@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: interconnect: qcom: add msm8974
+ bindings
+Date: Fri, 11 Oct 2019 10:29:17 -0500
+Message-ID: <20191011152917.GA28441@bogus>
+References: <20191005114605.5279-1-masneyb@onstation.org>
+ <20191005114605.5279-2-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20191011152446.5925-1-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: broonie@kernel.org, robh@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, spapothi@codeaurora.org, lgirdwood@gmail.com, pierre-louis.bossart@linux.intel.com, vkoul@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191005114605.5279-2-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: bjorn.andersson@linaro.org, georgi.djakov@linaro.org, agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonathan@marek.ca
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
-Amplifier. This Amplifier also has a simple thermal sensor for
-over temperature and speaker protection.
+On Sat, Oct 05, 2019 at 07:46:04AM -0400, Brian Masney wrote:
+> Add device tree bindings for the Qualcomm MSM8974 interconnect providers
+> that support setting system bandwidth requirements between various
+> network-on-chip fabrics.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Rob: I included in the next patch at the top a rough diagram showing the
+> relationship between different buses. I wanted to include that diagram
+> here, however I didn't since I assume that this document will be
+> transformed into HTML. I've seen some of the text bindings in the IIO
+> subsystem have nice ASCII-art diagrams, such as
+> Documentation/devicetree/bindings/iio/dac/dpot-dac.txt. Do you have any
+> suggestions for how this can go in the YAML bindings? Prefix the line
+> with four spaces, similiar to what is done in markdown?
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+The long term plan (dream?) is to extract schema into rST and there's 
+been some experimenting with embedded rST into description which seems 
+to work. But I don't see that happening anytime soon really. We've got 
+3500 bindings to convert...
+
+So put whatever you like in the description as long as it's parseable 
+yaml.
+
+> 
+> Changes since v1:
+> - Don't include all compatibles in the examples. Removed interconnect
+>   GPU client from example as well.
+> - Dual license header file: BSD or GPL 2.0
+> 
+>  .../bindings/interconnect/qcom,msm8974.yaml   |  62 ++++++++
+>  .../dt-bindings/interconnect/qcom,msm8974.h   | 146 ++++++++++++++++++
+>  2 files changed, 208 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+>  create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
+
 Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/sound/qcom,wsa881x.yaml          | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-
-diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-new file mode 100644
-index 000000000000..faa90966a33a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
-+
-+maintainers:
-+  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-+
-+description: |
-+  WSA8810 is a class-D smart speaker amplifier and WSA8815
-+  is a high-output power class-D smart speaker amplifier.
-+  Their primary operating mode uses a SoundWire digital audio
-+  interface. This binding is for SoundWire interface.
-+
-+properties:
-+  compatible:
-+    const: sdw10217201000
-+
-+  reg:
-+    maxItems: 1
-+
-+  powerdown-gpios:
-+    description: GPIO spec for Powerdown/Shutdown line to use
-+    maxItems: 1
-+
-+  '#thermal-sensor-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - powerdown-gpios
-+  - "#thermal-sensor-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    soundwire@c2d0000 {
-+        #address-cells = <2>;
-+        #size-cells = <0>;
-+        reg = <0x0c2d0000 0x2000>;
-+
-+        speaker@0,1 {
-+            compatible = "sdw10217201000";
-+            reg = <0 1>;
-+            powerdown-gpios = <&wcdpinctrl 2 0>;
-+            #thermal-sensor-cells = <0>;
-+        };
-+
-+        speaker@0,2 {
-+            compatible = "sdw10217201000";
-+            reg = <0 2>;
-+            powerdown-gpios = <&wcdpinctrl 2 0>;
-+            #thermal-sensor-cells = <0>;
-+        };
-+    };
-+
-+...
--- 
-2.21.0
