@@ -1,28 +1,86 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 03/11] dt-bindings: crypto: Add DT bindings
- documentation for sun8i-ce Crypto Engine
-Date: Fri, 11 Oct 2019 09:26:20 -0500
-Message-ID: <20191011142620.GA11285@bogus>
-References: <20191010182328.15826-1-clabbe.montjoie@gmail.com>
- <20191010182328.15826-4-clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v3 2/3] ARM: dts: add Netronix E60K02 board common file
+Date: Fri, 11 Oct 2019 09:29:27 -0500
+Message-ID: <20191011142927.GA11490@bogus>
+References: <20191010192357.27884-1-andreas@kemnade.info>
+ <20191010192357.27884-3-andreas@kemnade.info>
+ <20191011065609.6irap7elicatmsgg@pengutronix.de>
+ <20191011094148.1376430e@aktux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191010182328.15826-4-clabbe.montjoie@gmail.com>
+In-Reply-To: <20191011094148.1376430e@aktux>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: catalin.marinas@arm.com, davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org, wens@csie.org, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Marco Felsch <m.felsch@pengutronix.de>, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Oct 2019 20:23:20 +0200, Corentin Labbe wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> Crypto Engine cryptographic accelerator driver.
+On Fri, Oct 11, 2019 at 09:41:48AM +0200, Andreas Kemnade wrote:
+> On Fri, 11 Oct 2019 08:56:09 +0200
+> Marco Felsch <m.felsch@pengutronix.de> wrote:
 > 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> ---
->  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 92 +++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> 
+> > Hi Andreas,
+> > 
+> > On 19-10-10 21:23, Andreas Kemnade wrote:
+> > > The Netronix board E60K02 can be found some several Ebook-Readers,
+> > > at least the Kobo Clara HD and the Tolino Shine 3. The board
+> > > is equipped with different SoCs requiring different pinmuxes.
+> > > 
+> > > For now the following peripherals are included:
+> > > - LED
+> > > - Power Key
+> > > - Cover (gpio via hall sensor)
+> > > - RC5T619 PMIC (the kernel misses support for rtc and charger
+> > >   subdevices).
+> > > - Backlight via lm3630a
+> > > - Wifi sdio chip detection (mmc-powerseq and stuff)
+> > > 
+> > > It is based on vendor kernel but heavily reworked due to many
+> > > changed bindings.
+> > > 
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > ---
+> > > Changes in v3:
+> > > - better led name
+> > > - correct memory size
+> > > - comments about missing devices
+> > > 
+> > > Changes in v2:
+> > > - reordered, was 1/3
+> > > - moved pinmuxes to their actual users, not the parents
+> > >   of them
+> > > - removed some already-disabled stuff
+> > > - minor cleanups  
+> > 
+> > You won't change the muxing, so a this dtsi can be self contained?
+> > 
+> So you want me to put a big 
+> #if defined(MX6SLL) 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Not sure what the comment meant, but no, don't do this. C defines in dts 
+files are for symbolic names for numbers and assembling bitfields and 
+that's it.
+
+> [...]
+>              pinctrl_i2c1: i2c1grp {
+>                         fsl,pins = <
+>                                 MX6SLL_PAD_I2C1_SCL__I2C1_SCL    0x4001f8b1
+>                                 MX6SLL_PAD_I2C1_SDA__I2C1_SDA    0x4001f8b1
+>                         >;
+>                 };
+> 
+> #elif (MX6SL)
+> [...]
+>                pinctrl_i2c1: i2c1grp {
+>                         fsl,pins = <
+>                                 MX6SL_PAD_I2C1_SCL__I2C1_SCL     0x4001f8b1
+>                                 MX6SL_PAD_I2C1_SDA__I2C1_SDA     0x4001f8b1
+>                         >;
+>                 };
+> 
+> #endif
+> in the dtsi?
+> 
+> Regards,
+> Andreas
