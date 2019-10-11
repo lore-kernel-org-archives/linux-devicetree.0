@@ -1,7 +1,7 @@
 From: Pascal Paillet <p.paillet@st.com>
-Subject: [PATCH 2/4] ARM: dts: stm32: change default minimal buck1 value on stm32mp157
-Date: Fri, 11 Oct 2019 16:05:31 +0200
-Message-ID: <20191011140533.32619-3-p.paillet@st.com>
+Subject: [PATCH 4/4] ARM: dts: stm32: disable active-discharge for vbus_otg on stm32mp157a-avenger96
+Date: Fri, 11 Oct 2019 16:05:33 +0200
+Message-ID: <20191011140533.32619-5-p.paillet@st.com>
 References: <20191011140533.32619-1-p.paillet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,40 +12,25 @@ To: mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, robh+dt@kernel.org, mark
 Cc: p.paillet@st.com
 List-Id: devicetree@vger.kernel.org
 
-Minimal value is the value set during boot or before suspend.
-We must ensure that the value is a functional value to boot.
+Active discharge is not needed on vbus_otg and generate unneeded current
+consumption.
 
 Signed-off-by: Pascal Paillet <p.paillet@st.com>
 ---
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 2 +-
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/stm32mp157a-avenger96.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 26fb7c77092c..efeefb3d25b0 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -250,7 +250,7 @@
+diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+index d1cc42a92d3f..628c74a45a25 100644
+--- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
++++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+@@ -252,7 +252,6 @@
+ 				regulator-name = "vbus_otg";
+ 				interrupts = <IT_OCP_OTG 0>;
+ 				interrupt-parent = <&pmic>;
+-				regulator-active-discharge = <1>;
+ 			};
  
- 			vddcore: buck1 {
- 				regulator-name = "vddcore";
--				regulator-min-microvolt = <800000>;
-+				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1350000>;
- 				regulator-always-on;
- 				regulator-initial-mode = <0>;
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 1dbcc580e43c..15afa8f1a36f 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -127,7 +127,7 @@
- 
- 			vddcore: buck1 {
- 				regulator-name = "vddcore";
--				regulator-min-microvolt = <800000>;
-+				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1350000>;
- 				regulator-always-on;
- 				regulator-initial-mode = <0>;
+ 			vbus_sw: pwr_sw2 {
 -- 
 2.17.1
