@@ -1,69 +1,32 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v8 2/3] dt-bindings: ASoC: WSA881x: Add missing
-	#sound-dai-cells
-Date: Fri, 11 Oct 2019 16:24:45 +0100
-Message-ID: <20191011152446.5925-3-srinivas.kandagatla@linaro.org>
-References: <20191011152446.5925-1-srinivas.kandagatla@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: imx: fix native-mode setting
+Date: Fri, 11 Oct 2019 10:30:09 -0500
+Message-ID: <20191011153009.GA10322@bogus>
+References: <20190918193853.25689-1-martin@kaiser.cx>
+ <20191005130921.12874-1-martin@kaiser.cx>
+ <20191005130921.12874-2-martin@kaiser.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20191011152446.5925-1-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: broonie@kernel.org, robh@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, spapothi@codeaurora.org, lgirdwood@gmail.com, pierre-louis.bossart@linux.intel.com, vkoul@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191005130921.12874-2-martin@kaiser.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Shawn Guo <shawnguo@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Alexander Shiyan <shc_work@mail.ru>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kaiser <martin@kaiser.cx>
 List-Id: devicetree@vger.kernel.org
 
-As this codec now exposes dai, add missing #sound-dai-cells.
+On Sat,  5 Oct 2019 15:09:20 +0200, Martin Kaiser wrote:
+> Move the native-mode setting inside the display-timing node. Outside of
+> display-timing, it is ignored.
+> 
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> ---
+> changes in v2
+>  move parts of the commit message into the cover letter
+> 
+>  Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Applied, thanks.
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-index faa90966a33a..ea44d03e58ca 100644
---- a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-+++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-@@ -29,11 +29,15 @@ properties:
-   '#thermal-sensor-cells':
-     const: 0
- 
-+  '#sound-dai-cells':
-+    const: 0
-+
- required:
-   - compatible
-   - reg
-   - powerdown-gpios
-   - "#thermal-sensor-cells"
-+  - "#sound-dai-cells"
- 
- additionalProperties: false
- 
-@@ -49,6 +53,7 @@ examples:
-             reg = <0 1>;
-             powerdown-gpios = <&wcdpinctrl 2 0>;
-             #thermal-sensor-cells = <0>;
-+            #sound-dai-cells = <0>;
-         };
- 
-         speaker@0,2 {
-@@ -56,6 +61,7 @@ examples:
-             reg = <0 2>;
-             powerdown-gpios = <&wcdpinctrl 2 0>;
-             #thermal-sensor-cells = <0>;
-+            #sound-dai-cells = <0>;
-         };
-     };
- 
--- 
-2.21.0
+Rob
