@@ -1,15 +1,13 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/6] clk: sunxi-ng: h3: Export MBUS clock
-Date: Fri, 11 Oct 2019 09:34:39 -0500
-Message-ID: <20191011143439.GA24106@bogus>
-References: <20190929161653.160158-1-jernej.skrabec@siol.net>
- <20190929161653.160158-3-jernej.skrabec@siol.net>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 3/3] dt-bindings: arm: fsl: Add TQ TQMa6{S,Q,QP} on MBa6x
+Date: Fri, 11 Oct 2019 16:36:51 +0200
+Message-ID: <20191011143651.6424-3-p.zabel@pengutronix.de>
+References: <20191011143651.6424-1-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190929161653.160158-3-jernej.skrabec@siol.net>
+In-Reply-To: <20191011143651.6424-1-p.zabel@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,20 +17,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, mripard@kernel.org, hverkuil@xs4all.nl, wens@csie.org, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Markus Niebel <Markus.Niebel@tq-group.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 29 Sep 2019 18:16:49 +0200, Jernej Skrabec wrote:
-> MBUS clock will be referenced in MBUS controller node.
->
-> Export it.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/clk/sunxi-ng/ccu-sun8i-h3.h      | 4 ----
->  include/dt-bindings/clock/sun8i-h3-ccu.h | 2 +-
->  2 files changed, 1 insertion(+), 5 deletions(-)
->
+Add binding documentation for the TQ MBa6x mainboard with TQMa6S,
+TQMa6Q, or TQMa6QP SoM.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 1b4b4e6573b5..8cc2d4a76e77 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -114,6 +114,8 @@ properties:
+               - fsl,imx6q-sabresd
+               - technologic,imx6q-ts4900
+               - technologic,imx6q-ts7970
++              - tq,mba6a                  # TQ TQMa6Q SoM on MBa6x
++              - tq,mba6b
+           - const: fsl,imx6q
+ 
+       - description: i.MX6QP based Boards
+@@ -121,6 +123,8 @@ properties:
+           - enum:
+               - fsl,imx6qp-sabreauto      # i.MX6 Quad Plus SABRE Automotive Board
+               - fsl,imx6qp-sabresd        # i.MX6 Quad Plus SABRE Smart Device Board
++              - tq,mba6a                  # TQ TQMa6QP SoM on MBa6x
++              - tq,mba6b
+           - const: fsl,imx6qp
+ 
+       - description: i.MX6DL based Boards
+@@ -133,6 +137,8 @@ properties:
+               - fsl,imx6dl-sabresd        # i.MX6 DualLite SABRE Smart Device Board
+               - technologic,imx6dl-ts4900
+               - technologic,imx6dl-ts7970
++              - tq,mba6a                  # TQ TQMa6S SoM on MBa6x
++              - tq,mba6b
+               - ysoft,imx6dl-yapp4-draco  # i.MX6 DualLite Y Soft IOTA Draco board
+               - ysoft,imx6dl-yapp4-hydra  # i.MX6 DualLite Y Soft IOTA Hydra board
+               - ysoft,imx6dl-yapp4-ursa   # i.MX6 Solo Y Soft IOTA Ursa board
+-- 
+2.20.1
