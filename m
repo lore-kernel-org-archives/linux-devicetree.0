@@ -1,105 +1,45 @@
-From: Hui Song <hui.song_1@nxp.com>
-Subject: [PATCH v8] gpio/mpc8xxx: change irq handler from chained to normal
-Date: Fri, 11 Oct 2019 08:56:43 +0800
-Message-ID: <20191011005643.41007-1-hui.song_1@nxp.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: arm-smmu: Add an optional "input-address-size" property
+Date: Thu, 10 Oct 2019 20:46:08 -0700
+Message-ID: <20191011034609.13319-2-nicoleotsuka@gmail.com>
+References: <20191011034609.13319-1-nicoleotsuka@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191011034609.13319-1-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
+To: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, will@kernel.org, robin.murphy@arm.com
+Cc: vdumpa@nvidia.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+Some SMMU instances may not connect all input address lines physically
+but drive some upper address bits to logical zero, depending on their
+SoC designs. Some of them even connect only 39 bits that is not in the
+list of IAS/OAS from SMMU internal IDR registers.
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
+Since this can be an SoC design decision, this patch adds an optional
+property to specify how many input bits being physically connected.
 
-While this will work, it will mess up userspace accounting of the number
-of interrupts per second in tools such as vmstat.  The reason is that
-for every GPIO interrupt, /proc/interrupts records the count against GIC
-interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
-interrupt, the total number of interrupts that the system has seen
-increments by two.
-
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
-Changes in v8:
-        - merge two lines as one line to fit 80 characters.
-Changes in v7:
-	- make unsigned int convert to unsigned long.
-Changes in v6:
-        - change request_irq to devm_request_irq and add commit message.
-Changes in v5:
-        - add traverse every bit function.
-Changes in v4:
-        - convert 'pr_err' to 'dev_err'.
-Changes in v3:
-        - update the patch description.
-Changes in v2:
-        - delete the compatible of ls1088a.
- drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ Documentation/devicetree/bindings/iommu/arm,smmu.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..58ff372 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+index 3133f3ba7567..a9373a2964a3 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+@@ -97,6 +97,13 @@ conditions.
+ - power-domains:  Specifiers for power domains required to be powered on for
+                   the SMMU to operate, as per generic power domain bindings.
  
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,20 +128,19 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
--	unsigned int mask;
-+	unsigned long mask;
-+	int i;
- 
- 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
- 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
--	if (mask)
--		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
--						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+	for_each_set_bit(i, &mask, 32)
-+		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq, 31 - i));
++- input-address-size: Number of address bits being physically connected to an
++                  SMMU instance, as the input virtual address width. SoC might
++                  tie some upper address bits to logical zero inside the SMMU
++                  wrapper, so SMMU would only support a virtual address input
++                  size, corresponding to physically connected bits, instead of
++                  the reading from register.
 +
-+	return IRQ_HANDLED;
- }
+ ** Deprecated properties:
  
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -409,8 +409,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
-+			       mpc8xxx_gpio_irq_cascade,
-+			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-+			       mpc8xxx_gc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
-+			np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
+ - mmu-masters (deprecated in favour of the generic "iommus" binding) :
 -- 
-2.9.5
+2.17.1
