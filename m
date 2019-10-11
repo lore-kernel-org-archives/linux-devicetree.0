@@ -1,79 +1,249 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH v3 2/3] ARM: dts: add Netronix E60K02 board common file
-Date: Fri, 11 Oct 2019 09:41:48 +0200
-Message-ID: <20191011094148.1376430e@aktux>
-References: <20191010192357.27884-1-andreas@kemnade.info>
-        <20191010192357.27884-3-andreas@kemnade.info>
-        <20191011065609.6irap7elicatmsgg@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] gpio: Add xgs-iproc driver
+Date: Fri, 11 Oct 2019 09:43:28 +0200
+Message-ID: <CACRpkdYWLTjiSQo_VTeReL1CfEO3h_8ONbdCk=PD1x+oc2ggCg@mail.gmail.com>
+References: <20191004012525.26647-1-chris.packham@alliedtelesis.co.nz> <20191004012525.26647-3-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011065609.6irap7elicatmsgg@pengutronix.de>
+In-Reply-To: <20191004012525.26647-3-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, richard.laing@alliedtelesis.co.nz, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Oct 2019 08:56:09 +0200
-Marco Felsch <m.felsch@pengutronix.de> wrote:
+Hi Chris!
 
-> Hi Andreas,
-> 
-> On 19-10-10 21:23, Andreas Kemnade wrote:
-> > The Netronix board E60K02 can be found some several Ebook-Readers,
-> > at least the Kobo Clara HD and the Tolino Shine 3. The board
-> > is equipped with different SoCs requiring different pinmuxes.
-> > 
-> > For now the following peripherals are included:
-> > - LED
-> > - Power Key
-> > - Cover (gpio via hall sensor)
-> > - RC5T619 PMIC (the kernel misses support for rtc and charger
-> >   subdevices).
-> > - Backlight via lm3630a
-> > - Wifi sdio chip detection (mmc-powerseq and stuff)
-> > 
-> > It is based on vendor kernel but heavily reworked due to many
-> > changed bindings.
-> > 
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > ---
-> > Changes in v3:
-> > - better led name
-> > - correct memory size
-> > - comments about missing devices
-> > 
-> > Changes in v2:
-> > - reordered, was 1/3
-> > - moved pinmuxes to their actual users, not the parents
-> >   of them
-> > - removed some already-disabled stuff
-> > - minor cleanups  
-> 
-> You won't change the muxing, so a this dtsi can be self contained?
-> 
-So you want me to put a big 
-#if defined(MX6SLL) 
-[...]
-             pinctrl_i2c1: i2c1grp {
-                        fsl,pins = <
-                                MX6SLL_PAD_I2C1_SCL__I2C1_SCL    0x4001f8b1
-                                MX6SLL_PAD_I2C1_SDA__I2C1_SDA    0x4001f8b1
-                        >;
-                };
+Thanks for your patch!
 
-#elif (MX6SL)
-[...]
-               pinctrl_i2c1: i2c1grp {
-                        fsl,pins = <
-                                MX6SL_PAD_I2C1_SCL__I2C1_SCL     0x4001f8b1
-                                MX6SL_PAD_I2C1_SDA__I2C1_SDA     0x4001f8b1
-                        >;
-                };
+On Fri, Oct 4, 2019 at 3:25 AM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
 
-#endif
-in the dtsi?
+> This driver supports the Chip Common A GPIO controller present on a
+> number of Broadcom switch ASICs with integrated SoCs. The controller is
+> similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
+> different enough that a separate driver is required.
+>
+> This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
+> support (pinctrl-iproc-gpio covers CCB).
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-Regards,
-Andreas
+(...)
+
+> +config GPIO_XGS_IPROC
+> +       tristate "BRCM XGS iProc GPIO support"
+> +       depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
+> +       select GPIO_GENERIC
+> +       select GPIOLIB_IRQCHIP
+
+Nice reuse of abstractions.
+
+> +static u32 iproc_gpio_readl(struct iproc_gpio_chip *chip, int reg)
+> +{
+> +       return readl(chip->base + reg);
+> +}
+> +
+> +static void iproc_gpio_writel(struct iproc_gpio_chip *chip, u32 val, int reg)
+> +{
+> +       writel(val, chip->base + reg);
+> +}
+
+These wrappers don't really add anything do they? Just inline the
+direct readl()/writel() to base + reg everywhere instead.
+
+> +/* returns the corresponding gpio register bit */
+> +static int iproc_irq_to_gpio(struct iproc_gpio_chip *chip, u32 irq)
+> +{
+> +       struct irq_data *data = irq_domain_get_irq_data(chip->irq_domain, irq);
+> +
+> +       return data->hwirq;
+> +}
+
+I would name it something clearer since "gpio" is pretty ambigous.
+
+Like iproc_irq_to_gpio_offset()
+
+Maybe this is also a bit of unnecessary wrapper?
+
+> +static irqreturn_t iproc_gpio_irq_handler(int irq, void *data)
+> +{
+> +       struct iproc_gpio_chip *chip = (struct iproc_gpio_chip *)data;
+> +       struct gpio_chip gc = chip->gc;
+> +       int bit;
+> +       unsigned long int_bits = 0;
+> +       u32 int_status;
+> +
+> +       /* go through the entire GPIOs and handle all interrupts */
+> +       int_status = readl(chip->intr + CCA_INT_STS);
+> +       if (int_status & CCA_INT_F_GPIOINT) {
+> +               u32 event, level;
+> +
+> +               /* Get level and edge interrupts */
+> +               event = readl(chip->base + GPIO_CCA_INT_EVENT_MASK);
+> +               event &= readl(chip->base + GPIO_CCA_INT_EVENT);
+> +               level = readl(chip->base + GPIO_CCA_DIN);
+> +               level ^= readl(chip->base + GPIO_CCA_INT_LEVEL);
+> +               level &= readl(chip->base + GPIO_CCA_INT_LEVEL_MASK);
+> +               int_bits = level | event;
+> +
+> +               for_each_set_bit(bit, &int_bits, gc.ngpio)
+> +                       generic_handle_irq(
+> +                               irq_linear_revmap(chip->irq_domain, bit));
+> +       }
+> +
+> +       return  int_bits ? IRQ_HANDLED : IRQ_NONE;
+> +}
+
+I think this should be a chained interrupt handler (see below how to
+register it).
+
+See e.g. drivers/gpio/gpio-ftgpio010.c for an example:
+change function prototype, no return value, use
+chained_irq_enter/exit(irqchip, desc); etc.
+
+> +static int iproc_gpiolib_input(struct gpio_chip *gc, u32 gpio)
+> +static int iproc_gpiolib_output(struct gpio_chip *gc, u32 gpio, int value)
+> +static void iproc_gpiolib_set(struct gpio_chip *gc, u32 gpio, int value)
+> +static int iproc_gpiolib_get(struct gpio_chip *gc, u32 gpio)
+
+These callbacks seems to reimplement parts of GPIO_GENERIC
+that you should already be using.
+
+Again look at drivers/gpio/gpio-ftgpio010.c() use bgpio_init()
+to set up the library callbacks, look in
+drivers/gpio/gpio-mmio.c for kerneldoc on the function.
+
+> +static int iproc_gpiolib_to_irq(struct gpio_chip *gc, u32 offset)
+> +{
+> +       struct iproc_gpio_chip *chip = gpiochip_get_data(gc);
+> +
+> +       return irq_linear_revmap(chip->irq_domain, offset);
+> +}
+
+GPIOLIB_IRQCHIP provides a .to_irq() implementation
+so drop this and let the library handle this.
+
+> +static int iproc_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct device_node *dn = pdev->dev.of_node;
+> +       struct iproc_gpio_chip *chip;
+> +       u32 num_gpios;
+> +       int irq, ret;
+> +
+> +       chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+> +       if (!chip)
+> +               return -ENOMEM;
+> +
+> +       chip->dev = dev;
+> +       platform_set_drvdata(pdev, chip);
+> +
+> +       chip->gc.label = dev_name(dev);
+> +
+> +       chip->base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(chip->base))
+> +               return PTR_ERR(chip->base);
+> +
+> +       /* Get number of GPIO pin */
+> +       if (of_property_read_u32(dn, "ngpios", &num_gpios)) {
+> +               dev_err(dev, "missing ngpios DT property\n");
+> +               return -EINVAL;
+> +       }
+
+Maybe provide a sensible default?
+
+> +       chip->gc.ngpio = num_gpios;
+> +       chip->gc.parent = dev;
+> +       chip->gc.of_node = dn;
+> +       chip->gc.direction_input = iproc_gpiolib_input;
+> +       chip->gc.direction_output = iproc_gpiolib_output;
+> +       chip->gc.set = iproc_gpiolib_set;
+> +       chip->gc.get = iproc_gpiolib_get;
+
+Drop this and call bgpio_init() to set up the callbacks
+instead. However, set up .ngpio *after* calling
+bgpio_init() so users can't access the nonexisting
+gpios.
+
+> +       chip->gc.to_irq = iproc_gpiolib_to_irq;
+
+Drop this and use the GPIOLIB_IRQCHIP.
+
+> +       ret = gpiochip_add_data(&chip->gc, chip);
+> +       if (ret) {
+> +               dev_err(dev, "unable to add GPIO chip\n");
+> +               return ret;
+> +       }
+
+Why not use devm_gpiochip_add_data()?
+
+> +       irq = platform_get_irq(pdev, 0);
+> +       if (irq > 0) {
+> +               u32 val, count;
+> +               struct irq_chip *irqc;
+> +
+> +               irqc = &chip->irqchip;
+> +               irqc->name = dev_name(dev);
+> +               irqc->irq_ack = iproc_gpio_irq_ack;
+> +               irqc->irq_mask = iproc_gpio_irq_mask;
+> +               irqc->irq_unmask = iproc_gpio_irq_unmask;
+> +               irqc->irq_set_type = iproc_gpio_irq_set_type;
+> +               irqc->irq_enable = iproc_gpio_irq_unmask;
+> +               irqc->irq_disable = iproc_gpio_irq_mask;
+> +               chip->intr = devm_platform_ioremap_resource(pdev, 1);
+> +               if (IS_ERR(chip->intr))
+> +                       return PTR_ERR(chip->intr);
+
+Move all this above the [devm_]gpiochip_add_data()
+call and add:
+
+struct gpio_irq_chip *girq;
+
+girq = &chip->gc.irq;
+girq->chip = irqc;
+
+etc follow the pattern from other drivers like the
+mentioned ftgpio010.c.
+
+> +               /* Create irq domain */
+> +               chip->irq_domain = irq_domain_add_linear(dn, num_gpios,
+> +                               &irq_domain_simple_ops, chip);
+> +
+> +               if (!chip->irq_domain) {
+> +                       dev_err(dev, "Couldn't allocate IRQ domain\n");
+> +                       ret = -ENODEV;
+> +                       goto err_irq_domain;
+> +               }
+> +
+> +               /* Map each gpio pin to an IRQ and set the handler */
+> +               for (count = 0; count < num_gpios; count++) {
+> +                       int irq;
+> +
+> +                       irq = irq_create_mapping(chip->irq_domain, count);
+> +                       irq_set_chip_and_handler(irq, irqc, handle_simple_irq);
+> +                       irq_set_chip_data(irq, chip);
+> +               }
+
+Drop this and let the generic GPIO irqchip handle
+the domain.
+
+> +               /* Enable GPIO interrupts for CCA GPIO */
+> +               val = readl(chip->intr + CCA_INT_MASK);
+> +               val |= CCA_INT_F_GPIOINT;
+> +               writel(val, chip->intr + CCA_INT_MASK);
+
+Move this before registering the chip.
+
+> +               /* Install ISR for this GPIO controller */
+> +               ret = devm_request_irq(dev, irq, iproc_gpio_irq_handler,
+> +                                      IRQF_SHARED, chip->gc.label, chip);
+> +               if (ret) {
+> +                       dev_err(dev, "Fail to request IRQ%d: %d\n", irq, ret);
+> +                       goto err_irq_request;
+> +               }
+
+Drop this and use the gpiolib irqchip library.
+
+Yours,
+Linus Walleij
