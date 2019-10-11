@@ -1,168 +1,77 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v9 00/12] Device property improvements, add %pfw format specifier
-Date: Fri, 11 Oct 2019 11:28:39 +0200
-Message-ID: <1588860.o9alHonHAX@kreacher>
-References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
+From: Boris Brezillon <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [RESEND PATCH v2 0/4] media: rockchip: Add the rkvdec driver
+Date: Fri, 11 Oct 2019 11:33:38 +0200
+Message-ID: <20191011093342.3471-1-boris.brezillon@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, October 3, 2019 2:32:07 PM CEST Sakari Ailus wrote:
-> Hi all,
-> 
-> This set adds functionality into the device property API (counting a
-> node's parents as well as obtaining its name) in order to support printing
-> fwnode names using a new conversion specifier "%pfw". The names that are
-> produced are equivalent to its OF counterpart "%pOF" on OF systems for the
-> two supported modifiers ("f" and "P").
-> 
-> Printing a node's name is something that's been available on OF for a long
-> time and if something is converted to device property API (such as the
-> V4L2 fwnode framework) it always got removed of a nice feature that was
-> sometimes essential in debugging. With this set, that no longer is the
-> case.
-> 
-> Note: the set now depends on commit b295c3e39c13 ("tools lib traceevent:
-> Convert remaining %p[fF] users to %p[sS]") and commit 2d44d165e939 ("scsi:
-> lpfc: Convert existing %pf users to %ps") which both are in v5.4-rc1.
-> 
-> Note 2: There's no full v8 set as I sent a patch fixing a single issue but
-> there turned out to be a little more to fix, making this one v9.
-> 
-> since v7:
-> 
-> - Reword warning on re-use of %pf and %pF.
-> 
-> - Remove %pf and %pF support from vbin_printf() as well.
-> 
-> - Removed the first patch (now commit b295c3e39c13 ("tools lib traceevent:
->   Convert remaining %p[fF] users to %p[sS]")) from the set as it was
->   already merged through Arnoldo Carvalho de Melo's tree. Added
->   Depends-on: tag to the same patch.
-> 
-> since v6:
-> 
-> - Added a patch for a warning note on re-using obsolete %pf oand %pF
->   extensions.
-> 
-> - Rework %pfw validatition in checkpatch.pl according to Joe's comments.
-> 
-> - Unwrap a line wrapped by a previous versions in get_bprint_format().
-> 
-> - Handle %pf and %pF modifiers again in make_bprint_args() in case they're
->   no followed by 'w'.
-> 
-> since v5:
-> 
-> - Added a patch to convert %pf to %ps in tools/lib/traceevent.c (first in
->   the set).
-> 
-> - Fix ReST syntax in Documentation/core-api/printk-formats.rst.
-> 
-> - Fix returning root swnode name in patch "device property: Add
->   fwnode_get_name for returning the name of a node". Use to_swnode()
->   directly as well in the same patch.
-> 
-> - Tests: take root node name into account, use direct indices and remove
->   the comma from the guardian entry.
-> 
-> - Add a comment on how fwnode_full_name_string() enumerates the nodes.
-> 
-> - Fix error string in fwnode_string().
-> 
-> - Move 'f' + default case as last in the switch in fwnode_string().
-> 
-> - Fix %pfw validation in checkpatch.pl.
-> 
-> since v4:
-> 
-> - Improved documentation for fwnode_get_nth_parent().
-> 
-> - Removed comma from the guardian entry in fwnode_pointer() testcase.
-> 
-> since v3:
-> 
-> - Remove underscores in argument name of fwnode_count_parents().
-> 
-> - Re-introduce "%pO?" error string.
-> 
-> - Unwrap a call to string() in fwnode_string().
-> 
-> - Removed a useless Depends-on: on a patch that was merged long ago.
-> 
-> - Unwrap a Fixes: line.
-> 
-> - Added a patch to move fwnode_get_parent() up to make the review of the
->   following patch easier.
-> 
-> since v2:
-> 
-> - Better comments in acpi_fwnode_get_name_prefix().
-> 
-> - Added swnode implementation.
-> 
-> - Fixed swnode refcounting in get_parent() ("swnode: Get reference to
->   parent swnode in get_parent op")
-> 
-> - Make argument to to_software_node() const (a new patch)
-> 
-> - Factored out confusingly named kobject_string() that had a single
->   caller.
-> 
-> - Cleaner fwnode_count_parents() implementation (as discussed in review).
-> 
-> - Made fwnode_count_parents() argument const.
-> 
-> - Added tests (last patch in the set).
-> 
-> since v1:
-> 
-> - Add patch to remove support for %pf and %pF (depends on another patch
->   removing all use of %pf and %pF) (now 4th patch)
-> 
-> - Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
-> 
-> - Align kerneldoc style with the rest of drivers/base/property.c (no extra
->   newline after function name)
-> 
-> - Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
-> 
-> - WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
->   by "w")
-> 
-> Sakari Ailus (12):
->   software node: Get reference to parent swnode in get_parent op
->   software node: Make argument to to_software_node const
->   device property: Move fwnode_get_parent() up
->   device property: Add functions for accessing node's parents
->   device property: Add fwnode_get_name for returning the name of a node
->   device property: Add a function to obtain a node's prefix
->   lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
->   lib/vsprintf: Add a note on re-using %pf or %pF
->   lib/vsprintf: Make use of fwnode API to obtain node names and
->     separators
->   lib/vsprintf: OF nodes are first and foremost, struct device_nodes
->   lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
->   lib/test_printf: Add tests for %pfw printk modifier
-> 
->  Documentation/core-api/printk-formats.rst | 34 ++++++---
->  drivers/acpi/property.c                   | 48 ++++++++++++
->  drivers/base/property.c                   | 83 ++++++++++++++++++--
->  drivers/base/swnode.c                     | 43 ++++++++++-
->  drivers/of/property.c                     | 16 ++++
->  include/linux/fwnode.h                    |  4 +
->  include/linux/property.h                  |  8 +-
->  lib/test_printf.c                         | 32 ++++++++
->  lib/vsprintf.c                            | 93 ++++++++++++++---------
->  scripts/checkpatch.pl                     |  9 ++-
->  10 files changed, 309 insertions(+), 61 deletions(-)
-> 
-> 
+Hello,
 
-Applying the series (with the tags collected so far) as 5.5 material, thanks!
+Sorry for the noise, I forgot to Cc the DT maintainers/ML on my last
+attempt.
+
+This is v2 of the rkvdec driver which was initially posted as part of
+my RFC adding codec helpers.
+For this version, I decided to get rid of the helper stuff which is
+likely to take some more time to settle. The patchset now contains a
+proper DT binding doc.
+
+Note that this implementation is likely to be adjusted based on the
+outcome of the 'scaling matrix order' [1] and 'dynamic resolution
+changes' [2] discussions, but I thought it'd be worth posting this
+version to start getting feeback.
+
+Regards,
+
+Boris
+
+[1]https://patchwork.kernel.org/cover/11125207/
+[2]https://lkml.org/lkml/2019/9/3/1033
+
+Boris Brezillon (4):
+  media: vb2: Add a helper to get the vb2 buffer attached to a request
+  media: dt-bindings: rockchip: Document RK3399 Video Decoder bindings
+  media: rockchip: Add the rkvdec driver
+  arm64: dts: rockchip: rk3399: Define the rockchip Video Decoder node
+
+ .../bindings/media/rockchip,vdec.yaml         |   71 ++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      |   14 +-
+ .../media/common/videobuf2/videobuf2-core.c   |   23 +
+ drivers/staging/media/Kconfig                 |    2 +
+ drivers/staging/media/Makefile                |    1 +
+ drivers/staging/media/rockchip/Kconfig        |   16 +
+ drivers/staging/media/rockchip/Makefile       |    2 +
+ drivers/staging/media/rockchip/vdec/Kconfig   |   14 +
+ drivers/staging/media/rockchip/vdec/Makefile  |    3 +
+ .../staging/media/rockchip/vdec/rkvdec-h264.c |  960 +++++++++++++++
+ .../staging/media/rockchip/vdec/rkvdec-regs.h |  306 +++++
+ drivers/staging/media/rockchip/vdec/rkvdec.c  | 1089 +++++++++++++++++
+ drivers/staging/media/rockchip/vdec/rkvdec.h  |  131 ++
+ include/media/videobuf2-core.h                |   11 +
+ 14 files changed, 2642 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+ create mode 100644 drivers/staging/media/rockchip/Kconfig
+ create mode 100644 drivers/staging/media/rockchip/Makefile
+ create mode 100644 drivers/staging/media/rockchip/vdec/Kconfig
+ create mode 100644 drivers/staging/media/rockchip/vdec/Makefile
+ create mode 100644 drivers/staging/media/rockchip/vdec/rkvdec-h264.c
+ create mode 100644 drivers/staging/media/rockchip/vdec/rkvdec-regs.h
+ create mode 100644 drivers/staging/media/rockchip/vdec/rkvdec.c
+ create mode 100644 drivers/staging/media/rockchip/vdec/rkvdec.h
+
+-- 
+2.21.0
