@@ -1,43 +1,168 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 0/2] iommu/arm-smmu: Add an optional "input-address-size"
- property
-Date: Fri, 11 Oct 2019 10:16:28 +0100
-Message-ID: <e99e07c2-88c6-e4d8-af80-c46d36bc6cd0@arm.com>
-References: <20191011034609.13319-1-nicoleotsuka@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v9 00/12] Device property improvements, add %pfw format specifier
+Date: Fri, 11 Oct 2019 11:28:39 +0200
+Message-ID: <1588860.o9alHonHAX@kreacher>
+References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011034609.13319-1-nicoleotsuka@gmail.com>
-Content-Language: en-GB
+In-Reply-To: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>, joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, will@kernel.org
-Cc: vdumpa@nvidia.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-10-11 4:46 am, Nicolin Chen wrote:
-> This series of patches add an optional DT property to allow an SoC to
-> specify how many bits being physically connected to its SMMU instance,
-> depending on the SoC design.
-
-This has come up before, and it doesn't work in general because a single 
-SMMU instance can have many master interfaces, with potentially 
-different sizes of address bus wired up to each. It's also a 
-conceptually-wrong approach anyway, since this isn't a property of the 
-SMMU; it's a property of the interconnect(s) upstream of the SMMU.
-
-IIRC you were working on Tegra - if so, Thierry already has a plan, see 
-this thread: 
-https://lore.kernel.org/linux-arm-kernel/20190930133510.GA1904140@ulmo/
-
-Robin.
-
+On Thursday, October 3, 2019 2:32:07 PM CEST Sakari Ailus wrote:
+> Hi all,
 > 
-> Nicolin Chen (2):
->    dt-bindings: arm-smmu: Add an optional "input-address-size" property
->    iommu/arm-smmu: Read optional "input-address-size" property
+> This set adds functionality into the device property API (counting a
+> node's parents as well as obtaining its name) in order to support printing
+> fwnode names using a new conversion specifier "%pfw". The names that are
+> produced are equivalent to its OF counterpart "%pOF" on OF systems for the
+> two supported modifiers ("f" and "P").
 > 
->   Documentation/devicetree/bindings/iommu/arm,smmu.txt |  7 +++++++
->   drivers/iommu/arm-smmu.c                             | 10 ++++++++--
->   2 files changed, 15 insertions(+), 2 deletions(-)
+> Printing a node's name is something that's been available on OF for a long
+> time and if something is converted to device property API (such as the
+> V4L2 fwnode framework) it always got removed of a nice feature that was
+> sometimes essential in debugging. With this set, that no longer is the
+> case.
 > 
+> Note: the set now depends on commit b295c3e39c13 ("tools lib traceevent:
+> Convert remaining %p[fF] users to %p[sS]") and commit 2d44d165e939 ("scsi:
+> lpfc: Convert existing %pf users to %ps") which both are in v5.4-rc1.
+> 
+> Note 2: There's no full v8 set as I sent a patch fixing a single issue but
+> there turned out to be a little more to fix, making this one v9.
+> 
+> since v7:
+> 
+> - Reword warning on re-use of %pf and %pF.
+> 
+> - Remove %pf and %pF support from vbin_printf() as well.
+> 
+> - Removed the first patch (now commit b295c3e39c13 ("tools lib traceevent:
+>   Convert remaining %p[fF] users to %p[sS]")) from the set as it was
+>   already merged through Arnoldo Carvalho de Melo's tree. Added
+>   Depends-on: tag to the same patch.
+> 
+> since v6:
+> 
+> - Added a patch for a warning note on re-using obsolete %pf oand %pF
+>   extensions.
+> 
+> - Rework %pfw validatition in checkpatch.pl according to Joe's comments.
+> 
+> - Unwrap a line wrapped by a previous versions in get_bprint_format().
+> 
+> - Handle %pf and %pF modifiers again in make_bprint_args() in case they're
+>   no followed by 'w'.
+> 
+> since v5:
+> 
+> - Added a patch to convert %pf to %ps in tools/lib/traceevent.c (first in
+>   the set).
+> 
+> - Fix ReST syntax in Documentation/core-api/printk-formats.rst.
+> 
+> - Fix returning root swnode name in patch "device property: Add
+>   fwnode_get_name for returning the name of a node". Use to_swnode()
+>   directly as well in the same patch.
+> 
+> - Tests: take root node name into account, use direct indices and remove
+>   the comma from the guardian entry.
+> 
+> - Add a comment on how fwnode_full_name_string() enumerates the nodes.
+> 
+> - Fix error string in fwnode_string().
+> 
+> - Move 'f' + default case as last in the switch in fwnode_string().
+> 
+> - Fix %pfw validation in checkpatch.pl.
+> 
+> since v4:
+> 
+> - Improved documentation for fwnode_get_nth_parent().
+> 
+> - Removed comma from the guardian entry in fwnode_pointer() testcase.
+> 
+> since v3:
+> 
+> - Remove underscores in argument name of fwnode_count_parents().
+> 
+> - Re-introduce "%pO?" error string.
+> 
+> - Unwrap a call to string() in fwnode_string().
+> 
+> - Removed a useless Depends-on: on a patch that was merged long ago.
+> 
+> - Unwrap a Fixes: line.
+> 
+> - Added a patch to move fwnode_get_parent() up to make the review of the
+>   following patch easier.
+> 
+> since v2:
+> 
+> - Better comments in acpi_fwnode_get_name_prefix().
+> 
+> - Added swnode implementation.
+> 
+> - Fixed swnode refcounting in get_parent() ("swnode: Get reference to
+>   parent swnode in get_parent op")
+> 
+> - Make argument to to_software_node() const (a new patch)
+> 
+> - Factored out confusingly named kobject_string() that had a single
+>   caller.
+> 
+> - Cleaner fwnode_count_parents() implementation (as discussed in review).
+> 
+> - Made fwnode_count_parents() argument const.
+> 
+> - Added tests (last patch in the set).
+> 
+> since v1:
+> 
+> - Add patch to remove support for %pf and %pF (depends on another patch
+>   removing all use of %pf and %pF) (now 4th patch)
+> 
+> - Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
+> 
+> - Align kerneldoc style with the rest of drivers/base/property.c (no extra
+>   newline after function name)
+> 
+> - Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
+> 
+> - WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
+>   by "w")
+> 
+> Sakari Ailus (12):
+>   software node: Get reference to parent swnode in get_parent op
+>   software node: Make argument to to_software_node const
+>   device property: Move fwnode_get_parent() up
+>   device property: Add functions for accessing node's parents
+>   device property: Add fwnode_get_name for returning the name of a node
+>   device property: Add a function to obtain a node's prefix
+>   lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
+>   lib/vsprintf: Add a note on re-using %pf or %pF
+>   lib/vsprintf: Make use of fwnode API to obtain node names and
+>     separators
+>   lib/vsprintf: OF nodes are first and foremost, struct device_nodes
+>   lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
+>   lib/test_printf: Add tests for %pfw printk modifier
+> 
+>  Documentation/core-api/printk-formats.rst | 34 ++++++---
+>  drivers/acpi/property.c                   | 48 ++++++++++++
+>  drivers/base/property.c                   | 83 ++++++++++++++++++--
+>  drivers/base/swnode.c                     | 43 ++++++++++-
+>  drivers/of/property.c                     | 16 ++++
+>  include/linux/fwnode.h                    |  4 +
+>  include/linux/property.h                  |  8 +-
+>  lib/test_printf.c                         | 32 ++++++++
+>  lib/vsprintf.c                            | 93 ++++++++++++++---------
+>  scripts/checkpatch.pl                     |  9 ++-
+>  10 files changed, 309 insertions(+), 61 deletions(-)
+> 
+> 
+
+Applying the series (with the tags collected so far) as 5.5 material, thanks!
