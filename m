@@ -1,78 +1,45 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 0/8] Introduce max12xx ADC support
-Date: Fri, 11 Oct 2019 16:43:39 +0200
-Message-ID: <20191011144347.19146-1-miquel.raynal@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [v2,2/2] dt-bindings: i2c-mux-pca954x: Add optional property
+ i2c-mux-never-disable
+Date: Fri, 11 Oct 2019 09:44:45 -0500
+Message-ID: <20191011144445.GA2340@bogus>
+References: <20190930032503.44425-1-biwen.li@nxp.com>
+ <20190930032503.44425-2-biwen.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190930032503.44425-2-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: Biwen Li <biwen.li@nxp.com>
+Cc: peda@axentia.se, leoyang.li@nxp.com, mark.rutland@arm.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello, here is a patchset updating the existing max1027.c driver (for
-10-bit max1027/29/31 ADCs) with a few corrections/improvements and
-then introducing their 12-bit cousins named max1227/29/31.
+On Mon, Sep 30, 2019 at 11:25:03AM +0800, Biwen Li wrote:
+> The patch adds an optional property i2c-mux-never-disable
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v2:
+> 	- update documentation
+> 
+>  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> index 30ac6a60f041..71b73d0fdb62 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> @@ -34,6 +34,7 @@ Optional Properties:
+>      - first cell is the pin number
+>      - second cell is used to specify flags.
+>      See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +  - i2c-mux-never-disable: always forces mux to be enabled.
 
-As on my hardware setup the "start conversion" and "end of conversion"
-pin are not wired (which is absolutely fine for this chip), I also
-updated the driver and the bindings to support optional interrupts. In
-this case, triggered buffers are not available and the user must poll
-the value from sysfs.
+Either needs to have a vendor prefix or be documented as a common 
+property.
 
-Thanks,
-Miquèl
+IIRC, we already have a property for mux default state which seems like 
+that would cover this unless you need to leave it in different states.
 
-
-Changes in v4:
-==============
-* In the v3, I removed the bindings documentation for the max10xx
-  devices, in favor of the trivial devices bindings. Unfortunately, I
-  didn't spot that in the following patch adding support for the
-  max12xx series, I was adding the compatibles to the trivial devices
-  list but also re-introducing the bindings documentation with the
-  three new compatibles. Just drop this part of the last patch to only
-  have the trivial devices file, not the specific bindings. All the
-  rest is the same.
-
-Changes in v3:
-==============
-* Updated the commit message of the patch adding debugfs read access
-  to better explain why I decided to limit the number of bytes read to
-  two.
-* Updated the macros to define the number of channels per device as
-  proposed by Jonathan.
-* Re-used the realbits entry instead of adding my own (called .depth).
-* Started doing DT-bindings yaml conversion, but realized that after
-  the first patch offering the interrupt as optional, the
-  documentation was fitting pretty well the trivial devices
-  representation. Dropped the specific bindings files and updated the
-  trivial devices list instead.
-
-Changes in v2:
-==============
-* Removed the addition of three compatibles from patch 4 (the
-  preparation patch) to add these lines back in patch 5 (the actual
-  introduction).
-
-
-Miquel Raynal (8):
-  iio: adc: max1027: Add debugfs register read support
-  iio: adc: max1027: Make it optional to use interrupts
-  iio: adc: max1027: Reset the device at probe time
-  iio: adc: max1027: Prepare the introduction of different resolutions
-  iio: adc: max1027: Introduce 12-bit devices support
-  dt-bindings: iio: adc: max1027: Mark interrupts as optional
-  dt-bindings: Add 1027/1029/1031 SPI ADCs as trivial devices
-  dt-bindings: Add max12xx SPI ADC series as trivial devices
-
- .../bindings/iio/adc/max1027-adc.txt          |  20 --
- .../devicetree/bindings/trivial-devices.yaml  |  12 ++
- drivers/iio/adc/Kconfig                       |   4 +-
- drivers/iio/adc/max1027.c                     | 180 +++++++++++-------
- 4 files changed, 125 insertions(+), 91 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-
--- 
-2.20.1
+Rob
