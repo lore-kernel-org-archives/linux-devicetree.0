@@ -1,111 +1,139 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
- compatible for HiSi
-Date: Fri, 11 Oct 2019 10:51:23 -0500
-Message-ID: <20191011155123.GA14272@bogus>
-References: <20191007175553.66940-1-john.stultz@linaro.org>
- <20191007175553.66940-5-john.stultz@linaro.org>
- <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
- <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
- <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
- <CALAqxLVpPvHf2RpwjHh5v9cnQm9CLtj0HHaqVH=EFQJk-GhaPQ@mail.gmail.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH v3 2/3] ARM: dts: add Netronix E60K02 board common file
+Date: Fri, 11 Oct 2019 18:19:38 +0200
+Message-ID: <20191011181938.185f2a00@kemnade.info>
+References: <20191010192357.27884-1-andreas@kemnade.info>
+        <20191010192357.27884-3-andreas@kemnade.info>
+        <20191011065609.6irap7elicatmsgg@pengutronix.de>
+        <20191011094148.1376430e@aktux>
+        <20191011142927.GA11490@bogus>
+        <20191011170147.1b3c4b25@kemnade.info>
+        <20191011152214.v6lq6itwf5lp6j7q@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/xJOdSTuzcipgvT99VuhdzxO"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALAqxLVpPvHf2RpwjHh5v9cnQm9CLtj0HHaqVH=EFQJk-GhaPQ@mail.gmail.com>
+In-Reply-To: <20191011152214.v6lq6itwf5lp6j7q@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, marex@denx.de, devicetree@vger.kernel.org, andrew.smirnov@gmail.com, shawnguo@kernel.org, s.hauer@pengutronix.de, angus@akkea.ca, linux-kernel@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, manivannan.sadhasivam@linaro.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 04:00:24PM -0700, John Stultz wrote:
-> On Mon, Oct 7, 2019 at 2:11 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Mon, Oct 7, 2019 at 2:07 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
-> > > > >
-> > > > > Add necessary compatible flag for HiSi's DWC3 so
-> > > > > dwc3-of-simple will probe.
-> > > > >
-> > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > Cc: Felipe Balbi <balbi@kernel.org>
-> > > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > > Cc: Yu Chen <chenyu56@huawei.com>
-> > > > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > > > Cc: linux-usb@vger.kernel.org
-> > > > > Cc: devicetree@vger.kernel.org
-> > > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > > > ---
-> > > > > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
-> > > > > ---
-> > > > >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
-> > > > >  1 file changed, 52 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> > > >
-> > > > Can you make this a schema.
-> > >
-> > > Sorry, I'm not sure exactly what you're asking. I'm guessing from
-> > > grepping around you want the bindings in yaml instead (I see a few
-> > > examples)?
-> >
-> > Yes.
-> >
-> > > Is there some pointer to documentation? The
-> > > Documentation/devicetree/bindings/writing-bindings.txt file doesn't
-> > > seem to say much on it.
-> >
-> > You mean Documentation/devicetree/writing-schemas.rst? There's that
-> > and Documentation/devicetree/bindings/example-schema.yaml which has a
-> > bunch of annotations on what each part means.
-> 
-> Ah! Sorry for missing that. Thanks for the pointer, though I may get
-> away with dropping this one.
-> 
-> > > > If it's only clocks and resets for the wrapper node, just make this
-> > > > all one node.
-> > >
-> > > Just to make sure I'm following, you're suggesting I put all the
-> > > clocks/resets in the dwc3 node (renamed to usb for the node name) and
-> > > not add the wrapper?
-> >
-> > Yes.
-> >
-> > > I'll have to see if that's possible. The generic dwc3 binding wants 3
-> > > clocks, but I only have two in the code I've worked with (similarly it
-> > > seems to only want two resets, not 4) so I'll have to see if I can
-> > > figure out how to adapt that.
-> >
-> > Possible since commit fe8abf332b8f ("usb: dwc3: support clocks and
-> > resets for DWC3 core").
-> 
-> Ok. It *seems* like I can get it working with the existing binding
-> then. There's a little funkiness with the core expecting three clocks
-> while I only have two (currently I'm duplicating the "bus_early" clk
-> for "suspend". Is there a preferred way to do this sort of hack?), and
-> I'm a little worried that only the first reset is being used (instead
-> of the 4 specified), but it seems to work so far.
+--Sig_/xJOdSTuzcipgvT99VuhdzxO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I would assume that you simply don't know how the 'suspend' clock is 
-connected rather than you don't have one. But that's maybe not a 
-problem you can fix.
+On Fri, 11 Oct 2019 17:22:14 +0200
+Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-I would make dwc3 use devm_clk_bulk_get_all and allow for less than 3 
-clocks. And do a similar change for resets.
+> On 19-10-11 17:05, Andreas Kemnade wrote:
+> > On Fri, 11 Oct 2019 09:29:27 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> >  =20
+> > > On Fri, Oct 11, 2019 at 09:41:48AM +0200, Andreas Kemnade wrote: =20
+> > > > On Fri, 11 Oct 2019 08:56:09 +0200
+> > > > Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > > >    =20
+> > > > > Hi Andreas,
+> > > > >=20
+> > > > > On 19-10-10 21:23, Andreas Kemnade wrote:   =20
+> > > > > > The Netronix board E60K02 can be found some several Ebook-Reade=
+rs,
+> > > > > > at least the Kobo Clara HD and the Tolino Shine 3. The board
+> > > > > > is equipped with different SoCs requiring different pinmuxes.
+> > > > > >=20
+> > > > > > For now the following peripherals are included:
+> > > > > > - LED
+> > > > > > - Power Key
+> > > > > > - Cover (gpio via hall sensor)
+> > > > > > - RC5T619 PMIC (the kernel misses support for rtc and charger
+> > > > > >   subdevices).
+> > > > > > - Backlight via lm3630a
+> > > > > > - Wifi sdio chip detection (mmc-powerseq and stuff)
+> > > > > >=20
+> > > > > > It is based on vendor kernel but heavily reworked due to many
+> > > > > > changed bindings.
+> > > > > >=20
+> > > > > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > > > > ---
+> > > > > > Changes in v3:
+> > > > > > - better led name
+> > > > > > - correct memory size
+> > > > > > - comments about missing devices
+> > > > > >=20
+> > > > > > Changes in v2:
+> > > > > > - reordered, was 1/3
+> > > > > > - moved pinmuxes to their actual users, not the parents
+> > > > > >   of them
+> > > > > > - removed some already-disabled stuff
+> > > > > > - minor cleanups     =20
+> > > > >=20
+> > > > > You won't change the muxing, so a this dtsi can be self contained?
+> > > > >    =20
+> > > > So you want me to put a big=20
+> > > > #if defined(MX6SLL)    =20
+> > >=20
+> > > Not sure what the comment meant, but no, don't do this. C defines in =
+dts=20
+> > > files are for symbolic names for numbers and assembling bitfields and=
+=20
+> > > that's it. =20
+> >=20
+> > yes, that is also my opinion. For now, there is only one user
+> > of this .dtsi, but I have another one in preparation. That is the
+> > reason for splitting things between .dts and .dtsi to avoid such ugly
+> > ifdefs =20
+>=20
+> Then IMHO the pnictrl-* entries shouldn't appear in the dsti.
+>=20
+hmm, maybe now I understand your idea:
+You do not want only to have
+
+  pinctrl_lm3630a_bl_gpio: lm3630a_bl_gpio_grp {
+                        fsl,pins =3D <
+                                MX6SLL_PAD_EPDC_PWR_CTRL3__GPIO2_IO10   0x1=
+0059 /* HWEN */
+                        >;
+                };
+in dts, but also  do not have these in .dtsi:
+
+                pinctrl-names =3D "default";
+                pinctrl-0 =3D <&pinctrl_lm3630a_bl_gpio>;
+
+and instead have in dts:
+&lm3630a {
+ 	pinctrl-names =3D "default";
+        pinctrl-0 =3D <&pinctrl_lm3630a_bl_gpio>;
+=09
+};
 
 
-> I still suspect the dwc3-of-simple.c method might be better since it
-> can handle arbitrary sets of clks and resets instead of the fixed 3 &
-> 1 in the dwc3.txt binding.
-> But if I can get away without having to add an extra binding here, I'd
-> be happier.
+just to make sure I get it right before doing the restructuring work. That =
+way of structuring things did not come to my mind, but then the .dtsi is se=
+lf-contained.
 
-Me too.
+Regards,
+Andreas
 
-Rob
+--Sig_/xJOdSTuzcipgvT99VuhdzxO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl2gq5oACgkQl4jFM1s/
+ye/5WQ//SImeJwq5R6t0iZb9z5B55KLp97kuzkBviRqa/bWog9G1ceHcKolOMpSj
+/KnN+y5Ila/ha3ncHAlp0dTUitcVSIVlho5boYhLlSzFRkxRnB0+xPsPOSdil1GG
+TwhIWKuhokxRH+LrMXfPVfEY+eM+jT3RqXxUml7JDqaia5PUdWPP5nRf2jLK+dee
+SXOv46TGfWVziN4bbZY05zAbcjUeE5IT4tGJpOqcm2Tfmeci6oRlvHzh+j6/y9LB
+lAto7x+/EuzrLaaY9nmQgzaKGjKLMwjRANPIIFumx6c9U6yvl4ptglSdBZRGtCTE
+rT+eGouNQOlG5uuDewl8tYCwDwdrg0wBj879xUr9DPogHeXFW7CMvEcMlTk33/56
+FSQ8kzz1hxK84qphq6iJyQjReCqb0H2hDgOxB2yV2q8bWxL0S0MRn1iFJ9RODOqW
+XCU9EILEsLjQbfjB6EHlvR7Gw6ETL1WJIP25drqpyy09pvCtixtLVfpaYWO18adP
+nOv27Ah/5rT9NW5OH9kzm1Mt2HR1KxDSuyki3vR4rFFuWRrZlwt99nppAXDbzKqj
+j6oBOqZkksVhsuw4S6J79ML2qRCbOZghcLyQnA50V9Pk7AQuIA+F85h/HF4p3xt/
+WfiBoU3pHAnnyk+Yj1YiRzl/YaOWnm+xb2EQCtPxeyI9qyiDuwk=
+=7ucO
+-----END PGP SIGNATURE-----
+
+--Sig_/xJOdSTuzcipgvT99VuhdzxO--
