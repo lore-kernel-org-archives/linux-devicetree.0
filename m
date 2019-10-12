@@ -1,94 +1,75 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] iio: light: Add support for ADUX1020 sensor
-Date: Sat, 12 Oct 2019 12:59:21 +0100
-Message-ID: <20191012125921.4cf04474@archlinux>
-References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org>
-        <20191007101027.8383-3-manivannan.sadhasivam@linaro.org>
-        <30c4a0f9aff5a40879d6839ad8a5ce40565f0923.camel@analog.com>
-        <20191009094524.GA17962@Mani-XPS-13-9360>
-        <391446566afd59da7d94e8af5c7ecd13b57e1540.camel@analog.com>
+From: Johannes Sixt <j6t@kdbg.org>
+Subject: Re: [PATCH] userdiff: Fix some corner cases in dts regex
+Date: Sat, 12 Oct 2019 14:54:00 +0200
+Message-ID: <ab9b0dba-5c5b-5a97-07c5-ce8344cd74cd@kdbg.org>
+References: <20191004213029.145027-1-sboyd@kernel.org>
+ <c3a054d9-2646-e440-40c5-b0aecf21e690@kdbg.org>
+ <20191008144306.B2B0820659@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <391446566afd59da7d94e8af5c7ecd13b57e1540.camel@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "lars@metafoo.de" <lars@metafoo.de>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Return-path: <git-owner@vger.kernel.org>
+In-Reply-To: <20191008144306.B2B0820659@mail.kernel.org>
+Content-Language: en-US
+Sender: git-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, Junio C Hamano <gitster@pobox.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 9 Oct 2019 10:21:27 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-
-> On Wed, 2019-10-09 at 15:15 +0530, Manivannan Sadhasivam wrote:
-> > [External]
-> > 
-> > Hi Ardelean,
-
-For some reason, my email client decided not to filter this thread
-correctly so I didn't realise so much discussion had gone on when
-I applied the newer version earlier today.  Oops.  Hopefully
-there was nothing major outstanding.  Let me know if there was
-as it's not yet in a non rebasing tree...
-
-I've cropped to just where my name got mentioned ;)
-
-..
-
-> >   
-> > > - Just curios here: there is gesture mode as well; will that be
-> > > implemented
-> > > later? Or will there be other modes implemented?  
-> > 
-> > Currently only proximity mode is implemented. There are gesture and
-> > sample
-> > modes and I left those as a TODO. But I'm not sure whether IIO is
-> > supporting
-> > gesture mode properly or not.  
+Am 08.10.19 um 16:43 schrieb Stephen Boyd:
+> Quoting Johannes Sixt (2019-10-05 07:09:11)
+>> Am 04.10.19 um 23:30 schrieb Stephen Boyd:
+>>> --- /dev/null
+>>> +++ b/t/t4018/dts-nodes-multiline-prop
+>>> @@ -0,0 +1,12 @@
+>>> +/ {
+>>> +     label_1: node1@ff00 {
+>>> +             RIGHT@deadf00,4000 {
+>>> +                     multilineprop = <3>,
+>>> +                                     <4>;
+>>
+>> You could insert more lines to demonstrate that "<x>," on a line by
+>> itself is not picked up.
 > 
-> I don't have any input on this at the moment [about gesture support & IIO].
-> I'd have to investigate.
-> Maybe Jonathan has some thoughts.
+> Maybe I should add another test?
 
-Properly is a hard term for gesture support.  The issue has always
-been that every device does it slightly differently.  There are
-way too many types of gesture that a device 'might' use.
+This is is the _multi_line test case, right? ;) Just add one or two
+lines between the <3> and the <4> that look like common real-world cases
+to show that those lines won't be picked up. I don't think that another
+test file is required.
 
-We do have some drivers (IIRC) doing some gesture sensing, but you may
-well find places where things need to expand!
-
-...
-> > > > +static int adux1020_read_raw(struct iio_dev *indio_dev,
-> > > > +			     struct iio_chan_spec const *chan,
-> > > > +			     int *val, int *val2, long mask)
-> > > > +{
-> > > > +	struct adux1020_data *data = iio_priv(indio_dev);
-> > > > +	u16 buf[3];  
-> > > 
-> > > This buffer looks a bit weird. [8]
-> > > It's 3 elements-wide and passed without any information about size.
-> > > And only the first element is used.
-> > > So, maybe just convert u16 buf[3] -> u16 buf?
-> > >   
-> > 
-> > The buffer declaration is based on the hardware buffer available. It
-> > is 3 elements wide since the remaining 2 elements will be used by other
-> > modes. The idea here is to reuse the adux1020_measure() API for all 3
-> > modes (which has varying buffer sizes).  
+>>> +/ { RIGHT /* Technically just supposed to be a slash and brace */
+>>
+>> Devil's advocate here: insert ';' or '=' in the comment, and the line
+>> would not be picked up. Does that hurt in practice?
 > 
-> The only thought I have left about this buffer [and forgot to mention it
-> earlier], is whether this should be cacheline aligned [or not].
-> If it has to be, then maybe it shouldn't be stored on the stack and moved
-> to a malloc-ed buffer [on "struct adux1020_data"].
-> Cacheline aligned stuff typically deals with potential DMA issues. The DMA
-> issues [in this case] could be coming from i2c controllers that can do DMA.
-> 
-> Jonathan may have more input here.
-> 
-The i2c subsystem in general doesn't assume that buffers are dma safe
-though it would like to ;)
+> I don't think it hurts in practice so I'd like to ignore it.
 
-Wolfram did a good presentation on his efforts to sort that out at
-ELCE 2018
+Sure, no problem.
 
-https://www.youtube.com/watch?v=JDwaMClvV-s
+>>>  PATTERNS("dts",
+>>>        "!;\n"
+>>> +      "!.*=.*\n"
+>>
+>> This behaves the same way as just
+>>
+>>         "!=\n"
+>>
+>> no?
+>>
+> 
+> Not exactly. Properties don't always get assigned.
+
+I was just refering to the added line, not the combination of the two lines.
+
+But while you are speaking of it:
+
+> There are boolean
+> properties that can be tested for by the presence of some string with an
+> ending semi-colon, like 'this-is-true;'. If we just check for not equal
+> to a line with a semicolon and newline then we'll see boolean
+> properties. Should I add that as another test?
+
+I agree that a test case with a Boolean property would be great.
+
+-- Hannes
