@@ -1,29 +1,32 @@
-From: =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-Subject: [PATCH 0/1] arm64: tegra: enable SDIO on Jetson Nano M.2 Key E
-Date: Sat, 12 Oct 2019 09:52:12 +0200
-Message-ID: <20191012075213.4880-1-tszucs@protonmail.ch>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 0/2] pinctrl: rockchip: support rk3308 SoC
+Date: Sat, 12 Oct 2019 10:58:36 +0200
+Message-ID: <11066785.VItf2zBqlU@diego>
+References: <20191012061528.27821-1-jay.xu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191012061528.27821-1-jay.xu@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jianqun Xu <jay.xu@rock-chips.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+Am Samstag, 12. Oktober 2019, 08:15:26 CEST schrieb Jianqun Xu:
+> Add support for rk3308 SoC from rockchip.
+> 
+> Jianqun Xu (2):
+>   dt-bindings: pinctrl: rockchip: add rk3308 SoC support
+>   pinctrl: rockchip: add rk3308 SoC support
 
-Changes here have been tested with various u-blox SDIO Wi-Fi modules.
-It would be great to have support upstream.
-
-Kind regards,
-Tamas
-
-Tamás Szűcs (1):
-  arm64: tegra: enable SDIO on Jetson Nano M.2 Key E
-
- arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
--- 
-2.20.1
+both patches
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
