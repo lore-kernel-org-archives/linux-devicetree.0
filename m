@@ -1,34 +1,43 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 1/2] Serial: Ingenic: Add support for the X1000.
-Date: Sat, 12 Oct 2019 09:35:31 +0200
-Message-ID: <20191012073531.GA2036970@kroah.com>
-References: <1548667176-119830-1-git-send-email-zhouyanjie@zoho.com>
- <1548695029-11900-1-git-send-email-zhouyanjie@zoho.com>
- <1548695029-11900-2-git-send-email-zhouyanjie@zoho.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
+Date: Sat, 12 Oct 2019 10:39:54 +0300
+Message-ID: <CAHp75VeBrR0Ln5XOw5zA+JSoXM9BdoYw7p9D5c7u+2=Lfht75w@mail.gmail.com>
+References: <20191012035420.13904-1-dan@dlrobertson.com> <20191012035420.13904-3-dan@dlrobertson.com>
+ <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548695029-11900-2-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhou Yanjie <zhouyanjie@zoho.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, paul.burton@mips.com, mark.rutland@arm.com, syq@debian.org, ulf.hansson@linaro.org, linus.walleij@linaro.org, armijn@tjaldur.nl, tglx@linutronix.de, yuehaibing@huawei.com, malat@debian.org, ezequiel@collabora.com, paul@crapouillou.net, linux-serial@vger.kernel.org, jslaby@suse.com, jiaxun.yang@flygoat.com, 772753199@qq.com
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Dan Robertson <dan@dlrobertson.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio <linux-iio@vger.kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 01:13:23PM +0800, Zhou Yanjie wrote:
-> Add support for probing the 8250_ingenic driver on the
-> X1000 Soc from Ingenic.
-> 
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->  drivers/tty/serial/8250/8250_ingenic.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
+On Sat, Oct 12, 2019 at 10:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 10/11/19 8:54 PM, Dan Robertson wrote:
 
-<snip>
+> > +config BMA400_I2C
+> > +     tristate
+> > +     depends on BMA400
+> > +     depends on I2C
+> > +     select REGMAP_I2C
+> > +
+>
+> The bma400_i2c driver seems to use some OF interfaces.
+> Should it also depend on OF?
 
-you seem to have two patches merged into one here, please fix up and
-resend.
+Please, avoid unnecessary and strict dependencies when it's limiting
+the area of use the driver.
+The driver does not depend to OF. Why to stick with OF?
 
-thanks,
+The actual change has to be done is to switch from
 
-greg k-h
+> #include <linux/of.h>
+
+to
+
+#include <linux/mod_devicetable.h>
+
+-- 
+With Best Regards,
+Andy Shevchenko
