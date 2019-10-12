@@ -1,26 +1,26 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 3/8] iio: adc: max1027: Reset the device at probe
- time
-Date: Sat, 12 Oct 2019 12:28:10 +0100
-Message-ID: <20191012122810.5330fd7f@archlinux>
+Subject: Re: [PATCH v4 5/8] iio: adc: max1027: Introduce 12-bit devices
+ support
+Date: Sat, 12 Oct 2019 12:30:40 +0100
+Message-ID: <20191012123040.41e22379@archlinux>
 References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
-        <20191011144347.19146-4-miquel.raynal@bootlin.com>
+        <20191011144347.19146-6-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011144347.19146-4-miquel.raynal@bootlin.com>
+In-Reply-To: <20191011144347.19146-6-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Oct 2019 16:43:42 +0200
+On Fri, 11 Oct 2019 16:43:44 +0200
 Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> All the registers are configured by the driver, let's reset the chip
-> at probe time, avoiding any conflict with a possible earlier
-> configuration.
+> Maxim's max12xx series is very similar to the max10xx series, with the
+> difference of the measurements depth which is upgraded from 10 to 12
+> bits per channel. Everything else looks the same.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Applied.
@@ -30,25 +30,103 @@ Thanks,
 Jonathan
 
 > ---
->  drivers/iio/adc/max1027.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/iio/adc/Kconfig   |  4 ++--
+>  drivers/iio/adc/max1027.c | 38 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 39 insertions(+), 3 deletions(-)
 > 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index f0af3a42f53c..6ac16d738822 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -508,8 +508,8 @@ config MAX1027
+>  	select IIO_BUFFER
+>  	select IIO_TRIGGERED_BUFFER
+>  	help
+> -	  Say yes here to build support for Maxim SPI ADC models
+> -	  max1027, max1029 and max1031.
+> +	  Say yes here to build support for Maxim SPI {10,12}-bit ADC models:
+> +	  max1027, max1029, max1031, max1227, max1229 and max1231.
+>  
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called max1027.
 > diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-> index 823223b77a70..f9b473ee6711 100644
+> index 8b449044bef5..e171db20c04a 100644
 > --- a/drivers/iio/adc/max1027.c
 > +++ b/drivers/iio/adc/max1027.c
-> @@ -466,6 +466,14 @@ static int max1027_probe(struct spi_device *spi)
->  		}
->  	}
+> @@ -63,12 +63,18 @@ enum max1027_id {
+>  	max1027,
+>  	max1029,
+>  	max1031,
+> +	max1227,
+> +	max1229,
+> +	max1231,
+>  };
 >  
-> +	/* Internal reset */
-> +	st->reg = MAX1027_RST_REG;
-> +	ret = spi_write(st->spi, &st->reg, 1);
-> +	if (ret < 0) {
-> +		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
-> +		return ret;
-> +	}
+>  static const struct spi_device_id max1027_id[] = {
+>  	{"max1027", max1027},
+>  	{"max1029", max1029},
+>  	{"max1031", max1031},
+> +	{"max1227", max1227},
+> +	{"max1229", max1229},
+> +	{"max1231", max1231},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(spi, max1027_id);
+> @@ -78,6 +84,9 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
+>  	{ .compatible = "maxim,max1027" },
+>  	{ .compatible = "maxim,max1029" },
+>  	{ .compatible = "maxim,max1031" },
+> +	{ .compatible = "maxim,max1227" },
+> +	{ .compatible = "maxim,max1229" },
+> +	{ .compatible = "maxim,max1231" },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
+> @@ -153,6 +162,18 @@ static const struct iio_chan_spec max1031_channels[] = {
+>  	MAX1X31_CHANNELS(10),
+>  };
+>  
+> +static const struct iio_chan_spec max1227_channels[] = {
+> +	MAX1X27_CHANNELS(12),
+> +};
 > +
->  	/* Disable averaging */
->  	st->reg = MAX1027_AVG_REG;
->  	ret = spi_write(st->spi, &st->reg, 1);
+> +static const struct iio_chan_spec max1229_channels[] = {
+> +	MAX1X29_CHANNELS(12),
+> +};
+> +
+> +static const struct iio_chan_spec max1231_channels[] = {
+> +	MAX1X31_CHANNELS(12),
+> +};
+> +
+>  static const unsigned long max1027_available_scan_masks[] = {
+>  	0x000001ff,
+>  	0x00000000,
+> @@ -190,6 +211,21 @@ static const struct max1027_chip_info max1027_chip_info_tbl[] = {
+>  		.num_channels = ARRAY_SIZE(max1031_channels),
+>  		.available_scan_masks = max1031_available_scan_masks,
+>  	},
+> +	[max1227] = {
+> +		.channels = max1227_channels,
+> +		.num_channels = ARRAY_SIZE(max1227_channels),
+> +		.available_scan_masks = max1027_available_scan_masks,
+> +	},
+> +	[max1229] = {
+> +		.channels = max1229_channels,
+> +		.num_channels = ARRAY_SIZE(max1229_channels),
+> +		.available_scan_masks = max1029_available_scan_masks,
+> +	},
+> +	[max1231] = {
+> +		.channels = max1231_channels,
+> +		.num_channels = ARRAY_SIZE(max1231_channels),
+> +		.available_scan_masks = max1031_available_scan_masks,
+> +	},
+>  };
+>  
+>  struct max1027_state {
+> @@ -486,5 +522,5 @@ static struct spi_driver max1027_driver = {
+>  module_spi_driver(max1027_driver);
+>  
+>  MODULE_AUTHOR("Philippe Reynes <tremyfr@yahoo.fr>");
+> -MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
+> +MODULE_DESCRIPTION("MAX1X27/MAX1X29/MAX1X31 ADC");
+>  MODULE_LICENSE("GPL v2");
