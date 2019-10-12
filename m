@@ -1,33 +1,33 @@
 From: Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 0/2] pinctrl: rockchip: support rk3308 SoC
-Date: Sat, 12 Oct 2019 14:15:26 +0800
-Message-ID: <20191012061528.27821-1-jay.xu@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 1/2] dt-bindings: pinctrl: rockchip: add rk3308 SoC support
+Date: Sat, 12 Oct 2019 14:15:27 +0800
+Message-ID: <20191012061528.27821-2-jay.xu@rock-chips.com>
+References: <20191012061528.27821-1-jay.xu@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191012061528.27821-1-jay.xu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: Jianqun Xu <jay.xu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for rk3308 SoC from rockchip.
+Add rk3308 SoC support to rockchip pinctrl.
 
-Jianqun Xu (2):
-  dt-bindings: pinctrl: rockchip: add rk3308 SoC support
-  pinctrl: rockchip: add rk3308 SoC support
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+---
+ Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../bindings/pinctrl/rockchip,pinctrl.txt     |   1 +
- drivers/pinctrl/pinctrl-rockchip.c            | 377 ++++++++++++++++++
- 2 files changed, 378 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+index 0919db294c17..2113cfaa26e6 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+@@ -29,6 +29,7 @@ Required properties for iomux controller:
+ 		"rockchip,rk3188-pinctrl":  for Rockchip RK3188
+ 		"rockchip,rk3228-pinctrl":  for Rockchip RK3228
+ 		"rockchip,rk3288-pinctrl":  for Rockchip RK3288
++		"rockchip,rk3308-pinctrl":  for Rockchip RK3308
+ 		"rockchip,rk3328-pinctrl":  for Rockchip RK3328
+ 		"rockchip,rk3368-pinctrl":  for Rockchip RK3368
+ 		"rockchip,rk3399-pinctrl":  for Rockchip RK3399
 -- 
 2.17.1
