@@ -1,34 +1,35 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH 0/2] iommu/arm-smmu: Add an optional "input-address-size"
- property
-Date: Fri, 11 Oct 2019 16:55:25 -0700
-Message-ID: <20191011235524.GA20683@Asurada-Nvidia.nvidia.com>
-References: <20191011034609.13319-1-nicoleotsuka@gmail.com>
- <e99e07c2-88c6-e4d8-af80-c46d36bc6cd0@arm.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED
+ MACs
+Date: Fri, 11 Oct 2019 20:38:12 -0700 (PDT)
+Message-ID: <20191011.203812.1828730130029996774.davem@davemloft.net>
+References: <20191010020756.4198-1-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e99e07c2-88c6-e4d8-af80-c46d36bc6cd0@arm.com>
+In-Reply-To: <20191010020756.4198-1-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, will@kernel.org, vdumpa@nvidia.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: andrew@aj.id.au
+Cc: netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 10:16:28AM +0100, Robin Murphy wrote:
-> On 2019-10-11 4:46 am, Nicolin Chen wrote:
-> > This series of patches add an optional DT property to allow an SoC to
-> > specify how many bits being physically connected to its SMMU instance,
-> > depending on the SoC design.
-> 
-> This has come up before, and it doesn't work in general because a single
-> SMMU instance can have many master interfaces, with potentially different
-> sizes of address bus wired up to each. It's also a conceptually-wrong
-> approach anyway, since this isn't a property of the SMMU; it's a property of
-> the interconnect(s) upstream of the SMMU.
-> 
-> IIRC you were working on Tegra - if so, Thierry already has a plan, see this
-> thread:
-> https://lore.kernel.org/linux-arm-kernel/20190930133510.GA1904140@ulmo/
+From: Andrew Jeffery <andrew@aj.id.au>
+Date: Thu, 10 Oct 2019 12:37:53 +1030
 
-Thanks for the reply and link!
+> This series slightly extends the devicetree binding and driver for the
+> FTGMAC100 to describe an optional RMII RCLK gate in the clocks property.
+> Currently it's necessary for the kernel to ungate RCLK on the AST2600 in NCSI
+> configurations as u-boot does not yet support NCSI (which uses the
+> R(educed)MII).
+> 
+> v2:
+> * Clear up Reduced vs Reversed MII in the cover letter
+> * Mitigate anxiety in the commit message for 1/3 
+> * Clarify that AST2500 is also affected in the clocks property description in
+>   2/3
+> * Rework the error paths and update some comments in 3/3
+> 
+> v1 can be found here: https://lore.kernel.org/netdev/20191008115143.14149-1-andrew@aj.id.au/
+
+Series applied to net-next, thank you.
