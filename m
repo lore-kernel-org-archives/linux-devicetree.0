@@ -1,43 +1,45 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
-Date: Sat, 12 Oct 2019 10:39:54 +0300
-Message-ID: <CAHp75VeBrR0Ln5XOw5zA+JSoXM9BdoYw7p9D5c7u+2=Lfht75w@mail.gmail.com>
-References: <20191012035420.13904-1-dan@dlrobertson.com> <20191012035420.13904-3-dan@dlrobertson.com>
- <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
+From: =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
+Subject: [PATCH 1/1] arm64: tegra: enable SDIO on Jetson Nano M.2 Key E
+Date: Sat, 12 Oct 2019 09:52:13 +0200
+Message-ID: <20191012075213.4880-2-tszucs@protonmail.ch>
+References: <20191012075213.4880-1-tszucs@protonmail.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
+In-Reply-To: <20191012075213.4880-1-tszucs@protonmail.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dan Robertson <dan@dlrobertson.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio <linux-iio@vger.kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 10:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 10/11/19 8:54 PM, Dan Robertson wrote:
+Enable SDMMC3 and set it up for SDIO devices.
 
-> > +config BMA400_I2C
-> > +     tristate
-> > +     depends on BMA400
-> > +     depends on I2C
-> > +     select REGMAP_I2C
-> > +
->
-> The bma400_i2c driver seems to use some OF interfaces.
-> Should it also depend on OF?
+Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Please, avoid unnecessary and strict dependencies when it's limiting
-the area of use the driver.
-The driver does not depend to OF. Why to stick with OF?
-
-The actual change has to be done is to switch from
-
-> #include <linux/of.h>
-
-to
-
-#include <linux/mod_devicetable.h>
-
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+index 9d17ec707bce..66f913ba0b1c 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+@@ -515,6 +515,16 @@
+ 		vmmc-supply = <&vdd_3v3_sd>;
+ 	};
+ 
++	sdhci@700b0400 {
++		status = "okay";
++		bus-width = <4>;
++		cap-sdio-irq;
++		non-removable;
++
++		vqmmc-supply = <&vdd_1v8>;
++		vmmc-supply = <&vdd_3v3_sys>;
++	};
++
+ 	clocks {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
