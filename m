@@ -1,59 +1,62 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
-Date: Sat, 12 Oct 2019 10:29:17 +0100
-Message-ID: <20191012102917.7e85275f@archlinux>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: accel: bma400: add bindings
+Date: Sat, 12 Oct 2019 10:31:07 +0100
+Message-ID: <20191012103107.61eeb350@archlinux>
 References: <20191012035420.13904-1-dan@dlrobertson.com>
-        <20191012035420.13904-3-dan@dlrobertson.com>
-        <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
-        <CAHp75VeBrR0Ln5XOw5zA+JSoXM9BdoYw7p9D5c7u+2=Lfht75w@mail.gmail.com>
+        <20191012035420.13904-2-dan@dlrobertson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeBrR0Ln5XOw5zA+JSoXM9BdoYw7p9D5c7u+2=Lfht75w@mail.gmail.com>
+In-Reply-To: <20191012035420.13904-2-dan@dlrobertson.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Dan Robertson <dan@dlrobertson.com>, linux-iio <linux-iio@vger.kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Dan Robertson <dan@dlrobertson.com>
+Cc: linux-iio@vger.kernel.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 12 Oct 2019 10:39:54 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Sat, 12 Oct 2019 03:54:19 +0000
+Dan Robertson <dan@dlrobertson.com> wrote:
 
-> On Sat, Oct 12, 2019 at 10:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> > On 10/11/19 8:54 PM, Dan Robertson wrote:  
+> Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
+> accelerometer sensor.
 > 
-> > > +config BMA400_I2C
-> > > +     tristate
-> > > +     depends on BMA400
-> > > +     depends on I2C
-> > > +     select REGMAP_I2C
-> > > +  
-> >
-> > The bma400_i2c driver seems to use some OF interfaces.
-> > Should it also depend on OF?  
-> 
-> Please, avoid unnecessary and strict dependencies when it's limiting
-> the area of use the driver.
-> The driver does not depend to OF. Why to stick with OF?
-> 
-> The actual change has to be done is to switch from
-> 
-> > #include <linux/of.h>  
-> 
-> to
-> 
-> #include <linux/mod_devicetable.h>
-> 
+> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+Hi Dan,
 
-Good point Andy.  There are numerous drivers in IIO that do the same
-over enthusiastic including of linux/of.h just to get of_device_id
-definition.  Would be good to clean those up to just include this
-instead.
+Apologies for not pointing this out in V1 but all new IIO bindings need
+to be in the yaml format rather than plain text.
 
-This is going to cause very little noise so if there are any new
-contributors reading this it would be a nice sensible cleanup to get
-started with!
-
-Thanks,
+Please convert this one over for v3.  Content wise it's fine btw!
 
 Jonathan
+
+
+> ---
+>  .../devicetree/bindings/iio/accel/bma400.txt     | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bma400.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bma400.txt b/Documentation/devicetree/bindings/iio/accel/bma400.txt
+> new file mode 100644
+> index 000000000000..abba4f104941
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/bma400.txt
+> @@ -0,0 +1,16 @@
+> +
+> +* Bosch BMA400 triaxial acceleration sensor
+> +
+> +https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMA400-DS000.pdf
+> +
+> +Required properties:
+> +
+> +  - compatible : should be "bosch,bma400"
+> +  - reg : the I2C address of the sensor
+> +
+> +Example:
+> +
+> +bma400@14 {
+> +	compatible = "bosch,bma400";
+> +	reg = <0x14>;
+> +};
+> 
+> 
