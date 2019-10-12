@@ -1,58 +1,107 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 1/8] iio: adc: max1027: Add debugfs register read
- support
-Date: Sat, 12 Oct 2019 12:25:25 +0100
-Message-ID: <20191012122525.181fe29f@archlinux>
+Subject: Re: [PATCH v4 2/8] iio: adc: max1027: Make it optional to use
+ interrupts
+Date: Sat, 12 Oct 2019 12:34:55 +0100
+Message-ID: <20191012123455.7317c298@archlinux>
 References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
-        <20191011144347.19146-2-miquel.raynal@bootlin.com>
+        <20191011144347.19146-3-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011144347.19146-2-miquel.raynal@bootlin.com>
+In-Reply-To: <20191011144347.19146-3-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Oct 2019 16:43:40 +0200
+On Fri, 11 Oct 2019 16:43:41 +0200
 Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> Until now, only write operations were supported. Force two bytes read
-> operation when reading, which should fit most of the development
-> purposes. Of course, extended operations like buffered reads on
-> multiple channels or even temperature + voltage reads will not be read
-> entirely. Usually, just starting a new operation will work but in any
-> case a software reset (done through the debufs interface too) will
-> return the device in a usable state.
+> The chip has a 'start conversion' and a 'end of conversion' pair of
+> pins. They can be used but this is absolutely not mandatory as regular
+> polling of the value is totally fine with the current internal
+> clocking setup. Turn the interrupts optional and do not error out if
+> they are not inquired in the device tree. This has the effect to
+> prevent triggered buffers use though.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+Applied.
 
-thanks,
-
-Jonathan
+Thanks,
 
 > ---
->  drivers/iio/adc/max1027.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  drivers/iio/adc/max1027.c | 57 +++++++++++++++++++++------------------
+>  1 file changed, 31 insertions(+), 26 deletions(-)
 > 
 > diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-> index 214883458582..6cdfe9ef73fc 100644
+> index 6cdfe9ef73fc..823223b77a70 100644
 > --- a/drivers/iio/adc/max1027.c
 > +++ b/drivers/iio/adc/max1027.c
-> @@ -309,8 +309,11 @@ static int max1027_debugfs_reg_access(struct iio_dev *indio_dev,
->  	struct max1027_state *st = iio_priv(indio_dev);
->  	u8 *val = (u8 *)st->buffer;
+> @@ -430,35 +430,40 @@ static int max1027_probe(struct spi_device *spi)
+>  		return -ENOMEM;
+>  	}
 >  
-> -	if (readval != NULL)
-> -		return -EINVAL;
-> +	if (readval) {
-> +		int ret = spi_read(st->spi, val, 2);
-> +		*readval = be16_to_cpu(st->buffer[0]);
-> +		return ret;
-> +	}
+> -	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+> -					&iio_pollfunc_store_time,
+> -					&max1027_trigger_handler, NULL);
+> -	if (ret < 0) {
+> -		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+> -		return ret;
+> -	}
+> +	if (spi->irq) {
+> +		ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+> +						      &iio_pollfunc_store_time,
+> +						      &max1027_trigger_handler,
+> +						      NULL);
+> +		if (ret < 0) {
+> +			dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+> +			return ret;
+> +		}
 >  
->  	*val = (u8)writeval;
->  	return spi_write(st->spi, val, 1);
+> -	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
+> -							indio_dev->name);
+> -	if (st->trig == NULL) {
+> -		ret = -ENOMEM;
+> -		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
+> -		return ret;
+> -	}
+> +		st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
+> +						  indio_dev->name);
+> +		if (st->trig == NULL) {
+> +			ret = -ENOMEM;
+> +			dev_err(&indio_dev->dev,
+> +				"Failed to allocate iio trigger\n");
+> +			return ret;
+> +		}
+>  
+> -	st->trig->ops = &max1027_trigger_ops;
+> -	st->trig->dev.parent = &spi->dev;
+> -	iio_trigger_set_drvdata(st->trig, indio_dev);
+> -	iio_trigger_register(st->trig);
+> +		st->trig->ops = &max1027_trigger_ops;
+> +		st->trig->dev.parent = &spi->dev;
+> +		iio_trigger_set_drvdata(st->trig, indio_dev);
+> +		iio_trigger_register(st->trig);
+>  
+> -	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
+> -					iio_trigger_generic_data_rdy_poll,
+> -					NULL,
+> -					IRQF_TRIGGER_FALLING,
+> -					spi->dev.driver->name, st->trig);
+> -	if (ret < 0) {
+> -		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+> -		return ret;
+> +		ret = devm_request_threaded_irq(&spi->dev, spi->irq,
+> +						iio_trigger_generic_data_rdy_poll,
+> +						NULL,
+> +						IRQF_TRIGGER_FALLING,
+> +						spi->dev.driver->name,
+> +						st->trig);
+> +		if (ret < 0) {
+> +			dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	/* Disable averaging */
