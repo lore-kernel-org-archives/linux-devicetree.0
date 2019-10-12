@@ -1,69 +1,54 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v2 2/2] interconnect: qcom: add msm8974 driver
-Date: Sat, 12 Oct 2019 07:00:44 -0400
-Message-ID: <20191012110044.GA19009@onstation.org>
-References: <20191005114605.5279-1-masneyb@onstation.org>
- <20191005114605.5279-3-masneyb@onstation.org>
- <20191011170506.GD571@minitux>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 3/8] iio: adc: max1027: Reset the device at probe
+ time
+Date: Sat, 12 Oct 2019 12:28:10 +0100
+Message-ID: <20191012122810.5330fd7f@archlinux>
+References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
+        <20191011144347.19146-4-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191011170506.GD571@minitux>
+In-Reply-To: <20191011144347.19146-4-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: georgi.djakov@linaro.org, robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonathan@marek.ca
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 10:05:06AM -0700, Bjorn Andersson wrote:
-> On Sat 05 Oct 04:46 PDT 2019, Brian Masney wrote:
-> > diff --git a/drivers/interconnect/qcom/msm8974.c b/drivers/interconnect/qcom/msm8974.c
-> [..]
-> > +static void msm8974_icc_rpm_smd_send(struct device *dev, int rsc_type,
-> > +				     char *name, int id, u64 val)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (id == -1)
-> > +		return;
-> > +
-> > +	/*
-> > +	 * Setting the bandwidth requests for some nodes fails and this same
-> > +	 * behavior occurs on the downstream MSM 3.4 kernel sources based on
-> > +	 * errors like this in that kernel:
-> > +	 *
-> > +	 *   msm_rpm_get_error_from_ack(): RPM NACK Unsupported resource
-> > +	 *   AXI: msm_bus_rpm_req(): RPM: Ack failed
-> > +	 *   AXI: msm_bus_rpm_commit_arb(): RPM: Req fail: mas:32, bw:240000000
-> > +	 *
-> > +	 * Since there's no publicly available documentation for this hardware,
-> > +	 * and the bandwidth for some nodes in the path can be set properly,
-> > +	 * let's not return an error.
-> > +	 */
+On Fri, 11 Oct 2019 16:43:42 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+
+> All the registers are configured by the driver, let's reset the chip
+> at probe time, avoiding any conflict with a possible earlier
+> configuration.
 > 
-> So presumably all that matters for paths including these endpoints is
-> the clk_set_rate() on the bus itself.
-
-That's the case for the GPU at the very least.
-
-> But I prefer that we merge it like you propose and then swing back to
-> work out the details.
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Applied.
 
 Thanks,
 
-Brian
+Jonathan
 
-
+> ---
+>  drivers/iio/adc/max1027.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> > +	ret = qcom_icc_rpm_smd_send(QCOM_SMD_RPM_ACTIVE_STATE, rsc_type, id,
-> > +				    val);
-> > +	if (ret)
-> > +		dev_dbg(dev, "Cannot set bandwidth for node %s (%d): %d\n",
-> > +			name, id, ret);
-> > +}
-> > +
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Regards,
-> Bjorn
+> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+> index 823223b77a70..f9b473ee6711 100644
+> --- a/drivers/iio/adc/max1027.c
+> +++ b/drivers/iio/adc/max1027.c
+> @@ -466,6 +466,14 @@ static int max1027_probe(struct spi_device *spi)
+>  		}
+>  	}
+>  
+> +	/* Internal reset */
+> +	st->reg = MAX1027_RST_REG;
+> +	ret = spi_write(st->spi, &st->reg, 1);
+> +	if (ret < 0) {
+> +		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
+> +		return ret;
+> +	}
+> +
+>  	/* Disable averaging */
+>  	st->reg = MAX1027_AVG_REG;
+>  	ret = spi_write(st->spi, &st->reg, 1);
