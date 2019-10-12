@@ -1,13 +1,13 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 08/11] ARM64: dts: allwinner: sun50i: Add
- Crypto Engine node on H6
-Date: Sat, 12 Oct 2019 20:48:49 +0200
-Message-ID: <20191012184852.28329-9-clabbe.montjoie@gmail.com>
+Subject: [PATCH v4 06/11] ARM64: dts: allwinner: sun50i: Add
+ Crypto Engine node on A64
+Date: Sat, 12 Oct 2019 20:48:47 +0200
+Message-ID: <20191012184852.28329-7-clabbe.montjoie@gmail.com>
 References: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBJGARDWQKGQEUL5FILY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBIOARDWQKGQE2L352RA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20191012184852.28329-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,33 +22,34 @@ List-Id: devicetree@vger.kernel.org
 
 The Crypto Engine is a hardware cryptographic accelerator that supports
 many algorithms.
+It could be found on most Allwinner SoCs.
 
-This patch enables the Crypto Engine on the Allwinner H6 SoC Device-tree.
+This patch enables the Crypto Engine on the Allwinner A64 SoC Device-tree.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
  1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 5d7ab540b950..89d09b441abc 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -149,6 +149,15 @@
- 			allwinner,sram = <&ve_sram 1>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 70f4cce6be43..0287d8458675 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -478,6 +478,15 @@
+ 			reg = <0x1c14000 0x400>;
  		};
  
-+		crypto: crypto@1904000 {
-+			compatible = "allwinner,sun50i-h6-crypto";
-+			reg = <0x01904000 0x1000>;
-+			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>, <&ccu CLK_MBUS_CE>;
-+			clock-names = "bus", "mod", "ram";
++		crypto: crypto@1c15000 {
++			compatible = "allwinner,sun50i-a64-crypto";
++			reg = <0x01c15000 0x1000>;
++			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
++			clock-names = "bus", "mod";
 +			resets = <&ccu RST_BUS_CE>;
 +		};
 +
- 		syscon: syscon@3000000 {
- 			compatible = "allwinner,sun50i-h6-system-control",
- 				     "allwinner,sun50i-a64-system-control";
+ 		usb_otg: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-a33-musb";
+ 			reg = <0x01c19000 0x0400>;
 -- 
 2.21.0
