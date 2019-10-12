@@ -1,32 +1,59 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 0/2] pinctrl: rockchip: support rk3308 SoC
-Date: Sat, 12 Oct 2019 10:58:36 +0200
-Message-ID: <11066785.VItf2zBqlU@diego>
-References: <20191012061528.27821-1-jay.xu@rock-chips.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
+Date: Sat, 12 Oct 2019 10:29:17 +0100
+Message-ID: <20191012102917.7e85275f@archlinux>
+References: <20191012035420.13904-1-dan@dlrobertson.com>
+        <20191012035420.13904-3-dan@dlrobertson.com>
+        <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
+        <CAHp75VeBrR0Ln5XOw5zA+JSoXM9BdoYw7p9D5c7u+2=Lfht75w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191012061528.27821-1-jay.xu@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jianqun Xu <jay.xu@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VeBrR0Ln5XOw5zA+JSoXM9BdoYw7p9D5c7u+2=Lfht75w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Dan Robertson <dan@dlrobertson.com>, linux-iio <linux-iio@vger.kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 12. Oktober 2019, 08:15:26 CEST schrieb Jianqun Xu:
-> Add support for rk3308 SoC from rockchip.
-> 
-> Jianqun Xu (2):
->   dt-bindings: pinctrl: rockchip: add rk3308 SoC support
->   pinctrl: rockchip: add rk3308 SoC support
+On Sat, 12 Oct 2019 10:39:54 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-both patches
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> On Sat, Oct 12, 2019 at 10:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> > On 10/11/19 8:54 PM, Dan Robertson wrote:  
+> 
+> > > +config BMA400_I2C
+> > > +     tristate
+> > > +     depends on BMA400
+> > > +     depends on I2C
+> > > +     select REGMAP_I2C
+> > > +  
+> >
+> > The bma400_i2c driver seems to use some OF interfaces.
+> > Should it also depend on OF?  
+> 
+> Please, avoid unnecessary and strict dependencies when it's limiting
+> the area of use the driver.
+> The driver does not depend to OF. Why to stick with OF?
+> 
+> The actual change has to be done is to switch from
+> 
+> > #include <linux/of.h>  
+> 
+> to
+> 
+> #include <linux/mod_devicetable.h>
+> 
+
+Good point Andy.  There are numerous drivers in IIO that do the same
+over enthusiastic including of linux/of.h just to get of_device_id
+definition.  Would be good to clean those up to just include this
+instead.
+
+This is going to cause very little noise so if there are any new
+contributors reading this it would be a nice sensible cleanup to get
+started with!
+
+Thanks,
+
+Jonathan
