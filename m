@@ -1,75 +1,49 @@
-From: Johannes Sixt <j6t@kdbg.org>
-Subject: Re: [PATCH] userdiff: Fix some corner cases in dts regex
-Date: Sat, 12 Oct 2019 14:54:00 +0200
-Message-ID: <ab9b0dba-5c5b-5a97-07c5-ce8344cd74cd@kdbg.org>
-References: <20191004213029.145027-1-sboyd@kernel.org>
- <c3a054d9-2646-e440-40c5-b0aecf21e690@kdbg.org>
- <20191008144306.B2B0820659@mail.kernel.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: iio: maxbotix,mb1232.yaml: transform to
+ yaml
+Date: Sat, 12 Oct 2019 14:23:18 +0100
+Message-ID: <20191012142318.03057c61@archlinux>
+References: <20191007170219.xfipsry5nk4raiem@arbad>
+        <20191010205328.GA19956@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <git-owner@vger.kernel.org>
-In-Reply-To: <20191008144306.B2B0820659@mail.kernel.org>
-Content-Language: en-US
-Sender: git-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, Junio C Hamano <gitster@pobox.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191010205328.GA19956@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andreas Klinger <ak@it-klinger.de>, robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 08.10.19 um 16:43 schrieb Stephen Boyd:
-> Quoting Johannes Sixt (2019-10-05 07:09:11)
->> Am 04.10.19 um 23:30 schrieb Stephen Boyd:
->>> --- /dev/null
->>> +++ b/t/t4018/dts-nodes-multiline-prop
->>> @@ -0,0 +1,12 @@
->>> +/ {
->>> +     label_1: node1@ff00 {
->>> +             RIGHT@deadf00,4000 {
->>> +                     multilineprop = <3>,
->>> +                                     <4>;
->>
->> You could insert more lines to demonstrate that "<x>," on a line by
->> itself is not picked up.
+On Thu, 10 Oct 2019 15:53:28 -0500
+Rob Herring <robh@kernel.org> wrote:
+
+> On Mon, 7 Oct 2019 19:02:20 +0200, Andreas Klinger wrote:
+> > transform existing documentation of maxbotix,mb1232 ultrasonic ranger
+> > from text documentation format into yaml.
+> > 
+> > Changes in v3:
+> > - add a i2c node around device node to set up #address-cells and
+> >   #size-cells for omitting error during make dt_binding_check
+> > 
+> > Changes in v2:
+> > - removed description of reg property
+> > - added a line:
+> >   additionalProperties: false
+> > 
+> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> > ---
+> >  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
+> >  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 60 ++++++++++++++++++++++
+> >  2 files changed, 60 insertions(+), 29 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+> >   
 > 
-> Maybe I should add another test?
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for the 
+autobuilders to play with it.
 
-This is is the _multi_line test case, right? ;) Just add one or two
-lines between the <3> and the <4> that look like common real-world cases
-to show that those lines won't be picked up. I don't think that another
-test file is required.
+Thanks,
 
->>> +/ { RIGHT /* Technically just supposed to be a slash and brace */
->>
->> Devil's advocate here: insert ';' or '=' in the comment, and the line
->> would not be picked up. Does that hurt in practice?
-> 
-> I don't think it hurts in practice so I'd like to ignore it.
-
-Sure, no problem.
-
->>>  PATTERNS("dts",
->>>        "!;\n"
->>> +      "!.*=.*\n"
->>
->> This behaves the same way as just
->>
->>         "!=\n"
->>
->> no?
->>
-> 
-> Not exactly. Properties don't always get assigned.
-
-I was just refering to the added line, not the combination of the two lines.
-
-But while you are speaking of it:
-
-> There are boolean
-> properties that can be tested for by the presence of some string with an
-> ending semi-colon, like 'this-is-true;'. If we just check for not equal
-> to a line with a semicolon and newline then we'll see boolean
-> properties. Should I add that as another test?
-
-I agree that a test case with a Boolean property would be great.
-
--- Hannes
+Jonathan
