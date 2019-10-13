@@ -1,108 +1,44 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 5/5] ARM: dts: qcom: msm8974: add interconnect nodes
-Date: Sun, 13 Oct 2019 04:08:04 -0400
-Message-ID: <20191013080804.10231-6-masneyb@onstation.org>
-References: <20191013080804.10231-1-masneyb@onstation.org>
+Subject: [PATCH 0/5] ARM: qcom: add defconfig items and dts nodes
+Date: Sun, 13 Oct 2019 04:07:59 -0400
+Message-ID: <20191013080804.10231-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191013080804.10231-1-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: agross@kernel.org, bjorn.andersson@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add interconnect nodes that's needed to support bus scaling.
+Here's a small patch series that adds support for the On Chip MEMory
+(OCMEM) and msm8974 interconnect support to qcom_defconfig and to
+qcom-msm8974.dtsi. The OCMEM driver is already in linux-next and it
+looks like the interconnect support should be merged soon:
+https://lore.kernel.org/lkml/20191005114605.5279-1-masneyb@onstation.org/
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+I have some work in progress patches for the HDMI bridge that's found
+on the Nexus 5 and this series adds the necessary driver to
+qcom_defconfig.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index bdbde5125a56..ed98d14a88b1 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /dts-v1/;
- 
-+#include <dt-bindings/interconnect/qcom,msm8974.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8974.h>
- #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-@@ -1106,6 +1107,60 @@
- 			};
- 		};
- 
-+		bimc: interconnect@fc380000 {
-+			reg = <0xfc380000 0x6a000>;
-+			compatible = "qcom,msm8974-bimc";
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-+			         <&rpmcc RPM_SMD_BIMC_A_CLK>;
-+		};
-+
-+		cnoc: interconnect@fc480000 {
-+			reg = <0xfc480000 0x4000>;
-+			compatible = "qcom,msm8974-cnoc";
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_CNOC_CLK>,
-+			         <&rpmcc RPM_SMD_CNOC_A_CLK>;
-+		};
-+
-+		mmssnoc: interconnect@fc478000 {
-+			reg = <0xfc478000 0x4000>;
-+			compatible = "qcom,msm8974-mmssnoc";
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&mmcc MMSS_S0_AXI_CLK>,
-+			         <&mmcc MMSS_S0_AXI_CLK>;
-+		};
-+
-+		ocmemnoc: interconnect@fc470000 {
-+			reg = <0xfc470000 0x4000>;
-+			compatible = "qcom,msm8974-ocmemnoc";
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-+			         <&rpmcc RPM_SMD_OCMEMGX_A_CLK>;
-+		};
-+
-+		pnoc: interconnect@fc468000 {
-+			reg = <0xfc468000 0x4000>;
-+			compatible = "qcom,msm8974-pnoc";
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
-+			         <&rpmcc RPM_SMD_PNOC_A_CLK>;
-+		};
-+
-+		snoc: interconnect@fc460000 {
-+			reg = <0xfc460000 0x4000>;
-+			compatible = "qcom,msm8974-snoc";
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-+			         <&rpmcc RPM_SMD_SNOC_A_CLK>;
-+		};
-+
- 		mdss: mdss@fd900000 {
- 			status = "disabled";
- 
-@@ -1152,6 +1207,11 @@
- 				              "core",
- 				              "vsync";
- 
-+				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
-+				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
-+				interconnect-names = "mdp0-mem",
-+				                     "mdp1-mem";
-+
- 				ports {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
+Brian Masney (5):
+  ARM: qcom_defconfig: add ocmem support
+  ARM: qcom_defconfig: add msm8974 interconnect support
+  ARM: qcom_defconfig: add anx78xx HDMI bridge support
+  ARM: dts: qcom: msm8974: add ocmem node
+  ARM: dts: qcom: msm8974: add interconnect nodes
+
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 79 +++++++++++++++++++++++++++++
+ arch/arm/configs/qcom_defconfig     |  5 ++
+ 2 files changed, 84 insertions(+)
+
 -- 
 2.21.0
