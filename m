@@ -1,82 +1,51 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH V6 2/8] backlight: qcom-wled: restructure the qcom-wled
- bindings
-Date: Sun, 13 Oct 2019 14:10:46 +0200
-Message-ID: <20191013121045.GN5653@amd>
-References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
- <1569825553-26039-3-git-send-email-kgunda@codeaurora.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] dmaengine: sf-pdma: sf_pdma_disclaim_chan() can be static
+Date: Sun, 13 Oct 2019 21:04:47 +0800
+Message-ID: <20191013130447.2t2hbjcaatguytm3@332d0cec05f4>
+References: <20191003090945.29210-4-green.wan@sifive.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1249840067=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1569825553-26039-3-git-send-email-kgunda@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kiran Gunda <kgunda@codeaurora.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, linux-arm-msm@vger.kernel.org, lee.jones@linaro.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20191003090945.29210-4-green.wan@sifive.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Sagar Kadam <sagar.kadam@sifive.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-riscv@lists.infradead.org, "Paul E. McKenney" <paulmck@linux.ibm.com>, Vinod Koul <vkoul@kernel.org>, linux-hackers@sifive.com, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Green Wan <green.wan@sifive.com>, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams <dan.j.williams@intel.com>, kbuild-all@lists.01.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Yash Shah <yash.shah@sifive.com>, dmaengine@vger.kernel.org, Bin Meng <bmeng.cn@gmail.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
 
---===============1249840067==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="aSnC4ZPPfhCvD8sN"
-Content-Disposition: inline
+Fixes: 31c3b98b5a01 ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ sf-pdma.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
---aSnC4ZPPfhCvD8sN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon 2019-09-30 12:09:07, Kiran Gunda wrote:
-> Restructure the qcom-wled bindings for the better readability.
->=20
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-
-I applied 1,2 to my branch, it should appear in -next shortly.
-
-yaml conversion can be done in a followup...
-
-Best regards,
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---aSnC4ZPPfhCvD8sN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2jFEUACgkQMOfwapXb+vIpIgCfdMwca9CUvoL/C0TtvEIIn2qE
-fhkAnikG/2Cv/Oc9PYANCpjnBy8OHGiN
-=wClR
------END PGP SIGNATURE-----
-
---aSnC4ZPPfhCvD8sN--
-
---===============1249840067==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============1249840067==--
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index 70197ad95c1a6..973ed9d8cfa44 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -97,14 +97,14 @@ static void sf_pdma_fill_desc(struct sf_pdma_chan *chan,
+ 	writeq(src, regs->src_addr);
+ }
+ 
+-void sf_pdma_disclaim_chan(struct sf_pdma_chan *chan)
++static void sf_pdma_disclaim_chan(struct sf_pdma_chan *chan)
+ {
+ 	struct pdma_regs *regs = &chan->regs;
+ 
+ 	writel(PDMA_CLEAR_CTRL, regs->ctrl);
+ }
+ 
+-struct dma_async_tx_descriptor *
++static struct dma_async_tx_descriptor *
+ 	sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
+ 				dma_addr_t dest,
+ 				dma_addr_t src,
