@@ -1,93 +1,95 @@
-From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 3/4] media: rockchip: Add the rkvdec driver
-Date: Mon, 14 Oct 2019 03:08:22 +0800
-Message-ID: <201910140242.ys3UylA0%lkp@intel.com>
-References: <20191011093342.3471-4-boris.brezillon@collabora.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v1 3/3] ARM: dts: bcm2711: Enable GENET support for the
+ RPi4
+Date: Sun, 13 Oct 2019 12:19:55 -0700
+Message-ID: <15b182b4-488a-c023-91ff-e0e253dc41f9@gmail.com>
+References: <20191011184822.866-1-matthias.bgg@kernel.org>
+ <20191011184822.866-4-matthias.bgg@kernel.org>
+ <a514751e-e82a-b5ea-34d3-46468c851a80@gmail.com>
+ <c7fac096-4a0a-1d52-2284-4fe86554fbc8@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20191011093342.3471-4-boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, kbuild-all-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Boris Brezillon <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c7fac096-4a0a-1d52-2284-4fe86554fbc8@gmx.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <wahrenst@gmx.net>, matthias.bgg@kernel.org, "David S . Miller" <davem@davemloft.net>
+Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <mbrugger@suse.com>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on linuxtv-media/master]
-[cannot apply to v5.4-rc2 next-20191011]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Boris-Brezillon/media-rockchip-Add-the-rkvdec-driver/20191013-235029
-base:   git://linuxtv.org/media_tree.git master
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-43-g0ccb3b4-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
 
-sparse warnings: (new ones prefixed by >>)
+On 10/13/2019 11:41 AM, Stefan Wahren wrote:
+> Hi Florian,
+> 
+> Am 11.10.19 um 21:31 schrieb Florian Fainelli:
+>> On 10/11/19 11:48 AM, matthias.bgg@kernel.org wrote:
+>>> From: Matthias Brugger <mbrugger@suse.com>
+>>>
+>>> Enable Gigabit Ethernet support on the Raspberry Pi 4
+>>> Model B.
+>>>
+>>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+>>>
+>>> ---
+>>>
+>>>  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 22 ++++++++++++++++++++++
+>>>  arch/arm/boot/dts/bcm2711.dtsi        | 18 ++++++++++++++++++
+>>>  2 files changed, 40 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+>>> index cccc1ccd19be..958553d62670 100644
+>>> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+>>> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+>>> @@ -97,6 +97,28 @@
+>>>  	status = "okay";
+>>>  };
+>>>
+>>> +&genet {
+>>> +	phy-handle = <&phy1>;
+>>> +	phy-mode = "rgmii";
+>> Can you check that things still work against David Miller's net-next?
+>> Tree, in particular the BCM54213PE PHY might be matched by the BCM54210E
+>> entry in drivers/net/phy/broadcom.c and I just fixed an issue in how
+>> RGMII delays were configured:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?id=fea7fda7f50a6059220f83251e70709e45cc8040
+>>
+>> This might require you to change the 'phy-mode' property to what is
+>> appropriate.
+> 
+> i applied your changes, kept the phy-mode above and the interfaces cames
+> up. But there is a lot of packet loss using ping. After applying this
+> downstream patch [1] the packet loss doesn't occur.
 
->> drivers/staging/media/rockchip/vdec/rkvdec.c:498:22: sparse: sparse: symbol 'rkvdec_queue_ops' was not declared. Should it be static?
---
->> drivers/staging/media/rockchip/vdec/rkvdec-h264.c:698:19: sparse: sparse: symbol 'get_ref_buf' was not declared. Should it be static?
->> drivers/staging/media/rockchip/vdec/rkvdec.h:112:36: sparse: sparse: shift too big (32) for type int
->> drivers/staging/media/rockchip/vdec/rkvdec.h:115:21: sparse: sparse: shift too big (32) for type unsigned int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967268) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967276) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967277) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967279) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967282) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967285) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967286) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967290) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967295) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967269) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967270) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967279) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967288) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967289) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967290) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967291) for type int
->> drivers/staging/media/rockchip/vdec/rkvdec.h:112:36: sparse: sparse: shift too big (32) for type int
->> drivers/staging/media/rockchip/vdec/rkvdec.h:115:21: sparse: sparse: shift too big (32) for type unsigned int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967272) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967277) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967278) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967279) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967284) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967289) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967290) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967292) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967273) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967278) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967279) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967280) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967281) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967282) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967287) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:116:39: sparse: sparse: shift too big (4294967288) for type int
-   drivers/staging/media/rockchip/vdec/rkvdec.h:119:36: sparse: sparse: shift too big (32) for type int
+Packet loss is symptomatic of a mis-configured RGMII interface between
+the MAC and the PHY.
 
-Please review and possibly fold the followup patch.
+> 
+> Is the packet loss a possible cause of the wrong phy-mode and mentioned
+> patch only a workaround?
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+The patch at [1] is not doing much with respect to RGMII delays, so it
+will just keep whatever was configured prior to Linux taking over the
+PHY. The addition of the BCM54213PE entry makes use of the
+bcm54xx_config_init() callback, which does not call
+bcm54xx_config_clock_delay() for the BCM54213PE PHY model, which is why
+it "solves" the packet loss by preserving whatever was already configured.
+
+I would suggest checking with the Pi folks whether 'rgmii' is really the
+right mode of operation here (that is, the PHY is not adding TXC or RXC
+delays at all), or it just happens to work by virtue of the PHY device
+defaulting to a certain mode *and* the PHY device driver in Linux not
+attempting to correctly change the RX/TX clock delays based on the
+phy_interface_t value (aka: maintain the status quo).
+
+Thanks for checking!
+
+> 
+> [1] -
+> https://github.com/raspberrypi/linux/commit/360c8e98883f9cd075564be8a7fc25ac0785dee4
+> 
+
+-- 
+Florian
