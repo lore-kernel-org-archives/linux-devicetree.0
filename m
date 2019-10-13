@@ -1,113 +1,56 @@
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-Date: Sun, 13 Oct 2019 11:13:47 -0300
-Message-ID: <20191013141345.uctcutryo7pmdkem@smtp.gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v10 1/6] dt-bindings: sun6i-dsi: Add A64
+ MIPI-DSI compatible
+Date: Sun, 13 Oct 2019 22:32:18 +0530
+Message-ID: <CAMty3ZA1azP3kkJPw6oZudcSQksF6i+STeW=oOh65cfHsj0QrQ@mail.gmail.com>
+References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+ <20191005141913.22020-2-jagan@amarulasolutions.com> <20191007093122.ixrpzvy6ynh6vuir@gilmour>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: dragos.bogdan@analog.com, alexandru.ardelean@analog.com, stefan.popa@analog.com, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBKFRRXWQKGQESJXI7SI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20191007093122.ixrpzvy6ynh6vuir@gilmour>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a device tree binding doc for AD7292 monitor and control system.
+On Mon, Oct 7, 2019 at 3:01 PM Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+> On Sat, Oct 05, 2019 at 07:49:08PM +0530, Jagan Teki wrote:
+> > The MIPI DSI controller in Allwinner A64 is similar to A33.
+> >
+> > But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
+> > to with separate compatible for A64 on the same driver.
+> >
+> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > ---
+> >  .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml        | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > index dafc0980c4fa..cfcc84d38084 100644
+> > --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> > @@ -15,7 +15,9 @@ properties:
+> >    "#size-cells": true
+> >
+> >    compatible:
+> > -    const: allwinner,sun6i-a31-mipi-dsi
+> > +    enum:
+> > +      - const: allwinner,sun6i-a31-mipi-dsi
+> > +      - const: allwinner,sun50i-a64-mipi-dsi
+>
+> How did you test this? It will report an error when running the
+> validation
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
----
- .../bindings/iio/adc/adi,ad7292.yaml          | 71 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+I did follow the v9 comments [1] and forgot to do dt-doc-validate.
+will send the v11 for this patch alone, will that be okay?
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-new file mode 100644
-index 000000000000..16be9ea4194d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD7292 10-Bit Monitor and Control System
-+
-+maintainers:
-+  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-+
-+description: |
-+  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-+  Temperature Sensor, and GPIOs
-+
-+  Specifications about the part can be found at:
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7292
-+
-+  reg:
-+    maxItems: 1
-+
-+  vref-supply:
-+    description: |
-+      The regulator supply for ADC and DAC reference voltage.
-+    maxItems: 1
-+
-+  spi-cpha:
-+    description: |
-+      See Documentation/devicetree/bindings/spi/spi-controller.yaml
-+    maxItems: 1
-+
-+  diff-channels:
-+    description: |
-+      Empty property to tell whether VIN0 and VIN1 shall work as differential
-+      inputs.
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    spi0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      ad7292: ad7292@0 {
-+        compatible = "adi,ad7292";
-+        reg = <0>;
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        spi-max-frequency = <25000000>;
-+        vref-supply = <&adc_vref>;
-+        spi-cpha;
-+        diff-channels;
-+      };
-+    }
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e78317a5f4f1..5941cfc0d6f7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -819,6 +819,7 @@ L:	linux-iio@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/adc/ad7292.c
-+F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
- 
- ANALOG DEVICES INC AD7606 DRIVER
- M:	Stefan Popa <stefan.popa@analog.com>
--- 
-2.23.0
+[1] https://patchwork.freedesktop.org/patch/307499/
