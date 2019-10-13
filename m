@@ -1,70 +1,82 @@
-From: Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH] ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
-Date: Sun, 13 Oct 2019 12:53:23 +0200
-Message-ID: <1570964003-20227-1-git-send-email-wahrenst@gmx.net>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH V6 2/8] backlight: qcom-wled: restructure the qcom-wled
+ bindings
+Date: Sun, 13 Oct 2019 14:10:46 +0200
+Message-ID: <20191013121045.GN5653@amd>
+References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
+ <1569825553-26039-3-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pavel Machek <pavel@ucw.cz>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>
+Content-Type: multipart/mixed; boundary="===============1249840067=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1569825553-26039-3-git-send-email-kgunda@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, linux-arm-msm@vger.kernel.org, lee.jones@linaro.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-bcm2835-rpi.dtsi defines the behavior of the ACT LED, which is available
-on all Raspberry Pi boards. But there is no driver for this particual
-GPIO on CM3 in mainline yet, so this node was left incomplete without
-the actual GPIO definition. Since commit 025bf37725f1 ("gpio: Fix return
-value mismatch of function gpiod_get_from_of_node()") this causing probe
-issues of the leds-gpio driver for users of the CM3 dtsi file.
 
-  leds-gpio: probe of leds failed with error -2
+--===============1249840067==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="aSnC4ZPPfhCvD8sN"
+Content-Disposition: inline
 
-Until we have the necessary GPIO driver hide the ACT node for CM3
-to avoid this.
 
-Reported-by: Fredrik Yhlen <fredrik.yhlen@endian.se>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and IO board")
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+--aSnC4ZPPfhCvD8sN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon 2019-09-30 12:09:07, Kiran Gunda wrote:
+> Restructure the qcom-wled bindings for the better readability.
+>=20
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 
-i'm not sure the behavior change in leds-gpio was intended.
+I applied 1,2 to my branch, it should appear in -next shortly.
 
-Regards
-Stefan
+yaml conversion can be done in a followup...
 
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi b/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
-index 7c3cb7e..925cb37 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
-+++ b/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
-@@ -9,6 +9,14 @@
- 		reg = <0 0x40000000>;
- 	};
+Best regards,
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-+	leds {
-+		/*
-+		 * Since there is no upstream GPIO driver yet,
-+		 * remove the incomplete node.
-+		 */
-+		/delete-node/ act;
-+	};
-+
- 	reg_3v3: fixed-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3V3";
---
-2.7.4
+--aSnC4ZPPfhCvD8sN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl2jFEUACgkQMOfwapXb+vIpIgCfdMwca9CUvoL/C0TtvEIIn2qE
+fhkAnikG/2Cv/Oc9PYANCpjnBy8OHGiN
+=wClR
+-----END PGP SIGNATURE-----
+
+--aSnC4ZPPfhCvD8sN--
+
+--===============1249840067==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============1249840067==--
