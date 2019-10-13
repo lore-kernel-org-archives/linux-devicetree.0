@@ -1,46 +1,113 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 3/4] dmaengine: sf-pdma: add platform DMA support for
- HiFive Unleashed A00
-Date: Sun, 13 Oct 2019 21:04:47 +0800
-Message-ID: <201910132151.A52iK7nK%lkp@intel.com>
-References: <20191003090945.29210-4-green.wan@sifive.com>
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Subject: [PATCH 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
+Date: Sun, 13 Oct 2019 11:13:47 -0300
+Message-ID: <20191013141345.uctcutryo7pmdkem@smtp.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191003090945.29210-4-green.wan@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@lists.01.org, linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Dan Williams <dan.j.williams@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, Bin Meng <bmeng.cn@gmail.com>, Yash Shah <yash.shah@sifive.com>, Sagar Kadam <sagar.kadam@sifive.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.i
+To: jic23@kernel.org
+Cc: dragos.bogdan@analog.com, alexandru.ardelean@analog.com, stefan.popa@analog.com, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Green,
+Add a device tree binding doc for AD7292 monitor and control system.
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[cannot apply to v5.4-rc2 next-20191011]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Green-Wan/dmaengine-sf-pdma-Add-platform-dma-driver/20191003-172343
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-43-g0ccb3b4-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/dma/sf-pdma/sf-pdma.c:100:6: sparse: sparse: symbol 'sf_pdma_disclaim_chan' was not declared. Should it be static?
->> drivers/dma/sf-pdma/sf-pdma.c:107:32: sparse: sparse: symbol 'sf_pdma_prep_dma_memcpy' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ .../bindings/iio/adc/adi,ad7292.yaml          | 71 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+new file mode 100644
+index 000000000000..16be9ea4194d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD7292 10-Bit Monitor and Control System
++
++maintainers:
++  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
++
++description: |
++  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
++  Temperature Sensor, and GPIOs
++
++  Specifications about the part can be found at:
++    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7292
++
++  reg:
++    maxItems: 1
++
++  vref-supply:
++    description: |
++      The regulator supply for ADC and DAC reference voltage.
++    maxItems: 1
++
++  spi-cpha:
++    description: |
++      See Documentation/devicetree/bindings/spi/spi-controller.yaml
++    maxItems: 1
++
++  diff-channels:
++    description: |
++      Empty property to tell whether VIN0 and VIN1 shall work as differential
++      inputs.
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    spi0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      ad7292: ad7292@0 {
++        compatible = "adi,ad7292";
++        reg = <0>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        spi-max-frequency = <25000000>;
++        vref-supply = <&adc_vref>;
++        spi-cpha;
++        diff-channels;
++      };
++    }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e78317a5f4f1..5941cfc0d6f7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -819,6 +819,7 @@ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/adc/ad7292.c
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+ 
+ ANALOG DEVICES INC AD7606 DRIVER
+ M:	Stefan Popa <stefan.popa@analog.com>
+-- 
+2.23.0
