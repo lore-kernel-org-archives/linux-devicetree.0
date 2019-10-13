@@ -1,95 +1,34 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v1 3/3] ARM: dts: bcm2711: Enable GENET support for the
- RPi4
-Date: Sun, 13 Oct 2019 12:19:55 -0700
-Message-ID: <15b182b4-488a-c023-91ff-e0e253dc41f9@gmail.com>
-References: <20191011184822.866-1-matthias.bgg@kernel.org>
- <20191011184822.866-4-matthias.bgg@kernel.org>
- <a514751e-e82a-b5ea-34d3-46468c851a80@gmail.com>
- <c7fac096-4a0a-1d52-2284-4fe86554fbc8@gmx.net>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v5 3/3] ARM: dts: rockchip: Add RK3288 VOP gamma LUT
+ address
+Date: Sun, 13 Oct 2019 22:25:06 +0200
+Message-ID: <10075567.55hLz0bBqu@phil>
+References: <20191010194351.17940-1-ezequiel@collabora.com>
+ <20191010194351.17940-4-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c7fac096-4a0a-1d52-2284-4fe86554fbc8@gmx.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <wahrenst@gmx.net>, matthias.bgg@kernel.org, "David S . Miller" <davem@davemloft.net>
-Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <mbrugger@suse.com>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20191010194351.17940-4-ezequiel@collabora.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/13/2019 11:41 AM, Stefan Wahren wrote:
-> Hi Florian,
-> 
-> Am 11.10.19 um 21:31 schrieb Florian Fainelli:
->> On 10/11/19 11:48 AM, matthias.bgg@kernel.org wrote:
->>> From: Matthias Brugger <mbrugger@suse.com>
->>>
->>> Enable Gigabit Ethernet support on the Raspberry Pi 4
->>> Model B.
->>>
->>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
->>>
->>> ---
->>>
->>>  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 22 ++++++++++++++++++++++
->>>  arch/arm/boot/dts/bcm2711.dtsi        | 18 ++++++++++++++++++
->>>  2 files changed, 40 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
->>> index cccc1ccd19be..958553d62670 100644
->>> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
->>> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
->>> @@ -97,6 +97,28 @@
->>>  	status = "okay";
->>>  };
->>>
->>> +&genet {
->>> +	phy-handle = <&phy1>;
->>> +	phy-mode = "rgmii";
->> Can you check that things still work against David Miller's net-next?
->> Tree, in particular the BCM54213PE PHY might be matched by the BCM54210E
->> entry in drivers/net/phy/broadcom.c and I just fixed an issue in how
->> RGMII delays were configured:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?id=fea7fda7f50a6059220f83251e70709e45cc8040
->>
->> This might require you to change the 'phy-mode' property to what is
->> appropriate.
-> 
-> i applied your changes, kept the phy-mode above and the interfaces cames
-> up. But there is a lot of packet loss using ping. After applying this
-> downstream patch [1] the packet loss doesn't occur.
-
-Packet loss is symptomatic of a mis-configured RGMII interface between
-the MAC and the PHY.
-
-> 
-> Is the packet loss a possible cause of the wrong phy-mode and mentioned
-> patch only a workaround?
-
-The patch at [1] is not doing much with respect to RGMII delays, so it
-will just keep whatever was configured prior to Linux taking over the
-PHY. The addition of the BCM54213PE entry makes use of the
-bcm54xx_config_init() callback, which does not call
-bcm54xx_config_clock_delay() for the BCM54213PE PHY model, which is why
-it "solves" the packet loss by preserving whatever was already configured.
-
-I would suggest checking with the Pi folks whether 'rgmii' is really the
-right mode of operation here (that is, the PHY is not adding TXC or RXC
-delays at all), or it just happens to work by virtue of the PHY device
-defaulting to a certain mode *and* the PHY device driver in Linux not
-attempting to correctly change the RX/TX clock delays based on the
-phy_interface_t value (aka: maintain the status quo).
-
-Thanks for checking!
-
-> 
-> [1] -
-> https://github.com/raspberrypi/linux/commit/360c8e98883f9cd075564be8a7fc25ac0785dee4
-> 
-
--- 
-Florian
+QW0gRG9ubmVyc3RhZywgMTAuIE9rdG9iZXIgMjAxOSwgMjE6NDM6NTEgQ0VTVCBzY2hyaWViIEV6
+ZXF1aWVsIEdhcmNpYToKPiBSSzMyODggU29DIFZPUHMgaGF2ZSBvcHRpb25hbCBzdXBwb3J0IEdh
+bW1hIExVVCBzZXR0aW5nLAo+IHdoaWNoIHJlcXVpcmVzIHNwZWNpZnlpbmcgdGhlIEdhbW1hIExV
+VCBhZGRyZXNzIGluIHRoZSBkZXZpY2V0cmVlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEV6ZXF1aWVs
+IEdhcmNpYSA8ZXplcXVpZWxAY29sbGFib3JhLmNvbT4KPiBSZXZpZXdlZC1ieTogRG91Z2xhcyBB
+bmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgoKYXBwbGllZCBmb3IgNS41CgpUaGFua3MK
+SGVpa28KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
