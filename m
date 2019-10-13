@@ -1,11 +1,13 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 0/5] ARM: qcom: add defconfig items and dts nodes
-Date: Sun, 13 Oct 2019 04:07:59 -0400
-Message-ID: <20191013080804.10231-1-masneyb@onstation.org>
+Subject: [PATCH 4/5] ARM: dts: qcom: msm8974: add ocmem node
+Date: Sun, 13 Oct 2019 04:08:03 -0400
+Message-ID: <20191013080804.10231-5-masneyb@onstation.org>
+References: <20191013080804.10231-1-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191013080804.10231-1-masneyb@onstation.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,26 +21,42 @@ To: agross@kernel.org, bjorn.andersson@linaro.org
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Here's a small patch series that adds support for the On Chip MEMory
-(OCMEM) and msm8974 interconnect support to qcom_defconfig and to
-qcom-msm8974.dtsi. The OCMEM driver is already in linux-next and it
-looks like the interconnect support should be merged soon:
-https://lore.kernel.org/lkml/20191005114605.5279-1-masneyb@onstation.org/
+Add ocmem node that is needed in order to support the GPU upstream.
 
-I have some work in progress patches for the HDMI bridge that's found
-on the Nexus 5 and this series adds the necessary driver to
-qcom_defconfig.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Brian Masney (5):
-  ARM: qcom_defconfig: add ocmem support
-  ARM: qcom_defconfig: add msm8974 interconnect support
-  ARM: qcom_defconfig: add anx78xx HDMI bridge support
-  ARM: dts: qcom: msm8974: add ocmem node
-  ARM: dts: qcom: msm8974: add interconnect nodes
-
- arch/arm/boot/dts/qcom-msm8974.dtsi | 79 +++++++++++++++++++++++++++++
- arch/arm/configs/qcom_defconfig     |  5 ++
- 2 files changed, 84 insertions(+)
-
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 39a3a1d63889..bdbde5125a56 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -1087,6 +1087,25 @@
+ 			};
+ 		};
+ 
++		ocmem@fdd00000 {
++			compatible = "qcom,msm8974-ocmem";
++			reg = <0xfdd00000 0x2000>,
++			      <0xfec00000 0x180000>;
++			reg-names = "ctrl",
++			            "mem";
++			clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
++			         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
++			clock-names = "core",
++			              "iface";
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			gmu_sram: gmu-sram@0 {
++				reg = <0x0 0x100000>;
++			};
++		};
++
+ 		mdss: mdss@fd900000 {
+ 			status = "disabled";
+ 
 -- 
 2.21.0
