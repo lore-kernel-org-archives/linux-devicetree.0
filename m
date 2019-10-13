@@ -1,136 +1,61 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [RFC PATCH 1/2] ASoC: simple-card: Introduce force-dpcm DT property
-Date: Sun, 13 Oct 2019 22:00:13 +0300
-Message-ID: <20191013190014.32138-2-daniel.baluta@nxp.com>
-References: <20191013190014.32138-1-daniel.baluta@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191013190014.32138-1-daniel.baluta@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: perex@perex.cz, tiwai@suse.com, broonie@kernel.org, kuninori.morimoto.gx@renesas.com
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, Daniel Baluta <daniel.baluta@nxp.com>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH] media: rockchip: rkvdec_queue_ops can be static
+Date: Mon, 14 Oct 2019 03:08:22 +0800
+Message-ID: <20191013190822.klfeelozbfx6qrnz@332d0cec05f4>
+References: <20191011093342.3471-4-boris.brezillon@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20191011093342.3471-4-boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, kbuild-all-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jonas Karlman <jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Boris Brezillon <boris.brezillon-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Until now dai_link uses dynamic PCM in the following conditions:
-	* it is dpcm_selectable (this means compatible string is simple-scu-card)
-	* it has convert-xxx property
-	* or it has more than one CPU DAIs
 
-Our use case requires to be able to build a DPCM link with just 1 CPU.
-Add force-dpcm DT property to realize this.
-
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Fixes: 0fb0ad38c9ed ("media: rockchip: Add the rkvdec driver")
+Signed-off-by: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 ---
- include/sound/simple_card_utils.h     |  4 ++++
- sound/soc/generic/simple-card-utils.c | 17 +++++++++++++++++
- sound/soc/generic/simple-card.c       | 25 +++++++++++++++++++++++--
- 3 files changed, 44 insertions(+), 2 deletions(-)
+ rkvdec-h264.c |    6 +++---
+ rkvdec.c      |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
-index 985a5f583de4..0578bbfa4a24 100644
---- a/include/sound/simple_card_utils.h
-+++ b/include/sound/simple_card_utils.h
-@@ -48,6 +48,7 @@ struct asoc_simple_priv {
- 		struct asoc_simple_data adata;
- 		struct snd_soc_codec_conf *codec_conf;
- 		unsigned int mclk_fs;
-+		unsigned int force_dpcm;
- 	} *dai_props;
- 	struct asoc_simple_jack hp_jack;
- 	struct asoc_simple_jack mic_jack;
-@@ -120,6 +121,9 @@ void asoc_simple_convert_fixup(struct asoc_simple_data *data,
- void asoc_simple_parse_convert(struct device *dev,
- 			       struct device_node *np, char *prefix,
- 			       struct asoc_simple_data *data);
-+void asoc_simple_parse_force_dpcm(struct device *dev,
-+				  struct device_node *np, char *prefix,
-+				  unsigned int *force_dpcm);
+diff --git a/drivers/staging/media/rockchip/vdec/rkvdec-h264.c b/drivers/staging/media/rockchip/vdec/rkvdec-h264.c
+index d241afe12edd6..2d62ab739dbc8 100644
+--- a/drivers/staging/media/rockchip/vdec/rkvdec-h264.c
++++ b/drivers/staging/media/rockchip/vdec/rkvdec-h264.c
+@@ -695,9 +695,9 @@ static u32 poc_reg_tbl_bottom_field[16] = {
+ 	RKVDEC_REG_H264_POC_REFER2(1)
+ };
  
- int asoc_simple_parse_routing(struct snd_soc_card *card,
- 				      char *prefix);
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index 9b794775df53..2f03a73f8a8a 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -52,6 +52,23 @@ void asoc_simple_parse_convert(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(asoc_simple_parse_convert);
- 
-+void asoc_simple_parse_force_dpcm(struct device *dev,
-+			       struct device_node *np,
-+			       char *prefix,
-+			       unsigned int *force_dpcm)
-+{
-+	char prop[128];
-+
-+	if (!prefix)
-+		prefix = "";
-+
-+	/* dpcm property */
-+	snprintf(prop, sizeof(prop), "%s%s", prefix, "force-dpcm");
-+	if (of_find_property(np, prop, NULL))
-+		*force_dpcm = 1;
-+}
-+EXPORT_SYMBOL_GPL(asoc_simple_parse_force_dpcm);
-+
- int asoc_simple_parse_daifmt(struct device *dev,
- 			     struct device_node *node,
- 			     struct device_node *codec,
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index fc9c753db8dd..e40e22c8813b 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -92,6 +92,21 @@ static void simple_parse_convert(struct device *dev,
- 	of_node_put(node);
+-struct vb2_buffer *get_ref_buf(struct rkvdec_ctx *ctx,
+-			       struct rkvdec_h264_run *run,
+-			       unsigned int dpb_idx)
++static struct vb2_buffer *get_ref_buf(struct rkvdec_ctx *ctx,
++				      struct rkvdec_h264_run *run,
++				      unsigned int dpb_idx)
+ {
+ 	struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
+ 	const struct v4l2_h264_dpb_entry *dpb = run->decode_params->dpb;
+diff --git a/drivers/staging/media/rockchip/vdec/rkvdec.c b/drivers/staging/media/rockchip/vdec/rkvdec.c
+index 3531ce0dd3e72..5f07d589e4f9c 100644
+--- a/drivers/staging/media/rockchip/vdec/rkvdec.c
++++ b/drivers/staging/media/rockchip/vdec/rkvdec.c
+@@ -495,7 +495,7 @@ static void rkvdec_stop_streaming(struct vb2_queue *q)
+ 	rkvdec_queue_cleanup(q, VB2_BUF_STATE_ERROR);
  }
  
-+static void simple_parse_force_dpcm(struct device *dev,
-+				 struct device_node *np,
-+				 unsigned int *force_dpcm)
-+{
-+	struct device_node *top = dev->of_node;
-+	struct device_node *node = of_get_parent(np);
-+
-+	asoc_simple_parse_force_dpcm(dev, top,  PREFIX, force_dpcm);
-+	asoc_simple_parse_force_dpcm(dev, node, PREFIX, force_dpcm);
-+	asoc_simple_parse_force_dpcm(dev, node, NULL,   force_dpcm);
-+	asoc_simple_parse_force_dpcm(dev, np,   NULL,   force_dpcm);
-+
-+	of_node_put(node);
-+}
-+
- static void simple_parse_mclk_fs(struct device_node *top,
- 				 struct device_node *cpu,
- 				 struct device_node *codec,
-@@ -372,6 +387,7 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
- 		struct asoc_simple_data adata;
- 		struct device_node *codec;
- 		struct device_node *np;
-+		unsigned int force_dpcm = 0;
- 		int num = of_get_child_count(node);
- 
- 		/* get codec */
-@@ -387,15 +403,20 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
- 		for_each_child_of_node(node, np)
- 			simple_parse_convert(dev, np, &adata);
- 
-+		/* get force-dpcm property */
-+		for_each_child_of_node(node, np)
-+			simple_parse_force_dpcm(dev, np, &force_dpcm);
-+
- 		/* loop for all CPU/Codec node */
- 		for_each_child_of_node(node, np) {
- 			/*
- 			 * It is DPCM
- 			 * if it has many CPUs,
--			 * or has convert-xxx property
-+			 * or it has convert-xxx property
-+			 * or it has force-dpcm property
- 			 */
- 			if (dpcm_selectable &&
--			    (num > 2 ||
-+			    (num > 2 || force_dpcm ||
- 			     adata.convert_rate || adata.convert_channels))
- 				ret = func_dpcm(priv, np, codec, li, is_top);
- 			/* else normal sound */
--- 
-2.17.1
+-const struct vb2_ops rkvdec_queue_ops = {
++static const struct vb2_ops rkvdec_queue_ops = {
+ 	.queue_setup = rkvdec_queue_setup,
+ 	.buf_prepare = rkvdec_buf_prepare,
+ 	.buf_queue = rkvdec_buf_queue,
