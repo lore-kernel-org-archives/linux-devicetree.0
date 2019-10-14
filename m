@@ -1,41 +1,56 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-scu4-aib: Specify
- 'i2c-mux-idle-disconnect'
-Date: Mon, 14 Oct 2019 19:37:06 +0800
-Message-ID: <20191014113704.GO12262@dragon>
-References: <20191004054115.26082-1-andrew.smirnov@gmail.com>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: RE: [PATCH 1/2] dt-bindings: i2c: replace property
+ i2c-mux-idle-disconnect
+Date: Mon, 14 Oct 2019 11:41:48 +0000
+Message-ID: <DB7PR04MB44906CD36066595307E7848C8F900@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20191014112558.3881-1-biwen.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191004054115.26082-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20191014112558.3881-1-biwen.li@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>, Cory Tusar <cory.tusar@zii.aero>, Jeff White <jeff.white@zii.aero>, Rick Ramstetter <rick@anteaterllc.com>, Lucas Stach <l.stach@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Biwen Li <biwen.li@nxp.com>, "peda@axentia.se" <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 10:41:15PM -0700, Andrey Smirnov wrote:
-> Specify 'i2c-mux-idle-disconnect' for both I2C switches present on the
-> board, since both are connected to the same parent bus and all of
-> their children have the same I2C address.
-> 
-> Fixes: ca4b4d373fcc ("ARM: dts: vf610: Add ZII SCU4 AIB board")
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Cory Tusar <cory.tusar@zii.aero>
-> Cc: Jeff White <jeff.white@zii.aero>
-> Cc: Rick Ramstetter <rick@anteaterllc.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+Hi Peter, Rob
+
+This patch is a new method for https://lore.kernel.org/patchwork/patch/1132=
+445/
+
+Best Regards,
+Biwen Li
+>=20
+> This replaces property i2c-mux-idle-disconnect with idle-state
+>=20
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > ---
-> Shawn:
-> 
-> If this is possible, I'd like this one to go into 5.4.
-
-Okay, applied as fix.
-
-Shawn
+>  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> index 30ac6a60f041..f2db517b1635 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> @@ -25,9 +25,7 @@ Required Properties:
+>  Optional Properties:
+>=20
+>    - reset-gpios: Reference to the GPIO connected to the reset input.
+> -  - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconne=
+ct
+> all
+> -    children in idle state. This is necessary for example, if there are =
+several
+> -    multiplexers on the bus and the devices behind them use same I2C
+> addresses.
+> +  - idle-state: Please refer to
+> Documentation/devicetree/bindings/mux/mux-controller.txt
+>    - interrupts: Interrupt mapping for IRQ.
+>    - interrupt-controller: Marks the device node as an interrupt controll=
+er.
+>    - #interrupt-cells : Should be two.
+> --
+> 2.17.1
