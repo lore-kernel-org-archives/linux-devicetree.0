@@ -1,7 +1,7 @@
 From: Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v2 1/4] dt-bindings: crypto: Add DT bindings documentation for amlogic-crypto
-Date: Mon, 14 Oct 2019 05:31:41 +0000
-Message-ID: <1571031104-6880-2-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH v2 2/4] MAINTAINERS: Add myself as maintainer of amlogic crypto
+Date: Mon, 14 Oct 2019 05:31:42 +0000
+Message-ID: <1571031104-6880-3-git-send-email-clabbe@baylibre.com>
 References: <1571031104-6880-1-git-send-email-clabbe@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1571031104-6880-1-git-send-email-clabbe@baylibre.com>
@@ -10,72 +10,30 @@ To: davem@davemloft.net, herbert@gondor.apana.org.au, khilman@baylibre.com, mark
 Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for Device-Tree bindings for the
-Amlogic GXL cryptographic offloader driver.
+I will maintain the amlogic crypto driver.
 
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- .../bindings/crypto/amlogic,gxl-crypto.yaml   | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
-new file mode 100644
-index 000000000000..5becc60a0e28
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/amlogic,gxl-crypto.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 36c5d6ee01f9..a8487a0999ce 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1477,6 +1477,13 @@ F:	drivers/soc/amlogic/
+ F:	drivers/rtc/rtc-meson*
+ N:	meson
+ 
++ARM/Amlogic Meson SoC Crypto Drivers
++M:	Corentin Labbe <clabbe@baylibre.com>
++L:	linux-crypto@vger.kernel.org
++S:	Maintained
++F:	drivers/crypto/amlogic/
++F:	Documentation/devicetree/bindings/crypto/amlogic*
 +
-+title: Amlogic GXL Cryptographic Offloader
-+
-+maintainers:
-+  - Corentin Labbe <clabbe@baylibre.com>
-+
-+properties:
-+  compatible:
-+    items:
-+    - const: amlogic,gxl-crypto
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: "Interrupt for flow 0"
-+      - description: "Interrupt for flow 1"
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: blkmv
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/gxbb-clkc.h>
-+
-+    crypto: crypto@c883e000 {
-+        compatible = "amlogic,gxl-crypto";
-+        reg = <0x0 0xc883e000 0x0 0x36>;
-+        interrupts = <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>, <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
-+        clocks = <&clkc CLKID_BLKMV>;
-+        clock-names = "blkmv";
-+    };
+ ARM/Amlogic Meson SoC Sound Drivers
+ M:	Jerome Brunet <jbrunet@baylibre.com>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
 -- 
 2.21.0
