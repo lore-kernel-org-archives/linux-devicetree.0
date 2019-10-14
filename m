@@ -1,117 +1,138 @@
-From: Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH] ARM: dts: stm32: Enable high resolution timer
-Date: Mon, 14 Oct 2019 14:48:58 +0100
-Message-ID: <a42dd20677cddd8d09ea91a369a4e10b@www.loen.fr>
-References: <20190927084819.645-1-benjamin.gaignard@st.com>
- <da48ce9633441cd0186518fa7ce1d528@www.loen.fr>
- <341949c8-7864-5d65-2797-988022724a4c@st.com>
- <ff11797da8f049b354797689754fde52@www.loen.fr>
- <69af57d1-13a9-9e35-78f2-4a0d17bdaf6d@st.com>
- <e376301a8e9ec02dfd7713748abed83e@www.loen.fr>
- <61dda183-cd53-153b-8ed1-e2ecb8f96e03@st.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: display: Convert stm32 display bindings
+ to json-schema
+Date: Mon, 14 Oct 2019 08:57:11 -0500
+Message-ID: <CAL_Jsq+Z7G31vBhHn_csntOsBLnZoLFU0qZHk67kdC1kahd4kQ@mail.gmail.com>
+References: <20191014091622.23562-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <61dda183-cd53-153b-8ed1-e2ecb8f96e03@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc: Alexandre TORGUE <alexandre.torgue@st.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20191014091622.23562-1-benjamin.gaignard@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, Philippe Cornu <philippe.cornu@st.com>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick Fertre <yannick.fertre@st.com>, linux-stm32@st-md-mailman.stormreply.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-10-14 10:31, Benjamin GAIGNARD wrote:
-> On 9/27/19 2:59 PM, Marc Zyngier wrote:
->> On 2019-09-27 13:44, Benjamin GAIGNARD wrote:
->>> On 9/27/19 2:41 PM, Marc Zyngier wrote:
->>>> On 2019-09-27 13:36, Benjamin GAIGNARD wrote:
->>>>> On 9/27/19 1:22 PM, Marc Zyngier wrote:
->>>>>> On 2019-09-27 09:48, Benjamin Gaignard wrote:
->>>>>>> Adding always-on makes arm arch_timer claim to be an high 
->>>>>>> resolution
->>>>>>> timer.
->>>>>>> That is possible because power mode won't stop clocking the 
->>>>>>> timer.
->>>>>>
->>>>>> The "always-on" is not about the clock. It is about the 
->>>>>> comparator.
->>>>>> The clock itself is *guaranteed* to always tick. If it didn't,
->>>>>> that'd be
->>>>>> an integration bug, and a pretty bad one.
->>>>>>
->>>>>> What you're claiming here is that your CPU never enters a 
->>>>>> low-power
->>>>>> mode?
->>>>>> Ever? I find this very hard to believe.
->>>>>>
->>>>>> Furthermore, claiming that always-on is the way to force the
->>>>>> arch-timer
->>>>>> to be an hrtimer is factually wrong. This is what happens *if*
->>>>>> this is
->>>>>> the only timer in the system. The only case this is true is for
->>>>>> virtual
->>>>>> machines. Anything else has a global timer somewhere that will 
->>>>>> allow
->>>>>> the arch timers to be used as an hrtimer.
->>>>>>
->>>>>> I'm pretty sure you too have a global timer somewhere in your 
->>>>>> system.
->>>>>> Enable it, and enjoy hrtimers without having to lie about the
->>>>>> properties
->>>>>> of your system! ;-)
->>>>>
->>>>> Hi Marc,
->>>>>
->>>>> This SoC doesn't have any other global timer. Use arch_time is 
->>>>> the
->>>>> only
->>>>> we have to provide hrtimer on this system.
->>>>
->>>> And you don't have any form of power management either? What 
->>>> happens
->>>> when
->>>> your CPU goes into idle? If your system does any form of power
->>>> management
->>>> *and* doesn't have a separate timer, it is remarkably broken.
->>>
->>> Even in low-power modes this timer is always powered and clocked so 
->>> it
->>> is working fine.
->>
->> You're missing the point again. It is not about the clock, but the
->> comparator
->> that is internal to the CPU, and not functional when the CPU is in 
->> its
->> lowest
->> power mode. See also the verbiage in [1] (44.3 STGEN functional
->> description),
->> which indicates that the clock source actually dies in low-power 
->> mode
->> (going
->> against the architecture which mandates it to be always-on).
->>
->> Also, coming back to your earlier assertion ("This SoC doesn't have
->> any other
->> global timer"): The documentation at [1] shows at least 17 timers 
->> that
->> could
->> be used and avoid this dirty hack.
->>
->> So for what it is worth, NAK to this patch.
->
->
-> Hi Marc,
->
-> I have listen your remarks and propose another way to solve this 
-> issue:
->
-> https://lkml.org/lkml/2019/10/9/690
-
-I don't think you have. You're just trying to move the same dirty hack 
-to
-another place instead of properly describing your hardware, and Thomas
-has pointed you in the same direction.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+T24gTW9uLCBPY3QgMTQsIDIwMTkgYXQgNDoxNiBBTSBCZW5qYW1pbiBHYWlnbmFyZAo8YmVuamFt
+aW4uZ2FpZ25hcmRAc3QuY29tPiB3cm90ZToKPgo+IENvbnZlcnQgdGhlIFNUTTMyIGRpc3BsYXkg
+YmluZGluZyB0byBEVCBzY2hlbWEgZm9ybWF0IHVzaW5nIGpzb24tc2NoZW1hLgo+IFNwbGl0IHRo
+ZSBvcmlnaW5hbCBiaW5kaW5ncyBpbiB0d28geWFtbCBmaWxlczoKPiAtIG9uZSBmb3IgZGlzcGxh
+eSBjb250cm9sbGVyIChsdGRjKQo+IC0gb25lIGZvciBEU0kgY29udHJvbGxlcgo+Cj4gU2lnbmVk
+LW9mZi1ieTogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQHN0LmNvbT4KPiAt
+LS0KPiBjaGFuZ2VzIGluIHYzOgo+IC0gdXNlIChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNl
+KSBsaWNlbnNlCj4KPiBjaGFuZ2VzIGluIHYyOgo+IC0gdXNlIEJTRC0yLUNsYXVzZSBsaWNlbnNl
+Cj4gLSBhZGQgcGFuZWwgcHJvcGVydHkKPiAtIGZpeCBpZGVudGF0aW9uCj4gLSByZW1vdmUgcGlu
+Y3RybC1uYW1lczogdHJ1ZQo+IC0gcmVtb3ZlIHBpbmN0cmwtWzAtOV0rOiB0cnVlCj4gLSByZXdv
+cmsgcG9ydHMgYmxvY2sgdG8gaW5jbHVkZSBwb3J0QDAgYW5kIHBvcnRAMQo+IC0gdXNlIGNvbnN0
+IGZvciAjYWRyZXNzLWNlbGxzIGFuZCAjc2l6ZS1jZWxscwo+IC0gYWRkIGFkZGl0aW9uYWxQcm9w
+ZXJ0aWVzOiBmYWxzZQo+Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3Rt
+MzItZHNpLnlhbWwgIHwgMTUxICsrKysrKysrKysrKysrKysrKysrKwo+ICAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0ICB8IDE0NCAtLS0tLS0tLS0tLS0t
+LS0tLS0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMu
+eWFtbCB8ICA4MSArKysrKysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDIzMiBpbnNlcnRpb25z
+KCspLCAxNDQgZGVsZXRpb25zKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxzdG0zMi1kc2kueWFtbAo+ICBkZWxldGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qs
+c3RtMzItbHRkYy50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMueWFtbAo+Cj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWRzaS55
+YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzIt
+ZHNpLnlhbWwKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uOGRk
+NzI3Yzc1MzNlCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWRzaS55YW1sCj4gQEAgLTAsMCArMSwxNTEgQEAK
+PiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1
+c2UpCj4gKyVZQU1MIDEuMgo+ICstLS0KPiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2No
+ZW1hcy9kaXNwbGF5L3N0LHN0bTMyLWRzaS55YW1sIwo+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNl
+dHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKPiArCj4gK3RpdGxlOiBTVE1pY3JvZWxl
+Y3Ryb25pY3MgU1RNMzIgRFNJIGhvc3QgY29udHJvbGxlcgo+ICsKPiArbWFpbnRhaW5lcnM6Cj4g
+KyAgLSBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgo+ICsgIC0gWWFubmlj
+ayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4KPiArCj4gK2Rlc2NyaXB0aW9uOgo+ICsg
+IFRoZSBTVE1pY3JvZWxlY3Ryb25pY3MgU1RNMzIgRFNJIGNvbnRyb2xsZXIgdXNlcyB0aGUgU3lu
+b3BzeXMgRGVzaWduV2FyZSBNSVBJLURTSSBob3N0IGNvbnRyb2xsZXIuCj4gKwo+ICtwcm9wZXJ0
+aWVzOgo+ICsgIGNvbXBhdGlibGU6Cj4gKyAgICBjb25zdDogc3Qsc3RtMzItZHNpCj4gKwo+ICsg
+IHJlZzoKPiArICAgIG1heEl0ZW1zOiAxCj4gKwo+ICsgIGNsb2NrczoKPiArICAgIGl0ZW1zOgo+
+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBNb2R1bGUgQ2xvY2sKPiArICAgICAgLSBkZXNjcmlwdGlv
+bjogRFNJIGJ1cyBjbG9jawo+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBQaXhlbCBjbG9jawo+ICsg
+ICAgbWluSXRlbXM6IDIKPiArICAgIG1heEl0ZW1zOiAzCj4gKwo+ICsgIGNsb2NrLW5hbWVzOgo+
+ICsgICAgaXRlbXM6Cj4gKyAgICAgIC0gY29uc3Q6IHBjbGsKPiArICAgICAgLSBjb25zdDogcmVm
+Cj4gKyAgICAgIC0gY29uc3Q6IHB4X2Nsawo+ICsgICAgbWluSXRlbXM6IDIKPiArICAgIG1heEl0
+ZW1zOiAzCj4gKwo+ICsgIHJlc2V0czoKPiArICAgIG1heEl0ZW1zOiAxCj4gKwo+ICsgIHJlc2V0
+LW5hbWVzOgo+ICsgICAgaXRlbXM6Cj4gKyAgICAgIC0gY29uc3Q6IGFwYgo+ICsKPiArICBwaHkt
+ZHNpLXN1cHBseToKPiArICAgIG1heEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlwdGlvbjoKPiArICAg
+ICAgICBQaGFuZGxlIG9mIHRoZSByZWd1bGF0b3IgdGhhdCBwcm92aWRlcyB0aGUgc3VwcGx5IHZv
+bHRhZ2UuCj4gKwo+ICsgIHBvcnRzOgo+ICsgICAgdHlwZTogb2JqZWN0Cj4gKyAgICBkZXNjcmlw
+dGlvbjoKPiArICAgICAgQSBub2RlIGNvbnRhaW5pbmcgRFNJIGlucHV0ICYgb3V0cHV0IHBvcnQg
+bm9kZXMgd2l0aCBlbmRwb2ludAo+ICsgICAgICBkZWZpbml0aW9ucyBhcyBkb2N1bWVudGVkIGlu
+Cj4gKyAgICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1p
+bnRlcmZhY2VzLnR4dAo+ICsgICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+Z3JhcGgudHh0Cj4gKyAgICBwcm9wZXJ0aWVzOgo+ICsgICAgICBwb3J0QDA6Cj4gKyAgICAgICAg
+dHlwZTogb2JqZWN0Cj4gKyAgICAgICAgZGVzY3JpcHRpb246Cj4gKyAgICAgICAgICBEU0kgaW5w
+dXQgcG9ydCBub2RlLCBjb25uZWN0ZWQgdG8gdGhlIGx0ZGMgcmdiIG91dHB1dCBwb3J0Lgo+ICsK
+PiArICAgICAgcG9ydEAxOgo+ICsgICAgICAgIHR5cGU6IG9iamVjdAo+ICsgICAgICAgIGRlc2Ny
+aXB0aW9uOgo+ICsgICAgICAgICAgRFNJIG91dHB1dCBwb3J0IG5vZGUsIGNvbm5lY3RlZCB0byBh
+IHBhbmVsIG9yIGEgYnJpZGdlIGlucHV0IHBvcnQiCj4gKwo+ICtwYXR0ZXJuUHJvcGVydGllczoK
+PiArICAiXihwYW5lbHxwYW5lbC1kc2kpQFswLTldJCI6Cj4gKyAgICB0eXBlOiBvYmplY3QKPiAr
+ICAgIGRlc2NyaXB0aW9uOgo+ICsgICAgICBBIG5vZGUgY29udGFpbmluZyB0aGUgcGFuZWwgb3Ig
+YnJpZGdlIGRlc2NyaXB0aW9uIGFzIGRvY3VtZW50ZWQgaW4KPiArICAgICAgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWlwaS1kc2ktYnVzLnR4dAo+ICsgICAgcHJv
+cGVydGllczoKPiArICAgICAgcG9ydEAwOgoKWW91IGNhbiBkcm9wIHRoaXMuIFRoZSB1bml0IGFk
+ZHJlc3MgZm9yIHRoZSBwYW5lbCBwb3J0IGlzIGRlY2lkZWQgYnkKdGhlIHBhbmVsIGJpbmRpbmcs
+IG5vdCB0aGlzIG9uZS4KCj4gKyAgICAgICAgdHlwZTogb2JqZWN0Cj4gKyAgICAgICAgZGVzY3Jp
+cHRpb246Cj4gKyAgICAgICAgICBQYW5lbCBvciBicmlkZ2UgcG9ydCBub2RlLCBjb25uZWN0ZWQg
+dG8gdGhlIERTSSBvdXRwdXQgcG9ydCAocG9ydEAxKQoKWy4uLl0KCj4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMueWFt
+bCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0
+ZGMueWFtbAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi45NGE0
+MTM3ZjcyMzYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy55YW1sCj4gQEAgLTAsMCArMSw4MSBAQAo+
+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9SIEJTRC0yLUNsYXVz
+ZSkKPiArJVlBTUwgMS4yCj4gKy0tLQo+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hl
+bWFzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy55YW1sIwo+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNl
+dHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKPiArCj4gK3RpdGxlOiBTVE1pY3JvZWxl
+Y3Ryb25pY3MgU1RNMzIgbGNkLXRmdCBkaXNwbGF5IGNvbnRyb2xsZXIKPiArCj4gK21haW50YWlu
+ZXJzOgo+ICsgIC0gUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4KPiArICAt
+IFlhbm5pY2sgRmVydHJlIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+Cj4gKwo+ICtwcm9wZXJ0aWVz
+Ogo+ICsgIGNvbXBhdGlibGU6Cj4gKyAgICBjb25zdDogc3Qsc3RtMzItbHRkYwo+ICsKPiArICBy
+ZWc6Cj4gKyAgICBtYXhJdGVtczogMQo+ICsKPiArICBpbnRlcnJ1cHRzOgo+ICsgICAgbWluSXRl
+bXM6IDIKPiArICAgIG1heEl0ZW1zOiAyCgpOZWVkIHRvIGRlc2NyaWJlIHdoYXQgZWFjaCBpbnRl
+cnJ1cHQgaXMuCgppdGVtczoKICAtIGRlc2NyaXB0aW9uOiAuLi4KICAtIGRlc2NyaXB0aW9uOiAu
+Li4KCj4gKwo+ICsgIGNsb2NrczoKPiArICAgIG1heEl0ZW1zOiAxCj4gKwo+ICsgIGNsb2NrLW5h
+bWVzOgo+ICsgICAgaXRlbXM6Cj4gKyAgICAgIC0gY29uc3Q6IGxjZAo+ICsKPiArICByZXNldHM6
+Cj4gKyAgICBtYXhJdGVtczogMQo+ICsKPiArICBwb3J0Ogo+ICsgICAgdHlwZTogb2JqZWN0Cj4g
+KyAgICBkZXNjcmlwdGlvbjoKPiArICAgICAgIlZpZGVvIHBvcnQgZm9yIERQSSBSR0Igb3V0cHV0
+Lgo+ICsgICAgICBsdGRjIGhhcyBvbmUgdmlkZW8gcG9ydCB3aXRoIHVwIHRvIDIgZW5kcG9pbnRz
+Ogo+ICsgICAgICAtIGZvciBleHRlcm5hbCBkcGkgcmdiIHBhbmVsIG9yIGJyaWRnZSwgdXNpbmcg
+Z3Bpb3MuCj4gKyAgICAgIC0gZm9yIGludGVybmFsIGRwaSBpbnB1dCBvZiB0aGUgTUlQSSBEU0kg
+aG9zdCBjb250cm9sbGVyLgo+ICsgICAgICBOb3RlOiBUaGVzZSAyIGVuZHBvaW50cyBjYW5ub3Qg
+YmUgYWN0aXZhdGVkIHNpbXVsdGFuZW91c2x5Lgo+ICsgICAgICBQbGVhc2UgcmVmZXIgdG8gdGhl
+IGJpbmRpbmdzIGRlZmluZWQgaW4KPiArICAgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiIKPiArCj4gKyAgZG1hLXJhbmdlczoK
+PiArICAgIG1heEl0ZW1zOiAxCgpkbWEtcmFuZ2VzIGdvZXMgaW4gYnVzIG5vZGVzLCBub3QgZGV2
+aWNlIG5vZGVzLgoKPiArCj4gK3JlcXVpcmVkOgo+ICsgIC0gY29tcGF0aWJsZQo+ICsgIC0gcmVn
+Cj4gKyAgLSBpbnRlcnJ1cHRzCj4gKyAgLSBjbG9ja3MKPiArICAtIGNsb2NrLW5hbWVzCj4gKyAg
+LSByZXNldHMKPiArICAtIHBvcnQKPiArCj4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQo+
+ICsKPiArZXhhbXBsZXM6Cj4gKyAgLSB8Cj4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50
+ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPgo+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdz
+L2Nsb2NrL3N0bTMybXAxLWNsa3MuaD4KPiArICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9yZXNl
+dC9zdG0zMm1wMS1yZXNldHMuaD4KPiArICAgIGx0ZGM6IGRpc3BsYXktY29udHJvbGxlckA0MDAx
+NjgwMCB7Cj4gKyAgICAgICAgY29tcGF0aWJsZSA9ICJzdCxzdG0zMi1sdGRjIjsKPiArICAgICAg
+ICByZWcgPSA8MHg1YTAwMTAwMCAweDQwMD47Cj4gKyAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNf
+U1BJIDg4IElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+ICsgICAgICAgICAgICAgICAgICAgICA8R0lD
+X1NQSSA4OSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArICAgICAgICBjbG9ja3MgPSA8JnJjYyBM
+VERDX1BYPjsKPiArICAgICAgICBjbG9jay1uYW1lcyA9ICJsY2QiOwo+ICsgICAgICAgIHJlc2V0
+cyA9IDwmcmNjIExURENfUj47Cj4gKwo+ICsgICAgICAgIHBvcnQgewo+ICsgICAgICAgICAgICAg
+bHRkY19vdXRfZHNpOiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1l
+bmRwb2ludCA9IDwmZHNpX2luPjsKPiArICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgfTsKPiAr
+ICAgIH07Cj4gKwo+ICsuLi4KPiArCj4gLS0KPiAyLjE1LjAKPgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
