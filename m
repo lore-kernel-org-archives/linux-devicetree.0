@@ -1,72 +1,112 @@
-From: Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: Enable high resolution timer
-Date: Mon, 14 Oct 2019 09:31:14 +0000
-Message-ID: <61dda183-cd53-153b-8ed1-e2ecb8f96e03@st.com>
-References: <20190927084819.645-1-benjamin.gaignard@st.com>
- <da48ce9633441cd0186518fa7ce1d528@www.loen.fr>
- <341949c8-7864-5d65-2797-988022724a4c@st.com>
- <ff11797da8f049b354797689754fde52@www.loen.fr>
- <69af57d1-13a9-9e35-78f2-4a0d17bdaf6d@st.com>
- <e376301a8e9ec02dfd7713748abed83e@www.loen.fr>
+From: Dilip Kota <eswara.kota@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+Date: Mon, 14 Oct 2019 17:41:00 +0800
+Message-ID: <7db54ec8-b770-f22f-c711-52d58cae2fe3@linux.intel.com>
+References: <34336c9a-8e87-8f84-2ae8-032b7967928f@linux.intel.com>
+ <CAFBinCDfM3ssHisMBKXZUFkfoAFw51TaUuKt_aBgtD-mN+9fhg@mail.gmail.com>
+ <657d796d-cb1b-472d-fe67-f7b9bf12fd79@linux.intel.com>
+ <CAFBinCA5sRp1-siqZqJzFL2nuD3BtjrbD65QtpWbnTgtPNXY1A@mail.gmail.com>
+ <cebd8f1d-90ab-87e7-9a34-f5c760688ce5@linux.intel.com>
+ <CAFBinCCXo50OX6=8Fz-=nRKuELU_fMOCX=z6iwAcw0_Tfgn1ug@mail.gmail.com>
+ <da347f1c-864c-7d68-33c8-045e46651f45@linux.intel.com>
+ <CAFBinCDhLYmiORvHdZJAN5cuUjc6eWJK5n9Qg26B0dEhhqUqVQ@mail.gmail.com>
+ <389f360a-a993-b9a8-4b50-ad87bcfec767@linux.intel.com>
+ <CAFBinCBwrTajCrSf-UqZY5gHqUSn0UTmbc_TLPNVZrPyY5jpOA@mail.gmail.com>
+ <20191003141955.zi5wqjqf4wa7lhv7@pengutronix.de>
+ <CAFBinCAEzBk7tT5M-F3H4kLnKURRkK2oSSAmKkrjAn7_wdAROA@mail.gmail.com>
+ <1570550166.18914.12.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e376301a8e9ec02dfd7713748abed83e@www.loen.fr>
+In-Reply-To: <1570550166.18914.12.camel@pengutronix.de>
 Content-Language: en-US
-Content-ID: <6FE1FB0E6257394EB81AD2DCD2303F11@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <maz@kernel.org>
-Cc: Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Philipp Zabel <pza@pengutronix.de>
+Cc: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiA5LzI3LzE5IDI6NTkgUE0sIE1hcmMgWnluZ2llciB3cm90ZToNCj4gT24gMjAxOS0wOS0y
-NyAxMzo0NCwgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+PiBPbiA5LzI3LzE5IDI6NDEgUE0s
-IE1hcmMgWnluZ2llciB3cm90ZToNCj4+PiBPbiAyMDE5LTA5LTI3IDEzOjM2LCBCZW5qYW1pbiBH
-QUlHTkFSRCB3cm90ZToNCj4+Pj4gT24gOS8yNy8xOSAxOjIyIFBNLCBNYXJjIFp5bmdpZXIgd3Jv
-dGU6DQo+Pj4+PiBPbiAyMDE5LTA5LTI3IDA5OjQ4LCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToN
-Cj4+Pj4+PiBBZGRpbmcgYWx3YXlzLW9uIG1ha2VzIGFybSBhcmNoX3RpbWVyIGNsYWltIHRvIGJl
-IGFuIGhpZ2ggcmVzb2x1dGlvbg0KPj4+Pj4+IHRpbWVyLg0KPj4+Pj4+IFRoYXQgaXMgcG9zc2li
-bGUgYmVjYXVzZSBwb3dlciBtb2RlIHdvbid0IHN0b3AgY2xvY2tpbmcgdGhlIHRpbWVyLg0KPj4+
-Pj4NCj4+Pj4+IFRoZSAiYWx3YXlzLW9uIiBpcyBub3QgYWJvdXQgdGhlIGNsb2NrLiBJdCBpcyBh
-Ym91dCB0aGUgY29tcGFyYXRvci4NCj4+Pj4+IFRoZSBjbG9jayBpdHNlbGYgaXMgKmd1YXJhbnRl
-ZWQqIHRvIGFsd2F5cyB0aWNrLiBJZiBpdCBkaWRuJ3QsDQo+Pj4+PiB0aGF0J2QgYmUNCj4+Pj4+
-IGFuIGludGVncmF0aW9uIGJ1ZywgYW5kIGEgcHJldHR5IGJhZCBvbmUuDQo+Pj4+Pg0KPj4+Pj4g
-V2hhdCB5b3UncmUgY2xhaW1pbmcgaGVyZSBpcyB0aGF0IHlvdXIgQ1BVIG5ldmVyIGVudGVycyBh
-IGxvdy1wb3dlcg0KPj4+Pj4gbW9kZT8NCj4+Pj4+IEV2ZXI/IEkgZmluZCB0aGlzIHZlcnkgaGFy
-ZCB0byBiZWxpZXZlLg0KPj4+Pj4NCj4+Pj4+IEZ1cnRoZXJtb3JlLCBjbGFpbWluZyB0aGF0IGFs
-d2F5cy1vbiBpcyB0aGUgd2F5IHRvIGZvcmNlIHRoZSANCj4+Pj4+IGFyY2gtdGltZXINCj4+Pj4+
-IHRvIGJlIGFuIGhydGltZXIgaXMgZmFjdHVhbGx5IHdyb25nLiBUaGlzIGlzIHdoYXQgaGFwcGVu
-cyAqaWYqIA0KPj4+Pj4gdGhpcyBpcw0KPj4+Pj4gdGhlIG9ubHkgdGltZXIgaW4gdGhlIHN5c3Rl
-bS4gVGhlIG9ubHkgY2FzZSB0aGlzIGlzIHRydWUgaXMgZm9yIA0KPj4+Pj4gdmlydHVhbA0KPj4+
-Pj4gbWFjaGluZXMuIEFueXRoaW5nIGVsc2UgaGFzIGEgZ2xvYmFsIHRpbWVyIHNvbWV3aGVyZSB0
-aGF0IHdpbGwgYWxsb3cNCj4+Pj4+IHRoZSBhcmNoIHRpbWVycyB0byBiZSB1c2VkIGFzIGFuIGhy
-dGltZXIuDQo+Pj4+Pg0KPj4+Pj4gSSdtIHByZXR0eSBzdXJlIHlvdSB0b28gaGF2ZSBhIGdsb2Jh
-bCB0aW1lciBzb21ld2hlcmUgaW4geW91ciBzeXN0ZW0uDQo+Pj4+PiBFbmFibGUgaXQsIGFuZCBl
-bmpveSBocnRpbWVycyB3aXRob3V0IGhhdmluZyB0byBsaWUgYWJvdXQgdGhlDQo+Pj4+PiBwcm9w
-ZXJ0aWVzDQo+Pj4+PiBvZiB5b3VyIHN5c3RlbSEgOy0pDQo+Pj4+DQo+Pj4+IEhpIE1hcmMsDQo+
-Pj4+DQo+Pj4+IFRoaXMgU29DIGRvZXNuJ3QgaGF2ZSBhbnkgb3RoZXIgZ2xvYmFsIHRpbWVyLiBV
-c2UgYXJjaF90aW1lIGlzIHRoZSANCj4+Pj4gb25seQ0KPj4+PiB3ZSBoYXZlIHRvIHByb3ZpZGUg
-aHJ0aW1lciBvbiB0aGlzIHN5c3RlbS4NCj4+Pg0KPj4+IEFuZCB5b3UgZG9uJ3QgaGF2ZSBhbnkg
-Zm9ybSBvZiBwb3dlciBtYW5hZ2VtZW50IGVpdGhlcj8gV2hhdCBoYXBwZW5zIA0KPj4+IHdoZW4N
-Cj4+PiB5b3VyIENQVSBnb2VzIGludG8gaWRsZT8gSWYgeW91ciBzeXN0ZW0gZG9lcyBhbnkgZm9y
-bSBvZiBwb3dlciANCj4+PiBtYW5hZ2VtZW50DQo+Pj4gKmFuZCogZG9lc24ndCBoYXZlIGEgc2Vw
-YXJhdGUgdGltZXIsIGl0IGlzIHJlbWFya2FibHkgYnJva2VuLg0KPj4NCj4+IEV2ZW4gaW4gbG93
-LXBvd2VyIG1vZGVzIHRoaXMgdGltZXIgaXMgYWx3YXlzIHBvd2VyZWQgYW5kIGNsb2NrZWQgc28g
-aXQNCj4+IGlzIHdvcmtpbmcgZmluZS4NCj4NCj4gWW91J3JlIG1pc3NpbmcgdGhlIHBvaW50IGFn
-YWluLiBJdCBpcyBub3QgYWJvdXQgdGhlIGNsb2NrLCBidXQgdGhlIA0KPiBjb21wYXJhdG9yDQo+
-IHRoYXQgaXMgaW50ZXJuYWwgdG8gdGhlIENQVSwgYW5kIG5vdCBmdW5jdGlvbmFsIHdoZW4gdGhl
-IENQVSBpcyBpbiBpdHMgDQo+IGxvd2VzdA0KPiBwb3dlciBtb2RlLiBTZWUgYWxzbyB0aGUgdmVy
-YmlhZ2UgaW4gWzFdICg0NC4zIFNUR0VOIGZ1bmN0aW9uYWwgDQo+IGRlc2NyaXB0aW9uKSwNCj4g
-d2hpY2ggaW5kaWNhdGVzIHRoYXQgdGhlIGNsb2NrIHNvdXJjZSBhY3R1YWxseSBkaWVzIGluIGxv
-dy1wb3dlciBtb2RlIA0KPiAoZ29pbmcNCj4gYWdhaW5zdCB0aGUgYXJjaGl0ZWN0dXJlIHdoaWNo
-IG1hbmRhdGVzIGl0IHRvIGJlIGFsd2F5cy1vbikuDQo+DQo+IEFsc28sIGNvbWluZyBiYWNrIHRv
-IHlvdXIgZWFybGllciBhc3NlcnRpb24gKCJUaGlzIFNvQyBkb2Vzbid0IGhhdmUgDQo+IGFueSBv
-dGhlcg0KPiBnbG9iYWwgdGltZXIiKTogVGhlIGRvY3VtZW50YXRpb24gYXQgWzFdIHNob3dzIGF0
-IGxlYXN0IDE3IHRpbWVycyB0aGF0IA0KPiBjb3VsZA0KPiBiZSB1c2VkIGFuZCBhdm9pZCB0aGlz
-IGRpcnR5IGhhY2suDQo+DQo+IFNvIGZvciB3aGF0IGl0IGlzIHdvcnRoLCBOQUsgdG8gdGhpcyBw
-YXRjaC4NCg0KDQpIaSBNYXJjLA0KDQpJIGhhdmUgbGlzdGVuIHlvdXIgcmVtYXJrcyBhbmQgcHJv
-cG9zZSBhbm90aGVyIHdheSB0byBzb2x2ZSB0aGlzIGlzc3VlOg0KDQpodHRwczovL2xrbWwub3Jn
-L2xrbWwvMjAxOS8xMC85LzY5MA0KDQpUaGFua3MsDQoNCkJlbmphbWluDQoNCg0KPg0KPiDCoMKg
-wqDCoMKgwqDCoCBNLg0KPg0KPiBbMV0gaHR0cHM6Ly93d3cuc3QuY29tL3Jlc291cmNlL2VuL3Jl
-ZmVyZW5jZV9tYW51YWwvZG0wMDM2NjM1NS5wZGY=
+Hi Philipp,
+
+On 10/8/2019 11:56 PM, Philipp Zabel wrote:
+> Hi Martin,
+>
+> On Mon, 2019-10-07 at 21:53 +0200, Martin Blumenstingl wrote:
+>> Hi Philipp,
+>>
+>> On Thu, Oct 3, 2019 at 4:19 PM Philipp Zabel <pza@pengutronix.de> wrote:
+>> [...]
+>>>> because the register layout was greatly simplified for the newer SoCs
+>>>> (for which there is reset-intel) compared to the older ones
+>>>> (reset-lantiq).
+>>>> Dilip's suggestion (in my own words) is that you take his new
+>>>> reset-intel driver, then we will work on porting reset-lantiq over to
+>>>> that so in the end we can drop the reset-lantiq driver.
+>>> Just to be sure, you are suggesting to add support for the current
+>>> lantiq,reset binding to the reset-intel driver at a later point? I
+>>> see no reason not to do that, but I'm also not quite sure what the
+>>> benefit will be over just keeping reset-lantiq as is?
+>> according to Chuan and Dilip the current reset-lantiq implementation
+>> is wrong [0].
+> The only issue seems to be the .reset callback, which doesn't have any
+> users anway.
+The DT binding of reset-lantiq driver is also having issue. I have 
+explained here [1].
+>
+>> my understanding is that the Lantiq and Intel LGM reset controllers
+>> are identical except:
+>> - the Lantiq variant uses a weird register layout (reset and status
+>> registers not at consecutive offsets)
+>> - the bits of the reset and status registers sometimes don't match on
+>> the Lantiq variant
+> Thank you, so these are a good explanation for why the DT bindings
+> should be different.
+>
+>> - the Intel variant has a dedicated registers area for the reset
+>> controller registers, while the Lantiq variant mixes them with various
+>> other functionality (for example: USB2 PHYs)
+> I'm not quite sure I understand why the intel driver is using syscon,
+> then. Either way, it shouldn't make a big difference if regmap is used
+> anyway.
+Yes, we decided to remove the syscon and use the regmap.[2]
+>
+>>>> This approach means more work for me (as I am probably the one who
+>>>> then has to do the work to port reset-lantiq over to reset-intel).
+>>> More work than what alternative?
+>> compared to "fixing" the existing reset-lantiq driver (reset callback)
+> That is still something you could do, or just drop the .reset callback
+> because there are no reset consumers using it anyway.
+>
+> One correct thing to do would be to identify those self-clearing reset
+> bits and to disallow calling assert/deassert on them.
+>
+>> and then (instead of adding a new driver) integrating Intel LGM
+>> support into reset-lantiq
+> Since at this point I'm not even sure whether merging the two at all is
+> better than keeping them separate, I have no opinion on whether merging
+> intel support into the lantiq driver or the other way around is
+> preferable.
+>
+>>>> I'm happy to do that work if you think that it's worth following this
+>>>> approach.  So I want your opinion on this before I spend any effort on
+>>>> porting reset-lantiq over to reset-intel.
+>>> Reset drivers are typically so simple, I'm not quite sure whether it is
+>>> worth to integrate multiple drivers if it complicates matters too much.
+>>> In this case though I expect it would just be adding support for a
+>>> custom .of_xlate and lantiq specific register property parsing?
+>> yes, that's how I understand the Lantiq and Intel reset controllers:
+>> - reset/status/assert/deassert callbacks would be shared across all variants
+>> - register parsing and of_xlate are SoC specific
+> Ok. If that turns out to be less rather than more boilerplate than two
+> separate drivers, that should be fine.
+
+Thanks Philipp for your time and briefly explaining your view.
+
+Regards,
+Dilip
+
+[1]: https://www.spinics.net/lists/devicetree/msg308930.html
+[2]: https://lkml.org/lkml/2019/9/2/289
+
+> regards
+> Philipp
