@@ -1,32 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding
- for TI UFS wrapper
-Date: Mon, 14 Oct 2019 13:09:47 -0500
-Message-ID: <20191014180947.GA881@bogus>
-References: <20191010083357.28982-1-vigneshr@ti.com>
- <20191010083357.28982-2-vigneshr@ti.com>
+Subject: Re: [PATCH net-next v2 1/3] dt-bindings: can: rcar_can: Add r8a774b1
+ support
+Date: Mon, 14 Oct 2019 13:10:16 -0500
+Message-ID: <20191014181016.GA1927@bogus>
+References: <1570717560-7431-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570717560-7431-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191010083357.28982-2-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, jejb@linux.ibm.com, Martin K Petersen <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, Janek Kotas <jank@cadence.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, nsekhar@ti.com
+In-Reply-To: <1570717560-7431-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Oct 2019 14:03:56 +0530, Vignesh Raghavendra wrote:
-> Add binding documentation of TI wrapper for Cadence UFS Controller.
+On Thu, 10 Oct 2019 15:25:58 +0100, Fabrizio Castro wrote:
+> Document RZ/G2N (r8a774b1) SoC specific bindings.
 > 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
+> v1->v2:
+> * No change
 > 
-> v2:
-> Define Cadence UFS controller as child node of the wrapper as suggested
-> by Rob H
-> 
->  .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
