@@ -1,54 +1,95 @@
-From: Dan Robertson <dan@dlrobertson.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: accel: bma400: add bindings
-Date: Mon, 14 Oct 2019 17:27:31 +0000
-Message-ID: <20191014172731.GA30646@nessie>
-References: <20191012192525.21040-1-dan@dlrobertson.com>
- <20191012192525.21040-2-dan@dlrobertson.com>
- <20191014171521.GA29335@bogus>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+From: Johan Jonker <jbx6244@gmail.com>
+Subject: [PATCH] ARM: dts: rockchip: remove some tabs and spaces from dtsi files
+Date: Mon, 14 Oct 2019 20:00:45 +0200
+Message-ID: <20191014180045.11804-1-jbx6244@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191014171521.GA29335@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Andy Shevchenko <andy.shevchenko@gmail.com>, devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+To: heiko@sntech.de
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Cleanup the Rockchip dtsi files a little bit
+by removing some tabs and spaces.
 
---cNdxnHkX5QqsyA0e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3036.dtsi           |  4 ++--
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi |  2 +-
+ arch/arm/boot/dts/rk3288-tinker.dtsi    | 14 +++++---------
+ 3 files changed, 8 insertions(+), 12 deletions(-)
 
-> Fails 'make dt_binding_check':
-
-Thanks for the note. Should running `make dt_binding_check` be added to
-`Documentation/devicetree/bindings/submitting-patches.rst`?
-
-Cheers,
-
- - Dan
-
---cNdxnHkX5QqsyA0e
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEF5dO2RaKc5C+SCJ9RcSmUsR+QqUFAl2kr/cACgkQRcSmUsR+
-QqWFXg/9FsPJaiW55rPeVJ+BAFKW2BQd/QKN+TynZB/aEydTO/ohevd2G/u2C2Ak
-4z1zFgAqBumsGcEeoy7P1PpIaqLiJ1WBOr4H87bGGIRvjHvyTVStldh6hIQ/k7PI
-WbK9+no+FJ/Wwjgdcyty1Ni6lp8shMtJexTynIeymvYPKnC9LvdUp5buGe7FylRS
-F69iFget4xN9QciFFr27mq0wx+RtSOM5L42stvTjz8SBj/TMTUt9ROuwgr3TlPUN
-lUJT+nOQAhZZPT4vXsAgte5D2Fl+KmOi459cmqoshotihZnmZRmWYgLHpKFM4dju
-AEl4acLIMopFdBM9jFBJCLBb/lQbIlX3mf4E6rR2bBGt49Vc3x/yGKgddj9s+wyp
-8Xq5rlAplIZf+enrooHLxAXeUM2I1IizdZooGFY00zAXo7ZxpwNcyvL2g4iC/ezY
-wuNjaKuboGWCLbnKYi5CJrTSTUSt8pqVH+KFm58W5gPQrW2ZwFilDZYs1ZqM2inM
-/hhGAgBHP0U7p7cQZr4jr+qp6Idinns3RQCsYcZv1iRre4MSnmx3B5i7iOjjzlcn
-HCofz25ssaz6fDOA1bRhl6bhPhlXeQ5JGc+q1ELIp4Bawoc/05LtAPznIOlBEEqj
-UMO5CAycCKUG5FdtrTLXOYaHOsYHM9biuBKIuXd/ZxipDQ/VSQA=
-=36QZ
------END PGP SIGNATURE-----
-
---cNdxnHkX5QqsyA0e--
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index c776321b2..c70182c5a 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -696,8 +696,8 @@
+ 
+ 		hdmi {
+ 			hdmi_ctl: hdmi-ctl {
+-				rockchip,pins = <1 RK_PB0  1 &pcfg_pull_none>,
+-						<1 RK_PB1  1 &pcfg_pull_none>,
++				rockchip,pins = <1 RK_PB0 1 &pcfg_pull_none>,
++						<1 RK_PB1 1 &pcfg_pull_none>,
+ 						<1 RK_PB2 1 &pcfg_pull_none>,
+ 						<1 RK_PB3 1 &pcfg_pull_none>;
+ 			};
+diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+index 9f9e2bfd1..14aebd447 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
++++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+@@ -237,7 +237,7 @@
+ 
+ 	gmac {
+ 		phy_rst: phy-rst {
+-			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO  &pcfg_output_high>;
++			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_output_high>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+index 81e4e953d..0aeef23ca 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dtsi
++++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+@@ -382,18 +382,15 @@
+ 
+ 	pmic {
+ 		pmic_int: pmic-int {
+-			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO \
+-					&pcfg_pull_up>;
++			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 
+ 		dvs_1: dvs-1 {
+-			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO \
+-					&pcfg_pull_down>;
++			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_down>;
+ 		};
+ 
+ 		dvs_2: dvs-2 {
+-			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO \
+-					&pcfg_pull_down>;
++			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO &pcfg_pull_down>;
+ 		};
+ 	};
+ 
+@@ -406,8 +403,7 @@
+ 		};
+ 
+ 		sdmmc_clk: sdmmc-clk {
+-			rockchip,pins = <6 RK_PC4 1 \
+-					&pcfg_pull_none_drv_8ma>;
++			rockchip,pins = <6 RK_PC4 1 &pcfg_pull_none_drv_8ma>;
+ 		};
+ 
+ 		sdmmc_cmd: sdmmc-cmd {
+@@ -432,7 +428,7 @@
+ 	sdio {
+ 		wifi_enable: wifi-enable {
+ 			rockchip,pins = <4 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>,
+-				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
++					<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+ };
+-- 
+2.11.0
