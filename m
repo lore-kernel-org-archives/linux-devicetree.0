@@ -1,44 +1,106 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 1/2] dt-bindings: i2c: replace property
- i2c-mux-idle-disconnect
-Date: Mon, 14 Oct 2019 15:44:54 +0000
-Message-ID: <4124752f-19a2-e3c1-7887-07ba66a79c29@axentia.se>
-References: <20191014112558.3881-1-biwen.li@nxp.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH v3 2/2] soundwire: qcom: add support for
+ SoundWire controller
+Date: Mon, 14 Oct 2019 10:43:54 -0500
+Message-ID: <1a1a4ac0-388c-8999-47a2-6d6f7471ab93@linux.intel.com>
+References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
+ <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
+ <9d00c94b-1bce-9fdf-55fe-ee681466a97a@linux.intel.com>
+ <d053a17e-3d6d-e3b6-f988-485e77c30e3b@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191014112558.3881-1-biwen.li@nxp.com>
+In-Reply-To: <d053a17e-3d6d-e3b6-f988-485e77c30e3b@linaro.org>
 Content-Language: en-US
-Content-ID: <317733F89A582E43892671097717F529@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biwen Li <biwen.li@nxp.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, robh@kernel.org, vkoul@kernel.org
+Cc: broonie@kernel.org, bgoswami@codeaurora.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS0xMC0xNCAxMzoyNSwgQml3ZW4gTGkgd3JvdGU6DQo+IFRoaXMgcmVwbGFjZXMgcHJv
-cGVydHkgaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3Qgd2l0aCBpZGxlLXN0YXRlDQo+IA0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBCaXdlbiBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4NCj4gLS0tDQo+ICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50eHQgfCA0ICst
-LS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMyBkZWxldGlvbnMoLSkNCj4g
-DQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2ky
-Yy1tdXgtcGNhOTU0eC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJj
-L2kyYy1tdXgtcGNhOTU0eC50eHQNCj4gaW5kZXggMzBhYzZhNjBmMDQxLi5mMmRiNTE3YjE2MzUg
-MTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJj
-LW11eC1wY2E5NTR4LnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50eHQNCj4gQEAgLTI1LDkgKzI1LDcgQEAgUmVxdWlyZWQg
-UHJvcGVydGllczoNCj4gIE9wdGlvbmFsIFByb3BlcnRpZXM6DQo+ICANCj4gICAgLSByZXNldC1n
-cGlvczogUmVmZXJlbmNlIHRvIHRoZSBHUElPIGNvbm5lY3RlZCB0byB0aGUgcmVzZXQgaW5wdXQu
-DQo+IC0gIC0gaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3Q6IEJvb2xlYW47IGlmIGRlZmluZWQsIGZv
-cmNlcyBtdXggdG8gZGlzY29ubmVjdCBhbGwNCj4gLSAgICBjaGlsZHJlbiBpbiBpZGxlIHN0YXRl
-LiBUaGlzIGlzIG5lY2Vzc2FyeSBmb3IgZXhhbXBsZSwgaWYgdGhlcmUgYXJlIHNldmVyYWwNCj4g
-LSAgICBtdWx0aXBsZXhlcnMgb24gdGhlIGJ1cyBhbmQgdGhlIGRldmljZXMgYmVoaW5kIHRoZW0g
-dXNlIHNhbWUgSTJDIGFkZHJlc3Nlcy4NCj4gKyAgLSBpZGxlLXN0YXRlOiBQbGVhc2UgcmVmZXIg
-dG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL211eC9tdXgtY29udHJvbGxlci50
-eHQNCj4gICAgLSBpbnRlcnJ1cHRzOiBJbnRlcnJ1cHQgbWFwcGluZyBmb3IgSVJRLg0KPiAgICAt
-IGludGVycnVwdC1jb250cm9sbGVyOiBNYXJrcyB0aGUgZGV2aWNlIG5vZGUgYXMgYW4gaW50ZXJy
-dXB0IGNvbnRyb2xsZXIuDQo+ICAgIC0gI2ludGVycnVwdC1jZWxscyA6IFNob3VsZCBiZSB0d28u
-DQo+IA0KDQpZb3UgY2FuJ3QganVzdCByZW1vdmUgaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3QuIEl0
-IG5lZWRzIHRvIHJlbWFpbiwgYW5kIHRoZQ0KZHJpdmVyIG5lZWRzIHRvIG1haW50YWluIHN1cHBv
-cnQgZm9yIHRoaXMgaW4gY2FzZSBhIG5ldyBrZXJuZWwgaXMgcnVubmluZw0Kd2l0aCBhbiBvbGQg
-ZGV2aWNldHJlZS4NCg0KQ2hlZXJzLA0KUGV0ZXINCg==
+
+
+On 10/14/19 4:04 AM, Srinivas Kandagatla wrote:
+> Thanks Pierre for taking time to review the patch.
+> 
+> On 11/10/2019 18:50, Pierre-Louis Bossart wrote:
+>>
+>>> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 
+>>> cmd_data,
+>>> +                     u8 dev_addr, u16 reg_addr)
+>>> +{
+>>> +    DECLARE_COMPLETION_ONSTACK(comp);
+>>> +    unsigned long flags;
+>>> +    u32 val;
+>>> +    int ret;
+>>> +
+>>> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
+>>> +    ctrl->comp = &comp;
+>>> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+>>> +    val = SWRM_REG_VAL_PACK(cmd_data, dev_addr,
+>>> +                SWRM_SPECIAL_CMD_ID, reg_addr);
+>>> +    ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
+>>> +    if (ret)
+>>> +        goto err;
+>>> +
+>>> +    ret = wait_for_completion_timeout(ctrl->comp,
+>>> +                      msecs_to_jiffies(TIMEOUT_MS));
+>>> +
+>>> +    if (!ret)
+>>> +        ret = SDW_CMD_IGNORED;
+>>> +    else
+>>> +        ret = SDW_CMD_OK;
+>>
+>> It's odd to report CMD_IGNORED on a timeout. CMD_IGNORED is a valid 
+>> answer that should be retrieved immediately. You probably need to 
+>> translate the soundwire errors into -ETIMEOUT or something.
+> 
+> In this controller we have no way to know if the command is ignored or 
+> timedout, so All the commands that did not receive response either due 
+> to ignore or timeout are currently detected with out any response 
+> interrupt in given timeout.
+
+ok. It's still very odd. a CMD_IGNORED is a required answer e.g. when 
+there is no device0 left to enumerate, when a device has fallen off the 
+bus or when accessing a non-implemented register.
+
+>>> +static int qcom_swrm_register_dais(struct qcom_swrm_ctrl *ctrl)
+>>> +{
+>>> +    int num_dais = ctrl->num_dout_ports + ctrl->num_din_ports;
+>>> +    struct snd_soc_dai_driver *dais;
+>>> +    struct snd_soc_pcm_stream *stream;
+>>> +    struct device *dev = ctrl->dev;
+>>> +    int i;
+>>> +
+>>> +    /* PDM dais are only tested for now */
+>>> +    dais = devm_kcalloc(dev, num_dais, sizeof(*dais), GFP_KERNEL);
+>>> +    if (!dais)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    for (i = 0; i < num_dais; i++) {
+>>> +        dais[i].name = devm_kasprintf(dev, GFP_KERNEL, "SDW Pin%d", i);
+>>> +        if (!dais[i].name)
+>>> +            return -ENOMEM;
+>>> +
+>>> +        if (i < ctrl->num_dout_ports) {
+>>> +            stream = &dais[i].playback;
+>>> +            stream->stream_name = devm_kasprintf(dev, GFP_KERNEL,
+>>> +                                 "SDW Tx%d", i);
+>>> +        } else {
+>>> +            stream = &dais[i].capture;
+>>> +            stream->stream_name = devm_kasprintf(dev, GFP_KERNEL,
+>>> +                                 "SDW Rx%d", i);
+>>> +        }
+>>
+>> For the Intel stuff, we removed the stream_name assignment since it 
+>> conflicted with the DAI widgets added by the topology. Since the code 
+>> looks inspired by the Intel DAI handling, you should look into this.
+> 
+> Yes, this code was inspired by Intel's DAI handling, I will take a look 
+> a look at latest code and update accordingly.
+
+
+FWIW, the stream handling seems to have issues as well, specifically the 
+'deprepare' part, we are currently working around errors with 
+suspend-resume, see e.g. experimental branch at 
+https://github.com/thesofproject/linux/pull/1314
