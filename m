@@ -1,202 +1,499 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [Patch V10 0/8] Tegra XUSB gadget driver support
-Date: Mon, 14 Oct 2019 12:02:57 +0200
-Message-ID: <20191014100257.GB419598@ulmo>
-References: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: clk: qcom: Add YAML schemas for the
+ GCC clock bindings
+Date: Mon, 14 Oct 2019 15:46:39 +0530
+Message-ID: <632ef77f-dfea-3bb1-c10a-e2b5e75fc2fb@codeaurora.org>
+References: <20190918095018.17979-1-tdas@codeaurora.org>
+ <20190918095018.17979-3-tdas@codeaurora.org> <20190927172743.GA12132@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <20190927172743.GA12132@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nagarjuna Kristam <nkristam@nvidia.com>, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---v9Ux+11Zm5mwPlX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your comments.
 
-On Mon, Sep 23, 2019 at 01:55:44PM +0530, Nagarjuna Kristam wrote:
-> Patches 1-3 are phy driver changes to add support for device
-> mode.
-> Patches 4-7 are changes related to XUSB device mode
-> controller driver.
-> Patch 8 is to enable drivers for XUDC support in defconfig
->=20
-> Test Steps(USB 2.0):
-> - Enable "USB Gadget precomposed configurations" in defconfig
-> - Build, flash and boot Jetson TX1
-> - Connect Jetson TX1 and Ubuntu device using USB A to Micro B
->   cable
-> - After boot on Jetson TX1 terminal usb0 network device should be
->   enumerated
-> - Assign static ip to usb0 on Jetson TX1 and corresponding net
->   device on ubuntu
-> - Run ping test and transfer test(used scp) to check data transfer
->   communication
+On 9/27/2019 10:57 PM, Rob Herring wrote:
+> On Wed, Sep 18, 2019 at 03:20:17PM +0530, Taniya Das wrote:
+>> The GCC clock provider have a bunch of generic properties that
+>> are needed in a device tree. Add a YAML schemas for those. Also update
+>> the compatible for SC7180 along with example for clocks & clock-names.
+> 
+> I'm fine fixing errors in the conversion, but adding a new chip should
+> be separate patch.
+> 
 
-Hi Felipe, Kishon, Greg,
+Sure, will take care of splitting the patch.
 
-Patches 1-3 provide new API that is required by patch 7, so I think
-patches 1, 2, 3, 4 and 7 should probably all go through a single tree to
-avoid having to model the dependencies using stable branches.
+>>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/clock/qcom,gcc.txt    |  94 -----------
+>>   .../devicetree/bindings/clock/qcom,gcc.yaml   | 157 ++++++++++++++++++
+>>   include/dt-bindings/clock/qcom,gcc-sc7180.h   | 155 +++++++++++++++++
+>>   3 files changed, 312 insertions(+), 94 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>>   create mode 100644 include/dt-bindings/clock/qcom,gcc-sc7180.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>> deleted file mode 100644
+>> index d14362ad4132..000000000000
+>> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>> +++ /dev/null
+>> @@ -1,94 +0,0 @@
+>> -Qualcomm Global Clock & Reset Controller Binding
+>> -------------------------------------------------
+>> -
+>> -Required properties :
+>> -- compatible : shall contain only one of the following:
+>> -
+>> -			"qcom,gcc-apq8064"
+>> -			"qcom,gcc-apq8084"
+>> -			"qcom,gcc-ipq8064"
+>> -			"qcom,gcc-ipq4019"
+>> -			"qcom,gcc-ipq8074"
+>> -			"qcom,gcc-msm8660"
+>> -			"qcom,gcc-msm8916"
+>> -			"qcom,gcc-msm8960"
+>> -			"qcom,gcc-msm8974"
+>> -			"qcom,gcc-msm8974pro"
+>> -			"qcom,gcc-msm8974pro-ac"
+>> -			"qcom,gcc-msm8994"
+>> -			"qcom,gcc-msm8996"
+>> -			"qcom,gcc-msm8998"
+>> -			"qcom,gcc-mdm9615"
+>> -			"qcom,gcc-qcs404"
+>> -			"qcom,gcc-sdm630"
+>> -			"qcom,gcc-sdm660"
+>> -			"qcom,gcc-sdm845"
+>> -			"qcom,gcc-sm8150"
+>> -
+>> -- reg : shall contain base register location and length
+>> -- #clock-cells : shall contain 1
+>> -- #reset-cells : shall contain 1
+>> -
+>> -Optional properties :
+>> -- #power-domain-cells : shall contain 1
+>> -- Qualcomm TSENS (thermal sensor device) on some devices can
+>> -be part of GCC and hence the TSENS properties can also be
+>> -part of the GCC/clock-controller node.
+>> -For more details on the TSENS properties please refer
+>> -Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+>> -- protected-clocks : Protected clock specifier list as per common clock
+>> - binding.
+>> -
+>> -For SM8150 only:
+>> -       - clocks: a list of phandles and clock-specifier pairs,
+>> -                 one for each entry in clock-names.
+>> -       - clock-names: "bi_tcxo" (required)
+>> -                      "sleep_clk" (optional)
+>> -                      "aud_ref_clock" (optional)
+>> -
+>> -Example:
+>> -	clock-controller@900000 {
+>> -		compatible = "qcom,gcc-msm8960";
+>> -		reg = <0x900000 0x4000>;
+>> -		#clock-cells = <1>;
+>> -		#reset-cells = <1>;
+>> -		#power-domain-cells = <1>;
+>> -	};
+>> -
+>> -Example of GCC with TSENS properties:
+>> -	clock-controller@900000 {
+>> -		compatible = "qcom,gcc-apq8064";
+>> -		reg = <0x00900000 0x4000>;
+>> -		nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+>> -		nvmem-cell-names = "calib", "calib_backup";
+>> -		#clock-cells = <1>;
+>> -		#reset-cells = <1>;
+>> -		#thermal-sensor-cells = <1>;
+>> -	};
+>> -
+>> -Example of GCC with protected-clocks properties:
+>> -	clock-controller@100000 {
+>> -		compatible = "qcom,gcc-sdm845";
+>> -		reg = <0x100000 0x1f0000>;
+>> -		#clock-cells = <1>;
+>> -		#reset-cells = <1>;
+>> -		#power-domain-cells = <1>;
+>> -		protected-clocks = <GCC_QSPI_CORE_CLK>,
+>> -				   <GCC_QSPI_CORE_CLK_SRC>,
+>> -				   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+>> -				   <GCC_LPASS_Q6_AXI_CLK>,
+>> -				   <GCC_LPASS_SWAY_CLK>;
+>> -	};
+>> -
+>> -Example of GCC with clocks
+>> -	gcc: clock-controller@100000 {
+>> -		compatible = "qcom,gcc-sm8150";
+>> -		reg = <0x00100000 0x1f0000>;
+>> -		#clock-cells = <1>;
+>> -		#reset-cells = <1>;
+>> -		#power-domain-cells = <1>;
+>> -		clock-names = "bi_tcxo",
+>> -		              "sleep_clk";
+>> -		clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
+>> -			 <&sleep_clk>;
+>> -	};
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>> new file mode 100644
+>> index 000000000000..056a7977c458
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>> @@ -0,0 +1,157 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+> 
+> As all the authors where QCom on the old file, can you relicense to
+> (GPL-2.0-only OR BSD-2-Clause)?
+> 
 
-Kishon, patches 1-3 have gone through several rounds of review already,
-but do you have any remaining concerns on them? If not, it'd be great if
-you could ack them. Felipe and Greg could then pick them up along with
-patches 4 and 7 into the USB tree.
+I will submit the new file with the GPL-2.0-only license and will also 
+relicense the old files to use the GPL-2.0-only.
 
-Felipe, Greg, does that sound like a reasonable plan?
+> And please, can all of Qcom and the Linaro QCom landing team get aligned
+> on this.
+> 
 
-I should also mention that while waiting for review, Nagarjuna has been
-able to extend support for the XUDC driver to Tegra186 but has so far
-been holding back on sending them out so as to not needlessly hold up
-progress on this series. However, given the interdependencies, I've come
-to think that it may be preferable to merge everything in one go instead
-of revisiting this in a couple of weeks.
+Will work out internally.
 
-If you guys prefer, Nagarjuna could send out v11 of the series and
-integrate Tegra186 support.
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/clock/qcom,gcc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Global Clock & Reset Controller Binding
+>> +
+>> +maintainers:
+>> +  - Stephen Boyd <sboyd@kernel.org>
+>> +
+>> +properties:
+>> +  "#clock-cells":
+>> +    const: 1
+>> +
+>> +  "#reset-cells":
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  compatible :
+>> +     enum:
+>> +       - qcom,gcc-apq8064
+>> +       - qcom,gcc-apq8084
+>> +       - qcom,gcc-ipq8064
+>> +       - qcom,gcc-ipq4019
+>> +       - qcom,gcc-ipq8074
+>> +       - qcom,gcc-msm8660
+>> +       - qcom,gcc-msm8916
+>> +       - qcom,gcc-msm8960
+>> +       - qcom,gcc-msm8974
+>> +       - qcom,gcc-msm8974pro
+>> +       - qcom,gcc-msm8974pro-ac
+>> +       - qcom,gcc-msm8994
+>> +       - qcom,gcc-msm8996
+>> +       - qcom,gcc-msm8998
+>> +       - qcom,gcc-mdm9615
+>> +       - qcom,gcc-qcs404
+>> +       - qcom,gcc-sdm630
+>> +       - qcom,gcc-sdm660
+>> +       - qcom,gcc-sdm845
+>> +       - qcom,gcc-sm8150
+>> +       - qcom,gcc-sc7180
+>> +
+>> +  clocks:
+>> +    minItems: 1
+>> +    maxItems: 3
+>> +    items:
+>> +      - description: Board XO source
+>> +      - description: Board active XO source
+>> +      - description: Sleep clock source(optional)
+>> +
+>> +  clock-names:
+>> +    minItems: 1
+>> +    maxItems: 3
+>> +    items:
+>> +      - const: bi_tcxo
+>> +      - const: bi_tcxo_ao
+>> +      - const: sleep_clk
+>> +
+>> +  nvmem-cells:
+>> +    minItems: 1
+>> +    maxItems: 2
+>> +    description:
+>> +      Qualcomm TSENS (thermal sensor device) on some devices can
+>> +      be part of GCC and hence the TSENS properties can also be part
+>> +      of the GCC/clock-controller node.
+>> +      For more details on the TSENS properties please refer
+>> +      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+>> +
+>> +  nvmem-cell-names:
+>> +    minItems: 1
+>> +    maxItems: 2
+>> +    description:
+>> +      Names for each nvmem-cells specified.
+>> +    items:
+>> +      - const: calib
+>> +      - const: calib_backup
+>> +
+>> +  "#thermal-sensor-cells":
+>> +    const: 1
+>>
+>> +  "#power-domain-cells":
+>> +    const: 1
+>> +
+>> +  protected-clocks:
+>> +    description:
+>> +       Protected clock specifier list as per common clock binding
+>> +
+>> +required:
+>> +  - "#clock-cells"
+>> +  - "#reset-cells"
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +examples:
+>> +  - |
+>> +    // Example:
+>> +    clock-controller@900000 {
+>> +      compatible = "qcom,gcc-msm8960";
+>> +      reg = <0x900000 0x4000>;
+>> +      #clock-cells = <1>;
+>> +      #reset-cells = <1>;
+>> +      #power-domain-cells = <1>;
+> 
+> Does this pass 'make dt_binding_check' as 'clocks' is required.
+> 
 
-Thanks,
-Thierry
+I will fix it in the next patch.
 
+>> +    };
+>> +
+>> +
+>> +  - |
+>> +    // Example of GCC with TSENS properties:
+>> +    clock-controller@900000 {
+>> +      compatible = "qcom,gcc-apq8064";
+>> +      reg = <0x00900000 0x4000>;
+>> +      nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+>> +      nvmem-cell-names = "calib", "calib_backup";
+>> +      #clock-cells = <1>;
+>> +      #reset-cells = <1>;
+>> +      #thermal-sensor-cells = <1>;
+>> +    };
+>> +
+>> +  - |
+>> +    //Example of GCC with protected-clocks properties:
+>> +    clock-controller@100000 {
+>> +      compatible = "qcom,gcc-sdm845";
+>> +      reg = <0x100000 0x1f0000>;
+>> +      #clock-cells = <1>;
+>> +      #reset-cells = <1>;
+>> +      #power-domain-cells = <1>;
+>> +      protected-clocks = <187>, <188>, <189>, <190>, <191>;
+>> +    };
+>> +
+>> +  - |
+>> +    //Example of GCC with clock node properties for SM8150:
+>> +    clock-controller@100000 {
+>> +      compatible = "qcom,gcc-sm8150";
+>> +      reg = <0x00100000 0x1f0000>;
+>> +      #clock-cells = <1>;
+>> +      #reset-cells = <1>;
+>> +      #power-domain-cells = <1>;
+>> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <&sleep_clk>;
+>> +      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+>> +     };
+>> +
+>> +  - |
+>> +    //Example of GCC with clock nodes properties:
+>> +    clock-controller@100000 {
+>> +      compatible = "qcom,gcc-sc7180";
+>> +      reg = <0x100000 0x1f0000>;
+>> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
+>> +      clock-names = "bi_tcxo", "bi_tcxo_ao";
+>> +      #clock-cells = <1>;
+>> +      #reset-cells = <1>;
+>> +      #power-domain-cells = <1>;
+>> +    };
+>> +...
+>> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> new file mode 100644
+>> index 000000000000..d76b061f6a4e
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> @@ -0,0 +1,155 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_CLK_QCOM_GCC_SC7180_H
+>> +#define _DT_BINDINGS_CLK_QCOM_GCC_SC7180_H
+>> +
+>> +/* GCC clocks */
+>> +#define GCC_GPLL0_MAIN_DIV_CDIV					0
+>> +#define GPLL0							1
+>> +#define GPLL0_OUT_EVEN						2
+>> +#define GPLL1							3
+>> +#define GPLL4							4
+>> +#define GPLL6							5
+>> +#define GPLL7							6
+>> +#define GCC_AGGRE_UFS_PHY_AXI_CLK				7
+>> +#define GCC_AGGRE_USB3_PRIM_AXI_CLK				8
+>> +#define GCC_BOOT_ROM_AHB_CLK					9
+>> +#define GCC_CAMERA_AHB_CLK					10
+>> +#define GCC_CAMERA_HF_AXI_CLK					11
+>> +#define GCC_CAMERA_THROTTLE_HF_AXI_CLK				12
+>> +#define GCC_CAMERA_XO_CLK					13
+>> +#define GCC_CE1_AHB_CLK						14
+>> +#define GCC_CE1_AXI_CLK						15
+>> +#define GCC_CE1_CLK						16
+>> +#define GCC_CFG_NOC_USB3_PRIM_AXI_CLK				17
+>> +#define GCC_CPUSS_AHB_CLK					18
+>> +#define GCC_CPUSS_AHB_CLK_SRC					19
+>> +#define GCC_CPUSS_GNOC_CLK					20
+>> +#define GCC_CPUSS_RBCPR_CLK					21
+>> +#define GCC_DDRSS_GPU_AXI_CLK					22
+>> +#define GCC_DISP_AHB_CLK					23
+>> +#define GCC_DISP_GPLL0_CLK_SRC					24
+>> +#define GCC_DISP_GPLL0_DIV_CLK_SRC				25
+>> +#define GCC_DISP_HF_AXI_CLK					26
+>> +#define GCC_DISP_THROTTLE_HF_AXI_CLK				27
+>> +#define GCC_DISP_XO_CLK						28
+>> +#define GCC_GP1_CLK						29
+>> +#define GCC_GP1_CLK_SRC						30
+>> +#define GCC_GP2_CLK						31
+>> +#define GCC_GP2_CLK_SRC						32
+>> +#define GCC_GP3_CLK						33
+>> +#define GCC_GP3_CLK_SRC						34
+>> +#define GCC_GPU_CFG_AHB_CLK					35
+>> +#define GCC_GPU_GPLL0_CLK_SRC					36
+>> +#define GCC_GPU_GPLL0_DIV_CLK_SRC				37
+>> +#define GCC_GPU_MEMNOC_GFX_CLK					38
+>> +#define GCC_GPU_SNOC_DVM_GFX_CLK				39
+>> +#define GCC_NPU_AXI_CLK						40
+>> +#define GCC_NPU_BWMON_AXI_CLK					41
+>> +#define GCC_NPU_BWMON_DMA_CFG_AHB_CLK				42
+>> +#define GCC_NPU_BWMON_DSP_CFG_AHB_CLK				43
+>> +#define GCC_NPU_CFG_AHB_CLK					44
+>> +#define GCC_NPU_DMA_CLK						45
+>> +#define GCC_NPU_GPLL0_CLK_SRC					46
+>> +#define GCC_NPU_GPLL0_DIV_CLK_SRC				47
+>> +#define GCC_PDM2_CLK						48
+>> +#define GCC_PDM2_CLK_SRC					49
+>> +#define GCC_PDM_AHB_CLK						50
+>> +#define GCC_PDM_XO4_CLK						51
+>> +#define GCC_PRNG_AHB_CLK					52
+>> +#define GCC_QSPI_CNOC_PERIPH_AHB_CLK				53
+>> +#define GCC_QSPI_CORE_CLK					54
+>> +#define GCC_QSPI_CORE_CLK_SRC					55
+>> +#define GCC_QUPV3_WRAP0_CORE_2X_CLK				56
+>> +#define GCC_QUPV3_WRAP0_CORE_CLK				57
+>> +#define GCC_QUPV3_WRAP0_S0_CLK					58
+>> +#define GCC_QUPV3_WRAP0_S0_CLK_SRC				59
+>> +#define GCC_QUPV3_WRAP0_S1_CLK					60
+>> +#define GCC_QUPV3_WRAP0_S1_CLK_SRC				61
+>> +#define GCC_QUPV3_WRAP0_S2_CLK					62
+>> +#define GCC_QUPV3_WRAP0_S2_CLK_SRC				63
+>> +#define GCC_QUPV3_WRAP0_S3_CLK					64
+>> +#define GCC_QUPV3_WRAP0_S3_CLK_SRC				65
+>> +#define GCC_QUPV3_WRAP0_S4_CLK					66
+>> +#define GCC_QUPV3_WRAP0_S4_CLK_SRC				67
+>> +#define GCC_QUPV3_WRAP0_S5_CLK					68
+>> +#define GCC_QUPV3_WRAP0_S5_CLK_SRC				69
+>> +#define GCC_QUPV3_WRAP1_CORE_2X_CLK				70
+>> +#define GCC_QUPV3_WRAP1_CORE_CLK				71
+>> +#define GCC_QUPV3_WRAP1_S0_CLK					72
+>> +#define GCC_QUPV3_WRAP1_S0_CLK_SRC				73
+>> +#define GCC_QUPV3_WRAP1_S1_CLK					74
+>> +#define GCC_QUPV3_WRAP1_S1_CLK_SRC				75
+>> +#define GCC_QUPV3_WRAP1_S2_CLK					76
+>> +#define GCC_QUPV3_WRAP1_S2_CLK_SRC				77
+>> +#define GCC_QUPV3_WRAP1_S3_CLK					78
+>> +#define GCC_QUPV3_WRAP1_S3_CLK_SRC				79
+>> +#define GCC_QUPV3_WRAP1_S4_CLK					80
+>> +#define GCC_QUPV3_WRAP1_S4_CLK_SRC				81
+>> +#define GCC_QUPV3_WRAP1_S5_CLK					82
+>> +#define GCC_QUPV3_WRAP1_S5_CLK_SRC				83
+>> +#define GCC_QUPV3_WRAP_0_M_AHB_CLK				84
+>> +#define GCC_QUPV3_WRAP_0_S_AHB_CLK				85
+>> +#define GCC_QUPV3_WRAP_1_M_AHB_CLK				86
+>> +#define GCC_QUPV3_WRAP_1_S_AHB_CLK				87
+>> +#define GCC_SDCC1_AHB_CLK					88
+>> +#define GCC_SDCC1_APPS_CLK					89
+>> +#define GCC_SDCC1_APPS_CLK_SRC					90
+>> +#define GCC_SDCC1_ICE_CORE_CLK					91
+>> +#define GCC_SDCC1_ICE_CORE_CLK_SRC				92
+>> +#define GCC_SDCC2_AHB_CLK					93
+>> +#define GCC_SDCC2_APPS_CLK					94
+>> +#define GCC_SDCC2_APPS_CLK_SRC					95
+>> +#define GCC_SYS_NOC_CPUSS_AHB_CLK				96
+>> +#define GCC_UFS_MEM_CLKREF_CLK					97
+>> +#define GCC_UFS_PHY_AHB_CLK					98
+>> +#define GCC_UFS_PHY_AXI_CLK					99
+>> +#define GCC_UFS_PHY_AXI_CLK_SRC					100
+>> +#define GCC_UFS_PHY_ICE_CORE_CLK				101
+>> +#define GCC_UFS_PHY_ICE_CORE_CLK_SRC				102
+>> +#define GCC_UFS_PHY_PHY_AUX_CLK					103
+>> +#define GCC_UFS_PHY_PHY_AUX_CLK_SRC				104
+>> +#define GCC_UFS_PHY_RX_SYMBOL_0_CLK				105
+>> +#define GCC_UFS_PHY_TX_SYMBOL_0_CLK				106
+>> +#define GCC_UFS_PHY_UNIPRO_CORE_CLK				107
+>> +#define GCC_UFS_PHY_UNIPRO_CORE_CLK_SRC				108
+>> +#define GCC_USB30_PRIM_MASTER_CLK				109
+>> +#define GCC_USB30_PRIM_MASTER_CLK_SRC				110
+>> +#define GCC_USB30_PRIM_MOCK_UTMI_CLK				111
+>> +#define GCC_USB30_PRIM_MOCK_UTMI_CLK_SRC			112
+>> +#define GCC_USB30_PRIM_SLEEP_CLK				113
+>> +#define GCC_USB3_PRIM_CLKREF_CLK				114
+>> +#define GCC_USB3_PRIM_PHY_AUX_CLK				115
+>> +#define GCC_USB3_PRIM_PHY_AUX_CLK_SRC				116
+>> +#define GCC_USB3_PRIM_PHY_COM_AUX_CLK				117
+>> +#define GCC_USB3_PRIM_PHY_PIPE_CLK				118
+>> +#define GCC_USB_PHY_CFG_AHB2PHY_CLK				119
+>> +#define GCC_VIDEO_AHB_CLK					120
+>> +#define GCC_VIDEO_AXI_CLK					121
+>> +#define GCC_VIDEO_GPLL0_DIV_CLK_SRC				122
+>> +#define GCC_VIDEO_THROTTLE_AXI_CLK				123
+>> +#define GCC_VIDEO_XO_CLK					124
+>> +
+>> +/* GCC resets */
+>> +#define GCC_QUSB2PHY_PRIM_BCR					0
+>> +#define GCC_QUSB2PHY_SEC_BCR					1
+>> +#define GCC_UFS_PHY_BCR						2
+>> +#define GCC_USB30_PRIM_BCR					3
+>> +#define GCC_USB3_DP_PHY_PRIM_BCR				4
+>> +#define GCC_USB3_DP_PHY_SEC_BCR					5
+>> +#define GCC_USB3_PHY_PRIM_BCR					6
+>> +#define GCC_USB3_PHY_SEC_BCR					7
+>> +#define GCC_USB3PHY_PHY_PRIM_BCR				8
+>> +#define GCC_USB3PHY_PHY_SEC_BCR					9
+>> +#define GCC_USB_PHY_CFG_AHB2PHY_BCR				10
+>> +
+>> +/* GCC GDSCRs */
+>> +#define UFS_PHY_GDSC						0
+>> +#define USB30_PRIM_GDSC						1
+>> +#define HLOS1_VOTE_MMNOC_MMU_TBU_HF0_GDSC			2
+>> +#define HLOS1_VOTE_MMNOC_MMU_TBU_SF_GDSC			3
+>> +
+>> +#endif
+>> --
+>> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+>> of the Code Aurora Forum, hosted by the  Linux Foundation.
+>>
 
-> SS mode is verified by enabling Type A port as peripheral
-> ---
-> v10:
-> * Patches 1,2,4,5,7,8 - No changes.
-> * Patch 3 has braces added to one single line else condition.
-> * Patch 6 has update on compatible string as per suggestion from Chunfeng.
-> ---
-> v9:
-> * Patches 1,2,3,4,5 - No changes.
-> * Patch 6 has update on compatible string as per suggestion from Chunfeng.
-> * Patch 7 has comment fixes as suggested by Chunfeng.
-> * Patch 8 has CONFIG_USB_GPIO enabled as module additionally.
-> ---
-> v8:
-> * Patches 1,2,3,4,5,8 - No changes.
-> * Patch 6 has update on compatible string as per change done in [1].
-> * Patch 7 has issue fix, where device mode didnot got enabled after resume
->   from suspend.
-> ---
-> v7:
-> * Patches 1,2,3,4,5,6,8 - No changes.
-> * Patch 7 - Comments from Balbi and Chunfun adrresed.
->   Added COMPILE_TEST in Kconfig and updated dependencies.
-> ---
-> v6:
-> * Patches 1,2,3,7,8 - No changes.
-> * Patch 4,5,6 - Comments from Rob addressed, updated usb connector driver
->   compatibility string.
-> ---
-> v5:
-> * Patches 1-3 - Commit subject updated as per inputs from Thierry.
-> * Patch 4 - Added reg-names used on Tegra210 in the bindings doc
-> * Enabled xudc driver as module instead of part of kernel in patch 8.
-> * Patched 5-8 - No changes.
-> ---
-> v4:
-> * patch 1 - no changes.
-> * corrected companion device search based on inputs from Thierry in patch=
- 2.
-> * removed unneeded dev variable and corrected value read in
->   tegra210_utmi_port_reset function in patch 3.
-> * dt binding doc and dtb files are corrected for alignments.
->   Replaced extcon-usb-gpio with usb role switch.
-> * Added support for USB role switch instead of extcon-usb-gpio and other =
-minor
->   comments as suggested by Chunfeng.
-> * Enabled xudc driver as module instead of part of kernel in patch 8.
-> ---
-> V3:
-> * Rebased patch 1 to top of tree.
-> * Fixed bug in patch 2, where xudc interrupts dont get generated if USB h=
-ost
->   mode fails to probe. Moved fake port detection logic to generic xusb.c.=
- fake
->   usb port data is updated based on soc flag need_fake_usb3_port.
-> * Added extra lines whereever necessary to make code more readable in pat=
-ch 3
->   and 7.
-> * dt binding doc is corrected for typos and extcon references. Also added
->   details for clocks and removed xusb_ references to clock and power-doma=
-in
->   names and accordingly patch 5 is updated.
-> * removed avdd-pll-utmip-supply in patch 6, as its now part of padctl dri=
-ver.
-> * Patch 8 has no changes.
-> ---
-> V2:
-> * Patches 1-3 are new patches in this series, which splits unified featur=
-es
->   patch to speprated features and removes need of port-fake entry in DT.
-> * Patch 4 is re-arragend dt-bindings patch which incorporates previous
->   patch comments to sort DT entries alphabetically, addresses name changes
->   and PM domain details added.
-> * Patch 5-6 are re-arranged DT patches with major changes - sort entries
->   alphabetically, and adds clock names.
-> * Patch 7 is UDC driver tegra XUSB device mode controller with major
->   changes - remove un-used module params, lockinng for device_mode flag,
->   moving un-needed info logs to debug level, making changes feature flag
->   dependent rather than SOC based macros and other error handling in prob=
-e.
-> * Patch 8 has no changes.
->=20
-> Nagarjuna Kristam (8):
->   phy: tegra: xusb: Add XUSB dual mode support on Tegra210
->   phy: tegra: xusb: Add usb3 port fake support on Tegra210
->   phy: tegra: xusb: Add vbus override support on Tegra210
->   dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
->   arm64: tegra: Add xudc node for Tegra210
->   arm64: tegra: Enable xudc on Jetson TX1
->   usb: gadget: Add UDC driver for tegra XUSB device mode controller
->   arm64: defconfig: Enable tegra XUDC support
->=20
->  .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  110 +
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   31 +-
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
->  arch/arm64/configs/defconfig                       |    2 +
->  drivers/phy/tegra/xusb-tegra210.c                  |  134 +-
->  drivers/phy/tegra/xusb.c                           |   87 +
->  drivers/phy/tegra/xusb.h                           |    4 +
->  drivers/usb/gadget/udc/Kconfig                     |   11 +
->  drivers/usb/gadget/udc/Makefile                    |    1 +
->  drivers/usb/gadget/udc/tegra-xudc.c                | 3787 ++++++++++++++=
-++++++
->  include/linux/phy/tegra/xusb.h                     |    4 +-
->  11 files changed, 4186 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xu=
-dc.txt
->  create mode 100644 drivers/usb/gadget/udc/tegra-xudc.c
->=20
-> --=20
-> 2.7.4
->=20
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
---v9Ux+11Zm5mwPlX6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2kR88ACgkQ3SOs138+
-s6HcqBAAi6UX8jUkVwpS+m7EFLB8/o3WWuKoXwy4KUgj8b/RxjJJY1McNFuBE+b7
-1bZYWwORUA1v1fttqvXb6IbyMU5pyX9szaIlUw89B/p8hN0zXNdSsXi+d+Zq1mKo
-13zp6K4cel9FgTJZFWCRgP8ZfOplg6u3nNwP5JmPo/y8I9/iG4b5y01dsUpUJu5Q
-eniPgOflNqULclwdL0wcHRfVO2c3IyEE9U/qN+HDpxIY5/S1y9xDpwzjQikQSykN
-cOl/p2q00+EG/0onZcBGhuzGy9S8I9mHLGQhksmvcZDOIGMGotcwaur5xFGAv4IB
-7Ji548LYVfBT2P3vGkwnHJPm849jUHmoogEisHZZopqS3tQEUArIeTV//KQmKQdt
-XVyYcyq0nzw5KdF0Su+FCmDZUIaXJf1NVy+hsjhk9CyXbTWlEabUV6B5blafpqNF
-iAcBvToW8OndAMmLXkgkXpcct2QmgA9ic0JQbNtbxw5UQ7MwU5Tj30M+7f86q2K+
-z5LyNeIf+X2xsztv+FgeNNNQbtfp0NlpBxRPQ5qFaykgjOzzg1FvljxQpfQ29UCu
-4QvfBe2wIClKTwcO8o3wQ+JURKnt5YRXyzljYEkbPSu7MgnB86jsxHueGDm1j1AA
-kf6rTlSilLLaPMuSFh2vjb3GR/rDEsZEkYmBDhDSIh2dce/DHEg=
-=CTFt
------END PGP SIGNATURE-----
-
---v9Ux+11Zm5mwPlX6--
+--
