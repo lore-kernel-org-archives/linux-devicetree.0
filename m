@@ -1,119 +1,71 @@
-From: Tzung-Bi Shih <tzungbi@google.com>
-Subject: Re: [kbuild-all] Re: [PATCH v2 07/10] ASoC:
- cros_ec_codec: support WoV
-Date: Mon, 14 Oct 2019 18:26:30 +0800
-Message-ID: <CA+Px+wUJvpHHM8NuEgjnnU+ObFXFPtNqPheGq5nAOfq4ohRMsQ@mail.gmail.com>
-References: <20191005164320.07.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
- <201910060040.RXI5XB2W%lkp@intel.com>
- <CA+Px+wUqwjPKkbZAfJ0+a6JAhxRqGLqq_JRY6Qwoh49JrxKr8w@mail.gmail.com>
- <e02d6319-77b2-b74d-883e-7ec87c5bd1fc@intel.com>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v4 00/11] crypto: add sun8i-ce driver for Allwinner
+ crypto engine
+Date: Mon, 14 Oct 2019 12:47:08 +0200
+Message-ID: <20191014104708.cur6zbabmozhwu5o@gilmour>
+References: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <e02d6319-77b2-b74d-883e-7ec87c5bd1fc@intel.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Rong Chen <rong.a.chen@intel.com>
-Cc: Gwendal Grignou <gwendal@google.com>, devicetree@vger.kernel.org, ALSA development <alsa-devel@alsa-project.org>, kbuild test robot <lkp@intel.com>, Guenter Roeck <groeck@google.com>, Nicolas Boichat <drinkcat@google.com>, robh+dt@kernel.org, Mark Brown <broonie@kernel.org>, kbuild-all@01.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Benson Leung <bleung@google.com>, Dylan Reid <dgreid@google.com>, Jimmy Cheng-Yi Chiang <cychiang@google.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jcraal7cz45esj3i"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: catalin.marinas@arm.com, davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 3:25 PM Rong Chen <rong.a.chen@intel.com> wrote:
->
->
->
-> On 10/7/19 3:04 PM, Tzung-Bi Shih wrote:
-> > On Sun, Oct 6, 2019 at 12:54 AM kbuild test robot <lkp@intel.com> wrote:
-> >> url:    https://github.com/0day-ci/linux/commits/Tzung-Bi-Shih/ASoC-mediatek-mt8183-mt6358-ts3a227-max98357-support-WoV/20191005-171021
-> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-> >> reproduce:
-> >>          # apt-get install sparse
-> >>          # sparse version: v0.6.1-rc1-42-g38eda53-dirty
-> >>          make ARCH=x86_64 allmodconfig
-> >>          make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-> >>
-> >> If you fix the issue, kindly add following tag
-> >> Reported-by: kbuild test robot <lkp@intel.com>
-> >>
-> >>
-> >> sparse warnings: (new ones prefixed by >>)
-> >>
-> >>>> sound/soc/codecs/cros_ec_codec.c:430:39: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void * @@    got void [noderef] <asvoid * @@
-> >>>> sound/soc/codecs/cros_ec_codec.c:430:39: sparse:    expected void *
-> >>>> sound/soc/codecs/cros_ec_codec.c:430:39: sparse:    got void [noderef] <asn:2> *
-> >>>> sound/soc/codecs/cros_ec_codec.c:549:69: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
-> >>>> sound/soc/codecs/cros_ec_codec.c:549:69: sparse:    expected void const volatile [noderef] <asn:2> *
-> >>>> sound/soc/codecs/cros_ec_codec.c:549:69: sparse:    got unsigned char [usertype] *addr
-> >>>> sound/soc/codecs/cros_ec_codec.c:698:33: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
-> >>>> sound/soc/codecs/cros_ec_codec.c:698:33: sparse:    expected void volatile [noderef] <asn:2> *
-> >>>> sound/soc/codecs/cros_ec_codec.c:698:33: sparse:    got unsigned char [usertype] *wov_lang_shm_p
-> >>     sound/soc/codecs/cros_ec_codec.c:699:48: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
-> >>     sound/soc/codecs/cros_ec_codec.c:699:48: sparse:    expected void volatile [noderef] <asn:2> *
-> >>>> sound/soc/codecs/cros_ec_codec.c:699:48: sparse:    got unsigned char [usertype] *
-> > I cannot reproduce the same sparse errors.
-> >
-> > My commit stack: apply my patches onto broonie/sound.git for-next
-> > $ git log --oneline
-> > b4471777f5d8 (HEAD -> draft) ASoC: mediatek: mt8183: support WoV
-> > b6bb558fa59d ASoC: dt-bindings: mt8183: add ec-codec
-> > a08bede115d4 ASoC: mediatek: mt6358: support WoV
-> > f67068fd0c91 ASoC: cros_ec_codec: support WoV
-> > 7e11271c070e ASoC: dt-bindings: cros_ec_codec: add SHM bindings
-> > fd04f20e77d3 ASoC: cros_ec_codec: read max DMIC gain from EC codec
-> > c008f01d5bc3 platform/chrome: cros_ec: add common commands for EC codec
-> > 50d2c1f9b1f4 ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
-> > 00e5a1c121eb ASoC: cros_ec_codec: refactor I2S RX
-> > 3f0c475d6ec8 platform/chrome: cros_ec: remove unused EC feature
-> > 3877dcd0194c (mark/for-next, asoc-next) Merge branch 'asoc-5.5' into asoc-next
-> >
-> > My reproduce steps:
-> > $ make ARCH=x86_64 mrproper
-> > $ make ARCH=x86_64 allmodconfig
-> > $ make ARCH=x86_64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' -j40
 
-Find a typo from my previous message.  It should be "make ARCH=... C=1 ...".
+--jcraal7cz45esj3i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > 2>&1 | grep -v sched | tee log.txt
-> > (Note: filter sched out to not get flood sparse errors)
-> > $ grep cros_ec_codec log.txt
-> >    CHECK   sound/soc/codecs/cros_ec_codec.c
-> >    CC [M]  sound/soc/codecs/cros_ec_codec.o
-> >
-> > It did not generate the same message as 0day reported.
-> >
-> > One difference would be the sparse version (it is from "apt install"
-> > in my environment):
-> > $ sparse --version
-> > 0.6.0 (Debian: 0.6.0-3)
-> > On the other hand, 0day used "v0.6.1-rc1-42-g38eda53-dirty".
->
-> Hi,
->
-> The sparse warnings could be generated by the latest sparse
-> (https://github.com/lucvoo/sparse.git). Could you try again?
+Hi,
 
-Thanks.  By using the version from github, it can generate the same
-sparse errors.
-$ sparse --version
-v0.6.1-rc1-43-g0ccb3b4
+On Sat, Oct 12, 2019 at 08:48:41PM +0200, Corentin Labbe wrote:
+> Hello
+>
+> This patch serie adds support for the Allwinner crypto engine.
+> The Crypto Engine is the third generation of Allwinner cryptogaphic offloader.
+> The first generation is the Security System already handled by the
+> sun4i-ss driver.
+> The second is named also Security System and is present on A80 and A83T
+> SoCs, originaly this driver supported it also, but supporting both IP bringing
+> too much complexity and another driver (sun8i-ss) will came for it.
+>
+> For the moment, the driver support only DES3/AES in ECB/CBC mode.
+> Patchs for CTR/CTS/XTS, RSA and RNGs will came later.
+>
+> This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
+> and tested on:
+> sun50i-a64-bananapi-m64
+> sun50i-a64-pine64-plus
+> sun50i-h5-libretech-all-h3-cc
+> sun50i-h6-pine-h64
+> sun8i-h2-plus-libretech-all-h3-cc
+> sun8i-h2-plus-orangepi-r1
+> sun8i-h2-plus-orangepi-zero
+> sun8i-h3-libretech-all-h3-cc
+> sun8i-h3-orangepi-pc
+> sun8i-r40-bananapi-m2-ultra
 
-It seems current debian's version (i.e. 0.6.0 (Debian: 0.6.0-3))
-cannot reproduce the errors even without the typo mentioned above.
+for the drivers/crypto part
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
->
-> Best Regards,
-> Rong Chen
->
-> >
-> > Guenter, what we could do in the case?  Do you have any idea?
-> > _______________________________________________
-> > kbuild-all mailing list -- kbuild-all@lists.01.org
-> > To unsubscribe send an email to kbuild-all-leave@lists.01.org
->
+I'll merge the dt and defconfig bits when Herbert will be ok with the
+changes.
+
+Maxime
+
+--jcraal7cz45esj3i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXaRSLAAKCRDj7w1vZxhR
+xbAiAQCXNw9TZ+NI9M/ffhLEMVuGBoKDSMxJpeuryNZeejUpbAEAotBuhlogZFYt
+6gcqR7k6JoRm4LKGytJt02QqNsKkQAI=
+=JdiC
+-----END PGP SIGNATURE-----
+
+--jcraal7cz45esj3i--
