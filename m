@@ -1,156 +1,87 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: clk: qcom: Add YAML schemas for the
- GCC clock bindings
-Date: Mon, 14 Oct 2019 15:47:52 +0530
-Message-ID: <a6d37020-61e3-826b-f281-3e51cba4668b@codeaurora.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org>
- <20190918095018.17979-3-tdas@codeaurora.org>
- <20190918212614.448FC20882@mail.kernel.org>
+From: Tzung-Bi Shih <tzungbi@google.com>
+Subject: [PATCH v3 00/10] ASoC: mediatek:
+ mt8183-mt6358-ts3a227-max98357: support WoV
+Date: Mon, 14 Oct 2019 18:20:12 +0800
+Message-ID: <20191014102022.236013-1-tzungbi@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918212614.448FC20882@mail.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: broonie@kernel.org
+Cc: gwendal@google.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, cychiang@google.com, drinkcat@google.com, tzungbi@google.com, robh+dt@kernel.org, enric.balletbo@collabora.com, bleung@google.com, dgreid@google.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+This series makes mt6358, cros_ec_codec, and mt8183-mt6358-ts3a227-max98357
+support WoV (wake on voice).
 
-Thanks for your review.
+The first 3 commits are some cleanups and refactors.  It looks like
+breaking the existing interface.  But please be noticed that, the
+cros_ec_codec has not used by any real device yet.  The refactor is
+very necessary to keep the style consistent and for easier to further
+extend and maintain.
+  platform/chrome: cros_ec: remove unused EC feature
+  ASoC: cros_ec_codec: refactor I2S RX
+  ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
 
-On 9/19/2019 2:56 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-09-18 02:50:17)
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> new file mode 100644
->> index 000000000000..056a7977c458
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> @@ -0,0 +1,157 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/clock/qcom,gcc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Global Clock & Reset Controller Binding
->> +
->> +maintainers:
->> +  - Stephen Boyd <sboyd@kernel.org>
-> 
-> Why am I the maintainer? Shouldn't this be you?
-> 
->> +
->> +properties:
->> +  "#clock-cells":
->> +    const: 1
->> +
->> +  "#reset-cells":
->> +    const: 1
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  compatible :
->> +     enum:
->> +       - qcom,gcc-apq8064
->> +       - qcom,gcc-apq8084
->> +       - qcom,gcc-ipq8064
->> +       - qcom,gcc-ipq4019
->> +       - qcom,gcc-ipq8074
->> +       - qcom,gcc-msm8660
->> +       - qcom,gcc-msm8916
->> +       - qcom,gcc-msm8960
->> +       - qcom,gcc-msm8974
->> +       - qcom,gcc-msm8974pro
->> +       - qcom,gcc-msm8974pro-ac
->> +       - qcom,gcc-msm8994
->> +       - qcom,gcc-msm8996
->> +       - qcom,gcc-msm8998
->> +       - qcom,gcc-mdm9615
->> +       - qcom,gcc-qcs404
->> +       - qcom,gcc-sdm630
->> +       - qcom,gcc-sdm660
->> +       - qcom,gcc-sdm845
->> +       - qcom,gcc-sm8150
->> +       - qcom,gcc-sc7180
->> +
->> +  clocks:
->> +    minItems: 1
->> +    maxItems: 3
->> +    items:
->> +      - description: Board XO source
->> +      - description: Board active XO source
->> +      - description: Sleep clock source(optional)
-> 
-> Why is sleep clk optional?
-> 
+The 4th commit extends the feature offered from EC codec.
+  platform/chrome: cros_ec: add common commands for EC codec
 
-Will remove optional.
+The 5th commit changes the behavior of setting and getting DMIC gains.
+  ASoC: cros_ec_codec: read max DMIC gain from EC codec
 
->> +
->> +  clock-names:
->> +    minItems: 1
->> +    maxItems: 3
->> +    items:
->> +      - const: bi_tcxo
->> +      - const: bi_tcxo_ao
->> +      - const: sleep_clk
->> +
->> +  nvmem-cells:
->> +    minItems: 1
->> +    maxItems: 2
->> +    description:
->> +      Qualcomm TSENS (thermal sensor device) on some devices can
-> 
-> Can this be restricted to certain compatible strings where this is the
-> case? I'd like to be able to confirm that the compatibles that expect to
-> see the nvmem actually have it.
-> 
+The 6th and 7th commit make cros_ec_codec support WoV.
+  ASoC: dt-bindings: cros_ec_codec: add SHM bindings
+  ASoC: cros_ec_codec: support WoV
 
-I will add this in the next patch.
+The 8th commit sets necessary registers on mt6358 to support WoV.
+  ASoC: mediatek: mt6358: support WoV
 
->> +      be part of GCC and hence the TSENS properties can also be part
->> +      of the GCC/clock-controller node.
->> +      For more details on the TSENS properties please refer
->> +      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
->> +
->> +  nvmem-cell-names:
->> +    minItems: 1
->> +    maxItems: 2
->> +    description:
->> +      Names for each nvmem-cells specified.
->> +    items:
->> +      - const: calib
->> +      - const: calib_backup
->> +
->> +  "#thermal-sensor-cells":
->> +    const: 1
-> 
-> Same for this one.
-> 
->> +
->> +  "#power-domain-cells":
->> +    const: 1
->> +
->> +  protected-clocks:
->> +    description:
->> +       Protected clock specifier list as per common clock binding
->> +
->> +required:
->> +  - "#clock-cells"
->> +  - "#reset-cells"
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +
->> +examples:
+The last 2 commit make machine driver mt8183-mt6358-ts3a227-max98357
+support WoV if ec-codec is in DTS.
+  ASoC: dt-bindings: mt8183: add ec-codec
+  ASoC: mediatek: mt8183: support WoV
+
+Changes from v1:
+- fix a compile error and make kbuild bot happy
+https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/156315.html
+Changes from v2:
+- rebase upon to "don't use snd_pcm_ops" series
+https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/156170.html
+- fix sparse errors
+https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/156328.html
+- use "reg" for SHM binding
+https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/156657.html
+
+Tzung-Bi Shih (10):
+  WIP: platform/chrome: cros_ec: remove unused EC feature
+  WIP: ASoC: cros_ec_codec: refactor I2S RX
+  WIP: ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
+  WIP: platform/chrome: cros_ec: add common commands for EC codec
+  WIP: ASoC: cros_ec_codec: read max DMIC gain from EC codec
+  WIP: ASoC: dt-bindings: cros_ec_codec: add SHM bindings
+  WIP: ASoC: cros_ec_codec: support WoV
+  WIP: ASoC: mediatek: mt6358: support WoV
+  WIP: ASoC: dt-bindings: mt8183: add ec-codec
+  WIP: ASoC: mediatek: mt8183: support WoV
+
+ .../bindings/sound/google,cros-ec-codec.txt   |   24 +-
+ .../sound/mt8183-mt6358-ts3a227-max98357.txt  |    3 +
+ drivers/platform/chrome/cros_ec_trace.c       |    5 +-
+ .../linux/platform_data/cros_ec_commands.h    |  285 ++++-
+ sound/soc/codecs/cros_ec_codec.c              | 1128 +++++++++++++----
+ sound/soc/codecs/mt6358.c                     |  105 ++
+ sound/soc/mediatek/Kconfig                    |    1 +
+ .../mt8183/mt8183-mt6358-ts3a227-max98357.c   |   70 +-
+ 8 files changed, 1296 insertions(+), 325 deletions(-)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+2.23.0.700.g56cf767bdb-goog
