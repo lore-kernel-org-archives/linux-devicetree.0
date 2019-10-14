@@ -1,153 +1,62 @@
-From: Argus Lin <argus.lin@mediatek.com>
-Subject: Re: [PATCH 3/3] soc: mediatek: pwrap: add support for MT6359 PMIC
-Date: Mon, 14 Oct 2019 13:17:44 +0800
-Message-ID: <1571030264.19600.2.camel@mtkswgap22>
-References: <1570088901-23211-1-git-send-email-argus.lin@mediatek.com>
-         <1570088901-23211-4-git-send-email-argus.lin@mediatek.com>
-         <5ec86287-2a90-ca07-c9a6-262420a68fd3@gmail.com>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 0/4] crypto: add amlogic crypto offloader driver
+Date: Mon, 14 Oct 2019 07:18:35 +0200
+Message-ID: <20191014051839.32274-1-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5ec86287-2a90-ca07-c9a6-262420a68fd3@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: davem@davemloft.net, herbert@gondor.apana.org.au, khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org, martin.blumenstingl@googlemail.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-10-04 at 01:27 +0200, Matthias Brugger wrote:
-> 
-> On 03/10/2019 09:48, Argus Lin wrote:
-> > MT6359 is a new power management IC and it is used for
-> > MT6779 SoCs. To define mt6359_regs for pmic register mapping
-> > and pmic_mt6359 for accessing register.
-> > 
-> > Signed-off-by: Argus Lin <argus.lin@mediatek.com>
-> > ---
-> >  drivers/soc/mediatek/mtk-pmic-wrap.c | 72 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 72 insertions(+)
-> > 
-> > diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> > index fa8daf2..dd04318 100644
-> > --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-> > +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> > @@ -111,6 +111,29 @@ enum dew_regs {
-> >  	PWRAP_RG_SPI_CON13,
-> >  	PWRAP_SPISLV_KEY,
-> > 
-> > +	/* MT6359 only regs */
-> > +	PWRAP_DEW_CRC_SWRST,
-> > +	PWRAP_DEW_RG_EN_RECORD,
-> > +	PWRAP_DEW_RECORD_CMD0,
-> > +	PWRAP_DEW_RECORD_CMD1,
-> > +	PWRAP_DEW_RECORD_CMD2,
-> > +	PWRAP_DEW_RECORD_CMD3,
-> > +	PWRAP_DEW_RECORD_CMD4,
-> > +	PWRAP_DEW_RECORD_CMD5,
-> > +	PWRAP_DEW_RECORD_WDATA0,
-> > +	PWRAP_DEW_RECORD_WDATA1,
-> > +	PWRAP_DEW_RECORD_WDATA2,
-> > +	PWRAP_DEW_RECORD_WDATA3,
-> > +	PWRAP_DEW_RECORD_WDATA4,
-> > +	PWRAP_DEW_RECORD_WDATA5,
-> > +	PWRAP_DEW_RG_ADDR_TARGET,
-> > +	PWRAP_DEW_RG_ADDR_MASK,
-> > +	PWRAP_DEW_RG_WDATA_TARGET,
-> > +	PWRAP_DEW_RG_WDATA_MASK,
-> > +	PWRAP_DEW_RG_SPI_RECORD_CLR,
-> > +	PWRAP_DEW_RG_CMD_ALERT_CLR,
-> > +	PWRAP_DEW_SPISLV_KEY,
-> 
-> That looks like PWRAP_SPISLV_KEY from MT6358.
-> 
-> Regards,
-> Matthias
-> 
-Yes, I think I can reuse the PWRAP_SPISLV_KEY of MT6358.
+Hello
 
-B.R.
-Argus
-> > +
-> >  	/* MT6397 only regs */
-> >  	PWRAP_DEW_EVENT_OUT_EN,
-> >  	PWRAP_DEW_EVENT_SRC_EN,
-> > @@ -197,6 +220,42 @@ enum dew_regs {
-> >  	[PWRAP_SPISLV_KEY] =		0x044a,
-> >  };
-> > 
-> > +static const u32 mt6359_regs[] = {
-> > +	[PWRAP_DEW_RG_EN_RECORD] =	0x040a,
-> > +	[PWRAP_DEW_DIO_EN] =		0x040c,
-> > +	[PWRAP_DEW_READ_TEST] =		0x040e,
-> > +	[PWRAP_DEW_WRITE_TEST] =	0x0410,
-> > +	[PWRAP_DEW_CRC_SWRST] =		0x0412,
-> > +	[PWRAP_DEW_CRC_EN] =		0x0414,
-> > +	[PWRAP_DEW_CRC_VAL] =		0x0416,
-> > +	[PWRAP_DEW_CIPHER_KEY_SEL] =	0x0418,
-> > +	[PWRAP_DEW_CIPHER_IV_SEL] =	0x041a,
-> > +	[PWRAP_DEW_CIPHER_EN] =		0x041c,
-> > +	[PWRAP_DEW_CIPHER_RDY] =	0x041e,
-> > +	[PWRAP_DEW_CIPHER_MODE] =	0x0420,
-> > +	[PWRAP_DEW_CIPHER_SWRST] =	0x0422,
-> > +	[PWRAP_DEW_RDDMY_NO] =		0x0424,
-> > +	[PWRAP_DEW_RECORD_CMD0] =	0x0428,
-> > +	[PWRAP_DEW_RECORD_CMD1] =	0x042a,
-> > +	[PWRAP_DEW_RECORD_CMD2] =	0x042c,
-> > +	[PWRAP_DEW_RECORD_CMD3] =	0x042e,
-> > +	[PWRAP_DEW_RECORD_CMD4] =	0x0430,
-> > +	[PWRAP_DEW_RECORD_CMD5] =	0x0432,
-> > +	[PWRAP_DEW_RECORD_WDATA0] =	0x0434,
-> > +	[PWRAP_DEW_RECORD_WDATA1] =	0x0436,
-> > +	[PWRAP_DEW_RECORD_WDATA2] =	0x0438,
-> > +	[PWRAP_DEW_RECORD_WDATA3] =	0x043a,
-> > +	[PWRAP_DEW_RECORD_WDATA4] =	0x043c,
-> > +	[PWRAP_DEW_RECORD_WDATA5] =	0x043e,
-> > +	[PWRAP_DEW_RG_ADDR_TARGET] =	0x0440,
-> > +	[PWRAP_DEW_RG_ADDR_MASK] =	0x0442,
-> > +	[PWRAP_DEW_RG_WDATA_TARGET] =	0x0444,
-> > +	[PWRAP_DEW_RG_WDATA_MASK] =	0x0446,
-> > +	[PWRAP_DEW_RG_SPI_RECORD_CLR] =	0x0448,
-> > +	[PWRAP_DEW_RG_CMD_ALERT_CLR] =	0x0448,
-> > +	[PWRAP_DEW_SPISLV_KEY] =	0x044a,
-> > +};
-> > +
-> >  static const u32 mt6397_regs[] = {
-> >  	[PWRAP_DEW_BASE] =		0xbc00,
-> >  	[PWRAP_DEW_EVENT_OUT_EN] =	0xbc00,
-> > @@ -977,6 +1036,7 @@ enum pmic_type {
-> >  	PMIC_MT6351,
-> >  	PMIC_MT6357,
-> >  	PMIC_MT6358,
-> > +	PMIC_MT6359,
-> >  	PMIC_MT6380,
-> >  	PMIC_MT6397,
-> >  };
-> > @@ -1757,6 +1817,15 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
-> >  	.pwrap_write = pwrap_write16,
-> >  };
-> > 
-> > +static const struct pwrap_slv_type pmic_mt6359 = {
-> > +	.dew_regs = mt6359_regs,
-> > +	.type = PMIC_MT6359,
-> > +	.regmap = &pwrap_regmap_config16,
-> > +	.caps = PWRAP_SLV_CAP_DUALIO,
-> > +	.pwrap_read = pwrap_read16,
-> > +	.pwrap_write = pwrap_write16,
-> > +};
-> > +
-> >  static const struct pwrap_slv_type pmic_mt6380 = {
-> >  	.dew_regs = NULL,
-> >  	.type = PMIC_MT6380,
-> > @@ -1790,6 +1859,9 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
-> >  		.compatible = "mediatek,mt6358",
-> >  		.data = &pmic_mt6358,
-> >  	}, {
-> > +		.compatible = "mediatek,mt6359",
-> > +		.data = &pmic_mt6359,
-> > +	}, {
-> >  		/* The MT6380 PMIC only implements a regulator, so we bind it
-> >  		 * directly instead of using a MFD.
-> >  		 */
-> > --
-> > 1.8.1.1.dirty
-> > 
+This serie adds support for the crypto offloader present on amlogic GXL
+SoCs.
+
+Tested on meson-gxl-s905x-khadas-vim and meson-gxl-s905x-libretech-cc
+
+Regards
+
+Changes since v1:
+- renamed files and algo with gxl
+- removed unused reset handlings
+- splited the probe functions
+- splited meson_cipher fallback in need_fallback() and do_fallback()
+
+Corentin Labbe (4):
+  dt-bindings: crypto: Add DT bindings documentation for amlogic-crypto
+  MAINTAINERS: Add myself as maintainer of amlogic crypto
+  crypto: amlogic: Add crypto accelerator for amlogic GXL
+  ARM64: dts: amlogic: adds crypto hardware node
+
+ .../bindings/crypto/amlogic,gxl-crypto.yaml   |  52 +++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  10 +
+ drivers/crypto/Kconfig                        |   2 +
+ drivers/crypto/Makefile                       |   1 +
+ drivers/crypto/amlogic/Kconfig                |  24 ++
+ drivers/crypto/amlogic/Makefile               |   2 +
+ drivers/crypto/amlogic/amlogic-gxl-cipher.c   | 381 ++++++++++++++++++
+ drivers/crypto/amlogic/amlogic-gxl-core.c     | 333 +++++++++++++++
+ drivers/crypto/amlogic/amlogic-gxl.h          | 170 ++++++++
+ 10 files changed, 982 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+ create mode 100644 drivers/crypto/amlogic/Kconfig
+ create mode 100644 drivers/crypto/amlogic/Makefile
+ create mode 100644 drivers/crypto/amlogic/amlogic-gxl-cipher.c
+ create mode 100644 drivers/crypto/amlogic/amlogic-gxl-core.c
+ create mode 100644 drivers/crypto/amlogic/amlogic-gxl.h
+
+-- 
+2.21.0
