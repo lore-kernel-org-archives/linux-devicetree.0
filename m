@@ -1,64 +1,107 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v4 02/14] drm/mxsfb: Read bus flags from bridge if present
-Date: Mon, 14 Oct 2019 22:24:51 +0200
-Message-ID: <b5da1f015a4dd87a612e1a9e57fdca7a@agner.ch>
-References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
- <1567078215-31601-3-git-send-email-robert.chiras@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Johan Jonker <jbx6244@gmail.com>
+Subject: [PATCH v2] ARM: dts: rockchip: remove some tabs and spaces from dtsi files
+Date: Mon, 14 Oct 2019 23:06:19 +0200
+Message-ID: <20191014210619.12778-1-jbx6244@gmail.com>
+References: <20191014174521.11611-1-jbx6244@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567078215-31601-3-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <20191014174521.11611-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: heiko@sntech.de
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-08-29 13:30, Robert Chiras wrote:
-> From: Guido Günther <agx@sigxcpu.org>
-> 
-> The bridge might have special requirmentes on the input bus. This
-> is e.g. used by the imx-nwl bridge.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Reviewed-by: Stefan Agner <stefan@agner.ch>
+Cleanup the Rockchip dtsi files a little bit
+by removing some tabs and spaces.
 
-Applied to the drm-misc-next branch.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3036.dtsi           |  4 ++--
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi |  8 ++++----
+ arch/arm/boot/dts/rk3288-tinker.dtsi    | 14 +++++---------
+ 3 files changed, 11 insertions(+), 15 deletions(-)
 
-I decided to apply those two since they are independent from the rest.
-You can drop them in the next spin of the rest.
-
---
-Stefan
-
-
-> ---
->  drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> index de09b93..b69ace8 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> @@ -209,7 +209,7 @@ static void mxsfb_crtc_mode_set_nofb(struct
-> mxsfb_drm_private *mxsfb)
->  {
->  	struct drm_device *drm = mxsfb->pipe.crtc.dev;
->  	struct drm_display_mode *m = &mxsfb->pipe.crtc.state->adjusted_mode;
-> -	const u32 bus_flags = mxsfb->connector->display_info.bus_flags;
-> +	u32 bus_flags = mxsfb->connector->display_info.bus_flags;
->  	u32 vdctrl0, vsync_pulse_len, hsync_pulse_len;
->  	int err;
->  
-> @@ -233,6 +233,9 @@ static void mxsfb_crtc_mode_set_nofb(struct
-> mxsfb_drm_private *mxsfb)
->  
->  	clk_set_rate(mxsfb->clk, m->crtc_clock * 1000);
->  
-> +	if (mxsfb->bridge && mxsfb->bridge->timings)
-> +		bus_flags = mxsfb->bridge->timings->input_bus_flags;
-> +
->  	DRM_DEV_DEBUG_DRIVER(drm->dev, "Pixel clock: %dkHz (actual: %dkHz)\n",
->  			     m->crtc_clock,
->  			     (int)(clk_get_rate(mxsfb->clk) / 1000));
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index c776321b2..c70182c5a 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -696,8 +696,8 @@
+ 
+ 		hdmi {
+ 			hdmi_ctl: hdmi-ctl {
+-				rockchip,pins = <1 RK_PB0  1 &pcfg_pull_none>,
+-						<1 RK_PB1  1 &pcfg_pull_none>,
++				rockchip,pins = <1 RK_PB0 1 &pcfg_pull_none>,
++						<1 RK_PB1 1 &pcfg_pull_none>,
+ 						<1 RK_PB2 1 &pcfg_pull_none>,
+ 						<1 RK_PB3 1 &pcfg_pull_none>;
+ 			};
+diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+index 9f9e2bfd1..44bb5e6f8 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
++++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+@@ -230,14 +230,14 @@
+ 	};
+ 
+ 	emmc {
+-			emmc_reset: emmc-reset {
+-				rockchip,pins = <3 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
+-			};
++		emmc_reset: emmc-reset {
++			rockchip,pins = <3 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
+ 	};
+ 
+ 	gmac {
+ 		phy_rst: phy-rst {
+-			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO  &pcfg_output_high>;
++			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_output_high>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+index 81e4e953d..0aeef23ca 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dtsi
++++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+@@ -382,18 +382,15 @@
+ 
+ 	pmic {
+ 		pmic_int: pmic-int {
+-			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO \
+-					&pcfg_pull_up>;
++			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 
+ 		dvs_1: dvs-1 {
+-			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO \
+-					&pcfg_pull_down>;
++			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_down>;
+ 		};
+ 
+ 		dvs_2: dvs-2 {
+-			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO \
+-					&pcfg_pull_down>;
++			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO &pcfg_pull_down>;
+ 		};
+ 	};
+ 
+@@ -406,8 +403,7 @@
+ 		};
+ 
+ 		sdmmc_clk: sdmmc-clk {
+-			rockchip,pins = <6 RK_PC4 1 \
+-					&pcfg_pull_none_drv_8ma>;
++			rockchip,pins = <6 RK_PC4 1 &pcfg_pull_none_drv_8ma>;
+ 		};
+ 
+ 		sdmmc_cmd: sdmmc-cmd {
+@@ -432,7 +428,7 @@
+ 	sdio {
+ 		wifi_enable: wifi-enable {
+ 			rockchip,pins = <4 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>,
+-				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
++					<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+ };
+-- 
+2.11.0
