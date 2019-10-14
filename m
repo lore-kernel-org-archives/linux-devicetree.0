@@ -1,27 +1,78 @@
-From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Subject: Re: Re: [PATCH v2 4/5] dt-bindings: display: imx: add bindings for
- DCSS
-Date: Mon, 14 Oct 2019 08:03:28 +0000
-Message-ID: <20191014080327.GB14065@fsr-ub1664-121>
-References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
- <1570025100-5634-5-git-send-email-laurentiu.palcu@nxp.com>
- <20191011145042.GA15680@bogus>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 07/11] dts: arm64: layerscape: add dma-ranges property to
+ qoric-mc node
+Date: Mon, 14 Oct 2019 16:28:49 +0800
+Message-ID: <20191014082847.GH12262@dragon>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+ <20190924181244.7159-8-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011145042.GA15680@bogus>
-Content-Language: en-US
-Content-ID: <3066FF801F56084A93888E509A157F7D@eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20190924181244.7159-8-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org, linux-media@vger.kernel.org, linux-pci@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, mbrugger@suse.com, robin.murphy@arm.com, f.fainelli@gmail.com, james.quinlan@broadcom.com, wahrenst@gmx.net, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBGcmksIE9jdCAxMSwgMjAxOSBhdCAwOTo1MDo0MkFNIC0wNTAwLCBSb2Ig
-SGVycmluZyB3cm90ZToNCj4gOnU/d2M/P201P14/456+P300LT8/entiPz8/cj8rP9eAdT8/P9in
-Pz8/PyMXPz8DPz9layA/Pz8/P1c/Sj8/Pz9ePyg/Pz9ofT8/LT8/entiPz8/cj9aPz8/Pys/alcu
-PxpcP2/bindiPyA/dispPz8/P2x/PxpiPx8mPz8sPyY/P86+Pz8/Pz8/Pz8/Pz8/Pz8/P1c/Pz8h
-anged86iP8erPyonPz8reT9ePz9eP006Pz8/cumentatPz8/dT8/cT9reT/bindiPyA/dispPz8/
-P2x/PxpiPx8mPz8sPyY/Pxc/Pz8edT8/Pz/erj8/Pz8bP0c/Pz9oDQoNCk9rISBOb3Qgc3VyZSBo
-b3cgdG8gYWRkcmVzcyB0aGlzIHRob3VnaC4uLiA6KQ0KDQpUaGFua3MsDQpsYXVyZW50aXU=
+On Tue, Sep 24, 2019 at 08:12:38PM +0200, Nicolas Saenz Julienne wrote:
+> qoriq-mc's dpmacs DMA configuration is inherited from their parent node,
+> which acts a bus in this regard. So far it maked all devices as
+> dma-coherent but no dma-ranges recommendation is made.
+> 
+> The truth is that the underlying interconnect has DMA constraints, so
+> add an empty dma-ranges in qoriq-mc's node in order for DT's DMA
+> configuration code to get the DMA constraints from it.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+Updated subject prefix as 'arm64: dts: ...', and applied the patch.
+
+Shawn
+
+> ---
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 1 +
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 1 +
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 1 +
+>  3 files changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index c676d0771762..f0d0b6145b72 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -698,6 +698,7 @@
+>  			      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+>  			msi-parent = <&its>;
+>  			iommu-map = <0 &smmu 0 0>;	/* This is fixed-up by u-boot */
+> +			dma-ranges;
+>  			dma-coherent;
+>  			#address-cells = <3>;
+>  			#size-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> index 7a0be8eaa84a..fd6036b7865c 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> @@ -340,6 +340,7 @@
+>  			      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+>  			msi-parent = <&its>;
+>  			iommu-map = <0 &smmu 0 0>;	/* This is fixed-up by u-boot */
+> +			dma-ranges;
+>  			dma-coherent;
+>  			#address-cells = <3>;
+>  			#size-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> index 408e0ecdce6a..3735bb139cb2 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> @@ -868,6 +868,7 @@
+>  			msi-parent = <&its>;
+>  			/* iommu-map property is fixed up by u-boot */
+>  			iommu-map = <0 &smmu 0 0>;
+> +			dma-ranges;
+>  			dma-coherent;
+>  			#address-cells = <3>;
+>  			#size-cells = <1>;
+> -- 
+> 2.23.0
+> 
