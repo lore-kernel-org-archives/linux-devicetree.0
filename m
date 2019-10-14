@@ -1,33 +1,281 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: r8a774b1: Add CAN and CAN FD support
-Date: Mon, 14 Oct 2019 10:49:01 +0200
-Message-ID: <CAMuHMdWtK1+3AZ734j8rLsAx-b873Gxaif5g0+J4UVPLRR9X6g@mail.gmail.com>
-References: <1570717560-7431-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570717560-7431-4-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 2/2] soundwire: qcom: add support for SoundWire
+ controller
+Date: Mon, 14 Oct 2019 10:04:56 +0100
+Message-ID: <d053a17e-3d6d-e3b6-f988-485e77c30e3b@linaro.org>
+References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
+ <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
+ <9d00c94b-1bce-9fdf-55fe-ee681466a97a@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1570717560-7431-4-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9d00c94b-1bce-9fdf-55fe-ee681466a97a@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, robh@kernel.org, vkoul@kernel.org
+Cc: broonie@kernel.org, bgoswami@codeaurora.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 4:26 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Add CAN and CAN FD support to the RZ/G2N SoC specific dtsi.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Thanks Pierre for taking time to review the patch.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.5.
+On 11/10/2019 18:50, Pierre-Louis Bossart wrote:
+> 
+>> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 
+>> cmd_data,
+>> +                     u8 dev_addr, u16 reg_addr)
+>> +{
+>> +    DECLARE_COMPLETION_ONSTACK(comp);
+>> +    unsigned long flags;
+>> +    u32 val;
+>> +    int ret;
+>> +
+>> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
+>> +    ctrl->comp = &comp;
+>> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+>> +    val = SWRM_REG_VAL_PACK(cmd_data, dev_addr,
+>> +                SWRM_SPECIAL_CMD_ID, reg_addr);
+>> +    ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
+>> +    if (ret)
+>> +        goto err;
+>> +
+>> +    ret = wait_for_completion_timeout(ctrl->comp,
+>> +                      msecs_to_jiffies(TIMEOUT_MS));
+>> +
+>> +    if (!ret)
+>> +        ret = SDW_CMD_IGNORED;
+>> +    else
+>> +        ret = SDW_CMD_OK;
+> 
+> It's odd to report CMD_IGNORED on a timeout. CMD_IGNORED is a valid 
+> answer that should be retrieved immediately. You probably need to 
+> translate the soundwire errors into -ETIMEOUT or something.
 
-Gr{oetje,eeting}s,
+In this controller we have no way to know if the command is ignored or 
+timedout, so All the commands that did not receive response either due 
+to ignore or timeout are currently detected with out any response 
+interrupt in given timeout.
 
-                        Geert
+> 
+>> +err:
+>> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
+>> +    ctrl->comp = NULL;
+>> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+>> +
+>> +    return ret;
+>> +}
+>> +
+>> +
+>> +    for (i = 0; i < len; i++) {
+>> +        ret = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_RD_FIFO_ADDR, &val);
+>> +        if (ret)
+>> +            return ret;
+>> +
+>> +        rval[i] = val & 0xFF;
+>> +    }
+>> +
+>> +err:
+>> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
+>> +    ctrl->comp = NULL;
+>> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+>> +
+>> +    return ret;
+>> +} > +
+> 
+> [snip]
+> 
+>> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl = dev_id;
+>> +    u32 sts, value;
+>> +    unsigned long flags;
+>> +
+>> +    ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
+>> +        ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
+>> +        dev_err_ratelimited(ctrl->dev,
+>> +                    "CMD error, fifo status 0x%x\n",
+>> +                     value);
+>> +        ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
+>> +    }
+>> +
+>> +    if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
+>> +        sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
+>> +        schedule_work(&ctrl->slave_work);
+>> +
+>> +    ctrl->reg_write(ctrl, SWRM_INTERRUPT_CLEAR, sts);
+>> +
+>> +    if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED) {
+>> +        spin_lock_irqsave(&ctrl->comp_lock, flags);
+>> +        if (ctrl->comp)
+>> +            complete(ctrl->comp);
+>> +        spin_unlock_irqrestore(&ctrl->comp_lock, flags);
+> 
+> 
+> Wouldn't it be simpler if you declared the completion structure as part 
+> of your controller definitions, as done for the Intel stuff?
+> 
+I can give that a go!
+> [snip]
+> 
+>> +static void qcom_swrm_stream_free_ports(struct qcom_swrm_ctrl *ctrl,
+>> +                    struct sdw_stream_runtime *stream)
+>> +{
+>> +    struct sdw_master_runtime *m_rt;
+>> +    struct sdw_port_runtime *p_rt;
+>> +    unsigned long *port_mask;
+>> +
+>> +    mutex_lock(&ctrl->port_lock);
+> 
+> is this lock to avoid races between alloc/free? if yes maybe document it?
+> 
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Yes, port allocation resource is protected across these calls here, I 
+can add some notes as you suggested in next version.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>> +
+>> +    list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+>> +        if (m_rt->direction == SDW_DATA_DIR_RX)
+>> +            port_mask = &ctrl->dout_port_mask;
+>> +        else
+>> +            port_mask = &ctrl->din_port_mask;
+>> +
+>> +        list_for_each_entry(p_rt, &m_rt->port_list, port_node)
+>> +            clear_bit(p_rt->num - 1, port_mask);
+>> +    }
+>> +
+>> +    mutex_unlock(&ctrl->port_lock);
+>> +}
+>> +
+>> +static int qcom_swrm_stream_alloc_ports(struct qcom_swrm_ctrl *ctrl,
+>> +                    struct sdw_stream_runtime *stream,
+>> +                       struct snd_pcm_hw_params *params,
+>> +                       int direction)
+>> +{
+>> +    struct sdw_port_config pconfig[QCOM_SDW_MAX_PORTS];
+>> +    struct sdw_stream_config sconfig;
+>> +    struct sdw_master_runtime *m_rt;
+>> +    struct sdw_slave_runtime *s_rt;
+>> +    struct sdw_port_runtime *p_rt;
+>> +    unsigned long *port_mask;
+>> +    int i, maxport, pn, nports = 0, ret = 0;
+>> +
+>> +    mutex_lock(&ctrl->port_lock);
+>> +    list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+>> +        if (m_rt->direction == SDW_DATA_DIR_RX) {
+>> +            maxport = ctrl->num_dout_ports;
+>> +            port_mask = &ctrl->dout_port_mask;
+>> +        } else {
+>> +            maxport = ctrl->num_din_ports;
+>> +            port_mask = &ctrl->din_port_mask;
+>> +        }
+>> +
+>> +        list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
+>> +            list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
+>> +                /* Port numbers start from 1 - 14*/
+>> +                pn = find_first_zero_bit(port_mask, maxport);
+>> +                if (pn > (maxport - 1)) {
+>> +                    dev_err(ctrl->dev, "All ports busy\n");
+>> +                    ret = -EBUSY;
+>> +                    goto err;
+>> +                }
+>> +                set_bit(pn, port_mask);
+>> +                pconfig[nports].num = pn + 1;
+>> +                pconfig[nports].ch_mask = p_rt->ch_mask;
+>> +                nports++;
+>> +            }
+>> +        }
+>> +    }
+>> +
+>> +    if (direction == SNDRV_PCM_STREAM_CAPTURE)
+>> +        sconfig.direction = SDW_DATA_DIR_TX;
+>> +    else
+>> +        sconfig.direction = SDW_DATA_DIR_RX;
+>> +
+>> +    sconfig.ch_count = 1;
+>> +    sconfig.frame_rate = params_rate(params);
+>> +    sconfig.type = stream->type;
+>> +    sconfig.bps = 1;
+> 
+> Should probably add a note that hw_params is ignored since it's PDM 
+> content, so only 1ch 1bit data.
+> 
+
+Okay Sure!
+>> +    sdw_stream_add_master(&ctrl->bus, &sconfig, pconfig,
+>> +                  nports, stream);
+>> +err:
+>> +    if (ret) {
+>> +        for (i = 0; i < nports; i++)
+>> +            clear_bit(pconfig[i].num - 1, port_mask);
+>> +    }
+>> +
+>> +    mutex_unlock(&ctrl->port_lock);
+>> +
+>> +    return ret;
+>> +}
+>> +
+> 
+> [snip]
+> 
+>> +static int qcom_swrm_hw_free(struct snd_pcm_substream *substream,
+>> +                 struct snd_soc_dai *dai)
+>> +{
+>> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+>> +    struct sdw_stream_runtime *sruntime = ctrl->sruntime[dai->id];
+>> +
+>> +    qcom_swrm_stream_free_ports(ctrl, sruntime);
+>> +    sdw_stream_remove_master(&ctrl->bus, sruntime);
+>> +    sdw_deprepare_stream(sruntime);
+>> +    sdw_disable_stream(sruntime);
+> 
+> Should is be the reverse order? Removing ports/master before disabling 
+> doesn't seem too good.
+
+Good point!  Will fix it in next version.
+
+> 
+>> +
+>> +    return 0;
+>> +}
+>> +
+> 
+>> +static int qcom_swrm_register_dais(struct qcom_swrm_ctrl *ctrl)
+>> +{
+>> +    int num_dais = ctrl->num_dout_ports + ctrl->num_din_ports;
+>> +    struct snd_soc_dai_driver *dais;
+>> +    struct snd_soc_pcm_stream *stream;
+>> +    struct device *dev = ctrl->dev;
+>> +    int i;
+>> +
+>> +    /* PDM dais are only tested for now */
+>> +    dais = devm_kcalloc(dev, num_dais, sizeof(*dais), GFP_KERNEL);
+>> +    if (!dais)
+>> +        return -ENOMEM;
+>> +
+>> +    for (i = 0; i < num_dais; i++) {
+>> +        dais[i].name = devm_kasprintf(dev, GFP_KERNEL, "SDW Pin%d", i);
+>> +        if (!dais[i].name)
+>> +            return -ENOMEM;
+>> +
+>> +        if (i < ctrl->num_dout_ports) {
+>> +            stream = &dais[i].playback;
+>> +            stream->stream_name = devm_kasprintf(dev, GFP_KERNEL,
+>> +                                 "SDW Tx%d", i);
+>> +        } else {
+>> +            stream = &dais[i].capture;
+>> +            stream->stream_name = devm_kasprintf(dev, GFP_KERNEL,
+>> +                                 "SDW Rx%d", i);
+>> +        }
+> 
+> For the Intel stuff, we removed the stream_name assignment since it 
+> conflicted with the DAI widgets added by the topology. Since the code 
+> looks inspired by the Intel DAI handling, you should look into this.
+
+Yes, this code was inspired by Intel's DAI handling, I will take a look 
+a look at latest code and update accordingly.
+
+Thanks,
+srini
+> 
