@@ -1,188 +1,29 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v1 2/4] dt-bindings: net: dsa: qca,ar9331 switch documentation
-Date: Mon, 14 Oct 2019 08:15:47 +0200
-Message-ID: <20191014061549.3669-3-o.rempel@pengutronix.de>
-References: <20191014061549.3669-1-o.rempel@pengutronix.de>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [v2 1/2] arm64: dts: ls1028a: Update the clock providers for the
+ Mali DP500
+Date: Mon, 14 Oct 2019 14:19:31 +0800
+Message-ID: <20191014061930.GB12262@dragon>
+References: <20190920083419.5092-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191014061549.3669-1-o.rempel@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <20190920083419.5092-1-wen.he_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <jhogan@kernel.org>, Jay Cliburn <jcliburn@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Vivien Didelot <vivien.didelot@gmail.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+To: Wen He <wen.he_1@nxp.com>
+Cc: linux-devel@linux.nxdi.nxp.com, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Atheros AR9331 has built-in 5 port switch. The switch can be configured
-to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
-ethernet controller or to be used directly by the switch over second ethernet
-controller.
+On Fri, Sep 20, 2019 at 04:34:18PM +0800, Wen He wrote:
+> In order to maximise performance of the LCD Controller's 64-bit AXI
+> bus, for any give speed bin of the device, the AXI master interface
+> clock(ACLK) clock can be up to CPU_frequency/2, which is already
+> capable of optimal performance. In general, ACLK is always expected
+> to be equal to CPU_frequency/2. APB slave interface clock(PCLK) and
+> Main processing clock(PCLK) both are tied to the same clock as ACLK.
+> 
+> This change followed the LS1028A Architecture Specification Manual.
+> 
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- .../devicetree/bindings/net/dsa/ar9331.txt    | 155 ++++++++++++++++++
- 1 file changed, 155 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
-
-diff --git a/Documentation/devicetree/bindings/net/dsa/ar9331.txt b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
-new file mode 100644
-index 000000000000..b0f95fd19584
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
-@@ -0,0 +1,155 @@
-+Atheros AR9331 built-in switch
-+=============================
-+
-+It is a switch built-in to Atheros AR9331 WiSoC and addressable over internal
-+MDIO bus. All PHYs are build-in as well. 
-+
-+Required properties:
-+
-+ - compatible: should be: "qca,ar9331-switch" 
-+ - reg: Address on the MII bus for the switch.
-+ - resets : Must contain an entry for each entry in reset-names.
-+ - reset-names : Must include the following entries: "switch"
-+ - interrupt-parent: Phandle to the parent interrupt controller
-+ - interrupts: IRQ line for the switch
-+ - interrupt-controller: Indicates the switch is itself an interrupt
-+   controller. This is used for the PHY interrupts.
-+ - #interrupt-cells: must be 1
-+ - mdio: Container of PHY and devices on the switches MDIO bus.
-+
-+See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
-+required and optional properties.
-+Examples:
-+
-+eth0: ethernet@19000000 {
-+	compatible = "qca,ar9330-eth";
-+	reg = <0x19000000 0x200>;
-+	interrupts = <4>;
-+
-+	resets = <&rst 9>, <&rst 22>;
-+	reset-names = "mac", "mdio";
-+	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
-+	clock-names = "eth", "mdio";
-+
-+	phy-mode = "mii";
-+	phy-handle = <&phy_port4>;
-+};
-+
-+eth1: ethernet@1a000000 {
-+	compatible = "qca,ar9330-eth";
-+	reg = <0x1a000000 0x200>;
-+	interrupts = <5>;
-+	resets = <&rst 13>, <&rst 23>;
-+	reset-names = "mac", "mdio";
-+	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
-+	clock-names = "eth", "mdio";
-+
-+	phy-mode = "gmii";
-+	phy-handle = <&switch_port0>;
-+
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		switch10: switch@10 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			compatible = "qca,ar9331-switch";
-+			reg = <16>;
-+			resets = <&rst 8>;
-+			reset-names = "switch";
-+
-+			interrupt-parent = <&miscintc>;
-+			interrupts = <12>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				switch_port0: port@0 {
-+					reg = <0>;
-+					label = "cpu";
-+					ethernet = <&eth1>;
-+
-+					phy-mode = "gmii";
-+
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+
-+				switch_port1: port@1 {
-+					reg = <1>;
-+					phy-handle = <&phy_port0>;
-+					phy-mode = "internal";
-+				};
-+
-+				switch_port2: port@2 {
-+					reg = <2>;
-+					phy-handle = <&phy_port1>;
-+					phy-mode = "internal";
-+				};
-+
-+				switch_port3: port@3 {
-+					reg = <3>;
-+					phy-handle = <&phy_port2>;
-+					phy-mode = "internal";
-+				};
-+
-+				switch_port4: port@4 {
-+					reg = <4>;
-+					phy-handle = <&phy_port3>;
-+					phy-mode = "internal";
-+				};
-+
-+				switch_port5: port@5 {
-+					reg = <5>;
-+					phy-handle = <&phy_port4>;
-+					phy-mode = "internal";
-+				};
-+			};
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				interrupt-parent = <&switch10>;
-+
-+				phy_port0: phy@0 {
-+					reg = <0>;
-+					interrupts = <0>;
-+				};
-+
-+				phy_port1: phy@1 {
-+					reg = <1>;
-+					interrupts = <0>;
-+				};
-+
-+				phy_port2: phy@2 {
-+					reg = <2>;
-+					interrupts = <0>;
-+				};
-+
-+				phy_port3: phy@3 {
-+					reg = <3>;
-+					interrupts = <0>;
-+				};
-+
-+				phy_port4: phy@4 {
-+					reg = <4>;
-+					interrupts = <0>;
-+				};
-+			};
-+		};
-+	};
-+};
--- 
-2.23.0
+Applied, thanks.
