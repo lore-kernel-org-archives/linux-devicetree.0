@@ -1,50 +1,38 @@
-From: Andi Shyti <andi@etezian.org>
-Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
-Date: Mon, 14 Oct 2019 00:39:50 +0300
-Message-ID: <20191013213950.GB16344@jack.zhora.eu>
-References: <20191007203343.101466-1-stephan@gerhold.net>
- <20191007205021.104402-1-stephan@gerhold.net>
- <20191008220014.GI22365@dtor-ws>
- <20191009072612.GA2814@jack.zhora.eu>
- <20191009204017.GK22365@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH v2 1/2] dt-bindings: pinctrl: rockchip: add rk3308 SoC support
+Date: Mon, 14 Oct 2019 08:25:22 +0800
+Message-ID: <20191014002523.4540-2-jay.xu@rock-chips.com>
+References: <20191012061528.27821-1-jay.xu@rock-chips.com>
+ <20191014002523.4540-1-jay.xu@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191009204017.GK22365@dtor-ws>
+In-Reply-To: <20191014002523.4540-1-jay.xu@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andi Shyti <andi@etezian.org>, Stephan Gerhold <stephan@gerhold.net>, Simon Shields <simon@lineageos.org>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Jianqun Xu <jay.xu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Add rk3308 SoC support to rockchip pinctrl.
 
-> > > > There was a related patch [2] that removes I2C_M_NOSTART for all models,
-> > > > but it seems abandoned and I do not have any other model for testing.
-> > > > Therefore, this patch implements the least instrusive solution
-> > > > and only removes I2C_M_NOSTART for MMS345L.
-> > > 
-> > > Hmm,  at this point I am inclined to pick up Andi's patch since it seems
-> > > to work for you and him and it looks like Android drivers are not using
-> > > I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
-> > > it was originally developed.
-> > 
-> > I completely forgot about that patch :)
-> > 
-> > I should refresh some old work on that device which was left
-> > undone.
-> > 
-> > > Any objections?
-> > 
-> > It's OK for me. If you can just update my e-mail, please, when
-> > applying the patch to "andi@etezian.org". Thanks!
-> 
-> Andi, any chance you could resend it with the new email? One thing that
-> I try to avoid modifying whenever I can is S-O-B strings...
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+---
+changes since v1:
+- Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-sure, I will resend the patches, but it might take some time (a
-few days I hope) because I don't have the devices with me right
-now for testing (and I added some small fixes, as well)
+ Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Andi
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+index 0919db294c17..2113cfaa26e6 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+@@ -29,6 +29,7 @@ Required properties for iomux controller:
+ 		"rockchip,rk3188-pinctrl":  for Rockchip RK3188
+ 		"rockchip,rk3228-pinctrl":  for Rockchip RK3228
+ 		"rockchip,rk3288-pinctrl":  for Rockchip RK3288
++		"rockchip,rk3308-pinctrl":  for Rockchip RK3308
+ 		"rockchip,rk3328-pinctrl":  for Rockchip RK3328
+ 		"rockchip,rk3368-pinctrl":  for Rockchip RK3368
+ 		"rockchip,rk3399-pinctrl":  for Rockchip RK3399
+-- 
+2.17.1
