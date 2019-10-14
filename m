@@ -1,139 +1,51 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-Date: Mon, 14 Oct 2019 12:48:35 +0100
-Message-ID: <20191014124835.00005645@huawei.com>
-References: <20191013141345.uctcutryo7pmdkem@smtp.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 2/2] ASoC: simple-card: Add documentation for
+ force-dpcm property
+Date: Mon, 14 Oct 2019 12:56:35 +0100
+Message-ID: <20191014115635.GB4826@sirena.co.uk>
+References: <20191013190014.32138-1-daniel.baluta@nxp.com>
+ <20191013190014.32138-3-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191013141345.uctcutryo7pmdkem@smtp.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20191013190014.32138-3-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: jic23@kernel.org, dragos.bogdan@analog.com, alexandru.ardelean@analog.com, stefan.popa@analog.com, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: perex@perex.cz, tiwai@suse.com, kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com, robh+dt@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 13 Oct 2019 11:13:47 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-> Add a device tree binding doc for AD7292 monitor and control system.
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> ---
->  .../bindings/iio/adc/adi,ad7292.yaml          | 71 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> new file mode 100644
-> index 000000000000..16be9ea4194d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7292 10-Bit Monitor and Control System
-> +
-> +maintainers:
-> +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> +
-> +description: |
-> +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-> +  Temperature Sensor, and GPIOs
-> +
-> +  Specifications about the part can be found at:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7292
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vref-supply:
-> +    description: |
-> +      The regulator supply for ADC and DAC reference voltage.
-> +    maxItems: 1
-> +
-> +  spi-cpha:
-> +    description: |
-> +      See Documentation/devicetree/bindings/spi/spi-controller.yaml
-> +    maxItems: 1
-> +
-> +  diff-channels:
-> +    description: |
-> +      Empty property to tell whether VIN0 and VIN1 shall work as differential
-> +      inputs.
-> +    maxItems: 1
+--8GpibOaaTibBMecb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This looks like a nice general interface, but really isn't as it only applies
-to the first two channels.
+On Sun, Oct 13, 2019 at 10:00:14PM +0300, Daniel Baluta wrote:
 
-Can you use the standard channel defintions
-Documentation/devicetree/bindings/iio/adc.txt
-to specify this?
+> This property can be global in which case all links created will be DPCM
+> or present in certian dai-link subnode in which case only that specific
+> link is forced to be DPCM.
 
-It may seem overly complex, but it has the benefit of being generic.
+> +- force-dpcm				: Indicates dai-link is always DPCM.
 
-Would be something like:
+DPCM is an implementation detail of Linux (and one that we want to phase
+out going forwards too), we shouldn't be putting it in the DT bindings
+where it becomes an ABI.
 
-channel@0 {
-	diff-channels = < 0 1 >
-};
-channel@2 {
-};
-vs all the channels being present, none set as diff.
+--8GpibOaaTibBMecb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
 
-Jonathan
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2kYnIACgkQJNaLcl1U
+h9AJzAf+L30WoNHHnOrkkpLMsmM6uZcu7czOKRKOJyZ35878jKwHbjZap1z9TOLG
+ivJDyoiRoLYg4twQJcl7Rt/I7WytvqTEkhzju5+LWpRuB+fFtdBjwK0p0rXZbj1E
+6wWWkfnGi5NgxPGa0FSCwLUkIwPtrsd3Rwxbwk6n+kekbJxEYK9UzkGOydcIIgez
+ie6lZRh515nxc2sohfBhM3//verg1jHxxG6sA0cMQ+hHwdzgIzfXzsHXlYw9M/pm
+Z9KNu7+EiJ0gefb6XXCbqfJQ+B37sibpl+10EeiUIHIW2bjOl1w+LJgRJzb6nFK8
+j60W+/cODoUMQWboKCkQ+oTUEHuDXg==
+=SivO
+-----END PGP SIGNATURE-----
 
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    spi0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      ad7292: ad7292@0 {
-> +        compatible = "adi,ad7292";
-> +        reg = <0>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        spi-max-frequency = <25000000>;
-> +        vref-supply = <&adc_vref>;
-> +        spi-cpha;
-> +        diff-channels;
-> +      };
-> +    }
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e78317a5f4f1..5941cfc0d6f7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -819,6 +819,7 @@ L:	linux-iio@vger.kernel.org
->  W:	http://ez.analog.com/community/linux-device-drivers
->  S:	Supported
->  F:	drivers/iio/adc/ad7292.c
-> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
->  
->  ANALOG DEVICES INC AD7606 DRIVER
->  M:	Stefan Popa <stefan.popa@analog.com>
+--8GpibOaaTibBMecb--
