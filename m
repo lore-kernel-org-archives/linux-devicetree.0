@@ -1,28 +1,34 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 06/10] ARM: dts: imx: Rename "iram" node to "sram"
-Date: Mon, 14 Oct 2019 19:32:41 +0800
-Message-ID: <20191014113240.GN12262@dragon>
-References: <20191002164316.14905-1-krzk@kernel.org>
- <20191002164316.14905-6-krzk@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Biwen Li <biwen.li@nxp.com>
+Subject: [PATCH 1/2] dt-bindings: i2c: replace property i2c-mux-idle-disconnect
+Date: Mon, 14 Oct 2019 19:25:57 +0800
+Message-ID: <20191014112558.3881-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191002164316.14905-6-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@bootlin.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.orglinux-
+To: peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:43:12PM +0200, Krzysztof Kozlowski wrote:
-> The device node name should reflect generic class of a device so rename
-> the "iram" node to "sram".  This will be also in sync with upcoming DT
-> schema.  No functional change.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This replaces property i2c-mux-idle-disconnect with idle-state
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Let me know if you want it go through IMX tree.
-
-Shawn
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+index 30ac6a60f041..f2db517b1635 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+@@ -25,9 +25,7 @@ Required Properties:
+ Optional Properties:
+ 
+   - reset-gpios: Reference to the GPIO connected to the reset input.
+-  - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
+-    children in idle state. This is necessary for example, if there are several
+-    multiplexers on the bus and the devices behind them use same I2C addresses.
++  - idle-state: Please refer to Documentation/devicetree/bindings/mux/mux-controller.txt
+   - interrupts: Interrupt mapping for IRQ.
+   - interrupt-controller: Marks the device node as an interrupt controller.
+   - #interrupt-cells : Should be two.
+-- 
+2.17.1
