@@ -1,23 +1,28 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/5] clk: imx8mq: Add VIDEO2_PLL clock
-Date: Mon, 14 Oct 2019 19:27:49 +0800
-Message-ID: <20191014112748.GM12262@dragon>
-References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
- <1570025100-5634-2-git-send-email-laurentiu.palcu@nxp.com>
+Subject: Re: [PATCH v3 06/10] ARM: dts: imx: Rename "iram" node to "sram"
+Date: Mon, 14 Oct 2019 19:32:41 +0800
+Message-ID: <20191014113240.GN12262@dragon>
+References: <20191002164316.14905-1-krzk@kernel.org>
+ <20191002164316.14905-6-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1570025100-5634-2-git-send-email-laurentiu.palcu@nxp.com>
+In-Reply-To: <20191002164316.14905-6-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, agx@sigxcpu.org, l.stach@pengutronix.de, Abel Vesa <abel.vesa@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@bootlin.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.orglinux-
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 05:04:53PM +0300, Laurentiu Palcu wrote:
-> This clock is needed by DCSS when high resolutions are used.
+On Wed, Oct 02, 2019 at 06:43:12PM +0200, Krzysztof Kozlowski wrote:
+> The device node name should reflect generic class of a device so rename
+> the "iram" node to "sram".  This will be also in sync with upcoming DT
+> schema.  No functional change.
 > 
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> CC: Abel Vesa <abel.vesa@nxp.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Applied, thanks.
+Acked-by: Shawn Guo <shawnguo@kernel.org>
+
+Let me know if you want it go through IMX tree.
+
+Shawn
