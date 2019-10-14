@@ -1,26 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 8/8] dt-bindings: Add max12xx SPI ADC series as
- trivial devices
-Date: Mon, 14 Oct 2019 10:38:53 -0500
-Message-ID: <20191014153853.GA26878@bogus>
-References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
- <20191011144347.19146-9-miquel.raynal@bootlin.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: replace property
+ i2c-mux-idle-disconnect
+Date: Mon, 14 Oct 2019 15:44:54 +0000
+Message-ID: <4124752f-19a2-e3c1-7887-07ba66a79c29@axentia.se>
+References: <20191014112558.3881-1-biwen.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191011144347.19146-9-miquel.raynal@bootlin.com>
+In-Reply-To: <20191014112558.3881-1-biwen.li@nxp.com>
+Content-Language: en-US
+Content-ID: <317733F89A582E43892671097717F529@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: Biwen Li <biwen.li@nxp.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Oct 2019 16:43:47 +0200, Miquel Raynal wrote:
-> Update the compatible list with three Maxim ADCs compatibles.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gMjAxOS0xMC0xNCAxMzoyNSwgQml3ZW4gTGkgd3JvdGU6DQo+IFRoaXMgcmVwbGFjZXMgcHJv
+cGVydHkgaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3Qgd2l0aCBpZGxlLXN0YXRlDQo+IA0KPiBTaWdu
+ZWQtb2ZmLWJ5OiBCaXdlbiBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4NCj4gLS0tDQo+ICBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50eHQgfCA0ICst
+LS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMyBkZWxldGlvbnMoLSkNCj4g
+DQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2ky
+Yy1tdXgtcGNhOTU0eC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJj
+L2kyYy1tdXgtcGNhOTU0eC50eHQNCj4gaW5kZXggMzBhYzZhNjBmMDQxLi5mMmRiNTE3YjE2MzUg
+MTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJj
+LW11eC1wY2E5NTR4LnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50eHQNCj4gQEAgLTI1LDkgKzI1LDcgQEAgUmVxdWlyZWQg
+UHJvcGVydGllczoNCj4gIE9wdGlvbmFsIFByb3BlcnRpZXM6DQo+ICANCj4gICAgLSByZXNldC1n
+cGlvczogUmVmZXJlbmNlIHRvIHRoZSBHUElPIGNvbm5lY3RlZCB0byB0aGUgcmVzZXQgaW5wdXQu
+DQo+IC0gIC0gaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3Q6IEJvb2xlYW47IGlmIGRlZmluZWQsIGZv
+cmNlcyBtdXggdG8gZGlzY29ubmVjdCBhbGwNCj4gLSAgICBjaGlsZHJlbiBpbiBpZGxlIHN0YXRl
+LiBUaGlzIGlzIG5lY2Vzc2FyeSBmb3IgZXhhbXBsZSwgaWYgdGhlcmUgYXJlIHNldmVyYWwNCj4g
+LSAgICBtdWx0aXBsZXhlcnMgb24gdGhlIGJ1cyBhbmQgdGhlIGRldmljZXMgYmVoaW5kIHRoZW0g
+dXNlIHNhbWUgSTJDIGFkZHJlc3Nlcy4NCj4gKyAgLSBpZGxlLXN0YXRlOiBQbGVhc2UgcmVmZXIg
+dG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL211eC9tdXgtY29udHJvbGxlci50
+eHQNCj4gICAgLSBpbnRlcnJ1cHRzOiBJbnRlcnJ1cHQgbWFwcGluZyBmb3IgSVJRLg0KPiAgICAt
+IGludGVycnVwdC1jb250cm9sbGVyOiBNYXJrcyB0aGUgZGV2aWNlIG5vZGUgYXMgYW4gaW50ZXJy
+dXB0IGNvbnRyb2xsZXIuDQo+ICAgIC0gI2ludGVycnVwdC1jZWxscyA6IFNob3VsZCBiZSB0d28u
+DQo+IA0KDQpZb3UgY2FuJ3QganVzdCByZW1vdmUgaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3QuIEl0
+IG5lZWRzIHRvIHJlbWFpbiwgYW5kIHRoZQ0KZHJpdmVyIG5lZWRzIHRvIG1haW50YWluIHN1cHBv
+cnQgZm9yIHRoaXMgaW4gY2FzZSBhIG5ldyBrZXJuZWwgaXMgcnVubmluZw0Kd2l0aCBhbiBvbGQg
+ZGV2aWNldHJlZS4NCg0KQ2hlZXJzLA0KUGV0ZXINCg==
