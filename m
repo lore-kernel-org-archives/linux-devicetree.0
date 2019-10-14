@@ -1,25 +1,33 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 08/11] dts: arm64: layerscape: add dma-ranges property to
- pcie nodes
-Date: Mon, 14 Oct 2019 16:29:28 +0800
-Message-ID: <20191014082924.GI12262@dragon>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <20190924181244.7159-9-nsaenzjulienne@suse.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: r8a774b1: Add CAN and CAN FD support
+Date: Mon, 14 Oct 2019 10:49:01 +0200
+Message-ID: <CAMuHMdWtK1+3AZ734j8rLsAx-b873Gxaif5g0+J4UVPLRR9X6g@mail.gmail.com>
+References: <1570717560-7431-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570717560-7431-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190924181244.7159-9-nsaenzjulienne@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org, linux-media@vger.kernel.org, linux-pci@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, mbrugger@suse.com, robin.murphy@arm.com, f.fainelli@gmail.com, james.quinlan@broadcom.com, wahrenst@gmx.net, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1570717560-7431-4-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 08:12:39PM +0200, Nicolas Saenz Julienne wrote:
-> The bus behind the board's PCIe core has DMA addressing limitations. Add
-> an empty 'dma-ranges' property on all PCIe bus descriptions to inform
-> the OF core that a translation is due further down the line.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Thu, Oct 10, 2019 at 4:26 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Add CAN and CAN FD support to the RZ/G2N SoC specific dtsi.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Applied, thanks.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.5.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
