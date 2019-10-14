@@ -1,7 +1,7 @@
 From: kbuild test robot <lkp@intel.com>
-Subject: [RFC PATCH] crypto: sun8i_ce_pm_ops can be static
-Date: Tue, 15 Oct 2019 00:32:43 +0800
-Message-ID: <20191014163243.ijpkv4uyszse32lw@332d0cec05f4>
+Subject: Re: [PATCH v4 02/11] crypto: Add Allwinner sun8i-ce Crypto Engine
+Date: Tue, 15 Oct 2019 00:32:42 +0800
+Message-ID: <201910150009.4PL0gO1Q%lkp@intel.com>
 References: <20191012184852.28329-3-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -12,23 +12,34 @@ Sender: linux-kernel-owner@vger.kernel.org
 Cc: kbuild-all@lists.01.org, catalin.marinas@arm.com, davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org, wens@csie.org, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Corentin,
 
-Fixes: f113059e7b4f ("crypto: Add Allwinner sun8i-ce Crypto Engine")
-Signed-off-by: kbuild test robot <lkp@intel.com>
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on cryptodev/master]
+[cannot apply to v5.4-rc3 next-20191014]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Corentin-Labbe/crypto-add-sun8i-ce-driver-for-Allwinner-crypto-engine/20191014-104401
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-43-g0ccb3b4-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c:415:25: sparse: sparse: symbol 'sun8i_ce_pm_ops' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
 ---
- sun8i-ce-core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index 77e9cb0cc6eea..a08f0e7a29752 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -412,7 +412,7 @@ static int sun8i_ce_pm_resume(struct device *dev)
- 	return err;
- }
- 
--const struct dev_pm_ops sun8i_ce_pm_ops = {
-+static const struct dev_pm_ops sun8i_ce_pm_ops = {
- 	SET_RUNTIME_PM_OPS(sun8i_ce_pm_suspend, sun8i_ce_pm_resume, NULL)
- };
- 
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
