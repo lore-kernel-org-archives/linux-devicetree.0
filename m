@@ -1,7 +1,7 @@
 From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH v2 2/3] arm64: dts: rockchip: Add RK3328 audio pipelines
-Date: Mon, 14 Oct 2019 23:19:05 +0100
-Message-ID: <a09c8d795e7a66fb7bc47af2b6580f6e8dbec91e.1571090991.git.robin.murphy@arm.com>
+Subject: [PATCH v2 3/3] arm64: dts: rockchip: Add Beelink A1
+Date: Mon, 14 Oct 2019 23:19:06 +0100
+Message-ID: <2aa21c5f3020062cf6a47057bdf3c01f0ec863ea.1571090991.git.robin.murphy@arm.com>
 References: <82324d17b770fa8ea189fa708490d2c8c0c9290e.1571090991.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,64 +21,402 @@ To: heiko@sntech.de
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The audio pipelines for HDMI and the analog codec are internal to the
-SoC, so it makes sense to describe them at that level such that boards
-need only enable the respective nodes for outputs they implement.
+Beelink A1 is a TV box implementing the higher-end options of the
+RK3328 reference design - the DTB from the stock Android firmware is
+clearly the "rk3328-box-plus" variant from the Rockchip 3.10 BSP with
+minor modifications to accommodate the USB WiFi module and additional
+VFD-style LED driver. It features:
+
+- 4GB of 32-bit LPDDR3
+- 16GB of HS200 eMMC (newer models with 32GB also exist)
+- Realtek RTL8211F phy for gigabit ethernet
+- Fn-Link 6221E-UUC module (RealTek RTL8821CU) for 11ac WiFi and Bluetooth 4.2
+- HDMI and analog A/V
+- 1x USB 3.0 type A host, 1x USB 2.0 type A OTG, 1x micro SD
+- IR receiver and a neat little LED clock display.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 32 ++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ arch/arm64/boot/dts/rockchip/Makefile      |   1 +
+ arch/arm64/boot/dts/rockchip/rk3328-a1.dts | 359 +++++++++++++++++++++
+ 2 files changed, 360 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-a1.dts
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 31cc1541f1f5..91306ebed4da 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -142,6 +142,22 @@
- 		};
- 	};
- 
-+	analog_sound: analog-sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,mclk-fs = <256>;
-+		simple-audio-card,name = "Analog";
-+		status = "disabled";
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 1f18a9392d15..a6f250e7cde2 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-a1.dts b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
+new file mode 100644
+index 000000000000..76b49f573101
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
+@@ -0,0 +1,359 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
++// Copyright (c) 2017-2019 Arm Ltd.
 +
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s1>;
++/dts-v1/;
++#include "rk3328.dtsi"
++
++/ {
++	model = "Beelink A1";
++	compatible = "azw,beelink-a1", "rockchip,rk3328";
++
++	/*
++	 * UART pins, as viewed with bottom of case removed:
++	 *
++	 *           Front
++	 *        /-------
++	 *  L    / o <- Gnd
++	 *  e   / o <-- Rx
++	 *  f  / o <--- Tx
++	 *  t / o <---- +3.3v
++	 *    |
++	 */
++	chosen {
++		stdout-path = "serial2:1500000n8";
++	};
++
++	gmac_clkin: external-gmac-clock {
++		compatible = "fixed-clock";
++		clock-frequency = <125000000>;
++		clock-output-names = "gmac_clkin";
++		#clock-cells = <0>;
++	};
++
++	vcc_host_5v: usb3-current-switch {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb30_host_drv>;
++		regulator-name = "vcc_host_5v";
++		vin-supply = <&vcc_sys>;
++	};
++
++	vcc_sys: vcc-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_sys";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
++	ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&analog_sound {
++	simple-audio-card,name = "Analog A/V";
++	status = "okay";
++};
++
++&codec {
++	status = "okay";
++};
++
++&cpu0 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&emmc {
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++	no-sd;
++	no-sdio;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
++	vmmc-supply = <&vcc_io>;
++	vqmmc-supply = <&vcc18_emmc>;
++	status = "okay";
++};
++
++&gmac2io {
++	assigned-clocks = <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_EXT>;
++	assigned-clock-parents = <&gmac_clkin>, <&gmac_clkin>;
++	clock_in_out = "input";
++	phy-handle = <&rtl8211f>;
++	phy-mode = "rgmii";
++	phy-supply = <&vcc_io>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmiim1_pins>;
++	snps,aal;
++	snps,pbl = <0x4>;
++	tx_delay = <0x26>;
++	rx_delay = <0x11>;
++	status = "okay";
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		rtl8211f: phy@0 {
++			reg = <0>;
++			reset-assert-us = <10000>;
++			reset-deassert-us = <30000>;
++			reset-gpios = <&gpio2 RK_PC1 GPIO_ACTIVE_LOW>;
 +		};
++	};
++};
 +
-+		simple-audio-card,codec {
-+			sound-dai = <&codec>;
++&gpu {
++	mali-supply = <&vdd_logic>;
++};
++
++&hdmi {
++	status = "okay";
++};
++
++&hdmiphy {
++	status = "okay";
++};
++
++&hdmi_sound {
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <1000000>;
++	i2c-scl-falling-time-ns = <5>;
++	i2c-scl-rising-time-ns = <83>;
++	status = "okay";
++
++	pmic@18 {
++		compatible = "rockchip,rk805";
++		reg = <0x18>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <RK_PA6 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_int_l>;
++		rockchip,system-power-controller;
++		wakeup-source;
++
++		vcc1-supply = <&vcc_sys>;
++		vcc2-supply = <&vcc_sys>;
++		vcc3-supply = <&vcc_sys>;
++		vcc4-supply = <&vcc_sys>;
++		vcc5-supply = <&vcc_io>;
++		vcc6-supply = <&vcc_io>;
++
++		regulators {
++			vdd_logic: DCDC_REG1 {
++				regulator-name = "vdd_logic";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1000000>;
++				};
++			};
++
++			vdd_arm: DCDC_REG2 {
++				regulator-name = "vdd_arm";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <950000>;
++				};
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-name = "vcc_ddr";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vcc_io: DCDC_REG4 {
++				regulator-name = "vcc_io";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vdd_18: LDO_REG1 {
++				regulator-name = "vdd_18";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vcc18_emmc: LDO_REG2 {
++				regulator-name = "vcc_18emmc";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vdd_11: LDO_REG3 {
++				regulator-name = "vdd_11";
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1100000>;
++				};
++			};
++		};
++	};
++};
++
++&i2s0 {
++	status = "okay";
++};
++
++&i2s1 {
++	status = "okay";
++};
++
++&io_domains {
++	vccio1-supply = <&vcc_io>;
++	vccio2-supply = <&vcc18_emmc>;
++	vccio3-supply = <&vcc_io>;
++	vccio4-supply = <&vdd_18>;
++	vccio5-supply = <&vcc_io>;
++	vccio6-supply = <&vdd_18>;
++	pmuio-supply = <&vcc_io>;
++	status = "okay";
++};
++
++&pinctrl {
++	pmic {
++		pmic_int_l: pmic-int-l {
++			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +	};
 +
- 	arm-pmu {
- 		compatible = "arm,cortex-a53-pmu";
- 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-@@ -156,6 +172,22 @@
- 		ports = <&vop_out>;
- 	};
- 
-+	hdmi_sound: hdmi-sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,mclk-fs = <128>;
-+		simple-audio-card,name = "HDMI";
-+		status = "disabled";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s0>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&hdmi>;
++	usb3 {
++		usb30_host_drv: usb30-host-drv {
++			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
 +
- 	psci {
- 		compatible = "arm,psci-1.0", "arm,psci-0.2";
- 		method = "smc";
++	wifi {
++		bt_dis: bt-dis {
++			rockchip,pins = <2 RK_PC5 RK_FUNC_GPIO &pcfg_output_low>;
++		};
++
++		bt_wake_host: bt-wake-host {
++			rockchip,pins = <2 RK_PC0 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++
++		chip_en: chip-en {
++			rockchip,pins = <2 RK_PC3 RK_FUNC_GPIO &pcfg_output_low>;
++		};
++
++		host_wake_bt: host-wake-bt {
++			rockchip,pins = <2 RK_PB7 RK_FUNC_GPIO &pcfg_output_high>;
++		};
++
++		wl_dis: wl-dis {
++			rockchip,pins = <3 RK_PB0 RK_FUNC_GPIO &pcfg_output_low>;
++		};
++
++		wl_wake_host: wl-wake-host {
++			rockchip,pins = <3 RK_PA1 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++};
++
++&sdmmc {
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	disable-wp;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
++	vmmc-supply = <&vcc_io>;
++	vqmmc-supply = <&vcc_io>;
++	status = "okay";
++};
++
++&tsadc {
++	rockchip,hw-tshut-mode = <0>;
++	rockchip,hw-tshut-polarity = <0>;
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&u2phy {
++	status = "okay";
++};
++
++&u2phy_host {
++	status = "okay";
++};
++
++&u2phy_otg {
++	status = "okay";
++};
++
++&usb20_otg {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	pinctrl-names = "default";
++	pinctrl-0 = <&bt_dis &bt_wake_host &chip_en &host_wake_bt &wl_dis &wl_wake_host>;
++	status = "okay";
++};
++
++&vop {
++	status = "okay";
++};
++
++&vop_mmu {
++	status = "okay";
++};
 -- 
 2.17.1
