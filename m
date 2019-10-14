@@ -1,30 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: rockchip: add rk3308 SoC
- support
-Date: Mon, 14 Oct 2019 13:15:52 -0500
-Message-ID: <20191014181552.GA12199@bogus>
-References: <20191012061528.27821-1-jay.xu@rock-chips.com>
- <20191014030348.18860-1-jay.xu@rock-chips.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: crypto: Add DT bindings
+ documentation for amlogic-crypto
+Date: Mon, 14 Oct 2019 13:17:03 -0500
+Message-ID: <20191014181703.GA14399@bogus>
+References: <1571031104-6880-1-git-send-email-clabbe@baylibre.com>
+ <1571031104-6880-2-git-send-email-clabbe@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191014030348.18860-1-jay.xu@rock-chips.com>
+In-Reply-To: <1571031104-6880-2-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au, khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org, martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Oct 2019 11:03:48 +0800, Jianqun Xu wrote:
-> Add rk3308 SoC support to rockchip pinctrl.
+On Mon, 14 Oct 2019 05:31:41 +0000, Corentin Labbe wrote:
+> This patch adds documentation for Device-Tree bindings for the
+> Amlogic GXL cryptographic offloader driver.
 > 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 > ---
-> changes since v1:
-> - Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> 
->  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/crypto/amlogic,gxl-crypto.yaml   | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
