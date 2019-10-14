@@ -1,49 +1,46 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 1/6] opp: Handle target/min/max voltage in
- dev_pm_opp_adjust_voltage()
-Date: Mon, 14 Oct 2019 11:56:49 +0530
-Message-ID: <20191014062649.oegc2rwigmdv6kju@vireshk-i7>
-References: <20190910123618.27985-1-s.nawrocki@samsung.com>
- <CGME20190910123636eucas1p250ec04901f227b947cc38936563f63b2@eucas1p2.samsung.com>
- <20190910123618.27985-2-s.nawrocki@samsung.com>
- <20191002143310.GA15898@pi3>
- <ada1bb2f-a824-c34e-6561-04a35782a9b8@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V6 2/8] backlight: qcom-wled: restructure the qcom-wled
+ bindings
+Date: Mon, 14 Oct 2019 07:35:53 +0100
+Message-ID: <20191014063553.GA4545@dell>
+References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
+ <1569825553-26039-3-git-send-email-kgunda@codeaurora.org>
+ <20191013121045.GN5653@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ada1bb2f-a824-c34e-6561-04a35782a9b8@samsung.com>
+In-Reply-To: <20191013121045.GN5653@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, vireshk@kernel.org, robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Kiran Gunda <kgunda@codeaurora.org>, bjorn.andersson@linaro.org, jingoohan1@gmail.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02-10-19, 17:54, Sylwester Nawrocki wrote:
-> On 10/2/19 16:33, Krzysztof Kozlowski wrote:
-> > On Tue, Sep 10, 2019 at 02:36:13PM +0200, Sylwester Nawrocki wrote:
-> >> To be squashed with patch "PM / OPP: Support adjusting OPP voltages
-> >> at runtime".
-> >>
-> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >> ---
-> >>
-> >>  drivers/opp/core.c     | 10 ++++++++--
-> >>  include/linux/pm_opp.h |  3 ++-
-> >>  2 files changed, 10 insertions(+), 3 deletions(-)
-> >
-> > I'll take the ASV driver via samsung-soc but I see it depends on this
-> > one.  Please provide me a stable tag with it or an Ack.
-> 
-> There is further dependency on patch 
-> "[PATCH v4 6/8] PM / OPP: Support adjusting OPP voltages at runtime"
-> https://lore.kernel.org/linux-arm-kernel/1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com
-> 
-> Viresh, what are your plans WRT to those patches?
+On Sun, 13 Oct 2019, Pavel Machek wrote:
 
-I am waiting for Andrew to send me the next set of patches. You depend
-on only one of the patches ? In that case you can just pick that patch
-from his series, keep his authorship intact and make changes from 1/6
-and send along with your series.
+> On Mon 2019-09-30 12:09:07, Kiran Gunda wrote:
+> > Restructure the qcom-wled bindings for the better readability.
+> > 
+> > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> I applied 1,2 to my branch, it should appear in -next shortly.
+
+Doesn't patch 1 have outstanding review comments on it from Dan?
+
+If you're going to apply them, you need to send out an immutable
+branch for me to pull from.
+
+> yaml conversion can be done in a followup...
+> 
+> Best regards,
 
 -- 
-viresh
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
