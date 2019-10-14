@@ -1,44 +1,76 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 07/11] dts: arm64: layerscape: add dma-ranges property to
- qoric-mc node
-Date: Mon, 14 Oct 2019 19:09:12 +0800
-Message-ID: <20191014110911.GL12262@dragon>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <20190924181244.7159-8-nsaenzjulienne@suse.de>
- <20191014082847.GH12262@dragon>
- <f6262e61f858c6f50164416f4ea816e203c0704f.camel@suse.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/4] ARM: mstar: Add machine for MStar infinity family SoCs
+Date: Mon, 14 Oct 2019 13:19:46 +0200
+Message-ID: <CAK8P3a2U7U31eF_POU2=eCU+E1DH-wnR2uHr-VZYWLy25hLjKg@mail.gmail.com>
+References: <20191014061617.10296-1-daniel@0x0f.com> <20191014061617.10296-2-daniel@0x0f.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f6262e61f858c6f50164416f4ea816e203c0704f.camel-l3A5Bk7waGM@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Saenz Julienne <nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, etnaviv-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Li Yang <leoyang.li-3arQi8VN3Tc@public.gmane.org>, mbrugger-IBi9RG/b67k@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, james.quinlan-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, wahrenst-hi6Y0CQ0nG0@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191014061617.10296-2-daniel@0x0f.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Palmer <daniel@0x0f.com>
+Cc: Daniel Palmer <daniel@thingy.jp>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <mripard@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Shawn Guo <shawnguo@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, Linus Walleij <linus.walleij@linaro.org>, Paul Burton <paul.burton@mips.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Bartosz Golaszewski <bgolaszewski@ba>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:00:25PM +0200, Nicolas Saenz Julienne wrote:
-> On Mon, 2019-10-14 at 16:28 +0800, Shawn Guo wrote:
-> > On Tue, Sep 24, 2019 at 08:12:38PM +0200, Nicolas Saenz Julienne wrote:
-> > > qoriq-mc's dpmacs DMA configuration is inherited from their parent node,
-> > > which acts a bus in this regard. So far it maked all devices as
-> > > dma-coherent but no dma-ranges recommendation is made.
-> > > 
-> > > The truth is that the underlying interconnect has DMA constraints, so
-> > > add an empty dma-ranges in qoriq-mc's node in order for DT's DMA
-> > > configuration code to get the DMA constraints from it.
-> > > 
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
-> > 
-> > Updated subject prefix as 'arm64: dts: ...', and applied the patch.
-> 
-> Hi Shawn,
-> these two patches are no longer needed. This series has been superseded by this
-> patch[1] 951d48855d ('of: Make of_dma_get_range() work on bus nodes', available
-> in linux-next) which fixed the issue directly in OF code.
-> 
-> Sorry for the noise.
+On Mon, Oct 14, 2019 at 8:21 AM Daniel Palmer <daniel@0x0f.com> wrote:
+>
+> Initial support for the MStar infinity/infinity3 series of Cortex A7
+> based IP camera SoCs.
+>
+> These chips are interesting in that they contain a Cortex A7,
+> peripherals and system memory in a single tiny QFN package that
+> can be hand soldered allowing almost anyone to embed Linux
+> in their projects.
+>
+> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 
-Okay, thanks for letting me know.  Dropped them.
+> +
+> +static void __init infinity_map_io(void)
+> +{
+> +       iotable_init(infinity_io_desc, ARRAY_SIZE(infinity_io_desc));
+> +       miu_flush = (void __iomem *)(infinity_io_desc[0].virtual
+> +                       + INFINITY_L3BRIDGE_FLUSH);
+> +       miu_status = (void __iomem *)(infinity_io_desc[0].virtual
+> +                       + INFINITY_L3BRIDGE_STATUS);
+> +}
 
-Shawn
+If you do this a little later in .init_machine, you can use a simple ioremap()
+rather than picking a hardcoded physical address. It looks like nothing
+uses the mapping before you set soc_mb anyway.
+
+> +static DEFINE_SPINLOCK(infinity_mb_lock);
+> +
+> +static void infinity_mb(void)
+> +{
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&infinity_mb_lock, flags);
+> +       /* toggle the flush miu pipe fire bit */
+> +       writel_relaxed(0, miu_flush);
+> +       writel_relaxed(INFINITY_L3BRIDGE_FLUSH_TRIGGER, miu_flush);
+> +       while (!(readl_relaxed(miu_status) & INFINITY_L3BRIDGE_STATUS_DONE)) {
+> +               /* wait for flush to complete */
+> +       }
+> +       spin_unlock_irqrestore(&infinity_mb_lock, flags);
+> +}
+
+Wow, this is a heavy barrier. From your description it doesn't sound like
+there is anything to be done about it unfortunately.
+
+Two possible issues I see here:
+
+* It looks like it relies on CONFIG_ARM_HEAVY_BARRIER, but your Kconfig
+  entry does not select that. In many configurations, CACHE_L2X0 would
+  be set, but there is no need for yours on the Cortex-A7.
+
+* You might get into a deadlock if you get an FIQ (NMI) interrupt while
+   holding the infinity_mb_lock, and then issue another memory barrier
+   from that handler, so you might need to use
+   local_irq_disable()+local_fiq_disable()+raw_spin_lock() here, making
+   it even more expensive.
+   Not sure if it matters in practice, as almost nothing uses fiq any more.
+   OTOH, maybe the lock is not needed at all? AFAICT if the sequence
+   gets interrupted by a handler that also calls mb(), you would still
+   continue in the original thread while observing a full l3 barrier. ;-)
+
+        Arnd
