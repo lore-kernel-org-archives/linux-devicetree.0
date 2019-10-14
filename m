@@ -1,25 +1,36 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3] arm64: dts: enable otg mode for dwc3 usb ip on
- layerscape
-Date: Mon, 14 Oct 2019 21:18:52 +0800
-Message-ID: <20191014131847.GX12262@dragon>
-References: <20191008025642.19519-1-yinbo.zhu@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: Re: [PATCH v2 4/5] dt-bindings: display: imx: add bindings for DCSS
+Date: Mon, 14 Oct 2019 08:23:51 -0500
+Message-ID: <CAL_JsqJZHq=jDoK66bTHK+oqSvdrFh9x5a_cNe1hkFdALfs8vw@mail.gmail.com>
+References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
+ <1570025100-5634-5-git-send-email-laurentiu.palcu@nxp.com>
+ <20191011145042.GA15680@bogus> <20191014080327.GB14065@fsr-ub1664-121>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191008025642.19519-1-yinbo.zhu@nxp.com>
+In-Reply-To: <20191014080327.GB14065@fsr-ub1664-121>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, Ran Wang <ran.wang_1@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 10:56:42AM +0800, Yinbo Zhu wrote:
-> layerscape otg function should be supported HNP SRP and ADP protocol
-> accroing to rm doc, but dwc3 code not realize it and use id pin to
-> detect who is host or device(0 is host 1 is device) this patch is to
-> enable OTG mode on ls1028ardb ls1088ardb and ls1046ardb in dts
-> 
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+On Mon, Oct 14, 2019 at 3:03 AM Laurentiu Palcu <laurentiu.palcu@nxp.com> w=
+rote:
+>
+> Hi Rob,
+>
+> On Fri, Oct 11, 2019 at 09:50:42AM -0500, Rob Herring wrote:
+> > :u?wc??m5?^?=E3=9E=BE?}4-??z{b???r?+?=D7=80u???=D8=A7????# ?? ??ek ????=
+?W?J????^?(???h}??-??z{b???r?Z????+?jW.? \?o=DB=8Awb? ?v+)????l ? b? &??,?&=
+??=CE=BE????????????????W???!jx w=CE=A2?=C7=AB?*'??+y?^??^?M:???r=E9=9E=9E=
+=D6=AD???u??q?ky?=DB=8Awb? ?v+)????l ? b? &??,?&?? ??? u????=DE=AE???? ?G??=
+?h
+>
+> Ok! Not sure how to address this though... :)
 
-Applied, thanks.
+Your mail was base64 which ideally should be avoided on maillists. My
+scripting tries to deal with it, but failed obviously. What I said
+was:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
