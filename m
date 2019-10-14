@@ -1,120 +1,72 @@
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v3] dt-bindings: timer: Convert stm32 timer bindings to
- json-schema
-Date: Mon, 14 Oct 2019 11:23:16 +0200
-Message-ID: <20191014092316.24337-1-benjamin.gaignard@st.com>
+From: Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: Enable high resolution timer
+Date: Mon, 14 Oct 2019 09:31:14 +0000
+Message-ID: <61dda183-cd53-153b-8ed1-e2ecb8f96e03@st.com>
+References: <20190927084819.645-1-benjamin.gaignard@st.com>
+ <da48ce9633441cd0186518fa7ce1d528@www.loen.fr>
+ <341949c8-7864-5d65-2797-988022724a4c@st.com>
+ <ff11797da8f049b354797689754fde52@www.loen.fr>
+ <69af57d1-13a9-9e35-78f2-4a0d17bdaf6d@st.com>
+ <e376301a8e9ec02dfd7713748abed83e@www.loen.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, alexandre.torgue@st.com
-Cc: Benjamin Gaignard <benjamin.gaignard@st.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e376301a8e9ec02dfd7713748abed83e@www.loen.fr>
+Content-Language: en-US
+Content-ID: <6FE1FB0E6257394EB81AD2DCD2303F11@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <maz@kernel.org>
+Cc: Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert the STM32 timer binding to DT schema format using json-schema
-
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-changes in v3:
-- use (GPL-2.0-only OR BSD-2-Clause) license
-- fix identation
-- add additionalProperties: false
-
- .../devicetree/bindings/timer/st,stm32-timer.txt   | 22 ----------
- .../devicetree/bindings/timer/st,stm32-timer.yaml  | 47 ++++++++++++++++++++++
- 2 files changed, 47 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/st,stm32-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/st,stm32-timer.yaml
-
-diff --git a/Documentation/devicetree/bindings/timer/st,stm32-timer.txt b/Documentation/devicetree/bindings/timer/st,stm32-timer.txt
-deleted file mode 100644
-index 8ef28e70d6e8..000000000000
---- a/Documentation/devicetree/bindings/timer/st,stm32-timer.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--. STMicroelectronics STM32 timer
--
--The STM32 MCUs family has several general-purpose 16 and 32 bits timers.
--
--Required properties:
--- compatible : Should be "st,stm32-timer"
--- reg : Address and length of the register set
--- clocks : Reference on the timer input clock
--- interrupts : Reference to the timer interrupt
--
--Optional properties:
--- resets: Reference to a reset controller asserting the timer
--
--Example:
--
--timer5: timer@40000c00 {
--	compatible = "st,stm32-timer";
--	reg = <0x40000c00 0x400>;
--	interrupts = <50>;
--	resets = <&rrc 259>;
--	clocks = <&clk_pmtr1>;
--};
-diff --git a/Documentation/devicetree/bindings/timer/st,stm32-timer.yaml b/Documentation/devicetree/bindings/timer/st,stm32-timer.yaml
-new file mode 100644
-index 000000000000..176aa3c9baf8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/st,stm32-timer.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/st,stm32-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 general-purpose 16 and 32 bits timers bindings
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+
-+properties:
-+  compatible:
-+    const: st,stm32-timer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    timer: timer@40000c00 {
-+        compatible = "st,stm32-timer";
-+        reg = <0x40000c00 0x400>;
-+        interrupts = <50>;
-+        clocks = <&clk_pmtr1>;
-+    };
-+
-+...
--- 
-2.15.0
+DQpPbiA5LzI3LzE5IDI6NTkgUE0sIE1hcmMgWnluZ2llciB3cm90ZToNCj4gT24gMjAxOS0wOS0y
+NyAxMzo0NCwgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+PiBPbiA5LzI3LzE5IDI6NDEgUE0s
+IE1hcmMgWnluZ2llciB3cm90ZToNCj4+PiBPbiAyMDE5LTA5LTI3IDEzOjM2LCBCZW5qYW1pbiBH
+QUlHTkFSRCB3cm90ZToNCj4+Pj4gT24gOS8yNy8xOSAxOjIyIFBNLCBNYXJjIFp5bmdpZXIgd3Jv
+dGU6DQo+Pj4+PiBPbiAyMDE5LTA5LTI3IDA5OjQ4LCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToN
+Cj4+Pj4+PiBBZGRpbmcgYWx3YXlzLW9uIG1ha2VzIGFybSBhcmNoX3RpbWVyIGNsYWltIHRvIGJl
+IGFuIGhpZ2ggcmVzb2x1dGlvbg0KPj4+Pj4+IHRpbWVyLg0KPj4+Pj4+IFRoYXQgaXMgcG9zc2li
+bGUgYmVjYXVzZSBwb3dlciBtb2RlIHdvbid0IHN0b3AgY2xvY2tpbmcgdGhlIHRpbWVyLg0KPj4+
+Pj4NCj4+Pj4+IFRoZSAiYWx3YXlzLW9uIiBpcyBub3QgYWJvdXQgdGhlIGNsb2NrLiBJdCBpcyBh
+Ym91dCB0aGUgY29tcGFyYXRvci4NCj4+Pj4+IFRoZSBjbG9jayBpdHNlbGYgaXMgKmd1YXJhbnRl
+ZWQqIHRvIGFsd2F5cyB0aWNrLiBJZiBpdCBkaWRuJ3QsDQo+Pj4+PiB0aGF0J2QgYmUNCj4+Pj4+
+IGFuIGludGVncmF0aW9uIGJ1ZywgYW5kIGEgcHJldHR5IGJhZCBvbmUuDQo+Pj4+Pg0KPj4+Pj4g
+V2hhdCB5b3UncmUgY2xhaW1pbmcgaGVyZSBpcyB0aGF0IHlvdXIgQ1BVIG5ldmVyIGVudGVycyBh
+IGxvdy1wb3dlcg0KPj4+Pj4gbW9kZT8NCj4+Pj4+IEV2ZXI/IEkgZmluZCB0aGlzIHZlcnkgaGFy
+ZCB0byBiZWxpZXZlLg0KPj4+Pj4NCj4+Pj4+IEZ1cnRoZXJtb3JlLCBjbGFpbWluZyB0aGF0IGFs
+d2F5cy1vbiBpcyB0aGUgd2F5IHRvIGZvcmNlIHRoZSANCj4+Pj4+IGFyY2gtdGltZXINCj4+Pj4+
+IHRvIGJlIGFuIGhydGltZXIgaXMgZmFjdHVhbGx5IHdyb25nLiBUaGlzIGlzIHdoYXQgaGFwcGVu
+cyAqaWYqIA0KPj4+Pj4gdGhpcyBpcw0KPj4+Pj4gdGhlIG9ubHkgdGltZXIgaW4gdGhlIHN5c3Rl
+bS4gVGhlIG9ubHkgY2FzZSB0aGlzIGlzIHRydWUgaXMgZm9yIA0KPj4+Pj4gdmlydHVhbA0KPj4+
+Pj4gbWFjaGluZXMuIEFueXRoaW5nIGVsc2UgaGFzIGEgZ2xvYmFsIHRpbWVyIHNvbWV3aGVyZSB0
+aGF0IHdpbGwgYWxsb3cNCj4+Pj4+IHRoZSBhcmNoIHRpbWVycyB0byBiZSB1c2VkIGFzIGFuIGhy
+dGltZXIuDQo+Pj4+Pg0KPj4+Pj4gSSdtIHByZXR0eSBzdXJlIHlvdSB0b28gaGF2ZSBhIGdsb2Jh
+bCB0aW1lciBzb21ld2hlcmUgaW4geW91ciBzeXN0ZW0uDQo+Pj4+PiBFbmFibGUgaXQsIGFuZCBl
+bmpveSBocnRpbWVycyB3aXRob3V0IGhhdmluZyB0byBsaWUgYWJvdXQgdGhlDQo+Pj4+PiBwcm9w
+ZXJ0aWVzDQo+Pj4+PiBvZiB5b3VyIHN5c3RlbSEgOy0pDQo+Pj4+DQo+Pj4+IEhpIE1hcmMsDQo+
+Pj4+DQo+Pj4+IFRoaXMgU29DIGRvZXNuJ3QgaGF2ZSBhbnkgb3RoZXIgZ2xvYmFsIHRpbWVyLiBV
+c2UgYXJjaF90aW1lIGlzIHRoZSANCj4+Pj4gb25seQ0KPj4+PiB3ZSBoYXZlIHRvIHByb3ZpZGUg
+aHJ0aW1lciBvbiB0aGlzIHN5c3RlbS4NCj4+Pg0KPj4+IEFuZCB5b3UgZG9uJ3QgaGF2ZSBhbnkg
+Zm9ybSBvZiBwb3dlciBtYW5hZ2VtZW50IGVpdGhlcj8gV2hhdCBoYXBwZW5zIA0KPj4+IHdoZW4N
+Cj4+PiB5b3VyIENQVSBnb2VzIGludG8gaWRsZT8gSWYgeW91ciBzeXN0ZW0gZG9lcyBhbnkgZm9y
+bSBvZiBwb3dlciANCj4+PiBtYW5hZ2VtZW50DQo+Pj4gKmFuZCogZG9lc24ndCBoYXZlIGEgc2Vw
+YXJhdGUgdGltZXIsIGl0IGlzIHJlbWFya2FibHkgYnJva2VuLg0KPj4NCj4+IEV2ZW4gaW4gbG93
+LXBvd2VyIG1vZGVzIHRoaXMgdGltZXIgaXMgYWx3YXlzIHBvd2VyZWQgYW5kIGNsb2NrZWQgc28g
+aXQNCj4+IGlzIHdvcmtpbmcgZmluZS4NCj4NCj4gWW91J3JlIG1pc3NpbmcgdGhlIHBvaW50IGFn
+YWluLiBJdCBpcyBub3QgYWJvdXQgdGhlIGNsb2NrLCBidXQgdGhlIA0KPiBjb21wYXJhdG9yDQo+
+IHRoYXQgaXMgaW50ZXJuYWwgdG8gdGhlIENQVSwgYW5kIG5vdCBmdW5jdGlvbmFsIHdoZW4gdGhl
+IENQVSBpcyBpbiBpdHMgDQo+IGxvd2VzdA0KPiBwb3dlciBtb2RlLiBTZWUgYWxzbyB0aGUgdmVy
+YmlhZ2UgaW4gWzFdICg0NC4zIFNUR0VOIGZ1bmN0aW9uYWwgDQo+IGRlc2NyaXB0aW9uKSwNCj4g
+d2hpY2ggaW5kaWNhdGVzIHRoYXQgdGhlIGNsb2NrIHNvdXJjZSBhY3R1YWxseSBkaWVzIGluIGxv
+dy1wb3dlciBtb2RlIA0KPiAoZ29pbmcNCj4gYWdhaW5zdCB0aGUgYXJjaGl0ZWN0dXJlIHdoaWNo
+IG1hbmRhdGVzIGl0IHRvIGJlIGFsd2F5cy1vbikuDQo+DQo+IEFsc28sIGNvbWluZyBiYWNrIHRv
+IHlvdXIgZWFybGllciBhc3NlcnRpb24gKCJUaGlzIFNvQyBkb2Vzbid0IGhhdmUgDQo+IGFueSBv
+dGhlcg0KPiBnbG9iYWwgdGltZXIiKTogVGhlIGRvY3VtZW50YXRpb24gYXQgWzFdIHNob3dzIGF0
+IGxlYXN0IDE3IHRpbWVycyB0aGF0IA0KPiBjb3VsZA0KPiBiZSB1c2VkIGFuZCBhdm9pZCB0aGlz
+IGRpcnR5IGhhY2suDQo+DQo+IFNvIGZvciB3aGF0IGl0IGlzIHdvcnRoLCBOQUsgdG8gdGhpcyBw
+YXRjaC4NCg0KDQpIaSBNYXJjLA0KDQpJIGhhdmUgbGlzdGVuIHlvdXIgcmVtYXJrcyBhbmQgcHJv
+cG9zZSBhbm90aGVyIHdheSB0byBzb2x2ZSB0aGlzIGlzc3VlOg0KDQpodHRwczovL2xrbWwub3Jn
+L2xrbWwvMjAxOS8xMC85LzY5MA0KDQpUaGFua3MsDQoNCkJlbmphbWluDQoNCg0KPg0KPiDCoMKg
+wqDCoMKgwqDCoCBNLg0KPg0KPiBbMV0gaHR0cHM6Ly93d3cuc3QuY29tL3Jlc291cmNlL2VuL3Jl
+ZmVyZW5jZV9tYW51YWwvZG0wMDM2NjM1NS5wZGY=
