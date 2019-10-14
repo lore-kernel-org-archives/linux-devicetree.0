@@ -1,71 +1,48 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v4 00/11] crypto: add sun8i-ce driver for Allwinner
- crypto engine
-Date: Mon, 14 Oct 2019 12:47:08 +0200
-Message-ID: <20191014104708.cur6zbabmozhwu5o@gilmour>
-References: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
+From: Qianggui Song <qianggui.song@amlogic.com>
+Subject: [PATCH v3 0/4] pinctrl: meson-a1: add pinctrl driver
+Date: Mon, 14 Oct 2019 18:54:48 +0800
+Message-ID: <1571050492-6598-1-git-send-email-qianggui.song@amlogic.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jcraal7cz45esj3i"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: catalin.marinas@arm.com, davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Qianggui Song <qianggui.song@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Xingyu Chen <xingyu.chen@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds Pin controller driver support for Meson-A1 Soc
+which shares the same register layout of pinmux with previous
+Meson-G12A, however there is difference for gpio and pin config
+registers in A1.
 
---jcraal7cz45esj3i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes since v2 at [1]:
+ - make dt parser callback as a separate patch
 
-Hi,
+Changes since v1 at [0]:
+ - collect Reviewed-by
+ - modify commit log
+ - add an extra dt parser function for a1
 
-On Sat, Oct 12, 2019 at 08:48:41PM +0200, Corentin Labbe wrote:
-> Hello
->
-> This patch serie adds support for the Allwinner crypto engine.
-> The Crypto Engine is the third generation of Allwinner cryptogaphic offloader.
-> The first generation is the Security System already handled by the
-> sun4i-ss driver.
-> The second is named also Security System and is present on A80 and A83T
-> SoCs, originaly this driver supported it also, but supporting both IP bringing
-> too much complexity and another driver (sun8i-ss) will came for it.
->
-> For the moment, the driver support only DES3/AES in ECB/CBC mode.
-> Patchs for CTR/CTS/XTS, RSA and RNGs will came later.
->
-> This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
-> and tested on:
-> sun50i-a64-bananapi-m64
-> sun50i-a64-pine64-plus
-> sun50i-h5-libretech-all-h3-cc
-> sun50i-h6-pine-h64
-> sun8i-h2-plus-libretech-all-h3-cc
-> sun8i-h2-plus-orangepi-r1
-> sun8i-h2-plus-orangepi-zero
-> sun8i-h3-libretech-all-h3-cc
-> sun8i-h3-orangepi-pc
-> sun8i-r40-bananapi-m2-ultra
+[0] https://lore.kernel.org/linux-amlogic/1568700442-18540-1-git-send-email-qianggui.song@amlogic.com/
+[1] https://lore.kernel.org/linux-amlogic/1570532999-23302-1-git-send-email-qianggui.song@amlogic.com/
 
-for the drivers/crypto part
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Qianggui Song (4):
+  pinctrl: add compatible for Amlogic Meson A1 pin controller
+  pinctrl: meson: add a new dt parse callback for Meson-A series SoCs
+  pinctrl: meson: add pinctrl driver support for Meson-A1 Soc
+  arm64: dts: meson: a1: add pinctrl controller support
 
-I'll merge the dt and defconfig bits when Herbert will be ok with the
-changes.
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   1 +
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  18 +
+ drivers/pinctrl/meson/Kconfig                      |   6 +
+ drivers/pinctrl/meson/Makefile                     |   1 +
+ drivers/pinctrl/meson/pinctrl-meson-a1.c           | 942 +++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.c              |  16 +-
+ drivers/pinctrl/meson/pinctrl-meson.h              |   7 +
+ include/dt-bindings/gpio/meson-a1-gpio.h           |  73 ++
+ 8 files changed, 1063 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-a1.c
+ create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
 
-Maxime
-
---jcraal7cz45esj3i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXaRSLAAKCRDj7w1vZxhR
-xbAiAQCXNw9TZ+NI9M/ffhLEMVuGBoKDSMxJpeuryNZeejUpbAEAotBuhlogZFYt
-6gcqR7k6JoRm4LKGytJt02QqNsKkQAI=
-=JdiC
------END PGP SIGNATURE-----
-
---jcraal7cz45esj3i--
+-- 
+1.9.1
