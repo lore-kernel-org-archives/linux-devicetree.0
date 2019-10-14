@@ -1,24 +1,49 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mq-evk: Adjust nodes following
- alphabetical sort
-Date: Mon, 14 Oct 2019 21:33:44 +0800
-Message-ID: <20191014133343.GA12262@dragon>
-References: <1570588479-28009-1-git-send-email-Anson.Huang@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 3/5] dt-bindings: phy: tegra: Add Tegra194 support
+Date: Mon, 14 Oct 2019 08:40:37 -0500
+Message-ID: <CAL_Jsq+aKxfAir3skanfqmM+nFFzXPFL4eMa-+pq1kH-90YTbg@mail.gmail.com>
+References: <20191009024343.30218-1-jckuo@nvidia.com> <20191009024343.30218-4-jckuo@nvidia.com>
+ <20191009233900.GA9109@bogus> <20191014131752.GF422231@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1570588479-28009-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20191014131752.GF422231@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, ccaione@baylibre.com, abel.vesa@nxp.com, daniel.baluta@nxp.com, andrew.smirnov@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: JC Kuo <jckuo@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jon Hunter <jonathanh@nvidia.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-tegra@vger.kernel.org, Linux USB List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 10:34:38AM +0800, Anson Huang wrote:
-> Adjust some nodes to make them follow alphabetical sort except
-> iomuxc node which is put at the end of file because of its huge
-> pinctrl data.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Mon, Oct 14, 2019 at 8:17 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Wed, Oct 09, 2019 at 06:39:00PM -0500, Rob Herring wrote:
+> > On Wed, Oct 09, 2019 at 10:43:41AM +0800, JC Kuo wrote:
+> > > Extend the bindings to cover the set of features found in Tegra194.
+> > > Note that, technically, there are four more supplies connected to the
+> > > XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
+> > > , but the power sequencing requirements of Tegra194 require these to be
+> > > under the control of the PMIC.
+> > >
+> > > Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it is
+> > > possible for some platforms have long signal trace that could not
+> > > provide sufficient electrical environment for Gen 2 speed. To deal with
+> > > this, a new device node property "nvidia,disable-gen2" was added to
+> > > Tegra194 that be used to specifically disable Gen 2 speed for a
+> > > particular USB 3.0 port so that the port can be limited to Gen 1 speed
+> > > and avoid the instability.
+> >
+> > I suspect this may be a common issue and we should have a common
+> > property. Typically, this kind of property is in the controller though
+> > and supports multiple speed limits. See PCI bindings for inspiration.
+>
+> Given that support for gen 2 speeds is dependent on signal trace length,
+> it doesn't really make sense to restrict the whole controller to a given
+> speed if only the signal trace for a single port exceeds the limit for
+> which gen 2 would work.
+>
+> Also, the USB PHYs are in a different hardware block than the USB
+> controller, so this really is a property of the PHY block, not the USB
+> controller.
 
-Applied both, thanks.
+Okay, but still should be common for USB PHYs IMO.
+
+Rob
