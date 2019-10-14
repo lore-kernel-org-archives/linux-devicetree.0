@@ -1,51 +1,43 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [EXT] Re: [v2,2/2] dt-bindings: i2c-mux-pca954x: Add optional
- property i2c-mux-never-disable
-Date: Mon, 14 Oct 2019 03:21:14 +0000
-Message-ID: <DB7PR04MB44908DE0F57E985ED40C401A8F900@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190930032503.44425-1-biwen.li@nxp.com>
- <20190930032503.44425-2-biwen.li@nxp.com> <20191011144445.GA2340@bogus>
+From: Zhou Yanjie <zhouyanjie@zoho.com>
+Subject: Re: [PATCH v3 1/2] Serial: Ingenic: Add support for the X1000.
+Date: Mon, 14 Oct 2019 11:28:40 +0800
+Message-ID: <5DA3EB68.4050305@zoho.com>
+References: <1548667176-119830-1-git-send-email-zhouyanjie@zoho.com>
+ <1548695029-11900-1-git-send-email-zhouyanjie@zoho.com>
+ <1548695029-11900-2-git-send-email-zhouyanjie@zoho.com>
+ <20191012073531.GA2036970@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011144445.GA2340@bogus>
-Content-Language: en-US
+In-Reply-To: <20191012073531.GA2036970@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "peda@axentia.se" <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, paul.burton@mips.com, mark.rutland@arm.com, syq@debian.org, ulf.hansson@linaro.org, linus.walleij@linaro.org, armijn@tjaldur.nl, tglx@linutronix.de, yuehaibing@huawei.com, malat@debian.org, ezequiel@collabora.com, paul@crapouillou.net, linux-serial@vger.kernel.org, jslaby@suse.com, jiaxun.yang@flygoat.com, 772753199@qq.com
 List-Id: devicetree@vger.kernel.org
 
->=20
-> On Mon, Sep 30, 2019 at 11:25:03AM +0800, Biwen Li wrote:
-> > The patch adds an optional property i2c-mux-never-disable
-> >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> > Change in v2:
-> >       - update documentation
-> >
-> >  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> > b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> > index 30ac6a60f041..71b73d0fdb62 100644
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> > @@ -34,6 +34,7 @@ Optional Properties:
-> >      - first cell is the pin number
-> >      - second cell is used to specify flags.
-> >      See also
-> > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > +  - i2c-mux-never-disable: always forces mux to be enabled.
->=20
-> Either needs to have a vendor prefix or be documented as a common
-> property.
->=20
-> IIRC, we already have a property for mux default state which seems like t=
-hat
-> would cover this unless you need to leave it in different states.
-Okay, you are right, thank you so much. I will try it in v3.
->=20
-> Rob
+Hi Greg,
+
+I'm sorry, maybe it was a problem when I git send-email,
+causing the wrong patch to be sent to you. Just ignore
+the email about the serial patch please.
+
+Best regards!
+
+On 2019=E5=B9=B410=E6=9C=8812=E6=97=A5 15:35, Greg KH wrote:
+> On Sat, Oct 12, 2019 at 01:13:23PM +0800, Zhou Yanjie wrote:
+>> Add support for probing the 8250_ingenic driver on the
+>> X1000 Soc from Ingenic.
+>>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>   drivers/tty/serial/8250/8250_ingenic.c | 13 +++++++++----
+>>   1 file changed, 9 insertions(+), 4 deletions(-)
+> <snip>
+>
+> you seem to have two patches merged into one here, please fix up and
+> resend.
+>
+> thanks,
+>
+> greg k-h
