@@ -1,12 +1,14 @@
 From: Tzung-Bi Shih <tzungbi@google.com>
-Subject: [PATCH v3 00/10] ASoC: mediatek:
- mt8183-mt6358-ts3a227-max98357: support WoV
-Date: Mon, 14 Oct 2019 18:20:12 +0800
-Message-ID: <20191014102022.236013-1-tzungbi@google.com>
+Subject: [PATCH v3 01/10] platform/chrome: cros_ec: remove
+	unused EC feature
+Date: Mon, 14 Oct 2019 18:20:13 +0800
+Message-ID: <20191014180059.01.I374c311eaca0d47944a37b07acbe48fdb74f734d@changeid>
+References: <20191014102022.236013-1-tzungbi@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20191014102022.236013-1-tzungbi@google.com>
 List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -20,68 +22,25 @@ To: broonie@kernel.org
 Cc: gwendal@google.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, cychiang@google.com, drinkcat@google.com, tzungbi@google.com, robh+dt@kernel.org, enric.balletbo@collabora.com, bleung@google.com, dgreid@google.com
 List-Id: devicetree@vger.kernel.org
 
-This series makes mt6358, cros_ec_codec, and mt8183-mt6358-ts3a227-max98357
-support WoV (wake on voice).
+Remove unused EC_FEATURE_AUDIO_CODEC.
 
-The first 3 commits are some cleanups and refactors.  It looks like
-breaking the existing interface.  But please be noticed that, the
-cros_ec_codec has not used by any real device yet.  The refactor is
-very necessary to keep the style consistent and for easier to further
-extend and maintain.
-  platform/chrome: cros_ec: remove unused EC feature
-  ASoC: cros_ec_codec: refactor I2S RX
-  ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
+Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+---
+ include/linux/platform_data/cros_ec_commands.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-The 4th commit extends the feature offered from EC codec.
-  platform/chrome: cros_ec: add common commands for EC codec
-
-The 5th commit changes the behavior of setting and getting DMIC gains.
-  ASoC: cros_ec_codec: read max DMIC gain from EC codec
-
-The 6th and 7th commit make cros_ec_codec support WoV.
-  ASoC: dt-bindings: cros_ec_codec: add SHM bindings
-  ASoC: cros_ec_codec: support WoV
-
-The 8th commit sets necessary registers on mt6358 to support WoV.
-  ASoC: mediatek: mt6358: support WoV
-
-The last 2 commit make machine driver mt8183-mt6358-ts3a227-max98357
-support WoV if ec-codec is in DTS.
-  ASoC: dt-bindings: mt8183: add ec-codec
-  ASoC: mediatek: mt8183: support WoV
-
-Changes from v1:
-- fix a compile error and make kbuild bot happy
-https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/156315.html
-Changes from v2:
-- rebase upon to "don't use snd_pcm_ops" series
-https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/156170.html
-- fix sparse errors
-https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/156328.html
-- use "reg" for SHM binding
-https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/156657.html
-
-Tzung-Bi Shih (10):
-  WIP: platform/chrome: cros_ec: remove unused EC feature
-  WIP: ASoC: cros_ec_codec: refactor I2S RX
-  WIP: ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
-  WIP: platform/chrome: cros_ec: add common commands for EC codec
-  WIP: ASoC: cros_ec_codec: read max DMIC gain from EC codec
-  WIP: ASoC: dt-bindings: cros_ec_codec: add SHM bindings
-  WIP: ASoC: cros_ec_codec: support WoV
-  WIP: ASoC: mediatek: mt6358: support WoV
-  WIP: ASoC: dt-bindings: mt8183: add ec-codec
-  WIP: ASoC: mediatek: mt8183: support WoV
-
- .../bindings/sound/google,cros-ec-codec.txt   |   24 +-
- .../sound/mt8183-mt6358-ts3a227-max98357.txt  |    3 +
- drivers/platform/chrome/cros_ec_trace.c       |    5 +-
- .../linux/platform_data/cros_ec_commands.h    |  285 ++++-
- sound/soc/codecs/cros_ec_codec.c              | 1128 +++++++++++++----
- sound/soc/codecs/mt6358.c                     |  105 ++
- sound/soc/mediatek/Kconfig                    |    1 +
- .../mt8183/mt8183-mt6358-ts3a227-max98357.c   |   70 +-
- 8 files changed, 1296 insertions(+), 325 deletions(-)
-
+diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+index 98415686cbfa..43b8f7dae4cc 100644
+--- a/include/linux/platform_data/cros_ec_commands.h
++++ b/include/linux/platform_data/cros_ec_commands.h
+@@ -1277,8 +1277,6 @@ enum ec_feature_code {
+ 	 * MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE.
+ 	 */
+ 	EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS = 37,
+-	/* EC supports audio codec. */
+-	EC_FEATURE_AUDIO_CODEC = 38,
+ 	/* The MCU is a System Companion Processor (SCP). */
+ 	EC_FEATURE_SCP = 39,
+ 	/* The MCU is an Integrated Sensor Hub */
 -- 
 2.23.0.700.g56cf767bdb-goog
