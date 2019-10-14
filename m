@@ -1,54 +1,34 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [RFC PATCH 2/2] ASoC: simple-card: Add
- documentation for force-dpcm property
-Date: Mon, 14 Oct 2019 17:10:54 +0100
-Message-ID: <20191014161054.GD4826@sirena.co.uk>
-References: <20191013190014.32138-1-daniel.baluta@nxp.com>
- <20191013190014.32138-3-daniel.baluta@nxp.com>
- <20191014115635.GB4826@sirena.co.uk>
- <CAEnQRZDbXZUhix_aR_DCUzFn1NYz1Zh7MxW5uwnuycps9PNohw@mail.gmail.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] crypto: sun8i_ce_pm_ops can be static
+Date: Tue, 15 Oct 2019 00:32:43 +0800
+Message-ID: <20191014163243.ijpkv4uyszse32lw@332d0cec05f4>
+References: <20191012184852.28329-3-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Dzs2zDY0zgkG72+7"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAEnQRZDbXZUhix_aR_DCUzFn1NYz1Zh7MxW5uwnuycps9PNohw@mail.gmail.com>
+In-Reply-To: <20191012184852.28329-3-clabbe.montjoie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Guido Roncarolo <guido.roncarolo@nxp.com>, Jerome Laclavere <jerome.laclavere@nxp.com>
+Cc: kbuild-all@lists.01.org, catalin.marinas@arm.com, davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org, wens@csie.org, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
---Dzs2zDY0zgkG72+7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fixes: f113059e7b4f ("crypto: Add Allwinner sun8i-ce Crypto Engine")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ sun8i-ce-core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Mon, Oct 14, 2019 at 04:17:31PM +0300, Daniel Baluta wrote:
-> On Mon, Oct 14, 2019 at 2:57 PM Mark Brown <broonie@kernel.org> wrote:
-
-> > DPCM is an implementation detail of Linux (and one that we want to phase
-> > out going forwards too), we shouldn't be putting it in the DT bindings
-> > where it becomes an ABI.
-
-> I see your point. This is way I marked the patch series as RFC. I need to find
-> another way to reuse simple-card as machine driver for SOF.
-
-Have a look at the way the Renesas systems are using this and the audio
-graph card - they have DPCM.
-
---Dzs2zDY0zgkG72+7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2kng4ACgkQJNaLcl1U
-h9AY3Qf+KqjpJbSFjgUExOknWKmIQsHL8qO28Dh8CbziYGq/2T/5n/myzuBq77rJ
-Jsf5asU3PTubpf1TQOytAog3UDtT69cqu4JIgAu2GCv7HrX7aZ7keiAlw5rlH8OC
-wh5SxpbIgE959u5iOlD3l5e+koSPk+nnpiZAXfq8faWGDcbsA4OlzNqxq5kEX3j6
-wQxJwGKHX73MatU5AF2IEBdZQeyg1eygBqNLvAyLp8//NdN/TijgVQbpxK2ZVeCL
-RRtZDUu+j2yIvXE6ugzHd/6RQD0VnCZmAXfA/R5hgKIaNVJeyJ6hXZJ3sW7Go4Iu
-1DzGwQiDN5A8JadoizM4L/L9L7MAKA==
-=ZL3b
------END PGP SIGNATURE-----
-
---Dzs2zDY0zgkG72+7--
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+index 77e9cb0cc6eea..a08f0e7a29752 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+@@ -412,7 +412,7 @@ static int sun8i_ce_pm_resume(struct device *dev)
+ 	return err;
+ }
+ 
+-const struct dev_pm_ops sun8i_ce_pm_ops = {
++static const struct dev_pm_ops sun8i_ce_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(sun8i_ce_pm_suspend, sun8i_ce_pm_resume, NULL)
+ };
+ 
