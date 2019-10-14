@@ -1,165 +1,64 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v4 01/14] drm/mxsfb: Update mxsfb to support a bridge
-Date: Mon, 14 Oct 2019 22:23:20 +0200
-Message-ID: <4138bd0cea847abb60888a50236c2aa4@agner.ch>
+Subject: Re: [PATCH v4 02/14] drm/mxsfb: Read bus flags from bridge if present
+Date: Mon, 14 Oct 2019 22:24:51 +0200
+Message-ID: <b5da1f015a4dd87a612e1a9e57fdca7a@agner.ch>
 References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
- <1567078215-31601-2-git-send-email-robert.chiras@nxp.com>
+ <1567078215-31601-3-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1567078215-31601-2-git-send-email-robert.chiras@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1567078215-31601-3-git-send-email-robert.chiras@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Cc: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS0wOC0yOSAxMzozMCwgUm9iZXJ0IENoaXJhcyB3cm90ZToKPiBDdXJyZW50bHksIHRo
-ZSBNWFNGQiBEUk0gZHJpdmVyIG9ubHkgc3VwcG9ydHMgYSBwYW5lbC4gQnV0LCBpdHMgb3V0cHV0
-Cj4gZGlzcGxheSBzaWduYWwgY2FuIGFsc28gYmUgcmVkaXJlY3RlZCB0byBhbm90aGVyIGVuY29k
-ZXIsIGxpa2UgYSBEU0kKPiBjb250cm9sbGVyLiBJbiB0aGlzIGNhc2UsIHRoYXQgRFNJIGNvbnRy
-b2xsZXIgbWF5IGFjdCBsaWtlIGEgZHJtX2JyaWRnZS4KPiBJbiBvcmRlciBzdXBwb3J0IHRoaXMg
-dXNlLWNhc2UgdG9vLCB0aGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgZHJtX2JyaWRnZQo+IGlu
-IG14c2ZiLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBDaGlyYXMgPHJvYmVydC5jaGlyYXNA
-bnhwLmNvbT4KPiBUZXN0ZWQtYnk6IEd1aWRvIEfDvG50aGVyIDxhZ3hAc2lneGNwdS5vcmc+CgpB
-cHBsaWVkIHRvIHRoZSBkcm0tbWlzYy1uZXh0IGJyYW5jaC4KCi0tClN0ZWZhbgoKPiAtLS0KPiAg
-ZHJpdmVycy9ncHUvZHJtL214c2ZiL214c2ZiX2NydGMuYyB8IDE3ICsrKysrKysrKysrLS0tCj4g
-IGRyaXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9kcnYuYyAgfCA0NiArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKystLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2
-LmggIHwgIDQgKysrLQo+ICBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfb3V0LmMgIHwgMjYg
-KysrKysrKysrKystLS0tLS0tLS0tCj4gIDQgZmlsZXMgY2hhbmdlZCwgNzIgaW5zZXJ0aW9ucygr
-KSwgMjEgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9teHNm
-Yi9teHNmYl9jcnRjLmMKPiBiL2RyaXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9jcnRjLmMKPiBp
-bmRleCAxMjQyMTU2Li5kZTA5YjkzIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9teHNm
-Yi9teHNmYl9jcnRjLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfY3J0Yy5j
-Cj4gQEAgLTk1LDggKzk1LDExIEBAIHN0YXRpYyB2b2lkIG14c2ZiX3NldF9idXNfZm10KHN0cnVj
-dAo+IG14c2ZiX2RybV9wcml2YXRlICpteHNmYikKPiAgCj4gIAlyZWcgPSByZWFkbChteHNmYi0+
-YmFzZSArIExDRENfQ1RSTCk7Cj4gIAo+IC0JaWYgKG14c2ZiLT5jb25uZWN0b3IuZGlzcGxheV9p
-bmZvLm51bV9idXNfZm9ybWF0cykKPiAtCQlidXNfZm9ybWF0ID0gbXhzZmItPmNvbm5lY3Rvci5k
-aXNwbGF5X2luZm8uYnVzX2Zvcm1hdHNbMF07Cj4gKwlpZiAobXhzZmItPmNvbm5lY3Rvci0+ZGlz
-cGxheV9pbmZvLm51bV9idXNfZm9ybWF0cykKPiArCQlidXNfZm9ybWF0ID0gbXhzZmItPmNvbm5l
-Y3Rvci0+ZGlzcGxheV9pbmZvLmJ1c19mb3JtYXRzWzBdOwo+ICsKPiArCURSTV9ERVZfREVCVUdf
-RFJJVkVSKGRybS0+ZGV2LCAiVXNpbmcgYnVzX2Zvcm1hdDogMHglMDhYXG4iLAo+ICsJCQkgICAg
-IGJ1c19mb3JtYXQpOwo+ICAKPiAgCXJlZyAmPSB+Q1RSTF9CVVNfV0lEVEhfTUFTSzsKPiAgCXN3
-aXRjaCAoYnVzX2Zvcm1hdCkgewo+IEBAIC0yMDQsOCArMjA3LDkgQEAgc3RhdGljIGRtYV9hZGRy
-X3QgbXhzZmJfZ2V0X2ZiX3BhZGRyKHN0cnVjdAo+IG14c2ZiX2RybV9wcml2YXRlICpteHNmYikK
-PiAgCj4gIHN0YXRpYyB2b2lkIG14c2ZiX2NydGNfbW9kZV9zZXRfbm9mYihzdHJ1Y3QgbXhzZmJf
-ZHJtX3ByaXZhdGUgKm14c2ZiKQo+ICB7Cj4gKwlzdHJ1Y3QgZHJtX2RldmljZSAqZHJtID0gbXhz
-ZmItPnBpcGUuY3J0Yy5kZXY7Cj4gIAlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbSA9ICZteHNm
-Yi0+cGlwZS5jcnRjLnN0YXRlLT5hZGp1c3RlZF9tb2RlOwo+IC0JY29uc3QgdTMyIGJ1c19mbGFn
-cyA9IG14c2ZiLT5jb25uZWN0b3IuZGlzcGxheV9pbmZvLmJ1c19mbGFnczsKPiArCWNvbnN0IHUz
-MiBidXNfZmxhZ3MgPSBteHNmYi0+Y29ubmVjdG9yLT5kaXNwbGF5X2luZm8uYnVzX2ZsYWdzOwo+
-ICAJdTMyIHZkY3RybDAsIHZzeW5jX3B1bHNlX2xlbiwgaHN5bmNfcHVsc2VfbGVuOwo+ICAJaW50
-IGVycjsKPiAgCj4gQEAgLTIyOSw2ICsyMzMsMTMgQEAgc3RhdGljIHZvaWQgbXhzZmJfY3J0Y19t
-b2RlX3NldF9ub2ZiKHN0cnVjdAo+IG14c2ZiX2RybV9wcml2YXRlICpteHNmYikKPiAgCj4gIAlj
-bGtfc2V0X3JhdGUobXhzZmItPmNsaywgbS0+Y3J0Y19jbG9jayAqIDEwMDApOwo+ICAKPiArCURS
-TV9ERVZfREVCVUdfRFJJVkVSKGRybS0+ZGV2LCAiUGl4ZWwgY2xvY2s6ICVka0h6IChhY3R1YWw6
-ICVka0h6KVxuIiwKPiArCQkJICAgICBtLT5jcnRjX2Nsb2NrLAo+ICsJCQkgICAgIChpbnQpKGNs
-a19nZXRfcmF0ZShteHNmYi0+Y2xrKSAvIDEwMDApKTsKPiArCURSTV9ERVZfREVCVUdfRFJJVkVS
-KGRybS0+ZGV2LCAiQ29ubmVjdG9yIGJ1c19mbGFnczogMHglMDhYXG4iLAo+ICsJCQkgICAgIGJ1
-c19mbGFncyk7Cj4gKwlEUk1fREVWX0RFQlVHX0RSSVZFUihkcm0tPmRldiwgIk1vZGUgZmxhZ3M6
-IDB4JTA4WFxuIiwgbS0+ZmxhZ3MpOwo+ICsKPiAgCXdyaXRlbChUUkFOU0ZFUl9DT1VOVF9TRVRf
-VkNPVU5UKG0tPmNydGNfdmRpc3BsYXkpIHwKPiAgCSAgICAgICBUUkFOU0ZFUl9DT1VOVF9TRVRf
-SENPVU5UKG0tPmNydGNfaGRpc3BsYXkpLAo+ICAJICAgICAgIG14c2ZiLT5iYXNlICsgbXhzZmIt
-PmRldmRhdGEtPnRyYW5zZmVyX2NvdW50KTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L214c2ZiL214c2ZiX2Rydi5jCj4gYi9kcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2LmMK
-PiBpbmRleCBlODUwNjMzLi40OTdjZjQ0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9t
-eHNmYi9teHNmYl9kcnYuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9kcnYu
-Ywo+IEBAIC0xMDEsOSArMTAxLDI1IEBAIHN0YXRpYyB2b2lkIG14c2ZiX3BpcGVfZW5hYmxlKHN0
-cnVjdAo+IGRybV9zaW1wbGVfZGlzcGxheV9waXBlICpwaXBlLAo+ICAJCQkgICAgICBzdHJ1Y3Qg
-ZHJtX2NydGNfc3RhdGUgKmNydGNfc3RhdGUsCj4gIAkJCSAgICAgIHN0cnVjdCBkcm1fcGxhbmVf
-c3RhdGUgKnBsYW5lX3N0YXRlKQo+ICB7Cj4gKwlzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVj
-dG9yOwo+ICAJc3RydWN0IG14c2ZiX2RybV9wcml2YXRlICpteHNmYiA9IGRybV9waXBlX3RvX214
-c2ZiX2RybV9wcml2YXRlKHBpcGUpOwo+ICAJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IHBpcGUt
-PnBsYW5lLmRldjsKPiAgCj4gKwlpZiAoIW14c2ZiLT5jb25uZWN0b3IpIHsKPiArCQlsaXN0X2Zv
-cl9lYWNoX2VudHJ5KGNvbm5lY3RvciwKPiArCQkJCSAgICAmZHJtLT5tb2RlX2NvbmZpZy5jb25u
-ZWN0b3JfbGlzdCwKPiArCQkJCSAgICBoZWFkKQo+ICsJCQlpZiAoY29ubmVjdG9yLT5lbmNvZGVy
-ID09ICZteHNmYi0+cGlwZS5lbmNvZGVyKSB7Cj4gKwkJCQlteHNmYi0+Y29ubmVjdG9yID0gY29u
-bmVjdG9yOwo+ICsJCQkJYnJlYWs7Cj4gKwkJCX0KPiArCX0KPiArCj4gKwlpZiAoIW14c2ZiLT5j
-b25uZWN0b3IpIHsKPiArCQlkZXZfd2Fybihkcm0tPmRldiwgIk5vIGNvbm5lY3RvciBhdHRhY2hl
-ZCwgdXNpbmcgZGVmYXVsdFxuIik7Cj4gKwkJbXhzZmItPmNvbm5lY3RvciA9ICZteHNmYi0+cGFu
-ZWxfY29ubmVjdG9yOwo+ICsJfQo+ICsKPiAgCXBtX3J1bnRpbWVfZ2V0X3N5bmMoZHJtLT5kZXYp
-Owo+ICAJZHJtX3BhbmVsX3ByZXBhcmUobXhzZmItPnBhbmVsKTsKPiAgCW14c2ZiX2NydGNfZW5h
-YmxlKG14c2ZiKTsKPiBAQCAtMTI5LDYgKzE0NSw5IEBAIHN0YXRpYyB2b2lkIG14c2ZiX3BpcGVf
-ZGlzYWJsZShzdHJ1Y3QKPiBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZSAqcGlwZSkKPiAgCQlkcm1f
-Y3J0Y19zZW5kX3ZibGFua19ldmVudChjcnRjLCBldmVudCk7Cj4gIAl9Cj4gIAlzcGluX3VubG9j
-a19pcnEoJmRybS0+ZXZlbnRfbG9jayk7Cj4gKwo+ICsJaWYgKG14c2ZiLT5jb25uZWN0b3IgIT0g
-Jm14c2ZiLT5wYW5lbF9jb25uZWN0b3IpCj4gKwkJbXhzZmItPmNvbm5lY3RvciA9IE5VTEw7Cj4g
-IH0KPiAgCj4gIHN0YXRpYyB2b2lkIG14c2ZiX3BpcGVfdXBkYXRlKHN0cnVjdCBkcm1fc2ltcGxl
-X2Rpc3BsYXlfcGlwZSAqcGlwZSwKPiBAQCAtMjI2LDE2ICsyNDUsMzMgQEAgc3RhdGljIGludCBt
-eHNmYl9sb2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkcm0sCj4gdW5zaWduZWQgbG9uZyBmbGFncykK
-PiAgCj4gIAlyZXQgPSBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZV9pbml0KGRybSwgJm14c2ZiLT5w
-aXBlLCAmbXhzZmJfZnVuY3MsCj4gIAkJCW14c2ZiX2Zvcm1hdHMsIEFSUkFZX1NJWkUobXhzZmJf
-Zm9ybWF0cyksIE5VTEwsCj4gLQkJCSZteHNmYi0+Y29ubmVjdG9yKTsKPiArCQkJbXhzZmItPmNv
-bm5lY3Rvcik7Cj4gIAlpZiAocmV0IDwgMCkgewo+ICAJCWRldl9lcnIoZHJtLT5kZXYsICJDYW5u
-b3Qgc2V0dXAgc2ltcGxlIGRpc3BsYXkgcGlwZVxuIik7Cj4gIAkJZ290byBlcnJfdmJsYW5rOwo+
-ICAJfQo+ICAKPiAtCXJldCA9IGRybV9wYW5lbF9hdHRhY2gobXhzZmItPnBhbmVsLCAmbXhzZmIt
-PmNvbm5lY3Rvcik7Cj4gLQlpZiAocmV0KSB7Cj4gLQkJZGV2X2Vycihkcm0tPmRldiwgIkNhbm5v
-dCBjb25uZWN0IHBhbmVsXG4iKTsKPiAtCQlnb3RvIGVycl92Ymxhbms7Cj4gKwkvKgo+ICsJICog
-QXR0YWNoIHBhbmVsIG9ubHkgaWYgdGhlcmUgaXMgb25lLgo+ICsJICogSWYgdGhlcmUgaXMgbm8g
-cGFuZWwgYXR0YWNoLCBpdCBtdXN0IGJlIGEgYnJpZGdlLiBJbiB0aGlzIGNhc2UsIHdlCj4gKwkg
-KiBuZWVkIGEgcmVmZXJlbmNlIHRvIGl0cyBjb25uZWN0b3IgZm9yIGEgcHJvcGVyIGluaXRpYWxp
-emF0aW9uLgo+ICsJICogV2Ugd2lsbCBkbyB0aGlzIGNoZWNrIGluIHBpcGUtPmVuYWJsZSgpLCBz
-aW5jZSB0aGUgY29ubmVjdG9yIHdvbid0Cj4gKwkgKiBiZSBhdHRhY2hlZCB0byBhbiBlbmNvZGVy
-IHVudGlsIHRoZW4uCj4gKwkgKi8KPiArCj4gKwlpZiAobXhzZmItPnBhbmVsKSB7Cj4gKwkJcmV0
-ID0gZHJtX3BhbmVsX2F0dGFjaChteHNmYi0+cGFuZWwsIG14c2ZiLT5jb25uZWN0b3IpOwo+ICsJ
-CWlmIChyZXQpIHsKPiArCQkJZGV2X2Vycihkcm0tPmRldiwgIkNhbm5vdCBjb25uZWN0IHBhbmVs
-OiAlZFxuIiwgcmV0KTsKPiArCQkJZ290byBlcnJfdmJsYW5rOwo+ICsJCX0KPiArCX0gZWxzZSBp
-ZiAobXhzZmItPmJyaWRnZSkgewo+ICsJCXJldCA9IGRybV9zaW1wbGVfZGlzcGxheV9waXBlX2F0
-dGFjaF9icmlkZ2UoJm14c2ZiLT5waXBlLAo+ICsJCQkJCQkJICAgIG14c2ZiLT5icmlkZ2UpOwo+
-ICsJCWlmIChyZXQpIHsKPiArCQkJZGV2X2Vycihkcm0tPmRldiwgIkNhbm5vdCBjb25uZWN0IGJy
-aWRnZTogJWRcbiIsIHJldCk7Cj4gKwkJCWdvdG8gZXJyX3ZibGFuazsKPiArCQl9Cj4gIAl9Cj4g
-IAo+ICAJZHJtLT5tb2RlX2NvbmZpZy5taW5fd2lkdGgJPSBNWFNGQl9NSU5fWFJFUzsKPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL214c2ZiL214c2ZiX2Rydi5oCj4gYi9kcml2ZXJzL2dw
-dS9kcm0vbXhzZmIvbXhzZmJfZHJ2LmgKPiBpbmRleCBkOTc1MzAwLi4wYjY1YjUxIDEwMDY0NAo+
-IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9kcnYuaAo+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9teHNmYi9teHNmYl9kcnYuaAo+IEBAIC0yNyw4ICsyNywxMCBAQCBzdHJ1Y3QgbXhz
-ZmJfZHJtX3ByaXZhdGUgewo+ICAJc3RydWN0IGNsawkJCSpjbGtfZGlzcF9heGk7Cj4gIAo+ICAJ
-c3RydWN0IGRybV9zaW1wbGVfZGlzcGxheV9waXBlCXBpcGU7Cj4gLQlzdHJ1Y3QgZHJtX2Nvbm5l
-Y3RvcgkJY29ubmVjdG9yOwo+ICsJc3RydWN0IGRybV9jb25uZWN0b3IJCXBhbmVsX2Nvbm5lY3Rv
-cjsKPiArCXN0cnVjdCBkcm1fY29ubmVjdG9yCQkqY29ubmVjdG9yOwo+ICAJc3RydWN0IGRybV9w
-YW5lbAkJKnBhbmVsOwo+ICsJc3RydWN0IGRybV9icmlkZ2UJCSpicmlkZ2U7Cj4gIH07Cj4gIAo+
-ICBpbnQgbXhzZmJfc2V0dXBfY3J0YyhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KTsKPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL214c2ZiL214c2ZiX291dC5jCj4gYi9kcml2ZXJzL2dwdS9k
-cm0vbXhzZmIvbXhzZmJfb3V0LmMKPiBpbmRleCBiZTM2ZjRkLi40ZWI5NDc0IDEwMDY0NAo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9vdXQuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1
-L2RybS9teHNmYi9teHNmYl9vdXQuYwo+IEBAIC0yMSw3ICsyMSw4IEBACj4gIHN0YXRpYyBzdHJ1
-Y3QgbXhzZmJfZHJtX3ByaXZhdGUgKgo+ICBkcm1fY29ubmVjdG9yX3RvX214c2ZiX2RybV9wcml2
-YXRlKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IpCj4gIHsKPiAtCXJldHVybiBjb250
-YWluZXJfb2YoY29ubmVjdG9yLCBzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZhdGUsIGNvbm5lY3Rvcik7
-Cj4gKwlyZXR1cm4gY29udGFpbmVyX29mKGNvbm5lY3Rvciwgc3RydWN0IG14c2ZiX2RybV9wcml2
-YXRlLAo+ICsJCQkgICAgcGFuZWxfY29ubmVjdG9yKTsKPiAgfQo+ICAKPiAgc3RhdGljIGludCBt
-eHNmYl9wYW5lbF9nZXRfbW9kZXMoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiBA
-QCAtNzYsMjIgKzc3LDIzIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9mdW5j
-cwo+IG14c2ZiX3BhbmVsX2Nvbm5lY3Rvcl9mdW5jcyA9IHsKPiAgaW50IG14c2ZiX2NyZWF0ZV9v
-dXRwdXQoc3RydWN0IGRybV9kZXZpY2UgKmRybSkKPiAgewo+ICAJc3RydWN0IG14c2ZiX2RybV9w
-cml2YXRlICpteHNmYiA9IGRybS0+ZGV2X3ByaXZhdGU7Cj4gLQlzdHJ1Y3QgZHJtX3BhbmVsICpw
-YW5lbDsKPiAgCWludCByZXQ7Cj4gIAo+IC0JcmV0ID0gZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJp
-ZGdlKGRybS0+ZGV2LT5vZl9ub2RlLCAwLCAwLCAmcGFuZWwsIE5VTEwpOwo+ICsJcmV0ID0gZHJt
-X29mX2ZpbmRfcGFuZWxfb3JfYnJpZGdlKGRybS0+ZGV2LT5vZl9ub2RlLCAwLCAwLAo+ICsJCQkJ
-CSAgJm14c2ZiLT5wYW5lbCwgJm14c2ZiLT5icmlkZ2UpOwo+ICAJaWYgKHJldCkKPiAgCQlyZXR1
-cm4gcmV0Owo+ICAKPiAtCW14c2ZiLT5jb25uZWN0b3IuZHBtcyA9IERSTV9NT0RFX0RQTVNfT0ZG
-Owo+IC0JbXhzZmItPmNvbm5lY3Rvci5wb2xsZWQgPSAwOwo+IC0JZHJtX2Nvbm5lY3Rvcl9oZWxw
-ZXJfYWRkKCZteHNmYi0+Y29ubmVjdG9yLAo+IC0JCQkmbXhzZmJfcGFuZWxfY29ubmVjdG9yX2hl
-bHBlcl9mdW5jcyk7Cj4gLQlyZXQgPSBkcm1fY29ubmVjdG9yX2luaXQoZHJtLCAmbXhzZmItPmNv
-bm5lY3RvciwKPiAtCQkJCSAmbXhzZmJfcGFuZWxfY29ubmVjdG9yX2Z1bmNzLAo+IC0JCQkJIERS
-TV9NT0RFX0NPTk5FQ1RPUl9Vbmtub3duKTsKPiAtCWlmICghcmV0KQo+IC0JCW14c2ZiLT5wYW5l
-bCA9IHBhbmVsOwo+ICsJaWYgKG14c2ZiLT5wYW5lbCkgewo+ICsJCW14c2ZiLT5jb25uZWN0b3Ig
-PSAmbXhzZmItPnBhbmVsX2Nvbm5lY3RvcjsKPiArCQlteHNmYi0+Y29ubmVjdG9yLT5kcG1zID0g
-RFJNX01PREVfRFBNU19PRkY7Cj4gKwkJbXhzZmItPmNvbm5lY3Rvci0+cG9sbGVkID0gMDsKPiAr
-CQlkcm1fY29ubmVjdG9yX2hlbHBlcl9hZGQobXhzZmItPmNvbm5lY3RvciwKPiArCQkJCQkgJm14
-c2ZiX3BhbmVsX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MpOwo+ICsJCXJldCA9IGRybV9jb25uZWN0
-b3JfaW5pdChkcm0sIG14c2ZiLT5jb25uZWN0b3IsCj4gKwkJCQkJICZteHNmYl9wYW5lbF9jb25u
-ZWN0b3JfZnVuY3MsCj4gKwkJCQkJIERSTV9NT0RFX0NPTk5FQ1RPUl9Vbmtub3duKTsKPiArCX0K
-PiAgCj4gIAlyZXR1cm4gcmV0Owo+ICB9Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbA==
+On 2019-08-29 13:30, Robert Chiras wrote:
+> From: Guido Günther <agx@sigxcpu.org>
+> 
+> The bridge might have special requirmentes on the input bus. This
+> is e.g. used by the imx-nwl bridge.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Reviewed-by: Stefan Agner <stefan@agner.ch>
+
+Applied to the drm-misc-next branch.
+
+I decided to apply those two since they are independent from the rest.
+You can drop them in the next spin of the rest.
+
+--
+Stefan
+
+
+> ---
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> index de09b93..b69ace8 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> @@ -209,7 +209,7 @@ static void mxsfb_crtc_mode_set_nofb(struct
+> mxsfb_drm_private *mxsfb)
+>  {
+>  	struct drm_device *drm = mxsfb->pipe.crtc.dev;
+>  	struct drm_display_mode *m = &mxsfb->pipe.crtc.state->adjusted_mode;
+> -	const u32 bus_flags = mxsfb->connector->display_info.bus_flags;
+> +	u32 bus_flags = mxsfb->connector->display_info.bus_flags;
+>  	u32 vdctrl0, vsync_pulse_len, hsync_pulse_len;
+>  	int err;
+>  
+> @@ -233,6 +233,9 @@ static void mxsfb_crtc_mode_set_nofb(struct
+> mxsfb_drm_private *mxsfb)
+>  
+>  	clk_set_rate(mxsfb->clk, m->crtc_clock * 1000);
+>  
+> +	if (mxsfb->bridge && mxsfb->bridge->timings)
+> +		bus_flags = mxsfb->bridge->timings->input_bus_flags;
+> +
+>  	DRM_DEV_DEBUG_DRIVER(drm->dev, "Pixel clock: %dkHz (actual: %dkHz)\n",
+>  			     m->crtc_clock,
+>  			     (int)(clk_get_rate(mxsfb->clk) / 1000));
