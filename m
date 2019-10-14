@@ -1,159 +1,260 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH v3 2/3] ARM: dts: add Netronix E60K02 board common file
-Date: Sun, 13 Oct 2019 17:56:44 +0200
-Message-ID: <20191013175644.4fc264d0@kemnade.info>
-References: <20191010192357.27884-1-andreas@kemnade.info>
-        <20191010192357.27884-3-andreas@kemnade.info>
-        <20191011065609.6irap7elicatmsgg@pengutronix.de>
-        <20191011094148.1376430e@aktux>
-        <20191011142927.GA11490@bogus>
-        <20191011170147.1b3c4b25@kemnade.info>
-        <20191011152214.v6lq6itwf5lp6j7q@pengutronix.de>
-        <20191011181938.185f2a00@kemnade.info>
-        <20191011165633.5ty3yux4ljrcycux@pengutronix.de>
+From: Argus Lin <argus.lin@mediatek.com>
+Subject: Re: [PATCH 2/3] soc: mediatek: pwrap: add pwrap driver for MT6779
+ SoCs
+Date: Mon, 14 Oct 2019 14:04:25 +0800
+Message-ID: <1571033065.19600.23.camel@mtkswgap22>
+References: <1570088901-23211-1-git-send-email-argus.lin@mediatek.com>
+         <1570088901-23211-3-git-send-email-argus.lin@mediatek.com>
+         <b2f881e2-959e-eccf-e62e-54c510608aaa@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/K6CGQhzU3FFoLuhqnsD_8gF"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191011165633.5ty3yux4ljrcycux@pengutronix.de>
+In-Reply-To: <b2f881e2-959e-eccf-e62e-54c510608aaa@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>, festevam@gmail.com
-Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, marex@denx.de, devicetree@vger.kernel.org, andrew.smirnov@gmail.com, shawnguo@kernel.org, s.hauer@pengutronix.de, angus@akkea.ca, linux-kernel@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, manivannan.sadhasivam@linaro.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, linux-arm-kernel@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/K6CGQhzU3FFoLuhqnsD_8gF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, 2019-10-04 at 01:26 +0200, Matthias Brugger wrote:
+> 
+> On 03/10/2019 09:48, Argus Lin wrote:
+> > MT6779 is a highly integrated SoCs, it uses MT6359 for power
+> > management. This patch adds pwrap driver to access MT6359.
+> > Pwrap of MT6779 support dynamic priority meichanism, sequence
+> 
+> mechanism
+I will fix it.
+> 
+> > monitor and starvation mechanism to make transaction more
+> > reliable. WDT setting only need to init when it is zero,
+> > otherwise keep current value. When setting interrupt enable
+> 
+> that's mt6779 specific?
+It is common code. The PWRAP_WDT_UNIT and PWRAP_WDT_SRC_EN default value
+is zero. Different project can have different value, I think we can
+check if it has been initialized.
 
-On Fri, 11 Oct 2019 18:56:33 +0200
-Marco Felsch <m.felsch@pengutronix.de> wrote:
+Two methods execute pwrap_init at different product line.
+1. at bootloader(Smart phone/Tablet/Auto)
+PWRAP_WDT_UNIT and PWRAP_WDT_SRC_EN has been initialized at bootloader,
+we don't need to initialize it at kernel again.
+2. at kernel(Some specific Tablet)
+PWRAP_WDT_UNIT and PWRAP_WDT_SRC_EN is zero, just initialize them at
+kernel.
 
-> On 19-10-11 18:19, Andreas Kemnade wrote:
-> > On Fri, 11 Oct 2019 17:22:14 +0200
-> > Marco Felsch <m.felsch@pengutronix.de> wrote:
-> >  =20
-> > > On 19-10-11 17:05, Andreas Kemnade wrote: =20
-> > > > On Fri, 11 Oct 2019 09:29:27 -0500
-> > > > Rob Herring <robh@kernel.org> wrote:
-> > > >    =20
-> > > > > On Fri, Oct 11, 2019 at 09:41:48AM +0200, Andreas Kemnade wrote: =
-  =20
-> > > > > > On Fri, 11 Oct 2019 08:56:09 +0200
-> > > > > > Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > > > > >      =20
-> > > > > > > Hi Andreas,
-> > > > > > >=20
-> > > > > > > On 19-10-10 21:23, Andreas Kemnade wrote:     =20
-> > > > > > > > The Netronix board E60K02 can be found some several Ebook-R=
-eaders,
-> > > > > > > > at least the Kobo Clara HD and the Tolino Shine 3. The board
-> > > > > > > > is equipped with different SoCs requiring different pinmuxe=
-s.
-> > > > > > > >=20
-> > > > > > > > For now the following peripherals are included:
-> > > > > > > > - LED
-> > > > > > > > - Power Key
-> > > > > > > > - Cover (gpio via hall sensor)
-> > > > > > > > - RC5T619 PMIC (the kernel misses support for rtc and charg=
-er
-> > > > > > > >   subdevices).
-> > > > > > > > - Backlight via lm3630a
-> > > > > > > > - Wifi sdio chip detection (mmc-powerseq and stuff)
-> > > > > > > >=20
-> > > > > > > > It is based on vendor kernel but heavily reworked due to ma=
-ny
-> > > > > > > > changed bindings.
-> > > > > > > >=20
-> > > > > > > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > > > > > > ---
-> > > > > > > > Changes in v3:
-> > > > > > > > - better led name
-> > > > > > > > - correct memory size
-> > > > > > > > - comments about missing devices
-> > > > > > > >=20
-> > > > > > > > Changes in v2:
-> > > > > > > > - reordered, was 1/3
-> > > > > > > > - moved pinmuxes to their actual users, not the parents
-> > > > > > > >   of them
-> > > > > > > > - removed some already-disabled stuff
-> > > > > > > > - minor cleanups       =20
-> > > > > > >=20
-> > > > > > > You won't change the muxing, so a this dtsi can be self conta=
-ined?
-> > > > > > >      =20
-> > > > > > So you want me to put a big=20
-> > > > > > #if defined(MX6SLL)      =20
-> > > > >=20
-> > > > > Not sure what the comment meant, but no, don't do this. C defines=
- in dts=20
-> > > > > files are for symbolic names for numbers and assembling bitfields=
- and=20
-> > > > > that's it.   =20
-> > > >=20
-> > > > yes, that is also my opinion. For now, there is only one user
-> > > > of this .dtsi, but I have another one in preparation. That is the
-> > > > reason for splitting things between .dts and .dtsi to avoid such ug=
-ly
-> > > > ifdefs   =20
-> > >=20
-> > > Then IMHO the pnictrl-* entries shouldn't appear in the dsti.
-> > >  =20
-> > hmm, maybe now I understand your idea:
-> > You do not want only to have
-> >=20
-> >   pinctrl_lm3630a_bl_gpio: lm3630a_bl_gpio_grp {
-> >                         fsl,pins =3D <
-> >                                 MX6SLL_PAD_EPDC_PWR_CTRL3__GPIO2_IO10  =
- 0x10059 /* HWEN */ =20
-> >                         >; =20
-> >                 };
-> > in dts, but also  do not have these in .dtsi:
-> >=20
-> >                 pinctrl-names =3D "default";
-> >                 pinctrl-0 =3D <&pinctrl_lm3630a_bl_gpio>;
-> >=20
-> > and instead have in dts:
-> > &lm3630a {
-> >  	pinctrl-names =3D "default";
-> >         pinctrl-0 =3D <&pinctrl_lm3630a_bl_gpio>;
-> > =09
-> > };
-> >=20
-> >=20
-> > just to make sure I get it right before doing the restructuring work. T=
-hat way of structuring things did not come to my mind, but then the .dtsi i=
-s self-contained. =20
->=20
-> That is what I mean but wait for Shawn's comments. It's just my opinion
-> that .dtsi and .dts files should be self-contained.
+> 
+> > flag at pwrap_probe, read current setting then do logical OR
+> > operation with wrp->master->int_en_all.
+> 
+> same here, only specific to mt6779?
+same reason like why check WDT_UNIT == 0. What we do in the past is to
+overwrite pwrap_int_en use the same value at bootloader.
+If pwrap_int_en has been initialized, it is better to read current
+value, OR new value at kernel then write new one.
+> 
+> > 
+> > Signed-off-by: Argus Lin <argus.lin@mediatek.com>
+> > ---
+> >  drivers/soc/mediatek/mtk-pmic-wrap.c | 85 ++++++++++++++++++++++++++++++++----
+> >  1 file changed, 77 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> > index c725315..fa8daf2 100644
+> > --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+> > +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> > @@ -497,6 +497,45 @@ enum pwrap_regs {
+> >  	[PWRAP_DCM_DBC_PRD] =		0x1E0,
+> >  };
+> > 
+> > +static int mt6779_regs[] = {
+> > +	[PWRAP_MUX_SEL] =		0x0,
+> > +	[PWRAP_WRAP_EN] =		0x4,
+> > +	[PWRAP_DIO_EN] =		0x8,
+> > +	[PWRAP_RDDMY] =			0x20,
+> > +	[PWRAP_CSHEXT_WRITE] =		0x24,
+> > +	[PWRAP_CSHEXT_READ] =		0x28,
+> > +	[PWRAP_CSLEXT_WRITE] =		0x2C,
+> > +	[PWRAP_CSLEXT_READ] =		0x30,
+> > +	[PWRAP_EXT_CK_WRITE] =		0x34,
+> > +	[PWRAP_STAUPD_CTRL] =		0x3C,
+> > +	[PWRAP_STAUPD_GRPEN] =		0x40,
+> > +	[PWRAP_EINT_STA0_ADR] =		0x44,
+> > +	[PWRAP_HARB_HPRIO] =		0x68,
+> > +	[PWRAP_HIPRIO_ARB_EN] =		0x6C,
+> > +	[PWRAP_MAN_EN] =		0x7C,
+> > +	[PWRAP_MAN_CMD] =		0x80,
+> > +	[PWRAP_WACS0_EN] =		0x8C,
+> > +	[PWRAP_WACS1_EN] =		0x94,
+> > +	[PWRAP_WACS2_EN] =		0x9C,
+> > +	[PWRAP_INIT_DONE0] =		0x90,
+> > +	[PWRAP_INIT_DONE1] =		0x98,
+> > +	[PWRAP_INIT_DONE2] =		0xA0,
+> > +	[PWRAP_INT_EN] =		0xBC,
+> > +	[PWRAP_INT_FLG_RAW] =		0xC0,
+> > +	[PWRAP_INT_FLG] =		0xC4,
+> > +	[PWRAP_INT_CLR] =		0xC8,
+> > +	[PWRAP_INT1_EN] =		0xCC,
+> > +	[PWRAP_INT1_FLG] =		0xD4,
+> > +	[PWRAP_INT1_CLR] =		0xD8,
+> > +	[PWRAP_TIMER_EN] =		0xF0,
+> > +	[PWRAP_WDT_UNIT] =		0xF8,
+> > +	[PWRAP_WDT_SRC_EN] =		0xFC,
+> > +	[PWRAP_WDT_SRC_EN_1] =		0x100,
+> > +	[PWRAP_WACS2_CMD] =		0xC20,
+> > +	[PWRAP_WACS2_RDATA] =		0xC24,
+> > +	[PWRAP_WACS2_VLDCLR] =		0xC28,
+> > +};
+> > +
+> >  static int mt6797_regs[] = {
+> >  	[PWRAP_MUX_SEL] =		0x0,
+> >  	[PWRAP_WRAP_EN] =		0x4,
+> > @@ -945,6 +984,7 @@ enum pmic_type {
+> >  enum pwrap_type {
+> >  	PWRAP_MT2701,
+> >  	PWRAP_MT6765,
+> > +	PWRAP_MT6779,
+> >  	PWRAP_MT6797,
+> >  	PWRAP_MT7622,
+> >  	PWRAP_MT8135,
+> > @@ -1377,6 +1417,7 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
+> >  		break;
+> >  	case PWRAP_MT2701:
+> >  	case PWRAP_MT6765:
+> > +	case PWRAP_MT6779:
+> >  	case PWRAP_MT6797:
+> >  	case PWRAP_MT8173:
+> >  	case PWRAP_MT8516:
+> > @@ -1468,8 +1509,10 @@ static int pwrap_init_security(struct pmic_wrapper *wrp)
+> >  	pwrap_writel(wrp, 0x0, PWRAP_SIG_MODE);
+> >  	pwrap_writel(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_VAL],
+> >  		     PWRAP_SIG_ADR);
+> > -	pwrap_writel(wrp,
+> > -		     wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
+> > +	if (pwrap_readl(wrp, PWRAP_HIPRIO_ARB_EN) == 0) {
+> 
+> Did you make sure that this holds for all SoCs that are supported by the driver?
+> If so, why do we need this in mt6779 and didn't need that in the others?
+> Even more, mt6779 does not have the security capbaility, so why do you change
+> this code?
+revert it.
+> > +		pwrap_writel(wrp,
+> > +			     wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
+> > +	}
+> 
+> I just realize that we write PWRAP_HIPRIO_ARB_EN twice if the slave supports
+> security. Do we really need that?
+> 
+revert it.
+pwrap_init_security and pwrap_init do not called at MT6779. I will
+revert this change.
+> > 
+> >  	return 0;
+> >  }
+> > @@ -1581,7 +1624,10 @@ static int pwrap_init(struct pmic_wrapper *wrp)
+> > 
+> >  	pwrap_writel(wrp, 1, PWRAP_WRAP_EN);
+> > 
+> > -	pwrap_writel(wrp, wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
+> > +	if (pwrap_readl(wrp, PWRAP_HIPRIO_ARB_EN) == 0) {
+> > +		pwrap_writel(wrp,
+> > +			     wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
+> > +	}
+> > 
+> >  	pwrap_writel(wrp, 1, PWRAP_WACS2_EN);
+> > 
+> > @@ -1783,6 +1829,19 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
+> >  	.init_soc_specific = NULL,
+> >  };
+> > 
+> > +static const struct pmic_wrapper_type pwrap_mt6779 = {
+> > +	.regs = mt6779_regs,
+> > +	.type = PWRAP_MT6779,
+> > +	.arb_en_all = 0,
+> > +	.int_en_all = 0,
+> > +	.int1_en_all = 0,
+> > +	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
+> > +	.wdt_src = 0,
+> > +	.caps = 0,
+> > +	.init_reg_clock = pwrap_common_init_reg_clock,
+> > +	.init_soc_specific = NULL,
+> > +};
+> > +
+> >  static const struct pmic_wrapper_type pwrap_mt6797 = {
+> >  	.regs = mt6797_regs,
+> >  	.type = PWRAP_MT6797,
+> > @@ -1868,6 +1927,9 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
+> >  		.compatible = "mediatek,mt6765-pwrap",
+> >  		.data = &pwrap_mt6765,
+> >  	}, {
+> > +		.compatible = "mediatek,mt6779-pwrap",
+> > +		.data = &pwrap_mt6779,
+> > +	}, {
+> >  		.compatible = "mediatek,mt6797-pwrap",
+> >  		.data = &pwrap_mt6797,
+> >  	}, {
+> > @@ -1898,6 +1960,7 @@ static int pwrap_probe(struct platform_device *pdev)
+> >  	struct device_node *np = pdev->dev.of_node;
+> >  	const struct of_device_id *of_slave_id = NULL;
+> >  	struct resource *res;
+> > +	u32 int_en;
+> > 
+> >  	if (np->child)
+> >  		of_slave_id = of_match_node(of_slave_match_tbl, np->child);
+> > @@ -1995,23 +2058,29 @@ static int pwrap_probe(struct platform_device *pdev)
+> >  	}
+> > 
+> >  	/* Initialize watchdog, may not be done by the bootloader */
+> > -	pwrap_writel(wrp, 0xf, PWRAP_WDT_UNIT);
+> > +	if (pwrap_readl(wrp, PWRAP_WDT_UNIT) == 0)
+> 
+> Same here, why do we need it in mt6779 and did you test if it does not break any
+> older SoC?
+It is common code. The PWRAP_WDT_UNIT and PWRAP_WDT_SRC_EN default value
+is zero. Different project can have different value, I think we can
+check if it has been initialized.
 
-for files like the imx6sll.dtsi, I would clearly agree, here it might
-hide errors like missing pinmuxes in the dts, so it is not so clear.
-But if there is is consensus about .dtsi being self-contained I will not
-refuse to restructurize my work.
-
-Regards,
-Andreas
-
---Sig_/K6CGQhzU3FFoLuhqnsD_8gF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl2jSUAACgkQl4jFM1s/
-ye92lxAAsdTP3+mhOGTNy8BO0DcQGyukpQ4pJxYxIqrzLRnVO8ylnBEmW6tua5fh
-OICjnZ3NaxwbfkQPKSCJEtggUJI2w+6BkLpF3+eUvuU1RjQpTcHjiBR+znmxulhJ
-n7hyvtCx6O32GzyamSOAx8nW2qBJ1hGbUKyREJkpY4NZ615dL7jnWR5gSDJqQ/A6
-aZ7Cx6Xna2Mu8lXa3a8doDQKQMcPdluCZgNr76IsRTPmoMg7KEk2nrWOy2gls9N3
-Z+SVji02h3HtyjKFj4L0MPIZhiaAPsI9SFjfJyXQ570FBK5wnjtHv5VuxGBsVZlo
-TWdE1i6HGXnw5pSROb1jXLgmCG8G07UDF876UaNtjUpg8uGNLPhrlh3+SP5+zvbP
-n0m+vpm3GFkHFcKw5RxkdSz/E8+/rF2D/eFt6E4w8Gi2SzBq1nwTndvIN7ZYx4e4
-F95Sa4vQbYxtN1e6JYEJGcP0xKQC0LMRGLLIAAYGn11GBG8/o/8ociGdcmJnFBtk
-QsYoE8wCExvkYc2L/L/4YsFiLDfXCs+pYePVlAZsqffIInh1k0TGdmSINk8f+u5U
-etBUvs2x9zKs6K/OqNVcaRTP2pbozKfOGPmbcgUQ03k5Q/7eo7+IiJrPu+LgnkI6
-rQ42+/WhAfXgo5aBHI+Gzgtqsd/5fYTrRQab7IejHhNbYAPh6P8=
-=xmgK
------END PGP SIGNATURE-----
-
---Sig_/K6CGQhzU3FFoLuhqnsD_8gF--
+Two methods execute pwrap_init at different product line.
+1. at bootloader(Smart phone/Tablet/Auto)
+PWRAP_WDT_UNIT and PWRAP_WDT_SRC_EN has been initialized at bootloader,
+we don't need to initialize it at kernel again.
+2. at kernel(Some specific Tablet)
+PWRAP_WDT_UNIT and PWRAP_WDT_SRC_EN is zero, just initialize them at
+kernel.
+> 
+> > +		pwrap_writel(wrp, 0xf, PWRAP_WDT_UNIT);
+> >  	/*
+> >  	 * Since STAUPD was not used on mt8173 platform,
+> >  	 * so STAUPD of WDT_SRC which should be turned off
+> >  	 */
+> > -	pwrap_writel(wrp, wrp->master->wdt_src, PWRAP_WDT_SRC_EN);
+> > +	if (pwrap_readl(wrp, PWRAP_WDT_SRC_EN) == 0)
+> > +		pwrap_writel(wrp, wrp->master->wdt_src, PWRAP_WDT_SRC_EN);
+> >  	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_WDT_SRC1))
+> >  		pwrap_writel(wrp, wrp->master->wdt_src, PWRAP_WDT_SRC_EN_1);
+> > 
+> >  	pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
+> > -	pwrap_writel(wrp, wrp->master->int_en_all, PWRAP_INT_EN);
+> > +	int_en = pwrap_readl(wrp, PWRAP_INT_EN);
+> > +	pwrap_writel(wrp, (int_en) | (wrp->master->int_en_all), PWRAP_INT_EN);
+> 
+> Looks ok to me, is it a bug fix, or only needed for mt6779?
+It is common code.
+> 
+> >  	/*
+> >  	 * We add INT1 interrupt to handle starvation and request exception
+> >  	 * If we support it, we should enable it here.
+> >  	 */
+> > -	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_INT1_EN))
+> > -		pwrap_writel(wrp, wrp->master->int1_en_all, PWRAP_INT1_EN);
+> > +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_INT1_EN)) {
+> > +		int_en = pwrap_readl(wrp, PWRAP_INT1_EN);
+> > +		pwrap_writel(wrp, (int_en) | wrp->master->int1_en_all,
+> > +			     PWRAP_INT1_EN);
+> > +	}
+> > 
+> >  	irq = platform_get_irq(pdev, 0);
+> >  	ret = devm_request_irq(wrp->dev, irq, pwrap_interrupt,
+> > --
+> > 1.8.1.1.dirty
+> > 
