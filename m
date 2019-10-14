@@ -1,56 +1,24 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [PATCH 1/2] dt-bindings: i2c: replace property
- i2c-mux-idle-disconnect
-Date: Mon, 14 Oct 2019 11:41:48 +0000
-Message-ID: <DB7PR04MB44906CD36066595307E7848C8F900@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20191014112558.3881-1-biwen.li@nxp.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2] ARM: dts: imx7s: Correct GPT's ipg clock source
+Date: Mon, 14 Oct 2019 19:42:47 +0800
+Message-ID: <20191014114246.GQ12262@dragon>
+References: <1570409022-20442-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191014112558.3881-1-biwen.li@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1570409022-20442-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biwen Li <biwen.li@nxp.com>, "peda@axentia.se" <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter, Rob
+On Mon, Oct 07, 2019 at 08:43:42AM +0800, Anson Huang wrote:
+> i.MX7S/D's GPT ipg clock should be from GPT clock root and
+> controlled by CCM's GPT CCGR, using correct clock source for
+> GPT ipg clock instead of IMX7D_CLK_DUMMY.
+> 
+> Fixes: 3ef79ca6bd1d ("ARM: dts: imx7d: use imx7s.dtsi as base device tree")
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-This patch is a new method for https://lore.kernel.org/patchwork/patch/1132=
-445/
-
-Best Regards,
-Biwen Li
->=20
-> This replaces property i2c-mux-idle-disconnect with idle-state
->=20
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> index 30ac6a60f041..f2db517b1635 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> @@ -25,9 +25,7 @@ Required Properties:
->  Optional Properties:
->=20
->    - reset-gpios: Reference to the GPIO connected to the reset input.
-> -  - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconne=
-ct
-> all
-> -    children in idle state. This is necessary for example, if there are =
-several
-> -    multiplexers on the bus and the devices behind them use same I2C
-> addresses.
-> +  - idle-state: Please refer to
-> Documentation/devicetree/bindings/mux/mux-controller.txt
->    - interrupts: Interrupt mapping for IRQ.
->    - interrupt-controller: Marks the device node as an interrupt controll=
-er.
->    - #interrupt-cells : Should be two.
-> --
-> 2.17.1
+Applied, thanks.
