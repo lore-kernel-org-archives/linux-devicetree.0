@@ -1,169 +1,170 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V6 3/8] backlight: qcom-wled: Add new properties for
- PMI8998
-Date: Tue, 15 Oct 2019 14:24:39 +0530
-Message-ID: <2500384590b9f01116fc8ddf8f1b20b9@codeaurora.org>
-References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
- <1569825553-26039-4-git-send-email-kgunda@codeaurora.org>
- <3836b382-a4e6-d6db-9667-1851a9cf0112@ti.com>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
+ Layerscape SoCs
+Date: Tue, 15 Oct 2019 10:07:56 +0100
+Message-ID: <20191015090756.GS25745@shell.armlinux.org.uk>
+References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+ <20190916021742.22844-4-xiaowei.bao@nxp.com>
+ <20190924163850.GY25745@shell.armlinux.org.uk>
+ <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3836b382-a4e6-d6db-9667-1851a9cf0112@ti.com>
+Content-Disposition: inline
+In-Reply-To: <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-10-01 20:42, Dan Murphy wrote:
-> Kiran
-> 
-> On 9/30/19 1:39 AM, Kiran Gunda wrote:
->> Update the bindings with the new properties used for
->> PMI8998.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
->> ---
->>   .../bindings/leds/backlight/qcom-wled.txt          | 76 
->> ++++++++++++++++++----
->>   1 file changed, 62 insertions(+), 14 deletions(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt 
->> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->> index 14f28f2..9d840d5 100644
->> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->> @@ -20,8 +20,7 @@ platforms. The PMIC is connected to the host 
->> processor via SPMI bus.
->>   - default-brightness
->>   	Usage:        optional
->>   	Value type:   <u32>
->> -	Definition:   brightness value on boot, value from: 0-4095
->> -		      Default: 2048
->> +	Definition:   brightness value on boot, value from: 0-4095.
->>     - label
->>   	Usage:        required
->> @@ -48,20 +47,24 @@ platforms. The PMIC is connected to the host 
->> processor via SPMI bus.
->>   - qcom,current-limit
->>   	Usage:        optional
->>   	Value type:   <u32>
->> -	Definition:   mA; per-string current limit
->> -		      value: For pm8941: from 0 to 25 with 5 mA step
->> -			     Default 20 mA.
->> -			     For pmi8998: from 0 to 30 with 5 mA step
->> -			     Default 25 mA.
->> +	Definition:   mA; per-string current limit; value from 0 to 25 with
->> +		      1 mA step.
->> +		      This property is supported only for pm8941.
->> +
->> +- qcom,current-limit-microamp
->> +	Usage:        optional
->> +	Value type:   <u32>
->> +	Definition:   uA; per-string current limit; value from 0 to 30000 
->> with
->> +		      2500 uA step.
->>     - qcom,current-boost-limit
->>   	Usage:        optional
->>   	Value type:   <u32>
->>   	Definition:   mA; boost current limit.
->>   		      For pm8941: one of: 105, 385, 525, 805, 980, 1260, 1400,
->> -		      1680. Default: 805 mA
->> +		      1680.
->>   		      For pmi8998: one of: 105, 280, 450, 620, 970, 1150, 1300,
->> -		      1500. Default: 970 mA
->> +		      1500.
->>     - qcom,switching-freq
->>   	Usage:        optional
->> @@ -69,22 +72,66 @@ platforms. The PMIC is connected to the host 
->> processor via SPMI bus.
->>   	 Definition:   kHz; switching frequency; one of: 600, 640, 685, 
->> 738,
->>   		       800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
->>   		       4800, 9600.
->> -		       Default: for pm8941: 1600 kHz
->> -				for pmi8998: 800 kHz
->>     - qcom,ovp
->>   	Usage:        optional
->>   	Value type:   <u32>
->>   	Definition:   V; Over-voltage protection limit; one of:
->> -		      27, 29, 32, 35. default: 29V
->> +		      27, 29, 32, 35.
->>   		      This property is supported only for PM8941.
->>   +- qcom,ovp-millivolt
->> +	Usage:        optional
->> +	Value type:   <u32>
->> +	Definition:   mV; Over-voltage protection limit;
->> +		      For pmi8998: one of 18100, 19600, 29600, 31100
->> +		      If this property is not specified for PM8941, it
->> +		      falls back to "qcom,ovp" property.
->> +
->>   - qcom,num-strings
->>   	Usage:        optional
->>   	Value type:   <u32>
->>   	Definition:   #; number of led strings attached;
->> -		      value from 1 to 3. default: 2
->> -		      This property is supported only for PM8941.
->> +		      value: For PM8941 from 1 to 3.
->> +			     For PMI8998 from 1 to 4.
-> 
-> We probably don't need this since we define 1 led node per output. 
-> And if you need to define
-> 
-> multiple strings per node then you use led-sources.
-> 
-> Then you will use fwnode_property_count_u32(child, "led-sources"); to
-> get the number of outputs
+On Tue, Oct 15, 2019 at 07:46:12AM +0000, Xiaowei Bao wrote:
 > 
 > 
-I have kept this property as is to have the backward compatibility with 
-pm8941-wled.
-The backward compatibility is broken if this property is removed.
+> > -----Original Message-----
+> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > Sent: 2019年9月25日 0:39
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
+> > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
+> > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h. Lian
+> > <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
+> > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
+> > Layerscape SoCs
+> > 
+> > On Mon, Sep 16, 2019 at 10:17:39AM +0800, Xiaowei Bao wrote:
+> > > This PCIe controller is based on the Mobiveil GPEX IP, it work in EP
+> > > mode if select this config opteration.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > >  MAINTAINERS                                        |   2 +
+> > >  drivers/pci/controller/mobiveil/Kconfig            |  17 ++-
+> > >  drivers/pci/controller/mobiveil/Makefile           |   1 +
+> > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 156
+> > > +++++++++++++++++++++
+> > >  4 files changed, 173 insertions(+), 3 deletions(-)  create mode
+> > > 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS index b997056..0858b54 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -12363,11 +12363,13 @@ F:
+> > 	drivers/pci/controller/dwc/*layerscape*
+> > >
+> > >  PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
+> > >  M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > +M:	Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >  L:	linux-pci@vger.kernel.org
+> > >  L:	linux-arm-kernel@lists.infradead.org
+> > >  S:	Maintained
+> > >  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> > >  F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
+> > > +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > >
+> > >  PCI DRIVER FOR GENERIC OF HOSTS
+> > >  M:	Will Deacon <will@kernel.org>
+> > > diff --git a/drivers/pci/controller/mobiveil/Kconfig
+> > > b/drivers/pci/controller/mobiveil/Kconfig
+> > > index 2054950..0696b6e 100644
+> > > --- a/drivers/pci/controller/mobiveil/Kconfig
+> > > +++ b/drivers/pci/controller/mobiveil/Kconfig
+> > > @@ -27,13 +27,24 @@ config PCIE_MOBIVEIL_PLAT
+> > >  	  for address translation and it is a PCIe Gen4 IP.
+> > >
+> > >  config PCIE_LAYERSCAPE_GEN4
+> > > -	bool "Freescale Layerscape PCIe Gen4 controller"
+> > > +	bool "Freescale Layerscpe PCIe Gen4 controller in RC mode"
+> > >  	depends on PCI
+> > >  	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
+> > >  	depends on PCI_MSI_IRQ_DOMAIN
+> > >  	select PCIE_MOBIVEIL_HOST
+> > >  	help
+> > >  	  Say Y here if you want PCIe Gen4 controller support on
+> > > -	  Layerscape SoCs. The PCIe controller can work in RC or
+> > > -	  EP mode according to RCW[HOST_AGT_PEX] setting.
+> > > +	  Layerscape SoCs. And the PCIe controller work in RC mode
+> > > +	  by setting the RCW[HOST_AGT_PEX] to 0.
+> > > +
+> > > +config PCIE_LAYERSCAPE_GEN4_EP
+> > > +	bool "Freescale Layerscpe PCIe Gen4 controller in EP mode"
+> > > +	depends on PCI
+> > > +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
+> > > +	depends on PCI_ENDPOINT
+> > > +	select PCIE_MOBIVEIL_EP
+> > > +	help
+> > > +	  Say Y here if you want PCIe Gen4 controller support on
+> > > +	  Layerscape SoCs. And the PCIe controller work in EP mode
+> > > +	  by setting the RCW[HOST_AGT_PEX] to 1.
+> > >  endmenu
+> > > diff --git a/drivers/pci/controller/mobiveil/Makefile
+> > > b/drivers/pci/controller/mobiveil/Makefile
+> > > index 686d41f..6f54856 100644
+> > > --- a/drivers/pci/controller/mobiveil/Makefile
+> > > +++ b/drivers/pci/controller/mobiveil/Makefile
+> > > @@ -4,3 +4,4 @@ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) +=
+> > > pcie-mobiveil-host.o
+> > >  obj-$(CONFIG_PCIE_MOBIVEIL_EP) += pcie-mobiveil-ep.o
+> > >  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
+> > >  obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
+> > > +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4_EP) +=
+> > pcie-layerscape-gen4-ep.o
+> > > diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > new file mode 100644
+> > > index 0000000..7bfec51
+> > > --- /dev/null
+> > > +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > @@ -0,0 +1,156 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * PCIe controller EP driver for Freescale Layerscape SoCs
+> > > + *
+> > > + * Copyright (C) 2019 NXP Semiconductor.
+> > > + *
+> > > + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>  */
+> > > +
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/init.h>
+> > > +#include <linux/of_pci.h>
+> > > +#include <linux/of_platform.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/pci.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/resource.h>
+> > > +
+> > > +#include "pcie-mobiveil.h"
+> > > +
+> > > +#define PCIE_LX2_BAR_NUM	4
+> > > +
+> > > +#define to_ls_pcie_g4_ep(x)	dev_get_drvdata((x)->dev)
+> > > +
+> > > +struct ls_pcie_g4_ep {
+> > > +	struct mobiveil_pcie		*mv_pci;
+> > > +};
+> > > +
+> > > +static const struct of_device_id ls_pcie_g4_ep_of_match[] = {
+> > > +	{ .compatible = "fsl,lx2160a-pcie-ep",},
+> > > +	{ },
+> > > +};
+> > > +
+> > > +static const struct pci_epc_features ls_pcie_g4_epc_features = {
+> > > +	.linkup_notifier = false,
+> > > +	.msi_capable = true,
+> > > +	.msix_capable = true,
+> > > +	.reserved_bar = (1 << BAR_4) | (1 << BAR_5),
+> > 
+> > 			BIT(BAR_4) | BIT(BAR_5) ?
+> 
+> I think use .reserved_bar = (1 << BAR_4) | (1 << BAR_5), is better, because BAR_4 
+> is not a bit of register.
 
->> +
->> +- interrupts
->> +	Usage:        optional
->> +	Value type:   <prop encoded array>
->> +	Definition:   Interrupts associated with WLED. This should be
->> +		      "short" and "ovp" interrupts. Interrupts can be
->> +		      specified as per the encoding listed under
->> +		      Documentation/devicetree/bindings/spmi/
->> +		      qcom,spmi-pmic-arb.txt.
->> +
->> +- interrupt-names
->> +	Usage:        optional
->> +	Value type:   <string>
->> +	Definition:   Interrupt names associated with the interrupts.
->> +		      Must be "short" and "ovp". The short circuit detection
->> +		      is not supported for PM8941.
->> +
->> +- qcom,enabled-strings
->> +	Usage:        optional
->> +	Value tyoe:   <u32 array>
->> +	Definition:   Array of the WLED strings numbered from 0 to 3. Each
->> +		      string of leds are operated individually. Specify the
->> +		      list of strings used by the device. Any combination of
->> +		      led strings can be used.
-> 
-> We usually use the reg property per led node to denote what output is
-> associated with which
-> 
-> property node.  And if you want to define multiple outputs per node
-> then you need to use
-> 
-> led-sources
-> 
-> See leds-lm3697.txt for an example
-> 
-> Dan
-As per the Qualcomm hardware recommendation , all the strings (leds) 
-properties like
-OVP, FSC and brightness etc .. should have the same values. That's why 
-all the strings (leds)
-and it's properties are mentioned in a single node.
+Why is whether it's a register or not relevent?
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
