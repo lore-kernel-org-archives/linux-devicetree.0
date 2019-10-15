@@ -1,170 +1,50 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
- Layerscape SoCs
-Date: Tue, 15 Oct 2019 10:07:56 +0100
-Message-ID: <20191015090756.GS25745@shell.armlinux.org.uk>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190916021742.22844-4-xiaowei.bao@nxp.com>
- <20190924163850.GY25745@shell.armlinux.org.uk>
- <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
+Subject: [PATCH] arm64: dts: mt8183: add dpi node to mt8183
+Date: Tue, 15 Oct 2019 17:12:29 +0800
+Message-ID: <20191015091229.91814-1-pihsun@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, Jitao Shi <jitao.shi@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 07:46:12AM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Sent: 2019年9月25日 0:39
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
-> > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
-> > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h. Lian
-> > <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
-> > Layerscape SoCs
-> > 
-> > On Mon, Sep 16, 2019 at 10:17:39AM +0800, Xiaowei Bao wrote:
-> > > This PCIe controller is based on the Mobiveil GPEX IP, it work in EP
-> > > mode if select this config opteration.
-> > >
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > >  MAINTAINERS                                        |   2 +
-> > >  drivers/pci/controller/mobiveil/Kconfig            |  17 ++-
-> > >  drivers/pci/controller/mobiveil/Makefile           |   1 +
-> > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 156
-> > > +++++++++++++++++++++
-> > >  4 files changed, 173 insertions(+), 3 deletions(-)  create mode
-> > > 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS index b997056..0858b54 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -12363,11 +12363,13 @@ F:
-> > 	drivers/pci/controller/dwc/*layerscape*
-> > >
-> > >  PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
-> > >  M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > +M:	Xiaowei Bao <xiaowei.bao@nxp.com>
-> > >  L:	linux-pci@vger.kernel.org
-> > >  L:	linux-arm-kernel@lists.infradead.org
-> > >  S:	Maintained
-> > >  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> > >  F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
-> > > +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > >
-> > >  PCI DRIVER FOR GENERIC OF HOSTS
-> > >  M:	Will Deacon <will@kernel.org>
-> > > diff --git a/drivers/pci/controller/mobiveil/Kconfig
-> > > b/drivers/pci/controller/mobiveil/Kconfig
-> > > index 2054950..0696b6e 100644
-> > > --- a/drivers/pci/controller/mobiveil/Kconfig
-> > > +++ b/drivers/pci/controller/mobiveil/Kconfig
-> > > @@ -27,13 +27,24 @@ config PCIE_MOBIVEIL_PLAT
-> > >  	  for address translation and it is a PCIe Gen4 IP.
-> > >
-> > >  config PCIE_LAYERSCAPE_GEN4
-> > > -	bool "Freescale Layerscape PCIe Gen4 controller"
-> > > +	bool "Freescale Layerscpe PCIe Gen4 controller in RC mode"
-> > >  	depends on PCI
-> > >  	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > >  	depends on PCI_MSI_IRQ_DOMAIN
-> > >  	select PCIE_MOBIVEIL_HOST
-> > >  	help
-> > >  	  Say Y here if you want PCIe Gen4 controller support on
-> > > -	  Layerscape SoCs. The PCIe controller can work in RC or
-> > > -	  EP mode according to RCW[HOST_AGT_PEX] setting.
-> > > +	  Layerscape SoCs. And the PCIe controller work in RC mode
-> > > +	  by setting the RCW[HOST_AGT_PEX] to 0.
-> > > +
-> > > +config PCIE_LAYERSCAPE_GEN4_EP
-> > > +	bool "Freescale Layerscpe PCIe Gen4 controller in EP mode"
-> > > +	depends on PCI
-> > > +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > > +	depends on PCI_ENDPOINT
-> > > +	select PCIE_MOBIVEIL_EP
-> > > +	help
-> > > +	  Say Y here if you want PCIe Gen4 controller support on
-> > > +	  Layerscape SoCs. And the PCIe controller work in EP mode
-> > > +	  by setting the RCW[HOST_AGT_PEX] to 1.
-> > >  endmenu
-> > > diff --git a/drivers/pci/controller/mobiveil/Makefile
-> > > b/drivers/pci/controller/mobiveil/Makefile
-> > > index 686d41f..6f54856 100644
-> > > --- a/drivers/pci/controller/mobiveil/Makefile
-> > > +++ b/drivers/pci/controller/mobiveil/Makefile
-> > > @@ -4,3 +4,4 @@ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) +=
-> > > pcie-mobiveil-host.o
-> > >  obj-$(CONFIG_PCIE_MOBIVEIL_EP) += pcie-mobiveil-ep.o
-> > >  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
-> > >  obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
-> > > +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4_EP) +=
-> > pcie-layerscape-gen4-ep.o
-> > > diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > new file mode 100644
-> > > index 0000000..7bfec51
-> > > --- /dev/null
-> > > +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > @@ -0,0 +1,156 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * PCIe controller EP driver for Freescale Layerscape SoCs
-> > > + *
-> > > + * Copyright (C) 2019 NXP Semiconductor.
-> > > + *
-> > > + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>  */
-> > > +
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/of_pci.h>
-> > > +#include <linux/of_platform.h>
-> > > +#include <linux/of_address.h>
-> > > +#include <linux/pci.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/resource.h>
-> > > +
-> > > +#include "pcie-mobiveil.h"
-> > > +
-> > > +#define PCIE_LX2_BAR_NUM	4
-> > > +
-> > > +#define to_ls_pcie_g4_ep(x)	dev_get_drvdata((x)->dev)
-> > > +
-> > > +struct ls_pcie_g4_ep {
-> > > +	struct mobiveil_pcie		*mv_pci;
-> > > +};
-> > > +
-> > > +static const struct of_device_id ls_pcie_g4_ep_of_match[] = {
-> > > +	{ .compatible = "fsl,lx2160a-pcie-ep",},
-> > > +	{ },
-> > > +};
-> > > +
-> > > +static const struct pci_epc_features ls_pcie_g4_epc_features = {
-> > > +	.linkup_notifier = false,
-> > > +	.msi_capable = true,
-> > > +	.msix_capable = true,
-> > > +	.reserved_bar = (1 << BAR_4) | (1 << BAR_5),
-> > 
-> > 			BIT(BAR_4) | BIT(BAR_5) ?
-> 
-> I think use .reserved_bar = (1 << BAR_4) | (1 << BAR_5), is better, because BAR_4 
-> is not a bit of register.
+Add dpi node to mt8183.
 
-Why is whether it's a register or not relevent?
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+---
+This depends on https://patchwork.kernel.org/cover/11081047/ (for the
+dpi driver on mt8183) and https://patchwork.kernel.org/cover/11118371/
+(for the scpsys node).
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 6cbbd7726d36..42c3a6b3cfc7 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -642,6 +642,17 @@ mmsys: syscon@14000000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
++		dpi0: dpi@14015000 {
++			compatible = "mediatek,mt8183-dpi";
++			reg = <0 0x14015000 0 0x1000>;
++			interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DPI_IF>,
++				 <&mmsys CLK_MM_DPI_MM>,
++				 <&apmixedsys CLK_APMIXED_TVDPLL>;
++			clock-names = "pixel", "engine", "pll";
++		};
++
+ 		smi_common: smi@14019000 {
+ 			compatible = "mediatek,mt8183-smi-common", "syscon";
+ 			reg = <0 0x14019000 0 0x1000>;
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.23.0.700.g56cf767bdb-goog
