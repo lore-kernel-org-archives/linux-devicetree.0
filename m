@@ -1,57 +1,68 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 0/7] add support for clocksource/clockevent DT selection
-Date: Tue, 15 Oct 2019 09:23:35 +0000
-Message-ID: <7071b6fa-f7ed-c879-4a43-44100dbe6121@microchip.com>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
- <c3a68a08-d134-cd28-c8af-f757628e07f1@linaro.org>
- <72edc5fd-df05-cba5-5aa7-39da1709415b@microchip.com>
- <620a19d5-73b8-709d-9eec-49274ac23e51@microchip.com>
- <187d7020-fbe9-7984-2358-8a70faef019f@microchip.com>
- <14df6e5d-19ef-4ebc-fd11-9953bc3fc44e@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: spi: sh-msiof: Add r8a774b1 support" to the spi tree
+Date: Tue, 15 Oct 2019 10:26:57 +0100 (BST)
+Message-ID: <20191015092657.CF9B62742905@ypsilon.sirena.org.uk>
+References: <1570178133-21532-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <14df6e5d-19ef-4ebc-fd11-9953bc3fc44e@linaro.org>
-Content-Language: en-US
-Content-ID: <BFEA965B7AA9B54388AC67448362747B@namprd11.prod.outlook.com>
+In-Reply-To: <1570178133-21532-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, nsekhar@ti.com, bgolaszewski@baylibre.com, monstr@monstr.eu, john@phrozen.org, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, lftan@altera.com, tglx@linutronix.de, vgupta@synopsys.com, marc.zyngier@arm.com, patrice.chotard@st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, eric@anholt.net, wahrenst@gmx.net, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org, shc_work@mail.ru, kgene@kernel.org, krzk@kernel.org, ysato@users.sourceforge.jp, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org, linux-snps-arc@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-rpi-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp, linux-amlogic@lists.infradead.org, openbmc@lists.ozlabs.org, linux-oxnas@groups.io, linux-arm-msm@vger.kernel.org, linux-unisoc@lists.infradead.org, linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Bjorn Helgaas <bhelgaas@google.com>, Chris Paterson <Chris.Paterson2@renesas.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Guenter Roeck <linux@roeck-us.net>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Wim Van Sebroeck <wim@linux-watchdog.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQpPbiAxMy4xMC4yMDE5IDIxOjE2LCBEYW5pZWwgTGV6Y2FubyB3cm90ZToN
-Cj4gSGkgQ2xhdWRpdSwNCj4gDQo+IHNvcnJ5IGZvciB0aGUgZGVsYXksIEkgd2FzIE9vTyBhZ2Fp
-bi4NCg0KTm8gcHJvYmxlbSwgdGhhbmsgeW91IGZvciB5b3VyIHJlcGx5Lg0KDQo+IA0KPiBPbiAw
-My8xMC8yMDE5IDEyOjQzLCBDbGF1ZGl1LkJlem5lYUBtaWNyb2NoaXAuY29tIHdyb3RlOg0KPj4N
-Cj4+DQo+PiBPbiAwMi4xMC4yMDE5IDE2OjM1LCBDbGF1ZGl1IEJlem5lYSB3cm90ZToNCj4+PiBI
-aSBEYW5pZWwsDQo+Pj4NCj4+PiBUYWtpbmcgaW50byBhY2NvdW50IHRoYXQgUm9iIGRvZXNuJ3Qg
-YWdyZWUgd2l0aCB0aGUgc29sdXRpb24gcHJvcG9zZWQgaW4NCj4+PiB0aGlzIHNlcmllcyBkbyB5
-b3UgdGhpbmsgdGhlcmUgaXMgYSBjaGFuY2UgdG8gbWVyZ2UgdGhpcyBkcml2ZXIgYXMgaXM/DQo+
-Pg0KPj4gU29ycnksIEkgd2FzIHRhbGtpbmcgaGVyZSBhYm91dCB0aGUgZHJpdmVyIGF0IFsxXS4N
-Cj4+DQo+PiBbMV0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8xNTUyNTgwNzcyLTg0OTkt
-MS1naXQtc2VuZC1lbWFpbC1jbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tLw0KPiANCj4gRGFt
-biEgNyBtb250aHMgb2xkLiBJJ20gdHJ1bHkgc29ycnkgd2UgZG8gbm90IGhhdmUgcHJvZ3Jlc3Mg
-b24gdGhpcy4gTGV0DQo+IGZpeCB0aGlzIG9uY2UgYW5kIGZvciBhbGwuDQo+IA0KPiBJbiB0aGUg
-ZHJpdmVyOg0KPiANCj4gcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImNsb2NrLWZy
-ZXF1ZW5jeSIsICZmcmVxKTsNCj4gDQo+IEl0IGlzIHVuY2xlYXIgaG93IGlzIHVzZWQgdGhpcyBw
-cm9wZXJ0eS4gSXQgc2hvdWxkIGJlIHRoZSBmcmVxdWVuY3kNCj4gZHJpdmluZyB0aGUgdGltZXIs
-IGJ1dCBjYW4gd2UgZ2V0IGZyb20gYSBjbGtfZ2V0X3JhdGUoKSBhbmQgYSBmaXhlZCBkaXZpZGVy
-Pw0KPiANCg0KVGhlIHRpbWVyIGNvdWxkIGJlIGRyaXZlbiBieSAyIGNsb2NrIHNvdXJjZXMsIG9u
-ZSBpcyBjYWxsZWQgcGVyaXBoZXJhbA0KY2xvY2sgYW5kIGlzIHRoZSBjbG9jayB0aGF0IGlzIGFs
-c28gZHJpdmluZyB0aGUgSVAgaXRzZWxmLCBhbmQgb25lIGlzDQpjYWxsZWQgZ2VuZXJpYyBjbG9j
-ayAodGhpcyBjb3VsZCBkcml2ZSBvbmx5IHRoZSB0aW1lciBpdHNlbGYpIGFuZCBzaG91bGQgYmUN
-CmF0IGxlYXN0IDMgdGltZXMgbG93ZXIgdGhhbiB0aGUgcGVyaXBoZXJhbCBjbG9jay4NCg0KV2Ug
-Y291bGQgY2hvb3NlIHRoZSBjbG9jayBkcml2aW5nIHRoZSB0aW1lciBieSBzZXR0aW5nIHRoZSBQ
-SVQ2NEJfTVIuU0dDTEsNCmJpdCAoMCAtIG1lYW5zIHRoZSB0aW1lciBpdHNlbGYgaXMgZHJpdmVu
-IGJ5IHBlcmlwaGVyYWwgY2xvY2ssIDEgLSBtZWFucw0KdGhlIHRpbWVyIGlzIGRyaXZlbiBieSB0
-aGUgZ2VuZXJpYyBjbG9jaykuDQoNClRoZSB0aW1lciBjbG9jayBzb3VyY2UgY291bGQgYmUgZGl2
-aWRlZCBieSBNUi5QUkVTICsgMS4NCg0KU28sIEkgdXNlZCB0aGUgY2xvY2stZnJlcXVlbmN5IERU
-IGJpbmRpbmcgdG8gbGV0IHVzZXIgY2hvb3NlIHRoZSB0aW1lcidzDQpmcmVxdWVuY3kuIEJhc2Vk
-IG9uIHRoZSB2YWx1ZSBwcm92aWRlZCB2aWEgdGhpcyBEVCBiaW5kaW5nIHRoZSBiZXN0IGNsb2Nr
-DQpzb3VyY2UgYW5kIHByZXNjYWxlciBpcyBjaG9zZW4gdmlhIG1jaHBfcGl0NjRiX3ByZXNfcHJl
-cGFyZSgpIGZ1bmN0aW9uLg0KDQpBcyB0aGUgZGF0YXNoZWV0IGZvciB0aGUgcHJvZHVjdCB0aGF0
-IGlzIHVzaW5nIHRoaXMgSVAgaXMgb3BlbiBub3csIEknbQ0KaW5zZXJ0aW5nIGhlcmUgYSBsaW5r
-IHRvIGl0IFsxXS4NCg0KVGhhbmsgeW91LA0KQ2xhdWRpdSBCZXpuZWENCg0KWzFdDQpodHRwOi8v
-d3cxLm1pY3JvY2hpcC5jb20vZG93bmxvYWRzL2VuL0RldmljZURvYy9TQU05WDYwLURhdGEtU2hl
-ZXQtRFM2MDAwMTU3OUEucGRmDQoNCj4gDQo=
+The patch
+
+   dt-bindings: spi: sh-msiof: Add r8a774b1 support
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 97f41c68b83ea5216dbf3ac51fd86b0fbd399a97 Mon Sep 17 00:00:00 2001
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Date: Fri, 4 Oct 2019 09:35:28 +0100
+Subject: [PATCH] dt-bindings: spi: sh-msiof: Add r8a774b1 support
+
+Document RZ/G2N (R8A774B1) SoC bindings.
+
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/1570178133-21532-3-git-send-email-fabrizio.castro@bp.renesas.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml b/Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml
+index 4afaa48c1666..b6c1dd2a9c5e 100644
+--- a/Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml
++++ b/Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml
+@@ -35,6 +35,7 @@ properties:
+       - items:
+           - enum:
+               - renesas,msiof-r8a774a1      # RZ/G2M
++              - renesas,msiof-r8a774b1      # RZ/G2N
+               - renesas,msiof-r8a774c0      # RZ/G2E
+               - renesas,msiof-r8a7795       # R-Car H3
+               - renesas,msiof-r8a7796       # R-Car M3-W
+-- 
+2.20.1
