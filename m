@@ -1,60 +1,30 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/3 v2] drm/panel: Add DT bindings for Sony ACX424AKP
-Date: Tue, 15 Oct 2019 10:28:10 +0200
-Message-ID: <20191015082811.29497-2-linus.walleij@linaro.org>
-References: <20191015082811.29497-1-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20191015082811.29497-1-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org
+From: Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH v3 0/2] pinctrl: rockchip: support rk3308 SoC
+Date: Tue, 15 Oct 2019 16:36:48 +0800
+Message-ID: <20191015083650.7337-1-jay.xu@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Jianqun Xu <jay.xu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgU29ueSBBQ1g0MjRBS1AgcGFu
-ZWwuCkxldCdzIHVzZSBZQU1MLgoKQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnClNpZ25l
-ZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KLS0tCkNo
-YW5nZUxvZyB2MS0+djI6Ci0gU3VnZ2VzdCBhIHN0YW5kLWFsb25lIFlBTUwgYmluZGluZ3MgZmls
-ZSBmb3IgRFNJIHBhbmVscyBpbgogIGEgc2VwYXJhdGUgcGF0Y2gsIGFuZCB1c2UgdGhhdCB0byBy
-ZWZlcmVuY2UgdGhlCiAgYm9vbGVhbiAiZW5mb3JjZS12aWRlby1tb2RlIiBhdHRyaWJ1dGUgZm9y
-IERTSSBwYW5lbHMKLS0tCiAuLi4vZGlzcGxheS9wYW5lbC9zb255LGFjeDQyNGFrcC55YW1sICAg
-ICAgICAgfCA1MCArKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0
-aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsL3NvbnksYWN4NDI0YWtwLnlhbWwKCmRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zb255LGFjeDQyNGFr
-cC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
-c29ueSxhY3g0MjRha3AueWFtbApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAw
-MDAuLjg0NDY2NWIwYzk1MwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NvbnksYWN4NDI0YWtwLnlhbWwKQEAgLTAsMCAr
-MSw1MCBAQAorIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0Qt
-Mi1DbGF1c2UpCislWUFNTCAxLjIKKy0tLQorJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2No
-ZW1hcy9kaXNwbGF5L3BhbmVsL3NvbnksYWN4NDI0YWtwLnlhbWwjCiskc2NoZW1hOiBodHRwOi8v
-ZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKKwordGl0bGU6IFNvbnkgQUNY
-NDI0QUtQIDQiIDQ4MHg4NjQgQU1PTEVEIHBhbmVsCisKK21haW50YWluZXJzOgorICAtIExpbnVz
-IFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KKworYWxsT2Y6CisgIC0gJHJlZjog
-cGFuZWwtY29tbW9uLnlhbWwjCisgIC0gJHJlZjogcGFuZWwtZHNpLWNvbW1vbi55YW1sIworCitw
-cm9wZXJ0aWVzOgorICBjb21wYXRpYmxlOgorICAgIGNvbnN0OiBzb255LGFjeDQyNGFrcAorICBy
-ZWc6IHRydWUKKyAgcG9ydDogdHJ1ZQorICByZXNldC1ncGlvczogdHJ1ZQorICB2ZGRpLXN1cHBs
-eToKKyAgICAgZGVzY3JpcHRpb246IHJlZ3VsYXRvciB0aGF0IHN1cHBsaWVzIHRoZSB2ZGRpIHZv
-bHRhZ2UKKyAgZW5mb3JjZS12aWRlby1tb2RlOiB0cnVlCisKK3JlcXVpcmVkOgorICAtIGNvbXBh
-dGlibGUKKyAgLSByZWcKKyAgLSBwb3J0CisgIC0gcmVzZXQtZ3Bpb3MKKyAgLSBwb3dlci1zdXBw
-bHkKKworYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlCisKK2V4YW1wbGVzOgorICAtIHwKKyAg
-ICBwYW5lbEAwIHsKKyAgICAgICAgY29tcGF0aWJsZSA9ICJzb255LGFjeDQyNGFrcCI7CisgICAg
-ICAgIHJlZyA9IDwwPjsKKyAgICAgICAgdmRkaS1zdXBwbHkgPSA8JmZvbz47CisgICAgICAgIHJl
-c2V0LWdwaW9zID0gPCZmb29fZ3BpbyAwIEdQSU9fQUNUSVZFX0xPVz47CisKKyAgICAgICAgcG9y
-dCB7CisgICAgICAgICAgICBwYW5lbF9pbjogZW5kcG9pbnQgeworICAgICAgICAgICAgICAgIHJl
-bW90ZS1lbmRwb2ludCA9IDwmZHNpX291dD47CisgICAgICAgICAgICB9OworICAgICAgICB9Owor
-ICAgIH07CisKKy4uLgpcIE5vIG5ld2xpbmUgYXQgZW5kIG9mIGZpbGUKLS0gCjIuMjEuMAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Add support for rk3308 SoC from rockchip.
+
+Jianqun Xu (2):
+  dt-bindings: pinctrl: rockchip: add rk3308 SoC support
+  pinctrl: rockchip: add rk3308 SoC support
+
+ .../bindings/pinctrl/rockchip,pinctrl.txt     |   1 +
+ drivers/pinctrl/pinctrl-rockchip.c            | 382 +++++++++++++++++-
+ 2 files changed, 382 insertions(+), 1 deletion(-)
+
+-- 
+changes since v2:
+- Add Acked-by: Rob Herring <robh@kernel.org>
+
+changes since v1:
+- Add type case for pull get/set
+- Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+
+2.17.1
