@@ -1,7 +1,7 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v2 5/6] arm64: dts: lx2160a: Add PCIe EP node
-Date: Tue, 15 Oct 2019 16:37:01 +0800
-Message-ID: <20191015083702.21792-6-xiaowei.bao@nxp.com>
+Subject: [PATCH v2 6/6] misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device support
+Date: Tue, 15 Oct 2019 16:37:02 +0800
+Message-ID: <20191015083702.21792-7-xiaowei.bao@nxp.com>
 References: <20191015083702.21792-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191015083702.21792-1-xiaowei.bao@nxp.com>
@@ -10,116 +10,35 @@ To: Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@
 Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the LX2160A PCIe EP node.
+Add the layerscape PCIE GEN4 EP device support in pci_endpoint_test driver.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
 v2: 
  - No change.
 
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 56 ++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ drivers/misc/pci_endpoint_test.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index f60e5ac..18330df 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -1005,6 +1005,15 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 6e208a0..8b145a7 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -65,6 +65,7 @@
+ #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
  
-+		pcie_ep@3400000 {
-+			compatible = "fsl,lx2160a-pcie-ep";
-+			reg = <0x00 0x03400000 0x0 0x00100000
-+			       0x80 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			apio-wins = <8>;
-+			status = "disabled";
-+		};
-+
- 		pcie@3500000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-@@ -1032,6 +1041,15 @@
- 			status = "disabled";
- 		};
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
++#define PCI_DEVICE_ID_LX2160A			0x8d80
  
-+		pcie_ep@3500000 {
-+			compatible = "fsl,lx2160a-pcie-ep";
-+			reg = <0x00 0x03500000 0x0 0x00100000
-+			       0x88 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			apio-wins = <8>;
-+			status = "disabled";
-+		};
-+
- 		pcie@3600000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-@@ -1059,6 +1077,16 @@
- 			status = "disabled";
- 		};
- 
-+		pcie_ep@3600000 {
-+			compatible = "fsl,lx2160a-pcie-ep";
-+			reg = <0x00 0x03600000 0x0 0x00100000
-+			       0x90 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			apio-wins = <256>;
-+			max-functions = /bits/ 8 <2>;
-+			status = "disabled";
-+		};
-+
- 		pcie@3700000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
-@@ -1086,6 +1114,15 @@
- 			status = "disabled";
- 		};
- 
-+		pcie_ep@3700000 {
-+			compatible = "fsl,lx2160a-pcie-ep";
-+			reg = <0x00 0x03700000 0x0 0x00100000
-+			       0x98 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			apio-wins = <8>;
-+			status = "disabled";
-+		};
-+
- 		pcie@3800000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03800000 0x0 0x00100000   /* controller registers */
-@@ -1113,6 +1150,16 @@
- 			status = "disabled";
- 		};
- 
-+		pcie_ep@3800000 {
-+			compatible = "fsl,lx2160a-pcie-ep";
-+			reg = <0x00 0x03800000 0x0 0x00100000
-+			       0xa0 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			apio-wins = <256>;
-+			max-functions = /bits/ 8 <2>;
-+			status = "disabled";
-+		};
-+
- 		pcie@3900000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03900000 0x0 0x00100000   /* controller registers */
-@@ -1140,5 +1187,14 @@
- 			status = "disabled";
- 		};
- 
-+		pcie_ep@3900000 {
-+			compatible = "fsl,lx2160a-pcie-ep";
-+			reg = <0x00 0x03900000 0x0 0x00100000
-+			       0xa8 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			apio-wins = <8>;
-+			status = "disabled";
-+		};
-+
- 	};
- };
+ #define is_am654_pci_dev(pdev)		\
+ 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
+@@ -793,6 +794,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_LX2160A) },
+ 	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+ 	  .driver_data = (kernel_ulong_t)&am654_data
 -- 
 2.9.5
