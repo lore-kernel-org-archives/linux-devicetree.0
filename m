@@ -1,201 +1,57 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
- Layerscape SoCs
-Date: Tue, 15 Oct 2019 10:18:49 +0100
-Message-ID: <20191015091849.GT25745@shell.armlinux.org.uk>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190916021742.22844-4-xiaowei.bao@nxp.com>
- <20190924163850.GY25745@shell.armlinux.org.uk>
- <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20191015090756.GS25745@shell.armlinux.org.uk>
- <AM5PR04MB3299919E5C4C8A764DB3A656F5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 0/7] add support for clocksource/clockevent DT selection
+Date: Tue, 15 Oct 2019 09:23:35 +0000
+Message-ID: <7071b6fa-f7ed-c879-4a43-44100dbe6121@microchip.com>
+References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+ <c3a68a08-d134-cd28-c8af-f757628e07f1@linaro.org>
+ <72edc5fd-df05-cba5-5aa7-39da1709415b@microchip.com>
+ <620a19d5-73b8-709d-9eec-49274ac23e51@microchip.com>
+ <187d7020-fbe9-7984-2358-8a70faef019f@microchip.com>
+ <14df6e5d-19ef-4ebc-fd11-9953bc3fc44e@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM5PR04MB3299919E5C4C8A764DB3A656F5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+In-Reply-To: <14df6e5d-19ef-4ebc-fd11-9953bc3fc44e@linaro.org>
+Content-Language: en-US
+Content-ID: <BFEA965B7AA9B54388AC67448362747B@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, nsekhar@ti.com, bgolaszewski@baylibre.com, monstr@monstr.eu, john@phrozen.org, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, lftan@altera.com, tglx@linutronix.de, vgupta@synopsys.com, marc.zyngier@arm.com, patrice.chotard@st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, eric@anholt.net, wahrenst@gmx.net, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org, shc_work@mail.ru, kgene@kernel.org, krzk@kernel.org, ysato@users.sourceforge.jp, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org, linux-snps-arc@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-rpi-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp, linux-amlogic@lists.infradead.org, openbmc@lists.ozlabs.org, linux-oxnas@groups.io, linux-arm-msm@vger.kernel.org, linux-unisoc@lists.infradead.org, linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:14:00AM +0000, Xiaowei Bao wrote:
-> > -----Original Message-----
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Sent: 2019年10月15日 17:08
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
-> > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
-> > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h. Lian
-> > <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
-> > Layerscape SoCs
-> > 
-> > On Tue, Oct 15, 2019 at 07:46:12AM +0000, Xiaowei Bao wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > > > Sent: 2019年9月25日 0:39
-> > > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
-> > > > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
-> > > > robh+Li
-> > > > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
-> > > > Lian <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
-> > > > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
-> > > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > > > linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for
-> > > > NXP Layerscape SoCs
-> > > >
-> > > > On Mon, Sep 16, 2019 at 10:17:39AM +0800, Xiaowei Bao wrote:
-> > > > > This PCIe controller is based on the Mobiveil GPEX IP, it work in
-> > > > > EP mode if select this config opteration.
-> > > > >
-> > > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > > ---
-> > > > >  MAINTAINERS                                        |   2
-> > +
-> > > > >  drivers/pci/controller/mobiveil/Kconfig            |  17 ++-
-> > > > >  drivers/pci/controller/mobiveil/Makefile           |   1 +
-> > > > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 156
-> > > > > +++++++++++++++++++++
-> > > > >  4 files changed, 173 insertions(+), 3 deletions(-)  create mode
-> > > > > 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > >
-> > > > > diff --git a/MAINTAINERS b/MAINTAINERS index b997056..0858b54
-> > > > > 100644
-> > > > > --- a/MAINTAINERS
-> > > > > +++ b/MAINTAINERS
-> > > > > @@ -12363,11 +12363,13 @@ F:
-> > > > 	drivers/pci/controller/dwc/*layerscape*
-> > > > >
-> > > > >  PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
-> > > > >  M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > > +M:	Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > >  L:	linux-pci@vger.kernel.org
-> > > > >  L:	linux-arm-kernel@lists.infradead.org
-> > > > >  S:	Maintained
-> > > > >  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> > > > >  F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
-> > > > > +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > >
-> > > > >  PCI DRIVER FOR GENERIC OF HOSTS
-> > > > >  M:	Will Deacon <will@kernel.org>
-> > > > > diff --git a/drivers/pci/controller/mobiveil/Kconfig
-> > > > > b/drivers/pci/controller/mobiveil/Kconfig
-> > > > > index 2054950..0696b6e 100644
-> > > > > --- a/drivers/pci/controller/mobiveil/Kconfig
-> > > > > +++ b/drivers/pci/controller/mobiveil/Kconfig
-> > > > > @@ -27,13 +27,24 @@ config PCIE_MOBIVEIL_PLAT
-> > > > >  	  for address translation and it is a PCIe Gen4 IP.
-> > > > >
-> > > > >  config PCIE_LAYERSCAPE_GEN4
-> > > > > -	bool "Freescale Layerscape PCIe Gen4 controller"
-> > > > > +	bool "Freescale Layerscpe PCIe Gen4 controller in RC mode"
-> > > > >  	depends on PCI
-> > > > >  	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > > > >  	depends on PCI_MSI_IRQ_DOMAIN
-> > > > >  	select PCIE_MOBIVEIL_HOST
-> > > > >  	help
-> > > > >  	  Say Y here if you want PCIe Gen4 controller support on
-> > > > > -	  Layerscape SoCs. The PCIe controller can work in RC or
-> > > > > -	  EP mode according to RCW[HOST_AGT_PEX] setting.
-> > > > > +	  Layerscape SoCs. And the PCIe controller work in RC mode
-> > > > > +	  by setting the RCW[HOST_AGT_PEX] to 0.
-> > > > > +
-> > > > > +config PCIE_LAYERSCAPE_GEN4_EP
-> > > > > +	bool "Freescale Layerscpe PCIe Gen4 controller in EP mode"
-> > > > > +	depends on PCI
-> > > > > +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > > > > +	depends on PCI_ENDPOINT
-> > > > > +	select PCIE_MOBIVEIL_EP
-> > > > > +	help
-> > > > > +	  Say Y here if you want PCIe Gen4 controller support on
-> > > > > +	  Layerscape SoCs. And the PCIe controller work in EP mode
-> > > > > +	  by setting the RCW[HOST_AGT_PEX] to 1.
-> > > > >  endmenu
-> > > > > diff --git a/drivers/pci/controller/mobiveil/Makefile
-> > > > > b/drivers/pci/controller/mobiveil/Makefile
-> > > > > index 686d41f..6f54856 100644
-> > > > > --- a/drivers/pci/controller/mobiveil/Makefile
-> > > > > +++ b/drivers/pci/controller/mobiveil/Makefile
-> > > > > @@ -4,3 +4,4 @@ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) +=
-> > > > > pcie-mobiveil-host.o
-> > > > >  obj-$(CONFIG_PCIE_MOBIVEIL_EP) += pcie-mobiveil-ep.o
-> > > > >  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
-> > > > >  obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
-> > > > > +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4_EP) +=
-> > > > pcie-layerscape-gen4-ep.o
-> > > > > diff --git
-> > > > > a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > > b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > > new file mode 100644
-> > > > > index 0000000..7bfec51
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > > @@ -0,0 +1,156 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +/*
-> > > > > + * PCIe controller EP driver for Freescale Layerscape SoCs
-> > > > > + *
-> > > > > + * Copyright (C) 2019 NXP Semiconductor.
-> > > > > + *
-> > > > > + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>  */
-> > > > > +
-> > > > > +#include <linux/kernel.h>
-> > > > > +#include <linux/init.h>
-> > > > > +#include <linux/of_pci.h>
-> > > > > +#include <linux/of_platform.h>
-> > > > > +#include <linux/of_address.h>
-> > > > > +#include <linux/pci.h>
-> > > > > +#include <linux/platform_device.h> #include <linux/resource.h>
-> > > > > +
-> > > > > +#include "pcie-mobiveil.h"
-> > > > > +
-> > > > > +#define PCIE_LX2_BAR_NUM	4
-> > > > > +
-> > > > > +#define to_ls_pcie_g4_ep(x)	dev_get_drvdata((x)->dev)
-> > > > > +
-> > > > > +struct ls_pcie_g4_ep {
-> > > > > +	struct mobiveil_pcie		*mv_pci;
-> > > > > +};
-> > > > > +
-> > > > > +static const struct of_device_id ls_pcie_g4_ep_of_match[] = {
-> > > > > +	{ .compatible = "fsl,lx2160a-pcie-ep",},
-> > > > > +	{ },
-> > > > > +};
-> > > > > +
-> > > > > +static const struct pci_epc_features ls_pcie_g4_epc_features = {
-> > > > > +	.linkup_notifier = false,
-> > > > > +	.msi_capable = true,
-> > > > > +	.msix_capable = true,
-> > > > > +	.reserved_bar = (1 << BAR_4) | (1 << BAR_5),
-> > > >
-> > > > 			BIT(BAR_4) | BIT(BAR_5) ?
-> > >
-> > > I think use .reserved_bar = (1 << BAR_4) | (1 << BAR_5), is better,
-> > > because BAR_4 is not a bit of register.
-> > 
-> > Why is whether it's a register or not relevent?
-> 
-> My understand is that the BIT is used to register, refer to other EP driver files,
-> it also use 1 << BAR_4 method.
-> 
-> [baoxw@titan controller]$ grep -r "reserved_bar" *
-> dwc/pci-keystone.c:     .reserved_bar = 1 << BAR_0 | 1 << BAR_1,
-> mobiveil/pcie-layerscape-gen4-ep.c:     .reserved_bar = (1 << BAR_4) | (1 << BAR_5),
-
-$ grep '\<BIT(' fs kernel lib mm net -r
-
-About 695 non-device driver instances at the very least seem to disagree.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+SGkgRGFuaWVsLA0KDQpPbiAxMy4xMC4yMDE5IDIxOjE2LCBEYW5pZWwgTGV6Y2FubyB3cm90ZToN
+Cj4gSGkgQ2xhdWRpdSwNCj4gDQo+IHNvcnJ5IGZvciB0aGUgZGVsYXksIEkgd2FzIE9vTyBhZ2Fp
+bi4NCg0KTm8gcHJvYmxlbSwgdGhhbmsgeW91IGZvciB5b3VyIHJlcGx5Lg0KDQo+IA0KPiBPbiAw
+My8xMC8yMDE5IDEyOjQzLCBDbGF1ZGl1LkJlem5lYUBtaWNyb2NoaXAuY29tIHdyb3RlOg0KPj4N
+Cj4+DQo+PiBPbiAwMi4xMC4yMDE5IDE2OjM1LCBDbGF1ZGl1IEJlem5lYSB3cm90ZToNCj4+PiBI
+aSBEYW5pZWwsDQo+Pj4NCj4+PiBUYWtpbmcgaW50byBhY2NvdW50IHRoYXQgUm9iIGRvZXNuJ3Qg
+YWdyZWUgd2l0aCB0aGUgc29sdXRpb24gcHJvcG9zZWQgaW4NCj4+PiB0aGlzIHNlcmllcyBkbyB5
+b3UgdGhpbmsgdGhlcmUgaXMgYSBjaGFuY2UgdG8gbWVyZ2UgdGhpcyBkcml2ZXIgYXMgaXM/DQo+
+Pg0KPj4gU29ycnksIEkgd2FzIHRhbGtpbmcgaGVyZSBhYm91dCB0aGUgZHJpdmVyIGF0IFsxXS4N
+Cj4+DQo+PiBbMV0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8xNTUyNTgwNzcyLTg0OTkt
+MS1naXQtc2VuZC1lbWFpbC1jbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tLw0KPiANCj4gRGFt
+biEgNyBtb250aHMgb2xkLiBJJ20gdHJ1bHkgc29ycnkgd2UgZG8gbm90IGhhdmUgcHJvZ3Jlc3Mg
+b24gdGhpcy4gTGV0DQo+IGZpeCB0aGlzIG9uY2UgYW5kIGZvciBhbGwuDQo+IA0KPiBJbiB0aGUg
+ZHJpdmVyOg0KPiANCj4gcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImNsb2NrLWZy
+ZXF1ZW5jeSIsICZmcmVxKTsNCj4gDQo+IEl0IGlzIHVuY2xlYXIgaG93IGlzIHVzZWQgdGhpcyBw
+cm9wZXJ0eS4gSXQgc2hvdWxkIGJlIHRoZSBmcmVxdWVuY3kNCj4gZHJpdmluZyB0aGUgdGltZXIs
+IGJ1dCBjYW4gd2UgZ2V0IGZyb20gYSBjbGtfZ2V0X3JhdGUoKSBhbmQgYSBmaXhlZCBkaXZpZGVy
+Pw0KPiANCg0KVGhlIHRpbWVyIGNvdWxkIGJlIGRyaXZlbiBieSAyIGNsb2NrIHNvdXJjZXMsIG9u
+ZSBpcyBjYWxsZWQgcGVyaXBoZXJhbA0KY2xvY2sgYW5kIGlzIHRoZSBjbG9jayB0aGF0IGlzIGFs
+c28gZHJpdmluZyB0aGUgSVAgaXRzZWxmLCBhbmQgb25lIGlzDQpjYWxsZWQgZ2VuZXJpYyBjbG9j
+ayAodGhpcyBjb3VsZCBkcml2ZSBvbmx5IHRoZSB0aW1lciBpdHNlbGYpIGFuZCBzaG91bGQgYmUN
+CmF0IGxlYXN0IDMgdGltZXMgbG93ZXIgdGhhbiB0aGUgcGVyaXBoZXJhbCBjbG9jay4NCg0KV2Ug
+Y291bGQgY2hvb3NlIHRoZSBjbG9jayBkcml2aW5nIHRoZSB0aW1lciBieSBzZXR0aW5nIHRoZSBQ
+SVQ2NEJfTVIuU0dDTEsNCmJpdCAoMCAtIG1lYW5zIHRoZSB0aW1lciBpdHNlbGYgaXMgZHJpdmVu
+IGJ5IHBlcmlwaGVyYWwgY2xvY2ssIDEgLSBtZWFucw0KdGhlIHRpbWVyIGlzIGRyaXZlbiBieSB0
+aGUgZ2VuZXJpYyBjbG9jaykuDQoNClRoZSB0aW1lciBjbG9jayBzb3VyY2UgY291bGQgYmUgZGl2
+aWRlZCBieSBNUi5QUkVTICsgMS4NCg0KU28sIEkgdXNlZCB0aGUgY2xvY2stZnJlcXVlbmN5IERU
+IGJpbmRpbmcgdG8gbGV0IHVzZXIgY2hvb3NlIHRoZSB0aW1lcidzDQpmcmVxdWVuY3kuIEJhc2Vk
+IG9uIHRoZSB2YWx1ZSBwcm92aWRlZCB2aWEgdGhpcyBEVCBiaW5kaW5nIHRoZSBiZXN0IGNsb2Nr
+DQpzb3VyY2UgYW5kIHByZXNjYWxlciBpcyBjaG9zZW4gdmlhIG1jaHBfcGl0NjRiX3ByZXNfcHJl
+cGFyZSgpIGZ1bmN0aW9uLg0KDQpBcyB0aGUgZGF0YXNoZWV0IGZvciB0aGUgcHJvZHVjdCB0aGF0
+IGlzIHVzaW5nIHRoaXMgSVAgaXMgb3BlbiBub3csIEknbQ0KaW5zZXJ0aW5nIGhlcmUgYSBsaW5r
+IHRvIGl0IFsxXS4NCg0KVGhhbmsgeW91LA0KQ2xhdWRpdSBCZXpuZWENCg0KWzFdDQpodHRwOi8v
+d3cxLm1pY3JvY2hpcC5jb20vZG93bmxvYWRzL2VuL0RldmljZURvYy9TQU05WDYwLURhdGEtU2hl
+ZXQtRFM2MDAwMTU3OUEucGRmDQoNCj4gDQo=
