@@ -1,499 +1,201 @@
-From: Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH v3 2/2] pinctrl: rockchip: add rk3308 SoC support
-Date: Tue, 15 Oct 2019 17:17:08 +0800
-Message-ID: <20191015091708.7934-3-jay.xu@rock-chips.com>
-References: <20191015091708.7934-1-jay.xu@rock-chips.com>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
+ Layerscape SoCs
+Date: Tue, 15 Oct 2019 10:18:49 +0100
+Message-ID: <20191015091849.GT25745@shell.armlinux.org.uk>
+References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+ <20190916021742.22844-4-xiaowei.bao@nxp.com>
+ <20190924163850.GY25745@shell.armlinux.org.uk>
+ <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20191015090756.GS25745@shell.armlinux.org.uk>
+ <AM5PR04MB3299919E5C4C8A764DB3A656F5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191015091708.7934-1-jay.xu@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <AM5PR04MB3299919E5C4C8A764DB3A656F5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Jianqun Xu <jay.xu@rock-chips.com>
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch do support pinctrl for RK3308 SoCs.
+On Tue, Oct 15, 2019 at 09:14:00AM +0000, Xiaowei Bao wrote:
+> > -----Original Message-----
+> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > Sent: 2019年10月15日 17:08
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
+> > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
+> > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h. Lian
+> > <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
+> > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
+> > Layerscape SoCs
+> > 
+> > On Tue, Oct 15, 2019 at 07:46:12AM +0000, Xiaowei Bao wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > > > Sent: 2019年9月25日 0:39
+> > > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
+> > > > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
+> > > > robh+Li
+> > > > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
+> > > > Lian <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
+> > > > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
+> > > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > > > linux-kernel@vger.kernel.org
+> > > > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for
+> > > > NXP Layerscape SoCs
+> > > >
+> > > > On Mon, Sep 16, 2019 at 10:17:39AM +0800, Xiaowei Bao wrote:
+> > > > > This PCIe controller is based on the Mobiveil GPEX IP, it work in
+> > > > > EP mode if select this config opteration.
+> > > > >
+> > > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > > ---
+> > > > >  MAINTAINERS                                        |   2
+> > +
+> > > > >  drivers/pci/controller/mobiveil/Kconfig            |  17 ++-
+> > > > >  drivers/pci/controller/mobiveil/Makefile           |   1 +
+> > > > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 156
+> > > > > +++++++++++++++++++++
+> > > > >  4 files changed, 173 insertions(+), 3 deletions(-)  create mode
+> > > > > 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > > >
+> > > > > diff --git a/MAINTAINERS b/MAINTAINERS index b997056..0858b54
+> > > > > 100644
+> > > > > --- a/MAINTAINERS
+> > > > > +++ b/MAINTAINERS
+> > > > > @@ -12363,11 +12363,13 @@ F:
+> > > > 	drivers/pci/controller/dwc/*layerscape*
+> > > > >
+> > > > >  PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
+> > > > >  M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > > > +M:	Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > >  L:	linux-pci@vger.kernel.org
+> > > > >  L:	linux-arm-kernel@lists.infradead.org
+> > > > >  S:	Maintained
+> > > > >  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> > > > >  F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
+> > > > > +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > > >
+> > > > >  PCI DRIVER FOR GENERIC OF HOSTS
+> > > > >  M:	Will Deacon <will@kernel.org>
+> > > > > diff --git a/drivers/pci/controller/mobiveil/Kconfig
+> > > > > b/drivers/pci/controller/mobiveil/Kconfig
+> > > > > index 2054950..0696b6e 100644
+> > > > > --- a/drivers/pci/controller/mobiveil/Kconfig
+> > > > > +++ b/drivers/pci/controller/mobiveil/Kconfig
+> > > > > @@ -27,13 +27,24 @@ config PCIE_MOBIVEIL_PLAT
+> > > > >  	  for address translation and it is a PCIe Gen4 IP.
+> > > > >
+> > > > >  config PCIE_LAYERSCAPE_GEN4
+> > > > > -	bool "Freescale Layerscape PCIe Gen4 controller"
+> > > > > +	bool "Freescale Layerscpe PCIe Gen4 controller in RC mode"
+> > > > >  	depends on PCI
+> > > > >  	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
+> > > > >  	depends on PCI_MSI_IRQ_DOMAIN
+> > > > >  	select PCIE_MOBIVEIL_HOST
+> > > > >  	help
+> > > > >  	  Say Y here if you want PCIe Gen4 controller support on
+> > > > > -	  Layerscape SoCs. The PCIe controller can work in RC or
+> > > > > -	  EP mode according to RCW[HOST_AGT_PEX] setting.
+> > > > > +	  Layerscape SoCs. And the PCIe controller work in RC mode
+> > > > > +	  by setting the RCW[HOST_AGT_PEX] to 0.
+> > > > > +
+> > > > > +config PCIE_LAYERSCAPE_GEN4_EP
+> > > > > +	bool "Freescale Layerscpe PCIe Gen4 controller in EP mode"
+> > > > > +	depends on PCI
+> > > > > +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
+> > > > > +	depends on PCI_ENDPOINT
+> > > > > +	select PCIE_MOBIVEIL_EP
+> > > > > +	help
+> > > > > +	  Say Y here if you want PCIe Gen4 controller support on
+> > > > > +	  Layerscape SoCs. And the PCIe controller work in EP mode
+> > > > > +	  by setting the RCW[HOST_AGT_PEX] to 1.
+> > > > >  endmenu
+> > > > > diff --git a/drivers/pci/controller/mobiveil/Makefile
+> > > > > b/drivers/pci/controller/mobiveil/Makefile
+> > > > > index 686d41f..6f54856 100644
+> > > > > --- a/drivers/pci/controller/mobiveil/Makefile
+> > > > > +++ b/drivers/pci/controller/mobiveil/Makefile
+> > > > > @@ -4,3 +4,4 @@ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) +=
+> > > > > pcie-mobiveil-host.o
+> > > > >  obj-$(CONFIG_PCIE_MOBIVEIL_EP) += pcie-mobiveil-ep.o
+> > > > >  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
+> > > > >  obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
+> > > > > +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4_EP) +=
+> > > > pcie-layerscape-gen4-ep.o
+> > > > > diff --git
+> > > > > a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > > > b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > > > new file mode 100644
+> > > > > index 0000000..7bfec51
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > > > @@ -0,0 +1,156 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +/*
+> > > > > + * PCIe controller EP driver for Freescale Layerscape SoCs
+> > > > > + *
+> > > > > + * Copyright (C) 2019 NXP Semiconductor.
+> > > > > + *
+> > > > > + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>  */
+> > > > > +
+> > > > > +#include <linux/kernel.h>
+> > > > > +#include <linux/init.h>
+> > > > > +#include <linux/of_pci.h>
+> > > > > +#include <linux/of_platform.h>
+> > > > > +#include <linux/of_address.h>
+> > > > > +#include <linux/pci.h>
+> > > > > +#include <linux/platform_device.h> #include <linux/resource.h>
+> > > > > +
+> > > > > +#include "pcie-mobiveil.h"
+> > > > > +
+> > > > > +#define PCIE_LX2_BAR_NUM	4
+> > > > > +
+> > > > > +#define to_ls_pcie_g4_ep(x)	dev_get_drvdata((x)->dev)
+> > > > > +
+> > > > > +struct ls_pcie_g4_ep {
+> > > > > +	struct mobiveil_pcie		*mv_pci;
+> > > > > +};
+> > > > > +
+> > > > > +static const struct of_device_id ls_pcie_g4_ep_of_match[] = {
+> > > > > +	{ .compatible = "fsl,lx2160a-pcie-ep",},
+> > > > > +	{ },
+> > > > > +};
+> > > > > +
+> > > > > +static const struct pci_epc_features ls_pcie_g4_epc_features = {
+> > > > > +	.linkup_notifier = false,
+> > > > > +	.msi_capable = true,
+> > > > > +	.msix_capable = true,
+> > > > > +	.reserved_bar = (1 << BAR_4) | (1 << BAR_5),
+> > > >
+> > > > 			BIT(BAR_4) | BIT(BAR_5) ?
+> > >
+> > > I think use .reserved_bar = (1 << BAR_4) | (1 << BAR_5), is better,
+> > > because BAR_4 is not a bit of register.
+> > 
+> > Why is whether it's a register or not relevent?
+> 
+> My understand is that the BIT is used to register, refer to other EP driver files,
+> it also use 1 << BAR_4 method.
+> 
+> [baoxw@titan controller]$ grep -r "reserved_bar" *
+> dwc/pci-keystone.c:     .reserved_bar = 1 << BAR_0 | 1 << BAR_1,
+> mobiveil/pcie-layerscape-gen4-ep.c:     .reserved_bar = (1 << BAR_4) | (1 << BAR_5),
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
-changes since v2:
-- Fix increase offset according to iomux width
+$ grep '\<BIT(' fs kernel lib mm net -r
 
-changes since v1:
-- Add type case for pull get/set
-- Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+About 695 non-device driver instances at the very least seem to disagree.
 
- drivers/pinctrl/pinctrl-rockchip.c | 382 ++++++++++++++++++++++++++++-
- 1 file changed, 381 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index dc0bbf198cbc..fc9a2a9959d9 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -58,6 +58,7 @@ enum rockchip_pinctrl_type {
- 	RK3128,
- 	RK3188,
- 	RK3288,
-+	RK3308,
- 	RK3368,
- 	RK3399,
- };
-@@ -70,6 +71,7 @@ enum rockchip_pinctrl_type {
- #define IOMUX_SOURCE_PMU	BIT(2)
- #define IOMUX_UNROUTED		BIT(3)
- #define IOMUX_WIDTH_3BIT	BIT(4)
-+#define IOMUX_WIDTH_2BIT	BIT(5)
- 
- /**
-  * @type: iomux variant using IOMUX_* constants
-@@ -656,6 +658,100 @@ static  struct rockchip_mux_recalced_data rk3128_mux_recalced_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
-+	{
-+		.num = 1,
-+		.pin = 14,
-+		.reg = 0x28,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 15,
-+		.reg = 0x2c,
-+		.bit = 0,
-+		.mask = 0x3
-+	}, {
-+		.num = 1,
-+		.pin = 18,
-+		.reg = 0x30,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 19,
-+		.reg = 0x30,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 20,
-+		.reg = 0x30,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 21,
-+		.reg = 0x34,
-+		.bit = 0,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 22,
-+		.reg = 0x34,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 23,
-+		.reg = 0x34,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 12,
-+		.reg = 0x68,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 13,
-+		.reg = 0x68,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 2,
-+		.pin = 2,
-+		.reg = 0x608,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 3,
-+		.reg = 0x608,
-+		.bit = 4,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 16,
-+		.reg = 0x610,
-+		.bit = 8,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 10,
-+		.reg = 0x610,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 11,
-+		.reg = 0x610,
-+		.bit = 4,
-+		.mask = 0x7
-+	},
-+};
-+
- static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
- 	{
- 		.num = 2,
-@@ -982,6 +1078,192 @@ static struct rockchip_mux_route_data rk3288_mux_route_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_route_data rk3308_mux_route_data[] = {
-+	{
-+		/* rtc_clk */
-+		.bank_num = 0,
-+		.pin = 19,
-+		.func = 1,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 0) | BIT(0),
-+	}, {
-+		/* uart2_rxm0 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3),
-+	}, {
-+		/* uart2_rxm1 */
-+		.bank_num = 4,
-+		.pin = 26,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3) | BIT(2),
-+	}, {
-+		/* i2c3_sdam0 */
-+		.bank_num = 0,
-+		.pin = 15,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9),
-+	}, {
-+		/* i2c3_sdam1 */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(8),
-+	}, {
-+		/* i2c3_sdam2 */
-+		.bank_num = 2,
-+		.pin = 0,
-+		.func = 3,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* i2s-8ch-1-sclktxm0 */
-+		.bank_num = 1,
-+		.pin = 3,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclktxm1 */
-+		.bank_num = 1,
-+		.pin = 13,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* pdm-clkm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x308,
-+		.route_val =  BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* pdm-clkm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 4,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* pdm-clkm2 */
-+		.bank_num = 2,
-+		.pin = 6,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* pdm-clkm-m2 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x600,
-+		.route_val = BIT(16 + 2) | BIT(2),
-+	}, {
-+		/* spi1_miso */
-+		.bank_num = 3,
-+		.pin = 10,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9),
-+	}, {
-+		/* spi1_miso_m1 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* owire_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11),
-+	}, {
-+		/* owire_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 7,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(10),
-+	}, {
-+		/* owire_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(11),
-+	}, {
-+		/* can_rxd_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* can_rxd_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* can_rxd_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* mac_rxd0_m0 */
-+		.bank_num = 1,
-+		.pin = 20,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14),
-+	}, {
-+		/* mac_rxd0_m1 */
-+		.bank_num = 4,
-+		.pin = 2,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14) | BIT(14),
-+	}, {
-+		/* uart3_rx */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15),
-+	}, {
-+		/* uart3_rx_m1 */
-+		.bank_num = 0,
-+		.pin = 17,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15) | BIT(15),
-+	},
-+};
-+
- static struct rockchip_mux_route_data rk3328_mux_route_data[] = {
- 	{
- 		/* uart2dbg_rxm0 */
-@@ -1475,6 +1757,26 @@ static int rv1108_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
- 	return 0;
- }
- 
-+#define RK3308_SCHMITT_PINS_PER_REG		8
-+#define RK3308_SCHMITT_BANK_STRIDE		16
-+#define RK3308_SCHMITT_GRF_OFFSET		0x1a0
-+
-+static int rk3308_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_SCHMITT_GRF_OFFSET;
-+
-+	*reg += bank->bank_num * RK3308_SCHMITT_BANK_STRIDE;
-+	*reg += ((pin_num / RK3308_SCHMITT_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3308_SCHMITT_PINS_PER_REG;
-+
-+	return 0;
-+}
-+
- #define RK2928_PULL_OFFSET		0x118
- #define RK2928_PULL_PINS_PER_REG	16
- #define RK2928_PULL_BANK_STRIDE		8
-@@ -1646,6 +1948,40 @@ static void rk3228_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
- 	*bit *= RK3288_DRV_BITS_PER_PIN;
- }
- 
-+#define RK3308_PULL_OFFSET		0xa0
-+
-+static void rk3308_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_PULL_OFFSET;
-+	*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
-+	*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
-+	*bit *= RK3188_PULL_BITS_PER_PIN;
-+}
-+
-+#define RK3308_DRV_GRF_OFFSET		0x100
-+
-+static void rk3308_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_DRV_GRF_OFFSET;
-+	*reg += bank->bank_num * RK3288_DRV_BANK_STRIDE;
-+	*reg += ((pin_num / RK3288_DRV_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3288_DRV_PINS_PER_REG);
-+	*bit *= RK3288_DRV_BITS_PER_PIN;
-+}
-+
- #define RK3368_PULL_GRF_OFFSET		0x100
- #define RK3368_PULL_PMU_OFFSET		0x10
- 
-@@ -1986,6 +2322,7 @@ static int rockchip_get_pull(struct rockchip_pin_bank *bank, int pin_num)
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		pull_type = bank->pull_type[pin_num / 8];
-@@ -2030,6 +2367,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		pull_type = bank->pull_type[pin_num / 8];
-@@ -2293,6 +2631,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		return (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT);
-@@ -3303,7 +3642,8 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
- 			 * 4bit iomux'es are spread over two registers.
- 			 */
- 			inc = (iom->type & (IOMUX_WIDTH_4BIT |
--					    IOMUX_WIDTH_3BIT)) ? 8 : 4;
-+					    IOMUX_WIDTH_3BIT |
-+					    IOMUX_WIDTH_2BIT)) ? 8 : 4;
- 			if (iom->type & IOMUX_SOURCE_PMU)
- 				pmu_offs += inc;
- 			else
-@@ -3709,6 +4049,44 @@ static struct rockchip_pin_ctrl rk3288_pin_ctrl = {
- 		.drv_calc_reg		= rk3288_calc_drv_reg_and_bit,
- };
- 
-+static struct rockchip_pin_bank rk3308_pin_banks[] = {
-+	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(4, 32, "gpio4", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+};
-+
-+static struct rockchip_pin_ctrl rk3308_pin_ctrl = {
-+		.pin_banks		= rk3308_pin_banks,
-+		.nr_banks		= ARRAY_SIZE(rk3308_pin_banks),
-+		.label			= "RK3308-GPIO",
-+		.type			= RK3308,
-+		.grf_mux_offset		= 0x0,
-+		.iomux_recalced		= rk3308_mux_recalced_data,
-+		.niomux_recalced	= ARRAY_SIZE(rk3308_mux_recalced_data),
-+		.iomux_routes		= rk3308_mux_route_data,
-+		.niomux_routes		= ARRAY_SIZE(rk3308_mux_route_data),
-+		.pull_calc_reg		= rk3308_calc_pull_reg_and_bit,
-+		.drv_calc_reg		= rk3308_calc_drv_reg_and_bit,
-+		.schmitt_calc_reg	= rk3308_calc_schmitt_reg_and_bit,
-+};
-+
- static struct rockchip_pin_bank rk3328_pin_banks[] = {
- 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
- 	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
-@@ -3849,6 +4227,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 		.data = &rk3228_pin_ctrl },
- 	{ .compatible = "rockchip,rk3288-pinctrl",
- 		.data = &rk3288_pin_ctrl },
-+	{ .compatible = "rockchip,rk3308-pinctrl",
-+		.data = &rk3308_pin_ctrl },
- 	{ .compatible = "rockchip,rk3328-pinctrl",
- 		.data = &rk3328_pin_ctrl },
- 	{ .compatible = "rockchip,rk3368-pinctrl",
 -- 
-2.17.1
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
