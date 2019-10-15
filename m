@@ -1,49 +1,33 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: Re: [PATCH v9 0/7] nfc: pn533: add uart phy driver
-Date: Tue, 15 Oct 2019 11:54:21 +0200
-Message-ID: <20191015095421.GB17778@lem-wkst-02.lemonage>
-References: <20191008140544.17112-1-poeschel@lemonage.de>
- <20191009172907.2f0877f4@cakuba.netronome.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: iommu: ipmmu-vmsa: Add r8a774b1 support
+Date: Tue, 15 Oct 2019 11:54:49 +0200
+Message-ID: <20191015095449.GC14518@8bytes.org>
+References: <1569310854-37057-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20191009172907.2f0877f4@cakuba.netronome.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Jilayne Lovejoy <opensource@jilayne.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Steve Winslow <swinslow@gmail.com>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Kees Cook <keescook@chromium.org>, Allison Randal <allison@lohutok.net>, Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>
+In-Reply-To: <1569310854-37057-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 05:29:07PM -0700, Jakub Kicinski wrote:
-> On Tue,  8 Oct 2019 16:05:37 +0200, Lars Poeschel wrote:
-> > The purpose of this patch series is to add a uart phy driver to the
-> > pn533 nfc driver.
-> > It first changes the dt strings and docs. The dt compatible strings
-> > need to change, because I would add "pn532-uart" to the already
-> > existing "pn533-i2c" one. These two are now unified into just
-> > "pn532". Then the neccessary changes to the pn533 core driver are
-> > made. Then the uart phy is added.
-> > As the pn532 chip supports a autopoll, I wanted to use this instead
-> > of the software poll loop in the pn533 core driver. It is added and
-> > activated by the last to patches.
-> > The way to add the autopoll later in seperate patches is chosen, to
-> > show, that the uart phy driver can also work with the software poll
-> > loop, if someone needs that for some reason.
-> > This patchset is already rebased on Johans "NFC: pn533: fix
-> > use-after-free and memleaks" patch
-> > https://lore.kernel.org/netdev/20191007164059.5927-1-johan@kernel.org/
-> > as they would conflict.
-> > If for some reason Johans patch will not get merged, I can of course
-> > provide the patchset without depending on this patch.
+On Tue, Sep 24, 2019 at 08:40:54AM +0100, Biju Das wrote:
+> Document RZ/G2N (R8A774B1) SoC bindings.
 > 
-> The memleak patch was a fix and it's on its way to the current 5.4-rc
-> releases - therefore it was merged into the net tree. Your set adds
-> support for a new bus, and will go into the net-next tree.
-> 
-> It'd be best if you reposted once the net tree was merged into the
-> net-next tree (which usually happens every week or two). If you'd
-> rather not wait you need to rebase on top of the current net-next tree,
-> and maintainers will handle the conflicts.
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Thank you very much for this valueable information. I will repost the
-v10 of this patchset rebased on net-next, when the fix is appears there.
+Applied, thanks.
