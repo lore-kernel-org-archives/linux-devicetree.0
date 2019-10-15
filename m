@@ -1,178 +1,109 @@
-From: Alim Akhtar <alim.akhtar@gmail.com>
-Subject: Re: [PATCH v2 2/2] scsi: ufs: Add driver for TI wrapper for Cadence
- UFS IP
-Date: Tue, 15 Oct 2019 07:04:55 +0530
-Message-ID: <CAGOxZ51-ds99wNomK3xbws3G9nZgmhyox9k=fKrLmnJL68N2Vw@mail.gmail.com>
-References: <20191010083357.28982-1-vigneshr@ti.com> <20191010083357.28982-3-vigneshr@ti.com>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: RE: [EXT] Re: [PATCH 2/2] i2c: mux: pca954x: replace property
+ i2c-mux-idle-disconnect
+Date: Tue, 15 Oct 2019 03:17:50 +0000
+Message-ID: <DB7PR04MB44906BE3732F777C4DBB67538F930@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20191014112558.3881-1-biwen.li@nxp.com>
+ <20191014112558.3881-2-biwen.li@nxp.com>
+ <f3d1e68e-dfb0-b820-7797-1f0d95fa72dd@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191010083357.28982-3-vigneshr@ti.com>
+In-Reply-To: <f3d1e68e-dfb0-b820-7797-1f0d95fa72dd@axentia.se>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, Martin K Petersen <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, Janek Kotas <jank@cadence.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, nsekhar@ti.com
+To: Peter Rosin <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vignesh
-
-On Thu, Oct 10, 2019 at 2:05 PM Vignesh Raghavendra <vigneshr@ti.com> wrote:
->
-> TI's J721e SoC has a Cadence UFS IP with a TI specific wrapper. This is
-> a minimal driver to configure the wrapper. It releases the UFS slave
-> device out of reset and sets up registers to indicate PHY reference
-> clock input frequency before probing child Cadence UFS driver.
->
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->
-> v2: No change
->
->  drivers/scsi/ufs/Kconfig        | 10 ++++
->  drivers/scsi/ufs/Makefile       |  1 +
->  drivers/scsi/ufs/ti-j721e-ufs.c | 90 +++++++++++++++++++++++++++++++++
->  3 files changed, 101 insertions(+)
->  create mode 100644 drivers/scsi/ufs/ti-j721e-ufs.c
->
-> diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
-> index 0b845ab7c3bf..d14c2243e02a 100644
-> --- a/drivers/scsi/ufs/Kconfig
-> +++ b/drivers/scsi/ufs/Kconfig
-> @@ -132,6 +132,16 @@ config SCSI_UFS_HISI
->           Select this if you have UFS controller on Hisilicon chipset.
->           If unsure, say N.
->
-> +config SCSI_UFS_TI_J721E
-> +       tristate "TI glue layer for Cadence UFS Controller"
-> +       depends on OF && HAS_IOMEM && (ARCH_K3 || COMPILE_TEST)
-> +       help
-> +         This selects driver for TI glue layer for Cadence UFS Host
-> +         Controller IP.
-> +
-> +         Selects this if you have TI platform with UFS controller.
-> +         If unsure, say N.
-> +
->  config SCSI_UFS_BSG
->         bool "Universal Flash Storage BSG device node"
->         depends on SCSI_UFSHCD
-> diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
-> index 2a9097939bcb..94c6c5d7334b 100644
-> --- a/drivers/scsi/ufs/Makefile
-> +++ b/drivers/scsi/ufs/Makefile
-> @@ -11,3 +11,4 @@ obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
->  obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
->  obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o
->  obj-$(CONFIG_SCSI_UFS_MEDIATEK) += ufs-mediatek.o
-> +obj-$(CONFIG_SCSI_UFS_TI_J721E) += ti-j721e-ufs.o
-> diff --git a/drivers/scsi/ufs/ti-j721e-ufs.c b/drivers/scsi/ufs/ti-j721e-ufs.c
-> new file mode 100644
-> index 000000000000..a653bf1902f3
-> --- /dev/null
-> +++ b/drivers/scsi/ufs/ti-j721e-ufs.c
-> @@ -0,0 +1,90 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> +//
-> +
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +
-> +#define UFS_SS_CTRL            0x4
-> +#define UFS_SS_RST_N_PCS       BIT(0)
-> +#define UFS_SS_CLK_26MHZ       BIT(4)
-> +
-These looks like vendor specific defines, if so, please add TI_* suffix.
-
-> +static int ti_j721e_ufs_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       unsigned long clk_rate;
-> +       void __iomem *regbase;
-> +       struct clk *clk;
-> +       u32 reg = 0;
-> +       int ret;
-> +
-> +       regbase = devm_platform_ioremap_resource(pdev, 0);
-> +       if (IS_ERR(regbase))
-> +               return PTR_ERR(regbase);
-> +
-> +       /* Select MPHY refclk frequency */
-> +       clk = devm_clk_get(dev, NULL);
-> +       if (IS_ERR(clk)) {
-> +               dev_err(dev, "Cannot claim MPHY clock.\n");
-> +               return PTR_ERR(clk);
-> +       }
-No need to enable MPHY clock? Moreover this clock belongs to MPHY and
-should be handled using generic PHY framework to do that.
-> +       clk_rate = clk_get_rate(clk);
-> +       if (clk_rate == 26000000)
-> +               reg |= UFS_SS_CLK_26MHZ;
-> +       devm_clk_put(dev, clk);
-> +
-Is this only needed to select one bit in UFS_SS_CLK_26MHz? if so, just
-have a DT property and get this selection from there.
-
-> +       pm_runtime_enable(dev);
-> +       ret = pm_runtime_get_sync(dev);
-> +       if (ret < 0) {
-> +               pm_runtime_put_noidle(dev);
-> +               return ret;
-> +       }
-> +
-> +       /*  Take UFS slave device out of reset */
-> +       reg |= UFS_SS_RST_N_PCS;
-What is the default value of UFS_SS_CLK_26MHZ bit above? Incase 26MHZ
-is not set, then what is default?
-> +       writel(reg, regbase + UFS_SS_CTRL);
-> +
-> +       ret = of_platform_populate(pdev->dev.of_node, NULL, NULL,
-> +                                  dev);
-> +       if (ret) {
-> +               dev_err(dev, "failed to populate child nodes %d\n", ret);
-> +               pm_runtime_put_sync(dev);
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static int ti_j721e_ufs_remove(struct platform_device *pdev)
-> +{
-> +       of_platform_depopulate(&pdev->dev);
-> +       pm_runtime_put_sync(&pdev->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id ti_j721e_ufs_of_match[] = {
-> +       {
-> +               .compatible = "ti,j721e-ufs",
-> +       },
-> +       { },
-> +};
-> +
-> +static struct platform_driver ti_j721e_ufs_driver = {
-> +       .probe  = ti_j721e_ufs_probe,
-> +       .remove = ti_j721e_ufs_remove,
-> +       .driver = {
-> +               .name   = "ti-j721e-ufs",
-> +               .of_match_table = ti_j721e_ufs_of_match,
-> +       },
-> +};
-> +module_platform_driver(ti_j721e_ufs_driver);
-> +
-> +MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
-> +MODULE_DESCRIPTION("TI UFS host controller glue driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.23.0
->
-
-
--- 
-Regards,
-Alim
+PiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiAyMDE5LTEwLTE0IDEzOjI1LCBCaXdl
+biBMaSB3cm90ZToNCj4gPiBUaGlzIHJlcGxhY2VzIHByb3BlcnR5IGkyYy1tdXgtaWRsZS1kaXNj
+b25uZWN0IHdpdGggaWRsZS1zdGF0ZQ0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQml3ZW4gTGkg
+PGJpd2VuLmxpQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvaTJjL211eGVzL2kyYy1t
+dXgtcGNhOTU0eC5jIHwgNDQNCj4gPiArKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLQ0KPiA+
+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pDQo+ID4N
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvbXV4ZXMvaTJjLW11eC1wY2E5NTR4LmMNCj4g
+PiBiL2RyaXZlcnMvaTJjL211eGVzL2kyYy1tdXgtcGNhOTU0eC5jDQo+ID4gaW5kZXggOTIzYWEz
+YTVhM2RjLi5hMzMwOTI5YzRkNjcgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9pMmMvbXV4ZXMv
+aTJjLW11eC1wY2E5NTR4LmMNCj4gPiArKysgYi9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4LXBj
+YTk1NHguYw0KPiA+IEBAIC04Niw3ICs4Niw3IEBAIHN0cnVjdCBwY2E5NTR4IHsNCj4gPg0KPiA+
+ICAgICAgIHU4IGxhc3RfY2hhbjsgICAgICAgICAgIC8qIGxhc3QgcmVnaXN0ZXIgdmFsdWUgKi8N
+Cj4gPiAgICAgICAvKiBNVVhfSURMRV9BU19JUywgTVVYX0lETEVfRElTQ09OTkVDVCBvciA+PSAw
+IGZvciBjaGFubmVsICovDQo+ID4gLSAgICAgczggaWRsZV9zdGF0ZTsNCj4gPiArICAgICBzMzIg
+aWRsZV9zdGF0ZTsNCj4gPg0KPiA+ICAgICAgIHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQ7DQo+
+ID4NCj4gPiBAQCAtMjU2LDcgKzI1Niw3IEBAIHN0YXRpYyBpbnQgcGNhOTU0eF9kZXNlbGVjdF9t
+dXgoc3RydWN0DQo+ID4gaTJjX211eF9jb3JlICptdXhjLCB1MzIgY2hhbikgIHsNCj4gPiAgICAg
+ICBzdHJ1Y3QgcGNhOTU0eCAqZGF0YSA9IGkyY19tdXhfcHJpdihtdXhjKTsNCj4gPiAgICAgICBz
+dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gZGF0YS0+Y2xpZW50Ow0KPiA+IC0gICAgIHM4IGlk
+bGVfc3RhdGU7DQo+ID4gKyAgICAgczMyIGlkbGVfc3RhdGU7DQo+ID4NCj4gPiAgICAgICBpZGxl
+X3N0YXRlID0gUkVBRF9PTkNFKGRhdGEtPmlkbGVfc3RhdGUpOw0KPiA+ICAgICAgIGlmIChpZGxl
+X3N0YXRlID49IDApDQo+ID4gQEAgLTQxMSw3ICs0MTEsNiBAQCBzdGF0aWMgaW50IHBjYTk1NHhf
+cHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwNCj4gPiAgICAgICBzdHJ1Y3QgaTJjX2Fk
+YXB0ZXIgKmFkYXAgPSBjbGllbnQtPmFkYXB0ZXI7DQo+ID4gICAgICAgc3RydWN0IGRldmljZSAq
+ZGV2ID0gJmNsaWVudC0+ZGV2Ow0KPiA+ICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBk
+ZXYtPm9mX25vZGU7DQo+ID4gLSAgICAgYm9vbCBpZGxlX2Rpc2Nvbm5lY3RfZHQ7DQo+ID4gICAg
+ICAgc3RydWN0IGdwaW9fZGVzYyAqZ3BpbzsNCj4gPiAgICAgICBzdHJ1Y3QgaTJjX211eF9jb3Jl
+ICptdXhjOw0KPiA+ICAgICAgIHN0cnVjdCBwY2E5NTR4ICpkYXRhOw0KPiA+IEBAIC00NjIsMjIg
+KzQ2MSwzMSBAQCBzdGF0aWMgaW50IHBjYTk1NHhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQNCj4g
+KmNsaWVudCwNCj4gPiAgICAgICAgICAgICAgIH0NCj4gPiAgICAgICB9DQo+ID4NCj4gPiArICAg
+ICBpZiAob2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJpZGxlLXN0YXRlIiwgJmRhdGEtPmlkbGVf
+c3RhdGUpKQ0KPiA+ICsgICAgICAgICAgICAgZGF0YS0+aWRsZV9zdGF0ZSA9IE1VWF9JRExFX0FT
+X0lTOw0KPiA+ICsNCj4gPiAgICAgICAvKiBXcml0ZSB0aGUgbXV4IHJlZ2lzdGVyIGF0IGFkZHIg
+dG8gdmVyaWZ5DQo+ID4gICAgICAgICogdGhhdCB0aGUgbXV4IGlzIGluIGZhY3QgcHJlc2VudC4g
+VGhpcyBhbHNvDQo+ID4gICAgICAgICogaW5pdGlhbGl6ZXMgdGhlIG11eCB0byBkaXNjb25uZWN0
+ZWQgc3RhdGUuDQo+ID4gICAgICAgICovDQo+ID4gLSAgICAgaWYgKGkyY19zbWJ1c193cml0ZV9i
+eXRlKGNsaWVudCwgMCkgPCAwKSB7DQo+ID4gKyAgICAgaWYgKGRhdGEtPmlkbGVfc3RhdGUgPj0g
+MCl7DQo+IA0KPiBTcGFjZSBiZWZvcmUgew0KT2theSwgZ290IGl0LCBJIHdpbGwgYWRkIGl0IGlu
+IHYyLg0KPiANCj4gPiArICAgICAgICAgICAgIGRhdGEtPmxhc3RfY2hhbiA9IGRhdGEtPmlkbGVf
+c3RhdGU7DQo+IA0KPiBkYXRhLT5sYXN0X2NoYW4gc2hvdWxkIGhhdmUgdGhlIGFjdHVhbCByZWdp
+c3RlciB2YWx1ZSwgaS5lLiAodW50ZXN0ZWQpDQpPa2F5LCBnb3QgaXQsIEkgd2lsbCBhZGp1c3Qg
+aXQgaW4gdjIuDQo+IA0KPiAgICAgICAgICAgICAgICAgaWYgKGRhdGEtPmNoaXAtPm11eHR5cGUg
+PT0gcGNhOTU0eF9pc211eCkNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZGF0YS0+bGFzdF9j
+aGFuID0gZGF0YS0+aWRsZV9zdGF0ZSB8DQo+IGRhdGEtPmNoaXAtPmVuYWJsZTsNCj4gICAgICAg
+ICAgICAgICAgIGVsc2UNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZGF0YS0+bGFzdF9jaGFu
+ID0gMSA8PCBkYXRhLT5pZGxlX3N0YXRlOw0KPiANCj4gICAgICAgICAgICAgICAgIHJldCA9IGky
+Y19zbWJ1c193cml0ZV9ieXRlKGNsaWVudCwgZGF0YS0+bGFzdF9jaGFuKTsNCj4gDQo+IEJ1dCBz
+aW5jZSB0aGlzIHJlZ3ZhbCBjYWxjdWxhdGlvbiBpcyBub3cgbmVlZGVkIGluIHRocmVlIHBsYWNl
+cywgaXQgc2hvdWxkIGJlDQo+IG1vdmVkIHRvIGEgaGVscGVyIGZ1bmN0aW9uLg0KWW91IGFyZSBy
+aWdodCwgSSB3aWxsIGFkZCBhIGhlbHBlciBmdW5jdGlvbiBpbiB2Mi4NCj4gDQo+ID4gKyAgICAg
+ICAgICAgICAvKiBBbHdheXMgZW5hYmxlIG11bHRpcGxleGVyICovDQo+ID4gKyAgICAgICAgICAg
+ICByZXQgPSBpMmNfc21idXNfd3JpdGVfYnl0ZShjbGllbnQsIGRhdGEtPmxhc3RfY2hhbiB8DQo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKGRhdGEtPmNoaXAtPm11eHR5cGUgPT0N
+Cj4gcGNhOTU0eF9pc211eCA/DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRh
+dGEtPmNoaXAtPmVuYWJsZSA6IDApKTsNCj4gPiArICAgICB9DQo+ID4gKyAgICAgZWxzZXsNCj4g
+DQo+IFNwYWNlIGJlZm9yZSB7DQpHb3QgaXQsIEkgd2lsbCBhZGQgaXQgaW4gdjIuDQo+IA0KPiBO
+YXR1cmFsbHksIHlvdSBoYXZlIHRoZSBleGFjdCBzYW1lIGlzc3VlcyBpbiB0aGUgcGNhOTU0eF9y
+ZXN1bWUgaHVuaywNCj4gYmVsb3cuDQpHb3QgaXQNCj4gDQo+ID4gKyAgICAgICAgICAgICBkYXRh
+LT5sYXN0X2NoYW4gPSAwOyAgICAgICAgICAgICAgIC8qIGZvcmNlIHRoZSBmaXJzdA0KPiBzZWxl
+Y3Rpb24gKi8NCj4gPiArICAgICAgICAgICAgIC8qIERpc2Nvbm5lY3QgbXVsdGlwbGV4ZXIgKi8N
+Cj4gPiArICAgICAgICAgICAgIHJldCA9IGkyY19zbWJ1c193cml0ZV9ieXRlKGNsaWVudCwgZGF0
+YS0+bGFzdF9jaGFuKTsNCj4gPiArICAgICB9DQo+ID4gKw0KPiA+ICsgICAgIGlmIChyZXQgPCAw
+KSB7DQo+ID4gICAgICAgICAgICAgICBkZXZfd2FybihkZXYsICJwcm9iZSBmYWlsZWRcbiIpOw0K
+PiA+ICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9ERVY7DQo+ID4gICAgICAgfQ0KPiA+DQo+ID4g
+LSAgICAgZGF0YS0+bGFzdF9jaGFuID0gMDsgICAgICAgICAgICAgICAvKiBmb3JjZSB0aGUgZmly
+c3Qgc2VsZWN0aW9uICovDQo+ID4gLSAgICAgZGF0YS0+aWRsZV9zdGF0ZSA9IE1VWF9JRExFX0FT
+X0lTOw0KPiA+IC0NCj4gPiAtICAgICBpZGxlX2Rpc2Nvbm5lY3RfZHQgPSBucCAmJg0KPiA+IC0g
+ICAgICAgICAgICAgb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAiaTJjLW11eC1pZGxlLWRpc2Nv
+bm5lY3QiKTsNCj4gPiAtICAgICBpZiAoaWRsZV9kaXNjb25uZWN0X2R0KQ0KPiA+IC0gICAgICAg
+ICAgICAgZGF0YS0+aWRsZV9zdGF0ZSA9IE1VWF9JRExFX0RJU0NPTk5FQ1Q7DQo+IA0KPiBJbiBj
+YXNlIHRoZSBpZGxlLXN0YXRlIHByb3BlcnR5IGlzIG1pc3NpbmcsIHlvdSBuZWVkIHRvIGZhbGwg
+YmFjayB0byB0aGUgb2xkDQo+IGJlaGF2aW9yIGFuZCBoYW5kbGUgaTJjLW11eC1pZGxlLWRpc2Nv
+bm5lY3QgYXMgYmVmb3JlLg0KT2theSwgZ290IGl0LCBJIHdpbGwgYWRkIGl0IGluIHYyLg0KPiAN
+Cj4gQ2hlZXJzLA0KPiBQZXRlcg0KPiANCj4gPg0KPiA+ICAgICAgIHJldCA9IHBjYTk1NHhfaXJx
+X3NldHVwKG11eGMpOw0KPiA+ICAgICAgIGlmIChyZXQpDQo+ID4gQEAgLTUzMSw4ICs1MzksMTgg
+QEAgc3RhdGljIGludCBwY2E5NTR4X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gICAg
+ICAgc3RydWN0IGkyY19tdXhfY29yZSAqbXV4YyA9IGkyY19nZXRfY2xpZW50ZGF0YShjbGllbnQp
+Ow0KPiA+ICAgICAgIHN0cnVjdCBwY2E5NTR4ICpkYXRhID0gaTJjX211eF9wcml2KG11eGMpOw0K
+PiA+DQo+ID4gLSAgICAgZGF0YS0+bGFzdF9jaGFuID0gMDsNCj4gPiAtICAgICByZXR1cm4gaTJj
+X3NtYnVzX3dyaXRlX2J5dGUoY2xpZW50LCAwKTsNCj4gPiArICAgICBpZiAoZGF0YS0+aWRsZV9z
+dGF0ZSA+PSAwKXsNCj4gPiArICAgICAgICAgICAgIGRhdGEtPmxhc3RfY2hhbiA9IGRhdGEtPmlk
+bGVfc3RhdGU7DQo+ID4gKyAgICAgICAgICAgICAvKiBBbHdheXMgZW5hYmxlIG11bHRpcGxleGVy
+ICovDQo+ID4gKyAgICAgICAgICAgICByZXR1cm4gaTJjX3NtYnVzX3dyaXRlX2J5dGUoY2xpZW50
+LCBkYXRhLT5sYXN0X2NoYW4gfA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIChk
+YXRhLT5jaGlwLT5tdXh0eXBlID09DQo+IHBjYTk1NHhfaXNtdXggPw0KPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBkYXRhLT5jaGlwLT5lbmFibGUgOiAwKSk7DQo+ID4gKyAgICAg
+fQ0KPiA+ICsgICAgIGVsc2V7DQo+ID4gKyAgICAgICAgICAgICBkYXRhLT5sYXN0X2NoYW4gPSAw
+Ow0KPiA+ICsgICAgICAgICAgICAgLyogRGlzY29ubmVjdCBtdWx0aXBsZXhlciAqLw0KPiA+ICsg
+ICAgICAgICAgICAgcmV0dXJuIGkyY19zbWJ1c193cml0ZV9ieXRlKGNsaWVudCwgZGF0YS0+bGFz
+dF9jaGFuKTsNCj4gPiArICAgICB9DQo+ID4gIH0NCj4gPiAgI2VuZGlmDQo+ID4NCj4gPg0KDQo=
