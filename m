@@ -1,7 +1,7 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v2 6/6] misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device support
-Date: Tue, 15 Oct 2019 16:37:02 +0800
-Message-ID: <20191015083702.21792-7-xiaowei.bao@nxp.com>
+Subject: [PATCH v2 4/6] PCI: mobiveil: Add workaround for unsupported request error
+Date: Tue, 15 Oct 2019 16:37:00 +0800
+Message-ID: <20191015083702.21792-5-xiaowei.bao@nxp.com>
 References: <20191015083702.21792-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191015083702.21792-1-xiaowei.bao@nxp.com>
@@ -10,35 +10,57 @@ To: Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@
 Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the layerscape PCIE GEN4 EP device support in pci_endpoint_test driver.
+Errata: unsupported request error on inbound posted write
+transaction, PCIe controller reports advisory error instead
+of uncorrectable error message to RC.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
-v2: 
- - No change.
+v3: 
+ - Use BIT replce the expression.
 
- drivers/misc/pci_endpoint_test.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c | 13 +++++++++++++
+ drivers/pci/controller/mobiveil/pcie-mobiveil.h           |  4 ++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 6e208a0..8b145a7 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -65,6 +65,7 @@
- #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
+diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+index 56603ea..82bb38d 100644
+--- a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
++++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+@@ -49,6 +49,19 @@ static void ls_pcie_g4_ep_init(struct mobiveil_pcie_ep *ep)
+ 	struct mobiveil_pcie *mv_pci = to_mobiveil_pcie_from_ep(ep);
+ 	int win_idx;
+ 	u8 bar;
++	u32 val;
++
++	/*
++	 * Errata: unsupported request error on inbound posted write
++	 * transaction, PCIe controller reports advisory error instead
++	 * of uncorrectable error message to RC.
++	 * workaround: set the bit20(unsupported_request_Error_severity) with
++	 * value 1 in uncorrectable_Error_Severity_Register, make the
++	 * unsupported request error generate the fatal error.
++	 */
++	val =  csr_readl(mv_pci, CFG_UNCORRECTABLE_ERROR_SEVERITY);
++	val |= BIT(UNSUPPORTED_REQUEST_ERROR_SHIFT);
++	csr_writel(mv_pci, val, CFG_UNCORRECTABLE_ERROR_SEVERITY);
  
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
-+#define PCI_DEVICE_ID_LX2160A			0x8d80
+ 	ep->bar_num = PCIE_LX2_BAR_NUM;
  
- #define is_am654_pci_dev(pdev)		\
- 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
-@@ -793,6 +794,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_LX2160A) },
- 	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
- 	  .driver_data = (kernel_ulong_t)&am654_data
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+index 7308fa4..a40707e 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+@@ -123,6 +123,10 @@
+ #define GPEX_BAR_SIZE_UDW		0x4DC
+ #define GPEX_BAR_SELECT			0x4E0
+ 
++#define CFG_UNCORRECTABLE_ERROR_SEVERITY	0x10c
++#define UNSUPPORTED_REQUEST_ERROR_SHIFT		20
++#define CFG_UNCORRECTABLE_ERROR_MASK		0x108
++
+ /* starting offset of INTX bits in status register */
+ #define PAB_INTX_START			5
+ 
 -- 
 2.9.5
