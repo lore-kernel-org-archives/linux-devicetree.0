@@ -1,93 +1,212 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH 4/6] PCI: mobiveil: Add workaround for unsupported request
- error
-Date: Tue, 15 Oct 2019 07:46:51 +0000
-Message-ID: <AM5PR04MB329953CADC8E2DC11AFFCA2EF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190916021742.22844-5-xiaowei.bao@nxp.com>
- <20190924164930.GZ25745@shell.armlinux.org.uk>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC][PATCH 3/3] usb: dwc3: Registering a role switch in the DRD
+ code.
+Date: Tue, 15 Oct 2019 11:25:23 +0300
+Message-ID: <9e86bb7b-5dd2-760e-c324-fe1c1ee41868@ti.com>
+References: <20191002231617.3670-1-john.stultz@linaro.org>
+ <20191002231617.3670-4-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190924164930.GZ25745@shell.armlinux.org.uk>
+In-Reply-To: <20191002231617.3670-4-john.stultz@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>
+Cc: Yu Chen <chenyu56@huawei.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Felipe Balbi <balbi@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jun Li <lijun.kernel@gmail.com>, Valentin Schneider <valentin.schneider@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUnVzc2VsbCBLaW5nIC0g
-QVJNIExpbnV4IGFkbWluIDxsaW51eEBhcm1saW51eC5vcmcudWs+DQo+IFNlbnQ6IDIwMTnE6jnU
-wjI1yNUgMDo1MA0KPiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IENj
-OiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+OyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0K
-PiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJu
-ZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGtpc2hvbkB0aS5jb207IGxv
-cmVuem8ucGllcmFsaXNpQGFybS5jb207IE0uaC4gTGlhbg0KPiA8bWluZ2h1YW4ubGlhbkBueHAu
-Y29tPjsgYW5kcmV3Lm11cnJheUBhcm0uY29tOyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1QG54
-cC5jb20+OyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNC82XSBQQ0k6IG1v
-Yml2ZWlsOiBBZGQgd29ya2Fyb3VuZCBmb3IgdW5zdXBwb3J0ZWQNCj4gcmVxdWVzdCBlcnJvcg0K
-PiANCj4gT24gTW9uLCBTZXAgMTYsIDIwMTkgYXQgMTA6MTc6NDBBTSArMDgwMCwgWGlhb3dlaSBC
-YW8gd3JvdGU6DQo+ID4gRXJyYXRhOiB1bnN1cHBvcnRlZCByZXF1ZXN0IGVycm9yIG9uIGluYm91
-bmQgcG9zdGVkIHdyaXRlIHRyYW5zYWN0aW9uLA0KPiA+IFBDSWUgY29udHJvbGxlciByZXBvcnRz
-IGFkdmlzb3J5IGVycm9yIGluc3RlYWQgb2YgdW5jb3JyZWN0YWJsZSBlcnJvcg0KPiA+IG1lc3Nh
-Z2UgdG8gUkMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
-YW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVp
-bC9wY2llLWxheWVyc2NhcGUtZ2VuNC1lcC5jIHwgMTMNCj4gKysrKysrKysrKysrKw0KPiA+ICBk
-cml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaCAgICAgICAgICAg
-fCAgNCArKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1sYXll
-cnNjYXBlLWdlbjQtZXAuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9w
-Y2llLWxheWVyc2NhcGUtZ2VuNC1lcC5jDQo+ID4gaW5kZXggN2JmZWM1MS4uNWJjOWVkNyAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbGF5ZXJz
-Y2FwZS1nZW40LWVwLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWls
-L3BjaWUtbGF5ZXJzY2FwZS1nZW40LWVwLmMNCj4gPiBAQCAtNDksNiArNDksMTkgQEAgc3RhdGlj
-IHZvaWQgbHNfcGNpZV9nNF9lcF9pbml0KHN0cnVjdA0KPiBtb2JpdmVpbF9wY2llX2VwICplcCkN
-Cj4gPiAgCXN0cnVjdCBtb2JpdmVpbF9wY2llICptdl9wY2kgPSB0b19tb2JpdmVpbF9wY2llX2Zy
-b21fZXAoZXApOw0KPiA+ICAJaW50IHdpbl9pZHg7DQo+ID4gIAl1OCBiYXI7DQo+ID4gKwl1MzIg
-dmFsOw0KPiA+ICsNCj4gPiArCS8qDQo+ID4gKwkgKiBFcnJhdGE6IHVuc3VwcG9ydGVkIHJlcXVl
-c3QgZXJyb3Igb24gaW5ib3VuZCBwb3N0ZWQgd3JpdGUNCj4gPiArCSAqIHRyYW5zYWN0aW9uLCBQ
-Q0llIGNvbnRyb2xsZXIgcmVwb3J0cyBhZHZpc29yeSBlcnJvciBpbnN0ZWFkDQo+ID4gKwkgKiBv
-ZiB1bmNvcnJlY3RhYmxlIGVycm9yIG1lc3NhZ2UgdG8gUkMuDQo+ID4gKwkgKiB3b3JrYXJvdW5k
-OiBzZXQgdGhlIGJpdDIwKHVuc3VwcG9ydGVkX3JlcXVlc3RfRXJyb3Jfc2V2ZXJpdHkpIHdpdGgN
-Cj4gPiArCSAqIHZhbHVlIDEgaW4gdW5jb3JyZWN0YWJsZV9FcnJvcl9TZXZlcml0eV9SZWdpc3Rl
-ciwgbWFrZSB0aGUNCj4gPiArCSAqIHVuc3VwcG9ydGVkIHJlcXVlc3QgZXJyb3IgZ2VuZXJhdGUg
-dGhlIGZhdGFsIGVycm9yLg0KPiA+ICsJICovDQo+ID4gKwl2YWwgPSAgY3NyX3JlYWRsKG12X3Bj
-aSwgQ0ZHX1VOQ09SUkVDVEFCTEVfRVJST1JfU0VWRVJJVFkpOw0KPiA+ICsJdmFsIHw9IDEgPDwg
-VU5TVVBQT1JURURfUkVRVUVTVF9FUlJPUl9TSElGVDsNCj4gDQo+IAkgICAgICAgQklUKFVOU1VQ
-UE9SVEVEX1JFUVVFU1RfRVJST1JfU0hJRlQpID8NCg0KT0ssIHRoYW5rcw0KDQpUaGFua3MgDQpY
-aWFvd2VpDQoNCj4gDQo+ID4gKwljc3Jfd3JpdGVsKG12X3BjaSwgdmFsLCBDRkdfVU5DT1JSRUNU
-QUJMRV9FUlJPUl9TRVZFUklUWSk7DQo+ID4NCj4gPiAgCWVwLT5iYXJfbnVtID0gUENJRV9MWDJf
-QkFSX05VTTsNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21v
-Yml2ZWlsL3BjaWUtbW9iaXZlaWwuaA0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2Jp
-dmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gPiBpbmRleCA3MzA4ZmE0Li5hNDA3MDdlIDEwMDY0NA0K
-PiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5o
-DQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWls
-LmgNCj4gPiBAQCAtMTIzLDYgKzEyMywxMCBAQA0KPiA+ICAjZGVmaW5lIEdQRVhfQkFSX1NJWkVf
-VURXCQkweDREQw0KPiA+ICAjZGVmaW5lIEdQRVhfQkFSX1NFTEVDVAkJCTB4NEUwDQo+ID4NCj4g
-PiArI2RlZmluZSBDRkdfVU5DT1JSRUNUQUJMRV9FUlJPUl9TRVZFUklUWQkweDEwYw0KPiA+ICsj
-ZGVmaW5lIFVOU1VQUE9SVEVEX1JFUVVFU1RfRVJST1JfU0hJRlQJCTIwDQo+ID4gKyNkZWZpbmUg
-Q0ZHX1VOQ09SUkVDVEFCTEVfRVJST1JfTUFTSwkJMHgxMDgNCj4gPiArDQo+ID4gIC8qIHN0YXJ0
-aW5nIG9mZnNldCBvZiBJTlRYIGJpdHMgaW4gc3RhdHVzIHJlZ2lzdGVyICovDQo+ID4gICNkZWZp
-bmUgUEFCX0lOVFhfU1RBUlQJCQk1DQo+ID4NCj4gPiAtLQ0KPiA+IDIuOS41DQo+ID4NCj4gPg0K
-PiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4g
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcNCj4gPiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91
-dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRmxpc3RzDQo+ID4gLmluZnJhZGVhZC5vcmclMkZt
-YWlsbWFuJTJGbGlzdGluZm8lMkZsaW51eC1hcm0ta2VybmVsJmFtcDtkYXRhPTAyJQ0KPiA3QzAN
-Cj4gPg0KPiAxJTdDeGlhb3dlaS5iYW8lNDBueHAuY29tJTdDN2RjZWJjZGY1NjUxNDM0MTNhNzcw
-OGQ3NDEwZjM0ZjUlN0MNCj4gNjg2ZWExZA0KPiA+DQo+IDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2
-MzUlN0MwJTdDMCU3QzYzNzA0OTQwNTg3NjM5OTc3NCZhbXA7c2QNCj4gYXRhPSUyRmY4DQo+ID4N
-Cj4gblE3MFBiUHBlUiUyQmxGZExtJTJCJTJGUFo5emwxSEMlMkJJWWMxSWIlMkJEYkFSR1ElM0Qm
-YW1wO3INCj4gZXNlcnZlZD0wDQo+ID4NCj4gDQo+IC0tDQo+IFJNSydzIFBhdGNoIHN5c3RlbToN
-Cj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0
-dHBzJTNBJTJGJTJGd3d3Lg0KPiBhcm1saW51eC5vcmcudWslMkZkZXZlbG9wZXIlMkZwYXRjaGVz
-JTJGJmFtcDtkYXRhPTAyJTdDMDElN0N4aWFvDQo+IHdlaS5iYW8lNDBueHAuY29tJTdDN2RjZWJj
-ZGY1NjUxNDM0MTNhNzcwOGQ3NDEwZjM0ZjUlN0M2ODZlYTFkMw0KPiBiYzJiNGM2ZmE5MmNkOTlj
-NWMzMDE2MzUlN0MwJTdDMCU3QzYzNzA0OTQwNTg3NjQwNDc2NCZhbXA7c2RhDQo+IHRhPTNyUEE0
-a0pZdFF5R2NIUzRtJTJCNG1TcGlKSVl4OVlremhhdzczYlYwMVdrcyUzRCZhbXA7cmVzZXJ2DQo+
-IGVkPTANCj4gRlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZSBpbiBzdWJ1cmJpYTogc3lu
-YyBhdCAxMi4xTWJwcyBkb3duIDYyMmticHMNCj4gdXAgQWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5u
-ZXQ6IDExLjlNYnBzIGRvd24gNTAwa2JwcyB1cA0K
+Hi,
+
+On 03/10/2019 02:16, John Stultz wrote:
+> From: Yu Chen <chenyu56@huawei.com>
+> 
+> The Type-C drivers use USB role switch API to inform the
+> system about the negotiated data role, so registering a role
+> switch in the DRD code in order to support platforms with
+> USB Type-C connectors.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Jun Li <lijun.kernel@gmail.com>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>   drivers/usb/dwc3/Kconfig |  1 +
+>   drivers/usb/dwc3/core.h  |  6 ++++
+>   drivers/usb/dwc3/drd.c   | 78 +++++++++++++++++++++++++++++++++++++++-
+>   3 files changed, 84 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 89abc6078703..1104745c41a9 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -44,6 +44,7 @@ config USB_DWC3_DUAL_ROLE
+>   	bool "Dual Role mode"
+>   	depends on ((USB=y || USB=USB_DWC3) && (USB_GADGET=y || USB_GADGET=USB_DWC3))
+>   	depends on (EXTCON=y || EXTCON=USB_DWC3)
+> +	select USB_ROLE_SWITCH
+>   	help
+>   	  This is the default mode of working of DWC3 controller where
+>   	  both host and gadget features are enabled.
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index b3cb6eec3f8f..83728157b3e9 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -25,6 +25,7 @@
+>   #include <linux/usb/ch9.h>
+>   #include <linux/usb/gadget.h>
+>   #include <linux/usb/otg.h>
+> +#include <linux/usb/role.h>
+>   #include <linux/ulpi/interface.h>
+>   
+>   #include <linux/phy/phy.h>
+> @@ -951,6 +952,9 @@ struct dwc3_scratchpad_array {
+>    * @hsphy_mode: UTMI phy mode, one of following:
+>    *		- USBPHY_INTERFACE_MODE_UTMI
+>    *		- USBPHY_INTERFACE_MODE_UTMIW
+> + * role_sw: usb_role_switch handle
+> + * role_switch_default_mode: default operation mode of controller while
+> + *			usb role is USB_ROLE_NONE.
+>    * @usb2_phy: pointer to USB2 PHY
+>    * @usb3_phy: pointer to USB3 PHY
+>    * @usb2_generic_phy: pointer to USB2 PHY
+> @@ -1085,6 +1089,8 @@ struct dwc3 {
+>   	struct extcon_dev	*edev;
+>   	struct notifier_block	edev_nb;
+>   	enum usb_phy_interface	hsphy_mode;
+> +	struct usb_role_switch	*role_sw;
+> +	enum usb_dr_mode	role_switch_default_mode;
+>   
+>   	u32			fladj;
+>   	u32			irq_gadget;
+> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> index 726100d1ac0d..95b466a7faa0 100644
+> --- a/drivers/usb/dwc3/drd.c
+> +++ b/drivers/usb/dwc3/drd.c
+> @@ -479,6 +479,58 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
+>   	return edev;
+>   }
+>   
+> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
+> +{
+> +	struct dwc3 *dwc = dev_get_drvdata(dev);
+> +	u32 mode;
+> +
+> +	switch (role) {
+> +	case USB_ROLE_HOST:
+> +		mode = DWC3_GCTL_PRTCAP_HOST;
+> +		break;
+> +	case USB_ROLE_DEVICE:
+> +		mode = DWC3_GCTL_PRTCAP_DEVICE;
+> +		break;
+> +	default:
+> +		if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
+> +			mode = DWC3_GCTL_PRTCAP_HOST;
+> +		else
+> +			mode = DWC3_GCTL_PRTCAP_DEVICE;
+> +		break;
+> +	}
+> +
+> +	dwc3_set_mode(dwc, mode);
+> +	return 0;
+> +}
+> +
+> +static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
+> +{
+> +	struct dwc3 *dwc = dev_get_drvdata(dev);
+> +	unsigned long flags;
+> +	enum usb_role role;
+> +
+> +	spin_lock_irqsave(&dwc->lock, flags);
+> +	switch (dwc->current_dr_role) {
+> +	case DWC3_GCTL_PRTCAP_HOST:
+> +		role = USB_ROLE_HOST;
+> +		break;
+> +	case DWC3_GCTL_PRTCAP_DEVICE:
+> +		role = USB_ROLE_DEVICE;
+> +		break;
+> +	case DWC3_GCTL_PRTCAP_OTG:
+> +		role = dwc->current_otg_role;
+> +		break;
+> +	default:
+> +		if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
+> +			role = USB_ROLE_HOST;
+> +		else
+> +			role = USB_ROLE_DEVICE;
+> +		break;
+> +	}
+> +	spin_unlock_irqrestore(&dwc->lock, flags);
+> +	return role;
+> +}
+> +
+>   int dwc3_drd_init(struct dwc3 *dwc)
+>   {
+>   	int ret, irq;
+> @@ -487,7 +539,28 @@ int dwc3_drd_init(struct dwc3 *dwc)
+>   	if (IS_ERR(dwc->edev))
+>   		return PTR_ERR(dwc->edev);
+>   
+> -	if (dwc->edev) {
+> +	if (device_property_read_bool(dwc->dev, "usb-role-switch")) {
+
+I think we should use role switch unconditionally and get rid of the
+debugfs role status/change mechanism.
+
+> +		struct usb_role_switch_desc dwc3_role_switch = {0};
+> +		u32 mode;
+> +
+> +		if (device_property_read_bool(dwc->dev,
+> +					      "role-switch-default-host")) {
+> +			dwc->role_switch_default_mode = USB_DR_MODE_HOST;
+> +			mode = DWC3_GCTL_PRTCAP_HOST;
+> +		} else {
+> +			dwc->role_switch_default_mode = USB_DR_MODE_PERIPHERAL;
+> +			mode = DWC3_GCTL_PRTCAP_DEVICE;
+> +		}
+> +		dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
+> +		dwc3_role_switch.set = dwc3_usb_role_switch_set;
+> +		dwc3_role_switch.get = dwc3_usb_role_switch_get;
+> +		dwc->role_sw = usb_role_switch_register(dwc->dev,
+> +							&dwc3_role_switch);
+> +		if (IS_ERR(dwc->role_sw))
+> +			return PTR_ERR(dwc->role_sw);
+> +
+> +		dwc3_set_mode(dwc, mode);
+> +	} else if (dwc->edev) {
+
+Role switch should exist regardless if dwc->edev is present or not.
+
+>   		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
+>   		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
+>   					       &dwc->edev_nb);
+> @@ -534,6 +607,9 @@ void dwc3_drd_exit(struct dwc3 *dwc)
+>   {
+>   	unsigned long flags;
+>   
+> +	if (dwc->role_sw)
+> +		usb_role_switch_unregister(dwc->role_sw);
+> +
+>   	if (dwc->edev)
+>   		extcon_unregister_notifier(dwc->edev, EXTCON_USB_HOST,
+>   					   &dwc->edev_nb);
+> 
+
+-- 
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
