@@ -2,375 +2,121 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8241CA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 14:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E86CA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 14:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D335222C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 14:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECC1222C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 14:31:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="No1KvCTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408403AbfJROX0 (ORCPT
+        id S2410274AbfJRObY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 10:23:26 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:50291 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731923AbfJROX0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 10:23:26 -0400
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 62409200009;
-        Fri, 18 Oct 2019 14:23:23 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 16:23:23 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?K=E9vin?= RAYMOND <k.raymond@overkiz.com>,
-        Mickael GARDET <m.gardet@overkiz.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: add a common kizboxmini dtsi file
-Message-ID: <20191018142323.GI3125@piout.net>
-References: <20191018140304.31547-1-kamel.bouhara@bootlin.com>
- <20191018140304.31547-3-kamel.bouhara@bootlin.com>
+        Fri, 18 Oct 2019 10:31:24 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43662 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408406AbfJRObY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 10:31:24 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a2so4006561pfo.10
+        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 07:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=DjG/U9BKkuxjcwKWlSCYriO/UmhBuotz78biqdf5iWM=;
+        b=No1KvCTyeV9CU08Ov8gBjr93BqIBAQYrV1Mh4/BIMt/WtSM2oYLybWeA3VK5OHor2o
+         5X45uILNIprGFt75ykbOG0sPBKLbphIsDhtS6yeDiPyzjTfpC3aBu9DuiXo0iw53nGaT
+         9OttcUidiMzO5mWEWFcrUu04Bydt+np+IEeA8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=DjG/U9BKkuxjcwKWlSCYriO/UmhBuotz78biqdf5iWM=;
+        b=lJ7uP9SG5Jl/e3aE+nEYmI2bQwuJv0/AKE8wcNvcTOUW1zomNzbV+81R0He3r5xQ5K
+         IOWw5xi3S+w5wjL+aObth3m1Xi8BB85wY442QcwCL0KUDfNXwaCOBtTVzX8re4n4yTvn
+         ah5SVr9G5RS0iMZJFk3HqDiKhuVe4A3gT/j9BwJw9REHWVxmx199+AiM2qEuLFDnmZVw
+         1lVMDvYYhw1QIHbZ/S4TcIRpSOByDKu1UnvcFr9b+EY+xOjCkq7WCKaBqXpqj0pObPrk
+         xOhx/Q9A05Ef2IgHvSqHbTfAyM7DY3S7eIn2bHMkBoDwdP+oiGydbDQYDFLLhSKviYL9
+         9vQQ==
+X-Gm-Message-State: APjAAAXDHURf5x4+4BIRuqrF14m0WqEpr4Fv0Xg+Dg20urswKsr6cfZk
+        3aQSSUA+fciX1/5blQtyWu6mTw==
+X-Google-Smtp-Source: APXvYqxptM3aFepoM4tJuPMvzOKHwPl2f7fsuCN51qv6pj7z4Pv+GJhJdm+w2xzRVcF02WA8/ldV7A==
+X-Received: by 2002:a17:90a:aa97:: with SMTP id l23mr11538299pjq.7.1571409083037;
+        Fri, 18 Oct 2019 07:31:23 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id c16sm6419980pja.2.2019.10.18.07.31.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 07:31:22 -0700 (PDT)
+Message-ID: <5da9ccba.1c69fb81.3cae7.0064@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191018140304.31547-3-kamel.bouhara@bootlin.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d0fd71fbeff6cd040335846cb65e125a89412d43.1571406041.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1571406041.git.saiprakash.ranjan@codeaurora.org> <d0fd71fbeff6cd040335846cb65e125a89412d43.1571406041.git.saiprakash.ranjan@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        devicetree@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 1/2] soc: qcom: llcc: Add configuration data for SC7180
+User-Agent: alot/0.8.1
+Date:   Fri, 18 Oct 2019 07:31:21 -0700
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18/10/2019 16:03:04+0200, Kamel Bouhara wrote:
-> Split the Kizbox Mini boards into two board configuration, the
-> Kizboxmini Mother board and the Kizboxmini RailDIN board.
-> 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-> Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
-> ---
->  arch/arm/boot/dts/Makefile                    |   2 +
->  arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  38 ++++
->  arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  54 ++++++
->  arch/arm/boot/dts/at91-kizboxmini_common.dtsi | 166 ++++++++++++++++++
+Quoting Sai Prakash Ranjan (2019-10-18 06:57:08)
+> diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
+> index 4bd982a294ce..4acb52f8536b 100644
+> --- a/drivers/soc/qcom/llcc-qcom.c
+> +++ b/drivers/soc/qcom/llcc-qcom.c
+> @@ -91,6 +91,13 @@ struct qcom_llcc_config {
+>         int size;
+>  };
+> =20
+> +static struct llcc_slice_config sc7180_data[] =3D  {
 
-This adds more than the subject says.
+const?
 
->  4 files changed, 260 insertions(+)
->  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
->  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
->  create mode 100644 arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-> 
+> +       { LLCC_CPUSS,    1,  256, 1, 0, 0xf, 0x0, 0, 0, 0, 1, 1 },
+> +       { LLCC_MDM,      8,  128, 1, 0, 0xf, 0x0, 0, 0, 0, 1, 0 },
+> +       { LLCC_GPUHTW,   11, 128, 1, 0, 0xf, 0x0, 0, 0, 0, 1, 0 },
+> +       { LLCC_GPU,      12, 128, 1, 0, 0xf, 0x0, 0, 0, 0, 1, 0 },
+> +};
+> +
+>  static struct llcc_slice_config sdm845_data[] =3D  {
 
-Is arch/arm/boot/dts/at91-kizboxmini.dts still necessary after that?
+This one should be const too I guess but it's not part of this patch.
 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c976b72a4c94..6b3a65f3f6f8 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -38,6 +38,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
->  	at91-ariettag25.dtb \
->  	at91-cosino_mega2560.dtb \
->  	at91-kizboxmini.dtb \
-> +	at91-kizboxmini-mb.dtb \
-> +	at91-kizboxmini-rd.dtb \
->  	at91-wb45n.dtb \
->  	at91sam9g15ek.dtb \
->  	at91sam9g25ek.dtb \
-> diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> new file mode 100644
-> index 000000000000..52921f547dd6
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> @@ -0,0 +1,38 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2015-2018 Overkiz SAS
-> + *   Author: Mickael Gardet <m.gardet@overkiz.com>
-> + *           Kévin Raymond <k.raymond@overkiz.com>
-> + */
-> +/dts-v1/;
-> +#include "at91-kizboxmini_common.dtsi"
+>         { LLCC_CPUSS,    1,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 1 },
+>         { LLCC_VIDSC0,   2,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0 },
+> @@ -112,6 +119,11 @@ static struct llcc_slice_config sdm845_data[] =3D  {
+>         { LLCC_AUDHW,    22, 1024, 1, 1, 0xffc, 0x2,   0, 0, 1, 1, 0 },
+>  };
+> =20
+> +static const struct qcom_llcc_config sc7180_cfg =3D {
+> +       .sct_data       =3D sc7180_data,
+> +       .size           =3D ARRAY_SIZE(sc7180_data),
+> +};
 > +
-> +/ {
-> +	model = "Overkiz Kizbox Mini Mother Board";
-> +	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
-> +		     "atmel,at91sam9x5", "atmel,at91sam9";
-> +
-> +	clocks {
-> +		slow_xtal {
-> +			clock-frequency = <32768>;
-> +		};
-> +	};
-> +
-> +	pwm_leds {
-> +		blue {
-> +			label = "pwm:blue:user";
-> +			pwms = <&pwm0 2 10000000 0>;
-> +			max-brightness = <255>;
-> +			linux,default-trigger = "none";
+>  static const struct qcom_llcc_config sdm845_cfg =3D {
+>         .sct_data       =3D sdm845_data,
+>         .size           =3D ARRAY_SIZE(sdm845_data),
 
-The pwm is redefined here but is still left disabled from the common
-dtsi.
+Otherwise looks OK to me.
 
-> +		};
-> +	};
-> +};
-> +
-> +&usb0 {
-> +	num-ports = <2>;
-> +};
-> +
-> +&rtc {
-> +	status = "okay";
-> +};
-> +
-> diff --git a/arch/arm/boot/dts/at91-kizboxmini-rd.dts b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-> new file mode 100644
-> index 000000000000..1d2db8e16271
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-> @@ -0,0 +1,54 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2015-2018 Overkiz SAS
-> + *   Author: Mickael Gardet <m.gardet@overkiz.com>
-> + *           Kévin Raymond <k.raymond@overkiz.com>
-> + */
-> +/dts-v1/;
-> +#include "at91-kizboxmini_common.dtsi"
-> +
-> +/ {
-> +	model = "Overkiz Kizbox Mini RailDIN";
-> +	compatible = "overkiz,kizboxmini-rd", "atmel,at91sam9g25",
-> +		     "atmel,at91sam9x5", "atmel,at91sam9";
-> +
-> +	clocks {
-> +		slow_xtal {
-> +			clock-frequency = <32768>;
-> +		};
-> +		adc_op_clk {
-> +			status = "okay";
-> +		};
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +	adc0 {
-> +		pinctrl_adc0_ad5: adc0_ad5-0 {
-> +			/* pull-up disable */
-> +			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-> +		};
-> +	};
-> +};
-> +
-> +&usart0 {
-> +	status = "disabled";
-> +};
-> +
-> +&rtc {
-> +	status = "okay";
-> +};
-> +
-> +&leds {
-> +	blue {
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&adc0 {
-> +	atmel,adc-vref = <2500>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_adc0_ad5>;
-> +	atmel,adc-channels-used = <0x0020>;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/at91-kizboxmini_common.dtsi b/arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-> new file mode 100644
-> index 000000000000..2598b776a278
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-> @@ -0,0 +1,166 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * at91-kizboxmini.dts - Device Tree file for Overkiz Kizbox mini board
-> + *
-> + * Copyright (C) 2014-2018 Overkiz SAS
-> + *   Author: Antoine Aubert <a.aubert@overkiz.com>
-> + *           Gaël Portay <g.portay@overkiz.com>
-> + *           Kévin Raymond <k.raymond@overkiz.com>
-> + *           Dorian Rocipon <d.rocipon@overkiz.com>
-> + */
-> +#include "at91sam9g25.dtsi"
-> +
-> +/ {
-> +	chosen {
-> +		bootargs = "ubi.mtd=ubi";
-> +		stdout-path = &dbgu;
-> +	};
-> +
-> +	memory {
-> +		reg = <0x20000000 0x8000000>;
-> +	};
-> +
-> +	clocks {
-> +		main_xtal {
-> +			clock-frequency = <12000000>;
-> +		};
-> +
-> +		adc_op_clk {
-> +			status = "disabled";
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		prog {
-> +			label = "PB_PROG";
-> +			gpios = <&pioC 17 GPIO_ACTIVE_LOW>;
-> +			linux,code = <0x102>;
-> +			wakeup-source;
-> +		};
-> +
-> +		reset {
-> +			label = "PB_RST";
-> +			gpios = <&pioC 16 GPIO_ACTIVE_LOW>;
-> +			linux,code = <0x100>;
-> +			wakeup-source;
-> +		};
-> +	};
-> +
-> +	leds: pwm_leds {
-> +		compatible = "pwm-leds";
-> +
-> +		blue {
-> +			label = "pwm:blue:user";
-> +			pwms = <&pwm0 2 10000000 0>;
-> +			max-brightness = <255>;
-> +			linux,default-trigger = "none";
-> +			status = "disabled";
-> +		};
-> +
-> +		green {
-> +			label = "pwm:green:user";
-> +			pwms = <&pwm0 0 10000000 0>;
-> +			max-brightness = <255>;
-> +			linux,default-trigger = "default-on";
-> +		};
-> +
-> +		red {
-> +			label = "pwm:red:user";
-> +			pwms = <&pwm0 1 10000000 0>;
-> +			max-brightness = <255>;
-> +			linux,default-trigger = "default-on";
-> +		};
-> +	};
-> +};
-> +
-> +&usart0 {
-> +	atmel,use-dma-rx;
-> +	atmel,use-dma-tx;
-> +	status = "okay";
-> +};
-> +
-> +&macb0 {
-> +	phy-mode = "rmii";
-> +	status = "okay";
-> +};
-> +
-> +&pwm0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm0_pwm0_1
-> +		     &pinctrl_pwm0_pwm1_1
-> +		     &pinctrl_pwm0_pwm2_1>;
-> +	status = "okay";
-> +};
-> +
-> +&dbgu {
-> +	status = "okay";
-> +};
-> +
-> +&watchdog {
-> +	status = "okay";
-> +};
-> +
-> +&adc0 {
-> +	status = "disabled";
-> +};
-> +
-> +&rtc {
-> +	status = "disabled";
-> +};
-> +
-> +&ebi {
-> +	pinctrl-0 = <&pinctrl_ebi_addr_nand
-> +			&pinctrl_ebi_data_0_7>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&nand_controller {
-> +	status = "okay";
-> +	pinctrl-0 = <&pinctrl_nand_oe_we
-> +		     &pinctrl_nand_cs
-> +		     &pinctrl_nand_rb>;
-> +	pinctrl-names = "default";
-> +
-> +	nand@3 {
-> +		reg = <0x3 0x0 0x800000>;
-> +		rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-> +		cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-> +		nand-bus-width = <8>;
-> +		nand-ecc-mode = "hw";
-> +		nand-ecc-strength = <4>;
-> +		nand-ecc-step-size = <512>;
-> +		nand-on-flash-bbt;
-> +		label = "atmel_nand";
-> +
-> +		partitions {
-> +			compatible = "fixed-partitions";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			bootstrap@0 {
-> +				label = "bootstrap";
-> +				reg = <0x0 0x20000>;
-> +			};
-> +
-> +			ubi@20000 {
-> +				label = "ubi";
-> +				reg = <0x20000 0x7fe0000>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&usb0 {
-> +	num-ports = <1>;
-> +	status = "okay";
-> +};
-> +
-> +&usb1 {
-> +	status = "okay";
-> +};
-> +
-> -- 
-> 2.23.0
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
