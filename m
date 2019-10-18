@@ -2,64 +2,49 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3F1CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3A4CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6AF121925
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:39:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o/AVbTpu"
+	by mail.kernel.org (Postfix) with ESMTP id 7B67820872
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571424163;
+	bh=1zA/kcoIVok82OHMXldc2ogfVjj+Nv9tGJNM/8xB8Ak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rJb6OGOGHvKyj3C8/gJav+epVWyIXQSTPNSnB+y0zNQF+aK0O6krfrZ/hgyNeXKQA
+	 8JFs6egb8w1NvDiOc4fjjWIkd+saIzF72OVoIgEEBF6PQOXWXX7047ZKhFCwzsl9bx
+	 Q0nG3f+B8qUXqKdNidzJB4rqBsaTgzYcezWQ/0C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505669AbfJRSjd (ORCPT
+        id S1727287AbfJRSmn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:39:33 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33065 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502793AbfJRSjc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:39:32 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a15so6078160oic.0
-        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 11:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ehXsduEufI5Z+LBu/3xJfIT3IHAbo4RBsjs4lfnOsVk=;
-        b=o/AVbTpufUwVlLw2IH/kyrPmX5xyRp44PPCK3+dvQqhbPzdxFfvfgvRB824YVwCV0b
-         mHqfyg6EpZaITHapp0pRDP2YbEiJYwY0ogseEBdeB508tsHikcI+3IU9/gwOyYLdFeZJ
-         ZbUxVMHy/OfJqH5PJ5xLmgv1zZXoykz9Po7XmLQb38fzB/GL5hehWemXS9xrd6SDM7CQ
-         Q6PjTvwvLbbIl3HV57RNVYg7yCrIN6cLFa3oI4z8jEAZrX9JkRhkeU1Nyckec2RDdohC
-         oTcePShT2dSO6AZn7lKOwlXD/Hxbl63zjBDfrabfW33D13eqDuR+PLGHRlyL5s4xbSe6
-         kFLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ehXsduEufI5Z+LBu/3xJfIT3IHAbo4RBsjs4lfnOsVk=;
-        b=tgmKN3kX1FY5Cq+jmVP6b29UElPBBytDahhbY/hJ3wPahaPenPhW8sdTZPsKPng6dp
-         Dp2LTh/pkRWCsOuLexGYHuc3WSYL8XaaF+VXtViCCq8MpsNSKYGST2TVmf5GIZHttSKV
-         BO967em78mYQXcIT+z16I/UhqaJ191vlzaLFvnsQkeyCKHuKfNwS4g1CpwtwBXR5W41l
-         gC6Jtlqe9LQuQptjPVGXNd+AmYL2WJrvB4silGOmouQ9kkLPUEcQ7ifyKAK9VvGUpdu6
-         d3ycrid3u+QZhxzkXXsfz5vvZaPtJZ6f8ZwJ4LAdRVLK5eAEIzrkfulKt6fmE1xMRNQq
-         rO2Q==
-X-Gm-Message-State: APjAAAXTHorV4BWeZGV6ucdlZVoRGGe6HbGLZhlmMBAuJCqETEIrejDO
-        mPVKcLjiLWYznNKM98+XU8nTEzf6Poe9ugu2oP2KSw==
-X-Google-Smtp-Source: APXvYqxcAVv4IVYlFSWySPq8REWSKrEYBWbH7O/dQ1RvjD6j98hFsYaeP0zxpJA7Pbnh2oTn4bFCnA5uGkjCuSXZ2nQ=
-X-Received: by 2002:aca:1a18:: with SMTP id a24mr9341535oia.145.1571423971400;
- Fri, 18 Oct 2019 11:39:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191017213539.00-tzungbi@google.com> <20191017213539.07.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
- <20191018172220.GC4828@sirena.co.uk>
-In-Reply-To: <20191018172220.GC4828@sirena.co.uk>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Sat, 19 Oct 2019 02:39:20 +0800
-Message-ID: <CA+Px+wXCjaP1uktHLffRCe2C1P_D21f2+A=HDdhutoGv-BVzZQ@mail.gmail.com>
-Subject: Re: [PATCH v4 07/10] ASoC: cros_ec_codec: support WoV
-To:     Mark Brown <broonie@kernel.org>
+        Fri, 18 Oct 2019 14:42:43 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48416 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfJRSmm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:42:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vL9H+9/RLGnQWWp4nUhHSA5PaWdyyUffShvgM8LDMQw=; b=Tnve+d6cDI8Zt/OhjcmA2pC2B
+        tDtWgw88wNUXyjYVd3LYnu0U71Y3EnSrRuF/UzSDHC3Mkz15H34vWrDv0I1dRWhPNKQTJyVvs6d5L
+        DtrIdEn68Ti7JG5oSfiFIH38nY42D5by6mMstgXo44qp2u3FrqLVFyhq0rNoPJxMmDN4A=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iLXCx-0004NN-21; Fri, 18 Oct 2019 18:42:39 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 4A2D42741DEA; Fri, 18 Oct 2019 19:42:38 +0100 (BST)
+Date:   Fri, 18 Oct 2019 19:42:38 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Tzung-Bi Shih <tzungbi@google.com>
 Cc:     ALSA development <alsa-devel@alsa-project.org>, robh+dt@kernel.org,
         devicetree@vger.kernel.org,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
@@ -68,35 +53,68 @@ Cc:     ALSA development <alsa-devel@alsa-project.org>, robh+dt@kernel.org,
         Nicolas Boichat <drinkcat@google.com>,
         Jimmy Cheng-Yi Chiang <cychiang@google.com>,
         Dylan Reid <dgreid@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v4 07/10] ASoC: cros_ec_codec: support WoV
+Message-ID: <20191018184238.GD4828@sirena.co.uk>
+References: <20191017213539.00-tzungbi@google.com>
+ <20191017213539.07.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
+ <20191018172220.GC4828@sirena.co.uk>
+ <CA+Px+wXCjaP1uktHLffRCe2C1P_D21f2+A=HDdhutoGv-BVzZQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PHCdUe6m4AxPMzOu"
+Content-Disposition: inline
+In-Reply-To: <CA+Px+wXCjaP1uktHLffRCe2C1P_D21f2+A=HDdhutoGv-BVzZQ@mail.gmail.com>
+X-Cookie: Smear the road with a runner!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 1:22 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Oct 17, 2019 at 10:00:12PM +0800, Tzung-Bi Shih wrote:
-> > 1. Get EC codec's capabilities.
-> > 2. Get and set SHM address if any.
-> > 3. Transmit language model to EC codec if needed.
-> > 4. Start to read audio data from EC codec if receives host event.
->
-> This breaks the build:
->
-> ld: sound/soc/codecs/cros_ec_codec.o: in function `calculate_sha256.isra.15':
-> cros_ec_codec.c:(.text+0x119d): undefined reference to `crypto_alloc_shash'
-> ld: cros_ec_codec.c:(.text+0x11c1): undefined reference to `crypto_shash_digest'
-> ld: cros_ec_codec.c:(.text+0x11df): undefined reference to `crypto_destroy_tfm'
-> make: *** [Makefile:1094: vmlinux] Error 1
 
-Thanks so much for pointing this out.  Yeah, I forgot to select
-CRYPTO_SHA256 in Kconfig.
+--PHCdUe6m4AxPMzOu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Looks like there is a blind point in my local build tests
-(allyesconfig, allnoconfig, allmodconfig).  The config in the build
-fail case could be "CROS_EC_CODEC=y" and "CRYPTO_*=n".
+On Sat, Oct 19, 2019 at 02:39:20AM +0800, Tzung-Bi Shih wrote:
 
-Could you tell me how you get the .config (to enhance my local build
-tests next time)?  I tried randconfig several times but it seems not
-easy to hit the case (i.e. CROS_EC_CODEC=y but CRYPTO_*=n).
+> Could you tell me how you get the .config (to enhance my local build
+> tests next time)?  I tried randconfig several times but it seems not
+> easy to hit the case (i.e. CROS_EC_CODEC=y but CRYPTO_*=n).
+
+That one was caught using merge_config.sh to merge in the config below
+then have a script that turns on all options in my subsystems and MFD.
+
+CONFIG_COMPILE_TEST=y
+CONFIG_OF=y
+CONFIG_I2C=y
+CONFIG_SPI=y
+CONFIG_REGULATOR=y
+CONFIG_SOUND=y
+CONFIG_SND=y
+CONFIG_SND_SOC=y
+CONFIG_SND_SOC_ALL_CODECS=y
+CONFIG_SPMI=y
+CONFIG_NLS=y
+CONFIG_SLIMBUS=y
+CONFIG_CLK=y
+CONFIG_DMADEVICES=y
+CONFIG_PCI=y
+CONFIG_ACPI=y
+
+--PHCdUe6m4AxPMzOu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2qB50ACgkQJNaLcl1U
+h9CgCAf+PKAGMjGbyNjrM3ul2W9lHj8LB2sFoTtX/ynPK4k9veA707e4TUD9jhK4
+H/W7IVj6OgtizWbeQPgFvW2bHyZoc8KBqnrbvyWRf17KEwnuErupBw75uCRlP/S9
+n/eh/YzFhgHNvUNfzwWAjmgCA4iw5pVf6lBWooDbbeDx2KVPl38Z//+1PgWP+cNy
+1ZEdHTidjKewTdQoy8cqrRX0oQXzs2V05oYdvZssWklyTywANvANzsDS+/aapKCj
+LbXwhygk2xImXq9XVHIPGmQmRCbLimEwWzhcMkykfmMF0NcJFUXmLMtr0lF3+PBa
+WHyuO3Z/gbo293M87rP57al0ZXxkCQ==
+=GT10
+-----END PGP SIGNATURE-----
+
+--PHCdUe6m4AxPMzOu--
