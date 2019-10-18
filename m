@@ -2,271 +2,93 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4547CA9EA1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1360CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBBE222C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845E221D7C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Kftb0Sll"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ljMSkMrF";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="boUxtxkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387864AbfJRKLS (ORCPT
+        id S2405136AbfJRKMj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:11:18 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38075 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404942AbfJRKLR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 06:11:17 -0400
-Received: by mail-oi1-f195.google.com with SMTP id d140so443663oib.5
-        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 03:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ts2g+644mCUFX+ep3XKd0KCxqw+jeDCVqxn6lISlA1A=;
-        b=Kftb0Sll06dr2DyhBa7gV6Fq9w8KSZPPCyogNj6tdpq+D7oli9OnNhGr7GDgFOH3pH
-         kiVh/fxwKRGI/aNvD4Hs0G6ZXkhYrrVcK0fPNXOsrt4CxhpYVfnEnxKCd7mPK38ITVo9
-         S1NNvRyWuLzh6gR/KKrZ67JM6jDLn0Pq/hhHDVTEkNmA1QtsNgen8/qwT4C80SloCSXZ
-         L2g9WQYqw57hVz/JyYWk2YXprdkmrlaKvExObSW3IPS/zo4/LJjc34QiFXGkodYcT4y2
-         /jI6c2ifjjexouk8rGuHHhrsc+LttnoCL7CEXIspmlumq4gquHNSjO5Cs4bHJ/xbv9cy
-         OMOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ts2g+644mCUFX+ep3XKd0KCxqw+jeDCVqxn6lISlA1A=;
-        b=l5ti6vqvw1e7cOchyksCsZU6FuF+fWTT0XXxQESabTq9n4LMWIs6yCG/ejUIcwL3ko
-         Ru4rRdFfkxwEtjhKW5LNSgC6jGh/Y2P/N61Jyf6MYpR3eRlNgu/7xGK3HRvA1PhYvhJ+
-         1OxvcUPBI4SASw8Z104S4ptBBT59JWIDBtw8uOid/TjmkJ2pqlSSc6ow5o5PZa2DqNuy
-         MLQX1GOor29k6B9b3lhcIpqin8h13ztWPL1e+nK31IrKyn54xRPyyXHyqTOJg0rPbPb+
-         sP95SgBAMpMQxOTzlijqqQfaTNIi3DTOnQTuLVnJimw/qg3GjiG7GWb9owDh60hxHfZj
-         Cg0A==
-X-Gm-Message-State: APjAAAVMzzkO2qZrlLL4zfYqDb+XgiGko3f+jfpWusLKmXZ/NfabfRJ5
-        WEgEttt1Ph2lmvLRMK6Xf3ghMHp8HrefxzOexlooFg==
-X-Google-Smtp-Source: APXvYqyPqxy7enpG5/6yOqJDA/XF9nzGacPa1CGheBM3Z0AZcX2LrttAXRrjrLyu0q4t85n56ukgm60dT9UEoqxwNvI=
-X-Received: by 2002:aca:4584:: with SMTP id s126mr7353754oia.21.1571393475825;
- Fri, 18 Oct 2019 03:11:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018082557.3696-1-bibby.hsieh@mediatek.com> <CAAFQd5DuETr-N8efWYz7F-qrw1R-gL6fss2Ag1XezapojiakhQ@mail.gmail.com>
-In-Reply-To: <CAAFQd5DuETr-N8efWYz7F-qrw1R-gL6fss2Ag1XezapojiakhQ@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 18 Oct 2019 12:11:04 +0200
-Message-ID: <CAMpxmJURrp+Vd23+b7FHzn4CP81SLLg37xADa8AV9MPXaRXK_A@mail.gmail.com>
-Subject: Re: [PATCH v4] misc: eeprom: at24: support pm_runtime control
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 18 Oct 2019 06:12:39 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43820 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404942AbfJRKMj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 06:12:39 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0A06A60AD1; Fri, 18 Oct 2019 10:12:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571393558;
+        bh=p7lbLlSPaQAFwawg879bpgayWgRgmzrYII43r1DU4yI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ljMSkMrFEgFHEcPhcjGJ8kQwEKaNhV5WocO0k/0NCy4kfZMpEvTug6i/umC4eeEsw
+         jqF4uMuWYA5nEy0tDl/hrCVgBSf5L+7tdbnHCjuzThJYv7V1qQFLl+qICJsokveHV0
+         YNf99bkh/qnBAAV+QK1sOc7SNEJDP9U1Eb1wp3J0=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1357560930;
+        Fri, 18 Oct 2019 10:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571393557;
+        bh=p7lbLlSPaQAFwawg879bpgayWgRgmzrYII43r1DU4yI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=boUxtxkTBODnIwlrxgGAMRIBJ1cN92DTRur4zvDC9ozZNJ8V9zeUuBjFqpg7Yf1Z1
+         0ScSF2H06TY7u7etl7c9l10zd1JpG18O6TSfd8tmti2gBJh9ogKXtVGPkswUwNKerF
+         fwUGdAmkushBo1fbQU8c7Brg1PUxzaT8tqw985Ns=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1357560930
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 2/3] dt-bindings: clock: Introduce RPMHCC bindings for SC7180
+Date:   Fri, 18 Oct 2019 15:39:23 +0530
+Message-Id: <1571393364-32697-3-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
+References: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pt., 18 pa=C5=BA 2019 o 11:25 Tomasz Figa <tfiga@chromium.org> napisa=C5=82=
-(a):
->
-> Hi Bibby,
->
-> On Fri, Oct 18, 2019 at 5:26 PM Bibby Hsieh <bibby.hsieh@mediatek.com> wr=
-ote:
-> >
-> > Although in the most platforms, the power of eeprom and i2c
-> > are alway on, some platforms disable the eeprom and i2c power
-> > in order to meet low power request.
-> > This patch add the pm_runtime ops to control power to support
-> > all platforms.
-> >
-> > Changes since v3:
-> >  - remove redundant calling function
-> >  - change SIMPLE_DEV_PM_OPS to SET_RUNTIME_PM_OPS
-> >  - change supply name
-> >
-> > Changes since v2:
-> >  - rebase onto v5.4-rc1
-> >  - pm_runtime_disable and regulator_bulk_disable at
-> >    err return in probe function
-> >
-> > Changes since v1:
-> >  - remove redundant code
-> >  - fixup coding style
-> >
-> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > ---
-> >  drivers/misc/eeprom/at24.c | 64 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 64 insertions(+)
-> >
-> > diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> > index 2cccd82a3106..68ced4f25916 100644
-> > --- a/drivers/misc/eeprom/at24.c
-> > +++ b/drivers/misc/eeprom/at24.c
-> > @@ -22,6 +22,7 @@
-> >  #include <linux/nvmem-provider.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/pm_runtime.h>
-> > +#include <linux/regulator/consumer.h>
-> >  #include <linux/gpio/consumer.h>
-> >
-> >  /* Address pointer is 16 bit. */
-> > @@ -67,6 +68,12 @@
-> >   * which won't work on pure SMBus systems.
-> >   */
-> >
-> > +static const char * const at24_supply_names[] =3D {
-> > +       "vcc", "i2c",
-> > +};
-> > +
-> > +#define AT24_NUM_SUPPLIES ARRAY_SIZE(at24_supply_names)
-> > +
-> >  struct at24_client {
-> >         struct i2c_client *client;
-> >         struct regmap *regmap;
-> > @@ -91,6 +98,8 @@ struct at24_data {
-> >
-> >         struct gpio_desc *wp_gpio;
-> >
-> > +       bool has_supplies;
-> > +       struct regulator_bulk_data supplies[AT24_NUM_SUPPLIES];
-> >         /*
-> >          * Some chips tie up multiple I2C addresses; dummy devices rese=
-rve
-> >          * them for us, and we'll use them with SMBus calls.
-> > @@ -662,6 +671,17 @@ static int at24_probe(struct i2c_client *client)
-> >         at24->client[0].client =3D client;
-> >         at24->client[0].regmap =3D regmap;
-> >
-> > +       regulator_bulk_set_supply_names(at24->supplies,
-> > +                                       at24_supply_names, AT24_NUM_SUP=
-PLIES);
-> > +       err =3D  devm_regulator_bulk_get(&at24->client[0].client->dev,
-> > +                                      AT24_NUM_SUPPLIES, at24->supplie=
-s);
-> > +       if (err =3D=3D -ENODEV)
-> > +               at24->has_supplies =3D NULL;
->
-> has_supplies is a bool, so the right value would be false.
->
+Add compatible for SC7180 RPMHCC.
 
-Well I admit I did say 'assign NULL to has_supplies' in my previous
-review, but I really meant 'false' and it's pretty clear it was by
-mistake, or so I thought. :)
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Bart
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+index 326bfd7..e325c6e 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+@@ -19,6 +19,7 @@ properties:
+     enum:
+        - qcom,sdm845-rpmh-clk
+        - qcom,sm8150-rpmh-clk
++       - qcom,sc7180-rpmh-clk
 
-> > +       else if (err =3D=3D 0)
->
-> nit: One would typically use !err here as the condition.
->
-> > +               at24->has_supplies =3D !err;
->
-> In this branch, err is always 0, so !err is always true and we can
-> just directly assign true to the field.
->
-> > +       else
-> > +               return err;
-> > +
-> >         at24->wp_gpio =3D devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_=
-HIGH);
-> >         if (IS_ERR(at24->wp_gpio))
-> >                 return PTR_ERR(at24->wp_gpio);
-> > @@ -701,6 +721,14 @@ static int at24_probe(struct i2c_client *client)
-> >
-> >         i2c_set_clientdata(client, at24);
-> >
-> > +       if (at24->has_supplies) {
-> > +               err =3D regulator_bulk_enable(AT24_NUM_SUPPLIES, at24->=
-supplies);
-> > +               if (err) {
-> > +                       dev_err(dev, "Failed to enable power regulators=
-\n");
-> > +                       return err;
-> > +               }
-> > +       }
-> > +
-> >         /* enable runtime pm */
-> >         pm_runtime_set_active(dev);
-> >         pm_runtime_enable(dev);
-> > @@ -713,6 +741,9 @@ static int at24_probe(struct i2c_client *client)
-> >         pm_runtime_idle(dev);
-> >         if (err) {
-> >                 pm_runtime_disable(dev);
-> > +               if (at24->has_supplies)
-> > +                       regulator_bulk_disable(AT24_NUM_SUPPLIES,
-> > +                                              at24->supplies);
-> >                 return -ENODEV;
-> >         }
-> >
-> > @@ -725,15 +756,48 @@ static int at24_probe(struct i2c_client *client)
-> >
-> >  static int at24_remove(struct i2c_client *client)
-> >  {
-> > +       struct at24_data *at24 =3D i2c_get_clientdata(client);
-> > +
-> >         pm_runtime_disable(&client->dev);
-> >         pm_runtime_set_suspended(&client->dev);
-> > +       if (at24->has_supplies)
-> > +               regulator_bulk_disable(AT24_NUM_SUPPLIES, at24->supplie=
-s);
->
-> It's a weird behavior, but pm_runtime_disable() doesn't guarantee that
-> the device is actually resumed after the call returns. See [1].
-> We should move the regulator disable before we call
-> pm_runtime_set_suspended() and add !pm_runtime_status_suspended() as
-> an additional condition to the if.
->
-> By the way, that behavior is actually contradicting other parts of the
-> runtime PM core. For example pm_runtime_active() returns true if
-> dev->power.disable_depth is non-zero, but as per the above, the device
-> could as well be suspended. Rafael, is this expected?
->
-> [1] https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/base/power/r=
-untime.c#L1316
->
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int __maybe_unused at24_suspend(struct device *dev)
-> > +{
-> > +       struct i2c_client *client =3D to_i2c_client(dev);
-> > +       struct at24_data *at24 =3D i2c_get_clientdata(client);
-> > +
-> > +       if (at24->has_supplies)
-> > +               return regulator_bulk_disable(AT24_NUM_SUPPLIES,
-> > +                                             at24->supplies);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int __maybe_unused at24_resume(struct device *dev)
-> > +{
-> > +       struct i2c_client *client =3D to_i2c_client(dev);
-> > +       struct at24_data *at24 =3D i2c_get_clientdata(client);
-> > +
-> > +       if (at24->has_supplies)
-> > +               return regulator_bulk_enable(AT24_NUM_SUPPLIES,
-> > +                                            at24->supplies);
-> >
-> >         return 0;
-> >  }
-> >
-> > +static const struct dev_pm_ops at24_pm_ops =3D {
-> > +       SET_RUNTIME_PM_OPS(at24_suspend, at24_resume, NULL)
->
-> Do we also need pm_runtime_force_suspend() and
-> pm_runtime_force_resume() as system sleep PM ops or it isn't possible
-> for the device to be runtime active when entering the system suspend?
->
-> Best regards,
-> Tomasz
+   clocks:
+     maxItems: 1
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
+
