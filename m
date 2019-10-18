@@ -2,58 +2,58 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8393CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788AECA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D99222CD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D89222CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LdSLvwMj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jLqp5H1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410657AbfJRPcT (ORCPT
+        id S2410715AbfJRPca (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:32:19 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40708 "EHLO
+        Fri, 18 Oct 2019 11:32:30 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40728 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410600AbfJRPcS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:32:18 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWHFJ002693;
-        Fri, 18 Oct 2019 10:32:17 -0500
+        with ESMTP id S2410707AbfJRPc2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:32:28 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWRnv002721;
+        Fri, 18 Oct 2019 10:32:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571412737;
-        bh=fOWgVpmqUokvYHMT4mlXfALvalPrfwrOzlcnd0f6R94=;
+        s=ti-com-17Q1; t=1571412747;
+        bh=WCW45BFjyaYF9dFU+6TLiqhLXA6kwWxcmbGkdoJoeto=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LdSLvwMjC2eEIRq+N0l9Hwc4wiAYwGpdQKt+K/Jq56PKrAm/ugExFfOLwQ/X7zyHP
-         ++MWtOC4jJX342xnugGdWx8ZlsXdsIFWm1yagj5AbJbSDt3HRbjSfi0ymTbsnBj7tc
-         zbTQYFK+zSWZacUy58VAVrHrI8Hs2WQHuSF82iY8=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWH0O105954;
-        Fri, 18 Oct 2019 10:32:17 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        b=jLqp5H1E4cR8HOR3dLLt7E/aX5o+dSiMXk0tXgLGjqkAfXIRAnDivXZWJxbAsrD2M
+         ghv8l2opGiDIGJZLMQbhQB4vOYTDa7GjYN3SHOr9ohFjn0Bglpf/rEb2HWVGZ99nhg
+         zNHj6wbLdbxPwsY9QAMWDOjYjv0U60azXkW7zkDA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFWRKd081245
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 10:32:27 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 10:32:08 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 10:32:19 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 10:32:17 -0500
+ Frontend Transport; Fri, 18 Oct 2019 10:32:18 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15Q080266;
-        Fri, 18 Oct 2019 10:32:17 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15X080266;
+        Fri, 18 Oct 2019 10:32:27 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 12/19] media: ti-vpe: cal: Add DRA76x support
-Date:   Fri, 18 Oct 2019 10:34:30 -0500
-Message-ID: <20191018153437.20614-13-bparrot@ti.com>
+Subject: [Patch 19/19] dt-bindings: media: cal: convert binding to yaml
+Date:   Fri, 18 Oct 2019 10:34:37 -0500
+Message-ID: <20191018153437.20614-20-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191018153437.20614-1-bparrot@ti.com>
 References: <20191018153437.20614-1-bparrot@ti.com>
@@ -65,68 +65,296 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the needed control module register bit layout to support
-the DRA76x family of devices.
+Convert ti-cal.txt to ti,cal.yaml.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 36 +++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ .../devicetree/bindings/media/ti,cal.yaml     | 186 ++++++++++++++++++
+ .../devicetree/bindings/media/ti-cal.txt      |  82 --------
+ 2 files changed, 186 insertions(+), 82 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/ti,cal.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
 
-diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index c912ea82b534..f590fe712d3d 100644
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -290,6 +290,38 @@ static struct cal_data dra72x_es1_cal_data = {
- 	.flags = DRA72_CAL_PRE_ES2_LDO_DISABLE,
- };
- 
-+static struct reg_field dra76x_ctrl_core_csi0_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 8, 8),
-+	[F_CAMMODE] = REG_FIELD(0, 9, 10),
-+	[F_CSI_MODE] = REG_FIELD(0, 11, 11),
-+	[F_LANEENABLE] = REG_FIELD(0, 27, 31),
-+};
+diff --git a/Documentation/devicetree/bindings/media/ti,cal.yaml b/Documentation/devicetree/bindings/media/ti,cal.yaml
+new file mode 100644
+index 000000000000..c3fbb22b4571
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/ti,cal.yaml
+@@ -0,0 +1,186 @@
++# SPDX-License-Identifier: (GPL-2.0)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/ti,cal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static struct reg_field dra76x_ctrl_core_csi1_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 0, 0),
-+	[F_CAMMODE] = REG_FIELD(0, 1, 2),
-+	[F_CSI_MODE] = REG_FIELD(0, 3, 3),
-+	[F_LANEENABLE] = REG_FIELD(0, 24, 26),
-+};
++title: Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL) Device Tree Bindings
 +
-+static struct cal_csi2_phy dra76x_cal_csi_phy[] = {
-+	{
-+		.base_fields = dra76x_ctrl_core_csi0_reg_fields,
-+		.num_lanes = 5,
-+	},
-+	{
-+		.base_fields = dra76x_ctrl_core_csi1_reg_fields,
-+		.num_lanes = 3,
-+	},
-+};
++maintainers:
++  - Benoit Parrot <bparrot@ti.com>
 +
-+static struct cal_data dra76x_cal_data = {
-+	.csi2_phy_core = dra76x_cal_csi_phy,
-+	.num_csi2_phy = ARRAY_SIZE(dra76x_cal_csi_phy),
++description: |-
++  The Camera Adaptation Layer (CAL) is a key component for image capture
++  applications. The capture module provides the system interface and the
++  processing capability to connect CSI2 image-sensor modules to the
++  DRA72x device.
 +
-+	.flags = 0,
-+};
++  CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
++  should contain a 'port' child node with child 'endpoint' node. Please
++  refer to the bindings defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
 +
- /*
-  * there is one cal_dev structure in the driver, it is shared by
-  * all instances.
-@@ -2295,6 +2327,10 @@ static const struct of_device_id cal_of_match[] = {
- 		.compatible = "ti,dra72-pre-es2-cal",
- 		.data = (void *)&dra72x_es1_cal_data,
- 	},
-+	{
-+		.compatible = "ti,dra76-cal",
-+		.data = (void *)&dra76x_cal_data,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, cal_of_match);
++  compatible should be
++     "ti,dra72-cal", for DRA72 controllers
++     "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
++     "ti,dra76-cal", for DRA76 controllers
++     "ti,am654-cal", for AM654 controllers
++
++properties:
++  compatible:
++      items:
++        - enum:
++            - ti,dra72-cal
++            - ti,dra72-pre-es2-cal
++            - ti,dra76-cal
++            - ti,am654-cal
++
++  reg:
++    minItems: 2
++    items:
++      - description: The CAL main register region
++      - description: The RX Core0 (DPHY0) register region
++      - description: The RX Core1 (DPHY1) register region
++
++  reg-names:
++    minItems: 2
++    items:
++      - const: cal_top
++      - const: cal_rx_core0
++      - const: cal_rx_core1
++
++  interrupts:
++    maxItems: 1
++
++  syscon-camerrx:
++    maxItems: 1
++    items:
++      - description:
++           phandle to the device control module and offset to the
++           control_camerarx_core register
++
++  clocks:
++    maxItems: 1
++    description: functional clock
++
++  clock-names:
++    items:
++      - const: fck
++
++  power-domains:
++    description:
++      List of phandle and PM domain specifier as documented in
++      Documentation/devicetree/bindings/power/power_domain.txt
++    maxItems: 1
++
++  # See ./video-interfaces.txt for details
++  ports:
++    maxItems: 1
++    type: object
++    additionalProperties: false
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++    patternProperties:
++      '^port@[0-9a-fA-F]+$':
++        minItems: 1
++        maxItems: 2
++        type: object
++        additionalProperties: false
++
++        properties:
++          reg:
++            minItems: 1
++            items:
++              - description: The port id
++
++        patternProperties:
++          '^endpoint@[0-9a-fA-F]+$':
++            minItems: 1
++            type: object
++            additionalProperties: false
++
++            properties:
++              clock-lanes:
++                maxItems: 1
++
++              data-lanes:
++                minItems: 1
++                maxItems: 4
++
++              remote-endpoint: true
++
++            required:
++              - remote-endpoint
++
++        required:
++          - reg
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - syscon-camerrx
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    cal: cal@4845b000 {
++        compatible = "ti,dra72-cal";
++        reg = <0x4845B000 0x400>,
++              <0x4845B800 0x40>,
++              <0x4845B900 0x40>;
++        reg-names = "cal_top",
++                    "cal_rx_core0",
++                    "cal_rx_core1";
++        interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++        syscon-camerrx = <&scm_conf 0xE94>;
++
++        ports {
++              #address-cells = <1>;
++              #size-cells = <0>;
++
++              csi2_0: port@0 {
++                    reg = <0>;
++                    csi2_phy0: endpoint@0 {
++                           remote-endpoint = <&csi2_cam0>;
++                           clock-lanes = <0>;
++                           data-lanes = <1 2>;
++                    };
++              };
++        };
++    };
++
++    i2c5: i2c@4807c000 {
++        status = "okay";
++        clock-frequency = <400000>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ov5640@3c {
++               compatible = "ovti,ov5640";
++               reg = <0x3c>;
++
++               clocks = <&clk_ov5640_fixed>;
++               clock-names = "xclk";
++
++               port {
++                    csi2_cam0: endpoint@0 {
++                            remote-endpoint = <&csi2_phy0>;
++                            clock-lanes = <0>;
++                            data-lanes = <1 2>;
++                    };
++               };
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
+deleted file mode 100644
+index b7bf8492dc2a..000000000000
+--- a/Documentation/devicetree/bindings/media/ti-cal.txt
++++ /dev/null
+@@ -1,82 +0,0 @@
+-Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL)
+-------------------------------------------------------
+-
+-The Camera Adaptation Layer (CAL) is a key component for image capture
+-applications. The capture module provides the system interface and the
+-processing capability to connect CSI2 image-sensor modules to the
+-DRA72x device.
+-
+-Required properties:
+-- compatible:
+- Should be "ti,dra72-cal", for DRA72 controllers
+- Should be "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
+- Should be "ti,dra76-cal", for DRA76 controllers
+- Should be "ti,am654-cal", for AM654 controllers
+-- reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
+-	control address space
+-- reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
+-	     registers
+-- interrupts: should contain IRQ line for the CAL;
+-- syscon-camerrx: phandle to the device control module and offset to the
+-		  control_camerarx_core register
+-		  This node is meant to replace the "camerrx_control" reg
+-		  entry above but "camerrx_control" is still handled
+-		  for backward compatibility.
+-
+-CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
+-should contain a 'port' child node with child 'endpoint' node. Please
+-refer to the bindings defined in
+-Documentation/devicetree/bindings/media/video-interfaces.txt.
+-
+-Example:
+-	cal: cal@4845b000 {
+-		compatible = "ti,dra72-cal";
+-		reg = <0x4845B000 0x400>,
+-		      <0x4845B800 0x40>,
+-		      <0x4845B900 0x40>;
+-		reg-names = "cal_top",
+-			    "cal_rx_core0",
+-			    "cal_rx_core1";
+-		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+-		syscon-camerrx = <&scm_conf 0xE94>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			csi2_0: port@0 {
+-				reg = <0>;
+-				csi2_phy0: endpoint@0 {
+-					remote-endpoint = <&csi2_cam0>;
+-					clock-lanes = <0>;
+-					data-lanes = <1 2>;
+-				};
+-			};
+-			csi2_1: port@1 {
+-				reg = <1>;
+-			};
+-		};
+-	};
+-
+-	i2c5: i2c@4807c000 {
+-		status = "okay";
+-		clock-frequency = <400000>;
+-
+-		ov5640@3c {
+-			compatible = "ovti,ov5640";
+-			reg = <0x3c>;
+-
+-			clocks = <&clk_ov5640_fixed>;
+-			clock-names = "xclk";
+-
+-			port {
+-				csi2_cam0: endpoint {
+-					remote-endpoint = <&csi2_phy0>;
+-					clock-lanes = <0>;
+-					data-lanes = <1 2>;
+-				};
+-			};
+-		};
+-	};
 -- 
 2.17.1
 
