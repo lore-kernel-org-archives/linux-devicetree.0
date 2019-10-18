@@ -1,103 +1,208 @@
-Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F96AC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A92ECA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3EC21848
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:36:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="oN0HuX8T"
+	by mail.kernel.org (Postfix) with ESMTP id 76002222CC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571422023;
+	bh=TXKKnUpEYyMYZVZoy4vSROxkodnq1RiNDWtOKXy1SjI=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=ia1VJ0GK+1+mpccRXqCNwMILZJjaECrI73VzKVuV9Dczoc0Vqpjew7OwS2fe5TDgO
+	 uWRMRWxiVHLT7MVDaeal642IxdAuTADzq0mQ1bFys5qG6u8jiAsUYhCovVViT5i9Aa
+	 pQqfJav+1rKP62GhZBTpAD421JixxSCTAgc+CIus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfKFWg6 (ORCPT
+        id S2505690AbfJRSHD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:36:58 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:60543 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbfKFWg6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 17:36:58 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EFB9723E40;
-        Wed,  6 Nov 2019 23:36:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1573079815;
-        bh=0Cgnak2q2pgGiqu0fUxgRYjBqp9MNgljwA9whngru/8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oN0HuX8TDY08mBidhtFIjFi5aeLyPuODkvfLMHX/uLGtCbv2ty2Jtf+vVvj5E1jTw
-         cihwbIe4uPu1gkiE+F0GqlqYu39oOV5sUIkC4YVisPIsEtCFsckqe5LvlEBrQTk1hM
-         xqcJzORr2bJ25jlA6sUeMF187+/8xwZzNn1+ShBU=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 0/6] net: phy: at803x device tree binding
-Date:   Wed,  6 Nov 2019 23:36:11 +0100
-Message-Id: <20191106223617.1655-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+        Fri, 18 Oct 2019 14:07:03 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44656 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505686AbfJRSHC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:07:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=8Jt+TbiinheXcTe1WTC0Ra4cJpH5Mt5CGg3Akl1OuBc=; b=a+LJenjDe2eH
+        aoLdOVf/7uXxiiu8AbrvWTGzT7OOGvQWCP9W/NigQD4DIrgO0j+/d+bntl+AKJAl9D9GjA6vrauYa
+        dfunUVrSRsAXbLgx0tfpViQXw6ra1OgIcyBEUsv9Mbmgo3iR4Bxq7/hKaShVj5WIXTZlToPGyx4AE
+        BFZXk=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iLWeQ-0004Eh-MG; Fri, 18 Oct 2019 18:06:58 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id CC3812743273; Fri, 18 Oct 2019 19:06:57 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     alsa-devel@alsa-project.org, Benson Leung <bleung@chromium.org>,
+        bleung@google.com, broonie@kernel.org, cychiang@google.com,
+        devicetree@vger.kernel.org, dgreid@google.com, drinkcat@google.com,
+        enric.balletbo@collabora.com, gwendal@google.com,
+        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org,
+        tzungbi@google.com
+Subject: Applied "platform/chrome: cros_ec: add common commands for EC codec" to the asoc tree
+In-Reply-To: <20191017213539.04.Idc3c6e1cd94b70bf010249928d4a93c6c90495b7@changeid>
+X-Patchwork-Hint: ignore
+Message-Id: <20191018180657.CC3812743273@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:06:57 +0100 (BST)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds a device tree binding to configure the clock and the RGMII voltage.
+The patch
 
-Changes since v1:
- - rebased to latest net-next
- - renamed "Atheros" to "Qualcomm Atheros"
- - add a new patch to remove config_init() from AR9331
+   platform/chrome: cros_ec: add common commands for EC codec
 
-Changes since the RFC:
- - renamed the Kconfig entry to "Qualcomm Atheros.." and reordered the
-   item
- - renamed the prefix from atheros to qca
- - use the correct name AR803x (instead of AT803x) in new files and
-   dt-bindings.
- - listed the PHY maintainers in the new schema. Hopefully, thats ok.
- - fixed a typo in the bindings schema
- - run dtb_checks and dt_binding_check and fixed the schema
- - dropped the rgmii-io-1v8 property; instead provide two regulators vddh
-   and vddio, add one consumer vddio-supply
- - fix the clock settings for the AR8030/AR8035
- - only the AR8031 supports chaning the LDO and the PLL mode in software.
-   Check if we have the correct PHY.
- - new patch to mention the AR8033 which is the same as the AR8031 just
-   without PTP support
- - new patch which corrects any displayed PHY names and comments. Be
-   consistent.
+has been applied to the asoc tree at
 
-Michael Walle (6):
-  net: phy: at803x: fix Kconfig description
-  dt-bindings: net: phy: Add support for AT803X
-  net: phy: at803x: add device tree binding
-  net: phy: at803x: mention AR8033 as same as AR8031
-  net: phy: at803x: fix the PHY names
-  net: phy: at803x: remove config_init for AR9331
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
- .../devicetree/bindings/net/qca,ar803x.yaml   | 111 ++++++
- MAINTAINERS                                   |   2 +
- drivers/net/phy/Kconfig                       |  10 +-
- drivers/net/phy/at803x.c                      | 321 +++++++++++++++++-
- include/dt-bindings/net/qca-ar803x.h          |  13 +
- 5 files changed, 441 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/qca,ar803x.yaml
- create mode 100644 include/dt-bindings/net/qca-ar803x.h
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 104c6f8f7ff859ddd53b69c4af11e83f2971f0c4 Mon Sep 17 00:00:00 2001
+From: Tzung-Bi Shih <tzungbi@google.com>
+Date: Thu, 17 Oct 2019 22:00:09 +0800
+Subject: [PATCH] platform/chrome: cros_ec: add common commands for EC codec
+
+Add the following common commands:
+- GET_CAPABILITIES
+- GET_SHM_ADDR
+- SET_SHM_ADDR
+
+Acked-by: Benson Leung <bleung@chromium.org>
+Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+Link: https://lore.kernel.org/r/20191017213539.04.Idc3c6e1cd94b70bf010249928d4a93c6c90495b7@changeid
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/platform/chrome/cros_ec_trace.c       |  1 +
+ .../linux/platform_data/cros_ec_commands.h    | 64 ++++++++++++++++++-
+ 2 files changed, 63 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
+index e73bb6a8b00e..2ea0d4e0d54d 100644
+--- a/drivers/platform/chrome/cros_ec_trace.c
++++ b/drivers/platform/chrome/cros_ec_trace.c
+@@ -98,6 +98,7 @@
+ 	TRACE_SYMBOL(EC_CMD_SB_READ_BLOCK), \
+ 	TRACE_SYMBOL(EC_CMD_SB_WRITE_BLOCK), \
+ 	TRACE_SYMBOL(EC_CMD_BATTERY_VENDOR_PARAM), \
++	TRACE_SYMBOL(EC_CMD_EC_CODEC), \
+ 	TRACE_SYMBOL(EC_CMD_EC_CODEC_DMIC), \
+ 	TRACE_SYMBOL(EC_CMD_EC_CODEC_I2S_RX), \
+ 	TRACE_SYMBOL(EC_CMD_REBOOT_EC), \
+diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+index 58e460c015ef..3ca0fa9e92a7 100644
+--- a/include/linux/platform_data/cros_ec_commands.h
++++ b/include/linux/platform_data/cros_ec_commands.h
+@@ -4466,8 +4466,68 @@ enum mkbp_cec_event {
+ 
+ /*****************************************************************************/
+ 
++/* Commands for audio codec. */
++#define EC_CMD_EC_CODEC 0x00BC
++
++enum ec_codec_subcmd {
++	EC_CODEC_GET_CAPABILITIES = 0x0,
++	EC_CODEC_GET_SHM_ADDR = 0x1,
++	EC_CODEC_SET_SHM_ADDR = 0x2,
++	EC_CODEC_SUBCMD_COUNT,
++};
++
++enum ec_codec_cap {
++	EC_CODEC_CAP_LAST = 32,
++};
++
++enum ec_codec_shm_id {
++	EC_CODEC_SHM_ID_LAST,
++};
++
++enum ec_codec_shm_type {
++	EC_CODEC_SHM_TYPE_EC_RAM = 0x0,
++	EC_CODEC_SHM_TYPE_SYSTEM_RAM = 0x1,
++};
++
++struct __ec_align1 ec_param_ec_codec_get_shm_addr {
++	uint8_t shm_id;
++	uint8_t reserved[3];
++};
++
++struct __ec_align4 ec_param_ec_codec_set_shm_addr {
++	uint64_t phys_addr;
++	uint32_t len;
++	uint8_t shm_id;
++	uint8_t reserved[3];
++};
++
++struct __ec_align4 ec_param_ec_codec {
++	uint8_t cmd; /* enum ec_codec_subcmd */
++	uint8_t reserved[3];
++
++	union {
++		struct ec_param_ec_codec_get_shm_addr
++				get_shm_addr_param;
++		struct ec_param_ec_codec_set_shm_addr
++				set_shm_addr_param;
++	};
++};
++
++struct __ec_align4 ec_response_ec_codec_get_capabilities {
++	uint32_t capabilities;
++};
++
++struct __ec_align4 ec_response_ec_codec_get_shm_addr {
++	uint64_t phys_addr;
++	uint32_t len;
++	uint8_t type;
++	uint8_t reserved[3];
++};
++
++/*****************************************************************************/
++
+ /* Commands for DMIC on audio codec. */
+-#define EC_CMD_EC_CODEC_DMIC 0x00BC
++#define EC_CMD_EC_CODEC_DMIC 0x00BD
+ 
+ enum ec_codec_dmic_subcmd {
+ 	EC_CODEC_DMIC_SET_GAIN = 0x0,
+@@ -4500,7 +4560,7 @@ struct __ec_align1 ec_response_ec_codec_dmic_get_gain {
+ 
+ /* Commands for I2S RX on audio codec. */
+ 
+-#define EC_CMD_EC_CODEC_I2S_RX 0x00BD
++#define EC_CMD_EC_CODEC_I2S_RX 0x00BE
+ 
+ enum ec_codec_i2s_rx_subcmd {
+ 	EC_CODEC_I2S_RX_ENABLE = 0x0,
 -- 
 2.20.1
 
