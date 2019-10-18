@@ -1,100 +1,167 @@
-Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C98EC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FD0CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1232187F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5CC222C5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="S9twNAJZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="gRJ5jixv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfKFWg6 (ORCPT
+        id S2443096AbfJRSqp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:36:58 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:38597 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfKFWg6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 17:36:58 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 0628B23E46;
-        Wed,  6 Nov 2019 23:36:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1573079816;
-        bh=KUmWb8hbgelgYHG2KnGE1LTw4puVHmuuwDCpfOcUbkU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S9twNAJZmEaGqc4NmAviYdUHZPx8o5ApHJdNlgIUKv+ykTLW0waCall5IlfZ+v11B
-         rUQAkxSCepUC12EkVmA4yxbcX5m7WKWmWKAKYbi5xMQmU4FLGJ0tc3fqNDy+OGJ5/z
-         KFt0Zt/HWVyRBxVxDQTt3bYiL7IUVIKIP0e9jC/Q=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 1/6] net: phy: at803x: fix Kconfig description
-Date:   Wed,  6 Nov 2019 23:36:12 +0100
-Message-Id: <20191106223617.1655-2-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191106223617.1655-1-michael@walle.cc>
-References: <20191106223617.1655-1-michael@walle.cc>
+        Fri, 18 Oct 2019 14:46:45 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:19472 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443051AbfJRSqp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:46:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571424400;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=iSkqypEOIXqjPnMech7nom91pT488acblcWrfraIbHk=;
+        b=gRJ5jixv+dRRemDnjjwFltuBH2u419Tnvx9oCqofryjtZAisutnk+GcvoGye/QauC6
+        0NkuThKpPac0gQJsQs0rzRMJorYVUI6xhWSUZ3bhkk1eYjZWE4P2uwCwcbqkGsDy4ehH
+        8DUYlQDtDNDiWdOeNyQgzZ/iWtjc9+85VZQPC/NCwTespzq+Ch3Zechep5fnvJgb8XUS
+        LczGqsf/HeyVzcZokkcsB1da/nuPjD4z+vqQ7XTWz/5hYzk4L5iDAGL/TaMPEMCLnjTe
+        GB4RD/yTZsQ8vr4shaAPfQvtOpjU5k9Bjmat2c5QwZp8B4c0O56+QajutaQp8QC8a5hr
+        DojQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6F3CFF60="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id R0b2a8v9IIkWDLC
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 18 Oct 2019 20:46:32 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+Date:   Fri, 18 Oct 2019 20:46:24 +0200
+Message-Id: <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <cover.1571424390.git.hns@goldelico.com>
+References: <cover.1571424390.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The name of the PHY is actually AR803x not AT803x. Additionally, add the
-name of the vendor and mention the AR8031 support.
+The Imagination PVR/SGX GPU is part of several SoC from
+multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
+and others.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Here we describe how the SGX processor is interfaced to
+the SoC (registers, interrupt etc.).
+
+Clock, Reset and power management should be handled
+by the parent node.
+
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/net/phy/Kconfig | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/gpu/img,pvrsgx.txt    | 76 +++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
 
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index fe602648b99f..1b884ebb4e48 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -282,11 +282,6 @@ config AX88796B_PHY
- 	  Currently supports the Asix Electronics PHY found in the X-Surf 100
- 	  AX88796B package.
- 
--config AT803X_PHY
--	tristate "AT803X PHYs"
--	---help---
--	  Currently supports the AT8030 and AT8035 model
--
- config BCM63XX_PHY
- 	tristate "Broadcom 63xx SOCs internal PHY"
- 	depends on BCM63XX || COMPILE_TEST
-@@ -444,6 +439,11 @@ config NXP_TJA11XX_PHY
- 	---help---
- 	  Currently supports the NXP TJA1100 and TJA1101 PHY.
- 
-+config AT803X_PHY
-+	tristate "Qualcomm Atheros AR803X PHYs"
-+	help
-+	  Currently supports the AR8030, AR8031 and AR8035 model
+diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
+new file mode 100644
+index 000000000000..4ad87c075791
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
+@@ -0,0 +1,76 @@
++Imagination PVR/SGX GPU
 +
- config QSEMI_PHY
- 	tristate "Quality Semiconductor PHYs"
- 	---help---
++Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by this binding.
++
++Required properties:
++- compatible:	Should be one of
++		"img,sgx530-121", "img,sgx530", "ti,omap-omap3-sgx530-121";
++		  - BeagleBoard ABC, OpenPandora 600MHz
++		"img,sgx530-125", "img,sgx530", "ti,omap-omap3-sgx530-125";
++		  - BeagleBoard XM, GTA04, OpenPandora 1GHz
++		"img,sgx530-125", "img,sgx530", "ti,omap-am3517-sgx530-125";
++		"img,sgx530-125", "img,sgx530", "ti,omap-am335x-sgx530-125";
++		  - BeagleBone Black
++		"img,sgx540-120", "img,sgx540", "ti,omap-omap4-sgx540-120";
++		  - Pandaboard (ES)
++		"img,sgx544-112", "img,sgx544", "ti,omap-omap4-sgx544-112";
++		"img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
++		  - OMAP5 UEVM, Pyra Handheld
++		"img,sgx544-116", "img,sgx544", "ti,omap-dra7-sgx544-116";
++
++		For further study:
++			"ti,omap-am3517-sgx530-?"
++			"ti,omap-am43xx-sgx530-?"
++			"ti,ti43xx-sgx"
++			"ti,ti81xx-sgx"
++			"img,jz4780-sgx5??-?"
++			"intel,poulsbo-sgx?"
++			"intel,cedarview-sgx?"
++			"sunxi,sgx-544-?" - Banana-Pi-M3 (Allwinner A83T)
++
++		The "ti,omap..." entries are needed temporarily to handle SoC
++		specific builds of the kernel module.
++
++		In the long run, only the "img,sgx..." entry should suffice
++		to match a generic driver for all architectures and driver
++		code can dynamically find out on which SoC it is running.
++
++
++- reg:		Physical base addresses and lengths of the register areas.
++- reg-names:	Names for the register areas.
++- interrupts:	The interrupt numbers.
++
++Optional properties:
++- timer:	the timer to be used by the driver.
++- img,cores:	number of cores. Defaults to <1>.
++
++/ {
++	ocp {
++		sgx_module: target-module@56000000 {
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x5600fe00 0x4>,
++			      <0x5600fe10 0x4>;
++			reg-names = "rev", "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x56000000 0x2000000>;
++
++			sgx@fe00 {
++				compatible = "img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
++				reg = <0xfe00 0x200>;
++				reg-names = "sgx";
++				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++				timer = <&timer11>;
++				img,cores = <2>;
++			};
++		};
++	};
++};
 -- 
-2.20.1
+2.19.1
 
