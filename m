@@ -7,67 +7,70 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E66CA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 19:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E3CCA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 19:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD32222C5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 19:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED51D21897
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 19:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571425650;
-	bh=ZvKSuxQuN/jT3Fmjbjwnw6yt3Bbj3F9A+MC7acj1eYo=;
+	s=default; t=1571425744;
+	bh=GmnsYtHJlL/5yxZfKlw6PRpT4uy/4qUReZoxvsBsi1A=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TP645Ei5I0xaWkN+jK5ZgdMHcsBDvbFye9zPaGlb66Dx2jiEPvFkQngnbrJXlS2Nm
-	 3etP6Y4B3NS21wtT2RPW39mjJoY9j36Yxt9yYDQddaLvs1BtTdLLlK2aJwhOJj1Y9U
-	 18YZIXPSTmSkcxOwKjU5bc4CY1gNly6hj1PH+cgY=
+	b=RYNk5Xg5YijzWk/6T9SbD2UoNiPxXJR09gw9gwniN/GzeHBcDFvPqNhRX7t4D6XIH
+	 lTwAalil1uv56SWkNr3GUljc67CgKst5xQlMadWP4LPZ4maiqpYytmW0Ql4ER27CoV
+	 7KIfonh/ejSDkm/HirxHxfPT0LKa2B4G1Ykngcwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436538AbfJRTH3 (ORCPT
+        id S2443270AbfJRTJA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 15:07:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58594 "EHLO mail.kernel.org"
+        Fri, 18 Oct 2019 15:09:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436505AbfJRTH3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 18 Oct 2019 15:07:29 -0400
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        id S2443216AbfJRTI7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:08:59 -0400
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 070A2222CC;
-        Fri, 18 Oct 2019 19:07:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD7F2222C9;
+        Fri, 18 Oct 2019 19:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571425648;
-        bh=ZvKSuxQuN/jT3Fmjbjwnw6yt3Bbj3F9A+MC7acj1eYo=;
+        s=default; t=1571425738;
+        bh=GmnsYtHJlL/5yxZfKlw6PRpT4uy/4qUReZoxvsBsi1A=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r3J6l9JZJc1Zp8tJF9mLQSmXEA68DllcySKWuRRg/es60oLadlYjJhDaAjldnASSb
-         ATx8Um+zjpqNtXvhGwZLcVJe0hgMmNdA9edlIZqFx/1a8JB/Sb5YemGVg4SUJXOiKR
-         jRtSfzVPwCdgSZPJWLYASOe3Oyl6UG1dXPjI3dRE=
-Received: by mail-qk1-f176.google.com with SMTP id u184so6302458qkd.4;
-        Fri, 18 Oct 2019 12:07:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAVqzXlNJnNjJ81jSPsM8O8tkPvTcnq71VAfKdCP4a0THxoUFi0+
-        uzBdVPjL2XkndqxsBQZDVGI1oMTwUbSLk2Dtdw==
-X-Google-Smtp-Source: APXvYqyEfCrAtNPgA6gsKBq8urq8H5iqVlTDcHX0aikHpYcOCmiQnShU4x9vV/ge/RWs5MTLKNtafQj54U/NALrxbdY=
-X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr10482791qkl.152.1571425646996;
- Fri, 18 Oct 2019 12:07:26 -0700 (PDT)
+        b=Yzkb7O7kToMr9ftoJIsljRgPzqeY2SH+sT26HuU4kIKWFrb7ilYaeEZRB+M/FrexE
+         MEZ21PsBxIZ12PSDEx0CTVd+lU+RIc+As8k86sYzqoxW/lMHMMx+o17Yq1/qTabGIG
+         MPkvil9K++tYpUbqFk9N8tfSNy7Gz9RCledj00r0=
+Received: by mail-qk1-f182.google.com with SMTP id 71so2430896qkl.0;
+        Fri, 18 Oct 2019 12:08:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAWPTGVIErsQpV9L5ULLQxS7fJPsfviO5YoaqomYYv5JvXN77GKk
+        WOZEGGhkQS0+TkwdpFWfXnD+i2N4olAwskpABg==
+X-Google-Smtp-Source: APXvYqzvveMwPyNyUPS6FKiuGC/+W7xzJ9dudNA/QUPWCwfDT6mTtkpqAPxNed471TqkRHs19WUG0vAz2nR9XcZAlYU=
+X-Received: by 2002:a05:620a:12b4:: with SMTP id x20mr6347242qki.254.1571425736980;
+ Fri, 18 Oct 2019 12:08:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
- <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz>
- <20191017192437.GA24080@bogus> <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
-In-Reply-To: <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
+References: <20191017071234.8719-1-brgl@bgdev.pl> <20191017071234.8719-4-brgl@bgdev.pl>
+ <20191017183543.GA28403@bogus> <CAMpxmJUMgqocphdPhS_zCYX3ib_hnwhnhBfQEVaY8hnpi4vxQg@mail.gmail.com>
+In-Reply-To: <CAMpxmJUMgqocphdPhS_zCYX3ib_hnwhnhBfQEVaY8hnpi4vxQg@mail.gmail.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 18 Oct 2019 14:07:15 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
-Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+Date:   Fri, 18 Oct 2019 14:08:45 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKCbFWsozuaUbz5nBYUUT_jUtP03qRQ8Y9eGVs1knf77A@mail.gmail.com>
+Message-ID: <CAL_JsqKCbFWsozuaUbz5nBYUUT_jUtP03qRQ8Y9eGVs1knf77A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: regulator: max77650: convert the
+ binding document to yaml
 To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
         linux-devicetree <devicetree@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-pm <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
@@ -75,86 +78,114 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 1:00 AM Bartosz Golaszewski
+On Fri, Oct 18, 2019 at 1:45 AM Bartosz Golaszewski
 <bgolaszewski@baylibre.com> wrote:
 >
-> czw., 17 pa=C5=BA 2019 o 21:24 Rob Herring <robh@kernel.org> napisa=C5=82=
+> czw., 17 pa=C5=BA 2019 o 20:35 Rob Herring <robh@kernel.org> napisa=C5=82=
 (a):
 > >
-> > On Thu, Oct 17, 2019 at 04:10:50PM +1300, Chris Packham wrote:
-> > > This GPIO controller is present on a number of Broadcom switch ASICs
-> > > with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-> > > blocks but different enough to require a separate driver.
+> > On Thu, Oct 17, 2019 at 09:12:31AM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > > >
-> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > Convert the binding document for MAX77650 regulator module to YAML.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > > > ---
+> > >  .../bindings/regulator/max77650-regulator.txt | 41 -----------------=
+--
+> > >  .../regulator/max77650-regulator.yaml         | 31 ++++++++++++++
+> > >  2 files changed, 31 insertions(+), 41 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/regulator/max77=
+650-regulator.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/regulator/max77=
+650-regulator.yaml
 > > >
-> > > Notes:
-> > >     Changes in v2:
-> > >     - Document as DT schema
-> > >     - Include ngpios, #gpio-cells and gpio-controller properties
-> > >
-> > >  .../bindings/gpio/brcm,xgs-iproc.yaml         | 83 +++++++++++++++++=
-++
-> > >  1 file changed, 83 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-i=
-proc.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.ya=
-ml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> > > diff --git a/Documentation/devicetree/bindings/regulator/max77650-reg=
+ulator.txt b/Documentation/devicetree/bindings/regulator/max77650-regulator=
+.txt
+> > > deleted file mode 100644
+> > > index f1cbe813c30f..000000000000
+> > > --- a/Documentation/devicetree/bindings/regulator/max77650-regulator.=
+txt
+> > > +++ /dev/null
+> > > @@ -1,41 +0,0 @@
+> > > -Regulator driver for MAX77650 PMIC from Maxim Integrated.
+> > > -
+> > > -This module is part of the MAX77650 MFD device. For more details
+> > > -see Documentation/devicetree/bindings/mfd/max77650.txt.
+> > > -
+> > > -The regulator controller is represented as a sub-node of the PMIC no=
+de
+> > > -on the device tree.
+> > > -
+> > > -The device has a single LDO regulator and a SIMO buck-boost regulato=
+r with
+> > > -three independent power rails.
+> > > -
+> > > -Required properties:
+> > > ---------------------
+> > > -- compatible:                Must be "maxim,max77650-regulator"
+> > > -
+> > > -Each rail must be instantiated under the regulators subnode of the t=
+op PMIC
+> > > -node. Up to four regulators can be defined. For standard regulator p=
+roperties
+> > > -refer to Documentation/devicetree/bindings/regulator/regulator.txt.
+> > > -
+> > > -Available regulator compatible strings are: "ldo", "sbb0", "sbb1", "=
+sbb2".
+> > > -
+> > > -Example:
+> > > ---------
+> > > -
+> > > -     regulators {
+> > > -             compatible =3D "maxim,max77650-regulator";
+> > > -
+> > > -             max77650_ldo: regulator@0 {
+> > > -                     regulator-compatible =3D "ldo";
+> > > -                     regulator-name =3D "max77650-ldo";
+> > > -                     regulator-min-microvolt =3D <1350000>;
+> > > -                     regulator-max-microvolt =3D <2937500>;
+> > > -             };
+> > > -
+> > > -             max77650_sbb0: regulator@1 {
+> > > -                     regulator-compatible =3D "sbb0";
+> > > -                     regulator-name =3D "max77650-sbb0";
+> > > -                     regulator-min-microvolt =3D <800000>;
+> > > -                     regulator-max-microvolt =3D <1587500>;
+> > > -             };
+> > > -     };
+> > > diff --git a/Documentation/devicetree/bindings/regulator/max77650-reg=
+ulator.yaml b/Documentation/devicetree/bindings/regulator/max77650-regulato=
+r.yaml
 > > > new file mode 100644
-> > > index 000000000000..71998551209e
+> > > index 000000000000..a8770742836d
 > > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> > > @@ -0,0 +1,83 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +++ b/Documentation/devicetree/bindings/regulator/max77650-regulator.=
+yaml
+> > > @@ -0,0 +1,31 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
 > > > +%YAML 1.2
 > > > +---
-> > > +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
+> > > +$id: http://devicetree.org/schemas/regulator/max77650-regulator.yaml=
+#
 > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > > +
-> > > +title: Broadcom XGS iProc GPIO controller
+> > > +title: Regulator driver for MAX77650 PMIC from Maxim Integrated.
 > > > +
 > > > +maintainers:
-> > > +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > > > +
 > > > +description: |
-> > > +  This controller is the Chip Common A GPIO present on a number of B=
-roadcom
-> > > +  switch ASICs with integrated SoCs.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - brcm,iproc-gpio-cca
+> > > +  This module is part of the MAX77650 MFD device. For more details
+> > > +  see Documentation/devicetree/bindings/mfd/max77650.txt.
 > >
-> > enum vs. const usage depends on whether you think you'll add more
-> > compatibles.
+> > .yaml?
 > >
 >
-> What if you don't know yet? For instance we use a const compatible and
-> then a new chip is released for which we can reuse the driver?
+> Is there any better way of referencing the main document than
+> mentioning it in the description?
 
-Then you just change it to an enum (or oneOf if the new compatible has
-a fallback to the old one). Not really a big deal.
-
-> Is this
-> something that is expected to remain stable in the binding document?
-
-No, only in the sense we want to minimize changes.
-
-> The question is unrelated to this patch, I'm just unsure about my own
-> approach to writing yaml bindings.
-
-We could perhaps just say single entries should always be 'const'
-because then we could write a meta-schema enforcing that:
-
-properties:
-  enum:
-    minItems: 2
-
-I don't think we should be that strict though unless it becomes a
-frequent review topic. So either way is fine, it's up to your
-judgement, and let's stop talking about it before I change my mind. :)
+No.
 
 Rob
