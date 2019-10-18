@@ -2,45 +2,45 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FD0CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BF2CA9EAB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5CC222C5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E28222C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="gRJ5jixv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="d9YW11Uh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443096AbfJRSqp (ORCPT
+        id S2505832AbfJRSqx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:46:45 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:19472 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443051AbfJRSqp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:46:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571424400;
+        Fri, 18 Oct 2019 14:46:53 -0400
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.101]:11013 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502844AbfJRSqw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:46:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571424407;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=iSkqypEOIXqjPnMech7nom91pT488acblcWrfraIbHk=;
-        b=gRJ5jixv+dRRemDnjjwFltuBH2u419Tnvx9oCqofryjtZAisutnk+GcvoGye/QauC6
-        0NkuThKpPac0gQJsQs0rzRMJorYVUI6xhWSUZ3bhkk1eYjZWE4P2uwCwcbqkGsDy4ehH
-        8DUYlQDtDNDiWdOeNyQgzZ/iWtjc9+85VZQPC/NCwTespzq+Ch3Zechep5fnvJgb8XUS
-        LczGqsf/HeyVzcZokkcsB1da/nuPjD4z+vqQ7XTWz/5hYzk4L5iDAGL/TaMPEMCLnjTe
-        GB4RD/yTZsQ8vr4shaAPfQvtOpjU5k9Bjmat2c5QwZp8B4c0O56+QajutaQp8QC8a5hr
-        DojQ==
+        bh=8FsX47iELcDNe5J41570aGfAYcqQSq9axKOUa9WR9Qs=;
+        b=d9YW11UhjTVcJkD51B+bwurTg+HJJ83iGGvYpNEAXPhVGE6kJdGmy9blw6FBgeiyuA
+        ds6Xw+3fC6tY7TxuX8pvCpweR1kVZ58I/hAaIvdaUvdzJFSGHV1p9jZbG3W3Ie8iSt4s
+        bBgkmEAI4vnFAqoz6cxUxiL80CFChy7XV5Pp7PXJeaPLXIVC7lfZWKXlJRColf8wz+2d
+        YoT8RYB+6pP5Ler+Ho7N6VcQRCrcEUthQjwXEiK9jJMAALa2AvyPNOLcqUwdUZk+4dzC
+        WdCxdgQCbufERMqAYGCCjIkqjEXcLIatYrQlE+UeWKoPfjpC60wf1RsOLaMgtD23l0H5
+        Y8lw==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6F3CFF60="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9IIkWDLC
+        with ESMTPSA id R0b2a8v9IIkYDLH
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Fri, 18 Oct 2019 20:46:32 +0200 (CEST)
+        Fri, 18 Oct 2019 20:46:34 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
         letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
         "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
-Date:   Fri, 18 Oct 2019 20:46:24 +0200
-Message-Id: <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
+Subject: [PATCH 6/7] ARM: DTS: omap4: add sgx gpu child node
+Date:   Fri, 18 Oct 2019 20:46:29 +0200
+Message-Id: <4d9788256c2a34f97b5f2474333ceb113601dd6a.1571424390.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1571424390.git.hns@goldelico.com>
 References: <cover.1571424390.git.hns@goldelico.com>
@@ -64,103 +64,65 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Imagination PVR/SGX GPU is part of several SoC from
-multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
-and others.
+and add timer and interrupt.
 
-Here we describe how the SGX processor is interfaced to
-the SoC (registers, interrupt etc.).
+Since omap4420/30/60 and omap4470 come with different SGX variants
+we need to introduce a new omap4470.dtsi. If an omap4470 board
+does not want to use SGX it is no problem to still include
+omap4460.dtsi.
 
-Clock, Reset and power management should be handled
-by the parent node.
+Tested on PandaBoard ES.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- .../devicetree/bindings/gpu/img,pvrsgx.txt    | 76 +++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
+ arch/arm/boot/dts/omap4.dtsi   | 11 +++++++----
+ arch/arm/boot/dts/omap4470.dts | 16 ++++++++++++++++
+ 2 files changed, 23 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap4470.dts
 
-diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
-new file mode 100644
-index 000000000000..4ad87c075791
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
-@@ -0,0 +1,76 @@
-+Imagination PVR/SGX GPU
-+
-+Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by this binding.
-+
-+Required properties:
-+- compatible:	Should be one of
-+		"img,sgx530-121", "img,sgx530", "ti,omap-omap3-sgx530-121";
-+		  - BeagleBoard ABC, OpenPandora 600MHz
-+		"img,sgx530-125", "img,sgx530", "ti,omap-omap3-sgx530-125";
-+		  - BeagleBoard XM, GTA04, OpenPandora 1GHz
-+		"img,sgx530-125", "img,sgx530", "ti,omap-am3517-sgx530-125";
-+		"img,sgx530-125", "img,sgx530", "ti,omap-am335x-sgx530-125";
-+		  - BeagleBone Black
-+		"img,sgx540-120", "img,sgx540", "ti,omap-omap4-sgx540-120";
-+		  - Pandaboard (ES)
-+		"img,sgx544-112", "img,sgx544", "ti,omap-omap4-sgx544-112";
-+		"img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
-+		  - OMAP5 UEVM, Pyra Handheld
-+		"img,sgx544-116", "img,sgx544", "ti,omap-dra7-sgx544-116";
-+
-+		For further study:
-+			"ti,omap-am3517-sgx530-?"
-+			"ti,omap-am43xx-sgx530-?"
-+			"ti,ti43xx-sgx"
-+			"ti,ti81xx-sgx"
-+			"img,jz4780-sgx5??-?"
-+			"intel,poulsbo-sgx?"
-+			"intel,cedarview-sgx?"
-+			"sunxi,sgx-544-?" - Banana-Pi-M3 (Allwinner A83T)
-+
-+		The "ti,omap..." entries are needed temporarily to handle SoC
-+		specific builds of the kernel module.
-+
-+		In the long run, only the "img,sgx..." entry should suffice
-+		to match a generic driver for all architectures and driver
-+		code can dynamically find out on which SoC it is running.
-+
-+
-+- reg:		Physical base addresses and lengths of the register areas.
-+- reg-names:	Names for the register areas.
-+- interrupts:	The interrupt numbers.
-+
-+Optional properties:
-+- timer:	the timer to be used by the driver.
-+- img,cores:	number of cores. Defaults to <1>.
-+
-+/ {
-+	ocp {
-+		sgx_module: target-module@56000000 {
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0x5600fe00 0x4>,
-+			      <0x5600fe10 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x56000000 0x2000000>;
-+
-+			sgx@fe00 {
-+				compatible = "img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
-+				reg = <0xfe00 0x200>;
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 7cc95bc1598b..4c94555ae0d0 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -347,10 +347,13 @@
+ 			#size-cells = <1>;
+ 			ranges = <0 0x56000000 0x2000000>;
+ 
+-			/*
+-			 * Closed source PowerVR driver, no child device
+-			 * binding or driver in mainline
+-			 */
++			sgx: sgx@0 {
++				compatible = "img,sgx540-120", "img,sgx540", "ti,omap-omap4-sgx540-120";
++				reg = <0x0 0x2000000>;	/* 32MB */
 +				reg-names = "sgx";
 +				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
 +				timer = <&timer11>;
-+				img,cores = <2>;
 +			};
-+		};
-+	};
+ 		};
+ 
+ 		dss: dss@58000000 {
+diff --git a/arch/arm/boot/dts/omap4470.dts b/arch/arm/boot/dts/omap4470.dts
+new file mode 100644
+index 000000000000..45b0b4b8ce32
+--- /dev/null
++++ b/arch/arm/boot/dts/omap4470.dts
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Device Tree Source for OMAP4470 SoC
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++#include "omap4460.dtsi"
++
++&sgx {
++	compatible = "img,sgx544-112", "img,sgx544", "ti,omap-omap4-sgx544-112";
++	img,cores = <1>;
 +};
 -- 
 2.19.1
