@@ -2,107 +2,94 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7788ACA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30D6CA9EAB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50673222C5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAC3222C9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oy7Z0pRo";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ud1/1TAd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jHsdcfLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404706AbfJRP1r (ORCPT
+        id S2410616AbfJRPcN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:27:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56774 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394233AbfJRP1r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:27:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7DA496106C; Fri, 18 Oct 2019 15:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571412466;
-        bh=bZG3L7zXqO4GvOLgoEZUpllZarQ7DPHvX/3FqZ0KPQw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oy7Z0pRoF1j3FkzYFH7DTJOqJNKHwv6Ak4sgytcpG3WVjaNyw8Uyb/zQ1oLW0ueEa
-         2Fu+3zvWoAf4tjHfk31oFdsSGTfKI+LCgC7x/11sWJuEjKmhxx7p3C0Yq46e713M0h
-         Q3WCf+J/igRsUUWAQGQ0WEOe/+JpnNc0c1NXQHno=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id DA9D960FD2;
-        Fri, 18 Oct 2019 15:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571412465;
-        bh=bZG3L7zXqO4GvOLgoEZUpllZarQ7DPHvX/3FqZ0KPQw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ud1/1TAdWTnt5PC9DJBLOFdAFBQTt3OrSCQ2lV/36mOyu4Q/DFcniZNrMzJN0lJD6
-         gWbZSP8qOkvP9skewKanC9t639IegWEU5bSgeZSW2/XHMqD3oDmmdEvq4iYdVhEUmz
-         F+bo1/SOzlWm6kep8HH577Mz0VWDH1zVcYtnMZkQ=
+        Fri, 18 Oct 2019 11:32:13 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47674 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633278AbfJRPcL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:32:11 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW9N4013374;
+        Fri, 18 Oct 2019 10:32:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571412729;
+        bh=uq1i+tWOuS4mskWSGZzRgqiAOAAKC9B8IF3qNOEobQw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=jHsdcfLYcaRgy8ddrm1EwQL5JkP4OaF5gX/2vvnnbuFsz9Eix8zJkt25Cf7i4s+Jv
+         BHUlmSrN/lZj1uzg9bPo93yLmuuoWjeHod82exjEopN+Tped7xrVzo8uxLfFigNQRD
+         IbovdgaOiv8DUJf4yW/oN5Twn2X2cHADjmDVrYXE=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFW99c080454
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 10:32:09 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
+ Oct 2019 10:32:01 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 18 Oct 2019 10:32:01 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15K080266;
+        Fri, 18 Oct 2019 10:32:09 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
+        Jyri Sarha <jsarha@ti.com>
+Subject: [Patch 06/19] dt-bindings: media: cal: update binding to add PHY LDO errata support
+Date:   Fri, 18 Oct 2019 10:34:24 -0500
+Message-ID: <20191018153437.20614-7-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191018153437.20614-1-bparrot@ti.com>
+References: <20191018153437.20614-1-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 18 Oct 2019 20:57:45 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        devicetree-owner@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: msm: Add LLCC for SC7180
-In-Reply-To: <5da9cce6.1c69fb81.d3cb2.07d1@mx.google.com>
-References: <cover.1571406041.git.saiprakash.ranjan@codeaurora.org>
- <30f419d1612a3912e323287a96daa2b4fbe3dacd.1571406041.git.saiprakash.ranjan@codeaurora.org>
- <5da9cce6.1c69fb81.d3cb2.07d1@mx.google.com>
-Message-ID: <576b11d1f1fece666e2e8735c3a8657e@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-18 20:02, Stephen Boyd wrote:
-> Quoting Sai Prakash Ranjan (2019-10-18 06:57:09)
->> Add LLCC compatible for SC7180 SoC.
->> 
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> Can you convert this binding to YAML? Would be useful to make sure it's
-> used properly.
-> 
+Update Device Tree bindings for the CAL driver to add support for
+the CSI2 PHY LDO errata workaround for pre-es2 devices.
 
-Ok will do in next version.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ Documentation/devicetree/bindings/media/ti-cal.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
->> 
->> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt 
->> b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
->> index eaee06b2d8f2..f263aa539d47 100644
->> --- a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
->> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
->> @@ -11,7 +11,9 @@ Properties:
->>  - compatible:
->>         Usage: required
->>         Value type: <string>
->> -       Definition: must be "qcom,sdm845-llcc"
->> +       Definition: must be one of:
->> +                   "qcom,sc7180-llcc",
->> +                   "qcom,sdm845-llcc"
->> 
-
+diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
+index 6b56fddcfc4a..d43870a2324b 100644
+--- a/Documentation/devicetree/bindings/media/ti-cal.txt
++++ b/Documentation/devicetree/bindings/media/ti-cal.txt
+@@ -7,7 +7,9 @@ processing capability to connect CSI2 image-sensor modules to the
+ DRA72x device.
+ 
+ Required properties:
+-- compatible: must be "ti,dra72-cal"
++- compatible:
++ Should be "ti,dra72-cal", for DRA72 controllers
++ Should be "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
+ - reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
+ 	control address space
+ - reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
+
