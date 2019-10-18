@@ -1,336 +1,490 @@
-Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9B3FC6194
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA90CA9EAB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892E5217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HeDLa81X"
+	by mail.kernel.org (Postfix) with ESMTP id 8220B222C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571422029;
+	bh=OwsQSaQhUSI9x3A9tYSIjYLa4CKMs0HI8SDZ86b15S0=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=zyp5NZUeKxFC6A2ky88ORoFyQEYUON2XHO9/jpDch2fZvtoWuQeP+x0W8+E0W+OKJ
+	 A4H4PVGeAE/8rDHSy7nYmhACY0GeZimOXEoTs0pkWcJ5k650+N5jTzHbyAc1fNbysF
+	 OK3buR/I03Sb+V8Q9rWdtBpNC+WNsEPy2VT6ESE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbfKFWhH (ORCPT
+        id S2505686AbfJRSHI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:37:07 -0500
-Received: from mail-eopbgr150053.outbound.protection.outlook.com ([40.107.15.53]:11648
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732866AbfKFWhG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:37:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QDItSdGZH0thH44GN51UHkRGoO+IFfIm9a4VkGa5mZ7Flqt8XCsE1XtEMuXeTDKAEIBWYPfaxCLRILMHe7ycbuzTJDHakJFJDYF1U3npOunjJAczdtYW/3+BrYel0oE0WhIjQgl3kzBVjTdiXaNvyaxsfEpdmOxBmQQ5DszKr/nDG/IMF0Qkd0p6x65l++dw4fPvjvqitqgHbZS2EoVYdGMYU/WRNxtEzRBZbRIMTrkenVNiwKi8w6taTdevin62LzAa5lFyjUWbIGpGXwnWYxNleMdkXCu3KuLizi+TusEj16quZZArIon+gGFyLlu7npAawmbSGM+eh7R8ZcKibA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4g9r0GR99hiBNGlK/KwDC1PLB9GapFW/c6dcT+5kiWg=;
- b=KXRvLwN+gQypnEgSLiHnni/cHmKZNPGPp+HC8xhwFYSvtleor27pDbiYyIgsf6ZXbRiu1O8mS45zZauha+QANOxoapVzYUI7JikhXbApjje56JucnooN0jBAU/mhIcikWkwsQZEVq8lhXtTf2wDgajAPB48ziBQMJ7ek0VakrBZnn63kuZvMD3v3vEz78ayMHGBDrSYP1sOr9Dpf5gvuv5+QhTPf1uOKFKpu+VhVALVLO2d32UTdzONrFJJZ3TEuMX6DhwmwyrXC61kqYbCljZC3TmmoojYVWUyGMmHpG99vDWpwMJEvVgXrFNISOiYBXDXqeVYL6c6+1J9Mr+ER/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4g9r0GR99hiBNGlK/KwDC1PLB9GapFW/c6dcT+5kiWg=;
- b=HeDLa81X+BWJdcPEAdxWkX7ibqvUX0MGyvZ5PBCBrhdNiynOrOwi8wr3DvmYv3Lj5GNcGEFsYDvytcyG+pIIeV4d5ZHSYV2cyvlSF4dAapASskc4MvuLrCFSmK2zNol38q7hFo3zBprUUMR7dN7hwCjOgJVbmPPf033ge9HfSwY=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB4096.eurprd04.prod.outlook.com (52.133.14.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Wed, 6 Nov 2019 22:36:59 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3%5]) with mapi id 15.20.2430.023; Wed, 6 Nov 2019
- 22:36:59 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Martin Kepplinger <martink@posteo.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
+        Fri, 18 Oct 2019 14:07:08 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44850 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505695AbfJRSHH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:07:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=pRsIWe9U79jN+NdQSnCg3rgMnwSzcyvRozb90fu5/9Q=; b=GJDnfk9PbiMb
+        mf3AO247VyCbNgxTCbVAmlHqq6p2QDWOiqjIAMVVqJace+96yCbBUp1nuHbLogAhQU1uGzLQ7EV9i
+        o3xt+7LVBm3WyGzMPgc6066dIYv1bepQJNbtSZS/AumPm2wgedNg6XWhyFF7k01YUd4GBPdQGBQaU
+        KBdWU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iLWeR-0004F4-Bz; Fri, 18 Oct 2019 18:06:59 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D35652743273; Fri, 18 Oct 2019 19:06:58 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>, lgirdwood@gmail.com,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Carlo Caione <ccaione@baylibre.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
-Thread-Topic: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
-Thread-Index: AQHVH4Y/fXLWCNQC3kGmFNlizRWSbQ==
-Date:   Wed, 6 Nov 2019 22:36:59 +0000
-Message-ID: <VI1PR04MB70231EA80BB20C9A84B1B799EE790@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <20190610121346.15779-1-abel.vesa@nxp.com>
- <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
- <7d3a868a-768c-3cb1-c6d8-bf5fcd1ddd1c@posteo.de>
- <20191030080727.7pcvhd4466dproy4@fsr-ub1664-175>
- <523f92bd-7e89-b48a-afd0-0a9a8bca8344@posteo.de>
- <20191104103525.qjkxh2zhhgaaectk@fsr-ub1664-175>
- <433f3f03-f780-c327-f1e8-fbf046a8374c@posteo.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cccedd4d-50b4-4fee-5070-08d76309d603
-x-ms-traffictypediagnostic: VI1PR04MB4096:|VI1PR04MB4096:
-x-ms-exchange-purlcount: 3
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB40965C472C2822D5F2BFE77AEE790@VI1PR04MB4096.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(39860400002)(136003)(346002)(189003)(199004)(54014002)(43544003)(102836004)(446003)(6246003)(55016002)(256004)(14444005)(99286004)(2906002)(76176011)(5660300002)(7696005)(476003)(6436002)(54906003)(561944003)(71190400001)(71200400001)(8936002)(6306002)(86362001)(53546011)(110136005)(9686003)(14454004)(4326008)(6506007)(966005)(316002)(81156014)(52536014)(74316002)(305945005)(81166006)(66946007)(33656002)(26005)(8676002)(7416002)(3846002)(6116002)(186003)(45080400002)(66446008)(64756008)(66556008)(66476007)(478600001)(25786009)(7736002)(76116006)(66066001)(91956017)(44832011)(229853002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4096;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pBVez4nMyFrzgmUFk2DdZp5omAI6FV0qHGntOrStPA4t8u3o9GeOMk+WeAmAHcqCSvdhg2M4XgeBqkDXcwOzTvCbr59WvMxKexMWJEBXnIHmxuniKCHsZjqCgXjtWom4gL/6WuR2XKRb6j1N3BFkYeqxdPt4yNtynAZ6m2ifa1R5Y0TCsmK9TyTjujr0XgxjflJFzBD5wTIgJ0+FeysY7uAEOY7K9JUBqXG/IV1nRMZpCb1o1/IDM59baiCcYiWKRHQ5f4IQNLi5zHybfVD2nnbS9baT+lZQtZixtZQEKY7C4bM0k83QppfSW4ZjsioQirV9feMQD38CEpGQiuHzDbDG2MxCwwJ2lOucKU5pS89nHCswNZ8K2mPrg1217lrRG+nTq1pUUWVcHC9ew7rDXJUs1gbezkgtGCciMTwInRdi3DCpLOm/dj8cfk1xwUhGoZBD+od8hwfqM5DsV37ogyrMEkJxKavauKGAs8sB1cM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cccedd4d-50b4-4fee-5070-08d76309d603
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 22:36:59.1536
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ntQZvTMwfGr0Bhu5M0DO6wzfAO107mUhFv8clNVINPagL5vgkzFD1lzXfVZMABPAUlNIi8NdS/rzu+CP4o0Uhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4096
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "ASoC: dt-bindings: Convert Allwinner A10 codec to a schema" to the asoc tree
+In-Reply-To: <20191016104355.65169-1-mripard@kernel.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20191018180658.D35652743273@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:06:58 +0100 (BST)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06.11.2019 13:59, Martin Kepplinger wrote:=0A=
-> On 04.11.19 11:35, Abel Vesa wrote:=0A=
->> On 19-11-04 09:49:18, Martin Kepplinger wrote:=0A=
->>> On 30.10.19 09:08, Abel Vesa wrote:=0A=
->>>> On 19-10-30 07:11:37, Martin Kepplinger wrote:=0A=
->>>>> On 23.06.19 13:47, Martin Kepplinger wrote:=0A=
->>>>>> On 10.06.19 14:13, Abel Vesa wrote:=0A=
->>>>>>> This is another alternative for the RFC:=0A=
->>>>>>> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-Flkml.org%2Flkml%2F2019%2F3%2F27%2F545&amp;data=3D02%7C01%7Cleonard.crestez=
-%40nxp.com%7C6ca438b3b9e44d70ac7608d762b0c030%7C686ea1d3bc2b4c6fa92cd99c5c3=
-01635%7C0%7C1%7C637086383589318475&amp;sdata=3DNyFLkQ8PUfC7PGejDK7NBJoQu36Z=
-faYvg9yuJvHedzo%3D&amp;reserved=3D0=0A=
->>>>>>>=0A=
->>>>>>> This new workaround proposal is a little bit more hacky but more co=
-ntained=0A=
->>>>>>> since everything is done within the irq-imx-gpcv2 driver.=0A=
->>>>>>>=0A=
->>>>>>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cros=
-s_call=0A=
->>>>>>> handler and registers instead a wrapper which calls in the 'hijacke=
-d'=0A=
->>>>>>> handler, after that calling into EL3 which will take care of the ac=
-tual=0A=
->>>>>>> wake up. This time, instead of expanding the PSCI ABI, we use a new=
- vendor SIP.=0A=
->>>>>>>=0A=
->>>>>>> I also have the patches ready for TF-A but I'll hold on to them unt=
-il I see if=0A=
->>>>>>> this has a chance of getting in.=0A=
->>>>>>=0A=
->>>>>=0A=
->>>>> Hi Abel,=0A=
->>>>>=0A=
->>>>> Running this workaround doesn't seem to work anymore on 5.4-rcX. Linu=
-x=0A=
->>>>> doesn't boot, with ATF unchanged (includes your workaround changes). =
-I=0A=
->>>>> can try to add more details to this...=0A=
->>>>>=0A=
->>>>=0A=
->>>> This is happening because the system counter is now enabled on 8mq.=0A=
->>>> And since the irq-imx-gpcv2 is using as irq_set_affinity the=0A=
->>>> irq_chip_set_affinity_parent. This is because the actual implementatio=
-n=0A=
->>>> of the driver relies on GIC to set the right affinity. On a SoC=0A=
->>>> that has the wake_request signales linked to the power controller this=
-=0A=
->>>> works fine. Since the system counter is actually the tick broadcast=0A=
->>>> device and the set affinity relies only on GIC, the cores can't be=0A=
->>>> woken up by the broadcast interrupt.=0A=
->>>>=0A=
->>>>> Have you tested this for 5.4? Could you update this workaround? Pleas=
-e=0A=
->>>>> let me know if I missed any earlier update on this (having a cpu-slee=
-p=0A=
->>>>> idle state).=0A=
->>>>>=0A=
->>>>=0A=
->>>> The solution is to implement the set affinity in the irq-imx-gpcv2 dri=
-ver=0A=
->>>> which would allow the gpc to wake up the target core when the broadcas=
-t=0A=
->>>> irq arrives.=0A=
->>>>=0A=
->>>> I have a patch for this. I just need to clean it up a little bit.=0A=
->>>> Unfortunately, it won't go upstream since everuone thinks the gic=0A=
->>>> should be the one to control the affinity. This obviously doesn't work=
-=0A=
->>>> on 8mq.=0A=
->>>>=0A=
->>>> Currently, I'm at ELCE in Lyon. Will get back at the office tomorrow=
-=0A=
->>>> and sned you what I have.=0A=
->>>>=0A=
->>>=0A=
->>> Hi Abel,=0A=
->>>=0A=
->>> Do you have any news on said patch for testing? That'd be great for my=
-=0A=
->>> plannings.=0A=
->>>=0A=
->>=0A=
->> Sorry for the late answer.=0A=
->>=0A=
->> I'm dropping here the diff.=0A=
->>=0A=
->> Please keep in mind that this is _not_ an official solution.=0A=
->>=0A=
->> ---=0A=
->>   drivers/irqchip/irq-imx-gpcv2.c | 42 +++++++++++++++++++++++++++++++++=
-+++++++-=0A=
->>   1 file changed, 41 insertions(+), 1 deletion(-)=0A=
->>=0A=
->> diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-g=
-pcv2.c=0A=
->> index 01ce6f4..3150588 100644=0A=
->> --- a/drivers/irqchip/irq-imx-gpcv2.c=0A=
->> +++ b/drivers/irqchip/irq-imx-gpcv2.c=0A=
->> @@ -41,6 +41,24 @@ static void __iomem *gpcv2_idx_to_reg(struct gpcv2_ir=
-qchip_data *cd, int i)=0A=
->>   	return cd->gpc_base + cd->cpu2wakeup + i * 4;=0A=
->>   }=0A=
->>   =0A=
->> +static void __iomem *gpcv2_idx_to_reg_cpu(struct gpcv2_irqchip_data *cd=
-,=0A=
->> +					int i, int cpu)=0A=
->> +{=0A=
->> +	u32 offset =3D  GPC_IMR1_CORE0;=0A=
->> +	switch(cpu) {=0A=
->> +	case 1:=0A=
->> +		offset =3D GPC_IMR1_CORE1;=0A=
->> +		break;=0A=
->> +	case 2:=0A=
->> +		offset =3D GPC_IMR1_CORE2;=0A=
->> +		break;=0A=
->> +	case 3:=0A=
->> +		offset =3D GPC_IMR1_CORE3;=0A=
->> +		break;=0A=
->> +	}=0A=
->> +	return cd->gpc_base + offset + i * 4;=0A=
->> +}=0A=
->> +=0A=
->>   static int gpcv2_wakeup_source_save(void)=0A=
->>   {=0A=
->>   	struct gpcv2_irqchip_data *cd;=0A=
->> @@ -163,6 +181,28 @@ static void imx_gpcv2_irq_mask(struct irq_data *d)=
-=0A=
->>   	irq_chip_mask_parent(d);=0A=
->>   }=0A=
->>   =0A=
->> +static int imx_gpcv2_irq_set_affinity(struct irq_data *d,=0A=
->> +				 const struct cpumask *dest, bool force)=0A=
->> +{=0A=
->> +	struct gpcv2_irqchip_data *cd =3D d->chip_data;=0A=
->> +	void __iomem *reg;=0A=
->> +	u32 val;=0A=
->> +	int cpu;=0A=
->> +=0A=
->> +	for_each_possible_cpu(cpu) {=0A=
->> +		raw_spin_lock(&cd->rlock);=0A=
->> +		reg =3D gpcv2_idx_to_reg_cpu(cd, d->hwirq / 32, cpu);=0A=
->> +		val =3D readl_relaxed(reg);=0A=
->> +		val |=3D BIT(d->hwirq % 32);=0A=
->> +		if (cpumask_test_cpu(cpu, dest))=0A=
->> +			val &=3D ~BIT(d->hwirq % 32);=0A=
->> +		writel_relaxed(val, reg);=0A=
->> +		raw_spin_unlock(&cd->rlock);=0A=
->> +	}=0A=
->> +=0A=
->> +	return irq_chip_set_affinity_parent(d, dest, force);=0A=
->> +}=0A=
->> +=0A=
->>   static struct irq_chip gpcv2_irqchip_data_chip =3D {=0A=
->>   	.name			=3D "GPCv2",=0A=
->>   	.irq_eoi		=3D irq_chip_eoi_parent,=0A=
->> @@ -172,7 +212,7 @@ static struct irq_chip gpcv2_irqchip_data_chip =3D {=
-=0A=
->>   	.irq_retrigger		=3D irq_chip_retrigger_hierarchy,=0A=
->>   	.irq_set_type		=3D irq_chip_set_type_parent,=0A=
->>   #ifdef CONFIG_SMP=0A=
->> -	.irq_set_affinity	=3D irq_chip_set_affinity_parent,=0A=
->> +	.irq_set_affinity	=3D imx_gpcv2_irq_set_affinity,=0A=
->>   #endif=0A=
->>   };=0A=
-=0A=
-This is prone to race conditions.=0A=
-=0A=
-In NXP tree there is different gpcv2 irqchip driver which does all GPC =0A=
-IMR register manipulation in TF-A through SMC calls. The cpuidle =0A=
-workaround also manipulates the same registers and does so safely under =0A=
-a lock.=0A=
-=0A=
-If OS also writes to same IMR register then set_affinity for SPIs 1-31 =0A=
-can potentially race with one those cores being woken up. This is very =0A=
-unlikely (set_affinity calls are rare) but in the worst case the system =0A=
-could still hang on lost IPI.=0A=
-=0A=
-> I guess this diff does not apply when using this reworked change:=0A=
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fsourc=
-e.puri.sm%2FLibrem5%2Flinux-next%2Fcommit%2Fe59807ae0e236512761b751abc84a9b=
-129d7fcda&amp;data=3D02%7C01%7Cleonard.crestez%40nxp.com%7C6ca438b3b9e44d70=
-ac7608d762b0c030%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C6370863835893=
-18475&amp;sdata=3DMf%2BFtqFSG4xHL3IGPrD%2FOweR8qoJHV0IKuziPIUK%2Bsw%3D&amp;=
-reserved=3D0=0A=
-> which has worked for me when running 5.3.=0A=
-> =0A=
-> At least on 5.4-rc5, using your change, I still get=0A=
-> =0A=
-> cat /sys/devices/system/cpu/cpuidle/current_driver=0A=
-> none=0A=
-=0A=
-This reads "psci_idle" for me in linux-next on imx8mm. Your problem =0A=
-seems to be related to probing the cpuidle driver, not related to any =0A=
-hardware workarounds.=0A=
-=0A=
-> But also when trying to rewrite your patch against irq-gic-v3.c at least=
-=0A=
-> nothing changes for me (I might have done that wrong as well though).=0A=
-> =0A=
-> What needs to change (in order to have the cpu-sleep state / idle=0A=
-> driver) based on the above "reworked" workaround?=0A=
-> =0A=
-> Could the config have changed? CONFIG_ARM_CPUIDLE should be the only=0A=
-> needed path, or did things change there in 5.4?=0A=
-=0A=
-It seems there were some recent cleanups in the cpuidle psci core code, =0A=
-maybe you need config updates?=0A=
-=0A=
-https://patchwork.kernel.org/cover/11052723/=0A=
-=0A=
-> I know all this is no real solution, but currently the only way to have=
-=0A=
-> said sleep state on top of mainline. so be it for now.=0A=
-Can you use the gpcv2 driver from NXP tree?=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+The patch
+
+   ASoC: dt-bindings: Convert Allwinner A10 codec to a schema
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 2ad450593b7dbfcfcfd4e0502ccfcd6af627d430 Mon Sep 17 00:00:00 2001
+From: Maxime Ripard <mripard@kernel.org>
+Date: Wed, 16 Oct 2019 12:43:55 +0200
+Subject: [PATCH] ASoC: dt-bindings: Convert Allwinner A10 codec to a schema
+
+The Allwinner SoCs have an embedded audio codec that is supported in Linux,
+with a matching Device Tree binding.
+
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
+
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20191016104355.65169-1-mripard@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../sound/allwinner,sun4i-a10-codec.yaml      | 267 ++++++++++++++++++
+ .../devicetree/bindings/sound/sun4i-codec.txt |  94 ------
+ 2 files changed, 267 insertions(+), 94 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/sun4i-codec.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
+new file mode 100644
+index 000000000000..b8f89c7258eb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
+@@ -0,0 +1,267 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/allwinner,sun4i-a10-codec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A10 Codec Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  "#sound-dai-cells":
++    const: 0
++
++  compatible:
++    enum:
++      - allwinner,sun4i-a10-codec
++      - allwinner,sun6i-a31-codec
++      - allwinner,sun7i-a20-codec
++      - allwinner,sun8i-a23-codec
++      - allwinner,sun8i-h3-codec
++      - allwinner,sun8i-v3s-codec
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Bus Clock
++      - description: Module Clock
++
++  clock-names:
++    items:
++      - const: apb
++      - const: codec
++
++  dmas:
++    items:
++      - description: RX DMA Channel
++      - description: TX DMA Channel
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
++
++  resets:
++    maxItems: 1
++
++  allwinner,audio-routing:
++    description: |-
++      A list of the connections between audio components.  Each entry
++      is a pair of strings, the first being the connection's sink, the
++      second being the connection's source.
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/non-unique-string-array
++      - minItems: 2
++        maxItems: 18
++        items:
++          enum:
++            # Audio Pins on the SoC
++            - HP
++            - HPCOM
++            - LINEIN
++            - LINEOUT
++            - MIC1
++            - MIC2
++            - MIC3
++
++            # Microphone Biases from the SoC
++            - HBIAS
++            - MBIAS
++
++            # Board Connectors
++            - Headphone
++            - Headset Mic
++            - Line In
++            - Line Out
++            - Mic
++            - Speaker
++
++  allwinner,codec-analog-controls:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Phandle to the codec analog controls in the PRCM
++
++  allwinner,pa-gpios:
++    description: GPIO to enable the external amplifier
++
++required:
++  - "#sound-dai-cells"
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - dmas
++  - dma-names
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun6i-a31-codec
++            - allwinner,sun8i-a23-codec
++            - allwinner,sun8i-h3-codec
++            - allwinner,sun8i-v3s-codec
++
++    then:
++      if:
++        properties:
++          compatible:
++            const: allwinner,sun6i-a31-codec
++
++      then:
++        required:
++          - resets
++          - allwinner,audio-routing
++
++      else:
++        required:
++          - resets
++          - allwinner,audio-routing
++          - allwinner,codec-analog-controls
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun6i-a31-codec
++
++    then:
++      properties:
++        allwinner,audio-routing:
++          items:
++            enum:
++              - HP
++              - HPCOM
++              - LINEIN
++              - LINEOUT
++              - MIC1
++              - MIC2
++              - MIC3
++              - HBIAS
++              - MBIAS
++              - Headphone
++              - Headset Mic
++              - Line In
++              - Line Out
++              - Mic
++              - Speaker
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun8i-a23-codec
++
++    then:
++      properties:
++        allwinner,audio-routing:
++          items:
++            enum:
++              - HP
++              - HPCOM
++              - LINEIN
++              - MIC1
++              - MIC2
++              - HBIAS
++              - MBIAS
++              - Headphone
++              - Headset Mic
++              - Line In
++              - Line Out
++              - Mic
++              - Speaker
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun8i-h3-codec
++
++    then:
++      properties:
++        allwinner,audio-routing:
++          items:
++            enum:
++              - HP
++              - HPCOM
++              - LINEIN
++              - LINEOUT
++              - MIC1
++              - MIC2
++              - HBIAS
++              - MBIAS
++              - Headphone
++              - Headset Mic
++              - Line In
++              - Line Out
++              - Mic
++              - Speaker
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun8i-v3s-codec
++
++    then:
++      properties:
++        allwinner,audio-routing:
++          items:
++            enum:
++              - HP
++              - HPCOM
++              - MIC1
++              - HBIAS
++              - Headphone
++              - Headset Mic
++              - Line In
++              - Line Out
++              - Mic
++              - Speaker
++
++additionalProperties: false
++
++examples:
++  - |
++    codec@1c22c00 {
++        #sound-dai-cells = <0>;
++        compatible = "allwinner,sun7i-a20-codec";
++        reg = <0x01c22c00 0x40>;
++        interrupts = <0 30 4>;
++        clocks = <&apb0_gates 0>, <&codec_clk>;
++        clock-names = "apb", "codec";
++        dmas = <&dma 0 19>, <&dma 0 19>;
++        dma-names = "rx", "tx";
++    };
++
++  - |
++    codec@1c22c00 {
++        #sound-dai-cells = <0>;
++        compatible = "allwinner,sun6i-a31-codec";
++        reg = <0x01c22c00 0x98>;
++        interrupts = <0 29 4>;
++        clocks = <&ccu 61>, <&ccu 135>;
++        clock-names = "apb", "codec";
++        resets = <&ccu 42>;
++        dmas = <&dma 15>, <&dma 15>;
++        dma-names = "rx", "tx";
++        allwinner,audio-routing =
++            "Headphone", "HP",
++            "Speaker", "LINEOUT",
++            "LINEIN", "Line In",
++            "MIC1", "MBIAS",
++            "MIC1", "Mic",
++            "MIC2", "HBIAS",
++            "MIC2", "Headset Mic";
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/sound/sun4i-codec.txt b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+deleted file mode 100644
+index 66579bbd3294..000000000000
+--- a/Documentation/devicetree/bindings/sound/sun4i-codec.txt
++++ /dev/null
+@@ -1,94 +0,0 @@
+-* Allwinner A10 Codec
+-
+-Required properties:
+-- compatible: must be one of the following compatibles:
+-		- "allwinner,sun4i-a10-codec"
+-		- "allwinner,sun6i-a31-codec"
+-		- "allwinner,sun7i-a20-codec"
+-		- "allwinner,sun8i-a23-codec"
+-		- "allwinner,sun8i-h3-codec"
+-		- "allwinner,sun8i-v3s-codec"
+-- reg: must contain the registers location and length
+-- interrupts: must contain the codec interrupt
+-- dmas: DMA channels for tx and rx dma. See the DMA client binding,
+-	Documentation/devicetree/bindings/dma/dma.txt
+-- dma-names: should include "tx" and "rx".
+-- clocks: a list of phandle + clock-specifer pairs, one for each entry
+-  in clock-names.
+-- clock-names: should contain the following:
+-   - "apb": the parent APB clock for this controller
+-   - "codec": the parent module clock
+-
+-Optional properties:
+-- allwinner,pa-gpios: gpio to enable external amplifier
+-
+-Required properties for the following compatibles:
+-		- "allwinner,sun6i-a31-codec"
+-		- "allwinner,sun8i-a23-codec"
+-		- "allwinner,sun8i-h3-codec"
+-		- "allwinner,sun8i-v3s-codec"
+-- resets: phandle to the reset control for this device
+-- allwinner,audio-routing: A list of the connections between audio components.
+-			   Each entry is a pair of strings, the first being the
+-			   connection's sink, the second being the connection's
+-			   source. Valid names include:
+-
+-			   Audio pins on the SoC:
+-			   "HP"
+-			   "HPCOM"
+-			   "LINEIN"	(not on sun8i-v3s)
+-			   "LINEOUT"	(not on sun8i-a23 or sun8i-v3s)
+-			   "MIC1"
+-			   "MIC2"	(not on sun8i-v3s)
+-			   "MIC3"	(sun6i-a31 only)
+-
+-			   Microphone biases from the SoC:
+-			   "HBIAS"
+-			   "MBIAS"	(not on sun8i-v3s)
+-
+-			   Board connectors:
+-			   "Headphone"
+-			   "Headset Mic"
+-			   "Line In"
+-			   "Line Out"
+-			   "Mic"
+-			   "Speaker"
+-
+-Required properties for the following compatibles:
+-		- "allwinner,sun8i-a23-codec"
+-		- "allwinner,sun8i-h3-codec"
+-		- "allwinner,sun8i-v3s-codec"
+-- allwinner,codec-analog-controls: A phandle to the codec analog controls
+-				   block in the PRCM.
+-
+-Example:
+-codec: codec@1c22c00 {
+-	#sound-dai-cells = <0>;
+-	compatible = "allwinner,sun7i-a20-codec";
+-	reg = <0x01c22c00 0x40>;
+-	interrupts = <0 30 4>;
+-	clocks = <&apb0_gates 0>, <&codec_clk>;
+-	clock-names = "apb", "codec";
+-	dmas = <&dma 0 19>, <&dma 0 19>;
+-	dma-names = "rx", "tx";
+-};
+-
+-codec: codec@1c22c00 {
+-	#sound-dai-cells = <0>;
+-	compatible = "allwinner,sun6i-a31-codec";
+-	reg = <0x01c22c00 0x98>;
+-	interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&ccu CLK_APB1_CODEC>, <&ccu CLK_CODEC>;
+-	clock-names = "apb", "codec";
+-	resets = <&ccu RST_APB1_CODEC>;
+-	dmas = <&dma 15>, <&dma 15>;
+-	dma-names = "rx", "tx";
+-	allwinner,audio-routing =
+-		"Headphone", "HP",
+-		"Speaker", "LINEOUT",
+-		"LINEIN", "Line In",
+-		"MIC1",	"MBIAS",
+-		"MIC1", "Mic",
+-		"MIC2", "HBIAS",
+-		"MIC2", "Headset Mic";
+-};
+-- 
+2.20.1
+
