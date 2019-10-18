@@ -2,102 +2,91 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E070CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 13:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665FFCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 13:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9D1222BD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 13:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391D3222C5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 13:57:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Dc0GgBQr";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XsfKzgrD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388989AbfJRNu1 (ORCPT
+        id S2405809AbfJRN5b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:50:27 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:54940 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731183AbfJRNu1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:50:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 27700FB04;
-        Fri, 18 Oct 2019 15:50:24 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TA8MpUsK2edw; Fri, 18 Oct 2019 15:50:23 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id B98DB49A41; Fri, 18 Oct 2019 15:50:22 +0200 (CEST)
-Date:   Fri, 18 Oct 2019 15:50:22 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     "To : Lucas Stach" <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 18 Oct 2019 09:57:31 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47456 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405729AbfJRN5b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 09:57:31 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 22FAD60B12; Fri, 18 Oct 2019 13:57:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571407051;
+        bh=QjLSs+AKfU8qHXU4DHAP/z888hT5C50E4X5pwHuCIEU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Dc0GgBQrPE4qqb+E+Asv5AOSSmGTfvi9aD1wGrqpMZThzGMkrvaE3mrzQKgLm/0BX
+         /CEI9nLkz6dlw6Tne7i+1ByukRyAtG5eW8/RCq4lgjowOoVR1Y4wBYJKGaHUTsncs4
+         LCmPelERJh3cXC6QNy0gHsnJ2hr2L3CSgj36HseE=
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C821D60AA8;
+        Fri, 18 Oct 2019 13:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571407050;
+        bh=QjLSs+AKfU8qHXU4DHAP/z888hT5C50E4X5pwHuCIEU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XsfKzgrDxq1enXNNFWgloMGPW3E4zQjiTrNBbYRzXpn2WLNHrwkhJ8mEZiIpFX7K1
+         RcCDFkObZoipHH5sYKGqB6TSMOJP70zh+vhvw28MknMTgO1hUW0UFPn6KOoCef94Ag
+         IcuvSYg8bTWNa5suidxTocHhgoqPH4kI9E+g7s2M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C821D60AA8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: etnaviv: Add #cooling-cells
-Message-ID: <20191018135022.GA6728@bogon.m.sigxcpu.org>
-References: <cover.1568255903.git.agx@sigxcpu.org>
- <6e9d761598b2361532146f43161fd05f3eee6545.1568255903.git.agx@sigxcpu.org>
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 0/2] Add LLCC support for SC7180
+Date:   Fri, 18 Oct 2019 19:27:07 +0530
+Message-Id: <cover.1571406041.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6e9d761598b2361532146f43161fd05f3eee6545.1568255903.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-On Wed, Sep 11, 2019 at 07:40:36PM -0700, Guido Günther wrote:
-> Add #cooling-cells for when the gpu acts as a cooling device.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt          | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> index 8def11b16a24..640592e8ab2e 100644
-> --- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> @@ -21,6 +21,7 @@ Required properties:
->  Optional properties:
->  - power-domains: a power domain consumer specifier according to
->    Documentation/devicetree/bindings/power/power_domain.txt
-> +- #cooling-cells: : If used as a cooling device, must be <2>
+LLCC behaviour is controlled by the configuration data set
+in the llcc-qcom driver, add the same for SC7180 SoC.
+Also add the compatible for SC7180.
 
-The other patch of the series made it into linux-next already but this
-documentation fixup didn't. Anything i can do to get this applied as
-well so documentation stays in sync?
-Cheers,
- -- Guido
+The patch is based on linux-next where llcc driver has been
+made generic and not sdm845 specific.
 
->  
->  example:
->  
-> -- 
-> 2.23.0.rc1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Sai Prakash Ranjan (1):
+  dt-bindings: msm: Add LLCC for SC7180
+
+Vivek Gautam (1):
+  soc: qcom: llcc: Add configuration data for SC7180
+
+ .../devicetree/bindings/arm/msm/qcom,llcc.txt       |  4 +++-
+ drivers/soc/qcom/llcc-qcom.c                        | 13 +++++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
