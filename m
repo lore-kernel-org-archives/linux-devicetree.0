@@ -2,102 +2,159 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79052CA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E66CA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 19:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5968221897
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:59:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrxq9qqc"
+	by mail.kernel.org (Postfix) with ESMTP id 4DD32222C5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 19:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571425650;
+	bh=ZvKSuxQuN/jT3Fmjbjwnw6yt3Bbj3F9A+MC7acj1eYo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TP645Ei5I0xaWkN+jK5ZgdMHcsBDvbFye9zPaGlb66Dx2jiEPvFkQngnbrJXlS2Nm
+	 3etP6Y4B3NS21wtT2RPW39mjJoY9j36Yxt9yYDQddaLvs1BtTdLLlK2aJwhOJj1Y9U
+	 18YZIXPSTmSkcxOwKjU5bc4CY1gNly6hj1PH+cgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390708AbfJRS7t (ORCPT
+        id S2436538AbfJRTH3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:59:49 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53477 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfJRS7t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:59:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i16so7212635wmd.3;
-        Fri, 18 Oct 2019 11:59:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tZnkkMS8Ppjf38TtJcQbsEMS2EZYYG5QiaTxSNSCmAU=;
-        b=rrxq9qqc7DgaH0HdEaOBvv78Dadshyt0uH4Z2FokNryqzqMWRO9eBvltcFm378Xa++
-         bwaJgv2+CmHnK4W62vOlGirt6vd3UCbbdZ17FAS7Tnxhlnwmn6t2YgwG2KXuUqv/xh8/
-         JWMuZtrDA78BqXBQhp5njd+VT24TGBglgmNqUCNydzutvdXmW1FqwEczsgajwiwItPje
-         1xuEjON5lFv9tDjd8ilU5/Gh8uJItE6kxL4/1KehGMCuhIroFz/aqjqNaQ0JB32vMbSq
-         aSCqW3xJGB/xwuuw0EmLIAET75ep0kSOzGDGZS4YwKGHTymaRw5Pb2V3rjqLclTaIJi0
-         RTUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=tZnkkMS8Ppjf38TtJcQbsEMS2EZYYG5QiaTxSNSCmAU=;
-        b=On+/kORuJ/FGhBOLJXwNWqSN6F+2ZGF5A69BujmhASFAbryA+MZAAgMbMYYlNN7FO+
-         YiOnsX4/wqims0WMMRzMAHSJjU8eiC0/+Chj2xN2DUzHnmrDK+0fpX+V0G+u6BJkeOON
-         pwygawzHEd1J69Bw2BW06ySM5UZdWo+KFUw2TkKvjPCeCp7vpEDDwTaDb+qMqYdpRNcM
-         41RyMXp9kUqoxVRnKOK9AAIPD1wqZbNGvKKhrFksvnj+l0iMJO5I3/+3MXV+qCJAZ7cX
-         rfCZqPJbUtV7L3wvJ/gBVRkFDdy9XGGovd1mClDHIkRKoKrzihQdzNPEMfMsN2XQoOFx
-         S2jw==
-X-Gm-Message-State: APjAAAXKGP90RfegZxF0zAb4vjUifzFik05fCwfMExvol9VuolJ7vfwX
-        m5BshmJGDrIxcPyzz4Kh3Zw=
-X-Google-Smtp-Source: APXvYqwOa7xYCv/z3IBAcMPtD7kUb+dbcqrunj0PNN8ffzwuvTxLzcPJEazdIN4Y+Utte6EaBlzaBg==
-X-Received: by 2002:a1c:5609:: with SMTP id k9mr8690094wmb.103.1571425187005;
-        Fri, 18 Oct 2019 11:59:47 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a204sm8327224wmh.21.2019.10.18.11.59.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 11:59:45 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        Fri, 18 Oct 2019 15:07:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436505AbfJRTH3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 18 Oct 2019 15:07:29 -0400
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 070A2222CC;
+        Fri, 18 Oct 2019 19:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571425648;
+        bh=ZvKSuxQuN/jT3Fmjbjwnw6yt3Bbj3F9A+MC7acj1eYo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r3J6l9JZJc1Zp8tJF9mLQSmXEA68DllcySKWuRRg/es60oLadlYjJhDaAjldnASSb
+         ATx8Um+zjpqNtXvhGwZLcVJe0hgMmNdA9edlIZqFx/1a8JB/Sb5YemGVg4SUJXOiKR
+         jRtSfzVPwCdgSZPJWLYASOe3Oyl6UG1dXPjI3dRE=
+Received: by mail-qk1-f176.google.com with SMTP id u184so6302458qkd.4;
+        Fri, 18 Oct 2019 12:07:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAVqzXlNJnNjJ81jSPsM8O8tkPvTcnq71VAfKdCP4a0THxoUFi0+
+        uzBdVPjL2XkndqxsBQZDVGI1oMTwUbSLk2Dtdw==
+X-Google-Smtp-Source: APXvYqyEfCrAtNPgA6gsKBq8urq8H5iqVlTDcHX0aikHpYcOCmiQnShU4x9vV/ge/RWs5MTLKNtafQj54U/NALrxbdY=
+X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr10482791qkl.152.1571425646996;
+ Fri, 18 Oct 2019 12:07:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191017031051.20366-1-chris.packham@alliedtelesis.co.nz>
+ <20191017031051.20366-2-chris.packham@alliedtelesis.co.nz>
+ <20191017192437.GA24080@bogus> <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
+In-Reply-To: <CAMpxmJVrFK38BPjoUtGt99sqgFeOA=wHFAu=QNQg_5Rj1gU92A@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 18 Oct 2019 14:07:15 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
+Message-ID: <CAL_Jsq+iad9+SE8kwKdxKfOF6TsbTF1V+3yNOLhNNsgnmhSCiA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
-Date:   Fri, 18 Oct 2019 11:59:41 -0700
-Message-Id: <20191018185941.14223-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <1570964003-20227-1-git-send-email-wahrenst@gmx.net>
-References: <1570964003-20227-1-git-send-email-wahrenst@gmx.net>
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 13 Oct 2019 12:53:23 +0200, Stefan Wahren <wahrenst@gmx.net> wrote:
-> bcm2835-rpi.dtsi defines the behavior of the ACT LED, which is available
-> on all Raspberry Pi boards. But there is no driver for this particual
-> GPIO on CM3 in mainline yet, so this node was left incomplete without
-> the actual GPIO definition. Since commit 025bf37725f1 ("gpio: Fix return
-> value mismatch of function gpiod_get_from_of_node()") this causing probe
-> issues of the leds-gpio driver for users of the CM3 dtsi file.
-> 
->   leds-gpio: probe of leds failed with error -2
-> 
-> Until we have the necessary GPIO driver hide the ACT node for CM3
-> to avoid this.
-> 
-> Reported-by: Fredrik Yhlen <fredrik.yhlen@endian.se>
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and IO board")
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
+On Fri, Oct 18, 2019 at 1:00 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> czw., 17 pa=C5=BA 2019 o 21:24 Rob Herring <robh@kernel.org> napisa=C5=82=
+(a):
+> >
+> > On Thu, Oct 17, 2019 at 04:10:50PM +1300, Chris Packham wrote:
+> > > This GPIO controller is present on a number of Broadcom switch ASICs
+> > > with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
+> > > blocks but different enough to require a separate driver.
+> > >
+> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > ---
+> > >
+> > > Notes:
+> > >     Changes in v2:
+> > >     - Document as DT schema
+> > >     - Include ngpios, #gpio-cells and gpio-controller properties
+> > >
+> > >  .../bindings/gpio/brcm,xgs-iproc.yaml         | 83 +++++++++++++++++=
+++
+> > >  1 file changed, 83 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-i=
+proc.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.ya=
+ml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> > > new file mode 100644
+> > > index 000000000000..71998551209e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> > > @@ -0,0 +1,83 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Broadcom XGS iProc GPIO controller
+> > > +
+> > > +maintainers:
+> > > +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > > +
+> > > +description: |
+> > > +  This controller is the Chip Common A GPIO present on a number of B=
+roadcom
+> > > +  switch ASICs with integrated SoCs.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - brcm,iproc-gpio-cca
+> >
+> > enum vs. const usage depends on whether you think you'll add more
+> > compatibles.
+> >
+>
+> What if you don't know yet? For instance we use a const compatible and
+> then a new chip is released for which we can reuse the driver?
 
-Applied to devicetree/fixes, thanks!
---
-Florian
+Then you just change it to an enum (or oneOf if the new compatible has
+a fallback to the old one). Not really a big deal.
+
+> Is this
+> something that is expected to remain stable in the binding document?
+
+No, only in the sense we want to minimize changes.
+
+> The question is unrelated to this patch, I'm just unsure about my own
+> approach to writing yaml bindings.
+
+We could perhaps just say single entries should always be 'const'
+because then we could write a meta-schema enforcing that:
+
+properties:
+  enum:
+    minItems: 2
+
+I don't think we should be that strict though unless it becomes a
+frequent review topic. So either way is fine, it's up to your
+judgement, and let's stop talking about it before I change my mind. :)
+
+Rob
