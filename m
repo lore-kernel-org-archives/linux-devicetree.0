@@ -2,209 +2,93 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252B8CA9EA1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 06:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF853CA9EA1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 07:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F25222BD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 06:45:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fdz+n06H"
+	by mail.kernel.org (Postfix) with ESMTP id 90DBF222C5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 07:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504475AbfJRGpL (ORCPT
+        id S2442095AbfJRHOb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 02:45:11 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45424 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfJRGpL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 02:45:11 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 41so4050328oti.12
-        for <devicetree@vger.kernel.org>; Thu, 17 Oct 2019 23:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1lF1MIdaENKkNdKHx3QF8806cfpyw2N47Ri2S6zNu+A=;
-        b=fdz+n06HECsJp9I5yC12MLoPyso3cVdDWSygC4Y7XVo2s+raIUe7Kh+aLwemhLMU5k
-         i7dVQR2xfPsax9aa+5VJyUvt0/X84pN8bZr2I1IqodPrl3WJd8v/DQvU0Mn7HPDL3F9G
-         p2zjMx/ktE9PQCFIGtVBeHWjl+r/xzysY7yUr0+lRii3jz18vN6MqHlkSU45xQ55o05m
-         G1FSO9291SHGdzv4XiuXv+oNdb3MCs2XWDCdELcJYSDl+uaG/muocWgujsYLr1TZ5iXU
-         5ElzuYwPbcYqYAwmJUKvQibj3nrYv8cN7CxOJQhhzGPFEDhOSpyWjgAwj+3CpwrqQEHf
-         a/Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1lF1MIdaENKkNdKHx3QF8806cfpyw2N47Ri2S6zNu+A=;
-        b=YTYX+dvxj+RZQJoPvPq4LZ2Q+S0o7Qiu4f54xP/2F2PSaOL7q/LFLUu8nZJSNWLuP/
-         yBtfnw6FPJsC88wiwIXl4Nd0Nyph/byhBY4q0n5zO4xzQbutQ69zlg0MuAX/weak3Ncs
-         DAJvQJBRr0+e5RlQ0BfItx8tmxfxfcNLmq5UnxkfRgQFe1a0D2I3xyfyXNBxLuFvdJpq
-         LYZkyoVm5mYr/IFlBpl0HbhOZDEyV/uvvFxinfSEfDRa+X6rQSMwNmaebW6qGamRgZks
-         U0pxgU6yiTcbpNwBs/zzga2Jif9/CIabBoJJUHBo1AR0tCKXYxHRN9ODas2Tg3TkTSOL
-         1Dmg==
-X-Gm-Message-State: APjAAAXqDqWrD8eVU8/pb/aeW6OMsBXig295ujDdM1azCQRuV7doBAjp
-        JI40NYnUGek8xzw5UfXWFiCUi4AZ5TGH0k4RnxeC8g==
-X-Google-Smtp-Source: APXvYqxyM+v+SYTdyxQ4dtigF5DDcYtT8ndNrsXVrCyXLrBJJzjjCW0hbJvIcRwuifhyrCsk7IlYvVPciQR043PPUQs=
-X-Received: by 2002:a9d:7d09:: with SMTP id v9mr6404595otn.292.1571381108752;
- Thu, 17 Oct 2019 23:45:08 -0700 (PDT)
+        Fri, 18 Oct 2019 03:14:31 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:43763 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728008AbfJRHOb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 03:14:31 -0400
+Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 18 Oct 2019
+ 15:14:38 +0800
+From:   Jian Hu <jian.hu@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v2 0/3] add Amlogic A1 clock controller driver
+Date:   Fri, 18 Oct 2019 15:14:22 +0800
+Message-ID: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-References: <20191017071234.8719-1-brgl@bgdev.pl> <20191017071234.8719-4-brgl@bgdev.pl>
- <20191017183543.GA28403@bogus>
-In-Reply-To: <20191017183543.GA28403@bogus>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 18 Oct 2019 08:44:57 +0200
-Message-ID: <CAMpxmJUMgqocphdPhS_zCYX3ib_hnwhnhBfQEVaY8hnpi4vxQg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] dt-bindings: regulator: max77650: convert the
- binding document to yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        linux-pm <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.28.8.25]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-czw., 17 pa=C5=BA 2019 o 20:35 Rob Herring <robh@kernel.org> napisa=C5=82(a=
-):
->
-> On Thu, Oct 17, 2019 at 09:12:31AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Convert the binding document for MAX77650 regulator module to YAML.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  .../bindings/regulator/max77650-regulator.txt | 41 -------------------
-> >  .../regulator/max77650-regulator.yaml         | 31 ++++++++++++++
-> >  2 files changed, 31 insertions(+), 41 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/regulator/max7765=
-0-regulator.txt
-> >  create mode 100644 Documentation/devicetree/bindings/regulator/max7765=
-0-regulator.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/regulator/max77650-regul=
-ator.txt b/Documentation/devicetree/bindings/regulator/max77650-regulator.t=
-xt
-> > deleted file mode 100644
-> > index f1cbe813c30f..000000000000
-> > --- a/Documentation/devicetree/bindings/regulator/max77650-regulator.tx=
-t
-> > +++ /dev/null
-> > @@ -1,41 +0,0 @@
-> > -Regulator driver for MAX77650 PMIC from Maxim Integrated.
-> > -
-> > -This module is part of the MAX77650 MFD device. For more details
-> > -see Documentation/devicetree/bindings/mfd/max77650.txt.
-> > -
-> > -The regulator controller is represented as a sub-node of the PMIC node
-> > -on the device tree.
-> > -
-> > -The device has a single LDO regulator and a SIMO buck-boost regulator =
-with
-> > -three independent power rails.
-> > -
-> > -Required properties:
-> > ---------------------
-> > -- compatible:                Must be "maxim,max77650-regulator"
-> > -
-> > -Each rail must be instantiated under the regulators subnode of the top=
- PMIC
-> > -node. Up to four regulators can be defined. For standard regulator pro=
-perties
-> > -refer to Documentation/devicetree/bindings/regulator/regulator.txt.
-> > -
-> > -Available regulator compatible strings are: "ldo", "sbb0", "sbb1", "sb=
-b2".
-> > -
-> > -Example:
-> > ---------
-> > -
-> > -     regulators {
-> > -             compatible =3D "maxim,max77650-regulator";
-> > -
-> > -             max77650_ldo: regulator@0 {
-> > -                     regulator-compatible =3D "ldo";
-> > -                     regulator-name =3D "max77650-ldo";
-> > -                     regulator-min-microvolt =3D <1350000>;
-> > -                     regulator-max-microvolt =3D <2937500>;
-> > -             };
-> > -
-> > -             max77650_sbb0: regulator@1 {
-> > -                     regulator-compatible =3D "sbb0";
-> > -                     regulator-name =3D "max77650-sbb0";
-> > -                     regulator-min-microvolt =3D <800000>;
-> > -                     regulator-max-microvolt =3D <1587500>;
-> > -             };
-> > -     };
-> > diff --git a/Documentation/devicetree/bindings/regulator/max77650-regul=
-ator.yaml b/Documentation/devicetree/bindings/regulator/max77650-regulator.=
-yaml
-> > new file mode 100644
-> > index 000000000000..a8770742836d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/regulator/max77650-regulator.ya=
-ml
-> > @@ -0,0 +1,31 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/regulator/max77650-regulator.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Regulator driver for MAX77650 PMIC from Maxim Integrated.
-> > +
-> > +maintainers:
-> > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > +
-> > +description: |
-> > +  This module is part of the MAX77650 MFD device. For more details
-> > +  see Documentation/devicetree/bindings/mfd/max77650.txt.
->
-> .yaml?
->
+add support for Amlogic A1 clock driver, the clock includes 
+three parts: peripheral clocks, pll clocks, CPU clocks.
+sys pll and CPU clocks will be sent in next patch.
 
-Is there any better way of referencing the main document than
-mentioning it in the description?
+Changes since v1 at [1]:
+-place A1 config alphabetically
+-add actual reason for RO ops, CLK_IS_CRITICAL, CLK_IGNORE_UNUSED
+-separate the driver into two driver: peripheral and pll driver
+-delete CLK_IGNORE_UNUSED flag for pwm b/c/d/e/f clock, dsp clock
+-delete the change in Kconfig.platforms, address to Kevin alone
+-remove the useless comments
+-modify the meson pll driver to support A1 PLLs
 
-Bart
+[1] https://lkml.kernel.org/r/1569411888-98116-1-git-send-email-jian.hu@amlogic.com
 
-> > +
-> > +  The regulator controller is represented as a sub-node of the PMIC no=
-de
-> > +  on the device tree.
-> > +
-> > +  The device has a single LDO regulator and a SIMO buck-boost regulato=
-r with
-> > +  three independent power rails.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: maxim,max77650-regulator
-> > +
-> > +patternProperties:
-> > +  "^regulator@[0-3]$":
-> > +    $ref: "regulator.yaml#"
-> > +
-> > +required:
-> > +  - compatible
-> > --
-> > 2.23.0
-> >
+Jian Hu (3):
+  dt-bindings: clock: meson: add A1 clock controller bindings
+  clk: meson: add support for A1 PLL clock ops
+  clk: meson: a1: add support for Amlogic A1 clock driver
+
+ .../devicetree/bindings/clock/amlogic,a1-clkc.yaml |  143 ++
+ drivers/clk/meson/Kconfig                          |   10 +
+ drivers/clk/meson/Makefile                         |    1 +
+ drivers/clk/meson/a1-pll.c                         |  345 +++
+ drivers/clk/meson/a1-pll.h                         |   56 +
+ drivers/clk/meson/a1.c                             | 2264 ++++++++++++++++++++
+ drivers/clk/meson/a1.h                             |  120 ++
+ drivers/clk/meson/clk-pll.c                        |   66 +-
+ drivers/clk/meson/clk-pll.h                        |    1 +
+ include/dt-bindings/clock/a1-clkc.h                |   98 +
+ include/dt-bindings/clock/a1-pll-clkc.h            |   16 +
+ 11 files changed, 3114 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+ create mode 100644 drivers/clk/meson/a1-pll.c
+ create mode 100644 drivers/clk/meson/a1-pll.h
+ create mode 100644 drivers/clk/meson/a1.c
+ create mode 100644 drivers/clk/meson/a1.h
+ create mode 100644 include/dt-bindings/clock/a1-clkc.h
+ create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+
+-- 
+1.9.1
+
