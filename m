@@ -2,154 +2,141 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAA6CA9EA3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CDECA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908CF21852
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8341521897
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:39:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aDmfHjm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409809AbfJRJcz (ORCPT
+        id S2406647AbfJRJjS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:32:55 -0400
-Received: from mail-sh.amlogic.com ([58.32.228.43]:32069 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409794AbfJRJcy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 05:32:54 -0400
-Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 18 Oct 2019
- 17:33:00 +0800
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v3 1/4] dt-bindings: power: add Amlogic secure power domains bindings
-Date:   Fri, 18 Oct 2019 17:32:44 +0800
-Message-ID: <1571391167-79679-2-git-send-email-jianxin.pan@amlogic.com>
+        Fri, 18 Oct 2019 05:39:18 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13336 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407427AbfJRJjR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 05:39:17 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5da988470000>; Fri, 18 Oct 2019 02:39:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 18 Oct 2019 02:39:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 18 Oct 2019 02:39:15 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
+ 2019 09:39:15 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
+ 2019 09:39:15 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 18 Oct 2019 09:39:15 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.66.147]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5da988400000>; Fri, 18 Oct 2019 02:39:15 -0700
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Nagarjuna Kristam" <nkristam@nvidia.com>
+Subject: [Patch V11 01/11] phy: tegra: xusb: Add XUSB dual mode support on Tegra210
+Date:   Fri, 18 Oct 2019 15:08:06 +0530
+Message-ID: <1571391496-20834-2-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571391167-79679-1-git-send-email-jianxin.pan@amlogic.com>
-References: <1571391167-79679-1-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <1571391496-20834-1-git-send-email-nkristam@nvidia.com>
+References: <1571391496-20834-1-git-send-email-nkristam@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [116.236.93.172]
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571391559; bh=uplC7C3AwS9xTkDY3gNfmGlsF18xBuoOOiOFKVwMsSg=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=aDmfHjm8rBGIeZgu6mpHHLk0nOZzv/KyI14pIDQvDZaH8J08aWpsM3i50imjVsr+j
+         hCbEvgnVO6C1vpdZ6KQmLjFM+nw/pUHl6eSEpEzhsgLYqiRjR9ZsdzfyxNgrIfXbxP
+         5sYJDIIHR+JRCJG+b/aB5VebGlw3nhSTmvnSj8Gvq/rzKW5EDLR3+m/P6sQJPniovJ
+         IaVBPhucNv/s8rPPkosKkl1HT3Ik5APbffZNWqXfmzA3ov+tivrS3sHkxsj7kJJwvM
+         f2fQSDlX8dxckaRI6Wu00SLLC6a06Wg3FjtKcm31mmdiGMJ7bh3AieE+xJF2F1+b2v
+         X0xlYH5gANjlg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the bindings for the Amlogic Secure power domains, controlling the
-secure power domains.
+Configure the port capabilities based on usb_dr_mode settings.
 
-The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-power domain registers are in secure world.
+Based on work by JC Kuo <jckuo@nvidia.com>.
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Reviewed-by: JC Kuo <jckuo@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 ---
- .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 ++++++++++++++++++++++
- include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++
- 2 files changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
- create mode 100644 include/dt-bindings/power/meson-a1-power.h
+ drivers/phy/tegra/xusb-tegra210.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-new file mode 100644
-index 00000000..88d8261
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+# Copyright (c) 2019 Amlogic, Inc
-+# Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson Secure Power Domains
-+
-+maintainers:
-+  - Jianxin Pan <jianxin.pan@amlogic.com>
-+
-+description: |+
-+  Meson Secure Power Domains used in A1/C1 SoCs.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,meson-a1-pwrc
-+
-+  "#power-domain-cells":
-+    const: 1
-+
-+  secure-monitor:
-+    description: phandle to the secure-monitor node
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+required:
-+  - compatible
-+  - "#power-domain-cells"
-+  - secure-monitor
-+
-+examples:
-+  - |
-+    pwrc: power-controller {
-+          compatible = "amlogic,meson-a1-pwrc";
-+          #power-domain-cells = <1>;
-+          secure-monitor = <&sm>;
-+    };
-+
-+
-diff --git a/include/dt-bindings/power/meson-a1-power.h b/include/dt-bindings/power/meson-a1-power.h
-new file mode 100644
-index 00000000..6cf50bf
---- /dev/null
-+++ b/include/dt-bindings/power/meson-a1-power.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc.
-+ * Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_MESON_A1_POWER_H
-+#define _DT_BINDINGS_MESON_A1_POWER_H
-+
-+#define PWRC_DSPA_ID	8
-+#define PWRC_DSPB_ID	9
-+#define PWRC_UART_ID	10
-+#define PWRC_DMC_ID	11
-+#define PWRC_I2C_ID	12
-+#define PWRC_PSRAM_ID	13
-+#define PWRC_ACODEC_ID	14
-+#define PWRC_AUDIO_ID	15
-+#define PWRC_OTP_ID	16
-+#define PWRC_DMA_ID	17
-+#define PWRC_SD_EMMC_ID	18
-+#define PWRC_RAMA_ID	19
-+#define PWRC_RAMB_ID	20
-+#define PWRC_IR_ID	21
-+#define PWRC_SPICC_ID	22
-+#define PWRC_SPIFC_ID	23
-+#define PWRC_USB_ID	24
-+#define PWRC_NIC_ID	25
-+#define PWRC_PDMIN_ID	26
-+#define PWRC_RSA_ID	27
-+#define PWRC_MAX_ID	28
-+
-+#endif
+diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+index 0c0df68..0351c4a 100644
+--- a/drivers/phy/tegra/xusb-tegra210.c
++++ b/drivers/phy/tegra/xusb-tegra210.c
+@@ -39,7 +39,10 @@
+ #define XUSB_PADCTL_USB2_PAD_MUX_USB2_BIAS_PAD_XUSB 0x1
+ 
+ #define XUSB_PADCTL_USB2_PORT_CAP 0x008
++#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(x) (0x0 << ((x) * 4))
+ #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(x) (0x1 << ((x) * 4))
++#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(x) (0x2 << ((x) * 4))
++#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(x) (0x3 << ((x) * 4))
+ #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(x) (0x3 << ((x) * 4))
+ 
+ #define XUSB_PADCTL_SS_PORT_MAP 0x014
+@@ -64,6 +67,7 @@
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
++#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL 0x1
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18 (1 << 6)
+ 
+ #define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x) (0x088 + (x) * 0x40)
+@@ -957,7 +961,14 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PORT_CAP);
+ 	value &= ~XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(index);
+-	value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
++	if (port->mode == USB_DR_MODE_UNKNOWN)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(index);
++	else if (port->mode == USB_DR_MODE_PERIPHERAL)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(index);
++	else if (port->mode == USB_DR_MODE_HOST)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
++	else if (port->mode == USB_DR_MODE_OTG)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(index);
+ 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_PORT_CAP);
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
+@@ -989,7 +1000,12 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ 			     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+ 	value &= ~(XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK <<
+ 		   XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT);
+-	value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
++	if (port->mode == USB_DR_MODE_HOST)
++		value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
++	else
++		value |=
++		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL <<
++		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT;
+ 	padctl_writel(padctl, value,
+ 		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+ 
 -- 
 2.7.4
 
