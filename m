@@ -2,156 +2,90 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC13CA9EA1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9B7CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D5B21897
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mue1fKqh"
+	by mail.kernel.org (Postfix) with ESMTP id 68667222BD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfJRIxT (ORCPT
+        id S2442271AbfJRJBx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:53:19 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:32991 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730092AbfJRIxT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 04:53:19 -0400
-Received: by mail-vs1-f66.google.com with SMTP id p13so3556000vso.0
-        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 01:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZFGj7CW4hdUtWSJdWVNaVmZMeTl6mFJ/pi0dDaNSBNI=;
-        b=Mue1fKqhFIuquMu+rQdYue5Ab10+aIYtB6Q9/0NGn6yqBrOgXLgFxSg9NHgyKSbFSE
-         P/wYniqUzElGGRUAv73GH8vxgzAqIkRFcXnKtK9ERXdptaI+2SGSIs/jXswG4speKbto
-         lvoSDiJeqxjuzOzIefrZ/deo7u6TdlJP7VTwxZFuteA/G4mV3V/aqdXyku3K8eU9Xoif
-         xAyZGXgX2NNhi62LjQKANeErNlNX/Za8ktqBzNRyqHutbskgjId182FjA9IqnNqFz+zm
-         ZXV01E9q9XPvlg0rZAq3Q2UEHuoAvj3+8z07VtkHMPYeXNncwhRl6aFysiNItkIHFYs1
-         L2bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZFGj7CW4hdUtWSJdWVNaVmZMeTl6mFJ/pi0dDaNSBNI=;
-        b=DOF7KExIu8mx998GZy7WLSnGOGAb2fUDu6qb6SEmY2VHPapyLEWio6SkY5x76oIkhO
-         bm/8t85GDerTDNjL+xG3qTn6ADRlPkyWZcmYTivymqazvjOsNIvCPddC7J5HaGTmffq5
-         O7BZ9MabNfWRUROEEfV/c7/59wPjZ0gnJHGAycMVtQgrE8KOWyzsdyb/i3e6B/dCd11q
-         cdrh3x2hdopdJkUoGDdbkk380m/UrpZ56ggOoZ/6W7T+i+ZbCLDQ11NAzp5WXiXi/S0h
-         UDRJ1I8m3d3Z4tROyosxKtOHNUDAncqKxP2odSKlMJN4ieoQP5R3H3j2H5AJfSfluXP3
-         3vyw==
-X-Gm-Message-State: APjAAAXuLqbe87t9tssBvNgnz0rvPsfJYjgJgOMWFCQiSMzh6rVahsGa
-        dBLnJVkkho6uWtFpqAEUoI05hXIEP5hTkvOgyqBDcA==
-X-Google-Smtp-Source: APXvYqxx1CtlN+u0DoDjVeLLVdh/4lNPYBI0SFJLfPUK/RX16/kP5dPKuMLW2YkmIBl0ktGJ57HLSuHmNeIqxg0/6RQ=
-X-Received: by 2002:a67:ebc2:: with SMTP id y2mr4733668vso.191.1571388797894;
- Fri, 18 Oct 2019 01:53:17 -0700 (PDT)
+        Fri, 18 Oct 2019 05:01:53 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:58982 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2442255AbfJRJBx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 18 Oct 2019 05:01:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1096492;
+        Fri, 18 Oct 2019 02:01:33 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E39F53F718;
+        Fri, 18 Oct 2019 02:01:31 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 10:01:27 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, andrew.murray@arm.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 1/2] PCI: tegra: Fix CLKREQ dependency programming
+Message-ID: <20191018090127.GA25918@e121166-lin.cambridge.arm.com>
+References: <20191005164212.3646-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
- <1570857203-49192-1-git-send-email-zhouyanjie@zoho.com> <1570857203-49192-7-git-send-email-zhouyanjie@zoho.com>
-In-Reply-To: <1570857203-49192-7-git-send-email-zhouyanjie@zoho.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 18 Oct 2019 10:52:41 +0200
-Message-ID: <CAPDyKFo9juNmf6hrcBjzOprS6GwzAPBq8y3ReGu=ry+MdxT9Bg@mail.gmail.com>
-Subject: Re: [PATCH 6/6 v2] MMC: JZ4740: Add support for LPM.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>,
-        Paul Cercueil <paul@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Mark Rutland <mark.rutland@arm.com>, syq@debian.org,
-        Linus Walleij <linus.walleij@linaro.org>, armijn@tjaldur.nl,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191005164212.3646-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 12 Oct 2019 at 07:19, Zhou Yanjie <zhouyanjie@zoho.com> wrote:
->
-> add support for low power mode of Ingenic's MMC/SD Controller.
->
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-
-I couldn't find a proper coverletter for the series, please provide
-that next time as it really helps review. Additionally, it seems like
-you forgot to change the prefix of the patches to "mmc: jz4740" (or at
-least you chosed upper case letters), but I will take care of that
-this time. So, I have applied the series for next, thanks!
-
-I also have a general question. Should we perhaps rename the driver
-from jz4740_mmc.c to ingenic.c (and the file for the DT bindings, the
-Kconfig, etc), as that seems like a more appropriate name? No?
-
-Kind regards
-Uffe
-
-
+On Sat, Oct 05, 2019 at 10:12:11PM +0530, Vidya Sagar wrote:
+> Corrects the programming to provide REFCLK to the downstream device
+> when there is no CLKREQ sideband signal routing present from root port
+> to the endpont.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  drivers/mmc/host/jz4740_mmc.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-> index 44a04fe..4cbe7fb 100644
-> --- a/drivers/mmc/host/jz4740_mmc.c
-> +++ b/drivers/mmc/host/jz4740_mmc.c
-> @@ -43,6 +43,7 @@
->  #define JZ_REG_MMC_RESP_FIFO   0x34
->  #define JZ_REG_MMC_RXFIFO      0x38
->  #define JZ_REG_MMC_TXFIFO      0x3C
-> +#define JZ_REG_MMC_LPM         0x40
->  #define JZ_REG_MMC_DMAC                0x44
->
->  #define JZ_MMC_STRPCL_EXIT_MULTIPLE BIT(7)
-> @@ -102,6 +103,12 @@
->  #define JZ_MMC_DMAC_DMA_SEL BIT(1)
->  #define JZ_MMC_DMAC_DMA_EN BIT(0)
->
-> +#define        JZ_MMC_LPM_DRV_RISING BIT(31)
-> +#define        JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY BIT(31)
-> +#define        JZ_MMC_LPM_DRV_RISING_1NS_DLY BIT(30)
-> +#define        JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY BIT(29)
-> +#define        JZ_MMC_LPM_LOW_POWER_MODE_EN BIT(0)
-> +
->  #define JZ_MMC_CLK_RATE 24000000
->
->  enum jz4740_mmc_version {
-> @@ -860,6 +867,22 @@ static int jz4740_mmc_set_clock_rate(struct jz4740_mmc_host *host, int rate)
->         }
->
->         writew(div, host->base + JZ_REG_MMC_CLKRT);
-> +
-> +       if (real_rate > 25000000) {
-> +               if (host->version >= JZ_MMC_X1000) {
-> +                       writel(JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY |
-> +                                  JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY |
-> +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
-> +                                  host->base + JZ_REG_MMC_LPM);
-> +               } else if (host->version >= JZ_MMC_JZ4760) {
-> +                       writel(JZ_MMC_LPM_DRV_RISING |
-> +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
-> +                                  host->base + JZ_REG_MMC_LPM);
-> +               } else if (host->version >= JZ_MMC_JZ4725B)
-> +                       writel(JZ_MMC_LPM_LOW_POWER_MODE_EN,
-> +                                  host->base + JZ_REG_MMC_LPM);
-> +       }
-> +
->         return real_rate;
->  }
->
-> --
-> 2.7.4
->
->
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+
+Applied to pci/tegra, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index f89f5acee72d..cbe95f0ea0ca 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -40,8 +40,6 @@
+>  #define APPL_PINMUX_CLKREQ_OVERRIDE		BIT(3)
+>  #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE_EN	BIT(4)
+>  #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE	BIT(5)
+> -#define APPL_PINMUX_CLKREQ_OUT_OVRD_EN		BIT(9)
+> -#define APPL_PINMUX_CLKREQ_OUT_OVRD		BIT(10)
+>  
+>  #define APPL_CTRL				0x4
+>  #define APPL_CTRL_SYS_PRE_DET_STATE		BIT(6)
+> @@ -1193,8 +1191,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  
+>  	if (!pcie->supports_clkreq) {
+>  		val = appl_readl(pcie, APPL_PINMUX);
+> -		val |= APPL_PINMUX_CLKREQ_OUT_OVRD_EN;
+> -		val |= APPL_PINMUX_CLKREQ_OUT_OVRD;
+> +		val |= APPL_PINMUX_CLKREQ_OVERRIDE_EN;
+> +		val &= ~APPL_PINMUX_CLKREQ_OVERRIDE;
+>  		appl_writel(pcie, val, APPL_PINMUX);
+>  	}
+>  
+> -- 
+> 2.17.1
+> 
