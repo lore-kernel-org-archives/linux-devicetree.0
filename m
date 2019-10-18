@@ -2,98 +2,127 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E3ECA9EA1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 12:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74AECA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 12:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43074222BD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 12:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C069321852
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 12:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bn/UYDge"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LMWQ/i1c";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aZLlw7Ul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442752AbfJRMXS (ORCPT
+        id S2389585AbfJRMdx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 08:23:18 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40516 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442702AbfJRMXR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 08:23:17 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9ICN9Yf013215;
-        Fri, 18 Oct 2019 07:23:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571401389;
-        bh=I4qPIv3TfJomROlJ51jMxTwuDPaA3EB49Ea1gtA/Jko=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bn/UYDgeGgGNFmMAAiWvSKqtuZFAHubxGv06IYeTTPmKm9TxpuiwSTQaEo9s4NS77
-         Jl/ry4jaSCy7V7kWJLvYXy/bxgdh2exp1AnTIYbRBnpNqcnxwze+G61jiDowvFuoDp
-         /xXabzz+n6YMFvx7DD4QHNCsRT5Sgr/WmxhPiPc8=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICN99P088786;
-        Fri, 18 Oct 2019 07:23:09 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 07:23:00 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 07:23:09 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9ICN6Yl096018;
-        Fri, 18 Oct 2019 07:23:07 -0500
-Subject: Re: [PATCH] arm64: dts: ti: k3-am654-base-board: Add disable-wp for
- mmc0
-To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>
-References: <20191003114251.20533-1-faiz_abbas@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <ea838a43-4ee7-3e40-e610-fe4bdbef81c9@ti.com>
-Date:   Fri, 18 Oct 2019 15:23:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191003114251.20533-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 18 Oct 2019 08:33:53 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51818 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731028AbfJRMdx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 08:33:53 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B9FA761153; Fri, 18 Oct 2019 12:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571402031;
+        bh=3tRVjrnzdm7RkUk3GKY47Ahx002G46T/pICBBH7NvWA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LMWQ/i1cMrdzBvKrIelXLEd0/YNX5lIGVAq7JwADeaCXi1MSEeAzrFBrHxDEtwBON
+         bQ2vIEHKfSv0+HD4ktTxWhaPeCmRXk4mrnyakWhLNSXZE5r9LAWOR3VfyXr0ZF8f0c
+         rL39HRrd9IGKZFIRoY6O5GU6/FW788Db6QpsyDaU=
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6114260A64;
+        Fri, 18 Oct 2019 12:33:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571402030;
+        bh=3tRVjrnzdm7RkUk3GKY47Ahx002G46T/pICBBH7NvWA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aZLlw7UlL4APffRlCQHbZt7Pz9Ox0LA5cc0jOFTDFCoExZsQKnfk3oYrOxhQSTqNZ
+         4WKVoclFZE0Jvog5DIr0s6oWvA5/0Ve0ooWplFkcV6ImRnK6duhWvvK8N+JfPG84bW
+         xy3sojx7QJaOL0AHSq72XZdtUDkmSqIY16ujIFww=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6114260A64
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V8 0/6] backlight: qcom-wled: Support for QCOM wled driver
+Date:   Fri, 18 Oct 2019 18:03:23 +0530
+Message-Id: <1571402009-8706-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 03/10/2019 14:42, Faiz Abbas wrote:
-> MMC0_SDWP is not connected to the card. Indicate this by adding a
-> disable-wp flag.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> index 1102b84f853d..143474119328 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> @@ -221,6 +221,7 @@
->   	bus-width = <8>;
->   	non-removable;
->   	ti,driver-strength-ohm = <50>;
-> +	disable-wp;
->   };
->   
->   &dwc3_1 {
-> 
+This patch series renames the pm8941-wled.c driver to qcom-wled.c to add
+the support for multiple PMICs supported by qualcomm. This patch series
+supports both PM8941 and PMI8998 WLED. The PMI8998 WLED has the support
+to handle the OVP (over voltage protection) and the SC (short circuit
+protection)
+interrupts. It also has the auto string detection algorithm support to
+configure the right strings if the user specified string configuration
+is in-correct. These three features are added in this series for PMI8998.
 
-Queuing up towards 5.5, thanks.
+changes from v1:
+   - Fixed the commit message for
+   - backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Changes from v2:
+   - Fixed bjorn and other reviewer's comments
+   - Seperated the device tree bindings
+   - Splitted out the WLED4 changes in seperate patch
+   - Merged OVP and auto string detection patch
+
+Changes from v3:
+  - Added Reviewed-by/Acked-by tags
+  - Fixed comments from Bjorn/Vinod/Rob
+  - Splitting the "backlight: qcom-wled: Add support for WLED4 peripheral" patch
+    to seperate the WLED3 specific restructure.
+
+Changes from v4:
+  - Added reviewed-by/Acked-by tags
+  - Fixed comments from Bjorn/Daniel/Pavel
+
+Changes from v5:
+  - Fixed comments from Bjorn/Pavel
+
+Changes from v5/v6:
+  - Fixed comments from Bjorn/Pavel on V5 series, which were missed in V6 series
+  - Patch 1 and 2, mentioned below, from V6 series are picked by Pavel In next.
+    Hence, dropped them in this series.
+    https://lore.kernel.org/patchwork/patch/1132467/
+    https://lore.kernel.org/patchwork/patch/1132468/
+
+Changes from v7:
+  - Addressed comments from Daniel Thompson/Lee Jones
+  - Patch 1 and 2, mentioned below, from V6 series are picked by Pavel In next.
+    Hence, dropped them in this series.
+    https://lore.kernel.org/patchwork/patch/1132467/
+    https://lore.kernel.org/patchwork/patch/1132468/
+
+Kiran Gunda (6):
+  backlight: qcom-wled: Add new properties for PMI8998.
+  backlight: qcom-wled: Rename PM8941* to WLED3
+  backlight: qcom-wled: Restructure the driver for WLED3.
+  backlight: qcom-wled: Add support for WLED4 peripheral.
+  backlight: qcom-wled: add support for short circuit handling.
+  backlight: qcom-wled: Add auto string detection logic
+
+ .../bindings/leds/backlight/qcom-wled.txt          |   74 +-
+ drivers/video/backlight/qcom-wled.c                | 1254 +++++++++++++++++---
+ 2 files changed, 1125 insertions(+), 203 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
+
