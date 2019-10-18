@@ -2,119 +2,123 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A00CA9EA1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C739ACA9EA1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9866C222CC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB28222BD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:31:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CIsGHCGt";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CIsGHCGt"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RWOqByZZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PLEjqrTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633284AbfJRKMr (ORCPT
+        id S2408171AbfJRKbr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:12:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43986 "EHLO
+        Fri, 18 Oct 2019 06:31:47 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40394 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633218AbfJRKMq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 06:12:46 -0400
+        with ESMTP id S1729479AbfJRKbr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 06:31:47 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B9D6C61136; Fri, 18 Oct 2019 10:12:45 +0000 (UTC)
+        id 2084A6121D; Fri, 18 Oct 2019 10:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571393565;
-        bh=qQyWt4N0PfQUuGUcmF8g2Od8g0wOfG0DWFA70BBTCvo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CIsGHCGtt4S1ecanP4P6hDIBg+YH8NvjI30y/CUS8vOnTnkcQAZBglme1aes6Xsv3
-         Am4W4oMUe61fHqvjDyGrZ1WmRBcQXNVHOUleW78iuzm/ZHhlUHTgTB6M+TmvXLZnao
-         2JZKrM1zgn4qn2GDMcbmbOLLSYet61oCltoqzYuM=
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2521361019;
-        Fri, 18 Oct 2019 10:12:40 +0000 (UTC)
+        s=default; t=1571394706;
+        bh=JsxKFSAy1iuf/aPktsC6FZcWFRE+QUyAl6FXx4ZIliQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RWOqByZZFhO30hXT5mph+CcZRdB2FdL4DN8NACEA6PLudAh9mwFGB7h0/bzUFgrM3
+         PvhD+o5btMTaDxkRp0f9pFUIXwSkjmxZu4I3nOdU5JI/IB/B4j4HzAVV74NUX9l5t9
+         A6BVriwNLe2/e2WqDSNpaa4nVa6sBqEKb+SRNsLY=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 2BAF960D8F;
+        Fri, 18 Oct 2019 10:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571393565;
-        bh=qQyWt4N0PfQUuGUcmF8g2Od8g0wOfG0DWFA70BBTCvo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CIsGHCGtt4S1ecanP4P6hDIBg+YH8NvjI30y/CUS8vOnTnkcQAZBglme1aes6Xsv3
-         Am4W4oMUe61fHqvjDyGrZ1WmRBcQXNVHOUleW78iuzm/ZHhlUHTgTB6M+TmvXLZnao
-         2JZKrM1zgn4qn2GDMcbmbOLLSYet61oCltoqzYuM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2521361019
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 3/3] clk: qcom: clk-rpmh: Add support for RPMHCC for SC7180
-Date:   Fri, 18 Oct 2019 15:39:24 +0530
-Message-Id: <1571393364-32697-4-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
-References: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
+        s=default; t=1571394705;
+        bh=JsxKFSAy1iuf/aPktsC6FZcWFRE+QUyAl6FXx4ZIliQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PLEjqrTKNVywoJ79b0L13gACxAMsJ/2aGT7iUIgh/M8z1sbbNVoBNz9aZ8I+FicJw
+         QKBwcdjHsOfst1MaOgV54d9YmiJt4a9k4A+6JRVr9SsnKzs/IH9Oq43tNWB/Jo5SqY
+         q1A0mR6Hui5m0HIWVdCzyj6nIK1DnFBwhOKWYZAM=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 18 Oct 2019 16:01:45 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: c630: Enable adsp, cdsp and mpss
+In-Reply-To: <20191018055706.3729469-1-bjorn.andersson@linaro.org>
+References: <20191018055706.3729469-1-bjorn.andersson@linaro.org>
+Message-ID: <3e528de55c8d9ff36c6e532ffb1c3cf8@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for clock RPMh driver to vote for ARC and VRM managed
-clock resources.
+On 2019-10-18 11:27, Bjorn Andersson wrote:
+> Specify the firmware-name for the adsp, cdsp and mpss and enable the
+> nodes.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/clk-rpmh.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-index 96a36f6..7301c77 100644
---- a/drivers/clk/qcom/clk-rpmh.c
-+++ b/drivers/clk/qcom/clk-rpmh.c
-@@ -391,6 +391,24 @@ static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
- 	.num_clks = ARRAY_SIZE(sm8150_rpmh_clocks),
- };
+> ---
+>  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> index ded120d3aef5..13dc619687f3 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> @@ -20,6 +20,11 @@
+>  	};
+>  };
+> 
+> +&adsp_pas {
+> +	firmware-name = "qcom/LENOVO/81JL/qcadsp850.mbn";
+> +	status = "okay";
+> +};
+> +
+>  &apps_rsc {
+>  	pm8998-rpmh-regulators {
+>  		compatible = "qcom,pm8998-rpmh-regulators";
+> @@ -229,6 +234,11 @@
+>  	status = "disabled";
+>  };
+> 
+> +&cdsp_pas {
+> +	firmware-name = "qcom/LENOVO/81JL/qccdsp850.mbn";
+> +	status = "okay";
+> +};
+> +
+>  &gcc {
+>  	protected-clocks = <GCC_QSPI_CORE_CLK>,
+>  			   <GCC_QSPI_CORE_CLK_SRC>,
+> @@ -296,6 +306,10 @@
+>  	};
+>  };
+> 
+> +&mss_pil {
+> +	firmware-name = "qcom/LENOVO/81JL/qcdsp1v2850.mbn",
+> "qcom/LENOVO/81JL/qcdsp2850.mbn";
+> +};
+> +
+>  &qup_i2c12_default {
+>  	drive-strength = <2>;
+>  	bias-disable;
 
-+static struct clk_hw *sc7180_rpmh_clocks[] = {
-+	[RPMH_CXO_CLK]		= &sdm845_bi_tcxo.hw,
-+	[RPMH_CXO_CLK_A]	= &sdm845_bi_tcxo_ao.hw,
-+	[RPMH_LN_BB_CLK2]	= &sdm845_ln_bb_clk2.hw,
-+	[RPMH_LN_BB_CLK2_A]	= &sdm845_ln_bb_clk2_ao.hw,
-+	[RPMH_LN_BB_CLK3]	= &sdm845_ln_bb_clk3.hw,
-+	[RPMH_LN_BB_CLK3_A]	= &sdm845_ln_bb_clk3_ao.hw,
-+	[RPMH_RF_CLK1]		= &sdm845_rf_clk1.hw,
-+	[RPMH_RF_CLK1_A]	= &sdm845_rf_clk1_ao.hw,
-+	[RPMH_RF_CLK2]		= &sdm845_rf_clk2.hw,
-+	[RPMH_RF_CLK2_A]	= &sdm845_rf_clk2_ao.hw,
-+};
-+
-+static const struct clk_rpmh_desc clk_rpmh_sc7180 = {
-+	.clks = sc7180_rpmh_clocks,
-+	.num_clks = ARRAY_SIZE(sc7180_rpmh_clocks),
-+};
-+
- static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
- 					 void *data)
- {
-@@ -471,6 +489,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
- static const struct of_device_id clk_rpmh_match_table[] = {
- 	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
- 	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
-+	{ .compatible = "qcom,sc7180-rpmh-clk", .data = &clk_rpmh_sc7180},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
-
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
