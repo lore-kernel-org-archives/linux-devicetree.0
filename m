@@ -2,116 +2,127 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A440CA9EA3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA048CA9EA1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 11:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4452F20700
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 10:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CE820700
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 11:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x+ivwMa1"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Ze1abby5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404497AbfJRK6s (ORCPT
+        id S2409935AbfJRLLd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 06:58:48 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35976 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbfJRK6s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 06:58:48 -0400
-Received: by mail-vs1-f67.google.com with SMTP id v19so3745929vsv.3
-        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 03:58:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rio9HHOlkvh+lIpCQASjDvFu34ch6yz1YASODTUfN2A=;
-        b=x+ivwMa1fuOo73+TkPEdt11VJpA5s5IaNM4sh0A4umv+Kpq/SIrNSspl+Tx6BxkHYY
-         RGSVUmvMZ49HKAPY82E2W2EXufUFG0ArEJgsKO2irYjk/IFl7cZriGK8qRvmlpM5DiI4
-         cW4RyJmj6uE0YSjjvo3dcX10dzCulzvu3Wdu8JdDMZA8ZyqvmS1gBcQtAT6sZMSEGUxe
-         b3hhe8+ibWVBQRUWstv/Fvg1kRt6EKrLFHH+vqY7nvhAYcBSj/NDyg1zXhKZySE4005U
-         /Gbap+Mi81K6+uIXOrxUfYlABOUqEqwZBfS0dsqwISFWanRaHb3jm1VdybIarZTQFU0m
-         4jfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rio9HHOlkvh+lIpCQASjDvFu34ch6yz1YASODTUfN2A=;
-        b=TubuzUvMVbWejK1mIeOsjpmkGy2afu0RsfgqrEqCJz5GBpmeCbhVzRfX9DhVTmdyg4
-         gJDbCN78FME/BoomxwpbF3SGHdG37JMk5s1dGOvkp+2eERK4Cu58xZjX4qTNQzRl7fow
-         VzU/J2UK/lgKIGLwtI2jblBZyFdMXxe+TJdjVk8Q8Ji23DxrSnMQsfvOnXfezmywLSyL
-         xIdwtAA+KCDmoL+1k8yrk6UtaPReH6JxSxVJbhsy717OBr21d5e0wyWI7jKGUPxVi4on
-         N+Kk4NjGGp8vvzIx7GdBhuhMfXuvP9zMcDCbtV9nYMoE1A/3k4i6i7XUdeNTwEWGJTE1
-         /Z5w==
-X-Gm-Message-State: APjAAAVJhkI/2/8PDSuFoKaiSKZz2H+iWPjQ2GaPD4BnVLo7jWhsgkPo
-        5TrlJvgPEr2BGGQm/nxpdW7pZtUaoZia3in0fb+r9g==
-X-Google-Smtp-Source: APXvYqwRBr47REEzkA0e8ZYJ3EAkV4RqwFlssr91UqI3z8UAFs6Fwd6iaf/97SDUNB8MbcQd5ZnSNa99yYm/Z5IUQR4=
-X-Received: by 2002:a67:cf05:: with SMTP id y5mr5230380vsl.34.1571396327014;
- Fri, 18 Oct 2019 03:58:47 -0700 (PDT)
+        Fri, 18 Oct 2019 07:11:33 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:58114 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2409922AbfJRLLc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:11:32 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 71A4CC0488;
+        Fri, 18 Oct 2019 11:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1571397092; bh=HJga7B0ouM1COkEsJgMK2mlF5wYeXphpoMGtMGta1RQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ze1abby512NWxvUqRr6h+4NwB+YQyfrZpiGDyBUm+7vNoM/qQg3Tnf8Ch488M8u82
+         rPWMyRMHnS0sl9NEWv1tEMJ2dJ+w2Kz83bKqg2zcMmzvuVHb10wqIz2kOi/FlOefzn
+         FlfUDPlFirXImYNcG/s5R54NKx1vkg0dgPY+vODUdzlNnnDL46dDw8hpio/OfS6acm
+         2iqW1LBD4UVrPXX6pFZAf8n85YygkBHLQN3rS2z7c5pKh0NVs8vZpW4RRoxaBWGGP7
+         e6bOB9VWknheqoMIU2YBwAnU39+9L6x9008DWbwZSR4+A+Hln5Ig7U8YhcQlZf6351
+         fuD7h1O9e5CeA==
+Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.3.73])
+        by mailhost.synopsys.com (Postfix) with ESMTP id AAB22A0065;
+        Fri, 18 Oct 2019 11:11:30 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 2/2] ARC: [plat-hsdk]: Enable on-boardi SPI ADC IC
+Date:   Fri, 18 Oct 2019 14:11:26 +0300
+Message-Id: <20191018111126.5246-3-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191018111126.5246-1-Eugeniy.Paltsev@synopsys.com>
+References: <20191018111126.5246-1-Eugeniy.Paltsev@synopsys.com>
 MIME-Version: 1.0
-References: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
-In-Reply-To: <4d269f30b1122487a2b5c8b48e24f78f2b75a509.1570537903.git.nicolas.ferre@microchip.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 18 Oct 2019 12:58:10 +0200
-Message-ID: <CAPDyKFqcOKhqza=Gbjbwim1no2_NBLEzrq6JRoK_7U9hGXL5Xg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: sdhci-of-at91: add the
- microchip,sdcal-inverted property
-To:     Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 8 Oct 2019 at 14:34, Nicolas Ferre <nicolas.ferre@microchip.com> wrote:
->
-> Add the specific microchip,sdcal-inverted property to at91 sdhci
-> device binding.
-> This optional property describes how the SoC SDCAL pin is connected.
-> It could be handled at SiP, SoM or board level.
->
-> This property read by at91 sdhci driver will allow to put in place a
-> software workaround that would reduce power consumption.
->
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+HSDK board has adc108s102 SPI ADC IC installed, enable it.
 
-Applied for next, thanks!
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/boot/dts/hsdk.dts      | 15 +++++++++++++++
+ arch/arc/configs/hsdk_defconfig |  4 ++++
+ 2 files changed, 19 insertions(+)
 
-Kind regards
-Uffe
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 9bea5daadd23..9acbeba832c0 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -65,6 +65,14 @@
+ 		clock-frequency = <33333333>;
+ 	};
+ 
++	reg_5v0: regulator-5v0 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "5v0-supply";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
+ 	cpu_intc: cpu-interrupt-controller {
+ 		compatible = "snps,archs-intc";
+ 		interrupt-controller;
+@@ -272,6 +280,13 @@
+ 				#size-cells = <1>;
+ 				spi-max-frequency = <4000000>;
+ 			};
++
++			adc@1 {
++				compatible = "ti,adc108s102";
++				reg = <1>;
++				vref-supply = <&reg_5v0>;
++				spi-max-frequency = <1000000>;
++			};
+ 		};
+ 
+ 		creg_gpio: gpio@14b0 {
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 22fc70396a3b..0974226fab55 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -57,6 +57,8 @@ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_DWAPB=y
+ CONFIG_GPIO_SNPS_CREG=y
+ # CONFIG_HWMON is not set
++CONFIG_REGULATOR=y
++CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_DRM=y
+ # CONFIG_DRM_FBDEV_EMULATION is not set
+ CONFIG_DRM_UDL=y
+@@ -74,6 +76,8 @@ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_DW=y
+ CONFIG_DMADEVICES=y
+ CONFIG_DW_AXI_DMAC=y
++CONFIG_IIO=y
++CONFIG_TI_ADC108S102=y
+ CONFIG_EXT3_FS=y
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
+-- 
+2.21.0
 
-
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-atmel.txt | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
-> index 1b662d7171a0..503c6dbac1b2 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
-> @@ -9,6 +9,11 @@ Required properties:
->  - clocks:              Phandlers to the clocks.
->  - clock-names:         Must be "hclock", "multclk", "baseclk";
->
-> +Optional properties:
-> +- microchip,sdcal-inverted: when present, polarity on the SDCAL SoC pin is
-> +  inverted. The default polarity for this signal is described in the datasheet.
-> +  For instance on SAMA5D2, the pin is usually tied to the GND with a resistor
-> +  and a capacitor (see "SDMMC I/O Calibration" chapter).
->
->  Example:
->
-> --
-> 2.17.1
->
