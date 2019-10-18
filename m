@@ -2,283 +2,262 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34685CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 16:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C275CA9EAD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 16:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A8121D7C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 16:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gZNchhad"
+	by mail.kernel.org (Postfix) with ESMTP id 749B820659
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 16:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732159AbfJRQOR (ORCPT
+        id S2439576AbfJRQcd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 12:14:17 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37464 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728594AbfJRQOQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 12:14:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p14so6890619wro.4
-        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 09:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
-         :mime-version;
-        bh=0Cv5HxbYsKs88qKdDqqwy2GcVJ7JGGNauSIpovXmWjE=;
-        b=gZNchhaduGtAYNPyOyjo0Q/R9PH//aDDplRrAmvdTTPx0Kmxn8NFK+7uAx8JKgIEeX
-         CmgKuBT7wpTX5XgrppkFVgSvyCiZu9C7R70WHNEiHuYGIAt+FX3H7nG5/jkh44Rz1OeZ
-         +Oo06tmY7t+R2wCBMZC5VxXtyEFPzndgMtS0AaJNXfn7Z92k0ZvHBesNFCCpAyIBKLGr
-         S2lLW1EaKwt8i9PnSNjyZo3zC4zUjbt3z3L0mrfzR6prmno+8o5h44MIVZcom3MjiDPJ
-         giuQ9ZZ5Bvd2l9TyhJ2tWXibsW3ZYIKbYwAhsEv/jwRDgeS+z2dmIppYCe9Hu/GeFRL3
-         hzoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=0Cv5HxbYsKs88qKdDqqwy2GcVJ7JGGNauSIpovXmWjE=;
-        b=eiPTKG/2FNHZRt5nfFEpIMWd0p578lLbTa2zRjO/Ng+s3qRc62rnqdh1+qKS4Be44D
-         FYPQauOdprg2Yclt2IrvswfMHTYXY80bdyT/zCCjzT6fyFWBsTIUJA3JWFY4pEugB2OO
-         w3enqfWqL5/B+Q0fjKxEeJTYIZXUYyI33WRBhOnDCRSDxgaAxnJxLHsxpTNwm489QZZd
-         xIbmfLCeIKd5+kigQqNmKVefFqU5GSk4X0gGsyq29BkJF/HguvILJSfQPY9BUnb67rQ1
-         rsXwEeJ64oA1ooTTbQpewjyQL4UaVANRiitEshA/zBlySGAZ/kZe/BT86H7LisDO5NVX
-         urnw==
-X-Gm-Message-State: APjAAAUrFeGBeOj4yo2huxLZjloLk2xzm8ZEggf1VGjkrYiyiwIhjLFb
-        R74vo3lzVjyMkzo+IGbaOi646Q==
-X-Google-Smtp-Source: APXvYqxahX2Eo67G58sg7nvdDRQg5C58GloUqLjP/ZxQkAa40VhAeVwwcIp6pZ/sy3jdITFMe4NWDg==
-X-Received: by 2002:adf:df05:: with SMTP id y5mr9222772wrl.84.1571415253811;
-        Fri, 18 Oct 2019 09:14:13 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a204sm7706251wmh.21.2019.10.18.09.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 09:14:12 -0700 (PDT)
-References: <1571393152-3698-1-git-send-email-christianshewitt@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson: khadas-vim3l: enable audio
-In-reply-to: <1571393152-3698-1-git-send-email-christianshewitt@gmail.com>
-Date:   Fri, 18 Oct 2019 18:14:11 +0200
-Message-ID: <1jd0euf2uk.fsf@starbuckisacylon.baylibre.com>
+        Fri, 18 Oct 2019 12:32:33 -0400
+Received: from muru.com ([72.249.23.125]:38116 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440098AbfJRQcc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 18 Oct 2019 12:32:32 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 3D0B58168;
+        Fri, 18 Oct 2019 16:33:05 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 01/10] ARM: OMAP2+: Drop legacy platform data for omap4 mcbsp
+Date:   Fri, 18 Oct 2019 09:32:11 -0700
+Message-Id: <20191018163220.3504-2-tony@atomide.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191018163220.3504-1-tony@atomide.com>
+References: <20191018163220.3504-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+We can now probe devices with ti-sysc interconnect driver and dts
+data. Let's drop the related platform data and custom ti,hwmods
+dts property.
 
-On Fri 18 Oct 2019 at 12:05, Christian Hewitt <christianshewitt@gmail.com> wrote:
+As we're just dropping data, and the early platform data init
+is based on the custom ti,hwmods property, we want to drop both
+the platform data and ti,hwmods property in a single patch.
 
-> Add and enable the audio nodes on the VIM3L. This is based on the recent
-> submission for the SEI610 device [1] and the existing VIM3 dts.
->
-> [1] https://patchwork.kernel.org/patch/11180785/
->
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  .../boot/dts/amlogic/meson-sm1-khadas-vim3l.dts    | 147 +++++++++++++++++++++
->  1 file changed, 147 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-> index dbbf29a..d07f0cf 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-> @@ -8,6 +8,7 @@
->  
->  #include "meson-sm1.dtsi"
->  #include "meson-khadas-vim3.dtsi"
-> +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
->  
->  / {
->  	compatible = "khadas,vim3l", "amlogic,sm1";
-> @@ -31,6 +32,86 @@
->  		regulator-boot-on;
->  		regulator-always-on;
->  	};
-> +
-> +	sound {
-> +		compatible = "amlogic,axg-sound-card";
-> +		model = "SM1-KHADAS-VIM3L";
-> +		audio-aux-devs = <&tdmout_a>, <&tdmout_b>,
-> +				 <&tdmin_a>, <&tdmin_b>;
-> +		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
-> +				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
-> +				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
-> +				"TDM_A Playback", "TDMOUT_A OUT",
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/omap4-l4-abe.dtsi        |   3 -
+ arch/arm/boot/dts/omap4-l4.dtsi            |   1 -
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c | 143 ---------------------
+ 3 files changed, 147 deletions(-)
 
-The route above are useless since you are not using TDM A in this card
-
-> +				"TDMOUT_B IN 0", "FRDDR_A OUT 1",
-> +				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-> +				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-> +				"TDM_B Playback", "TDMOUT_B OUT";
-> +
-> +		assigned-clocks = <&clkc CLKID_MPLL2>,
-> +				  <&clkc CLKID_MPLL0>,
-> +				  <&clkc CLKID_MPLL1>;
-> +		assigned-clock-parents = <0>, <0>, <0>;
-> +		assigned-clock-rates = <294912000>,
-> +				       <270950400>,
-> +				       <393216000>;
-> +		status = "okay";
-> +
-> +		dai-link-0 {
-> +			sound-dai = <&frddr_a>;
-> +		};
-> +
-> +		dai-link-1 {
-> +			sound-dai = <&frddr_b>;
-> +		};
-> +
-> +		dai-link-2 {
-> +			sound-dai = <&frddr_c>;
-> +		};
-
-You have only one output, so one FRDDR is enough.
-So either enable a put just one, or put them all (including FRDDR D)
-
-> +
-> +		dai-link-3 {
-> +			sound-dai = <&toddr_a>;
-> +		};
-> +
-> +		dai-link-4 {
-> +			sound-dai = <&toddr_b>;
-> +		};
-> +
-> +		dai-link-5 {
-> +			sound-dai = <&toddr_c>;
-> +		};
-
-There is no capture Backend, to the TODDR are useless
-
-> +
-> +		/* 8ch hdmi interface */
-> +		dai-link-6 {
-> +			sound-dai = <&tdmif_b>;
-
-Any particular reason for using TDM B interface ? What is khadas doing
-in there own code ?
-
-> +			dai-format = "i2s";
-> +			dai-tdm-slot-tx-mask-0 = <1 1>;
-> +			dai-tdm-slot-tx-mask-1 = <1 1>;
-> +			dai-tdm-slot-tx-mask-2 = <1 1>;
-> +			dai-tdm-slot-tx-mask-3 = <1 1>;
-> +			mclk-fs = <256>;
-> +
-> +			codec {
-> +				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-> +			};
-> +		};
-> +
-> +		/* hdmi glue */
-> +		dai-link-7 {
-> +			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-> +
-> +			codec {
-> +				sound-dai = <&hdmi_tx>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&arb {
-> +	status = "okay";
-> +};
-> +
-> +&clkc_audio {
-> +	status = "okay";
->  };
->  
->  &cpu0 {
-> @@ -61,6 +142,24 @@
->  	clock-latency = <50000>;
->  };
->  
-> +&frddr_a {
-> +	status = "okay";
-> +};
-> +
-> +&frddr_b {
-> +	status = "okay";
-> +};
-> +
-> +&frddr_c {
-> +	status = "okay";
-> +};
-> +
-> +&pdm {
-> +	pinctrl-0 = <&pdm_din0_z_pins>, <&pdm_dclk_z_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-
-Why do you enable PDM ? does this board provide some digital mics ?
-There is no links using PDM in your card. Please clarify
-
-> +
->  &pwm_AO_cd {
->  	pinctrl-0 = <&pwm_ao_d_e_pins>;
->  	pinctrl-names = "default";
-> @@ -93,3 +192,51 @@
->  	phy-names = "usb2-phy0", "usb2-phy1";
->  };
->   */
-> +
-> +&tdmif_a {
-> +	pinctrl-0 = <&tdm_a_dout0_pins>, <&tdm_a_fs_pins>, <&tdm_a_sclk_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +
-> +	assigned-clocks = <&clkc_audio AUD_CLKID_TDM_SCLK_PAD0>,
-> +			  <&clkc_audio AUD_CLKID_TDM_LRCLK_PAD0>;
-> +	assigned-clock-parents = <&clkc_audio AUD_CLKID_MST_A_SCLK>,
-> +				 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
-> +	assigned-clock-rates = <0>, <0>;
-> +};
-> +
-> +&tdmif_b {
-> +	status = "okay";
-> +};
-> +
-> +&tdmin_a {
-> +	status = "okay";
-> +};
-> +
-> +&tdmin_b {
-> +	status = "okay";
-> +};
-> +
-> +&tdmout_a {
-> +	status = "okay";
-> +};
-> +
-> +&tdmout_b {
-> +	status = "okay";
-> +};
-> +
-> +&toddr_a {
-> +	status = "okay";
-> +};
-> +
-> +&toddr_b {
-> +	status = "okay";
-> +};
-> +
-> +&toddr_c {
-> +	status = "okay";
-> +};
-> +
-> +&tohdmitx {
-> +	status = "okay";
-> +};
-
+diff --git a/arch/arm/boot/dts/omap4-l4-abe.dtsi b/arch/arm/boot/dts/omap4-l4-abe.dtsi
+--- a/arch/arm/boot/dts/omap4-l4-abe.dtsi
++++ b/arch/arm/boot/dts/omap4-l4-abe.dtsi
+@@ -86,7 +86,6 @@
+ 
+ 		target-module@22000 {			/* 0x40122000, ap 2 02.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "mcbsp1";
+ 			reg = <0x2208c 0x4>;
+ 			reg-names = "sysc";
+ 			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
+@@ -120,7 +119,6 @@
+ 
+ 		target-module@24000 {			/* 0x40124000, ap 4 04.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "mcbsp2";
+ 			reg = <0x2408c 0x4>;
+ 			reg-names = "sysc";
+ 			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
+@@ -154,7 +152,6 @@
+ 
+ 		target-module@26000 {			/* 0x40126000, ap 6 06.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "mcbsp3";
+ 			reg = <0x2608c 0x4>;
+ 			reg-names = "sysc";
+ 			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
+diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
+--- a/arch/arm/boot/dts/omap4-l4.dtsi
++++ b/arch/arm/boot/dts/omap4-l4.dtsi
+@@ -2013,7 +2013,6 @@
+ 
+ 		target-module@96000 {			/* 0x48096000, ap 37 26.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "mcbsp4";
+ 			reg = <0x9608c 0x4>;
+ 			reg-names = "sysc";
+ 			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
+diff --git a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+@@ -1324,113 +1324,6 @@ static struct omap_hwmod omap44xx_mcasp_hwmod = {
+ 	},
+ };
+ 
+-/*
+- * 'mcbsp' class
+- * multi channel buffered serial port controller
+- */
+-
+-static struct omap_hwmod_class_sysconfig omap44xx_mcbsp_sysc = {
+-	.rev_offs	= -ENODEV,
+-	.sysc_offs	= 0x008c,
+-	.sysc_flags	= (SYSC_HAS_CLOCKACTIVITY | SYSC_HAS_ENAWAKEUP |
+-			   SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+-	.sysc_fields	= &omap_hwmod_sysc_type1,
+-};
+-
+-static struct omap_hwmod_class omap44xx_mcbsp_hwmod_class = {
+-	.name	= "mcbsp",
+-	.sysc	= &omap44xx_mcbsp_sysc,
+-};
+-
+-/* mcbsp1 */
+-static struct omap_hwmod_opt_clk mcbsp1_opt_clks[] = {
+-	{ .role = "pad_fck", .clk = "pad_clks_ck" },
+-	{ .role = "prcm_fck", .clk = "mcbsp1_sync_mux_ck" },
+-};
+-
+-static struct omap_hwmod omap44xx_mcbsp1_hwmod = {
+-	.name		= "mcbsp1",
+-	.class		= &omap44xx_mcbsp_hwmod_class,
+-	.clkdm_name	= "abe_clkdm",
+-	.main_clk	= "func_mcbsp1_gfclk",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = OMAP4_CM1_ABE_MCBSP1_CLKCTRL_OFFSET,
+-			.context_offs = OMAP4_RM_ABE_MCBSP1_CONTEXT_OFFSET,
+-			.modulemode   = MODULEMODE_SWCTRL,
+-		},
+-	},
+-	.opt_clks	= mcbsp1_opt_clks,
+-	.opt_clks_cnt	= ARRAY_SIZE(mcbsp1_opt_clks),
+-};
+-
+-/* mcbsp2 */
+-static struct omap_hwmod_opt_clk mcbsp2_opt_clks[] = {
+-	{ .role = "pad_fck", .clk = "pad_clks_ck" },
+-	{ .role = "prcm_fck", .clk = "mcbsp2_sync_mux_ck" },
+-};
+-
+-static struct omap_hwmod omap44xx_mcbsp2_hwmod = {
+-	.name		= "mcbsp2",
+-	.class		= &omap44xx_mcbsp_hwmod_class,
+-	.clkdm_name	= "abe_clkdm",
+-	.main_clk	= "func_mcbsp2_gfclk",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = OMAP4_CM1_ABE_MCBSP2_CLKCTRL_OFFSET,
+-			.context_offs = OMAP4_RM_ABE_MCBSP2_CONTEXT_OFFSET,
+-			.modulemode   = MODULEMODE_SWCTRL,
+-		},
+-	},
+-	.opt_clks	= mcbsp2_opt_clks,
+-	.opt_clks_cnt	= ARRAY_SIZE(mcbsp2_opt_clks),
+-};
+-
+-/* mcbsp3 */
+-static struct omap_hwmod_opt_clk mcbsp3_opt_clks[] = {
+-	{ .role = "pad_fck", .clk = "pad_clks_ck" },
+-	{ .role = "prcm_fck", .clk = "mcbsp3_sync_mux_ck" },
+-};
+-
+-static struct omap_hwmod omap44xx_mcbsp3_hwmod = {
+-	.name		= "mcbsp3",
+-	.class		= &omap44xx_mcbsp_hwmod_class,
+-	.clkdm_name	= "abe_clkdm",
+-	.main_clk	= "func_mcbsp3_gfclk",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = OMAP4_CM1_ABE_MCBSP3_CLKCTRL_OFFSET,
+-			.context_offs = OMAP4_RM_ABE_MCBSP3_CONTEXT_OFFSET,
+-			.modulemode   = MODULEMODE_SWCTRL,
+-		},
+-	},
+-	.opt_clks	= mcbsp3_opt_clks,
+-	.opt_clks_cnt	= ARRAY_SIZE(mcbsp3_opt_clks),
+-};
+-
+-/* mcbsp4 */
+-static struct omap_hwmod_opt_clk mcbsp4_opt_clks[] = {
+-	{ .role = "pad_fck", .clk = "pad_clks_ck" },
+-	{ .role = "prcm_fck", .clk = "mcbsp4_sync_mux_ck" },
+-};
+-
+-static struct omap_hwmod omap44xx_mcbsp4_hwmod = {
+-	.name		= "mcbsp4",
+-	.class		= &omap44xx_mcbsp_hwmod_class,
+-	.clkdm_name	= "l4_per_clkdm",
+-	.main_clk	= "per_mcbsp4_gfclk",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = OMAP4_CM_L4PER_MCBSP4_CLKCTRL_OFFSET,
+-			.context_offs = OMAP4_RM_L4PER_MCBSP4_CONTEXT_OFFSET,
+-			.modulemode   = MODULEMODE_SWCTRL,
+-		},
+-	},
+-	.opt_clks	= mcbsp4_opt_clks,
+-	.opt_clks_cnt	= ARRAY_SIZE(mcbsp4_opt_clks),
+-};
+-
+ /*
+  * 'mcpdm' class
+  * multi channel pdm controller (proprietary interface with phoenix power
+@@ -2938,38 +2831,6 @@ static struct omap_hwmod_ocp_if omap44xx_l4_abe__mcasp_dma = {
+ 	.user		= OCP_USER_SDMA,
+ };
+ 
+-/* l4_abe -> mcbsp1 */
+-static struct omap_hwmod_ocp_if omap44xx_l4_abe__mcbsp1 = {
+-	.master		= &omap44xx_l4_abe_hwmod,
+-	.slave		= &omap44xx_mcbsp1_hwmod,
+-	.clk		= "ocp_abe_iclk",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+-/* l4_abe -> mcbsp2 */
+-static struct omap_hwmod_ocp_if omap44xx_l4_abe__mcbsp2 = {
+-	.master		= &omap44xx_l4_abe_hwmod,
+-	.slave		= &omap44xx_mcbsp2_hwmod,
+-	.clk		= "ocp_abe_iclk",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+-/* l4_abe -> mcbsp3 */
+-static struct omap_hwmod_ocp_if omap44xx_l4_abe__mcbsp3 = {
+-	.master		= &omap44xx_l4_abe_hwmod,
+-	.slave		= &omap44xx_mcbsp3_hwmod,
+-	.clk		= "ocp_abe_iclk",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+-/* l4_per -> mcbsp4 */
+-static struct omap_hwmod_ocp_if omap44xx_l4_per__mcbsp4 = {
+-	.master		= &omap44xx_l4_per_hwmod,
+-	.slave		= &omap44xx_mcbsp4_hwmod,
+-	.clk		= "l4_div_ck",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+ /* l4_abe -> mcpdm */
+ static struct omap_hwmod_ocp_if omap44xx_l4_abe__mcpdm = {
+ 	.master		= &omap44xx_l4_abe_hwmod,
+@@ -3308,10 +3169,6 @@ static struct omap_hwmod_ocp_if *omap44xx_hwmod_ocp_ifs[] __initdata = {
+ 	&omap44xx_l4_wkup__kbd,
+ 	&omap44xx_l4_abe__mcasp,
+ 	&omap44xx_l4_abe__mcasp_dma,
+-	&omap44xx_l4_abe__mcbsp1,
+-	&omap44xx_l4_abe__mcbsp2,
+-	&omap44xx_l4_abe__mcbsp3,
+-	&omap44xx_l4_per__mcbsp4,
+ 	&omap44xx_l4_abe__mcpdm,
+ 	&omap44xx_l3_main_2__mmu_ipu,
+ 	&omap44xx_l4_cfg__mmu_dsp,
+-- 
+2.23.0
