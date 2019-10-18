@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18167CA9EAB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D65CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E31222C5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117C021852
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H9ZkOQpl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZevOt9ld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505153AbfJRPcm (ORCPT
+        id S2410675AbfJRPcW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:32:42 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44842 "EHLO
+        Fri, 18 Oct 2019 11:32:22 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44830 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410688AbfJRPcY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:32:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWNju117124;
-        Fri, 18 Oct 2019 10:32:23 -0500
+        with ESMTP id S2410668AbfJRPcV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:32:21 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFWKdO117113;
+        Fri, 18 Oct 2019 10:32:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571412743;
-        bh=Gnev1/nUK6kia0qBTPA020FCXW4FagJcU0jgSzyPRRI=;
+        s=ti-com-17Q1; t=1571412740;
+        bh=r5gqWhuoa2gJ1iIJ0GdWbvBLizT1eB9GcyotAuDXfac=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=H9ZkOQplb/ylnwjF8I86pA6AYkS/NmZQpgmt7+spwTP+RyjAm1LvThH+/pe64oAP2
-         JVAYrqMqvtt89zrGiZJ2Cxp9mHidrx0BkRvdi5rSSOsA9gGu1yhlhAcV0sN6QPrtSH
-         8so6iQls54noCLmh+jELH+igSZpUg+i1krk/2KHM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFWNJ2113243
+        b=ZevOt9ld7M6nhyVxwr0+s5B4kZMvbBXn5HnHbyFB4xtictTSPFXTW55WeDj6fb+2c
+         l4jiV/foNA+TTitr0Rfk9uPNZCutVfK7ifEzeTkrEaC7Wy+BVW7KZxJAii2QFxabbf
+         pbfapOvCI/n473Jner3xOS6dSOF122C8cv2f93e4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFWKab080890
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Oct 2019 10:32:23 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 18 Oct 2019 10:32:20 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 10:32:14 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 10:32:11 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 10:32:14 -0500
+ Frontend Transport; Fri, 18 Oct 2019 10:32:11 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15U080266;
-        Fri, 18 Oct 2019 10:32:22 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15S080266;
+        Fri, 18 Oct 2019 10:32:19 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 16/19] media: ti-vpe: cal: Properly calculate max resolution boundary
-Date:   Fri, 18 Oct 2019 10:34:34 -0500
-Message-ID: <20191018153437.20614-17-bparrot@ti.com>
+Subject: [Patch 14/19] media: ti-vpe: cal: Add AM654 support
+Date:   Fri, 18 Oct 2019 10:34:32 -0500
+Message-ID: <20191018153437.20614-15-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191018153437.20614-1-bparrot@ti.com>
 References: <20191018153437.20614-1-bparrot@ti.com>
@@ -65,60 +65,81 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently we were using an arbitrarily small maximum resolution mostly
-based on available sensor capabilities. However the hardware DMA limits
-are much higher than the statically define maximum resolution we were
-using.
-
-There we rework the boundary check code to handle the maximum width and
-height based on the maximum line width in bytes and re-calculating the
-pixel width based on the given pixel format.
+Add the needed control module register bit layout to support the AM654
+family of devices.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/media/platform/Kconfig      |  2 +-
+ drivers/media/platform/ti-vpe/cal.c | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 28 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index 997de1a83ff9..24713e79c1ec 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -151,7 +151,7 @@ source "drivers/media/platform/sunxi/Kconfig"
+ config VIDEO_TI_CAL
+ 	tristate "TI CAL (Camera Adaptation Layer) driver"
+ 	depends on VIDEO_DEV && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+-	depends on SOC_DRA7XX || COMPILE_TEST
++	depends on SOC_DRA7XX || ARCH_K3 || COMPILE_TEST
+ 	select VIDEOBUF2_DMA_CONTIG
+ 	select V4L2_FWNODE
+ 	help
 diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index e61d2f3fd1da..a0ff67412410 100644
+index f590fe712d3d..42b0063b610e 100644
 --- a/drivers/media/platform/ti-vpe/cal.c
 +++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -34,8 +34,8 @@
+@@ -322,6 +322,26 @@ static struct cal_data dra76x_cal_data = {
+ 	.flags = 0,
+ };
  
- #define CAL_MODULE_NAME "cal"
++static struct reg_field am654_ctrl_core_csi0_reg_fields[F_MAX_FIELDS] = {
++	[F_CTRLCLKEN] = REG_FIELD(0, 15, 15),
++	[F_CAMMODE] = REG_FIELD(0, 24, 25),
++	[F_LANEENABLE] = REG_FIELD(0, 0, 4),
++};
++
++static struct cal_csi2_phy am654_cal_csi_phy[] = {
++	{
++		.base_fields = am654_ctrl_core_csi0_reg_fields,
++		.num_lanes = 5,
++	},
++};
++
++static struct cal_data am654_cal_data = {
++	.csi2_phy_core = am654_cal_csi_phy,
++	.num_csi2_phy = ARRAY_SIZE(am654_cal_csi_phy),
++
++	.flags = 0,
++};
++
+ /*
+  * there is one cal_dev structure in the driver, it is shared by
+  * all instances.
+@@ -548,7 +568,9 @@ static void camerarx_phy_enable(struct cal_ctx *ctx)
+ 	/* Always enable all lanes at the phy control level */
+ 	max_lanes = (1 << cal_data_get_phy_max_lanes(ctx)) - 1;
+ 	regmap_field_write(phy->fields[F_LANEENABLE], max_lanes);
+-	regmap_field_write(phy->fields[F_CSI_MODE], 1);
++	/* F_CSI_MODE is not present on every architecture */
++	if (phy->fields[F_CSI_MODE])
++		regmap_field_write(phy->fields[F_CSI_MODE], 1);
+ 	regmap_field_write(phy->fields[F_CTRLCLKEN], 1);
+ }
  
--#define MAX_WIDTH 1920
--#define MAX_HEIGHT 1200
-+#define MAX_WIDTH_BYTES (8192 * 8)
-+#define MAX_HEIGHT_LINES 16383
- 
- #define CAL_VERSION "0.1.0"
- 
-@@ -1337,15 +1337,21 @@ static int cal_calc_format_size(struct cal_ctx *ctx,
- 				const struct cal_fmt *fmt,
- 				struct v4l2_format *f)
- {
--	u32 bpl;
-+	u32 bpl, max_width;
- 
- 	if (!fmt) {
- 		ctx_dbg(3, ctx, "No cal_fmt provided!\n");
- 		return -EINVAL;
- 	}
- 
--	v4l_bound_align_image(&f->fmt.pix.width, 48, MAX_WIDTH, 2,
--			      &f->fmt.pix.height, 32, MAX_HEIGHT, 0, 0);
-+	/*
-+	 * Maximum width is bound by the DMA max width in bytes.
-+	 * We need to recalculate the actual maxi width depending on the
-+	 * number of bytes per pixels required.
-+	 */
-+	max_width = MAX_WIDTH_BYTES / (ALIGN(fmt->bpp, 8) >> 3);
-+	v4l_bound_align_image(&f->fmt.pix.width, 48, max_width, 2,
-+			      &f->fmt.pix.height, 32, MAX_HEIGHT_LINES, 0, 0);
- 
- 	bpl = (f->fmt.pix.width * ALIGN(fmt->bpp, 8)) >> 3;
- 	f->fmt.pix.bytesperline = ALIGN(bpl, 16);
+@@ -2331,6 +2353,10 @@ static const struct of_device_id cal_of_match[] = {
+ 		.compatible = "ti,dra76-cal",
+ 		.data = (void *)&dra76x_cal_data,
+ 	},
++	{
++		.compatible = "ti,am654-cal",
++		.data = (void *)&am654_cal_data,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, cal_of_match);
 -- 
 2.17.1
 
