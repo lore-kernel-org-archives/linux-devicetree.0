@@ -2,109 +2,165 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55979CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4038CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 20:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2731C2245D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 20:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13282054F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 20:38:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="U2/qBjFc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W69Zhxtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506089AbfJRU1a (ORCPT
+        id S1730879AbfJRUhy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 16:27:30 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:19624 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443420AbfJRU07 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 16:26:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571430351;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=NW3mRlbGbfeDunz3kPNWIYRsTEKfeJ6w6UloX2TJNho=;
-        b=U2/qBjFcCR+uj7xSqRH4N19PmmWnjZw2Hg0fRB4mFVhR9eYJvS5qP+qnEyRXC0zaJo
-        ioG5Znk7xL0khCEUntYrGM0zSrsv/vYhSfl0IY0Doc12CS2Tla+k/6dE6EIafdTu59fy
-        7x/DC3rgCdA5QcpoM+I/io/5NhcD2kO47XYCxMgDFNsRUAYelWwRSoX6cg3RCfY5SPu2
-        /Px31ZT3Tl/zr87mqBwtHd/u3izGT5mgP5hzQOZ7/SvP08kMgQoVEinMlgKCtbI1hERd
-        8C8umNIml2k5N8CVZrbOz4I9EmzcuhynWHCpujGALoxo5nVM8zfd3Qg6A9I0NtxJ2l6P
-        0EcA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6F3CFF60="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9IKPcDUu
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 18 Oct 2019 22:25:38 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
+        Fri, 18 Oct 2019 16:37:54 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35708 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2443484AbfJRUhx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 16:37:53 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l10so7144516wrb.2
+        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 13:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X3UV8UFcJXmjR8xWcyajZiE4sW1UaQr14OUnxYin0zs=;
+        b=W69ZhxtcR3kEhzKTH2ppDDQlp2xuHqjvVPvb8g7MCaMKvJtrGmDQfS+xmx1MWd1hh3
+         QdpwpFZ99tTKz2te6dL/wBpDqKbY0S5bSaMX6Vmp4JINdE+Bqt+lk1Wu1u5kD84Dc2Q+
+         5RtBaef8PynQwb9Ljk6vWRAshRymWsFte5uNn66HYAcKz651iy77RKs5rnO3gqJzMp7b
+         QVcQ7OI19bTTvuIugp4NbrXZyotEiFX6o3wLZaO/VZDeL1y5KG+ZQo1DiG85Du2xp/X2
+         BUjDvNl/1m/N2FUK5XNLaiu/lZLRzh8MOKLMQc1M62AgAd8VCpzGhFglTNx88iFW8aDW
+         S4jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X3UV8UFcJXmjR8xWcyajZiE4sW1UaQr14OUnxYin0zs=;
+        b=spQWYs8WdCZ3cT0eCc3s51q0ul57Zrj2eG45t012ewL8w1ZseBXCG1fvAYyGiqSf1z
+         qk5sxVXXDzzmW4Av/4ji5qyndRPdIIkBivOxPKR/Rxu+mxLb1/D/bGBtlYLw6P4Dvy4S
+         vx+2tyH30t+r+rudp+p7XsTcPbflECgXX5nmb8uIOAADzw+46Y+r0visrUqzJsbTlLin
+         qngS3uNsfk07yJ9NkQCX3tXc8WflPxEqeDhb1lni7oXE1fmybflS3XpCRYW2i8kdYeJJ
+         SeQ46H1VcyK7WE3+5ZPknio7knhaEM00E+T0csYlwVOmaRsnzw+OSk6Wht33X5PmizZa
+         wOwQ==
+X-Gm-Message-State: APjAAAXUCVcpo9s9+tZ/NOZwWxat11L5qLiEjdvIt/zBefirn7WknSOf
+        nZLqW2/2ZITKKoObfrtANVKLq18/X51Vv4kee5px5w==
+X-Google-Smtp-Source: APXvYqw2ZOeG9Qok15FEuCqv0VPjp925ukdnNDK2HvOgBeJidTalVOsPQfwmo811wLb4RXONWUEEJmfoTECJ+r0Plkw=
+X-Received: by 2002:a05:6000:92:: with SMTP id m18mr6224464wrx.105.1571431071003;
+ Fri, 18 Oct 2019 13:37:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-3-john.stultz@linaro.org>
+ <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com> <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
+ <b8695418-9d3a-96a6-9587-c9a790f49740@redhat.com> <CALAqxLVh6GbiKmuK60e6f+_dWh-TS2ZLrwx0WsSo5bKp-F3iLA@mail.gmail.com>
+ <648e2943-42f5-e07d-5bb4-f6fd8b38b726@redhat.com> <CALAqxLWh0=GRod5ORpi+ENpWCkmY39mUw_=NV67sKY8qH_otZw@mail.gmail.com>
+ <f2236442-111d-cd84-fc47-0737df71cf3a@redhat.com> <CALAqxLWHbhst5KXAGCswKVp7ztzFHxdb6nskfze+Jk+xWo2Ssw@mail.gmail.com>
+ <7877d69b-b17c-d4a4-9806-3dca98fc9e26@redhat.com> <CALAqxLWE-8YkYmrKoP6-+2xherwsGZ8-CeUyOFe9YPQj6EuSpg@mail.gmail.com>
+ <7ea7824f-abc2-4cf6-720a-3668b6286781@redhat.com> <CALAqxLVrEYT5RbL_R0tx_3jHzt7ZuWHDPuEwt1r2iXgPwR+Czw@mail.gmail.com>
+ <f5c9f5a3-97b8-389b-47ee-cfa5ddb9afa7@redhat.com>
+In-Reply-To: <f5c9f5a3-97b8-389b-47ee-cfa5ddb9afa7@redhat.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 18 Oct 2019 13:37:39 -0700
+Message-ID: <CALAqxLW5vYpGY1yLTvRefiX6anOGsPWW_Dc1Rj8kdf9+BDm0kw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Subject: [PATCH 8/9] net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 definition
-Date:   Fri, 18 Oct 2019 22:25:29 +0200
-Message-Id: <ddc2d28c3cd12e69ccad0819e5ed97ca204d04dc.1571430329.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1571430329.git.hns@goldelico.com>
-References: <cover.1571430329.git.hns@goldelico.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SDIO_VENDOR_ID_TI_WL1251 is now defined in mmc/sdio_ids.h separately
-from SDIO_VENDOR_ID_TI for wl1271.
+On Fri, Oct 18, 2019 at 1:21 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 18-10-2019 22:12, John Stultz wrote:
+> > On Fri, Oct 18, 2019 at 12:59 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >> On 18-10-2019 21:53, John Stultz wrote:
+> >>> On Fri, Oct 18, 2019 at 12:30 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>>> Looking at drivers/usb/typec/tcpm/tcpci.c: tcpci_set_vconn I see that
+> >>>> there is a data struct with vendor specific callbacks and that the
+> >>>> drivers/usb/typec/tcpm/tcpci_rt1711h.c implements that.
+> >>>>
+> >>>> So you may want something similar here. But things are tricky here,
+> >>>> because when nothing is connected you want to provide Vbus for
+> >>>> the USB-A ports, which means that if someone then connects a
+> >>>> USB-A to C cable to connect the board to a PC (switching the port
+> >>>> to device mode) there will be a time when both sides are supplying
+> >>>> 5V if I remember the schedule correctly.
+> >>>
+> >>> Ok. Thanks for the pointer, I'll take a look at that to see if I can
+> >>> get it to work.
+> >>>
+> >>>> I think that the original hack might not be that bad, the whole hw
+> >>>> design seems so, erm, broken, that you probably cannot do proper
+> >>>> roleswapping anyways.  So just tying Vbus to host mode might be
+> >>>> fine, the question then becomes again how can some other piece
+> >>>> of code listen to the role-switch events...
+> >>>
+> >>> So, at least in the current approach (see the v3 series), I've
+> >>> basically set the hub driver as an role-switch intermediary, sitting
+> >>> between the calls from the tcpm to the dwc3 driver. It actually works
+> >>> better then the earlier notifier method (which had some issues with
+> >>> reliably establishing the initial state on boot).  Does that approach
+> >>> work for you?
+> >>
+> >> That sounds like it might be a nice solution. But I have not seen the
+> >> code, I think I was not Cc-ed on v3. Do you have a patchwork or
+> >> lore.kernel.org link for me?
+> >
+> > Oh! I think I had you on CC, maybe it got caught in your spam folder?
+>
+> More likely I just deleted mail to aggressively, sorry.
+>
+> > My apologies either way! The thread is here:
+> >    https://lore.kernel.org/lkml/20191016033340.1288-1-john.stultz@linaro.org/
+> >
+> > And the hub/role-switch-intermediary driver is here:
+> >    https://lore.kernel.org/lkml/20191016033340.1288-12-john.stultz@linaro.org/
+>
+> Hm, this looks very nice actually, much much better then the notifier stuff!
+>
+> As for your:
+>
+> "NOTE: It was noted that controlling the TYPEC_VBUS_POWER_OFF and
+> TYPEC_VBUS_POWER_ON values here is not reccomended. I'm looking
+> for a way to remove that bit from the logic here, but wanted to
+> still get feedback on this approach."
+>
+> Comment in the commit message, normally a type-c port would turn external Vbus
+> off until a sink is connected, IIRC the same Vbus is also used for the TupeA ports
+> on the hub, so that would mean those are unusable when nothing is connected to
+> the TypeC port, which is not what you want.
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
+Uh, so I think for the HiKey960, the type-A ports on the hub are
+separately powered via the hub_power_ctrl(hisi_hikey_usb,
+HUB_VBUS_POWER_OFF/ON) call.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # 4.11.0
----
- drivers/net/wireless/ti/wl1251/sdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+At least, with the current driver, the functionality is working as
+expected: remove the USB-C cable, and devices connected to the hub
+power on, plug something into the USB-C port and devices plugged into
+the hub shutdown.
 
-diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
-index c54a273713ed..42b55f3a50df 100644
---- a/drivers/net/wireless/ti/wl1251/sdio.c
-+++ b/drivers/net/wireless/ti/wl1251/sdio.c
-@@ -52,7 +52,7 @@ static void wl1251_sdio_interrupt(struct sdio_func *func)
- }
- 
- static const struct sdio_device_id wl1251_devices[] = {
--	{ SDIO_DEVICE(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1251) },
-+	{ SDIO_DEVICE(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251) },
- 	{}
- };
- MODULE_DEVICE_TABLE(sdio, wl1251_devices);
--- 
-2.19.1
+But maybe I'm missing what you mean?
 
+> So I think that given the special case / hack-ish hw you have, that just setting
+> Vbus based on the role is ok(ish).
+
+Ok. I'm happy to stick with what works here, since it is at least the
+oddness is isolated to the device specific hub driver.
+
+thanks
+-john
