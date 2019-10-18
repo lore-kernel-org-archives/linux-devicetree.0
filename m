@@ -2,95 +2,85 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7ECCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58680CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 16:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861B72082C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KG1ZY15o"
+	by mail.kernel.org (Postfix) with ESMTP id 2CA76222CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 16:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409053AbfJRPqR (ORCPT
+        id S2502328AbfJRQHl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:46:17 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42150 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409052AbfJRPqQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:46:16 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDSu005895;
-        Fri, 18 Oct 2019 10:46:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571413573;
-        bh=QIHNicus3UqUNLJM8IoaxNSWcvCYyJXUsrZb07TeW2I=;
-        h=From:To:CC:Subject:Date;
-        b=KG1ZY15ohlTbhuUOSOFwoJlqxPKAxPDTIGvk8TKan8xgllpfpmFj+szxujfu5/A2w
-         galPXyHHlLSq01Bv8S7YBlhnZOydVva/pwQj5Ogxu150xn4x5Mq+evS7t937FHqaG/
-         SWt1avt9pYlqHHnP9erzy1YfLM6B0JxnH1jXZWGI=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDBK128650;
-        Fri, 18 Oct 2019 10:46:13 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 10:46:13 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 10:46:05 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDAM045642;
-        Fri, 18 Oct 2019 10:46:13 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-CC:     Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 0/9] ARM: dts: dra7: add cal nodes 
-Date:   Fri, 18 Oct 2019 10:48:40 -0500
-Message-ID: <20191018154849.3127-1-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 18 Oct 2019 12:07:41 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42919 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394470AbfJRQHl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 12:07:41 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1iLUmx-0002BS-RM; Fri, 18 Oct 2019 18:07:39 +0200
+Received: from mtr by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1iLUmw-0004AH-5I; Fri, 18 Oct 2019 18:07:38 +0200
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com,
+        devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rajan Vaja <rajanv@xilinx.com>,
+        Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH 1/5] arm64: zynqmp: Add firmware DT node
+Date:   Fri, 18 Oct 2019 18:07:31 +0200
+Message-Id: <20191018160735.15658-2-m.tretter@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191018160735.15658-1-m.tretter@pengutronix.de>
+References: <20191018160735.15658-1-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mtr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series adds the needed clkctrl and ty-sysc nodes for CAL module.
-It also adds support for the module in related dtsi and dts for DRA72,
-DRA76 and AM654 SoC.
+From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Benoit Parrot (9):
-  ARM: dts: dra7: add cam clkctrl node
-  ARM: OMAP: DRA7xx: Make CAM clock domain SWSUP only
-  ARM: dts: dra7-l4: Add ti-sysc node for CAM
-  ARM: dts: DRA72: Add CAL dtsi node
-  arm: dts: dra72-evm-common: Add entries for the CSI2 cameras
-  arm: dtsi: dra76x: Add CAL dtsi node
-  arm: dts: dra76-evm: Add CAL and OV5640 nodes
-  arm64: dts: k3-am65-main Add CAL node
-  arm64: dts: k3-am654-base-board: Add CSI2 OV5640 camera
+Add firmware DT node in ZynqMP device tree. This node
+uses bindings as per new firmware interface driver.
 
- arch/arm/boot/dts/dra7-l4.dtsi                | 43 ++++++++++++++++---
- arch/arm/boot/dts/dra72-evm-common.dtsi       | 35 +++++++++++++++
- arch/arm/boot/dts/dra72x.dtsi                 | 43 +++++++++++++++++++
- arch/arm/boot/dts/dra76-evm.dts               | 39 +++++++++++++++++
- arch/arm/boot/dts/dra76x.dtsi                 | 43 +++++++++++++++++++
- arch/arm/boot/dts/dra7xx-clocks.dtsi          | 14 ++++++
- arch/arm/mach-omap2/clockdomains7xx_data.c    |  2 +-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 23 ++++++++++
- .../arm64/boot/dts/ti/k3-am654-base-board.dts | 36 ++++++++++++++++
- drivers/clk/ti/clk-7xx.c                      | 19 ++++++++
- include/dt-bindings/clock/dra7.h              | 10 +++++
- 11 files changed, 300 insertions(+), 7 deletions(-)
+Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+---
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 9aa67340a4d8..9115eaebbf70 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -115,6 +115,13 @@
+ 		method = "smc";
+ 	};
+ 
++	firmware {
++		zynqmp_firmware: zynqmp-firmware {
++			compatible = "xlnx,zynqmp-firmware";
++			method = "smc";
++		};
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupt-parent = <&gic>;
 -- 
-2.17.1
+2.20.1
 
