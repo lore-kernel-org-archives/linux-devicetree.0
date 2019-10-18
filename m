@@ -2,59 +2,59 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1C8CA9EB3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32181CA9EC8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D802245A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04CA021897
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LIaho/b0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HPGmM9E1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406742AbfJRAUJ (ORCPT
+        id S2503907AbfJRAUO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 17 Oct 2019 20:20:09 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33360 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503879AbfJRAUI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 17 Oct 2019 20:20:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r17so8124855wme.0
-        for <devicetree@vger.kernel.org>; Thu, 17 Oct 2019 17:20:07 -0700 (PDT)
+        Thu, 17 Oct 2019 20:20:14 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42905 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503878AbfJRAUN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 17 Oct 2019 20:20:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n14so4254093wrw.9
+        for <devicetree@vger.kernel.org>; Thu, 17 Oct 2019 17:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QGtqqoloz6hjB0cfAJP9qri2qA1iaYEqSaS6htthArs=;
-        b=LIaho/b0J0bCWjv6CBIj3ZqtNf200u7TNu0EqK9EI/D1EbS9cAYhiXleb9Uuiaqiu/
-         fXTNI2o/N4Ml6abfGPssQl9a3BGnzm9yUVQrdqtGthafs5VwIdKWiFle8XjR6MBn5VZT
-         bsHgs7DnzUSfOZcfj8Scuv913Cu8IdvSTdCkK2X/FqwpHtzfaKSYL1iNHBPtwKy+IXju
-         dge0dRglAXmJRAT8ibNcpVEbZ5d9nm9VTdo4kRCCDgKVtgKZDN4MVeGa/tulRTotYkk6
-         EbCi4a6rWfry6/yYGE5QMVEuWuLY/WZLHAkqUD4pYofrxv3I3xrhzFiQ9UXPi3lX0WKH
-         nSwQ==
+        bh=GWhC+phGxk4cJHdVi7LihKAUgiJg2uxQnJKT5r5d7UQ=;
+        b=HPGmM9E1W83HgllFgk9pMxwjTYsbQzRckZu/VM7VC6LPNi3RBrdhW9K14HGxL475w1
+         d0kQDj9AIH8llEjBFu7TFoOAshhxYE4kNT1ChG4+rGoOzGTv0wJLd7p36TSfhj8aDL+c
+         /LOXysFNnyYWAGvIRUmU03yEpJzLEK3fka2jYJUOCxrXby2XDCz+xCWjn2pbJtxKdR7i
+         BFLd9g8hwRRxbfwgABRAxB2pBvvLfZXddf828UpwkihvSpHjUxBrMUHeCmjwznUuDu/E
+         /DNMBlvdTWff29L98NL+8nrhAdM/Kn6YgZcJ/iX7jRij8f4q4UbvQoSaLotW0wW71Onw
+         xqiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QGtqqoloz6hjB0cfAJP9qri2qA1iaYEqSaS6htthArs=;
-        b=XOpm7B1j8Hq407qZPk8dnxG/itjIwq/ZDiWKXWFNmqKe6hRztfToymfXpdZCS2Qo8r
-         eh+Vo1rrQsg2pTIyLjYHerpnpI7CJd4jBsA8VI8Xo6DsHhbIrmp0NkAuSo/Rq/f9jD0O
-         slmvvxOTrYxv2aTJyrQG2n8aS20rh8fcvvQ7N7P/gihF6htv4+aK9cEwqAUgQaoMkSss
-         9xQy5ONRLfVRQd0yJdqrjr8jXBCgrfKL/mxvdu2Trtkeb8d68RQzyHgwry0Sko2iC026
-         YUzkv49snfGTEJ5pwtfoU7gBetU+3AbIr3bvzfFuiiJdvsda0mvb6HFdDbX1OcrxyVvc
-         5/jQ==
-X-Gm-Message-State: APjAAAXocWIndHNkFKt0ldx1v1bj7eUFL3qxgWMIYf7g9KxLRokShbxB
-        GO9ypM7GhwR5MiVZEbOr/66Dfg==
-X-Google-Smtp-Source: APXvYqx1D7V2pK2CNerimKn2kRSQmnmpBiXII2FunyzWAOtbGGBEB9dmQc42ffr4CshM5SaUVCtzuA==
-X-Received: by 2002:a1c:7c13:: with SMTP id x19mr4991011wmc.80.1571358007133;
-        Thu, 17 Oct 2019 17:20:07 -0700 (PDT)
+        bh=GWhC+phGxk4cJHdVi7LihKAUgiJg2uxQnJKT5r5d7UQ=;
+        b=J4O1uMlkfa2+J62Qbmh2fJRRHEeh31F4QLeKdGwinqV0j0L/Cjc74M5RW2p3USWGvn
+         vAZDbJl2FGc0GkADsmILzpY0I5zJTe9E2O2DY8tjPp+oDFLv+13HwHdkCv54cSlgGFwz
+         MZGvfVSQlI44pvBXv1ycdlPHFPaZHe1VhUPOHhrwq4FiuBsg0CJYydUTsQRv/+blbmaX
+         T/zVfdtpiTDPVbCUjg50Xsiz2CV60v35+aioXSXssNtqYG9LYfYGMM7cW6bO9voFcjrL
+         scwV35ur9Qab9Ucd43C42wC30gmIt7j1/YMNanhHAEvvY/omwUKehNq0nj5kcYmeN3+H
+         0eHw==
+X-Gm-Message-State: APjAAAUiUl8GuvYXzoC9bSP9P8JemKHh2s3S8sW4Il3WyyEyQviAZHcP
+        ZcC77TgYN8vQI0bSEoeAoKSLIg==
+X-Google-Smtp-Source: APXvYqybeC8LSQnjicpCNQ8RT3mFa3CNGEJdoMQYNaY4Zxg6lBhzZLJJ1+8IBmV+nqcQqJ8s/WD1Lg==
+X-Received: by 2002:adf:f145:: with SMTP id y5mr5032576wro.330.1571358010901;
+        Thu, 17 Oct 2019 17:20:10 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id z189sm4851248wmc.25.2019.10.17.17.20.05
+        by smtp.gmail.com with ESMTPSA id z189sm4851248wmc.25.2019.10.17.17.20.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2019 17:20:06 -0700 (PDT)
+        Thu, 17 Oct 2019 17:20:10 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
         lee.jones@linaro.org
@@ -63,9 +63,9 @@ Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
         spapothi@codeaurora.org, bgoswami@codeaurora.org,
         linux-gpio@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add bindings for gpio
-Date:   Fri, 18 Oct 2019 01:18:46 +0100
-Message-Id: <20191018001849.27205-9-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 11/11] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
+Date:   Fri, 18 Oct 2019 01:18:49 +0100
+Message-Id: <20191018001849.27205-12-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
 References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
@@ -76,73 +76,131 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
-gpio controller to control 5 gpios on the chip. This patch adds
-required device tree bindings for it.
+This patch adds support to Lenovo Yoga c630 compatible strings
+and related setup to the sound machine driver.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- .../pinctrl/qcom,wcd934x-pinctrl.yaml         | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
+ sound/soc/qcom/sdm845.c | 71 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 70 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
-new file mode 100644
-index 000000000000..c8a36cbc4935
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/qcom,wcd934x-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
+index 28f3cef696e6..1ed570c19628 100644
+--- a/sound/soc/qcom/sdm845.c
++++ b/sound/soc/qcom/sdm845.c
+@@ -24,6 +24,9 @@
+ #define RIGHT_SPK_TDM_TX_MASK   0xC0
+ #define SPK_TDM_RX_MASK         0x03
+ #define NUM_TDM_SLOTS           8
++#define SLIM_MAX_TX_PORTS 16
++#define SLIM_MAX_RX_PORTS 16
++#define WCD934X_DEFAULT_MCLK_RATE	9600000
+ 
+ struct sdm845_snd_data {
+ 	struct snd_soc_jack jack;
+@@ -36,6 +39,39 @@ struct sdm845_snd_data {
+ 
+ static unsigned int tdm_slot_offset[8] = {0, 4, 8, 12, 16, 20, 24, 28};
+ 
++static int sdm845_slim_snd_hw_params(struct snd_pcm_substream *substream,
++				     struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai_link *dai_link = rtd->dai_link;
++	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
++	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
++	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
++	int ret = 0, i;
 +
-+title: WCD9340/WCD9341 GPIO Pin controller
++	for (i = 0 ; i < dai_link->num_codecs; i++) {
++		ret = snd_soc_dai_get_channel_map(rtd->codec_dais[i],
++				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
 +
-+maintainers:
-+  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
++		if (ret != 0 && ret != -ENOTSUPP) {
++			pr_err("failed to get codec chan map, err:%d\n", ret);
++			return ret;
++		} else if (ret == -ENOTSUPP) {
++			/* Ignore unsupported */
++			continue;
++		}
 +
-+description: |
-+  Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
-+  gpio controller to control 5 gpios on the chip.
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++			ret = snd_soc_dai_set_channel_map(cpu_dai, 0, NULL,
++							  rx_ch_cnt, rx_ch);
++		else
++			ret = snd_soc_dai_set_channel_map(cpu_dai, tx_ch_cnt,
++							  tx_ch, 0, NULL);
++	}
 +
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,wcd9340-pinctrl
-+      - qcom,wcd9341-pinctrl
++	return 0;
++}
 +
-+  reg:
-+    maxItems: 1
+ static int sdm845_tdm_snd_hw_params(struct snd_pcm_substream *substream,
+ 					struct snd_pcm_hw_params *params)
+ {
+@@ -151,6 +187,9 @@ static int sdm845_snd_hw_params(struct snd_pcm_substream *substream,
+ 	case QUATERNARY_TDM_TX_0:
+ 		ret = sdm845_tdm_snd_hw_params(substream, params);
+ 		break;
++	case SLIMBUS_0_RX...SLIMBUS_6_TX:
++		ret = sdm845_slim_snd_hw_params(substream, params);
++		break;
+ 	default:
+ 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
+ 		break;
+@@ -173,7 +212,20 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
+ 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
+ 	struct sdm845_snd_data *pdata = snd_soc_card_get_drvdata(card);
+ 	struct snd_jack *jack;
+-	int rval;
++	struct snd_soc_dai_link *dai_link = rtd->dai_link;
++	/*
++	 * Codec SLIMBUS configuration
++	 * RX1, RX2, RX3, RX4, RX5, RX6, RX7, RX8, RX9, RX10, RX11, RX12, RX13
++	 * TX1, TX2, TX3, TX4, TX5, TX6, TX7, TX8, TX9, TX10, TX11, TX12, TX13
++	 * TX14, TX15, TX16
++	 */
++	unsigned int rx_ch[SLIM_MAX_RX_PORTS] = {144, 145, 146, 147, 148, 149,
++					150, 151, 152, 153, 154, 155, 156};
++	unsigned int tx_ch[SLIM_MAX_TX_PORTS] = {128, 129, 130, 131, 132, 133,
++					    134, 135, 136, 137, 138, 139,
++					    140, 141, 142, 143};
++	int rval, i;
 +
-+  gpio-controller: true
+ 
+ 	if (!pdata->jack_setup) {
+ 		rval = snd_soc_card_jack_new(card, "Headset Jack",
+@@ -211,6 +263,21 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
+ 			return rval;
+ 		}
+ 		break;
++	case SLIMBUS_0_RX...SLIMBUS_6_TX:
++		for (i = 0 ; i < dai_link->num_codecs; i++) {
++			rval = snd_soc_dai_set_channel_map(rtd->codec_dais[i],
++							  ARRAY_SIZE(tx_ch),
++							  tx_ch,
++							  ARRAY_SIZE(rx_ch),
++							  rx_ch);
++			if (rval != 0 && rval != -ENOTSUPP)
++				return rval;
 +
-+  gpio-ranges:
-+    maxItems: 1
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - gpio-ranges
-+  - "#gpio-cells"
-+
-+
-+examples:
-+  - |
-+    wcdpinctrl: wcdpinctrl@42 {
-+        compatible = "qcom,wcd9340-pinctrl";
-+        reg = <0x042 0x2>;
-+        gpio-controller;
-+        gpio-ranges = <&wcdpinctrl 0 0 5>;
-+        #gpio-cells = <2>;
-+    };
-+
-+...
++			snd_soc_dai_set_sysclk(rtd->codec_dais[i], 0,
++					       WCD934X_DEFAULT_MCLK_RATE,
++					       SNDRV_PCM_STREAM_PLAYBACK);
++		}
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -451,6 +518,8 @@ static int sdm845_snd_platform_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id sdm845_snd_device_id[]  = {
+ 	{ .compatible = "qcom,sdm845-sndcard" },
++	{ .compatible = "qcom,db845c-sndcard" },
++	{ .compatible = "lenovo,yoga-c630-sndcard" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, sdm845_snd_device_id);
 -- 
 2.21.0
 
