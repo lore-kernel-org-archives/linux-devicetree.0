@@ -1,138 +1,156 @@
-Return-Path: <SRS0=ea/6=YK=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AE9CA9EC8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 17 Oct 2019 23:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCD6CA9EC8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9D721D7A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 17 Oct 2019 23:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476CB222CD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 00:20:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iMvfUq56"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441785AbfJQXkJ (ORCPT
+        id S2503766AbfJRAT7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 17 Oct 2019 19:40:09 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33554 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438560AbfJQXkJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 17 Oct 2019 19:40:09 -0400
-Received: from remote.shanghaihotelholland.com ([46.44.148.63] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iLFNE-0004OT-M8; Fri, 18 Oct 2019 01:40:04 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Andy Yan <andy.yan@rock-chips.com>
-Cc:     kever.yang@rock-chips.com, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add basic dts for RK3308 EVB
-Date:   Fri, 18 Oct 2019 01:39:58 +0200
-Message-ID: <120878573.PH0Dm224ES@phil>
-In-Reply-To: <20191017030520.32420-1-andy.yan@rock-chips.com>
-References: <20191017030242.32219-1-andy.yan@rock-chips.com> <20191017030520.32420-1-andy.yan@rock-chips.com>
+        Thu, 17 Oct 2019 20:19:59 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51241 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503822AbfJRAT6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 17 Oct 2019 20:19:58 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 7so4319967wme.1
+        for <devicetree@vger.kernel.org>; Thu, 17 Oct 2019 17:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/QAhBLGy3kJwx9AVjnikoQwMK78+wDfkG0Z+oCWFsgc=;
+        b=iMvfUq56WMjSs6BbLFNNjBqk4R/wA7XWiEqQ5cOoA5jxbcoXhfFQzScHibNauAjSWt
+         vh7jyvGFEwk4+A3kZ8DRk7o+dl4KexvSALP2OuqduSs5hobn3C3fLqKz+xr4NEFaYnTY
+         hIl2XGSrJC0TdMPqJm5+jJ5CPFzZ0d9nEYQaaPXfxf6PxYoeKHaE91yJBMBacMwqysc1
+         nO5Mk/ZqTq235Rp2qG5WrkXLcfLBfiCNWIwIj+NtG9IvhUjTRONgo3UFTYYjgi6nQ/jd
+         oO5YkCHmVkEyZovZgc9WkbFYmSSqQonesPomVRhwoU3nEwO86woGSE8KHwWr2ATwbUr4
+         lWuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/QAhBLGy3kJwx9AVjnikoQwMK78+wDfkG0Z+oCWFsgc=;
+        b=eKnJV0BoCdl7mcehLJY0tV5W52MNsPjqtsQ9YbhvXlGrYDb0mmMNGQpErDtiyvIF92
+         druG+zEXHlgXUKg0ev+Zmyx/iec5gM5m7wjRz2H2EzAkddYTDbGvY0td+y83THpsPOcf
+         Nqg+uRAAPOW+jgHqWXTFbSyYaOwNemkLqNFLUFq4qbfMh5l55H8JkCpvIeLqvs9jZabZ
+         C1cLcv7iQvvj+WJggd7L0/ZFiuRZCAruQX9IoDoYGMOi2aRRhFqMisY3kR9Bio7tOMTI
+         n72IyHGE/3BZ23cBeKebg1TFNYlpojiTEdG5IaWKay0l+bZfB7KEnjiJRuhEPLKkc6HI
+         iWAA==
+X-Gm-Message-State: APjAAAWflvC6LosfDaTBvI2ZDRS85YFEk8U7fSGLZXl4cDZs2aLyvwqg
+        0HLcd9tAJjlhsYZSnW7QfytGvL+6iOw=
+X-Google-Smtp-Source: APXvYqwed+8BHWLv8haNNmapLa2e4SIyZOujwERahm2qLxkUJRKuCwY14eI+b08j5yOWgBtWBOCrGA==
+X-Received: by 2002:a7b:c652:: with SMTP id q18mr760429wmk.148.1571357996011;
+        Thu, 17 Oct 2019 17:19:56 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id z189sm4851248wmc.25.2019.10.17.17.19.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2019 17:19:55 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        lee.jones@linaro.org
+Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 00/11] ASoC: Add support to WCD9340/WCD9341 codec
+Date:   Fri, 18 Oct 2019 01:18:38 +0100
+Message-Id: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+This patchset adds support to Qualcomm WCD9340/WCD9341 Codec which
+is a standalone Hi-Fi audio codec IC.
+This codec supports both I2S/I2C and SLIMbus audio interfaces.
+On slimbus interface it supports two data lanes; 16 Tx ports
+and 8 Rx ports. It has Five DACs and seven dedicated interpolators,
+Multibutton headset control (MBHC), Active noise cancellation,
+Sidetone paths, MAD (mic activity detection) and codec processing engine.
+It supports Class-H differential earpiece out and stereo single
+ended headphones out.
 
-Am Donnerstag, 17. Oktober 2019, 05:05:20 CEST schrieb Andy Yan:
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index c82c5e57d44c..b680c4b8b2c9 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -447,6 +447,11 @@ properties:
->            - const: rockchip,r88
->            - const: rockchip,rk3368
->  
-> +      - description: Rockchip RK3308 Evaluation board
-> +        items:
-> +          - const: rockchip,rk3308-evb
-> +          - const: rockchip,rk3308
-> +
->        - description: Rockchip RK3228 Evaluation board
->          items:
->            - const: rockchip,rk3228-evb
+This codec also has integrated SoundWire controller.
+Patchset for this is already sent for review at
+https://patchwork.kernel.org/cover/11185769/
+    
+This patchset has been tested on SDM845 based DragonBoard DB845c and
+Lenovo Yoga C630 laptop with WSA881x smart speaker amplifiers via
+soundwire and 4 DMICs.
 
-Rob likes the binding addition to be a separate patch.
+Pin Controller patch does not have any link dependency, it can go by its own.
 
-> +	vdd_log: vdd_core: vdd-core {
-> +		compatible = "pwm-regulator";
-> +		pwms = <&pwm0 0 5000 1>;
-> +		regulator-name = "vdd_core";
-> +		regulator-min-microvolt = <827000>;
-> +		regulator-max-microvolt = <1340000>;
-> +		regulator-init-microvolt = <1015000>;
-> +		regulator-early-min-microvolt = <1015000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-settling-time-up-us = <250>;
-> +		status = "okay";
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
 
-It's a board-regulator, so always "okay", no need for a status.
+If anyone is interested to try, here are working set of patches on top of rc3.
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/log/?h=audio/v5.4-rc3-YOGA-C630
+alsa ucm files:
+https://git.linaro.org/people/srinivas.kandagatla/alsa-lib.git/log/?h=DB845c
 
-In general for regulators, please create an actual regulator tree, with
-correctly modelled supply-chains following the naming according
-to the board schematics. See for example rk3399-gru for a nice example.
+Thanks,
+srini
 
-> +	};
-> +
-> +	vdd_1v0: vdd-1v0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vdd_1v0";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <1000000>;
-> +		regulator-max-microvolt = <1000000>;
+Changes since v1:
+- Code cleanup and convert to proper dpcm widgets where possible.
+- converted to mfd driver.
+- added pinctrl driver to this series
+- added dts changes in this series
+- bindings converted to yaml.
 
-As noted above, missing vin-supply
+Srinivas Kandagatla (10):
+  ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
+  mfd: wcd934x: add support to wcd9340/wcd9341 codec
+  ASoC: wcd934x: add support to wcd9340/wcd9341 codec
+  ASoC: wcd934x: add basic controls
+  ASoC: wcd934x: add playback dapm widgets
+  ASoC: wcd934x: add capture dapm widgets
+  ASoC: wcd934x: add audio routings
+  dt-bindings: pinctrl: qcom-wcd934x: Add bindings for gpio
+  ASoC: dt-bindings: Add compatible for DB845c and Lenovo Yoga
+  ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
 
-> +	};
-> +
+Yeleswarapu Nagaradhesh (1):
+  pinctrl: qcom-wcd934x: Add support to wcd934x pinctrl driver.
 
-> +	vccio_flash: vccio-flash {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vccio_flash";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vcc_phy: vcc-phy-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_phy";
-> +		regulator-always-on;
-> +		regulator-boot-on;
+ .../pinctrl/qcom,wcd934x-pinctrl.yaml         |   51 +
+ .../devicetree/bindings/sound/qcom,sdm845.txt |    5 +-
+ .../bindings/sound/qcom,wcd934x.yaml          |  169 +
+ drivers/mfd/Kconfig                           |    8 +
+ drivers/mfd/Makefile                          |    1 +
+ drivers/mfd/wcd934x.c                         |  330 ++
+ drivers/pinctrl/qcom/Kconfig                  |    7 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c   |  365 ++
+ include/linux/mfd/wcd934x/registers.h         |  529 ++
+ include/linux/mfd/wcd934x/wcd934x.h           |   24 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wcd934x.c                    | 5218 +++++++++++++++++
+ sound/soc/qcom/sdm845.c                       |   71 +-
+ 15 files changed, 6789 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+ create mode 100644 drivers/mfd/wcd934x.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+ create mode 100644 include/linux/mfd/wcd934x/registers.h
+ create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
+ create mode 100644 sound/soc/codecs/wcd934x.c
 
-This is the classic example of not following the schematics.
-I.e. no Rockchip board I know has a regulator named "vcc_phy"
-that is completely unconnected, yet all boards in the vendor tree
-have this regulator ;-) ... so as I said, please follow the schematics.
-
-> +	};
-> +
-> +	vbus_host: vbus-host-regulator {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb_drv>;
-> +		regulator-name = "vbus_host";
-> +	};
-> +};
-> +
-
-
-Thanks
-Heiko
-
+-- 
+2.21.0
 
