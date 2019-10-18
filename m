@@ -2,136 +2,103 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EB3CA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DA0CA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 23:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4D420872
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 22:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88CC21D7C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 23:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733016AbfJRWHf (ORCPT
+        id S1730039AbfJRXUx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 18:07:35 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:56118 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732957AbfJRWHe (ORCPT
+        Fri, 18 Oct 2019 19:20:53 -0400
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139]:46842
+        "EHLO rjones.pdc.gateworks.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729068AbfJRXUx (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:34 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 103D1634C8A;
-        Sat, 19 Oct 2019 01:06:57 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iLaOf-0001ge-N7; Sat, 19 Oct 2019 01:06:57 +0300
-Date:   Sat, 19 Oct 2019 01:06:57 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191018220657.GI4735@valkosipuli.retiisi.org.uk>
-References: <20191011035613.13598-1-manivannan.sadhasivam@linaro.org>
- <20191011035613.13598-2-manivannan.sadhasivam@linaro.org>
- <20191015224554.GA5634@bogus>
- <20191016083748.GA2288@Mani-XPS-13-9360>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016083748.GA2288@Mani-XPS-13-9360>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 18 Oct 2019 19:20:53 -0400
+Received: by rjones.pdc.gateworks.com (Postfix, from userid 1002)
+        id 0A7141A434C2; Fri, 18 Oct 2019 16:20:51 -0700 (PDT)
+From:   Robert Jones <rjones@gateworks.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: [PATCH] ARM: dt: add fxos8700 on gateworks boards
+Date:   Fri, 18 Oct 2019 16:20:49 -0700
+Message-Id: <20191018232049.4045-1-rjones@gateworks.com>
+X-Mailer: git-send-email 2.9.2
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Manivannan, Rob,
+Add fxos8700 iio imu entries for Gateworks SBCs.
 
-On Wed, Oct 16, 2019 at 02:07:48PM +0530, Manivannan Sadhasivam wrote:
-> Hi Rob,
-> 
-> On Tue, Oct 15, 2019 at 05:45:54PM -0500, Rob Herring wrote:
-> > On Fri, Oct 11, 2019 at 09:26:12AM +0530, Manivannan Sadhasivam wrote:
-> > > Add devicetree binding for IMX296 CMOS image sensor.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  .../devicetree/bindings/media/i2c/imx296.txt  | 55 +++++++++++++++++++
-> > >  1 file changed, 55 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.txt
-> > 
-> > You should know by now, use DT schema format please.
-> > 
-> 
-> I know for other subsystems but by having a vague look at the existing bindings
-> I thought media subsystem is still using .txt. But I now see few yaml bindings
-> in linux-next and will switch over this.
-> 
-> Btw, is it mandatory now to use YAML bindings for all subsystems? I don't
-> see any issue (instead I prefer) but I remember that you defer to the preference
-> of the subsystem maintainers before!
-> 
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.txt b/Documentation/devicetree/bindings/media/i2c/imx296.txt
-> > > new file mode 100644
-> > > index 000000000000..25d3b15162c1
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/imx296.txt
-> > > @@ -0,0 +1,55 @@
-> > > +* Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> > > +
-> > > +The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> > > +sensor with square pixel array and 1.58 M effective pixels. This chip features
-> > > +a global shutter with variable charge-integration time. It is programmable
-> > > +through I2C and 4-wire interfaces. The sensor output is available via CSI-2
-> > > +serial data output (1 Lane).
-> > > +
-> > > +Required Properties:
-> > > +- compatible: Should be "sony,imx296"
-> > > +- reg: I2C bus address of the device
-> > > +- clocks: Reference to the mclk clock.
-> > > +- clock-names: Should be "mclk".
-> > > +- clock-frequency: Frequency of the mclk clock in Hz.
-> > > +- vddo-supply: Interface power supply.
-> > > +- vdda-supply: Analog power supply.
-> > > +- vddd-supply: Digital power supply.
-> > > +
-> > > +Optional Properties:
-> > > +- reset-gpios: Sensor reset GPIO
-> > > +
-> > > +The imx296 device node should contain one 'port' child node with
-> > > +an 'endpoint' subnode. For further reading on port node refer to
-> > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > > +
-> > > +Required Properties on endpoint:
-> > > +- data-lanes: check ../video-interfaces.txt
-> > 
-> > This should only be required when not using all the lanes on the device.
-> > 
-> 
-> This is a bit weird! How will someone know how many lanes the device is using
-> by looking at the binding? He can anyway refer the datasheet but still...
+Signed-off-by: Robert Jones <rjones@gateworks.com>
+---
+ arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 5 +++++
+ arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 5 +++++
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 5 +++++
+ 3 files changed, 15 insertions(+)
 
-Many current bindings document data-lanes as mandatory. Nothing prevents
-making all lanes are connected the default though, thus making data-lanes
-optional.
-
-The V4L2 fwnode framework supports easy parsing of that, too, by driver
-providing that default value before letting V4L2 fwnode framework to parse
-the endpoint properties.
-
-Looking at this particular sensor --- doesn't it only have a single lane,
-and thus nothing to configure here?
-
+diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+index 1a9a9d9..ffc4449 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+@@ -306,6 +306,11 @@
+ 		VDDIO-supply = <&reg_3p3v>;
+ 	};
+ 
++	fxos8700@1e {
++		compatible = "nxp,fxos8700";
++		reg = <0x1e>;
++	};
++
+ 	touchscreen: egalax_ts@4 {
+ 		compatible = "eeti,egalax_ts";
+ 		reg = <0x04>;
+diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+index 54b2bea..ebbd1c8 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+@@ -297,6 +297,11 @@
+ 		VDDIO-supply = <&reg_3p3v>;
+ 	};
+ 
++	fxos8700@1e {
++		compatible = "nxp,fxos8700";
++		reg = <0x1e>;
++	};
++
+ 	touchscreen: egalax_ts@4 {
+ 		compatible = "eeti,egalax_ts";
+ 		reg = <0x04>;
+diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+index 1b6c133..67d4725 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+@@ -354,6 +354,11 @@
+ 		VDDIO-supply = <&reg_3p3v>;
+ 	};
+ 
++	fxos8700@1e {
++		compatible = "nxp,fxos8700";
++		reg = <0x1e>;
++	};
++
+ 	touchscreen: egalax_ts@4 {
+ 		compatible = "eeti,egalax_ts";
+ 		reg = <0x04>;
 -- 
-Regards,
+2.9.2
 
-Sakari Ailus
