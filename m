@@ -2,200 +2,160 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFE3CA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 05:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C9ACA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3E82082C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 05:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721C8222C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 06:43:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XXpUDtHD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gW0PUImE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438337AbfJRFlU (ORCPT
+        id S2407420AbfJRGm7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 01:41:20 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31112 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389961AbfJRFlU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 01:41:20 -0400
-X-UUID: 2be832a9497145dbb013a68753705429-20191018
-X-UUID: 2be832a9497145dbb013a68753705429-20191018
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1470944434; Fri, 18 Oct 2019 13:41:14 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 18 Oct 2019 13:41:11 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 18 Oct 2019 13:41:11 +0800
-Message-ID: <1571377272.11955.6.camel@mtkswgap22>
-Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
- ARMv8 SoCs
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Neal Liu <neal.liu@mediatek.com>
-Date:   Fri, 18 Oct 2019 13:41:12 +0800
-In-Reply-To: <1570024070.4002.1.camel@mtkswgap22>
-References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
-         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
-         <20190722171320.GA9806@bogus> <1563848465.31451.4.camel@mtkswgap22>
-         <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
-         <1568771054.21700.7.camel@mtkswgap22> <1570024070.4002.1.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 18 Oct 2019 02:42:59 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46322 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393594AbfJRGm6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 02:42:58 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4EDDF610DC; Fri, 18 Oct 2019 06:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571380977;
+        bh=6TBlAdKQKJ2jvjGwgvWVKyvODqXx7MA+HnxHF0EkO/M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XXpUDtHDTlxK4+UvWEa/J0kS0HjwY2zBjFYE7YpXGJAmogZBuItNCDKOCCoKd9sHw
+         j7laQYY1fc5Ie3Od2WNektEtPV7W7lVx9ovF5SOUdgYCEtFWEh42yQx1tkvgbpiQuc
+         9Q51u31cVnJSq1RadpOrTop88nLPI8gLZWDhFCiw=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 51E72610DC;
+        Fri, 18 Oct 2019 06:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571380976;
+        bh=6TBlAdKQKJ2jvjGwgvWVKyvODqXx7MA+HnxHF0EkO/M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gW0PUImE+THwnpgh1sMlgBvC+wHvJgH2dfUwZPnMJQ7NXR8nLTHYG6kMHd7zke0fQ
+         jsf4OF79koepY/K+yoYiF204JVVpAVxDfkKQO1EgSXeOjt2EQ9YxVRfGLagD86Oa+W
+         CjGLZ6+0LYrwcuBryQpPZXdoJgNDTOYZwxCrAF/s=
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 18 Oct 2019 12:12:56 +0530
+From:   kgunda@codeaurora.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V7 6/6] backlight: qcom-wled: Add auto string detection
+ logic
+In-Reply-To: <20191017133954.7vgqjgwxojmjw446@holly.lan>
+References: <1571220826-7740-1-git-send-email-kgunda@codeaurora.org>
+ <1571220826-7740-7-git-send-email-kgunda@codeaurora.org>
+ <20191017112941.qqvgboyambzw63i3@holly.lan>
+ <fa32f7ec727cb2626ad877a6cef32a1b@codeaurora.org>
+ <20191017133954.7vgqjgwxojmjw446@holly.lan>
+Message-ID: <bd369e2d809d642867f712499df0eb33@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2019-10-02 at 21:47 +0800, Neal Liu wrote:
-> Dear Rob,
+On 2019-10-17 19:09, Daniel Thompson wrote:
+> On Thu, Oct 17, 2019 at 05:47:47PM +0530, kgunda@codeaurora.org wrote:
+>> On 2019-10-17 16:59, Daniel Thompson wrote:
+>> > On Wed, Oct 16, 2019 at 03:43:46PM +0530, Kiran Gunda wrote:
+>> > > The auto string detection algorithm checks if the current WLED
+>> > > sink configuration is valid. It tries enabling every sink and
+>> > > checks if the OVP fault is observed. Based on this information
+>> > > it detects and enables the valid sink configuration.
+>> > > Auto calibration will be triggered when the OVP fault interrupts
+>> > > are seen frequently thereby it tries to fix the sink configuration.
+>> > >
+>> > > The auto-detection also kicks in when the connected LED string
+>> > > of the display-backlight malfunctions (because of damage) and
+>> > > requires the damaged string to be turned off to prevent the
+>> > > complete panel and/or board from being damaged.
+>> > >
+>> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> >
+>> > It's a complex bit of code but I'm OK with it in principle. Everything
+>> > below is about small details and/or nitpicking.
+>> >
+>> >
+>> > > +static void wled_ovp_work(struct work_struct *work)
+>> > > +{
+>> > > +	struct wled *wled = container_of(work,
+>> > > +					 struct wled, ovp_work.work);
+>> > > +	enable_irq(wled->ovp_irq);
+>> > > +}
+>> > > +
+>> >
+>> > A bit of commenting about why we have to wait 10ms before enabling the
+>> > OVP interrupt would be appreciated.
+>> >
+>> >
+>> Sure. Will add the comment in the next series.
+>> > > +static irqreturn_t wled_ovp_irq_handler(int irq, void *_wled)
+>> > > +{
+>> > > +	struct wled *wled = _wled;
+>> > > +	int rc;
+>> > > +	u32 int_sts, fault_sts;
+>> > > +
+>> > > +	rc = regmap_read(wled->regmap,
+>> > > +			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS, &int_sts);
+>> > > +	if (rc < 0) {
+>> > > +		dev_err(wled->dev, "Error in reading WLED3_INT_RT_STS rc=%d\n",
+>> > > +			rc);
+>> > > +		return IRQ_HANDLED;
+>> > > +	}
+>> > > +
+>> > > +	rc = regmap_read(wled->regmap, wled->ctrl_addr +
+>> > > +			 WLED3_CTRL_REG_FAULT_STATUS, &fault_sts);
+>> > > +	if (rc < 0) {
+>> > > +		dev_err(wled->dev, "Error in reading WLED_FAULT_STATUS rc=%d\n",
+>> > > +			rc);
+>> > > +		return IRQ_HANDLED;
+>> > > +	}
+>> > > +
+>> > > +	if (fault_sts &
+>> > > +		(WLED3_CTRL_REG_OVP_FAULT_BIT | WLED3_CTRL_REG_ILIM_FAULT_BIT))
+>> > > +		dev_dbg(wled->dev, "WLED OVP fault detected, int_sts=%x
+>> > > fault_sts= %x\n",
+>> > > +			int_sts, fault_sts);
+>> > > +
+>> > > +	if (fault_sts & WLED3_CTRL_REG_OVP_FAULT_BIT) {
+>> > > +		mutex_lock(&wled->lock);
+>> > > +		disable_irq_nosync(wled->ovp_irq);
+>> >
+>> > We're currently running the threaded ISR for this irq. Do we really need
+>> > to disable it?
+>> >
+>> We need to disable this IRQ, during the auto string detection logic. 
+>> Because
+>> in the auto string detection we configure the current sinks one by one 
+>> and
+>> check the
+>> status register for the OVPs and set the right string configuration. 
+>> We
+>> enable it later after
+>> the auto string detection is completed.
 > 
-> Just a gentle ping.
+> This is a threaded oneshot interrupt handler. Why isn't the framework
+> masking sufficient for you here?
 > 
-> Neal
 > 
-> On Wed, 2019-09-18 at 09:44 +0800, Neal Liu wrote:
-> > On Tue, 2019-07-23 at 22:35 +0800, Rob Herring wrote:
-> > > On Mon, Jul 22, 2019 at 8:21 PM Neal Liu <neal.liu@mediatek.com> wrote:
-> > > >
-> > > 
-> > > Please don't top post to lists.
-> > > 
-> > > > Dear Rob,
-> > > >         You can check my driver for detail:
-> > > >         http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
-> > > 
-> > > I could, or you could just answer my question.
-> > > 
-> > > >
-> > > >         This driver is registered as hardware random number generator, and
-> > > > combines with rng-core.
-> > > >         We want to add one rng hw based on the dts. Is this proper or do you
-> > > > have other suggestion to meet this requirement?
-> > > 
-> > > It depends. There doesn't appear to be any resource configuration, so
-> > > why does it need to be in DT. DT is not the only way instantiate
-> > > drivers.
-> > > 
-> > > Rob
-> > > 
-> > 
-> > We would like to consult more about this patch.
-> > We cannot figure out what method should be used instead of DT.
-> > The interface to access firmware is "smc" and firmware function only
-> > exists on certain platforms.
-> > Some DT has similar way, like:
-> > http://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts#L470
-> > 
-> > 	firmware {
-> > 		optee {
-> > 			compatible = "linaro,optee-tz";
-> > 			method = "smc";
-> > 		};
-> > 	};
-> > 
-> > Is there any way to instantiate driver on certain platforms without DT?
-> > Could you give us some examples?
-> > Thanks
-> > 
-> > > >
-> > > >         Thanks
-> > > >
-> > > >
-> > > > On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
-> > > > > On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
-> > > > > > Document the binding used by the MediaTek ARMv8 SoCs random
-> > > > > > number generator with TrustZone enabled.
-> > > > > >
-> > > > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
-> > > > > >  1 file changed, 10 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > > > new file mode 100644
-> > > > > > index 0000000..c04ce15
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > > > @@ -0,0 +1,10 @@
-> > > > > > +MediaTek random number generator with TrustZone enabled
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > +- compatible : Should be "mediatek,mtk-sec-rng"
-> > > > >
-> > > > > What's the interface to access this?
-> > > > >
-> > > > > A node with a 'compatible' and nothing else is a sign of something that
-> > > > > a parent device should instantiate and doesn't need to be in DT. IOW,
-> > > > > what do complete bindings for firmware functions look like?
-> > > > >
-
-We would like to revise our DT node as below:
-
-firmware {
-	hwrng {
-		compatible = "mediatek,mtk-sec-rng";
-		method = "smc";
-	};
-};
-
-And dt-bindings path would be changed because it's base on ARM TrustZone
-Firmware.
-From "Documentation/devicetree/bindings/rng/mtk-sec-rng.txt"
-To
-"Documentation/devicetree/bindings/arm/firmware/mediatek,mtk-sec-rng.txt"
-
-We found some similar examples which also provide an interface to trap
-to Secure State through SMC instruction.
-Example 1: Documentation/devicetree/bindings/arm/firmware/xxx.txt
-Example 2: Documentation/devicetree/bindings/arm/psci.txt
-
-Is that okay for you?
-
-Neal
-
-> > > > > > +
-> > > > > > +Example:
-> > > > > > +
-> > > > > > +hwrng: hwrng {
-> > > > > > +   compatible = "mediatek,mtk-sec-rng";
-> > > > > > +}
-> > > > > > --
-> > > > > > 1.7.9.5
-> > > > > >
-> > > > >
-> > > > > _______________________________________________
-> > > > > Linux-mediatek mailing list
-> > > > > Linux-mediatek@lists.infradead.org
-> > > > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> > > >
-> > > >
-> > 
-> 
-
-
+> Daniel.
+Right .. I overlooked that it is a oneshot interrupt earlier.
+I will address it in the next series.
