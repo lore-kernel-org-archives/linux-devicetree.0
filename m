@@ -1,86 +1,304 @@
-Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BB5FC6194
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E11CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5222C217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PmCk1vAn"
+	by mail.kernel.org (Postfix) with ESMTP id 018172245A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571422024;
+	bh=PZcbUbwowo71Gjfg3D1n17w4Arub2phYFkmsghb05jI=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=AmdPMqGtflMxpzDz07x/NryEz8qtG6XByHLrcFr6/MMQN7WBDWLPhgJ5XcEdS9lL0
+	 hlB0fAo+10CLXoiaI4NQQQOHkNTcAXQ83TOdtzr9EU7hevPVxX9A8ED5fxL48Zxu0c
+	 syA9Usud9nMCbJKGY5iUa8IZKeL+uyXbkOE5/69A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732842AbfKFWhA (ORCPT
+        id S2505691AbfJRSHD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:37:00 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:54219 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732666AbfKFWg7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 17:36:59 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EF59A23E4D;
-        Wed,  6 Nov 2019 23:36:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1573079818;
-        bh=Y+C2JFik0SuaDLpIqi9+CLYF43yMTrkGy5sCVB6l4Og=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmCk1vAne199FyMkya45OUNfY6OEKMuPSfXsxcOnI3K2HGWhsmo4aDDpQKETYzpHx
-         +lukrRcHw3K3RIuDbCLUpbhFNvbw+f+oszUERR6EJvqfKJudZ+sNy3MbIlZ1VYRu2T
-         Gw0uAXVBX4tdrusC+KxMx12y6iRPILvngIyIBoW4=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 6/6] net: phy: at803x: remove config_init for AR9331
-Date:   Wed,  6 Nov 2019 23:36:17 +0100
-Message-Id: <20191106223617.1655-7-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191106223617.1655-1-michael@walle.cc>
-References: <20191106223617.1655-1-michael@walle.cc>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+        Fri, 18 Oct 2019 14:07:03 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44654 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505687AbfJRSHD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:07:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=0/hveyck1dnXdr8iG9tezEBcpoCN7kE7Yiz6fCTLXEU=; b=AZWBwilt1rp2
+        b+XMXncGixAdGZCAaJTPGfv2bOqPZ1PXBch+LrclgCliAiOmefxEW8v05AQmfzmqACqLyt2YuQE58
+        gGCshQ4JSDwYHIbujbDH+vEMM3js1ol3nseCKGmTwogQF3fArvC1wza0zf7iRj5Efnz7kliQv9SVN
+        3qx0w=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iLWeQ-0004Eg-8Z; Fri, 18 Oct 2019 18:06:58 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 952482743259; Fri, 18 Oct 2019 19:06:57 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     alsa-devel@alsa-project.org, Benson Leung <bleung@chromium.org>,
+        bleung@google.com, broonie@kernel.org, cychiang@google.com,
+        devicetree@vger.kernel.org, dgreid@google.com, drinkcat@google.com,
+        enric.balletbo@collabora.com, gwendal@google.com,
+        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org,
+        Rob Herring <robh@kernel.org>, tzungbi@google.com
+Subject: Applied "ASoC: cros_ec_codec: read max DMIC gain from EC codec" to the asoc tree
+In-Reply-To: <20191017213539.05.Id4657c864d544634f2b5c1c9b34fa8232ecba44d@changeid>
+X-Patchwork-Hint: ignore
+Message-Id: <20191018180657.952482743259@ypsilon.sirena.org.uk>
+Date:   Fri, 18 Oct 2019 19:06:57 +0100 (BST)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to its datasheet, the internal PHY doesn't have debug
-registers nor MMDs. Since config_init() only configures delays and
-clocks and so on in these registers it won't be needed on this PHY.
-Remove it.
+The patch
 
-Signed-off-by: Michael Walle <michael@walle.cc>
+   ASoC: cros_ec_codec: read max DMIC gain from EC codec
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From f3e82ad43ca538a7e0db0f310e26c5e75db6ba18 Mon Sep 17 00:00:00 2001
+From: Tzung-Bi Shih <tzungbi@google.com>
+Date: Thu, 17 Oct 2019 22:00:10 +0800
+Subject: [PATCH] ASoC: cros_ec_codec: read max DMIC gain from EC codec
+
+Read max DMIC gain from EC codec instead of DTS.  Also removes the
+dt-binding of max-dmic-gain.
+
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Benson Leung <bleung@chromium.org>
+Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+Link: https://lore.kernel.org/r/20191017213539.05.Id4657c864d544634f2b5c1c9b34fa8232ecba44d@changeid
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/net/phy/at803x.c | 2 --
- 1 file changed, 2 deletions(-)
+ .../bindings/sound/google,cros-ec-codec.txt   |  4 +-
+ .../linux/platform_data/cros_ec_commands.h    | 43 +++++++++++----
+ sound/soc/codecs/cros_ec_codec.c              | 53 ++++++++++++++-----
+ 3 files changed, 73 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index 4434d501cd4f..aee62610bade 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -755,8 +755,6 @@ static struct phy_driver at803x_driver[] = {
- 	/* ATHEROS AR9331 */
- 	PHY_ID_MATCH_EXACT(ATH9331_PHY_ID),
- 	.name			= "Qualcomm Atheros AR9331 built-in PHY",
--	.probe			= at803x_probe,
--	.config_init		= at803x_config_init,
- 	.suspend		= at803x_suspend,
- 	.resume			= at803x_resume,
- 	/* PHY_BASIC_FEATURES */
+diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
+index 1084f7f22eea..0ce9fafc78e2 100644
+--- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
++++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.txt
+@@ -1,4 +1,4 @@
+-* Audio codec controlled by ChromeOS EC
++Audio codec controlled by ChromeOS EC
+ 
+ Google's ChromeOS EC codec is a digital mic codec provided by the
+ Embedded Controller (EC) and is controlled via a host-command interface.
+@@ -9,7 +9,6 @@ Documentation/devicetree/bindings/mfd/cros-ec.txt).
+ Required properties:
+ - compatible: Must contain "google,cros-ec-codec"
+ - #sound-dai-cells: Should be 1. The cell specifies number of DAIs.
+-- max-dmic-gain: A number for maximum gain in dB on digital microphone.
+ 
+ Example:
+ 
+@@ -21,6 +20,5 @@ cros-ec@0 {
+ 	cros_ec_codec: ec-codec {
+ 		compatible = "google,cros-ec-codec";
+ 		#sound-dai-cells = <1>;
+-		max-dmic-gain = <43>;
+ 	};
+ };
+diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+index 3ca0fa9e92a7..21db0d4d4025 100644
+--- a/include/linux/platform_data/cros_ec_commands.h
++++ b/include/linux/platform_data/cros_ec_commands.h
+@@ -4530,30 +4530,53 @@ struct __ec_align4 ec_response_ec_codec_get_shm_addr {
+ #define EC_CMD_EC_CODEC_DMIC 0x00BD
+ 
+ enum ec_codec_dmic_subcmd {
+-	EC_CODEC_DMIC_SET_GAIN = 0x0,
+-	EC_CODEC_DMIC_GET_GAIN = 0x1,
++	EC_CODEC_DMIC_GET_MAX_GAIN = 0x0,
++	EC_CODEC_DMIC_SET_GAIN_IDX = 0x1,
++	EC_CODEC_DMIC_GET_GAIN_IDX = 0x2,
+ 	EC_CODEC_DMIC_SUBCMD_COUNT,
+ };
+ 
+-struct __ec_align1 ec_param_ec_codec_dmic_set_gain {
+-	uint8_t left;
+-	uint8_t right;
++enum ec_codec_dmic_channel {
++	EC_CODEC_DMIC_CHANNEL_0 = 0x0,
++	EC_CODEC_DMIC_CHANNEL_1 = 0x1,
++	EC_CODEC_DMIC_CHANNEL_2 = 0x2,
++	EC_CODEC_DMIC_CHANNEL_3 = 0x3,
++	EC_CODEC_DMIC_CHANNEL_4 = 0x4,
++	EC_CODEC_DMIC_CHANNEL_5 = 0x5,
++	EC_CODEC_DMIC_CHANNEL_6 = 0x6,
++	EC_CODEC_DMIC_CHANNEL_7 = 0x7,
++	EC_CODEC_DMIC_CHANNEL_COUNT,
++};
++
++struct __ec_align1 ec_param_ec_codec_dmic_set_gain_idx {
++	uint8_t channel; /* enum ec_codec_dmic_channel */
++	uint8_t gain;
+ 	uint8_t reserved[2];
+ };
+ 
++struct __ec_align1 ec_param_ec_codec_dmic_get_gain_idx {
++	uint8_t channel; /* enum ec_codec_dmic_channel */
++	uint8_t reserved[3];
++};
++
+ struct __ec_align4 ec_param_ec_codec_dmic {
+ 	uint8_t cmd; /* enum ec_codec_dmic_subcmd */
+ 	uint8_t reserved[3];
+ 
+ 	union {
+-		struct ec_param_ec_codec_dmic_set_gain
+-				set_gain_param;
++		struct ec_param_ec_codec_dmic_set_gain_idx
++				set_gain_idx_param;
++		struct ec_param_ec_codec_dmic_get_gain_idx
++				get_gain_idx_param;
+ 	};
+ };
+ 
+-struct __ec_align1 ec_response_ec_codec_dmic_get_gain {
+-	uint8_t left;
+-	uint8_t right;
++struct __ec_align1 ec_response_ec_codec_dmic_get_max_gain {
++	uint8_t max_gain;
++};
++
++struct __ec_align1 ec_response_ec_codec_dmic_get_gain_idx {
++	uint8_t gain;
+ };
+ 
+ /*****************************************************************************/
+diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
+index c19c7fe42e2e..3d4f9e82d6e9 100644
+--- a/sound/soc/codecs/cros_ec_codec.c
++++ b/sound/soc/codecs/cros_ec_codec.c
+@@ -65,18 +65,26 @@ static int dmic_get_gain(struct snd_kcontrol *kcontrol,
+ 	struct cros_ec_codec_priv *priv =
+ 		snd_soc_component_get_drvdata(component);
+ 	struct ec_param_ec_codec_dmic p;
+-	struct ec_response_ec_codec_dmic_get_gain r;
++	struct ec_response_ec_codec_dmic_get_gain_idx r;
+ 	int ret;
+ 
+-	p.cmd = EC_CODEC_DMIC_GET_GAIN;
++	p.cmd = EC_CODEC_DMIC_GET_GAIN_IDX;
++	p.get_gain_idx_param.channel = EC_CODEC_DMIC_CHANNEL_0;
+ 	ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_DMIC,
+ 				   (uint8_t *)&p, sizeof(p),
+ 				   (uint8_t *)&r, sizeof(r));
+ 	if (ret < 0)
+ 		return ret;
++	ucontrol->value.integer.value[0] = r.gain;
+ 
+-	ucontrol->value.integer.value[0] = r.left;
+-	ucontrol->value.integer.value[1] = r.right;
++	p.cmd = EC_CODEC_DMIC_GET_GAIN_IDX;
++	p.get_gain_idx_param.channel = EC_CODEC_DMIC_CHANNEL_1;
++	ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_DMIC,
++				   (uint8_t *)&p, sizeof(p),
++				   (uint8_t *)&r, sizeof(r));
++	if (ret < 0)
++		return ret;
++	ucontrol->value.integer.value[1] = r.gain;
+ 
+ 	return 0;
+ }
+@@ -94,15 +102,24 @@ static int dmic_put_gain(struct snd_kcontrol *kcontrol,
+ 	int left = ucontrol->value.integer.value[0];
+ 	int right = ucontrol->value.integer.value[1];
+ 	struct ec_param_ec_codec_dmic p;
++	int ret;
+ 
+ 	if (left > max_dmic_gain || right > max_dmic_gain)
+ 		return -EINVAL;
+ 
+ 	dev_dbg(component->dev, "set mic gain to %u, %u\n", left, right);
+ 
+-	p.cmd = EC_CODEC_DMIC_SET_GAIN;
+-	p.set_gain_param.left = left;
+-	p.set_gain_param.right = right;
++	p.cmd = EC_CODEC_DMIC_SET_GAIN_IDX;
++	p.set_gain_idx_param.channel = EC_CODEC_DMIC_CHANNEL_0;
++	p.set_gain_idx_param.gain = left;
++	ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_DMIC,
++				   (uint8_t *)&p, sizeof(p), NULL, 0);
++	if (ret < 0)
++		return ret;
++
++	p.cmd = EC_CODEC_DMIC_SET_GAIN_IDX;
++	p.set_gain_idx_param.channel = EC_CODEC_DMIC_CHANNEL_1;
++	p.set_gain_idx_param.gain = right;
+ 	return send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_DMIC,
+ 				    (uint8_t *)&p, sizeof(p), NULL, 0);
+ }
+@@ -125,19 +142,27 @@ static int dmic_probe(struct snd_soc_component *component)
+ 	struct cros_ec_codec_priv *priv =
+ 		snd_soc_component_get_drvdata(component);
+ 	struct device *dev = priv->dev;
+-	int ret, val;
+ 	struct soc_mixer_control *control;
++	struct ec_param_ec_codec_dmic p;
++	struct ec_response_ec_codec_dmic_get_max_gain r;
++	int ret;
+ 
+-	ret = device_property_read_u32(dev, "max-dmic-gain", &val);
+-	if (ret) {
+-		dev_err(dev, "Failed to read 'max-dmic-gain'\n");
+-		return ret;
++	p.cmd = EC_CODEC_DMIC_GET_MAX_GAIN;
++
++	ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_DMIC,
++				   (uint8_t *)&p, sizeof(p),
++				   (uint8_t *)&r, sizeof(r));
++	if (ret < 0) {
++		dev_warn(dev, "get_max_gain() unsupported\n");
++		return 0;
+ 	}
+ 
++	dev_dbg(dev, "max gain = %d\n", r.max_gain);
++
+ 	control = (struct soc_mixer_control *)
+ 		dmic_controls[DMIC_CTL_GAIN].private_value;
+-	control->max = val;
+-	control->platform_max = val;
++	control->max = r.max_gain;
++	control->platform_max = r.max_gain;
+ 
+ 	return snd_soc_add_component_controls(component,
+ 			&dmic_controls[DMIC_CTL_GAIN], 1);
 -- 
 2.20.1
 
