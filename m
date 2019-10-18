@@ -2,108 +2,102 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165E8CA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79052CA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD504222C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5968221897
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="KLKjL3k9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrxq9qqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443059AbfJRSqp (ORCPT
+        id S2390708AbfJRS7t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:46:45 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:35312 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443048AbfJRSqp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:46:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571424401;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ePGzYHaP9Bqb+GVhBLa6uE50M8Noh8VJjTLNEr2egSs=;
-        b=KLKjL3k9vQc9ofDI5ike/pzE/Ur4mVk54f9r0Uj2kR/VsuHYEraWZnPbi15kz8dLcq
-        rpKYcBWoachr4wZtljig3y7ldHkfvfXaPsLE394N23TZ18R3zEN+ymOWmo4zO7TZTW/+
-        br+elhTBzfrYD1grqoLGSTClkPOsxlQe2GpdfIrcdS3rievIFFkCig5Hn6wyjUEd8Amz
-        xNWK+bHP7oNLcRv/RO/i+SU5GdrymQz8EnMdcxedNSEgtGV/7wOvc8w23xkfX9Zz0NBO
-        2wGao/oJOz0nHeYb+ZBELnVrQckXU4WQ/1EASDqLSfeQi9iRHTvRz3piycnEy4rpjcSD
-        TXug==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6F3CFF60="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9IIkXDLF
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 18 Oct 2019 20:46:33 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Fri, 18 Oct 2019 14:59:49 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53477 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfJRS7t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:59:49 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i16so7212635wmd.3;
+        Fri, 18 Oct 2019 11:59:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=tZnkkMS8Ppjf38TtJcQbsEMS2EZYYG5QiaTxSNSCmAU=;
+        b=rrxq9qqc7DgaH0HdEaOBvv78Dadshyt0uH4Z2FokNryqzqMWRO9eBvltcFm378Xa++
+         bwaJgv2+CmHnK4W62vOlGirt6vd3UCbbdZ17FAS7Tnxhlnwmn6t2YgwG2KXuUqv/xh8/
+         JWMuZtrDA78BqXBQhp5njd+VT24TGBglgmNqUCNydzutvdXmW1FqwEczsgajwiwItPje
+         1xuEjON5lFv9tDjd8ilU5/Gh8uJItE6kxL4/1KehGMCuhIroFz/aqjqNaQ0JB32vMbSq
+         aSCqW3xJGB/xwuuw0EmLIAET75ep0kSOzGDGZS4YwKGHTymaRw5Pb2V3rjqLclTaIJi0
+         RTUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=tZnkkMS8Ppjf38TtJcQbsEMS2EZYYG5QiaTxSNSCmAU=;
+        b=On+/kORuJ/FGhBOLJXwNWqSN6F+2ZGF5A69BujmhASFAbryA+MZAAgMbMYYlNN7FO+
+         YiOnsX4/wqims0WMMRzMAHSJjU8eiC0/+Chj2xN2DUzHnmrDK+0fpX+V0G+u6BJkeOON
+         pwygawzHEd1J69Bw2BW06ySM5UZdWo+KFUw2TkKvjPCeCp7vpEDDwTaDb+qMqYdpRNcM
+         41RyMXp9kUqoxVRnKOK9AAIPD1wqZbNGvKKhrFksvnj+l0iMJO5I3/+3MXV+qCJAZ7cX
+         rfCZqPJbUtV7L3wvJ/gBVRkFDdy9XGGovd1mClDHIkRKoKrzihQdzNPEMfMsN2XQoOFx
+         S2jw==
+X-Gm-Message-State: APjAAAXKGP90RfegZxF0zAb4vjUifzFik05fCwfMExvol9VuolJ7vfwX
+        m5BshmJGDrIxcPyzz4Kh3Zw=
+X-Google-Smtp-Source: APXvYqwOa7xYCv/z3IBAcMPtD7kUb+dbcqrunj0PNN8ffzwuvTxLzcPJEazdIN4Y+Utte6EaBlzaBg==
+X-Received: by 2002:a1c:5609:: with SMTP id k9mr8690094wmb.103.1571425187005;
+        Fri, 18 Oct 2019 11:59:47 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a204sm8327224wmh.21.2019.10.18.11.59.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 11:59:45 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <wahrenst@gmx.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 4/7] ARM: DTS: omap3: add sgx gpu child node
-Date:   Fri, 18 Oct 2019 20:46:27 +0200
-Message-Id: <ebc994aa9e1a5669c2c79a8452562eae10419291.1571424390.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1571424390.git.hns@goldelico.com>
-References: <cover.1571424390.git.hns@goldelico.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Eric Anholt <eric@anholt.net>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
+Date:   Fri, 18 Oct 2019 11:59:41 -0700
+Message-Id: <20191018185941.14223-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <1570964003-20227-1-git-send-email-wahrenst@gmx.net>
+References: <1570964003-20227-1-git-send-email-wahrenst@gmx.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-and add timer and interrupt
+On Sun, 13 Oct 2019 12:53:23 +0200, Stefan Wahren <wahrenst@gmx.net> wrote:
+> bcm2835-rpi.dtsi defines the behavior of the ACT LED, which is available
+> on all Raspberry Pi boards. But there is no driver for this particual
+> GPIO on CM3 in mainline yet, so this node was left incomplete without
+> the actual GPIO definition. Since commit 025bf37725f1 ("gpio: Fix return
+> value mismatch of function gpiod_get_from_of_node()") this causing probe
+> issues of the leds-gpio driver for users of the CM3 dtsi file.
+> 
+>   leds-gpio: probe of leds failed with error -2
+> 
+> Until we have the necessary GPIO driver hide the ACT node for CM3
+> to avoid this.
+> 
+> Reported-by: Fredrik Yhlen <fredrik.yhlen@endian.se>
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and IO board")
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
-Tested on OpenPandora 600 MHz.
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/omap34xx.dtsi | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-index 7b09cbee8bb8..28d5c77d6d6c 100644
---- a/arch/arm/boot/dts/omap34xx.dtsi
-+++ b/arch/arm/boot/dts/omap34xx.dtsi
-@@ -111,7 +111,7 @@
- 		 * are also different clocks, but we do not have any dts users
- 		 * for it.
- 		 */
--		sgx_module: target-module@50000000 {
-+		target-module@50000000 {
- 			compatible = "ti,sysc-omap2", "ti,sysc";
- 			reg = <0x50000014 0x4>;
- 			reg-names = "rev";
-@@ -121,10 +121,13 @@
- 			#size-cells = <1>;
- 			ranges = <0 0x50000000 0x4000>;
- 
--			/*
--			 * Closed source PowerVR driver, no child device
--			 * binding or driver in mainline
--			 */
-+			sgx: sgx@0 {
-+				compatible = "img,sgx530-121", "img,sgx530", "ti,omap-omap3-sgx530-121";
-+				reg = <0x0 0x4000>;	/* 64kB */
-+				reg-names = "sgx";
-+				interrupts = <21>;
-+				timer = <&timer11>;
-+			};
- 		};
- 	};
- 
--- 
-2.19.1
-
+Applied to devicetree/fixes, thanks!
+--
+Florian
