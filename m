@@ -2,73 +2,138 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1842CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CDDCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE3D21852
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB03222C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:46:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yZ3zG/uS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfJRPjA (ORCPT
+        id S2505525AbfJRPq1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:39:00 -0400
-Received: from muru.com ([72.249.23.125]:38080 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728464AbfJRPjA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 18 Oct 2019 11:39:00 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 09A72809F;
-        Fri, 18 Oct 2019 15:39:33 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 08:38:56 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     linux-omap@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Ankur Tyagi <ankur.tyagi@gallagher.com>,
-        Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 00/21] Drop more legacy platform data for omaps
-Message-ID: <20191018153856.GP5610@atomide.com>
-References: <20191017194411.18258-1-tony@atomide.com>
- <291b705f-cfe7-9d22-16c0-90d269cfa799@ti.com>
+        Fri, 18 Oct 2019 11:46:27 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49680 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502173AbfJRPq0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:46:26 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkOe0016686;
+        Fri, 18 Oct 2019 10:46:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571413584;
+        bh=4XFNuK5ltxL4zK2+hVEoqLGhDnmvAy3+zQEpDc7IUK0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=yZ3zG/uS6bhU3+mm2eEUwdejaTBaNFKHyzQSoXcCEFiq19m0zf+eno316RrRSVOU3
+         FLOCmWveCpCKjFIQ1QAW/k8EYqMkl8AAZD7z1SdurnFxSXykraYdnk8e3rhRjSyw6u
+         uDemw5yPhBeM6hHJkP9JqMgGYt1aUQ+cdEsUSfXc=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFkOfF005546
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Oct 2019 10:46:24 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
+ Oct 2019 10:46:24 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 18 Oct 2019 10:46:15 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFkDAV045642;
+        Fri, 18 Oct 2019 10:46:24 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 9/9] arm64: dts: k3-am654-base-board: Add CSI2 OV5640 camera
+Date:   Fri, 18 Oct 2019 10:48:49 -0500
+Message-ID: <20191018154849.3127-10-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191018154849.3127-1-bparrot@ti.com>
+References: <20191018154849.3127-1-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <291b705f-cfe7-9d22-16c0-90d269cfa799@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Keerthy <j-keerthy@ti.com> [191018 04:55]:
-> 
-> 
-> On 18/10/19 1:13 AM, Tony Lindgren wrote:
-> > Hi all,
-> > 
-> > Here's a series of changes to remove more legacy platform data and
-> > ti,hwmods devitree property for omap variants.
-> > 
-> > The patches are against v5.4-rc1, but please note that the watchdog
-> > changes depend on the following patch:
-> > 
-> > [PATCH] bus: ti-sysc: Fix watchdog quirk handling
-> 
-> Tested with the above on AM33/AM43 for DS0. All working fine
-> however this series needs a re base on top of 5.4-rc3 as the patches are not
-> applying cleanly.
+Add support for the OV5640 CSI camera:
+- add the OV5640 nodes
+- add the CAL node linkage
+- enable CAL node
 
-Thanks for testing. Yeah these are still against v5.4-rc1.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-> Also rc1 does not have the remoteproc config fix patch so i added that
-> remoteproc config fix patch on top.
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index 1102b84f853d..918601c18f85 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -53,6 +53,12 @@
+ 			gpios = <&wkup_gpio0 27 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
++
++	clk_ov5640_fixed: clk_ov5640_fixed {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24000000>;
++	};
+ };
+ 
+ &wkup_pmx0 {
+@@ -184,6 +190,23 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_i2c1_pins_default>;
+ 	clock-frequency = <400000>;
++
++	ov5640@3c {
++		compatible = "ovti,ov5640";
++		reg = <0x3c>;
++
++		clocks = <&clk_ov5640_fixed>;
++		clock-names = "xclk";
++
++		port {
++			csi2_cam0: endpoint {
++				remote-endpoint = <&csi2_phy0>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
++
+ };
+ 
+ &main_i2c2 {
+@@ -280,3 +303,16 @@
+ &pcie1_ep {
+ 	status = "disabled";
+ };
++
++&cal {
++	status = "okay";
++};
++
++&csi2_0 {
++	csi2_phy0: endpoint@0 {
++		remote-endpoint = <&csi2_cam0>;
++		clock-lanes = <0>;
++		data-lanes = <1 2>;
++	};
++};
++
+-- 
+2.17.1
 
-OK
-
-Thanks,
-
-Tony
