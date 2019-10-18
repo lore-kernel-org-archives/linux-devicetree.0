@@ -2,201 +2,156 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E133CCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC13CA9EA1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42E121897
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D5B21897
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:53:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mue1fKqh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632805AbfJRIjR (ORCPT
+        id S1727734AbfJRIxT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:39:17 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:44409 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727903AbfJRIjR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 18 Oct 2019 04:39:17 -0400
-X-IronPort-AV: E=Sophos;i="5.67,311,1566831600"; 
-   d="scan'208";a="29209172"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 18 Oct 2019 17:39:14 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 65ACA4000C6E;
-        Fri, 18 Oct 2019 17:39:14 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] dt-bindings: phy: renesas: usb3-phy: convert bindings to json-schema
-Date:   Fri, 18 Oct 2019 17:39:14 +0900
-Message-Id: <1571387954-23446-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 18 Oct 2019 04:53:19 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:32991 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730092AbfJRIxT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 04:53:19 -0400
+Received: by mail-vs1-f66.google.com with SMTP id p13so3556000vso.0
+        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 01:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZFGj7CW4hdUtWSJdWVNaVmZMeTl6mFJ/pi0dDaNSBNI=;
+        b=Mue1fKqhFIuquMu+rQdYue5Ab10+aIYtB6Q9/0NGn6yqBrOgXLgFxSg9NHgyKSbFSE
+         P/wYniqUzElGGRUAv73GH8vxgzAqIkRFcXnKtK9ERXdptaI+2SGSIs/jXswG4speKbto
+         lvoSDiJeqxjuzOzIefrZ/deo7u6TdlJP7VTwxZFuteA/G4mV3V/aqdXyku3K8eU9Xoif
+         xAyZGXgX2NNhi62LjQKANeErNlNX/Za8ktqBzNRyqHutbskgjId182FjA9IqnNqFz+zm
+         ZXV01E9q9XPvlg0rZAq3Q2UEHuoAvj3+8z07VtkHMPYeXNncwhRl6aFysiNItkIHFYs1
+         L2bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZFGj7CW4hdUtWSJdWVNaVmZMeTl6mFJ/pi0dDaNSBNI=;
+        b=DOF7KExIu8mx998GZy7WLSnGOGAb2fUDu6qb6SEmY2VHPapyLEWio6SkY5x76oIkhO
+         bm/8t85GDerTDNjL+xG3qTn6ADRlPkyWZcmYTivymqazvjOsNIvCPddC7J5HaGTmffq5
+         O7BZ9MabNfWRUROEEfV/c7/59wPjZ0gnJHGAycMVtQgrE8KOWyzsdyb/i3e6B/dCd11q
+         cdrh3x2hdopdJkUoGDdbkk380m/UrpZ56ggOoZ/6W7T+i+ZbCLDQ11NAzp5WXiXi/S0h
+         UDRJ1I8m3d3Z4tROyosxKtOHNUDAncqKxP2odSKlMJN4ieoQP5R3H3j2H5AJfSfluXP3
+         3vyw==
+X-Gm-Message-State: APjAAAXuLqbe87t9tssBvNgnz0rvPsfJYjgJgOMWFCQiSMzh6rVahsGa
+        dBLnJVkkho6uWtFpqAEUoI05hXIEP5hTkvOgyqBDcA==
+X-Google-Smtp-Source: APXvYqxx1CtlN+u0DoDjVeLLVdh/4lNPYBI0SFJLfPUK/RX16/kP5dPKuMLW2YkmIBl0ktGJ57HLSuHmNeIqxg0/6RQ=
+X-Received: by 2002:a67:ebc2:: with SMTP id y2mr4733668vso.191.1571388797894;
+ Fri, 18 Oct 2019 01:53:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+ <1570857203-49192-1-git-send-email-zhouyanjie@zoho.com> <1570857203-49192-7-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <1570857203-49192-7-git-send-email-zhouyanjie@zoho.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 18 Oct 2019 10:52:41 +0200
+Message-ID: <CAPDyKFo9juNmf6hrcBjzOprS6GwzAPBq8y3ReGu=ry+MdxT9Bg@mail.gmail.com>
+Subject: Re: [PATCH 6/6 v2] MMC: JZ4740: Add support for LPM.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Mark Rutland <mark.rutland@arm.com>, syq@debian.org,
+        Linus Walleij <linus.walleij@linaro.org>, armijn@tjaldur.nl,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Renesas R-Car generation 3 USB 3.0 PHY bindings documentation
-to json-schema.
+On Sat, 12 Oct 2019 at 07:19, Zhou Yanjie <zhouyanjie@zoho.com> wrote:
+>
+> add support for low power mode of Ingenic's MMC/SD Controller.
+>
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- .../devicetree/bindings/phy/rcar-gen3-phy-usb3.txt | 52 --------------
- .../devicetree/bindings/phy/renesas,usb3-phy.yaml  | 80 ++++++++++++++++++++++
- 2 files changed, 80 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
- create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
+I couldn't find a proper coverletter for the series, please provide
+that next time as it really helps review. Additionally, it seems like
+you forgot to change the prefix of the patches to "mmc: jz4740" (or at
+least you chosed upper case letters), but I will take care of that
+this time. So, I have applied the series for next, thanks!
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
-deleted file mode 100644
-index 0fe433b..00000000
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
-+++ /dev/null
-@@ -1,52 +0,0 @@
--* Renesas R-Car generation 3 USB 3.0 PHY
--
--This file provides information on what the device node for the R-Car generation
--3 and RZ/G2 USB 3.0 PHY contain.
--If you want to enable spread spectrum clock (ssc), you should use USB_EXTAL
--instead of USB3_CLK. However, if you don't want to these features, you don't
--need this driver.
--
--Required properties:
--- compatible: "renesas,r8a774a1-usb3-phy" if the device is a part of an R8A774A1
--	      SoC.
--	      "renesas,r8a774b1-usb3-phy" if the device is a part of an R8A774B1
--	      SoC.
--	      "renesas,r8a7795-usb3-phy" if the device is a part of an R8A7795
--	      SoC.
--	      "renesas,r8a7796-usb3-phy" if the device is a part of an R8A7796
--	      SoC.
--	      "renesas,r8a77965-usb3-phy" if the device is a part of an
--	      R8A77965 SoC.
--	      "renesas,rcar-gen3-usb3-phy" for a generic R-Car Gen3 or RZ/G2
--	      compatible device.
--
--	      When compatible with the generic version, nodes must list the
--	      SoC-specific version corresponding to the platform first
--	      followed by the generic version.
--
--- reg: offset and length of the USB 3.0 PHY register block.
--- clocks: A list of phandles and clock-specifier pairs.
--- clock-names: Name of the clocks.
--  - The funcional clock must be "usb3-if".
--  - The usb3's external clock must be "usb3s_clk".
--  - The usb2's external clock must be "usb_extal". If you want to use the ssc,
--    the clock-frequency must not be 0.
--- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
--
--Optional properties:
--- renesas,ssc-range: Enable/disable spread spectrum clock (ssc) by using
--		     the following values as u32:
--			- 0 (or the property doesn't exist): disable the ssc
--			- 4980: enable the ssc as -4980 ppm
--			- 4492: enable the ssc as -4492 ppm
--			- 4003: enable the ssc as -4003 ppm
--
--Example (R-Car H3):
--
--	usb-phy@e65ee000 {
--		compatible = "renesas,r8a7795-usb3-phy",
--			     "renesas,rcar-gen3-usb3-phy";
--		reg = <0 0xe65ee000 0 0x90>;
--		clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>, <&usb_extal>;
--		clock-names = "usb3-if", "usb3s_clk", "usb_extal";
--	};
-diff --git a/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
-new file mode 100644
-index 00000000..42239e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/renesas,usb3-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas R-Car generation 3 USB 3.0 PHY
-+
-+maintainers:
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - renesas,r8a774a1-usb3-phy # RZ/G2M
-+              - renesas,r8a774b1-usb3-phy # RZ/G2N
-+              - renesas,r8a7795-usb3-phy  # R-Car H3
-+              - renesas,r8a7796-usb3-phy  # R-Car M3-W
-+              - renesas,r8a77965-usb3-phy # R-Car M3-N
-+          - const: renesas,rcar-gen3-usb3-phy
-+
-+  reg:
-+    # base address and length of the registers block for the PHY.
-+    maxItems: 1
-+
-+  clocks:
-+    # A list of phandles and clock-specifier pairs.
-+    maxItems: 3
-+
-+  clock-names:
-+    # If you want to use the ssc, the clock-frequency of usb_extal
-+    # must not be 0.
-+    maxItems: 3
-+    items:
-+      - const: usb3-if # The funcional clock
-+      - const: usb3s_clk # The usb3's external clock
-+      - const: usb_extal # The usb2's external clock
-+
-+  '#phy-cells':
-+    # see phy-bindings.txt in the same directory
-+    const: 0
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  renesas,ssc-range:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Enable/disable spread spectrum clock (ssc) by using the following values
-+       - 0 (or the property doesn't exist): disable the ssc
-+       - 4980: enable the ssc as -4980 ppm
-+       - 4492: enable the ssc as -4492 ppm
-+       - 4003: enable the ssc as -4003 ppm
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#phy-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
-+    #include <dt-bindings/power/r8a7795-sysc.h>
-+
-+    usb-phy@e65ee000 {
-+        compatible = "renesas,r8a7795-usb3-phy", "renesas,rcar-gen3-usb3-phy";
-+        reg = <0 0xe65ee000 0 0x90>;
-+        clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>, <&usb_extal>;
-+        clock-names = "usb3-if", "usb3s_clk", "usb_extal";
-+        #phy-cells = <0>;
-+    };
--- 
-2.7.4
+I also have a general question. Should we perhaps rename the driver
+from jz4740_mmc.c to ingenic.c (and the file for the DT bindings, the
+Kconfig, etc), as that seems like a more appropriate name? No?
 
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/host/jz4740_mmc.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>
+> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
+> index 44a04fe..4cbe7fb 100644
+> --- a/drivers/mmc/host/jz4740_mmc.c
+> +++ b/drivers/mmc/host/jz4740_mmc.c
+> @@ -43,6 +43,7 @@
+>  #define JZ_REG_MMC_RESP_FIFO   0x34
+>  #define JZ_REG_MMC_RXFIFO      0x38
+>  #define JZ_REG_MMC_TXFIFO      0x3C
+> +#define JZ_REG_MMC_LPM         0x40
+>  #define JZ_REG_MMC_DMAC                0x44
+>
+>  #define JZ_MMC_STRPCL_EXIT_MULTIPLE BIT(7)
+> @@ -102,6 +103,12 @@
+>  #define JZ_MMC_DMAC_DMA_SEL BIT(1)
+>  #define JZ_MMC_DMAC_DMA_EN BIT(0)
+>
+> +#define        JZ_MMC_LPM_DRV_RISING BIT(31)
+> +#define        JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY BIT(31)
+> +#define        JZ_MMC_LPM_DRV_RISING_1NS_DLY BIT(30)
+> +#define        JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY BIT(29)
+> +#define        JZ_MMC_LPM_LOW_POWER_MODE_EN BIT(0)
+> +
+>  #define JZ_MMC_CLK_RATE 24000000
+>
+>  enum jz4740_mmc_version {
+> @@ -860,6 +867,22 @@ static int jz4740_mmc_set_clock_rate(struct jz4740_mmc_host *host, int rate)
+>         }
+>
+>         writew(div, host->base + JZ_REG_MMC_CLKRT);
+> +
+> +       if (real_rate > 25000000) {
+> +               if (host->version >= JZ_MMC_X1000) {
+> +                       writel(JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY |
+> +                                  JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY |
+> +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
+> +                                  host->base + JZ_REG_MMC_LPM);
+> +               } else if (host->version >= JZ_MMC_JZ4760) {
+> +                       writel(JZ_MMC_LPM_DRV_RISING |
+> +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
+> +                                  host->base + JZ_REG_MMC_LPM);
+> +               } else if (host->version >= JZ_MMC_JZ4725B)
+> +                       writel(JZ_MMC_LPM_LOW_POWER_MODE_EN,
+> +                                  host->base + JZ_REG_MMC_LPM);
+> +       }
+> +
+>         return real_rate;
+>  }
+>
+> --
+> 2.7.4
+>
+>
