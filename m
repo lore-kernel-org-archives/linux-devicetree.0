@@ -2,201 +2,119 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBA7CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEC6CA9EA1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83B721D7C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FBD222C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 09:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Bal5tBxe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n28OxGit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407000AbfJRJjP (ORCPT
+        id S2407778AbfJRJxE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 05:39:15 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13319 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406647AbfJRJjO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 05:39:14 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da988430000>; Fri, 18 Oct 2019 02:39:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 18 Oct 2019 02:39:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 18 Oct 2019 02:39:12 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 18 Oct
- 2019 09:39:11 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 18 Oct 2019 09:39:11 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.66.147]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5da9883d0000>; Fri, 18 Oct 2019 02:39:11 -0700
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V11 00/11] Tegra XUSB gadget driver support
-Date:   Fri, 18 Oct 2019 15:08:05 +0530
-Message-ID: <1571391496-20834-1-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Fri, 18 Oct 2019 05:53:04 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33510 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406962AbfJRJxE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 05:53:04 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so3569705pfl.0
+        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 02:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PGk9J+4Cve7nPzhB48lXZkSk8jD7RUn6XtFGq2ZdcE4=;
+        b=n28OxGityoZDMnTZJXc8oRsZQcZHor+VKmgC6rBmcaS7on08zd2eWAFv06U/ZiSHk6
+         9Lw8fUIWzMB6DMmUXmMNoKxdNKX0NF4jQCmhVVthlNpOhD2eKdor/MF6yaXkFzninruu
+         cmzLJ2wHqbw1r9bS+WsEPgxmkgSt/E1yg7CKLON6iqE6joGCQR9KMjskL+l2KsIqdXmR
+         F/VtfVlR4O0W1D9MWmMnF8DFcSRaOM+ZZvYUoJZsat8VUP/QR7rz1p4SE1GJkwYpTN+a
+         X4hbuvWfGb1KTL73kiiUTCAn605J1ZE4Mz5ly7rR37WtyirV/Qs97aNCLdY3VnhQsu34
+         NNlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PGk9J+4Cve7nPzhB48lXZkSk8jD7RUn6XtFGq2ZdcE4=;
+        b=me8DN5at9tmRfzSX3qgOdYOOLAzZj9jJWLZM5HnaNIJesU1puU6KcPc1Q1AAJ/RPQ1
+         7NEo/Na3DWFxpU6yI2RHzOiIb2mDAW3TUqq+SgblpEoqzX8+Nlhd50Bm6lpwIfgDr9ra
+         SHdPcebXXHui0vDkW+WDHyYKAveHS8ou/yyha6RVt8hdX86kfcYGp4arYBmS1b+tya01
+         kTmJ2DgFyWJvZoM6ttvKHpym7z8YgTOxl8Z+Wf103mqOygaTCS45G/Uqs6+gER/8GBl5
+         9ajsYQGGuYOmO7P5npXM4L8FvkG+tYKP24Bt1KuoRPBje9ewvf64pvJsShpvEA3ouw9b
+         /MYQ==
+X-Gm-Message-State: APjAAAXcR7uD3DMK/rJ1cmy67NrEWssSQEI9n35s9ZIVL+bIrqF+REub
+        FgHfJgXTQEdWjyvOFdYR27qdJXJ1/AU=
+X-Google-Smtp-Source: APXvYqxlPmABURKMNZR4TlIqRnlfd/HOkYCVCXPKQWozAwch1z3PnRODRY9cczTpXXYxPHhWt0UqUQ==
+X-Received: by 2002:a63:ec4f:: with SMTP id r15mr9050130pgj.17.1571392383198;
+        Fri, 18 Oct 2019 02:53:03 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id l62sm6471028pfl.167.2019.10.18.02.53.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 18 Oct 2019 02:53:02 -0700 (PDT)
+Date:   Fri, 18 Oct 2019 15:23:00 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "andrew-sh.cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Fan Chen =?utf-8?B?KOmZs+WHoSk=?= <fan.chen@mediatek.com>
+Subject: Re: [v4, 7/8] cpufreq: mediatek: add opp notification for SVS support
+Message-ID: <20191018095300.mtygp2ej7rnz6uzn@vireshk-i7>
+References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1565703113-31479-8-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20190820033927.72muldasu4xd6wb7@vireshk-i7>
+ <1571193828.22071.5.camel@mtksdaap41>
+ <20191017063102.4jirlphdxdydl2bm@vireshk-i7>
+ <1571389431.27207.4.camel@mtksdaap41>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571391555; bh=47EXNA3S0+KHjdoC83yPa5Gt6NFURER54GHBRG5i5pA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=Bal5tBxeu4JrdAR5lO3R1bfYIT20BZD/iI/y91irr/3aF+dbWKYjL2G5X7PRPUPs3
-         2ZK5os9kQelLqDnaivyh4il2jYuJnK+qGVdOgMYcjlEeRX+/ZNud/yDXVjdkLohH7g
-         IdKBuy1ryGnBvtqlOJ7MWh1GCXhFCNT+zkhCUJs+yYBAQccV84HllOu0zPgd6dg9ge
-         27FjRbw3ZxTNLwKLqlaNVGFXcnsexo+8hptckpZHE/oP5POFHTHJ/CWh+g6k1uwsOF
-         ArPZclwpRacJw2ZTbCu6TBsrfJtIQoDOnxjjaugLQLI2OQNegl49CQBKljq8z+7W0O
-         nF5ERIFaBxQmg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571389431.27207.4.camel@mtksdaap41>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Patches 1-4 are phy driver changes to add support for device
-mode.
-Patches 5-10 are changes related to XUSB device mode
-controller driver.
-Patch 11 is to enable drivers for XUDC support in defconfig
+On 18-10-19, 17:03, andrew-sh.cheng wrote:
+> On Thu, 2019-10-17 at 12:01 +0530, Viresh Kumar wrote:
+> > On 16-10-19, 10:43, andrew-sh.cheng wrote:
+> > > This is due to SVS feature need to fix Vproc for calibration.
+> > > When SVS calibration, it want to disable all opp items, except one with
+> > > voltae 1.0V. (SVS will change the voltage field of that opp item, if the
+> > > corresponding voltage is not 1.0V)
+> > > In this way, SVS can make sure there is no other module, include
+> > > thermal, will change Vproc by DVFS driver.
+> > > After SVS calibration done, SVS will enable those disabled opp items
+> > > back.
+> > 
+> > But why is this required to be done this way ? Why can't we just update the
+> > voltages without doing this disable/enable dance ?
+> > 
+> This is because some opp items need voltage larger than 1.0V.
+> We cannot update the voltage to 1.0V.
+> 
+> If we don't disable these opp items, and DVFS policy want to set these
+> high frequencies, dvfs driver will set higher voltage to Vproc and SVS
+> calibration will be fail.
 
-Test Steps(USB 2.0):
-- Enable "USB Gadget precomposed configurations" in defconfig
-- Build, flash and boot Jetson TX1
-- Connect Jetson TX1 and Ubuntu device using USB A to Micro B
-  cable
-- After boot on Jetson TX1 terminal usb0 network device should be
-  enumerated
-- Assign static ip to usb0 on Jetson TX1 and corresponding net
-  device on ubuntu
-- Run ping test and transfer test(used scp) to check data transfer
-  communication
-
-SS mode is verified by enabling Type A port as peripheral
----
-v11:
-* Patches 1,2,3 - No changes.
-* Patch 4 is new patch in the series to add support for Tegra186.
-* Patch 5(previously patch 4) - added Tegra186 compatible.
-* Patches 6,7(previously patches 5,6) - No changes.
-* Patch 8,9 are new patches to add support for Jetson-TX2 platform.
-* Patch 10(previously Patch 7) - added Tegra186 soc data.
-* Patch 11(previously Patch 8) - No changes.
----
-v10:
-* Patches 1,2,4,5,7,8 - No changes.
-* Patch 3 has braces added to one single line else condition.
-* Patch 6 has update on compatible string as per suggestion from Chunfeng.
----
-v9:
-* Patches 1,2,3,4,5 - No changes.
-* Patch 6 has update on compatible string as per suggestion from Chunfeng.
-* Patch 7 has comment fixes as suggested by Chunfeng.
-* Patch 8 has CONFIG_USB_GPIO enabled as module additionally.
----
-v8:
-* Patches 1,2,3,4,5,8 - No changes.
-* Patch 6 has update on compatible string as per change done in [1].
-* Patch 7 has issue fix, where device mode didnot got enabled after resume
-  from suspend.
----
-v7:
-* Patches 1,2,3,4,5,6,8 - No changes.
-* Patch 7 - Comments from Balbi and Chunfun adrresed.
-  Added COMPILE_TEST in Kconfig and updated dependencies.
----
-v6:
-* Patches 1,2,3,7,8 - No changes.
-* Patch 4,5,6 - Comments from Rob addressed, updated usb connector driver
-  compatibility string.
----
-v5:
-* Patches 1-3 - Commit subject updated as per inputs from Thierry.
-* Patch 4 - Added reg-names used on Tegra210 in the bindings doc
-* Enabled xudc driver as module instead of part of kernel in patch 8.
-* Patched 5-8 - No changes.
----
-v4:
-* patch 1 - no changes.
-* corrected companion device search based on inputs from Thierry in patch 2.
-* removed unneeded dev variable and corrected value read in
-  tegra210_utmi_port_reset function in patch 3.
-* dt binding doc and dtb files are corrected for alignments.
-  Replaced extcon-usb-gpio with usb role switch.
-* Added support for USB role switch instead of extcon-usb-gpio and other minor
-  comments as suggested by Chunfeng.
-* Enabled xudc driver as module instead of part of kernel in patch 8.
----
-V3:
-* Rebased patch 1 to top of tree.
-* Fixed bug in patch 2, where xudc interrupts dont get generated if USB host
-  mode fails to probe. Moved fake port detection logic to generic xusb.c. fake
-  usb port data is updated based on soc flag need_fake_usb3_port.
-* Added extra lines whereever necessary to make code more readable in patch 3
-  and 7.
-* dt binding doc is corrected for typos and extcon references. Also added
-  details for clocks and removed xusb_ references to clock and power-domain
-  names and accordingly patch 5 is updated.
-* removed avdd-pll-utmip-supply in patch 6, as its now part of padctl driver.
-* Patch 8 has no changes.
----
-V2:
-* Patches 1-3 are new patches in this series, which splits unified features
-  patch to speprated features and removes need of port-fake entry in DT.
-* Patch 4 is re-arragend dt-bindings patch which incorporates previous
-  patch comments to sort DT entries alphabetically, addresses name changes
-  and PM domain details added.
-* Patch 5-6 are re-arranged DT patches with major changes - sort entries
-  alphabetically, and adds clock names.
-* Patch 7 is UDC driver tegra XUSB device mode controller with major
-  changes - remove un-used module params, lockinng for device_mode flag,
-  moving un-needed info logs to debug level, making changes feature flag
-  dependent rather than SOC based macros and other error handling in probe.
-* Patch 8 has no changes.
-
-Nagarjuna Kristam (8):
-  phy: tegra: xusb: Add XUSB dual mode support on Tegra210
-  phy: tegra: xusb: Add usb3 port fake support on Tegra210
-  phy: tegra: xusb: Add vbus override support on Tegra210
-  phy: tegra: xusb: Add vbus override support on Tegra186
-  dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
-  arm64: tegra: Add xudc node for Tegra210
-  arm64: tegra: Enable xudc on Jetson TX1
-  arm64: tegra: Add xudc node for Tegra186
-  arm64: tegra: Enable xudc on Jetson TX2
-  usb: gadget: Add UDC driver for tegra XUSB device mode controller
-  arm64: defconfig: Enable tegra XUDC support
-
- .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  112 +
- arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |   29 +-
- arch/arm64/boot/dts/nvidia/tegra186.dtsi           |   19 +
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   31 +-
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
- arch/arm64/configs/defconfig                       |    2 +
- drivers/phy/tegra/xusb-tegra186.c                  |   23 +
- drivers/phy/tegra/xusb-tegra210.c                  |  134 +-
- drivers/phy/tegra/xusb.c                           |   87 +
- drivers/phy/tegra/xusb.h                           |    4 +
- drivers/usb/gadget/udc/Kconfig                     |   11 +
- drivers/usb/gadget/udc/Makefile                    |    1 +
- drivers/usb/gadget/udc/tegra-xudc.c                | 3810 ++++++++++++++++++++
- include/linux/phy/tegra/xusb.h                     |    4 +-
- 14 files changed, 4281 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
- create mode 100644 drivers/usb/gadget/udc/tegra-xudc.c
+Okay.
 
 -- 
-2.7.4
-
+viresh
