@@ -2,117 +2,158 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B13CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C417CA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E59F21852
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DD2222D0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 15:37:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fGkAhBIE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="v470AP/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410582AbfJRPcE (ORCPT
+        id S1732658AbfJRPh6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 11:32:04 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40648 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410487AbfJRPcE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:32:04 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW2H1002558;
-        Fri, 18 Oct 2019 10:32:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571412722;
-        bh=/YKNqD/6ZGTEd6vo7678PvL+PAspt5iQ6uoWMMZXLTI=;
-        h=From:To:CC:Subject:Date;
-        b=fGkAhBIEXOSEtrhMaII1nKgPsMipkBxkNpgwDk2MkYXcemLFIqT1yVYzq59W7audu
-         xUItnBiV5HoV/mF13iIEgnUWRjFhJdmOn8U8UobKzar7FZwVCo6wIQd1/ozQ9n1RvG
-         uq6E9YBO7tr8eu7T+tMlQGxJnLr4DzAznnvNPWMk=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9IFW15D084478
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Oct 2019 10:32:02 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 18
- Oct 2019 10:31:53 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 18 Oct 2019 10:31:53 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9IFW15E080266;
-        Fri, 18 Oct 2019 10:32:01 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 00/19] media: ti-vpe: cal: maintenance
-Date:   Fri, 18 Oct 2019 10:34:18 -0500
-Message-ID: <20191018153437.20614-1-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 18 Oct 2019 11:37:58 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60928 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730468AbfJRPh6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 11:37:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1571413074; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yvFr+nNghkKZwR4mawCKvHUmrMBJduw6erMI6YTlcHM=;
+        b=v470AP/WoXYbHAA0MikRhd2C2Q47Jva7B2tAsqSQJh2nMYK2q/AuxV6ILjajalIe9ifrUq
+        QQ5AMEkFZxjYo9B3QckbJkKJ22INg6mA+cpEFKl/QqzArCcPa/pKii/EQODfOjJpBl38Oc
+        nlS76mnfHy2OQjR4ZofesDfcpS7rIQ0=
+Date:   Fri, 18 Oct 2019 17:37:47 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 6/6 v2] MMC: JZ4740: Add support for LPM.
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Zhou Yanjie <zhouyanjie@zoho.com>, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mmc@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Mark Rutland <mark.rutland@arm.com>, syq@debian.org,
+        Linus Walleij <linus.walleij@linaro.org>, armijn@tjaldur.nl,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Message-Id: <1571413067.3.0@crapouillou.net>
+In-Reply-To: <CAPDyKFo9juNmf6hrcBjzOprS6GwzAPBq8y3ReGu=ry+MdxT9Bg@mail.gmail.com>
+References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+        <1570857203-49192-1-git-send-email-zhouyanjie@zoho.com>
+        <1570857203-49192-7-git-send-email-zhouyanjie@zoho.com>
+        <CAPDyKFo9juNmf6hrcBjzOprS6GwzAPBq8y3ReGu=ry+MdxT9Bg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This a collection of backlog patches I have been carrying for the CAL
-driver.
+Hi Uffe,
 
-- Add support for SoC variants.
 
-- Switches to syscon/regmap to access a system controller register for
-the DPHY configuration. This register has different bit layout depending
-on the SoC version.
+Le ven., oct. 18, 2019 at 10:52, Ulf Hansson <ulf.hansson@linaro.org> a=20
+=E9crit :
+> On Sat, 12 Oct 2019 at 07:19, Zhou Yanjie <zhouyanjie@zoho.com> wrote:
+>>=20
+>>  add support for low power mode of Ingenic's MMC/SD Controller.
+>>=20
+>>  Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>=20
+> I couldn't find a proper coverletter for the series, please provide
+> that next time as it really helps review. Additionally, it seems like
+> you forgot to change the prefix of the patches to "mmc: jz4740" (or at
+> least you chosed upper case letters), but I will take care of that
+> this time. So, I have applied the series for next, thanks!
+>=20
+> I also have a general question. Should we perhaps rename the driver
+> from jz4740_mmc.c to ingenic.c (and the file for the DT bindings, the
+> Kconfig, etc), as that seems like a more appropriate name? No?
 
-- It adds supports for pre ES2.0 silicon errata.
+Is there a kernel policy regarding renaming drivers? Since it trashes=20
+the git history. Anyway you're the subsystem maintainer so I guess=20
+that's up to you. I can send a patch to rename it if you want.
 
-- Reworked the DPHY initialization sequence to match the technical
-reference manual and provide a more robust restartability.
+Cheers,
+-Paul
 
-- Adds the missing ability to power subdevice.
 
-- Update the devicetree binding and then converts it to dt-schema 
+>=20
+> Kind regards
+> Uffe
+>=20
+>=20
+>>  ---
+>>   drivers/mmc/host/jz4740_mmc.c | 23 +++++++++++++++++++++++
+>>   1 file changed, 23 insertions(+)
+>>=20
+>>  diff --git a/drivers/mmc/host/jz4740_mmc.c=20
+>> b/drivers/mmc/host/jz4740_mmc.c
+>>  index 44a04fe..4cbe7fb 100644
+>>  --- a/drivers/mmc/host/jz4740_mmc.c
+>>  +++ b/drivers/mmc/host/jz4740_mmc.c
+>>  @@ -43,6 +43,7 @@
+>>   #define JZ_REG_MMC_RESP_FIFO   0x34
+>>   #define JZ_REG_MMC_RXFIFO      0x38
+>>   #define JZ_REG_MMC_TXFIFO      0x3C
+>>  +#define JZ_REG_MMC_LPM         0x40
+>>   #define JZ_REG_MMC_DMAC                0x44
+>>=20
+>>   #define JZ_MMC_STRPCL_EXIT_MULTIPLE BIT(7)
+>>  @@ -102,6 +103,12 @@
+>>   #define JZ_MMC_DMAC_DMA_SEL BIT(1)
+>>   #define JZ_MMC_DMAC_DMA_EN BIT(0)
+>>=20
+>>  +#define        JZ_MMC_LPM_DRV_RISING BIT(31)
+>>  +#define        JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY BIT(31)
+>>  +#define        JZ_MMC_LPM_DRV_RISING_1NS_DLY BIT(30)
+>>  +#define        JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY BIT(29)
+>>  +#define        JZ_MMC_LPM_LOW_POWER_MODE_EN BIT(0)
+>>  +
+>>   #define JZ_MMC_CLK_RATE 24000000
+>>=20
+>>   enum jz4740_mmc_version {
+>>  @@ -860,6 +867,22 @@ static int jz4740_mmc_set_clock_rate(struct=20
+>> jz4740_mmc_host *host, int rate)
+>>          }
+>>=20
+>>          writew(div, host->base + JZ_REG_MMC_CLKRT);
+>>  +
+>>  +       if (real_rate > 25000000) {
+>>  +               if (host->version >=3D JZ_MMC_X1000) {
+>>  +                       writel(JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY |
+>>  +                                 =20
+>> JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY |
+>>  +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
+>>  +                                  host->base + JZ_REG_MMC_LPM);
+>>  +               } else if (host->version >=3D JZ_MMC_JZ4760) {
+>>  +                       writel(JZ_MMC_LPM_DRV_RISING |
+>>  +                                  JZ_MMC_LPM_LOW_POWER_MODE_EN,
+>>  +                                  host->base + JZ_REG_MMC_LPM);
+>>  +               } else if (host->version >=3D JZ_MMC_JZ4725B)
+>>  +                       writel(JZ_MMC_LPM_LOW_POWER_MODE_EN,
+>>  +                                  host->base + JZ_REG_MMC_LPM);
+>>  +       }
+>>  +
+>>          return real_rate;
+>>   }
+>>=20
+>>  --
+>>  2.7.4
+>>=20
+>>=20
 
-Benoit Parrot (18):
-  dt-bindings: media: cal: update binding to use syscon
-  dt-bindings: media: cal: update binding example
-  media: ti-vpe: cal: Add per platform data support
-  media: ti-vpe: cal: Enable DMABUF export
-  dt-bindings: media: cal: update binding to add PHY LDO errata support
-  media: ti-vpe: cal: add CSI2 PHY LDO errata support
-  media: ti-vpe: cal: Fix ths_term/ths_settle parameters
-  media: ti-vpe: cal: Fix pixel processing parameters
-  media: ti-vpe: cal: Align DPHY init sequence with docs
-  dt-bindings: media: cal: update binding to add DRA76x support
-  media: ti-vpe: cal: Add DRA76x support
-  dt-bindings: media: cal: update binding to add AM654 support
-  media: ti-vpe: cal: Add AM654 support
-  media: ti-vpe: cal: Add subdev s_power hooks
-  media: ti-vpe: cal: Properly calculate max resolution boundary
-  media: ti-vpe: cal: Fix a WARN issued when start streaming fails
-  media: ti-vpe: cal: fix enum_mbus_code/frame_size subdev arguments
-  dt-bindings: media: cal: convert binding to yaml
-
-Nikhil Devshatwar (1):
-  media: ti-vpe: cal: Restrict DMA to avoid memory corruption
-
- .../devicetree/bindings/media/ti,cal.yaml     | 186 +++++
- .../devicetree/bindings/media/ti-cal.txt      |  72 --
- drivers/media/platform/Kconfig                |   2 +-
- drivers/media/platform/ti-vpe/cal.c           | 775 ++++++++++++++----
- drivers/media/platform/ti-vpe/cal_regs.h      |  27 +
- 5 files changed, 830 insertions(+), 232 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/ti,cal.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
-
--- 
-2.17.1
+=
 
