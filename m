@@ -1,130 +1,246 @@
-Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CE6CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 04:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B137ECA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688332077C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 04:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571633051;
-	bh=LVlUwIor1Q0zqTd3c1Z8i6+KPgjp8+NUXpE9o1AUPGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vOGrhedWxxePCo1Of0QEO+ybaqtHY1B9MgMXUeoaE2kcPuk/vcEIKh+AJ65xaPRjs
-	 XaFS58F94hjLgTAsDP29Ud+eaQRrocLoiiWBcr7IaifVZlm1OO50SBVeOfDX7z1sUb
-	 HSIErRtBSbRv8mp5agn06Xp3OUbbteiwieOl+cJg=
+	by mail.kernel.org (Postfix) with ESMTP id 87A7221897
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725874AbfJUEoK (ORCPT
+        id S2407604AbfJRIi4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 00:44:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbfJUEoK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 00:44:10 -0400
-Received: from localhost (unknown [122.167.89.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 102972067B;
-        Mon, 21 Oct 2019 04:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571633049;
-        bh=LVlUwIor1Q0zqTd3c1Z8i6+KPgjp8+NUXpE9o1AUPGg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J6WyMO4de+yhu9NJ87JGfUDk+teLPhNjtBP7DfyEfMwcriRxAM0DBKoshvRyAxjT8
-         Rw2crnxAE4eO4ywbrixkkk++fwl0VQ4ay2UipY6mi6JtLiBPAeQ35wGoGk2Gfi2J3p
-         I0GCNmT+kV4uyMNPvoDXLVL7Vqf5oyYwTpo0ocII=
-Date:   Mon, 21 Oct 2019 10:14:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     robh@kernel.org, broonie@kernel.org, bgoswami@codeaurora.org,
-        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
-Subject: Re: [PATCH v3 2/2] soundwire: qcom: add support for SoundWire
- controller
-Message-ID: <20191021044405.GB2654@vkoul-mobl>
-References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
- <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 18 Oct 2019 04:38:56 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:11276 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727903AbfJRIi4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:38:56 -0400
+X-IronPort-AV: E=Sophos;i="5.67,311,1566831600"; 
+   d="scan'208";a="29424813"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 18 Oct 2019 17:38:53 +0900
+Received: from localhost.localdomain (unknown [10.166.17.210])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 62E564004BD5;
+        Fri, 18 Oct 2019 17:38:53 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] dt-bindings: phy: renesas: usb2-phy: convert bindings to json-schema
+Date:   Fri, 18 Oct 2019 17:38:53 +0900
+Message-Id: <1571387933-23397-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11-10-19, 16:44, Srinivas Kandagatla wrote:
+Convert Renesas R-Car generation 3 USB 2.0 PHY bindings documentation
+to json-schema.
 
-> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct qcom_swrm_ctrl *ctrl = dev_id;
-> +	u32 sts, value;
-> +	unsigned long flags;
-> +
-> +	ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
-> +
-> +	if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
-> +		ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
-> +		dev_err_ratelimited(ctrl->dev,
-> +				    "CMD error, fifo status 0x%x\n",
-> +				     value);
-> +		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
-> +	}
-> +
-> +	if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
-> +	    sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
-> +		schedule_work(&ctrl->slave_work);
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 --------------
+ .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 106 +++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 70 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
 
-we are in irq thread, so why not do the work here rather than schedule
-it?
-
-> +static int qcom_swrm_compute_params(struct sdw_bus *bus)
-> +{
-> +	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
-> +	struct sdw_master_runtime *m_rt;
-> +	struct sdw_slave_runtime *s_rt;
-> +	struct sdw_port_runtime *p_rt;
-> +	struct qcom_swrm_port_config *pcfg;
-> +	int i = 0;
-> +
-> +	list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
-> +		list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
-> +			pcfg = &ctrl->pconfig[p_rt->num - 1];
-> +			p_rt->transport_params.port_num = p_rt->num;
-> +			p_rt->transport_params.sample_interval = pcfg->si + 1;
-> +			p_rt->transport_params.offset1 = pcfg->off1;
-> +			p_rt->transport_params.offset2 = pcfg->off2;
-> +		}
-> +
-> +		list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
-> +			list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
-> +				pcfg = &ctrl->pconfig[i];
-> +				p_rt->transport_params.port_num = p_rt->num;
-> +				p_rt->transport_params.sample_interval =
-> +					pcfg->si + 1;
-> +				p_rt->transport_params.offset1 = pcfg->off1;
-> +				p_rt->transport_params.offset2 = pcfg->off2;
-> +				i++;
-> +			}
-
-Can you explain this one, am not sure I understood this. This fn is
-supposed to compute and fill up the params, all I can see is filling up!
-
-> +static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
-> +	.hw_params = qcom_swrm_hw_params,
-> +	.prepare = qcom_swrm_prepare,
-> +	.hw_free = qcom_swrm_hw_free,
-> +	.startup = qcom_swrm_startup,
-> +	.shutdown = qcom_swrm_shutdown,
-> +        .set_sdw_stream = qcom_swrm_set_sdw_stream,
-
-why does indent look off to me!
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+deleted file mode 100644
+index 7734b21..00000000
+--- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
++++ /dev/null
+@@ -1,70 +0,0 @@
+-* Renesas R-Car generation 3 USB 2.0 PHY
+-
+-This file provides information on what the device node for the R-Car generation
+-3, RZ/G1C, RZ/G2 and RZ/A2 USB 2.0 PHY contain.
+-
+-Required properties:
+-- compatible: "renesas,usb2-phy-r7s9210" if the device is a part of an R7S9210
+-	      SoC.
+-	      "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
+-	      SoC.
+-	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
+-	      SoC.
+-	      "renesas,usb2-phy-r8a774b1" if the device is a part of an R8A774B1
+-	      SoC.
+-	      "renesas,usb2-phy-r8a774c0" if the device is a part of an R8A774C0
+-	      SoC.
+-	      "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
+-	      SoC.
+-	      "renesas,usb2-phy-r8a7796" if the device is a part of an R8A7796
+-	      SoC.
+-	      "renesas,usb2-phy-r8a77965" if the device is a part of an
+-	      R8A77965 SoC.
+-	      "renesas,usb2-phy-r8a77990" if the device is a part of an
+-	      R8A77990 SoC.
+-	      "renesas,usb2-phy-r8a77995" if the device is a part of an
+-	      R8A77995 SoC.
+-	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3, RZ/G2 or
+-	      RZ/A2 compatible device.
+-
+-	      When compatible with the generic version, nodes must list the
+-	      SoC-specific version corresponding to the platform first
+-	      followed by the generic version.
+-
+-- reg: offset and length of the partial USB 2.0 Host register block.
+-- clocks: clock phandle and specifier pair(s).
+-- #phy-cells: see phy-bindings.txt in the same directory, must be <1> (and
+-	      using <0> is deprecated).
+-
+-The phandle's argument in the PHY specifier is the INT_STATUS bit of controller:
+-- 1 = USBH_INTA (OHCI)
+-- 2 = USBH_INTB (EHCI)
+-- 3 = UCOM_INT (OTG and BC)
+-
+-Optional properties:
+-To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
+-combined, the device tree node should set interrupt properties to use the
+-channel as USB OTG:
+-- interrupts: interrupt specifier for the PHY.
+-- vbus-supply: Phandle to a regulator that provides power to the VBUS. This
+-	       regulator will be managed during the PHY power on/off sequence.
+-- renesas,no-otg-pins: boolean, specify when a board does not provide proper
+-		       otg pins.
+-- dr_mode: string, indicates the working mode for the PHY. Can be "host",
+-           "peripheral", or "otg". Should be set if otg controller is not used.
+-
+-
+-Example (R-Car H3):
+-
+-	usb-phy@ee080200 {
+-		compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
+-		reg = <0 0xee080200 0 0x700>;
+-		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cpg CPG_MOD 703>;
+-	};
+-
+-	usb-phy@ee0a0200 {
+-		compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
+-		reg = <0 0xee0a0200 0 0x700>;
+-		clocks = <&cpg CPG_MOD 702>;
+-	};
+diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+new file mode 100644
+index 00000000..0f109c2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+@@ -0,0 +1,106 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/renesas,usb2-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas R-Car generation 3 USB 2.0 PHY
++
++maintainers:
++  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - renesas,usb2-phy-r8a77470 # RZ/G1C
++      - items:
++          - enum:
++              - renesas,usb2-phy-r7s9210  # RZ/A2
++              - renesas,usb2-phy-r8a774a1 # RZ/G2M
++              - renesas,usb2-phy-r8a774b1 # RZ/G2N
++              - renesas,usb2-phy-r8a774c0 # RZ/G2E
++              - renesas,usb2-phy-r8a7795  # R-Car H3
++              - renesas,usb2-phy-r8a7796  # R-Car M3-W
++              - renesas,usb2-phy-r8a77965 # R-Car M3-N
++              - renesas,usb2-phy-r8a77990 # R-Car E3
++              - renesas,usb2-phy-r8a77995 # R-Car D3
++          - const: renesas,rcar-gen3-usb2-phy
++
++  reg:
++    # base address and length of the registers block for the PHY.
++    maxItems: 1
++
++  clocks:
++    # clock phandle and specifier pair(s).
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    # for RZ/A2
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: fck
++      - const: usb_x1
++
++  '#phy-cells':
++    # see phy-bindings.txt in the same directory
++    enum: [0, 1]  # and 0 is deprecated.
++
++  interrupts:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    minItems: 1
++    maxItems: 2
++
++  vbus-supply:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Phandle to a regulator that provides power to the VBUS. This regulator
++      will be managed during the PHY power on/off sequence.
++
++  renesas,no-otg-pins:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      specify when a board does not provide proper otg pins.
++
++  dr_mode:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: |
++      indicates the working mode for the PHY. Can be "host", "peripheral", or
++      "otg". Should be set if otg controller is not used.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#phy-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a7795-sysc.h>
++
++    usb-phy@ee080200 {
++        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
++        reg = <0 0xee080200 0 0x700>;
++        interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&cpg CPG_MOD 703>;
++        #phy-cells = <1>;
++    };
++
++    usb-phy@ee0a0200 {
++        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
++        reg = <0 0xee0a0200 0 0x700>;
++        clocks = <&cpg CPG_MOD 702>;
++        #phy-cells = <1>;
++    };
 -- 
-~Vinod
+2.7.4
+
