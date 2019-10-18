@@ -2,45 +2,45 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A42CA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB61CA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABCD222C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CA4222C9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:47:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Kcf+ZvuI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="kcskptyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502809AbfJRSrJ (ORCPT
+        id S2443086AbfJRSqp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:47:09 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:27432 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443134AbfJRSqt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:46:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571424406;
+        Fri, 18 Oct 2019 14:46:45 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:20449 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfJRSqp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:46:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571424401;
         s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=1QwlT7mxYs3pWYaMtPoVjC+h0W2w6mR5VlLH4l4Vwo4=;
-        b=Kcf+ZvuIP9lsrRTKnHsW42Gh5QKk1z8Raqw9bB7SbLoJ8Tjed4IYjn0oDtRtV2Kmpx
-        VBjBWoZ3gckqUZ7vbPcK+g5bN+OgyOnTXnuc6JIWfxtF+6mZvF15rmQ4xxRAuyPEP0gw
-        4IxkWQkwW6jBFWGYHwn0L6UoW0w+jVzxtw37dm2sZcQTgPtWT1rx+mptW++nxvVrGlrg
-        5FMrN9P73iCHDal3Tu2zXJhl9F8BhaxCjB6wi6KbYPJ0ZpFdig+5vMmr1F5XYdzTAYta
-        dnRGyxqxWRNVqLVoKtGG9+sx6mbGaQ3pDJ7ohEGHBUhSSuA0DLWPc0uyBmDSBfHGFb2u
-        7myw==
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=cJdq0SDEvpnBl8IRrj/mGYOVcbLhacfbQeiycT5TI1k=;
+        b=kcskptyAnIOxyfwLxL4Zodi/q7OSXFjsNAoLXodoZcfxDJuqtKshMl31MW/3ZqgoD4
+        hwPZx528qr3xkTYg6ZJtn2bRFSqXBV5+a+ry3+Xc0+D2wpUez+l4Y/ix6XRyYSEajCpj
+        3coyHbuP/VdeC2/B4naDM7AZ90bW9YZfamdJDFIdMe2glXhl/Yd3Fw6vyHh++Dbhrrpc
+        7lm0B2xrxbfIvfwkyHWmDQERbDGIRJCNAAqbwnqkIl9xxQ0xvnuKNiNPgoqGPh6pNnBJ
+        ++uVc5yIOTDy3hOSKg1PnFjhfnRJHuUNgg7c/QSaN+mVo2b7QWv24DxSnPicJHHyuygK
+        54Iw==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6F3CFF60="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9IIkVDLB
+        with ESMTPSA id R0b2a8v9IIkWDLD
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Fri, 18 Oct 2019 20:46:31 +0200 (CEST)
+        Fri, 18 Oct 2019 20:46:32 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -51,10 +51,12 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
         letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
         "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 0/7] ARM: DTS: OMAP: add child nodes describing the PVRSGX present in some OMAP SoC
-Date:   Fri, 18 Oct 2019 20:46:23 +0200
-Message-Id: <cover.1571424390.git.hns@goldelico.com>
+Subject: [PATCH 2/7] ARM: DTS: am33xx: add sgx gpu child node
+Date:   Fri, 18 Oct 2019 20:46:25 +0200
+Message-Id: <fd15fe04514a26ba308df040ea92cb864ebdffcd.1571424390.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <cover.1571424390.git.hns@goldelico.com>
+References: <cover.1571424390.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -62,48 +64,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch set defines child nodes for the SGX5xx interface inside
-the OMAP SoC so that a driver can be found and probed by the
-compatible strings and can retrieve information about the SGX revision
-that is included in a specific SoC. It also defines the interrupt number
-and the timer to be used by the SGX driver.
+and add timer and interrupt.
 
-There is currently no mainline driver for these GPUs, but a project [1]
-is ongoing with the goal to get the open-source part as provided by TI/IMG
-into drivers/staging/pvr.
+Tested on BeagleBone Black.
 
-The kernel modules built from this project have successfully demonstrated
-to work with the DTS definitions from this patch set on AM335x BeagleBone
-Black and OMAP5 Pyra. They partially works on DM3730 and PandaBoard ES but
-that is likely a problem in the kernel driver or the (non-free) user-space
-blobs.
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ arch/arm/boot/dts/am33xx.dtsi | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-There is potential to extend this work to JZ4780 (CI20 board) and
-BananaPi-M3 (A83) and even some Intel Poulsbo and CedarView devices.
-
-[1]: https://github.com/openpvrsgx-devgroup
-
-H. Nikolaus Schaller (7):
-  dt-bindings: gpu: pvrsgx: add initial bindings
-  ARM: DTS: am33xx: add sgx gpu child node
-  ARM: DTS: am3517: add sgx gpu child node
-  ARM: DTS: omap3: add sgx gpu child node
-  ARM: DTS: omap36xx: add sgx gpu child node
-  ARM: DTS: omap4: add sgx gpu child node
-  ARM: DTS: omap5: add sgx gpu child node
-
- .../devicetree/bindings/gpu/img,pvrsgx.txt    | 76 +++++++++++++++++++
- arch/arm/boot/dts/am33xx.dtsi                 | 11 ++-
- arch/arm/boot/dts/am3517.dtsi                 | 13 ++--
- arch/arm/boot/dts/omap34xx.dtsi               | 13 ++--
- arch/arm/boot/dts/omap36xx.dtsi               | 13 ++--
- arch/arm/boot/dts/omap4.dtsi                  | 11 ++-
- arch/arm/boot/dts/omap4470.dts                | 16 ++++
- arch/arm/boot/dts/omap5.dtsi                  | 12 ++-
- 8 files changed, 138 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
- create mode 100644 arch/arm/boot/dts/omap4470.dts
-
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index a9d848d50b20..e76a47991de3 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -480,10 +480,13 @@
+ 			#size-cells = <1>;
+ 			ranges = <0 0x56000000 0x1000000>;
+ 
+-			/*
+-			 * Closed source PowerVR driver, no child device
+-			 * binding or driver in mainline
+-			 */
++			sgx: sgx@0 {
++				compatible = "img,sgx530-125", "img,sgx530", "ti,omap-am335x-sgx530-125";
++				reg = <0x00 0x1000000>;	/* 16 MB */
++				reg-names = "sgx";
++				interrupts = <37>;
++				timer = <&timer7>;
++			};
+ 		};
+ 	};
+ };
 -- 
 2.19.1
 
