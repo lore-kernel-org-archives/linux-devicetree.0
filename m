@@ -2,126 +2,169 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749CDCA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648B5CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7EE20869
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36BEF21835
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="AUDeot5s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="auHZttj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfJRSK4 (ORCPT
+        id S2502853AbfJRSY5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:10:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41034 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfJRSK4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:10:56 -0400
-Received: by mail-oi1-f196.google.com with SMTP id g81so5964231oib.8;
-        Fri, 18 Oct 2019 11:10:55 -0700 (PDT)
+        Fri, 18 Oct 2019 14:24:57 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37068 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502836AbfJRSY5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:24:57 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l21so7180839lje.4
+        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 11:24:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bWo85hzC3rFDGBh+qfuz6zjPF4f2jpRFQQPWDuhwYqs=;
-        b=AUDeot5sdk8RXpqa2rRBSsuSmgFYWqs4lpAV51+6KaztZ2cT8TxjYsmYUF0t+KLaws
-         MyMhetN8cI7rdsro2aCR1NACcoyC3E90+149x4CJrHprRW//SMJFooy5OWzUwo+Gc3X3
-         mvEGoOI6/3weRp7A8SxaVTEyl7vsLYU5a49cDY4zzu53bLRVpDpyQSFtIWfZIgFcwDtL
-         7srgiyNKud5QR/upaeFGc+LTNl10WIdL/wcn22Gz5u6hp6Y+n/pHoDWNWxf30s2enTB6
-         d9EasecpycxXWpiBvYl6h8Z2TPNZ5755OAWiV0nPmPlN+FJX0VW/sfrkpwPiWeccacxg
-         R0ew==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IYHZuLGg+JGJBwHO1m+JSuqR2RXOf2t8ywlY3WZdrN0=;
+        b=auHZttj89zTTWX6QMDr8blBfC+K/EgSELf0teDHp1pkUjxV63etpiqa9A4Qd08STM7
+         IMiiWsXaiMaKzdHmXylAP/bj3ts9LRBL5qbSIkL5L6XuGEQTaU7icGOQxSQRzVj1vDur
+         Aikyb2mwMmucPPWhTjD58iPhEhZ/lXlMHmosULz+j1kpV7F5ApvX9Wx5jYn90HQLANJ/
+         bnABKygJfUUocd53BiIh/CGwCslYNIaQFMGBQgzl9eUt0bTDZnKgEZofPPgyRB/0pg+V
+         E/HYvP8i/wFhI1bTBvgv9nObxFtsvTVGdHo0XI6+ZT7CJBL2LAsgViiImxxu8NUsMlA3
+         3LxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bWo85hzC3rFDGBh+qfuz6zjPF4f2jpRFQQPWDuhwYqs=;
-        b=C7uTPNGO4qGk2E62QKxz7mJECIpH+S+tqNlMsWNEyBon2e/qhZD4cp2EqZgXjPUyAI
-         HgF8TmxO/qjojALsLDoMoyVmYy8OfS6Q+kKt1rKN94sCyt+GsmEls+3k3W6ZMDDTJM/h
-         ZrwRur6wXXma6dl+tkHC7MBok5YpeyiMDjqBtm+BQXlbi2OQfaqQ+zxW4V7YPZX0i+Wg
-         1qsoj8ZvrUT2KUQj6JO5FhZPF++cobcJ36I2ShRwY5SlvuMbRD1l/F8sdpYxX+vazKoU
-         PB8oVVHG5fJ129yGickpAGcnje8W3Q4RsCy+knqVifCJR2ATs57UdHjCQa3gjTruG/O8
-         kE3w==
-X-Gm-Message-State: APjAAAXWoAsu7IoPirSBYcabFaSCWa//cogMr7IubJamQMezT2EHuqM9
-        aa4XtvYqlIENQ9dNFS8l1AdAa2P3CMw4tV4HymFhIZT0cUyJwA==
-X-Google-Smtp-Source: APXvYqwEibktI+IxVNP8RRKtYl//H8Q1mpai1qab+3Ui3eiyhRWcHSzDlv+gK9gKLi9CwTMnjb/N6KWMP6Cc/KSQGW8=
-X-Received: by 2002:a05:6808:87:: with SMTP id s7mr9359708oic.47.1571422255246;
- Fri, 18 Oct 2019 11:10:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IYHZuLGg+JGJBwHO1m+JSuqR2RXOf2t8ywlY3WZdrN0=;
+        b=l9aqMxNMQb0z12OS5DxrrHmnGD/tE72MQmS9PTv5uWJNucojsfAtOmCjAD2pSbiF9D
+         NqBu7NFmkv/2PsPRDp1MlZLK3AgGHda30B/iSx9xIXiP7YjMwfeLrSeky51sixKGNpEB
+         /ylG9aWeQXwV6n2GFekhkvIZ0+N02+NqFs90hxAbdjy9cjilM8T1ehBUqG2gTsdAtp/7
+         yTWDTMQgZdPYvlXURLY0Kd7p2fQfjqFrL0eaWMY2EVJtGOCTLQDr/WrefYUhDgJxTvH1
+         6+dNSQrW5NqTMdaTJIczVVheT+uUH6eI/QpfdL+EOeMvhr7YY0lynOVB6+Cj+YnqheZW
+         Jupw==
+X-Gm-Message-State: APjAAAX0slPXmn8bH0JOaFeXIZQvrtoE9LyXEHrvD7G6ezBDuWKOwv6F
+        JRL2OYm35gGnjyVB5mj/x3knuw==
+X-Google-Smtp-Source: APXvYqzBKy427jd3dlIZ/D555Svg4NIKOAkSrJwvldFXaPFjPxfgRskBmEv1lPaMhwTVADRpb5luKQ==
+X-Received: by 2002:a2e:8684:: with SMTP id l4mr7425517lji.87.1571423095129;
+        Fri, 18 Oct 2019 11:24:55 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id g26sm3020617lje.80.2019.10.18.11.24.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2019 11:24:51 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org,
+        Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/3 v3] drm/panel: Add generic DSI panel YAML bindings
+Date:   Fri, 18 Oct 2019 20:24:44 +0200
+Message-Id: <20191018182446.26131-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com>
- <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
- <7hsgo4cgeg.fsf@baylibre.com> <CANAwSgRfcFa6uBNtpqz6y=9Uwsa4gcp_4tDD+Chhg4SynJCq0Q@mail.gmail.com>
- <CAFBinCA6ZoeR4m4bhj08HF1DqxY1qB5mygpaQCGbo3d8M+Wr9Q@mail.gmail.com>
- <CANAwSgSeYTnUkLnjw-RORw76Fyj3_WT0cdM9D0vFsY8g=9L94Q@mail.gmail.com>
- <1jwode9lba.fsf@starbuckisacylon.baylibre.com> <CANAwSgSoK4X3_QbO3YpZRXNTpPJ+zVeid=w93f14Eyk8Dd32EQ@mail.gmail.com>
-In-Reply-To: <CANAwSgSoK4X3_QbO3YpZRXNTpPJ+zVeid=w93f14Eyk8Dd32EQ@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 18 Oct 2019 20:10:43 +0200
-Message-ID: <CAFBinCBdwqxA2kLMAA9gtOcXevYK-J4x12odHwpQOAWakgWiEg@mail.gmail.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anand,
+This adds a starting point for processing and defining generic
+bindings used by DSI panels. We just define one single bool
+property to force the panel into video mode for now.
 
-On Fri, Oct 18, 2019 at 4:04 PM Anand Moon <linux.amoon@gmail.com> wrote:
-[...]
-> > Next step it to try narrow down the clock causing the issue.
-> > Remove clk_ignore_unused from the command line and add CLK_INGORE_UNUSED
-> > to the flag of some clocks your clock controller (g12a I think) until
-> >
-> > The peripheral clock gates already have this flag (something we should
-> > fix someday) so don't bother looking there.
-> >
-> > Most likely the source of the pwm is getting disabled between the
-> > late_init call and the probe of the PWM module. Since the pwm is already
-> > active (w/o a driver), gating the clock source shuts dowm the power to
-> > the cores.
-> >
-> > Looking a the possible inputs in pwm driver, I'd bet on fdiv4.
-> >
->
-> I had give this above steps a try but with little success.
-> I am still looking into this much close.
-it's not clear to me if you have only tested with the PWM and/or
-FCLK_DIV4 clocks. can you please describe what you have tested so far?
+Cc: devicetree@vger.kernel.org
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v2->v3:
+- Make a more complete DSI panel binding including the controller
+  and its address-cells and size-cells and a pattern for the panel
+  nodes. The panel is one per DSI master, the reg property is
+  compulsory but should always be 0 (as far as I can tell) as
+  only one panel can be connected. The bus doesn't really have
+  any addresses for the panel, the address/reg notation seems
+  to be cargo-culted from the port graphs and is not necessary
+  to parse some device trees, it is used to tell whether the
+  node is a panel or not rather than any addressing.
+- I have no idea how many displays you can daisychain on a single
+  DSI master, I just guess 15 will be enough. The MIPI-specs
+  are memberwalled. Someone who knows can tell perhaps?
+ChangeLog v1->v2:
+- New patch after feedback.
+---
+ .../display/panel/panel-dsi-common.yaml       | 58 +++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/panel-dsi-common.yaml
 
-for reference - my way of debugging this in the past was:
-1. add some printks to clk_disable_unused_subtree (right after the
-clk_core_is_enabled check) to see which clocks are being disabled
-2. add CLK_IGNORE_UNUSED or CLK_IS_CRITICAL to the clocks which are
-being disabled based on the information from step #1
-3. (at some point I had a working kernel with lots of clocks with
-CLK_IGNORE_UNUSED/CLK_IS_CRITICAL)
-4. start dropping the CLK_IGNORE_UNUSED/CLK_IS_CRITICAL flags again
-until you have traced it down to the clocks that are the actual issue
-(so far I always had only one clock which caused issues, but it may be
-multiple)
-5. investigate (and/or ask on the mailing list, Amlogic developers are
-reading the mails here as well) for the few clocks from step #4
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-dsi-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-dsi-common.yaml
+new file mode 100644
+index 000000000000..d63f597eff9c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/panel-dsi-common.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/panel-dsi-common.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Common Properties for DSI Display Panels
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++description: |
++  This document defines device tree properties common to DSI, Display
++  Serial Interface panels. It doesn't constitute a device tree binding
++  specification by itself but is meant to be referenced by device tree
++  bindings.
++
++  When referenced from panel device tree bindings the properties defined in
++  this document are defined as follows. The panel device tree bindings are
++  responsible for defining whether each property is required or optional.
++
++  Notice: this binding concerns DSI panels connected directly to a master
++  without any intermediate port graph to the panel. Each DSI master
++  can control exactly one panel. They should all just have a node "panel"
++  for their panel with their reg-property set to 0.
++
++properties:
++  $nodename:
++    pattern: "^dsi-controller(@[0-9a-f]+)?$"
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^panel$":
++    type: object
++
++    properties:
++      reg:
++        const: 0
++        description:
++          Only one panel can be connected to each DSI controller, but for
++          historical reasons, the reg property must be specified, as the
++          DSI controller can contain other child nodes, and operating
++          systems will identify which child node is the panel by looking
++          for the reg property. It should however always be set to 0.
++
++      enforce-video-mode:
++        type: boolean
++        description:
++          The best option is usually to run a panel in command mode, as this
++          gives better control over the panel hardware. However for different
++          reasons like broken hardware, missing features or testing, it may be
++          useful to be able to force a command mode-capable panel into video
++          mode.
+-- 
+2.21.0
 
-> Well I am not the expert in clk or bus configuration.
-> but after looking into the datasheet of for clk configuration
-> I found some bus are not configured correctly.
-did you find any reason which indicates that the problem is related to a bus?
-the issues I had were due to clocks not being assigned to their
-consumers in .dts - that can be anything (from a bus to something
-different).
-
-
-Martin
