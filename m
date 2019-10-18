@@ -2,99 +2,65 @@ Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C07CA9EA1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 13:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A39DCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 14:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587DF222BD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 13:57:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WvnzHPE8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WvnzHPE8"
+	by mail.kernel.org (Postfix) with ESMTP id 78DCB222C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 14:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408698AbfJRN5p (ORCPT
+        id S2393926AbfJRODP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 09:57:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47794 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404643AbfJRN5o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 09:57:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EF48D611BD; Fri, 18 Oct 2019 13:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571407063;
-        bh=Z9QUer5RoaSbIwfPWwdpc0lD2Veyk1wUP4npdE2dGPk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WvnzHPE8PS4bDMKZpUM08Jurvz5xtb16pB/g5RJPqVdpJeEwaTletvZlV+Mh4JzJZ
-         Z4h8UHRfL3mWtPVg4r5tOWQQdD5zyZdYTR18rs0Zqi4x/YKtdoRNvm0sgr+q+cbtfT
-         XezUWNZjnHksdfpEW6OwiLc2k8HT4qEdeDbzHaYc=
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 864F5611CF;
-        Fri, 18 Oct 2019 13:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571407063;
-        bh=Z9QUer5RoaSbIwfPWwdpc0lD2Veyk1wUP4npdE2dGPk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WvnzHPE8PS4bDMKZpUM08Jurvz5xtb16pB/g5RJPqVdpJeEwaTletvZlV+Mh4JzJZ
-         Z4h8UHRfL3mWtPVg4r5tOWQQdD5zyZdYTR18rs0Zqi4x/YKtdoRNvm0sgr+q+cbtfT
-         XezUWNZjnHksdfpEW6OwiLc2k8HT4qEdeDbzHaYc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 864F5611CF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+        Fri, 18 Oct 2019 10:03:15 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:46097 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390337AbfJRODP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 10:03:15 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 84EA320004;
+        Fri, 18 Oct 2019 14:03:12 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
 To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 2/2] dt-bindings: msm: Add LLCC for SC7180
-Date:   Fri, 18 Oct 2019 19:27:09 +0530
-Message-Id: <30f419d1612a3912e323287a96daa2b4fbe3dacd.1571406041.git.saiprakash.ranjan@codeaurora.org>
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH RESEND 0/2] Add Kizboxmini boards support
+Date:   Fri, 18 Oct 2019 16:03:02 +0200
+Message-Id: <20191018140304.31547-1-kamel.bouhara@bootlin.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1571406041.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1571406041.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add LLCC compatible for SC7180 SoC.
+Add support for the Overkiz's SAM9G25 based boards and document them.
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Kamel Bouhara (2):
+  dt-bindings: arm: at91: Document Kizboxmini boards binding
+  ARM: dts: at91: add a common kizboxmini dtsi file
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-index eaee06b2d8f2..f263aa539d47 100644
---- a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-+++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-@@ -11,7 +11,9 @@ Properties:
- - compatible:
- 	Usage: required
- 	Value type: <string>
--	Definition: must be "qcom,sdm845-llcc"
-+	Definition: must be one of:
-+		    "qcom,sc7180-llcc",
-+		    "qcom,sdm845-llcc"
- 
- - reg:
- 	Usage: required
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+ .../devicetree/bindings/arm/atmel-at91.yaml   |  14 ++
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  38 ++++
+ arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  54 ++++++
+ arch/arm/boot/dts/at91-kizboxmini_common.dtsi | 166 ++++++++++++++++++
+ 5 files changed, 274 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
+ create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
+ create mode 100644 arch/arm/boot/dts/at91-kizboxmini_common.dtsi
+
+--
+2.23.0
 
