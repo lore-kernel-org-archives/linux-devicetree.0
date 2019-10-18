@@ -1,124 +1,110 @@
-Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5C9C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F10CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45B52187F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46BC821835
+	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="c5r7NCOu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f1TWdlYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfKFWhb (ORCPT
+        id S2505867AbfJRSjU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:37:31 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:48345 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfKFWg7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 17:36:59 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 317CB23E4A;
-        Wed,  6 Nov 2019 23:36:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1573079817;
-        bh=bHgzmPWMQvRLD4IDF6kRyjvUWHwW1NVG2ZzBKrWk2cM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c5r7NCOuLDM+GY2Md38faRERyiNuUNtONA1JvvJmarD9B/Ba72YVr+F8ryeCspVrH
-         3eQKOhuLu/Jp2Ud/hXMROrk2iv9pwkn0JZhvOKqa7IRLZfUJvPlp3lYPGV+RrQOF6O
-         +cmbr8572/zwexutMVoIa2T+7u3hNh+bYAq+28l4=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 4/6] net: phy: at803x: mention AR8033 as same as AR8031
-Date:   Wed,  6 Nov 2019 23:36:15 +0100
-Message-Id: <20191106223617.1655-5-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191106223617.1655-1-michael@walle.cc>
-References: <20191106223617.1655-1-michael@walle.cc>
+        Fri, 18 Oct 2019 14:39:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53262 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505728AbfJRSjU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:39:20 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i16so7164102wmd.3
+        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 11:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f4CnMsn4AbSRNn1EVCaabWmq8sv54L0ZTWdVo5HeLwA=;
+        b=f1TWdlYaruRtAyn1ngSsZ6uQn90ArDxO5LBV1SCnegvCTBjunLuFQdCC5GQcOic5kV
+         XFX4SOPayd3RrflTHaz9+t1hM4dPpdExngdo3PnFxk5kowUq+zvTsVLEbj2AUks6p20x
+         iQHFEDttYjw/iF8/w/yPlasZfFcKXzwcThXlvx8iXO6IZu/+6bD9Si5igH998rahS9kD
+         wCtSdgazQwuBZ7W127ThETW+39wbFdle7JTJlO+jOfYJ/a4KN4EGaVf7O2oRqubH7fEQ
+         XdqNT2/L8jTS95upwtA+kgQwGiJxlXO8kpGvnzsiPJcVm/lBKiwBaH9+SueZ4aw1uEBh
+         zaoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f4CnMsn4AbSRNn1EVCaabWmq8sv54L0ZTWdVo5HeLwA=;
+        b=G9nCKZb7z6Uq/H0Jl0vGoymQVbBO8C8c3jY9chaZC4DuUlr6Ro9DK+d7qAQgC0+YbK
+         HjTGosqHmfDbQqxRpv5KpPHmMw6P05grJ47HRP63lLVWocipDi+HS7HjrA5IEueVK4nV
+         B0xzQfpcmjgU1VHY6Ns12UIs+qntqYbsDblmV9+CvSDh507TggSUFqzUltjPCIcWAvYH
+         1wR2BSZC4NZjNekF9uUr2hYhwVpR6ZKZyEKtVqdM3KhEX1Y0zCrMAN3OAn7wvXu0xIWc
+         vPsIWifwfwmsZ8uBgX280MflbBR3RV/9HL0AmfSaEgrcgBGvp5Ouu0HRzxGHqoILuE11
+         tcog==
+X-Gm-Message-State: APjAAAXzxUhIOb9mrryT2Ob5CvfDF+/rRIz2JVIiMRbsVyVOxmohdD1m
+        1p1/zQSC3DY2rVIjbaboRk1ODZyBZfXqirY6Kdtrmw==
+X-Google-Smtp-Source: APXvYqwQBRN+0AP3sy+6+jMt6ece72V8onGhRTBZvT/3iOom/I8z+sXUkSfEcU0M5YrBcGzh2NdoipI884i3PRHW/D4=
+X-Received: by 2002:a1c:f201:: with SMTP id s1mr8322752wmc.59.1571423957896;
+ Fri, 18 Oct 2019 11:39:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-3-john.stultz@linaro.org>
+ <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com> <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
+ <b8695418-9d3a-96a6-9587-c9a790f49740@redhat.com> <CALAqxLVh6GbiKmuK60e6f+_dWh-TS2ZLrwx0WsSo5bKp-F3iLA@mail.gmail.com>
+ <648e2943-42f5-e07d-5bb4-f6fd8b38b726@redhat.com> <CALAqxLWh0=GRod5ORpi+ENpWCkmY39mUw_=NV67sKY8qH_otZw@mail.gmail.com>
+ <f2236442-111d-cd84-fc47-0737df71cf3a@redhat.com>
+In-Reply-To: <f2236442-111d-cd84-fc47-0737df71cf3a@redhat.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 18 Oct 2019 11:39:06 -0700
+Message-ID: <CALAqxLWHbhst5KXAGCswKVp7ztzFHxdb6nskfze+Jk+xWo2Ssw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The AR8033 is the AR8031 without PTP support. All other registers are
-the same. Unfortunately, they share the same PHY ID. Therefore, we
-cannot distinguish between the one with PTP support and the one without.
+On Fri, Oct 18, 2019 at 1:06 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 18-10-2019 07:55, John Stultz wrote:
+> > On Wed, Oct 16, 2019 at 12:27 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> >> Look at the tcpm_set_vbus implementation in drivers/usb/typec/tcpm/fusb302.c
+> >> you need to do something similar in your Type-C controller driver and
+> >> export the GPIO as as a gpio-controlled regulator and tie the regulator to
+> >> the connector.
+> >
+> > Thanks for the suggestion, I really appreciate it! One more question
+> > though, since I'm using the tcpci_rt1711h driver, which re-uses the
+> > somewhat sparse tcpci.c implementation, would you recommend trying to
+> > add generic regulator support to the tcpci code or trying to extend
+> > the implementation somehow allow the tcpci_rt1711h driver replace just
+> > the set_vbus function?
+>
+> I have the feeling that this is more of a question for Heikki.
+>
+> My first instinct is: if you are using tcpci can't you put all
+> the hacks you need for the usb connection shared between hub
+> and type-c in your firmware ?
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/net/phy/Kconfig  |  2 +-
- drivers/net/phy/at803x.c | 12 +++++++-----
- 2 files changed, 8 insertions(+), 6 deletions(-)
+I appreciate the suggestion, but I'm not aware of any USB firmware for
+the board, nor do I think I have any such source.  :(
 
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 1b884ebb4e48..8bccadf17e60 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -442,7 +442,7 @@ config NXP_TJA11XX_PHY
- config AT803X_PHY
- 	tristate "Qualcomm Atheros AR803X PHYs"
- 	help
--	  Currently supports the AR8030, AR8031 and AR8035 model
-+	  Currently supports the AR8030, AR8031, AR8033 and AR8035 model
- 
- config QSEMI_PHY
- 	tristate "Quality Semiconductor PHYs"
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index aa782b28615b..716672edd415 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -93,8 +93,8 @@
- #define AT803X_CLK_OUT_125MHZ_PLL		6
- #define AT803X_CLK_OUT_125MHZ_DSP		7
- 
--/* The AR8035 has another mask which is compatible with the AR8031 mask but
-- * doesn't support choosing between XTAL/PLL and DSP.
-+/* The AR8035 has another mask which is compatible with the AR8031/AR8033 mask
-+ * but doesn't support choosing between XTAL/PLL and DSP.
-  */
- #define AT8035_CLK_OUT_MASK			GENMASK(4, 3)
- 
-@@ -449,7 +449,9 @@ static int at803x_parse_dt(struct phy_device *phydev)
- 		}
- 	}
- 
--	/* Only supported on AR8031, the AR8030/AR8035 use strapping options */
-+	/* Only supported on AR8031/AR8033, the AR8030/AR8035 use strapping
-+	 * options.
-+	 */
- 	if (at803x_match_phy_id(phydev, ATH8031_PHY_ID)) {
- 		if (of_property_read_bool(node, "qca,keep-pll-enabled"))
- 			priv->flags |= AT803X_KEEP_PLL_ENABLED;
-@@ -734,9 +736,9 @@ static struct phy_driver at803x_driver[] = {
- 	.ack_interrupt		= at803x_ack_interrupt,
- 	.config_intr		= at803x_config_intr,
- }, {
--	/* ATHEROS 8031 */
-+	/* ATHEROS 8031/8033 */
- 	.phy_id			= ATH8031_PHY_ID,
--	.name			= "Atheros 8031 ethernet",
-+	.name			= "Atheros 8031/8033 ethernet",
- 	.phy_id_mask		= AT803X_PHY_ID_MASK,
- 	.probe			= at803x_probe,
- 	.config_init		= at803x_config_init,
--- 
-2.20.1
-
+thanks
+-john
