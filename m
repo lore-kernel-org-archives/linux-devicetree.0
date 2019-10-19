@@ -2,129 +2,81 @@ Return-Path: <SRS0=lZ7l=YM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC42BCA9EAC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 18:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424A8CA9EAC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 20:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5660222BD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 18:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="X2N01twc"
+	by mail.kernel.org (Postfix) with ESMTP id 1594821D7C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 20:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbfJSSlt (ORCPT
+        id S1726129AbfJSUol convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 19 Oct 2019 14:41:49 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:12824 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfJSSlt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 19 Oct 2019 14:41:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571510506;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=tdCWw/zmBvEFdY9U+zojU/H5xTfVzrhdPsoCDI94GlQ=;
-        b=X2N01twcoqVYaM79cUyQsT3uiCb+FjnbcDvtI3067p/esh37KqLiCMG3kbuTIB37Lq
-        Ph8h75NyBiPBQ6EsvRLxtjUeV+KDiL29LwORLVuqn1pCeIEVtZeXSdlQXlUb5wQDEsU4
-        ZBvkAGSXKBhmKKlHr2dtlRSNS2+FkQ+Gevdgu4tArMCS/SVFiuPtIKCMAPuPrJKdsA+I
-        whAS6lNHfuRJYKaoNm3wk1KUMTX42OMbn1x/KtCK3ST3YMSweAWlOTiCPVSm6nKA65BR
-        SDCWDSjEIYD4fZ1X/vQo9RyO700g1sG6tKhyNKsechTXAW/3Ahcu6cTAKM164yMcnRS/
-        2QtA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAyXkHTz8="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9JIfTFMM
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sat, 19 Oct 2019 20:41:29 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v2 01/11] Documentation: dt: wireless: update wl1251 for sdio
-Date:   Sat, 19 Oct 2019 20:41:16 +0200
-Message-Id: <741828f69eca2a9c9a0a7e80973c91f50cc71f9b.1571510481.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1571510481.git.hns@goldelico.com>
-References: <cover.1571510481.git.hns@goldelico.com>
+        Sat, 19 Oct 2019 16:44:41 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49748 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfJSUol (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 19 Oct 2019 16:44:41 -0400
+Received: from turkeyburger.collabora.co.uk (turkeyburger.collabora.co.uk [46.235.227.230])
+        by bhuna.collabora.co.uk (Postfix) with ESMTP id C2434263BB2;
+        Sat, 19 Oct 2019 21:44:38 +0100 (BST)
+Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <5DA9EE2F.4030603@zoho.com>
+From:   "Ezequiel Garcia" <ezequiel.garcia@collabora.com>
+X-Forward: 81.67.116.94
+Date:   Sat, 19 Oct 2019 21:44:38 +0100
+Cc:     "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Paul Cercueil" <paul@crapouillou.net>, linux-mips@vger.kernel.org,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        =?utf-8?q?linux-mmc=40vger=2Ekernel=2Eorg?= 
+        <linux-mmc@vger.kernel.org>, "DTML" <devicetree@vger.kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Paul Burton" <paul.burton@mips.com>,
+        "Mark Rutland" <mark.rutland@arm.com>, syq@debian.org,
+        "Linus Walleij" <linus.walleij@linaro.org>, armijn@tjaldur.nl,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "YueHaibing" <yuehaibing@huawei.com>,
+        "Mathieu Malaterre" <malat@debian.org>
+To:     "Zhou Yanjie" <zhouyanjie@zoho.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <47f6-5dab7580-33-5680128@176712317>
+Subject: =?utf-8?q?Re=3A?==?utf-8?q?_=5BPATCH?==?utf-8?q?_6=2F6?==?utf-8?q?_v2=5D?=
+ =?utf-8?q?_MMC=3A?==?utf-8?q?_JZ4740=3A?= Add support for 
+ =?utf-8?q?LPM=2E?=
+User-Agent: SOGoMail 4.0.7
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The standard method for sdio devices connected to
-an sdio interface is to define them as a child node
-like we can see with wlcore.
+On Friday, October 18, 2019 13:54 -03, Zhou Yanjie <zhouyanjie@zoho.com> wrote: 
+ 
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
----
- .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> 
+> >
+> > I also have a general question. Should we perhaps rename the driver
+> > from jz4740_mmc.c to ingenic.c (and the file for the DT bindings, the
+> > Kconfig, etc), as that seems like a more appropriate name? No?
+> 
+> I am very much in favor of this proposal. Now jz4740_mmc.c is not only used
+> for the JZ4740 processor, it is also used for JZ4725, JZ4760, JZ4770, JZ4780
+> and X1000, and now Ingenic's processor is no longer named after JZ47xx,
+> it is divided into three product lines: M, T, and X. It is easy to cause 
+> some
+> misunderstandings by using jz4740_mmc.c. At the same time, I think that
+> some register names also need to be adjusted. For example, the STLPPL
+> register name has only appeared in JZ4730 and JZ4740, and this register
+> in all subsequent processors is called CTRL. This time I was confused by
+> the STLPPL when I added drivers for the JZ4760's and X1000's LPM.
+> 
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-index bb2fcde6f7ff..88612ff29f2d 100644
---- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-@@ -35,3 +35,29 @@ Examples:
- 		ti,power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
- 	};
- };
-+
-+&mmc3 {
-+	vmmc-supply = <&wlan_en>;
-+
-+	bus-width = <4>;
-+	non-removable;
-+	ti,non-removable;
-+	cap-power-off-card;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	wlan: wl1251@1 {
-+		compatible = "ti,wl1251";
-+
-+		reg = <1>;
-+
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
-+
-+		ti,wl1251-has-eeprom;
-+	};
-+};
--- 
-2.19.1
+I am very much against renamings, for several reasons. As Paul already mentioned, it's pointless and just adds noise to the git-log, making history harder to recover. Driver file names don't really have to reflect the device exactly. For the compatibility list, it's far easier to just git-grep for compatible strings, or git-grep Documentation and/or Kconfig.
+
+Renaming macros and register names, is equally pointless and equally git-history invasive. Simply adding some documentation is enough.
+
+Thanks,
+Ezequiel
 
