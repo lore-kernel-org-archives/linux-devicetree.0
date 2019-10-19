@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44612CA9EAC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4F9CA9EAC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDF2222D1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 770B5222CC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="KuldUVGH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="dztIfHmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbfJSSl6 (ORCPT
+        id S1726628AbfJSSm1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 19 Oct 2019 14:41:58 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.177]:33684 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfJSSl5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 19 Oct 2019 14:41:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571510511;
+        Sat, 19 Oct 2019 14:42:27 -0400
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:22572 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfJSSlz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 19 Oct 2019 14:41:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571510510;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ghOjg962ogCTFSl+WarS5kwHM8++CbDNCWRtO1jWLTk=;
-        b=KuldUVGHcPNu1X7NDi5MTgY9yWo6HfoZddIoAuYqHTJ4cdfcN4efsCBcsNvWruhMuf
-        yHHveeugsTzrq2k2NjAJmRQuwGlzMHhpSssJPk8ajfZ32BRuHknOlikbNiwIYVlU9OmJ
-        uB8YmdmH2aNN1990r6XzXi5w9WVYRoPEURPKy4RTeBYklJoE003rkeDheucLbvcCSM5B
-        IWUBZFDYPPLmL3Q7OmXE5UsWx8HtZOFm3LZv4caZ/Mu4ZSukbNHFeZT4RYWgkshyi/p3
-        P8jKbYhnQgwk65JjaOgVREgrB/EndKwwz896VI5jTX+VxEzZxRbx+JWV3g2k1WQhhgSH
-        4PVA==
+        bh=8/ITeyMIKJXiU8PIrPxcxydlS2MxJhnwQVJo5WpZiiw=;
+        b=dztIfHmVPGCxOsQFGGi5frWN/VFGM8SQK9Cbau1kCzX9/Xbzmg8d3dreGQCLuJoRWL
+        nOfhW6ydjUj52dUE7y7e0HZqGUSBnROUt8qWuV+/I23jcWCh3PBso5SpnCWaT7CYcRJx
+        spjB0mR1540Ydp05RuS+/xb/Byn5kE8PE/3cnzWTyQi9gKa1iOrvFwwsp9zfCPV1Ef4Z
+        yUUbxncQ1THLqQVZgY5u6q7L9DsjICjzituEDwj8Wx8R59jmTzqz9GYlEOczJ6NPD9Qx
+        65k5pfBJt352KodIVY31W7VqayF8cdY8Ok/rkIdj5GEjlRBT9GkAAnT2phJTCFiXf+h7
+        mGYA==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAyXkHTz8="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9JIfcFMW
+        with ESMTPSA id R0b2a8v9JIfUFMN
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Sat, 19 Oct 2019 20:41:38 +0200 (CEST)
+        Sat, 19 Oct 2019 20:41:30 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
         Tony Lindgren <tony@atomide.com>,
@@ -67,10 +67,10 @@ Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Subject: [PATCH v2 11/11] net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
-Date:   Sat, 19 Oct 2019 20:41:26 +0200
-Message-Id: <da609ecf83eca8af70172627ada29902b096bae9.1571510481.git.hns@goldelico.com>
+        kernel@pyra-handheld.com
+Subject: [PATCH v2 02/11] net: wireless: ti: wl1251 add device tree support
+Date:   Sat, 19 Oct 2019 20:41:17 +0200
+Message-Id: <062703f6033df5919d814c7312f577e8b2a96838.1571510481.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1571510481.git.hns@goldelico.com>
 References: <cover.1571510481.git.hns@goldelico.com>
@@ -81,57 +81,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-They are already included from mmc/sdio_ids.h and do not need
-a local definition.
+We will have the wl1251 defined as a child node of the mmc interface
+and can read setup for gpios, interrupts and the ti,use-eeprom
+property from there instead of pdata to be provided by pdata-quirks.
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Acked-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: <stable@vger.kernel.org> # 4.11.0
 ---
- drivers/net/wireless/ti/wl1251/sdio.c | 8 --------
- drivers/net/wireless/ti/wlcore/sdio.c | 8 --------
- 2 files changed, 16 deletions(-)
+ drivers/net/wireless/ti/wl1251/sdio.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
-index 42b55f3a50df..3c4d5e38c66c 100644
+index 677f1146ccf0..c54a273713ed 100644
 --- a/drivers/net/wireless/ti/wl1251/sdio.c
 +++ b/drivers/net/wireless/ti/wl1251/sdio.c
-@@ -22,14 +22,6 @@
+@@ -16,6 +16,9 @@
+ #include <linux/irq.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/gpio.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/of_irq.h>
  
  #include "wl1251.h"
  
--#ifndef SDIO_VENDOR_ID_TI
--#define SDIO_VENDOR_ID_TI		0x104c
--#endif
--
--#ifndef SDIO_DEVICE_ID_TI_WL1251
--#define SDIO_DEVICE_ID_TI_WL1251	0x9066
--#endif
--
- struct wl1251_sdio {
- 	struct sdio_func *func;
- 	u32 elp_val;
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index 7afaf35f2453..9fd8cf2d270c 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -26,14 +26,6 @@
- #include "wl12xx_80211.h"
- #include "io.h"
+@@ -217,6 +220,7 @@ static int wl1251_sdio_probe(struct sdio_func *func,
+ 	struct ieee80211_hw *hw;
+ 	struct wl1251_sdio *wl_sdio;
+ 	const struct wl1251_platform_data *wl1251_board_data;
++	struct device_node *np = func->dev.of_node;
  
--#ifndef SDIO_VENDOR_ID_TI
--#define SDIO_VENDOR_ID_TI		0x0097
--#endif
--
--#ifndef SDIO_DEVICE_ID_TI_WL1271
--#define SDIO_DEVICE_ID_TI_WL1271	0x4076
--#endif
--
- static bool dump = false;
+ 	hw = wl1251_alloc_hw();
+ 	if (IS_ERR(hw))
+@@ -248,6 +252,15 @@ static int wl1251_sdio_probe(struct sdio_func *func,
+ 		wl->power_gpio = wl1251_board_data->power_gpio;
+ 		wl->irq = wl1251_board_data->irq;
+ 		wl->use_eeprom = wl1251_board_data->use_eeprom;
++	} else if (np) {
++		wl->use_eeprom =of_property_read_bool(np, "ti,wl1251-has-eeprom");
++		wl->power_gpio = of_get_named_gpio(np, "ti,power-gpio", 0);
++		wl->irq = of_irq_get(np, 0);
++
++		if (wl->power_gpio == -EPROBE_DEFER || wl->irq == -EPROBE_DEFER) {
++			ret = -EPROBE_DEFER;
++			goto disable;
++		}
+ 	}
  
- struct wl12xx_sdio_glue {
+ 	if (gpio_is_valid(wl->power_gpio)) {
 -- 
 2.19.1
 
