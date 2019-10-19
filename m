@@ -2,243 +2,125 @@ Return-Path: <SRS0=lZ7l=YM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8055ACA9EAC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE277CA9EAC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 16:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42938222CD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 15:07:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSRNpF8K"
+	by mail.kernel.org (Postfix) with ESMTP id 948C6222BD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 16:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbfJSPHA (ORCPT
+        id S1726032AbfJSQXA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 19 Oct 2019 11:07:00 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44905 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfJSPHA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 19 Oct 2019 11:07:00 -0400
-Received: by mail-qk1-f194.google.com with SMTP id u22so8136403qkk.11;
-        Sat, 19 Oct 2019 08:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4x2DM6vZJfp7GFqVdyd8aE+i5ANpX3rPocujCcf6n+Q=;
-        b=dSRNpF8Km8Wl/VGIETvgMHBBkwRJyKufEUVuc4wNpOE356LHlaiGiAYHBOVBX/FPgr
-         ZJXNGncPQpgh6fTjruSxIV4sdslVcxJiBcNyhTY7sH+J8Uxx+P3NOPwcaJJKN7O7I0/+
-         SASQOrK/14FVJDhBc3g+8VJMGKiHP9kyOs5AYz5jH+pm0N66bQT4wnBuj5X/Ntsi5YdU
-         112WZFoLH3l9x1tVjdUrrgEIdRILB3F0Fxek+Q5R4do7T3u6lxn4c53nXLnhzFf5hYX5
-         8TdtnCbq1wcBmyq4rUE448Ki2aOFyJfMfw3GRpmbyyc5eIS6cDlcstWGy2Lg4MY1aeh9
-         e2nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4x2DM6vZJfp7GFqVdyd8aE+i5ANpX3rPocujCcf6n+Q=;
-        b=Rq6Jx9ilqTxMsvVwTXLXCM89Hpon3mE1rMR9rDVUhi6jK7hei2fyRTsbgYCet6wBLx
-         pH+YvFBOv0ySb51cidwAtgRecQ7DrMWrwLEUxKthJo2MTC7fLjBJuIRxXk00TPIaNSUl
-         H3Qs0N5gxUzOwaGOo5/aKCtvy9LQSecVblFp3Swb6iem8tGzghpXnYrhZEDUJkG6xBZ2
-         JPMMOTI+jBld3GRwCQKcmHwQx3qXgZdKWRLSWhCXqXeWNnmH2q+YcLkG9ApH1DoK8Exi
-         i3bfvWustAGV9hZNYaRNnhQNkxoyZ1uqd2TRa83ssF2g8n3qHZdQAuTY/PHzYRTyYAea
-         zZtg==
-X-Gm-Message-State: APjAAAVJ52Pib72AmKrYcWgrjZIioRS8HlTkgOhc9X6ni6vVM2RcbsGR
-        63a15QnXlJE2MAnPoGmTSUQ=
-X-Google-Smtp-Source: APXvYqxhgQLri63K/LbZFQj7lcnficy1+XLo94yeZlvK5RP4VuJQeAGIK9vTjSodOLSIirkggjI2Ag==
-X-Received: by 2002:a37:8d01:: with SMTP id p1mr14038731qkd.210.1571497618475;
-        Sat, 19 Oct 2019 08:06:58 -0700 (PDT)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id o5sm3120283qtq.10.2019.10.19.08.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2019 08:06:58 -0700 (PDT)
-Date:   Sat, 19 Oct 2019 12:06:54 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
-        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-Message-ID: <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
-References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
- <20191017191152.GA11222@bogus>
+        Sat, 19 Oct 2019 12:23:00 -0400
+Received: from muru.com ([72.249.23.125]:38240 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfJSQXA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 19 Oct 2019 12:23:00 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 265D880E2;
+        Sat, 19 Oct 2019 16:23:33 +0000 (UTC)
+Date:   Sat, 19 Oct 2019 09:22:55 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Subject: Re: [PATCH 5/9] omap: pdata-quirks: remove openpandora quirks for
+ mmc3 and wl1251
+Message-ID: <20191019162255.GR5610@atomide.com>
+References: <63f59daa6b6e079905ff128b88282cf2c72e3540.1571430329.git.hns@goldelico.com>
+ <20191019133621.C1CE421897@mail.kernel.org>
+ <A0434659-A282-44AA-90E9-D234ADF8A04A@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017191152.GA11222@bogus>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <A0434659-A282-44AA-90E9-D234ADF8A04A@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob
-
-Thanks for the review.
-
-I'm having some trouble with the DTC.
-I installed the DT tool from https://github.com/robherring/dt-schema.
-Running make -k dt_binding_check goes through all the checks (CHKDT), producing
-the .example.dts files but then gives errors like:
-
-  DTC     Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml
-FATAL ERROR: Unknown output format "yaml"
-make[1]: *** [scripts/Makefile.lib:314: Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml] Error 1
-make[1]: *** Deleting file 'Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml'
-
-My pip3 installation has:
-jsonschema jsonschema-3.1.2.dev6+g0d827f3
-rfc3987 1.3.8
-
-$HOME/.local/bin is listed in my shell's PATH variable.
-
-I was trying to follow the documentation at:
-Documentation/devicetree/writing-schema.rst
-
-Are there any other DTC dependencies that I am missing?
-
-On 10/17, Rob Herring wrote:
-> On Tue, Oct 15, 2019 at 11:52:23PM -0300, Marcelo Schmitt wrote:
-> > Add a device tree binding doc for AD7292 monitor and control system.
+* H. Nikolaus Schaller <hns@goldelico.com> [191019 15:18]:
+> 
+> > Am 19.10.2019 um 15:36 schrieb Sasha Levin <sashal@kernel.org>:
 > > 
-> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > ---
-> >  .../bindings/iio/adc/adi,ad7292.yaml          | 107 ++++++++++++++++++
-> >  MAINTAINERS                                   |   1 +
-> >  2 files changed, 108 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > Hi,
 > > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > new file mode 100644
-> > index 000000000000..40028332d9e2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > @@ -0,0 +1,107 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices AD7292 10-Bit Monitor and Control System
-> > +
-> > +maintainers:
-> > +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > +
-> > +description: |
-> > +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-> > +  Temperature Sensor, and GPIOs
-> > +
-> > +  Specifications about the part can be found at:
-> > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,ad7292
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  vref-supply:
-> > +    description: |
-> > +      The regulator supply for ADC and DAC reference voltage.
-> > +    maxItems: 1
+> > [This is an automated email]
+> > 
+> > This commit has been processed because it contains a "Fixes:" tag,
+> > fixing commit: 81eef6ca92014 mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel.
+> > 
+> > The bot has tested the following trees: v5.3.6, v4.19.79, v4.14.149, v4.9.196.
+> > 
+> > v5.3.6: Build OK!
+> > v4.19.79: Failed to apply! Possible dependencies:
+> >    Unable to calculate
+> > 
+> > v4.14.149: Failed to apply! Possible dependencies:
+> >    0486738928bf0 ("ARM: OMAP1: ams-delta: add GPIO lookup tables")
+> >    0920ca103f8d8 ("ARM: sa1100: provide infrastructure to support generic CF sockets")
+> >    29786e9b6551b ("ARM: sa1100/assabet: convert to generic CF sockets")
+> >    2bcb1be092370 ("Input: ams_delta_serio: Replace power GPIO with regulator")
+> >    56de7570b3264 ("Input: ams_delta_serio: use private structure")
+> >    7be893aa2d6a1 ("pcmcia: sa1100: provide generic CF support")
+> >    b51af86559d4b ("ARM: sa1100/shannon: convert to generic CF sockets")
+> >    b955153bfa68d ("ARM: sa1100/assabet: add BCR/BSR GPIO driver")
+> >    c2f9b05fd5c12 ("media: arch: sh: ecovec: Use new renesas-ceu camera driver")
+> >    df88c57689278 ("Input: ams_delta_serio: convert to platform driver")
+> >    efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
 > 
-> Not necessary, regulator supplies are always 1 item, so drop maxItems.
+> ^^^ this is the relevant one.
 > 
-> > +
-> > +  spi-cpha:
-> > +    description: |
-> > +      See Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > +    maxItems: 1
+> > 
+> > v4.9.196: Failed to apply! Possible dependencies:
+> >    0486738928bf0 ("ARM: OMAP1: ams-delta: add GPIO lookup tables")
+> >    072f58af1dfbc ("ARM: dts: Add devicetree for the Raspberry Pi 3, for arm32 (v6)")
+> >    1aa1d858f582c ("ARM: dts: bcm283x: Add dtsi for OTG mode")
+> >    29786e9b6551b ("ARM: sa1100/assabet: convert to generic CF sockets")
+> >    2bcb1be092370 ("Input: ams_delta_serio: Replace power GPIO with regulator")
+> >    3bfe25fa9f8a5 ("ARM: dts: bcm283x: Move the BCM2837 DT contents from arm64 to arm.")
+> >    56de7570b3264 ("Input: ams_delta_serio: use private structure")
+> >    6c1b417adc8fa ("ARM: pxa: ezx: use the new pxa_camera platform_data")
+> >    7ade445c26269 ("ARM: pxa: magician: Add support for ADS7846 touchscreen")
+> >    8f9bafbb92c03 ("ARM: dts: aspeed: Add Romulus BMC platform")
+> >    b24413180f560 ("License cleanup: add SPDX GPL-2.0 license identifier to files with no license")
+> >    b5478c1b67bcd ("alpha: add asm/extable.h")
+> >    b955153bfa68d ("ARM: sa1100/assabet: add BCR/BSR GPIO driver")
+> >    d9fa04725f27f ("ARM: pxa: em-x270: use the new pxa_camera platform_data")
+> >    df88c57689278 ("Input: ams_delta_serio: convert to platform driver")
+> >    efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
+> >    fe7bf9dcfff5b ("ARM: dts: add a devicetree for Raidsonic NAS IB-4220-B")
+> > 
+> > 
+> > NOTE: The patch will not be queued to stable trees until it is upstream.
+> > 
+> > How should we proceed with this patch?
 > 
-> This is just wrong because spi-cpha is a boolean. Just 'spi-cpha: true' 
-> is sufficient. If this device needs this property, then it should 
-> probably be required.
+> I have checked and the reason is that 
 > 
-> > +
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 0
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +patternProperties:
-> > +  "^channel@[0-7]$":
-> > +    type: object
-> > +    description: |
-> > +      Represents the external channels which are connected to the ADC.
-> > +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-> > +
-> > +    properties:
-> > +      reg:
-> > +        description: |
-> > +          The channel number. It can have up to 8 channels numbered from 0 to 7.
-> > +        maxItems: 1
-> > +
-> > +      diff-channels:
-> > +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> > +        maxItems: 1
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    spi {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      ad7292: ad7292@0 {
+> efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
 > 
-> adc@0
+> was introduced after v.4.19 which was also partially reverted by this patch
+> if based on mainline.
 > 
-> > +        compatible = "adi,ad7292";
-> > +        reg = <0>;
-> > +
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        spi-max-frequency = <25000000>;
-> > +        vref-supply = <&adc_vref>;
-> > +        spi-cpha;
-> > +
-> > +        channel@0 {
-> > +          reg = <0>;
-> > +          diff-channels = <0 1>;
-> > +        };
-> > +        channel@2 {
-> > +          reg = <2>;
-> > +        };
-> > +        channel@3 {
-> > +          reg = <3>;
-> > +        };
-> > +        channel@4 {
-> > +          reg = <4>;
-> > +        };
-> > +        channel@5 {
-> > +          reg = <5>;
-> > +        };
-> > +        channel@6 {
-> > +          reg = <6>;
-> > +        };
-> > +        channel@7 {
-> > +          reg = <7>;
-> > +        };
-> > +      };
-> > +    }
+> I have split it up into the partial revert of efdfeb079cc3b  for mainline
+> and the real patch which now applies to all relevant stable trees.
 > 
-> Missing ';'. Make sure this builds with 'make -k dt_binding_check'. The 
-> '-k' is due to some other breakage ATM.
-> 
-> Rob
+> So I'll sent a v2 asap.
+
+Please also remove arch/arm/mach-omap2/hsmmc.[ch] as I think that
+can be now done :)
+
+Regards,
+
+Tony
