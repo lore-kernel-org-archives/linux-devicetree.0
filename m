@@ -2,125 +2,213 @@ Return-Path: <SRS0=lZ7l=YM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE277CA9EAC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 16:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1318CA9EAB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948C6222BD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 16:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BEA222CD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 18:42:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="f8WNaBqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbfJSQXA (ORCPT
+        id S1726527AbfJSSl6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 19 Oct 2019 12:23:00 -0400
-Received: from muru.com ([72.249.23.125]:38240 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfJSQXA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 19 Oct 2019 12:23:00 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 265D880E2;
-        Sat, 19 Oct 2019 16:23:33 +0000 (UTC)
-Date:   Sat, 19 Oct 2019 09:22:55 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Subject: Re: [PATCH 5/9] omap: pdata-quirks: remove openpandora quirks for
- mmc3 and wl1251
-Message-ID: <20191019162255.GR5610@atomide.com>
-References: <63f59daa6b6e079905ff128b88282cf2c72e3540.1571430329.git.hns@goldelico.com>
- <20191019133621.C1CE421897@mail.kernel.org>
- <A0434659-A282-44AA-90E9-D234ADF8A04A@goldelico.com>
+        Sat, 19 Oct 2019 14:41:58 -0400
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.120]:9822 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbfJSSl5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 19 Oct 2019 14:41:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571510511;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=/pObl1FM2M6AHMr9luNDZ5UQLwObvzqffucymVvdQFs=;
+        b=f8WNaBqP71JuDMDfUgg9Pw5eQ1uAhZ0R9P5Kp3arMhjRoNg3ggfQ3GyTYSUUcwgu+F
+        BGRWbqSvgx7ZyKwWzZSdGRCCP/5MyTGafm5S63eTO+sIwYBoAXbAMRatgUZWIYXFVSOm
+        ashgOX+yqyB7udrmnewWVUZvQq2FWPdVkYWCvo8iGUF7+0/YjU2dafascI9nRp30epEx
+        Z8u48cdrIkM1lZucGjwYSJPmT2GetkrHNORdiYkCXbAodDE910Ct95JHQIDwG3JnGBMf
+        LMmE+S7aVkk2dI3kuoisoTRRxbhaXNNSvtnrXzVr/vAJk1gMhfrPQpA7q8rHN8EY1UC6
+        bACg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAyXkHTz8="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id R0b2a8v9JIfXFMR
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sat, 19 Oct 2019 20:41:33 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Subject: [PATCH v2 06/11] omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+Date:   Sat, 19 Oct 2019 20:41:21 +0200
+Message-Id: <9cb3b9f9bee4aa50a19bf47742cff095b8c2fbfb.1571510481.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <cover.1571510481.git.hns@goldelico.com>
+References: <cover.1571510481.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <A0434659-A282-44AA-90E9-D234ADF8A04A@goldelico.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191019 15:18]:
-> 
-> > Am 19.10.2019 um 15:36 schrieb Sasha Levin <sashal@kernel.org>:
-> > 
-> > Hi,
-> > 
-> > [This is an automated email]
-> > 
-> > This commit has been processed because it contains a "Fixes:" tag,
-> > fixing commit: 81eef6ca92014 mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel.
-> > 
-> > The bot has tested the following trees: v5.3.6, v4.19.79, v4.14.149, v4.9.196.
-> > 
-> > v5.3.6: Build OK!
-> > v4.19.79: Failed to apply! Possible dependencies:
-> >    Unable to calculate
-> > 
-> > v4.14.149: Failed to apply! Possible dependencies:
-> >    0486738928bf0 ("ARM: OMAP1: ams-delta: add GPIO lookup tables")
-> >    0920ca103f8d8 ("ARM: sa1100: provide infrastructure to support generic CF sockets")
-> >    29786e9b6551b ("ARM: sa1100/assabet: convert to generic CF sockets")
-> >    2bcb1be092370 ("Input: ams_delta_serio: Replace power GPIO with regulator")
-> >    56de7570b3264 ("Input: ams_delta_serio: use private structure")
-> >    7be893aa2d6a1 ("pcmcia: sa1100: provide generic CF support")
-> >    b51af86559d4b ("ARM: sa1100/shannon: convert to generic CF sockets")
-> >    b955153bfa68d ("ARM: sa1100/assabet: add BCR/BSR GPIO driver")
-> >    c2f9b05fd5c12 ("media: arch: sh: ecovec: Use new renesas-ceu camera driver")
-> >    df88c57689278 ("Input: ams_delta_serio: convert to platform driver")
-> >    efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
-> 
-> ^^^ this is the relevant one.
-> 
-> > 
-> > v4.9.196: Failed to apply! Possible dependencies:
-> >    0486738928bf0 ("ARM: OMAP1: ams-delta: add GPIO lookup tables")
-> >    072f58af1dfbc ("ARM: dts: Add devicetree for the Raspberry Pi 3, for arm32 (v6)")
-> >    1aa1d858f582c ("ARM: dts: bcm283x: Add dtsi for OTG mode")
-> >    29786e9b6551b ("ARM: sa1100/assabet: convert to generic CF sockets")
-> >    2bcb1be092370 ("Input: ams_delta_serio: Replace power GPIO with regulator")
-> >    3bfe25fa9f8a5 ("ARM: dts: bcm283x: Move the BCM2837 DT contents from arm64 to arm.")
-> >    56de7570b3264 ("Input: ams_delta_serio: use private structure")
-> >    6c1b417adc8fa ("ARM: pxa: ezx: use the new pxa_camera platform_data")
-> >    7ade445c26269 ("ARM: pxa: magician: Add support for ADS7846 touchscreen")
-> >    8f9bafbb92c03 ("ARM: dts: aspeed: Add Romulus BMC platform")
-> >    b24413180f560 ("License cleanup: add SPDX GPL-2.0 license identifier to files with no license")
-> >    b5478c1b67bcd ("alpha: add asm/extable.h")
-> >    b955153bfa68d ("ARM: sa1100/assabet: add BCR/BSR GPIO driver")
-> >    d9fa04725f27f ("ARM: pxa: em-x270: use the new pxa_camera platform_data")
-> >    df88c57689278 ("Input: ams_delta_serio: convert to platform driver")
-> >    efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
-> >    fe7bf9dcfff5b ("ARM: dts: add a devicetree for Raidsonic NAS IB-4220-B")
-> > 
-> > 
-> > NOTE: The patch will not be queued to stable trees until it is upstream.
-> > 
-> > How should we proceed with this patch?
-> 
-> I have checked and the reason is that 
-> 
-> efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
-> 
-> was introduced after v.4.19 which was also partially reverted by this patch
-> if based on mainline.
-> 
-> I have split it up into the partial revert of efdfeb079cc3b  for mainline
-> and the real patch which now applies to all relevant stable trees.
-> 
-> So I'll sent a v2 asap.
+With a wl1251 child node of mmc3 in the device tree decoded
+in omap_hsmmc.c to handle special wl1251 initialization, we do
+no longer need to instantiate the mmc3 through pdata quirks.
 
-Please also remove arch/arm/mach-omap2/hsmmc.[ch] as I think that
-can be now done :)
+We also can remove the wlan regulator and reset/interrupt definitions
+and do them through device tree.
 
-Regards,
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
 
-Tony
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # 4.7.0
+---
+ arch/arm/mach-omap2/pdata-quirks.c | 93 ------------------------------
+ 1 file changed, 93 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 89734ef9ab1e..ecc1ef632951 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -303,108 +303,15 @@ static void __init omap3_logicpd_torpedo_init(void)
+ }
+ 
+ /* omap3pandora legacy devices */
+-#define PANDORA_WIFI_IRQ_GPIO		21
+-#define PANDORA_WIFI_NRESET_GPIO	23
+ 
+ static struct platform_device pandora_backlight = {
+ 	.name	= "pandora-backlight",
+ 	.id	= -1,
+ };
+ 
+-static struct regulator_consumer_supply pandora_vmmc3_supply[] = {
+-	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.2"),
+-};
+-
+-static struct regulator_init_data pandora_vmmc3 = {
+-	.constraints = {
+-		.valid_ops_mask		= REGULATOR_CHANGE_STATUS,
+-	},
+-	.num_consumer_supplies	= ARRAY_SIZE(pandora_vmmc3_supply),
+-	.consumer_supplies	= pandora_vmmc3_supply,
+-};
+-
+-static struct fixed_voltage_config pandora_vwlan = {
+-	.supply_name		= "vwlan",
+-	.microvolts		= 1800000, /* 1.8V */
+-	.gpio			= PANDORA_WIFI_NRESET_GPIO,
+-	.startup_delay		= 50000, /* 50ms */
+-	.enable_high		= 1,
+-	.init_data		= &pandora_vmmc3,
+-};
+-
+-static struct platform_device pandora_vwlan_device = {
+-	.name		= "reg-fixed-voltage",
+-	.id		= 1,
+-	.dev = {
+-		.platform_data = &pandora_vwlan,
+-	},
+-};
+-
+-static void pandora_wl1251_init_card(struct mmc_card *card)
+-{
+-	/*
+-	 * We have TI wl1251 attached to MMC3. Pass this information to
+-	 * SDIO core because it can't be probed by normal methods.
+-	 */
+-	if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
+-		card->quirks |= MMC_QUIRK_NONSTD_SDIO;
+-		card->cccr.wide_bus = 1;
+-		card->cis.vendor = 0x104c;
+-		card->cis.device = 0x9066;
+-		card->cis.blksize = 512;
+-		card->cis.max_dtr = 24000000;
+-		card->ocr = 0x80;
+-	}
+-}
+-
+-static struct omap2_hsmmc_info pandora_mmc3[] = {
+-	{
+-		.mmc		= 3,
+-		.caps		= MMC_CAP_4_BIT_DATA | MMC_CAP_POWER_OFF_CARD,
+-		.gpio_cd	= -EINVAL,
+-		.gpio_wp	= -EINVAL,
+-		.init_card	= pandora_wl1251_init_card,
+-	},
+-	{}	/* Terminator */
+-};
+-
+-static void __init pandora_wl1251_init(void)
+-{
+-	struct wl1251_platform_data pandora_wl1251_pdata;
+-	int ret;
+-
+-	memset(&pandora_wl1251_pdata, 0, sizeof(pandora_wl1251_pdata));
+-
+-	pandora_wl1251_pdata.power_gpio = -1;
+-
+-	ret = gpio_request_one(PANDORA_WIFI_IRQ_GPIO, GPIOF_IN, "wl1251 irq");
+-	if (ret < 0)
+-		goto fail;
+-
+-	pandora_wl1251_pdata.irq = gpio_to_irq(PANDORA_WIFI_IRQ_GPIO);
+-	if (pandora_wl1251_pdata.irq < 0)
+-		goto fail_irq;
+-
+-	pandora_wl1251_pdata.use_eeprom = true;
+-	ret = wl1251_set_platform_data(&pandora_wl1251_pdata);
+-	if (ret < 0)
+-		goto fail_irq;
+-
+-	return;
+-
+-fail_irq:
+-	gpio_free(PANDORA_WIFI_IRQ_GPIO);
+-fail:
+-	pr_err("wl1251 board initialisation failed\n");
+-}
+-
+ static void __init omap3_pandora_legacy_init(void)
+ {
+ 	platform_device_register(&pandora_backlight);
+-	platform_device_register(&pandora_vwlan_device);
+-	omap_hsmmc_init(pandora_mmc3);
+-	omap_hsmmc_late_init(pandora_mmc3);
+-	pandora_wl1251_init();
+ }
+ #endif /* CONFIG_ARCH_OMAP3 */
+ 
+-- 
+2.19.1
+
