@@ -1,104 +1,128 @@
-Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=lZ7l=YM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347EDCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 23:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBD4CA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 01:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1039B222C5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 23:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1A5222CC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 19 Oct 2019 01:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732357AbfJRXV0 (ORCPT
+        id S1726152AbfJSBuV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 19:21:26 -0400
-Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139]:46862
-        "EHLO rjones.pdc.gateworks.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729068AbfJRXV0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 18 Oct 2019 19:21:26 -0400
-Received: by rjones.pdc.gateworks.com (Postfix, from userid 1002)
-        id C57361A434C2; Fri, 18 Oct 2019 16:21:25 -0700 (PDT)
-From:   Robert Jones <rjones@gateworks.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Fri, 18 Oct 2019 21:50:21 -0400
+Received: from sender4-op-o14.zoho.com ([136.143.188.14]:17479 "EHLO
+        sender4-op-o14.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfJSBuU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 21:50:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571449804; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=OWaI5P4CEehv/9Y0b0XMFbIqbX0ug/SQifLBKXN/wQaJCBcmiIla+N8WmZJT3oy+gKsxIRMRONFQskXKUO69Ezedn+IBFsme793WmUGcmDv3peS3cuUhDowMMzLxBaGXhwCXAQuSpf437AJnhIS9tZKiH9vU4Y6I82ekxkDKZes=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1571449804; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=X+sorDRmgdOKvUGcHABOo/6lzo+4hMmoIkCm/G9ejtY=; 
+        b=SwUeUv6NmGe/smz5MMoGv64w3/5nJMZzaa7f3GbWElniPBZXTUoiCJwmGg8yR/js7bfobFESPLGN8iGCEmH+x+ea/rvQ8TojrVjKP33FEs/bSNX378MRaCI7sM9ppUpWl5Sfa3k9i2uAAwYxzzXiN19pDj6l6XT2BpuQ3x6VLnA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie (pool-100-15-144-194.washdc.fios.verizon.net [100.15.144.194]) by mx.zohomail.com
+        with SMTPS id 157144980180417.00672295930474; Fri, 18 Oct 2019 18:50:01 -0700 (PDT)
+Date:   Sat, 19 Oct 2019 01:35:26 +0000
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Robert Jones <rjones@gateworks.com>
-Subject: [PATCH] ARM: dt: add lsm9ds1 iio imu/magn support to gw553x
-Date:   Fri, 18 Oct 2019 16:21:24 -0700
-Message-Id: <20191018232124.4126-1-rjones@gateworks.com>
-X-Mailer: git-send-email 2.9.2
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] iio: (bma400) add driver for the BMA400
+Message-ID: <20191019013526.GA8593@nessie>
+References: <20191018031848.18538-1-dan@dlrobertson.com>
+ <20191018031848.18538-3-dan@dlrobertson.com>
+ <487efd2c-b453-6c8b-eaac-7ba168bb4d77@infradead.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
+Content-Disposition: inline
+In-Reply-To: <487efd2c-b453-6c8b-eaac-7ba168bb4d77@infradead.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Zoho-Virus-Status: 1
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add one node for the accel/gyro i2c device and another for the separate
-magnetometer device in the lsm9ds1.
 
-Signed-off-by: Robert Jones <rjones@gateworks.com>
----
- arch/arm/boot/dts/imx6qdl-gw553x.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+--h31gzZEtNLTqOjlF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-index a106689..55e6922 100644
---- a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-@@ -173,6 +173,25 @@
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
- 
-+	lsm9ds1_ag@6a {
-+		compatible = "st,lsm9ds1-imu";
-+		reg = <0x6a>;
-+		st,drdy-int-pin = <1>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_acc_gyro>;
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	lsm9ds1_m@1c {
-+		compatible = "st,lsm9ds1-magn";
-+		reg = <0x1c>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_mag>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <2 IRQ_TYPE_EDGE_RISING>;
-+	};
-+
- 	ltc3676: pmic@3c {
- 		compatible = "lltc,ltc3676";
- 		reg = <0x3c>;
-@@ -462,6 +481,18 @@
- 		>;
- 	};
- 
-+	pinctrl_acc_gyro: acc_gyrogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_18__GPIO7_IO13		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_mag: maggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_pps: ppsgrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
--- 
-2.9.2
+On Thu, Oct 17, 2019 at 09:25:37PM -0700, Randy Dunlap wrote:
+> On 10/17/19 8:18 PM, Dan Robertson wrote:
+> > +config BMA400
+> > +	tristate "Bosch BMA400 3-Axis Accelerometer Driver"
+> > +	depends on I2C
+> > +	select REGMAP
+> > +	select BMA400_I2C if (I2C)
+>=20
+> Since BMA400 already depends on I2C, the "if (I2C)" above is
+> redundant so it's not needed.
+
+You are correct. I'll remove the depends on I2C.
+
+> > +struct bma400_data {
+> > +	struct device *dev;
+> > +	struct mutex mutex; /* data register lock */
+>=20
+> needs #include <linux/mutex.h>
+
+Good point.
+
+> > +static int bma400_get_accel_scale_idx(struct bma400_data *data, int va=
+l)
+> > +{
+> > +	int i;
+> > +
+> > +	for (i =3D 1; i < ARRAY_SIZE(bma400_scale_table); i +=3D 2) {
+>=20
+> needs #include <linux/kernel.h>
+> for ARRAY_SIZE()
+
+Thanks
+
+Cheers,
+
+ - Dan
+
+--h31gzZEtNLTqOjlF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEF5dO2RaKc5C+SCJ9RcSmUsR+QqUFAl2qaF0ACgkQRcSmUsR+
+QqVPdBAAjUpM5443o6S7dD+2/YUIMZg6dC9qCOLlOt2e3oNUNJuTESggWW/xHVkF
+tg4keSNYZG+X+aA+EkyJObiWyfHGjGBqkMFZt1ykk8pT1Sdx7CGxD0m3bp57zadD
+EJ7Mftk8nzrEaQUYTLfjnCPwBxoucEJqsHfgHKI7kW6IFAzehxeXo0cBPqmrvAK4
+0AB71yrq7IjWLDExbPmjlAlwVLQgwtcu+oIyueurtI+Z/6gBPB3NL4xxX0wII5OG
+nyPQVq2DvnQIF3XyM0jCbVuh5FCMmhkCDTB0hQzVI5qflgdaS1WCpftp2lXIwE0p
+ZMtiN3Q2yf3TFofzBMAq17b7R+hY4eu+XXljE6D92WLbtTbQOYbAYf25tTZPkuSI
+NyJrL79iFeFZ8isw0ASTNU2C61JQL38NRj5XzU1f5jdjbqt+8rfF7v2dGMFKEapb
+sjQNO6K9iM6hqUP234wfQyt1NOh60kSQksVxNnITEH8QSoxKng8kNb2+veaI4Uva
+vG3bPq23G9Mgmd34jAzyyUV1hMn/rMKGcVes5cUSfirY/JWeoXmAZfN9F/BHBpjQ
+kvJi360Sha22+K46kbPZV3uVSBPIE4JXPetf/Z/CaYtsdU9hA0LYA4wdFhFZCKJ+
+jaD+5dtcEEwbTJuvyu42xxovDarduN+YZl0LP59gnuzeYYgmPl4=
+=OKYb
+-----END PGP SIGNATURE-----
+
+--h31gzZEtNLTqOjlF--
 
