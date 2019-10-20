@@ -1,98 +1,78 @@
-Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628E0FC6195
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377D4CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3422B21848
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:40:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lktGWLr3"
+	by mail.kernel.org (Postfix) with ESMTP id 157BD2173E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfKFWkU (ORCPT
+        id S1726395AbfJTEIi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:40:20 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33377 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfKFWkU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 17:40:20 -0500
-Received: by mail-pf1-f196.google.com with SMTP id c184so255405pfb.0;
-        Wed, 06 Nov 2019 14:40:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=G+wFREXzWnU4DvNTPp24jRK6gxHaykXaWaMf/sx6ATg=;
-        b=lktGWLr3/bgx3/ucB1j1LiAdjYxPUv/VzQAxdgfeHQb4IreqFBsad+ABk5LnWp4VXN
-         ttc8B0sCWR9Tq6/LAX6Yn0gAa7L65tRj/gmKJ9zUIL0NKQUkxTvG4bp0Qebbfy66Y7bq
-         vi7UAHgEEPOAraCB0IiaShYNCUimetDf6pirOFAiteCULQyL45HCKkN8turz6u7Nhr0O
-         7UN2l2E1izSVZdI8eeq7HuujZr48EwEkvt+F7lW8Iwb6j8Dily2nOEFPcsRNZ19Xji28
-         2dJ9tmA18ToYOSAuVgtV7aQ2FnO0HDU1YkQpJ3GiWjcufjmcCCE5zCcPbeVJ0/mc5e1i
-         X4GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=G+wFREXzWnU4DvNTPp24jRK6gxHaykXaWaMf/sx6ATg=;
-        b=Y6/XxNbokdhXLNjn4IN0ob2oPfQISynM9UqH6a0+qW+oMZckhmN/PMQEHd9xFFGO41
-         hc6KoJVd9B22B5tNr7EOU+90WtTFMD9KwmPO4W5lHVeKZeJOfvTy0/cHLvVk5JCmWoin
-         g5jbugCwFOgAKfpXwvLJ2RNQyt/Z9OPTu8lsfKNF6XrHqNvF6vTu1CCBErSGuUunuByG
-         kQ6R+yi/M6jNKw4LE2vZycUNAZAkoisyuc5zn5LC33MmjtEOxlKEGekooqdbLIo0hXM6
-         DYIoaiDzuOBRLEAX1yuZwglyvcCwPduf8BWJGuh8/mH9VcYDeOj4e4ncSuMGV72h5T+p
-         /glQ==
-X-Gm-Message-State: APjAAAVQeATF0jkYvZcQtLOb1IDN+kXCrMn30CLPJisXrT0+fyFBR2XC
-        6GWiceGB+tpDa6qWmsirEXPftoveh4s=
-X-Google-Smtp-Source: APXvYqxvCPKVks8a1VhUTjXjnqv1qXKWQbwY0UcGGC+kQVTDOwaguh/Hl96NDqbeuoc4aVExN+jJ/Q==
-X-Received: by 2002:a63:934d:: with SMTP id w13mr283470pgm.185.1573080019554;
-        Wed, 06 Nov 2019 14:40:19 -0800 (PST)
-Received: from odroid.ad.adelaide.edu.au (staff-249-202.wireless.adelaide.edu.au. [129.127.249.202])
-        by smtp.googlemail.com with ESMTPSA id v2sm96783pgf.39.2019.11.06.14.40.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Nov 2019 14:40:19 -0800 (PST)
-From:   Marian Mihailescu <mihailescu2m@gmail.com>
-To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kgene@kernel.org
-Cc:     Marian Mihailescu <mihailescu2m@gmail.com>
-Subject: [PATCH v3 1/2] dt-bindings: gpu: mali-midgard: add samsung exynos 5420 compatible
-Date:   Thu,  7 Nov 2019 09:10:07 +1030
-Message-Id: <20191106224008.7588-1-mihailescu2m@gmail.com>
-X-Mailer: git-send-email 2.14.1
+        Sun, 20 Oct 2019 00:08:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37192 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726303AbfJTEIa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 20 Oct 2019 00:08:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C69D2B2EA;
+        Sun, 20 Oct 2019 04:08:28 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        info@synology.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 7/8] dt-bindings: arm: realtek: Document RTD1296 and Synology DS418
+Date:   Sun, 20 Oct 2019 06:08:16 +0200
+Message-Id: <20191020040817.16882-8-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191020040817.16882-1-afaerber@suse.de>
+References: <20191020040817.16882-1-afaerber@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add "samsung,exynos5420-mali" binding
+Define compatible strings for Realtek RTD1296 SoC and Synology
+DiskStation DS418 NAS.
 
-Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Cc: info@synology.com
+Acked-by: Rob Herring <robh@kernel.org>
+[AF: Converted to json-schema]
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ v1 -> v2:
+ * Converted to YAML schema
+ 
+ Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-index 47bc1ac36426..41b928bce4ea 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-@@ -38,9 +38,12 @@ properties:
-           - enum:
-              - samsung,exynos5433-mali
-           - const: arm,mali-t760
+diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+index 6ea3a79825cc..ab59de17152d 100644
+--- a/Documentation/devicetree/bindings/arm/realtek.yaml
++++ b/Documentation/devicetree/bindings/arm/realtek.yaml
+@@ -27,4 +27,10 @@ properties:
+               - probox2,ava # ProBox2 AVA
+               - zidoo,x9s # Zidoo X9S
+           - const: realtek,rtd1295
++
++      # RTD1296 SoC based boards
 +      - items:
 +          - enum:
-+             - samsung,exynos5420-mali
-+          - const: arm,mali-t628
- 
-           # "arm,mali-t624"
--          # "arm,mali-t628"
-           # "arm,mali-t830"
-           # "arm,mali-t880"
- 
++              - synology,ds418 # Synology DiskStation DS418
++          - const: realtek,rtd1296
+ ...
 -- 
-2.14.1
+2.16.4
 
