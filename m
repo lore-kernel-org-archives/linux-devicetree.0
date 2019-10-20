@@ -2,103 +2,325 @@ Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38A9CA9EB2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 13:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F304CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 14:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C6720679
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 13:42:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="rL0PJD9+"
+	by mail.kernel.org (Postfix) with ESMTP id D88AA21928
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 14:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571580003;
+	bh=dJPbKdcJSzXbptQK//XpIi5kDh3BWFfFpMSmRiLd+iI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XJlMbhMxDS/qW9WbrM2PRS45zl+US0tVBx7uUG2dykYQMfHP/uD1wINuD81Hy+jLs
+	 R6Jzsn2mfVCL/v6MBt2zaTnqn/5A4qZtjgxoDCogq7NWcqrKpC62XOq5KQ2KqhzcPx
+	 2qk2rvcfWxneh6qaYOb47aM5NjoNx3hPUOEpm6ZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfJTNmd (ORCPT
+        id S1726299AbfJTOAD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 09:42:33 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52550 "EHLO vps.xff.cz"
+        Sun, 20 Oct 2019 10:00:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfJTNmd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 20 Oct 2019 09:42:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1571578951; bh=hofiJnVP7aDAhfypTNm/xBHKoQaxIAs/RXYARGH7SXc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rL0PJD9+XJttVWgq6PD++yB5Sj29S7dDgQLRKYExvDwtHfsFge/DBYBBg32DHDc3h
-         uFt7Kll3lqRdpvBCmi1LsqpI0gVdL988W7mcdgp/2yBqEDdg6Xt1f6/Hipb/Rc017j
-         eBYOK1eBGMgpotIXKAPN/Iy0Dq4rBZghfte9nFRU=
-From:   megous@megous.com
-To:     linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1726296AbfJTOAC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 20 Oct 2019 10:00:02 -0400
+Received: from localhost (unknown [106.51.108.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA33221835;
+        Sun, 20 Oct 2019 14:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571580001;
+        bh=dJPbKdcJSzXbptQK//XpIi5kDh3BWFfFpMSmRiLd+iI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y+4PNmnb2iFDucdONLx+ZV2n+HrKsZu2LDRPoEw3wwEya+INUdmj0vmD1Sj+ZyFfP
+         6XPvCCHl1tedShe5sLdLzQlcySprmWYY7U/kTztvJ2MzyTqraBfTOELNGhikrU6eZJ
+         w2F9AEKapQtjxn4rrJdDtdVta5mApmbkjDtUznWM=
+Date:   Sun, 20 Oct 2019 19:29:52 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Green Wan <green.wan@sifive.com>
+Cc:     linux-hackers@sifive.com, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Ondrej Jirman <megous@megous.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 0/4] Add USB 3 support for H6 and Orange Pi 3
-Date:   Sun, 20 Oct 2019 15:42:25 +0200
-Message-Id: <20191020134229.1216351-1-megous@megous.com>
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] dmaengine: sf-pdma: add platform DMA support for
+ HiFive Unleashed A00
+Message-ID: <20191020135952.GU2654@vkoul-mobl>
+References: <20191003090945.29210-1-green.wan@sifive.com>
+ <20191003090945.29210-4-green.wan@sifive.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003090945.29210-4-green.wan@sifive.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+On 03-10-19, 17:09, Green Wan wrote:
 
-This series implements USB 3 support for Xunlong Orange Pi 3 board.
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 7af874b69ffb..03dc82094857 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -661,6 +661,8 @@ source "drivers/dma/qcom/Kconfig"
+>  
+>  source "drivers/dma/dw/Kconfig"
+>  
+> +source "drivers/dma/sf-pdma/Kconfig"
 
-This is a re-hash of the Icenowy's earlier USB3 work[1] without code
-that caused controversy previously. Orange Pi 3 board doesn't need vbus
-supply to be dynamically enabled, so that code is not needed to support
-USB3 on this board.
+Please keep this in sorted order
 
-Most of patches are already reviewed. I've converted dt-bindings to yaml
-format, and added the Orange Pi 3 board modifications.
+> +
+>  source "drivers/dma/dw-edma/Kconfig"
+>  
+>  source "drivers/dma/hsu/Kconfig"
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index f5ce8665e944..4bbd90563ede 100644
+> --- a/drivers/dma/Makefile
+> +++ b/drivers/dma/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_DMA_SUN4I) += sun4i-dma.o
+>  obj-$(CONFIG_DMA_SUN6I) += sun6i-dma.o
+>  obj-$(CONFIG_DW_AXI_DMAC) += dw-axi-dmac/
+>  obj-$(CONFIG_DW_DMAC_CORE) += dw/
+> +obj-$(CONFIG_SF_PDMA) += sf-pdma/
 
-Hopefully with this series we can get USB3 support into mainline for
-Orange Pi 3, and build on it later to support more boards, where
-supporting them is more complicated.
+here as well!
 
-Please take a look.
+>  obj-$(CONFIG_DW_EDMA) += dw-edma/
+>  obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
+>  obj-$(CONFIG_FSL_DMA) += fsldma.o
+> diff --git a/drivers/dma/sf-pdma/Kconfig b/drivers/dma/sf-pdma/Kconfig
+> new file mode 100644
+> index 000000000000..0e01a5728a79
+> --- /dev/null
+> +++ b/drivers/dma/sf-pdma/Kconfig
+> @@ -0,0 +1,6 @@
+> +config SF_PDMA
+> +	bool "Sifive PDMA controller driver"
 
-thank you and regards,
-  Ondrej Jirman
+why not a module?
 
-[1] https://lore.kernel.org/patchwork/patch/1058919/
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/irq.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_dma.h>
 
+do you need all the headers?
 
-Changes since Icenowy v5 series:
-- use earlier patches that did not include VBUS regulator/connector
-  code
-- converted dt bindings to yaml
-- added patch to enable usb3 on Orange Pi 3
+> +#include <linux/time64.h>
 
-Icenowy Zheng (2):
-  phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC
-  arm64: dts: allwinner: h6: add USB3 device nodes
+why is this required?
 
-Ondrej Jirman (2):
-  dt-bindings: Add bindings for USB3 phy on Allwinner H6
-  arm64: dts: allwinner: orange-pi-3: Enable USB 3.0 host support
+> +
+> +#include "sf-pdma.h"
+> +#include "../dmaengine.h"
+> +#include "../virt-dma.h"
+> +
+> +#define SIFIVE_PDMA_NAME "sf-pdma"
 
- .../phy/allwinner,sun50i-h6-usb3-phy.yaml     |  47 +++++
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    |   8 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  32 +++
- drivers/phy/allwinner/Kconfig                 |  12 ++
- drivers/phy/allwinner/Makefile                |   1 +
- drivers/phy/allwinner/phy-sun50i-usb3.c       | 195 ++++++++++++++++++
- 6 files changed, 295 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
- create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
+this is used only once! can you use it directly to help readability!
 
+> +
+> +#ifndef readq
+> +static inline unsigned long long readq(void __iomem *addr)
+> +{
+> +	return readl(addr) | (((unsigned long long)readl(addr + 4)) << 32LL);
+> +}
+> +#endif
+> +
+> +#ifndef writeq
+> +static inline void writeq(unsigned long long v, void __iomem *addr)
+> +{
+> +	writel(v & 0xffffffff, addr);
+> +	writel(v >> 32, addr + 4);
+
+why not use upper/lower_32_bits?
+
+> +static void sf_pdma_fill_desc(struct sf_pdma_chan *chan,
+> +			      u64 dst,
+> +			      u64 src,
+> +			      u64 size)
+
+these can fit in a line!
+
+> +struct dma_async_tx_descriptor *
+> +	sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
+> +				dma_addr_t dest,
+> +				dma_addr_t src,
+> +				size_t len,
+> +				unsigned long flags)
+> +{
+> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+> +	struct sf_pdma_desc *desc;
+> +
+> +	if (!chan || !len || !dest || !src) {
+> +		pr_debug("%s: Please check dma len, dest, src!\n", __func__);
+
+why pr_debug() and not dev_debug(), bonus you get the device name in
+each print!
+
+and this should be an error print!
+
+> +static void sf_pdma_unprep_slave_dma(struct sf_pdma_chan *chan)
+> +{
+> +	if (chan->dma_dir != DMA_NONE)
+> +		dma_unmap_resource(chan->vchan.chan.device->dev,
+> +				   chan->dma_dev_addr,
+> +				   chan->dma_dev_size,
+> +				   chan->dma_dir, 0);
+
+this does not seem correct to me, in slave cases the client is supposed
+to take care of mapping and unmapping, why is this being done here?
+
+> +	chan->dma_dir = DMA_NONE;
+> +}
+> +
+> +static int sf_pdma_slave_config(struct dma_chan *dchan,
+> +				struct dma_slave_config *cfg)
+> +{
+> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+> +
+> +	memcpy(&chan->cfg, cfg, sizeof(*cfg));
+> +	sf_pdma_unprep_slave_dma(chan);
+
+why unmap!
+
+> +static enum dma_status
+> +sf_pdma_tx_status(struct dma_chan *dchan,
+> +		  dma_cookie_t cookie,
+> +		  struct dma_tx_state *txstate)
+> +{
+> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+> +	enum dma_status status;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&chan->lock, flags);
+> +	if (chan->xfer_err) {
+> +		chan->status = DMA_ERROR;
+> +		spin_unlock_irqrestore(&chan->lock, flags);
+> +		return chan->status;
+
+well this is not correct! The status is queried for a descriptor and we
+might have that succeeded so returning error of a channel for descriptor
+does not make sense!
+
+> +static irqreturn_t sf_pdma_done_isr(int irq, void *dev_id)
+> +{
+> +	struct sf_pdma_chan *chan = dev_id;
+> +	struct pdma_regs *regs = &chan->regs;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&chan->lock, flags);
+> +	writel((readl(regs->ctrl)) & ~PDMA_DONE_STATUS_MASK, regs->ctrl);
+> +	spin_unlock_irqrestore(&chan->lock, flags);
+
+why not submit next transaction here? This is DMA so we do care about
+utilizing it!
+
+> +static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
+> +{
+> +	int irq, r, i;
+> +	struct sf_pdma_chan *chan;
+> +
+> +	for (i = 0; i < pdma->n_chans; i++) {
+> +		chan = &pdma->chans[i];
+> +
+> +		irq = platform_get_irq(pdev, i * 2);
+> +		if (irq < 0) {
+> +			dev_err(&pdev->dev, "Can't get pdma done irq.\n");
+> +			return irq;
+> +		}
+> +
+> +		r = devm_request_irq(&pdev->dev, irq, sf_pdma_done_isr, 0,
+> +				     dev_name(&pdev->dev), (void *)chan);
+> +		if (r) {
+> +			dev_err(&pdev->dev, "Fail to attach done ISR: %d\n", r);
+> +			return -1;
+
+-1 :(
+
+> +static int sf_pdma_probe(struct platform_device *pdev)
+> +{
+> +	struct sf_pdma *pdma;
+> +	struct sf_pdma_chan *chan;
+> +	struct resource *res;
+> +	int len, chans;
+> +	int ret;
+> +
+> +	chans = PDMA_NR_CH;
+> +	len = sizeof(*pdma) + sizeof(*chan) * chans;
+> +	pdma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
+> +	if (!pdma)
+> +		return -ENOMEM;
+> +
+> +	pdma->n_chans = chans;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pdma->membase = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(pdma->membase))
+> +		goto ERR_MEMBASE;
+> +
+> +	ret = sf_pdma_irq_init(pdev, pdma);
+> +	if (ret)
+> +		goto ERR_INITIRQ;
+> +
+> +	sf_pdma_setup_chans(pdma);
+> +
+> +	pdma->dma_dev.dev = &pdev->dev;
+> +	dma_cap_set(DMA_MEMCPY, pdma->dma_dev.cap_mask);
+> +
+> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+> +	if (ret)
+> +		pr_warn("*** Failed to set DMA mask. Fall back to default.\n");
+> +
+> +	/* Setup DMA APIs */
+> +	pdma->dma_dev.device_alloc_chan_resources =
+> +		sf_pdma_alloc_chan_resources;
+> +	pdma->dma_dev.device_free_chan_resources =
+> +		sf_pdma_free_chan_resources;
+> +	pdma->dma_dev.device_tx_status = sf_pdma_tx_status;
+> +	pdma->dma_dev.device_prep_dma_memcpy = sf_pdma_prep_dma_memcpy;
+> +	pdma->dma_dev.device_config = sf_pdma_slave_config;
+> +	pdma->dma_dev.device_terminate_all = sf_pdma_terminate_all;
+> +	pdma->dma_dev.device_issue_pending = sf_pdma_issue_pending;
+
+please set the capabilities of the controller, width, direction,
+granularity etc!
+
+> +static int sf_pdma_remove(struct platform_device *pdev)
+> +{
+> +	struct sf_pdma *pdma = platform_get_drvdata(pdev);
+> +
+> +	dma_async_device_unregister(&pdma->dma_dev);
+
+since you used devm_irq_() you have irq which is running, tasklets which
+maybe schedule and can be scheduled again including the vchan one!
 -- 
-2.23.0
-
+~Vinod
