@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E531ECA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C21BCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA252190F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED32C2190F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XCGX1B9i";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="j1YHpLqg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MWJ6Iiz3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NPGr9j7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfJTKFg (ORCPT
+        id S1726494AbfJTKFg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 20 Oct 2019 06:05:36 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48264 "EHLO
+Received: from smtp.codeaurora.org ([198.145.29.96]:48238 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfJTKFf (ORCPT
+        with ESMTP id S1726319AbfJTKFf (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 06:05:35 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4D30A6132F; Sun, 20 Oct 2019 10:05:31 +0000 (UTC)
+        id 95A3861330; Sun, 20 Oct 2019 10:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571565934;
-        bh=n1TH14OOke05BEB5V7rTjBgazVntCdJIxU0InuIFfBM=;
+        s=default; t=1571565933;
+        bh=snncLReTw1yMIh3xsZC0GMJaIxzyIQxfYI9od1UMK1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XCGX1B9iZlhjbKAQpWjUG66aQ9eUJmUfL1z32LRajdhJZeZtYXtQb0nY4fwxS3v6l
-         9F8FpelPq8QP8sP8MQYRFZrJZilRzwIxH25Ea5LpcTs5yGnwig6YYHDU7/1jbAET3Q
-         5ZP1mgqed1SXBwuD14eIcrNNeiZdHRG2UoMPIlCY=
+        b=MWJ6Iiz3HAM8oigwfcy8BcYaGGOheQEjjmIB2njo9gsmdlQlgV8h6nnJ2lXWVRBzJ
+         P/vqqpM36MioEK0OZ4TvL4kcfNF2cdJnLHz/VhvPAeSbL07vXM+MQaW0BRoSEDtQ0w
+         D2A1kZxlOXGJA9NUtAWSj9FVIw8KOK4y4dRwzvPg=
 Received: from x230.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4168561479;
-        Sun, 20 Oct 2019 10:05:27 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7FFB4613B8;
+        Sun, 20 Oct 2019 10:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571565928;
-        bh=n1TH14OOke05BEB5V7rTjBgazVntCdJIxU0InuIFfBM=;
+        s=default; t=1571565918;
+        bh=snncLReTw1yMIh3xsZC0GMJaIxzyIQxfYI9od1UMK1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j1YHpLqgOC+q1qN2aBFTUd5W+4nalC//O91Ij6hispRWzGi1Ik40dV4pO5gNmYtxX
-         L/+ptvBY5Jq9kdbHqdE1NCY+08bD1XbpTqjLgpTXFE8S0kDQmAkZz7lxK8wdyHTTPu
-         zXvvIH37XWLWIH47TWZbgLuzvr9UfsaZblRLvdG0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4168561479
+        b=NPGr9j7wb0XizKLnR5kdP48iVsCnpRsF79HVK2Pu47S0UZU8Fx/BlRM69Empc4YCi
+         ZMOakBo/3IrqvZQx8ze1NOhFLX0x17Vus4K1wWvWkFaAOXTxDO38dGweh3EYpoRguf
+         gVqPsbZFyn5VVSXA5+ayO276Eyxz5O3mbGPIgqGk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7FFB4613B8
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 From:   Kalle Valo <kvalo@codeaurora.org>
 To:     linux-wireless@vger.kernel.org
 Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 32/49] ath11k: add mac.h
-Date:   Sun, 20 Oct 2019 13:03:50 +0300
-Message-Id: <1571565847-10338-33-git-send-email-kvalo@codeaurora.org>
+Subject: [PATCH v2 29/49] ath11k: add htc.h
+Date:   Sun, 20 Oct 2019 13:03:47 +0300
+Message-Id: <1571565847-10338-30-git-send-email-kvalo@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
 References: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
@@ -66,158 +66,326 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 ---
- drivers/net/wireless/ath/ath11k/mac.h | 145 ++++++++++++++++++++++++++++++++++
- 1 file changed, 145 insertions(+)
+ drivers/net/wireless/ath/ath11k/htc.h | 313 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 313 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/mac.h b/drivers/net/wireless/ath/ath11k/mac.h
+diff --git a/drivers/net/wireless/ath/ath11k/htc.h b/drivers/net/wireless/ath/ath11k/htc.h
 new file mode 100644
-index 000000000000..f84af1fc4952
+index 000000000000..f0a3387567ca
 --- /dev/null
-+++ b/drivers/net/wireless/ath/ath11k/mac.h
-@@ -0,0 +1,145 @@
++++ b/drivers/net/wireless/ath/ath11k/htc.h
+@@ -0,0 +1,313 @@
 +/* SPDX-License-Identifier: BSD-3-Clause-Clear */
 +/*
 + * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 + */
 +
-+#ifndef ATH11K_MAC_H
-+#define ATH11K_MAC_H
++#ifndef ATH11K_HTC_H
++#define ATH11K_HTC_H
 +
-+#include <net/mac80211.h>
-+#include <net/cfg80211.h>
++#include <linux/kernel.h>
++#include <linux/list.h>
++#include <linux/bug.h>
++#include <linux/skbuff.h>
++#include <linux/timer.h>
 +
-+struct ath11k;
 +struct ath11k_base;
 +
-+struct ath11k_generic_iter {
-+	struct ath11k *ar;
-+	int ret;
++#define HTC_HDR_ENDPOINTID                       GENMASK(7, 0)
++#define HTC_HDR_FLAGS                            GENMASK(15, 8)
++#define HTC_HDR_PAYLOADLEN                       GENMASK(31, 16)
++#define HTC_HDR_CONTROLBYTES0                    GENMASK(7, 0)
++#define HTC_HDR_CONTROLBYTES1                    GENMASK(15, 8)
++#define HTC_HDR_RESERVED                         GENMASK(31, 16)
++
++#define HTC_SVC_MSG_SERVICE_ID                   GENMASK(31, 16)
++#define HTC_SVC_MSG_CONNECTIONFLAGS              GENMASK(15, 0)
++#define HTC_SVC_MSG_SERVICEMETALENGTH            GENMASK(23, 16)
++#define HTC_READY_MSG_CREDITCOUNT                GENMASK(31, 16)
++#define HTC_READY_MSG_CREDITSIZE                 GENMASK(15, 0)
++#define HTC_READY_MSG_MAXENDPOINTS               GENMASK(23, 16)
++
++#define HTC_READY_EX_MSG_HTCVERSION              GENMASK(7, 0)
++#define HTC_READY_EX_MSG_MAXMSGSPERHTCBUNDLE     GENMASK(15, 8)
++
++#define HTC_SVC_RESP_MSG_SERVICEID           GENMASK(31, 16)
++#define HTC_SVC_RESP_MSG_STATUS              GENMASK(7, 0)
++#define HTC_SVC_RESP_MSG_ENDPOINTID          GENMASK(15, 8)
++#define HTC_SVC_RESP_MSG_MAXMSGSIZE          GENMASK(31, 16)
++#define HTC_SVC_RESP_MSG_SERVICEMETALENGTH   GENMASK(7, 0)
++
++#define HTC_MSG_MESSAGEID                        GENMASK(15, 0)
++#define HTC_SETUP_COMPLETE_EX_MSG_SETUPFLAGS     GENMASK(31, 0)
++#define HTC_SETUP_COMPLETE_EX_MSG_MAXMSGSPERBUNDLEDRECV      GENMASK(7, 0)
++#define HTC_SETUP_COMPLETE_EX_MSG_RSVD0          GENMASK(15, 8)
++#define HTC_SETUP_COMPLETE_EX_MSG_RSVD1          GENMASK(23, 16)
++#define HTC_SETUP_COMPLETE_EX_MSG_RSVD2          GENMASK(31, 24)
++
++enum ath11k_htc_tx_flags {
++	ATH11K_HTC_FLAG_NEED_CREDIT_UPDATE = 0x01,
++	ATH11K_HTC_FLAG_SEND_BUNDLE        = 0x02
 +};
 +
-+/* number of failed packets (20 packets with 16 sw reties each) */
-+#define ATH11K_KICKOUT_THRESHOLD		(20 * 16)
++enum ath11k_htc_rx_flags {
++	ATH11K_HTC_FLAG_TRAILER_PRESENT = 0x02,
++	ATH11K_HTC_FLAG_BUNDLE_MASK     = 0xF0
++};
 +
-+/* Use insanely high numbers to make sure that the firmware implementation
-+ * won't start, we have the same functionality already in hostapd. Unit
-+ * is seconds.
++struct ath11k_htc_hdr {
++	u32 htc_info;
++	u32 ctrl_info;
++} __packed __aligned(4);
++
++enum ath11k_htc_msg_id {
++	ATH11K_HTC_MSG_READY_ID                = 1,
++	ATH11K_HTC_MSG_CONNECT_SERVICE_ID      = 2,
++	ATH11K_HTC_MSG_CONNECT_SERVICE_RESP_ID = 3,
++	ATH11K_HTC_MSG_SETUP_COMPLETE_ID       = 4,
++	ATH11K_HTC_MSG_SETUP_COMPLETE_EX_ID    = 5,
++	ATH11K_HTC_MSG_SEND_SUSPEND_COMPLETE   = 6
++};
++
++enum ath11k_htc_version {
++	ATH11K_HTC_VERSION_2P0 = 0x00, /* 2.0 */
++	ATH11K_HTC_VERSION_2P1 = 0x01, /* 2.1 */
++};
++
++#define ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_MASK GENMASK(1, 0)
++#define ATH11K_HTC_CONN_FLAGS_RECV_ALLOC GENMASK(15, 8)
++
++enum ath11k_htc_conn_flags {
++	ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_ONE_FOURTH    = 0x0,
++	ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_ONE_HALF      = 0x1,
++	ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_THREE_FOURTHS = 0x2,
++	ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_UNITY         = 0x3,
++	ATH11K_HTC_CONN_FLAGS_REDUCE_CREDIT_DRIBBLE    = 1 << 2,
++	ATH11K_HTC_CONN_FLAGS_DISABLE_CREDIT_FLOW_CTRL = 1 << 3
++};
++
++enum ath11k_htc_conn_svc_status {
++	ATH11K_HTC_CONN_SVC_STATUS_SUCCESS      = 0,
++	ATH11K_HTC_CONN_SVC_STATUS_NOT_FOUND    = 1,
++	ATH11K_HTC_CONN_SVC_STATUS_FAILED       = 2,
++	ATH11K_HTC_CONN_SVC_STATUS_NO_RESOURCES = 3,
++	ATH11K_HTC_CONN_SVC_STATUS_NO_MORE_EP   = 4
++};
++
++struct ath11k_htc_ready {
++	u32 id_credit_count;
++	u32 size_ep;
++} __packed;
++
++struct ath11k_htc_ready_extended {
++	struct ath11k_htc_ready base;
++	u32 ver_bundle;
++} __packed;
++
++struct ath11k_htc_conn_svc {
++	u32 msg_svc_id;
++	u32 flags_len;
++} __packed;
++
++struct ath11k_htc_conn_svc_resp {
++	u32 msg_svc_id;
++	u32 flags_len;
++	u32 svc_meta_pad;
++} __packed;
++
++struct ath11k_htc_setup_complete_extended {
++	u32 msg_id;
++	u32 flags;
++	u32 max_msgs_per_bundled_recv;
++} __packed;
++
++struct ath11k_htc_msg {
++	u32 msg_svc_id;
++	u32 flags_len;
++} __packed __aligned(4);
++
++enum ath11k_htc_record_id {
++	ATH11K_HTC_RECORD_NULL    = 0,
++	ATH11K_HTC_RECORD_CREDITS = 1
++};
++
++struct ath11k_htc_record_hdr {
++	u8 id; /* @enum ath11k_htc_record_id */
++	u8 len;
++	u8 pad0;
++	u8 pad1;
++} __packed;
++
++struct ath11k_htc_credit_report {
++	u8 eid; /* @enum ath11k_htc_ep_id */
++	u8 credits;
++	u8 pad0;
++	u8 pad1;
++} __packed;
++
++struct ath11k_htc_record {
++	struct ath11k_htc_record_hdr hdr;
++	union {
++		struct ath11k_htc_credit_report credit_report[0];
++		u8 pauload[0];
++	};
++} __packed __aligned(4);
++
++/* note: the trailer offset is dynamic depending
++ * on payload length. this is only a struct layout draft
 + */
-+#define ATH11K_KEEPALIVE_MIN_IDLE		3747
-+#define ATH11K_KEEPALIVE_MAX_IDLE		3895
-+#define ATH11K_KEEPALIVE_MAX_UNRESPONSIVE	3900
++struct ath11k_htc_frame {
++	struct ath11k_htc_hdr hdr;
++	union {
++		struct ath11k_htc_msg msg;
++		u8 payload[0];
++	};
++	struct ath11k_htc_record trailer[0];
++} __packed __aligned(4);
 +
-+#define WMI_HOST_RC_DS_FLAG			0x01
-+#define WMI_HOST_RC_CW40_FLAG			0x02
-+#define WMI_HOST_RC_SGI_FLAG			0x04
-+#define WMI_HOST_RC_HT_FLAG			0x08
-+#define WMI_HOST_RC_RTSCTS_FLAG			0x10
-+#define WMI_HOST_RC_TX_STBC_FLAG		0x20
-+#define WMI_HOST_RC_RX_STBC_FLAG		0xC0
-+#define WMI_HOST_RC_RX_STBC_FLAG_S		6
-+#define WMI_HOST_RC_WEP_TKIP_FLAG		0x100
-+#define WMI_HOST_RC_TS_FLAG			0x200
-+#define WMI_HOST_RC_UAPSD_FLAG			0x400
++enum ath11k_htc_svc_gid {
++	ATH11K_HTC_SVC_GRP_RSVD = 0,
++	ATH11K_HTC_SVC_GRP_WMI = 1,
++	ATH11K_HTC_SVC_GRP_NMI = 2,
++	ATH11K_HTC_SVC_GRP_HTT = 3,
++	ATH11K_HTC_SVC_GRP_CFG = 4,
++	ATH11K_HTC_SVC_GRP_IPA = 5,
++	ATH11K_HTC_SVC_GRP_PKTLOG = 6,
 +
-+#define WMI_HT_CAP_ENABLED			0x0001
-+#define WMI_HT_CAP_HT20_SGI			0x0002
-+#define WMI_HT_CAP_DYNAMIC_SMPS			0x0004
-+#define WMI_HT_CAP_TX_STBC			0x0008
-+#define WMI_HT_CAP_TX_STBC_MASK_SHIFT		3
-+#define WMI_HT_CAP_RX_STBC			0x0030
-+#define WMI_HT_CAP_RX_STBC_MASK_SHIFT		4
-+#define WMI_HT_CAP_LDPC				0x0040
-+#define WMI_HT_CAP_L_SIG_TXOP_PROT		0x0080
-+#define WMI_HT_CAP_MPDU_DENSITY			0x0700
-+#define WMI_HT_CAP_MPDU_DENSITY_MASK_SHIFT	8
-+#define WMI_HT_CAP_HT40_SGI			0x0800
-+#define WMI_HT_CAP_RX_LDPC			0x1000
-+#define WMI_HT_CAP_TX_LDPC			0x2000
-+#define WMI_HT_CAP_IBF_BFER			0x4000
++	ATH11K_HTC_SVC_GRP_TEST = 254,
++	ATH11K_HTC_SVC_GRP_LAST = 255,
++};
 +
-+/* These macros should be used when we wish to advertise STBC support for
-+ * only 1SS or 2SS or 3SS.
-+ */
-+#define WMI_HT_CAP_RX_STBC_1SS			0x0010
-+#define WMI_HT_CAP_RX_STBC_2SS			0x0020
-+#define WMI_HT_CAP_RX_STBC_3SS			0x0030
++#define SVC(group, idx) \
++	(int)(((int)(group) << 8) | (int)(idx))
 +
-+#define WMI_HT_CAP_DEFAULT_ALL (WMI_HT_CAP_ENABLED    | \
-+				WMI_HT_CAP_HT20_SGI   | \
-+				WMI_HT_CAP_HT40_SGI   | \
-+				WMI_HT_CAP_TX_STBC    | \
-+				WMI_HT_CAP_RX_STBC    | \
-+				WMI_HT_CAP_LDPC)
++enum ath11k_htc_svc_id {
++	/* NOTE: service ID of 0x0000 is reserved and should never be used */
++	ATH11K_HTC_SVC_ID_RESERVED	= 0x0000,
++	ATH11K_HTC_SVC_ID_UNUSED	= ATH11K_HTC_SVC_ID_RESERVED,
 +
-+#define WMI_VHT_CAP_MAX_MPDU_LEN_MASK		0x00000003
-+#define WMI_VHT_CAP_RX_LDPC			0x00000010
-+#define WMI_VHT_CAP_SGI_80MHZ			0x00000020
-+#define WMI_VHT_CAP_SGI_160MHZ			0x00000040
-+#define WMI_VHT_CAP_TX_STBC			0x00000080
-+#define WMI_VHT_CAP_RX_STBC_MASK		0x00000300
-+#define WMI_VHT_CAP_RX_STBC_MASK_SHIFT		8
-+#define WMI_VHT_CAP_SU_BFER			0x00000800
-+#define WMI_VHT_CAP_SU_BFEE			0x00001000
-+#define WMI_VHT_CAP_MAX_CS_ANT_MASK		0x0000E000
-+#define WMI_VHT_CAP_MAX_CS_ANT_MASK_SHIFT	13
-+#define WMI_VHT_CAP_MAX_SND_DIM_MASK		0x00070000
-+#define WMI_VHT_CAP_MAX_SND_DIM_MASK_SHIFT	16
-+#define WMI_VHT_CAP_MU_BFER			0x00080000
-+#define WMI_VHT_CAP_MU_BFEE			0x00100000
-+#define WMI_VHT_CAP_MAX_AMPDU_LEN_EXP		0x03800000
-+#define WMI_VHT_CAP_MAX_AMPDU_LEN_EXP_SHIT	23
-+#define WMI_VHT_CAP_RX_FIXED_ANT		0x10000000
-+#define WMI_VHT_CAP_TX_FIXED_ANT		0x20000000
++	ATH11K_HTC_SVC_ID_RSVD_CTRL	= SVC(ATH11K_HTC_SVC_GRP_RSVD, 1),
++	ATH11K_HTC_SVC_ID_WMI_CONTROL	= SVC(ATH11K_HTC_SVC_GRP_WMI, 0),
++	ATH11K_HTC_SVC_ID_WMI_DATA_BE	= SVC(ATH11K_HTC_SVC_GRP_WMI, 1),
++	ATH11K_HTC_SVC_ID_WMI_DATA_BK	= SVC(ATH11K_HTC_SVC_GRP_WMI, 2),
++	ATH11K_HTC_SVC_ID_WMI_DATA_VI	= SVC(ATH11K_HTC_SVC_GRP_WMI, 3),
++	ATH11K_HTC_SVC_ID_WMI_DATA_VO	= SVC(ATH11K_HTC_SVC_GRP_WMI, 4),
++	ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC1 = SVC(ATH11K_HTC_SVC_GRP_WMI, 5),
++	ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC2 = SVC(ATH11K_HTC_SVC_GRP_WMI, 6),
 +
-+#define WMI_VHT_CAP_MAX_MPDU_LEN_11454		0x00000002
++	ATH11K_HTC_SVC_ID_NMI_CONTROL	= SVC(ATH11K_HTC_SVC_GRP_NMI, 0),
++	ATH11K_HTC_SVC_ID_NMI_DATA	= SVC(ATH11K_HTC_SVC_GRP_NMI, 1),
 +
-+/* These macros should be used when we wish to advertise STBC support for
-+ * only 1SS or 2SS or 3SS.
-+ */
-+#define WMI_VHT_CAP_RX_STBC_1SS			0x00000100
-+#define WMI_VHT_CAP_RX_STBC_2SS			0x00000200
-+#define WMI_VHT_CAP_RX_STBC_3SS			0x00000300
++	ATH11K_HTC_SVC_ID_HTT_DATA_MSG	= SVC(ATH11K_HTC_SVC_GRP_HTT, 0),
 +
-+#define WMI_VHT_CAP_DEFAULT_ALL (WMI_VHT_CAP_MAX_MPDU_LEN_11454  | \
-+				 WMI_VHT_CAP_SGI_80MHZ      |       \
-+				 WMI_VHT_CAP_TX_STBC        |       \
-+				 WMI_VHT_CAP_RX_STBC_MASK   |       \
-+				 WMI_VHT_CAP_RX_LDPC        |       \
-+				 WMI_VHT_CAP_MAX_AMPDU_LEN_EXP   |  \
-+				 WMI_VHT_CAP_RX_FIXED_ANT   |       \
-+				 WMI_VHT_CAP_TX_FIXED_ANT)
++	/* raw stream service (i.e. flash, tcmd, calibration apps) */
++	ATH11K_HTC_SVC_ID_TEST_RAW_STREAMS = SVC(ATH11K_HTC_SVC_GRP_TEST, 0),
++	ATH11K_HTC_SVC_ID_IPA_TX = SVC(ATH11K_HTC_SVC_GRP_IPA, 0),
++	ATH11K_HTC_SVC_ID_PKT_LOG = SVC(ATH11K_HTC_SVC_GRP_PKTLOG, 0),
++};
 +
-+/* FIXME: should these be in ieee80211.h? */
-+#define IEEE80211_VHT_MCS_SUPPORT_0_11_MASK	GENMASK(23, 16)
-+#define IEEE80211_DISABLE_VHT_MCS_SUPPORT_0_11	BIT(24)
++#undef SVC
 +
-+#define WMI_MAX_SPATIAL_STREAM			3
++enum ath11k_htc_ep_id {
++	ATH11K_HTC_EP_UNUSED = -1,
++	ATH11K_HTC_EP_0 = 0,
++	ATH11K_HTC_EP_1 = 1,
++	ATH11K_HTC_EP_2,
++	ATH11K_HTC_EP_3,
++	ATH11K_HTC_EP_4,
++	ATH11K_HTC_EP_5,
++	ATH11K_HTC_EP_6,
++	ATH11K_HTC_EP_7,
++	ATH11K_HTC_EP_8,
++	ATH11K_HTC_EP_COUNT,
++};
 +
-+#define ATH11K_CHAN_WIDTH_NUM			8
++struct ath11k_htc_ops {
++	void (*target_send_suspend_complete)(struct ath11k_base *ar);
++};
 +
-+extern const struct htt_rx_ring_tlv_filter ath11k_mac_mon_status_filter_default;
++struct ath11k_htc_ep_ops {
++	void (*ep_tx_complete)(struct ath11k_base *, struct sk_buff *);
++	void (*ep_rx_complete)(struct ath11k_base *, struct sk_buff *);
++	void (*ep_tx_credits)(struct ath11k_base *);
++};
 +
-+int ath11k_mac_create(struct ath11k_base *ab);
-+void ath11k_mac_destroy(struct ath11k_base *ab);
-+void ath11k_mac_unregister(struct ath11k_base *ab);
-+int ath11k_mac_hw_ratecode_to_legacy_rate(u8 hw_rc, u8 preamble, u8 *rateidx,
-+					  u16 *rate);
-+u8 ath11k_mac_bitrate_to_idx(const struct ieee80211_supported_band *sband,
-+			     u32 bitrate);
-+u8 ath11k_mac_hw_rate_to_idx(const struct ieee80211_supported_band *sband,
-+			     u8 hw_rate, bool cck);
++/* service connection information */
++struct ath11k_htc_svc_conn_req {
++	u16 service_id;
++	struct ath11k_htc_ep_ops ep_ops;
++	int max_send_queue_depth;
++};
 +
-+void __ath11k_mac_scan_finish(struct ath11k *ar);
-+void ath11k_mac_scan_finish(struct ath11k *ar);
++/* service connection response information */
++struct ath11k_htc_svc_conn_resp {
++	u8 buffer_len;
++	u8 actual_len;
++	enum ath11k_htc_ep_id eid;
++	unsigned int max_msg_len;
++	u8 connect_resp_code;
++};
 +
-+struct ath11k_vif *ath11k_mac_get_arvif(struct ath11k *ar, u32 vdev_id);
-+struct ath11k_vif *ath11k_mac_get_arvif_by_vdev_id(struct ath11k_base *ab,
-+						   u32 vdev_id);
-+struct ath11k *ath11k_mac_get_ar_by_vdev_id(struct ath11k_base *ab, u32 vdev_id);
-+struct ath11k *ath11k_mac_get_ar_by_pdev_id(struct ath11k_base *ab, u32 pdev_id);
-+struct ath11k *ath11k_mac_get_ar_vdev_stop_status(struct ath11k_base *ab,
-+						  u32 vdev_id);
++#define ATH11K_NUM_CONTROL_TX_BUFFERS 2
++#define ATH11K_HTC_MAX_LEN 4096
++#define ATH11K_HTC_MAX_CTRL_MSG_LEN 256
++#define ATH11K_HTC_WAIT_TIMEOUT_HZ (1 * HZ)
++#define ATH11K_HTC_CONTROL_BUFFER_SIZE (ATH11K_HTC_MAX_CTRL_MSG_LEN + \
++					sizeof(struct ath11k_htc_hdr))
++#define ATH11K_HTC_CONN_SVC_TIMEOUT_HZ (1 * HZ)
++#define ATH11K_HTC_MAX_SERVICE_ALLOC_ENTRIES 8
 +
-+void ath11k_mac_drain_tx(struct ath11k *ar);
-+void ath11k_mac_peer_cleanup_all(struct ath11k *ar);
-+int ath11k_mac_tx_mgmt_pending_free(int buf_id, void *skb, void *ctx);
++struct ath11k_htc_ep {
++	struct ath11k_htc *htc;
++	enum ath11k_htc_ep_id eid;
++	enum ath11k_htc_svc_id service_id;
++	struct ath11k_htc_ep_ops ep_ops;
++
++	int max_tx_queue_depth;
++	int max_ep_message_len;
++	u8 ul_pipe_id;
++	u8 dl_pipe_id;
++
++	u8 seq_no; /* for debugging */
++	int tx_credits;
++	bool tx_credit_flow_enabled;
++};
++
++struct ath11k_htc_svc_tx_credits {
++	u16 service_id;
++	u8  credit_allocation;
++};
++
++struct ath11k_htc {
++	struct ath11k_base *ab;
++	struct ath11k_htc_ep endpoint[ATH11K_HTC_EP_COUNT];
++
++	/* protects endpoints */
++	spinlock_t tx_lock;
++
++	struct ath11k_htc_ops htc_ops;
++
++	u8 control_resp_buffer[ATH11K_HTC_MAX_CTRL_MSG_LEN];
++	int control_resp_len;
++
++	struct completion ctl_resp;
++
++	int total_transmit_credits;
++	struct ath11k_htc_svc_tx_credits
++		service_alloc_table[ATH11K_HTC_MAX_SERVICE_ALLOC_ENTRIES];
++	int target_credit_size;
++	u8 wmi_ep_count;
++};
++
++int ath11k_htc_init(struct ath11k_base *ar);
++int ath11k_htc_wait_target(struct ath11k_htc *htc);
++int ath11k_htc_start(struct ath11k_htc *htc);
++int ath11k_htc_connect_service(struct ath11k_htc *htc,
++			       struct ath11k_htc_svc_conn_req  *conn_req,
++			       struct ath11k_htc_svc_conn_resp *conn_resp);
++int ath11k_htc_send(struct ath11k_htc *htc, enum ath11k_htc_ep_id eid,
++		    struct sk_buff *packet);
++struct sk_buff *ath11k_htc_alloc_skb(struct ath11k_base *ar, int size);
++void ath11k_htc_rx_completion_handler(struct ath11k_base *ar,
++				      struct sk_buff *skb);
++
 +#endif
 
