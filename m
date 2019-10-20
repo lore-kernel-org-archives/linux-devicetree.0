@@ -2,421 +2,129 @@ Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B6CCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 20:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F1CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 21:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84B020869
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 20:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B84821928
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 21:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Z1URIBeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbfJTUFc (ORCPT
+        id S1726301AbfJTVR4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 16:05:32 -0400
-Received: from mga07.intel.com ([134.134.136.100]:45572 "EHLO mga07.intel.com"
+        Sun, 20 Oct 2019 17:17:56 -0400
+Received: from mout.gmx.net ([212.227.15.18]:57311 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfJTUFb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 20 Oct 2019 16:05:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 13:05:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,320,1566889200"; 
-   d="scan'208";a="227107416"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.252.18.15]) ([10.252.18.15])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Oct 2019 13:05:24 -0700
-Subject: Re: [PATCH v2 05/11] ASoC: wcd934x: add playback dapm widgets
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
-        lee.jones@linaro.org, vinod.koul@linaro.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
-        bgoswami@codeaurora.org, linux-gpio@vger.kernel.org
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-6-srinivas.kandagatla@linaro.org>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <e0049071-7fb7-7f9a-e79f-102c1a9c8d20@intel.com>
-Date:   Sun, 20 Oct 2019 22:05:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        id S1726405AbfJTVRz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 20 Oct 2019 17:17:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1571606253;
+        bh=roIbpENmIxP4w7WU842plrcJ0VYVDHDaJFUQvtEjZVw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Z1URIBeTCZdah6s4j/sKdRv73XsfdJpSmOnpWS/epQ8RrHI72c1HYDoFE+wvHaE3z
+         CQyow6f1L56niC1fnkb/SyPdL7WT00eZTT+af3mVkhJjMW3xPLI+uP23N9sxpizPxT
+         Q76fGQ2SNYZOah1/Mq72IH1cp0S3g7lXoyGb7dHQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.112]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MN5eR-1id05A17DB-00J1N0; Sun, 20
+ Oct 2019 23:17:33 +0200
+Subject: Re: [PATCH V4 01/10] bluetooth: hci_bcm: Fix RTS handling during
+ startup
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-bluetooth@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
+ <1570375708-26965-2-git-send-email-wahrenst@gmx.net>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <61789264-a4c2-ac85-9d74-d186213ec70a@gmx.net>
+Date:   Sun, 20 Oct 2019 23:17:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191018001849.27205-6-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <1570375708-26965-2-git-send-email-wahrenst@gmx.net>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:vAXNLeW3B5iKlKv7LnAYxXpah2Ujax35yKaou7peYeveOh8Bfl3
+ GTIPS1NaeC1cJMdYa36LsyR2STBODHsoycgoEwP+G8542RYkQdxAElrhEXuxdsnUAi7liOa
+ wS4SGlI/65Cfkj4tunClj/0XRjXDjXgbch8NLBUgrVl6ju/3d7+odcsqVyjjlzKviPYagej
+ T90QqRJzev5JXtZ2v7BrA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZvVXQvPtsDM=:Rq5rL0CL03Z2b8FC5Z2jzt
+ IMZD4nGS529l9VjgJSXNIP5SkKDH6OD11sRP78HHHwK9vvT0s0k+iXuaZF3wOwDmOB3w0fPDc
+ 97oyAndzL0qEOIRwqdYSUUvQ29+RmiJJk/Yc9+KdVs7XpNzpeWheOGViq1COuLFWfWK4CbsER
+ QdNjScNeOE/79coAjarQCv0u8EXAYO7Al36INHpHz5nNnDfUlKqvskBsXN21cZR4DEpgfvatS
+ 7uAhiVrshIVVHQ/UG+Y+7nIIvqFssB0HsJHeBQv+6IZ45A32ABK/IewFZ3BZg7ClMIBBv0qeG
+ +n4zricQibxE0O1cOMKWl918w1rg/Rml2NtrgSI6s18Dd783q/01Xud7S/7Z4eyum9WWOfhQp
+ iZjPf5fiPw4eUhbNmUfMT0T0xWttDRGaJIt/A3CYDtkKFvAo/1qP+Mt9BU0QwDqD7iKbN4v0Y
+ TXhq1v5oY9T+tUpoVuv6dZMWGsM6R2Qs3zrX1HEe3c/Diyzk/ltFqNbe+WjjbHk3/VupMXLt6
+ JdQWZgs9Um6ZQW7q+K2o42tgpxCuZ922KzUCnknE0qtVoHjsqtROILyvjBq21SAOt5NIb5A93
+ HWCUEjTqzphXtfoGuiI92F7S+qISKdIRfkeg8L2++MQLSsZ2xxPH3rX4thcGNEQhwYJ9lPOhi
+ uRB5EcaYg6YJhbpj2kfTHZESzX8UK+KA2FEjrVuQOFcaQBkcikEq1FhbfNc3s9lbjQeVAXPRL
+ au8BC4usnvAxnE8N5C+eBiX0VnLw9WiSRHjdS0y7XtHNK/llgI2A6JsyWxoG0bu848q+38Ky0
+ pgwTeWRtj5mxJp9OIKOwSDqh+zMgikMhnpWjzzUVJbYFT0fCsvoS3wwBj2O7E/BXM0SlHY2eB
+ 1TgrXu9i1++fGRhoS1FohhemCDIsQqtp19PszXDIBEUqZi7SWGJhbZnRK5Gs//xZcaBaxLFJO
+ w/UdhsLcyquEgpKcp2YLiuFg73mLHvrmVOs9DqsdoPl/OS3VsmY2lGdN5WDOMaxeaw4yvACpe
+ FPDfotLCr6r7CzxRGsWpqd2jELzKQQa5s8X/qRwPcerlChy1qqVk78ksefjNMr8OJkCBp3YQZ
+ PUda8HS8TXloj9R1yMuq++VyQz9FH9EavSLfof/g1XqeaC6ewoMULPxlXZLfUA9k5IwiWKSzU
+ HF3RYWSLPym91HsCM82SIWOtcaCAJhKcpIIw/A0RoOx4v3zz/jX55LCFwhaE5I2EGMNCFW4Ta
+ AiolJFF63DpRR/O53R4biOThQ9pt/Jbphr1hBIgRtDlLbW2VNWmCXz+eHLsg=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-18 02:18, Srinivas Kandagatla wrote:
-> +static int wcd934x_codec_enable_slim(struct snd_soc_dapm_widget *w,
-> +				     struct snd_kcontrol *kc,
-> +				       int event)
-> +{
-> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
-> +	struct wcd934x_codec *wcd = snd_soc_component_get_drvdata(comp);
-> +	struct wcd_slim_codec_dai_data *dai = &wcd->dai[w->shift];
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		wcd934x_codec_enable_int_port(dai, comp);
-> +		break;
-> +	case SNDRV_PCM_TRIGGER_STOP:
-> +		break;
+Hi Marcel,
+hi Johan,
 
-Any reason for mentioning _TRIGGER_STOP here?
+Am 06.10.19 um 17:28 schrieb Stefan Wahren:
+> The RPi 4 uses the hardware handshake lines for CYW43455, but the chip
+> doesn't react to HCI requests during DT probe. The reason is the inproper
+> handling of the RTS line during startup. According to the startup
+> signaling sequence in the CYW43455 datasheet, the hosts RTS line must
+> be driven after BT_REG_ON and BT_HOST_WAKE.
+>
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> ---
+>  drivers/bluetooth/hci_bcm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+> index 7646636..0f73f6a 100644
+> --- a/drivers/bluetooth/hci_bcm.c
+> +++ b/drivers/bluetooth/hci_bcm.c
+> @@ -445,9 +445,11 @@ static int bcm_open(struct hci_uart *hu)
+>
+>  out:
+>  	if (bcm->dev) {
+> +		hci_uart_set_flow_control(hu, true);
+>  		hu->init_speed = bcm->dev->init_speed;
+>  		hu->oper_speed = bcm->dev->oper_speed;
+>  		err = bcm_gpio_set_power(bcm->dev, true);
+> +		hci_uart_set_flow_control(hu, false);
+>  		if (err)
+>  			goto err_unset_hu;
+>  	}
+> --
+> 2.7.4
 
-> +	case SND_SOC_DAPM_POST_PMD:
-> +		kfree(dai->sconfig.chs);
-> +
-> +		break;
+would be nice to get some feedback about this.
 
-Comment for kfree depending on _event_ would be advised.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void wcd934x_codec_hd2_control(struct snd_soc_component *component,
-> +				      u16 interp_idx, int event)
-> +{
-> +	u16 hd2_scale_reg;
-> +	u16 hd2_enable_reg = 0;
-> +
-> +	switch (interp_idx) {
-> +	case INTERP_HPHL:
-> +		hd2_scale_reg = WCD934X_CDC_RX1_RX_PATH_SEC3;
-> +		hd2_enable_reg = WCD934X_CDC_RX1_RX_PATH_CFG0;
-> +		break;
-> +	case INTERP_HPHR:
-> +		hd2_scale_reg = WCD934X_CDC_RX2_RX_PATH_SEC3;
-> +		hd2_enable_reg = WCD934X_CDC_RX2_RX_PATH_CFG0;
-> +		break;
-> +	}
-
-What's the rest of this function for if switch-case does not match?
-Without hd2_enable_reg > 0 you might as well return immediately.
-
-> +
-> +	if (hd2_enable_reg && SND_SOC_DAPM_EVENT_ON(event)) {
-> +		snd_soc_component_update_bits(component, hd2_scale_reg,
-> +				      WCD934X_CDC_RX_PATH_SEC_HD2_ALPHA_MASK,
-> +				      WCD934X_CDC_RX_PATH_SEC_HD2_ALPHA_0P3125);
-> +		snd_soc_component_update_bits(component, hd2_enable_reg,
-> +				      WCD934X_CDC_RX_PATH_CFG_HD2_EN_MASK,
-> +				      WCD934X_CDC_RX_PATH_CFG_HD2_ENABLE);
-> +	}
-> +
-> +	if (hd2_enable_reg && SND_SOC_DAPM_EVENT_OFF(event)) {
-> +		snd_soc_component_update_bits(component, hd2_enable_reg,
-> +				      WCD934X_CDC_RX_PATH_CFG_HD2_EN_MASK,
-> +				      WCD934X_CDC_RX_PATH_CFG_HD2_DISABLE);
-> +		snd_soc_component_update_bits(component, hd2_scale_reg,
-> +				      WCD934X_CDC_RX_PATH_SEC_HD2_ALPHA_MASK,
-> +				      WCD934X_CDC_RX_PATH_SEC_HD2_ALPHA_0P0000);
-> +	}
-> +}
-> +
-> +static void wcd934x_codec_hphdelay_lutbypass(struct snd_soc_component *comp,
-> +					     u16 interp_idx, int event)
-> +{
-> +	u8 hph_dly_mask;
-> +	u16 hph_lut_bypass_reg = 0;
-> +	u16 hph_comp_ctrl7 = 0;
-> +
-> +	switch (interp_idx) {
-> +	case INTERP_HPHL:
-> +		hph_dly_mask = 1;
-> +		hph_lut_bypass_reg = WCD934X_CDC_TOP_HPHL_COMP_LUT;
-> +		hph_comp_ctrl7 = WCD934X_CDC_COMPANDER1_CTL7;
-> +		break;
-> +	case INTERP_HPHR:
-> +		hph_dly_mask = 2;
-> +		hph_lut_bypass_reg = WCD934X_CDC_TOP_HPHR_COMP_LUT;
-> +		hph_comp_ctrl7 = WCD934X_CDC_COMPANDER2_CTL7;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-
-'Default' made it here, what was not the case for most of other 
-switch-case. Keep code consistent would be appreciated.
-Moreover, in the following function "wcd934x_config_compander", you do 
-decide to do all the processing directly within switch-case. I see no 
-reason why you should not do that here too.
-
-Again, once switch-case fails to find match, the rest of function does 
-not do much, really.
-
-
-> +
-> +	if (hph_lut_bypass_reg && SND_SOC_DAPM_EVENT_ON(event)) {
-> +		snd_soc_component_update_bits(comp, WCD934X_CDC_CLSH_TEST0,
-> +					      hph_dly_mask, 0x0);
-> +		snd_soc_component_update_bits(comp, hph_lut_bypass_reg,
-> +					      WCD934X_HPH_LUT_BYPASS_MASK,
-> +					      WCD934X_HPH_LUT_BYPASS_ENABLE);
-> +	}
-> +
-> +	if (hph_lut_bypass_reg && SND_SOC_DAPM_EVENT_OFF(event)) {
-> +		snd_soc_component_update_bits(comp, WCD934X_CDC_CLSH_TEST0,
-> +					      hph_dly_mask, hph_dly_mask);
-> +		snd_soc_component_update_bits(comp, hph_lut_bypass_reg,
-> +					      WCD934X_HPH_LUT_BYPASS_MASK,
-> +					      WCD934X_HPH_LUT_BYPASS_DISABLE);
-> +	}
-> +}
-> +
-> +static int wcd934x_config_compander(struct snd_soc_component *comp,
-> +				    int interp_n, int event)
-> +{
-> +	struct wcd934x_codec *wcd = dev_get_drvdata(comp->dev);
-> +	int compander;
-> +	u16 comp_ctl0_reg, rx_path_cfg0_reg;
-> +
-> +	/* EAR does not have compander */
-> +	if (!interp_n)
-> +		return 0;
-> +
-> +	compander = interp_n - 1;
-> +	if (!wcd->comp_enabled[compander])
-> +		return 0;
-> +
-> +	comp_ctl0_reg = WCD934X_CDC_COMPANDER1_CTL0 + (compander * 8);
-> +	rx_path_cfg0_reg = WCD934X_CDC_RX1_RX_PATH_CFG0 + (compander * 20);
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_PRE_PMU:
-> +		/* Enable Compander Clock */
-> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
-> +					      WCD934X_COMP_CLK_EN_MASK,
-> +					      WCD934X_COMP_CLK_ENABLE);
-> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
-> +					      WCD934X_COMP_SOFT_RST_MASK,
-> +					      WCD934X_COMP_SOFT_RST_ENABLE);
-> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
-> +					      WCD934X_COMP_SOFT_RST_MASK,
-> +					      WCD934X_COMP_SOFT_RST_DISABLE);
-> +		snd_soc_component_update_bits(comp, rx_path_cfg0_reg,
-> +					      WCD934X_HPH_CMP_EN_MASK,
-> +					      WCD934X_HPH_CMP_ENABLE);
-> +		break;
-> +	case SND_SOC_DAPM_POST_PMD:
-> +		snd_soc_component_update_bits(comp, rx_path_cfg0_reg,
-> +					      WCD934X_HPH_CMP_EN_MASK,
-> +					      WCD934X_HPH_CMP_DISABLE);
-> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
-> +					      WCD934X_COMP_HALT_MASK,
-> +					      WCD934X_COMP_HALT);
-> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
-> +					      WCD934X_COMP_SOFT_RST_MASK,
-> +					      WCD934X_COMP_SOFT_RST_ENABLE);
-> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
-> +					      WCD934X_COMP_SOFT_RST_MASK,
-> +					      WCD934X_COMP_SOFT_RST_DISABLE);
-> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
-> +					      WCD934X_COMP_CLK_EN_MASK, 0x0);
-> +		snd_soc_component_update_bits(comp, comp_ctl0_reg,
-> +					      WCD934X_COMP_SOFT_RST_MASK, 0x0);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int wcd934x_codec_enable_mix_path(struct snd_soc_dapm_widget *w,
-> +					 struct snd_kcontrol *kc, int event)
-> +{
-> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
-> +	int offset_val = 0;
-> +	u16 gain_reg, mix_reg;
-> +	int val = 0;
-> +
-> +	gain_reg = WCD934X_CDC_RX0_RX_VOL_MIX_CTL +
-> +					(w->shift * WCD934X_RX_PATH_CTL_OFFSET);
-> +	mix_reg = WCD934X_CDC_RX0_RX_PATH_MIX_CTL +
-> +					(w->shift * WCD934X_RX_PATH_CTL_OFFSET);
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_PRE_PMU:
-> +		/* Clk enable */
-> +		snd_soc_component_update_bits(comp, mix_reg,
-> +					      WCD934X_CDC_RX_MIX_CLK_EN_MASK,
-> +					      WCD934X_CDC_RX_MIX_CLK_ENABLE);
-> +		break;
-> +
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		val = snd_soc_component_read32(comp, gain_reg);
-> +		val += offset_val;
-> +		snd_soc_component_write(comp, gain_reg, val);
-> +		break;
-> +	case SND_SOC_DAPM_POST_PMD:
-> +		break;
-
-Redundant case?.
-> +	};
-> +
-> +	return 0;
-> +}
-> +
-> +static int wcd934x_codec_set_iir_gain(struct snd_soc_dapm_widget *w,
-> +				      struct snd_kcontrol *kcontrol, int event)
-> +{
-> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
-> +	int reg = w->reg;
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		/* B1 GAIN */
-> +		snd_soc_component_write(comp, reg,
-> +					snd_soc_component_read32(comp, reg));
-> +		/* B2 GAIN */
-> +		reg++;
-> +		snd_soc_component_write(comp, reg,
-> +					snd_soc_component_read32(comp, reg));
-> +		/* B3 GAIN */
-> +		reg++;
-> +		snd_soc_component_write(comp, reg,
-> +					snd_soc_component_read32(comp, reg));
-> +		/* B4 GAIN */
-> +		reg++;
-> +		snd_soc_component_write(comp, reg,
-> +					snd_soc_component_read32(comp, reg));
-> +		/* B5 GAIN */
-> +		reg++;
-> +		snd_soc_component_write(comp, reg,
-> +					snd_soc_component_read32(comp, reg));
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	return 0;
-
-Missing newline before return - based on format of your other functions.
-
-> +}
-> +
-> +static int wcd934x_codec_enable_main_path(struct snd_soc_dapm_widget *w,
-> +					  struct snd_kcontrol *kcontrol,
-> +					int event)
-> +{
-> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
-> +	u16 gain_reg;
-> +	u32 val;
-> +
-> +	gain_reg = WCD934X_CDC_RX0_RX_VOL_CTL + (w->shift *
-> +						 WCD934X_RX_PATH_CTL_OFFSET);
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		val = snd_soc_component_read32(comp, gain_reg);
-> +		snd_soc_component_write(comp, gain_reg, val);
-> +		break;
-> +	};
-
-In the function above, "wcd934x_codec_set_iir_gain", you decided against 
-declaring local 'val' for storing _read32, though here, only for a 
-single use-case, you made a difference. Let's keep it consistent and run 
-with one or the other.
-
-Also, is there any value for assigning gain_reg outside of switch-case?
-
-> +
-> +	return 0;
-> +}
-
-> +static int wcd934x_codec_enable_hphl_pa(struct snd_soc_dapm_widget *w,
-> +					struct snd_kcontrol *kcontrol,
-> +					int event)
-> +{
-> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_PRE_PMU:
-> +		break;
-
-Redundant case.
-
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		/*
-> +		 * 7ms sleep is required after PA is enabled as per
-> +		 * HW requirement. If compander is disabled, then
-> +		 * 20ms delay is needed.
-> +		 */
-> +		usleep_range(20000, 20100);
-> +
-> +		snd_soc_component_update_bits(comp, WCD934X_HPH_L_TEST,
-> +					      WCD934X_HPH_OCP_DET_MASK,
-> +					      WCD934X_HPH_OCP_DET_ENABLE);
-> +		/* Remove Mute on primary path */
-> +		snd_soc_component_update_bits(comp, WCD934X_CDC_RX1_RX_PATH_CTL,
-> +				      WCD934X_RX_PATH_PGA_MUTE_EN_MASK,
-> +				      0);
-> +		/* Enable GM3 boost */
-> +		snd_soc_component_update_bits(comp, WCD934X_HPH_CNP_WG_CTL,
-> +					      WCD934X_HPH_GM3_BOOST_EN_MASK,
-> +					      WCD934X_HPH_GM3_BOOST_ENABLE);
-> +		/* Enable AutoChop timer at the end of power up */
-> +		snd_soc_component_update_bits(comp,
-> +				      WCD934X_HPH_NEW_INT_HPH_TIMER1,
-> +				      WCD934X_HPH_AUTOCHOP_TIMER_EN_MASK,
-> +				      WCD934X_HPH_AUTOCHOP_TIMER_ENABLE);
-> +		/* Remove mix path mute */
-> +		snd_soc_component_update_bits(comp,
-> +				WCD934X_CDC_RX1_RX_PATH_MIX_CTL,
-> +				WCD934X_CDC_RX_PGA_MUTE_EN_MASK, 0x00);
-> +		break;
-> +	case SND_SOC_DAPM_PRE_PMD:
-> +		/* Enable DSD Mute before PA disable */
-> +
-> +		snd_soc_component_update_bits(comp, WCD934X_HPH_L_TEST,
-> +					      WCD934X_HPH_OCP_DET_MASK,
-> +					      WCD934X_HPH_OCP_DET_DISABLE);
-> +		snd_soc_component_update_bits(comp, WCD934X_CDC_RX1_RX_PATH_CTL,
-> +					      WCD934X_RX_PATH_PGA_MUTE_EN_MASK,
-> +					      WCD934X_RX_PATH_PGA_MUTE_ENABLE);
-> +		snd_soc_component_update_bits(comp,
-> +					      WCD934X_CDC_RX1_RX_PATH_MIX_CTL,
-> +					      WCD934X_RX_PATH_PGA_MUTE_EN_MASK,
-> +					      WCD934X_RX_PATH_PGA_MUTE_ENABLE);
-> +		break;
-> +	case SND_SOC_DAPM_POST_PMD:
-> +		/*
-> +		 * 5ms sleep is required after PA disable. If compander is
-> +		 * disabled, then 20ms delay is needed after PA disable.
-> +		 */
-> +			usleep_range(20000, 20100);
-
-Superfluous identation.
-
-> +		break;
-> +	};
-> +
-> +	return 0;
-> +}
-> +
-> +static int wcd934x_codec_enable_hphr_pa(struct snd_soc_dapm_widget *w,
-> +					struct snd_kcontrol *kcontrol,
-> +					int event)
-> +{
-> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_PRE_PMU:
-> +		break;
-
-Redundant case.
-
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		/*
-> +		 * 7ms sleep is required after PA is enabled as per
-> +		 * HW requirement. If compander is disabled, then
-> +		 * 20ms delay is needed.
-> +		 */
-> +		usleep_range(20000, 20100);
+Regards
+Stefan
 
