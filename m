@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CE9CA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E28CA9EA9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F37EF222BD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09982190F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="guNI9qXr";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gveHzsYA"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nLKW1ltk";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MGSqOrqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbfJTKFw (ORCPT
+        id S1726524AbfJTKFy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 06:05:52 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49804 "EHLO
+        Sun, 20 Oct 2019 06:05:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49972 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfJTKFv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 06:05:51 -0400
+        with ESMTP id S1726272AbfJTKFx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 06:05:53 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B4965612EE; Sun, 20 Oct 2019 10:05:42 +0000 (UTC)
+        id 8BEAF61645; Sun, 20 Oct 2019 10:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571565950;
-        bh=XJybD5uGC+L3kvQxcr+1c6jZvPE3CbU+r81KelTNQuA=;
+        s=default; t=1571565952;
+        bh=Kxqc5QO3KywQh2Tr62cMbJ1rX0g2C3BZ01Ey4NzoEC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=guNI9qXrdYQQLAH+XO+FtEU5DB2nOS1U3DqdYhil+n/+UUgpfXyvwaJGeTVmhqwr7
-         GJi5qYnKtT+ftiTNaqQMTtaZ4aAwJercg/io4w29ct3d7wgsKrkf5fBrytgFmK9Btg
-         lGkontr3CwK/tJxScmjL3BlNXns+FDFJhFLUI2cI=
+        b=nLKW1ltksHGRulpmopMC6aiC8w33p+4c7X6e3FWpuh8o8g2IJeS76c3cmvsGkvS4u
+         agQVl3df9uk5MvKy5NNC75qz7TdP9SmMBtkJp0StptVNzdIr8zsoREzTgoEqn3Vxqy
+         yuSQWHsT3XqMEOr3iaG8WlqbdRpcA3ck+mTb0Xwo=
 Received: from x230.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16859612DE;
-        Sun, 20 Oct 2019 10:05:39 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 267B361271;
+        Sun, 20 Oct 2019 10:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571565941;
-        bh=XJybD5uGC+L3kvQxcr+1c6jZvPE3CbU+r81KelTNQuA=;
+        s=default; t=1571565947;
+        bh=Kxqc5QO3KywQh2Tr62cMbJ1rX0g2C3BZ01Ey4NzoEC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gveHzsYAQVelktKDOk8ubIVZDVCAef42LSnTEFyPGZPW7eP3iPfuegN6QU3b2xKJc
-         baOOXj4GGAOFMIGGg3frCuzXSf0bN1SwUyJARCoDkDJQV9fiCoiIh/nPy94ry8EcY0
-         8xTdzB+F4rHPyC5III+Hun4IlUq9Zj+jszu9g6d8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 16859612DE
+        b=MGSqOrqeQMZ+AL6YODTIWn9PHENIUp9ihV2HubVY4pb93izFjaL/J40dYBfHNyPr9
+         SFLOvD/ctqQwxWrGF+uVS3DaokHJ0BQ6aEiZpKNC1QmFbBanQgRgbW3PxfzNQA3n1r
+         kV2wxq+cfV7uHYTaS/FDJrdWUleBsnEWs/E7iFBA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 267B361271
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 From:   Kalle Valo <kvalo@codeaurora.org>
 To:     linux-wireless@vger.kernel.org
 Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 38/49] ath11k: add reg.h
-Date:   Sun, 20 Oct 2019 13:03:56 +0300
-Message-Id: <1571565847-10338-39-git-send-email-kvalo@codeaurora.org>
+Subject: [PATCH v2 41/49] ath11k: add testmode.h
+Date:   Sun, 20 Oct 2019 13:03:59 +0300
+Message-Id: <1571565847-10338-42-git-send-email-kvalo@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
 References: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
@@ -66,48 +66,42 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 ---
- drivers/net/wireless/ath/ath11k/reg.h | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/net/wireless/ath/ath11k/testmode.h | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/reg.h b/drivers/net/wireless/ath/ath11k/reg.h
+diff --git a/drivers/net/wireless/ath/ath11k/testmode.h b/drivers/net/wireless/ath/ath11k/testmode.h
 new file mode 100644
-index 000000000000..39b7fc943541
+index 000000000000..aaa122ed9069
 --- /dev/null
-+++ b/drivers/net/wireless/ath/ath11k/reg.h
-@@ -0,0 +1,35 @@
++++ b/drivers/net/wireless/ath/ath11k/testmode.h
+@@ -0,0 +1,29 @@
 +/* SPDX-License-Identifier: BSD-3-Clause-Clear */
 +/*
-+ * Copyright (c) 2019 The Linux Foundation. All rights reserved.
++ * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 + */
 +
-+#ifndef ATH11K_REG_H
-+#define ATH11K_REG_H
++#include "core.h"
 +
-+#include <linux/kernel.h>
-+#include <net/regulatory.h>
++#ifdef CONFIG_NL80211_TESTMODE
 +
-+struct ath11k_base;
-+struct ath11k;
++bool ath11k_tm_event_wmi(struct ath11k *ar, u32 cmd_id, struct sk_buff *skb);
++int ath11k_tm_cmd(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
++		  void *data, int len);
 +
-+/* DFS regdomains supported by Firmware */
-+enum ath11k_dfs_region {
-+	ATH11K_DFS_REG_UNSET,
-+	ATH11K_DFS_REG_FCC,
-+	ATH11K_DFS_REG_ETSI,
-+	ATH11K_DFS_REG_MKK,
-+	ATH11K_DFS_REG_CN,
-+	ATH11K_DFS_REG_KR,
-+	ATH11K_DFS_REG_UNDEF,
-+};
++#else
 +
-+/* ATH11K Regulatory API's */
-+void ath11k_reg_init(struct ath11k *ar);
-+void ath11k_reg_free(struct ath11k_base *ab);
-+void ath11k_regd_update_work(struct work_struct *work);
-+struct ieee80211_regdomain *
-+ath11k_reg_build_regd(struct ath11k_base *ab,
-+		      struct cur_regulatory_info *reg_info, bool intersect);
-+int ath11k_regd_update(struct ath11k *ar, bool init);
-+int ath11k_reg_update_chan_list(struct ath11k *ar);
++static inline bool ath11k_tm_event_wmi(struct ath11k *ar, u32 cmd_id,
++				       struct sk_buff *skb)
++{
++	return false;
++}
++
++static inline int ath11k_tm_cmd(struct ieee80211_hw *hw,
++				struct ieee80211_vif *vif,
++				void *data, int len)
++{
++	return 0;
++}
++
 +#endif
 
