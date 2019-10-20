@@ -2,58 +2,58 @@ Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304D9CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9F1C4CECE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D0C2067B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA32F20679
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 10:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kZyMdWe8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X5ugu0EW"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DGw+cspu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WIiO80T1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfJTKGH (ORCPT
+        id S1726553AbfJTKGJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 06:06:07 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51052 "EHLO
+        Sun, 20 Oct 2019 06:06:09 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50946 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfJTKGH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 06:06:07 -0400
+        with ESMTP id S1726376AbfJTKGJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 06:06:09 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 223F061669; Sun, 20 Oct 2019 10:05:52 +0000 (UTC)
+        id 12A6A6166B; Sun, 20 Oct 2019 10:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571565965;
-        bh=TgcLdsdu40zlbJ20OOGbfrow/cyD+hIeG8t3KLcO770=;
+        s=default; t=1571565964;
+        bh=//13TQmscer0GiSMmlMuKEm2Z0bO0l/38CJA8JGXhec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZyMdWe8ALfWcXfpOmQmDkK1odmLHaHueAkyLaZJavEGiO0Oh7VSJNgmVG8faP9fr
-         3k+dSlJIbpyWYqQI1sPF8Mm3ak7TINCN+kCYalsxmSnDbgIHafG82NWtjQCVST3inW
-         LT6TvsUE8XlT95Ibx2UBbVtFqnxhkTpNkmb6rX7A=
+        b=DGw+cspuEiJpcvlYDDaRDSmrA2ywtErIxDzna9sprOHqspGI9Qz473IRgqyxawYEX
+         qSoZE/9/xlu92ACvnnqYaT5YZEs/B1QPNlMEZt/HMQdxuU5xecNhDRRMVipKahbKCI
+         CZv3fmZSWqCTpKXvzhKnYDFhT6+d5smbns4JrOl8=
 Received: from x230.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3CCD6160A;
-        Sun, 20 Oct 2019 10:05:41 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 19E126138E;
+        Sun, 20 Oct 2019 10:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571565943;
-        bh=TgcLdsdu40zlbJ20OOGbfrow/cyD+hIeG8t3KLcO770=;
+        s=default; t=1571565926;
+        bh=//13TQmscer0GiSMmlMuKEm2Z0bO0l/38CJA8JGXhec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5ugu0EWsVjMSfxRMgjH7DPAYBRZh+vXGVcRaeysG7cVBUPFejON8yG/n9C842Fd7
-         XJhNahWJWcwsCTyc9KGGGuVr37hAWAAij7D/Fk3Yw5xSJKYVic1Q9WnlAgDy1DxMl3
-         LrjXThRc2yOjwUy8TH2EfsnLjTtC53fgR5wOjrPk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C3CCD6160A
+        b=WIiO80T1A/g1Wya9BNuUwKb4qzvYjnQwIQJfyNtVzK4xcP4K007dI+Qqhu0DdMN6S
+         z2KPXG+E+kSV3wlu9TWplm7XZ6VtnOKywx8zYcwqRJdpnDlxdg5L3ZcLPJJIVHV+0J
+         mThcnHwhUMPMQ9H98s+aA6AvhFSRhR2Elp+vOD5E=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 19E126138E
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 From:   Kalle Valo <kvalo@codeaurora.org>
 To:     linux-wireless@vger.kernel.org
 Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 39/49] ath11k: add rx_desc.h
-Date:   Sun, 20 Oct 2019 13:03:57 +0300
-Message-Id: <1571565847-10338-40-git-send-email-kvalo@codeaurora.org>
+Subject: [PATCH v2 31/49] ath11k: add mac.c
+Date:   Sun, 20 Oct 2019 13:03:49 +0300
+Message-Id: <1571565847-10338-32-git-send-email-kvalo@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
 References: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
@@ -66,1225 +66,5440 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 ---
- drivers/net/wireless/ath/ath11k/rx_desc.h | 1212 +++++++++++++++++++++++++++++
- 1 file changed, 1212 insertions(+)
+ drivers/net/wireless/ath/ath11k/mac.c | 5427 +++++++++++++++++++++++++++++++++
+ 1 file changed, 5427 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/rx_desc.h b/drivers/net/wireless/ath/ath11k/rx_desc.h
+diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
 new file mode 100644
-index 000000000000..a5aff801f17f
+index 000000000000..cb025a4a5785
 --- /dev/null
-+++ b/drivers/net/wireless/ath/ath11k/rx_desc.h
-@@ -0,0 +1,1212 @@
-+/* SPDX-License-Identifier: BSD-3-Clause-Clear */
++++ b/drivers/net/wireless/ath/ath11k/mac.c
+@@ -0,0 +1,5427 @@
++// SPDX-License-Identifier: BSD-3-Clause-Clear
 +/*
 + * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 + */
-+#ifndef ATH11K_RX_DESC_H
-+#define ATH11K_RX_DESC_H
 +
-+enum rx_desc_rxpcu_filter {
-+	RX_DESC_RXPCU_FILTER_PASS,
-+	RX_DESC_RXPCU_FILTER_MONITOR_CLIENT,
-+	RX_DESC_RXPCU_FILTER_MONITOR_OTHER,
++#include <net/mac80211.h>
++#include <linux/etherdevice.h>
++#include "mac.h"
++#include "core.h"
++#include "debug.h"
++#include "wmi.h"
++#include "hw.h"
++#include "dp_tx.h"
++#include "dp_rx.h"
++#include "testmode.h"
++#include "peer.h"
++
++#define CHAN2G(_channel, _freq, _flags) { \
++	.band                   = NL80211_BAND_2GHZ, \
++	.hw_value               = (_channel), \
++	.center_freq            = (_freq), \
++	.flags                  = (_flags), \
++	.max_antenna_gain       = 0, \
++	.max_power              = 30, \
++}
++
++#define CHAN5G(_channel, _freq, _flags) { \
++	.band                   = NL80211_BAND_5GHZ, \
++	.hw_value               = (_channel), \
++	.center_freq            = (_freq), \
++	.flags                  = (_flags), \
++	.max_antenna_gain       = 0, \
++	.max_power              = 30, \
++}
++
++static const struct ieee80211_channel ath11k_2ghz_channels[] = {
++	CHAN2G(1, 2412, 0),
++	CHAN2G(2, 2417, 0),
++	CHAN2G(3, 2422, 0),
++	CHAN2G(4, 2427, 0),
++	CHAN2G(5, 2432, 0),
++	CHAN2G(6, 2437, 0),
++	CHAN2G(7, 2442, 0),
++	CHAN2G(8, 2447, 0),
++	CHAN2G(9, 2452, 0),
++	CHAN2G(10, 2457, 0),
++	CHAN2G(11, 2462, 0),
++	CHAN2G(12, 2467, 0),
++	CHAN2G(13, 2472, 0),
++	CHAN2G(14, 2484, 0),
 +};
 +
-+/* rxpcu_filter_pass
-+ *		This MPDU passed the normal frame filter programming of rxpcu.
-+ *
-+ * rxpcu_filter_monitor_client
-+ *		 This MPDU did not pass the regular frame filter and would
-+ *		 have been dropped, were it not for the frame fitting into the
-+ *		 'monitor_client' category.
-+ *
-+ * rxpcu_filter_monitor_other
-+ *		This MPDU did not pass the regular frame filter and also did
-+ *		not pass the rxpcu_monitor_client filter. It would have been
-+ *		dropped accept that it did pass the 'monitor_other' category.
++static const struct ieee80211_channel ath11k_5ghz_channels[] = {
++	CHAN5G(36, 5180, 0),
++	CHAN5G(40, 5200, 0),
++	CHAN5G(44, 5220, 0),
++	CHAN5G(48, 5240, 0),
++	CHAN5G(52, 5260, 0),
++	CHAN5G(56, 5280, 0),
++	CHAN5G(60, 5300, 0),
++	CHAN5G(64, 5320, 0),
++	CHAN5G(100, 5500, 0),
++	CHAN5G(104, 5520, 0),
++	CHAN5G(108, 5540, 0),
++	CHAN5G(112, 5560, 0),
++	CHAN5G(116, 5580, 0),
++	CHAN5G(120, 5600, 0),
++	CHAN5G(124, 5620, 0),
++	CHAN5G(128, 5640, 0),
++	CHAN5G(132, 5660, 0),
++	CHAN5G(136, 5680, 0),
++	CHAN5G(140, 5700, 0),
++	CHAN5G(144, 5720, 0),
++	CHAN5G(149, 5745, 0),
++	CHAN5G(153, 5765, 0),
++	CHAN5G(157, 5785, 0),
++	CHAN5G(161, 5805, 0),
++	CHAN5G(165, 5825, 0),
++	CHAN5G(169, 5845, 0),
++	CHAN5G(173, 5865, 0),
++};
++
++static struct ieee80211_rate ath11k_legacy_rates[] = {
++	{ .bitrate = 10,
++	  .hw_value = ATH11K_HW_RATE_CCK_LP_1M },
++	{ .bitrate = 20,
++	  .hw_value = ATH11K_HW_RATE_CCK_LP_2M,
++	  .hw_value_short = ATH11K_HW_RATE_CCK_SP_2M,
++	  .flags = IEEE80211_RATE_SHORT_PREAMBLE },
++	{ .bitrate = 55,
++	  .hw_value = ATH11K_HW_RATE_CCK_LP_5_5M,
++	  .hw_value_short = ATH11K_HW_RATE_CCK_SP_5_5M,
++	  .flags = IEEE80211_RATE_SHORT_PREAMBLE },
++	{ .bitrate = 110,
++	  .hw_value = ATH11K_HW_RATE_CCK_LP_11M,
++	  .hw_value_short = ATH11K_HW_RATE_CCK_SP_11M,
++	  .flags = IEEE80211_RATE_SHORT_PREAMBLE },
++
++	{ .bitrate = 60, .hw_value = ATH11K_HW_RATE_OFDM_6M },
++	{ .bitrate = 90, .hw_value = ATH11K_HW_RATE_OFDM_9M },
++	{ .bitrate = 120, .hw_value = ATH11K_HW_RATE_OFDM_12M },
++	{ .bitrate = 180, .hw_value = ATH11K_HW_RATE_OFDM_18M },
++	{ .bitrate = 240, .hw_value = ATH11K_HW_RATE_OFDM_24M },
++	{ .bitrate = 360, .hw_value = ATH11K_HW_RATE_OFDM_36M },
++	{ .bitrate = 480, .hw_value = ATH11K_HW_RATE_OFDM_48M },
++	{ .bitrate = 540, .hw_value = ATH11K_HW_RATE_OFDM_54M },
++};
++
++static const int
++ath11k_phymodes[NUM_NL80211_BANDS][ATH11K_CHAN_WIDTH_NUM] = {
++	[NL80211_BAND_2GHZ] = {
++			[NL80211_CHAN_WIDTH_5] = MODE_UNKNOWN,
++			[NL80211_CHAN_WIDTH_10] = MODE_UNKNOWN,
++			[NL80211_CHAN_WIDTH_20_NOHT] = MODE_11AX_HE20_2G,
++			[NL80211_CHAN_WIDTH_20] = MODE_11AX_HE20_2G,
++			[NL80211_CHAN_WIDTH_40] = MODE_11AX_HE40_2G,
++			[NL80211_CHAN_WIDTH_80] = MODE_11AX_HE80_2G,
++			[NL80211_CHAN_WIDTH_80P80] = MODE_UNKNOWN,
++			[NL80211_CHAN_WIDTH_160] = MODE_UNKNOWN,
++	},
++	[NL80211_BAND_5GHZ] = {
++			[NL80211_CHAN_WIDTH_5] = MODE_UNKNOWN,
++			[NL80211_CHAN_WIDTH_10] = MODE_UNKNOWN,
++			[NL80211_CHAN_WIDTH_20_NOHT] = MODE_11AX_HE20,
++			[NL80211_CHAN_WIDTH_20] = MODE_11AX_HE20,
++			[NL80211_CHAN_WIDTH_40] = MODE_11AX_HE40,
++			[NL80211_CHAN_WIDTH_80] = MODE_11AX_HE80,
++			[NL80211_CHAN_WIDTH_160] = MODE_11AX_HE160,
++			[NL80211_CHAN_WIDTH_80P80] = MODE_11AX_HE80_80,
++	},
++};
++
++const struct htt_rx_ring_tlv_filter ath11k_mac_mon_status_filter_default = {
++	.rx_filter = HTT_RX_FILTER_TLV_FLAGS_MPDU_START |
++		     HTT_RX_FILTER_TLV_FLAGS_PPDU_END |
++		     HTT_RX_FILTER_TLV_FLAGS_PPDU_END_STATUS_DONE,
++	.pkt_filter_flags0 = HTT_RX_FP_MGMT_FILTER_FLAGS0,
++	.pkt_filter_flags1 = HTT_RX_FP_MGMT_FILTER_FLAGS1,
++	.pkt_filter_flags2 = HTT_RX_FP_CTRL_FILTER_FLASG2,
++	.pkt_filter_flags3 = HTT_RX_FP_DATA_FILTER_FLASG3 |
++			     HTT_RX_FP_CTRL_FILTER_FLASG3
++};
++
++#define ATH11K_MAC_FIRST_OFDM_RATE_IDX 4
++#define ath11k_g_rates ath11k_legacy_rates
++#define ath11k_g_rates_size (ARRAY_SIZE(ath11k_legacy_rates))
++#define ath11k_a_rates (ath11k_legacy_rates + 4)
++#define ath11k_a_rates_size (ARRAY_SIZE(ath11k_legacy_rates) - 4)
++
++#define ATH11K_MAC_SCAN_TIMEOUT_MSECS 200 /* in msecs */
++
++static const u32 ath11k_smps_map[] = {
++	[WLAN_HT_CAP_SM_PS_STATIC] = WMI_PEER_SMPS_STATIC,
++	[WLAN_HT_CAP_SM_PS_DYNAMIC] = WMI_PEER_SMPS_DYNAMIC,
++	[WLAN_HT_CAP_SM_PS_INVALID] = WMI_PEER_SMPS_PS_NONE,
++	[WLAN_HT_CAP_SM_PS_DISABLED] = WMI_PEER_SMPS_PS_NONE,
++};
++
++int ath11k_mac_hw_ratecode_to_legacy_rate(u8 hw_rc, u8 preamble, u8 *rateidx,
++					  u16 *rate)
++{
++	/* As default, it is OFDM rates */
++	int i = ATH11K_MAC_FIRST_OFDM_RATE_IDX;
++	int max_rates_idx = ath11k_g_rates_size;
++
++	if (preamble == WMI_RATE_PREAMBLE_CCK) {
++		hw_rc &= ~ATH11k_HW_RATECODE_CCK_SHORT_PREAM_MASK;
++		i = 0;
++		max_rates_idx = ATH11K_MAC_FIRST_OFDM_RATE_IDX;
++	}
++
++	while (i < max_rates_idx) {
++		if (hw_rc == ath11k_legacy_rates[i].hw_value) {
++			*rateidx = i;
++			*rate = ath11k_legacy_rates[i].bitrate;
++			return 0;
++		}
++		i++;
++	}
++
++	return -EINVAL;
++}
++
++static int get_num_chains(u32 mask)
++{
++	int num_chains = 0;
++
++	while (mask) {
++		if (mask & BIT(0))
++			num_chains++;
++		mask >>= 1;
++	}
++
++	return num_chains;
++}
++
++u8 ath11k_mac_bitrate_to_idx(const struct ieee80211_supported_band *sband,
++			     u32 bitrate)
++{
++	int i;
++
++	for (i = 0; i < sband->n_bitrates; i++)
++		if (sband->bitrates[i].bitrate == bitrate)
++			return i;
++
++	return 0;
++}
++
++static u32
++ath11k_mac_max_ht_nss(const u8 ht_mcs_mask[IEEE80211_HT_MCS_MASK_LEN])
++{
++	int nss;
++
++	for (nss = IEEE80211_HT_MCS_MASK_LEN - 1; nss >= 0; nss--)
++		if (ht_mcs_mask[nss])
++			return nss + 1;
++
++	return 1;
++}
++
++static u32
++ath11k_mac_max_vht_nss(const u16 vht_mcs_mask[NL80211_VHT_NSS_MAX])
++{
++	int nss;
++
++	for (nss = NL80211_VHT_NSS_MAX - 1; nss >= 0; nss--)
++		if (vht_mcs_mask[nss])
++			return nss + 1;
++
++	return 1;
++}
++
++static u8 ath11k_parse_mpdudensity(u8 mpdudensity)
++{
++/* 802.11n D2.0 defined values for "Minimum MPDU Start Spacing":
++ *   0 for no restriction
++ *   1 for 1/4 us
++ *   2 for 1/2 us
++ *   3 for 1 us
++ *   4 for 2 us
++ *   5 for 4 us
++ *   6 for 8 us
++ *   7 for 16 us
 + */
++	switch (mpdudensity) {
++	case 0:
++		return 0;
++	case 1:
++	case 2:
++	case 3:
++	/* Our lower layer calculations limit our precision to
++	 * 1 microsecond
++	 */
++		return 1;
++	case 4:
++		return 2;
++	case 5:
++		return 4;
++	case 6:
++		return 8;
++	case 7:
++		return 16;
++	default:
++		return 0;
++	}
++}
 +
-+#define RX_DESC_INFO0_RXPCU_MPDU_FITLER	GENMASK(1, 0)
-+#define RX_DESC_INFO0_SW_FRAME_GRP_ID	GENMASK(8, 2)
++static int ath11k_mac_vif_chan(struct ieee80211_vif *vif,
++			       struct cfg80211_chan_def *def)
++{
++	struct ieee80211_chanctx_conf *conf;
 +
-+enum rx_desc_sw_frame_grp_id {
-+	RX_DESC_SW_FRAME_GRP_ID_NDP_FRAME,
-+	RX_DESC_SW_FRAME_GRP_ID_MCAST_DATA,
-+	RX_DESC_SW_FRAME_GRP_ID_UCAST_DATA,
-+	RX_DESC_SW_FRAME_GRP_ID_NULL_DATA,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_0000,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_0001,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_0010,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_0011,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_0100,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_0101,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_0110,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_0111,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_1000,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_1001,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_1010,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_1011,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_1100,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_1101,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_1110,
-+	RX_DESC_SW_FRAME_GRP_ID_MGMT_1111,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_0000,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_0001,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_0010,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_0011,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_0100,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_0101,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_0110,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_0111,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_1000,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_1001,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_1010,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_1011,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_1100,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_1101,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_1110,
-+	RX_DESC_SW_FRAME_GRP_ID_CTRL_1111,
-+	RX_DESC_SW_FRAME_GRP_ID_UNSUPPORTED,
-+	RX_DESC_SW_FRAME_GRP_ID_PHY_ERR,
++	rcu_read_lock();
++	conf = rcu_dereference(vif->chanctx_conf);
++	if (!conf) {
++		rcu_read_unlock();
++		return -ENOENT;
++	}
++
++	*def = conf->def;
++	rcu_read_unlock();
++
++	return 0;
++}
++
++static bool ath11k_mac_bitrate_is_cck(int bitrate)
++{
++	switch (bitrate) {
++	case 10:
++	case 20:
++	case 55:
++	case 110:
++		return true;
++	}
++
++	return false;
++}
++
++u8 ath11k_mac_hw_rate_to_idx(const struct ieee80211_supported_band *sband,
++			     u8 hw_rate, bool cck)
++{
++	const struct ieee80211_rate *rate;
++	int i;
++
++	for (i = 0; i < sband->n_bitrates; i++) {
++		rate = &sband->bitrates[i];
++
++		if (ath11k_mac_bitrate_is_cck(rate->bitrate) != cck)
++			continue;
++
++		if (rate->hw_value == hw_rate)
++			return i;
++		else if (rate->flags & IEEE80211_RATE_SHORT_PREAMBLE &&
++			 rate->hw_value_short == hw_rate)
++			return i;
++	}
++
++	return 0;
++}
++
++static u8 ath11k_mac_bitrate_to_rate(int bitrate)
++{
++	return DIV_ROUND_UP(bitrate, 5) |
++	       (ath11k_mac_bitrate_is_cck(bitrate) ? BIT(7) : 0);
++}
++
++static void ath11k_get_arvif_iter(void *data, u8 *mac,
++				  struct ieee80211_vif *vif)
++{
++	struct ath11k_vif_iter *arvif_iter = data;
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++
++	if (arvif->vdev_id == arvif_iter->vdev_id)
++		arvif_iter->arvif = arvif;
++}
++
++struct ath11k_vif *ath11k_mac_get_arvif(struct ath11k *ar, u32 vdev_id)
++{
++	struct ath11k_vif_iter arvif_iter;
++	u32 flags;
++
++	memset(&arvif_iter, 0, sizeof(struct ath11k_vif_iter));
++	arvif_iter.vdev_id = vdev_id;
++
++	flags = IEEE80211_IFACE_ITER_RESUME_ALL;
++	ieee80211_iterate_active_interfaces_atomic(ar->hw,
++						   flags,
++						   ath11k_get_arvif_iter,
++						   &arvif_iter);
++	if (!arvif_iter.arvif)
++		return NULL;
++
++	return arvif_iter.arvif;
++}
++
++struct ath11k_vif *ath11k_mac_get_arvif_by_vdev_id(struct ath11k_base *ab,
++						   u32 vdev_id)
++{
++	int i;
++	struct ath11k_pdev *pdev;
++	struct ath11k_vif *arvif;
++
++	for (i = 0; i < ab->num_radios; i++) {
++		pdev = rcu_dereference(ab->pdevs_active[i]);
++		if (pdev && pdev->ar) {
++			arvif = ath11k_mac_get_arvif(pdev->ar, vdev_id);
++			if (arvif)
++				return arvif;
++		}
++	}
++
++	return NULL;
++}
++
++struct ath11k *ath11k_mac_get_ar_by_vdev_id(struct ath11k_base *ab, u32 vdev_id)
++{
++	int i;
++	struct ath11k_pdev *pdev;
++	struct ath11k_vif *arvif;
++
++	for (i = 0; i < ab->num_radios; i++) {
++		pdev = rcu_dereference(ab->pdevs_active[i]);
++		if (pdev && pdev->ar) {
++			arvif = ath11k_mac_get_arvif(pdev->ar, vdev_id);
++			if (arvif)
++				return arvif->ar;
++		}
++	}
++
++	return NULL;
++}
++
++struct ath11k *ath11k_mac_get_ar_by_pdev_id(struct ath11k_base *ab, u32 pdev_id)
++{
++	int i;
++	struct ath11k_pdev *pdev;
++
++	if (WARN_ON(pdev_id > ab->num_radios))
++		return NULL;
++
++	for (i = 0; i < ab->num_radios; i++) {
++		pdev = rcu_dereference(ab->pdevs_active[i]);
++
++		if (pdev && pdev->pdev_id == pdev_id)
++			return (pdev->ar ? pdev->ar : NULL);
++	}
++
++	return NULL;
++}
++
++struct ath11k *ath11k_mac_get_ar_vdev_stop_status(struct ath11k_base *ab,
++						  u32 vdev_id)
++{
++	int i;
++	struct ath11k_pdev *pdev;
++	struct ath11k *ar;
++
++	for (i = 0; i < ab->num_radios; i++) {
++		pdev = rcu_dereference(ab->pdevs_active[i]);
++		if (pdev && pdev->ar) {
++			ar = pdev->ar;
++
++			spin_lock_bh(&ar->data_lock);
++			if (ar->vdev_stop_status.stop_in_progress &&
++			    ar->vdev_stop_status.vdev_id == vdev_id) {
++				ar->vdev_stop_status.stop_in_progress = false;
++				spin_unlock_bh(&ar->data_lock);
++				return ar;
++			}
++			spin_unlock_bh(&ar->data_lock);
++		}
++	}
++	return NULL;
++}
++
++static void ath11k_pdev_caps_update(struct ath11k *ar)
++{
++	struct ath11k_base *ab = ar->ab;
++
++	ar->max_tx_power = ab->target_caps.hw_max_tx_power;
++
++	/* FIXME Set min_tx_power to ab->target_caps.hw_min_tx_power.
++	 * But since the received value in svcrdy is same as hw_max_tx_power,
++	 * we can set ar->min_tx_power to 0 currently until
++	 * this is fixed in firmware
++	 */
++	ar->min_tx_power = 0;
++
++	ar->txpower_limit_2g = ar->max_tx_power;
++	ar->txpower_limit_5g = ar->max_tx_power;
++	ar->txpower_scale = WMI_HOST_TP_SCALE_MAX;
++}
++
++static int ath11k_mac_txpower_recalc(struct ath11k *ar)
++{
++	struct ath11k_pdev *pdev = ar->pdev;
++	struct ath11k_vif *arvif;
++	int ret, txpower = -1;
++	u32 param;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	list_for_each_entry(arvif, &ar->arvifs, list) {
++		if (arvif->txpower <= 0)
++			continue;
++
++		if (txpower == -1)
++			txpower = arvif->txpower;
++		else
++			txpower = min(txpower, arvif->txpower);
++	}
++
++	if (txpower == -1)
++		return 0;
++
++	/* txpwr is set as 2 units per dBm in FW*/
++	txpower = min_t(u32, max_t(u32, ar->min_tx_power, txpower),
++			ar->max_tx_power) * 2;
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "txpower to set in hw %d\n",
++		   txpower / 2);
++
++	if ((pdev->cap.supported_bands & WMI_HOST_WLAN_2G_CAP) &&
++	    ar->txpower_limit_2g != txpower) {
++		param = WMI_PDEV_PARAM_TXPOWER_LIMIT2G;
++		ret = ath11k_wmi_pdev_set_param(ar, param,
++						txpower, ar->pdev->pdev_id);
++		if (ret)
++			goto fail;
++		ar->txpower_limit_2g = txpower;
++	}
++
++	if ((pdev->cap.supported_bands & WMI_HOST_WLAN_5G_CAP) &&
++	    ar->txpower_limit_5g != txpower) {
++		param = WMI_PDEV_PARAM_TXPOWER_LIMIT5G;
++		ret = ath11k_wmi_pdev_set_param(ar, param,
++						txpower, ar->pdev->pdev_id);
++		if (ret)
++			goto fail;
++		ar->txpower_limit_5g = txpower;
++	}
++
++	return 0;
++
++fail:
++	ath11k_warn(ar->ab, "failed to recalc txpower limit %d using pdev param %d: %d\n",
++		    txpower / 2, param, ret);
++	return ret;
++}
++
++static int ath11k_recalc_rtscts_prot(struct ath11k_vif *arvif)
++{
++	struct ath11k *ar = arvif->ar;
++	u32 vdev_param, rts_cts = 0;
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	vdev_param = WMI_VDEV_PARAM_ENABLE_RTSCTS;
++
++	/* Enable RTS/CTS protection for sw retries (when legacy stations
++	 * are in BSS) or by default only for second rate series.
++	 * TODO: Check if we need to enable CTS 2 Self in any case
++	 */
++	rts_cts = WMI_USE_RTS_CTS;
++
++	if (arvif->num_legacy_stations > 0)
++		rts_cts |= WMI_RTSCTS_ACROSS_SW_RETRIES << 4;
++	else
++		rts_cts |= WMI_RTSCTS_FOR_SECOND_RATESERIES << 4;
++
++	/* Need not send duplicate param value to firmware */
++	if (arvif->rtscts_prot_mode == rts_cts)
++		return 0;
++
++	arvif->rtscts_prot_mode = rts_cts;
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac vdev %d recalc rts/cts prot %d\n",
++		   arvif->vdev_id, rts_cts);
++
++	ret =  ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					     vdev_param, rts_cts);
++	if (ret)
++		ath11k_warn(ar->ab, "failed to recalculate rts/cts prot for vdev %d: %d\n",
++			    arvif->vdev_id, ret);
++
++	return ret;
++}
++
++static int ath11k_mac_set_kickout(struct ath11k_vif *arvif)
++{
++	struct ath11k *ar = arvif->ar;
++	u32 param;
++	int ret;
++
++	ret = ath11k_wmi_pdev_set_param(ar, WMI_PDEV_PARAM_STA_KICKOUT_TH,
++					ATH11K_KICKOUT_THRESHOLD,
++					ar->pdev->pdev_id);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set kickout threshold on vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++		return ret;
++	}
++
++	param = WMI_VDEV_PARAM_AP_KEEPALIVE_MIN_IDLE_INACTIVE_TIME_SECS;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id, param,
++					    ATH11K_KEEPALIVE_MIN_IDLE);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set keepalive minimum idle time on vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++		return ret;
++	}
++
++	param = WMI_VDEV_PARAM_AP_KEEPALIVE_MAX_IDLE_INACTIVE_TIME_SECS;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id, param,
++					    ATH11K_KEEPALIVE_MAX_IDLE);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set keepalive maximum idle time on vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++		return ret;
++	}
++
++	param = WMI_VDEV_PARAM_AP_KEEPALIVE_MAX_UNRESPONSIVE_TIME_SECS;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id, param,
++					    ATH11K_KEEPALIVE_MAX_UNRESPONSIVE);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set keepalive maximum unresponsive time on vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++void ath11k_mac_peer_cleanup_all(struct ath11k *ar)
++{
++	struct ath11k_peer *peer, *tmp;
++	struct ath11k_base *ab = ar->ab;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	spin_lock_bh(&ab->base_lock);
++	list_for_each_entry_safe(peer, tmp, &ab->peers, list) {
++		ath11k_peer_rx_tid_cleanup(ar, peer);
++		list_del(&peer->list);
++		kfree(peer);
++	}
++	spin_unlock_bh(&ab->base_lock);
++
++	ar->num_peers = 0;
++	ar->num_stations = 0;
++}
++
++static int ath11k_monitor_vdev_up(struct ath11k *ar, int vdev_id)
++{
++	int ret = 0;
++
++	ret = ath11k_wmi_vdev_up(ar, vdev_id, 0, ar->mac_addr);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to put up monitor vdev %i: %d\n",
++			    vdev_id, ret);
++		return ret;
++	}
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac monitor vdev %i started\n",
++		   vdev_id);
++	return 0;
++}
++
++static int ath11k_mac_op_config(struct ieee80211_hw *hw, u32 changed)
++{
++	struct ath11k *ar = hw->priv;
++	int ret = 0;
++
++	/* mac80211 requires this op to be present and that's why
++	 * there's an empty function, this can be extended when
++	 * required.
++	 */
++
++	mutex_lock(&ar->conf_mutex);
++
++	/* TODO: Handle configuration changes as appropriate */
++
++	mutex_unlock(&ar->conf_mutex);
++
++	return ret;
++}
++
++static int ath11k_mac_setup_bcn_tmpl(struct ath11k_vif *arvif)
++{
++	struct ath11k *ar = arvif->ar;
++	struct ath11k_base *ab = ar->ab;
++	struct ieee80211_hw *hw = ar->hw;
++	struct ieee80211_vif *vif = arvif->vif;
++	struct ieee80211_mutable_offsets offs = {};
++	struct sk_buff *bcn;
++	int ret;
++
++	if (arvif->vdev_type != WMI_VDEV_TYPE_AP)
++		return 0;
++
++	bcn = ieee80211_beacon_get_template(hw, vif, &offs);
++	if (!bcn) {
++		ath11k_warn(ab, "failed to get beacon template from mac80211\n");
++		return -EPERM;
++	}
++
++	ret = ath11k_wmi_bcn_tmpl(ar, arvif->vdev_id, &offs, bcn);
++
++	kfree_skb(bcn);
++
++	if (ret)
++		ath11k_warn(ab, "failed to submit beacon template command: %d\n",
++			    ret);
++
++	return ret;
++}
++
++static void ath11k_control_beaconing(struct ath11k_vif *arvif,
++				     struct ieee80211_bss_conf *info)
++{
++	struct ath11k *ar = arvif->ar;
++	int ret = 0;
++
++	lockdep_assert_held(&arvif->ar->conf_mutex);
++
++	if (!info->enable_beacon) {
++		ret = ath11k_wmi_vdev_down(ar, arvif->vdev_id);
++		if (ret)
++			ath11k_warn(ar->ab, "failed to down vdev_id %i: %d\n",
++				    arvif->vdev_id, ret);
++
++		arvif->is_up = false;
++		return;
++	}
++
++	/* Install the beacon template to the FW */
++	ret = ath11k_mac_setup_bcn_tmpl(arvif);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to update bcn tmpl during vdev up: %d\n",
++			    ret);
++		return;
++	}
++
++	arvif->tx_seq_no = 0x1000;
++
++	arvif->aid = 0;
++
++	ether_addr_copy(arvif->bssid, info->bssid);
++
++	ret = ath11k_wmi_vdev_up(arvif->ar, arvif->vdev_id, arvif->aid,
++				 arvif->bssid);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to bring up vdev %d: %i\n",
++			    arvif->vdev_id, ret);
++		return;
++	}
++
++	arvif->is_up = true;
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac vdev %d up\n", arvif->vdev_id);
++}
++
++static void ath11k_peer_assoc_h_basic(struct ath11k *ar,
++				      struct ieee80211_vif *vif,
++				      struct ieee80211_sta *sta,
++				      struct peer_assoc_params *arg)
++{
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	u32 aid;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (vif->type == NL80211_IFTYPE_STATION)
++		aid = vif->bss_conf.aid;
++	else
++		aid = sta->aid;
++
++	ether_addr_copy(arg->peer_mac, sta->addr);
++	arg->vdev_id = arvif->vdev_id;
++	arg->peer_associd = aid;
++	arg->auth_flag = true;
++	/* TODO: STA WAR in ath10k for listen interval required? */
++	arg->peer_listen_intval = ar->hw->conf.listen_interval;
++	arg->peer_nss = 1;
++	arg->peer_caps = vif->bss_conf.assoc_capability;
++}
++
++static void ath11k_peer_assoc_h_crypto(struct ath11k *ar,
++				       struct ieee80211_vif *vif,
++				       struct ieee80211_sta *sta,
++				       struct peer_assoc_params *arg)
++{
++	struct ieee80211_bss_conf *info = &vif->bss_conf;
++	struct cfg80211_chan_def def;
++	struct cfg80211_bss *bss;
++	const u8 *rsnie = NULL;
++	const u8 *wpaie = NULL;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (WARN_ON(ath11k_mac_vif_chan(vif, &def)))
++		return;
++
++	bss = cfg80211_get_bss(ar->hw->wiphy, def.chan, info->bssid, NULL, 0,
++			       IEEE80211_BSS_TYPE_ANY, IEEE80211_PRIVACY_ANY);
++	if (bss) {
++		const struct cfg80211_bss_ies *ies;
++
++		rcu_read_lock();
++		rsnie = ieee80211_bss_get_ie(bss, WLAN_EID_RSN);
++
++		ies = rcu_dereference(bss->ies);
++
++		wpaie = cfg80211_find_vendor_ie(WLAN_OUI_MICROSOFT,
++						WLAN_OUI_TYPE_MICROSOFT_WPA,
++						ies->data,
++						ies->len);
++		rcu_read_unlock();
++		cfg80211_put_bss(ar->hw->wiphy, bss);
++	}
++
++	/* FIXME: base on RSN IE/WPA IE is a correct idea? */
++	if (rsnie || wpaie) {
++		ath11k_dbg(ar->ab, ATH11K_DBG_WMI,
++			   "%s: rsn ie found\n", __func__);
++		arg->need_ptk_4_way = true;
++	}
++
++	if (wpaie) {
++		ath11k_dbg(ar->ab, ATH11K_DBG_WMI,
++			   "%s: wpa ie found\n", __func__);
++		arg->need_gtk_2_way = true;
++	}
++
++	if (sta->mfp) {
++		/* TODO: Need to check if FW supports PMF? */
++		arg->is_pmf_enabled = true;
++	}
++
++	/* TODO: safe_mode_enabled (bypass 4-way handshake) flag req? */
++}
++
++static void ath11k_peer_assoc_h_rates(struct ath11k *ar,
++				      struct ieee80211_vif *vif,
++				      struct ieee80211_sta *sta,
++				      struct peer_assoc_params *arg)
++{
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	struct wmi_rate_set_arg *rateset = &arg->peer_legacy_rates;
++	struct cfg80211_chan_def def;
++	const struct ieee80211_supported_band *sband;
++	const struct ieee80211_rate *rates;
++	enum nl80211_band band;
++	u32 ratemask;
++	u8 rate;
++	int i;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (WARN_ON(ath11k_mac_vif_chan(vif, &def)))
++		return;
++
++	band = def.chan->band;
++	sband = ar->hw->wiphy->bands[band];
++	ratemask = sta->supp_rates[band];
++	ratemask &= arvif->bitrate_mask.control[band].legacy;
++	rates = sband->bitrates;
++
++	rateset->num_rates = 0;
++
++	for (i = 0; i < 32; i++, ratemask >>= 1, rates++) {
++		if (!(ratemask & 1))
++			continue;
++
++		rate = ath11k_mac_bitrate_to_rate(rates->bitrate);
++		rateset->rates[rateset->num_rates] = rate;
++		rateset->num_rates++;
++	}
++}
++
++static bool
++ath11k_peer_assoc_h_ht_masked(const u8 ht_mcs_mask[IEEE80211_HT_MCS_MASK_LEN])
++{
++	int nss;
++
++	for (nss = 0; nss < IEEE80211_HT_MCS_MASK_LEN; nss++)
++		if (ht_mcs_mask[nss])
++			return false;
++
++	return true;
++}
++
++static bool
++ath11k_peer_assoc_h_vht_masked(const u16 vht_mcs_mask[NL80211_VHT_NSS_MAX])
++{
++	int nss;
++
++	for (nss = 0; nss < NL80211_VHT_NSS_MAX; nss++)
++		if (vht_mcs_mask[nss])
++			return false;
++
++	return true;
++}
++
++static void ath11k_peer_assoc_h_ht(struct ath11k *ar,
++				   struct ieee80211_vif *vif,
++				   struct ieee80211_sta *sta,
++				   struct peer_assoc_params *arg)
++{
++	const struct ieee80211_sta_ht_cap *ht_cap = &sta->ht_cap;
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	struct cfg80211_chan_def def;
++	enum nl80211_band band;
++	const u8 *ht_mcs_mask;
++	int i, n;
++	u8 max_nss;
++	u32 stbc;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (WARN_ON(ath11k_mac_vif_chan(vif, &def)))
++		return;
++
++	if (!ht_cap->ht_supported)
++		return;
++
++	band = def.chan->band;
++	ht_mcs_mask = arvif->bitrate_mask.control[band].ht_mcs;
++
++	if (ath11k_peer_assoc_h_ht_masked(ht_mcs_mask))
++		return;
++
++	arg->ht_flag = true;
++
++	arg->peer_max_mpdu = (1 << (IEEE80211_HT_MAX_AMPDU_FACTOR +
++				    ht_cap->ampdu_factor)) - 1;
++
++	arg->peer_mpdu_density =
++		ath11k_parse_mpdudensity(ht_cap->ampdu_density);
++
++	arg->peer_ht_caps = ht_cap->cap;
++	arg->peer_rate_caps |= WMI_HOST_RC_HT_FLAG;
++
++	if (ht_cap->cap & IEEE80211_HT_CAP_LDPC_CODING)
++		arg->ldpc_flag = true;
++
++	if (sta->bandwidth >= IEEE80211_STA_RX_BW_40) {
++		arg->bw_40 = true;
++		arg->peer_rate_caps |= WMI_HOST_RC_CW40_FLAG;
++	}
++
++	if (arvif->bitrate_mask.control[band].gi != NL80211_TXRATE_FORCE_LGI) {
++		if (ht_cap->cap & (IEEE80211_HT_CAP_SGI_20 |
++		    IEEE80211_HT_CAP_SGI_40))
++			arg->peer_rate_caps |= WMI_HOST_RC_SGI_FLAG;
++	}
++
++	if (ht_cap->cap & IEEE80211_HT_CAP_TX_STBC) {
++		arg->peer_rate_caps |= WMI_HOST_RC_TX_STBC_FLAG;
++		arg->stbc_flag = true;
++	}
++
++	if (ht_cap->cap & IEEE80211_HT_CAP_RX_STBC) {
++		stbc = ht_cap->cap & IEEE80211_HT_CAP_RX_STBC;
++		stbc = stbc >> IEEE80211_HT_CAP_RX_STBC_SHIFT;
++		stbc = stbc << WMI_HOST_RC_RX_STBC_FLAG_S;
++		arg->peer_rate_caps |= stbc;
++		arg->stbc_flag = true;
++	}
++
++	if (ht_cap->mcs.rx_mask[1] && ht_cap->mcs.rx_mask[2])
++		arg->peer_rate_caps |= WMI_HOST_RC_TS_FLAG;
++	else if (ht_cap->mcs.rx_mask[1])
++		arg->peer_rate_caps |= WMI_HOST_RC_DS_FLAG;
++
++	for (i = 0, n = 0, max_nss = 0; i < IEEE80211_HT_MCS_MASK_LEN * 8; i++)
++		if ((ht_cap->mcs.rx_mask[i / 8] & BIT(i % 8)) &&
++		    (ht_mcs_mask[i / 8] & BIT(i % 8))) {
++			max_nss = (i / 8) + 1;
++			arg->peer_ht_rates.rates[n++] = i;
++		}
++
++	/* This is a workaround for HT-enabled STAs which break the spec
++	 * and have no HT capabilities RX mask (no HT RX MCS map).
++	 *
++	 * As per spec, in section 20.3.5 Modulation and coding scheme (MCS),
++	 * MCS 0 through 7 are mandatory in 20MHz with 800 ns GI at all STAs.
++	 *
++	 * Firmware asserts if such situation occurs.
++	 */
++	if (n == 0) {
++		arg->peer_ht_rates.num_rates = 8;
++		for (i = 0; i < arg->peer_ht_rates.num_rates; i++)
++			arg->peer_ht_rates.rates[i] = i;
++	} else {
++		arg->peer_ht_rates.num_rates = n;
++		arg->peer_nss = min(sta->rx_nss, max_nss);
++	}
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac ht peer %pM mcs cnt %d nss %d\n",
++		   arg->peer_mac,
++		   arg->peer_ht_rates.num_rates,
++		   arg->peer_nss);
++}
++
++static int ath11k_mac_get_max_vht_mcs_map(u16 mcs_map, int nss)
++{
++	switch ((mcs_map >> (2 * nss)) & 0x3) {
++	case IEEE80211_VHT_MCS_SUPPORT_0_7: return BIT(8) - 1;
++	case IEEE80211_VHT_MCS_SUPPORT_0_8: return BIT(9) - 1;
++	case IEEE80211_VHT_MCS_SUPPORT_0_9: return BIT(10) - 1;
++	}
++	return 0;
++}
++
++static u16
++ath11k_peer_assoc_h_vht_limit(u16 tx_mcs_set,
++			      const u16 vht_mcs_limit[NL80211_VHT_NSS_MAX])
++{
++	int idx_limit;
++	int nss;
++	u16 mcs_map;
++	u16 mcs;
++
++	for (nss = 0; nss < NL80211_VHT_NSS_MAX; nss++) {
++		mcs_map = ath11k_mac_get_max_vht_mcs_map(tx_mcs_set, nss) &
++			  vht_mcs_limit[nss];
++
++		if (mcs_map)
++			idx_limit = fls(mcs_map) - 1;
++		else
++			idx_limit = -1;
++
++		switch (idx_limit) {
++		case 0: /* fall through */
++		case 1: /* fall through */
++		case 2: /* fall through */
++		case 3: /* fall through */
++		case 4: /* fall through */
++		case 5: /* fall through */
++		case 6: /* fall through */
++		case 7:
++			mcs = IEEE80211_VHT_MCS_SUPPORT_0_7;
++			break;
++		case 8:
++			mcs = IEEE80211_VHT_MCS_SUPPORT_0_8;
++			break;
++		case 9:
++			mcs = IEEE80211_VHT_MCS_SUPPORT_0_9;
++			break;
++		default:
++			WARN_ON(1);
++			/* fall through */
++		case -1:
++			mcs = IEEE80211_VHT_MCS_NOT_SUPPORTED;
++			break;
++		}
++
++		tx_mcs_set &= ~(0x3 << (nss * 2));
++		tx_mcs_set |= mcs << (nss * 2);
++	}
++
++	return tx_mcs_set;
++}
++
++static void ath11k_peer_assoc_h_vht(struct ath11k *ar,
++				    struct ieee80211_vif *vif,
++				    struct ieee80211_sta *sta,
++				    struct peer_assoc_params *arg)
++{
++	const struct ieee80211_sta_vht_cap *vht_cap = &sta->vht_cap;
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	struct cfg80211_chan_def def;
++	enum nl80211_band band;
++	const u16 *vht_mcs_mask;
++	u8 ampdu_factor;
++	u8 max_nss, vht_mcs;
++	int i;
++
++	if (WARN_ON(ath11k_mac_vif_chan(vif, &def)))
++		return;
++
++	if (!vht_cap->vht_supported)
++		return;
++
++	band = def.chan->band;
++	vht_mcs_mask = arvif->bitrate_mask.control[band].vht_mcs;
++
++	if (ath11k_peer_assoc_h_vht_masked(vht_mcs_mask))
++		return;
++
++	arg->vht_flag = true;
++
++	/* TODO: similar flags required? */
++	arg->vht_capable = true;
++
++	if (def.chan->band == NL80211_BAND_2GHZ)
++		arg->vht_ng_flag = true;
++
++	arg->peer_vht_caps = vht_cap->cap;
++
++	ampdu_factor = (vht_cap->cap &
++			IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK) >>
++		       IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_SHIFT;
++
++	/* Workaround: Some Netgear/Linksys 11ac APs set Rx A-MPDU factor to
++	 * zero in VHT IE. Using it would result in degraded throughput.
++	 * arg->peer_max_mpdu at this point contains HT max_mpdu so keep
++	 * it if VHT max_mpdu is smaller.
++	 */
++	arg->peer_max_mpdu = max(arg->peer_max_mpdu,
++				 (1U << (IEEE80211_HT_MAX_AMPDU_FACTOR +
++					ampdu_factor)) - 1);
++
++	if (sta->bandwidth == IEEE80211_STA_RX_BW_80)
++		arg->bw_80 = true;
++
++	if (sta->bandwidth == IEEE80211_STA_RX_BW_160)
++		arg->bw_160 = true;
++
++	/* Calculate peer NSS capability from VHT capabilities if STA
++	 * supports VHT.
++	 */
++	for (i = 0, max_nss = 0, vht_mcs = 0; i < NL80211_VHT_NSS_MAX; i++) {
++		vht_mcs = __le16_to_cpu(vht_cap->vht_mcs.rx_mcs_map) >>
++			  (2 * i) & 3;
++
++		if (vht_mcs != IEEE80211_VHT_MCS_NOT_SUPPORTED &&
++		    vht_mcs_mask[i])
++			max_nss = i + 1;
++	}
++	arg->peer_nss = min(sta->rx_nss, max_nss);
++	arg->rx_max_rate = __le16_to_cpu(vht_cap->vht_mcs.rx_highest);
++	arg->rx_mcs_set = __le16_to_cpu(vht_cap->vht_mcs.rx_mcs_map);
++	arg->tx_max_rate = __le16_to_cpu(vht_cap->vht_mcs.tx_highest);
++	arg->tx_mcs_set = ath11k_peer_assoc_h_vht_limit(
++		__le16_to_cpu(vht_cap->vht_mcs.tx_mcs_map), vht_mcs_mask);
++
++	/* In IPQ8074 platform, VHT mcs rate 10 and 11 is enabled by default.
++	 * VHT mcs rate 10 and 11 is not suppoerted in 11ac standard.
++	 * so explicitly disable the VHT MCS rate 10 and 11 in 11ac mode.
++	 */
++	arg->tx_mcs_set &= ~IEEE80211_VHT_MCS_SUPPORT_0_11_MASK;
++	arg->tx_mcs_set |= IEEE80211_DISABLE_VHT_MCS_SUPPORT_0_11;
++
++	/* TODO:  Check */
++	arg->tx_max_mcs_nss = 0xFF;
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac vht peer %pM max_mpdu %d flags 0x%x\n",
++		   sta->addr, arg->peer_max_mpdu, arg->peer_flags);
++
++	/* TODO: rxnss_override */
++}
++
++static void ath11k_peer_assoc_h_he(struct ath11k *ar,
++				   struct ieee80211_vif *vif,
++				   struct ieee80211_sta *sta,
++				   struct peer_assoc_params *arg)
++{
++	/* TODO: Implementation */
++}
++
++static void ath11k_peer_assoc_h_smps(struct ieee80211_sta *sta,
++				     struct peer_assoc_params *arg)
++{
++	const struct ieee80211_sta_ht_cap *ht_cap = &sta->ht_cap;
++	int smps;
++
++	if (!ht_cap->ht_supported)
++		return;
++
++	smps = ht_cap->cap & IEEE80211_HT_CAP_SM_PS;
++	smps >>= IEEE80211_HT_CAP_SM_PS_SHIFT;
++
++	switch (smps) {
++	case WLAN_HT_CAP_SM_PS_STATIC:
++		arg->static_mimops_flag = true;
++		break;
++	case WLAN_HT_CAP_SM_PS_DYNAMIC:
++		arg->dynamic_mimops_flag = true;
++		break;
++	case WLAN_HT_CAP_SM_PS_DISABLED:
++		arg->spatial_mux_flag = true;
++		break;
++	default:
++		break;
++	}
++}
++
++static void ath11k_peer_assoc_h_qos(struct ath11k *ar,
++				    struct ieee80211_vif *vif,
++				    struct ieee80211_sta *sta,
++				    struct peer_assoc_params *arg)
++{
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++
++	switch (arvif->vdev_type) {
++	case WMI_VDEV_TYPE_AP:
++		if (sta->wme) {
++			/* TODO: Check WME vs QoS */
++			arg->is_wme_set = true;
++			arg->qos_flag = true;
++		}
++
++		if (sta->wme && sta->uapsd_queues) {
++			/* TODO: Check WME vs QoS */
++			arg->is_wme_set = true;
++			arg->apsd_flag = true;
++			arg->peer_rate_caps |= WMI_HOST_RC_UAPSD_FLAG;
++		}
++		break;
++	case WMI_VDEV_TYPE_STA:
++		if (sta->wme) {
++			arg->is_wme_set = true;
++			arg->qos_flag = true;
++		}
++		break;
++	default:
++		break;
++	}
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac peer %pM qos %d\n",
++		   sta->addr, arg->qos_flag);
++}
++
++static int ath11k_peer_assoc_qos_ap(struct ath11k *ar,
++				    struct ath11k_vif *arvif,
++				    struct ieee80211_sta *sta)
++{
++	struct ap_ps_params params;
++	u32 max_sp;
++	u32 uapsd;
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	params.vdev_id = arvif->vdev_id;
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac uapsd_queues 0x%x max_sp %d\n",
++		   sta->uapsd_queues, sta->max_sp);
++
++	uapsd = 0;
++	if (sta->uapsd_queues & IEEE80211_WMM_IE_STA_QOSINFO_AC_VO)
++		uapsd |= WMI_AP_PS_UAPSD_AC3_DELIVERY_EN |
++			 WMI_AP_PS_UAPSD_AC3_TRIGGER_EN;
++	if (sta->uapsd_queues & IEEE80211_WMM_IE_STA_QOSINFO_AC_VI)
++		uapsd |= WMI_AP_PS_UAPSD_AC2_DELIVERY_EN |
++			 WMI_AP_PS_UAPSD_AC2_TRIGGER_EN;
++	if (sta->uapsd_queues & IEEE80211_WMM_IE_STA_QOSINFO_AC_BK)
++		uapsd |= WMI_AP_PS_UAPSD_AC1_DELIVERY_EN |
++			 WMI_AP_PS_UAPSD_AC1_TRIGGER_EN;
++	if (sta->uapsd_queues & IEEE80211_WMM_IE_STA_QOSINFO_AC_BE)
++		uapsd |= WMI_AP_PS_UAPSD_AC0_DELIVERY_EN |
++			 WMI_AP_PS_UAPSD_AC0_TRIGGER_EN;
++
++	max_sp = 0;
++	if (sta->max_sp < MAX_WMI_AP_PS_PEER_PARAM_MAX_SP)
++		max_sp = sta->max_sp;
++
++	params.param = WMI_AP_PS_PEER_PARAM_UAPSD;
++	params.value = uapsd;
++	ret = ath11k_wmi_send_set_ap_ps_param_cmd(ar, sta->addr, &params);
++	if (ret)
++		goto err;
++
++	params.param = WMI_AP_PS_PEER_PARAM_MAX_SP;
++	params.value = max_sp;
++	ret = ath11k_wmi_send_set_ap_ps_param_cmd(ar, sta->addr, &params);
++	if (ret)
++		goto err;
++
++	/* TODO revisit during testing */
++	params.param = WMI_AP_PS_PEER_PARAM_SIFS_RESP_FRMTYPE;
++	params.value = DISABLE_SIFS_RESPONSE_TRIGGER;
++	ret = ath11k_wmi_send_set_ap_ps_param_cmd(ar, sta->addr, &params);
++	if (ret)
++		goto err;
++
++	params.param = WMI_AP_PS_PEER_PARAM_SIFS_RESP_UAPSD;
++	params.value = DISABLE_SIFS_RESPONSE_TRIGGER;
++	ret = ath11k_wmi_send_set_ap_ps_param_cmd(ar, sta->addr, &params);
++	if (ret)
++		goto err;
++
++	return 0;
++
++err:
++	ath11k_warn(ar->ab, "failed to set ap ps peer param %d for vdev %i: %d\n",
++		    params.param, arvif->vdev_id, ret);
++	return ret;
++}
++
++static bool ath11k_mac_sta_has_ofdm_only(struct ieee80211_sta *sta)
++{
++	return sta->supp_rates[NL80211_BAND_2GHZ] >>
++	       ATH11K_MAC_FIRST_OFDM_RATE_IDX;
++}
++
++static enum wmi_phy_mode ath11k_mac_get_phymode_vht(struct ath11k *ar,
++						    struct ieee80211_sta *sta)
++{
++	if (sta->bandwidth == IEEE80211_STA_RX_BW_160) {
++		switch (sta->vht_cap.cap &
++			IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_MASK) {
++		case IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ:
++			return MODE_11AC_VHT160;
++		case IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ:
++			return MODE_11AC_VHT80_80;
++		default:
++			/* not sure if this is a valid case? */
++			return MODE_11AC_VHT160;
++		}
++	}
++
++	if (sta->bandwidth == IEEE80211_STA_RX_BW_80)
++		return MODE_11AC_VHT80;
++
++	if (sta->bandwidth == IEEE80211_STA_RX_BW_40)
++		return MODE_11AC_VHT40;
++
++	if (sta->bandwidth == IEEE80211_STA_RX_BW_20)
++		return MODE_11AC_VHT20;
++
++	return MODE_UNKNOWN;
++}
++
++static void ath11k_peer_assoc_h_phymode(struct ath11k *ar,
++					struct ieee80211_vif *vif,
++					struct ieee80211_sta *sta,
++					struct peer_assoc_params *arg)
++{
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	struct cfg80211_chan_def def;
++	enum nl80211_band band;
++	const u8 *ht_mcs_mask;
++	const u16 *vht_mcs_mask;
++	enum wmi_phy_mode phymode = MODE_UNKNOWN;
++
++	if (WARN_ON(ath11k_mac_vif_chan(vif, &def)))
++		return;
++
++	band = def.chan->band;
++	ht_mcs_mask = arvif->bitrate_mask.control[band].ht_mcs;
++	vht_mcs_mask = arvif->bitrate_mask.control[band].vht_mcs;
++
++	switch (band) {
++	case NL80211_BAND_2GHZ:
++		if (sta->vht_cap.vht_supported &&
++		    !ath11k_peer_assoc_h_vht_masked(vht_mcs_mask)) {
++			if (sta->bandwidth == IEEE80211_STA_RX_BW_40)
++				phymode = MODE_11AC_VHT40;
++			else
++				phymode = MODE_11AC_VHT20;
++		} else if (sta->ht_cap.ht_supported &&
++			   !ath11k_peer_assoc_h_ht_masked(ht_mcs_mask)) {
++			if (sta->bandwidth == IEEE80211_STA_RX_BW_40)
++				phymode = MODE_11NG_HT40;
++			else
++				phymode = MODE_11NG_HT20;
++		} else if (ath11k_mac_sta_has_ofdm_only(sta)) {
++			phymode = MODE_11G;
++		} else {
++			phymode = MODE_11B;
++		}
++		/* TODO: HE */
++
++		break;
++	case NL80211_BAND_5GHZ:
++		/* Check VHT first */
++		if (sta->vht_cap.vht_supported &&
++		    !ath11k_peer_assoc_h_vht_masked(vht_mcs_mask)) {
++			phymode = ath11k_mac_get_phymode_vht(ar, sta);
++		} else if (sta->ht_cap.ht_supported &&
++			   !ath11k_peer_assoc_h_ht_masked(ht_mcs_mask)) {
++			if (sta->bandwidth >= IEEE80211_STA_RX_BW_40)
++				phymode = MODE_11NA_HT40;
++			else
++				phymode = MODE_11NA_HT20;
++		} else {
++			phymode = MODE_11A;
++		}
++		/* TODO: HE Phymode */
++		break;
++	default:
++		break;
++	}
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac peer %pM phymode %s\n",
++		   sta->addr, ath11k_wmi_phymode_str(phymode));
++
++	arg->peer_phymode = phymode;
++	WARN_ON(phymode == MODE_UNKNOWN);
++}
++
++static void ath11k_peer_assoc_prepare(struct ath11k *ar,
++				      struct ieee80211_vif *vif,
++				      struct ieee80211_sta *sta,
++				      struct peer_assoc_params *arg,
++				      bool reassoc)
++{
++	lockdep_assert_held(&ar->conf_mutex);
++
++	memset(arg, 0, sizeof(*arg));
++
++	reinit_completion(&ar->peer_assoc_done);
++
++	arg->peer_new_assoc = !reassoc;
++	ath11k_peer_assoc_h_basic(ar, vif, sta, arg);
++	ath11k_peer_assoc_h_crypto(ar, vif, sta, arg);
++	ath11k_peer_assoc_h_rates(ar, vif, sta, arg);
++	ath11k_peer_assoc_h_ht(ar, vif, sta, arg);
++	ath11k_peer_assoc_h_vht(ar, vif, sta, arg);
++	ath11k_peer_assoc_h_he(ar, vif, sta, arg);
++	ath11k_peer_assoc_h_qos(ar, vif, sta, arg);
++	ath11k_peer_assoc_h_phymode(ar, vif, sta, arg);
++	ath11k_peer_assoc_h_smps(sta, arg);
++
++	/* TODO: amsdu_disable req? */
++}
++
++static int ath11k_setup_peer_smps(struct ath11k *ar, struct ath11k_vif *arvif,
++				  const u8 *addr,
++				  const struct ieee80211_sta_ht_cap *ht_cap)
++{
++	int smps;
++
++	if (!ht_cap->ht_supported)
++		return 0;
++
++	smps = ht_cap->cap & IEEE80211_HT_CAP_SM_PS;
++	smps >>= IEEE80211_HT_CAP_SM_PS_SHIFT;
++
++	if (smps >= ARRAY_SIZE(ath11k_smps_map))
++		return -EINVAL;
++
++	return ath11k_wmi_set_peer_param(ar, addr, arvif->vdev_id,
++					 WMI_PEER_MIMO_PS_STATE,
++					 ath11k_smps_map[smps]);
++}
++
++static void ath11k_bss_assoc(struct ieee80211_hw *hw,
++			     struct ieee80211_vif *vif,
++			     struct ieee80211_bss_conf *bss_conf)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	struct peer_assoc_params peer_arg;
++	struct ieee80211_sta *ap_sta;
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac vdev %i assoc bssid %pM aid %d\n",
++		   arvif->vdev_id, arvif->bssid, arvif->aid);
++
++	rcu_read_lock();
++
++	ap_sta = ieee80211_find_sta(vif, bss_conf->bssid);
++	if (!ap_sta) {
++		ath11k_warn(ar->ab, "failed to find station entry for bss %pM vdev %i\n",
++			    bss_conf->bssid, arvif->vdev_id);
++		rcu_read_unlock();
++		return;
++	}
++
++	ath11k_peer_assoc_prepare(ar, vif, ap_sta, &peer_arg, false);
++
++	rcu_read_unlock();
++
++	ret = ath11k_wmi_send_peer_assoc_cmd(ar, &peer_arg);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to run peer assoc for %pM vdev %i: %d\n",
++			    bss_conf->bssid, arvif->vdev_id, ret);
++		return;
++	}
++
++	if (!wait_for_completion_timeout(&ar->peer_assoc_done, 1 * HZ)) {
++		ath11k_warn(ar->ab, "failed to get peer assoc conf event for %pM vdev %i\n",
++			    bss_conf->bssid, arvif->vdev_id);
++		return;
++	}
++
++	ret = ath11k_setup_peer_smps(ar, arvif, bss_conf->bssid,
++				     &ap_sta->ht_cap);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to setup peer SMPS for vdev %d: %d\n",
++			    arvif->vdev_id, ret);
++		return;
++	}
++
++	WARN_ON(arvif->is_up);
++
++	arvif->aid = bss_conf->aid;
++	ether_addr_copy(arvif->bssid, bss_conf->bssid);
++
++	ret = ath11k_wmi_vdev_up(ar, arvif->vdev_id, arvif->aid, arvif->bssid);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set vdev %d up: %d\n",
++			    arvif->vdev_id, ret);
++		return;
++	}
++
++	arvif->is_up = true;
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++		   "mac vdev %d up (associated) bssid %pM aid %d\n",
++		   arvif->vdev_id, bss_conf->bssid, bss_conf->aid);
++
++	/* Authorize BSS Peer */
++	ret = ath11k_wmi_set_peer_param(ar, arvif->bssid,
++					arvif->vdev_id,
++					WMI_PEER_AUTHORIZE,
++					1);
++	if (ret)
++		ath11k_warn(ar->ab, "Unable to authorize BSS peer: %d\n", ret);
++}
++
++static void ath11k_bss_disassoc(struct ieee80211_hw *hw,
++				struct ieee80211_vif *vif)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac vdev %i disassoc bssid %pM\n",
++		   arvif->vdev_id, arvif->bssid);
++
++	ret = ath11k_wmi_vdev_down(ar, arvif->vdev_id);
++	if (ret)
++		ath11k_warn(ar->ab, "failed to down vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++
++	arvif->is_up = false;
++
++	/* TODO: cancel connection_loss_work */
++}
++
++static u32 ath11k_mac_get_rate_hw_value(int bitrate)
++{
++	u32 preamble;
++	u16 hw_value;
++	int rate;
++	size_t i;
++
++	if (ath11k_mac_bitrate_is_cck(bitrate))
++		preamble = WMI_RATE_PREAMBLE_CCK;
++	else
++		preamble = WMI_RATE_PREAMBLE_OFDM;
++
++	for (i = 0; i < ARRAY_SIZE(ath11k_legacy_rates); i++) {
++		if (ath11k_legacy_rates[i].bitrate != bitrate)
++			continue;
++
++		hw_value = ath11k_legacy_rates[i].hw_value;
++		rate = ATH11K_HW_RATE_CODE(hw_value, 0, preamble);
++
++		return rate;
++	}
++
++	return -EINVAL;
++}
++
++static void ath11k_recalculate_mgmt_rate(struct ath11k *ar,
++					 struct ieee80211_vif *vif,
++					 struct cfg80211_chan_def *def)
++{
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	const struct ieee80211_supported_band *sband;
++	u8 basic_rate_idx;
++	int hw_rate_code;
++	u32 vdev_param;
++	u16 bitrate;
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	sband = ar->hw->wiphy->bands[def->chan->band];
++	basic_rate_idx = ffs(vif->bss_conf.basic_rates) - 1;
++	bitrate = sband->bitrates[basic_rate_idx].bitrate;
++
++	hw_rate_code = ath11k_mac_get_rate_hw_value(bitrate);
++	if (hw_rate_code < 0) {
++		ath11k_warn(ar->ab, "bitrate not supported %d\n", bitrate);
++		return;
++	}
++
++	vdev_param = WMI_VDEV_PARAM_MGMT_RATE;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id, vdev_param,
++					    hw_rate_code);
++	if (ret)
++		ath11k_warn(ar->ab, "failed to set mgmt tx rate %d\n", ret);
++
++	vdev_param = WMI_VDEV_PARAM_BEACON_RATE;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id, vdev_param,
++					    hw_rate_code);
++	if (ret)
++		ath11k_warn(ar->ab, "failed to set beacon tx rate %d\n", ret);
++}
++
++static void ath11k_mac_op_bss_info_changed(struct ieee80211_hw *hw,
++					   struct ieee80211_vif *vif,
++					   struct ieee80211_bss_conf *info,
++					   u32 changed)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
++	struct cfg80211_chan_def def;
++	u32 param_id, param_value;
++	enum nl80211_band band;
++	u32 vdev_param;
++	int mcast_rate;
++	u32 preamble;
++	u16 hw_value;
++	u16 bitrate;
++	int ret = 0;
++	u8 rateidx;
++	u32 rate;
++
++	mutex_lock(&ar->conf_mutex);
++
++	if (changed & BSS_CHANGED_BEACON_INT) {
++		arvif->beacon_interval = info->beacon_int;
++
++		param_id = WMI_VDEV_PARAM_BEACON_INTERVAL;
++		ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++						    param_id,
++						    arvif->beacon_interval);
++		if (ret)
++			ath11k_warn(ar->ab, "Failed to set beacon interval for VDEV: %d\n",
++				    arvif->vdev_id);
++		else
++			ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++				   "Beacon interval: %d set for VDEV: %d\n",
++				   arvif->beacon_interval, arvif->vdev_id);
++	}
++
++	if (changed & BSS_CHANGED_BEACON) {
++		param_id = WMI_PDEV_PARAM_BEACON_TX_MODE;
++		param_value = WMI_BEACON_STAGGERED_MODE;
++		ret = ath11k_wmi_pdev_set_param(ar, param_id,
++						param_value, ar->pdev->pdev_id);
++		if (ret)
++			ath11k_warn(ar->ab, "Failed to set beacon mode for VDEV: %d\n",
++				    arvif->vdev_id);
++		else
++			ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++				   "Set staggered beacon mode for VDEV: %d\n",
++				   arvif->vdev_id);
++
++		ret = ath11k_mac_setup_bcn_tmpl(arvif);
++		if (ret)
++			ath11k_warn(ar->ab, "failed to update bcn template: %d\n",
++				    ret);
++	}
++
++	if (changed & (BSS_CHANGED_BEACON_INFO | BSS_CHANGED_BEACON)) {
++		arvif->dtim_period = info->dtim_period;
++
++		param_id = WMI_VDEV_PARAM_DTIM_PERIOD;
++		ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++						    param_id,
++						    arvif->dtim_period);
++
++		if (ret)
++			ath11k_warn(ar->ab, "Failed to set dtim period for VDEV %d: %i\n",
++				    arvif->vdev_id, ret);
++		else
++			ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++				   "DTIM period: %d set for VDEV: %d\n",
++				   arvif->dtim_period, arvif->vdev_id);
++	}
++
++	if (changed & BSS_CHANGED_SSID &&
++	    vif->type == NL80211_IFTYPE_AP) {
++		arvif->u.ap.ssid_len = info->ssid_len;
++		if (info->ssid_len)
++			memcpy(arvif->u.ap.ssid, info->ssid, info->ssid_len);
++		arvif->u.ap.hidden_ssid = info->hidden_ssid;
++	}
++
++	if (changed & BSS_CHANGED_BSSID && !is_zero_ether_addr(info->bssid))
++		ether_addr_copy(arvif->bssid, info->bssid);
++
++	if (changed & BSS_CHANGED_BEACON_ENABLED)
++		ath11k_control_beaconing(arvif, info);
++
++	if (changed & BSS_CHANGED_ERP_CTS_PROT) {
++		u32 cts_prot;
++
++		cts_prot = !!(info->use_cts_prot);
++		param_id = WMI_VDEV_PARAM_PROTECTION_MODE;
++
++		if (arvif->is_started) {
++			ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++							    param_id, cts_prot);
++			if (ret)
++				ath11k_warn(ar->ab, "Failed to set CTS prot for VDEV: %d\n",
++					    arvif->vdev_id);
++			else
++				ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "Set CTS prot: %d for VDEV: %d\n",
++					   cts_prot, arvif->vdev_id);
++		} else {
++			ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "defer protection mode setup, vdev is not ready yet\n");
++		}
++	}
++
++	if (changed & BSS_CHANGED_ERP_SLOT) {
++		u32 slottime;
++
++		if (info->use_short_slot)
++			slottime = WMI_VDEV_SLOT_TIME_SHORT; /* 9us */
++
++		else
++			slottime = WMI_VDEV_SLOT_TIME_LONG; /* 20us */
++
++		param_id = WMI_VDEV_PARAM_SLOT_TIME;
++		ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++						    param_id, slottime);
++		if (ret)
++			ath11k_warn(ar->ab, "Failed to set erp slot for VDEV: %d\n",
++				    arvif->vdev_id);
++		else
++			ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++				   "Set slottime: %d for VDEV: %d\n",
++				   slottime, arvif->vdev_id);
++	}
++
++	if (changed & BSS_CHANGED_ERP_PREAMBLE) {
++		u32 preamble;
++
++		if (info->use_short_preamble)
++			preamble = WMI_VDEV_PREAMBLE_SHORT;
++		else
++			preamble = WMI_VDEV_PREAMBLE_LONG;
++
++		param_id = WMI_VDEV_PARAM_PREAMBLE;
++		ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++						    param_id, preamble);
++		if (ret)
++			ath11k_warn(ar->ab, "Failed to set preamble for VDEV: %d\n",
++				    arvif->vdev_id);
++		else
++			ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++				   "Set preamble: %d for VDEV: %d\n",
++				   preamble, arvif->vdev_id);
++	}
++
++	if (changed & BSS_CHANGED_ASSOC) {
++		if (info->assoc)
++			ath11k_bss_assoc(hw, vif, info);
++		else
++			ath11k_bss_disassoc(hw, vif);
++	}
++
++	if (changed & BSS_CHANGED_TXPOWER) {
++		ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac vdev_id %i txpower %d\n",
++			   arvif->vdev_id, info->txpower);
++
++		arvif->txpower = info->txpower;
++		ath11k_mac_txpower_recalc(ar);
++	}
++
++	if (changed & BSS_CHANGED_MCAST_RATE &&
++	    !ath11k_mac_vif_chan(arvif->vif, &def)) {
++		band = def.chan->band;
++		mcast_rate = vif->bss_conf.mcast_rate[band];
++
++		if (mcast_rate > 0)
++			rateidx = mcast_rate - 1;
++		else
++			rateidx = ffs(vif->bss_conf.basic_rates) - 1;
++
++		if (ar->pdev->cap.supported_bands & WMI_HOST_WLAN_5G_CAP)
++			rateidx += ATH11K_MAC_FIRST_OFDM_RATE_IDX;
++
++		bitrate = ath11k_legacy_rates[rateidx].bitrate;
++		hw_value = ath11k_legacy_rates[rateidx].hw_value;
++
++		if (ath11k_mac_bitrate_is_cck(bitrate))
++			preamble = WMI_RATE_PREAMBLE_CCK;
++		else
++			preamble = WMI_RATE_PREAMBLE_OFDM;
++
++		rate = ATH11K_HW_RATE_CODE(hw_value, 0, preamble);
++
++		ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++			   "mac vdev %d mcast_rate %x\n",
++			   arvif->vdev_id, rate);
++
++		vdev_param = WMI_VDEV_PARAM_MCAST_DATA_RATE;
++		ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++						    vdev_param, rate);
++		if (ret)
++			ath11k_warn(ar->ab,
++				    "failed to set mcast rate on vdev %i: %d\n",
++				    arvif->vdev_id,  ret);
++
++		vdev_param = WMI_VDEV_PARAM_BCAST_DATA_RATE;
++		ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++						    vdev_param, rate);
++		if (ret)
++			ath11k_warn(ar->ab,
++				    "failed to set bcast rate on vdev %i: %d\n",
++				    arvif->vdev_id,  ret);
++	}
++
++	if (changed & BSS_CHANGED_BASIC_RATES &&
++	    !ath11k_mac_vif_chan(arvif->vif, &def))
++		ath11k_recalculate_mgmt_rate(ar, vif, &def);
++
++	mutex_unlock(&ar->conf_mutex);
++}
++
++void __ath11k_mac_scan_finish(struct ath11k *ar)
++{
++	lockdep_assert_held(&ar->data_lock);
++
++	switch (ar->scan.state) {
++	case ATH11K_SCAN_IDLE:
++		break;
++	case ATH11K_SCAN_RUNNING:
++	case ATH11K_SCAN_ABORTING:
++		if (!ar->scan.is_roc) {
++			struct cfg80211_scan_info info = {
++				.aborted = (ar->scan.state ==
++					    ATH11K_SCAN_ABORTING),
++			};
++
++			ieee80211_scan_completed(ar->hw, &info);
++		} else if (ar->scan.roc_notify) {
++			ieee80211_remain_on_channel_expired(ar->hw);
++		}
++		/* fall through */
++	case ATH11K_SCAN_STARTING:
++		ar->scan.state = ATH11K_SCAN_IDLE;
++		ar->scan_channel = NULL;
++		ar->scan.roc_freq = 0;
++		cancel_delayed_work(&ar->scan.timeout);
++		complete(&ar->scan.completed);
++		break;
++	}
++}
++
++void ath11k_mac_scan_finish(struct ath11k *ar)
++{
++	spin_lock_bh(&ar->data_lock);
++	__ath11k_mac_scan_finish(ar);
++	spin_unlock_bh(&ar->data_lock);
++}
++
++static int ath11k_scan_stop(struct ath11k *ar)
++{
++	struct scan_cancel_param arg = {
++		.req_type = WLAN_SCAN_CANCEL_SINGLE,
++		.scan_id = ATH11K_SCAN_ID,
++	};
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	/* TODO: Fill other STOP Params */
++	arg.pdev_id = ar->pdev->pdev_id;
++
++	ret = ath11k_wmi_send_scan_stop_cmd(ar, &arg);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to stop wmi scan: %d\n", ret);
++		goto out;
++	}
++
++	ret = wait_for_completion_timeout(&ar->scan.completed, 3 * HZ);
++	if (ret == 0) {
++		ath11k_warn(ar->ab,
++			    "failed to receive scan abort comple: timed out\n");
++		ret = -ETIMEDOUT;
++	} else if (ret > 0) {
++		ret = 0;
++	}
++
++out:
++	/* Scan state should be updated upon scan completion but in case
++	 * firmware fails to deliver the event (for whatever reason) it is
++	 * desired to clean up scan state anyway. Firmware may have just
++	 * dropped the scan completion event delivery due to transport pipe
++	 * being overflown with data and/or it can recover on its own before
++	 * next scan request is submitted.
++	 */
++	spin_lock_bh(&ar->data_lock);
++	if (ar->scan.state != ATH11K_SCAN_IDLE)
++		__ath11k_mac_scan_finish(ar);
++	spin_unlock_bh(&ar->data_lock);
++
++	return ret;
++}
++
++static void ath11k_scan_abort(struct ath11k *ar)
++{
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	spin_lock_bh(&ar->data_lock);
++
++	switch (ar->scan.state) {
++	case ATH11K_SCAN_IDLE:
++		/* This can happen if timeout worker kicked in and called
++		 * abortion while scan completion was being processed.
++		 */
++		break;
++	case ATH11K_SCAN_STARTING:
++	case ATH11K_SCAN_ABORTING:
++		ath11k_warn(ar->ab, "refusing scan abortion due to invalid scan state: %d\n",
++			    ar->scan.state);
++		break;
++	case ATH11K_SCAN_RUNNING:
++		ar->scan.state = ATH11K_SCAN_ABORTING;
++		spin_unlock_bh(&ar->data_lock);
++
++		ret = ath11k_scan_stop(ar);
++		if (ret)
++			ath11k_warn(ar->ab, "failed to abort scan: %d\n", ret);
++
++		spin_lock_bh(&ar->data_lock);
++		break;
++	}
++
++	spin_unlock_bh(&ar->data_lock);
++}
++
++static void ath11k_scan_timeout_work(struct work_struct *work)
++{
++	struct ath11k *ar = container_of(work, struct ath11k,
++					 scan.timeout.work);
++
++	mutex_lock(&ar->conf_mutex);
++	ath11k_scan_abort(ar);
++	mutex_unlock(&ar->conf_mutex);
++}
++
++static int ath11k_start_scan(struct ath11k *ar,
++			     struct scan_req_params *arg)
++{
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	ret = ath11k_wmi_send_scan_start_cmd(ar, arg);
++	if (ret)
++		return ret;
++
++	ret = wait_for_completion_timeout(&ar->scan.started, 1 * HZ);
++	if (ret == 0) {
++		ret = ath11k_scan_stop(ar);
++		if (ret)
++			ath11k_warn(ar->ab, "failed to stop scan: %d\n", ret);
++
++		return -ETIMEDOUT;
++	}
++
++	/* If we failed to start the scan, return error code at
++	 * this point.  This is probably due to some issue in the
++	 * firmware, but no need to wedge the driver due to that...
++	 */
++	spin_lock_bh(&ar->data_lock);
++	if (ar->scan.state == ATH11K_SCAN_IDLE) {
++		spin_unlock_bh(&ar->data_lock);
++		return -EINVAL;
++	}
++	spin_unlock_bh(&ar->data_lock);
++
++	return 0;
++}
++
++static int ath11k_mac_op_hw_scan(struct ieee80211_hw *hw,
++				 struct ieee80211_vif *vif,
++				 struct ieee80211_scan_request *hw_req)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
++	struct cfg80211_scan_request *req = &hw_req->req;
++	struct scan_req_params arg;
++	int ret = 0;
++	int i;
++
++	mutex_lock(&ar->conf_mutex);
++
++	spin_lock_bh(&ar->data_lock);
++	switch (ar->scan.state) {
++	case ATH11K_SCAN_IDLE:
++		reinit_completion(&ar->scan.started);
++		reinit_completion(&ar->scan.completed);
++		ar->scan.state = ATH11K_SCAN_STARTING;
++		ar->scan.is_roc = false;
++		ar->scan.vdev_id = arvif->vdev_id;
++		ret = 0;
++		break;
++	case ATH11K_SCAN_STARTING:
++	case ATH11K_SCAN_RUNNING:
++	case ATH11K_SCAN_ABORTING:
++		ret = -EBUSY;
++		break;
++	}
++	spin_unlock_bh(&ar->data_lock);
++
++	if (ret)
++		goto exit;
++
++	memset(&arg, 0, sizeof(arg));
++	ath11k_wmi_start_scan_init(ar, &arg);
++	arg.vdev_id = arvif->vdev_id;
++	arg.scan_id = ATH11K_SCAN_ID;
++
++	if (req->ie_len) {
++		arg.extraie.len = req->ie_len;
++		arg.extraie.ptr = kzalloc(req->ie_len, GFP_KERNEL);
++		memcpy(arg.extraie.ptr, req->ie, req->ie_len);
++	}
++
++	if (req->n_ssids) {
++		arg.num_ssids = req->n_ssids;
++		for (i = 0; i < arg.num_ssids; i++) {
++			arg.ssid[i].length  = req->ssids[i].ssid_len;
++			memcpy(&arg.ssid[i].ssid, req->ssids[i].ssid,
++			       req->ssids[i].ssid_len);
++		}
++	} else {
++		arg.scan_flags |= WMI_SCAN_FLAG_PASSIVE;
++	}
++
++	if (req->n_channels) {
++		arg.num_chan = req->n_channels;
++		for (i = 0; i < arg.num_chan; i++)
++			arg.chan_list[i] = req->channels[i]->center_freq;
++	}
++
++	ret = ath11k_start_scan(ar, &arg);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to start hw scan: %d\n", ret);
++		spin_lock_bh(&ar->data_lock);
++		ar->scan.state = ATH11K_SCAN_IDLE;
++		spin_unlock_bh(&ar->data_lock);
++	}
++
++	/* Add a 200ms margin to account for event/command processing */
++	ieee80211_queue_delayed_work(ar->hw, &ar->scan.timeout,
++				     msecs_to_jiffies(arg.max_scan_time +
++						      ATH11K_MAC_SCAN_TIMEOUT_MSECS));
++
++exit:
++	if (req->ie_len)
++		kfree(arg.extraie.ptr);
++
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
++}
++
++static void ath11k_mac_op_cancel_hw_scan(struct ieee80211_hw *hw,
++					 struct ieee80211_vif *vif)
++{
++	struct ath11k *ar = hw->priv;
++
++	mutex_lock(&ar->conf_mutex);
++	ath11k_scan_abort(ar);
++	mutex_unlock(&ar->conf_mutex);
++
++	cancel_delayed_work_sync(&ar->scan.timeout);
++}
++
++static int ath11k_install_key(struct ath11k_vif *arvif,
++			      struct ieee80211_key_conf *key,
++			      enum set_key_cmd cmd,
++			      const u8 *macaddr, u32 flags)
++{
++	int ret;
++	struct ath11k *ar = arvif->ar;
++	struct wmi_vdev_install_key_arg arg = {
++		.vdev_id = arvif->vdev_id,
++		.key_idx = key->keyidx,
++		.key_len = key->keylen,
++		.key_data = key->key,
++		.key_flags = flags,
++		.macaddr = macaddr,
++	};
++
++	lockdep_assert_held(&arvif->ar->conf_mutex);
++
++	reinit_completion(&ar->install_key_done);
++
++	if (cmd == DISABLE_KEY) {
++		/* TODO: Check if FW expects  value other than NONE for del */
++		/* arg.key_cipher = WMI_CIPHER_NONE; */
++		arg.key_len = 0;
++		arg.key_data = NULL;
++		goto install;
++	}
++
++	switch (key->cipher) {
++	case WLAN_CIPHER_SUITE_CCMP:
++		arg.key_cipher = WMI_CIPHER_AES_CCM;
++		/* TODO: Re-check if flag is valid */
++		key->flags |= IEEE80211_KEY_FLAG_GENERATE_IV_MGMT;
++		break;
++	case WLAN_CIPHER_SUITE_TKIP:
++		arg.key_cipher = WMI_CIPHER_TKIP;
++		arg.key_txmic_len = 8;
++		arg.key_rxmic_len = 8;
++		break;
++	case WLAN_CIPHER_SUITE_CCMP_256:
++		arg.key_cipher = WMI_CIPHER_AES_CCM;
++		break;
++	case WLAN_CIPHER_SUITE_GCMP:
++	case WLAN_CIPHER_SUITE_GCMP_256:
++		arg.key_cipher = WMI_CIPHER_AES_GCM;
++		break;
++	default:
++		ath11k_warn(ar->ab, "cipher %d is not supported\n", key->cipher);
++		return -EOPNOTSUPP;
++	}
++
++install:
++	ret = ath11k_wmi_vdev_install_key(arvif->ar, &arg);
++	if (ret)
++		return ret;
++
++	if (!wait_for_completion_timeout(&ar->install_key_done, 1 * HZ))
++		return -ETIMEDOUT;
++
++	return ar->install_key_status ? -EINVAL : 0;
++}
++
++static int ath11k_clear_peer_keys(struct ath11k_vif *arvif,
++				  const u8 *addr)
++{
++	struct ath11k *ar = arvif->ar;
++	struct ath11k_base *ab = ar->ab;
++	struct ath11k_peer *peer;
++	int first_errno = 0;
++	int ret;
++	int i;
++	u32 flags = 0;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	spin_lock_bh(&ab->base_lock);
++	peer = ath11k_peer_find(ab, arvif->vdev_id, addr);
++	spin_unlock_bh(&ab->base_lock);
++
++	if (!peer)
++		return -ENOENT;
++
++	for (i = 0; i < ARRAY_SIZE(peer->keys); i++) {
++		if (!peer->keys[i])
++			continue;
++
++		/* key flags are not required to delete the key */
++		ret = ath11k_install_key(arvif, peer->keys[i],
++					 DISABLE_KEY, addr, flags);
++		if (ret < 0 && first_errno == 0)
++			first_errno = ret;
++
++		if (ret < 0)
++			ath11k_warn(ab, "failed to remove peer key %d: %d\n",
++				    i, ret);
++
++		spin_lock_bh(&ab->base_lock);
++		peer->keys[i] = NULL;
++		spin_unlock_bh(&ab->base_lock);
++	}
++
++	return first_errno;
++}
++
++static int ath11k_mac_op_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
++				 struct ieee80211_vif *vif, struct ieee80211_sta *sta,
++				 struct ieee80211_key_conf *key)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_base *ab = ar->ab;
++	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
++	struct ath11k_peer *peer;
++	const u8 *peer_addr;
++	int ret = 0;
++	u32 flags = 0;
++
++	/* BIP needs to be done in software */
++	if (key->cipher == WLAN_CIPHER_SUITE_AES_CMAC ||
++	    key->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_128 ||
++	    key->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_256 ||
++	    key->cipher == WLAN_CIPHER_SUITE_BIP_CMAC_256)
++		return 1;
++
++	if (key->keyidx > WMI_MAX_KEY_INDEX)
++		return -ENOSPC;
++
++	mutex_lock(&ar->conf_mutex);
++
++	if (sta)
++		peer_addr = sta->addr;
++	else if (arvif->vdev_type == WMI_VDEV_TYPE_STA)
++		peer_addr = vif->bss_conf.bssid;
++	else
++		peer_addr = vif->addr;
++
++	key->hw_key_idx = key->keyidx;
++
++	/* the peer should not disappear in mid-way (unless FW goes awry) since
++	 * we already hold conf_mutex. we just make sure its there now.
++	 */
++	spin_lock_bh(&ab->base_lock);
++	peer = ath11k_peer_find(ab, arvif->vdev_id, peer_addr);
++	spin_unlock_bh(&ab->base_lock);
++
++	if (!peer) {
++		if (cmd == SET_KEY) {
++			ath11k_warn(ab, "cannot install key for non-existent peer %pM\n",
++				    peer_addr);
++			ret = -EOPNOTSUPP;
++			goto exit;
++		} else {
++			/* if the peer doesn't exist there is no key to disable
++			 * anymore
++			 */
++			goto exit;
++		}
++	}
++
++	if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE)
++		flags |= WMI_KEY_PAIRWISE;
++	else
++		flags |= WMI_KEY_GROUP;
++
++	ret = ath11k_install_key(arvif, key, cmd, peer_addr, flags);
++	if (ret) {
++		ath11k_warn(ab, "ath11k_install_key failed (%d)\n", ret);
++		goto exit;
++	}
++
++	spin_lock_bh(&ab->base_lock);
++	peer = ath11k_peer_find(ab, arvif->vdev_id, peer_addr);
++	if (peer && cmd == SET_KEY)
++		peer->keys[key->keyidx] = key;
++	else if (peer && cmd == DISABLE_KEY)
++		peer->keys[key->keyidx] = NULL;
++	else if (!peer)
++		/* impossible unless FW goes crazy */
++		ath11k_warn(ab, "peer %pM disappeared!\n", peer_addr);
++	spin_unlock_bh(&ab->base_lock);
++
++exit:
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
++}
++
++static int
++ath11k_mac_bitrate_mask_num_vht_rates(struct ath11k *ar,
++				      enum nl80211_band band,
++				      const struct cfg80211_bitrate_mask *mask)
++{
++	int num_rates = 0;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(mask->control[band].vht_mcs); i++)
++		num_rates += hweight16(mask->control[band].vht_mcs[i]);
++
++	return num_rates;
++}
++
++static int
++ath11k_mac_set_peer_vht_fixed_rate(struct ath11k_vif *arvif,
++				   struct ieee80211_sta *sta,
++				   const struct cfg80211_bitrate_mask *mask,
++				   enum nl80211_band band)
++{
++	struct ath11k *ar = arvif->ar;
++	u8 vht_rate, nss;
++	u32 rate_code;
++	int ret, i;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	nss = 0;
++
++	for (i = 0; i < ARRAY_SIZE(mask->control[band].vht_mcs); i++) {
++		if (hweight16(mask->control[band].vht_mcs[i]) == 1) {
++			nss = i + 1;
++			vht_rate = ffs(mask->control[band].vht_mcs[i]) - 1;
++		}
++	}
++
++	if (!nss) {
++		ath11k_warn(ar->ab, "No single VHT Fixed rate found to set for %pM",
++			    sta->addr);
++		return -EINVAL;
++	}
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++		   "Setting Fixed VHT Rate for peer %pM. Device will not switch to any other selected rates",
++		   sta->addr);
++
++	rate_code = ATH11K_HW_RATE_CODE(vht_rate, nss - 1,
++					WMI_RATE_PREAMBLE_VHT);
++	ret = ath11k_wmi_set_peer_param(ar, sta->addr,
++					arvif->vdev_id,
++					WMI_PEER_PARAM_FIXED_RATE,
++					rate_code);
++	if (ret)
++		ath11k_warn(ar->ab,
++			    "failed to update STA %pM Fixed Rate %d: %d\n",
++			     sta->addr, rate_code, ret);
++
++	return ret;
++}
++
++static int ath11k_station_assoc(struct ath11k *ar,
++				struct ieee80211_vif *vif,
++				struct ieee80211_sta *sta,
++				bool reassoc)
++{
++	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
++	struct peer_assoc_params peer_arg;
++	int ret = 0;
++	struct cfg80211_chan_def def;
++	enum nl80211_band band;
++	struct cfg80211_bitrate_mask *mask;
++	u8 num_vht_rates;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (WARN_ON(ath11k_mac_vif_chan(vif, &def)))
++		return -EPERM;
++
++	band = def.chan->band;
++	mask = &arvif->bitrate_mask;
++
++	ath11k_peer_assoc_prepare(ar, vif, sta, &peer_arg, reassoc);
++
++	ret = ath11k_wmi_send_peer_assoc_cmd(ar, &peer_arg);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to run peer assoc for STA %pM vdev %i: %d\n",
++			    sta->addr, arvif->vdev_id, ret);
++		return ret;
++	}
++
++	if (!wait_for_completion_timeout(&ar->peer_assoc_done, 1 * HZ)) {
++		ath11k_warn(ar->ab, "failed to get peer assoc conf event for %pM vdev %i\n",
++			    sta->addr, arvif->vdev_id);
++		return -ETIMEDOUT;
++	}
++
++	num_vht_rates = ath11k_mac_bitrate_mask_num_vht_rates(ar, band, mask);
++
++	/* If single VHT rate is configured (by set_bitrate_mask()),
++	 * peer_assoc will disable VHT. This is now enabled by a peer specific
++	 * fixed param.
++	 * Note that all other rates and NSS will be disabled for this peer.
++	 */
++	if (sta->vht_cap.vht_supported && num_vht_rates == 1) {
++		ret = ath11k_mac_set_peer_vht_fixed_rate(arvif, sta, mask,
++							 band);
++		if (ret)
++			return ret;
++	}
++
++	/* Re-assoc is run only to update supported rates for given station. It
++	 * doesn't make much sense to reconfigure the peer completely.
++	 */
++	if (reassoc)
++		return 0;
++
++	ret = ath11k_setup_peer_smps(ar, arvif, sta->addr,
++				     &sta->ht_cap);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to setup peer SMPS for vdev %d: %d\n",
++			    arvif->vdev_id, ret);
++		return ret;
++	}
++
++	if (!sta->wme) {
++		arvif->num_legacy_stations++;
++		ret = ath11k_recalc_rtscts_prot(arvif);
++		if (ret)
++			return ret;
++	}
++
++	if (sta->wme && sta->uapsd_queues) {
++		ret = ath11k_peer_assoc_qos_ap(ar, arvif, sta);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to set qos params for STA %pM for vdev %i: %d\n",
++				    sta->addr, arvif->vdev_id, ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static int ath11k_station_disassoc(struct ath11k *ar,
++				   struct ieee80211_vif *vif,
++				   struct ieee80211_sta *sta)
++{
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	int ret = 0;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (!sta->wme) {
++		arvif->num_legacy_stations--;
++		ret = ath11k_recalc_rtscts_prot(arvif);
++		if (ret)
++			return ret;
++	}
++
++	ret = ath11k_clear_peer_keys(arvif, sta->addr);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to clear all peer keys for vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++		return ret;
++	}
++	return 0;
++}
++
++static void ath11k_sta_rc_update_wk(struct work_struct *wk)
++{
++	struct ath11k *ar;
++	struct ath11k_vif *arvif;
++	struct ath11k_sta *arsta;
++	struct ieee80211_sta *sta;
++	struct cfg80211_chan_def def;
++	enum nl80211_band band;
++	const u8 *ht_mcs_mask;
++	const u16 *vht_mcs_mask;
++	u32 changed, bw, nss, smps;
++	int err, num_vht_rates;
++	const struct cfg80211_bitrate_mask *mask;
++	struct peer_assoc_params peer_arg;
++
++	arsta = container_of(wk, struct ath11k_sta, update_wk);
++	sta = container_of((void *)arsta, struct ieee80211_sta, drv_priv);
++	arvif = arsta->arvif;
++	ar = arvif->ar;
++
++	if (WARN_ON(ath11k_mac_vif_chan(arvif->vif, &def)))
++		return;
++
++	band = def.chan->band;
++	ht_mcs_mask = arvif->bitrate_mask.control[band].ht_mcs;
++	vht_mcs_mask = arvif->bitrate_mask.control[band].vht_mcs;
++
++	spin_lock_bh(&ar->data_lock);
++
++	changed = arsta->changed;
++	arsta->changed = 0;
++
++	bw = arsta->bw;
++	nss = arsta->nss;
++	smps = arsta->smps;
++
++	spin_unlock_bh(&ar->data_lock);
++
++	mutex_lock(&ar->conf_mutex);
++
++	nss = max_t(u32, 1, nss);
++	nss = min(nss, max(ath11k_mac_max_ht_nss(ht_mcs_mask),
++			   ath11k_mac_max_vht_nss(vht_mcs_mask)));
++
++	if (changed & IEEE80211_RC_BW_CHANGED) {
++		err = ath11k_wmi_set_peer_param(ar, sta->addr, arvif->vdev_id,
++						WMI_PEER_CHWIDTH, bw);
++		if (err)
++			ath11k_warn(ar->ab, "failed to update STA %pM peer bw %d: %d\n",
++				    sta->addr, bw, err);
++	}
++
++	if (changed & IEEE80211_RC_NSS_CHANGED) {
++		ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac update sta %pM nss %d\n",
++			   sta->addr, nss);
++
++		err = ath11k_wmi_set_peer_param(ar, sta->addr, arvif->vdev_id,
++						WMI_PEER_NSS, nss);
++		if (err)
++			ath11k_warn(ar->ab, "failed to update STA %pM nss %d: %d\n",
++				    sta->addr, nss, err);
++	}
++
++	if (changed & IEEE80211_RC_SMPS_CHANGED) {
++		ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac update sta %pM smps %d\n",
++			   sta->addr, smps);
++
++		err = ath11k_wmi_set_peer_param(ar, sta->addr, arvif->vdev_id,
++						WMI_PEER_MIMO_PS_STATE, smps);
++		if (err)
++			ath11k_warn(ar->ab, "failed to update STA %pM smps %d: %d\n",
++				    sta->addr, smps, err);
++	}
++
++	if (changed & IEEE80211_RC_SUPP_RATES_CHANGED) {
++		mask = &arvif->bitrate_mask;
++		num_vht_rates = ath11k_mac_bitrate_mask_num_vht_rates(ar, band,
++								      mask);
++
++		/* Peer_assoc_prepare will reject vht rates in
++		 * bitrate_mask if its not available in range format and
++		 * sets vht tx_rateset as unsupported. So multiple VHT MCS
++		 * setting(eg. MCS 4,5,6) per peer is not supported here.
++		 * But, Single rate in VHT mask can be set as per-peer
++		 * fixed rate. But even if any HT rates are configured in
++		 * the bitrate mask, device will not switch to those rates
++		 * when per-peer Fixed rate is set.
++		 * TODO: Check RATEMASK_CMDID to support auto rates selection
++		 * across HT/VHT and for multiple VHT MCS support.
++		 */
++		if (sta->vht_cap.vht_supported && num_vht_rates == 1) {
++			ath11k_mac_set_peer_vht_fixed_rate(arvif, sta, mask,
++							   band);
++		} else {
++			/* If the peer is non-VHT or no fixed VHT rate
++			 * is provided in the new bitrate mask we set the
++			 * other rates using peer_assoc command.
++			 */
++			ath11k_peer_assoc_prepare(ar, arvif->vif, sta,
++						  &peer_arg, true);
++
++			err = ath11k_wmi_send_peer_assoc_cmd(ar, &peer_arg);
++			if (err)
++				ath11k_warn(ar->ab, "failed to run peer assoc for STA %pM vdev %i: %d\n",
++					    sta->addr, arvif->vdev_id, err);
++
++			if (!wait_for_completion_timeout(&ar->peer_assoc_done, 1 * HZ))
++				ath11k_warn(ar->ab, "failed to get peer assoc conf event for %pM vdev %i\n",
++					    sta->addr, arvif->vdev_id);
++		}
++	}
++
++	mutex_unlock(&ar->conf_mutex);
++}
++
++static int ath11k_mac_inc_num_stations(struct ath11k_vif *arvif,
++				       struct ieee80211_sta *sta)
++{
++	struct ath11k *ar = arvif->ar;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (arvif->vdev_type == WMI_VDEV_TYPE_STA && !sta->tdls)
++		return 0;
++
++	if (ar->num_stations >= ar->max_num_stations)
++		return -ENOBUFS;
++
++	ar->num_stations++;
++
++	return 0;
++}
++
++static void ath11k_mac_dec_num_stations(struct ath11k_vif *arvif,
++					struct ieee80211_sta *sta)
++{
++	struct ath11k *ar = arvif->ar;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (arvif->vdev_type == WMI_VDEV_TYPE_STA && !sta->tdls)
++		return;
++
++	ar->num_stations--;
++}
++
++static int ath11k_mac_op_sta_state(struct ieee80211_hw *hw,
++				   struct ieee80211_vif *vif,
++				   struct ieee80211_sta *sta,
++				   enum ieee80211_sta_state old_state,
++				   enum ieee80211_sta_state new_state)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
++	struct ath11k_sta *arsta = (struct ath11k_sta *)sta->drv_priv;
++	struct peer_create_params peer_param;
++	int ret = 0;
++
++	/* cancel must be done outside the mutex to avoid deadlock */
++	if ((old_state == IEEE80211_STA_NONE &&
++	     new_state == IEEE80211_STA_NOTEXIST))
++		cancel_work_sync(&arsta->update_wk);
++
++	mutex_lock(&ar->conf_mutex);
++
++	if (old_state == IEEE80211_STA_NOTEXIST &&
++	    new_state == IEEE80211_STA_NONE) {
++		memset(arsta, 0, sizeof(*arsta));
++		arsta->arvif = arvif;
++		INIT_WORK(&arsta->update_wk, ath11k_sta_rc_update_wk);
++
++		ret = ath11k_mac_inc_num_stations(arvif, sta);
++		if (ret) {
++			ath11k_warn(ar->ab, "refusing to associate station: too many connected already (%d)\n",
++				    ar->max_num_stations);
++			goto exit;
++		}
++
++		arsta->rx_stats = kzalloc(sizeof(*arsta->rx_stats), GFP_KERNEL);
++		if (!arsta->rx_stats) {
++			ret = -ENOMEM;
++			goto exit;
++		}
++
++		peer_param.vdev_id = arvif->vdev_id;
++		peer_param.peer_addr = sta->addr;
++		peer_param.peer_type = WMI_PEER_TYPE_DEFAULT;
++		ret = ath11k_peer_create(ar, arvif, sta, &peer_param);
++		if (ret) {
++			ath11k_warn(ar->ab, "Failed to add peer: %pM for VDEV: %d\n",
++				    sta->addr, arvif->vdev_id);
++			ath11k_mac_dec_num_stations(arvif, sta);
++			goto exit;
++		}
++
++		ath11k_info(ar->ab, "Added peer: %pM for VDEV: %d\n",
++			    sta->addr, arvif->vdev_id);
++
++		if (ath11k_debug_is_extd_tx_stats_enabled(ar)) {
++			arsta->tx_stats = kzalloc(sizeof(*arsta->tx_stats),
++						  GFP_KERNEL);
++			if (!arsta->tx_stats) {
++				ret = -ENOMEM;
++				goto exit;
++			}
++		}
++
++		if (ieee80211_vif_is_mesh(vif)) {
++			ret = ath11k_wmi_set_peer_param(ar, sta->addr,
++							arvif->vdev_id,
++							WMI_PEER_USE_4ADDR, 1);
++			if (ret) {
++				ath11k_warn(ar->ab, "failed to STA %pM 4addr capability: %d\n",
++					    sta->addr, ret);
++				goto exit;
++			}
++		}
++
++		ret = ath11k_dp_peer_setup(ar, arvif->vdev_id, sta->addr);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to setup dp for peer %pM on vdev %i (%d)\n",
++				    sta->addr, arvif->vdev_id, ret);
++			ath11k_peer_delete(ar, arvif->vdev_id, sta->addr);
++			ath11k_mac_dec_num_stations(arvif, sta);
++		}
++	} else if ((old_state == IEEE80211_STA_NONE &&
++		    new_state == IEEE80211_STA_NOTEXIST)) {
++		ath11k_dp_peer_cleanup(ar, arvif->vdev_id, sta->addr);
++
++		ret = ath11k_peer_delete(ar, arvif->vdev_id, sta->addr);
++		if (ret)
++			ath11k_warn(ar->ab, "Failed to delete peer: %pM for VDEV: %d\n",
++				    sta->addr, arvif->vdev_id);
++		else
++			ath11k_info(ar->ab,
++				    "Removed peer: %pM for VDEV: %d\n",
++				    sta->addr, arvif->vdev_id);
++
++		ath11k_mac_dec_num_stations(arvif, sta);
++
++		kfree(arsta->tx_stats);
++		arsta->tx_stats = NULL;
++
++		kfree(arsta->rx_stats);
++		arsta->rx_stats = NULL;
++	} else if (old_state == IEEE80211_STA_AUTH &&
++		   new_state == IEEE80211_STA_ASSOC &&
++		   (vif->type == NL80211_IFTYPE_AP ||
++		    vif->type == NL80211_IFTYPE_MESH_POINT ||
++		    vif->type == NL80211_IFTYPE_ADHOC)) {
++		ret = ath11k_station_assoc(ar, vif, sta, false);
++		if (ret)
++			ath11k_warn(ar->ab, "Failed to associate station: %pM\n",
++				    sta->addr);
++		else
++			ath11k_info(ar->ab,
++				    "Station %pM moved to assoc state\n",
++				    sta->addr);
++	} else if (old_state == IEEE80211_STA_ASSOC &&
++		   new_state == IEEE80211_STA_AUTH &&
++		   (vif->type == NL80211_IFTYPE_AP ||
++		    vif->type == NL80211_IFTYPE_MESH_POINT ||
++		    vif->type == NL80211_IFTYPE_ADHOC)) {
++		ret = ath11k_station_disassoc(ar, vif, sta);
++		if (ret)
++			ath11k_warn(ar->ab, "Failed to disassociate station: %pM\n",
++				    sta->addr);
++		else
++			ath11k_info(ar->ab,
++				    "Station %pM moved to disassociated state\n",
++				    sta->addr);
++	}
++
++exit:
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
++}
++
++static void ath11k_mac_op_sta_rc_update(struct ieee80211_hw *hw,
++					struct ieee80211_vif *vif,
++					struct ieee80211_sta *sta,
++					u32 changed)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_sta *arsta = (struct ath11k_sta *)sta->drv_priv;
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	struct ath11k_peer *peer;
++	u32 bw, smps;
++
++	spin_lock_bh(&ar->ab->base_lock);
++
++	peer = ath11k_peer_find(ar->ab, arvif->vdev_id, sta->addr);
++	if (!peer) {
++		spin_unlock_bh(&ar->ab->base_lock);
++		ath11k_warn(ar->ab, "mac sta rc update failed to find peer %pM on vdev %i\n",
++			    sta->addr, arvif->vdev_id);
++		return;
++	}
++
++	spin_unlock_bh(&ar->ab->base_lock);
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++		   "mac sta rc update for %pM changed %08x bw %d nss %d smps %d\n",
++		   sta->addr, changed, sta->bandwidth, sta->rx_nss,
++		   sta->smps_mode);
++
++	spin_lock_bh(&ar->data_lock);
++
++	if (changed & IEEE80211_RC_BW_CHANGED) {
++		bw = WMI_PEER_CHWIDTH_20MHZ;
++
++		switch (sta->bandwidth) {
++		case IEEE80211_STA_RX_BW_20:
++			bw = WMI_PEER_CHWIDTH_20MHZ;
++			break;
++		case IEEE80211_STA_RX_BW_40:
++			bw = WMI_PEER_CHWIDTH_40MHZ;
++			break;
++		case IEEE80211_STA_RX_BW_80:
++			bw = WMI_PEER_CHWIDTH_80MHZ;
++			break;
++		case IEEE80211_STA_RX_BW_160:
++			bw = WMI_PEER_CHWIDTH_160MHZ;
++			break;
++		default:
++			ath11k_warn(ar->ab, "Invalid bandwidth %d in rc update for %pM\n",
++				    sta->bandwidth, sta->addr);
++			bw = WMI_PEER_CHWIDTH_20MHZ;
++			break;
++		}
++
++		arsta->bw = bw;
++	}
++
++	if (changed & IEEE80211_RC_NSS_CHANGED)
++		arsta->nss = sta->rx_nss;
++
++	if (changed & IEEE80211_RC_SMPS_CHANGED) {
++		smps = WMI_PEER_SMPS_PS_NONE;
++
++		switch (sta->smps_mode) {
++		case IEEE80211_SMPS_AUTOMATIC:
++		case IEEE80211_SMPS_OFF:
++			smps = WMI_PEER_SMPS_PS_NONE;
++			break;
++		case IEEE80211_SMPS_STATIC:
++			smps = WMI_PEER_SMPS_STATIC;
++			break;
++		case IEEE80211_SMPS_DYNAMIC:
++			smps = WMI_PEER_SMPS_DYNAMIC;
++			break;
++		default:
++			ath11k_warn(ar->ab, "Invalid smps %d in sta rc update for %pM\n",
++				    sta->smps_mode, sta->addr);
++			smps = WMI_PEER_SMPS_PS_NONE;
++			break;
++		}
++
++		arsta->smps = smps;
++	}
++
++	arsta->changed |= changed;
++
++	spin_unlock_bh(&ar->data_lock);
++
++	ieee80211_queue_work(hw, &arsta->update_wk);
++}
++
++static int ath11k_conf_tx_uapsd(struct ath11k *ar, struct ieee80211_vif *vif,
++				u16 ac, bool enable)
++{
++	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
++	u32 value = 0;
++	int ret = 0;
++
++	if (arvif->vdev_type != WMI_VDEV_TYPE_STA)
++		return 0;
++
++	switch (ac) {
++	case IEEE80211_AC_VO:
++		value = WMI_STA_PS_UAPSD_AC3_DELIVERY_EN |
++			WMI_STA_PS_UAPSD_AC3_TRIGGER_EN;
++		break;
++	case IEEE80211_AC_VI:
++		value = WMI_STA_PS_UAPSD_AC2_DELIVERY_EN |
++			WMI_STA_PS_UAPSD_AC2_TRIGGER_EN;
++		break;
++	case IEEE80211_AC_BE:
++		value = WMI_STA_PS_UAPSD_AC1_DELIVERY_EN |
++			WMI_STA_PS_UAPSD_AC1_TRIGGER_EN;
++		break;
++	case IEEE80211_AC_BK:
++		value = WMI_STA_PS_UAPSD_AC0_DELIVERY_EN |
++			WMI_STA_PS_UAPSD_AC0_TRIGGER_EN;
++		break;
++	}
++
++	if (enable)
++		arvif->u.sta.uapsd |= value;
++	else
++		arvif->u.sta.uapsd &= ~value;
++
++	ret = ath11k_wmi_set_sta_ps_param(ar, arvif->vdev_id,
++					  WMI_STA_PS_PARAM_UAPSD,
++					  arvif->u.sta.uapsd);
++	if (ret) {
++		ath11k_warn(ar->ab, "could not set uapsd params %d\n", ret);
++		goto exit;
++	}
++
++	if (arvif->u.sta.uapsd)
++		value = WMI_STA_PS_RX_WAKE_POLICY_POLL_UAPSD;
++	else
++		value = WMI_STA_PS_RX_WAKE_POLICY_WAKE;
++
++	ret = ath11k_wmi_set_sta_ps_param(ar, arvif->vdev_id,
++					  WMI_STA_PS_PARAM_RX_WAKE_POLICY,
++					  value);
++	if (ret)
++		ath11k_warn(ar->ab, "could not set rx wake param %d\n", ret);
++
++exit:
++	return ret;
++}
++
++static int ath11k_mac_op_conf_tx(struct ieee80211_hw *hw,
++				 struct ieee80211_vif *vif, u16 ac,
++				 const struct ieee80211_tx_queue_params *params)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	struct wmi_wmm_params_arg *p = NULL;
++	int ret;
++
++	mutex_lock(&ar->conf_mutex);
++
++	switch (ac) {
++	case IEEE80211_AC_VO:
++		p = &arvif->wmm_params.ac_vo;
++		break;
++	case IEEE80211_AC_VI:
++		p = &arvif->wmm_params.ac_vi;
++		break;
++	case IEEE80211_AC_BE:
++		p = &arvif->wmm_params.ac_be;
++		break;
++	case IEEE80211_AC_BK:
++		p = &arvif->wmm_params.ac_bk;
++		break;
++	}
++
++	if (WARN_ON(!p)) {
++		ret = -EINVAL;
++		goto exit;
++	}
++
++	p->cwmin = params->cw_min;
++	p->cwmax = params->cw_max;
++	p->aifs = params->aifs;
++
++	/* The channel time duration programmed in the HW is in absolute
++	 * microseconds, while mac80211 gives the txop in units of
++	 * 32 microseconds.
++	 */
++	p->txop = params->txop * 32;
++
++	ret = ath11k_wmi_send_wmm_update_cmd_tlv(ar, arvif->vdev_id,
++						 &arvif->wmm_params);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set wmm params: %d\n", ret);
++		goto exit;
++	}
++
++	ret = ath11k_conf_tx_uapsd(ar, vif, ac, params->uapsd);
++
++	if (ret)
++		ath11k_warn(ar->ab, "failed to set sta uapsd: %d\n", ret);
++
++exit:
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
++}
++
++static struct ieee80211_sta_ht_cap
++ath11k_create_ht_cap(struct ath11k *ar, u32 ar_ht_cap, u32 rate_cap_rx_chainmask)
++{
++	int i;
++	struct ieee80211_sta_ht_cap ht_cap = {0};
++	u32 ar_vht_cap = ar->pdev->cap.vht_cap;
++
++	if (!(ar_ht_cap & WMI_HT_CAP_ENABLED))
++		return ht_cap;
++
++	ht_cap.ht_supported = 1;
++	ht_cap.ampdu_factor = IEEE80211_HT_MAX_AMPDU_64K;
++	ht_cap.ampdu_density = IEEE80211_HT_MPDU_DENSITY_8;
++	ht_cap.cap |= IEEE80211_HT_CAP_SUP_WIDTH_20_40;
++	ht_cap.cap |= IEEE80211_HT_CAP_DSSSCCK40;
++	ht_cap.cap |= WLAN_HT_CAP_SM_PS_STATIC << IEEE80211_HT_CAP_SM_PS_SHIFT;
++
++	if (ar_ht_cap & WMI_HT_CAP_HT20_SGI)
++		ht_cap.cap |= IEEE80211_HT_CAP_SGI_20;
++
++	if (ar_ht_cap & WMI_HT_CAP_HT40_SGI)
++		ht_cap.cap |= IEEE80211_HT_CAP_SGI_40;
++
++	if (ar_ht_cap & WMI_HT_CAP_DYNAMIC_SMPS) {
++		u32 smps;
++
++		smps   = WLAN_HT_CAP_SM_PS_DYNAMIC;
++		smps <<= IEEE80211_HT_CAP_SM_PS_SHIFT;
++
++		ht_cap.cap |= smps;
++	}
++
++	if (ar_ht_cap & WMI_HT_CAP_TX_STBC)
++		ht_cap.cap |= IEEE80211_HT_CAP_TX_STBC;
++
++	if (ar_ht_cap & WMI_HT_CAP_RX_STBC) {
++		u32 stbc;
++
++		stbc   = ar_ht_cap;
++		stbc  &= WMI_HT_CAP_RX_STBC;
++		stbc >>= WMI_HT_CAP_RX_STBC_MASK_SHIFT;
++		stbc <<= IEEE80211_HT_CAP_RX_STBC_SHIFT;
++		stbc  &= IEEE80211_HT_CAP_RX_STBC;
++
++		ht_cap.cap |= stbc;
++	}
++
++	if (ar_ht_cap & WMI_HT_CAP_RX_LDPC)
++		ht_cap.cap |= IEEE80211_HT_CAP_LDPC_CODING;
++
++	if (ar_ht_cap & WMI_HT_CAP_L_SIG_TXOP_PROT)
++		ht_cap.cap |= IEEE80211_HT_CAP_LSIG_TXOP_PROT;
++
++	if (ar_vht_cap & WMI_VHT_CAP_MAX_MPDU_LEN_MASK)
++		ht_cap.cap |= IEEE80211_HT_CAP_MAX_AMSDU;
++
++	for (i = 0; i < ar->num_rx_chains; i++) {
++		if (rate_cap_rx_chainmask & BIT(i))
++			ht_cap.mcs.rx_mask[i] = 0xFF;
++	}
++
++	ht_cap.mcs.tx_params |= IEEE80211_HT_MCS_TX_DEFINED;
++
++	return ht_cap;
++}
++
++static int ath11k_mac_set_txbf_conf(struct ath11k_vif *arvif)
++{
++	u32 value = 0;
++	struct ath11k *ar = arvif->ar;
++	int nsts;
++	int sound_dim;
++	u32 vht_cap = ar->pdev->cap.vht_cap;
++	u32 vdev_param = WMI_VDEV_PARAM_TXBF;
++
++	if (vht_cap & (IEEE80211_VHT_CAP_SU_BEAMFORMEE_CAPABLE)) {
++		nsts = vht_cap & IEEE80211_VHT_CAP_BEAMFORMEE_STS_MASK;
++		nsts >>= IEEE80211_VHT_CAP_BEAMFORMEE_STS_SHIFT;
++		value |= SM(nsts, WMI_TXBF_STS_CAP_OFFSET);
++	}
++
++	if (vht_cap & (IEEE80211_VHT_CAP_SU_BEAMFORMER_CAPABLE)) {
++		sound_dim = vht_cap &
++			    IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_MASK;
++		sound_dim >>= IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_SHIFT;
++		if (sound_dim > (ar->num_tx_chains - 1))
++			sound_dim = ar->num_tx_chains - 1;
++		value |= SM(sound_dim, WMI_BF_SOUND_DIM_OFFSET);
++	}
++
++	if (!value)
++		return 0;
++
++	if (vht_cap & IEEE80211_VHT_CAP_SU_BEAMFORMER_CAPABLE) {
++		value |= WMI_VDEV_PARAM_TXBF_SU_TX_BFER;
++
++		if ((vht_cap & IEEE80211_VHT_CAP_MU_BEAMFORMER_CAPABLE) &&
++		    arvif->vdev_type == WMI_VDEV_TYPE_AP)
++			value |= WMI_VDEV_PARAM_TXBF_MU_TX_BFER;
++	}
++
++	/* TODO: SUBFEE not validated in HK, disable here until validated? */
++
++	if (vht_cap & IEEE80211_VHT_CAP_SU_BEAMFORMEE_CAPABLE) {
++		value |= WMI_VDEV_PARAM_TXBF_SU_TX_BFEE;
++
++		if ((vht_cap & IEEE80211_VHT_CAP_MU_BEAMFORMEE_CAPABLE) &&
++		    arvif->vdev_type == WMI_VDEV_TYPE_STA)
++			value |= WMI_VDEV_PARAM_TXBF_MU_TX_BFEE;
++	}
++
++	return ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					     vdev_param, value);
++}
++
++static void ath11k_set_vht_txbf_cap(struct ath11k *ar, u32 *vht_cap)
++{
++	bool subfer, subfee;
++	int sound_dim = 0;
++
++	subfer = !!(*vht_cap & (IEEE80211_VHT_CAP_SU_BEAMFORMER_CAPABLE));
++	subfee = !!(*vht_cap & (IEEE80211_VHT_CAP_SU_BEAMFORMEE_CAPABLE));
++
++	if (ar->num_tx_chains < 2) {
++		*vht_cap &= ~(IEEE80211_VHT_CAP_SU_BEAMFORMER_CAPABLE);
++		subfer = false;
++	}
++
++	/* If SU Beaformer is not set, then disable MU Beamformer Capability */
++	if (!subfer)
++		*vht_cap &= ~(IEEE80211_VHT_CAP_MU_BEAMFORMER_CAPABLE);
++
++	/* If SU Beaformee is not set, then disable MU Beamformee Capability */
++	if (!subfee)
++		*vht_cap &= ~(IEEE80211_VHT_CAP_MU_BEAMFORMEE_CAPABLE);
++
++	sound_dim = (*vht_cap & IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_MASK);
++	sound_dim >>= IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_SHIFT;
++	*vht_cap &= ~IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_MASK;
++
++	/* TODO: Need to check invalid STS and Sound_dim values set by FW? */
++
++	/* Enable Sounding Dimension Field only if SU BF is enabled */
++	if (subfer) {
++		if (sound_dim > (ar->num_tx_chains - 1))
++			sound_dim = ar->num_tx_chains - 1;
++
++		sound_dim <<= IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_SHIFT;
++		sound_dim &=  IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_MASK;
++		*vht_cap |= sound_dim;
++	}
++
++	/* Use the STS advertised by FW unless SU Beamformee is not supported*/
++	if (!subfee)
++		*vht_cap &= ~(IEEE80211_VHT_CAP_BEAMFORMEE_STS_MASK);
++}
++
++static struct ieee80211_sta_vht_cap
++ath11k_create_vht_cap(struct ath11k *ar, u32 rate_cap_tx_chainmask,
++		      u32 rate_cap_rx_chainmask)
++{
++	struct ieee80211_sta_vht_cap vht_cap = {0};
++	u16 txmcs_map, rxmcs_map;
++	int i;
++
++	vht_cap.vht_supported = 1;
++	vht_cap.cap = ar->pdev->cap.vht_cap;
++
++	ath11k_set_vht_txbf_cap(ar, &vht_cap.cap);
++
++	/* TODO: Enable back VHT160 mode once association issues are fixed */
++	/* Disabling VHT160 and VHT80+80 modes */
++	vht_cap.cap &= ~IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_MASK;
++	vht_cap.cap &= ~IEEE80211_VHT_CAP_SHORT_GI_160;
++
++	rxmcs_map = 0;
++	txmcs_map = 0;
++	for (i = 0; i < 8; i++) {
++		if (i < ar->num_tx_chains && rate_cap_tx_chainmask & BIT(i))
++			txmcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << (i * 2);
++		else
++			txmcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << (i * 2);
++
++		if (i < ar->num_rx_chains && rate_cap_rx_chainmask & BIT(i))
++			rxmcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << (i * 2);
++		else
++			rxmcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << (i * 2);
++	}
++
++	if (rate_cap_tx_chainmask <= 1)
++		vht_cap.cap &= ~IEEE80211_VHT_CAP_TXSTBC;
++
++	vht_cap.vht_mcs.rx_mcs_map = cpu_to_le16(rxmcs_map);
++	vht_cap.vht_mcs.tx_mcs_map = cpu_to_le16(txmcs_map);
++
++	return vht_cap;
++}
++
++static void ath11k_mac_setup_ht_vht_cap(struct ath11k *ar,
++					struct ath11k_pdev_cap *cap,
++					u32 *ht_cap_info)
++{
++	struct ieee80211_supported_band *band;
++	u32 rate_cap_tx_chainmask;
++	u32 rate_cap_rx_chainmask;
++	u32 ht_cap;
++
++	rate_cap_tx_chainmask = ar->cfg_tx_chainmask >> cap->tx_chain_mask_shift;
++	rate_cap_rx_chainmask = ar->cfg_rx_chainmask >> cap->rx_chain_mask_shift;
++
++	if (cap->supported_bands & WMI_HOST_WLAN_2G_CAP) {
++		band = &ar->mac.sbands[NL80211_BAND_2GHZ];
++		ht_cap = cap->band[NL80211_BAND_2GHZ].ht_cap_info;
++		if (ht_cap_info)
++			*ht_cap_info = ht_cap;
++		band->ht_cap = ath11k_create_ht_cap(ar, ht_cap,
++						    rate_cap_rx_chainmask);
++	}
++
++	if (cap->supported_bands & WMI_HOST_WLAN_5G_CAP) {
++		band = &ar->mac.sbands[NL80211_BAND_5GHZ];
++		ht_cap = cap->band[NL80211_BAND_5GHZ].ht_cap_info;
++		if (ht_cap_info)
++			*ht_cap_info = ht_cap;
++		band->ht_cap = ath11k_create_ht_cap(ar, ht_cap,
++						    rate_cap_rx_chainmask);
++		band->vht_cap = ath11k_create_vht_cap(ar, rate_cap_tx_chainmask,
++						      rate_cap_rx_chainmask);
++	}
++}
++
++static int ath11k_check_chain_mask(struct ath11k *ar, u32 ant, bool is_tx_ant)
++{
++	/* TODO: Check the request chainmask against the supported
++	 * chainmask table which is advertised in extented_service_ready event
++	 */
++
++	return 0;
++}
++
++static int __ath11k_set_antenna(struct ath11k *ar, u32 tx_ant, u32 rx_ant)
++{
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (ath11k_check_chain_mask(ar, tx_ant, true))
++		return -EINVAL;
++
++	if (ath11k_check_chain_mask(ar, rx_ant, false))
++		return -EINVAL;
++
++	ar->cfg_tx_chainmask = tx_ant;
++	ar->cfg_rx_chainmask = rx_ant;
++
++	if (ar->state != ATH11K_STATE_ON &&
++	    ar->state != ATH11K_STATE_RESTARTED)
++		return 0;
++
++	ret = ath11k_wmi_pdev_set_param(ar, WMI_PDEV_PARAM_TX_CHAIN_MASK,
++					tx_ant, ar->pdev->pdev_id);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set tx-chainmask: %d, req 0x%x\n",
++			    ret, tx_ant);
++		return ret;
++	}
++
++	ret = ath11k_wmi_pdev_set_param(ar, WMI_PDEV_PARAM_RX_CHAIN_MASK,
++					rx_ant, ar->pdev->pdev_id);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set rx-chainmask: %d, req 0x%x\n",
++			    ret, rx_ant);
++		return ret;
++	}
++
++	/* Reload HT/VHT capability */
++	ath11k_mac_setup_ht_vht_cap(ar, &ar->pdev->cap, NULL);
++
++	return 0;
++}
++
++int ath11k_mac_tx_mgmt_pending_free(int buf_id, void *skb, void *ctx)
++{
++	struct ath11k *ar = ctx;
++	struct ath11k_base *ab = ar->ab;
++	struct sk_buff *msdu = skb;
++	struct ieee80211_tx_info *info;
++
++	spin_lock_bh(&ar->txmgmt_idr_lock);
++	idr_remove(&ar->txmgmt_idr, buf_id);
++	spin_unlock_bh(&ar->txmgmt_idr_lock);
++	dma_unmap_single(ab->dev, ATH11K_SKB_CB(msdu)->paddr, msdu->len,
++			 DMA_TO_DEVICE);
++
++	info = IEEE80211_SKB_CB(msdu);
++	memset(&info->status, 0, sizeof(info->status));
++
++	ieee80211_free_txskb(ar->hw, msdu);
++
++	return 0;
++}
++
++static int ath11k_mac_vif_txmgmt_idr_remove(int buf_id, void *skb, void *ctx)
++{
++	struct ieee80211_vif *vif = ctx;
++	struct ath11k_skb_cb *skb_cb = ATH11K_SKB_CB((struct sk_buff *)skb);
++	struct sk_buff *msdu = skb;
++	struct ath11k *ar = skb_cb->ar;
++	struct ath11k_base *ab = ar->ab;
++
++	if (skb_cb->vif == vif) {
++		spin_lock_bh(&ar->txmgmt_idr_lock);
++		idr_remove(&ar->txmgmt_idr, buf_id);
++		spin_unlock_bh(&ar->txmgmt_idr_lock);
++		dma_unmap_single(ab->dev, skb_cb->paddr, msdu->len,
++				 DMA_TO_DEVICE);
++	}
++
++	return 0;
++}
++
++static int ath11k_mac_mgmt_tx_wmi(struct ath11k *ar, struct ath11k_vif *arvif,
++				  struct sk_buff *skb)
++{
++	struct ath11k_base *ab = ar->ab;
++	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
++	dma_addr_t paddr;
++	int buf_id;
++	int ret;
++
++	spin_lock_bh(&ar->txmgmt_idr_lock);
++	buf_id = idr_alloc(&ar->txmgmt_idr, skb, 0,
++			   ATH11K_TX_MGMT_NUM_PENDING_MAX, GFP_ATOMIC);
++	spin_unlock_bh(&ar->txmgmt_idr_lock);
++	if (buf_id < 0)
++		return -ENOSPC;
++
++	if ((ieee80211_is_action(hdr->frame_control) ||
++	     ieee80211_is_deauth(hdr->frame_control) ||
++	     ieee80211_is_disassoc(hdr->frame_control)) &&
++	     ieee80211_has_protected(hdr->frame_control)) {
++		skb_put(skb, IEEE80211_CCMP_MIC_LEN);
++	}
++
++	paddr = dma_map_single(ab->dev, skb->data, skb->len, DMA_TO_DEVICE);
++	if (dma_mapping_error(ab->dev, paddr)) {
++		ath11k_warn(ab, "failed to DMA map mgmt Tx buffer\n");
++		ret = -EIO;
++		goto err_free_idr;
++	}
++
++	ATH11K_SKB_CB(skb)->paddr = paddr;
++
++	ret = ath11k_wmi_mgmt_send(ar, arvif->vdev_id, buf_id, skb);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to send mgmt frame: %d\n", ret);
++		goto err_unmap_buf;
++	}
++
++	return 0;
++
++err_unmap_buf:
++	dma_unmap_single(ab->dev, ATH11K_SKB_CB(skb)->paddr,
++			 skb->len, DMA_TO_DEVICE);
++err_free_idr:
++	spin_lock_bh(&ar->txmgmt_idr_lock);
++	idr_remove(&ar->txmgmt_idr, buf_id);
++	spin_unlock_bh(&ar->txmgmt_idr_lock);
++
++	return ret;
++}
++
++static void ath11k_mgmt_over_wmi_tx_purge(struct ath11k *ar)
++{
++	struct sk_buff *skb;
++
++	while ((skb = skb_dequeue(&ar->wmi_mgmt_tx_queue)) != NULL)
++		ieee80211_free_txskb(ar->hw, skb);
++}
++
++static void ath11k_mgmt_over_wmi_tx_work(struct work_struct *work)
++{
++	struct ath11k *ar = container_of(work, struct ath11k, wmi_mgmt_tx_work);
++	struct ieee80211_tx_info *info;
++	struct ath11k_vif *arvif;
++	struct sk_buff *skb;
++	int ret;
++
++	while ((skb = skb_dequeue(&ar->wmi_mgmt_tx_queue)) != NULL) {
++		info = IEEE80211_SKB_CB(skb);
++		arvif = ath11k_vif_to_arvif(info->control.vif);
++
++		ret = ath11k_mac_mgmt_tx_wmi(ar, arvif, skb);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to transmit management frame %d\n",
++				    ret);
++			ieee80211_free_txskb(ar->hw, skb);
++		} else {
++			atomic_inc(&ar->num_pending_mgmt_tx);
++		}
++	}
++}
++
++static int ath11k_mac_mgmt_tx(struct ath11k *ar, struct sk_buff *skb,
++			      bool is_prb_rsp)
++{
++	struct sk_buff_head *q = &ar->wmi_mgmt_tx_queue;
++
++	if (test_bit(ATH11K_FLAG_CRASH_FLUSH, &ar->ab->dev_flags))
++		return -ESHUTDOWN;
++
++	/* Drop probe response packets when the pending management tx
++	 * count has reached a certain threshold, so as to prioritize
++	 * other mgmt packets like auth and assoc to be sent on time
++	 * for establishing successful connections.
++	 */
++	if (is_prb_rsp &&
++	    atomic_read(&ar->num_pending_mgmt_tx) > ATH11K_PRB_RSP_DROP_THRESHOLD) {
++		ath11k_warn(ar->ab,
++			    "dropping probe response as pending queue is almost full\n");
++		return -ENOSPC;
++	}
++
++	if (skb_queue_len(q) == ATH11K_TX_MGMT_NUM_PENDING_MAX) {
++		ath11k_warn(ar->ab, "mgmt tx queue is full\n");
++		return -ENOSPC;
++	}
++
++	skb_queue_tail(q, skb);
++	ieee80211_queue_work(ar->hw, &ar->wmi_mgmt_tx_work);
++
++	return 0;
++}
++
++static void ath11k_mac_op_tx(struct ieee80211_hw *hw,
++			     struct ieee80211_tx_control *control,
++			     struct sk_buff *skb)
++{
++	struct ath11k *ar = hw->priv;
++	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
++	struct ieee80211_vif *vif = info->control.vif;
++	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
++	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
++	bool is_prb_rsp;
++	int ret;
++
++	if (ieee80211_is_mgmt(hdr->frame_control)) {
++		is_prb_rsp = ieee80211_is_probe_resp(hdr->frame_control);
++		ret = ath11k_mac_mgmt_tx(ar, skb, is_prb_rsp);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to queue management frame %d\n",
++				    ret);
++			ieee80211_free_txskb(ar->hw, skb);
++		}
++		return;
++	}
++
++	ret = ath11k_dp_tx(ar, arvif, skb);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to transmit frame %d\n", ret);
++		ieee80211_free_txskb(ar->hw, skb);
++	}
++}
++
++void ath11k_mac_drain_tx(struct ath11k *ar)
++{
++	/* make sure rcu-protected mac80211 tx path itself is drained */
++	synchronize_net();
++
++	cancel_work_sync(&ar->wmi_mgmt_tx_work);
++	ath11k_mgmt_over_wmi_tx_purge(ar);
++}
++
++static int ath11k_mac_config_mon_status_default(struct ath11k *ar, bool enable)
++{
++	struct htt_rx_ring_tlv_filter tlv_filter = {0};
++	u32 ring_id;
++
++	if (enable)
++		tlv_filter = ath11k_mac_mon_status_filter_default;
++
++	ring_id = ar->dp.rx_mon_status_refill_ring.refill_buf_ring.ring_id;
++
++	return ath11k_dp_tx_htt_rx_filter_setup(ar->ab, ring_id, ar->dp.mac_id,
++						HAL_RXDMA_MONITOR_STATUS,
++						DP_RX_BUFFER_SIZE, &tlv_filter);
++}
++
++static int ath11k_mac_op_start(struct ieee80211_hw *hw)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_base *ab = ar->ab;
++	struct ath11k_pdev *pdev = ar->pdev;
++	int ret;
++
++	ath11k_mac_drain_tx(ar);
++	mutex_lock(&ar->conf_mutex);
++
++	switch (ar->state) {
++	case ATH11K_STATE_OFF:
++		ar->state = ATH11K_STATE_ON;
++		break;
++	case ATH11K_STATE_RESTARTING:
++		ar->state = ATH11K_STATE_RESTARTED;
++		break;
++	case ATH11K_STATE_RESTARTED:
++	case ATH11K_STATE_WEDGED:
++	case ATH11K_STATE_ON:
++		WARN_ON(1);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	ret = ath11k_wmi_pdev_set_param(ar, WMI_PDEV_PARAM_PMF_QOS,
++					1, pdev->pdev_id);
++
++	if (ret) {
++		ath11k_err(ar->ab, "failed to enable PMF QOS: (%d\n", ret);
++		goto err;
++	}
++
++	ret = ath11k_wmi_pdev_set_param(ar, WMI_PDEV_PARAM_DYNAMIC_BW, 1,
++					pdev->pdev_id);
++	if (ret) {
++		ath11k_err(ar->ab, "failed to enable dynamic bw: %d\n", ret);
++		goto err;
++	}
++
++	ret = ath11k_wmi_pdev_set_param(ar, WMI_PDEV_PARAM_ARP_AC_OVERRIDE,
++					0, pdev->pdev_id);
++	if (ret) {
++		ath11k_err(ab, "failed to set ac override for ARP: %d\n",
++			   ret);
++		goto err;
++	}
++
++	ret = ath11k_wmi_send_dfs_phyerr_offload_enable_cmd(ar, pdev->pdev_id);
++	if (ret) {
++		ath11k_err(ab, "failed to offload radar detection: %d\n",
++			   ret);
++		goto err;
++	}
++
++	ret = ath11k_dp_tx_htt_h2t_ppdu_stats_req(ar,
++						  HTT_PPDU_STATS_TAG_DEFAULT);
++	if (ret) {
++		ath11k_err(ab, "failed to req ppdu stats: %d\n", ret);
++		goto err;
++	}
++
++	ret = ath11k_wmi_pdev_set_param(ar, WMI_PDEV_PARAM_MESH_MCAST_ENABLE,
++					1, pdev->pdev_id);
++
++	if (ret) {
++		ath11k_err(ar->ab, "failed to enable MESH MCAST ENABLE: (%d\n", ret);
++		goto err;
++	}
++
++	__ath11k_set_antenna(ar, ar->cfg_tx_chainmask, ar->cfg_rx_chainmask);
++
++	/* TODO: Do we need to enable ANI? */
++
++	ath11k_reg_update_chan_list(ar);
++
++	ar->num_started_vdevs = 0;
++	ar->num_created_vdevs = 0;
++	ar->num_peers = 0;
++
++	/* Configure monitor status ring with default rx_filter to get rx status
++	 * such as rssi, rx_duration.
++	 */
++	ret = ath11k_mac_config_mon_status_default(ar, true);
++	if (ret) {
++		ath11k_err(ab, "failed to configure monitor status ring with default rx_filter: (%d)\n",
++			   ret);
++		goto err;
++	}
++
++	mutex_unlock(&ar->conf_mutex);
++
++	rcu_assign_pointer(ab->pdevs_active[ar->pdev_idx],
++			   &ab->pdevs[ar->pdev_idx]);
++
++	return 0;
++
++err:
++	ar->state = ATH11K_STATE_OFF;
++	mutex_unlock(&ar->conf_mutex);
++
++	return ret;
++}
++
++static void ath11k_mac_op_stop(struct ieee80211_hw *hw)
++{
++	struct ath11k *ar = hw->priv;
++	struct htt_ppdu_stats_info *ppdu_stats, *tmp;
++	int ret;
++
++	ath11k_mac_drain_tx(ar);
++
++	mutex_lock(&ar->conf_mutex);
++	ret = ath11k_mac_config_mon_status_default(ar, false);
++	if (ret)
++		ath11k_err(ar->ab, "failed to clear rx_filter for monitor status ring: (%d)\n",
++			   ret);
++
++	clear_bit(ATH11K_CAC_RUNNING, &ar->dev_flags);
++	ar->state = ATH11K_STATE_OFF;
++	mutex_unlock(&ar->conf_mutex);
++
++	cancel_delayed_work_sync(&ar->scan.timeout);
++	cancel_work_sync(&ar->regd_update_work);
++
++	spin_lock_bh(&ar->data_lock);
++	list_for_each_entry_safe(ppdu_stats, tmp, &ar->ppdu_stats_info, list) {
++		list_del(&ppdu_stats->list);
++		kfree(ppdu_stats);
++	}
++	spin_unlock_bh(&ar->data_lock);
++
++	rcu_assign_pointer(ar->ab->pdevs_active[ar->pdev_idx], NULL);
++
++	synchronize_rcu();
++
++	atomic_set(&ar->num_pending_mgmt_tx, 0);
++}
++
++static void
++ath11k_mac_setup_vdev_create_params(struct ath11k_vif *arvif,
++				    struct vdev_create_params *params)
++{
++	struct ath11k *ar = arvif->ar;
++	struct ath11k_pdev *pdev = ar->pdev;
++
++	params->if_id = arvif->vdev_id;
++	params->type = arvif->vdev_type;
++	params->subtype = arvif->vdev_subtype;
++	params->pdev_id = pdev->pdev_id;
++
++	if (pdev->cap.supported_bands & WMI_HOST_WLAN_2G_CAP) {
++		params->chains[NL80211_BAND_2GHZ].tx = ar->num_tx_chains;
++		params->chains[NL80211_BAND_2GHZ].rx = ar->num_rx_chains;
++	}
++	if (pdev->cap.supported_bands & WMI_HOST_WLAN_5G_CAP) {
++		params->chains[NL80211_BAND_5GHZ].tx = ar->num_tx_chains;
++		params->chains[NL80211_BAND_5GHZ].rx = ar->num_rx_chains;
++	}
++}
++
++static u32
++ath11k_mac_prepare_he_mode(struct ath11k_pdev *pdev, u32 viftype)
++{
++	struct ath11k_pdev_cap *pdev_cap = &pdev->cap;
++	struct ath11k_band_cap *cap_band = NULL;
++	u32 *hecap_phy_ptr = NULL;
++	u32 hemode = 0;
++
++	if (pdev->cap.supported_bands & WMI_HOST_WLAN_2G_CAP)
++		cap_band = &pdev_cap->band[NL80211_BAND_2GHZ];
++	else
++		cap_band = &pdev_cap->band[NL80211_BAND_5GHZ];
++
++	hecap_phy_ptr = &cap_band->he_cap_phy_info[0];
++
++	hemode = FIELD_PREP(HE_MODE_SU_TX_BFEE, HE_SU_BFEE_ENABLE) |
++		FIELD_PREP(HE_MODE_SU_TX_BFER, HECAP_PHY_SUBFMR_GET(hecap_phy_ptr)) |
++		FIELD_PREP(HE_MODE_UL_MUMIMO, HECAP_PHY_ULMUMIMO_GET(hecap_phy_ptr));
++
++	/* TODO WDS and other modes */
++	if (viftype == NL80211_IFTYPE_AP) {
++		hemode |= FIELD_PREP(HE_MODE_MU_TX_BFER,
++			   HECAP_PHY_MUBFMR_GET(hecap_phy_ptr)) |
++			FIELD_PREP(HE_MODE_DL_OFDMA, HE_DL_MUOFDMA_ENABLE) |
++			FIELD_PREP(HE_MODE_UL_OFDMA, HE_UL_MUOFDMA_ENABLE);
++	} else {
++		hemode |= FIELD_PREP(HE_MODE_MU_TX_BFEE, HE_MU_BFEE_ENABLE);
++	}
++
++	return hemode;
++}
++
++static int ath11k_set_he_mu_sounding_mode(struct ath11k *ar,
++					  struct ath11k_vif *arvif)
++{
++	u32 param_id, param_value;
++	struct ath11k_base *ab = ar->ab;
++	int ret = 0;
++
++	param_id = WMI_VDEV_PARAM_SET_HEMU_MODE;
++	param_value = ath11k_mac_prepare_he_mode(ar->pdev, arvif->vif->type);
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					    param_id, param_value);
++	if (ret) {
++		ath11k_warn(ab, "failed to set vdev %d HE MU mode: %d param_value %x\n",
++			    arvif->vdev_id, ret, param_value);
++		return ret;
++	}
++	param_id = WMI_VDEV_PARAM_SET_HE_SOUNDING_MODE;
++	param_value =
++		FIELD_PREP(HE_VHT_SOUNDING_MODE, HE_VHT_SOUNDING_MODE_ENABLE) |
++		FIELD_PREP(HE_TRIG_NONTRIG_SOUNDING_MODE,
++			   HE_TRIG_NONTRIG_SOUNDING_MODE_ENABLE);
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					    param_id, param_value);
++	if (ret) {
++		ath11k_warn(ab, "failed to set vdev %d HE MU mode: %d\n",
++			    arvif->vdev_id, ret);
++		return ret;
++	}
++	return ret;
++}
++
++static int ath11k_mac_op_add_interface(struct ieee80211_hw *hw,
++				       struct ieee80211_vif *vif)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_base *ab = ar->ab;
++	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
++	struct vdev_create_params vdev_param = {0};
++	struct peer_create_params peer_param;
++	u32 param_id, param_value;
++	u16 nss;
++	int i;
++	int ret;
++	int bit;
++
++	vif->driver_flags |= IEEE80211_VIF_SUPPORTS_UAPSD;
++
++	mutex_lock(&ar->conf_mutex);
++
++	if (vif->type == NL80211_IFTYPE_AP &&
++	    ar->num_peers > (ar->max_num_peers - 1)) {
++		ath11k_warn(ab, "failed to create vdev due to insufficient peer entry resource in firmware\n");
++		ret = -ENOBUFS;
++		goto err;
++	}
++
++	if (ar->num_created_vdevs > (TARGET_NUM_VDEVS - 1)) {
++		ath11k_warn(ab, "failed to create vdev, reached max vdev limit %d\n",
++			    TARGET_NUM_VDEVS);
++		ret = -EBUSY;
++		goto err;
++	}
++
++	memset(arvif, 0, sizeof(*arvif));
++
++	arvif->ar = ar;
++	arvif->vif = vif;
++
++	INIT_LIST_HEAD(&arvif->list);
++
++	/* Should we initialize any worker to handle connection loss indication
++	 * from firmware in sta mode?
++	 */
++
++	for (i = 0; i < ARRAY_SIZE(arvif->bitrate_mask.control); i++) {
++		arvif->bitrate_mask.control[i].legacy = 0xffffffff;
++		memset(arvif->bitrate_mask.control[i].ht_mcs, 0xff,
++		       sizeof(arvif->bitrate_mask.control[i].ht_mcs));
++		memset(arvif->bitrate_mask.control[i].vht_mcs, 0xff,
++		       sizeof(arvif->bitrate_mask.control[i].vht_mcs));
++	}
++
++	bit = __ffs64(ab->free_vdev_map);
++
++	arvif->vdev_id = bit;
++	arvif->vdev_subtype = WMI_VDEV_SUBTYPE_NONE;
++
++	switch (vif->type) {
++	case NL80211_IFTYPE_UNSPECIFIED:
++	case NL80211_IFTYPE_STATION:
++		arvif->vdev_type = WMI_VDEV_TYPE_STA;
++		break;
++	case NL80211_IFTYPE_MESH_POINT:
++		arvif->vdev_subtype = WMI_VDEV_SUBTYPE_MESH_11S;
++		/* fall through */
++	case NL80211_IFTYPE_AP:
++		arvif->vdev_type = WMI_VDEV_TYPE_AP;
++		break;
++	case NL80211_IFTYPE_MONITOR:
++		arvif->vdev_type = WMI_VDEV_TYPE_MONITOR;
++		break;
++	default:
++		WARN_ON(1);
++		break;
++	}
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac add interface id %d type %d subtype %d map %llx\n",
++		   arvif->vdev_id, arvif->vdev_type, arvif->vdev_subtype,
++		   ab->free_vdev_map);
++
++	vif->cab_queue = arvif->vdev_id % (ATH11K_HW_MAX_QUEUES - 1);
++	for (i = 0; i < ARRAY_SIZE(vif->hw_queue); i++)
++		vif->hw_queue[i] = i % (ATH11K_HW_MAX_QUEUES - 1);
++
++	ath11k_mac_setup_vdev_create_params(arvif, &vdev_param);
++
++	ret = ath11k_wmi_vdev_create(ar, vif->addr, &vdev_param);
++	if (ret) {
++		ath11k_warn(ab, "failed to create WMI vdev %d: %d\n",
++			    arvif->vdev_id, ret);
++		goto err;
++	}
++
++	ar->num_created_vdevs++;
++
++	ab->free_vdev_map &= ~(1LL << arvif->vdev_id);
++	spin_lock_bh(&ar->data_lock);
++	list_add(&arvif->list, &ar->arvifs);
++	spin_unlock_bh(&ar->data_lock);
++
++	param_id = WMI_VDEV_PARAM_TX_ENCAP_TYPE;
++	param_value = ATH11K_HW_TXRX_NATIVE_WIFI;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					    param_id, param_value);
++	if (ret) {
++		ath11k_warn(ab, "failed to set vdev %d tx encap mode: %d\n",
++			    arvif->vdev_id, ret);
++		goto err_vdev_del;
++	}
++
++	nss = get_num_chains(ar->cfg_tx_chainmask) ? : 1;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					    WMI_VDEV_PARAM_NSS, nss);
++	if (ret) {
++		ath11k_warn(ab, "failed to set vdev %d chainmask 0x%x, nss %d :%d\n",
++			    arvif->vdev_id, ar->cfg_tx_chainmask, nss, ret);
++		goto err_vdev_del;
++	}
++
++	switch (arvif->vdev_type) {
++	case WMI_VDEV_TYPE_AP:
++		peer_param.vdev_id = arvif->vdev_id;
++		peer_param.peer_addr = vif->addr;
++		peer_param.peer_type = WMI_PEER_TYPE_DEFAULT;
++		ret = ath11k_peer_create(ar, arvif, NULL, &peer_param);
++		if (ret) {
++			ath11k_warn(ab, "failed to vdev %d create peer for AP: %d\n",
++				    arvif->vdev_id, ret);
++			goto err_vdev_del;
++		}
++
++		ret = ath11k_mac_set_kickout(arvif);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to set vdev %i kickout parameters: %d\n",
++				    arvif->vdev_id, ret);
++			goto err_peer_del;
++		}
++		break;
++	case WMI_VDEV_TYPE_STA:
++		param_id = WMI_STA_PS_PARAM_RX_WAKE_POLICY;
++		param_value = WMI_STA_PS_RX_WAKE_POLICY_WAKE;
++		ret = ath11k_wmi_set_sta_ps_param(ar, arvif->vdev_id,
++						  param_id, param_value);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to set vdev %d RX wake policy: %d\n",
++				    arvif->vdev_id, ret);
++			goto err_peer_del;
++		}
++
++		param_id = WMI_STA_PS_PARAM_TX_WAKE_THRESHOLD;
++		param_value = WMI_STA_PS_TX_WAKE_THRESHOLD_ALWAYS;
++		ret = ath11k_wmi_set_sta_ps_param(ar, arvif->vdev_id,
++						  param_id, param_value);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to set vdev %d TX wake threshold: %d\n",
++				    arvif->vdev_id, ret);
++			goto err_peer_del;
++		}
++
++		param_id = WMI_STA_PS_PARAM_PSPOLL_COUNT;
++		param_value = WMI_STA_PS_PSPOLL_COUNT_NO_MAX;
++		ret = ath11k_wmi_set_sta_ps_param(ar, arvif->vdev_id,
++						  param_id, param_value);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to set vdev %d pspoll count: %d\n",
++				    arvif->vdev_id, ret);
++			goto err_peer_del;
++		}
++		break;
++	default:
++		break;
++	}
++
++	arvif->txpower = vif->bss_conf.txpower;
++	ret = ath11k_mac_txpower_recalc(ar);
++	if (ret)
++		goto err_peer_del;
++
++	param_id = WMI_VDEV_PARAM_RTS_THRESHOLD;
++	param_value = ar->hw->wiphy->rts_threshold;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					    param_id, param_value);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set rts threshold for vdev %d: %d\n",
++			    arvif->vdev_id, ret);
++	}
++
++	ret = ath11k_mac_set_txbf_conf(arvif);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set txbf conf for vdev %d: %d\n",
++			    arvif->vdev_id, ret);
++	}
++
++	ath11k_dp_vdev_tx_attach(ar, arvif);
++
++	mutex_unlock(&ar->conf_mutex);
++
++	return 0;
++
++err_peer_del:
++	if (arvif->vdev_type == WMI_VDEV_TYPE_AP) {
++		ar->num_peers--;
++		ath11k_wmi_send_peer_delete_cmd(ar, vif->addr, arvif->vdev_id);
++	}
++
++err_vdev_del:
++	ath11k_wmi_vdev_delete(ar, arvif->vdev_id);
++	ar->num_created_vdevs--;
++	ab->free_vdev_map |= 1LL << arvif->vdev_id;
++	spin_lock_bh(&ar->data_lock);
++	list_del(&arvif->list);
++	spin_unlock_bh(&ar->data_lock);
++
++err:
++	mutex_unlock(&ar->conf_mutex);
++
++	return ret;
++}
++
++static int ath11k_mac_vif_unref(int buf_id, void *skb, void *ctx)
++{
++	struct ieee80211_vif *vif = (struct ieee80211_vif *)ctx;
++	struct ath11k_skb_cb *skb_cb = ATH11K_SKB_CB((struct sk_buff *)skb);
++
++	if (skb_cb->vif == vif)
++		skb_cb->vif = NULL;
++
++	return 0;
++}
++
++static void ath11k_mac_op_remove_interface(struct ieee80211_hw *hw,
++					   struct ieee80211_vif *vif)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
++	struct ath11k_base *ab = ar->ab;
++	int ret;
++	int i;
++
++	mutex_lock(&ar->conf_mutex);
++
++	ath11k_dbg(ab, ATH11K_DBG_MAC, "mac remove interface (vdev %d)\n",
++		   arvif->vdev_id);
++
++	ab->free_vdev_map |= 1LL << (arvif->vdev_id);
++	spin_lock_bh(&ar->data_lock);
++	list_del(&arvif->list);
++	spin_unlock_bh(&ar->data_lock);
++
++	if (arvif->vdev_type == WMI_VDEV_TYPE_AP) {
++		ret = ath11k_peer_delete(ar, arvif->vdev_id, vif->addr);
++		if (ret)
++			ath11k_warn(ab, "failed to submit AP self-peer removal on vdev %d: %d\n",
++				    arvif->vdev_id, ret);
++	}
++
++	ret = ath11k_wmi_vdev_delete(ar, arvif->vdev_id);
++	if (ret)
++		ath11k_warn(ab, "failed to delete WMI vdev %d: %d\n",
++			    arvif->vdev_id, ret);
++
++	ar->num_created_vdevs--;
++
++	ath11k_peer_cleanup(ar, arvif->vdev_id);
++
++	idr_for_each(&ar->txmgmt_idr,
++		     ath11k_mac_vif_txmgmt_idr_remove, vif);
++
++	for (i = 0; i < DP_TCL_NUM_RING_MAX; i++) {
++		spin_lock_bh(&ab->dp.tx_ring[i].tx_idr_lock);
++		idr_for_each(&ab->dp.tx_ring[i].txbuf_idr,
++			     ath11k_mac_vif_unref, vif);
++		spin_unlock_bh(&ab->dp.tx_ring[i].tx_idr_lock);
++	}
++
++	/* Recalc txpower for remaining vdev */
++	ath11k_mac_txpower_recalc(ar);
++	clear_bit(ATH11K_FLAG_MONITOR_ENABLED, &ar->monitor_flags);
++
++	/* TODO: recal traffic pause state based on the available vdevs */
++
++	mutex_unlock(&ar->conf_mutex);
++}
++
++/* FIXME: Has to be verified. */
++#define SUPPORTED_FILTERS			\
++	(FIF_ALLMULTI |				\
++	FIF_CONTROL |				\
++	FIF_PSPOLL |				\
++	FIF_OTHER_BSS |				\
++	FIF_BCN_PRBRESP_PROMISC |		\
++	FIF_PROBE_REQ |				\
++	FIF_FCSFAIL)
++
++static void ath11k_mac_op_configure_filter(struct ieee80211_hw *hw,
++					   unsigned int changed_flags,
++					   unsigned int *total_flags,
++					   u64 multicast)
++{
++	struct ath11k *ar = hw->priv;
++	bool reset_flag = false;
++	int ret = 0;
++
++	mutex_lock(&ar->conf_mutex);
++
++	changed_flags &= SUPPORTED_FILTERS;
++	*total_flags &= SUPPORTED_FILTERS;
++	ar->filter_flags = *total_flags;
++
++	/* For monitor mode */
++	reset_flag = !(ar->filter_flags & FIF_BCN_PRBRESP_PROMISC);
++
++	ret = ath11k_dp_tx_htt_monitor_mode_ring_config(ar, reset_flag);
++	if (!ret) {
++		if (!reset_flag)
++			set_bit(ATH11K_FLAG_MONITOR_ENABLED, &ar->monitor_flags);
++		else
++			clear_bit(ATH11K_FLAG_MONITOR_ENABLED, &ar->monitor_flags);
++	} else {
++		ath11k_warn(ar->ab,
++			    "fail to set monitor filter: %d\n", ret);
++	}
++	mutex_unlock(&ar->conf_mutex);
++}
++
++static int ath11k_mac_op_get_antenna(struct ieee80211_hw *hw, u32 *tx_ant, u32 *rx_ant)
++{
++	struct ath11k *ar = hw->priv;
++
++	mutex_lock(&ar->conf_mutex);
++
++	*tx_ant = ar->cfg_tx_chainmask;
++	*rx_ant = ar->cfg_rx_chainmask;
++
++	mutex_unlock(&ar->conf_mutex);
++
++	return 0;
++}
++
++static int ath11k_mac_op_set_antenna(struct ieee80211_hw *hw, u32 tx_ant, u32 rx_ant)
++{
++	struct ath11k *ar = hw->priv;
++	int ret;
++
++	mutex_lock(&ar->conf_mutex);
++	ret = __ath11k_set_antenna(ar, tx_ant, rx_ant);
++	mutex_unlock(&ar->conf_mutex);
++
++	return ret;
++}
++
++static int ath11k_mac_op_ampdu_action(struct ieee80211_hw *hw,
++				      struct ieee80211_vif *vif,
++				      struct ieee80211_ampdu_params *params)
++{
++	struct ath11k *ar = hw->priv;
++	int ret = -EINVAL;
++
++	mutex_lock(&ar->conf_mutex);
++
++	switch (params->action) {
++	case IEEE80211_AMPDU_RX_START:
++		ret = ath11k_dp_rx_ampdu_start(ar, params);
++		break;
++	case IEEE80211_AMPDU_RX_STOP:
++		ret = ath11k_dp_rx_ampdu_stop(ar, params);
++		break;
++	case IEEE80211_AMPDU_TX_START:
++	case IEEE80211_AMPDU_TX_STOP_CONT:
++	case IEEE80211_AMPDU_TX_STOP_FLUSH:
++	case IEEE80211_AMPDU_TX_STOP_FLUSH_CONT:
++	case IEEE80211_AMPDU_TX_OPERATIONAL:
++		/* Tx A-MPDU aggregation offloaded to hw/fw so deny mac80211
++		 * Tx aggregation requests.
++		 */
++		ret = -EOPNOTSUPP;
++		break;
++	}
++
++	mutex_unlock(&ar->conf_mutex);
++
++	return ret;
++}
++
++static int ath11k_mac_op_add_chanctx(struct ieee80211_hw *hw,
++				     struct ieee80211_chanctx_conf *ctx)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_base *ab = ar->ab;
++
++	ath11k_dbg(ab, ATH11K_DBG_MAC,
++		   "mac chanctx add freq %hu width %d ptr %pK\n",
++		   ctx->def.chan->center_freq, ctx->def.width, ctx);
++
++	mutex_lock(&ar->conf_mutex);
++
++	spin_lock_bh(&ar->data_lock);
++	/* TODO: In case of multiple channel context, populate rx_channel from
++	 * Rx PPDU desc information.
++	 */
++	ar->rx_channel = ctx->def.chan;
++	spin_unlock_bh(&ar->data_lock);
++
++	mutex_unlock(&ar->conf_mutex);
++
++	return 0;
++}
++
++static void ath11k_mac_op_remove_chanctx(struct ieee80211_hw *hw,
++					 struct ieee80211_chanctx_conf *ctx)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_base *ab = ar->ab;
++
++	ath11k_dbg(ab, ATH11K_DBG_MAC,
++		   "mac chanctx remove freq %hu width %d ptr %pK\n",
++		   ctx->def.chan->center_freq, ctx->def.width, ctx);
++
++	mutex_lock(&ar->conf_mutex);
++
++	spin_lock_bh(&ar->data_lock);
++	/* TODO: In case of there is one more channel context left, populate
++	 * rx_channel with the channel of that remaining channel context.
++	 */
++	ar->rx_channel = NULL;
++	spin_unlock_bh(&ar->data_lock);
++
++	mutex_unlock(&ar->conf_mutex);
++}
++
++static inline int ath11k_mac_vdev_setup_sync(struct ath11k *ar)
++{
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (test_bit(ATH11K_FLAG_CRASH_FLUSH, &ar->ab->dev_flags))
++		return -ESHUTDOWN;
++
++	if (!wait_for_completion_timeout(&ar->vdev_setup_done,
++					 ATH11K_VDEV_SETUP_TIMEOUT_HZ))
++		return -ETIMEDOUT;
++
++	return ar->last_wmi_vdev_start_status ? -EINVAL : 0;
++}
++
++static int
++ath11k_mac_vdev_start_restart(struct ath11k_vif *arvif,
++			      const struct cfg80211_chan_def *chandef,
++			      bool restart)
++{
++	struct ath11k *ar = arvif->ar;
++	struct ath11k_base *ab = ar->ab;
++	struct wmi_vdev_start_req_arg arg = {};
++	int he_support = arvif->vif->bss_conf.he_support;
++	int ret = 0;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	reinit_completion(&ar->vdev_setup_done);
++
++	arg.vdev_id = arvif->vdev_id;
++	arg.dtim_period = arvif->dtim_period;
++	arg.bcn_intval = arvif->beacon_interval;
++
++	arg.channel.freq = chandef->chan->center_freq;
++	arg.channel.band_center_freq1 = chandef->center_freq1;
++	arg.channel.band_center_freq2 = chandef->center_freq2;
++	arg.channel.mode =
++		ath11k_phymodes[chandef->chan->band][chandef->width];
++
++	arg.channel.min_power = 0;
++	arg.channel.max_power = chandef->chan->max_power * 2;
++	arg.channel.max_reg_power = chandef->chan->max_reg_power * 2;
++	arg.channel.max_antenna_gain = chandef->chan->max_antenna_gain * 2;
++
++	arg.pref_tx_streams = ar->num_tx_chains;
++	arg.pref_rx_streams = ar->num_rx_chains;
++
++	if (arvif->vdev_type == WMI_VDEV_TYPE_AP) {
++		arg.ssid = arvif->u.ap.ssid;
++		arg.ssid_len = arvif->u.ap.ssid_len;
++		arg.hidden_ssid = arvif->u.ap.hidden_ssid;
++
++		/* For now allow DFS for AP mode */
++		arg.channel.chan_radar =
++			!!(chandef->chan->flags & IEEE80211_CHAN_RADAR);
++
++		arg.channel.passive = arg.channel.chan_radar;
++
++		spin_lock_bh(&ab->base_lock);
++		arg.regdomain = ar->ab->dfs_region;
++		spin_unlock_bh(&ab->base_lock);
++
++		/* TODO: Notify if secondary 80Mhz also needs radar detection */
++		if (he_support) {
++			ret = ath11k_set_he_mu_sounding_mode(ar, arvif);
++			if (ret) {
++				ath11k_warn(ar->ab, "failed to set he mode vdev %i\n",
++					    arg.vdev_id);
++				return ret;
++			}
++		}
++	}
++
++	arg.channel.passive |= !!(chandef->chan->flags & IEEE80211_CHAN_NO_IR);
++
++	ath11k_dbg(ab, ATH11K_DBG_MAC,
++		   "mac vdev %d start center_freq %d phymode %s\n",
++		   arg.vdev_id, arg.channel.freq,
++		   ath11k_wmi_phymode_str(arg.channel.mode));
++
++	ret = ath11k_wmi_vdev_start(ar, &arg, restart);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to %s WMI vdev %i\n",
++			    restart ? "restart" : "start", arg.vdev_id);
++		return ret;
++	}
++
++	ret = ath11k_mac_vdev_setup_sync(ar);
++	if (ret) {
++		ath11k_warn(ab, "failed to synchronize setup for vdev %i %s: %d\n",
++			    arg.vdev_id, restart ? "restart" : "start", ret);
++		return ret;
++	}
++
++	ar->num_started_vdevs++;
++
++	/* Enable CAC Flag in the driver by checking the channel DFS cac time,
++	 * i.e dfs_cac_ms value which will be valid only for radar channels
++	 * and state as NL80211_DFS_USABLE which indicates CAC needs to be
++	 * done before channel usage. This flags is used to drop rx packets.
++	 * during CAC.
++	 */
++	/* TODO Set the flag for other interface types as required */
++	if (arvif->vdev_type == WMI_VDEV_TYPE_AP &&
++	    chandef->chan->dfs_cac_ms &&
++	    chandef->chan->dfs_state == NL80211_DFS_USABLE) {
++		set_bit(ATH11K_CAC_RUNNING, &ar->dev_flags);
++		ath11k_dbg(ab, ATH11K_DBG_MAC,
++			   "CAC Started in chan_freq %d for vdev %d\n",
++			   arg.channel.freq, arg.vdev_id);
++	}
++
++	return 0;
++}
++
++static int ath11k_mac_vdev_stop(struct ath11k_vif *arvif)
++{
++	struct ath11k *ar = arvif->ar;
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	reinit_completion(&ar->vdev_setup_done);
++
++	spin_lock_bh(&ar->data_lock);
++
++	ar->vdev_stop_status.stop_in_progress = true;
++	ar->vdev_stop_status.vdev_id = arvif->vdev_id;
++
++	spin_unlock_bh(&ar->data_lock);
++
++	ret = ath11k_wmi_vdev_stop(ar, arvif->vdev_id);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to stop WMI vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++		goto err;
++	}
++
++	ret = ath11k_mac_vdev_setup_sync(ar);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to synchronize setup for vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++		goto err;
++	}
++
++	WARN_ON(ar->num_started_vdevs == 0);
++
++	ar->num_started_vdevs--;
++
++	if (test_bit(ATH11K_CAC_RUNNING, &ar->dev_flags)) {
++		clear_bit(ATH11K_CAC_RUNNING, &ar->dev_flags);
++		ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "CAC Stopped for vdev %d\n",
++			   arvif->vdev_id);
++	}
++
++	return 0;
++err:
++	spin_lock_bh(&ar->data_lock);
++	ar->vdev_stop_status.stop_in_progress = false;
++	spin_unlock_bh(&ar->data_lock);
++
++	return ret;
++}
++
++static int ath11k_mac_vdev_start(struct ath11k_vif *arvif,
++				 const struct cfg80211_chan_def *chandef)
++{
++	return ath11k_mac_vdev_start_restart(arvif, chandef, false);
++}
++
++static int ath11k_mac_vdev_restart(struct ath11k_vif *arvif,
++				   const struct cfg80211_chan_def *chandef)
++{
++	return ath11k_mac_vdev_start_restart(arvif, chandef, true);
++}
++
++struct ath11k_mac_change_chanctx_arg {
++	struct ieee80211_chanctx_conf *ctx;
++	struct ieee80211_vif_chanctx_switch *vifs;
++	int n_vifs;
++	int next_vif;
 +};
 +
-+enum rx_desc_decap_type {
-+	RX_DESC_DECAP_TYPE_RAW,
-+	RX_DESC_DECAP_TYPE_NATIVE_WIFI,
-+	RX_DESC_DECAP_TYPE_ETHERNET2_DIX,
-+	RX_DESC_DECAP_TYPE_8023,
-+};
++static void
++ath11k_mac_change_chanctx_cnt_iter(void *data, u8 *mac,
++				   struct ieee80211_vif *vif)
++{
++	struct ath11k_mac_change_chanctx_arg *arg = data;
 +
-+enum rx_desc_decrypt_status_code {
-+	RX_DESC_DECRYPT_STATUS_CODE_OK,
-+	RX_DESC_DECRYPT_STATUS_CODE_UNPROTECTED_FRAME,
-+	RX_DESC_DECRYPT_STATUS_CODE_DATA_ERR,
-+	RX_DESC_DECRYPT_STATUS_CODE_KEY_INVALID,
-+	RX_DESC_DECRYPT_STATUS_CODE_PEER_ENTRY_INVALID,
-+	RX_DESC_DECRYPT_STATUS_CODE_OTHER,
-+};
++	if (rcu_access_pointer(vif->chanctx_conf) != arg->ctx)
++		return;
 +
-+#define RX_ATTENTION_INFO1_FIRST_MPDU		BIT(0)
-+#define RX_ATTENTION_INFO1_RSVD_1A		BIT(1)
-+#define RX_ATTENTION_INFO1_MCAST_BCAST		BIT(2)
-+#define RX_ATTENTION_INFO1_AST_IDX_NOT_FOUND	BIT(3)
-+#define RX_ATTENTION_INFO1_AST_IDX_TIMEDOUT	BIT(4)
-+#define RX_ATTENTION_INFO1_POWER_MGMT		BIT(5)
-+#define RX_ATTENTION_INFO1_NON_QOS		BIT(6)
-+#define RX_ATTENTION_INFO1_NULL_DATA		BIT(7)
-+#define RX_ATTENTION_INFO1_MGMT_TYPE		BIT(8)
-+#define RX_ATTENTION_INFO1_CTRL_TYPE		BIT(9)
-+#define RX_ATTENTION_INFO1_MORE_DATA		BIT(10)
-+#define RX_ATTENTION_INFO1_EOSP			BIT(11)
-+#define RX_ATTENTION_INFO1_A_MSDU_ERROR		BIT(12)
-+#define RX_ATTENTION_INFO1_FRAGMENT		BIT(13)
-+#define RX_ATTENTION_INFO1_ORDER		BIT(14)
-+#define RX_ATTENTION_INFO1_CCE_MATCH		BIT(15)
-+#define RX_ATTENTION_INFO1_OVERFLOW_ERR		BIT(16)
-+#define RX_ATTENTION_INFO1_MSDU_LEN_ERR		BIT(17)
-+#define RX_ATTENTION_INFO1_TCP_UDP_CKSUM_FAIL	BIT(18)
-+#define RX_ATTENTION_INFO1_IP_CKSUM_FAIL	BIT(19)
-+#define RX_ATTENTION_INFO1_SA_IDX_INVALID	BIT(20)
-+#define RX_ATTENTION_INFO1_DA_IDX_INVALID	BIT(21)
-+#define RX_ATTENTION_INFO1_RSVD_1B		BIT(22)
-+#define RX_ATTENTION_INFO1_RX_IN_TX_DECRYPT_BYP	BIT(23)
-+#define RX_ATTENTION_INFO1_ENCRYPT_REQUIRED	BIT(24)
-+#define RX_ATTENTION_INFO1_DIRECTED		BIT(25)
-+#define RX_ATTENTION_INFO1_BUFFER_FRAGMENT	BIT(26)
-+#define RX_ATTENTION_INFO1_MPDU_LEN_ERR		BIT(27)
-+#define RX_ATTENTION_INFO1_TKIP_MIC_ERR		BIT(28)
-+#define RX_ATTENTION_INFO1_DECRYPT_ERR		BIT(29)
-+#define RX_ATTENTION_INFO1_UNDECRYPT_FRAME_ERR	BIT(30)
-+#define RX_ATTENTION_INFO1_FCS_ERR		BIT(31)
++	arg->n_vifs++;
++}
 +
-+#define RX_ATTENTION_INFO2_FLOW_IDX_TIMEOUT	BIT(0)
-+#define RX_ATTENTION_INFO2_FLOW_IDX_INVALID	BIT(1)
-+#define RX_ATTENTION_INFO2_WIFI_PARSER_ERR	BIT(2)
-+#define RX_ATTENTION_INFO2_AMSDU_PARSER_ERR	BIT(3)
-+#define RX_ATTENTION_INFO2_SA_IDX_TIMEOUT	BIT(4)
-+#define RX_ATTENTION_INFO2_DA_IDX_TIMEOUT	BIT(5)
-+#define RX_ATTENTION_INFO2_MSDU_LIMIT_ERR	BIT(6)
-+#define RX_ATTENTION_INFO2_DA_IS_VALID		BIT(7)
-+#define RX_ATTENTION_INFO2_DA_IS_MCBC		BIT(8)
-+#define RX_ATTENTION_INFO2_SA_IS_VALID		BIT(9)
-+#define RX_ATTENTION_INFO2_DCRYPT_STATUS_CODE	GENMASK(12, 10)
-+#define RX_ATTENTION_INFO2_RX_BITMAP_NOT_UPDED	BIT(13)
-+#define RX_ATTENTION_INFO2_MSDU_DONE		BIT(31)
++static void
++ath11k_mac_change_chanctx_fill_iter(void *data, u8 *mac,
++				    struct ieee80211_vif *vif)
++{
++	struct ath11k_mac_change_chanctx_arg *arg = data;
++	struct ieee80211_chanctx_conf *ctx;
 +
-+struct rx_attention {
-+	__le16 info0;
-+	__le16 phy_ppdu_id;
-+	__le32 info1;
-+	__le32 info2;
-+} __packed;
++	ctx = rcu_access_pointer(vif->chanctx_conf);
++	if (ctx != arg->ctx)
++		return;
 +
-+/* rx_attention
-+ *
-+ * rxpcu_mpdu_filter_in_category
-+ *		Field indicates what the reason was that this mpdu frame
-+ *		was allowed to come into the receive path by rxpcu. Values
-+ *		are defined in enum %RX_DESC_RXPCU_FILTER_*.
-+ *
-+ * sw_frame_group_id
-+ *		SW processes frames based on certain classifications. Values
-+ *		are defined in enum %RX_DESC_SW_FRAME_GRP_ID_*.
-+ *
-+ * phy_ppdu_id
-+ *		A ppdu counter value that PHY increments for every PPDU
-+ *		received. The counter value wraps around.
-+ *
-+ * first_mpdu
-+ *		Indicates the first MSDU of the PPDU.  If both first_mpdu
-+ *		and last_mpdu are set in the MSDU then this is a not an
-+ *		A-MPDU frame but a stand alone MPDU.  Interior MPDU in an
-+ *		A-MPDU shall have both first_mpdu and last_mpdu bits set to
-+ *		0.  The PPDU start status will only be valid when this bit
-+ *		is set.
-+ *
-+ * mcast_bcast
-+ *		Multicast / broadcast indicator.  Only set when the MAC
-+ *		address 1 bit 0 is set indicating mcast/bcast and the BSSID
-+ *		matches one of the 4 BSSID registers. Only set when
-+ *		first_msdu is set.
-+ *
-+ * ast_index_not_found
-+ *		Only valid when first_msdu is set. Indicates no AST matching
-+ *		entries within the the max search count.
-+ *
-+ * ast_index_timeout
-+ *		Only valid when first_msdu is set. Indicates an unsuccessful
-+ *		search in the address search table due to timeout.
-+ *
-+ * power_mgmt
-+ *		Power management bit set in the 802.11 header.  Only set
-+ *		when first_msdu is set.
-+ *
-+ * non_qos
-+ *		Set if packet is not a non-QoS data frame.  Only set when
-+ *		first_msdu is set.
-+ *
-+ * null_data
-+ *		Set if frame type indicates either null data or QoS null
-+ *		data format.  Only set when first_msdu is set.
-+ *
-+ * mgmt_type
-+ *		Set if packet is a management packet.  Only set when
-+ *		first_msdu is set.
-+ *
-+ * ctrl_type
-+ *		Set if packet is a control packet.  Only set when first_msdu
-+ *		is set.
-+ *
-+ * more_data
-+ *		Set if more bit in frame control is set.  Only set when
-+ *		first_msdu is set.
-+ *
-+ * eosp
-+ *		Set if the EOSP (end of service period) bit in the QoS
-+ *		control field is set.  Only set when first_msdu is set.
-+ *
-+ * a_msdu_error
-+ *		Set if number of MSDUs in A-MSDU is above a threshold or if the
-+ *		size of the MSDU is invalid. This receive buffer will contain
-+ *		all of the remainder of MSDUs in this MPDU w/o decapsulation.
-+ *
-+ * fragment
-+ *		Indicates that this is an 802.11 fragment frame.  This is
-+ *		set when either the more_frag bit is set in the frame
-+ *		control or the fragment number is not zero.  Only set when
-+ *		first_msdu is set.
-+ *
-+ * order
-+ *		Set if the order bit in the frame control is set.  Only set
-+ *		when first_msdu is set.
-+ *
-+ * cce_match
-+ *		Indicates that this status has a corresponding MSDU that
-+ *		requires FW processing. The OLE will have classification
-+ *		ring mask registers which will indicate the ring(s) for
-+ *		packets and descriptors which need FW attention.
-+ *
-+ * overflow_err
-+ *		PCU Receive FIFO does not have enough space to store the
-+ *		full receive packet.  Enough space is reserved in the
-+ *		receive FIFO for the status is written.  This MPDU remaining
-+ *		packets in the PPDU will be filtered and no Ack response
-+ *		will be transmitted.
-+ *
-+ * msdu_length_err
-+ *		Indicates that the MSDU length from the 802.3 encapsulated
-+ *		length field extends beyond the MPDU boundary.
-+ *
-+ * tcp_udp_chksum_fail
-+ *		Indicates that the computed checksum (tcp_udp_chksum) did
-+ *		not match the checksum in the TCP/UDP header.
-+ *
-+ * ip_chksum_fail
-+ *		Indicates that the computed checksum did not match the
-+ *		checksum in the IP header.
-+ *
-+ * sa_idx_invalid
-+ *		Indicates no matching entry was found in the address search
-+ *		table for the source MAC address.
-+ *
-+ * da_idx_invalid
-+ *		Indicates no matching entry was found in the address search
-+ *		table for the destination MAC address.
-+ *
-+ * rx_in_tx_decrypt_byp
-+ *		Indicates that RX packet is not decrypted as Crypto is busy
-+ *		with TX packet processing.
-+ *
-+ * encrypt_required
-+ *		Indicates that this data type frame is not encrypted even if
-+ *		the policy for this MPDU requires encryption as indicated in
-+ *		the peer table key type.
-+ *
-+ * directed
-+ *		MPDU is a directed packet which means that the RA matched
-+ *		our STA addresses.  In proxySTA it means that the TA matched
-+ *		an entry in our address search table with the corresponding
-+ *		'no_ack' bit is the address search entry cleared.
-+ *
-+ * buffer_fragment
-+ *		Indicates that at least one of the rx buffers has been
-+ *		fragmented.  If set the FW should look at the rx_frag_info
-+ *		descriptor described below.
-+ *
-+ * mpdu_length_err
-+ *		Indicates that the MPDU was pre-maturely terminated
-+ *		resulting in a truncated MPDU.  Don't trust the MPDU length
-+ *		field.
-+ *
-+ * tkip_mic_err
-+ *		Indicates that the MPDU Michael integrity check failed
-+ *
-+ * decrypt_err
-+ *		Indicates that the MPDU decrypt integrity check failed
-+ *
-+ * fcs_err
-+ *		Indicates that the MPDU FCS check failed
-+ *
-+ * flow_idx_timeout
-+ *		Indicates an unsuccessful flow search due to the expiring of
-+ *		the search timer.
-+ *
-+ * flow_idx_invalid
-+ *		flow id is not valid.
-+ *
-+ * amsdu_parser_error
-+ *		A-MSDU could not be properly de-agregated.
-+ *
-+ * sa_idx_timeout
-+ *		Indicates an unsuccessful search for the source MAC address
-+ *		due to the expiring of the search timer.
-+ *
-+ * da_idx_timeout
-+ *		Indicates an unsuccessful search for the destination MAC
-+ *		address due to the expiring of the search timer.
-+ *
-+ * msdu_limit_error
-+ *		Indicates that the MSDU threshold was exceeded and thus
-+ *		all the rest of the MSDUs will not be scattered and will not
-+ *		be decasulated but will be DMA'ed in RAW format as a single
-+ *		MSDU buffer.
-+ *
-+ * da_is_valid
-+ *		Indicates that OLE found a valid DA entry.
-+ *
-+ * da_is_mcbc
-+ *		Field Only valid if da_is_valid is set. Indicates the DA address
-+ *		was a Multicast or Broadcast address.
-+ *
-+ * sa_is_valid
-+ *		Indicates that OLE found a valid SA entry.
-+ *
-+ * decrypt_status_code
-+ *		Field provides insight into the decryption performed. Values are
-+ *		defined in enum %RX_DESC_DECRYPT_STATUS_CODE*.
-+ *
-+ * rx_bitmap_not_updated
-+ *		Frame is received, but RXPCU could not update the receive bitmap
-+ *		due to (temporary) fifo constraints.
-+ *
-+ * msdu_done
-+ *		If set indicates that the RX packet data, RX header data, RX
-+ *		PPDU start descriptor, RX MPDU start/end descriptor, RX MSDU
-+ *		start/end descriptors and RX Attention descriptor are all
-+ *		valid.  This bit must be in the last octet of the
-+ *		descriptor.
++	if (WARN_ON(arg->next_vif == arg->n_vifs))
++		return;
++
++	arg->vifs[arg->next_vif].vif = vif;
++	arg->vifs[arg->next_vif].old_ctx = ctx;
++	arg->vifs[arg->next_vif].new_ctx = ctx;
++	arg->next_vif++;
++}
++
++static void
++ath11k_mac_update_vif_chan(struct ath11k *ar,
++			   struct ieee80211_vif_chanctx_switch *vifs,
++			   int n_vifs)
++{
++	struct ath11k_base *ab = ar->ab;
++	struct ath11k_vif *arvif;
++	int ret;
++	int i;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	for (i = 0; i < n_vifs; i++) {
++		arvif = (void *)vifs[i].vif->drv_priv;
++
++		ath11k_dbg(ab, ATH11K_DBG_MAC,
++			   "mac chanctx switch vdev_id %i freq %hu->%hu width %d->%d\n",
++			   arvif->vdev_id,
++			   vifs[i].old_ctx->def.chan->center_freq,
++			   vifs[i].new_ctx->def.chan->center_freq,
++			   vifs[i].old_ctx->def.width,
++			   vifs[i].new_ctx->def.width);
++
++		if (WARN_ON(!arvif->is_started))
++			continue;
++
++		if (WARN_ON(!arvif->is_up))
++			continue;
++
++		ret = ath11k_wmi_vdev_down(ar, arvif->vdev_id);
++		if (ret) {
++			ath11k_warn(ab, "failed to down vdev %d: %d\n",
++				    arvif->vdev_id, ret);
++			continue;
++		}
++	}
++
++	/* All relevant vdevs are downed and associated channel resources
++	 * should be available for the channel switch now.
++	 */
++
++	/* TODO: Update ar->rx_channel */
++
++	for (i = 0; i < n_vifs; i++) {
++		arvif = (void *)vifs[i].vif->drv_priv;
++
++		if (WARN_ON(!arvif->is_started))
++			continue;
++
++		if (WARN_ON(!arvif->is_up))
++			continue;
++
++		ret = ath11k_mac_setup_bcn_tmpl(arvif);
++		if (ret)
++			ath11k_warn(ab, "failed to update bcn tmpl during csa: %d\n",
++				    ret);
++
++		ret = ath11k_mac_vdev_restart(arvif, &vifs[i].new_ctx->def);
++		if (ret) {
++			ath11k_warn(ab, "failed to restart vdev %d: %d\n",
++				    arvif->vdev_id, ret);
++			continue;
++		}
++
++		ret = ath11k_wmi_vdev_up(arvif->ar, arvif->vdev_id, arvif->aid,
++					 arvif->bssid);
++		if (ret) {
++			ath11k_warn(ab, "failed to bring vdev up %d: %d\n",
++				    arvif->vdev_id, ret);
++			continue;
++		}
++	}
++}
++
++static void
++ath11k_mac_update_active_vif_chan(struct ath11k *ar,
++				  struct ieee80211_chanctx_conf *ctx)
++{
++	struct ath11k_mac_change_chanctx_arg arg = { .ctx = ctx };
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	ieee80211_iterate_active_interfaces_atomic(ar->hw,
++						   IEEE80211_IFACE_ITER_NORMAL,
++						   ath11k_mac_change_chanctx_cnt_iter,
++						   &arg);
++	if (arg.n_vifs == 0)
++		return;
++
++	arg.vifs = kcalloc(arg.n_vifs, sizeof(arg.vifs[0]), GFP_KERNEL);
++	if (!arg.vifs)
++		return;
++
++	ieee80211_iterate_active_interfaces_atomic(ar->hw,
++						   IEEE80211_IFACE_ITER_NORMAL,
++						   ath11k_mac_change_chanctx_fill_iter,
++						   &arg);
++
++	ath11k_mac_update_vif_chan(ar, arg.vifs, arg.n_vifs);
++
++	kfree(arg.vifs);
++}
++
++static void ath11k_mac_op_change_chanctx(struct ieee80211_hw *hw,
++					 struct ieee80211_chanctx_conf *ctx,
++					 u32 changed)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_base *ab = ar->ab;
++
++	mutex_lock(&ar->conf_mutex);
++
++	ath11k_dbg(ab, ATH11K_DBG_MAC,
++		   "mac chanctx change freq %hu width %d ptr %pK changed %x\n",
++		   ctx->def.chan->center_freq, ctx->def.width, ctx, changed);
++
++	/* This shouldn't really happen because channel switching should use
++	 * switch_vif_chanctx().
++	 */
++	if (WARN_ON(changed & IEEE80211_CHANCTX_CHANGE_CHANNEL))
++		goto unlock;
++
++	if (changed & IEEE80211_CHANCTX_CHANGE_WIDTH)
++		ath11k_mac_update_active_vif_chan(ar, ctx);
++
++	/* TODO: Recalc radar detection */
++
++unlock:
++	mutex_unlock(&ar->conf_mutex);
++}
++
++static int
++ath11k_mac_op_assign_vif_chanctx(struct ieee80211_hw *hw,
++				 struct ieee80211_vif *vif,
++				 struct ieee80211_chanctx_conf *ctx)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_base *ab = ar->ab;
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	int ret;
++
++	mutex_lock(&ar->conf_mutex);
++
++	ath11k_dbg(ab, ATH11K_DBG_MAC,
++		   "mac chanctx assign ptr %pK vdev_id %i\n",
++		   ctx, arvif->vdev_id);
++
++	if (WARN_ON(arvif->is_started)) {
++		mutex_unlock(&ar->conf_mutex);
++		return -EBUSY;
++	}
++
++	ret = ath11k_mac_vdev_start(arvif, &ctx->def);
++	if (ret) {
++		ath11k_warn(ab, "failed to start vdev %i addr %pM on freq %d: %d\n",
++			    arvif->vdev_id, vif->addr,
++			    ctx->def.chan->center_freq, ret);
++		goto err;
++	}
++	if (arvif->vdev_type == WMI_VDEV_TYPE_MONITOR) {
++		ret = ath11k_monitor_vdev_up(ar, arvif->vdev_id);
++		if (ret)
++			goto err;
++	}
++
++	arvif->is_started = true;
++
++	/* TODO: Setup ps and cts/rts protection */
++
++	mutex_unlock(&ar->conf_mutex);
++
++	return 0;
++
++err:
++	mutex_unlock(&ar->conf_mutex);
++
++	return ret;
++}
++
++static void
++ath11k_mac_op_unassign_vif_chanctx(struct ieee80211_hw *hw,
++				   struct ieee80211_vif *vif,
++				   struct ieee80211_chanctx_conf *ctx)
++{
++	struct ath11k *ar = hw->priv;
++	struct ath11k_base *ab = ar->ab;
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	int ret;
++
++	mutex_lock(&ar->conf_mutex);
++
++	ath11k_dbg(ab, ATH11K_DBG_MAC,
++		   "mac chanctx unassign ptr %pK vdev_id %i\n",
++		   ctx, arvif->vdev_id);
++
++	WARN_ON(!arvif->is_started);
++
++	ret = ath11k_mac_vdev_stop(arvif);
++	if (ret)
++		ath11k_warn(ab, "failed to stop vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++
++	arvif->is_started = false;
++
++	mutex_unlock(&ar->conf_mutex);
++}
++
++static int
++ath11k_mac_op_switch_vif_chanctx(struct ieee80211_hw *hw,
++				 struct ieee80211_vif_chanctx_switch *vifs,
++				 int n_vifs,
++				 enum ieee80211_chanctx_switch_mode mode)
++{
++	struct ath11k *ar = hw->priv;
++
++	mutex_lock(&ar->conf_mutex);
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++		   "mac chanctx switch n_vifs %d mode %d\n",
++		   n_vifs, mode);
++	ath11k_mac_update_vif_chan(ar, vifs, n_vifs);
++
++	mutex_unlock(&ar->conf_mutex);
++
++	return 0;
++}
++
++static int
++ath11k_set_vdev_param_to_all_vifs(struct ath11k *ar, int param, u32 value)
++{
++	struct ath11k_vif *arvif;
++	int ret = 0;
++
++	mutex_lock(&ar->conf_mutex);
++	list_for_each_entry(arvif, &ar->arvifs, list) {
++		ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "setting mac vdev %d param %d value %d\n",
++			   param, arvif->vdev_id, value);
++
++		ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++						    param, value);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to set param %d for vdev %d: %d\n",
++				    param, arvif->vdev_id, ret);
++			break;
++		}
++	}
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
++}
++
++/* mac80211 stores device specific RTS/Fragmentation threshold value,
++ * this is set interface specific to firmware from ath11k driver
 + */
++static int ath11k_mac_op_set_rts_threshold(struct ieee80211_hw *hw, u32 value)
++{
++	struct ath11k *ar = hw->priv;
++	int param_id = WMI_VDEV_PARAM_RTS_THRESHOLD;
 +
-+#define RX_MPDU_START_INFO0_NDP_FRAME		BIT(9)
-+#define RX_MPDU_START_INFO0_PHY_ERR		BIT(10)
-+#define RX_MPDU_START_INFO0_PHY_ERR_MPDU_HDR	BIT(11)
-+#define RX_MPDU_START_INFO0_PROTO_VER_ERR	BIT(12)
-+#define RX_MPDU_START_INFO0_AST_LOOKUP_VALID	BIT(13)
++	return ath11k_set_vdev_param_to_all_vifs(ar, param_id, value);
++}
 +
-+#define RX_MPDU_START_INFO1_MPDU_CTRL_VALID	BIT(0)
-+#define RX_MPDU_START_INFO1_MPDU_DUR_VALID	BIT(1)
-+#define RX_MPDU_START_INFO1_MAC_ADDR1_VALID	BIT(2)
-+#define RX_MPDU_START_INFO1_MAC_ADDR2_VALID	BIT(3)
-+#define RX_MPDU_START_INFO1_MAC_ADDR3_VALID	BIT(4)
-+#define RX_MPDU_START_INFO1_MAC_ADDR4_VALID	BIT(5)
-+#define RX_MPDU_START_INFO1_MPDU_SEQ_CTRL_VALID	BIT(6)
-+#define RX_MPDU_START_INFO1_MPDU_QOS_CTRL_VALID	BIT(7)
-+#define RX_MPDU_START_INFO1_MPDU_HT_CTRL_VALID	BIT(8)
-+#define RX_MPDU_START_INFO1_ENCRYPT_INFO_VALID	BIT(9)
-+#define RX_MPDU_START_INFO1_MPDU_FRAG_NUMBER	GENMASK(13, 10)
-+#define RX_MPDU_START_INFO1_MORE_FRAG_FLAG	BIT(14)
-+#define RX_MPDU_START_INFO1_FROM_DS		BIT(16)
-+#define RX_MPDU_START_INFO1_TO_DS		BIT(17)
-+#define RX_MPDU_START_INFO1_ENCRYPTED		BIT(18)
-+#define RX_MPDU_START_INFO1_MPDU_RETRY		BIT(19)
-+#define RX_MPDU_START_INFO1_MPDU_SEQ_NUM	GENMASK(31, 20)
++static int ath11k_mac_op_set_frag_threshold(struct ieee80211_hw *hw, u32 value)
++{
++	/* Even though there's a WMI vdev param for fragmentation threshold no
++	 * known firmware actually implements it. Moreover it is not possible to
++	 * rely frame fragmentation to mac80211 because firmware clears the
++	 * "more fragments" bit in frame control making it impossible for remote
++	 * devices to reassemble frames.
++	 *
++	 * Hence implement a dummy callback just to say fragmentation isn't
++	 * supported. This effectively prevents mac80211 from doing frame
++	 * fragmentation in software.
++	 */
++	return -EOPNOTSUPP;
++}
 +
-+#define RX_MPDU_START_INFO2_EPD_EN		BIT(0)
-+#define RX_MPDU_START_INFO2_ALL_FRAME_ENCPD	BIT(1)
-+#define RX_MPDU_START_INFO2_ENC_TYPE		GENMASK(5, 2)
-+#define RX_MPDU_START_INFO2_VAR_WEP_KEY_WIDTH	GENMASK(7, 6)
-+#define RX_MPDU_START_INFO2_MESH_STA		BIT(8)
-+#define RX_MPDU_START_INFO2_BSSID_HIT		BIT(9)
-+#define RX_MPDU_START_INFO2_BSSID_NUM		GENMASK(13, 10)
-+#define RX_MPDU_START_INFO2_TID			GENMASK(17, 14)
++static void ath11k_mac_op_flush(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
++				u32 queues, bool drop)
++{
++	struct ath11k *ar = hw->priv;
++	long time_left;
 +
-+#define RX_MPDU_START_INFO3_REO_DEST_IND		GENMASK(4, 0)
-+#define RX_MPDU_START_INFO3_FLOW_ID_TOEPLITZ		BIT(7)
-+#define RX_MPDU_START_INFO3_PKT_SEL_FP_UCAST_DATA	BIT(8)
-+#define RX_MPDU_START_INFO3_PKT_SEL_FP_MCAST_DATA	BIT(9)
-+#define RX_MPDU_START_INFO3_PKT_SEL_FP_CTRL_BAR		BIT(10)
-+#define RX_MPDU_START_INFO3_RXDMA0_SRC_RING_SEL		GENMASK(12, 11)
-+#define RX_MPDU_START_INFO3_RXDMA0_DST_RING_SEL		GENMASK(14, 13)
++	if (drop)
++		return;
 +
-+#define RX_MPDU_START_INFO4_REO_QUEUE_DESC_HI	GENMASK(7, 0)
-+#define RX_MPDU_START_INFO4_RECV_QUEUE_NUM	GENMASK(23, 8)
-+#define RX_MPDU_START_INFO4_PRE_DELIM_ERR_WARN	BIT(24)
-+#define RX_MPDU_START_INFO4_FIRST_DELIM_ERR	BIT(25)
++	time_left = wait_event_timeout(ar->dp.tx_empty_waitq,
++				       (atomic_read(&ar->dp.num_tx_pending) == 0),
++				       ATH11K_FLUSH_TIMEOUT);
++	if (time_left == 0)
++		ath11k_warn(ar->ab, "failed to flush transmit queue %ld\n", time_left);
++}
 +
-+#define RX_MPDU_START_INFO5_KEY_ID		GENMASK(7, 0)
-+#define RX_MPDU_START_INFO5_NEW_PEER_ENTRY	BIT(8)
-+#define RX_MPDU_START_INFO5_DECRYPT_NEEDED	BIT(9)
-+#define RX_MPDU_START_INFO5_DECAP_TYPE		GENMASK(11, 10)
-+#define RX_MPDU_START_INFO5_VLAN_TAG_C_PADDING	BIT(12)
-+#define RX_MPDU_START_INFO5_VLAN_TAG_S_PADDING	BIT(13)
-+#define RX_MPDU_START_INFO5_STRIP_VLAN_TAG_C	BIT(14)
-+#define RX_MPDU_START_INFO5_STRIP_VLAN_TAG_S	BIT(15)
-+#define RX_MPDU_START_INFO5_PRE_DELIM_COUNT	GENMASK(27, 16)
-+#define RX_MPDU_START_INFO5_AMPDU_FLAG		BIT(28)
-+#define RX_MPDU_START_INFO5_BAR_FRAME		BIT(29)
++static int
++ath11k_mac_bitrate_mask_num_ht_rates(struct ath11k *ar,
++				     enum nl80211_band band,
++				     const struct cfg80211_bitrate_mask *mask)
++{
++	int num_rates = 0;
++	int i;
 +
-+#define RX_MPDU_START_INFO6_MPDU_LEN		GENMASK(13, 0)
-+#define RX_MPDU_START_INFO6_FIRST_MPDU		BIT(14)
-+#define RX_MPDU_START_INFO6_MCAST_BCAST		BIT(15)
-+#define RX_MPDU_START_INFO6_AST_IDX_NOT_FOUND	BIT(16)
-+#define RX_MPDU_START_INFO6_AST_IDX_TIMEOUT	BIT(17)
-+#define RX_MPDU_START_INFO6_POWER_MGMT		BIT(18)
-+#define RX_MPDU_START_INFO6_NON_QOS		BIT(19)
-+#define RX_MPDU_START_INFO6_NULL_DATA		BIT(20)
-+#define RX_MPDU_START_INFO6_MGMT_TYPE		BIT(21)
-+#define RX_MPDU_START_INFO6_CTRL_TYPE		BIT(22)
-+#define RX_MPDU_START_INFO6_MORE_DATA		BIT(23)
-+#define RX_MPDU_START_INFO6_EOSP		BIT(24)
-+#define RX_MPDU_START_INFO6_FRAGMENT		BIT(25)
-+#define RX_MPDU_START_INFO6_ORDER		BIT(26)
-+#define RX_MPDU_START_INFO6_UAPSD_TRIGGER	BIT(27)
-+#define RX_MPDU_START_INFO6_ENCRYPT_REQUIRED	BIT(28)
-+#define RX_MPDU_START_INFO6_DIRECTED		BIT(29)
++	for (i = 0; i < ARRAY_SIZE(mask->control[band].ht_mcs); i++)
++		num_rates += hweight16(mask->control[band].ht_mcs[i]);
 +
-+#define RX_MPDU_START_RAW_MPDU			BIT(0)
++	return num_rates;
++}
 +
-+struct rx_mpdu_start {
-+	__le16 info0;
-+	__le16 phy_ppdu_id;
-+	__le16 ast_index;
-+	__le16 sw_peer_id;
-+	__le32 info1;
-+	__le32 info2;
-+	__le32 pn[4];
-+	__le32 peer_meta_data;
-+	__le32 info3;
-+	__le32 reo_queue_desc_lo;
-+	__le32 info4;
-+	__le32 info5;
-+	__le32 info6;
-+	__le16 frame_ctrl;
-+	__le16 duration;
-+	u8 addr1[ETH_ALEN];
-+	u8 addr2[ETH_ALEN];
-+	u8 addr3[ETH_ALEN];
-+	__le16 seq_ctrl;
-+	u8 addr4[ETH_ALEN];
-+	__le16 qos_ctrl;
-+	__le32 ht_ctrl;
-+	__le32 raw;
-+} __packed;
++static bool
++ath11k_mac_has_single_legacy_rate(struct ath11k *ar,
++				  enum nl80211_band band,
++				  const struct cfg80211_bitrate_mask *mask)
++{
++	int num_rates = 0;
 +
-+/* rx_mpdu_start
-+ *
-+ * rxpcu_mpdu_filter_in_category
-+ *		Field indicates what the reason was that this mpdu frame
-+ *		was allowed to come into the receive path by rxpcu. Values
-+ *		are defined in enum %RX_DESC_RXPCU_FILTER_*.
-+ *		Note: for ndp frame, if it was expected because the preceding
-+ *		NDPA was filter_pass, the setting rxpcu_filter_pass will be
-+ *		used. This setting will also be used for every ndp frame in
-+ *		case Promiscuous mode is enabled.
-+ *
-+ * sw_frame_group_id
-+ *		SW processes frames based on certain classifications. Values
-+ *		are defined in enum %RX_DESC_SW_FRAME_GRP_ID_*.
-+ *
-+ * ndp_frame
-+ *		Indicates that the received frame was an NDP frame.
-+ *
-+ * phy_err
-+ *		Indicates that PHY error was received before MAC received data.
-+ *
-+ * phy_err_during_mpdu_header
-+ *		PHY error was received before MAC received the complete MPDU
-+ *		header which was needed for proper decoding.
-+ *
-+ * protocol_version_err
-+ *		RXPCU detected a version error in the frame control field.
-+ *
-+ * ast_based_lookup_valid
-+ *		AST based lookup for this frame has found a valid result.
-+ *
-+ * phy_ppdu_id
-+ *		A ppdu counter value that PHY increments for every PPDU
-+ *		received. The counter value wraps around.
-+ *
-+ * ast_index
-+ *		This field indicates the index of the AST entry corresponding
-+ *		to this MPDU. It is provided by the GSE module instantiated in
-+ *		RXPCU. A value of 0xFFFF indicates an invalid AST index.
-+ *
-+ * sw_peer_id
-+ *		This field indicates a unique peer identifier. It is set equal
-+ *		to field 'sw_peer_id' from the AST entry.
-+ *
-+ * mpdu_frame_control_valid, mpdu_duration_valid, mpdu_qos_control_valid,
-+ * mpdu_ht_control_valid, frame_encryption_info_valid
-+ *		Indicates that each fields have valid entries.
-+ *
-+ * mac_addr_adx_valid
-+ *		Corresponding mac_addr_adx_{lo/hi} has valid entries.
-+ *
-+ * from_ds, to_ds
-+ *		Valid only when mpdu_frame_control_valid is set. Indicates that
-+ *		frame is received from DS and sent to DS.
-+ *
-+ * encrypted
-+ *		Protected bit from the frame control.
-+ *
-+ * mpdu_retry
-+ *		Retry bit from frame control. Only valid when first_msdu is set.
-+ *
-+ * mpdu_sequence_number
-+ *		The sequence number from the 802.11 header.
-+ *
-+ * epd_en
-+ *		If set, use EPD instead of LPD.
-+ *
-+ * all_frames_shall_be_encrypted
-+ *		If set, all frames (data only?) shall be encrypted. If not,
-+ *		RX CRYPTO shall set an error flag.
-+ *
-+ * encrypt_type
-+ *		Values are defined in enum %HAL_ENCRYPT_TYPE_.
-+ *
-+ * mesh_sta
-+ *		Indicates a Mesh (11s) STA.
-+ *
-+ * bssid_hit
-+ *		 BSSID of the incoming frame matched one of the 8 BSSID
-+ *		 register values.
-+ *
-+ * bssid_number
-+ *		This number indicates which one out of the 8 BSSID register
-+ *		values matched the incoming frame.
-+ *
-+ * tid
-+ *		TID field in the QoS control field
-+ *
-+ * pn
-+ *		The PN number.
-+ *
-+ * peer_meta_data
-+ *		Meta data that SW has programmed in the Peer table entry
-+ *		of the transmitting STA.
-+ *
-+ * rx_reo_queue_desc_addr_lo
-+ *		Address (lower 32 bits) of the REO queue descriptor.
-+ *
-+ * rx_reo_queue_desc_addr_hi
-+ *		Address (upper 8 bits) of the REO queue descriptor.
-+ *
-+ * receive_queue_number
-+ *		Indicates the MPDU queue ID to which this MPDU link
-+ *		descriptor belongs.
-+ *
-+ * pre_delim_err_warning
-+ *		Indicates that a delimiter FCS error was found in between the
-+ *		previous MPDU and this MPDU. Note that this is just a warning,
-+ *		and does not mean that this MPDU is corrupted in any way. If
-+ *		it is, there will be other errors indicated such as FCS or
-+ *		decrypt errors.
-+ *
-+ * first_delim_err
-+ *		Indicates that the first delimiter had a FCS failure.
-+ *
-+ * key_id
-+ *		The key ID octet from the IV.
-+ *
-+ * new_peer_entry
-+ *		Set if new RX_PEER_ENTRY TLV follows. If clear, RX_PEER_ENTRY
-+ *		doesn't follow so RX DECRYPTION module either uses old peer
-+ *		entry or not decrypt.
-+ *
-+ * decrypt_needed
-+ *		When RXPCU sets bit 'ast_index_not_found or ast_index_timeout',
-+ *		RXPCU will also ensure that this bit is NOT set. CRYPTO for that
-+ *		reason only needs to evaluate this bit and non of the other ones
-+ *
-+ * decap_type
-+ *		Used by the OLE during decapsulation. Values are defined in
-+ *		enum %MPDU_START_DECAP_TYPE_*.
-+ *
-+ * rx_insert_vlan_c_tag_padding
-+ * rx_insert_vlan_s_tag_padding
-+ *		Insert 4 byte of all zeros as VLAN tag or double VLAN tag if
-+ *		the rx payload does not have VLAN.
-+ *
-+ * strip_vlan_c_tag_decap
-+ * strip_vlan_s_tag_decap
-+ *		Strip VLAN or double VLAN during decapsulation.
-+ *
-+ * pre_delim_count
-+ *		The number of delimiters before this MPDU. Note that this
-+ *		number is cleared at PPDU start. If this MPDU is the first
-+ *		received MPDU in the PPDU and this MPDU gets filtered-in,
-+ *		this field will indicate the number of delimiters located
-+ *		after the last MPDU in the previous PPDU.
-+ *
-+ *		If this MPDU is located after the first received MPDU in
-+ *		an PPDU, this field will indicate the number of delimiters
-+ *		located between the previous MPDU and this MPDU.
-+ *
-+ * ampdu_flag
-+ *		Received frame was part of an A-MPDU.
-+ *
-+ * bar_frame
-+ *		Received frame is a BAR frame
-+ *
-+ * mpdu_length
-+ *		MPDU length before decapsulation.
-+ *
-+ * first_mpdu..directed
-+ *		See definition in RX attention descriptor
-+ *
-+ */
++	num_rates = hweight32(mask->control[band].legacy);
 +
-+enum rx_msdu_start_pkt_type {
-+	RX_MSDU_START_PKT_TYPE_11A,
-+	RX_MSDU_START_PKT_TYPE_11B,
-+	RX_MSDU_START_PKT_TYPE_11N,
-+	RX_MSDU_START_PKT_TYPE_11AC,
-+	RX_MSDU_START_PKT_TYPE_11AX,
++	if (ath11k_mac_bitrate_mask_num_ht_rates(ar, band, mask))
++		return false;
++
++	if (ath11k_mac_bitrate_mask_num_vht_rates(ar, band, mask))
++		return false;
++
++	return num_rates == 1;
++}
++
++static bool
++ath11k_mac_bitrate_mask_get_single_nss(struct ath11k *ar,
++				       enum nl80211_band band,
++				       const struct cfg80211_bitrate_mask *mask,
++				       int *nss)
++{
++	struct ieee80211_supported_band *sband = &ar->mac.sbands[band];
++	u16 vht_mcs_map = le16_to_cpu(sband->vht_cap.vht_mcs.tx_mcs_map);
++	u8 ht_nss_mask = 0;
++	u8 vht_nss_mask = 0;
++	int i;
++
++	/* No need to consider legacy here. Basic rates are always present
++	 * in bitrate mask
++	 */
++
++	for (i = 0; i < ARRAY_SIZE(mask->control[band].ht_mcs); i++) {
++		if (mask->control[band].ht_mcs[i] == 0)
++			continue;
++		else if (mask->control[band].ht_mcs[i] ==
++			 sband->ht_cap.mcs.rx_mask[i])
++			ht_nss_mask |= BIT(i);
++		else
++			return false;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(mask->control[band].vht_mcs); i++) {
++		if (mask->control[band].vht_mcs[i] == 0)
++			continue;
++		else if (mask->control[band].vht_mcs[i] ==
++			 ath11k_mac_get_max_vht_mcs_map(vht_mcs_map, i))
++			vht_nss_mask |= BIT(i);
++		else
++			return false;
++	}
++
++	if (ht_nss_mask != vht_nss_mask)
++		return false;
++
++	if (ht_nss_mask == 0)
++		return false;
++
++	if (BIT(fls(ht_nss_mask)) - 1 != ht_nss_mask)
++		return false;
++
++	*nss = fls(ht_nss_mask);
++
++	return true;
++}
++
++static int
++ath11k_mac_get_single_legacy_rate(struct ath11k *ar,
++				  enum nl80211_band band,
++				  const struct cfg80211_bitrate_mask *mask,
++				  u32 *rate, u8 *nss)
++{
++	int rate_idx;
++	u16 bitrate;
++	u8 preamble;
++	u8 hw_rate;
++
++	if (hweight32(mask->control[band].legacy) != 1)
++		return -EINVAL;
++
++	rate_idx = ffs(mask->control[band].legacy) - 1;
++
++	if (band == NL80211_BAND_5GHZ)
++		rate_idx += ATH11K_MAC_FIRST_OFDM_RATE_IDX;
++
++	hw_rate = ath11k_legacy_rates[rate_idx].hw_value;
++	bitrate = ath11k_legacy_rates[rate_idx].bitrate;
++
++	if (ath11k_mac_bitrate_is_cck(bitrate))
++		preamble = WMI_RATE_PREAMBLE_CCK;
++	else
++		preamble = WMI_RATE_PREAMBLE_OFDM;
++
++	*nss = 1;
++	*rate = ATH11K_HW_RATE_CODE(hw_rate, 0, preamble);
++
++	return 0;
++}
++
++static int ath11k_mac_set_fixed_rate_params(struct ath11k_vif *arvif,
++					    u32 rate, u8 nss, u8 sgi, u8 ldpc)
++{
++	struct ath11k *ar = arvif->ar;
++	u32 vdev_param;
++	int ret;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_MAC, "mac set fixed rate params vdev %i rate 0x%02hhx nss %hhu sgi %hhu\n",
++		   arvif->vdev_id, rate, nss, sgi);
++
++	vdev_param = WMI_VDEV_PARAM_FIXED_RATE;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					    vdev_param, rate);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set fixed rate param 0x%02x: %d\n",
++			    rate, ret);
++		return ret;
++	}
++
++	vdev_param = WMI_VDEV_PARAM_NSS;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					    vdev_param, nss);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set nss param %d: %d\n",
++			    nss, ret);
++		return ret;
++	}
++
++	vdev_param = WMI_VDEV_PARAM_SGI;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					    vdev_param, sgi);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set sgi param %d: %d\n",
++			    sgi, ret);
++		return ret;
++	}
++
++	vdev_param = WMI_VDEV_PARAM_LDPC;
++	ret = ath11k_wmi_vdev_set_param_cmd(ar, arvif->vdev_id,
++					    vdev_param, ldpc);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set ldpc param %d: %d\n",
++			    ldpc, ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static bool
++ath11k_mac_vht_mcs_range_present(struct ath11k *ar,
++				 enum nl80211_band band,
++				 const struct cfg80211_bitrate_mask *mask)
++{
++	int i;
++	u16 vht_mcs;
++
++	for (i = 0; i < NL80211_VHT_NSS_MAX; i++) {
++		vht_mcs = mask->control[band].vht_mcs[i];
++
++		switch (vht_mcs) {
++		case 0:
++		case BIT(8) - 1:
++		case BIT(9) - 1:
++		case BIT(10) - 1:
++			break;
++		default:
++			return false;
++		}
++	}
++
++	return true;
++}
++
++static void ath11k_mac_set_bitrate_mask_iter(void *data,
++					     struct ieee80211_sta *sta)
++{
++	struct ath11k_vif *arvif = data;
++	struct ath11k_sta *arsta = (struct ath11k_sta *)sta->drv_priv;
++	struct ath11k *ar = arvif->ar;
++
++	spin_lock_bh(&ar->data_lock);
++	arsta->changed |= IEEE80211_RC_SUPP_RATES_CHANGED;
++	spin_unlock_bh(&ar->data_lock);
++
++	ieee80211_queue_work(ar->hw, &arsta->update_wk);
++}
++
++static void ath11k_mac_disable_peer_fixed_rate(void *data,
++					       struct ieee80211_sta *sta)
++{
++	struct ath11k_vif *arvif = data;
++	struct ath11k *ar = arvif->ar;
++	int ret;
++
++	ret = ath11k_wmi_set_peer_param(ar, sta->addr,
++					arvif->vdev_id,
++					WMI_PEER_PARAM_FIXED_RATE,
++					WMI_FIXED_RATE_NONE);
++	if (ret)
++		ath11k_warn(ar->ab,
++			    "failed to disable peer fixed rate for STA %pM ret %d\n",
++			    sta->addr, ret);
++}
++
++static int
++ath11k_mac_op_set_bitrate_mask(struct ieee80211_hw *hw,
++			       struct ieee80211_vif *vif,
++			       const struct cfg80211_bitrate_mask *mask)
++{
++	struct ath11k_vif *arvif = (void *)vif->drv_priv;
++	struct cfg80211_chan_def def;
++	struct ath11k *ar = arvif->ar;
++	enum nl80211_band band;
++	const u8 *ht_mcs_mask;
++	const u16 *vht_mcs_mask;
++	u32 rate;
++	u8 nss;
++	u8 sgi;
++	u8 ldpc;
++	int single_nss;
++	int ret;
++	int num_rates;
++
++	if (ath11k_mac_vif_chan(vif, &def))
++		return -EPERM;
++
++	band = def.chan->band;
++	ht_mcs_mask = mask->control[band].ht_mcs;
++	vht_mcs_mask = mask->control[band].vht_mcs;
++	ldpc = !!(ar->ht_cap_info & WMI_HT_CAP_LDPC);
++
++	sgi = mask->control[band].gi;
++	if (sgi == NL80211_TXRATE_FORCE_LGI)
++		return -EINVAL;
++
++	/* mac80211 doesn't support sending a fixed HT/VHT MCS alone, rather it
++	 * requires passing atleast one of used basic rates along with them.
++	 * Fixed rate setting across different preambles(legacy, HT, VHT) is
++	 * not supported by the FW. Hence use of FIXED_RATE vdev param is not
++	 * suitable for setting single HT/VHT rates.
++	 * But, there could be a single basic rate passed from userspace which
++	 * can be done through the FIXED_RATE param.
++	 */
++	if (ath11k_mac_has_single_legacy_rate(ar, band, mask)) {
++		ret = ath11k_mac_get_single_legacy_rate(ar, band, mask, &rate,
++							&nss);
++		if (ret) {
++			ath11k_warn(ar->ab, "failed to get single legacy rate for vdev %i: %d\n",
++				    arvif->vdev_id, ret);
++			return ret;
++		}
++		ieee80211_iterate_stations_atomic(ar->hw,
++						  ath11k_mac_disable_peer_fixed_rate,
++						  arvif);
++	} else if (ath11k_mac_bitrate_mask_get_single_nss(ar, band, mask,
++							  &single_nss)) {
++		rate = WMI_FIXED_RATE_NONE;
++		nss = single_nss;
++	} else {
++		rate = WMI_FIXED_RATE_NONE;
++		nss = min_t(u32, ar->num_tx_chains,
++			    max(ath11k_mac_max_ht_nss(ht_mcs_mask),
++				ath11k_mac_max_vht_nss(vht_mcs_mask)));
++
++		/* If multiple rates across different preambles are given
++		 * we can reconfigure this info with all peers using PEER_ASSOC
++		 * command with the below exception cases.
++		 * - Single VHT Rate : peer_assoc command accommodates only MCS
++		 * range values i.e 0-7, 0-8, 0-9 for VHT. Though mac80211
++		 * mandates passing basic rates along with HT/VHT rates, FW
++		 * doesn't allow switching from VHT to Legacy. Hence instead of
++		 * setting legacy and VHT rates using RATEMASK_CMD vdev cmd,
++		 * we could set this VHT rate as peer fixed rate param, which
++		 * will override FIXED rate and FW rate control algorithm.
++		 * If single VHT rate is passed along with HT rates, we select
++		 * the VHT rate as fixed rate for vht peers.
++		 * - Multiple VHT Rates : When Multiple VHT rates are given,this
++		 * can be set using RATEMASK CMD which uses FW rate-ctl alg.
++		 * TODO: Setting multiple VHT MCS and replacing peer_assoc with
++		 * RATEMASK_CMDID can cover all use cases of setting rates
++		 * across multiple preambles and rates within same type.
++		 * But requires more validation of the command at this point.
++		 */
++
++		num_rates = ath11k_mac_bitrate_mask_num_vht_rates(ar, band,
++								  mask);
++
++		if (!ath11k_mac_vht_mcs_range_present(ar, band, mask) &&
++		    num_rates > 1) {
++			/* TODO: Handle multiple VHT MCS values setting using
++			 * RATEMASK CMD
++			 */
++			ath11k_warn(ar->ab,
++				    "Setting more than one MCS Value in bitrate mask not supported\n");
++			return -EINVAL;
++		}
++
++		ieee80211_iterate_stations_atomic(ar->hw,
++						  ath11k_mac_disable_peer_fixed_rate,
++						  arvif);
++
++		mutex_lock(&ar->conf_mutex);
++
++		arvif->bitrate_mask = *mask;
++		ieee80211_iterate_stations_atomic(ar->hw,
++						  ath11k_mac_set_bitrate_mask_iter,
++						  arvif);
++
++		mutex_unlock(&ar->conf_mutex);
++	}
++
++	mutex_lock(&ar->conf_mutex);
++
++	ret = ath11k_mac_set_fixed_rate_params(arvif, rate, nss, sgi, ldpc);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to set fixed rate params on vdev %i: %d\n",
++			    arvif->vdev_id, ret);
++	}
++
++	mutex_unlock(&ar->conf_mutex);
++
++	return ret;
++}
++
++static void
++ath11k_mac_op_reconfig_complete(struct ieee80211_hw *hw,
++				enum ieee80211_reconfig_type reconfig_type)
++{
++	struct ath11k *ar = hw->priv;
++
++	if (reconfig_type != IEEE80211_RECONFIG_TYPE_RESTART)
++		return;
++
++	mutex_lock(&ar->conf_mutex);
++
++	if (ar->state == ATH11K_STATE_RESTARTED) {
++		ath11k_warn(ar->ab, "pdev %d successfully recovered\n",
++			    ar->pdev->pdev_id);
++		ar->state = ATH11K_STATE_ON;
++		ieee80211_wake_queues(ar->hw);
++	}
++
++	mutex_unlock(&ar->conf_mutex);
++}
++
++static void
++ath11k_mac_update_bss_chan_survey(struct ath11k *ar,
++				  struct ieee80211_channel *channel)
++{
++	int ret;
++	enum wmi_bss_chan_info_req_type type = WMI_BSS_SURVEY_REQ_TYPE_READ;
++
++	lockdep_assert_held(&ar->conf_mutex);
++
++	if (!test_bit(WMI_TLV_SERVICE_BSS_CHANNEL_INFO_64, ar->ab->wmi_sc.svc_map) ||
++	    ar->rx_channel != channel)
++		return;
++
++	if (ar->scan.state != ATH11K_SCAN_IDLE) {
++		ath11k_dbg(ar->ab, ATH11K_DBG_MAC,
++			   "ignoring bss chan info req while scanning..\n");
++		return;
++	}
++
++	reinit_completion(&ar->bss_survey_done);
++
++	ret = ath11k_wmi_pdev_bss_chan_info_request(ar, type);
++	if (ret) {
++		ath11k_warn(ar->ab, "failed to send pdev bss chan info request\n");
++		return;
++	}
++
++	ret = wait_for_completion_timeout(&ar->bss_survey_done, 3 * HZ);
++	if (ret == 0)
++		ath11k_warn(ar->ab, "bss channel survey timed out\n");
++}
++
++static int ath11k_mac_op_get_survey(struct ieee80211_hw *hw, int idx,
++				    struct survey_info *survey)
++{
++	struct ath11k *ar = hw->priv;
++	struct ieee80211_supported_band *sband;
++	struct survey_info *ar_survey;
++	int ret = 0;
++
++	if (idx >= ATH11K_NUM_CHANS)
++		return -ENOENT;
++
++	ar_survey = &ar->survey[idx];
++
++	mutex_lock(&ar->conf_mutex);
++
++	sband = hw->wiphy->bands[NL80211_BAND_2GHZ];
++	if (sband && idx >= sband->n_channels) {
++		idx -= sband->n_channels;
++		sband = NULL;
++	}
++
++	if (!sband)
++		sband = hw->wiphy->bands[NL80211_BAND_5GHZ];
++
++	if (!sband || idx >= sband->n_channels) {
++		ret = -ENOENT;
++		goto exit;
++	}
++
++	ath11k_mac_update_bss_chan_survey(ar, &sband->channels[idx]);
++
++	spin_lock_bh(&ar->data_lock);
++	memcpy(survey, ar_survey, sizeof(*survey));
++	spin_unlock_bh(&ar->data_lock);
++
++	survey->channel = &sband->channels[idx];
++
++	if (ar->rx_channel == survey->channel)
++		survey->filled |= SURVEY_INFO_IN_USE;
++
++exit:
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
++}
++
++static void ath11k_mac_op_sta_statistics(struct ieee80211_hw *hw,
++					 struct ieee80211_vif *vif,
++					 struct ieee80211_sta *sta,
++					 struct station_info *sinfo)
++{
++	struct ath11k_sta *arsta = (struct ath11k_sta *)sta->drv_priv;
++
++	sinfo->rx_duration = arsta->rx_duration;
++	sinfo->filled |= BIT_ULL(NL80211_STA_INFO_RX_DURATION);
++
++	if (!arsta->txrate.legacy && !arsta->txrate.nss)
++		return;
++
++	if (arsta->txrate.legacy) {
++		sinfo->txrate.legacy = arsta->txrate.legacy;
++	} else {
++		sinfo->txrate.mcs = arsta->txrate.mcs;
++		sinfo->txrate.nss = arsta->txrate.nss;
++		sinfo->txrate.bw = arsta->txrate.bw;
++		sinfo->txrate.he_gi = arsta->txrate.he_gi;
++		sinfo->txrate.he_dcm = arsta->txrate.he_dcm;
++		sinfo->txrate.he_ru_alloc = arsta->txrate.he_ru_alloc;
++	}
++	sinfo->txrate.flags = arsta->txrate.flags;
++	sinfo->filled |= BIT_ULL(NL80211_STA_INFO_TX_BITRATE);
++
++	/* TODO: Use real NF instead of default one. */
++	sinfo->signal = arsta->rssi_comb + ATH11K_DEFAULT_NOISE_FLOOR;
++}
++
++static const struct ieee80211_ops ath11k_ops = {
++	.tx				= ath11k_mac_op_tx,
++	.start                          = ath11k_mac_op_start,
++	.stop                           = ath11k_mac_op_stop,
++	.reconfig_complete              = ath11k_mac_op_reconfig_complete,
++	.add_interface                  = ath11k_mac_op_add_interface,
++	.remove_interface		= ath11k_mac_op_remove_interface,
++	.config                         = ath11k_mac_op_config,
++	.bss_info_changed               = ath11k_mac_op_bss_info_changed,
++	.configure_filter		= ath11k_mac_op_configure_filter,
++	.hw_scan                        = ath11k_mac_op_hw_scan,
++	.cancel_hw_scan                 = ath11k_mac_op_cancel_hw_scan,
++	.set_key                        = ath11k_mac_op_set_key,
++	.sta_state                      = ath11k_mac_op_sta_state,
++	.sta_rc_update			= ath11k_mac_op_sta_rc_update,
++	.conf_tx                        = ath11k_mac_op_conf_tx,
++	.set_antenna			= ath11k_mac_op_set_antenna,
++	.get_antenna			= ath11k_mac_op_get_antenna,
++	.ampdu_action			= ath11k_mac_op_ampdu_action,
++	.add_chanctx			= ath11k_mac_op_add_chanctx,
++	.remove_chanctx			= ath11k_mac_op_remove_chanctx,
++	.change_chanctx			= ath11k_mac_op_change_chanctx,
++	.assign_vif_chanctx		= ath11k_mac_op_assign_vif_chanctx,
++	.unassign_vif_chanctx		= ath11k_mac_op_unassign_vif_chanctx,
++	.switch_vif_chanctx		= ath11k_mac_op_switch_vif_chanctx,
++	.set_rts_threshold		= ath11k_mac_op_set_rts_threshold,
++	.set_frag_threshold		= ath11k_mac_op_set_frag_threshold,
++	.set_bitrate_mask		= ath11k_mac_op_set_bitrate_mask,
++	.get_survey			= ath11k_mac_op_get_survey,
++	.flush				= ath11k_mac_op_flush,
++	.sta_statistics			= ath11k_mac_op_sta_statistics,
++	CFG80211_TESTMODE_CMD(ath11k_tm_cmd)
++#ifdef CONFIG_MAC80211_DEBUGFS
++	.sta_add_debugfs		= ath11k_sta_add_debugfs,
++#endif
 +};
 +
-+enum rx_msdu_start_sgi {
-+	RX_MSDU_START_SGI_0_8_US,
-+	RX_MSDU_START_SGI_0_4_US,
-+	RX_MSDU_START_SGI_1_6_US,
-+	RX_MSDU_START_SGI_3_2_US,
++static const struct ieee80211_iface_limit ath11k_if_limits[] = {
++	{
++		.max = 1,
++		.types = BIT(NL80211_IFTYPE_STATION),
++	},
++	{
++		.max    = 16,
++		.types  = BIT(NL80211_IFTYPE_AP)
++#ifdef CONFIG_MAC80211_MESH
++			| BIT(NL80211_IFTYPE_MESH_POINT)
++#endif
++	},
 +};
 +
-+enum rx_msdu_start_recv_bw {
-+	RX_MSDU_START_RECV_BW_20MHZ,
-+	RX_MSDU_START_RECV_BW_40MHZ,
-+	RX_MSDU_START_RECV_BW_80MHZ,
-+	RX_MSDU_START_RECV_BW_160MHZ,
++static const struct ieee80211_iface_combination ath11k_if_comb[] = {
++	{
++		.limits = ath11k_if_limits,
++		.n_limits = ARRAY_SIZE(ath11k_if_limits),
++		.max_interfaces = 16,
++		.num_different_channels = 1,
++		.beacon_int_infra_match = true,
++		.beacon_int_min_gcd = 100,
++		.radar_detect_widths =	BIT(NL80211_CHAN_WIDTH_20_NOHT) |
++					BIT(NL80211_CHAN_WIDTH_20) |
++					BIT(NL80211_CHAN_WIDTH_40) |
++					BIT(NL80211_CHAN_WIDTH_80),
++	},
 +};
 +
-+enum rx_msdu_start_reception_type {
-+	RX_MSDU_START_RECEPTION_TYPE_SU,
-+	RX_MSDU_START_RECEPTION_TYPE_DL_MU_MIMO,
-+	RX_MSDU_START_RECEPTION_TYPE_DL_MU_OFDMA,
-+	RX_MSDU_START_RECEPTION_TYPE_DL_MU_OFDMA_MIMO,
-+	RX_MSDU_START_RECEPTION_TYPE_UL_MU_MIMO,
-+	RX_MSDU_START_RECEPTION_TYPE_UL_MU_OFDMA,
-+	RX_MSDU_START_RECEPTION_TYPE_UL_MU_OFDMA_MIMO,
++static void ath11k_mac_update_ch_list(struct ath11k *ar,
++				      struct ieee80211_supported_band *band,
++				      u32 freq_low, u32 freq_high)
++{
++	int i;
++
++	if (!(freq_low && freq_high))
++		return;
++
++	for (i = 0; i < band->n_channels; i++) {
++		if (band->channels[i].center_freq < freq_low ||
++		    band->channels[i].center_freq > freq_high)
++			band->channels[i].flags |= IEEE80211_CHAN_DISABLED;
++	}
++}
++
++static int ath11k_mac_setup_channels_rates(struct ath11k *ar,
++					   u32 supported_bands)
++{
++	struct ieee80211_supported_band *band;
++	struct ath11k_hal_reg_capabilities_ext *reg_cap;
++	void *channels;
++
++	BUILD_BUG_ON((ARRAY_SIZE(ath11k_2ghz_channels) +
++		      ARRAY_SIZE(ath11k_5ghz_channels)) !=
++		     ATH11K_NUM_CHANS);
++
++	reg_cap = &ar->ab->hal_reg_cap[ar->pdev_idx];
++
++	if (supported_bands & WMI_HOST_WLAN_2G_CAP) {
++		channels = kmemdup(ath11k_2ghz_channels,
++				   sizeof(ath11k_2ghz_channels),
++				   GFP_KERNEL);
++		if (!channels)
++			return -ENOMEM;
++
++		band = &ar->mac.sbands[NL80211_BAND_2GHZ];
++		band->n_channels = ARRAY_SIZE(ath11k_2ghz_channels);
++		band->channels = channels;
++		band->n_bitrates = ath11k_g_rates_size;
++		band->bitrates = ath11k_g_rates;
++		ar->hw->wiphy->bands[NL80211_BAND_2GHZ] = band;
++		ath11k_mac_update_ch_list(ar, band,
++					  reg_cap->low_2ghz_chan,
++					  reg_cap->high_2ghz_chan);
++	}
++
++	if (supported_bands & WMI_HOST_WLAN_5G_CAP) {
++		channels = kmemdup(ath11k_5ghz_channels,
++				   sizeof(ath11k_5ghz_channels),
++				   GFP_KERNEL);
++		if (!channels) {
++			kfree(ar->mac.sbands[NL80211_BAND_2GHZ].channels);
++			return -ENOMEM;
++		}
++
++		band = &ar->mac.sbands[NL80211_BAND_5GHZ];
++		band->n_channels = ARRAY_SIZE(ath11k_5ghz_channels);
++		band->channels = channels;
++		band->n_bitrates = ath11k_a_rates_size;
++		band->bitrates = ath11k_a_rates;
++		ar->hw->wiphy->bands[NL80211_BAND_5GHZ] = band;
++		ath11k_mac_update_ch_list(ar, band,
++					  reg_cap->low_5ghz_chan,
++					  reg_cap->high_5ghz_chan);
++	}
++
++	return 0;
++}
++
++static const u8 ath11k_if_types_ext_capa[] = {
++	[0] = WLAN_EXT_CAPA1_EXT_CHANNEL_SWITCHING,
++	[7] = WLAN_EXT_CAPA8_OPMODE_NOTIF,
 +};
 +
-+#define RX_MSDU_START_INFO1_MSDU_LENGTH		GENMASK(13, 0)
-+#define RX_MSDU_START_INFO1_RSVD_1A		BIT(14)
-+#define RX_MSDU_START_INFO1_IPSEC_ESP		BIT(15)
-+#define RX_MSDU_START_INFO1_L3_OFFSET		GENMASK(22, 16)
-+#define RX_MSDU_START_INFO1_IPSEC_AH		BIT(23)
-+#define RX_MSDU_START_INFO1_L4_OFFSET		GENMASK(31, 24)
-+
-+#define RX_MSDU_START_INFO2_MSDU_NUMBER		GENMASK(7, 0)
-+#define RX_MSDU_START_INFO2_DECAP_TYPE		GENMASK(9, 8)
-+#define RX_MSDU_START_INFO2_IPV4		BIT(10)
-+#define RX_MSDU_START_INFO2_IPV6		BIT(11)
-+#define RX_MSDU_START_INFO2_TCP			BIT(12)
-+#define RX_MSDU_START_INFO2_UDP			BIT(13)
-+#define RX_MSDU_START_INFO2_IP_FRAG		BIT(14)
-+#define RX_MSDU_START_INFO2_TCP_ONLY_ACK	BIT(15)
-+#define RX_MSDU_START_INFO2_DA_IS_BCAST_MCAST	BIT(16)
-+#define RX_MSDU_START_INFO2_SELECTED_TOEPLITZ_HASH	GENMASK(18, 17)
-+#define RX_MSDU_START_INFO2_IP_FIXED_HDR_VALID		BIT(19)
-+#define RX_MSDU_START_INFO2_IP_EXTN_HDR_VALID		BIT(20)
-+#define RX_MSDU_START_INFO2_IP_TCP_UDP_HDR_VALID	BIT(21)
-+#define RX_MSDU_START_INFO2_MESH_CTRL_PRESENT		BIT(22)
-+#define RX_MSDU_START_INFO2_LDPC			BIT(23)
-+#define RX_MSDU_START_INFO2_IP4_IP6_NXT_HDR		GENMASK(31, 24)
-+#define RX_MSDU_START_INFO2_DECAP_FORMAT		GENMASK(9, 8)
-+
-+#define RX_MSDU_START_INFO3_USER_RSSI		GENMASK(7, 0)
-+#define RX_MSDU_START_INFO3_PKT_TYPE		GENMASK(11, 8)
-+#define RX_MSDU_START_INFO3_STBC		BIT(12)
-+#define RX_MSDU_START_INFO3_SGI			GENMASK(14, 13)
-+#define RX_MSDU_START_INFO3_RATE_MCS		GENMASK(18, 15)
-+#define RX_MSDU_START_INFO3_RECV_BW		GENMASK(20, 19)
-+#define RX_MSDU_START_INFO3_RECEPTION_TYPE	GENMASK(23, 21)
-+#define RX_MSDU_START_INFO3_MIMO_SS_BITMAP	GENMASK(31, 24)
-+
-+struct rx_msdu_start {
-+	__le16 info0;
-+	__le16 phy_ppdu_id;
-+	__le32 info1;
-+	__le32 info2;
-+	__le32 toeplitz_hash;
-+	__le32 flow_id_toeplitz;
-+	__le32 info3;
-+	__le32 ppdu_start_timestamp;
-+	__le32 phy_meta_data;
-+} __packed;
-+
-+/* rx_msdu_start
-+ *
-+ * rxpcu_mpdu_filter_in_category
-+ *		Field indicates what the reason was that this mpdu frame
-+ *		was allowed to come into the receive path by rxpcu. Values
-+ *		are defined in enum %RX_DESC_RXPCU_FILTER_*.
-+ *
-+ * sw_frame_group_id
-+ *		SW processes frames based on certain classifications. Values
-+ *		are defined in enum %RX_DESC_SW_FRAME_GRP_ID_*.
-+ *
-+ * phy_ppdu_id
-+ *		A ppdu counter value that PHY increments for every PPDU
-+ *		received. The counter value wraps around.
-+ *
-+ * msdu_length
-+ *		MSDU length in bytes after decapsulation.
-+ *
-+ * ipsec_esp
-+ *		Set if IPv4/v6 packet is using IPsec ESP.
-+ *
-+ * l3_offset
-+ *		Depending upon mode bit, this field either indicates the
-+ *		L3 offset in bytes from the start of the RX_HEADER or the IP
-+ *		offset in bytes from the start of the packet after
-+ *		decapsulation. The latter is only valid if ipv4_proto or
-+ *		ipv6_proto is set.
-+ *
-+ * ipsec_ah
-+ *		Set if IPv4/v6 packet is using IPsec AH
-+ *
-+ * l4_offset
-+ *		Depending upon mode bit, this field either indicates the
-+ *		L4 offset nin bytes from the start of RX_HEADER (only valid
-+ *		if either ipv4_proto or ipv6_proto is set to 1) or indicates
-+ *		the offset in bytes to the start of TCP or UDP header from
-+ *		the start of the IP header after decapsulation (Only valid if
-+ *		tcp_proto or udp_proto is set). The value 0 indicates that
-+ *		the offset is longer than 127 bytes.
-+ *
-+ * msdu_number
-+ *		Indicates the MSDU number within a MPDU.  This value is
-+ *		reset to zero at the start of each MPDU.  If the number of
-+ *		MSDU exceeds 255 this number will wrap using modulo 256.
-+ *
-+ * decap_type
-+ *		Indicates the format after decapsulation. Values are defined in
-+ *		enum %MPDU_START_DECAP_TYPE_*.
-+ *
-+ * ipv4_proto
-+ *		Set if L2 layer indicates IPv4 protocol.
-+ *
-+ * ipv6_proto
-+ *		Set if L2 layer indicates IPv6 protocol.
-+ *
-+ * tcp_proto
-+ *		Set if the ipv4_proto or ipv6_proto are set and the IP protocol
-+ *		indicates TCP.
-+ *
-+ * udp_proto
-+ *		Set if the ipv4_proto or ipv6_proto are set and the IP protocol
-+ *		indicates UDP.
-+ *
-+ * ip_frag
-+ *		Indicates that either the IP More frag bit is set or IP frag
-+ *		number is non-zero.  If set indicates that this is a fragmented
-+ *		IP packet.
-+ *
-+ * tcp_only_ack
-+ *		Set if only the TCP Ack bit is set in the TCP flags and if
-+ *		the TCP payload is 0.
-+ *
-+ * da_is_bcast_mcast
-+ *		The destination address is broadcast or multicast.
-+ *
-+ * toeplitz_hash
-+ *		Actual chosen Hash.
-+ *		0 - Toeplitz hash of 2-tuple (IP source address, IP
-+ *		    destination address)
-+ *		1 - Toeplitz hash of 4-tuple (IP source	address,
-+ *		    IP destination address, L4 (TCP/UDP) source port,
-+ *		    L4 (TCP/UDP) destination port)
-+ *		2 - Toeplitz of flow_id
-+ *		3 - Zero is used
-+ *
-+ * ip_fixed_header_valid
-+ *		Fixed 20-byte IPv4 header or 40-byte IPv6 header parsed
-+ *		fully within first 256 bytes of the packet
-+ *
-+ * ip_extn_header_valid
-+ *		IPv6/IPv6 header, including IPv4 options and
-+ *		recognizable extension headers parsed fully within first 256
-+ *		bytes of the packet
-+ *
-+ * tcp_udp_header_valid
-+ *		Fixed 20-byte TCP (excluding TCP options) or 8-byte UDP
-+ *		header parsed fully within first 256 bytes of the packet
-+ *
-+ * mesh_control_present
-+ *		When set, this MSDU includes the 'Mesh Control' field
-+ *
-+ * ldpc
-+ *
-+ * ip4_protocol_ip6_next_header
-+ *		For IPv4, this is the 8 bit protocol field set). For IPv6 this
-+ *		is the 8 bit next_header field.
-+ *
-+ * toeplitz_hash_2_or_4
-+ *		Controlled by RxOLE register - If register bit set to 0,
-+ *		Toeplitz hash is computed over 2-tuple IPv4 or IPv6 src/dest
-+ *		addresses; otherwise, toeplitz hash is computed over 4-tuple
-+ *		IPv4 or IPv6 src/dest addresses and src/dest ports.
-+ *
-+ * flow_id_toeplitz
-+ *		Toeplitz hash of 5-tuple
-+ *		{IP source address, IP destination address, IP source port, IP
-+ *		destination port, L4 protocol}  in case of non-IPSec.
-+ *
-+ *		In case of IPSec - Toeplitz hash of 4-tuple
-+ *		{IP source address, IP destination address, SPI, L4 protocol}
-+ *
-+ *		The relevant Toeplitz key registers are provided in RxOLE's
-+ *		instance of common parser module. These registers are separate
-+ *		from the Toeplitz keys used by ASE/FSE modules inside RxOLE.
-+ *		The actual value will be passed on from common parser module
-+ *		to RxOLE in one of the WHO_* TLVs.
-+ *
-+ * user_rssi
-+ *		RSSI for this user
-+ *
-+ * pkt_type
-+ *		Values are defined in enum %RX_MSDU_START_PKT_TYPE_*.
-+ *
-+ * stbc
-+ *		When set, use STBC transmission rates.
-+ *
-+ * sgi
-+ *		Field only valid when pkt type is HT, VHT or HE. Values are
-+ *		defined in enum %RX_MSDU_START_SGI_*.
-+ *
-+ * rate_mcs
-+ *		MCS Rate used.
-+ *
-+ * receive_bandwidth
-+ *		Full receive Bandwidth. Values are defined in enum
-+ *		%RX_MSDU_START_RECV_*.
-+ *
-+ * reception_type
-+ *		Indicates what type of reception this is and defined in enum
-+ *		%RX_MSDU_START_RECEPTION_TYPE_*.
-+ *
-+ * mimo_ss_bitmap
-+ *		Field only valid when
-+ *		Reception_type is RX_MSDU_START_RECEPTION_TYPE_DL_MU_MIMO or
-+ *		RX_MSDU_START_RECEPTION_TYPE_DL_MU_OFDMA_MIMO.
-+ *
-+ *		Bitmap, with each bit indicating if the related spatial
-+ *		stream is used for this STA
-+ *
-+ *		LSB related to SS 0
-+ *
-+ *		0 - spatial stream not used for this reception
-+ *		1 - spatial stream used for this reception
-+ *
-+ * ppdu_start_timestamp
-+ *		Timestamp that indicates when the PPDU that contained this MPDU
-+ *		started on the medium.
-+ *
-+ * phy_meta_data
-+ *		SW programmed Meta data provided by the PHY. Can be used for SW
-+ *		to indicate the channel the device is on.
-+ */
-+
-+#define RX_MSDU_END_INFO0_RXPCU_MPDU_FITLER	GENMASK(1, 0)
-+#define RX_MSDU_END_INFO0_SW_FRAME_GRP_ID	GENMASK(8, 2)
-+
-+#define RX_MSDU_END_INFO1_KEY_ID		GENMASK(7, 0)
-+#define RX_MSDU_END_INFO1_CCE_SUPER_RULE	GENMASK(13, 8)
-+#define RX_MSDU_END_INFO1_CCND_TRUNCATE		BIT(14)
-+#define RX_MSDU_END_INFO1_CCND_CCE_DIS		BIT(15)
-+#define RX_MSDU_END_INFO1_EXT_WAPI_PN		GENMASK(31, 16)
-+
-+#define RX_MSDU_END_INFO2_REPORTED_MPDU_LEN	GENMASK(13, 0)
-+#define RX_MSDU_END_INFO2_FIRST_MSDU		BIT(14)
-+#define RX_MSDU_END_INFO2_LAST_MSDU		BIT(15)
-+#define RX_MSDU_END_INFO2_SA_IDX_TIMEOUT	BIT(16)
-+#define RX_MSDU_END_INFO2_DA_IDX_TIMEOUT	BIT(17)
-+#define RX_MSDU_END_INFO2_MSDU_LIMIT_ERR	BIT(18)
-+#define RX_MSDU_END_INFO2_FLOW_IDX_TIMEOUT	BIT(19)
-+#define RX_MSDU_END_INFO2_FLOW_IDX_INVALID	BIT(20)
-+#define RX_MSDU_END_INFO2_WIFI_PARSER_ERR	BIT(21)
-+#define RX_MSDU_END_INFO2_AMSDU_PARSET_ERR	BIT(22)
-+#define RX_MSDU_END_INFO2_SA_IS_VALID		BIT(23)
-+#define RX_MSDU_END_INFO2_DA_IS_VALID		BIT(24)
-+#define RX_MSDU_END_INFO2_DA_IS_MCBC		BIT(25)
-+#define RX_MSDU_END_INFO2_L3_HDR_PADDING	GENMASK(27, 26)
-+
-+#define RX_MSDU_END_INFO3_TCP_FLAG		GENMASK(8, 0)
-+#define RX_MSDU_END_INFO3_LRO_ELIGIBLE		BIT(9)
-+
-+#define RX_MSDU_END_INFO4_DA_OFFSET		GENMASK(5, 0)
-+#define RX_MSDU_END_INFO4_SA_OFFSET		GENMASK(11, 6)
-+#define RX_MSDU_END_INFO4_DA_OFFSET_VALID	BIT(12)
-+#define RX_MSDU_END_INFO4_SA_OFFSET_VALID	BIT(13)
-+#define RX_MSDU_END_INFO4_L3_TYPE		GENMASK(31, 16)
-+
-+#define RX_MSDU_END_INFO5_MSDU_DROP		BIT(0)
-+#define RX_MSDU_END_INFO5_REO_DEST_IND		GENMASK(5, 1)
-+#define RX_MSDU_END_INFO5_FLOW_IDX		GENMASK(25, 6)
-+
-+struct rx_msdu_end {
-+	__le16 info0;
-+	__le16 phy_ppdu_id;
-+	__le16 ip_hdr_cksum;
-+	__le16 tcp_udp_cksum;
-+	__le32 info1;
-+	__le32 ext_wapi_pn[2];
-+	__le32 info2;
-+	__le32 ipv6_options_crc;
-+	__le32 tcp_seq_num;
-+	__le32 tcp_ack_num;
-+	__le16 info3;
-+	__le16 window_size;
-+	__le32 info4;
-+	__le32 rule_indication[2];
-+	__le16 sa_idx;
-+	__le16 da_idx;
-+	__le32 info5;
-+	__le32 fse_metadata;
-+	__le16 cce_metadata;
-+	__le16 sa_sw_peer_id;
-+} __packed;
-+
-+/* rx_msdu_end
-+ *
-+ * rxpcu_mpdu_filter_in_category
-+ *		Field indicates what the reason was that this mpdu frame
-+ *		was allowed to come into the receive path by rxpcu. Values
-+ *		are defined in enum %RX_DESC_RXPCU_FILTER_*.
-+ *
-+ * sw_frame_group_id
-+ *		SW processes frames based on certain classifications. Values
-+ *		are defined in enum %RX_DESC_SW_FRAME_GRP_ID_*.
-+ *
-+ * phy_ppdu_id
-+ *		A ppdu counter value that PHY increments for every PPDU
-+ *		received. The counter value wraps around.
-+ *
-+ * ip_hdr_cksum
-+ *		This can include the IP header checksum or the pseudo
-+ *		header checksum used by TCP/UDP checksum.
-+ *
-+ * tcp_udp_chksum
-+ *		The value of the computed TCP/UDP checksum.  A mode bit
-+ *		selects whether this checksum is the full checksum or the
-+ *		partial checksum which does not include the pseudo header.
-+ *
-+ * key_id
-+ *		The key ID octet from the IV. Only valid when first_msdu is set.
-+ *
-+ * cce_super_rule
-+ *		Indicates the super filter rule.
-+ *
-+ * cce_classify_not_done_truncate
-+ *		Classification failed due to truncated frame.
-+ *
-+ * cce_classify_not_done_cce_dis
-+ *		Classification failed due to CCE global disable
-+ *
-+ * ext_wapi_pn*
-+ *		Extension PN (packet number) which is only used by WAPI.
-+ *
-+ * reported_mpdu_length
-+ *		MPDU length before decapsulation. Only valid when first_msdu is
-+ *		set. This field is taken directly from the length field of the
-+ *		A-MPDU delimiter or the preamble length field for non-A-MPDU
-+ *		frames.
-+ *
-+ * first_msdu
-+ *		Indicates the first MSDU of A-MSDU. If both first_msdu and
-+ *		last_msdu are set in the MSDU then this is a non-aggregated MSDU
-+ *		frame: normal MPDU. Interior MSDU in an A-MSDU shall have both
-+ *		first_mpdu and last_mpdu bits set to 0.
-+ *
-+ * last_msdu
-+ *		Indicates the last MSDU of the A-MSDU. MPDU end status is only
-+ *		valid when last_msdu is set.
-+ *
-+ * sa_idx_timeout
-+ *		Indicates an unsuccessful MAC source address search due to the
-+ *		expiring of the search timer.
-+ *
-+ * da_idx_timeout
-+ *		Indicates an unsuccessful MAC destination address search due to
-+ *		the expiring of the search timer.
-+ *
-+ * msdu_limit_error
-+ *		Indicates that the MSDU threshold was exceeded and thus all the
-+ *		rest of the MSDUs will not be scattered and will not be
-+ *		decapsulated but will be DMA'ed in RAW format as a single MSDU.
-+ *
-+ * flow_idx_timeout
-+ *		Indicates an unsuccessful flow search due to the expiring of
-+ *		the search timer.
-+ *
-+ * flow_idx_invalid
-+ *		flow id is not valid.
-+ *
-+ * amsdu_parser_error
-+ *		A-MSDU could not be properly de-agregated.
-+ *
-+ * sa_is_valid
-+ *		Indicates that OLE found a valid SA entry.
-+ *
-+ * da_is_valid
-+ *		Indicates that OLE found a valid DA entry.
-+ *
-+ * da_is_mcbc
-+ *		Field Only valid if da_is_valid is set. Indicates the DA address
-+ *		was a Multicast of Broadcast address.
-+ *
-+ * l3_header_padding
-+ *		Number of bytes padded  to make sure that the L3 header will
-+ *		always start of a Dword boundary.
-+ *
-+ * ipv6_options_crc
-+ *		32 bit CRC computed out of  IP v6 extension headers.
-+ *
-+ * tcp_seq_number
-+ *		TCP sequence number.
-+ *
-+ * tcp_ack_number
-+ *		TCP acknowledge number.
-+ *
-+ * tcp_flag
-+ *		TCP flags {NS, CWR, ECE, URG, ACK, PSH, RST, SYN, FIN}.
-+ *
-+ * lro_eligible
-+ *		Computed out of TCP and IP fields to indicate that this
-+ *		MSDU is eligible for LRO.
-+ *
-+ * window_size
-+ *		TCP receive window size.
-+ *
-+ * da_offset
-+ *		Offset into MSDU buffer for DA.
-+ *
-+ * sa_offset
-+ *		Offset into MSDU buffer for SA.
-+ *
-+ * da_offset_valid
-+ *		da_offset field is valid. This will be set to 0 in case
-+ *		of a dynamic A-MSDU when DA is compressed.
-+ *
-+ * sa_offset_valid
-+ *		sa_offset field is valid. This will be set to 0 in case
-+ *		of a dynamic A-MSDU when SA is compressed.
-+ *
-+ * l3_type
-+ *		The 16-bit type value indicating the type of L3 later
-+ *		extracted from LLC/SNAP, set to zero if SNAP is not
-+ *		available.
-+ *
-+ * rule_indication
-+ *		Bitmap indicating which of rules have matched.
-+ *
-+ * sa_idx
-+ *		The offset in the address table which matches MAC source address
-+ *
-+ * da_idx
-+ *		The offset in the address table which matches MAC destination
-+ *		address.
-+ *
-+ * msdu_drop
-+ *		REO shall drop this MSDU and not forward it to any other ring.
-+ *
-+ * reo_destination_indication
-+ *		The id of the reo exit ring where the msdu frame shall push
-+ *		after (MPDU level) reordering has finished. Values are defined
-+ *		in enum %HAL_RX_MSDU_DESC_REO_DEST_IND_.
-+ *
-+ * flow_idx
-+ *		Flow table index.
-+ *
-+ * fse_metadata
-+ *		FSE related meta data.
-+ *
-+ * cce_metadata
-+ *		CCE related meta data.
-+ *
-+ * sa_sw_peer_id
-+ *		sw_peer_id from the address search entry corresponding to the
-+ *		source address of the MSDU.
-+ */
-+
-+enum rx_mpdu_end_rxdma_dest_ring {
-+	RX_MPDU_END_RXDMA_DEST_RING_RELEASE,
-+	RX_MPDU_END_RXDMA_DEST_RING_FW,
-+	RX_MPDU_END_RXDMA_DEST_RING_SW,
-+	RX_MPDU_END_RXDMA_DEST_RING_REO,
++static const u8 ath11k_if_types_ext_capa_sta[] = {
++	[0] = WLAN_EXT_CAPA1_EXT_CHANNEL_SWITCHING,
++	[7] = WLAN_EXT_CAPA8_OPMODE_NOTIF,
++	[9] = WLAN_EXT_CAPA10_TWT_REQUESTER_SUPPORT,
 +};
 +
-+#define RX_MPDU_END_INFO1_UNSUP_KTYPE_SHORT_FRAME	BIT(11)
-+#define RX_MPDU_END_INFO1_RX_IN_TX_DECRYPT_BYT		BIT(12)
-+#define RX_MPDU_END_INFO1_OVERFLOW_ERR			BIT(13)
-+#define RX_MPDU_END_INFO1_MPDU_LEN_ERR			BIT(14)
-+#define RX_MPDU_END_INFO1_TKIP_MIC_ERR			BIT(15)
-+#define RX_MPDU_END_INFO1_DECRYPT_ERR			BIT(16)
-+#define RX_MPDU_END_INFO1_UNENCRYPTED_FRAME_ERR		BIT(17)
-+#define RX_MPDU_END_INFO1_PN_FIELDS_VALID		BIT(18)
-+#define RX_MPDU_END_INFO1_FCS_ERR			BIT(19)
-+#define RX_MPDU_END_INFO1_MSDU_LEN_ERR			BIT(20)
-+#define RX_MPDU_END_INFO1_RXDMA0_DEST_RING		GENMASK(22, 21)
-+#define RX_MPDU_END_INFO1_RXDMA1_DEST_RING		GENMASK(24, 23)
-+#define RX_MPDU_END_INFO1_DECRYPT_STATUS_CODE		GENMASK(27, 25)
-+#define RX_MPDU_END_INFO1_RX_BITMAP_NOT_UPD		BIT(28)
++static const u8 ath11k_if_types_ext_capa_ap[] = {
++	[0] = WLAN_EXT_CAPA1_EXT_CHANNEL_SWITCHING,
++	[7] = WLAN_EXT_CAPA8_OPMODE_NOTIF,
++	[9] = WLAN_EXT_CAPA10_TWT_RESPONDER_SUPPORT,
++};
 +
-+struct rx_mpdu_end {
-+	__le16 info0;
-+	__le16 phy_ppdu_id;
-+	__le32 info1;
-+} __packed;
++static const struct wiphy_iftype_ext_capab ath11k_iftypes_ext_capa[] = {
++	{
++		.extended_capabilities = ath11k_if_types_ext_capa,
++		.extended_capabilities_mask = ath11k_if_types_ext_capa,
++		.extended_capabilities_len = sizeof(ath11k_if_types_ext_capa),
++	}, {
++		.iftype = NL80211_IFTYPE_STATION,
++		.extended_capabilities = ath11k_if_types_ext_capa_sta,
++		.extended_capabilities_mask = ath11k_if_types_ext_capa_sta,
++		.extended_capabilities_len =
++				sizeof(ath11k_if_types_ext_capa_sta),
++	}, {
++		.iftype = NL80211_IFTYPE_AP,
++		.extended_capabilities = ath11k_if_types_ext_capa_ap,
++		.extended_capabilities_mask = ath11k_if_types_ext_capa_ap,
++		.extended_capabilities_len =
++				sizeof(ath11k_if_types_ext_capa_ap),
++	},
++};
 +
-+/* rx_mpdu_end
-+ *
-+ * rxpcu_mpdu_filter_in_category
-+ *		Field indicates what the reason was that this mpdu frame
-+ *		was allowed to come into the receive path by rxpcu. Values
-+ *		are defined in enum %RX_DESC_RXPCU_FILTER_*.
-+ *
-+ * sw_frame_group_id
-+ *		SW processes frames based on certain classifications. Values
-+ *		are defined in enum %RX_DESC_SW_FRAME_GRP_ID_*.
-+ *
-+ * phy_ppdu_id
-+ *		A ppdu counter value that PHY increments for every PPDU
-+ *		received. The counter value wraps around.
-+ *
-+ * unsup_ktype_short_frame
-+ *		This bit will be '1' when WEP or TKIP or WAPI key type is
-+ *		received for 11ah short frame. Crypto will bypass the received
-+ *		packet without decryption to RxOLE after setting this bit.
-+ *
-+ * rx_in_tx_decrypt_byp
-+ *		Indicates that RX packet is not decrypted as Crypto is
-+ *		busy with TX packet processing.
-+ *
-+ * overflow_err
-+ *		RXPCU Receive FIFO ran out of space to receive the full MPDU.
-+ *		Therefore this MPDU is terminated early and is thus corrupted.
-+ *
-+ *		This MPDU will not be ACKed.
-+ *
-+ *		RXPCU might still be able to correctly receive the following
-+ *		MPDUs in the PPDU if enough fifo space became available in time.
-+ *
-+ * mpdu_length_err
-+ *		Set by RXPCU if the expected MPDU length does not correspond
-+ *		with the actually received number of bytes in the MPDU.
-+ *
-+ * tkip_mic_err
-+ *		Set by Rx crypto when crypto detected a TKIP MIC error for
-+ *		this MPDU.
-+ *
-+ * decrypt_err
-+ *		Set by RX CRYPTO when CRYPTO detected a decrypt error for this
-+ *		MPDU or CRYPTO received an encrypted frame, but did not get a
-+ *		valid corresponding key id in the peer entry.
-+ *
-+ * unencrypted_frame_err
-+ *		Set by RX CRYPTO when CRYPTO detected an unencrypted frame while
-+ *		in the peer entry field 'All_frames_shall_be_encrypted' is set.
-+ *
-+ * pn_fields_contain_valid_info
-+ *		Set by RX CRYPTO to indicate that there is a valid PN field
-+ *		present in this MPDU.
-+ *
-+ * fcs_err
-+ *		Set by RXPCU when there is an FCS error detected for this MPDU.
-+ *
-+ * msdu_length_err
-+ *		Set by RXOLE when there is an msdu length error detected
-+ *		in at least 1 of the MSDUs embedded within the MPDU.
-+ *
-+ * rxdma0_destination_ring
-+ * rxdma1_destination_ring
-+ *		The ring to which RXDMA0/1 shall push the frame, assuming
-+ *		no MPDU level errors are detected. In case of MPDU level
-+ *		errors, RXDMA0/1 might change the RXDMA0/1 destination. Values
-+ *		are defined in %enum RX_MPDU_END_RXDMA_DEST_RING_*.
-+ *
-+ * decrypt_status_code
-+ *		Field provides insight into the decryption performed. Values
-+ *		are defined in enum %RX_DESC_DECRYPT_STATUS_CODE_*.
-+ *
-+ * rx_bitmap_not_updated
-+ *		Frame is received, but RXPCU could not update the receive bitmap
-+ *		due to (temporary) fifo constraints.
-+ */
++static int ath11k_mac_register(struct ath11k *ar)
++{
++	struct ath11k_base *ab = ar->ab;
++	struct ath11k_pdev_cap *cap = &ar->pdev->cap;
++	static const u32 cipher_suites[] = {
++		WLAN_CIPHER_SUITE_TKIP,
++		WLAN_CIPHER_SUITE_CCMP,
++		WLAN_CIPHER_SUITE_AES_CMAC,
++		WLAN_CIPHER_SUITE_BIP_CMAC_256,
++		WLAN_CIPHER_SUITE_BIP_GMAC_128,
++		WLAN_CIPHER_SUITE_BIP_GMAC_256,
++		WLAN_CIPHER_SUITE_GCMP,
++		WLAN_CIPHER_SUITE_GCMP_256,
++		WLAN_CIPHER_SUITE_CCMP_256,
++	};
++	int ret;
++	u32 ht_cap = 0;
 +
-+/* Padding bytes to avoid TLV's spanning across 128 byte boundary */
-+#define HAL_RX_DESC_PADDING0_BYTES	4
-+#define HAL_RX_DESC_PADDING1_BYTES	16
++	ath11k_pdev_caps_update(ar);
 +
-+#define HAL_RX_DESC_HDR_STATUS_LEN	120
++	SET_IEEE80211_PERM_ADDR(ar->hw, ar->mac_addr);
 +
-+struct hal_rx_desc {
-+	__le32 msdu_end_tag;
-+	struct rx_msdu_end msdu_end;
-+	__le32 rx_attn_tag;
-+	struct rx_attention attention;
-+	__le32 msdu_start_tag;
-+	struct rx_msdu_start msdu_start;
-+	u8 rx_padding0[HAL_RX_DESC_PADDING0_BYTES];
-+	__le32 mpdu_start_tag;
-+	struct rx_mpdu_start mpdu_start;
-+	__le32 mpdu_end_tag;
-+	struct rx_mpdu_end mpdu_end;
-+	u8 rx_padding1[HAL_RX_DESC_PADDING1_BYTES];
-+	__le32 hdr_status_tag;
-+	__le32 phy_ppdu_id;
-+	u8 hdr_status[HAL_RX_DESC_HDR_STATUS_LEN];
-+	u8 msdu_payload[0];
-+} __packed;
++	SET_IEEE80211_DEV(ar->hw, ab->dev);
 +
-+#endif /* ATH11K_RX_DESC_H */
++	ret = ath11k_mac_setup_channels_rates(ar,
++					      cap->supported_bands);
++	if (ret)
++		goto err_free;
++
++	ath11k_mac_setup_ht_vht_cap(ar, cap, &ht_cap);
++
++	ar->hw->wiphy->available_antennas_rx = cap->rx_chain_mask;
++	ar->hw->wiphy->available_antennas_tx = cap->tx_chain_mask;
++
++	ar->hw->wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
++					 BIT(NL80211_IFTYPE_AP) |
++					 BIT(NL80211_IFTYPE_MESH_POINT);
++
++	ieee80211_hw_set(ar->hw, SIGNAL_DBM);
++	ieee80211_hw_set(ar->hw, SUPPORTS_PS);
++	ieee80211_hw_set(ar->hw, SUPPORTS_DYNAMIC_PS);
++	ieee80211_hw_set(ar->hw, MFP_CAPABLE);
++	ieee80211_hw_set(ar->hw, REPORTS_TX_ACK_STATUS);
++	ieee80211_hw_set(ar->hw, HAS_RATE_CONTROL);
++	ieee80211_hw_set(ar->hw, AP_LINK_PS);
++	ieee80211_hw_set(ar->hw, SPECTRUM_MGMT);
++	ieee80211_hw_set(ar->hw, SUPPORT_FAST_XMIT);
++	ieee80211_hw_set(ar->hw, CONNECTION_MONITOR);
++	ieee80211_hw_set(ar->hw, SUPPORTS_PER_STA_GTK);
++	ieee80211_hw_set(ar->hw, WANT_MONITOR_VIF);
++	ieee80211_hw_set(ar->hw, CHANCTX_STA_CSA);
++	ieee80211_hw_set(ar->hw, QUEUE_CONTROL);
++	ieee80211_hw_set(ar->hw, SUPPORTS_TX_FRAG);
++	ieee80211_hw_set(ar->hw, REPORTS_LOW_ACK);
++	if (ht_cap & WMI_HT_CAP_ENABLED) {
++		ieee80211_hw_set(ar->hw, AMPDU_AGGREGATION);
++		ieee80211_hw_set(ar->hw, TX_AMPDU_SETUP_IN_HW);
++		ieee80211_hw_set(ar->hw, SUPPORTS_REORDERING_BUFFER);
++		ieee80211_hw_set(ar->hw, SUPPORTS_AMSDU_IN_AMPDU);
++	}
++
++	ar->hw->wiphy->features |= NL80211_FEATURE_STATIC_SMPS;
++	ar->hw->wiphy->flags |= WIPHY_FLAG_IBSS_RSN;
++
++	/* TODO: Check if HT capability advertised from firmware is different
++	 * for each band for a dual band capable radio. It will be tricky to
++	 * handle it when the ht capability different for each band.
++	 */
++	if (ht_cap & WMI_HT_CAP_DYNAMIC_SMPS)
++		ar->hw->wiphy->features |= NL80211_FEATURE_DYNAMIC_SMPS;
++
++	ar->hw->wiphy->max_scan_ssids = WLAN_SCAN_PARAMS_MAX_SSID;
++	ar->hw->wiphy->max_scan_ie_len = WLAN_SCAN_PARAMS_MAX_IE_LEN;
++
++	ar->hw->max_listen_interval = ATH11K_MAX_HW_LISTEN_INTERVAL;
++
++	ar->hw->wiphy->flags |= WIPHY_FLAG_HAS_REMAIN_ON_CHANNEL;
++	ar->hw->wiphy->flags |= WIPHY_FLAG_HAS_CHANNEL_SWITCH;
++	ar->hw->wiphy->max_remain_on_channel_duration = 5000;
++
++	ar->hw->wiphy->flags |= WIPHY_FLAG_AP_UAPSD;
++	ar->hw->wiphy->features |= NL80211_FEATURE_AP_MODE_CHAN_WIDTH_CHANGE |
++				   NL80211_FEATURE_AP_SCAN;
++
++	ar->max_num_stations = TARGET_NUM_STATIONS;
++	ar->max_num_peers = TARGET_NUM_PEERS_PDEV;
++
++	ar->hw->wiphy->max_ap_assoc_sta = ar->max_num_stations;
++
++	ar->hw->queues = ATH11K_HW_MAX_QUEUES;
++	ar->hw->offchannel_tx_hw_queue = ATH11K_HW_MAX_QUEUES - 1;
++	ar->hw->max_rx_aggregation_subframes = IEEE80211_MAX_AMPDU_BUF;
++
++	ar->hw->vif_data_size = sizeof(struct ath11k_vif);
++	ar->hw->sta_data_size = sizeof(struct ath11k_sta);
++
++	ar->hw->wiphy->iface_combinations = ath11k_if_comb;
++	ar->hw->wiphy->n_iface_combinations = ARRAY_SIZE(ath11k_if_comb);
++
++	wiphy_ext_feature_set(ar->hw->wiphy, NL80211_EXT_FEATURE_CQM_RSSI_LIST);
++
++	ar->hw->wiphy->cipher_suites = cipher_suites;
++	ar->hw->wiphy->n_cipher_suites = ARRAY_SIZE(cipher_suites);
++
++	ar->hw->wiphy->iftype_ext_capab = ath11k_iftypes_ext_capa;
++	ar->hw->wiphy->num_iftype_ext_capab =
++		ARRAY_SIZE(ath11k_iftypes_ext_capa);
++
++	ath11k_reg_init(ar);
++
++	/* advertise HW checksum offload capabilities */
++	ar->hw->netdev_features = NETIF_F_HW_CSUM;
++
++	ret = ieee80211_register_hw(ar->hw);
++	if (ret) {
++		ath11k_err(ar->ab, "ieee80211 registration failed: %d\n", ret);
++		goto err_free;
++	}
++
++	/* Apply the regd received during initialization */
++	ret = ath11k_regd_update(ar, true);
++	if (ret) {
++		ath11k_err(ar->ab, "ath11k regd update failed: %d\n", ret);
++		goto err_free;
++	}
++
++	ret = ath11k_debug_register(ar);
++	if (ret) {
++		ath11k_err(ar->ab, "debugfs registration failed: %d\n", ret);
++		goto err_free;
++	}
++
++	return 0;
++
++err_free:
++	kfree(ar->mac.sbands[NL80211_BAND_2GHZ].channels);
++	kfree(ar->mac.sbands[NL80211_BAND_5GHZ].channels);
++
++	SET_IEEE80211_DEV(ar->hw, NULL);
++	return ret;
++}
++
++void ath11k_mac_unregister(struct ath11k_base *ab)
++{
++	struct ath11k *ar;
++	struct ath11k_pdev *pdev;
++	int i;
++
++	for (i = 0; i < ab->num_radios; i++) {
++		pdev = &ab->pdevs[i];
++		ar = pdev->ar;
++		if (!ar)
++			continue;
++		cancel_work_sync(&ar->regd_update_work);
++
++		ieee80211_unregister_hw(ar->hw);
++
++		idr_for_each(&ar->txmgmt_idr, ath11k_mac_tx_mgmt_pending_free, ar);
++		idr_destroy(&ar->txmgmt_idr);
++
++		kfree(ar->mac.sbands[NL80211_BAND_2GHZ].channels);
++		kfree(ar->mac.sbands[NL80211_BAND_5GHZ].channels);
++
++		SET_IEEE80211_DEV(ar->hw, NULL);
++	}
++}
++
++int ath11k_mac_create(struct ath11k_base *ab)
++{
++	struct ieee80211_hw *hw;
++	struct ath11k *ar;
++	struct ath11k_pdev *pdev;
++	int ret;
++	int i;
++
++	if (test_bit(ATH11K_FLAG_REGISTERED, &ab->dev_flags))
++		return 0;
++
++	for (i = 0; i < ab->num_radios; i++) {
++		pdev = &ab->pdevs[i];
++		hw = ieee80211_alloc_hw(sizeof(struct ath11k), &ath11k_ops);
++		if (!hw) {
++			ath11k_warn(ab, "failed to allocate mac80211 hw device\n");
++			ret = -ENOMEM;
++			goto err_destroy_mac;
++		}
++
++		ar = hw->priv;
++		ar->hw = hw;
++		ar->ab = ab;
++		ar->pdev = pdev;
++		ar->pdev_idx = i;
++		ar->lmac_id = ath11k_core_get_hw_mac_id(ab, i);
++
++		ar->wmi = &ab->wmi_sc.wmi[i];
++		/* FIXME wmi[0] is already initialized during attach,
++		 * Should we do this again?
++		 */
++		ath11k_wmi_pdev_attach(ab, i);
++
++		ar->cfg_tx_chainmask = pdev->cap.tx_chain_mask;
++		ar->cfg_rx_chainmask = pdev->cap.rx_chain_mask;
++		ar->num_tx_chains = get_num_chains(pdev->cap.tx_chain_mask);
++		ar->num_rx_chains = get_num_chains(pdev->cap.rx_chain_mask);
++
++		if (ab->pdevs_macaddr_valid) {
++			ether_addr_copy(ar->mac_addr, pdev->mac_addr);
++		} else {
++			ether_addr_copy(ar->mac_addr, ab->mac_addr);
++			ar->mac_addr[4] += i;
++		}
++
++		pdev->ar = ar;
++		spin_lock_init(&ar->data_lock);
++		INIT_LIST_HEAD(&ar->arvifs);
++		INIT_LIST_HEAD(&ar->ppdu_stats_info);
++		mutex_init(&ar->conf_mutex);
++		init_completion(&ar->vdev_setup_done);
++		init_completion(&ar->peer_assoc_done);
++		init_completion(&ar->install_key_done);
++		init_completion(&ar->bss_survey_done);
++		init_completion(&ar->scan.started);
++		init_completion(&ar->scan.completed);
++		INIT_DELAYED_WORK(&ar->scan.timeout, ath11k_scan_timeout_work);
++		INIT_WORK(&ar->regd_update_work, ath11k_regd_update_work);
++
++		INIT_WORK(&ar->wmi_mgmt_tx_work, ath11k_mgmt_over_wmi_tx_work);
++		skb_queue_head_init(&ar->wmi_mgmt_tx_queue);
++		clear_bit(ATH11K_FLAG_MONITOR_ENABLED, &ar->monitor_flags);
++
++		ret = ath11k_mac_register(ar);
++		if (ret) {
++			ath11k_warn(ab, "failed to register hw device\n");
++			pdev->ar = NULL;
++			ieee80211_free_hw(hw);
++			goto err_destroy_mac;
++		}
++
++		idr_init(&ar->txmgmt_idr);
++		spin_lock_init(&ar->txmgmt_idr_lock);
++	}
++
++	/* Initialize channel counters frequency value in hertz */
++	ab->cc_freq_hz = IPQ8074_CC_FREQ_HERTZ;
++	ab->free_vdev_map = (1LL << (ab->num_radios * TARGET_NUM_VDEVS)) - 1;
++
++	return 0;
++
++err_destroy_mac:
++	ath11k_mac_destroy(ab);
++
++	return ret;
++}
++
++void ath11k_mac_destroy(struct ath11k_base *ab)
++{
++	struct ath11k *ar;
++	struct ath11k_pdev *pdev;
++	int i;
++
++	for (i = 0; i < ab->num_radios; i++) {
++		pdev = &ab->pdevs[i];
++		ar = pdev->ar;
++		if (!ar)
++			continue;
++
++		ieee80211_free_hw(ar->hw);
++		pdev->ar = NULL;
++	}
++}
 
