@@ -2,99 +2,69 @@ Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1136CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 19:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D8CCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 19:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE1F218BA
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 19:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571598586;
-	bh=q+SNoyLgu/l1SWVD0v1n4bg2iKbjViIVFGsPMw+F+Sg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FgjqrF1mRtWLvfTPR7WoELHzx2Ssaz07t9K8GowzS2UUfUXR4Xum/wP/6s81dTQxj
-	 1x7xc8qc7cHZ+dERP2GLrBx6R2lTTB2ZHZc21iJwbh9VPjMuOh4B/dJuXoGiSadXeb
-	 pwqtU1zgfmyhp0u0TDWgv6TGSrnP0yVVOLGHnZSQ=
+	by mail.kernel.org (Postfix) with ESMTP id 11AFB21928
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 19:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfJTTJn (ORCPT
+        id S1725938AbfJTTyk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 15:09:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40710 "EHLO mail.kernel.org"
+        Sun, 20 Oct 2019 15:54:40 -0400
+Received: from bsmtp7.bon.at ([213.33.87.19]:35332 "EHLO bsmtp7.bon.at"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfJTTJn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 20 Oct 2019 15:09:43 -0400
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73E58222BD;
-        Sun, 20 Oct 2019 19:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571598582;
-        bh=q+SNoyLgu/l1SWVD0v1n4bg2iKbjViIVFGsPMw+F+Sg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QyJ0u1gsmZ/V7MnfqumkZzYuh3gOFfX0eFw6KmAymq1IxqoEZyac6XlVLqS6Yy8Np
-         R+qOurhoRpM/AO2NMSDBtJ/StVnhcu2Gc6JMe4A1lir+Yqr6kyQObqkN8nOoeMvFO6
-         FlPbW1TkQ6fo/05GZ4EPCfyKgN2oymnPGtilANoM=
-Received: by mail-qk1-f175.google.com with SMTP id 71so6433806qkl.0;
-        Sun, 20 Oct 2019 12:09:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAWId48mqMupjnQtPVK/ptvmX2z+J0CpnT1mWuSHsDRWzY/kBhZO
-        NxZFIDPndoudp7M4c+V/S+DXmiQed6iFfvnOPw==
-X-Google-Smtp-Source: APXvYqxCZdoSJOPws5ld0rBfQmiAIurX/KPccb8UPTZj2Xd7JXOnejqxFnBHAVEABVkT9T6d/ENfL9Tq+XQMwqbKO64=
-X-Received: by 2002:a37:9847:: with SMTP id a68mr10386178qke.223.1571598581555;
- Sun, 20 Oct 2019 12:09:41 -0700 (PDT)
+        id S1725933AbfJTTyk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 20 Oct 2019 15:54:40 -0400
+Received: from dx.site (unknown [93.83.142.38])
+        by bsmtp7.bon.at (Postfix) with ESMTPSA id 46x9TQ5YJZz5tlB;
+        Sun, 20 Oct 2019 21:54:34 +0200 (CEST)
+Received: from [IPv6:::1] (localhost [IPv6:::1])
+        by dx.site (Postfix) with ESMTP id 69C581CFC;
+        Sun, 20 Oct 2019 21:54:33 +0200 (CEST)
+Subject: Re: [PATCH v3] userdiff: Fix some corner cases in dts regex
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>,
+        Junio C Hamano <gitster@pobox.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+References: <20191020185230.212875-1-sboyd@kernel.org>
+From:   Johannes Sixt <j6t@kdbg.org>
+Message-ID: <21271a81-5273-ad8e-be06-7a2242aa57cf@kdbg.org>
+Date:   Sun, 20 Oct 2019 21:54:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
- <20191017191152.GA11222@bogus> <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
-In-Reply-To: <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Sun, 20 Oct 2019 14:09:30 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com>
-Message-ID: <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191020185230.212875-1-sboyd@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 10:07 AM Marcelo Schmitt
-<marcelo.schmitt1@gmail.com> wrote:
->
-> Hi Rob
->
-> Thanks for the review.
->
-> I'm having some trouble with the DTC.
-> I installed the DT tool from https://github.com/robherring/dt-schema.
-> Running make -k dt_binding_check goes through all the checks (CHKDT), producing
-> the .example.dts files but then gives errors like:
->
->   DTC     Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml
-> FATAL ERROR: Unknown output format "yaml"
-> make[1]: *** [scripts/Makefile.lib:314: Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml] Error 1
-> make[1]: *** Deleting file 'Documentation/devicetree/bindings/arm/calxeda.example.dt.yaml'
->
-> My pip3 installation has:
-> jsonschema jsonschema-3.1.2.dev6+g0d827f3
-> rfc3987 1.3.8
->
-> $HOME/.local/bin is listed in my shell's PATH variable.
->
-> I was trying to follow the documentation at:
-> Documentation/devicetree/writing-schema.rst
->
-> Are there any other DTC dependencies that I am missing?
+Am 20.10.19 um 20:52 schrieb Stephen Boyd:
+> --- /dev/null
+> +++ b/t/t4018/dts-nodes-multiline-prop
+> @@ -0,0 +1,13 @@
+> +/ {
+> +	label_1: node1@ff00 {
+> +		RIGHT@deadf00,4000 {
+> +			multilineprop = <3>,
+> +					<4>,
+> +					<5>,
+> +					<6>,
+> +					<7>;
 
-Yes, libyaml. See Documentation/devicetree/writing-schema.rst.
+There is little variation in the lines, but if that is what occurs in
+real life, so be it.
 
-Rob
+This patch is good. Thanks!
+
+Reviewed-by: Johannes Sixt <j6t@kdbg.org>
+
+-- Hannes
