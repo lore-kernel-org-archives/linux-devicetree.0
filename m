@@ -2,1139 +2,645 @@ Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BC8CA9EAD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 15:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E682CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 16:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BE821929
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 15:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1976C22459
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 16:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uPd09LEC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfmBZJZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfJTPkt (ORCPT
+        id S1726511AbfJTQMg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 11:40:49 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38525 "EHLO
+        Sun, 20 Oct 2019 12:12:36 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43725 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbfJTPkt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 11:40:49 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w3so6109459pgt.5
-        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 08:40:48 -0700 (PDT)
+        with ESMTP id S1726482AbfJTQMg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 12:12:36 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l24so1203572pgh.10;
+        Sun, 20 Oct 2019 09:12:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FuZGu2aoCknAnv24EgRZLq3TpHuQkVfEzbRooIt81lk=;
-        b=uPd09LECoZZcL4GG5VAq7JVDR/LbXkpGucbjiwal6Nvcgp+zXGcA8oD6SF8UVjQ4Wz
-         lbsXMGx0JWpekvHEQ+66JVqGpr0P1p4nkwSUkkylrcnYcwth1HEJfxh8CcpzEvQbbf/Z
-         /0b5jUeWTYFjqQlSj2aDIqCLael92OMy8/XNvNdEJLHGU6tivzoZME4qlZvFCfOXDcC4
-         jDGGze5dPMOMvWh8BC+C6NARTCQQVh9WEu9EjETO9gRB62FgGiiRDJGJmzQ7oWi3y4yz
-         WgSpoLycJGt2SwbVqWnKyquFV/8xVdNSx5LlSozs9CLmBzfkKZXScySG6OZD0CQeNhS5
-         MZvQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=N2vUzMWvxctopwaIty53Xn6Eu6Vntr0uF6mbiVGNHCs=;
+        b=CfmBZJZAnLmLvpis9JBQpxauv5ejHQOJDlvAmIW2XPYZD2V5d8mj+dALtDj/cwpwQ5
+         jonEaf5pvszX9zqxnRRZIizPXuXPliFQMFVkyAKWz9vFABJDa8ANd5K2SMfExh2Urpuq
+         ifP7zaEBNdLGyihye9t7KhksNjwo5ORAtfYfqpWn+sXCJ8PlVj6bCs+H8AJXXn7/fpsO
+         qp3y14LMuLoBqg315TiG9LlTXnTOrapIRy2DrkQbVBWFPHif0KEpSQ8hU0JWA8NVIrW+
+         aqTkrtIWGWqla03EfCEGc8TW3R4L+qQMgnhKyxdMANBKJKhtknf0f06/BYDanCzC5Psd
+         2L5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FuZGu2aoCknAnv24EgRZLq3TpHuQkVfEzbRooIt81lk=;
-        b=Lal4XHIYbOY8+RJo6wYUtu6Io1qauqncCFS7AhD+yesPtORERvE0f1tfatvgIovFao
-         /pGWQJqC3DRnXJDVRWcfYkxEiX26GIjhyU48j4snJFCLTsZEmalDX/raj7YxK/u9xVRh
-         VaVF4jJHaGZrpJUHFvGMf5phUNfG44kO8pbndttHC7ZqwDEif2GJDU4+vdeZZuVhdV01
-         XqkW9xyI/BygMrDsvrNo7ZXACCjwJRaWey8ztg5aRTdCQQOjFU79EMTVCptLmX1DPapp
-         by1Fi7JHOi4YZEiLrQfbq/S9Tsy/mT8mrsYl/lFbuC4xPQWvDLBE+WdAa19zcy5YjSDx
-         PZiA==
-X-Gm-Message-State: APjAAAXZ7hIdwyAsd4uXf8DYkqqFfV/oJ4VxlrG7u8934uvbW0fUJZ61
-        PeZSwU2EitEoIRiEmgpkbrzU
-X-Google-Smtp-Source: APXvYqzHLGqSKCCwjH28TYjZPhjkmDnRxlDMQXG2Cn5CjKEZFuZgAWN28a99BdHESND/cJvzhwrF8A==
-X-Received: by 2002:a17:90a:86c2:: with SMTP id y2mr22888108pjv.105.1571586047397;
-        Sun, 20 Oct 2019 08:40:47 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:619e:9471:81c6:faf1:b3a2:6750])
-        by smtp.gmail.com with ESMTPSA id c26sm13324659pfo.173.2019.10.20.08.40.40
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=N2vUzMWvxctopwaIty53Xn6Eu6Vntr0uF6mbiVGNHCs=;
+        b=NL0Nb5XcYPY65s/aLg+JaVNkfeK4QBJBwWlKc6vbUBcLw6tEAHMP6u83yk/6c5+vjj
+         tFFCn4RW0RZbcltM6psIW10JvfIhat5jw4z3vY3zbt4bt2tmZdJGEWB0RPhmBP+5h0Pp
+         WRdLfsqWJaO334160dGDH1FfaPX/s3c6JYOYeQqY24ByhnmOnzFIEM0baqTqI3aNqiCw
+         p14XmDwqg3yjWT1OXbVaQYmTSgBKls/7sqNSr+jy1ovWkq6hkJHU5g31nqLv/V9pxLJl
+         IELLD8Qcznvuc6+WixFuaKrykcQqhqvtOrs4DGUpHm9vJfovDzUT2JIeps4LBdPc70ZJ
+         K0eQ==
+X-Gm-Message-State: APjAAAWTJW6tdHkF7TE9I+4Kzr52c7ey+d4+m3+wqW9SxNyUr7SVfT2Y
+        7K8zV7AlIkkHzWbdoarjntU1lpBe
+X-Google-Smtp-Source: APXvYqzqsmI5UBrTGsN2AX4iQgWVO4TqFySQTAAaBhzMH75l5DFJXMjbjmPgvOpeEW2IAOTzbSE2Xw==
+X-Received: by 2002:a17:90a:ba8d:: with SMTP id t13mr23376041pjr.129.1571587953015;
+        Sun, 20 Oct 2019 09:12:33 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 6sm11599846pgl.40.2019.10.20.09.12.32
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 20 Oct 2019 08:40:46 -0700 (PDT)
-Date:   Sun, 20 Oct 2019 21:10:37 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     mturquette@baylibre.com, robh+dt@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        fisher.cheng@bitmain.com, alec.lin@bitmain.com
-Subject: Re: [PATCH v5 7/8] clk: Add common clock driver for BM1880 SoC
-Message-ID: <20191020154037.GD12864@Mani-XPS-13-9360>
-References: <20190916161447.32715-1-manivannan.sadhasivam@linaro.org>
- <20190916161447.32715-8-manivannan.sadhasivam@linaro.org>
- <20190918044745.1FD7221848@mail.kernel.org>
+        Sun, 20 Oct 2019 09:12:32 -0700 (PDT)
+Date:   Sun, 20 Oct 2019 09:12:31 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/2] hwmon: Support ADI Fan Control IP
+Message-ID: <20191020161231.GA27783@roeck-us.net>
+References: <20191009102806.262241-1-nuno.sa@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190918044745.1FD7221848@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191009102806.262241-1-nuno.sa@analog.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Tue, Sep 17, 2019 at 09:47:44PM -0700, Stephen Boyd wrote:
-> Quoting Manivannan Sadhasivam (2019-09-16 09:14:46)
-> > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> > index 801fa1cd0321..e70c64e43ff9 100644
-> > --- a/drivers/clk/Kconfig
-> > +++ b/drivers/clk/Kconfig
-> > @@ -139,6 +139,13 @@ config COMMON_CLK_SI570
-> >           This driver supports Silicon Labs 570/571/598/599 programmable
-> >           clock generators.
-> >  
-> > +config COMMON_CLK_BM1880
-> > +       bool "Clock driver for Bitmain BM1880 SoC"
+On Wed, Oct 09, 2019 at 12:28:05PM +0200, Nuno Sá wrote:
+> The purpose of this IP Core is to control the fan used for the cooling of a
+> Xilinx Zynq Ultrascale+ MPSoC without the need of any external temperature
+> sensors. To achieve this, the IP core uses the PL SYSMONE4 primitive to
+> obtain the PL temperature and, based on those readings, it then outputs
+> a PWM signal to control the fan rotation accordingly.
 > 
-> Can it be tristate?
-> 
+> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 
-I would prefer to have the common clock drivers as built-in since they
-are the most fundamental parts of the system.
-
-> > +       depends on ARCH_BITMAIN || COMPILE_TEST
-> > +       default ARCH_BITMAIN
-> > +       help
-> > +         This driver supports the clocks on Bitmain BM1880 SoC.
-> > +
-> >  config COMMON_CLK_CDCE706
-> >         tristate "Clock driver for TI CDCE706 clock synthesizer"
-> >         depends on I2C
-> > diff --git a/drivers/clk/clk-bm1880.c b/drivers/clk/clk-bm1880.c
-> > new file mode 100644
-> > index 000000000000..3b10de929fd4
-> > --- /dev/null
-> > +++ b/drivers/clk/clk-bm1880.c
-> > @@ -0,0 +1,966 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Bitmain BM1880 SoC clock driver
-> > + *
-> > + * Copyright (c) 2019 Linaro Ltd.
-> > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > + */
-> > +
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#include <dt-bindings/clock/bm1880-clock.h>
-> > +
-> > +#define BM1880_CLK_MPLL_CTL    0x00
-> > +#define BM1880_CLK_SPLL_CTL    0x04
-> > +#define BM1880_CLK_FPLL_CTL    0x08
-> > +#define BM1880_CLK_DDRPLL_CTL  0x0c
-> > +
-> > +#define BM1880_CLK_ENABLE0     0x00
-> > +#define BM1880_CLK_ENABLE1     0x04
-> > +#define BM1880_CLK_SELECT      0x20
-> > +#define BM1880_CLK_DIV0                0x40
-> > +#define BM1880_CLK_DIV1                0x44
-> > +#define BM1880_CLK_DIV2                0x48
-> > +#define BM1880_CLK_DIV3                0x4c
-> > +#define BM1880_CLK_DIV4                0x50
-> > +#define BM1880_CLK_DIV5                0x54
-> > +#define BM1880_CLK_DIV6                0x58
-> > +#define BM1880_CLK_DIV7                0x5c
-> > +#define BM1880_CLK_DIV8                0x60
-> > +#define BM1880_CLK_DIV9                0x64
-> > +#define BM1880_CLK_DIV10       0x68
-> > +#define BM1880_CLK_DIV11       0x6c
-> > +#define BM1880_CLK_DIV12       0x70
-> > +#define BM1880_CLK_DIV13       0x74
-> > +#define BM1880_CLK_DIV14       0x78
-> > +#define BM1880_CLK_DIV15       0x7c
-> > +#define BM1880_CLK_DIV16       0x80
-> > +#define BM1880_CLK_DIV17       0x84
-> > +#define BM1880_CLK_DIV18       0x88
-> > +#define BM1880_CLK_DIV19       0x8c
-> > +#define BM1880_CLK_DIV20       0x90
-> > +#define BM1880_CLK_DIV21       0x94
-> > +#define BM1880_CLK_DIV22       0x98
-> > +#define BM1880_CLK_DIV23       0x9c
-> > +#define BM1880_CLK_DIV24       0xa0
-> > +#define BM1880_CLK_DIV25       0xa4
-> > +#define BM1880_CLK_DIV26       0xa8
-> > +#define BM1880_CLK_DIV27       0xac
-> > +#define BM1880_CLK_DIV28       0xb0
-> > +
-> > +#define to_bm1880_pll_clk(_hw) container_of(_hw, struct bm1880_pll_hw_clock, hw)
-> > +#define to_bm1880_div_clk(_hw) container_of(_hw, struct bm1880_div_hw_clock, hw)
-> > +
-> > +static DEFINE_SPINLOCK(bm1880_clk_lock);
-> > +
-> > +struct bm1880_clock_data {
-> > +       void __iomem *pll_base;
-> > +       void __iomem *sys_base;
-> > +       struct clk_hw_onecell_data *clk_data;
-> 
-> Please call it hw_data or onecell_data instead so that the code doesn't
-> read as clk_data->clk_data. Also, probably can just make it part of the
-> same struct instead of a pointer inside so that it can all be allocated
-> in one big chunk instead of in two.
-> 
-
-okay.
-
-> > +};
-> > +
-> > +struct bm1880_gate_clock {
-> > +       unsigned int    id;
-> > +       const char      *name;
-> > +       const char      *parent;
-> > +       u32             gate_reg;
-> > +       s8              gate_shift;
-> > +       unsigned long   flags;
-> > +};
-> > +
-> > +struct bm1880_mux_clock {
-> > +       unsigned int    id;
-> > +       const char      *name;
-> > +       const char      * const *parents;
-> > +       s8              num_parents;
-> > +       u32             reg;
-> > +       s8              shift;
-> > +       unsigned long   flags;
-> > +};
-> > +
-> > +struct bm1880_div_clock {
-> > +       unsigned int    id;
-> > +       const char      *name;
-> > +       u32             reg;
-> > +       u8              shift;
-> > +       u8              width;
-> > +       u32             initval;
-> > +       const struct clk_div_table *table;
-> > +       unsigned long flags;
-> > +};
-> > +
-> > +struct bm1880_div_hw_clock {
-> > +       struct bm1880_div_clock div;
-> > +       void __iomem *base;
-> > +       spinlock_t *lock;
-> > +       struct clk_hw hw;
-> > +       struct clk_init_data init;
-> > +};
-> > +
-> > +struct bm1880_composite_clock {
-> > +       unsigned int    id;
-> > +       const char      *name;
-> > +       const char      *parent;
-> > +       const char      * const *parents;
-> > +       unsigned int    num_parents;
-> > +       unsigned long   flags;
-> > +
-> > +       u32             gate_reg;
-> > +       u32             mux_reg;
-> > +       u32             div_reg;
-> > +
-> > +       s8              gate_shift;
-> > +       s8              mux_shift;
-> > +       s8              div_shift;
-> > +       s8              div_width;
-> > +       s16             div_initval;
-> > +       const struct clk_div_table *table;
-> > +};
-> > +
-> > +struct bm1880_pll_clock {
-> > +       unsigned int    id;
-> > +       const char      *name;
-> > +       u32             reg;
-> > +       unsigned long   flags;
-> > +};
-> > +
-> > +struct bm1880_pll_hw_clock {
-> > +       struct bm1880_pll_clock pll;
-> > +       void __iomem *base;
-> > +       struct clk_hw hw;
-> > +       struct clk_init_data init;
-> > +};
-> > +
-> > +static const struct clk_ops bm1880_pll_ops;
-> > +static const struct clk_ops bm1880_clk_div_ops;
-> > +
-> > +#define GATE_DIV(_id, _name, _parent, _gate_reg, _gate_shift, _div_reg,        \
-> > +                       _div_shift, _div_width, _div_initval, _table,   \
-> > +                       _flags) {                                       \
-> > +               .id = _id,                                              \
-> > +               .parent = _parent,                                      \
-> > +               .name = _name,                                          \
-> > +               .gate_reg = _gate_reg,                                  \
-> > +               .gate_shift = _gate_shift,                              \
-> > +               .div_reg = _div_reg,                                    \
-> > +               .div_shift = _div_shift,                                \
-> > +               .div_width = _div_width,                                \
-> > +               .div_initval = _div_initval,                            \
-> > +               .table = _table,                                        \
-> > +               .mux_shift = -1,                                        \
-> > +               .flags = _flags,                                        \
-> > +       }
-> > +
-> > +#define GATE_MUX(_id, _name, _parents, _gate_reg, _gate_shift,         \
-> > +                       _mux_reg, _mux_shift, _flags) {                 \
-> > +               .id = _id,                                              \
-> > +               .parents = _parents,                                    \
-> > +               .num_parents = ARRAY_SIZE(_parents),                    \
-> > +               .name = _name,                                          \
-> > +               .gate_reg = _gate_reg,                                  \
-> > +               .gate_shift = _gate_shift,                              \
-> > +               .div_shift = -1,                                        \
-> > +               .mux_reg = _mux_reg,                                    \
-> > +               .mux_shift = _mux_shift,                                \
-> > +               .flags = _flags,                                        \
-> > +       }
-> > +
-> > +#define CLK_PLL(_id, _name, _parent, _reg, _flags) {                   \
-> > +               .pll.id = _id,                                          \
-> > +               .pll.name = _name,                                      \
-> > +               .pll.reg = _reg,                                        \
-> > +               .hw.init = CLK_HW_INIT_PARENTS_DATA(_name, _parent,     \
-> > +                                                   &bm1880_pll_ops,    \
-> > +                                                   _flags),            \
-> > +       }
-> > +
-> > +#define CLK_DIV(_id, _name, _parent, _reg, _shift, _width, _initval,   \
-> > +                               _table, _flags) {                       \
-> > +               .div.id = _id,                                          \
-> > +               .div.name = _name,                                      \
-> > +               .div.reg = _reg,                                        \
-> > +               .div.shift = _shift,                                    \
-> > +               .div.width = _width,                                    \
-> > +               .div.initval = _initval,                                \
-> > +               .div.table = _table,                                    \
-> > +               .hw.init = CLK_HW_INIT_HW(_name, _parent,               \
-> > +                                         &bm1880_clk_div_ops,          \
-> > +                                         _flags),                      \
-> > +       }
-> > +
-> > +static struct clk_parent_data bm1880_pll_parent[] = {
-> > +       { .fw_name = "osc", .name = "osc" },
-> > +};
-> > +
-> > +/*
-> > + * All PLL clocks are marked as CRITICAL, hence they are very crucial
-> > + * for the functioning of the SoC
-> 
-> Please add more information besides crucial to function of the clk.
-> Basically describe what the PLLs are clocking and why those child clks
-> aren't enabled or marked as critical themselves. The usage of
-> CLK_IS_CRITICAL is too liberal in this driver so this needs to be
-> cleaned up. For example, clk_mpll shouldn't be marked critical, just the
-> a53 CPU clk that can source from it should be marked critical because
-> it's for the CPU running code.
-
-okay. I got into the assumption that we should explicitly mark the parent
-clocks as critical also. But yeah, this doesn't makes much sense...
-
-> It's also odd that we would register gate
-> clks or the a53 clks if we don't expect to ever turn those clks off. Can
-> that be avoided so that we don't need to mark anything critical for this
-> path?
-> 
-
-No. I would like to implement the whole logic provided by the IP as it is.
-Eventhough it looks odd, that's how things are designed ;-)
-
-> > + */
-> > +static struct bm1880_pll_hw_clock bm1880_pll_clks[] = {
-> > +       CLK_PLL(BM1880_CLK_MPLL, "clk_mpll", bm1880_pll_parent,
-> > +               BM1880_CLK_MPLL_CTL, CLK_IS_CRITICAL),
-> > +       CLK_PLL(BM1880_CLK_SPLL, "clk_spll", bm1880_pll_parent,
-> > +               BM1880_CLK_SPLL_CTL, CLK_IS_CRITICAL),
-> > +       CLK_PLL(BM1880_CLK_FPLL, "clk_fpll", bm1880_pll_parent,
-> > +               BM1880_CLK_FPLL_CTL, CLK_IS_CRITICAL),
-> > +       CLK_PLL(BM1880_CLK_DDRPLL, "clk_ddrpll", bm1880_pll_parent,
-> > +               BM1880_CLK_DDRPLL_CTL, CLK_IS_CRITICAL),
-> > +};
-> > +
-> > +/*
-> > + * Clocks marked as CRITICAL are needed for the proper functioning
-> > + * of the SoC.
-> > + */
-> > +static const struct bm1880_gate_clock bm1880_gate_clks[] = {
-> > +       { BM1880_CLK_AHB_ROM, "clk_ahb_rom", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE0, 2, CLK_IS_CRITICAL },
-> > +       { BM1880_CLK_AXI_SRAM, "clk_axi_sram", "clk_axi1",
-> > +         BM1880_CLK_ENABLE0, 3, CLK_IS_CRITICAL },
-> > +       { BM1880_CLK_DDR_AXI, "clk_ddr_axi", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE0, 4, CLK_IS_CRITICAL },
-> > +       { BM1880_CLK_APB_EFUSE, "clk_apb_efuse", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE0, 6, CLK_IS_CRITICAL },
-> > +       { BM1880_CLK_AXI5_EMMC, "clk_axi5_emmc", "clk_axi5",
-> > +         BM1880_CLK_ENABLE0, 7, 0 },
-> > +       { BM1880_CLK_AXI5_SD, "clk_axi5_sd", "clk_axi5",
-> > +         BM1880_CLK_ENABLE0, 10, 0 },
-> > +       { BM1880_CLK_AXI4_ETH0, "clk_axi4_eth0", "clk_axi4",
-> > +         BM1880_CLK_ENABLE0, 14, 0 },
-> > +       { BM1880_CLK_AXI4_ETH1, "clk_axi4_eth1", "clk_axi4",
-> > +         BM1880_CLK_ENABLE0, 16, 0 },
-> > +       { BM1880_CLK_AXI1_GDMA, "clk_axi1_gdma", "clk_axi1",
-> > +         BM1880_CLK_ENABLE0, 17, 0 },
-> > +       /* Don't gate GPIO clocks as it is not owned by the GPIO driver */
-> > +       { BM1880_CLK_APB_GPIO, "clk_apb_gpio", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE0, 18, CLK_IGNORE_UNUSED },
-> > +       { BM1880_CLK_APB_GPIO_INTR, "clk_apb_gpio_intr", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE0, 19, CLK_IGNORE_UNUSED },
-> > +       { BM1880_CLK_AXI1_MINER, "clk_axi1_miner", "clk_axi1",
-> > +         BM1880_CLK_ENABLE0, 21, 0 },
-> > +       { BM1880_CLK_AHB_SF, "clk_ahb_sf", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE0, 22, 0 },
-> > +       { BM1880_CLK_SDMA_AXI, "clk_sdma_axi", "clk_axi5",
-> > +         BM1880_CLK_ENABLE0, 23, 0 },
-> > +       { BM1880_CLK_APB_I2C, "clk_apb_i2c", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE0, 25, 0 },
-> > +       { BM1880_CLK_APB_WDT, "clk_apb_wdt", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE0, 26, 0 },
-> > +       { BM1880_CLK_APB_JPEG, "clk_apb_jpeg", "clk_axi6",
-> > +         BM1880_CLK_ENABLE0, 27, 0 },
-> > +       { BM1880_CLK_AXI5_NF, "clk_axi5_nf", "clk_axi5",
-> > +         BM1880_CLK_ENABLE0, 29, 0 },
-> > +       { BM1880_CLK_APB_NF, "clk_apb_nf", "clk_axi6",
-> > +         BM1880_CLK_ENABLE0, 30, 0 },
-> > +       { BM1880_CLK_APB_PWM, "clk_apb_pwm", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE1, 0, 0 },
-> > +       { BM1880_CLK_RV, "clk_rv", "clk_mux_rv",
-> > +         BM1880_CLK_ENABLE1, 1, 0 },
-> > +       { BM1880_CLK_APB_SPI, "clk_apb_spi", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE1, 2, 0 },
-> > +       { BM1880_CLK_UART_500M, "clk_uart_500m", "clk_div_uart_500m",
-> > +         BM1880_CLK_ENABLE1, 4, 0 },
-> > +       { BM1880_CLK_APB_UART, "clk_apb_uart", "clk_axi6",
-> > +         BM1880_CLK_ENABLE1, 5, 0 },
-> > +       { BM1880_CLK_APB_I2S, "clk_apb_i2s", "clk_axi6",
-> > +         BM1880_CLK_ENABLE1, 6, 0 },
-> > +       { BM1880_CLK_AXI4_USB, "clk_axi4_usb", "clk_axi4",
-> > +         BM1880_CLK_ENABLE1, 7, 0 },
-> > +       { BM1880_CLK_APB_USB, "clk_apb_usb", "clk_axi6",
-> > +         BM1880_CLK_ENABLE1, 8, 0 },
-> > +       { BM1880_CLK_12M_USB, "clk_12m_usb", "clk_div_12m_usb",
-> > +         BM1880_CLK_ENABLE1, 11, 0 },
-> > +       { BM1880_CLK_APB_VIDEO, "clk_apb_video", "clk_axi6",
-> > +         BM1880_CLK_ENABLE1, 12, 0 },
-> > +       { BM1880_CLK_APB_VPP, "clk_apb_vpp", "clk_axi6",
-> > +         BM1880_CLK_ENABLE1, 15, 0 },
-> > +       { BM1880_CLK_AXI6, "clk_axi6", "clk_mux_axi6",
-> > +         BM1880_CLK_ENABLE1, 21, CLK_IS_CRITICAL },
-> > +};
-> > +
-> > +static const char * const clk_a53_parents[] = { "clk_spll", "clk_mpll" };
-> > +static const char * const clk_rv_parents[] = { "clk_div_1_rv", "clk_div_0_rv" };
-> > +static const char * const clk_axi1_parents[] = { "clk_div_1_axi1", "clk_div_0_axi1" };
-> > +static const char * const clk_axi6_parents[] = { "clk_div_1_axi6", "clk_div_0_axi6" };
-> 
-> I sent some patches to make the basic clk types support the new way of
-> specifying parents. Can you use those patches instead of listing all
-> these strings?
-> 
-
-Yeah, I just noticed after sending out these patches. But I'd like to adapt
-them later due to that fact that it will require some rework to this driver
-and I don't have time to do it currently :(
-
-I'll send incremental patches later once this gets in!
-
-> > +
-> > +static const struct bm1880_mux_clock bm1880_mux_clks[] = {
-> > +       { BM1880_CLK_MUX_RV, "clk_mux_rv", clk_rv_parents, 2,
-> > +         BM1880_CLK_SELECT, 1, 0 },
-> > +       { BM1880_CLK_MUX_AXI6, "clk_mux_axi6", clk_axi6_parents, 2,
-> > +         BM1880_CLK_SELECT, 3, 0 },
-> > +};
-> > +
-> > +static const struct clk_div_table bm1880_div_table_0[] = {
-> > +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
-> > +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
-> > +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
-> > +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
-> > +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
-> > +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
-> > +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
-> > +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
-> > +       { 0, 0 }
-> > +};
-> > +
-> > +static const struct clk_div_table bm1880_div_table_1[] = {
-> > +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
-> > +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
-> > +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
-> > +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
-> > +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
-> > +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
-> > +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
-> > +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
-> > +       { 127, 128 }, { 0, 0 }
-> > +};
-> > +
-> > +static const struct clk_div_table bm1880_div_table_2[] = {
-> > +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
-> > +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
-> > +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
-> > +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
-> > +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
-> > +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
-> > +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
-> > +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
-> > +       { 127, 128 }, { 255, 256 }, { 0, 0 }
-> > +};
-> > +
-> > +static const struct clk_div_table bm1880_div_table_3[] = {
-> > +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
-> > +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
-> > +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
-> > +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
-> > +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
-> > +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
-> > +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
-> > +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
-> > +       { 127, 128 }, { 255, 256 }, { 511, 512 }, { 0, 0 }
-> > +};
-> > +
-> > +static const struct clk_div_table bm1880_div_table_4[] = {
-> > +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
-> > +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
-> > +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
-> > +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
-> > +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
-> > +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
-> > +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
-> > +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
-> > +       { 127, 128 }, { 255, 256 }, { 511, 512 }, { 65535, 65536 },
-> > +       { 0, 0 }
-> > +};
-> > +
-> > +/*
-> > + * Clocks marked as CRITICAL are needed for the proper functioning
-> > + * of the SoC.
-> > + */
-> > +static struct bm1880_div_hw_clock bm1880_div_clks[] = {
-> > +       CLK_DIV(BM1880_CLK_DIV_0_RV, "clk_div_0_rv", &bm1880_pll_clks[1].hw,
-> > +               BM1880_CLK_DIV12, 16, 5, 1, bm1880_div_table_0, 0),
-> > +       CLK_DIV(BM1880_CLK_DIV_1_RV, "clk_div_1_rv", &bm1880_pll_clks[2].hw,
-> > +               BM1880_CLK_DIV13, 16, 5, 1, bm1880_div_table_0, 0),
-> > +       CLK_DIV(BM1880_CLK_DIV_UART_500M, "clk_div_uart_500m", &bm1880_pll_clks[2].hw,
-> > +               BM1880_CLK_DIV15, 16, 7, 3, bm1880_div_table_1, 0),
-> > +       CLK_DIV(BM1880_CLK_DIV_0_AXI1, "clk_div_0_axi1", &bm1880_pll_clks[0].hw,
-> > +               BM1880_CLK_DIV21, 16, 5, 2, bm1880_div_table_0,
-> > +               CLK_IS_CRITICAL),
-> > +       CLK_DIV(BM1880_CLK_DIV_1_AXI1, "clk_div_1_axi1", &bm1880_pll_clks[2].hw,
-> > +               BM1880_CLK_DIV22, 16, 5, 3, bm1880_div_table_0,
-> > +               CLK_IS_CRITICAL),
-> > +       CLK_DIV(BM1880_CLK_DIV_0_AXI6, "clk_div_0_axi6", &bm1880_pll_clks[2].hw,
-> > +               BM1880_CLK_DIV27, 16, 5, 15, bm1880_div_table_0,
-> > +               CLK_IS_CRITICAL),
-> > +       CLK_DIV(BM1880_CLK_DIV_1_AXI6, "clk_div_1_axi6", &bm1880_pll_clks[0].hw,
-> > +               BM1880_CLK_DIV28, 16, 5, 11, bm1880_div_table_0,
-> > +               CLK_IS_CRITICAL),
-> > +       CLK_DIV(BM1880_CLK_DIV_12M_USB, "clk_div_12m_usb", &bm1880_pll_clks[2].hw,
-> > +               BM1880_CLK_DIV18, 16, 7, 125, bm1880_div_table_1, 0),
-> > +};
-> > +
-> > +/*
-> > + * Clocks marked as CRITICAL are all needed for the proper functioning
-> > + * of the SoC.
-> > + */
-> > +static struct bm1880_composite_clock bm1880_composite_clks[] = {
-> > +       GATE_MUX(BM1880_CLK_A53, "clk_a53", clk_a53_parents,
-> > +                BM1880_CLK_ENABLE0, 0, BM1880_CLK_SELECT, 0,
-> > +                CLK_IS_CRITICAL),
-> > +       GATE_DIV(BM1880_CLK_50M_A53, "clk_50m_a53", "clk_fpll",
-> > +                BM1880_CLK_ENABLE0, 1, BM1880_CLK_DIV0, 16, 5, 30,
-> > +                bm1880_div_table_0, CLK_IS_CRITICAL),
-> > +       GATE_DIV(BM1880_CLK_EFUSE, "clk_efuse", "clk_fpll",
-> > +                BM1880_CLK_ENABLE0, 5, BM1880_CLK_DIV1, 16, 7, 60,
-> > +                bm1880_div_table_1, 0),
-> > +       GATE_DIV(BM1880_CLK_EMMC, "clk_emmc", "clk_fpll",
-> > +                BM1880_CLK_ENABLE0, 8, BM1880_CLK_DIV2, 16, 5, 15,
-> > +                bm1880_div_table_0, 0),
-> > +       GATE_DIV(BM1880_CLK_100K_EMMC, "clk_100k_emmc", "clk_div_12m_usb",
-> > +                BM1880_CLK_ENABLE0, 9, BM1880_CLK_DIV3, 16, 8, 120,
-> > +                bm1880_div_table_2, 0),
-> > +       GATE_DIV(BM1880_CLK_SD, "clk_sd", "clk_fpll",
-> > +                BM1880_CLK_ENABLE0, 11, BM1880_CLK_DIV4, 16, 5, 15,
-> > +                bm1880_div_table_0, 0),
-> > +       GATE_DIV(BM1880_CLK_100K_SD, "clk_100k_sd", "clk_div_12m_usb",
-> > +                BM1880_CLK_ENABLE0, 12, BM1880_CLK_DIV5, 16, 8, 120,
-> > +                bm1880_div_table_2, 0),
-> > +       GATE_DIV(BM1880_CLK_500M_ETH0, "clk_500m_eth0", "clk_fpll",
-> > +                BM1880_CLK_ENABLE0, 13, BM1880_CLK_DIV6, 16, 5, 3,
-> > +                bm1880_div_table_0, 0),
-> > +       GATE_DIV(BM1880_CLK_500M_ETH1, "clk_500m_eth1", "clk_fpll",
-> > +                BM1880_CLK_ENABLE0, 15, BM1880_CLK_DIV7, 16, 5, 3,
-> > +                bm1880_div_table_0, 0),
-> > +       /* Don't gate GPIO clocks as it is not owned by the GPIO driver */
-> > +       GATE_DIV(BM1880_CLK_GPIO_DB, "clk_gpio_db", "clk_div_12m_usb",
-> > +                BM1880_CLK_ENABLE0, 20, BM1880_CLK_DIV8, 16, 16, 120,
-> > +                bm1880_div_table_4, CLK_IGNORE_UNUSED),
-> > +       GATE_DIV(BM1880_CLK_SDMA_AUD, "clk_sdma_aud", "clk_fpll",
-> > +                BM1880_CLK_ENABLE0, 24, BM1880_CLK_DIV9, 16, 7, 61,
-> > +                bm1880_div_table_1, 0),
-> > +       GATE_DIV(BM1880_CLK_JPEG_AXI, "clk_jpeg_axi", "clk_fpll",
-> > +                BM1880_CLK_ENABLE0, 28, BM1880_CLK_DIV10, 16, 5, 4,
-> > +                bm1880_div_table_0, 0),
-> > +       GATE_DIV(BM1880_CLK_NF, "clk_nf", "clk_fpll",
-> > +                BM1880_CLK_ENABLE0, 31, BM1880_CLK_DIV11, 16, 5, 30,
-> > +                bm1880_div_table_0, 0),
-> > +       GATE_DIV(BM1880_CLK_TPU_AXI, "clk_tpu_axi", "clk_spll",
-> > +                BM1880_CLK_ENABLE1, 3, BM1880_CLK_DIV14, 16, 5, 1,
-> > +                bm1880_div_table_0, 0),
-> > +       GATE_DIV(BM1880_CLK_125M_USB, "clk_125m_usb", "clk_fpll",
-> > +                BM1880_CLK_ENABLE1, 9, BM1880_CLK_DIV16, 16, 5, 12,
-> > +                bm1880_div_table_0, 0),
-> > +       GATE_DIV(BM1880_CLK_33K_USB, "clk_33k_usb", "clk_div_12m_usb",
-> > +                BM1880_CLK_ENABLE1, 10, BM1880_CLK_DIV17, 16, 9, 363,
-> > +                bm1880_div_table_3, 0),
-> > +       GATE_DIV(BM1880_CLK_VIDEO_AXI, "clk_video_axi", "clk_fpll",
-> > +                BM1880_CLK_ENABLE1, 13, BM1880_CLK_DIV19, 16, 5, 4,
-> > +                bm1880_div_table_0, 0),
-> > +       GATE_DIV(BM1880_CLK_VPP_AXI, "clk_vpp_axi", "clk_fpll",
-> > +                BM1880_CLK_ENABLE1, 14, BM1880_CLK_DIV20, 16, 5, 4,
-> > +                bm1880_div_table_0, 0),
-> > +       GATE_MUX(BM1880_CLK_AXI1, "clk_axi1", clk_axi1_parents,
-> > +                BM1880_CLK_ENABLE1, 15, BM1880_CLK_SELECT, 2,
-> > +                CLK_IS_CRITICAL),
-> > +       GATE_DIV(BM1880_CLK_AXI2, "clk_axi2", "clk_fpll",
-> > +                BM1880_CLK_ENABLE1, 17, BM1880_CLK_DIV23, 16, 5, 3,
-> > +                bm1880_div_table_0, CLK_IS_CRITICAL),
-> > +       GATE_DIV(BM1880_CLK_AXI3, "clk_axi3", "clk_mux_rv",
-> > +                BM1880_CLK_ENABLE1, 18, BM1880_CLK_DIV24, 16, 5, 2,
-> > +                bm1880_div_table_0, CLK_IS_CRITICAL),
-> > +       GATE_DIV(BM1880_CLK_AXI4, "clk_axi4", "clk_fpll",
-> > +                BM1880_CLK_ENABLE1, 19, BM1880_CLK_DIV25, 16, 5, 6,
-> > +                bm1880_div_table_0, CLK_IS_CRITICAL),
-> > +       GATE_DIV(BM1880_CLK_AXI5, "clk_axi5", "clk_fpll",
-> > +                BM1880_CLK_ENABLE1, 20, BM1880_CLK_DIV26, 16, 5, 15,
-> > +                bm1880_div_table_0, CLK_IS_CRITICAL),
-> > +};
-> > +
-> > +static unsigned long bm1880_pll_rate_calc(u32 regval, unsigned long parent_rate)
-> > +{
-> > +       u32 fbdiv, fref, refdiv;
-> > +       u32 postdiv1, postdiv2;
-> > +       unsigned long rate, numerator, denominator;
-> > +
-> > +       fbdiv = (regval >> 16) & 0xfff;
-> > +       fref = parent_rate;
-> > +       refdiv = regval & 0x1f;
-> > +       postdiv1 = (regval >> 8) & 0x7;
-> > +       postdiv2 = (regval >> 12) & 0x7;
-> > +
-> > +       numerator = parent_rate * fbdiv;
-> > +       denominator = refdiv * postdiv1 * postdiv2;
-> > +       do_div(numerator, denominator);
-> > +       rate = numerator;
-> > +
-> > +       return rate;
-> > +}
-> > +
-> > +static unsigned long bm1880_pll_recalc_rate(struct clk_hw *hw,
-> > +                                           unsigned long parent_rate)
-> > +{
-> > +       struct bm1880_pll_hw_clock *pll_hw = to_bm1880_pll_clk(hw);
-> > +       unsigned long rate;
-> > +       u32 regval;
-> > +
-> > +       regval = readl(pll_hw->base + pll_hw->pll.reg);
-> > +       rate = bm1880_pll_rate_calc(regval, parent_rate);
-> > +
-> > +       return rate;
-> > +}
-> > +
-> > +static const struct clk_ops bm1880_pll_ops = {
-> > +       .recalc_rate    = bm1880_pll_recalc_rate,
-> > +};
-> > +
-> > +static struct clk_hw *bm1880_clk_register_pll(struct bm1880_pll_hw_clock *pll_clk,
-> > +                                             void __iomem *sys_base)
-> > +{
-> > +       struct clk_hw *hw;
-> > +       int err;
-> > +
-> > +       pll_clk->base = sys_base;
-> > +       hw = &pll_clk->hw;
-> > +
-> > +       err = clk_hw_register(NULL, hw);
-> > +       if (err)
-> > +               return ERR_PTR(err);
-> > +
-> > +       return hw;
-> > +}
-> > +
-> > +static void bm1880_clk_unregister_pll(struct clk_hw *hw)
-> > +{
-> > +       struct bm1880_pll_hw_clock *pll_hw = to_bm1880_pll_clk(hw);
-> > +
-> > +       clk_hw_unregister(hw);
-> > +       kfree(pll_hw);
-> > +}
-> > +
-> > +static int bm1880_clk_register_plls(struct bm1880_pll_hw_clock *clks,
-> > +                            int num_clks, struct bm1880_clock_data *data)
-> > +{
-> > +       struct clk_hw *hw;
-> > +       void __iomem *pll_base = data->pll_base;
-> > +       int i;
-> > +
-> > +       for (i = 0; i < num_clks; i++) {
-> > +               struct bm1880_pll_hw_clock *bm1880_clk = &clks[i];
-> > +
-> > +               hw = bm1880_clk_register_pll(bm1880_clk, pll_base);
-> > +               if (IS_ERR(hw)) {
-> > +                       pr_err("%s: failed to register clock %s\n",
-> > +                              __func__, bm1880_clk->pll.name);
-> > +                       goto err_clk;
-> > +               }
-> > +
-> > +               data->clk_data->hws[clks[i].pll.id] = hw;
-> > +       }
-> > +
-> > +       return 0;
-> > +
-> > +err_clk:
-> > +       while (i--)
-> > +               bm1880_clk_unregister_pll(data->clk_data->hws[clks[i].pll.id]);
-> > +
-> > +       return PTR_ERR(hw);
-> > +}
-> > +
-> > +static int bm1880_clk_register_mux(const struct bm1880_mux_clock *clks,
-> > +                           int num_clks, struct bm1880_clock_data *data)
-> > +{
-> > +       struct clk_hw *hw;
-> > +       void __iomem *sys_base = data->sys_base;
-> > +       int i;
-> > +
-> > +       for (i = 0; i < num_clks; i++) {
-> > +               hw = clk_hw_register_mux(NULL, clks[i].name,
-> > +                                        clks[i].parents,
-> > +                                        clks[i].num_parents,
-> > +                                        clks[i].flags,
-> > +                                        sys_base + clks[i].reg,
-> > +                                        clks[i].shift, 1, 0,
-> > +                                        &bm1880_clk_lock);
-> > +               if (IS_ERR(hw)) {
-> > +                       pr_err("%s: failed to register clock %s\n",
-> > +                              __func__, clks[i].name);
-> > +                       goto err_clk;
-> > +               }
-> > +
-> > +               data->clk_data->hws[clks[i].id] = hw;
-> > +       }
-> > +
-> > +       return 0;
-> > +
-> > +err_clk:
-> > +       while (i--)
-> > +               clk_hw_unregister_mux(data->clk_data->hws[clks[i].id]);
-> > +
-> > +       return PTR_ERR(hw);
-> > +}
-> > +
-> > +static unsigned long bm1880_clk_div_recalc_rate(struct clk_hw *hw,
-> > +                                               unsigned long parent_rate)
-> > +{
-> > +       struct bm1880_div_hw_clock *div_hw = to_bm1880_div_clk(hw);
-> > +       struct bm1880_div_clock *div = &div_hw->div;
-> > +       void __iomem *reg_addr = div_hw->base + div->reg;
-> > +       unsigned int val;
-> > +       unsigned long rate;
-> > +
-> > +       if (!(readl(reg_addr) & BIT(3))) {
-> > +               val = div->initval;
-> > +       } else {
-> > +               val = readl(reg_addr) >> div->shift;
-> > +               val &= clk_div_mask(div->width);
-> > +       }
-> > +
-> > +       rate = divider_recalc_rate(hw, parent_rate, val, div->table,
-> > +                                  div->flags, div->width);
-> > +
-> > +       return rate;
-> > +}
-> > +
-> > +static long bm1880_clk_div_round_rate(struct clk_hw *hw, unsigned long rate,
-> > +                                     unsigned long *prate)
-> > +{
-> > +       struct bm1880_div_hw_clock *div_hw = to_bm1880_div_clk(hw);
-> > +       struct bm1880_div_clock *div = &div_hw->div;
-> > +       void __iomem *reg_addr = div_hw->base + div->reg;
-> > +
-> > +       if (div->flags & CLK_DIVIDER_READ_ONLY) {
-> > +               u32 val;
-> > +
-> > +               val = readl(reg_addr) >> div->shift;
-> > +               val &= clk_div_mask(div->width);
-> > +
-> > +               return divider_ro_round_rate(hw, rate, prate, div->table,
-> > +                                            div->width, div->flags,
-> > +                                            val);
-> > +       }
-> > +
-> > +       return divider_round_rate(hw, rate, prate, div->table,
-> > +                                 div->width, div->flags);
-> > +}
-> > +
-> > +static int bm1880_clk_div_set_rate(struct clk_hw *hw, unsigned long rate,
-> > +                                  unsigned long parent_rate)
-> > +{
-> > +       struct bm1880_div_hw_clock *div_hw = to_bm1880_div_clk(hw);
-> > +       struct bm1880_div_clock *div = &div_hw->div;
-> > +       void __iomem *reg_addr = div_hw->base + div->reg;
-> > +       unsigned long flags = 0;
-> > +       int value;
-> > +       u32 val;
-> > +
-> > +       value = divider_get_val(rate, parent_rate, div->table,
-> > +                               div->width, div_hw->div.flags);
-> > +       if (value < 0)
-> > +               return value;
-> > +
-> > +       if (div_hw->lock)
-> > +               spin_lock_irqsave(div_hw->lock, flags);
-> > +       else
-> > +               __acquire(div_hw->lock);
-> > +
-> > +       if (div->flags & CLK_DIVIDER_HIWORD_MASK) {
-> 
-> Is this used by your driver? As far as I can recall it was a
-> rockchip/hisilicon specific thing that hasn't happened since.
-> 
-
-Actually, this is used by the underlying IP but not currently used in BM1880.
-So, I can remove it. We can add it once the corresponding SoC is added.
-
-> > +               val = clk_div_mask(div->width) << (div_hw->div.shift + 16);
-> > +       } else {
-> > +               val = readl(reg_addr);
-> > +               val &= ~(clk_div_mask(div->width) << div_hw->div.shift);
-> > +       }
-> > +       val |= (u32)value << div->shift;
-> > +       writel(val, reg_addr);
-> > +
-> > +       if (div_hw->lock)
-> > +               spin_unlock_irqrestore(div_hw->lock, flags);
-> > +       else
-> > +               __release(div_hw->lock);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct clk_ops bm1880_clk_div_ops = {
-> > +       .recalc_rate = bm1880_clk_div_recalc_rate,
-> > +       .round_rate = bm1880_clk_div_round_rate,
-> > +       .set_rate = bm1880_clk_div_set_rate,
-> > +};
-> > +
-> > +static struct clk_hw *bm1880_clk_register_div(struct bm1880_div_hw_clock *div_clk,
-> > +                                   void __iomem *sys_base)
-> > +{
-> > +       struct clk_hw *hw;
-> > +       int err;
-> > +
-> > +       div_clk->div.flags = CLK_DIVIDER_ONE_BASED | CLK_DIVIDER_ALLOW_ZERO;
-> > +       div_clk->base = sys_base;
-> > +       div_clk->lock = &bm1880_clk_lock;
-> > +
-> > +       hw = &div_clk->hw;
-> > +       err = clk_hw_register(NULL, hw);
-> > +       if (err)
-> > +               return ERR_PTR(err);
-> > +
-> > +       return hw;
-> > +}
-> > +
-> > +static void bm1880_clk_unregister_div(struct clk_hw *hw)
-> > +{
-> > +       struct bm1880_div_hw_clock *div_hw = to_bm1880_div_clk(hw);
-> > +
-> > +       clk_hw_unregister(hw);
-> > +       kfree(div_hw);
-> > +}
-> > +
-> > +static int bm1880_clk_register_divs(struct bm1880_div_hw_clock *clks,
-> > +                            int num_clks, struct bm1880_clock_data *data)
-> > +{
-> > +       struct clk_hw *hw;
-> > +       void __iomem *sys_base = data->sys_base;
-> > +       int i;
-> > +
-> > +       for (i = 0; i < num_clks; i++) {
-> > +               struct bm1880_div_hw_clock *bm1880_clk = &clks[i];
-> > +
-> > +               hw = bm1880_clk_register_div(bm1880_clk, sys_base);
-> > +               if (IS_ERR(hw)) {
-> > +                       pr_err("%s: failed to register clock %s\n",
-> > +                              __func__, bm1880_clk->div.name);
-> > +                       goto err_clk;
-> > +               }
-> > +
-> > +               data->clk_data->hws[clks[i].div.id] = hw;
-> 
-> This line is overly complicated. Please use local variables.
->
-
-Ack.
- 
-> > +       }
-> > +
-> > +       return 0;
-> > +
-> > +err_clk:
-> > +       while (i--)
-> > +               bm1880_clk_unregister_div(data->clk_data->hws[clks[i].div.id]);
-> > +
-> > +       return PTR_ERR(hw);
-> > +}
-> > +
-> > +static int bm1880_clk_register_gate(const struct bm1880_gate_clock *clks,
-> > +                            int num_clks, struct bm1880_clock_data *data)
-> > +{
-> > +       struct clk_hw *hw;
-> > +       void __iomem *sys_base = data->sys_base;
-> > +       int i;
-> > +
-> > +       for (i = 0; i < num_clks; i++) {
-> > +               hw = clk_hw_register_gate(NULL, clks[i].name,
-> > +                                         clks[i].parent,
-> > +                                         clks[i].flags,
-> > +                                         sys_base + clks[i].gate_reg,
-> > +                                         clks[i].gate_shift,
-> > +                                       0,
-> > +                                       &bm1880_clk_lock);
-> 
-> Weird tabs here.
->
-
-Ack.
- 
-> > +               if (IS_ERR(hw)) {
-> > +                       pr_err("%s: failed to register clock %s\n",
-> > +                              __func__, clks[i].name);
-> > +                       goto err_clk;
-> > +               }
-> > +
-> > +               data->clk_data->hws[clks[i].id] = hw;
-> > +       }
-> > +
-> > +       return 0;
-> > +
-> > +err_clk:
-> > +       while (i--)
-> > +               clk_hw_unregister_gate(data->clk_data->hws[clks[i].id]);
-> > +
-> > +       return PTR_ERR(hw);
-> > +}
-> > +
-> > +static struct clk_hw *bm1880_clk_register_composite(struct bm1880_composite_clock *clks,
-> > +                                         void __iomem *sys_base)
-> > +{
-> > +       struct clk_hw *hw;
-> > +       struct clk_mux *mux = NULL;
-> > +       struct clk_gate *gate = NULL;
-> > +       struct bm1880_div_hw_clock *div_hws = NULL;
-> > +       struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *div_hw = NULL;
-> > +       const struct clk_ops *mux_ops = NULL, *gate_ops = NULL, *div_ops = NULL;
-> > +       const char * const *parent_names;
-> > +       const char *parent;
-> > +       int num_parents;
-> > +       int ret;
-> > +
-> > +       if (clks->mux_shift >= 0) {
-> > +               mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-> > +               if (!mux)
-> > +                       return ERR_PTR(-ENOMEM);
-> > +
-> > +               mux->reg = sys_base + clks->mux_reg;
-> > +               mux->mask = 1;
-> > +               mux->shift = clks->mux_shift;
-> > +               mux_hw = &mux->hw;
-> > +               mux_ops = &clk_mux_ops;
-> > +               mux->lock = &bm1880_clk_lock;
-> > +
-> > +               parent_names = clks->parents;
-> > +               num_parents = clks->num_parents;
-> > +       } else {
-> > +               parent = clks->parent;
-> > +               parent_names = &parent;
-> > +               num_parents = 1;
-> > +       }
-> > +
-> > +       if (clks->gate_shift >= 0) {
-> > +               gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-> > +               if (!gate) {
-> > +                       ret = -ENOMEM;
-> > +                       goto err_out;
-> > +               }
-> > +
-> > +               gate->reg = sys_base + clks->gate_reg;
-> > +               gate->bit_idx = clks->gate_shift;
-> > +               gate->lock = &bm1880_clk_lock;
-> > +
-> > +               gate_hw = &gate->hw;
-> > +               gate_ops = &clk_gate_ops;
-> > +       }
-> > +
-> > +       if (clks->div_shift >= 0) {
-> > +               div_hws = kzalloc(sizeof(*div_hws), GFP_KERNEL);
-> > +               if (!div_hws) {
-> > +                       ret = -ENOMEM;
-> > +                       goto err_out;
-> > +               }
-> > +
-> > +               div_hws->base = sys_base;
-> > +               div_hws->div.reg = clks->div_reg;
-> > +               div_hws->div.shift = clks->div_shift;
-> > +               div_hws->div.width = clks->div_width;
-> > +               div_hws->div.table = clks->table;
-> > +               div_hws->div.initval = clks->div_initval;
-> > +               div_hws->lock = &bm1880_clk_lock;
-> > +               div_hws->div.flags = CLK_DIVIDER_ONE_BASED |
-> > +                                    CLK_DIVIDER_ALLOW_ZERO;
-> > +
-> > +               div_hw = &div_hws->hw;
-> > +               div_ops = &bm1880_clk_div_ops;
-> > +       }
-> > +
-> > +       hw = clk_hw_register_composite(NULL, clks->name, parent_names,
-> > +                                      num_parents, mux_hw, mux_ops, div_hw,
-> > +                                      div_ops, gate_hw, gate_ops,
-> > +                                      clks->flags);
-> > +
-> 
-> All of these need to be removed on probe failure. Any plans to do so?
->
-
-Removing the composite clocks during failure is handled one level up, in
-bm1880_clk_register_composites().
- 
-> > +       if (IS_ERR(hw)) {
-> > +               ret = PTR_ERR(hw);
-> > +               goto err_out;
-> > +       }
-> > +
-> > +       return hw;
-> > +
-> > +err_out:
-> > +       kfree(div_hws);
-> > +       kfree(gate);
-> > +       kfree(mux);
-> > +
-> > +       return ERR_PTR(ret);
-> > +}
-> > +
-> > +static int bm1880_clk_register_composites(struct bm1880_composite_clock *clks,
-> > +                                  int num_clks, struct bm1880_clock_data *data)
-> > +{
-> > +       struct clk_hw *hw;
-> > +       void __iomem *sys_base = data->sys_base;
-> > +       int i;
-> > +
-> > +       for (i = 0; i < num_clks; i++) {
-> > +               struct bm1880_composite_clock *bm1880_clk = &clks[i];
-> > +
-> > +               hw = bm1880_clk_register_composite(bm1880_clk, sys_base);
-> > +               if (IS_ERR(hw)) {
-> > +                       pr_err("%s: failed to register clock %s\n",
-> > +                              __func__, bm1880_clk->name);
-> > +                       goto err_clk;
-> > +               }
-> > +
-> > +               data->clk_data->hws[clks[i].id] = hw;
-> > +       }
-> > +
-> > +       return 0;
-> > +
-> > +err_clk:
-> > +       while (i--)
-> > +               clk_hw_unregister_composite(data->clk_data->hws[clks[i].id]);
-> > +
-> > +       return PTR_ERR(hw);
-> > +}
-> > +
-> > +static int bm1880_clk_probe(struct platform_device *pdev)
-> > +{
-> > +       struct bm1880_clock_data *clk_data;
-> > +       void __iomem *pll_base, *sys_base;
-> > +       struct device_node *np = pdev->dev.of_node;
-> > +       struct device *dev = &pdev->dev;
-> > +       struct resource *res;
-> > +       struct clk_hw_onecell_data *clk_hw_data;
-> > +       int num_clks, i;
-> > +
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       pll_base = devm_ioremap_resource(&pdev->dev, res);
-> > +       if (IS_ERR(pll_base))
-> > +               return PTR_ERR(pll_base);
-> > +
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > +       sys_base = devm_ioremap_resource(&pdev->dev, res);
-> > +       if (IS_ERR(sys_base))
-> > +               return PTR_ERR(sys_base);
-> > +
-> > +       clk_data = devm_kzalloc(dev, sizeof(*clk_data), GFP_KERNEL);
-> > +       if (!clk_data)
-> > +               return -ENOMEM;
-> > +
-> > +       clk_data->pll_base = pll_base;
-> > +       clk_data->sys_base = sys_base;
-> > +
-> > +       num_clks = ARRAY_SIZE(bm1880_pll_clks) +
-> > +                  ARRAY_SIZE(bm1880_div_clks) +
-> > +                  ARRAY_SIZE(bm1880_mux_clks) +
-> > +                  ARRAY_SIZE(bm1880_composite_clks) +
-> > +                  ARRAY_SIZE(bm1880_gate_clks);
-> > +
-> > +       clk_hw_data = devm_kzalloc(&pdev->dev, struct_size(clk_hw_data, hws,
-> > +                                         num_clks), GFP_KERNEL);
-> > +       if (!clk_hw_data)
-> > +               return -ENOMEM;
-> > +
-> > +       clk_data->clk_data = clk_hw_data;
-> > +
-> > +       for (i = 0; i < num_clks; i++)
-> > +               clk_data->clk_data->hws[i] = ERR_PTR(-ENOENT);
-> > +
-> > +       clk_data->clk_data->num = num_clks;
-> > +
-> > +       bm1880_clk_register_plls(bm1880_pll_clks,
-> > +                                ARRAY_SIZE(bm1880_pll_clks),
-> > +                                clk_data);
-> > +
-> > +       bm1880_clk_register_divs(bm1880_div_clks,
-> > +                                ARRAY_SIZE(bm1880_div_clks),
-> > +                                clk_data);
-> > +
-> > +       bm1880_clk_register_mux(bm1880_mux_clks,
-> > +                               ARRAY_SIZE(bm1880_mux_clks),
-> > +                               clk_data);
-> > +
-> > +       bm1880_clk_register_composites(bm1880_composite_clks,
-> > +                                      ARRAY_SIZE(bm1880_composite_clks),
-> > +                                      clk_data);
-> > +
-> > +       bm1880_clk_register_gate(bm1880_gate_clks,
-> > +                                ARRAY_SIZE(bm1880_gate_clks),
-> > +                                clk_data);
-> > +
-> > +       return of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
-> 
-> Can you use devm_of_clk_add_hw_provider()?
-> 
-
-okay.
+Applied to hwmon-next.
 
 Thanks,
-Mani
+Guenter
 
-> > +                                     clk_data->clk_data);
-> > +}
+> ---
+> Changes in v2:
+>  * define AXI_PCORE macros in the driver source for now;
+>  * include linux/bits.h;
+>  * axi_fan_control_io{read/write} renamed with shorter names;
+>  * Make sure tach is != 0 when getting the fan rpm;
+>  * Read only once the clk rate;
+>  * Remove unneeded struct clk;
+>  * Fixed typo in millidegrees;
+>  * Use devm_platform_ioremap_resource();
+>  * Remove unneeded error logs;
+>  * Check valid values for pulses per revolution;
+>  * Clear the fault attribute after reading it;
+>  * Notify userspace if HW changed the PWM;
+>  * Add comments on how the core works in other to better understand the IRQ handling.
+> 
+>  MAINTAINERS                     |   7 +
+>  drivers/hwmon/Kconfig           |   9 +
+>  drivers/hwmon/Makefile          |   1 +
+>  drivers/hwmon/axi-fan-control.c | 473 ++++++++++++++++++++++++++++++++
+>  4 files changed, 490 insertions(+)
+>  create mode 100644 drivers/hwmon/axi-fan-control.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 296de2b51c83..caa80ae1925e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2873,6 +2873,13 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/sound/axentia,*
+>  F:	sound/soc/atmel/tse850-pcm5142.c
+>  
+> +AXI-FAN-CONTROL HARDWARE MONITOR DRIVER
+> +M:	Nuno Sá <nuno.sa@analog.com>
+> +W:	http://ez.analog.com/community/linux-device-drivers
+> +L:	linux-hwmon@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/hwmon/axi-fan-control.c
+> +
+>  AXXIA I2C CONTROLLER
+>  M:	Krzysztof Adamski <krzysztof.adamski@nokia.com>
+>  L:	linux-i2c@vger.kernel.org
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 7b6c4025b827..ca53bb33b965 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -269,6 +269,15 @@ config SENSORS_ASC7621
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called asc7621.
+>  
+> +config SENSORS_AXI_FAN_CONTROL
+> +	tristate "Analog Devices FAN Control HDL Core driver"
+> +	help
+> +	  If you say yes here you get support for the Analog Devices
+> +	  AXI HDL FAN monitoring core.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called axi-fan-control
+> +
+>  config SENSORS_K8TEMP
+>  	tristate "AMD Athlon64/FX or Opteron temperature sensor"
+>  	depends on X86 && PCI
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 40c036ea45e6..dcb4b64e1f4d 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_SENSORS_AS370)	+= as370-hwmon.o
+>  obj-$(CONFIG_SENSORS_ASC7621)	+= asc7621.o
+>  obj-$(CONFIG_SENSORS_ASPEED)	+= aspeed-pwm-tacho.o
+>  obj-$(CONFIG_SENSORS_ATXP1)	+= atxp1.o
+> +obj-$(CONFIG_SENSORS_AXI_FAN_CONTROL) += axi-fan-control.o
+>  obj-$(CONFIG_SENSORS_CORETEMP)	+= coretemp.o
+>  obj-$(CONFIG_SENSORS_DA9052_ADC)+= da9052-hwmon.o
+>  obj-$(CONFIG_SENSORS_DA9055)+= da9055-hwmon.o
+> diff --git a/drivers/hwmon/axi-fan-control.c b/drivers/hwmon/axi-fan-control.c
+> new file mode 100644
+> index 000000000000..6c1bd3269c8c
+> --- /dev/null
+> +++ b/drivers/hwmon/axi-fan-control.c
+> @@ -0,0 +1,473 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Fan Control HDL CORE driver
+> + *
+> + * Copyright 2019 Analog Devices Inc.
+> + */
+> +#include <linux/bits.h>
+> +#include <linux/clk.h>
+> +#include <linux/fpga/adi-axi-common.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define ADI_AXI_PCORE_VER_MAJOR(version)	(((version) >> 16) & 0xff)
+> +#define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
+> +#define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
+> +
+> +/* register map */
+> +#define ADI_REG_RSTN		0x0080
+> +#define ADI_REG_PWM_WIDTH	0x0084
+> +#define ADI_REG_TACH_PERIOD	0x0088
+> +#define ADI_REG_TACH_TOLERANCE	0x008c
+> +#define ADI_REG_PWM_PERIOD	0x00c0
+> +#define ADI_REG_TACH_MEASUR	0x00c4
+> +#define ADI_REG_TEMPERATURE	0x00c8
+> +
+> +#define ADI_REG_IRQ_MASK	0x0040
+> +#define ADI_REG_IRQ_PENDING	0x0044
+> +#define ADI_REG_IRQ_SRC		0x0048
+> +
+> +/* IRQ sources */
+> +#define ADI_IRQ_SRC_PWM_CHANGED		BIT(0)
+> +#define ADI_IRQ_SRC_TACH_ERR		BIT(1)
+> +#define ADI_IRQ_SRC_TEMP_INCREASE	BIT(2)
+> +#define ADI_IRQ_SRC_NEW_MEASUR		BIT(3)
+> +#define ADI_IRQ_SRC_MASK		GENMASK(3, 0)
+> +#define ADI_IRQ_MASK_OUT_ALL		0xFFFFFFFFU
+> +
+> +#define SYSFS_PWM_MAX			255
+> +
+> +struct axi_fan_control_data {
+> +	void __iomem *base;
+> +	struct device *hdev;
+> +	unsigned long clk_rate;
+> +	int irq;
+> +	/* pulses per revolution */
+> +	u32 ppr;
+> +	bool hw_pwm_req;
+> +	bool update_tacho_params;
+> +	u8 fan_fault;
+> +};
+> +
+> +static inline void axi_iowrite(const u32 val, const u32 reg,
+> +			       const struct axi_fan_control_data *ctl)
+> +{
+> +	iowrite32(val, ctl->base + reg);
+> +}
+> +
+> +static inline u32 axi_ioread(const u32 reg,
+> +			     const struct axi_fan_control_data *ctl)
+> +{
+> +	return ioread32(ctl->base + reg);
+> +}
+> +
+> +static long axi_fan_control_get_pwm_duty(const struct axi_fan_control_data *ctl)
+> +{
+> +	u32 pwm_width = axi_ioread(ADI_REG_PWM_WIDTH, ctl);
+> +	u32 pwm_period = axi_ioread(ADI_REG_PWM_PERIOD, ctl);
+> +	/*
+> +	 * PWM_PERIOD is a RO register set by the core. It should never be 0.
+> +	 * For now we are trusting the HW...
+> +	 */
+> +	return DIV_ROUND_CLOSEST(pwm_width * SYSFS_PWM_MAX, pwm_period);
+> +}
+> +
+> +static int axi_fan_control_set_pwm_duty(const long val,
+> +					struct axi_fan_control_data *ctl)
+> +{
+> +	u32 pwm_period = axi_ioread(ADI_REG_PWM_PERIOD, ctl);
+> +	u32 new_width;
+> +	long __val = clamp_val(val, 0, SYSFS_PWM_MAX);
+> +
+> +	new_width = DIV_ROUND_CLOSEST(__val * pwm_period, SYSFS_PWM_MAX);
+> +
+> +	axi_iowrite(new_width, ADI_REG_PWM_WIDTH, ctl);
+> +
+> +	return 0;
+> +}
+> +
+> +static long axi_fan_control_get_fan_rpm(const struct axi_fan_control_data *ctl)
+> +{
+> +	const u32 tach = axi_ioread(ADI_REG_TACH_MEASUR, ctl);
+> +
+> +	if (tach == 0)
+> +		/* should we return error, EAGAIN maybe? */
+> +		return 0;
+> +	/*
+> +	 * The tacho period should be:
+> +	 *      TACH = 60/(ppr * rpm), where rpm is revolutions per second
+> +	 *      and ppr is pulses per revolution.
+> +	 * Given the tacho period, we can multiply it by the input clock
+> +	 * so that we know how many clocks we need to have this period.
+> +	 * From this, we can derive the RPM value.
+> +	 */
+> +	return DIV_ROUND_CLOSEST(60 * ctl->clk_rate, ctl->ppr * tach);
+> +}
+> +
+> +static int axi_fan_control_read_temp(struct device *dev, u32 attr, long *val)
+> +{
+> +	struct axi_fan_control_data *ctl = dev_get_drvdata(dev);
+> +	long raw_temp;
+> +
+> +	switch (attr) {
+> +	case hwmon_temp_input:
+> +		raw_temp = axi_ioread(ADI_REG_TEMPERATURE, ctl);
+> +		/*
+> +		 * The formula for the temperature is:
+> +		 *      T = (ADC * 501.3743 / 2^bits) - 273.6777
+> +		 * It's multiplied by 1000 to have millidegrees as
+> +		 * specified by the hwmon sysfs interface.
+> +		 */
+> +		*val = ((raw_temp * 501374) >> 16) - 273677;
+> +		return 0;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +}
+> +
+> +static int axi_fan_control_read_fan(struct device *dev, u32 attr, long *val)
+> +{
+> +	struct axi_fan_control_data *ctl = dev_get_drvdata(dev);
+> +
+> +	switch (attr) {
+> +	case hwmon_fan_fault:
+> +		*val = ctl->fan_fault;
+> +		/* clear it now */
+> +		ctl->fan_fault = 0;
+> +		return 0;
+> +	case hwmon_fan_input:
+> +		*val = axi_fan_control_get_fan_rpm(ctl);
+> +		return 0;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +}
+> +
+> +static int axi_fan_control_read_pwm(struct device *dev, u32 attr, long *val)
+> +{
+> +	struct axi_fan_control_data *ctl = dev_get_drvdata(dev);
+> +
+> +	switch (attr) {
+> +	case hwmon_pwm_input:
+> +		*val = axi_fan_control_get_pwm_duty(ctl);
+> +		return 0;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +}
+> +
+> +static int axi_fan_control_write_pwm(struct device *dev, u32 attr, long val)
+> +{
+> +	struct axi_fan_control_data *ctl = dev_get_drvdata(dev);
+> +
+> +	switch (attr) {
+> +	case hwmon_pwm_input:
+> +		return axi_fan_control_set_pwm_duty(val, ctl);
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +}
+> +
+> +static int axi_fan_control_read_labels(struct device *dev,
+> +				       enum hwmon_sensor_types type,
+> +				       u32 attr, int channel, const char **str)
+> +{
+> +	switch (type) {
+> +	case hwmon_fan:
+> +		*str = "FAN";
+> +		return 0;
+> +	case hwmon_temp:
+> +		*str = "SYSMON4";
+> +		return 0;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +}
+> +
+> +static int axi_fan_control_read(struct device *dev,
+> +				enum hwmon_sensor_types type,
+> +				u32 attr, int channel, long *val)
+> +{
+> +	switch (type) {
+> +	case hwmon_fan:
+> +		return axi_fan_control_read_fan(dev, attr, val);
+> +	case hwmon_pwm:
+> +		return axi_fan_control_read_pwm(dev, attr, val);
+> +	case hwmon_temp:
+> +		return axi_fan_control_read_temp(dev, attr, val);
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +}
+> +
+> +static int axi_fan_control_write(struct device *dev,
+> +				 enum hwmon_sensor_types type,
+> +				 u32 attr, int channel, long val)
+> +{
+> +	switch (type) {
+> +	case hwmon_pwm:
+> +		return axi_fan_control_write_pwm(dev, attr, val);
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +}
+> +
+> +static umode_t axi_fan_control_fan_is_visible(const u32 attr)
+> +{
+> +	switch (attr) {
+> +	case hwmon_fan_input:
+> +	case hwmon_fan_fault:
+> +	case hwmon_fan_label:
+> +		return 0444;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static umode_t axi_fan_control_pwm_is_visible(const u32 attr)
+> +{
+> +	switch (attr) {
+> +	case hwmon_pwm_input:
+> +		return 0644;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static umode_t axi_fan_control_temp_is_visible(const u32 attr)
+> +{
+> +	switch (attr) {
+> +	case hwmon_temp_input:
+> +	case hwmon_temp_label:
+> +		return 0444;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static umode_t axi_fan_control_is_visible(const void *data,
+> +					  enum hwmon_sensor_types type,
+> +					  u32 attr, int channel)
+> +{
+> +	switch (type) {
+> +	case hwmon_fan:
+> +		return axi_fan_control_fan_is_visible(attr);
+> +	case hwmon_pwm:
+> +		return axi_fan_control_pwm_is_visible(attr);
+> +	case hwmon_temp:
+> +		return axi_fan_control_temp_is_visible(attr);
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +/*
+> + * This core has two main ways of changing the PWM duty cycle. It is done,
+> + * either by a request from userspace (writing on pwm1_input) or by the
+> + * core itself. When the change is done by the core, it will use predefined
+> + * parameters to evaluate the tach signal and, on that case we cannot set them.
+> + * On the other hand, when the request is done by the user, with some arbitrary
+> + * value that the core does not now about, we have to provide the tach
+> + * parameters so that, the core can evaluate the signal. On the IRQ handler we
+> + * distinguish this by using the ADI_IRQ_SRC_TEMP_INCREASE interrupt. This tell
+> + * us that the CORE requested a new duty cycle. After this, there is 5s delay
+> + * on which the core waits for the fan rotation speed to stabilize. After this
+> + * we get ADI_IRQ_SRC_PWM_CHANGED irq where we will decide if we need to set
+> + * the tach parameters or not on the next tach measurement cycle (corresponding
+> + * already to the ney duty cycle) based on the %ctl->hw_pwm_req flag.
+> + */
+> +static irqreturn_t axi_fan_control_irq_handler(int irq, void *data)
+> +{
+> +	struct axi_fan_control_data *ctl = (struct axi_fan_control_data *)data;
+> +	u32 irq_pending = axi_ioread(ADI_REG_IRQ_PENDING, ctl);
+> +	u32 clear_mask;
+> +
+> +	if (irq_pending & ADI_IRQ_SRC_NEW_MEASUR) {
+> +		if (ctl->update_tacho_params) {
+> +			u32 new_tach = axi_ioread(ADI_REG_TACH_MEASUR, ctl);
+> +
+> +			/* get 25% tolerance */
+> +			u32 tach_tol = DIV_ROUND_CLOSEST(new_tach * 25, 100);
+> +			/* set new tacho parameters */
+> +			axi_iowrite(new_tach, ADI_REG_TACH_PERIOD, ctl);
+> +			axi_iowrite(tach_tol, ADI_REG_TACH_TOLERANCE, ctl);
+> +			ctl->update_tacho_params = false;
+> +		}
+> +	}
+> +
+> +	if (irq_pending & ADI_IRQ_SRC_PWM_CHANGED) {
+> +		/*
+> +		 * if the pwm changes on behalf of software,
+> +		 * we need to provide new tacho parameters to the core.
+> +		 * Wait for the next measurement for that...
+> +		 */
+> +		if (!ctl->hw_pwm_req) {
+> +			ctl->update_tacho_params = true;
+> +		} else {
+> +			ctl->hw_pwm_req = false;
+> +			sysfs_notify(&ctl->hdev->kobj, NULL, "pwm1");
+> +		}
+> +	}
+> +
+> +	if (irq_pending & ADI_IRQ_SRC_TEMP_INCREASE)
+> +		/* hardware requested a new pwm */
+> +		ctl->hw_pwm_req = true;
+> +
+> +	if (irq_pending & ADI_IRQ_SRC_TACH_ERR)
+> +		ctl->fan_fault = 1;
+> +
+> +	/* clear all interrupts */
+> +	clear_mask = irq_pending & ADI_IRQ_SRC_MASK;
+> +	axi_iowrite(clear_mask, ADI_REG_IRQ_PENDING, ctl);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int axi_fan_control_init(struct axi_fan_control_data *ctl,
+> +				const struct device_node *np)
+> +{
+> +	int ret;
+> +
+> +	/* get fan pulses per revolution */
+> +	ret = of_property_read_u32(np, "adi,pulses-per-revolution", &ctl->ppr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* 1, 2 and 4 are the typical and accepted values */
+> +	if (ctl->ppr != 1 && ctl->ppr != 2 && ctl->ppr != 4)
+> +		return -EINVAL;
+> +	/*
+> +	 * Enable all IRQs
+> +	 */
+> +	axi_iowrite(ADI_IRQ_MASK_OUT_ALL &
+> +		    ~(ADI_IRQ_SRC_NEW_MEASUR | ADI_IRQ_SRC_TACH_ERR |
+> +		      ADI_IRQ_SRC_PWM_CHANGED | ADI_IRQ_SRC_TEMP_INCREASE),
+> +		    ADI_REG_IRQ_MASK, ctl);
+> +
+> +	/* bring the device out of reset */
+> +	axi_iowrite(0x01, ADI_REG_RSTN, ctl);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct hwmon_channel_info *axi_fan_control_info[] = {
+> +	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_INPUT),
+> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_FAULT | HWMON_F_LABEL),
+> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT | HWMON_T_LABEL),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops axi_fan_control_hwmon_ops = {
+> +	.is_visible = axi_fan_control_is_visible,
+> +	.read = axi_fan_control_read,
+> +	.write = axi_fan_control_write,
+> +	.read_string = axi_fan_control_read_labels,
+> +};
+> +
+> +static const struct hwmon_chip_info axi_chip_info = {
+> +	.ops = &axi_fan_control_hwmon_ops,
+> +	.info = axi_fan_control_info,
+> +};
+> +
+> +static const u32 version_1_0_0 = ADI_AXI_PCORE_VER(1, 0, 'a');
+> +
+> +static const struct of_device_id axi_fan_control_of_match[] = {
+> +	{ .compatible = "adi,axi-fan-control-1.00.a",
+> +		.data = (void *)&version_1_0_0},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, axi_fan_control_of_match);
+> +
+> +static int axi_fan_control_probe(struct platform_device *pdev)
+> +{
+> +	struct axi_fan_control_data *ctl;
+> +	struct clk *clk;
+> +	const struct of_device_id *id;
+> +	const char *name = "axi_fan_control";
+> +	struct resource *res;
+> +	u32 version;
+> +	int ret;
+> +
+> +	id = of_match_node(axi_fan_control_of_match, pdev->dev.of_node);
+> +	if (!id)
+> +		return -EINVAL;
+> +
+> +	ctl = devm_kzalloc(&pdev->dev, sizeof(*ctl), GFP_KERNEL);
+> +	if (!ctl)
+> +		return -ENOMEM;
+> +
+> +	ctl->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(ctl->base))
+> +		return PTR_ERR(ctl->base);
+> +
+> +	clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(clk)) {
+> +		dev_err(&pdev->dev, "clk_get failed with %ld\n", PTR_ERR(clk));
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	ctl->clk_rate = clk_get_rate(clk);
+> +	if (!ctl->clk_rate)
+> +		return -EINVAL;
+> +
+> +	dev_dbg(&pdev->dev, "Re-mapped from 0x%08llX to %p\n",
+> +		(unsigned long long)res->start, ctl->base);
+> +
+> +	version = axi_ioread(ADI_AXI_REG_VERSION, ctl);
+> +	if (ADI_AXI_PCORE_VER_MAJOR(version) !=
+> +	    ADI_AXI_PCORE_VER_MAJOR((*(u32 *)id->data))) {
+> +		dev_err(&pdev->dev, "Major version mismatch. Expected %d.%.2d.%c, Reported %d.%.2d.%c\n",
+> +			ADI_AXI_PCORE_VER_MAJOR((*(u32 *)id->data)),
+> +			ADI_AXI_PCORE_VER_MINOR((*(u32 *)id->data)),
+> +			ADI_AXI_PCORE_VER_PATCH((*(u32 *)id->data)),
+> +			ADI_AXI_PCORE_VER_MAJOR(version),
+> +			ADI_AXI_PCORE_VER_MINOR(version),
+> +			ADI_AXI_PCORE_VER_PATCH(version));
+> +		return -ENODEV;
+> +	}
+> +
+> +	ctl->irq = platform_get_irq(pdev, 0);
+> +	if (ctl->irq < 0)
+> +		return ctl->irq;
+> +
+> +	ret = devm_request_threaded_irq(&pdev->dev, ctl->irq, NULL,
+> +					axi_fan_control_irq_handler,
+> +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> +					pdev->driver_override, ctl);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to request an irq, %d", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = axi_fan_control_init(ctl, pdev->dev.of_node);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to initialize device\n");
+> +		return ret;
+> +	}
+> +
+> +	ctl->hdev = devm_hwmon_device_register_with_info(&pdev->dev,
+> +							 name,
+> +							 ctl,
+> +							 &axi_chip_info,
+> +							 NULL);
+> +
+> +	return PTR_ERR_OR_ZERO(ctl->hdev);
+> +}
+> +
+> +static struct platform_driver axi_fan_control_driver = {
+> +	.driver = {
+> +		.name = "axi_fan_control_driver",
+> +		.of_match_table = axi_fan_control_of_match,
+> +	},
+> +	.probe = axi_fan_control_probe,
+> +};
+> +module_platform_driver(axi_fan_control_driver);
+> +
+> +MODULE_AUTHOR("Nuno Sa <nuno.sa@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices Fan Control HDL CORE driver");
+> +MODULE_LICENSE("GPL");
