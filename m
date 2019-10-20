@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52327CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 13:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08A6CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 13:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E164121929
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 13:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9156B222D3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 13:42:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Sr+bIfZy"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="GEonPDHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfJTNmd (ORCPT
+        id S1726475AbfJTNme (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 09:42:33 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52574 "EHLO vps.xff.cz"
+        Sun, 20 Oct 2019 09:42:34 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52620 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbfJTNmd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726349AbfJTNmd (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sun, 20 Oct 2019 09:42:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1571578951; bh=h4J7KFQapQWjRwMMa+Q2cRD0P8kG4K/9cQRm/b5HHnQ=;
+        t=1571578952; bh=HFSrXSPJyZ/r/g3KvWIYj4ef7s1MoOfxTtkAX4wXq50=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=Sr+bIfZyaJ4sTS/2FZC+LKnzMqIF6Wg4O+iT121liaIdH9LvxF3eIU1rrGRVcvzWO
-         BQM34AnljVaFATVoFPUD1o37TzYEOUVy7U7M9xf/F6UNRIeQ2/4PU018P0C/b94Vcp
-         XaerfWkcwSrymJUXdKJ2KrXa63ErNsNzZKpFXaY8=
+        b=GEonPDHa6dAj8IQNI362IJTat+lXX4X4xGT0W2YVbPkzUHdnZVue/WOTLUDFmZ69Z
+         WWTwVUFThlPCZiwNH0XMpsghZETlWi87QbUsDa/pDWDVf304lGaGQba8yufiED//2I
+         /IT0A2cQYtcw/ZwIyXjalxDOXonEOOeG9/5vCZVY=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -37,14 +37,14 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
         Thomas Gleixner <tglx@linutronix.de>,
         Arnd Bergmann <arnd@arndb.de>
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/4] dt-bindings: Add bindings for USB3 phy on Allwinner H6
-Date:   Sun, 20 Oct 2019 15:42:26 +0200
-Message-Id: <20191020134229.1216351-2-megous@megous.com>
+        linux-arm-kernel@lists.infradead.org,
+        Ondrej Jirman <megous@megous.com>
+Subject: [PATCH 3/4] arm64: dts: allwinner: h6: add USB3 device nodes
+Date:   Sun, 20 Oct 2019 15:42:28 +0200
+Message-Id: <20191020134229.1216351-4-megous@megous.com>
 In-Reply-To: <20191020134229.1216351-1-megous@megous.com>
 References: <20191020134229.1216351-1-megous@megous.com>
 MIME-Version: 1.0
@@ -54,72 +54,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-external USB3 pins of the SoC.
+Allwinner H6 SoC features USB3 functionality, with a DWC3 controller and
+a custom PHY.
 
-Add a device tree binding for the PHY.
+Add device tree nodes for them.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 ---
- .../phy/allwinner,sun50i-h6-usb3-phy.yaml     | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 32 ++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-new file mode 100644
-index 000000000000..2fdc890748db
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Ondrej Jirman <megous@megous.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/allwinner,sun50i-h6-usb3-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 0d5ea19336a1..80233db478e6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -537,6 +537,38 @@
+ 			status = "disabled";
+ 		};
+ 
++		dwc3: dwc3@5200000 {
++			compatible = "snps,dwc3";
++			reg = <0x05200000 0x10000>;
++			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_XHCI>,
++				 <&ccu CLK_BUS_XHCI>,
++				 <&rtc 0>;
++			clock-names = "ref", "bus_early", "suspend";
++			resets = <&ccu RST_BUS_XHCI>;
++			/*
++			 * The datasheet of the chip doesn't declare the
++			 * peripheral function, and there's no boards known
++			 * to have a USB Type-B port routed to the port.
++			 * In addition, no one has tested the peripheral
++			 * function yet.
++			 * So set the dr_mode to "host" in the DTSI file.
++			 */
++			dr_mode = "host";
++			phys = <&usb3phy>;
++			phy-names = "usb3-phy";
++			status = "disabled";
++		};
 +
-+title: Allwinner sun50i USB3 PHY
++		usb3phy: phy@5210000 {
++			compatible = "allwinner,sun50i-h6-usb3-phy";
++			reg = <0x5210000 0x10000>;
++			clocks = <&ccu CLK_USB_PHY1>;
++			resets = <&ccu RST_USB_PHY1>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
 +
-+maintainers:
-+  - Ondrej Jirman <megous@megous.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun50i-h6-usb3-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+  - "#phy-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun50i-h6-ccu.h>
-+    #include <dt-bindings/reset/sun50i-h6-ccu.h>
-+    phy@5210000 {
-+          compatible = "allwinner,sun50i-h6-usb3-phy";
-+          reg = <0x5210000 0x10000>;
-+          clocks = <&ccu CLK_USB_PHY1>;
-+          resets = <&ccu RST_USB_PHY1>;
-+          #phy-cells = <0>;
-+    };
+ 		ehci3: usb@5311000 {
+ 			compatible = "allwinner,sun50i-h6-ehci", "generic-ehci";
+ 			reg = <0x05311000 0x100>;
 -- 
 2.23.0
 
