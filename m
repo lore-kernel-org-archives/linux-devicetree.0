@@ -2,325 +2,229 @@ Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F304CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 14:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5697FCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 14:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88AA21928
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 14:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571580003;
-	bh=dJPbKdcJSzXbptQK//XpIi5kDh3BWFfFpMSmRiLd+iI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XJlMbhMxDS/qW9WbrM2PRS45zl+US0tVBx7uUG2dykYQMfHP/uD1wINuD81Hy+jLs
-	 R6Jzsn2mfVCL/v6MBt2zaTnqn/5A4qZtjgxoDCogq7NWcqrKpC62XOq5KQ2KqhzcPx
-	 2qk2rvcfWxneh6qaYOb47aM5NjoNx3hPUOEpm6ZY=
+	by mail.kernel.org (Postfix) with ESMTP id 2090E21D80
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 14:35:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S5KHl+cR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbfJTOAD (ORCPT
+        id S1726373AbfJTOfy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 10:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfJTOAC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 20 Oct 2019 10:00:02 -0400
-Received: from localhost (unknown [106.51.108.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA33221835;
-        Sun, 20 Oct 2019 14:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571580001;
-        bh=dJPbKdcJSzXbptQK//XpIi5kDh3BWFfFpMSmRiLd+iI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=y+4PNmnb2iFDucdONLx+ZV2n+HrKsZu2LDRPoEw3wwEya+INUdmj0vmD1Sj+ZyFfP
-         6XPvCCHl1tedShe5sLdLzQlcySprmWYY7U/kTztvJ2MzyTqraBfTOELNGhikrU6eZJ
-         w2F9AEKapQtjxn4rrJdDtdVta5mApmbkjDtUznWM=
-Date:   Sun, 20 Oct 2019 19:29:52 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Green Wan <green.wan@sifive.com>
-Cc:     linux-hackers@sifive.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] dmaengine: sf-pdma: add platform DMA support for
- HiFive Unleashed A00
-Message-ID: <20191020135952.GU2654@vkoul-mobl>
-References: <20191003090945.29210-1-green.wan@sifive.com>
- <20191003090945.29210-4-green.wan@sifive.com>
+        Sun, 20 Oct 2019 10:35:54 -0400
+Received: from mail-eopbgr60082.outbound.protection.outlook.com ([40.107.6.82]:60193
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726372AbfJTOfy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 20 Oct 2019 10:35:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a/NRTe9QbYqtq+8ebXEIemLMFdeiJtPCKTuuFGQvaF3AO6NTi5T1AOUDpgeoIMsgpBXaWCwO2P0P943WvK6XJpkAGebl5dO0K9mRn4M6Ig4wWrCklnfBIAvE7HhDcjouZcPXww6Pwj5tcwoLnVhh2+phuvd+SIQYh59Q2xbxq18iyb+HHBTVBrAMrq7Fu1r9K+x3m/qcy9CTBowvJA6y4MGx7R1Qg6IvBP5TP9blXGPLxL7nhbetTw4cjPaWQUwaNoUSUqHaTmwE4C2zlnUJzKjICcW6za6oFiLNoz4dORkEakyeUFdsyTDSdUcacWPNKzi6NeYxociFeVM/u2x8xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZunBzdSgqBn83vfFWhTnPpKuEPQF6jQl+q0Vn5Js/uo=;
+ b=b/cmwZ1z+Wl6eNgBhv5m+bZ+XpztWFGocXSDD6BKhex0v0lp6IgHg+3wcw1SHvy4T95vdikx2YzLCvP/4McHuZ1Vl4JPcZ+5rSjGuHxoBtHyZUmLXHWCfBua7watEoJzThfdQB+j2T0AJX0eD/6cB3eakONDMrLpamt4hZYq3RH28OZD3rrRiaiFqm52+r1WE1oTlZYQtloUJOUQ3gvHOk5SWfFaUe+ffq26P1hUafD587Igsg6pdpK91VsBx+Qcpygvy//KeTsjdDcxebgYsLILi/gRr+PH020Seo30KSmTvLmpelWtHcE3smPUD8dbOGdLGfekqPsB0l33lT0vOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZunBzdSgqBn83vfFWhTnPpKuEPQF6jQl+q0Vn5Js/uo=;
+ b=S5KHl+cRFBuMCen/Hht51k5T7zqT5LbG5DzrqNGmEPjOaqGKkVvPYmWw+FAnuPor5Kot2HoB7Z7IDMzppZitPBTUK6v5D99wWpBsaBchObAilvZpRc8UZBEoysOWZYXmNWW0KJ3PzW5bAPfcdSMmIcNgMnHBAePgQkXxqcMvLkQ=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB4644.eurprd04.prod.outlook.com (52.135.149.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Sun, 20 Oct 2019 14:35:47 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::4122:fda5:e903:8c02]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::4122:fda5:e903:8c02%3]) with mapi id 15.20.2347.028; Sun, 20 Oct 2019
+ 14:35:47 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>, Jun Li <jun.li@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "angus@akkea.ca" <angus@akkea.ca>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        Troy Kisky <troy.kisky@boundarydevices.com>,
+        Gary Bisson <gary.bisson@boundarydevices.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        Richard Hu <richard.hu@technexion.com>,
+        "andradanciu1997@gmail.com" <andradanciu1997@gmail.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Andy Duan <fugang.duan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/5] arm64: dts: imx8qxp: Move usdhc clocks assignment to
+ board DT
+Thread-Topic: [PATCH 1/5] arm64: dts: imx8qxp: Move usdhc clocks assignment to
+ board DT
+Thread-Index: AQHVg8fd9TcILJytHEmYMksBHN4gSadjn8CA
+Date:   Sun, 20 Oct 2019 14:35:46 +0000
+Message-ID: <20191020143545.we56f4epnbgjr5lw@fsr-ub1664-175>
+References: <1571192067-19600-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1571192067-19600-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6P192CA0073.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:209:8d::14) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [89.37.124.34]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 35bc6452-3df7-4ee2-39f1-08d7556acb9d
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: AM0PR04MB4644:|AM0PR04MB4644:|AM0PR04MB4644:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4644B26C226E1890CD2135CDF66E0@AM0PR04MB4644.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0196A226D1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(366004)(346002)(136003)(396003)(376002)(39860400002)(189003)(199004)(6246003)(25786009)(66946007)(6436002)(71200400001)(5660300002)(52116002)(76176011)(26005)(71190400001)(6862004)(6486002)(66476007)(66556008)(64756008)(66446008)(386003)(6506007)(53546011)(229853002)(6512007)(4326008)(9686003)(186003)(33716001)(66066001)(476003)(486006)(256004)(6636002)(2906002)(44832011)(54906003)(14444005)(14454004)(3846002)(6116002)(86362001)(102836004)(81156014)(81166006)(7736002)(11346002)(8676002)(446003)(305945005)(8936002)(99286004)(7416002)(478600001)(1076003)(316002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4644;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LN4tolFxqJRH8nh5vr8WB+TS2sD8bkkBeDOL4Cb1t0GiHDhnS+5GcKISAYn3N83hUbyR/MALaoBYshwRyUlVM59seDb+E4jcJR2BRZB4gSoxhBuD8YvhuJWJq9/32gknscFvRl612iB+Qz+4TS6aLvtSsPoyY8Wue+VeSlaRak1ZClJawfi0/VjF2CVGLIzOLrHHXeyxh0KJHN5dqmC9mryiMn6D6RFO6rHdOCyPgY37VtoBBuUAbJl1CSHKOC2CSvqF5mOTJHnCjCmu1PVbc4GhqNhAs0iMDJyVNaRk5zz0ikoQRDxRpI90alwe2yjexpP0TxjI66olTvRTJPXrRLIDsR4cJST1zoC8WRd5uDCtCTjy9ZgegVXfeaxsZxx/MlS99yYVOi+ycbgFhDVpgUBu4oVpyBBkpDvY1Nm7EA4=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DEBBB76B9937294C881230836D0D6976@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003090945.29210-4-green.wan@sifive.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35bc6452-3df7-4ee2-39f1-08d7556acb9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2019 14:35:46.9826
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: n7yG0oOLB3WuPSGrrzplBkEBZ4J03TgkvH3DDwgtxMjpY/9UwgaSQE2bRzPKArHpJU8yCrBvYLeMkJvCslnp1g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4644
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 03-10-19, 17:09, Green Wan wrote:
+On 19-10-16 10:14:23, Anson Huang wrote:
+> usdhc's clock rate is different according to different devices
+> connected, so clock rate assignment should be placed in board
+> DT according to different devices connected on each usdhc port.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 7af874b69ffb..03dc82094857 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -661,6 +661,8 @@ source "drivers/dma/qcom/Kconfig"
->  
->  source "drivers/dma/dw/Kconfig"
->  
-> +source "drivers/dma/sf-pdma/Kconfig"
+For the entire patchset:
 
-Please keep this in sorted order
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-> +
->  source "drivers/dma/dw-edma/Kconfig"
->  
->  source "drivers/dma/hsu/Kconfig"
-> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> index f5ce8665e944..4bbd90563ede 100644
-> --- a/drivers/dma/Makefile
-> +++ b/drivers/dma/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_DMA_SUN4I) += sun4i-dma.o
->  obj-$(CONFIG_DMA_SUN6I) += sun6i-dma.o
->  obj-$(CONFIG_DW_AXI_DMAC) += dw-axi-dmac/
->  obj-$(CONFIG_DW_DMAC_CORE) += dw/
-> +obj-$(CONFIG_SF_PDMA) += sf-pdma/
-
-here as well!
-
->  obj-$(CONFIG_DW_EDMA) += dw-edma/
->  obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
->  obj-$(CONFIG_FSL_DMA) += fsldma.o
-> diff --git a/drivers/dma/sf-pdma/Kconfig b/drivers/dma/sf-pdma/Kconfig
-> new file mode 100644
-> index 000000000000..0e01a5728a79
-> --- /dev/null
-> +++ b/drivers/dma/sf-pdma/Kconfig
-> @@ -0,0 +1,6 @@
-> +config SF_PDMA
-> +	bool "Sifive PDMA controller driver"
-
-why not a module?
-
-> +#include <linux/module.h>
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/irq.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_dma.h>
-
-do you need all the headers?
-
-> +#include <linux/time64.h>
-
-why is this required?
-
-> +
-> +#include "sf-pdma.h"
-> +#include "../dmaengine.h"
-> +#include "../virt-dma.h"
-> +
-> +#define SIFIVE_PDMA_NAME "sf-pdma"
-
-this is used only once! can you use it directly to help readability!
-
-> +
-> +#ifndef readq
-> +static inline unsigned long long readq(void __iomem *addr)
-> +{
-> +	return readl(addr) | (((unsigned long long)readl(addr + 4)) << 32LL);
-> +}
-> +#endif
-> +
-> +#ifndef writeq
-> +static inline void writeq(unsigned long long v, void __iomem *addr)
-> +{
-> +	writel(v & 0xffffffff, addr);
-> +	writel(v >> 32, addr + 4);
-
-why not use upper/lower_32_bits?
-
-> +static void sf_pdma_fill_desc(struct sf_pdma_chan *chan,
-> +			      u64 dst,
-> +			      u64 src,
-> +			      u64 size)
-
-these can fit in a line!
-
-> +struct dma_async_tx_descriptor *
-> +	sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
-> +				dma_addr_t dest,
-> +				dma_addr_t src,
-> +				size_t len,
-> +				unsigned long flags)
-> +{
-> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-> +	struct sf_pdma_desc *desc;
-> +
-> +	if (!chan || !len || !dest || !src) {
-> +		pr_debug("%s: Please check dma len, dest, src!\n", __func__);
-
-why pr_debug() and not dev_debug(), bonus you get the device name in
-each print!
-
-and this should be an error print!
-
-> +static void sf_pdma_unprep_slave_dma(struct sf_pdma_chan *chan)
-> +{
-> +	if (chan->dma_dir != DMA_NONE)
-> +		dma_unmap_resource(chan->vchan.chan.device->dev,
-> +				   chan->dma_dev_addr,
-> +				   chan->dma_dev_size,
-> +				   chan->dma_dir, 0);
-
-this does not seem correct to me, in slave cases the client is supposed
-to take care of mapping and unmapping, why is this being done here?
-
-> +	chan->dma_dir = DMA_NONE;
-> +}
-> +
-> +static int sf_pdma_slave_config(struct dma_chan *dchan,
-> +				struct dma_slave_config *cfg)
-> +{
-> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-> +
-> +	memcpy(&chan->cfg, cfg, sizeof(*cfg));
-> +	sf_pdma_unprep_slave_dma(chan);
-
-why unmap!
-
-> +static enum dma_status
-> +sf_pdma_tx_status(struct dma_chan *dchan,
-> +		  dma_cookie_t cookie,
-> +		  struct dma_tx_state *txstate)
-> +{
-> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-> +	enum dma_status status;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chan->lock, flags);
-> +	if (chan->xfer_err) {
-> +		chan->status = DMA_ERROR;
-> +		spin_unlock_irqrestore(&chan->lock, flags);
-> +		return chan->status;
-
-well this is not correct! The status is queried for a descriptor and we
-might have that succeeded so returning error of a channel for descriptor
-does not make sense!
-
-> +static irqreturn_t sf_pdma_done_isr(int irq, void *dev_id)
-> +{
-> +	struct sf_pdma_chan *chan = dev_id;
-> +	struct pdma_regs *regs = &chan->regs;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chan->lock, flags);
-> +	writel((readl(regs->ctrl)) & ~PDMA_DONE_STATUS_MASK, regs->ctrl);
-> +	spin_unlock_irqrestore(&chan->lock, flags);
-
-why not submit next transaction here? This is DMA so we do care about
-utilizing it!
-
-> +static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
-> +{
-> +	int irq, r, i;
-> +	struct sf_pdma_chan *chan;
-> +
-> +	for (i = 0; i < pdma->n_chans; i++) {
-> +		chan = &pdma->chans[i];
-> +
-> +		irq = platform_get_irq(pdev, i * 2);
-> +		if (irq < 0) {
-> +			dev_err(&pdev->dev, "Can't get pdma done irq.\n");
-> +			return irq;
-> +		}
-> +
-> +		r = devm_request_irq(&pdev->dev, irq, sf_pdma_done_isr, 0,
-> +				     dev_name(&pdev->dev), (void *)chan);
-> +		if (r) {
-> +			dev_err(&pdev->dev, "Fail to attach done ISR: %d\n", r);
-> +			return -1;
-
--1 :(
-
-> +static int sf_pdma_probe(struct platform_device *pdev)
-> +{
-> +	struct sf_pdma *pdma;
-> +	struct sf_pdma_chan *chan;
-> +	struct resource *res;
-> +	int len, chans;
-> +	int ret;
-> +
-> +	chans = PDMA_NR_CH;
-> +	len = sizeof(*pdma) + sizeof(*chan) * chans;
-> +	pdma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
-> +	if (!pdma)
-> +		return -ENOMEM;
-> +
-> +	pdma->n_chans = chans;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pdma->membase = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(pdma->membase))
-> +		goto ERR_MEMBASE;
-> +
-> +	ret = sf_pdma_irq_init(pdev, pdma);
-> +	if (ret)
-> +		goto ERR_INITIRQ;
-> +
-> +	sf_pdma_setup_chans(pdma);
-> +
-> +	pdma->dma_dev.dev = &pdev->dev;
-> +	dma_cap_set(DMA_MEMCPY, pdma->dma_dev.cap_mask);
-> +
-> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-> +	if (ret)
-> +		pr_warn("*** Failed to set DMA mask. Fall back to default.\n");
-> +
-> +	/* Setup DMA APIs */
-> +	pdma->dma_dev.device_alloc_chan_resources =
-> +		sf_pdma_alloc_chan_resources;
-> +	pdma->dma_dev.device_free_chan_resources =
-> +		sf_pdma_free_chan_resources;
-> +	pdma->dma_dev.device_tx_status = sf_pdma_tx_status;
-> +	pdma->dma_dev.device_prep_dma_memcpy = sf_pdma_prep_dma_memcpy;
-> +	pdma->dma_dev.device_config = sf_pdma_slave_config;
-> +	pdma->dma_dev.device_terminate_all = sf_pdma_terminate_all;
-> +	pdma->dma_dev.device_issue_pending = sf_pdma_issue_pending;
-
-please set the capabilities of the controller, width, direction,
-granularity etc!
-
-> +static int sf_pdma_remove(struct platform_device *pdev)
-> +{
-> +	struct sf_pdma *pdma = platform_get_drvdata(pdev);
-> +
-> +	dma_async_device_unregister(&pdma->dma_dev);
-
-since you used devm_irq_() you have irq which is running, tasklets which
-maybe schedule and can be scheduled again including the vchan one!
--- 
-~Vinod
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts   | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi      | 6 ------
+>  3 files changed, 8 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts b/arch/arm64=
+/boot/dts/freescale/imx8qxp-ai_ml.dts
+> index 91eef97..a3f8cf1 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
+> @@ -133,6 +133,8 @@
+>  &usdhc1 {
+>  	#address-cells =3D <1>;
+>  	#size-cells =3D <0>;
+> +	assigned-clocks =3D <&clk IMX_CONN_SDHC0_CLK>;
+> +	assigned-clock-rates =3D <200000000>;
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_usdhc1>;
+>  	bus-width =3D <4>;
+> @@ -149,6 +151,8 @@
+> =20
+>  /* SD */
+>  &usdhc2 {
+> +	assigned-clocks =3D <&clk IMX_CONN_SDHC1_CLK>;
+> +	assigned-clock-rates =3D <200000000>;
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_usdhc2>;
+>  	bus-width =3D <4>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/b=
+oot/dts/freescale/imx8qxp-mek.dts
+> index 88dd9132..d3d26cc 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> @@ -137,6 +137,8 @@
+>  };
+> =20
+>  &usdhc1 {
+> +	assigned-clocks =3D <&clk IMX_CONN_SDHC0_CLK>;
+> +	assigned-clock-rates =3D <200000000>;
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_usdhc1>;
+>  	bus-width =3D <8>;
+> @@ -147,6 +149,8 @@
+>  };
+> =20
+>  &usdhc2 {
+> +	assigned-clocks =3D <&clk IMX_CONN_SDHC1_CLK>;
+> +	assigned-clock-rates =3D <200000000>;
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_usdhc2>;
+>  	bus-width =3D <4>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot=
+/dts/freescale/imx8qxp.dtsi
+> index 2d69f1a..9646a41 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -368,8 +368,6 @@
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
+>  			clock-names =3D "ipg", "per", "ahb";
+> -			assigned-clocks =3D <&clk IMX_CONN_SDHC0_CLK>;
+> -			assigned-clock-rates =3D <200000000>;
+>  			power-domains =3D <&pd IMX_SC_R_SDHC_0>;
+>  			status =3D "disabled";
+>  		};
+> @@ -383,8 +381,6 @@
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
+>  			clock-names =3D "ipg", "per", "ahb";
+> -			assigned-clocks =3D <&clk IMX_CONN_SDHC1_CLK>;
+> -			assigned-clock-rates =3D <200000000>;
+>  			power-domains =3D <&pd IMX_SC_R_SDHC_1>;
+>  			fsl,tuning-start-tap =3D <20>;
+>  			fsl,tuning-step=3D <2>;
+> @@ -400,8 +396,6 @@
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
+>  				 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
+>  			clock-names =3D "ipg", "per", "ahb";
+> -			assigned-clocks =3D <&clk IMX_CONN_SDHC2_CLK>;
+> -			assigned-clock-rates =3D <200000000>;
+>  			power-domains =3D <&pd IMX_SC_R_SDHC_2>;
+>  			status =3D "disabled";
+>  		};
+> --=20
+> 2.7.4
+>=20
