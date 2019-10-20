@@ -2,40 +2,40 @@ Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6D8CA9EAD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CCBCA9EAF
 	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 15:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4EC7205C9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 15:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C885E20663
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 15:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfJTPgY (ORCPT
+        id S1726482AbfJTPgZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 11:36:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42548 "EHLO mx1.suse.de"
+        Sun, 20 Oct 2019 11:36:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42576 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726482AbfJTPgY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726492AbfJTPgY (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sun, 20 Oct 2019 11:36:24 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 69453AE35;
+        by mx1.suse.de (Postfix) with ESMTP id D727BB02C;
         Sun, 20 Oct 2019 15:36:22 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] arm64: dts: realtek: Add oscillator for RTD129x
-Date:   Sun, 20 Oct 2019 17:36:11 +0200
-Message-Id: <20191020153612.29889-2-afaerber@suse.de>
+        Wim Van Sebroeck <wim@iguana.be>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, Roc He <hepeng@zidoo.tv>,
+        =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 0/2] arm64: Realtek RTD1295 watchdog
+Date:   Sun, 20 Oct 2019 17:36:10 +0200
+Message-Id: <20191020153612.29889-1-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191020153612.29889-1-afaerber@suse.de>
-References: <20191020153612.29889-1-afaerber@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -44,33 +44,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add 27 MHz oscillator clock node.
+Hello,
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v3: New (from previously blocking clk patch series)
- 
- arch/arm64/boot/dts/realtek/rtd129x.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+This series adds the watchdog for the Realtek RTD1295 SoC.
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-index a26c375ee1bb..4fb16611159b 100644
---- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-@@ -23,6 +23,13 @@
- 		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
-+	osc27M: osc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <27000000>;
-+		#clock-cells = <0>;
-+		clock-output-names = "osc27M";
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
+v3 adds the missing DT node, previously dependent on an unreviewed clk series.
+
+Have a lot of fun!
+
+Cheers,
+Andreas
+
+v2 -> v3:
+* Driver was merged
+* Split off needed osc27M clock from clk patch series
+
+v1 -> v2:
+* Prepared remove (Guenther)
+* Set timeout field (Guenther)
+* Cleanups (Guenther, Andreas)
+
+Cc: Wim Van Sebroeck <wim@iguana.be>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-watchdog@vger.kernel.org
+Cc: Roc He <hepeng@zidoo.tv>
+Cc: 蒋丽琴 <jiang.liqin@geniatech.com>
+Cc: linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+
+Andreas Färber (2):
+  arm64: dts: realtek: Add oscillator for RTD129x
+  arm64: dts: realtek: Add watchdog node for RTD129x
+
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
 -- 
 2.16.4
 
