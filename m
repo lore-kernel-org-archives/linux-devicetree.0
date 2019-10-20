@@ -2,37 +2,40 @@ Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81A2CA9EB2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F0ECA9EB4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E072173E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CB2222C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 04:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfJTEIu (ORCPT
+        id S1726225AbfJTEI2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 00:08:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37158 "EHLO mx1.suse.de"
+        Sun, 20 Oct 2019 00:08:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37122 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfJTEI2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1725851AbfJTEI2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sun, 20 Oct 2019 00:08:28 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1C371AF24;
-        Sun, 20 Oct 2019 04:08:27 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 605AAACCA;
+        Sun, 20 Oct 2019 04:08:26 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        info@synology.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/8] dt-bindings: arm: realtek: Document RTD1293 and Synology DS418j
-Date:   Sun, 20 Oct 2019 06:08:13 +0200
-Message-Id: <20191020040817.16882-5-afaerber@suse.de>
+Subject: [PATCH v2 2/8] dt-bindings: rtc: realtek: Convert RTD119x to schema
+Date:   Sun, 20 Oct 2019 06:08:11 +0200
+Message-Id: <20191020040817.16882-3-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191020040817.16882-1-afaerber@suse.de>
 References: <20191020040817.16882-1-afaerber@suse.de>
@@ -44,37 +47,84 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Define compatible strings for Realtek RTD1293 SoC and Synology
-DiskStation DS418j NAS.
+Convert the RTD119x binding to a YAML schema.
 
-Cc: info@synology.com
-Acked-by: Rob Herring <robh@kernel.org>
-[AF: Converted to json-schema]
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- v1 -> v2:
- * Converted to YAML schema
+ v2: New
  
- Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../devicetree/bindings/rtc/realtek,rtd119x.txt    | 16 ---------
+ .../devicetree/bindings/rtc/realtek,rtd119x.yaml   | 38 ++++++++++++++++++++++
+ 2 files changed, 38 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
-index 66458a3f422d..6ea3a79825cc 100644
---- a/Documentation/devicetree/bindings/arm/realtek.yaml
-+++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -14,6 +14,12 @@ properties:
-     const: '/'
-   compatible:
-     oneOf:
-+      # RTD1293 SoC based boards
-+      - items:
-+          - enum:
-+              - synology,ds418j # Synology DiskStation DS418j
-+          - const: realtek,rtd1293
+diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+deleted file mode 100644
+index bbf1ccb5df31..000000000000
+--- a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-Realtek RTD129x Real-Time Clock
+-===============================
+-
+-Required properties:
+-- compatible :  Should be "realtek,rtd1295-rtc"
+-- reg        :  Specifies the physical base address and size
+-- clocks     :  Specifies the clock gate
+-
+-
+-Example:
+-
+-	rtc@9801b600 {
+-		compatible = "realtek,rtd1295-clk";
+-		reg = <0x9801b600 0x100>;
+-		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
+-	};
+diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+new file mode 100644
+index 000000000000..71b7396bd469
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rtc/realtek,rtd119x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-       # RTD1295 SoC based boards
-       - items:
-           - enum:
++title: Realtek RTD129x Real-Time Clock
++
++allOf:
++  - $ref: "rtc.yaml#"
++
++maintainers:
++  - Andreas Färber <afaerber@suse.de>
++
++properties:
++  compatible:
++    const: realtek,rtd1295-rtc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++    description: Specifies the clock gate
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++examples:
++  - |
++	rtc@9801b600 {
++		compatible = "realtek,rtd1295-clk";
++		reg = <0x9801b600 0x100>;
++		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
++	};
++...
 -- 
 2.16.4
 
