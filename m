@@ -2,172 +2,104 @@ Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DB3CA9EAD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 18:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C13DCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 18:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66FF921A4A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 18:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0752421929
+	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 18:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571597552;
-	bh=Ez4ENTvYs0AfI3YbAmEvULnW7Y+h0pBneEkV67koPdw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=h6+vwEcmUgoWZfNT9I1DiX8hc+XeDbsUsdxTVcCPsyfHW2rF6YOnuqqmW5zSASUGu
-	 11KfBaN9HusflMZkRZb0srMia/S89Z3JAEAQJgATBPR9I5B/kiwKruwaA3GgyUptpX
-	 GIg8ECfKbhxQ76zR0o3rmFZcunmVudJy246r6juU=
+	s=default; t=1571597815;
+	bh=DMWKjIExqTNEr+jTC8Cfcm9xcLhUQN9BnsaReJNFJ8M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TqHds6aSd+7wAoLPMmg55hu+0c+7XY8nIXCvcJqlwDa8aMcqlRqeHOK8dGPXMo/cY
+	 0ZjKDYhE75zY/5SYsSa+Hzt3epMyDGEcXD3CQmZZlUCYB9Z417KqWAqe7Au+h8S8EK
+	 MGCDQLmzt80N1I/KBnakdFXDd/FFOrw8Q1E7BZKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfJTSwb (ORCPT
+        id S1726622AbfJTS4v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 14:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39226 "EHLO mail.kernel.org"
+        Sun, 20 Oct 2019 14:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbfJTSwb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 20 Oct 2019 14:52:31 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
+        id S1726281AbfJTS4v (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 20 Oct 2019 14:56:51 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 916F321928;
-        Sun, 20 Oct 2019 18:52:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DB6021929;
+        Sun, 20 Oct 2019 18:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571597550;
-        bh=Ez4ENTvYs0AfI3YbAmEvULnW7Y+h0pBneEkV67koPdw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=H6QFWknoDst1WPX3HbWPMkx2TIwKh9iK2+6LZfTVfh5nvDDKzPPB0VoR1nesxJkYV
-         Ld6tuyKJJfjdM0V0LPtnWcigKx+rdspuKzjV47JkWC/lYGov25Sm9RwiJqJS35cT6M
-         S138DqsZSaYQtZ+Rw8ZMIe4D0gu+LqkstW25XMl0=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     git@vger.kernel.org
-Cc:     Adrian Johnson <ajohnson@redneon.com>,
-        Johannes Sixt <j6t@kdbg.org>,
-        Junio C Hamano <gitster@pobox.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [PATCH v3] userdiff: Fix some corner cases in dts regex
-Date:   Sun, 20 Oct 2019 11:52:30 -0700
-Message-Id: <20191020185230.212875-1-sboyd@kernel.org>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+        s=default; t=1571597810;
+        bh=DMWKjIExqTNEr+jTC8Cfcm9xcLhUQN9BnsaReJNFJ8M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=g8+tJDxW537aodtTeA4/otxkxK01TEF9iPF9sSrkoDF3ukvWcWA//yZavpwqlni8Y
+         9fa6tqxNT/JEmkxpKvFzIrbd2Kl8ESLMW4Or00HmBVPMj4wVtxXxU8L0V6iA6zq3Qg
+         hlTKF4uSm1pgkha1yNEkF3TKb/aeLvREYzn6YuK0=
+Received: by mail-qt1-f182.google.com with SMTP id c17so14294315qtn.8;
+        Sun, 20 Oct 2019 11:56:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAXj62PmDOvIh/nwiZu+CZOpaZM8OZxj9UtBcnNZKmjG0WYDzgUu
+        xp2kMmMWKmU1ADlmknmsB1bSJvkU0mVC++HBsw==
+X-Google-Smtp-Source: APXvYqzezxKnvH4ddIHzD22MnL1TUymJkjpa1epQZ/YP39BDEZsjaDCXMab8nDnoewNjHMIBJSM56RP3ixQbzXmu1kU=
+X-Received: by 2002:ac8:741a:: with SMTP id p26mr6395369qtq.143.1571597809618;
+ Sun, 20 Oct 2019 11:56:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190911093123.11312-1-colin.king@canonical.com> <4aa3bcde-1ad1-98ec-8deb-4a8ab1bbb41c@gmail.com>
+In-Reply-To: <4aa3bcde-1ad1-98ec-8deb-4a8ab1bbb41c@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Sun, 20 Oct 2019 13:56:38 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKETEt3SstdoRBV0s63fKeE7pPnOf405147r22ZC6XcgQ@mail.gmail.com>
+Message-ID: <CAL_JsqKETEt3SstdoRBV0s63fKeE7pPnOf405147r22ZC6XcgQ@mail.gmail.com>
+Subject: Re: [PATCH] dtc: fix spelling mistake "mmory" -> "memory"
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Colin King <colin.king@canonical.com>, devicetree@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-While reviewing some dts diffs recently I noticed that the hunk header
-logic was failing to find the containing node. This is because the regex
-doesn't consider properties that may span multiple lines, i.e.
+On Thu, Oct 17, 2019 at 2:08 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> Hi Rob,
+>
+>
+> On 09/11/2019 04:31, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> >
+> > There is a spelling mistake in an error message. Fix it.
+> >
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> >  scripts/dtc/fdtput.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/scripts/dtc/fdtput.c b/scripts/dtc/fdtput.c
+> > index a363c3cabc59..3755e5f68a5a 100644
+> > --- a/scripts/dtc/fdtput.c
+> > +++ b/scripts/dtc/fdtput.c
+> > @@ -84,7 +84,7 @@ static int encode_value(struct display_info *disp, char **arg, int arg_count,
+> >                       value_size = (upto + len) + 500;
+> >                       value = realloc(value, value_size);
+> >                       if (!value) {
+> > -                             fprintf(stderr, "Out of mmory: cannot alloc "
+> > +                             fprintf(stderr, "Out of memory: cannot alloc "
+> >                                       "%d bytes\n", value_size);
+> >                               return -1;
+> >                       }
+> >
+>
+> This is a very old version of the upstream file.  update-dtc-source.sh does
+> not pull new versions of this file.
+>
+> We don't actually build fdtput, is there any reason to not just remove
+> scripts/dtc/fdtput.c?
 
-	property = <something>,
-		   <something_else>;
+Yes, we should just remove it.
 
-and it got hung up on comments inside nodes that look like the root node
-because they start with '/*'. Add tests for these cases and update the
-regex to find them. Maybe detecting the root node is too complicated but
-forcing it to be a backslash with any amount of whitespace up to an open
-bracket seemed OK. I tried to detect that a comment is in-between the
-two parts but I wasn't happy so I just dropped it.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
-
-Changes from v2:
- * Updated test to be really multiline.
-
-Changes from v1:
- * Added a new boolean property unit test
- * Updated the regex to simplify multi-line property skipping
- * Added some space to multieline prop test between cells in
-   first property
-
- t/t4018/dts-nodes-boolean-prop   |  9 +++++++++
- t/t4018/dts-nodes-multiline-prop | 13 +++++++++++++
- t/t4018/dts-root                 |  2 +-
- t/t4018/dts-root-comment         |  8 ++++++++
- userdiff.c                       |  3 ++-
- 5 files changed, 33 insertions(+), 2 deletions(-)
- create mode 100644 t/t4018/dts-nodes-boolean-prop
- create mode 100644 t/t4018/dts-nodes-multiline-prop
- create mode 100644 t/t4018/dts-root-comment
-
-diff --git a/t/t4018/dts-nodes-boolean-prop b/t/t4018/dts-nodes-boolean-prop
-new file mode 100644
-index 000000000000..afc6b5b404e4
---- /dev/null
-+++ b/t/t4018/dts-nodes-boolean-prop
-@@ -0,0 +1,9 @@
-+/ {
-+	label_1: node1@ff00 {
-+		RIGHT@deadf00,4000 {
-+			boolean-prop1;
-+
-+			ChangeMe;
-+		};
-+	};
-+};
-diff --git a/t/t4018/dts-nodes-multiline-prop b/t/t4018/dts-nodes-multiline-prop
-new file mode 100644
-index 000000000000..072d58b69dc2
---- /dev/null
-+++ b/t/t4018/dts-nodes-multiline-prop
-@@ -0,0 +1,13 @@
-+/ {
-+	label_1: node1@ff00 {
-+		RIGHT@deadf00,4000 {
-+			multilineprop = <3>,
-+					<4>,
-+					<5>,
-+					<6>,
-+					<7>;
-+
-+			ChangeMe = <0xffeedd00>;
-+		};
-+	};
-+};
-diff --git a/t/t4018/dts-root b/t/t4018/dts-root
-index 2ef9e6ffaa2c..4353b8220c91 100644
---- a/t/t4018/dts-root
-+++ b/t/t4018/dts-root
-@@ -1,4 +1,4 @@
--/RIGHT { /* Technically just supposed to be a slash */
-+/ { RIGHT /* Technically just supposed to be a slash and brace */
- 	#size-cells = <1>;
- 
- 	ChangeMe = <0xffeedd00>;
-diff --git a/t/t4018/dts-root-comment b/t/t4018/dts-root-comment
-new file mode 100644
-index 000000000000..333a625c7007
---- /dev/null
-+++ b/t/t4018/dts-root-comment
-@@ -0,0 +1,8 @@
-+/ { RIGHT /* Technically just supposed to be a slash and brace */
-+	#size-cells = <1>;
-+
-+	/* This comment should be ignored */
-+
-+	some-property = <40+2>;
-+	ChangeMe = <0xffeedd00>;
-+};
-diff --git a/userdiff.c b/userdiff.c
-index 86e3244e15dd..e187d356f6ff 100644
---- a/userdiff.c
-+++ b/userdiff.c
-@@ -25,8 +25,9 @@ IPATTERN("ada",
- 	 "|=>|\\.\\.|\\*\\*|:=|/=|>=|<=|<<|>>|<>"),
- PATTERNS("dts",
- 	 "!;\n"
-+	 "!=\n"
- 	 /* lines beginning with a word optionally preceded by '&' or the root */
--	 "^[ \t]*((/|&?[a-zA-Z_]).*)",
-+	 "^[ \t]*((/[ \t]*\\{|&?[a-zA-Z_]).*)",
- 	 /* -- */
- 	 /* Property names and math operators */
- 	 "[a-zA-Z0-9,._+?#-]+"
--- 
-Sent by a computer through tubes
-
+Rob
