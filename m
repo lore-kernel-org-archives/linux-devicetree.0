@@ -2,185 +2,124 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377C0CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 15:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F76BCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 15:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0262C2089C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 15:24:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="fzDD2u5a"
+	by mail.kernel.org (Postfix) with ESMTP id 430F42089C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 15:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571671662;
+	bh=tgOUAzogrK9mW4/x4P6IQADd3SWZqmLrp79Aenb9jmE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k19fEckQuX0xc9Q3MlBgLnuuhYS/FyJ0gRXBdKJx2Y1k98zooqoUzZKodF05ea2fv
+	 1z436z4D2+69k9TQdwtcCR8c7wOH5jh6BhHQif7QnMelUJjtkLHbK+vXaW2W8EQKz8
+	 5fptRUtw1DuFnuTr4QaZYrfXkVyav2barxuatJ7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfJUPYA (ORCPT
+        id S1726847AbfJUP1l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:24:00 -0400
-Received: from mail-eopbgr40101.outbound.protection.outlook.com ([40.107.4.101]:11453
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727140AbfJUPYA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:24:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jC8hkpDEVIBf4ubqsjy0iX01/ZU2kSs8n1ZTj/ji5ZNCIvv66l2D/c5nYQQ2BMLsR3tDhgNHn/TaEkU04FlN9D62v/b6jkTHY0JHk1eRAudk6TxIWgLVFO4Dma/MHFbk8LZKTdPdKor8mTzcBqwnVMNqsOVNdjCuRtNNyj6b95SRdiG/9906r0jE9YKqZcBYSH0/KRVVqCPs1d2ZqGo2R/x1APb7nIoiddtG4skAUJBF793+/14Smv6S5tBRVtLVDCBNhnbxkNGhBBCKHax8C20/gQYI057sI5DX8H0SWG3gtCC3PDFsn1W1CtJLKh8v2dTz0pxhbyMMkgtmkrqC1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rx6kOuyc4Ro67mNwa4n9HD0kzfxFP2ooqXnUoypIvHQ=;
- b=dRc5jgRnP3hlElKmsQWg9/GCfNfce0jWtuADj+YeLs5gr+2xG9Ok+drRcPqWzl3sZzQw3xtW63dyKaqJL8OyAF1aNeEx9NRDcUi4A6OjfyYMq5awUXtTIhXq+dKhD2kttsRUsX1OEK98rBRFmkr8dNj+kBAWkmfPVjYa/FQa60mm1vb4IZMmVkKLsKU8QgsQZJyFZxbgIMsd7w0bwQviyzPPsXfLd/fMXkmerF1I1+C9F/INoQaXM+qRJaA87TIKHRywrrCBZHYC7T9szsH13EUc06qZriztzlYChBIl9lMZSh58f9RycAyhiSIE7LvHcJIEgU7zBZSn7Xq1ilfMBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rx6kOuyc4Ro67mNwa4n9HD0kzfxFP2ooqXnUoypIvHQ=;
- b=fzDD2u5aRXAute0K6/4EeocrMjvoO69WoMsL52No+LF7FPokCjsfSr+3Yg7UKNW/UYRGey+dIqy4b2SRtKHFAtNkaiX9pYF7lvZuVWywROTL7M2r88QRuhTM99G7hEnfI07U7krFpePJFhqwJutEtVD4ts6pj0Z79Bq2e2IqZFw=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3435.eurprd02.prod.outlook.com (52.134.65.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Mon, 21 Oct 2019 15:23:15 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
- 15:23:15 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH v5 0/9] i2c: add support for filters
-Thread-Topic: [PATCH v5 0/9] i2c: add support for filters
-Thread-Index: AQHVaHpLr7113TR4Hk2itVe9BFeajadO9gMAgBZqJ4CAABXHgA==
-Date:   Mon, 21 Oct 2019 15:23:15 +0000
-Message-ID: <f5bd0c1f-9a72-6661-146b-ef5de77e31ff@axentia.se>
-References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
- <c17182ac-67dd-d11f-5daf-066bf446b969@microchip.com>
- <20191021140515.GC26782@ninjato>
-In-Reply-To: <20191021140515.GC26782@ninjato>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR07CA0034.eurprd07.prod.outlook.com
- (2603:10a6:7:66::20) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ec7f5e47-6753-432f-46e0-08d7563a97e1
-x-ms-traffictypediagnostic: DB3PR0202MB3435:
-x-microsoft-antispam-prvs: <DB3PR0202MB34353FA956C351DE96B30572BC690@DB3PR0202MB3435.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0197AFBD92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(346002)(396003)(136003)(376002)(366004)(199004)(189003)(11346002)(7736002)(31686004)(8936002)(71200400001)(71190400001)(508600001)(31696002)(5660300002)(446003)(86362001)(316002)(476003)(2616005)(305945005)(3846002)(25786009)(7416002)(6116002)(256004)(14444005)(486006)(2906002)(76176011)(52116002)(2501003)(6436002)(58126008)(229853002)(66476007)(66556008)(64756008)(66446008)(99286004)(66066001)(110136005)(65806001)(54906003)(6486002)(66946007)(36756003)(6512007)(14454004)(26005)(81166006)(81156014)(186003)(102836004)(6246003)(4001150100001)(53546011)(386003)(65956001)(6506007)(4326008)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3435;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pWuxGBn7XG4yM+XRDcuNA6uQV2R9rqrWZFoSen+1zMWiegUU8TS0Oi9iS1F3KPF7I73E2u7p7IsaBxYFXVzRQ28xtnhjrXKO29DOgfBk1JHBdAG491iuKX6Ls5vprySq2TZVSlq5HWYAtb9PLt1AwG+/heNEjlmnpLrNEtughdhGiQcgZ6VwRRSuoibm4t8OV5s1eKxiy9vHn0sae07UHjtfP5M6xvBahCpbw0crNfd+t/4HX58lIg9+0YfEEVH1fQCihApZ99fKIJHpM0WKzXO5LaA2bZ77fhwOg424i9/9FKSvvw2cBcAQzuBKphtlO+WUHdL5GIPb2yYzx5uTjIG+CYnB1uuCkqSgwE0o2l39ZPH7HG412CDiGoTl18zUksAPNjHwIQceR/R7sc2uzRo5ptwndHvqhbFtGrlAts++9HOaia1V/BoXRhvktL6q
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <542A5BB2F1351346977B834EB3C11628@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 21 Oct 2019 11:27:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfJUP1l (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:27:41 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F7DD206C2;
+        Mon, 21 Oct 2019 15:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571671660;
+        bh=tgOUAzogrK9mW4/x4P6IQADd3SWZqmLrp79Aenb9jmE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=So1JiJXAq/nkjaZOg4OGfQw08KJNFUR6W8uRhNkz2fE0AapU+HpjD+yeu0c+OSbus
+         7pW31tvL6ntJhEe3EZXnwFd1pFUYAzljKNuaEW68HUfNda6mPV7+ai+c4DaPAFCwMZ
+         H2nRkxN3zhb/ibpMgFhTCoiaFEXpH9AmyOezJbQw=
+Date:   Mon, 21 Oct 2019 16:27:36 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio: Add ltc2983 documentation
+Message-ID: <20191021162736.7409baa7@archlinux>
+In-Reply-To: <20191015214435.5d51835a@archlinux>
+References: <20191011084038.45829-1-nuno.sa@analog.com>
+        <20191011084038.45829-2-nuno.sa@analog.com>
+        <20191012115745.069119b0@archlinux>
+        <20191014143950.GA6163@bogus>
+        <CAL_Jsq+Hju1KtvfjEJNGsS9maC3LDn0FcQJe6Wp+y-YgiAP=+w@mail.gmail.com>
+        <20191015214435.5d51835a@archlinux>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec7f5e47-6753-432f-46e0-08d7563a97e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 15:23:15.3938
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 546Ctu3x6wdXrmmTcp/2Pd2JUwyCfmDKIbZrO++SlVOT1TPMI85NgE3ijiiYqSb9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3435
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-21 16:05, Wolfram Sang wrote:
-> On Mon, Oct 07, 2019 at 07:53:21AM +0000, Eugen.Hristev@microchip.com wro=
-te:
->>
->>
->> On 11.09.2019 11:24, Eugen Hristev - M18282 wrote:
->>> From: Eugen Hristev <eugen.hristev@microchip.com>
->>>
->>> Hello,
->>>
->>> This series adds support for analog and digital filters for i2c control=
-lers
->>>
->>> This series is based on the series:
->>> [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
->>> and later
->>> [PATCH v4 0/9] i2c: add support for filters
->>> and enhanced to add the bindings for all controllers plus an extra bind=
-ings
->>> for the width of the spikes in nanoseconds (digital filters) and cut-of=
-f
->>> frequency (analog filters)
->>>
->>> First, bindings are created for
->>> 'i2c-analog-filter'
->>> 'i2c-digital-filter'
->>> 'i2c-digital-filter-width-ns'
->>> 'i2c-analog-filter-cutoff-frequency'
->>>
->>> The support is added in the i2c core to retrieve filter width/cutoff fr=
-equency
->>> and add it to the timings structure.
->>> Next, the at91 driver is enhanced for supporting digital filter, advanc=
-ed
->>> digital filter (with selectable spike width) and the analog filter.
->>>
->>> Finally the device tree for two boards are modified to make use of the
->>> new properties.
->>>
->>> This series is the result of the comments on the ML in the direction
->>> requested: to make the bindings globally available for i2c drivers.
->>>
->>> Changes in v5:
->>> - renamed i2c-filter-width-ns to i2c-digital-filter-width-ns as this
->>> is applicable only to digital filter
->>> - created new binding i2c-digital-filter-width-ns for analog filters.
->>
->> Hello Wolfram and Peter,
->>
->> Are you happy with the changes in this version? I haven't heard from you=
-=20
->> since this latest update.
->> I am interested to know if anymore changes are required or maybe we can=
-=20
->> move further with this support.
+On Tue, 15 Oct 2019 21:44:35 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
+
+> On Tue, 15 Oct 2019 09:19:10 -0500
+> Rob Herring <robh@kernel.org> wrote:
 >=20
-> So, I had a look now and I am happy. I will give Peter one more day to
-> comment, otherwise I'll apply it tomorrow.
+> > On Mon, Oct 14, 2019 at 9:39 AM Rob Herring <robh@kernel.org> wrote: =20
+> > >
+> > > On Sat, Oct 12, 2019 at 11:57:45AM +0100, Jonathan Cameron wrote:   =
+=20
+> > > > On Fri, 11 Oct 2019 10:40:38 +0200
+> > > > Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+> > > >   =20
+> > > > > Document the LTC2983 temperature sensor devicetree bindings.
+> > > > >
+> > > > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>   =20
+> > > >
+> > > > I'm happy with this, but will be waiting for Rob to have a chance
+> > > > for a final look before applying.   =20
+> > >
+> > > LGTM, but I need to add the int64-matrix type to the core schema first
+> > > or this will give you errors. I should get to that in the next day or
+> > > so.   =20
+> >=20
+> > Now added, so please update dtschema and check.
+> >=20
+> > Reviewed-by: Rob Herring <robh@kernel.org> =20
+>=20
+> /home/jic23/src/kernel/iio/Documentation/devicetree/bindings/iio/temperat=
+ure/adi,ltc2983.example.dt.yaml: ltc2983@0: thermocouple@20:adi,custom-ther=
+mocouple:0:0: 18446744073659331616 is greater than the maximum of 922337203=
+6854775807
+> /home/jic23/src/kernel/iio/Documentation/devicetree/bindings/iio/temperat=
+ure/adi,ltc2983.example.dt.yaml: ltc2983@0: thermocouple@20:adi,custom-ther=
+mocouple:0:2: 18446744073679351616 is greater than the maximum of 922337203=
+6854775807
+> /home/jic23/src/kernel/iio/Documentation/devicetree/bindings/iio/temperat=
+ure/adi,ltc2983.example.dt.yaml: ltc2983@0: thermocouple@20:adi,custom-ther=
+mocouple:0:4: 18446744073704251616 is greater than the maximum of 922337203=
+6854775807
+>=20
+> Which is odd.  I haven't looked into it beyond testing and reverting the
+> patch as out of time for today.
 
-I had another read-through and only found one nit which is in a separate
-message. You can add
+I'm still getting this and not sure why.  Rob?
 
-Reviewed-by: Peter Rosin <peda@axentia.se>
+Thanks,
 
-for the whole series.
+Jonathan
 
-Cheers,
-Peter
-
-> Thanks for your patience and keeping at it!
+>=20
+> Thanks,
+>=20
+> Jonathan
+>=20
 >=20
 
