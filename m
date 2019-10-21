@@ -2,258 +2,182 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F08CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE2ECA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4AC720B7C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346B12166E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hso+9Cri"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="o3pc+fU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbfJUNgX (ORCPT
+        id S1728976AbfJUNjz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:36:23 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:39650 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbfJUNgW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 09:36:22 -0400
-Received: by mail-vs1-f68.google.com with SMTP id y129so8860931vsc.6
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 06:36:21 -0700 (PDT)
+        Mon, 21 Oct 2019 09:39:55 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38194 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728958AbfJUNjy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 09:39:54 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 3so12858728wmi.3
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 06:39:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MXjl3Qdj6k4PSsOEssi1NBEDlEeNdvwTH033BcyI0qQ=;
-        b=Hso+9CrinK4xZlbaApuYrGSZonV4azH0FJB494beKtvJpcRl8Veanvo9tKNRl7Hd1x
-         4tmspmnmA0Cr3+PVnZpVJ/kh//Qy8fgmmXudTnPcLaULLV/AVkzp926bTQRYB+2cdjZ7
-         D2Gr10VIaRo6QwVbtfNc1HqK26D8ym5oe82dJZdBpwN3+AQ/64P8TQrSoBI326eblL6S
-         Le+iuwOkJkXR+ECvd9X6PwZUqbCReqmk68QHVjx9BJUJ3cnEgYloCebC3Csv1czA2QIe
-         Pop03LroOrf/V2y7qf2Nv1poWAHPtBnNJ071pfZtADDmz3RnX0XW8p/bICpvIBU6NQ0O
-         4uQw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rxZzIwlDD5DO3Dig1AAmB3NX72gSPtCfOYTtxG2Ms5Q=;
+        b=o3pc+fU/IFhuH3lLsX421aMMLNgviKUCS8A1bpdOmWwPY+qswyHRHsftp/JYKIgYCT
+         FDKGAHGBuyqR6IE5DhsJIbh1tZwPUOfQC9iRtmBMXQINkFEeWondGaIU4S0d3uPPlvZ1
+         RywTXQ0VjFlT5oqDG151fTDTrhpQqSr8vUdHplHloWnbCANc+Y0iKvua71c+LMkCJZq/
+         a3gXTpfWTSZIYtv+XBfny+NVQIojTHjJbK9l/GUakkcOSw8FqYpwiQJuEV2bhPXsvCui
+         RN4vRrsTpwB4XDDjLBDDLu3/nN/uCyuugzpAmsBVbeSzcTya/2YiF2eOS/d1hHTcNSXN
+         cPYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MXjl3Qdj6k4PSsOEssi1NBEDlEeNdvwTH033BcyI0qQ=;
-        b=pT6s2dV0DfHU7Xt75GPX7BBnEF4MtJLsdGytRbat8d7Y3FvAXt1zBf2mVNE7pna0kx
-         YWFCQRHCKFS+mqWF++hLWj6s5k6o/QqXwoS/K+w5TCqOSSqc9kV92m7VtJhotmHMRTmF
-         s4YUhITeQtDehT+0rruR2vKce/OvInV+a45Q8N76/yjOjZJS37WGvx6FB43dOJJd6UQd
-         mHGkeyGBVCD2K2+Zjpa8/rcs4jXe0AkbCqPX1vv5JXxFudF1XwQc8oTKHSY/qY9FZ9/L
-         c3gLL9MOiYrMA456aLGUeb2KL46vyeuhMtvS/g3x83sEn+q+KQgy/ogdr5G8kYFnEvtA
-         WT/Q==
-X-Gm-Message-State: APjAAAX3AF2PckWzxToywOzXJ90C35MKqWI9DVa39VauAJcCVVtBd7z2
-        xsxsZx7CqqHDwgkYO2hfKKyxorGeTk6VmwURGQorGA==
-X-Google-Smtp-Source: APXvYqyaD/lVRLAGjdvleYMAYDc5dLlKYIHBFNw9Y8pm/8dJbZCYSSBsihmIjD8/eWFRLVRUnDlcrVW2b1zkXu+Rw1E=
-X-Received: by 2002:a67:ebc2:: with SMTP id y2mr13457816vso.191.1571664981141;
- Mon, 21 Oct 2019 06:36:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rxZzIwlDD5DO3Dig1AAmB3NX72gSPtCfOYTtxG2Ms5Q=;
+        b=SKGWFqYycbxF+ZXbWUCgkAFexCTN+Jz0Z9mterMsh78SbWHQnDaORZpE3KNe/bWqJk
+         RZAiE0SybV0cYI5+emoa/usvAzeVk+QKJ44kIl9TsweAKjNu6pBsvfJI5+i94Gr+mbKa
+         n1tUgiuyr14ExiLgfGa3WG+GpnraRGYOswfaMNH++TAv19zBBGwji6aeKfknHhWGlUTn
+         /QR56bLa9c/34cJvmNaqoOotghBDvrhKcrdAVUpm1FqC5NV/6OBl+R5fyzWWKt31hnOd
+         dkQIqtwWNJBueXP8ocgzZPWC+rDObprxt4DFakQglIv/kwEH2MDG9FGudVoFpHAJZY7w
+         Gz8A==
+X-Gm-Message-State: APjAAAVBV8mSS0HQOqzRQdM+hXU2jvqTNTi3XD9m6muKqPLMAFYPAMzL
+        n16kj2vDVcVYrPIX0OCnTQk64A==
+X-Google-Smtp-Source: APXvYqzYcRG7qQc57VrQDTccwlNW2H5DWKsVDXNVe8OUa6L1J6a/dYF402AJ/L9jlUOo8hOKSLt6TA==
+X-Received: by 2002:a1c:39c1:: with SMTP id g184mr1936913wma.75.1571665192059;
+        Mon, 21 Oct 2019 06:39:52 -0700 (PDT)
+Received: from localhost.localdomain (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id 17sm4050552wmg.29.2019.10.21.06.39.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 06:39:51 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     robh+dt@kernel.org
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        mjourdan@baylibre.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] dt-bindings: soc: amlogic: canvas: convert to yaml
+Date:   Mon, 21 Oct 2019 15:39:50 +0200
+Message-Id: <20191021133950.30490-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20191011131502.29579-1-ludovic.Barre@st.com> <20191011131502.29579-2-ludovic.Barre@st.com>
-In-Reply-To: <20191011131502.29579-2-ludovic.Barre@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 21 Oct 2019 15:35:44 +0200
-Message-ID: <CAPDyKFqE09nqdev_qewwNzjjUuhm0UUC03tgvY=ZukYY4az7wg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mmc: add unstuck function if host is in deadlock state
-To:     Ludovic Barre <ludovic.Barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 11 Oct 2019 at 15:15, Ludovic Barre <ludovic.Barre@st.com> wrote:
->
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> After a request a host may be in deadlock state, and wait
-> a specific action to unstuck the hardware block before
-> re-sending a new command.
+Now that we have the DT validation in place, let's convert the device tree
+bindings for the Amlogic Canvas over to a YAML schemas.
 
-Rather than talking about "unstuck" and "deadlock", how about instead
-describing that an MMC controller, may end up in an non-functional
-state hanging on something. Then to allow it to serve new requests it
-needs to be reset.
+Cc: Maxime Jourdan <mjourdan@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/soc/amlogic/amlogic,canvas.txt   | 33 -------------
+ .../bindings/soc/amlogic/amlogic,canvas.yaml  | 49 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 33 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.yaml
 
->
-> This patch adds an optional callback mmc_hw_unstuck which
-> allows the host to unstuck the controller. In order to avoid
-> a critical context, this callback must be called when the
-> request is completed. Depending the mmc request, the completion
-> function is defined by mrq->done and could be in block.c or core.c.
+diff --git a/Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.txt b/Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.txt
+deleted file mode 100644
+index e876f3ce54f6..000000000000
+--- a/Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.txt
++++ /dev/null
+@@ -1,33 +0,0 @@
+-Amlogic Canvas
+-================================
+-
+-A canvas is a collection of metadata that describes a pixel buffer.
+-Those metadata include: width, height, phyaddr, wrapping and block mode.
+-Starting with GXBB the endianness can also be described.
+-
+-Many IPs within Amlogic SoCs rely on canvas indexes to read/write pixel data
+-rather than use the phy addresses directly. For instance, this is the case for
+-the video decoders and the display.
+-
+-Amlogic SoCs have 256 canvas.
+-
+-Device Tree Bindings:
+----------------------
+-
+-Video Lookup Table
+---------------------------
+-
+-Required properties:
+-- compatible: has to be one of:
+-		- "amlogic,meson8-canvas", "amlogic,canvas" on Meson8
+-		- "amlogic,meson8b-canvas", "amlogic,canvas" on Meson8b
+-		- "amlogic,meson8m2-canvas", "amlogic,canvas" on Meson8m2
+-		- "amlogic,canvas" on GXBB and newer
+-- reg: Base physical address and size of the canvas registers.
+-
+-Example:
+-
+-canvas: video-lut@48 {
+-	compatible = "amlogic,canvas";
+-	reg = <0x0 0x48 0x0 0x14>;
+-};
+diff --git a/Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.yaml b/Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.yaml
+new file mode 100644
+index 000000000000..4322f876753d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/soc/amlogic/amlogic,canvas.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Canvas
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++  - Maxime Jourdan <mjourdan@baylibre.com>
++
++description: |
++  A canvas is a collection of metadata that describes a pixel buffer.
++  Those metadata include: width, height, phyaddr, wrapping and block mode.
++  Starting with GXBB the endianness can also be described.
++
++  Many IPs within Amlogic SoCs rely on canvas indexes to read/write pixel data
++  rather than use the phy addresses directly. For instance, this is the case for
++  the video decoders and the display.
++
++  Amlogic SoCs have 256 canvas.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - amlogic,meson8-canvas
++          - amlogic,meson8b-canvas
++          - amlogic,meson8m2-canvas
++        - const: amlogic,canvas
++      - const: amlogic,canvas # GXBB and newer SoCs
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    canvas: video-lut@48 {
++        compatible = "amlogic,canvas";
++        reg = <0x48 0x14>;
++    };
++
+-- 
+2.22.0
 
-I think it's important to state exactly what is expected from the core
-perspective, by the mmc host driver when it calls this new host ops.
-We need to clarify that.
-
->
-> mmc_hw_unstuck is called if the host returns an cmd/sbc/stop/data
-> DEADLK error.
-
-To me, this approach seems a bit upside-down. Although, I have to
-admit that I haven't thought through this completely yet.
-
-The thing is, to make this useful for host drivers in general, I
-instead think we need to add timeout to each request that the core
-sends to the host driver. In other words, rather than waiting forever
-in the core for the completion variable to be set, via calling
-wait_for_completion() we could call wait_for_completion_timeout(). The
-tricky part is to figure out what timeout to use for each request.
-Perhaps that is even why you picked the approach as implemented in
-@subject patch instead?
-
-Anyway, the typical scenario I see, is that the host driver is
-hanging, likely waiting for an IRQ that never get raised. So, unless
-it implements it own variant of a "request timeout" mechanism, it
-simple isn't able to call mmc_request_done() to inform the core about
-that the request has failed.
-
-For comments to the code, I defer that to the next step, when we have
-agreed on the way forward.
-
-Kind regards
-Uffe
-
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/core/block.c | 11 +++++++++++
->  drivers/mmc/core/core.c  | 35 +++++++++++++++++++++++++++++++++--
->  include/linux/mmc/core.h |  1 +
->  include/linux/mmc/host.h |  7 +++++++
->  4 files changed, 52 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-> index 2c71a434c915..2f723e2f5fde 100644
-> --- a/drivers/mmc/core/block.c
-> +++ b/drivers/mmc/core/block.c
-> @@ -1799,6 +1799,17 @@ static void mmc_blk_mq_rw_recovery(struct mmc_queue *mq, struct request *req)
->         u32 blocks;
->         int err;
->
-> +       /*
-> +        * if the host return a deadlock, it needs to be unstuck
-> +        * before to send a new command.
-> +        */
-> +       if (brq->sbc.error == -EDEADLK || brq->cmd.error == -EDEADLK ||
-> +           brq->stop.error == -EDEADLK || brq->data.error == -EDEADLK) {
-> +               pr_err("%s: host is in bad state, must be unstuck\n",
-> +                      req->rq_disk->disk_name);
-> +               mmc_hw_unstuck(card->host);
-> +       }
-> +
->         /*
->          * Some errors the host driver might not have seen. Set the number of
->          * bytes transferred to zero in that case.
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index 221127324709..43fe59a7403b 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -397,6 +397,7 @@ static int __mmc_start_req(struct mmc_host *host, struct mmc_request *mrq)
->  void mmc_wait_for_req_done(struct mmc_host *host, struct mmc_request *mrq)
->  {
->         struct mmc_command *cmd;
-> +       int sbc_err, stop_err, data_err;
->
->         while (1) {
->                 wait_for_completion(&mrq->completion);
-> @@ -420,8 +421,24 @@ void mmc_wait_for_req_done(struct mmc_host *host, struct mmc_request *mrq)
->                                        mmc_hostname(host), __func__);
->                         }
->                 }
-> -               if (!cmd->error || !cmd->retries ||
-> -                   mmc_card_removed(host->card))
-> +
-> +               sbc_err =  mrq->sbc ? mrq->sbc->error : 0;
-> +               stop_err = mrq->stop ? mrq->stop->error : 0;
-> +               data_err =  mrq->data ? mrq->data->error : 0;
-> +
-> +               /*
-> +                * if the host return a deadlock, it needs to be unstuck
-> +                * before to send a new command.
-> +                */
-> +               if (cmd->error == -EDEADLK || sbc_err == -EDEADLK ||
-> +                   stop_err == -EDEADLK || data_err == -EDEADLK) {
-> +                       pr_debug("%s: host is in bad state, must be unstuck\n",
-> +                                mmc_hostname(host));
-> +                       mmc_hw_unstuck(host);
-> +               }
-> +
-> +               if ((!cmd->error && !sbc_err && !stop_err && !data_err) ||
-> +                   !cmd->retries || mmc_card_removed(host->card))
->                         break;
->
->                 mmc_retune_recheck(host);
-> @@ -430,6 +447,12 @@ void mmc_wait_for_req_done(struct mmc_host *host, struct mmc_request *mrq)
->                          mmc_hostname(host), cmd->opcode, cmd->error);
->                 cmd->retries--;
->                 cmd->error = 0;
-> +               if (mrq->sbc)
-> +                       mrq->sbc->error = 0;
-> +               if (mrq->stop)
-> +                       mrq->stop->error = 0;
-> +               if (mrq->data)
-> +                       mrq->data->error = 0;
->                 __mmc_start_request(host, mrq);
->         }
->
-> @@ -2161,6 +2184,14 @@ int mmc_sw_reset(struct mmc_host *host)
->  }
->  EXPORT_SYMBOL(mmc_sw_reset);
->
-> +void mmc_hw_unstuck(struct mmc_host *host)
-> +{
-> +       if (!host->ops->hw_unstuck)
-> +               return;
-> +       host->ops->hw_unstuck(host);
-> +}
-> +EXPORT_SYMBOL(mmc_hw_unstuck);
-> +
->  static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
->  {
->         host->f_init = freq;
-> diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
-> index b7ba8810a3b5..eb10b8194073 100644
-> --- a/include/linux/mmc/core.h
-> +++ b/include/linux/mmc/core.h
-> @@ -173,6 +173,7 @@ void mmc_wait_for_req(struct mmc_host *host, struct mmc_request *mrq);
->  int mmc_wait_for_cmd(struct mmc_host *host, struct mmc_command *cmd,
->                 int retries);
->
-> +void mmc_hw_unstuck(struct mmc_host *host);
->  int mmc_hw_reset(struct mmc_host *host);
->  int mmc_sw_reset(struct mmc_host *host);
->  void mmc_set_data_timeout(struct mmc_data *data, const struct mmc_card *card);
-> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> index ba703384bea0..8b52cafcd1eb 100644
-> --- a/include/linux/mmc/host.h
-> +++ b/include/linux/mmc/host.h
-> @@ -163,6 +163,13 @@ struct mmc_host_ops {
->         void    (*hw_reset)(struct mmc_host *host);
->         void    (*card_event)(struct mmc_host *host);
->
-> +       /*
-> +        * Optional callback, if your host could be in deadlock after a command
-> +        * and need a specific action to unstuck the controller before sending
-> +        * new command.
-> +        */
-> +       void    (*hw_unstuck)(struct mmc_host *host);
-> +
->         /*
->          * Optional callback to support controllers with HW issues for multiple
->          * I/O. Returns the number of supported blocks for the request.
-> --
-> 2.17.1
->
