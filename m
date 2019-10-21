@@ -2,101 +2,134 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97A9CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AD1CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A856B2166E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571653786;
-	bh=k+fKVfyYreCqp6G4mH8/WCYlH0xNk9lCGA13oSnsVP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zKkK++pnUFciDhJ2OVa9X+vkCcrDm/ULdoKB6yHTJOPY45OJb5Eg0eCf4sco/3zu0
-	 iF5JDhBEPo9mHo6E/q/dFsFWQbAobagvflb4eqhftXP+JGnpdpXEL8f8GJsma8Idv/
-	 Ac0UMbcpcy3/sdaU87/Rc2sHb5WtDx4DnYe2qjuc=
+	by mail.kernel.org (Postfix) with ESMTP id F37822184C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sNQbgSe6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfJUK3q (ORCPT
+        id S1728101AbfJUKb7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:29:46 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33152 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfJUK3p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 06:29:45 -0400
-Received: by mail-ed1-f66.google.com with SMTP id c4so9613695edl.0;
-        Mon, 21 Oct 2019 03:29:44 -0700 (PDT)
+        Mon, 21 Oct 2019 06:31:59 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42188 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbfJUKb4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 06:31:56 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r1so3505674wrs.9
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 03:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fQUvlL0V3Iz6E4Ap+lDL6E5wl3Ji5YJZ7TElhvimK6s=;
+        b=sNQbgSe6MW9Sf188uOBYTA+NasNjY7oDNNSVRg80tBE27c9oTBKOeTOMBhKbIfSnFo
+         9fkgnUIi2Drnm02trdz8ueWMyzH7rb45BJPDAsHxAC/uVs45kb4m9g09Pvcas5OGWFzf
+         DWH9vGPLNAryoDnEviIkDk+cuhXVfHBR3FK+/IkRRLTVbLQ4eRInplmskDLz0elRyE2X
+         tAAQe/vc0QIYP8i8VqLixnry7C+73poCoC+aSEnJYUbKzt+ax6O/itJJr1sCUStytl3u
+         gbMqKpuJQWKu/lh1fykZ1lIpc5ZxKzp1T0h77Op17uH6xYjSi9/TCYQ9yy8bIxKylSQ4
+         Zq0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T2kiEHki8gQHRbb/hKRBiHJ6jSiOvzHioA7z3T6/JhE=;
-        b=r6+bYWMk2bg9608wUl6DHhQuVxPRo7PUaHrJ1ndG8JBUdZ/52CMfjcfXpoteYdPsj6
-         muS8jjsqeGw10kLv1lm1U1Nk3xmoesGAo/1OZDLYIYK05P0CM00q7S2SzFIclLKvQsoP
-         2wjWnqbQtOaddQXCIotoek1JauUYXGHEHsE1BUmP0jznan+8ijD7A/qKmi7KV2HaHFyx
-         HZHIqGpyDk1YM8oe6ns7JMle4Vv+iK1skxWHxsOlK5zVzhAWf19//jXSm+tqBfrQVhAB
-         6Wu5SDMAhaN3EcRj9gNd78nG6mX4opcIMzOLHI6heLO7gMWk0Fzq2iv45K4GUnHHSoEt
-         ebbw==
-X-Gm-Message-State: APjAAAWb8wjhiSnU0kajsR1e+A//XMOr7UenCO0wA3bnVqNJcC4iKHSh
-        sL/gIX0MpLoyVEfMZx3F8Lw=
-X-Google-Smtp-Source: APXvYqybsb4F9xNYHToK1I85K/GHqBT18pPOXA/5ILN5589Myyx73mLaxb72wmS/sAZ2T26vfuEd+w==
-X-Received: by 2002:aa7:da4f:: with SMTP id w15mr24017636eds.26.1571653784220;
-        Mon, 21 Oct 2019 03:29:44 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id j5sm629045edj.62.2019.10.21.03.29.42
+        bh=fQUvlL0V3Iz6E4Ap+lDL6E5wl3Ji5YJZ7TElhvimK6s=;
+        b=tcnJl+PYRenOhd0+hdmT/VlC1z6iGCk3PAeGLeh2hUXOLL93+vf+CXeW4FqXKPA4F4
+         KBwPjA/g7KgJHrywT34r4cDuoAvbji8CtX6+hOoytNkn5bAgJ7rbTuvri61JSJUqgx//
+         Nuhj7rLw2NEUu0GgMfcmmhVm/pV0ARzwJ4oYn6t+OS5rm+IyRNSJNF6mePqnI5auuEtm
+         2HgUkI+5X9VGXR3T+OyW43BVUxEAl2d8p6MylNedifAH6etwoIAXRqU8KFTWrj1FBWL6
+         Kdbz5HwoEDcBkO53YwHjncAhnmPEPQPmdyN7qaeDNhMJYtgsGZxxfy6xlXYLaEazXpjv
+         xjbA==
+X-Gm-Message-State: APjAAAV5smXDo0+nEaw9pFgiTmKQpEOjaYtaCednHJzNOJwTQ1fFkm3L
+        Eq3vxKdGjnvicId7mvmWfjTpIQ==
+X-Google-Smtp-Source: APXvYqyy4Oux2tNP8V/BSFAyhpaClSr0k2FeVWZej2dR57qFLk+u7vifjBbJudZPXvQKK+XBBOZNeQ==
+X-Received: by 2002:adf:e702:: with SMTP id c2mr17251611wrm.70.1571653912695;
+        Mon, 21 Oct 2019 03:31:52 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id f143sm27637543wme.40.2019.10.21.03.31.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:29:43 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:29:41 +0200
-From:   "krzk@kernel.org" <krzk@kernel.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 02/10] ARM: dts: Add support for two more Kontron SoMs
- N6311 and N6411
-Message-ID: <20191021102941.GB1934@pi3>
-References: <20191016150622.21753-1-frieder.schrempf@kontron.de>
- <20191016150622.21753-3-frieder.schrempf@kontron.de>
+        Mon, 21 Oct 2019 03:31:52 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 11:31:50 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH V8 6/6] backlight: qcom-wled: Add auto string detection
+ logic
+Message-ID: <20191021103150.ta7qalltldofouh4@holly.lan>
+References: <1571402009-8706-1-git-send-email-kgunda@codeaurora.org>
+ <1571402009-8706-7-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016150622.21753-3-frieder.schrempf@kontron.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1571402009-8706-7-git-send-email-kgunda@codeaurora.org>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:07:21PM +0000, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Fri, Oct 18, 2019 at 06:03:29PM +0530, Kiran Gunda wrote:
+> The auto string detection algorithm checks if the current WLED
+> sink configuration is valid. It tries enabling every sink and
+> checks if the OVP fault is observed. Based on this information
+> it detects and enables the valid sink configuration.
+> Auto calibration will be triggered when the OVP fault interrupts
+> are seen frequently thereby it tries to fix the sink configuration.
 > 
-> The N6311 and the N6411 SoM are similar to the Kontron N6310 SoM.
-> They are pin-compatible, but feature a larger RAM and NAND flash
-> (512MiB instead of 256MiB). Further, the N6411 has an i.MX6ULL SoC,
-> instead of an i.MX6UL.
+> The auto-detection also kicks in when the connected LED string
+> of the display-backlight malfunctions (because of damage) and
+> requires the damaged string to be turned off to prevent the
+> complete panel and/or board from being damaged.
 > 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 > ---
->  .../boot/dts/imx6ul-kontron-n6311-som.dtsi    | 40 +++++++++++++++++++
->  .../boot/dts/imx6ull-kontron-n6411-som.dtsi   | 40 +++++++++++++++++++
->  2 files changed, 80 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
->  create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
+>  drivers/video/backlight/qcom-wled.c | 398 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 392 insertions(+), 6 deletions(-)
 > 
+> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+> index 658b1e0..b2e6754 100644
+> --- a/drivers/video/backlight/qcom-wled.c
+> +++ b/drivers/video/backlight/qcom-wled.c
+> @@ -193,7 +216,23 @@ static int wled_module_enable(struct wled *wled, int val)
+>  				WLED3_CTRL_REG_MOD_EN,
+>  				WLED3_CTRL_REG_MOD_EN_MASK,
+>  				val << WLED3_CTRL_REG_MOD_EN_SHIFT);
+> -	return rc;
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	if (wled->ovp_irq > 0) {
+> +		if (val) {
+> +			/*
+> +			 * Wait for at least 10ms before enabling OVP interrupt
+> +			 * after module enable so that soft start is completed.
+> +			 */
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Comments should not say what is does (we can read that). It should be
+saying what is weird about the hardware the results in us enabling the
+interrupt in an unusual way.
 
-Best regards,
-Krzysztof
+More like:
 
+"The hardware generates a storm of spurious OVP interrupts during soft
+start operations so defer enabling the IRQ for 10ms to ensure that
+the soft start is complete."
+
+Note that I am only guessing that is an spurious interrupt storm that
+caused you to defer the interrupt enable... I don't want to have to
+guess which is why I am asking for a good quality comment!
+
+
+Daniel.
