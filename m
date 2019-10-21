@@ -2,95 +2,124 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D0CCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC25CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DE32084C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C105B206C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571655184;
-	bh=vR9XEaMi7TLXC56PpEUV67so/BvHCnADajU0Dcf+bjc=;
+	s=default; t=1571655976;
+	bh=6aIiiW6Oy2Tp3jMHez2uZxsG1cbGxMZp3/IBu+pOkT4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YjDEgznWkFAsWC8Vfr7UGG+ZQE7SF04nHiCI2DgwSl4Uv8ishkU28N93KfK/oEtXy
-	 kL6vsoeffwiUa33ek7DZFqhwbucUlI1nA8xE7osgAnleLWHUjehsdLKlB01tkUtAH5
-	 v/39rMbNpFzRuxdOCbxX9I7mVDYXgHMArF9ZSJbE=
+	b=vkRzSlF9oJEAU309ChniCqaLWD6Fg1f8rJZX4y2fRagATxwvAdk1sfUY/X6NQqcep
+	 of4hrvhEj1gYqZogn64P20h73C379ORfzABeqSlL36PGRVVFkD4TESRekT9yAoSqld
+	 ByW+QO9eK1apgzZcHNPUfHXW7HqdyJEwhajfdkMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfJUKxD (ORCPT
+        id S1727433AbfJULGQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:53:03 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36508 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfJUKxD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 06:53:03 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h2so9655015edn.3;
-        Mon, 21 Oct 2019 03:53:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1TgtWs4DJV+Q7PKm3m20XxcpK+EeU8BJOWEpeeqxE5M=;
-        b=uGe9mqCoXb7TLZRTqC7aL2cTHY4se14+w0cwxDoo0HWRf/Vy9xhy1xWR7cjc/x7mk3
-         YMzuDDnge/gY4nxTwo5qtFvpAegRhpNG8XFcwjxlboCY0BV442A7KHuo3ufaM8b/GeEF
-         MGNpdESC4abNmVX8WA82hCNmGFYvsu/PN8elCC5J8l++kjXC8V315HhdD6oz9vNtbZed
-         /9L+ITfDVUYGD9H/pHqKhjV5G2tMysLLVi/2ZpQ9I/PttqvvvHg5M11o9QkBN4FA8CZL
-         GCkq5J57I47s+vFKo+2JwbRBqURVr9bHOp4Ww2ihb+PwgPs/dOqsHlaKyoiEBp03tKto
-         ZyJQ==
-X-Gm-Message-State: APjAAAWNRcPut/SDJMoLEVCeLdWs+7M08TDm5Sv8TVB0cits0TqSpD7S
-        uMQe+Hq0J0dxDf/v1n26L7E=
-X-Google-Smtp-Source: APXvYqyn3T6TPNnfeaVJZoBwWoGAgZgv5UKwL8hq/5/+A3Y7v6R5GsY3E9ElucI70tnAiJFoFzuFZg==
-X-Received: by 2002:a50:ee12:: with SMTP id g18mr23842734eds.114.1571655181681;
-        Mon, 21 Oct 2019 03:53:01 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id a3sm594352edk.51.2019.10.21.03.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:53:01 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:52:58 +0200
-From:   "krzk@kernel.org" <krzk@kernel.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mon, 21 Oct 2019 07:06:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727058AbfJULGQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:06:16 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8679C2084C;
+        Mon, 21 Oct 2019 11:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571655975;
+        bh=6aIiiW6Oy2Tp3jMHez2uZxsG1cbGxMZp3/IBu+pOkT4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SmsbcM7ob9APIInCUIWU9pFZGqvQIzlGXwhVv9ndL0rOALynmG1mW1Lk39mqHaJ+Q
+         TQBh/zNq2g+4biDbSzud0mQktKJ4SKk26i2jhm9Z/4ZJi/BOWEEtnOTVilP/UQOxXA
+         fAORWnAKW7DLCV5+MqTkkoIA0Rta9wHUGhHGt0Sg=
+Date:   Mon, 21 Oct 2019 13:06:12 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     megous@megous.com
+Cc:     linux-sunxi@googlegroups.com,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/10] ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen' node
- with 'stdout-path'
-Message-ID: <20191021105258.GA2089@pi3>
-References: <20191016150622.21753-1-frieder.schrempf@kontron.de>
- <20191016150622.21753-6-frieder.schrempf@kontron.de>
+        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/4] dt-bindings: Add bindings for USB3 phy on Allwinner
+ H6
+Message-ID: <20191021110612.55ym4y3m3xko3kpc@gilmour>
+References: <20191020134229.1216351-1-megous@megous.com>
+ <20191020134229.1216351-2-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ewuc6ubrfgaw6qrn"
 Content-Disposition: inline
-In-Reply-To: <20191016150622.21753-6-frieder.schrempf@kontron.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191020134229.1216351-2-megous@megous.com>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:07:28PM +0000, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> The Kontron N6x1x SoMs all use uart4 as a debug serial interface.
-> Therefore we set in the 'chosen' node.
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+
+--ewuc6ubrfgaw6qrn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sun, Oct 20, 2019 at 03:42:26PM +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+>
+> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
+> external USB3 pins of the SoC.
+>
+> Add a device tree binding for the PHY.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 > ---
->  arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../phy/allwinner,sun50i-h6-usb3-phy.yaml     | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
+> new file mode 100644
+> index 000000000000..2fdc890748db
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Ondrej Jirman <megous@megous.com>
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/allwinner,sun50i-h6-usb3-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Allwinner sun50i USB3 PHY
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+H6 would be more appropriate here instead of sun50i. There's a bunch
+of sun50i SoCs already, and only one uses it.
 
-Best regards,
-Krzysztof
+With that fixed,
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
+Maxime
+
+--ewuc6ubrfgaw6qrn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXa2RJAAKCRDj7w1vZxhR
+xR48AQDAv8g0iblut9ytzfU6bZMgT1D68v8XPkVM2Tm82RTKoAEAn/tXqAEV2OQF
+ePOXBUp1QBOrzVFUJQx03BYGUacvdwI=
+=O92R
+-----END PGP SIGNATURE-----
+
+--ewuc6ubrfgaw6qrn--
