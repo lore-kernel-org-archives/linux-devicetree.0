@@ -2,150 +2,88 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8533FCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 21:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4531CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 21:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A21A2077C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 21:06:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="JijF89Je"
+	by mail.kernel.org (Postfix) with ESMTP id A089B20873
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 21:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbfJUVGO (ORCPT
+        id S1729388AbfJUVaQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 17:06:14 -0400
-Received: from mail-eopbgr40112.outbound.protection.outlook.com ([40.107.4.112]:17920
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726672AbfJUVGO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 17:06:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D5VYTA21ulp2UzWB0dTDrfOlTouBelHWE6uFZF7hev1bDCoAu+ydmzmwRAMj5n3BiRvuIsvWD7JD+C/1W+7071NnJ5vHUoS6oq026tbndVARmLWv0gHluK2qh8S+pOAQpRDa9ou/TvEo58AddbZ3r0hklHndA2GXIKOIsYTJ0VlLuzvnMEcRmKl7Nqh8Pu8uMxuaFiTsxzy1JkpOBX7LwRdi9RbeSnQspPYDjLTzbRQU6ZSeiU1GckC8qyfAWiA5ByZiH0m2SYR/4yYCUjYoYeLRTKfem9qw56eFAOcGZOH5vsMkMGl3uNCcgdmNUUVXIxMZmXe88DegURT7Td68zQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y07oKaaqKSnHSZU7ZErPJ0lOSrDEhxx/ej7WX712aP4=;
- b=XVz04L97rzkWK5Lr9m6vbvVJiLkypb+h5ZEec4S8SIBDWHYa40v6bpBtjKnh9x5kVwYybqYXsM49NOcc/ose1gtbvI+N9LJdtI9HpvN6Wej9U/riF0iSwq9ibureeTPTiO8bfwmIKItYkpGsCJf5P38fpxkz/eDeeoju4mFb0cEsOYhpbFrBIzRjwN2sJZTKiZwrXfXxq2QMFF/f8ebgZAXaz3cHVebhNpNiNYNosBNkQ4JBtgxenwYiKWWEsD2CtvFLFsZIfbi89hSYZ4t3xZ5MJkbFnmjTCy5+x6QyoQzai6eyOszoESC/VJ/yRVV1R2fS1Yb50kx8P4htGgHmQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y07oKaaqKSnHSZU7ZErPJ0lOSrDEhxx/ej7WX712aP4=;
- b=JijF89Je7rBmLGn2k9hrYcRZkb6BUZu7RBFmv3S/K1JaIbTzLGzf5X6ioijuskJTLmxvKFg9bKQtosEmWKiyaB85tYrEo9z9KMorMQVdjazygY8VzFJcREkqSfzsSDAT73NwXhnrHuM/1QEImLAJR840+tI+xirZybjkP3xmJoI=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3513.eurprd02.prod.outlook.com (52.134.68.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Mon, 21 Oct 2019 21:05:30 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
- 21:05:30 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
-        Cedric Le Goater <clg@kaod.org>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
- timeout support
-Thread-Topic: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
- timeout support
-Thread-Index: AQHViE2KU5aZojIjkUqCdR4ab3gQm6dlleoA
-Date:   Mon, 21 Oct 2019 21:05:30 +0000
-Message-ID: <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
-References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
- <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
-In-Reply-To: <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR05CA0367.eurprd05.prod.outlook.com
- (2603:10a6:7:94::26) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 91d0eb2c-01b2-461a-2091-08d7566a67be
-x-ms-traffictypediagnostic: DB3PR0202MB3513:
-x-microsoft-antispam-prvs: <DB3PR0202MB3513DAFA5FCC7AD4146097BCBC690@DB3PR0202MB3513.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0197AFBD92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(366004)(346002)(39830400003)(199004)(52314003)(189003)(7736002)(31686004)(11346002)(8936002)(71200400001)(71190400001)(31696002)(5660300002)(52116002)(2616005)(446003)(476003)(508600001)(305945005)(486006)(14444005)(3846002)(25786009)(7416002)(6116002)(256004)(316002)(76176011)(2906002)(86362001)(6436002)(58126008)(66556008)(66476007)(64756008)(66446008)(66066001)(99286004)(110136005)(4326008)(65956001)(54906003)(65806001)(6486002)(66946007)(229853002)(36756003)(6512007)(14454004)(26005)(81166006)(81156014)(186003)(6506007)(53546011)(102836004)(6246003)(386003)(4001150100001)(8676002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3513;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mJqj2ZbhUlIhrfXqL98P05v/azoe2H35E7KthchOMKKzRLo01+l0N1w5ELQQueY80Cdy5mZONO6GZdcrM9KhO2shn5gCvX3l6xQFzuwTPjmxFdu/dI7s2CoOL3YGv8GdC5tuW91RQL1tbI7QjN/0kleF8C09RM0cvesWDa6jdVy6/MDf2ZsZfZT2rG8YxAah8le4WACndK/nT6AN5u3NvxiMwQPfEt9QUrc3jyS8/zsQGC2am6OzI8aQz2C4qVTauhm6teBV7OEY2aRtY7aqNRFiUKzV/7y5g9uCKMBZ7E0xm0hkFaTmVVI43O9PtxmYIMmijLrs6zHNHmTD2EPR+Pc41elp3xKpsDtEcprF3FCMQe2KVY61rPIHTmR3BaatwcaBJgXysZkB9oW53QY12LOR03Ulp1BNW3+IpvWVtG9yOHNgZtkSKq2j/Mv/J1Gh
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <08F8C0D291CEAA46A8C814AED28C379A@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 21 Oct 2019 17:30:16 -0400
+Received: from muru.com ([72.249.23.125]:38776 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727264AbfJUVaQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 17:30:16 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id E154F80CC;
+        Mon, 21 Oct 2019 21:30:49 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, Bin Liu <b-liu@ti.com>,
+        Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 0/3] Probe am335x musb with ti-sysc and drop platform data
+Date:   Mon, 21 Oct 2019 14:30:08 -0700
+Message-Id: <20191021213011.29110-1-tony@atomide.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91d0eb2c-01b2-461a-2091-08d7566a67be
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 21:05:30.4539
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qjCxwIOnZ9iL7XFNToBawV2OwLWNd5V7TOhZA8Z9CNeEl2o/DBABErzUMOKG0b0n
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3513
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMjAxOS0xMC0yMSAyMjoyNCwgSmFlIEh5dW4gWW9vIHdyb3RlOg0KPiBBcHBlbmQgYSBiaW5k
-aW5nIHRvIHN1cHBvcnQgaGFyZHdhcmUgdGltZW91dCBmZWF0dXJlLg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogSmFlIEh5dW4gWW9vIDxqYWUuaHl1bi55b29AbGludXguaW50ZWwuY29tPg0KPiAtLS0N
-Cj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWFzcGVlZC50eHQg
-fCAyICsrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXNwZWVkLnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWFzcGVlZC50eHQN
-Cj4gaW5kZXggYjQ3ZjZjY2IxOTZhLi4xMzNiZmVkZjRjZGQgMTAwNjQ0DQo+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWFzcGVlZC50eHQNCj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXNwZWVkLnR4dA0KPiBA
-QCAtMTcsNiArMTcsOCBAQCBPcHRpb25hbCBQcm9wZXJ0aWVzOg0KPiAgLSBidXMtZnJlcXVlbmN5
-CTogZnJlcXVlbmN5IG9mIHRoZSBidXMgY2xvY2sgaW4gSHogZGVmYXVsdHMgdG8gMTAwIGtIeiB3
-aGVuIG5vdA0KPiAgCQkgIHNwZWNpZmllZA0KPiAgLSBtdWx0aS1tYXN0ZXIJOiBzdGF0ZXMgdGhh
-dCB0aGVyZSBpcyBhbm90aGVyIG1hc3RlciBhY3RpdmUgb24gdGhpcyBidXMuDQo+ICstIGFzcGVl
-ZCxody10aW1lb3V0LW1zCTogSGFyZHdhcmUgdGltZW91dCBpbiBtaWxsaXNlY29uZHMuIElmIGl0
-J3Mgbm90DQo+ICsJCQkgIHNwZWNpZmllZCwgdGhlIEgvVyB0aW1lb3V0IGZlYXR1cmUgd2lsbCBi
-ZSBkaXNhYmxlZC4NCj4gIA0KPiAgRXhhbXBsZToNCj4gIA0KPiANCg0KU29tZSBTTUJ1cyBjbGll
-bnRzIHN1cHBvcnQgYSBzbWJ1cy10aW1lb3V0LWRpc2FibGUgYmluZGluZyBmb3IgZGlzYWJsaW5n
-DQp0aW1lb3V0cyBsaWtlIHRoaXMsIGZvciBjYXNlcyB3aGVyZSB0aGUgSTJDIGFkYXB0ZXIgaW4g
-cXVlc3Rpb24gb24gb2NjYXNpb24NCmlzIHVuYWJsZSB0byBrZWVwIHRoZSBwYWNlLiBBZGRpbmcg
-dGhhdCBwcm9wZXJ0eSB0aHVzIGF2b2lkcyB1bmRlc2lyZWQNCnRpbWVvdXRzIHdoZW4gdGhlIGNs
-aWVudCBpcyBTTUJ1cyBjb25mb3JtYW50IHdpdGhvdXQgaXQuIFlvdXIgbmV3IGJpbmRpbmcNCmlz
-IHRoZSByZXZlcnNlIHNpdHVhdGlvbiwgd2hlcmUgeW91IHdhbnQgdG8gYWRkIGEgdGltZW91dCB3
-aGVyZSBvbmUgaXMNCm90aGVyd2lzZSBtaXNzaW5nLg0KDQpBbnl3YXksIHNpbmNlIEkyQyBkb2Vz
-IG5vdCBoYXZlIGEgc3BlY2lmaWVkIGxvd2VzdCBwb3NzaWJsZSBmcmVxdWVuY3ksIHRoaXMNCmZl
-ZWxzIGxpa2Ugc29tZXRoaW5nIHRoYXQgaXMgbW9yZSBpbiB0aGUgU01CdXMgYXJlbmEuIFNob3Vs
-ZCB0aGUgcHJvcGVydHkNCnBlcmhhcHMgYmUgYSBnZW5lcmljIHByb3BlcnR5IG5hbWVkIHNtYnVz
-LXRpbWVvdXQtbXMsIG9yIHNvbWV0aGluZyBsaWtlDQp0aGF0Pw0KDQpJZiB0aGUgYWJvdmUgaXMg
-bm90IHdhbnRlZCBvciBhcHByb3ByaWF0ZSwgdGhlbiBJIHdvdWxkIHBlcnNvbmFsbHkgcHJlZmVy
-DQphc3BlZWQsYnVzLXRpbWVvdXQtbXMgb3ZlciBhc3BlZWQsaHctdGltZW91dC1tcy4gVG8gbWUs
-IGh3LXRpbWVvdXQtbXMgc291bmRzDQpsaWtlIGEgKG1vcmUgc2VyaW91cykgdGltZW91dCBiZXR3
-ZWVuIHRoZSBDUFUgYW5kIHRoZSBJMkMgcGVyaXBoZXJhbCB1bml0DQpvciBzb21ldGhpbmcgbGlr
-ZSB0aGF0LiBCdXQgSSBkb24ndCBjYXJlIGRlZXBseS4uLg0KDQpDaGVlcnMsDQpQZXRlcg0KDQo=
+Hi all,
+
+This series of changes updates am335x musb to probe with ti-sysc interconnect
+target module driver, removes some unnecessary board specific boiler plate,
+and then drops the legacy platform data for musb.
+
+Note that this patch depends on the following two patches:
+
+[PATCH] bus: ti-sysc: Handle mstandby quirk and use it for musb
+[PATCH] bus: ti-sysc: Use swsup quirks also for am335x musb
+
+Regards,
+
+Tony
+
+
+Tony Lindgren (3):
+  ARM: dts: Probe am335x musb with ti-sysc
+  ARM: dts: Drop pointless status changing for am3 musb
+  ARM: OMAP2+: Drop legacy platform data for am335x musb
+
+ arch/arm/boot/dts/am335x-baltos.dtsi          | 12 ----
+ arch/arm/boot/dts/am335x-bone-common.dtsi     | 22 -------
+ arch/arm/boot/dts/am335x-boneblue.dts         | 22 -------
+ arch/arm/boot/dts/am335x-chiliboard.dts       | 18 -----
+ arch/arm/boot/dts/am335x-cm-t335.dts          | 20 ------
+ arch/arm/boot/dts/am335x-evm.dts              | 25 -------
+ arch/arm/boot/dts/am335x-evmsk.dts            | 25 -------
+ arch/arm/boot/dts/am335x-guardian.dts         | 22 -------
+ arch/arm/boot/dts/am335x-igep0033.dtsi        | 25 -------
+ arch/arm/boot/dts/am335x-lxm.dts              | 22 -------
+ .../boot/dts/am335x-moxa-uc-2100-common.dtsi  | 17 -----
+ .../arm/boot/dts/am335x-moxa-uc-8100-me-t.dts | 22 -------
+ arch/arm/boot/dts/am335x-osd3358-sm-red.dts   | 22 -------
+ arch/arm/boot/dts/am335x-pcm-953.dtsi         | 25 -------
+ arch/arm/boot/dts/am335x-pdu001.dts           | 28 --------
+ arch/arm/boot/dts/am335x-pepper.dts           | 20 ------
+ arch/arm/boot/dts/am335x-pocketbeagle.dts     | 22 -------
+ arch/arm/boot/dts/am335x-regor.dtsi           | 21 ------
+ arch/arm/boot/dts/am335x-shc.dts              | 17 -----
+ arch/arm/boot/dts/am335x-sl50.dts             | 22 -------
+ arch/arm/boot/dts/am335x-wega.dtsi            | 26 --------
+ arch/arm/boot/dts/am33xx-l4.dtsi              |  7 ++
+ arch/arm/boot/dts/am33xx.dtsi                 | 66 +++++++++----------
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c    | 44 -------------
+ 24 files changed, 39 insertions(+), 533 deletions(-)
+
+-- 
+2.23.0
