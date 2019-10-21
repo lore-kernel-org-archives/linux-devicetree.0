@@ -2,151 +2,95 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9D1CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A3CCA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3655E2070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409692070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfJUJuR (ORCPT
+        id S1727649AbfJUJyl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:50:17 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59149 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfJUJuR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 05:50:17 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iMUKM-0003je-1U; Mon, 21 Oct 2019 11:50:14 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iMUKL-00040z-BG; Mon, 21 Oct 2019 11:50:13 +0200
-Date:   Mon, 21 Oct 2019 11:50:13 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, Jun Li <jun.li@nxp.com>
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for fec1
-Message-ID: <20191021095013.3lm2slv6glqx5nnh@pengutronix.de>
-References: <1571649512-24041-1-git-send-email-peng.fan@nxp.com>
- <20191021094420.wmy5w2tp532dibqm@pengutronix.de>
- <AM0PR04MB448170DA0486707775C3DABA88690@AM0PR04MB4481.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB448170DA0486707775C3DABA88690@AM0PR04MB4481.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:47:55 up 156 days, 16:06, 98 users,  load average: 0.06, 0.09,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Mon, 21 Oct 2019 05:54:41 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27943 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727323AbfJUJyl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 05:54:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 02:54:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="209409910"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Oct 2019 02:54:38 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     kishon@ti.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        peter.harliman.liem@intel.com,
+        vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: [PATCH v6 0/2] phy: intel,lgm-emmc-phy: Add support for eMMC PHY on Intel LGM SoC
+Date:   Mon, 21 Oct 2019 17:54:34 +0800
+Message-Id: <20191021095436.50303-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19-10-21 09:46, Peng Fan wrote:
-> > Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for
-> > fec1
-> > 
-> > Hi,
-> > 
-> > On 19-10-21 09:21, Peng Fan wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > We should not rely on U-Boot to configure the phy reset.
+ Rebased to kernel verson 5.4 
 
-nitpick: s/U-Boot/bootloader/ ?
+dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+changes in v6:
+   - cobined comaptible strings
+   - added as contiguous and can be a single entry for reg properties
+changes in v5:
+   - earlier Review-by tag given by Rob
+   - rework done with syscon parent node.
 
-> > > So introduce phy-reset-gpios property to let Linux handle phy reset
-> > > itself.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> > > b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> > > index faefb7182af1..e4d66f7db09d 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> > > @@ -80,6 +80,7 @@
-> > >  	pinctrl-0 = <&pinctrl_fec1>;
-> > >  	phy-mode = "rgmii-id";
-> > >  	phy-handle = <&ethphy0>;
-> > > +	phy-reset-gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
-> > 
-> > Where is the pinctrl done?
-> 
-> https://elixir.bootlin.com/linux/v5.4-rc2/source/arch/arm64/boot/dts/freescale/imx8mm-evk.dts#L328
+ changes in v4:
+   - As per Rob's review: validate 5.2 and 5.3
+   - drop unrelated items.
 
-Thanks :)
+ changes in v3:
+   - resolve 'make dt_binding_check' warnings
 
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de> 
+ changes in v2:
+   As per Rob Herring review comments, the following updates
+  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+  - filename is the compatible string plus .yaml
+  - LGM: Lightning Mountain
+  - update maintainer
+  - add intel,syscon under property list
+  - keep one example instead of two
 
-Regards,
-  Marco 
+phy: intel-lgm-emmc: Add support for eMMC PHY
+  No changes from  patchV5 
+ 
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+	
+  phy: intel-lgm-emmc: Add support for eMMC PHY
 
-> Regards,
-> Peng.
-> 
-> > 
-> > Regards,
-> >   Marco
-> > 
-> > >  	fsl,magic-packet;
-> > >  	status = "okay";
-> > >
-> > > --
-> > > 2.16.4
-> > >
-> > >
-> > >
-> > 
-> > --
-> > Pengutronix e.K.                           |
-> > |
-> > Industrial Linux Solutions                 |
-> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.p
-> > engutronix.de%2F&amp;data=02%7C01%7Cpeng.fan%40nxp.com%7Cb40bb6
-> > 4c5e39449ade4808d7560b43ca%7C686ea1d3bc2b4c6fa92cd99c5c301635%
-> > 7C0%7C0%7C637072478688921047&amp;sdata=xZI60uyyQ%2BkX%2Fpf07n
-> > CgVhGt1ApYBKSnndGB3Dk2578%3D&amp;reserved=0  |
-> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
-> > |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:
-> > +49-5121-206917-5555 |
-> 
+ .../bindings/phy/intel,lgm-emmc-phy.yaml           |  63 +++++
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/intel/Kconfig                          |   9 +
+ drivers/phy/intel/Makefile                         |   2 +
+ drivers/phy/intel/phy-intel-emmc.c                 | 283 +++++++++++++++++++++
+ 6 files changed, 359 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+ create mode 100644 drivers/phy/intel/Kconfig
+ create mode 100644 drivers/phy/intel/Makefile
+ create mode 100644 drivers/phy/intel/phy-intel-emmc.c
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.11.0
+
