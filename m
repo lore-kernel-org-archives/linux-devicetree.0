@@ -2,105 +2,130 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E73CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 17:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3DFC47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 17:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE342086D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 17:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16ADF2173B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 17:21:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571678516;
+	bh=SYpEJFKUcvPNj9+4z7rqcb97NEcogWIgV/xCLMMUywA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rLVb3av8J13kKkSAT/tNM4rgf8rRUPtzKkGNpkFY+xIV8Jm76CCh+cGpu8oyptRiL
+	 A4gq42nw0nm/OqpnWN+TjVdsaZxIFtRfKdHjOV9UsSpblRjbm+6eIe46Ak9toVL7ZM
+	 +uguza8crxgUcDlxl8KgXzEzei5XqURPJ2hpEFl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfJURTt (ORCPT
+        id S1727953AbfJURVz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:19:49 -0400
-Received: from muru.com ([72.249.23.125]:38582 "EHLO muru.com"
+        Mon, 21 Oct 2019 13:21:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbfJURTt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:19:49 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 8EBC280CC;
-        Mon, 21 Oct 2019 17:20:22 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 10:19:44 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V5 3/3] ARM: logicpd-torpedo-37xx-devkit-28: Reference
- new DRM panel
-Message-ID: <20191021171944.GA5610@atomide.com>
-References: <20191016135147.7743-1-aford173@gmail.com>
- <20191016135147.7743-3-aford173@gmail.com>
+        id S1727110AbfJURVz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 13:21:55 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D09962089C;
+        Mon, 21 Oct 2019 17:21:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571678514;
+        bh=SYpEJFKUcvPNj9+4z7rqcb97NEcogWIgV/xCLMMUywA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J2jFrgIpGxKvd9FIYb/VEJ2WbLxM60E+iDmd/iS9GY0aHlz/ZWJJdv/8z3l+BKGjx
+         4dVqDQviALL8gIemyeo5ZZcvVAkK0RyiXfAXenF69xI0iGvolq45dtfla6jucjXVun
+         /FkYMR6C5BZ0x9AYOyd3DtWt6swxKZ56fd7bF6+o=
+Received: by mail-qt1-f177.google.com with SMTP id z22so1668623qtq.11;
+        Mon, 21 Oct 2019 10:21:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAUI1t3ScOdymf3QheMQjdkyAhKTNrQ/TywIYJW9p7skKE/SmOfu
+        u7e77qvwtcPMnCFj0OejDRm7VkmoUkUtlJIXJQ==
+X-Google-Smtp-Source: APXvYqz/KkdnRA0X14PgdTwtIDdgEw2A0RnxTw/n5AHCYfwxEFm6jj/LMEjFYqOQCAXfF6HFdnHPV3STLDKP4fJgJ3k=
+X-Received: by 2002:ac8:4508:: with SMTP id q8mr9885446qtn.110.1571678512972;
+ Mon, 21 Oct 2019 10:21:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016135147.7743-3-aford173@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191011084038.45829-1-nuno.sa@analog.com> <20191011084038.45829-2-nuno.sa@analog.com>
+ <20191012115745.069119b0@archlinux> <20191014143950.GA6163@bogus>
+ <CAL_Jsq+Hju1KtvfjEJNGsS9maC3LDn0FcQJe6Wp+y-YgiAP=+w@mail.gmail.com>
+ <20191015214435.5d51835a@archlinux> <20191021162736.7409baa7@archlinux>
+In-Reply-To: <20191021162736.7409baa7@archlinux>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 21 Oct 2019 12:21:41 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+5SYOPDOJJJ8+OuGpQ=PKB2JmbQ=yGN1fyuZnuQnAJ2Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+5SYOPDOJJJ8+OuGpQ=PKB2JmbQ=yGN1fyuZnuQnAJ2Q@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio: Add ltc2983 documentation
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [191016 06:53]:
-> With the removal of the panel-dpi from the omap drivers, the
-> LCD no longer works.  This patch points the device tree to
-> a newly created panel named "logicpd,type28"
-> 
-> Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
-> V5:  No Change
-> V4:  No Change
-> V3:  No change
-> V2:  Remove legacy 'label' from binding
+On Mon, Oct 21, 2019 at 10:27 AM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Tue, 15 Oct 2019 21:44:35 +0100
+> Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> > On Tue, 15 Oct 2019 09:19:10 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> >
+> > > On Mon, Oct 14, 2019 at 9:39 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Sat, Oct 12, 2019 at 11:57:45AM +0100, Jonathan Cameron wrote:
+> > > > > On Fri, 11 Oct 2019 10:40:38 +0200
+> > > > > Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+> > > > >
+> > > > > > Document the LTC2983 temperature sensor devicetree bindings.
+> > > > > >
+> > > > > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > > > >
+> > > > > I'm happy with this, but will be waiting for Rob to have a chance
+> > > > > for a final look before applying.
+> > > >
+> > > > LGTM, but I need to add the int64-matrix type to the core schema fi=
+rst
+> > > > or this will give you errors. I should get to that in the next day =
+or
+> > > > so.
+> > >
+> > > Now added, so please update dtschema and check.
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > /home/jic23/src/kernel/iio/Documentation/devicetree/bindings/iio/temper=
+ature/adi,ltc2983.example.dt.yaml: ltc2983@0: thermocouple@20:adi,custom-th=
+ermocouple:0:0: 18446744073659331616 is greater than the maximum of 9223372=
+036854775807
+> > /home/jic23/src/kernel/iio/Documentation/devicetree/bindings/iio/temper=
+ature/adi,ltc2983.example.dt.yaml: ltc2983@0: thermocouple@20:adi,custom-th=
+ermocouple:0:2: 18446744073679351616 is greater than the maximum of 9223372=
+036854775807
+> > /home/jic23/src/kernel/iio/Documentation/devicetree/bindings/iio/temper=
+ature/adi,ltc2983.example.dt.yaml: ltc2983@0: thermocouple@20:adi,custom-th=
+ermocouple:0:4: 18446744073704251616 is greater than the maximum of 9223372=
+036854775807
+> >
+> > Which is odd.  I haven't looked into it beyond testing and reverting th=
+e
+> > patch as out of time for today.
+>
+> I'm still getting this and not sure why.  Rob?
 
-I'm picking this patch into omap-for-v5.5/dt thanks.
+Just realized I failed to send my draft...
 
-Regards,
+This is dtc yaml output not maintaining the sign, so everything is
+unsigned. (I had mentioned this and then promptly forgot.) I'll need
+to figure out how to plumb this thru dtc. For now, its probably
+easiest to just change to uint64-matrix with a comment that it should
+be signed.
 
-Tony
-
-> diff --git a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-> index 07ac99b9cda6..cdb89b3e2a9b 100644
-> --- a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-> +++ b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-> @@ -11,22 +11,6 @@
->  #include "logicpd-torpedo-37xx-devkit.dts"
->  
->  &lcd0 {
-> -
-> -	label = "28";
-> -
-> -	panel-timing {
-> -		clock-frequency = <9000000>;
-> -		hactive = <480>;
-> -		vactive = <272>;
-> -		hfront-porch = <3>;
-> -		hback-porch = <2>;
-> -		hsync-len = <42>;
-> -		vback-porch = <3>;
-> -		vfront-porch = <2>;
-> -		vsync-len = <11>;
-> -		hsync-active = <1>;
-> -		vsync-active = <1>;
-> -		de-active = <1>;
-> -		pixelclk-active = <0>;
-> -	};
-> +	/* To make it work, set CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=4 */
-> +	compatible = "logicpd,type28";
->  };
-> -- 
-> 2.17.1
-> 
+Rob
