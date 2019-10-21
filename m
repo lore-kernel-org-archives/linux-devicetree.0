@@ -2,114 +2,285 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035D1CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD80BCA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74AA20679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571657041;
-	bh=a2UHtRt26/huoScw/p2X1IBkDX1yI2mM4U79evBbDqY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CuWGp6btUhg5ZCGTXI8KHWPHFjUCV1rkNi2rhP93D35EfkiKXscDcpHTnmrokJO+I
-	 +Qo9mxr5V1INMANpQvnkyqy6yUU9y9B9EJ0zDi8tBWFL2d/bEAHQNsOqr0eDk+LX8c
-	 s2sf4wmyZfd3XgGkYf7T03h3suNiclDOjPpvW1Ic=
+	by mail.kernel.org (Postfix) with ESMTP id 8B3CC20679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xqIxF+9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfJULYB (ORCPT
+        id S1728454AbfJULZn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:24:01 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33454 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727433AbfJULYB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 07:24:01 -0400
-Received: by mail-ed1-f67.google.com with SMTP id c4so9725449edl.0;
-        Mon, 21 Oct 2019 04:23:58 -0700 (PDT)
+        Mon, 21 Oct 2019 07:25:43 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42062 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbfJULZm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 07:25:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r1so3709659wrs.9
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 04:25:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IoIwguD84l9TdKOgIJ6k+NaPdGHth76VlXctQ/52GAY=;
+        b=xqIxF+9MYXYRVZPdLb01gQWr+VIugeUrnEUZArwU1V5796KikHPXG/7BUjbJwd7gF+
+         w/8nq4zoTzaZVWIu+E1v11ZYoz0IZ7sCin6eM+yqVVQsvaIIyCFuD0akeBQ0uRNdlZeQ
+         bIEnMYTCF2exPyDpTWHWdrHEoEKvXdos65r+twfdvNwQ11ELrVPgFHVd8LTQoZXK9wkD
+         6pC5KnYwnjtjpFkH4QfsECky8N444Q3u42QT+D/hchoyuIYQo3fgQVdRjUTAp28+D2GF
+         fQydIK48vCnY/6PE+4Hu8t146LAFeUrg60tfRlkdC9phiNuYYbiiNAr+53NgZgb+Z8+D
+         P2Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BVlXhkUOcHB+M6im4W80bsAnmThctBDhzXi/Z0FpqPM=;
-        b=S0V90N+JCrqNnp2dnTE9DRbdC6LfHTIezwPuiDSdPk9RbPLwEEUOEbiFij3ksnRY2a
-         swl+mXCUjqpoKfnsWigLH9jUEeSsPrT0lCqz8jCv7zNaIXiaLang8ux+zBMrAa3Qs4Nt
-         kp31ZpRZo4UKtPx0fVtYp3aNoAIrKXrponiD8ZcvD69VEoPoR8sE8pN07ncfgT4X193B
-         zQdaTLgcfzuQAxb/kLKTBR0mxJQ16NlSI/9qI0886GSxDDd3X+TN78j0NdMyECFn3C1I
-         Sy6gBcvIXCu0v4KWHD4rzxzC3jDfVqGvfeyCv70vGmPk2mQfJegvcJJ5KhiquzID1jfo
-         g2Bw==
-X-Gm-Message-State: APjAAAXrbCYpLnbKDqwO1D4j1d9hml48eaRfvQmKs39b65Ew0Ee9QVHv
-        bOc1/7IME92xRvKKsm1DwEM=
-X-Google-Smtp-Source: APXvYqwff/GiwAwp/7TONncf6a2J4jtHzGlSJbceQ9C74FUOcOXZ54eJ4FoTQ+a8fgD2rHnjfyIlmQ==
-X-Received: by 2002:a17:906:5292:: with SMTP id c18mr21356043ejm.129.1571657037596;
-        Mon, 21 Oct 2019 04:23:57 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id w16sm579189edd.93.2019.10.21.04.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 04:23:56 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 13:23:54 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, vireshk@kernel.org,
-        robh+dt@kernel.org, sboyd@kernel.org, roger.lu@mediatek.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 1/4] PM / OPP: Support adjusting OPP voltages at
- runtime
-Message-ID: <20191021112354.GA2262@pi3>
-References: <20191016145756.16004-1-s.nawrocki@samsung.com>
- <CGME20191016145810eucas1p1b31400c9b2e7f30cdf6deeb4ccee2788@eucas1p1.samsung.com>
- <20191016145756.16004-2-s.nawrocki@samsung.com>
- <20191017064258.yfbh7iz3pbzfhdvr@vireshk-i7>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IoIwguD84l9TdKOgIJ6k+NaPdGHth76VlXctQ/52GAY=;
+        b=qltjVxp6adLbWu/hGby5Pods5ffhRo41pW1q2APwHUkTlCRpUZl5CFlmrYQf9O5gel
+         UzmapBR6IMZL98qOIBoJKPzZIjNaPIH56U4NVUffCwsFbLqPFWqWCFDOJCVrZtXyiodu
+         visocPku9Dn6imgiCKciHHyVcyNNIg+hZJ3H/Q1TTEoWJs9eQdK15DgpnxHJElVz+MJ+
+         GiQ+nrnf+4I5NM5pI+Z+Ayp8+koDuDfTOHUg0+IGiBLO1n5eu8dmVplZvJpgtAirLcEE
+         JH2bmQ9EC5wbtUuDRQ4v4zbBvTvb4bIigd+fFMx8elUmDoUipC7b0qZKiRWalVHSEdrX
+         5mMw==
+X-Gm-Message-State: APjAAAWMGZPXFraiOy2WlszMpFj1IMHrxzl5GN/cxRrpjDA8z73S46D+
+        qTadrlSMQWzfk93c4ZSPk4SX0w==
+X-Google-Smtp-Source: APXvYqyYjDblvuAXUOiGxRxoOHlR+3MiGcdtPvzyetJP+LpvAsFsDJf8xyDkuzhWJGG5meZW4KEGDg==
+X-Received: by 2002:adf:a50b:: with SMTP id i11mr20423440wrb.308.1571657140501;
+        Mon, 21 Oct 2019 04:25:40 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id a186sm12614204wmd.3.2019.10.21.04.25.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 04:25:39 -0700 (PDT)
+Subject: Re: [PATCH v2 02/11] mfd: wcd934x: add support to wcd9340/wcd9341
+ codec
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-3-srinivas.kandagatla@linaro.org>
+ <20191021104611.GZ4365@dell>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <1af8a875-8f55-6b7e-4204-ecedc1608889@linaro.org>
+Date:   Mon, 21 Oct 2019 12:25:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191017064258.yfbh7iz3pbzfhdvr@vireshk-i7>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191021104611.GZ4365@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 12:12:58PM +0530, Viresh Kumar wrote:
-> On 16-10-19, 16:57, Sylwester Nawrocki wrote:
-> > From: Stephen Boyd <sboyd@codeaurora.org>
-> > 
-> > On some SoCs the Adaptive Voltage Scaling (AVS) technique is
-> > employed to optimize the operating voltage of a device. At a
-> > given frequency, the hardware monitors dynamic factors and either
-> > makes a suggestion for how much to adjust a voltage for the
-> > current frequency, or it automatically adjusts the voltage
-> > without software intervention. Add an API to the OPP library for
-> > the former case, so that AVS type devices can update the voltages
-> > for an OPP when the hardware determines the voltage should
-> > change. The assumption is that drivers like CPUfreq or devfreq
-> > will register for the OPP notifiers and adjust the voltage
-> > according to suggestions that AVS makes.
-> > 
-> > This patch is derived from [1] submitted by Stephen.
-> > [1] https://lore.kernel.org/patchwork/patch/599279/
-> > 
-> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> > [s.nawrocki@samsung.com: added handling of OPP min/max voltage]
-> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > ---
-> >  drivers/opp/core.c     | 69 ++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pm_opp.h | 13 ++++++++
-> >  2 files changed, 82 insertions(+)
+Thanks Lee for taking time to review.
+
+I agree with most of the style related comments, will fix them in next 
+version. For others I have replied it inline.
+
+On 21/10/2019 11:46, Lee Jones wrote:
+> On Fri, 18 Oct 2019, Srinivas Kandagatla wrote:
 > 
-> Applied. Thanks.
+>> Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
+>>
+>> This codec has integrated SoundWire controller, pin controller and
+>> interrupt controller.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/mfd/Kconfig                   |   8 +
+>>   drivers/mfd/Makefile                  |   1 +
+>>   drivers/mfd/wcd934x.c                 | 330 ++++++++++++++++
+>>   include/linux/mfd/wcd934x/registers.h | 529 ++++++++++++++++++++++++++
+>>   include/linux/mfd/wcd934x/wcd934x.h   |  24 ++
+>>   5 files changed, 892 insertions(+)
+>>   create mode 100644 drivers/mfd/wcd934x.c
+>>   create mode 100644 include/linux/mfd/wcd934x/registers.h
+>>   create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index ae24d3ea68ea..ab09862b5996 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -1967,6 +1967,14 @@ config MFD_STMFX
+>>   	  additional drivers must be enabled in order to use the functionality
+>>   	  of the device.
+>>   
 
-Hi Viresh,
+[...]
 
-Can you provide a stable tag with this patch so I can take soc/samsung
-driver?
+>> diff --git a/drivers/mfd/wcd934x.c b/drivers/mfd/wcd934x.c
+>> new file mode 100644
+>> index 000000000000..bb4d2a6c89bc
+>> --- /dev/null
+>> +++ b/drivers/mfd/wcd934x.c
+>> @@ -0,0 +1,330 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2019, Linaro Limited
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/mfd/wcd934x/registers.h>
+>> +#include <linux/mfd/wcd934x/wcd934x.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_gpio.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/slimbus.h>
+>> +
 
-Best regards,
-Krzysztof
+[...]
 
+>> +static int wcd934x_bring_up(struct wcd934x_data *wcd)
+>> +{
+>> +	struct regmap *rm = wcd->regmap;
+> 
+> It's much more common to use 'regmap' or 'map'.
+
+Only reason to make it short here is to save some lines!
+If you prefer regmap, I will add that in next version!
+
+> 
+>> +	u16 id_minor, id_major;
+>> +	int ret;
+>> +
+>> +	ret = regmap_bulk_read(rm, WCD934X_CHIP_TIER_CTRL_CHIP_ID_BYTE0,
+>> +			       (u8 *)&id_minor, sizeof(u16));
+>> +	if (ret)
+>> +		return -EINVAL;
+>> +
+>> +	ret = regmap_bulk_read(rm, WCD934X_CHIP_TIER_CTRL_CHIP_ID_BYTE2,
+>> +			       (u8 *)&id_major, sizeof(u16));
+>> +	if (ret)
+>> +		return -EINVAL;
+>> +
+>> +	dev_info(wcd->dev, "wcd934x chip id major 0x%x, minor 0x%x\n",
+>> +		 id_major, id_minor);
+>> +
+>> +	regmap_write(rm, WCD934X_CODEC_RPM_RST_CTL, 0x01);
+>> +	regmap_write(rm, WCD934X_SIDO_NEW_VOUT_A_STARTUP, 0x19);
+>> +	regmap_write(rm, WCD934X_SIDO_NEW_VOUT_D_STARTUP, 0x15);
+>> +	/* Add 1msec delay for VOUT to settle */
+>> +	usleep_range(1000, 1100);
+>> +	regmap_write(rm, WCD934X_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x5);
+>> +	regmap_write(rm, WCD934X_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x7);
+>> +	regmap_write(rm, WCD934X_CODEC_RPM_RST_CTL, 0x3);
+>> +	regmap_write(rm, WCD934X_CODEC_RPM_RST_CTL, 0x7);
+>> +	regmap_write(rm, WCD934X_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x3);
+>> +
+>> +	return 0;
+>> +
+> 
+> Superfluous '\n'.
+> 
+>> +}
+>> +
+>> +static int wcd934x_slim_status(struct slim_device *sdev,
+>> +			       enum slim_device_status status)
+>> +{
+>> +	struct device *dev = &sdev->dev;
+>> +	struct wcd934x_data *wcd;
+>> +	int ret;
+> 
+> This is semantically odd!  Why are you doing most of the
+> initialisation and bring-up in 'status' and not 'probe'.  Seems
+> broken to me.
+> 
+
+SLIMBus device will not be in a state to communicate before enumeration 
+(at probe), so all the device initialization is done in status callback 
+where it is ready for communication.
+
+This is same with SoundWire Bus as well!
+
+>> +	wcd = dev_get_drvdata(dev);
+>> +
+>> +	switch (status) {
+>> +	case SLIM_DEVICE_STATUS_UP:
+>> +		wcd->regmap = regmap_init_slimbus(sdev, &wcd934x_regmap_config);
+>> +		if (IS_ERR(wcd->regmap)) {
+>> +			dev_err(dev, "Error allocating slim regmap\n");
+>> +			return PTR_ERR(wcd->regmap);
+>> +		}
+>> +
+>> +		ret = wcd934x_bring_up(wcd);
+>> +		if (ret) {
+>> +			dev_err(dev, "Error WCD934X bringup: err = %d\n", ret);
+
+
+[...]
+
+>> +	return 0;
+>> +}
+>> +
+>> +static void wcd934x_slim_remove(struct slim_device *sdev)
+>> +{
+>> +	struct wcd934x_data *wcd = dev_get_drvdata(&sdev->dev);
+> 
+> No more clean-up?  Aren't the regulators still enabled?
+> Good point, will add missing regulator disable in next version.
+
+>> +	mfd_remove_devices(&sdev->dev);
+>> +	kfree(wcd);
+>> +}
+>> +
+
+[...]
+
+>> +#endif
+>> diff --git a/include/linux/mfd/wcd934x/wcd934x.h b/include/linux/mfd/wcd934x/wcd934x.h
+>> new file mode 100644
+>> index 000000000000..d102e211948c
+>> --- /dev/null
+>> +++ b/include/linux/mfd/wcd934x/wcd934x.h
+>> @@ -0,0 +1,24 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +
+>> +#ifndef __WCD934X_H__
+>> +#define __WCD934X_H__
+>> +#include <linux/clk.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/slimbus.h>
+
+[...]
+
+>> +struct wcd934x_data {
+>> +	int reset_gpio;
+>> +	int irq;
+> 
+> I'd prefer to see the more complex 'struct's at the top.
+> 
+>> +	struct device *dev;
+>> +	struct clk *extclk;
+>> +	struct regmap *regmap;
+>> +	struct slim_device *sdev;
+> 
+> You don't need 'sdev' and 'dev'.
+
+slim_device instance (sdev) is required by audio codec driver to 
+allocate stream runtime.
+
+> 
+>> +	struct regmap_irq_chip_data *irq_data;
+>> +	struct regulator_bulk_data supplies[WCD934X_MAX_SUPPLY];
+>> +};
+>> +
+>> +#endif /* __WCD934X_H__ */
+>> +
+> 
