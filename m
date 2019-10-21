@@ -2,95 +2,194 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A53CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637DACA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 917FB20B7C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571645452;
-	bh=YgWyBo8MjRj07MfbrlPv0kNCL/8hgHqP/T1LhKJ4jFw=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=ICZOtzSzZXhny5b7JP7wYsFv99T4auuAJ9CiCVsvhlolhF9MIHtrdy36QgqPwhVMA
-	 85Lvxh0xUB5L89KVedoo7ExYZzJOh5gErr4pk2/qyPS/yrUIfagC+SwNWK6pTRnCLO
-	 WGAj+cskQmfietZO1GYsTrnpMNXmmneBRkwXe4co=
+	by mail.kernel.org (Postfix) with ESMTP id 41A70205C9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfJUIKw (ORCPT
+        id S1727122AbfJUILy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:10:52 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:53197 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725972AbfJUIKv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:10:51 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iMSm9-0007tu-RH; Mon, 21 Oct 2019 10:10:49 +0200
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v2 11/13] drivers: irqchip: qcom-pdc: Add irqchip for  sc7180
-X-PHP-Originating-Script: 0:main.inc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 21 Oct 2019 09:10:49 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <agross@kernel.org>, <robh+dt@kernel.org>,
-        <bjorn.andersson@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>
-In-Reply-To: <20191021065522.24511-12-rnayak@codeaurora.org>
-References: <20191021065522.24511-1-rnayak@codeaurora.org>
- <20191021065522.24511-12-rnayak@codeaurora.org>
-Message-ID: <18195431666bd42aa31cf4ec1eed2881@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: rnayak@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mkshah@codeaurora.org, ilina@codeaurora.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Mon, 21 Oct 2019 04:11:54 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:46372 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727399AbfJUILy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 04:11:54 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B65D20020B;
+        Mon, 21 Oct 2019 10:11:51 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 227322001DC;
+        Mon, 21 Oct 2019 10:11:47 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 25DE7402B6;
+        Mon, 21 Oct 2019 16:11:42 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+Subject: [v4,2/2] i2c: mux: pca954x: support property idle-state
+Date:   Mon, 21 Oct 2019 16:00:48 +0800
+Message-Id: <20191021080048.47189-2-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20191021080048.47189-1-biwen.li@nxp.com>
+References: <20191021080048.47189-1-biwen.li@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-21 07:55, Rajendra Nayak wrote:
-> From: Maulik Shah <mkshah@codeaurora.org>
->
-> Add sc7180 pdc irqchip
->
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
-> v2: No change
->
->  drivers/irqchip/qcom-pdc.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index faa7d61b9d6c..954fb599fa9c 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -310,3 +310,4 @@ static int qcom_pdc_init(struct device_node
-> *node, struct device_node *parent)
->  }
->
->  IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
-> +IRQCHIP_DECLARE(pdc_sc7180, "qcom,sc7180-pdc", qcom_pdc_init);
+This supports property idle-state
 
-What I gather from these 3 irq-related patches is that as far as
-the PDC is concerned, SDM845/850 and SC7180 are strictly identical.
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v4:
+	- rename function
+	  pca954x_calculate_chan -> pca954x_regval
 
-Why the churn?
+Change in v3:
+	- update subject and description
+	- add a helper function pca954x_calculate_chan()
 
-         M.
+Change in v2:
+	- update subject and description
+	- add property idle-state
+
+ drivers/i2c/muxes/i2c-mux-pca954x.c | 59 ++++++++++++++++++-----------
+ 1 file changed, 36 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+index 923aa3a5a3dc..e566c4cd8ba5 100644
+--- a/drivers/i2c/muxes/i2c-mux-pca954x.c
++++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+@@ -86,7 +86,7 @@ struct pca954x {
+ 
+ 	u8 last_chan;		/* last register value */
+ 	/* MUX_IDLE_AS_IS, MUX_IDLE_DISCONNECT or >= 0 for channel */
+-	s8 idle_state;
++	s32 idle_state;
+ 
+ 	struct i2c_client *client;
+ 
+@@ -229,20 +229,23 @@ static int pca954x_reg_write(struct i2c_adapter *adap,
+ 				I2C_SMBUS_BYTE, &dummy);
+ }
+ 
++static u8 pca954x_regval(struct pca954x *data, u8 chan)
++{
++	/* we make switches look like muxes, not sure how to be smarter */
++	if (data->chip->muxtype == pca954x_ismux)
++		return chan | data->chip->enable;
++	else
++		return 1 << chan;
++}
++
+ static int pca954x_select_chan(struct i2c_mux_core *muxc, u32 chan)
+ {
+ 	struct pca954x *data = i2c_mux_priv(muxc);
+ 	struct i2c_client *client = data->client;
+-	const struct chip_desc *chip = data->chip;
+ 	u8 regval;
+ 	int ret = 0;
+ 
+-	/* we make switches look like muxes, not sure how to be smarter */
+-	if (chip->muxtype == pca954x_ismux)
+-		regval = chan | chip->enable;
+-	else
+-		regval = 1 << chan;
+-
++	regval = pca954x_regval(data, (u8)(chan & 0xff));
+ 	/* Only select the channel if its different from the last channel */
+ 	if (data->last_chan != regval) {
+ 		ret = pca954x_reg_write(muxc->parent, client, regval);
+@@ -256,7 +259,7 @@ static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
+ {
+ 	struct pca954x *data = i2c_mux_priv(muxc);
+ 	struct i2c_client *client = data->client;
+-	s8 idle_state;
++	s32 idle_state;
+ 
+ 	idle_state = READ_ONCE(data->idle_state);
+ 	if (idle_state >= 0)
+@@ -402,6 +405,17 @@ static void pca954x_cleanup(struct i2c_mux_core *muxc)
+ 	i2c_mux_del_adapters(muxc);
+ }
+ 
++static int pca954x_init(struct i2c_client *client, struct pca954x *data)
++{
++	if (data->idle_state >= 0) {
++		data->last_chan = pca954x_regval(data, (u8)(data->idle_state & 0xff));
++	} else {
++		/* Disconnect multiplexer */
++		data->last_chan = 0;
++	}
++	return i2c_smbus_write_byte(client, data->last_chan);
++}
++
+ /*
+  * I2C init/probing/exit functions
+  */
+@@ -411,7 +425,6 @@ static int pca954x_probe(struct i2c_client *client,
+ 	struct i2c_adapter *adap = client->adapter;
+ 	struct device *dev = &client->dev;
+ 	struct device_node *np = dev->of_node;
+-	bool idle_disconnect_dt;
+ 	struct gpio_desc *gpio;
+ 	struct i2c_mux_core *muxc;
+ 	struct pca954x *data;
+@@ -462,23 +475,24 @@ static int pca954x_probe(struct i2c_client *client,
+ 		}
+ 	}
+ 
+-	/* Write the mux register at addr to verify
++	data->idle_state = MUX_IDLE_AS_IS;
++	if (of_property_read_u32(np, "idle-state", &data->idle_state)) {
++		if (np && of_property_read_bool(np, "i2c-mux-idle-disconnect"))
++			data->idle_state = MUX_IDLE_DISCONNECT;
++	}
++
++	/*
++	 * Write the mux register at addr to verify
+ 	 * that the mux is in fact present. This also
+-	 * initializes the mux to disconnected state.
++	 * initializes the mux to a channel
++	 * or disconnected state.
+ 	 */
+-	if (i2c_smbus_write_byte(client, 0) < 0) {
++	ret = pca954x_init(client, data);
++	if (ret < 0) {
+ 		dev_warn(dev, "probe failed\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	data->last_chan = 0;		   /* force the first selection */
+-	data->idle_state = MUX_IDLE_AS_IS;
+-
+-	idle_disconnect_dt = np &&
+-		of_property_read_bool(np, "i2c-mux-idle-disconnect");
+-	if (idle_disconnect_dt)
+-		data->idle_state = MUX_IDLE_DISCONNECT;
+-
+ 	ret = pca954x_irq_setup(muxc);
+ 	if (ret)
+ 		goto fail_cleanup;
+@@ -531,8 +545,7 @@ static int pca954x_resume(struct device *dev)
+ 	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
+ 	struct pca954x *data = i2c_mux_priv(muxc);
+ 
+-	data->last_chan = 0;
+-	return i2c_smbus_write_byte(client, 0);
++	return pca954x_init(client, data);
+ }
+ #endif
+ 
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
