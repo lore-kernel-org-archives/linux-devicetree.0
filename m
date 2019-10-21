@@ -2,220 +2,260 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384A9CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 15:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899FFCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 15:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03B120659
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 15:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571670487;
-	bh=uOOHIkxfhvis0C/Go5PYneNloCdkzG4Y0N0DZM+N+/A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VvKMsQoMo3raaa/3SuejNRmahX1vd6rI1eIPuc2oESTWMsH5wauyjtqRaornlR99V
-	 /4g39gqlweZUxpUrQSjbjgB+nGGNGAqQxHYM5vL0K0NvHnxOGnjF5DgUZGdlMt489R
-	 RwcHxAv4pJiJnunTkohB4nOY0fAiuofPRnupxuns=
+	by mail.kernel.org (Postfix) with ESMTP id 3EC252089C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 15:10:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="AsC3srh7";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="QSvmjf9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfJUPIG (ORCPT
+        id S1727140AbfJUPKB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 11:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfJUPIG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 11:08:06 -0400
-Received: from mail-yw1-f52.google.com (mail-yw1-f52.google.com [209.85.161.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 21 Oct 2019 11:10:01 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:47440 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726847AbfJUPKB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 11:10:01 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 786C221872;
-        Mon, 21 Oct 2019 15:08:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571670484;
-        bh=uOOHIkxfhvis0C/Go5PYneNloCdkzG4Y0N0DZM+N+/A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MPG7ILQ4e6be5KuAsiCnX1NmDuX6hHYkUG3FY++76EvtLs8mWZgamXGWV9An86R4q
-         GXjJHkKJFFxLGnnO0hSxGhM8zigbrkvwJHA++tx7aKVHA71hZTI/+yojzkMyfAlG+f
-         Lzp/gPdUt6216tBHK+sUHd5Xj8YUs4dXflVIV6hg=
-Received: by mail-yw1-f52.google.com with SMTP id w140so5028314ywd.0;
-        Mon, 21 Oct 2019 08:08:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAUdzAS9O8P4qEswUGrXGhEQ4EgrNMG0xJPJzcXmeC1rk0UprjVU
-        4kBMpNX5zT2up4I7XQ1+zhJpIOzY6x8l2uNpyw==
-X-Google-Smtp-Source: APXvYqzM/HACTdPRONivWDLf+Xt0qQcSVJ0ofJX0zbPQQ2RaSyY7sqAVya8zdW6qm7MUHKRoyN92+rIluy5rmGOrrYc=
-X-Received: by 2002:a0d:d307:: with SMTP id v7mr5750789ywd.507.1571670483603;
- Mon, 21 Oct 2019 08:08:03 -0700 (PDT)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8D1FFC039E;
+        Mon, 21 Oct 2019 15:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1571670600; bh=fTFdjwxpF4teq4qqkiw4toBaY7Kc2/TL4Zdmne5dRJI=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=AsC3srh7bhVtoFFPhnKC4P0cXHVTvHXpVehiDRYKMTbN9FtljcK9DH9jzA+SU0duA
+         7R2znVkgCxUC2Nw8X0kp8eYuK2q+GdfNJoYCfMjApKOQ7sy7AVm1fVJa3Ai11eO/w3
+         IwFI91++Tis2/0BbhhnoGILlY/yhCJ/cI/0zOJFtwgvoLthdU3ZVT29tQ/Y6mPd337
+         nOTo53DHEaRWynDRkrujx5rGaufkminKz677o1AMZnSMfT9KxJEf5rBSc7ZNWgACSP
+         P2N3wnbct0E/qtSDpwxwRRsvVmAfozK9xZSmWeXsqDU7ZyWXOK3CSgUVXmfdxqrQrZ
+         pKrwqgsfNsOtQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 2D2A4A005A;
+        Mon, 21 Oct 2019 15:10:00 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 21 Oct 2019 08:10:00 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 21 Oct 2019 08:09:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Eg7KhxMMV3wZ0RKrPL8LJ53q+LAgMUQkhaaiQlcb+TsJm1sCqlUHs0ZrnF54jf9JORuTVYwkXEjo/rXH8L0FntL7xdxU1qHMwFLZ6KsJZmz4NNtNRfVPFfIRFlsVxtlfmddICKP1DSRVCKGSXRJCZAAs/FIMWn0Dq0p3+Zcsvn2G6cBkqFi3MCGnWgMzDr1jnyEu20T1+kT1RPymAVYkZ4jjRVQ6t9lYk0PySGMsHivBbtB4oeSWYdYY5bsQznSSTHoaj9XG8mZAjw9uRM97zIVmlsZr334/rBNKNY5hBe1VYpyTFdOvJ8uEjiszr0BEMJskrcQwzoSFCc6dO3qvtA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fTFdjwxpF4teq4qqkiw4toBaY7Kc2/TL4Zdmne5dRJI=;
+ b=YpylNLCluL0tPKXBd4yJaeuwYIHWaJK5YIO/CLQkzcJ7wBkrOIsYugV/+A4/U4UrPagTwudN72csNzSLpXQj3lWEuo0OyfoXdd3qujwxJFbfCpxoVWn1qiLXd0uRrpQvfyAWehtg5OfRFQ2cEgGV/yjWc593cuq8Ms5F+PkgVnUa6rSmHIL/lMwoBZpuJ4HOjshFlz9Mt95VpZh363yENjxVBQO6E7i6HrPhCG0i8YlnAmP6zDCf9znALOb81CbyvMpoGkapN0XwEbisXc9+kTnoYwz3xy/6R6P93N2IKbRoGukc9NYWSsko/8gsHho9Y169pO9+RkJsIcak/9D+Qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fTFdjwxpF4teq4qqkiw4toBaY7Kc2/TL4Zdmne5dRJI=;
+ b=QSvmjf9P/Nfb1ndyE5ZNVNokCs98spyWMMA8n/DDvSfv3zF714ZYnXb5kbzqDLUSOOc3OOzACkLy7t/8V5VKVTYqJhKmkKFb+kOERGwZabER8fERhuHk30s/rKL+UZSIaGN9Of/TVdAy6lVrYkxm2SvJ0jaVLZ2jHnFpcguOAks=
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
+ DM6PR12MB4075.namprd12.prod.outlook.com (10.141.187.72) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Mon, 21 Oct 2019 15:09:57 +0000
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::89b8:dea4:cfcb:a241]) by DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::89b8:dea4:cfcb:a241%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
+ 15:09:57 +0000
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Anvesh Salveru <anvesh.s@samsung.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Pankaj Dubey" <pankaj.dubey@samsung.com>
+Subject: RE: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for ZRX-DC
+ PHY property
+Thread-Topic: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for ZRX-DC
+ PHY property
+Thread-Index: AQHViArdRl1xcTG91EaVBXmINz+ZiadlMw+Q
+Date:   Mon, 21 Oct 2019 15:09:57 +0000
+Message-ID: <DM6PR12MB40102695CA1BB24F7ADE2E6DDA690@DM6PR12MB4010.namprd12.prod.outlook.com>
+References: <CGME20191021122630epcas5p32bd92762c4304035cad5c1822d96e304@epcas5p3.samsung.com>
+ <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
+In-Reply-To: <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MV1EyT1RNME16SmlMV1kwTVRRdE1URmxPUzA1T0RrekxXRTBOR05q?=
+ =?utf-8?B?T0dVNVkyWXdObHhoYldVdGRHVnpkRnhrTmprek5ETXlaQzFtTkRFMExURXha?=
+ =?utf-8?B?VGt0T1RnNU15MWhORFJqWXpobE9XTm1NRFppYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?RTJOVGNpSUhROUlqRXpNakUyTVRRME1UazFPREUxTURReU55SWdhRDBpVTI0?=
+ =?utf-8?B?eFpHcDRjVW81VWxKMU1XVjVhV3hyYWtWUWF6YzNjVmhOUFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlFsRktRVUZCWWxGbGRWbEpXV3BXUVdSbWRtNVZPSGhrWkV4NU1T?=
+ =?utf-8?B?c3JaRlI2UmpFd2RrbFBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGRlIwbFplbEZCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
+ =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
+ =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
+ =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
+ =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
+ =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
+ =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
+ =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
+ =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
+ =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
+ =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gustavo@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7f69aabd-9df3-4291-9e32-08d75638bc89
+x-ms-traffictypediagnostic: DM6PR12MB4075:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB4075338CC814C82402D362D1DA690@DM6PR12MB4075.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1824;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(376002)(346002)(366004)(199004)(189003)(305945005)(7736002)(6116002)(3846002)(74316002)(6246003)(4326008)(71200400001)(7696005)(76176011)(71190400001)(99286004)(110136005)(54906003)(316002)(6436002)(9686003)(229853002)(55016002)(2906002)(33656002)(81156014)(478600001)(8676002)(81166006)(8936002)(25786009)(86362001)(2201001)(446003)(14454004)(52536014)(5660300002)(6506007)(53546011)(102836004)(26005)(256004)(2501003)(486006)(66066001)(76116006)(64756008)(66556008)(66476007)(66946007)(66446008)(11346002)(476003)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB4075;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DcCDFb10DtMFiPpR9/4hL5l/x48BlNdAmSkz4hT7YGe356PDtFlHQM54dwSm9TV3VfGC8p+Sj5ZpIMGqiROJwLGAxLKAg8kARn0A57y5qYVmgpcNJkte6T3TdQRHPgOWaU7MyvgOpjlvKI4D9kvfa0aFAvyDH0p4uLcGPtyfwy1F33o7vEfT1fE48KH9t5LZWryD02Yd6rEXbRVpI0eax4sZ6ZQWZ5KeZ8RpDAZQwgYackTN+PeWvnP+0j8lK7yb00SFu+x4oJvEZE6LzCcrxrkfUwzRXlQcHpRsZt0hF0dFdrLSIgQXxwMvnzIqEiaYCnm0xV7FczdDzyKIV9+JTKIN+ndPyKY91H127NTVgLIer8/2qZqVNNE1yPhg5fyYwdby3l2rtbt3iaO/4HcyOSAFBjQ83336y5z6vxEtrJvfueu5c9lwYQRm1f3fzm3E
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
-In-Reply-To: <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 21 Oct 2019 10:07:51 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com>
-Message-ID: <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com>
-Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f69aabd-9df3-4291-9e32-08d75638bc89
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 15:09:57.7237
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jrmgMUNU3NojC0RD6psGViFDhVzUKGbfAmNH/AM0/IhjrrW4yYBpZxyLOGTVfQyD34vFILP+a+y9FzQXcLGobg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4075
+X-OriginatorOrg: synopsys.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> The Imagination PVR/SGX GPU is part of several SoC from
-> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
-> and others.
->
-> Here we describe how the SGX processor is interfaced to
-> the SoC (registers, interrupt etc.).
->
-> Clock, Reset and power management should be handled
-> by the parent node.
-
-That's TI specific.
-
->
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  .../devicetree/bindings/gpu/img,pvrsgx.txt    | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
-
-Please make this DT schema format.
-
-> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
-> new file mode 100644
-> index 000000000000..4ad87c075791
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
-> @@ -0,0 +1,76 @@
-> +Imagination PVR/SGX GPU
-> +
-> +Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by this binding.
-> +
-> +Required properties:
-> +- compatible:  Should be one of
-> +               "img,sgx530-121", "img,sgx530", "ti,omap-omap3-sgx530-121";
-> +                 - BeagleBoard ABC, OpenPandora 600MHz
-> +               "img,sgx530-125", "img,sgx530", "ti,omap-omap3-sgx530-125";
-> +                 - BeagleBoard XM, GTA04, OpenPandora 1GHz
-> +               "img,sgx530-125", "img,sgx530", "ti,omap-am3517-sgx530-125";
-> +               "img,sgx530-125", "img,sgx530", "ti,omap-am335x-sgx530-125";
-> +                 - BeagleBone Black
-> +               "img,sgx540-120", "img,sgx540", "ti,omap-omap4-sgx540-120";
-> +                 - Pandaboard (ES)
-> +               "img,sgx544-112", "img,sgx544", "ti,omap-omap4-sgx544-112";
-> +               "img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
-> +                 - OMAP5 UEVM, Pyra Handheld
-> +               "img,sgx544-116", "img,sgx544", "ti,omap-dra7-sgx544-116";
-
-The order here is wrong. Should be most specific first.
-
-Drop 'omap-' from the compatible.
-
-> +
-> +               For further study:
-> +                       "ti,omap-am3517-sgx530-?"
-> +                       "ti,omap-am43xx-sgx530-?"
-> +                       "ti,ti43xx-sgx"
-> +                       "ti,ti81xx-sgx"
-> +                       "img,jz4780-sgx5??-?"
-> +                       "intel,poulsbo-sgx?"
-> +                       "intel,cedarview-sgx?"
-> +                       "sunxi,sgx-544-?" - Banana-Pi-M3 (Allwinner A83T)
-
-Just drop these.
-
-> +
-> +               The "ti,omap..." entries are needed temporarily to handle SoC
-> +               specific builds of the kernel module.
-> +
-> +               In the long run, only the "img,sgx..." entry should suffice
-> +               to match a generic driver for all architectures and driver
-> +               code can dynamically find out on which SoC it is running.
-
-Drop this. Which compatible an OS matches on is not relevant to the
-binding. And 'temporarily' is wrong as the SoC specific compatible
-strings are what are used for handling errata or other integration
-specific things.
-
-> +
-> +
-> +- reg:         Physical base addresses and lengths of the register areas.
-
-How many?
-
-> +- reg-names:   Names for the register areas.
-
-If only 1 as the example suggests, then you don't need this.
-
-> +- interrupts:  The interrupt numbers.
-> +
-> +Optional properties:
-> +- timer:       the timer to be used by the driver.
-
-Needs a better description and vendor prefix at least.
-
-Why is this needed rather than using the OS's timers?
-
-> +- img,cores:   number of cores. Defaults to <1>.
-
-Not discoverable?
-
-> +
-> +/ {
-> +       ocp {
-> +               sgx_module: target-module@56000000 {
-
-This is TI specific and this binding covers other chips in theory at
-least. This part is outside the scope
-
-> +                       compatible = "ti,sysc-omap4", "ti,sysc";
-> +                       reg = <0x5600fe00 0x4>,
-> +                             <0x5600fe10 0x4>;
-
-How does it work that these registers overlap the GPU registers?
-
-> +                       reg-names = "rev", "sysc";
-> +                       ti,sysc-midle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>,
-> +                                       <SYSC_IDLE_SMART>;
-> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>,
-> +                                       <SYSC_IDLE_SMART>;
-> +                       clocks = <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
-> +                       clock-names = "fck";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0 0x56000000 0x2000000>;
-> +
-> +                       sgx@fe00 {
-
-gpu@...
-
-
-
-> +                               compatible = "img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
-> +                               reg = <0xfe00 0x200>;
-> +                               reg-names = "sgx";
-> +                               interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +                               timer = <&timer11>;
-> +                               img,cores = <2>;
-> +                       };
-> +               };
-> +       };
-> +};
-> --
-> 2.19.1
->
+T24gTW9uLCBPY3QgMjEsIDIwMTkgYXQgMTM6MjU6NTUsIEFudmVzaCBTYWx2ZXJ1IDxhbnZlc2gu
+c0BzYW1zdW5nLmNvbT4gDQp3cm90ZToNCg0KPiBBZGQgc3VwcG9ydCBmb3IgWlJYLURDIGNvbXBs
+aWFudCBQSFlzLiBJZiBQSFkgaXMgbm90IGNvbXBsaWFudCB0byBaUlgtREMNCj4gc3BlY2lmaWNh
+dGlvbiwgdGhlbiBhZnRlciBldmVyeSAxMDBtcyBsaW5rIHNob3VsZCB0cmFuc2l0aW9uIHRvIHJl
+Y292ZXJ5DQo+IHN0YXRlIGR1cmluZyB0aGUgbG93IHBvd2VyIHN0YXRlcyB3aGljaCBpbmNyZWFz
+ZXMgcG93ZXIgY29uc3VtcHRpb24uDQo+IA0KPiBQbGF0Zm9ybXMgd2l0aCBaUlgtREMgY29tcGxp
+YW50IFBIWSBjYW4gdXNlICJzbnBzLHBoeS16cnhkYy1jb21wbGlhbnQiDQo+IHByb3BlcnR5IGlu
+IERlc2lnbldhcmUgY29udHJvbGxlciBEVCBub2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW52
+ZXNoIFNhbHZlcnUgPGFudmVzaC5zQHNhbXN1bmcuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBQYW5r
+YWogRHViZXkgPHBhbmthai5kdWJleUBzYW1zdW5nLmNvbT4NCj4gLS0tDQo+ICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQgfCAyICsrDQo+
+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUudHh0
+DQo+IGluZGV4IDc4NDk0YzQwNTBmNy4uOTUwN2FjMzhhYzg5IDEwMDY0NA0KPiAtLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQNCj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBj
+aWUudHh0DQo+IEBAIC0zOCw2ICszOCw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICAgICBm
+b3IgZGF0YSBjb3JydXB0aW9uLiBDRE0gcmVnaXN0ZXJzIGluY2x1ZGUgc3RhbmRhcmQgUENJZSBj
+b25maWd1cmF0aW9uDQo+ICAgICBzcGFjZSByZWdpc3RlcnMsIFBvcnQgTG9naWMgcmVnaXN0ZXJz
+LCBETUEgYW5kIGlBVFUgKGludGVybmFsIEFkZHJlc3MNCj4gICAgIFRyYW5zbGF0aW9uIFVuaXQp
+IHJlZ2lzdGVycy4NCj4gKy0gc25wcyxwaHktenJ4ZGMtY29tcGxpYW50OiBUaGlzIHByb3BlcnR5
+IGlzIG5lZWRlZCBpZiBwaHkgY29tcGxpZXMgd2l0aCB0aGUNCj4gKyAgWlJYLURDIHNwZWNpZmlj
+YXRpb24uDQo+ICBSQyBtb2RlOg0KPiAgLSBudW0tdmlld3BvcnQ6IG51bWJlciBvZiB2aWV3IHBv
+cnRzIGNvbmZpZ3VyZWQgaW4gaGFyZHdhcmUuIElmIGEgcGxhdGZvcm0NCj4gICAgZG9lcyBub3Qg
+c3BlY2lmeSBpdCwgdGhlIGRyaXZlciBhc3N1bWVzIDIuDQo+IC0tIA0KPiAyLjE3LjENCg0KDQpS
+ZXZpZXdlZC1ieTogR3VzdGF2byBQaW1lbnRlbCA8Z3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5j
+b20+DQoNCg0K
