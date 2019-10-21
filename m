@@ -2,217 +2,83 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0A7CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 06:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC778CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 06:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28992089C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 06:04:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ayp/mwhD"
+	by mail.kernel.org (Postfix) with ESMTP id B9A6D20700
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 06:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbfJUGEe (ORCPT
+        id S1726125AbfJUGjc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:04:34 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46682 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfJUGEe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 02:04:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e15so7064969pgu.13
-        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 23:04:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VUM8EdX1ZDvK2MjT4PPm05Eny0orr8ox80cAhgwjycY=;
-        b=Ayp/mwhD5mnZbfZWGsRyh7968uDtldk4J6TnJqU1mg9puDAVhizQ+al2gxZQsRgq+w
-         3X5KGFxrLb+ptyhLMKIVF4697/PzNDzf6mKv+PDM1CLypOyI992x06MakqKrhO+LbXci
-         mgZth4Tw/yeUeG6/V3BZlapk9tZPM+BDGT9WRwgSKOdvThSHwM4AdJDxlBc7qH+7zi8l
-         JglGcYAlJbDQxdO6KIS/9hOFMAfYTWPaS2YbFu9jwbYyxZr953QYtwoF39cJNqIYEWdN
-         ZqWbPiJ2cLPU4KgTsq9Yls79CKFXQPKV0SWT34txuQ09ipUc0zmMf1YsTEhppSXLxsjb
-         RRjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VUM8EdX1ZDvK2MjT4PPm05Eny0orr8ox80cAhgwjycY=;
-        b=j2vX03BSelM31eU8eElSJAqgQoV/wE56/hpKDQKqbvvT2gelZtjUtKy1Ckwt5N/6Fr
-         yTX+GT1WpIpjlXaKIUBqjWfjB0rJ9mOFZcj4U+SkM6srvSqAnMaKoUrrnHjm0Hp6hyLx
-         GFTxok/w35bGVSlAMOqSvW9/CgtByIG72FvABRAoGKaI8XBHDimtU29QJIjJPwO9sbvL
-         2LhjQjTKevYR+SnXvdvYoI4UQR/GteqwGrc7OffGN463JzS2lzt0gaFH4bYCAyyptz42
-         Guy+EkEqWk7XCz+p3/IAmevtZh6nNAAoLtGDGAyDMlirYWHtPROi/u0x9AfTgxUSPGeY
-         G2Kg==
-X-Gm-Message-State: APjAAAU/P+2VsdgMN+gKIVIF3XQevUYUjdm7xUvJ9LizD87sUHmh7xWS
-        MaUnMeH7rK7jqztsFbmBoBT3cg==
-X-Google-Smtp-Source: APXvYqyjkw2/TGDt7dlDu5ptN2fzkkTmRIuKXQZ9/L876fbVIMDbZzFgqgVOBZxJvkEf+lGG9Mox6A==
-X-Received: by 2002:aa7:8287:: with SMTP id s7mr21069461pfm.82.1571637871898;
-        Sun, 20 Oct 2019 23:04:31 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 22sm12528779pfj.139.2019.10.20.23.04.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 23:04:30 -0700 (PDT)
-Date:   Sun, 20 Oct 2019 23:04:28 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     kholk11@gmail.com
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        ccross@android.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        agross@kernel.org, marijns95@gmail.com
-Subject: Re: [PATCH 5/5] arm64: dts: qcom: Add Sony Xperia (Loire) X and X
- Compact support
-Message-ID: <20191021060428.GA601@tuxbook-pro>
-References: <20191020150746.64114-1-kholk11@gmail.com>
- <20191020150746.64114-6-kholk11@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191020150746.64114-6-kholk11@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 21 Oct 2019 02:39:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:14496 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbfJUGjb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 02:39:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Oct 2019 23:39:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,322,1566889200"; 
+   d="scan'208";a="209378615"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Oct 2019 23:39:28 -0700
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v4 0/3] PCI: Add Intel PCIe Driver and respective dt-binding yaml file
+Date:   Mon, 21 Oct 2019 14:39:17 +0800
+Message-Id: <cover.1571638827.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 20 Oct 08:07 PDT 2019, kholk11@gmail.com wrote:
-[..]
-> diff --git a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire-kugo.dts b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire-kugo.dts
-[..]
-> +&pm8950_l1 {
-> +	regulator-min-microvolt = <1100000>;
-> +	regulator-max-microvolt = <1300000>;
-> +	qcom,init-voltage = <1200000>;
+Intel PCIe is synopsys based controller utilizes the Designware
+framework for host initialization and intel application
+specific register configurations.
 
-There's no qcom,init-voltage in the upstream binding.
+Changes on v4:
+	Add lane resizing API in PCIe DesignWare driver.
+	Intel PCIe driver uses it for lane resizing which
+	 is being exposed through sysfs attributes.
+	Add Intel PCIe sysfs attributes is in separate patch.
+	Address review comments given on v3.
 
-> +};
-> +
-> +/* Machine specific pins override */
-> +&tlmm {
-> +	usb_cable_det_n_gpio: usb_cable_det_n {
-> +		mux {
+Changes on v3:
+	Compared to v2, map_irq() patch is removed as it is no longer
+	  required for Intel PCIe driver. Intel PCIe driver does platform
+	  specific interrupt configuration during core initialization. So
+	  changed the subject line too.
+	Address v2 review comments for DT binding and PCIe driver
 
-As stated on previous patch, feel free to squash/drop the inner
-subnodes.
+Dilip Kota (3):
+  dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
+  dwc: PCI: intel: PCIe RC controller driver
+  pci: intel: Add sysfs attributes to configure pcie link
 
-> +			pins = "gpio107";
-> +			function = "gpio";
-> +		};
-> +		config {
-> +			pins = "gpio107";
-> +			drive-strength = <2>;
-> +			bias-pull-up;
-> +			input-enable;
-> +		};
-> +	};
-> +
-[..]
-> diff --git a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
-[..]
-> +&soc {
-> +	blsp2_uart2: serial@7af0000 {
+ .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 ++++
+ drivers/pci/controller/dwc/Kconfig                 |  10 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-designware.c       |  43 ++
+ drivers/pci/controller/dwc/pcie-designware.h       |  15 +
+ drivers/pci/controller/dwc/pcie-intel-gw.c         | 700 +++++++++++++++
+ include/uapi/linux/pci_regs.h                      |   1 +
+ 7 files changed, 905 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
 
-Specify this, disabled, in msm8976.dtsi and just enable it here.
+-- 
+2.11.0
 
-> +		compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-> +		reg = <0x7af0000 0x200>;
-> +		interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
-> +			 <&gcc GCC_BLSP2_AHB_CLK>;
-> +		clock-names = "core", "iface";
-> +		dmas = <&blsp2_dma 1>, <&blsp2_dma 0>;
-> +		dma-names = "rx", "tx";
-> +		status = "okay";
-> +	};
-> +
-> +	gpio_keys {
-
-gpio_keys is not a mmio device, so please move it to /
-
-> +		compatible = "gpio-keys";
-> +		input-name = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		autorepeat;
-> +
-[..]
-> +&blsp1_uart1 {
-> +	status = "disabled";
-
-If you need to disable these nodes in your first board dtsi, then they
-should have been disabled in msm8976.dtsi.
-
-> +};
-> +
-> +&blsp1_uart2 {
-> +	status = "disabled";
-> +};
-> +
-> +/* eMMC */
-> +&sdhc_1 {
-> +	vmmc-supply = <&pm8950_l8>;
-> +	vqmmc-supply = <&pm8950_l5>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on>;
-
-I suggest that you specify a single sdc1_on state with subnodes clk, cmd
-and data.
-
-> +
-> +	status = "ok";
-> +};
-> +
-[..]
-> +&smd_rpm_regulators {
-> +	vdd_s1-supply = <&vph_pwr>;
-> +	vdd_s2-supply = <&vph_pwr>;
-> +	vdd_s3-supply = <&vph_pwr>;
-> +	vdd_s4-supply = <&vph_pwr>;
-> +	vdd_s5-supply = <&vph_pwr>;
-> +	vdd_s6-supply = <&vph_pwr>;
-> +	vdd_l1_l19-supply = <&pm8950_s3>;
-> +	vdd_l2_l23-supply = <&pm8950_s3>;
-> +	vdd_l3-supply = <&pm8950_s3>;
-> +	vdd_l4_l5_l6_l7_l16-supply = <&pm8950_s4>;
-> +	vdd_l8_l11_l12_l17_l22-supply = <&vph_pwr>;
-> +	vdd_l20-supply = <&pm8950_s4>;
-> +	vdd_l21-supply = <&pm8950_s4>;
-> +
-> +	s1 {
-> +		regulator-min-microvolt = <1000000>;
-> +		regulator-max-microvolt = <1162500>;
-> +		qcom,init-voltage = <1000000>;
-
-Again, no qcom,init-voltage...
-
-> +		status = "okay";
-
-You shouldn't need to say "okay" here, it's enabled unless you disable
-it.
-
-> +	};
-[..]
-> +&pm8950_gpios {
-> +	cdc_pm_mclk_pin: cdc_pm_mclk {
-> +		cdc_pm {
-
-Please drop this inner subnode, it's no longer needed (same goes for the
-remainder of nodes in this patch).
-
-> +			pins = "gpio1";
-> +			function = "func1"; /* SF1 */
-> +			output-low;
-> +			bias-disable;
-> +			qcom,drive-strength = <2>;
-> +			power-source = <2>; /* VIN 2 */
-> +		};
-> +	};
-> +
-
-Keep up the good work!
-
-Regards,
-Bjorn
