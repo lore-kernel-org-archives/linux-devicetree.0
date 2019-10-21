@@ -2,172 +2,119 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ECECA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD80CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAEE6214B2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:30:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="r104k429"
+	by mail.kernel.org (Postfix) with ESMTP id AF5B12084C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729995AbfJUSaa (ORCPT
+        id S1729703AbfJUSgl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:30:30 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43858 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfJUSaa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 14:30:30 -0400
-Received: by mail-il1-f194.google.com with SMTP id t5so12950384ilh.10
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 11:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AR63DmWjyzGt6KRdOolpGSBjajplu7OlrmmkLDJcF1w=;
-        b=r104k429d5kD4MhbpW7CsAzUCeS0MvNA2lwEo7M3+M+ZRmetRuneB8nvFRgLuP5tQ6
-         J9AKWyyIKKMOX00v0Kdg61NH+qsyMxoXqdfAltdCnCFK4pEdyXQhccQsFXnzV3ALGMjF
-         SGS27FyioGLGTnffmypWBvmKw8dC6yfr+isAhHG9DtvWsqLqu6xlyJDWEk4lKH/r40B7
-         Wxerfq7p3FpMUFwQs8jVPnsL1bLo1Ve8L9+s4ZS17nQ0yiIO2u6g3DVw1MFsuFNNM+f7
-         AugqoDYUUN0oVT99Q04VqQJ8YWw8013gmT4592iYFmLJkmSN+9FKG8UnkYOwGWeEvV9P
-         czhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AR63DmWjyzGt6KRdOolpGSBjajplu7OlrmmkLDJcF1w=;
-        b=hUsEd/mymyCxO4vXqxUA3LS+TF3BMZHYTCjjgk9tok0Ce7j0PNOVKgKF/9N2b1R0bT
-         kzD6+vYD3A3opSG/7Hflhk44+J9V4ZQugPlji8sHHZU8X6Ji+jVkITRZjn7yGz0929OR
-         f/cwUY2PHwGcDaOz1ttJ4/C8B2uNZJXEEWuVhfC7tTJg0BGQaeg+REisaHWvw0T+0Wd9
-         Mgl2LzW2EB0I3RRA9iv3Sv3PQQpHCIQPfxYGLVhuuDv9VshKm/KLPdWSrs3qHyaASdu6
-         3F+4dj+wW1XOB7sKp++xE/zFJhapW03x1YWLsQlkXxXRwp9jhMF71O9PQB2iugLhiXoA
-         oSyw==
-X-Gm-Message-State: APjAAAUQCuFTyEfFN3hovx6TEGzHNLr28GnaahduYJwyI/PgET1H84ta
-        vK5IP/b4OroAhVcGftwBljnQYYgd1UJ4sJMzj7v7lg==
-X-Google-Smtp-Source: APXvYqxDB3gB2L7gTQbzzkQP9wEvUweroIM30iMNvPJ5rKY/UAIM6U3j7QAfdmgJ+vmcQ6N1I2k2AlTFXOpvzMZTjxM=
-X-Received: by 2002:a92:d24d:: with SMTP id v13mr28009523ilg.112.1571682627649;
- Mon, 21 Oct 2019 11:30:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018232124.4126-1-rjones@gateworks.com> <20191021081945.o7knknxacm6uvd3c@pengutronix.de>
-In-Reply-To: <20191021081945.o7knknxacm6uvd3c@pengutronix.de>
-From:   Bobby Jones <rjones@gateworks.com>
-Date:   Mon, 21 Oct 2019 11:30:16 -0700
-Message-ID: <CALAE=UBqEShQ6REhqPEChpXX7-soi4w9vdEu8rO8QfqZqCBS8Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dt: add lsm9ds1 iio imu/magn support to gw553x
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 21 Oct 2019 14:36:41 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58081 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728375AbfJUSgi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 14:36:38 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iMcXb-0004yt-Pa; Mon, 21 Oct 2019 20:36:27 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iMcXZ-000580-DT; Mon, 21 Oct 2019 20:36:25 +0200
+Date:   Mon, 21 Oct 2019 20:36:25 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 4/5] net: dsa: add support for Atheros AR9331 TAG
+ format
+Message-ID: <20191021183625.bmapf4bliaisluad@pengutronix.de>
+References: <20191021053811.19818-1-o.rempel@pengutronix.de>
+ <20191021053811.19818-5-o.rempel@pengutronix.de>
+ <20191021154900.GF17002@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191021154900.GF17002@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 20:14:24 up 157 days, 32 min, 97 users,  load average: 0.00, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 1:19 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> Hi Robert,
->
-> same here, don't name it 'ARM: dt: ...' instead name it 'ARM: dts: imx:
-> ventana: ..' or 'ARM: dts: imx: imx6qdl-gw553x: ..'.
+On Mon, Oct 21, 2019 at 05:49:00PM +0200, Andrew Lunn wrote:
+> > +static struct sk_buff *ar9331_tag_rcv(struct sk_buff *skb,
+> > +				      struct net_device *ndev,
+> > +				      struct packet_type *pt)
+> > +{
+> > +	u8 ver, port;
+> > +	u16 hdr;
+> > +
+> > +	if (unlikely(!pskb_may_pull(skb, AR9331_HDR_LEN)))
+> > +		return NULL;
+> > +
+> > +	hdr = le16_to_cpu(*(__le16 *)skb_mac_header(skb));
+> > +
+> > +	ver = FIELD_GET(AR9331_HDR_VERSION_MASK, hdr);
+> > +	if (unlikely(ver != AR9331_HDR_VERSION)) {
+> > +		netdev_warn_once(ndev, "%s:%i wrong header version 0x%2x\n",
+> > +				 __func__, __LINE__, hdr);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	if (unlikely(hdr & AR9331_HDR_FROM_CPU)) {
+> > +		netdev_warn_once(ndev, "%s:%i packet should not be from cpu 0x%2x\n",
+> > +				 __func__, __LINE__, hdr);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	skb_pull(skb, AR9331_HDR_LEN);
+> > +	skb_set_mac_header(skb, -ETH_HLEN);
+> 
+> No other tag driver calls skb_set_mac_header().  Also, the -ETH_HLEN
+> looks odd, give you have just pulled off AR9331_HDR_LEN?
 
-Sorry about that, I'll follow that format from now on.
->
-> On 19-10-18 16:21, Robert Jones wrote:
-> > Add one node for the accel/gyro i2c device and another for the separate
-> > magnetometer device in the lsm9ds1.
-> >
-> > Signed-off-by: Robert Jones <rjones@gateworks.com>
-> > ---
-> >  arch/arm/boot/dts/imx6qdl-gw553x.dtsi | 31 +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-> > index a106689..55e6922 100644
-> > --- a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-> > +++ b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
-> > @@ -173,6 +173,25 @@
-> >       pinctrl-0 = <&pinctrl_i2c2>;
-> >       status = "okay";
-> >
-> > +     lsm9ds1_ag@6a {
-> > +             compatible = "st,lsm9ds1-imu";
->
-> Didn't found this compatible string.
-So this is a compatible string for a driver that's being mainlined
-now. The devicetree bindings for which has already been reviewed-by
-Rob Herring as seen here:
-https://www.spinics.net/lists/linux-iio/msg47297.html. If possible I'd
-prefer to get this in the same kernel release so let me know if
-there's anything else I can do to make that happen.
+Hm.. is it corrected somewhere else? Any way, B.T.M.A.N need a proper
+value ant it seems to work correctly. So I remove it.
 
->
-> > +             reg = <0x6a>;
-> > +             st,drdy-int-pin = <1>;
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&pinctrl_acc_gyro>;
-> > +             interrupt-parent = <&gpio7>;
-> > +             interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
-> > +     };
-> > +
-> > +     lsm9ds1_m@1c {
-> > +             compatible = "st,lsm9ds1-magn";
-> > +             reg = <0x1c>;
->
-> Nodes are sorted according their i2c-addresses.
->
-I'll resubmit with that change, thanks!
-- Bobby
+> What other tag drivers use is skb_pull_rcsum().
 
-> Regards,
->   Marco
->
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&pinctrl_mag>;
-> > +             interrupt-parent = <&gpio1>;
-> > +             interrupts = <2 IRQ_TYPE_EDGE_RISING>;
-> > +     };
-> > +
-> >       ltc3676: pmic@3c {
-> >               compatible = "lltc,ltc3676";
-> >               reg = <0x3c>;
-> > @@ -462,6 +481,18 @@
-> >               >;
-> >       };
-> >
-> > +     pinctrl_acc_gyro: acc_gyrogrp {
-> > +             fsl,pins = <
-> > +                     MX6QDL_PAD_GPIO_18__GPIO7_IO13          0x1b0b0
-> > +             >;
-> > +     };
-> > +
-> > +     pinctrl_mag: maggrp {
-> > +             fsl,pins = <
-> > +                     MX6QDL_PAD_GPIO_2__GPIO1_IO02           0x1b0b0
-> > +             >;
-> > +     };
-> > +
-> >       pinctrl_pps: ppsgrp {
-> >               fsl,pins = <
-> >                       MX6QDL_PAD_ENET_RXD1__GPIO1_IO26        0x1b0b1
-> > --
-> > 2.9.2
-> >
-> >
-> >
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+It is build in switch and internal Ethernet controller do not set csum. There is
+nothing to recalculate... on other hand, it adds no overhead. So, I have
+nothing against it. Are there other arguments?
+
+Regards,
+Oleksij
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
