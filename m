@@ -2,234 +2,323 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562A2CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CC9CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9E62086D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E412089C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Puy09oE5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3KLxSok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbfJUHk6 (ORCPT
+        id S1727406AbfJUHuy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:40:58 -0400
-Received: from mail-eopbgr80057.outbound.protection.outlook.com ([40.107.8.57]:1702
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727462AbfJUHk6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 03:40:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lbOz4YQ0/eiynkzvkaSv18CmwFPyBEY9zQ8zxQb7ib5k8NizvCJPq3BTtGA5k+Gcgi0o10G52/pHZ6yAUJjfHxh1xpT0U3I5/7hKESMvl8YPY0uxjNM/hTJZIOk16oJfL6JIFvWMz+MA4dFDpCaoYgYsjzh9EyfTw6PtzdHLLrjtoRxXmRVXOSK1UMjaeGPZikrkeOQh9EDNqmHGYEodwGTmpS0ZaWgLuDw7LEo8vj1BxZcTg+qUrLPoFXbdpWi0awmNPGQHDge0UlkOeWviIcbP9Cbb1Q8XLOUDCMD/mxAXtzi9QENlqFxv84mjSX7jXpGAzhH1vygZlVWyp7PDtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ke36duWD9fK3rgbM15mTV/dP/A2KOXQODYXyC57GJQE=;
- b=aD8KPt9n8DF80gulTBAcG4uXMuoXoPYjU+cZIzmYdddDqzGUEzTXvqZyKQUDoHANAHI25uDdWrLudmqkcH07LO4KJLVVYIrIwyGqnRoEoDudOYZqeKtEVNQbvc/3aFJAGjXVQ6EhB1o3p7uweSCH7Dc/XbzORBCc3xpvHlvyMQKTbjMGnOZtwSTkun7To9+1NxIaSm2tGG3tY/EXmmCDG3HjocYa354lUk6uBSCFzdoMlhgGI0O0qtCrhAcfZ3OwFJZw7x1qaLEUkg9xM+0ZcFTzmCu3fCpiuHzen/sTlgAq8czPEHm2wDLLJDgNJXndilu7ELyfQbKoFyrAu7uGGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ke36duWD9fK3rgbM15mTV/dP/A2KOXQODYXyC57GJQE=;
- b=Puy09oE5C0q4YHOLeGqVNcqE+hIZfVfqU/W3ADnTY+IURluat1ip1v1WC25Ac9dwOIOb0avPSGpdk8nWsVo1BTH+hX5C58T/ZOOorShX5Cda/ALqzTStdsFMLOkQA6UV9P49+mJ++h5qpcfccn+/hYl4VAmmd5p/h3aUb/PVazU=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB5369.eurprd04.prod.outlook.com (20.178.106.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.20; Mon, 21 Oct 2019 07:40:48 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::7804:558a:eef9:cc11]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::7804:558a:eef9:cc11%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
- 07:40:48 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Peter Rosin <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [EXT] Re: [v3,2/2] i2c: mux: pca954x: support property idle-state
-Thread-Topic: [EXT] Re: [v3,2/2] i2c: mux: pca954x: support property
- idle-state
-Thread-Index: AQHVg9kFy//9JNcSgkK6ygKn6GT14ade+pwAgAW0LXA=
-Date:   Mon, 21 Oct 2019 07:40:48 +0000
-Message-ID: <DB7PR04MB44902378FD1E4052F4FB261A8F690@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20191016040920.8511-1-biwen.li@nxp.com>
- <20191016040920.8511-2-biwen.li@nxp.com>
- <6e2fb6b9-4ffe-e6de-744f-a2bfe66a1b6c@axentia.se>
-In-Reply-To: <6e2fb6b9-4ffe-e6de-744f-a2bfe66a1b6c@axentia.se>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 715e42a0-cd90-4940-29c7-08d755f9fda0
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DB7PR04MB5369:|DB7PR04MB5369:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5369C437E96BF130FD1F7B358F690@DB7PR04MB5369.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0197AFBD92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(376002)(39860400002)(136003)(199004)(189003)(6246003)(256004)(44832011)(110136005)(14444005)(52536014)(186003)(229853002)(5660300002)(316002)(54906003)(476003)(486006)(9686003)(11346002)(446003)(74316002)(4001150100001)(99286004)(7696005)(4326008)(76176011)(66066001)(102836004)(26005)(6506007)(53546011)(66446008)(86362001)(2906002)(6116002)(3846002)(2501003)(7736002)(64756008)(478600001)(55016002)(71190400001)(71200400001)(81156014)(81166006)(8936002)(8676002)(305945005)(6436002)(14454004)(25786009)(66946007)(33656002)(76116006)(66476007)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5369;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4naQmO7zl/5yCSDpauHEBbIz55n+KyzOC4SbMNkHzgsWvkz7fYUnbRg+8e6P0d2xeBHSREt6aeHeAkGZKg7TA7MAHebDA5omxrEzTbJ5F7CWqFhOzptWQ1iybPLpQ/tQ+49+m5hv+HmRQc4twEPKTS6J+Ws4G5Y72vNKQbrCkDTbaAwEf4W4dTKmsLnaB4AE42QeDxXOL77O440QKb7KkorLC8ZTYu+Vyy5FFqbfSsbpLIAlP0LJBoWKkprHzJvQukiOrnnM+ZQCBR6EDtwCmYzMylGeptCGpGjKXN9jW1P2XhFRJFldOKQYWzIzB03pmQ3I4zkcqToGLOiCyiEQXgZz2HFT9X/fD+0tZb7sULIOnCOZVb98QEc9XyjLl6ckJKVayeDbv6AJrQgeMz/kxGDyzTCrKu85DWhxfc53k+ymycfnmkaDe7tkTUEHn+kl
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 21 Oct 2019 03:50:54 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52696 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfJUHuy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 03:50:54 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r19so12071539wmh.2;
+        Mon, 21 Oct 2019 00:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lAch51dUhj4NuzLLw8/8w9QHfn4X/4BidztkzB9RvfQ=;
+        b=M3KLxSok8AgAVfLEchFOsfRv+wuA0XZdvQG+6LHQ74itWTxD32ECYi2MubLeR05VOe
+         82pgZCQND+alVXLmVAyUfPkDFHW7oITqbFs8NLR+BjxjbrC4IbYxS0iCp2RLS5GIlNjB
+         O52mIcClJhojW5n2TEMZw/VleX58HI9GuiIs1fPJrmFJlGIptEwmFOmkhrEGJlOeBT9B
+         2j8UwRXYooiokJjK36vzUFcvWAcI45B5wdkilEjvp90Z+gQIE1cC5kQqWwVzm30VLNfM
+         kXFF0l1A2KnkSCnS/ObuG3c1UlKsqLHdiB8jPJwaJeW7yzyfaPXQzAS3Zpo4XcevG4WW
+         m8hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lAch51dUhj4NuzLLw8/8w9QHfn4X/4BidztkzB9RvfQ=;
+        b=oYayn0yDzHBXMoCO7Vcpd00ZbONeXe7km4CA74bDOGBMrHhdFhiIt/4FTAKjiid/bp
+         6IMNzTFJNCbFbwIvL0gNyMZEv0LD0nOGuLooR/lK01PrcMlRtfMdJ6jh9Fhvw3XM0lT3
+         2u3iToNdKkmkJrmipbut+gW9Q00bDeBuMbq066x5ee87pJ56VQ/lTJ5pDhBFKmlaLjrt
+         JWK384IdB8I4EVaD1GbEm6nDX2lQz5+sCBRrOJ8V852ONnWfmTeLrrC5Sadez9CmgHDK
+         6rrkBskAv1yrYBcXIfPa1yPmsWV54Y23lYFg3CsZkcivQYUPes8eHYioksvXQeYTfx/p
+         jwnA==
+X-Gm-Message-State: APjAAAWGenavlLXQZ2EN8czYcbSjrMv1/+GE6KSSlzXCRHeHQW6ItAEi
+        qtomnGH3KIpIcREIFba1KAp9l7pcRkRMy0ffzjo=
+X-Google-Smtp-Source: APXvYqyHHiaGrYwtb7fLd+aNGzjSJ73p77CHEpRF07Iqth1hDCiTYqW1YQmFQ9v6qhJoxVWBOg9brhbBqFfefuR9ij0=
+X-Received: by 2002:a7b:c4d4:: with SMTP id g20mr16489854wmk.123.1571644250026;
+ Mon, 21 Oct 2019 00:50:50 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 715e42a0-cd90-4940-29c7-08d755f9fda0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 07:40:48.5534
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QpEcUcatnYsAraDF/2rwLlcRCVZ/jsnv2mfb0vObff8JTuJRXkeZRlqckdW/44DcnSrXKeBSIvpn49Ns4FkQMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5369
+References: <20191020150746.64114-1-kholk11@gmail.com> <20191020150746.64114-5-kholk11@gmail.com>
+ <20191021055207.GJ4500@tuxbook-pro>
+In-Reply-To: <20191021055207.GJ4500@tuxbook-pro>
+From:   AngeloGioacchino Del Regno <kholk11@gmail.com>
+Date:   Mon, 21 Oct 2019 09:50:38 +0200
+Message-ID: <CAK7fi1bTRWtMr6y+ugZ-jBKA5xTM=J+_ePL62AMqyJ19bYwMQw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] arm64: dts: qcom: Add MSM8976 SoC support dts files
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org,
+        ccross@android.com, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>, marijns95@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBPbiAyMDE5LTEwLTE2IDA2OjA5LCBCaXdlbiBMaSB3cm90ZToNCj4gPiBUaGlzIHN1cHBvcnRz
-IHByb3BlcnR5IGlkbGUtc3RhdGUNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpd2VuIExpIDxi
-aXdlbi5saUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZSBpbiB2MzoNCj4gPiAgICAgICAt
-IHVwZGF0ZSBzdWJqZWN0IGFuZCBkZXNjcmlwdGlvbg0KPiA+ICAgICAgIC0gYWRkIGEgaGVscGVy
-IGZ1bmN0aW9uIHBjYTk1NHhfY2FsY3VsYXRlX2NoYW4oKQ0KPiA+DQo+ID4gQ2hhbmdlIGluIHYy
-Og0KPiA+ICAgICAgIC0gdXBkYXRlIHN1YmplY3QgYW5kIGRlc2NyaXB0aW9uDQo+ID4gICAgICAg
-LSBhZGQgcHJvcGVydHkgaWRsZS1zdGF0ZQ0KPiA+DQo+ID4gIGRyaXZlcnMvaTJjL211eGVzL2ky
-Yy1tdXgtcGNhOTU0eC5jIHwgNjQNCj4gPiArKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLQ0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKSwgMjUgZGVsZXRpb25zKC0pDQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvbXV4ZXMvaTJjLW11eC1wY2E5NTR4LmMN
-Cj4gPiBiL2RyaXZlcnMvaTJjL211eGVzL2kyYy1tdXgtcGNhOTU0eC5jDQo+ID4gaW5kZXggOTIz
-YWEzYTVhM2RjLi44Nzc3ZDQyOTI2OWMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9pMmMvbXV4
-ZXMvaTJjLW11eC1wY2E5NTR4LmMNCj4gPiArKysgYi9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4
-LXBjYTk1NHguYw0KPiA+IEBAIC04Niw3ICs4Niw3IEBAIHN0cnVjdCBwY2E5NTR4IHsNCj4gPg0K
-PiA+ICAgICAgIHU4IGxhc3RfY2hhbjsgICAgICAgICAgIC8qIGxhc3QgcmVnaXN0ZXIgdmFsdWUg
-Ki8NCj4gPiAgICAgICAvKiBNVVhfSURMRV9BU19JUywgTVVYX0lETEVfRElTQ09OTkVDVCBvciA+
-PSAwIGZvciBjaGFubmVsICovDQo+ID4gLSAgICAgczggaWRsZV9zdGF0ZTsNCj4gPiArICAgICBz
-MzIgaWRsZV9zdGF0ZTsNCj4gPg0KPiA+ICAgICAgIHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQ7
-DQo+ID4NCj4gPiBAQCAtMjI5LDIyICsyMjksMjUgQEAgc3RhdGljIGludCBwY2E5NTR4X3JlZ193
-cml0ZShzdHJ1Y3QgaTJjX2FkYXB0ZXINCj4gKmFkYXAsDQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgSTJDX1NNQlVTX0JZVEUsICZkdW1teSk7ICB9DQo+ID4NCj4gPiArc3RhdGlj
-IGludCBwY2E5NTR4X2NhbGN1bGF0ZV9jaGFuKHN0cnVjdCBwY2E5NTR4ICpkYXRhLCB1MzIgY2hh
-bikNCj4gDQo+IFNob3VsZCByZXR1cm4gdTgsIGFuZCAiY2hhbiIgaXMgbm90IHdoYXQgaXMgY2Fs
-Y3VsYXRlZC4gUGVyaGFwcyBuYW1lIHRoZQ0KPiBmdW5jdGlvbiBwY2E5NTR4X3JlZ3ZhbD8NCk9r
-YXksIGdvdCBpdCwgSSB3aWxsIGNoYW5nZSBpdCBpbiB2NC4NCj4gDQo+IChZZXMsIGxhc3RfY2hh
-biBpcyBhbHNvIGNsZWFybHkgYSBiYWQgbmFtZSwgYW5kIEkgc3VzcGVjdCB5b3UgbWF5IGhhdmUN
-Cj4gYmFzZWQgdGhpcyBuYW1lIG9uIGl0LCBidXQgY2hhbmdpbmcgdGhhdCBpcyBhIHNlcGFyYXRl
-IHBhdGNoLikNCj4gDQo+ID4gK3sNCj4gPiArICAgICAvKiB3ZSBtYWtlIHN3aXRjaGVzIGxvb2sg
-bGlrZSBtdXhlcywgbm90IHN1cmUgaG93IHRvIGJlIHNtYXJ0ZXIgKi8NCj4gPiArICAgICBpZiAo
-ZGF0YS0+Y2hpcC0+bXV4dHlwZSA9PSBwY2E5NTR4X2lzbXV4KQ0KPiA+ICsgICAgICAgICAgICAg
-cmV0dXJuIGNoYW4gfCBkYXRhLT5jaGlwLT5lbmFibGU7DQo+ID4gKyAgICAgZWxzZQ0KPiA+ICsg
-ICAgICAgICAgICAgcmV0dXJuIDEgPDwgY2hhbjsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgc3RhdGlj
-IGludCBwY2E5NTR4X3NlbGVjdF9jaGFuKHN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eGMsIHUzMiBj
-aGFuKQ0KPiA+IHsNCj4gPiAgICAgICBzdHJ1Y3QgcGNhOTU0eCAqZGF0YSA9IGkyY19tdXhfcHJp
-dihtdXhjKTsNCj4gPiAgICAgICBzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gZGF0YS0+Y2xp
-ZW50Ow0KPiA+IC0gICAgIGNvbnN0IHN0cnVjdCBjaGlwX2Rlc2MgKmNoaXAgPSBkYXRhLT5jaGlw
-Ow0KPiA+ICAgICAgIHU4IHJlZ3ZhbDsNCj4gPiAgICAgICBpbnQgcmV0ID0gMDsNCj4gPg0KPiA+
-IC0gICAgIC8qIHdlIG1ha2Ugc3dpdGNoZXMgbG9vayBsaWtlIG11eGVzLCBub3Qgc3VyZSBob3cg
-dG8gYmUgc21hcnRlciAqLw0KPiA+IC0gICAgIGlmIChjaGlwLT5tdXh0eXBlID09IHBjYTk1NHhf
-aXNtdXgpDQo+ID4gLSAgICAgICAgICAgICByZWd2YWwgPSBjaGFuIHwgY2hpcC0+ZW5hYmxlOw0K
-PiA+IC0gICAgIGVsc2UNCj4gPiAtICAgICAgICAgICAgIHJlZ3ZhbCA9IDEgPDwgY2hhbjsNCj4g
-PiAtDQo+ID4gKyAgICAgcmVndmFsID0gcGNhOTU0eF9jYWxjdWxhdGVfY2hhbihkYXRhLCBjaGFu
-KTsNCj4gDQo+IEkgdGhpbmsgSSB3b3VsZCBoYXZlIGtlcHQgdGhlIGVtcHR5IGxpbmUgaGVyZS4g
-Tm90IGltcG9ydGFudC4uLg0KPiANCj4gPiAgICAgICAvKiBPbmx5IHNlbGVjdCB0aGUgY2hhbm5l
-bCBpZiBpdHMgZGlmZmVyZW50IGZyb20gdGhlIGxhc3QgY2hhbm5lbCAqLw0KPiA+IC0gICAgIGlm
-IChkYXRhLT5sYXN0X2NoYW4gIT0gcmVndmFsKSB7DQo+ID4gKyAgICAgaWYgKChkYXRhLT5sYXN0
-X2NoYW4gJiAweGZmKSAhPSByZWd2YWwpIHsNCj4gDQo+IFRoZSBjaGFuZ2VzIG9uIHRoaXMgbGlu
-ZSBhcmUgbm90IG5lZWRlZCAobGFzdF9jaGFuIGFuZCByZWd2YWwgYXJlIGJvdGggdTgpDQo+IGFu
-ZCBqdXN0IGNsdXR0ZXJzIHVwIHRoZSBjb2RlLg0KT2theSwgZ290IGl0LCBJIHdpbGwgbm90IGNo
-YW5nZSBpdCBpbiB2NC4NCj4gDQo+ID4gICAgICAgICAgICAgICByZXQgPSBwY2E5NTR4X3JlZ193
-cml0ZShtdXhjLT5wYXJlbnQsIGNsaWVudCwgcmVndmFsKTsNCj4gPiAgICAgICAgICAgICAgIGRh
-dGEtPmxhc3RfY2hhbiA9IHJldCA8IDAgPyAwIDogcmVndmFsOw0KPiA+ICAgICAgIH0NCj4gPiBA
-QCAtMjU2LDcgKzI1OSw3IEBAIHN0YXRpYyBpbnQgcGNhOTU0eF9kZXNlbGVjdF9tdXgoc3RydWN0
-DQo+ID4gaTJjX211eF9jb3JlICptdXhjLCB1MzIgY2hhbikgIHsNCj4gPiAgICAgICBzdHJ1Y3Qg
-cGNhOTU0eCAqZGF0YSA9IGkyY19tdXhfcHJpdihtdXhjKTsNCj4gPiAgICAgICBzdHJ1Y3QgaTJj
-X2NsaWVudCAqY2xpZW50ID0gZGF0YS0+Y2xpZW50Ow0KPiA+IC0gICAgIHM4IGlkbGVfc3RhdGU7
-DQo+ID4gKyAgICAgczMyIGlkbGVfc3RhdGU7DQo+ID4NCj4gPiAgICAgICBpZGxlX3N0YXRlID0g
-UkVBRF9PTkNFKGRhdGEtPmlkbGVfc3RhdGUpOw0KPiA+ICAgICAgIGlmIChpZGxlX3N0YXRlID49
-IDApDQo+ID4gQEAgLTQwMiw2ICs0MDUsMjMgQEAgc3RhdGljIHZvaWQgcGNhOTU0eF9jbGVhbnVw
-KHN0cnVjdA0KPiBpMmNfbXV4X2NvcmUgKm11eGMpDQo+ID4gICAgICAgaTJjX211eF9kZWxfYWRh
-cHRlcnMobXV4Yyk7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgaW50IHBjYTk1NHhfaW5pdChz
-dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LCBzdHJ1Y3QgcGNhOTU0eA0KPiA+ICsqZGF0YSkgew0K
-PiA+ICsgICAgIC8qDQo+ID4gKyAgICAgICogV3JpdGUgdGhlIG11eCByZWdpc3RlciBhdCBhZGRy
-IHRvIHZlcmlmeQ0KPiA+ICsgICAgICAqIHRoYXQgdGhlIG11eCBpcyBpbiBmYWN0IHByZXNlbnQu
-IFRoaXMgYWxzbw0KPiA+ICsgICAgICAqIGluaXRpYWxpemVzIHRoZSBtdXggdG8gYSBjaGFubmVs
-DQo+ID4gKyAgICAgICogb3IgZGlzY29ubmVjdGVkIHN0YXRlLg0KPiA+ICsgICAgICAqLw0KPiAN
-Cj4gQWdhaW4sIHRoaXMgY29tbWVudCBiZWxvbmdzIGluIHBjYTk1NHhfcHJvYmUgYmVmb3JlIHRo
-ZSBjYWxsIHRvIHRoaXMNCj4gZnVuY3Rpb24uDQo+IEl0IGRvZXMgbm90IGFwcGx5IChhdCBsZWFz
-dCBub3QgdGhlIGZpcnN0IHNlbnRlbmNlKSB3aGVuIHBjYTk1NHhfaW5pdCBpcyBjYWxsZWQNCj4g
-ZnJvbSBwY2E5NTR4X3Jlc3VtZS4NCk9rYXksIGdvdCBpdCwgdGhhbmtzLCBJIHdpbGwgbW92ZSBp
-dCBpbiB2NC4NCj4gDQo+IEhtbW0sIGl0IGNvdWxkIGJlIGFyZ3VlZCB0aGF0IHNwZWNpZnlpbmcg
-TVVYX0lETEVfQVNfSVMgc2hvdWxkIG5vdA0KPiB0cmlnZ2VyIGEgZGlzY29ubmVjdCBvbiBpbml0
-IChzaW5jZSB0aGUgbXV4IGlzIGFsd2F5cyBpZGxlIGF0IGluaXQpIGFuZCB0aGF0DQo+IHNvbWUg
-b3RoZXIgbWV0aG9kIHNob3VsZCBiZSB1c2VkIHRvIGRldGVybWluZSBpZiB0aGUgY2hpcCBpcyBw
-cmVzZW50LiBUaGUNCj4gZGlmZmVyZW5jZSBpcyB0aGF0IHdpdGggdGhlIGlkbGUtc3RhdGUgcHJv
-cGVydHkgeW91IGNhbiBleHBsaWNpdGx5IHJlcXVlc3QNCj4gTVVYX0lETEVfQVNfSVMsIHdoaWxl
-IHRoZSBvbGQgY29kZSBvbmx5IGhhZCBzb21lIGRlZmF1bHQgYmVoYXZpb3IgaWYNCj4gaTJjLW11
-eC1pZGxlLWRpc2Nvbm5lY3Qgd2FzIG5vdCBwcmVzZW50Lg0KPiANCj4gVGhlIGVhc3kgd2F5IG91
-dCBvZiB0aGlzIGlzIHRvLCBpbiB0aGUgYmluZGluZywgZG9jdW1lbnQgdGhlIHNpdHVhdGlvbiBh
-bmQgc2F5DQo+IHRoYXQgImlkbGUtc3RhdGUgPSA8TVVYX0lETEVfQVNfSVM+OyIgaXMgbm90IHN1
-cHBvcnRlZCBidXQgdGhhdCBzaW1pbGFyDQo+IGZ1bmN0aW9uYWxpdHkgY2FuIGJlIG9idGFpbmVk
-IGJ5IGxlYXZpbmcgb3V0IGJvdGggdGhlDQo+IGkyYy1tdXgtaWRsZS1kaXNjb25uZWN0IGFuZCBp
-ZGxlLXN0YXRlIHByb3BlcnRpZXMuDQpJIHdpbGwgc3VwcG9ydCBNVVhfSURMRV9BU19JUyBpbiB2
-NC4NCg0KPiANCj4gPiArICAgICBpZiAoZGF0YS0+aWRsZV9zdGF0ZSA+PSAwKSB7DQo+ID4gKyAg
-ICAgICAgICAgICBkYXRhLT5sYXN0X2NoYW4gPSBwY2E5NTR4X2NhbGN1bGF0ZV9jaGFuKGRhdGEs
-DQo+IGRhdGEtPmlkbGVfc3RhdGUpOw0KPiA+ICsgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAg
-ICAgICAvKiBEaXNjb25uZWN0IG11bHRpcGxleGVyICovDQo+ID4gKyAgICAgICAgICAgICBkYXRh
-LT5sYXN0X2NoYW4gPSAwOw0KPiA+ICsgICAgIH0NCj4gPiArICAgICByZXR1cm4gaTJjX3NtYnVz
-X3dyaXRlX2J5dGUoY2xpZW50LCBkYXRhLT5sYXN0X2NoYW4pOyB9DQo+ID4gKw0KPiA+ICAvKg0K
-PiA+ICAgKiBJMkMgaW5pdC9wcm9iaW5nL2V4aXQgZnVuY3Rpb25zDQo+ID4gICAqLw0KPiA+IEBA
-IC00MTEsNyArNDMxLDYgQEAgc3RhdGljIGludCBwY2E5NTR4X3Byb2JlKHN0cnVjdCBpMmNfY2xp
-ZW50ICpjbGllbnQsDQo+ID4gICAgICAgc3RydWN0IGkyY19hZGFwdGVyICphZGFwID0gY2xpZW50
-LT5hZGFwdGVyOw0KPiA+ICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZjbGllbnQtPmRldjsN
-Cj4gPiAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gZGV2LT5vZl9ub2RlOw0KPiA+IC0g
-ICAgIGJvb2wgaWRsZV9kaXNjb25uZWN0X2R0Ow0KPiA+ICAgICAgIHN0cnVjdCBncGlvX2Rlc2Mg
-KmdwaW87DQo+ID4gICAgICAgc3RydWN0IGkyY19tdXhfY29yZSAqbXV4YzsNCj4gPiAgICAgICBz
-dHJ1Y3QgcGNhOTU0eCAqZGF0YTsNCj4gPiBAQCAtNDYyLDIyICs0ODEsMTggQEAgc3RhdGljIGlu
-dCBwY2E5NTR4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50DQo+ICpjbGllbnQsDQo+ID4gICAgICAg
-ICAgICAgICB9DQo+ID4gICAgICAgfQ0KPiA+DQo+ID4gLSAgICAgLyogV3JpdGUgdGhlIG11eCBy
-ZWdpc3RlciBhdCBhZGRyIHRvIHZlcmlmeQ0KPiA+IC0gICAgICAqIHRoYXQgdGhlIG11eCBpcyBp
-biBmYWN0IHByZXNlbnQuIFRoaXMgYWxzbw0KPiA+IC0gICAgICAqIGluaXRpYWxpemVzIHRoZSBt
-dXggdG8gZGlzY29ubmVjdGVkIHN0YXRlLg0KPiA+IC0gICAgICAqLw0KPiA+IC0gICAgIGlmIChp
-MmNfc21idXNfd3JpdGVfYnl0ZShjbGllbnQsIDApIDwgMCkgew0KPiA+ICsgICAgIGRhdGEtPmlk
-bGVfc3RhdGUgPSBNVVhfSURMRV9BU19JUzsNCj4gPiArICAgICBpZiAobnAgJiYgb2ZfcHJvcGVy
-dHlfcmVhZF91MzIobnAsICJpZGxlLXN0YXRlIiwgJmRhdGEtPmlkbGVfc3RhdGUpKQ0KPiB7DQo+
-ID4gKyAgICAgICAgICAgICBpZiAobnAgJiYgb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLA0KPiA+
-ICsgImkyYy1tdXgtaWRsZS1kaXNjb25uZWN0IikpDQo+IA0KPiBZb3UgZG8gbm90IG5lZWQgdG8g
-ZG8gdGhlICJucCAmJiIgcGFydCBmb3IgYm90aCBpZnMsIHNpbmNlIGl0J3MgYWxyZWFkeSBrbm93
-DQo+IHRoYXQgbnAgaXMgbm9uLU5VTEwgd2hlbiB5b3UgaGl0IHRoZSBzZWNvbmQgaWYuIEJ1dCwg
-aXQncyBhIE5PUCBpbiB0aGUgZmlyc3QgaWYsDQo+IHNpbmNlIG9mX3Byb3BlcnR5X3JlYWRfdTMy
-IHJldHVybnMgLUVJTlZBTCBpZiBpdCBpcy4gU28sIEkgc3VnZ2VzdA0KPiANCj4gICAgICAgICBp
-ZiAob2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJpZGxlLXN0YXRlIiwgJmRhdGEtPmlkbGVfc3Rh
-dGUpKSB7DQo+ICAgICAgICAgICAgICAgICBpZiAobnAgJiYgb2ZfcHJvcGVydHlfcmVhZF9ib29s
-KG5wLA0KPiAiaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3QiKSkNCk9rYXksIHRoYW5rcywgSSB3aWxs
-IHJlbW92ZSBpdCBpbiB2NC4NCj4gDQo+IENoZWVycywNCj4gUGV0ZXINCj4gDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgIGRhdGEtPmlkbGVfc3RhdGUgPSBNVVhfSURMRV9ESVNDT05ORUNUOw0K
-PiA+ICsgICAgIH0NCj4gPiArDQo+ID4gKyAgICAgcmV0ID0gcGNhOTU0eF9pbml0KGNsaWVudCwg
-ZGF0YSk7DQo+ID4gKyAgICAgaWYgKHJldCA8IDApIHsNCj4gPiAgICAgICAgICAgICAgIGRldl93
-YXJuKGRldiwgInByb2JlIGZhaWxlZFxuIik7DQo+ID4gICAgICAgICAgICAgICByZXR1cm4gLUVO
-T0RFVjsNCj4gPiAgICAgICB9DQo+ID4NCj4gPiAtICAgICBkYXRhLT5sYXN0X2NoYW4gPSAwOyAg
-ICAgICAgICAgICAgIC8qIGZvcmNlIHRoZSBmaXJzdCBzZWxlY3Rpb24gKi8NCj4gPiAtICAgICBk
-YXRhLT5pZGxlX3N0YXRlID0gTVVYX0lETEVfQVNfSVM7DQo+ID4gLQ0KPiA+IC0gICAgIGlkbGVf
-ZGlzY29ubmVjdF9kdCA9IG5wICYmDQo+ID4gLSAgICAgICAgICAgICBvZl9wcm9wZXJ0eV9yZWFk
-X2Jvb2wobnAsICJpMmMtbXV4LWlkbGUtZGlzY29ubmVjdCIpOw0KPiA+IC0gICAgIGlmIChpZGxl
-X2Rpc2Nvbm5lY3RfZHQpDQo+ID4gLSAgICAgICAgICAgICBkYXRhLT5pZGxlX3N0YXRlID0gTVVY
-X0lETEVfRElTQ09OTkVDVDsNCj4gPg0KPiA+ICAgICAgIHJldCA9IHBjYTk1NHhfaXJxX3NldHVw
-KG11eGMpOw0KPiA+ICAgICAgIGlmIChyZXQpDQo+ID4gQEAgLTUzMSw4ICs1NDYsNyBAQCBzdGF0
-aWMgaW50IHBjYTk1NHhfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiAgICAgICBzdHJ1
-Y3QgaTJjX211eF9jb3JlICptdXhjID0gaTJjX2dldF9jbGllbnRkYXRhKGNsaWVudCk7DQo+ID4g
-ICAgICAgc3RydWN0IHBjYTk1NHggKmRhdGEgPSBpMmNfbXV4X3ByaXYobXV4Yyk7DQo+ID4NCj4g
-PiAtICAgICBkYXRhLT5sYXN0X2NoYW4gPSAwOw0KPiA+IC0gICAgIHJldHVybiBpMmNfc21idXNf
-d3JpdGVfYnl0ZShjbGllbnQsIDApOw0KPiA+ICsgICAgIHJldHVybiBwY2E5NTR4X2luaXQoY2xp
-ZW50LCBkYXRhKTsNCj4gPiAgfQ0KPiA+ICAjZW5kaWYNCj4gPg0KPiA+DQoNCg==
+Il giorno lun 21 ott 2019 alle ore 07:52 Bjorn Andersson
+<bjorn.andersson@linaro.org> ha scritto:
+>
+> On Sun 20 Oct 08:07 PDT 2019, kholk11@gmail.com wrote:
+> [..]
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8976-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8976-pins.dtsi
+> > new file mode 100644
+> > index 000000000000..1abeba8b8d18
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/msm8976-pins.dtsi
+> > @@ -0,0 +1,2119 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
+> > + * Copyright (c) 2016-2019 AngeloGioacchino Del Regno <kholk11@gmail.com>
+> > + */
+> > +
+> > +&tlmm {
+>
+> Please inline this in msm8974.dtsi, it makes it easier to find nodes
+> than when they are sprinkled in various *pins.dtsi files.
+>
+>
+> Note also that a lot of these configs are specific to loire, rather than
+> msm8976. So preferably they should be specified there instead of in the
+> platform.
+>
+
+Well, no... the loire pin config is another story.... this
+configuration comes in reality
+from the Qualcomm's MSM8976 MTP initial standard configuration (which I've
+"translated" from that 3.10 downstream "thing" to the new pinctrl
+style some time
+ago), so, if some of this configuration effectively does apply to the somc loire
+platform, that's because the hardware engineers were kind to not
+change everything
+from the ground up....
+
+I didn't append this thingy to the msm8976.dtsi because it's a veeeery
+long list of
+pins and, since I saw it done like that already for MSM8916/8992/8994/8996/8998,
+I thought it was a good idea to follow that kind of style.. but I can
+totally understand
+your point of having to open a myriad of files here and there to find
+what you want
+being less comfortable than having what you need just immediately right there!
+
+Shorter said: sure! I will move this stuff in msm8976.dtsi and I'll
+delete any pin
+configuration that is strictly tied to the MTP (or any other) platform
+to keep it
+clean and short.
+
+> > +     cdc_reset_ctrl {
+> > +             cdc_reset_line_sus: cdc_reset_sleep {
+> > +                     mux {
+>
+> You don't have to split mux and config into subnodes (you don't even
+> need the last level subnode anymore)...
+>
+
+Sorry for that, there's some confusion around looking at other *-pins files
+and I thought it was fine to keep it like that.
+
+Will change it!
+
+> > +                             pins = "gpio133";
+> > +                             function = "gpio";
+> > +                     };
+> > +                     config {
+> > +                             pins = "gpio133";
+> > +                             drive-strength = <16>;
+> > +                             bias-disable;
+> > +                             output-low;
+> > +                     };
+> > +             };
+> [..]
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8976.dtsi b/arch/arm64/boot/dts/qcom/msm8976.dtsi
+> [..]
+> > +     firmware {
+> > +             scm: scm {
+> > +                     compatible = "qcom,scm";
+>
+> Please add a more specific compatible as well.
+>
+
+Oops! Yeah, adding it.
+
+> > +                     clocks = <&gcc GCC_CRYPTO_CLK>,
+> > +                              <&gcc GCC_CRYPTO_AXI_CLK>,
+> > +                              <&gcc GCC_CRYPTO_AHB_CLK>;
+> > +                     clock-names = "core", "bus", "iface";
+> > +                     #reset-cells = <1>;
+> > +
+> > +                     qcom,dload-mode = <&tcsr 0x6100>;
+> > +             };
+> > +     };
+> [..]
+> > +     smd {
+> > +             compatible = "qcom,smd";
+> > +
+> > +             rpm {
+> > +                     interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+> > +                     qcom,ipc = <&apcs 8 0>;
+> > +                     qcom,smd-edge = <15>;
+> > +
+> > +                     rpm_requests {
+> > +                             compatible = "qcom,rpm-msm8976";
+> > +                             qcom,smd-channels = "rpm_requests";
+> > +
+> > +                             rpmcc: qcom,rpmcc {
+> > +                                     compatible = "qcom,rpmcc-msm8976";
+> > +                                     #clock-cells = <1>;
+> > +                             };
+> > +
+> > +                             rpmpd: power-controller {
+> > +                                     compatible = "qcom,msm8976-rpmpd";
+> > +                                     #power-domain-cells = <1>;
+> > +                                     operating-points-v2 = <&rpmpd_opp_table>;
+> > +                             };
+> > +
+> > +                             smd_rpm_regulators: pm8950-regulators {
+>
+> We've seen several times before where devices of a specific platform
+> comes with different set of pmics, so please omit the pmic configuration
+> from msm8976.dtsi, give rpm_requests a label and add these regulators in
+> the loire.dtsi
+>
+
+I would never have any objections on that. I even knew it already, but
+sometimes my brain plays bad jokes on me, apparently.
+
+Consider it done!
+
+> > +                                     compatible = "qcom,rpm-pm8950-regulators";
+> > +
+> > +                                     pm8950_s1: s1 {};
+> > +                                     pm8950_s2: s2 {};
+> > +                                     pm8950_s3: s3 {};
+> > +                                     pm8950_s4: s4 {};
+> > +                                     pm8950_s5: s5 {};
+> > +                                     pm8950_s6: s6 {};
+> > +
+> > +                                     pm8950_l1: l1 {};
+> > +                                     pm8950_l2: l2 {};
+> > +                                     pm8950_l3: l3 {};
+> > +                                     pm8950_l4: l4 {};
+> > +                                     pm8950_l5: l5 {};
+> > +                                     pm8950_l6: l6 {};
+> > +                                     pm8950_l7: l7 {};
+> > +                                     pm8950_l8: l8 {};
+> > +                                     pm8950_l9: l9 {};
+> > +                                     pm8950_l10: l10 {};
+> > +                                     pm8950_l11: l11 {};
+> > +                                     pm8950_l12: l12 {};
+> > +                                     pm8950_l13: l13 {};
+> > +                                     pm8950_l14: l14 {};
+> > +                                     pm8950_l15: l15 {};
+> > +                                     pm8950_l16: l16 {};
+> > +                                     pm8950_l17: l17 {};
+> > +                                     pm8950_l18: l18 {};
+> > +                                     pm8950_l19: l19 {};
+> > +                                     pm8950_l20: l20 {};
+> > +                                     pm8950_l21: l21 {};
+> > +                                     pm8950_l22: l22 {};
+> > +                                     pm8950_l23: l23 {};
+> > +                             };
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> > +     soc: soc {
+> > +             #address-cells = <1>;
+> > +             #size-cells = <1>;
+> > +             ranges = <0 0 0 0xffffffff>;
+> > +             compatible = "simple-bus";
+> > +
+> > +             tcsr_mutex_regs: syscon@1905000 {
+> > +                     compatible = "syscon";
+> > +                     reg = <0x1905000 0x20000>;
+>
+> Please pad the address to 8 digits (to make it easier for me to see if
+> things are sorted) and please sort all nodes based on address and then
+> by name.
+>
+> > +             };
+> [..]
+> > +             smsm {
+>
+> Non-mmio nodes should not live under /soc, please move them to /.
+>
+> > +                     compatible = "qcom,smsm";
+> > +
+> > +                     #address-cells = <1>;
+> > +                     #size-cells = <0>;
+> > +
+> > +                     qcom,ipc-1 = <&apcs 8 12>;
+> > +                     qcom,ipc-2 = <&apcs 8 9>;
+> > +                     qcom,ipc-3 = <&apcs 8 18>;
+> > +
+> > +                     apps_smsm: apps@0 {
+> > +                             reg = <0>;
+> > +                             #qcom,smem-state-cells = <1>;
+> > +                     };
+> > +
+> > +                     hexagon_smsm: hexagon@1 {
+> > +                             reg = <1>;
+> > +                             interrupts = <0 290 IRQ_TYPE_EDGE_RISING>;
+> > +
+> > +                             interrupt-controller;
+> > +                             #interrupt-cells = <2>;
+> > +                     };
+> > +
+> > +                     wcnss_smsm: wcnss@6 {
+> > +                             reg = <6>;
+> > +                             interrupts = <GIC_SPI 144 IRQ_TYPE_EDGE_RISING>;
+> > +
+> > +                             interrupt-controller;
+> > +                             #interrupt-cells = <2>;
+> > +                     };
+> > +             };
+> [..]
+> > +
+> > +             hexagon@4080000 {
+>
+> remoteproc@4080000
+>
+> > +                     compatible = "qcom,q6v5-pil";
+> > +                     reg = <0x04080000 0x100>,
+> > +                           <0x04020000 0x040>;
+> > +
+> > +                     reg-names = "qdsp6", "rmb";
+> > +
+> > +                     interrupts-extended = <&intc 0 293 1>,
+> > +                                           <&adsp_smp2p_in 0 0>,
+>
+> The compatible indicates that this is the modem, but this says "adsp".
+> Can you please confirm the Hexagon configuration on this platform?
+>
+> > +                                           <&adsp_smp2p_in 2 0>,
+> > +                                           <&adsp_smp2p_in 1 0>,
+> > +                                           <&adsp_smp2p_in 3 0>;
+> > +                     interrupt-names = "wdog", "fatal", "ready",
+> > +                                       "handover", "stop-ack";
+> > +
+>
+> Regards,
+> Bjorn
+
+And about the rest, yep, I'll check, recheck and fix :)))
+
+Thanks for the review!
+Angelo
