@@ -2,233 +2,150 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE79CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00099C47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6463F20873
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571669705;
-	bh=Ae8OHG6lZmDDwOM3SPPGHZv5YZXmtKO6eyJM3Lg9gCc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dIej/068Df5fsUVi8bigX/18T2EmTX61gRlxyaRCY0Q+tJCHqn9TliNhNVOkvcWdV
-	 G6v8QyBTinDoiCmKu9tCqatvTXvsgv3Y5/RXMKldIfyZLQ2mxU0Ctn/VgXSo9chuCq
-	 FNTWncgLiU4gw8vD8fXO/Xd76iOAzEAoa17oaSgk=
+	by mail.kernel.org (Postfix) with ESMTP id D363420873
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfJUOy6 (ORCPT
+        id S1727674AbfJUO43 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:54:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbfJUOy6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:54:58 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12E1520656;
-        Mon, 21 Oct 2019 14:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571669697;
-        bh=Ae8OHG6lZmDDwOM3SPPGHZv5YZXmtKO6eyJM3Lg9gCc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yVdUxHn0ayRtWCZgG2r4z6BF9YxO67CgUU/O5YziuEIz/2b4fLTzjX4STw//Gb9gZ
-         dowPKbMZQWZHC6ohCe9xAjDoYFk9qMuAhGAI9WmWVU6bqgDPiVtDwNedmIU/nqX99b
-         rhYuCZ5XiFF3N1gxV8wRDkuenIuMGMjWP0cJZqlY=
-Date:   Mon, 21 Oct 2019 15:54:50 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
-        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
-        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>,
-        Paul Cercueil <paul.cercueil@analog.com>
-Subject: Re: [PATCH 2/4] iio: adc: ad7091r5: Add scale and external VREF
- support
-Message-ID: <20191021155450.0ac9d380@archlinux>
-In-Reply-To: <20191021170608.26412-2-beniamin.bia@analog.com>
-References: <20191021170608.26412-1-beniamin.bia@analog.com>
-        <20191021170608.26412-2-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 21 Oct 2019 10:56:29 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:51512 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfJUO43 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 10:56:29 -0400
+X-AuditID: c0a8fbf4-183ff70000001fa6-18-5dadc719495a
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id D1.D0.08102.917CDAD5; Mon, 21 Oct 2019 16:56:25 +0200 (CEST)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Mon, 21 Oct 2019 16:56:12 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Subject: Re: [RFC PATCH 10/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+Thread-Topic: [RFC PATCH 10/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+Thread-Index: AQHVhNC0M8qm8vzoP0yjRB+AhWv9dadepj4AgAXpHQCAAH9rgIAABXqA
+Date:   Mon, 21 Oct 2019 14:56:11 +0000
+Message-ID: <63a9fca56dbc174bf2c26eb602ba1c0c057488b0.camel@fi.rohmeurope.com>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+         <f8f8c323d378244afe4e94f48c0a94bb296cbbe0.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+         <CAMpxmJWXQccY8HsM6MXYBW8KC0U+7iOk+Ve-4nk=cpa=Zuk1cg@mail.gmail.com>
+         <3ae3507649f2e9a66053a99b4a71e29786fc3d34.camel@fi.rohmeurope.com>
+         <CAMpxmJVABg-UAzZtaQKu5ADBhi1P7CNArmstxHi5ZfdPiSKyYw@mail.gmail.com>
+In-Reply-To: <CAMpxmJVABg-UAzZtaQKu5ADBhi1P7CNArmstxHi5ZfdPiSKyYw@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [82.203.142.98]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C87ABB7EB9CD9C49908822B6FEB2A7F0@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUwTWRSGc2em08tHzVDBXupKwhhiXCPqasyNuoY/a8ZojMZENyJhBxlp
+        FVqcaRU00e5m/aoYMYofFQrbgAJFXboiajBqBaworlUsEItKRI2Iui74FYk6w6Dw6773vuc9
+        z/lxLiT1j2gjNFtsgmjhs1k6krpc+al2avy1k2nT3wVn4fLgPS3e+eq4Fg+UtFC4qLuHxqWN
+        tzR4z40zGny/7m8KP3zbBPC7tl0EPjh4gsBvCh5o8D+lgwDfvVBM47q+UwA3e9toXNEeJHBx
+        RYDCwZZfcFdLE423X2zU4s+hWioljqtx1wDudcd2Leeu2cKdd3VpOV/1bpoLhxpo7lpHPcEd
+        dn8kuErvey3X70tYGrkqal4Gb9u43JxlmTb/tyhTaVkI5Dom5p3xnCIcoIB1ggiImFno6aXb
+        lBNEQj0TAuj+2VZSvQQA6va/1jgBhDQzDzk7tUoglpmLXrbfJBRNMi6I9noTFD2WSUXFtR2U
+        WrMa9fU/HtYLUP2BclLRFJOEGpyPhvromCVo38s/aJX1kUDhoqKhoghmGep3lw2FATMB7Xa8
+        GoYZkO/pe406NYPKG/4lVR2Hnj/+PDQnYhLRm8poRZLMZHT6wjQ1mYLqap5Qqk5EB/d0D48Q
+        g64f7aEKwTjXKIBrJO0alXaNSrtGpcuAphqgHN6cncXbhBnJomBPFq2mHPlYY83xAXVjBs6B
+        L/6FfkBA4AfxkGDjdIb6k2n6MRnWzHwTL5nSRXu2IPkBgiQbqwtPlz1dJp+/WRCt36zxkGIN
+        uknd+9P0jMJaLwi5gvjN/QFCFulAsxyMEYUsIW+tOds2YhMwQmkeaYyVBEumIPJ2myldWY90
+        Sd4PxYqWua1NClfK5XPkVzXaAqbAwuclHhI2llR4SD1lsVoEo0EXUEoZpdRkt3wH9QIDBOxY
+        XVhxo+Vv871Pr4wgZIQ33qsgbPyIZXSAwj8DUkpiPtH1IqqJS/YUtq9JyPqJnf1X3bptgYJn
+        Zpu9jwv3ZkjLc5v/m2kPbfWkLjpS+f+hHl9BAjzwIt3nIGI7Sye0Ldi0ImnwU97iXSt9VTFz
+        qtxL9s+88vN1aiC44aKlNaMq9cPVzdXOkqudFb/e/HLnxDFj39v43w/v8Glt51hKMvEzfiRF
+        if8K25O4F/MDAAA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 21 Oct 2019 20:06:06 +0300
-Beniamin Bia <beniamin.bia@analog.com> wrote:
-
-> From: Paul Cercueil <paul.cercueil@analog.com>
-> 
-> The scale can now be obtained with the "in_voltage_scale" file.
-> By default, the scale returned corresponds to the internal VREF of 2.5V.
-> 
-> It is possible to use an external VREF (through the REFIN/REFOUT pin of
-> the chip), by passing a regulator to the driver. The scale will then be
-> calculated according to the voltage reported by the regulator.
-> 
-> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
-> Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-My only comment on this one is that you could use devm_add_action_or_reset
-to deal with the regulator clean up.
-
-> ---
->  drivers/iio/adc/ad7091r-base.c | 42 +++++++++++++++++++++++++++++++++-
->  drivers/iio/adc/ad7091r-base.h |  1 +
->  drivers/iio/adc/ad7091r5.c     |  5 ++++
->  3 files changed, 47 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad7091r-base.c b/drivers/iio/adc/ad7091r-base.c
-> index 140413329754..d416f0912531 100644
-> --- a/drivers/iio/adc/ad7091r-base.c
-> +++ b/drivers/iio/adc/ad7091r-base.c
-> @@ -14,6 +14,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #define AD7091R_REG_RESULT  0
->  #define AD7091R_REG_CHANNEL 1
-> @@ -42,6 +43,7 @@ enum ad7091r_mode {
->  struct ad7091r_state {
->  	struct device *dev;
->  	struct regmap *map;
-> +	struct regulator *reg;
->  	const struct ad7091r_chip_info *chip_info;
->  	enum ad7091r_mode mode;
->  };
-> @@ -139,6 +141,21 @@ static int ad7091r_read_raw(struct iio_dev *iio_dev,
->  		ret = IIO_VAL_INT;
->  		break;
->  
-> +	case IIO_CHAN_INFO_SCALE:
-> +		if (st->reg) {
-> +			ret = regulator_get_voltage(st->reg);
-> +			if (ret < 0)
-> +				goto unlock;
-> +
-> +			*val = ret / 1000;
-> +		} else {
-> +			*val = st->chip_info->vref_mV;
-> +		}
-> +
-> +		*val2 = chan->scan_type.realbits;
-> +		ret = IIO_VAL_FRACTIONAL_LOG2;
-> +		break;
-> +
->  	default:
->  		ret = -EINVAL;
->  		break;
-> @@ -215,6 +232,18 @@ int ad7091r_probe(struct device *dev, const char *name,
->  			return ret;
->  	}
->  
-> +	st->reg = devm_regulator_get_optional(dev, "vref");
-> +	if (IS_ERR(st->reg)) {
-> +		if (PTR_ERR(st->reg) == EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		st->reg = NULL;
-> +	} else {
-> +		ret = regulator_enable(st->reg);
-> +		if (ret)
-> +			return ret;
-
-I would use devm_add_action_or_reset with appropriate wrapper
-around disabling the regulator. That will get rid of the
-need to manually deal with errors or remove path.
-
-> +	}
-> +
->  	/* Use command mode by default */
->  	ret = ad7091r_set_mode(st, AD7091R_MODE_COMMAND);
->  	if (ret < 0)
-> @@ -222,18 +251,29 @@ int ad7091r_probe(struct device *dev, const char *name,
->  
->  	ret = iio_device_register(iio_dev);
->  	if (ret)
-> -		return ret;
-> +		goto err_disable_reg;
->  
->  	dev_dbg(dev, "Probed\n");
->  	return 0;
-> +
-> +err_disable_reg:
-> +	if (st->reg)
-> +		regulator_disable(st->reg);
-> +
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(ad7091r_probe);
->  
->  int ad7091r_remove(struct device *dev)
->  {
->  	struct iio_dev *iio_dev = dev_get_drvdata(dev);
-> +	struct ad7091r_state *st = iio_priv(iio_dev);
->  
->  	iio_device_unregister(iio_dev);
-> +
-> +	if (st->reg)
-> +		regulator_disable(st->reg);
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(ad7091r_remove);
-> diff --git a/drivers/iio/adc/ad7091r-base.h b/drivers/iio/adc/ad7091r-base.h
-> index 7a29f86ea82b..cec4fb75fecc 100644
-> --- a/drivers/iio/adc/ad7091r-base.h
-> +++ b/drivers/iio/adc/ad7091r-base.h
-> @@ -18,6 +18,7 @@ struct ad7091r_state;
->  struct ad7091r_chip_info {
->  	unsigned int num_channels;
->  	const struct iio_chan_spec *channels;
-> +	unsigned int vref_mV;
->  };
->  
->  extern const struct regmap_config ad7091r_regmap_config;
-> diff --git a/drivers/iio/adc/ad7091r5.c b/drivers/iio/adc/ad7091r5.c
-> index 1ba838c58c31..65bcd8bb692a 100644
-> --- a/drivers/iio/adc/ad7091r5.c
-> +++ b/drivers/iio/adc/ad7091r5.c
-> @@ -35,10 +35,13 @@ static const struct iio_event_spec ad7091r5_events[] = {
->  #define AD7091R_CHANNEL(idx, bits, ev, num_ev) { \
->  	.type = IIO_VOLTAGE, \
->  	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
->  	.indexed = 1, \
->  	.channel = idx, \
->  	.event_spec = ev, \
->  	.num_event_specs = num_ev, \
-> +	.scan_type.storagebits = 16, \
-> +	.scan_type.realbits = bits, \
->  }
->  static const struct iio_chan_spec ad7091r5_channels_irq[] = {
->  	AD7091R_CHANNEL(0, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
-> @@ -58,11 +61,13 @@ static const struct iio_chan_spec ad7091r5_channels_noirq[] = {
->  static const struct ad7091r_chip_info ad7091r5_chip_info_irq = {
->  	.channels = ad7091r5_channels_irq,
->  	.num_channels = ARRAY_SIZE(ad7091r5_channels_irq),
-> +	.vref_mV = 2500,
->  };
->  
->  static const struct ad7091r_chip_info ad7091r5_chip_info_noirq = {
->  	.channels = ad7091r5_channels_noirq,
->  	.num_channels = ARRAY_SIZE(ad7091r5_channels_noirq),
-> +	.vref_mV = 2500,
->  };
->  
->  static int ad7091r5_i2c_probe(struct i2c_client *i2c,
-
+VGhhbmtzIGFnYWluIEJhcnQgPSkNCg0KDQpPbiBNb24sIDIwMTktMTAtMjEgYXQgMTY6MzYgKzAy
+MDAsIEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6DQo+IHBvbi4sIDIxIHBhxbogMjAxOSBvIDA5
+OjAwIFZhaXR0aW5lbiwgTWF0dGkNCj4gPE1hdHRpLlZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNv
+bT4gbmFwaXNhxYIoYSk6DQo+ID4gSGVsbG8gQmFydG9zeiwNCj4gPiANCj4gPiArDQo+ID4gPiA+
+ICsgICAgICAgYmRncGlvLT5jaGlwLmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gPiA+ICsgICAgICAg
+YmRncGlvLT5ncGlvLnBhcmVudCA9IHBkZXYtPmRldi5wYXJlbnQ7DQo+ID4gPiA+ICsgICAgICAg
+YmRncGlvLT5ncGlvLmxhYmVsID0gImJkNzE4MjgtZ3BpbyI7DQo+ID4gPiA+ICsgICAgICAgYmRn
+cGlvLT5ncGlvLm93bmVyID0gVEhJU19NT0RVTEU7DQo+ID4gPiA+ICsgICAgICAgYmRncGlvLT5n
+cGlvLmdldF9kaXJlY3Rpb24gPSBiZDcxODI4X2dldF9kaXJlY3Rpb247DQo+ID4gPiA+ICsgICAg
+ICAgYmRncGlvLT5ncGlvLnNldF9jb25maWcgPSBiZDcxODI4X2dwaW9fc2V0X2NvbmZpZzsNCj4g
+PiA+ID4gKyAgICAgICBiZGdwaW8tPmdwaW8uY2FuX3NsZWVwID0gdHJ1ZTsNCj4gPiA+ID4gKyAg
+ICAgICBiZGdwaW8tPmdwaW8uZ2V0ID0gYmQ3MTgyOF9ncGlvX2dldDsNCj4gPiA+ID4gKyAgICAg
+ICBiZGdwaW8tPmdwaW8uc2V0ID0gYmQ3MTgyOF9ncGlvX3NldDsNCj4gPiA+IA0KPiA+ID4gTm90
+IGltcGxlbWVudGluZyBkaXJlY3Rpb25fb3V0cHV0KCkgYW5kIGRpcmVjdGlvbl9pbnB1dCgpIGhl
+cmUNCj4gPiA+IHdpbGwNCj4gPiA+IHJlc3VsdHMgaW4gd2FybmluZ3MgZnJvbSB0aGUgR1BJTyBm
+cmFtZXdvcms6IGZvciBpbnN0YW5jZSB5b3UNCj4gPiA+IGltcGxlbWVudCBzZXQoKSBidXQgbm90
+IGRpcmVjdGlvbl9vdXRwdXQoKS4gSSdkIHNheToganVzdCBhZGQNCj4gPiA+IHRob3NlDQo+ID4g
+PiBjYWxsYmFja3MgYW5kIHJldHVybiBhbiBlcnJvciBpZiB0aGV5J3JlIGNhbGxlZCBmb3IgaW52
+YWxpZCBsaW5lcw0KPiA+ID4gKGZvcg0KPiA+ID4gaW5zdGFuY2U6IGRpcmVjdGlvbl9vdXRwdXQo
+KSBiZWluZyBjYWxsZWQgZm9yIGxpbmUgMykuDQo+ID4gDQo+ID4gT2suIEkgd2lsbCBpbXBsZW1l
+bnQgZHVtbXkgZnVuY3Rpb25zLg0KPiA+IA0KPiA+IEJ1dCBvdXQgb2YgdGhlIGN1cmlvc2l0eSAt
+IHdoeSB0aGUgR1BJTyBjb3JlIGVtaXRzIHRoZSB3YXJuaW5ncyBpZg0KPiA+IHRoZXNlIGFyZSBu
+b3QgaW1wbGVtZW50ZWQ/IEkgdGhpbmsgdGhlIGNvcmUgc2hvdWxkIG5vdCByZXF1aXJlICJuby0N
+Cj4gPiBvcGVyYXRpb24iIGZ1bmN0aW9ucyB0byBiZSBpbXBsZW1lbnRlZCBmb3IgcGlucyB3aGlj
+aCBkb24ndCBzdXBwb3J0DQo+ID4gYm90aCBvZiB0aGUgZGlyZWN0aW9ucy4gR1BJTyBjb3JlIGNv
+dWxkIG9ubHkgZW1pdCB3YXJuaW5nIGlmIGl0DQo+ID4gbmVlZHMNCj4gPiB0byBzZXQgZGlyZWN0
+aW9uIHRvIHNvbWV0aGluZyB0aGUgSFcgZG9lcyBub3Qgc3VwcG9ydC4gVGhhdCB3b3VsZA0KPiA+
+IGF2b2lkDQo+ID4gYWRkaW5nIHRoZSBkdW1teSBmdW5jdGlvbnMgdG8gYWxsIG9mIHRoZSBkcml2
+ZXJzLCByaWdodD8NCj4gPiANCj4gDQo+IEkgbG9va2VkIGF0IHRoZSBjb2RlIGFnYWluIGFuZCBp
+dCBzZWVtcyBJIHdhcyB3cm9uZy4gSWYgd2UgZG9uJ3QgaGF2ZQ0KPiBkaXJlY3Rpb25faW5wdXQo
+KSBvciBkaXJlY3Rpb25fb3V0cHV0KCkgd2UgY2hlY2sgdGhlIGFjdHVhbCBkaXJlY3Rpb24NCj4g
+d2l0aCBnZXRfZGlyZWN0aW9uKCkgYmVmb3JlIGVtaXR0aW5nIGFueSB3YXJuaW5ncyBhbmQgaWYg
+dGhlcmUncyBubw0KPiBkaXJlY3Rpb25fb3V0cHV0KCksIGJ1dCBsaW5lIGlzIGluIGlucHV0IG1v
+ZGUgdGhlbiBhbGwncyBmaW5lLiBJbg0KPiBvdGhlciB3b3JkczogZmFsc2UgYWxhcm0sIGFuZCB5
+b3UgY2FuIGtlZXAgaXQgdGhpcyB3YXkuDQoNClRoYW5rcyBmb3IgY2xhcmlmeWluZyB0aGlzIC0g
+aXQgbWFrZXMgc2Vuc2UgOikgSSB3b250IGNoYW5nZSB0aGlzIHRoZW4uDQoNCj4gPiA+IERvbid0
+IHlvdSBuZWVkIGEgTU9EVUxFX0FMSUFTKCkgaGVyZSBzaW5jZSB0aGlzIGlzIGFuIE1GRCBzdWIt
+DQo+ID4gPiBtb2R1bGU/DQo+ID4gDQo+ID4gSSBtdXN0IGFkbWl0IEkgZG9uJ3Qga25vdyB0aGUg
+ZGV0YWlscyBvZiBob3cgbW9kdWxlIGxvYWRpbmcgaXMNCj4gPiBkb25lLiBJDQo+ID4gdXNlZCBz
+eXN0ZW0gd2hlcmUgbW9kdWxlcyBhcmUgbG9hZCBieSBzY3JpcHRzLiAoSSBndWVzcyB0aGUgbW9k
+dWxlDQo+ID4gYWxpYXMgY291bGQgYmUgdXNlZCB0byBhbGxvdyBhdXRvbWF0aWMgbW9kdWxlIGxv
+YWRpbmcgW2J5IHVkZXY/XSkNCj4gPiANCj4gPiBDYW4geW91IHBsZWFzZSBlZHVjYXRlIG1lIC0g
+SWYgSSBhZGQgbW9kdWxlIGFsaWFzZXMgbWF0Y2hpbmcgdGhlDQo+ID4gc3ViLQ0KPiA+IGRldmlj
+ZSBuYW1lIGdpdmVuIGluIGluIE1GRCBjZWxsIC0gc2hvdWxkIHRoZSBzdWIgbW9kdWxlIGxvYWRp
+bmcgYmUNCj4gPiBhdXRvbWF0aWMgd2hlbiBNRkQgZHJpdmVyIGdldHMgcHJvYmVkPyBGb3Igc29t
+ZSByZWFzb24gSSBkaWRuJ3QgZ2V0DQo+ID4gdGhhdCB3b3JraW5nIG9uIG15IHRlc3QgYmVkLiBP
+ciBtYXliZSBJIG1pc3VuZGVyc3Rvb2Qgc29tZXRoaW5nLg0KPiA+IA0KPiANCj4gSWYgdGhlIGdw
+aW8gbW9kdWxlIGlzIGEgc3ViLW5vZGUgb24gdGhlIGRldmljZSB0cmVlIHRoYW4geW91IG1heSBu
+ZWVkDQo+IHRvIHVzZSBhIHN1Yi1jb21wYXRpYmxlIHRvIGdldCB0aGUgbW9kdWxlIGxvYWRlZCBi
+eSB1ZGV2Lg0KDQpKdXN0IGZvdW5kIG91dCB0aGF0IHRoZSBsYXN0IHVwZGF0ZSBicm9rZSBteSB0
+ZXN0IGJlZCBJMkMgY29tcGxldGVseS4NCkknbGwgZXhwZXJpbWVudCB3aXRoIHRoZSBNT0RVTEVf
+QUxJQVMgd2hlbiBJIGdldCBteSBib2FyZCBydW5uaW5nLi4uDQoNCkkgZG9uJ3Qgd2FudCB0byBh
+ZGQgb3duIERUIG5vZGUgZm9yIGdwaW8gKGFuZCBhbGwgb3RoZXIgc3ViIGRldmljZXMpLg0KVGhh
+dCBzaG91bGRuJ3QgYmUgbmVlZGVkLiBJdCByZWFsbHkgc2hvdWxkIGJlIGVub3VnaCB0byBraWNr
+IHRoZSBNRkQNCnBhcnQgZnJvbSBEVCB1c2luZyB0aGUgY29tcGF0aWJsZSAtIHN1YmRldmljZXMg
+c2hvdWxkIGJlIGxvYWQgYnkgTUZEDQp3aXRob3V0IGhhdmluZyBvd24gRFQgY29tcGF0aWJsZXMg
+Zm9yIHRoZW0uIEJ1dCBJJ2xsIHNlZSBob3cgdGhpcyB3b3Jrcw0Kb3V0IC0gdGhhbmtzIQ0KDQpC
+ciwNCglNYXR0aSBWYWl0dGluZW4NCg==
