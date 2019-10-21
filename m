@@ -2,133 +2,378 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4161CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC26CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EC820B7C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2191C20659
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z970tQQc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="j97WxTVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbfJUM0f (ORCPT
+        id S1728083AbfJUMbc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:26:35 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:37977 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727392AbfJUM0e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 08:26:34 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191021122632epoutp04b4f608aad0d5d1c0d684452e0d2aa462~PqSoCHA2u1842818428epoutp04e
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 12:26:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191021122632epoutp04b4f608aad0d5d1c0d684452e0d2aa462~PqSoCHA2u1842818428epoutp04e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571660792;
-        bh=Ib8mQYcAATt7VC/ozZSjbgQ4fyxDkPbivTJaQXT9kTU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=Z970tQQcAQKqVuiEhEqBw/PoifBpOUJ3dN2dJdLGDYPyH7e8LIfE8GhmBy+BskQ8Z
-         LGEkDTAO2yWdRuZWFKew/0I92Tl6VqJB35+byAmPjSMmICyk1m4r6KKpH2boOsJmq0
-         T157LDJ7dORA1z0hqIHf442jmp8qapjoP2a0Dz3E=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20191021122631epcas5p441ec4095a56595f6bb88d3065ea8199c~PqSmvKwR42322723227epcas5p4w;
-        Mon, 21 Oct 2019 12:26:31 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        86.F6.04660.7F3ADAD5; Mon, 21 Oct 2019 21:26:31 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191021122630epcas5p32bd92762c4304035cad5c1822d96e304~PqSmDKWob2825528255epcas5p3P;
-        Mon, 21 Oct 2019 12:26:30 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191021122630epsmtrp1f9091c284304576aa739d5e3e0f35ee5~PqSmCcBig0379003790epsmtrp1F;
-        Mon, 21 Oct 2019 12:26:30 +0000 (GMT)
-X-AuditID: b6c32a4a-5f7ff70000001234-54-5dada3f79b13
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        28.FC.03889.6F3ADAD5; Mon, 21 Oct 2019 21:26:30 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191021122629epsmtip1ddbc1e74c4a1df5055eb035be96e15ca~PqSkfHkg82000820008epsmtip1y;
-        Mon, 21 Oct 2019 12:26:28 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        Anvesh Salveru <anvesh.s@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for ZRX-DC
- PHY property
-Date:   Mon, 21 Oct 2019 17:55:55 +0530
-Message-Id: <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsWy7bCmpu73xWtjDV7PYrY4u2shq8WSpgyL
-        +UfOsVrsutvBbrHiy0x2i8u75rBZnJ13nM1i6fWLTBaLtn5ht2jde4Tdgctjzbw1jB47Z91l
-        91iwqdRj06pONo++LasYPbbs/8zo8XmTXAB7FJdNSmpOZllqkb5dAldG5+YDTAW7uSpOXZnJ
-        3sD4naOLkZNDQsBEYvftc+wgtpDAbkaJw7u8IOxPjBLf9oRD2N8YJTomisDUX/77kbmLkQso
-        vpdR4sOUo4wQTguTxNTWf0wgVWwC2hI/j+4FmsrBISIQKXG8gRWkhlngFKPEgbPTmEFqhAUi
-        JLYfuQ5WzyKgKnFy3WOwOK+Ai8SCnZNZIbbJSdw81wm2TUJgDZvEv8/vmCESLhI3+h9BFQlL
-        vDq+hR3ClpJ42d8GZedL9N5dCmXXSEy528EIYdtLHLgyhwXkOGYBTYn1u/RBwswCfBK9v58w
-        gYQlBHglOtqEIEwlibaZ1RCNEhKL59+EOsBDYu6sqyyQ8ImVuN86m2UCo8wshJkLGBlXMUqm
-        FhTnpqcWmxYY5aWW6xUn5haX5qXrJefnbmIEpwEtrx2My875HGIU4GBU4uEtWLQ2Vog1say4
-        MvcQowQHs5II7x0DoBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeSaxXY4QE0hNLUrNTUwtSi2Cy
-        TBycUg2MmgWvP++2LXybFBemraX6xVAto8dE9/PqHTcTVXN1r15dHb1ZQ8lwTgS/3X3n7dcF
-        GNP7zuWnfjh9eOIiT4Vv1106eyt527rsTnZws7ulmddqyiqkaTyuitI9ynlh/r/Cww9uqLct
-        qT929dXMZUHioSp8OXkp0tVrbFXlj842tGra4qxtp6nEUpyRaKjFXFScCADVRSLP/wIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrILMWRmVeSWpSXmKPExsWy7bCSnO63xWtjDb7v0LI4u2shq8WSpgyL
-        +UfOsVrsutvBbrHiy0x2i8u75rBZnJ13nM1i6fWLTBaLtn5ht2jde4Tdgctjzbw1jB47Z91l
-        91iwqdRj06pONo++LasYPbbs/8zo8XmTXAB7FJdNSmpOZllqkb5dAldG5+YDTAW7uSpOXZnJ
-        3sD4naOLkZNDQsBE4vLfj8xdjFwcQgK7GSXWXLjKBJGQkPiy9ysbhC0ssfLfc3YQW0igiUli
-        2g0LEJtNQFvi59G9QHEODhGBaIkNr4RA5jALXGKUePl4CytIXFggTOJFVwlIOYuAqsTJdY+Z
-        QWxeAReJBTsns0KMl5O4ea6TeQIjzwJGhlWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmb
-        GMEBp6W1g/HEifhDjAIcjEo8vA7T18QKsSaWFVfmHmKU4GBWEuG9Y7A2Vog3JbGyKrUoP76o
-        NCe1+BCjNAeLkjivfP6xSCGB9MSS1OzU1ILUIpgsEwenVANjzpujN3693W2hktP2MHmRseSM
-        bX+/BkWXl6/W5PWNi6hwLZy7fsnU0/IzW/iuGmgmr250C/vteT50zj4dg9+3Y3/3tplnh1qu
-        DGUyiXC3j4n5eXPJ9Qe60cl3TP3Elyn7rGtm974lu2nO7CPqLO1ufu5ZBwsE6/g8RPaF3uj0
-        stoWrqZu+02JpTgj0VCLuag4EQACwT8sNAIAAA==
-X-CMS-MailID: 20191021122630epcas5p32bd92762c4304035cad5c1822d96e304
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191021122630epcas5p32bd92762c4304035cad5c1822d96e304
-References: <CGME20191021122630epcas5p32bd92762c4304035cad5c1822d96e304@epcas5p3.samsung.com>
+        Mon, 21 Oct 2019 08:31:32 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:35324 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfJUMbc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 08:31:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1571661087; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4TXgjYlU7RkcRykgNRHIqiOriMkc6I0HvWxvpvV5mQQ=;
+        b=j97WxTVymXWTkc5PYmpSfaQ7n+TbvkjJ5Umav9GrbUKf7rWaTw9fEXhgMEPByGU0NtP0UY
+        5oKV1jI7WjPMNdhjvO4Eu+sKsHTsKRG5c4PSKGxJ11nvSWzKn1qJBtKOaXdmpWPmhbeFmP
+        p6u8qO19VbWwTY6Kr3qfgtj2xfF7woA=
+Date:   Mon, 21 Oct 2019 14:31:20 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] clk: Ingenic: Add CGU driver for X1000.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, sboyd@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, mturquette@baylibre.com
+Message-Id: <1571661080.3.0@crapouillou.net>
+In-Reply-To: <1571421006-12771-3-git-send-email-zhouyanjie@zoho.com>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+        <1571421006-12771-3-git-send-email-zhouyanjie@zoho.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
-specification, then after every 100ms link should transition to recovery
-state during the low power states which increases power consumption.
+Hi Zhou,
 
-Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-property in DesignWare controller DT node.
 
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
- Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Le sam., oct. 19, 2019 at 01:50, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> Add support for the clocks provided by the CGU in the Ingenic X1000
+> SoC, making use of the cgu code to do the heavy lifting.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> ---
+>  drivers/clk/ingenic/Kconfig     |  10 ++
+>  drivers/clk/ingenic/Makefile    |   1 +
+>  drivers/clk/ingenic/x1000-cgu.c | 253=20
+> ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 264 insertions(+)
+>  create mode 100644 drivers/clk/ingenic/x1000-cgu.c
+>=20
+> diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
+> index fe8db93..2aebf0d 100644
+> --- a/drivers/clk/ingenic/Kconfig
+> +++ b/drivers/clk/ingenic/Kconfig
+> @@ -45,4 +45,14 @@ config INGENIC_CGU_JZ4780
+>=20
+>  	  If building for a JZ4780 SoC, you want to say Y here.
+>=20
+> +config INGENIC_CGU_X1000
+> +	bool "Ingenic X1000 CGU driver"
+> +	default MACH_X1000
+> +	select INGENIC_CGU_COMMON
+> +	help
+> +	  Support the clocks provided by the CGU hardware on Ingenic X1000
+> +	  and compatible SoCs.
+> +
+> +	  If building for a X1000 SoC, you want to say Y here.
+> +
+>  endmenu
+> diff --git a/drivers/clk/ingenic/Makefile=20
+> b/drivers/clk/ingenic/Makefile
+> index 250570a..0f0e784 100644
+> --- a/drivers/clk/ingenic/Makefile
+> +++ b/drivers/clk/ingenic/Makefile
+> @@ -4,3 +4,4 @@ obj-$(CONFIG_INGENIC_CGU_JZ4740)	+=3D jz4740-cgu.o
+>  obj-$(CONFIG_INGENIC_CGU_JZ4725B)	+=3D jz4725b-cgu.o
+>  obj-$(CONFIG_INGENIC_CGU_JZ4770)	+=3D jz4770-cgu.o
+>  obj-$(CONFIG_INGENIC_CGU_JZ4780)	+=3D jz4780-cgu.o
+> +obj-$(CONFIG_INGENIC_CGU_X1000)		+=3D x1000-cgu.o
+> diff --git a/drivers/clk/ingenic/x1000-cgu.c=20
+> b/drivers/clk/ingenic/x1000-cgu.c
+> new file mode 100644
+> index 00000000..c9d744c
+> --- /dev/null
+> +++ b/drivers/clk/ingenic/x1000-cgu.c
+> @@ -0,0 +1,253 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * X1000 SoC CGU driver
+> + * Copyright (c) 2019 Zhou Yanjie <zhouyanjie@zoho.com>
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+> +#include <linux/of.h>
+> +#include <dt-bindings/clock/x1000-cgu.h>
+> +#include "cgu.h"
+> +
+> +/* CGU register offsets */
+> +#define CGU_REG_CPCCR		0x00
+> +#define CGU_REG_APLL		0x10
+> +#define CGU_REG_MPLL		0x14
+> +#define CGU_REG_CLKGR		0x20
+> +#define CGU_REG_OPCR		0x24
+> +#define CGU_REG_DDRCDR		0x2c
+> +#define CGU_REG_MACPHYCDR	0x54
+> +#define CGU_REG_I2SCDR		0x60
+> +#define CGU_REG_LPCDR		0x64
+> +#define CGU_REG_MSC0CDR		0x68
+> +#define CGU_REG_I2SCDR1		0x70
+> +#define CGU_REG_SSICDR		0x74
+> +#define CGU_REG_CIMCDR		0x7c
+> +#define CGU_REG_PCMCDR		0x84
+> +#define CGU_REG_MSC1CDR		0xa4
+> +#define CGU_REG_CMP_INTR	0xb0
+> +#define CGU_REG_CMP_INTRE	0xb4
+> +#define CGU_REG_DRCG		0xd0
+> +#define CGU_REG_CLOCKSTATUS	0xd4
+> +#define CGU_REG_PCMCDR1		0xe0
+> +#define CGU_REG_MACPHYC		0xe8
+> +
+> +/* bits within the OPCR register */
+> +#define OPCR_SPENDN0		(1 << 7)
+> +#define OPCR_SPENDN1		(1 << 6)
 
-diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-index 78494c4050f7..9507ac38ac89 100644
---- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-@@ -38,6 +38,8 @@ Optional properties:
-    for data corruption. CDM registers include standard PCIe configuration
-    space registers, Port Logic registers, DMA and iATU (internal Address
-    Translation Unit) registers.
-+- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
-+  ZRX-DC specification.
- RC mode:
- - num-viewport: number of view ports configured in hardware. If a platform
-   does not specify it, the driver assumes 2.
--- 
-2.17.1
+Please use the BIT() macro from <linux/bitops.h>
+
+
+> +
+> +static struct ingenic_cgu *cgu;
+> +
+> +static const s8 pll_od_encoding[8] =3D {
+> +	0x0, 0x1, -1, 0x2, -1, -1, -1, 0x3,
+> +};
+> +
+> +static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] =3D {
+> +
+> +	/* External clocks */
+> +
+> +	[X1000_CLK_EXCLK] =3D { "ext", CGU_CLK_EXT },
+> +	[X1000_CLK_RTCLK] =3D { "rtc", CGU_CLK_EXT },
+> +
+> +	/* PLLs */
+> +
+> +	[X1000_CLK_APLL] =3D {
+> +		"apll", CGU_CLK_PLL,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.pll =3D {
+> +			.reg =3D CGU_REG_APLL,
+> +			.m_shift =3D 24,
+> +			.m_bits =3D 7,
+> +			.m_offset =3D 1,
+> +			.n_shift =3D 18,
+> +			.n_bits =3D 5,
+> +			.n_offset =3D 1,
+> +			.od_shift =3D 16,
+> +			.od_bits =3D 2,
+> +			.od_max =3D 8,
+> +			.od_encoding =3D pll_od_encoding,
+> +			.bypass_bit =3D 9,
+> +			.enable_bit =3D 8,
+> +			.stable_bit =3D 10,
+> +		},
+> +	},
+> +
+> +	[X1000_CLK_MPLL] =3D {
+> +		"mpll", CGU_CLK_PLL,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.pll =3D {
+> +			.reg =3D CGU_REG_MPLL,
+> +			.m_shift =3D 24,
+> +			.m_bits =3D 7,
+> +			.m_offset =3D 1,
+> +			.n_shift =3D 18,
+> +			.n_bits =3D 5,
+> +			.n_offset =3D 1,
+> +			.od_shift =3D 16,
+> +			.od_bits =3D 2,
+> +			.od_max =3D 8,
+> +			.od_encoding =3D pll_od_encoding,
+> +			.bypass_bit =3D 6,
+> +			.enable_bit =3D 7,
+> +			.stable_bit =3D 0,
+> +		},
+> +	},
+> +
+> +	/* Muxes & dividers */
+> +
+> +	[X1000_CLK_SCLKA] =3D {
+> +		"sclk_a", CGU_CLK_MUX,
+> +		.parents =3D { -1, X1000_CLK_EXCLK, X1000_CLK_APLL, -1 },
+> +		.mux =3D { CGU_REG_CPCCR, 30, 2 },
+> +	},
+> +
+> +	[X1000_CLK_CPUMUX] =3D {
+> +		"cpu_mux", CGU_CLK_MUX,
+> +		.parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+> +		.mux =3D { CGU_REG_CPCCR, 28, 2 },
+> +	},
+> +
+> +	[X1000_CLK_CPU] =3D {
+> +		"cpu", CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_CPUMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_L2CACHE] =3D {
+> +		"l2cache", CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_CPUMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_AHB0] =3D {
+> +		"ahb0", CGU_CLK_MUX | CGU_CLK_DIV,
+> +		.parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+> +		.mux =3D { CGU_REG_CPCCR, 26, 2 },
+> +		.div =3D { CGU_REG_CPCCR, 8, 1, 4, 21, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_AHB2PMUX] =3D {
+> +		"ahb2_apb_mux", CGU_CLK_MUX,
+> +		.parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+> +		.mux =3D { CGU_REG_CPCCR, 24, 2 },
+> +	},
+> +
+> +	[X1000_CLK_AHB2] =3D {
+> +		"ahb2", CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_AHB2PMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_CPCCR, 12, 1, 4, 20, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_PCLK] =3D {
+> +		"pclk", CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_AHB2PMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_DDR] =3D {
+> +		"ddr", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
+> +		.parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+> +		.mux =3D { CGU_REG_DDRCDR, 30, 2 },
+> +		.div =3D { CGU_REG_DDRCDR, 0, 1, 4, 29, 28, 27 },
+> +		.gate =3D { CGU_REG_CLKGR, 31 },
+> +	},
+> +
+> +	[X1000_CLK_MAC] =3D {
+> +		"mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_SCLKA, X1000_CLK_MPLL},
+> +		.mux =3D { CGU_REG_MACPHYCDR, 31, 1 },
+> +		.div =3D { CGU_REG_DDRCDR, 0, 1, 8, 29, 28, 27 },
+> +		.gate =3D { CGU_REG_CLKGR, 25 },
+> +	},
+> +
+> +	[X1000_CLK_MSCMUX] =3D {
+> +		"msc_mux", CGU_CLK_MUX,
+> +		.parents =3D { X1000_CLK_SCLKA, X1000_CLK_MPLL},
+> +		.mux =3D { CGU_REG_MSC0CDR, 31, 1 },
+> +	},
+> +
+> +	[X1000_CLK_MSC0] =3D {
+> +		"msc0", CGU_CLK_DIV | CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_MSCMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_MSC0CDR, 0, 2, 8, 29, 28, 27 },
+> +		.gate =3D { CGU_REG_CLKGR, 4 },
+> +	},
+> +
+> +	[X1000_CLK_MSC1] =3D {
+> +		"msc1", CGU_CLK_DIV | CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_MSCMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_MSC1CDR, 0, 2, 8, 29, 28, 27 },
+> +		.gate =3D { CGU_REG_CLKGR, 5 },
+> +	},
+> +
+> +	[X1000_CLK_SSIPLL] =3D {
+> +		"ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_SCLKA, X1000_CLK_MPLL, -1, -1 },
+> +		.mux =3D { CGU_REG_SSICDR, 31, 1 },
+> +		.div =3D { CGU_REG_SSICDR, 0, 1, 8, 29, 28, 27 },
+> +	},
+> +
+> +	[X1000_CLK_SSIMUX] =3D {
+> +		"ssi_mux", CGU_CLK_MUX,
+> +		.parents =3D { X1000_CLK_EXCLK, X1000_CLK_SSIPLL, -1, -1 },
+> +		.mux =3D { CGU_REG_SSICDR, 30, 1 },
+> +	},
+> +
+> +	/* Gate-only clocks */
+> +
+> +	[X1000_CLK_SFC] =3D {
+> +		"sfc", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_SSIPLL, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 2 },
+> +	},
+> +
+> +	[X1000_CLK_UART0] =3D {
+> +		"uart0", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 14 },
+> +	},
+> +
+> +	[X1000_CLK_UART1] =3D {
+> +		"uart1", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 15 },
+> +	},
+> +
+> +	[X1000_CLK_UART2] =3D {
+> +		"uart2", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 16 },
+> +	},
+> +
+> +	[X1000_CLK_SSI] =3D {
+> +		"ssi", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_SSIMUX, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 19 },
+> +	},
+> +
+> +	[X1000_CLK_PDMA] =3D {
+> +		"pdma", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 21 },
+> +	},
+> +};
+> +
+> +static void __init x1000_cgu_init(struct device_node *np)
+> +{
+> +	int retval;
+> +
+> +	cgu =3D ingenic_cgu_new(x1000_cgu_clocks,
+> +			      ARRAY_SIZE(x1000_cgu_clocks), np);
+> +	if (!cgu) {
+> +		pr_err("%s: failed to initialise CGU\n", __func__);
+> +		return;
+> +	}
+> +
+> +	retval =3D ingenic_cgu_register_clocks(cgu);
+> +	if (retval) {
+> +		pr_err("%s: failed to register CGU Clocks\n", __func__);
+> +		return;
+
+Does this SoC has the LPM bit in the LCR register like on the other=20
+SoCs?
+If so, call ingenic_cgu_register_syscore_ops() here.
+
+
+> +	}
+> +}
+> +CLK_OF_DECLARE(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
+
+Please use CLK_OF_DECLARE_DRIVER like the other CGU drivers.
+
+Cheers,
+-Paul
+
+
+=
 
