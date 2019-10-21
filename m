@@ -2,217 +2,267 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7EACA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 16:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAF9CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 16:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1783214AE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 16:08:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmpFriVh"
+	by mail.kernel.org (Postfix) with ESMTP id 754EA2064B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 16:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571674260;
+	bh=9vUKs8pCzKFuQ7qoUJr6IKkD/Ix0T+CpovzK7sscdoY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zvJVN8efWZpuHIAYuLzCoZE73pgeCopWPEKRD9KcAlLbltl/8XgnBYwMker29AqPg
+	 UKNRhX6RPgpwLWWlQTCoGx2PsEZ4kNHnjsNLMQpWPQDDp4J/UXIX+Yp2Hq3ceN4dXz
+	 glitjfyAUPzUXgAlcNRRSNSUDofE2JYKsv8q3Qgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfJUQIC (ORCPT
+        id S1728205AbfJUQLA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:08:02 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41861 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729666AbfJUQIC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 12:08:02 -0400
-Received: by mail-io1-f65.google.com with SMTP id r144so4720419iod.8;
-        Mon, 21 Oct 2019 09:08:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QoGVt8z7Xqona1SxpdHTyw3J7LGidBEFHR42VoLXFRU=;
-        b=KmpFriVhTnDG86I3PIVY7uzgzRy5yfikd7/rJhKkmbBgCaPm4gLz2slAO5cKIIY42E
-         lkCegMnUc9yLmebmqGeZ1JzKwJ2IVjk0HBw5rnvqWEHbVYUa+rPnoKqr4vWybDnAjMKO
-         v0lkXShVt/n67sMopyAsRw/A9wOUXwZ4Ghovwt9NJXto8fTLOHbd6oNM2jeXq5ACrDCw
-         KbZeKbBY2UEa8u4dug26zfSJkkuymjBxHB8aX4P8fjLvj1Zr5UIDfbI40h2x6+F0uo4C
-         HqBszL0hl5fflm+3AHi71b2WXVQICuHQ9z9DoVQhCNjg7Pwa3I754JbKsPY2TSQvM19I
-         Q3tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QoGVt8z7Xqona1SxpdHTyw3J7LGidBEFHR42VoLXFRU=;
-        b=cHgb5+GwWhPDKcmjeH3J03v8C2uoTkOy0V1XAsxKtEtKOvOkYGWYK/DvP/5ESO+x2E
-         znCPJsGCVdsPkiKbhkc5KVkR5LgOW/pZ1kgKdnPDyft9jM+i0CRXpRHD+vkE32RLOh94
-         v1JziUVYKD01Lz/HmOthIdrQP376vcrG9DHPr9f1wjR2IbDOHbd4lqnNUHJQ3N3g+pmh
-         jDXyM4q4mLGvKl/pzufi5zmjCsHitOtn4TWXddoUEaX9Y4XSv3U/8d/z16WqS3UFQEaw
-         enLKsP1InlsH7U0Du5NoiNutFh58zKdEKaQGYdSqNW7YWL8IR14lNAfLwhIPzyPo7Lxj
-         0DaQ==
-X-Gm-Message-State: APjAAAX6XASrJTVUNwVVJtCG5b+NFQPbRJD0aI5epYUCsLyfkRcSNuM8
-        /hh4XBF24tUyr2AsDNt8BMxgPGMDqcVybts/rVg3UQ==
-X-Google-Smtp-Source: APXvYqwkUZqqEAi78M4CToxxX7LrSOewa0chx6aLK0CEbG9exQ6nzm5udY+EvrqO/8UmQn0n0KKFAHXzewx9LjlwqLQ=
-X-Received: by 2002:a5d:8991:: with SMTP id m17mr22588160iol.106.1571674080766;
- Mon, 21 Oct 2019 09:08:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191021151440.13505-1-krzk@kernel.org>
-In-Reply-To: <20191021151440.13505-1-krzk@kernel.org>
-From:   Alim Akhtar <alim.akhtar@gmail.com>
-Date:   Mon, 21 Oct 2019 21:37:24 +0530
-Message-ID: <CAGOxZ531SdYcud3nQ-6hbCRZptUYznTRajVyxwEi-mFmm8-zPg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Rename children of SysRAM node to "sram"
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 21 Oct 2019 12:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726847AbfJUQK7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:10:59 -0400
+Received: from localhost.localdomain (unknown [194.230.155.217])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C85F20B7C;
+        Mon, 21 Oct 2019 16:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571673743;
+        bh=9vUKs8pCzKFuQ7qoUJr6IKkD/Ix0T+CpovzK7sscdoY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YnuG4tgpME3kPNjXMpUARMsvb9tqSSpIBym0ehdPKylfYMgiqTnXeo27b5jdwh9dq
+         qlPWNYYo7/4HpfxKy1fzneHlbFxhhI5aYIHBVsgbpVpZ8Yz2PkRaBWPAY7U+tvf0qO
+         wKup6EQVUm2LRfxMmfeWS9uEP6d4M11xqW+icQ0U=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v4 2/2] dt-bindings: pwm: Convert Samsung PWM bindings to json-schema
+Date:   Mon, 21 Oct 2019 18:02:07 +0200
+Message-Id: <20191021160207.18026-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191021160207.18026-1-krzk@kernel.org>
+References: <20191021160207.18026-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 8:45 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> The device node name should reflect generic class of a device so rename
-> the children of SysRAM node to "smp-sysram".  This will be also in sync
-Typo "smp-sram"
-> with upcoming DT schema.  No functional change.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
-Looks good to me.
+Convert Samsung PWM (S3C, S5P and Exynos SoCs) bindings to DT schema
+format using json-schema.
 
->  arch/arm/boot/dts/exynos3250.dtsi               | 4 ++--
->  arch/arm/boot/dts/exynos4210-universal_c210.dts | 6 +++---
->  arch/arm/boot/dts/exynos4210.dtsi               | 4 ++--
->  arch/arm/boot/dts/exynos4412.dtsi               | 4 ++--
->  arch/arm/boot/dts/exynos5250.dtsi               | 4 ++--
->  arch/arm/boot/dts/exynos54xx.dtsi               | 4 ++--
->  6 files changed, 13 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index b016b0b68306..044e5da64a76 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -145,12 +145,12 @@
->                         #size-cells = <1>;
->                         ranges = <0 0x02020000 0x40000>;
->
-> -                       smp-sysram@0 {
-> +                       smp-sram@0 {
->                                 compatible = "samsung,exynos4210-sysram";
->                                 reg = <0x0 0x1000>;
->                         };
->
-> -                       smp-sysram@3f000 {
-> +                       smp-sram@3f000 {
->                                 compatible = "samsung,exynos4210-sysram-ns";
->                                 reg = <0x3f000 0x1000>;
->                         };
-> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> index 09d3d54d09ff..a1bdf7830a87 100644
-> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> @@ -590,16 +590,16 @@
->  };
->
->  &sysram {
-> -       smp-sysram@0 {
-> +       smp-sram@0 {
->                 status = "disabled";
->         };
->
-> -       smp-sysram@5000 {
-> +       smp-sram@5000 {
->                 compatible = "samsung,exynos4210-sysram";
->                 reg = <0x5000 0x1000>;
->         };
->
-> -       smp-sysram@1f000 {
-> +       smp-sram@1f000 {
->                 status = "disabled";
->         };
->  };
-> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-> index 554819ae1446..b4466232f0c1 100644
-> --- a/arch/arm/boot/dts/exynos4210.dtsi
-> +++ b/arch/arm/boot/dts/exynos4210.dtsi
-> @@ -79,12 +79,12 @@
->                         #size-cells = <1>;
->                         ranges = <0 0x02020000 0x20000>;
->
-> -                       smp-sysram@0 {
-> +                       smp-sram@0 {
->                                 compatible = "samsung,exynos4210-sysram";
->                                 reg = <0x0 0x1000>;
->                         };
->
-> -                       smp-sysram@1f000 {
-> +                       smp-sram@1f000 {
->                                 compatible = "samsung,exynos4210-sysram-ns";
->                                 reg = <0x1f000 0x1000>;
->                         };
-> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-> index 5022aa574b26..48868947373e 100644
-> --- a/arch/arm/boot/dts/exynos4412.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> @@ -195,12 +195,12 @@
->                         #size-cells = <1>;
->                         ranges = <0 0x02020000 0x40000>;
->
-> -                       smp-sysram@0 {
-> +                       smp-sram@0 {
->                                 compatible = "samsung,exynos4210-sysram";
->                                 reg = <0x0 0x1000>;
->                         };
->
-> -                       smp-sysram@2f000 {
-> +                       smp-sram@2f000 {
->                                 compatible = "samsung,exynos4210-sysram-ns";
->                                 reg = <0x2f000 0x1000>;
->                         };
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index e1f0215e3985..ec983283f573 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -171,12 +171,12 @@
->                         #size-cells = <1>;
->                         ranges = <0 0x02020000 0x30000>;
->
-> -                       smp-sysram@0 {
-> +                       smp-sram@0 {
->                                 compatible = "samsung,exynos4210-sysram";
->                                 reg = <0x0 0x1000>;
->                         };
->
-> -                       smp-sysram@2f000 {
-> +                       smp-sram@2f000 {
->                                 compatible = "samsung,exynos4210-sysram-ns";
->                                 reg = <0x2f000 0x1000>;
->                         };
-> diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-> index f78dee801cd9..8aa5117e58ce 100644
-> --- a/arch/arm/boot/dts/exynos54xx.dtsi
-> +++ b/arch/arm/boot/dts/exynos54xx.dtsi
-> @@ -62,12 +62,12 @@
->                         #size-cells = <1>;
->                         ranges = <0 0x02020000 0x54000>;
->
-> -                       smp-sysram@0 {
-> +                       smp-sram@0 {
->                                 compatible = "samsung,exynos4210-sysram";
->                                 reg = <0x0 0x1000>;
->                         };
->
-> -                       smp-sysram@53000 {
-> +                       smp-sram@53000 {
->                                 compatible = "samsung,exynos4210-sysram-ns";
->                                 reg = <0x53000 0x1000>;
->                         };
-> --
-> 2.17.1
->
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
+---
 
+Changes since v3:
+1. Add reviewed-by.
+
+Changes since v2:
+1. Add additionalProperties: false.
+
+Changes since v1:
+1. Indent example with four spaces (more readable),
+2. Fix samsung,pwm-outputs after review,
+3. Remove double-quotes from clock names.
+---
+ .../devicetree/bindings/pwm/pwm-samsung.txt   |  51 --------
+ .../devicetree/bindings/pwm/pwm-samsung.yaml  | 109 ++++++++++++++++++
+ 2 files changed, 109 insertions(+), 51 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+deleted file mode 100644
+index 5538de9c2007..000000000000
+--- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
++++ /dev/null
+@@ -1,51 +0,0 @@
+-* Samsung PWM timers
+-
+-Samsung SoCs contain PWM timer blocks which can be used for system clock source
+-and clock event timers, as well as to drive SoC outputs with PWM signal. Each
+-PWM timer block provides 5 PWM channels (not all of them can drive physical
+-outputs - see SoC and board manual).
+-
+-Be aware that the clocksource driver supports only uniprocessor systems.
+-
+-Required properties:
+-- compatible : should be one of following:
+-    samsung,s3c2410-pwm - for 16-bit timers present on S3C24xx SoCs
+-    samsung,s3c6400-pwm - for 32-bit timers present on S3C64xx SoCs
+-    samsung,s5p6440-pwm - for 32-bit timers present on S5P64x0 SoCs
+-    samsung,s5pc100-pwm - for 32-bit timers present on S5PC100, S5PV210,
+-			  Exynos4210 rev0 SoCs
+-    samsung,exynos4210-pwm - for 32-bit timers present on Exynos4210,
+-                          Exynos4x12, Exynos5250 and Exynos5420 SoCs
+-- reg: base address and size of register area
+-- interrupts: list of timer interrupts (one interrupt per timer, starting at
+-  timer 0)
+-- clock-names: should contain all following required clock names:
+-    - "timers" - PWM base clock used to generate PWM signals,
+-  and any subset of following optional clock names:
+-    - "pwm-tclk0" - first external PWM clock source,
+-    - "pwm-tclk1" - second external PWM clock source.
+-  Note that not all IP variants allow using all external clock sources.
+-  Refer to SoC documentation to learn which clock source configurations
+-  are available.
+-- clocks: should contain clock specifiers of all clocks, which input names
+-  have been specified in clock-names property, in same order.
+-- #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+-  the cells format. The only third cell flag supported by this binding is
+-  PWM_POLARITY_INVERTED.
+-
+-Optional properties:
+-- samsung,pwm-outputs: list of PWM channels used as PWM outputs on particular
+-    platform - an array of up to 5 elements being indices of PWM channels
+-    (from 0 to 4), the order does not matter.
+-
+-Example:
+-	pwm@7f006000 {
+-		compatible = "samsung,s3c6400-pwm";
+-		reg = <0x7f006000 0x1000>;
+-		interrupt-parent = <&vic0>;
+-		interrupts = <23>, <24>, <25>, <27>, <28>;
+-		clocks = <&clock 67>;
+-		clock-names = "timers";
+-		samsung,pwm-outputs = <0>, <1>;
+-		#pwm-cells = <3>;
+-	}
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+new file mode 100644
+index 000000000000..ea7f32905172
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+@@ -0,0 +1,109 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/pwm-samsung.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung SoC PWM timers
++
++maintainers:
++  - Thierry Reding <thierry.reding@gmail.com>
++  - Krzysztof Kozlowski <krzk@kernel.org>
++
++description: |+
++  Samsung SoCs contain PWM timer blocks which can be used for system clock source
++  and clock event timers, as well as to drive SoC outputs with PWM signal. Each
++  PWM timer block provides 5 PWM channels (not all of them can drive physical
++  outputs - see SoC and board manual).
++
++  Be aware that the clocksource driver supports only uniprocessor systems.
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    enum:
++      - samsung,s3c2410-pwm             # 16-bit, S3C24xx
++      - samsung,s3c6400-pwm             # 32-bit, S3C64xx
++      - samsung,s5p6440-pwm             # 32-bit, S5P64x0
++      - samsung,s5pc100-pwm             # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
++      - samsung,exynos4210-pwm          # 32-bit, Exynos
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 3
++
++  clock-names:
++    description: |
++      Should contain all following required clock names:
++      - "timers" - PWM base clock used to generate PWM signals,
++      and any subset of following optional clock names:
++      - "pwm-tclk0" - first external PWM clock source,
++      - "pwm-tclk1" - second external PWM clock source.
++      Note that not all IP variants allow using all external clock sources.
++      Refer to SoC documentation to learn which clock source configurations
++      are available.
++    oneOf:
++      - items:
++        - const: timers
++      - items:
++        - const: timers
++        - const: pwm-tclk0
++      - items:
++        - const: timers
++        - const: pwm-tclk1
++      - items:
++        - const: timers
++        - const: pwm-tclk0
++        - const: pwm-tclk1
++
++  interrupts:
++    description:
++      One interrupt per timer, starting at timer 0.
++    minItems: 1
++    maxItems: 5
++
++  "#pwm-cells":
++    description:
++      The only third cell flag supported by this binding
++      is PWM_POLARITY_INVERTED.
++    const: 3
++
++  samsung,pwm-outputs:
++    description:
++      A list of PWM channels used as PWM outputs on particular platform.
++      It is an array of up to 5 elements being indices of PWM channels
++      (from 0 to 4), the order does not matter.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - uniqueItems: true
++      - items:
++          minimum: 0
++          maximum: 4
++
++required:
++  - clocks
++  - clock-names
++  - compatible
++  - interrupts
++  - "#pwm-cells"
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm@7f006000 {
++        compatible = "samsung,s3c6400-pwm";
++        reg = <0x7f006000 0x1000>;
++        interrupt-parent = <&vic0>;
++        interrupts = <23>, <24>, <25>, <27>, <28>;
++        clocks = <&clock 67>;
++        clock-names = "timers";
++        samsung,pwm-outputs = <0>, <1>;
++        #pwm-cells = <3>;
++    };
 -- 
-Regards,
-Alim
+2.17.1
+
