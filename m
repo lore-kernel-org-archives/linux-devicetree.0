@@ -2,135 +2,126 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6ABCA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF23CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87970214AE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571680855;
-	bh=XM+FygnugCQee4JxAth0vGJ2t52VZLAJMmBqZuGFwU4=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=oouShOgRmWImg0aPGVS5fX35v5k7ksEMqJ3GY4ANsGueKIXrzeCck1hCIvglGCyYX
-	 hZ9tjyt/QD+G5YmSPNNLa3IFwVePYJRzuRDBBZR+2SIvCsNOhU46ri5w4DVyhHr7sb
-	 r/wrY4dKlXIHwCPKkyW79tfLQJs/LfwpL7P+Y9rI=
+	by mail.kernel.org (Postfix) with ESMTP id 236632086D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:08:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="OH+QEsF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfJUSAz (ORCPT
+        id S1727110AbfJUSIF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:00:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38986 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbfJUSAz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 14:00:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=uq0cbL+MVqRsyuw0sPQS5GA0v05y+bqGq3kL9K0P2h8=; b=PGEycT3N3lTQ
-        NSSgmXX+NrJZnmMPp0DDgf3TJ5vpiZ60E/A5h7/jh7v9/BlffeXg/8qSJZDhUVO94BoiVkdBKZIA6
-        oHFGZxOgPxsjFb2uNM5ycbXGiYwo6ZffM4e2i8UHOVbaL6uUVM1svJMDhy6F5RQfWvgyT7vK5Cl+k
-        9gRQU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iMbz5-0004bf-DO; Mon, 21 Oct 2019 18:00:47 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8052B2743293; Mon, 21 Oct 2019 19:00:46 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Maciej Falkowski <m.falkowski@samsung.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
+        Mon, 21 Oct 2019 14:08:05 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:35936 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729878AbfJUSIE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 14:08:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571681282;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=qQ6zV65O4QTCFnYrPW5AcyzqoTnREY7XPbgJ3s1IDW8=;
+        b=OH+QEsF7qliA4AI9mvrnicGWFLMcpuY9MqzuAT7wW1sa+9GRkIx1vaVlSIbfhMBMv0
+        NS3/R2t97sq1iP1MJmGf20rkY9S3BMwUYAhsDKNxMD55NNt4f5tsm6CGOhBeoDqiVWqg
+        vXZfuPoPYF7Uhl21FK6i9d/73TExoANaC6RynmClpWDpadd66hjnX9OrioTdY7rfNio4
+        aLr4Tg3urEHez4D9kZV8rV9GXCzW42jtu5ahFuRjmuqhhf4rOaqbzNuUecCpFtGCJhnn
+        tfsNdV/WtxciK7Y+MifqSv+y+m/5RANFDMSQGaP32r6aM09ILJAuizAGWeFEPffg3KxA
+        5yUQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCbXA4Ewxc="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id R0b2a8v9LI7xM5P
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 21 Oct 2019 20:07:59 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191021172557.GB5610@atomide.com>
+Date:   Mon, 21 Oct 2019 20:07:59 +0200
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Applied "ASoC: samsung: i2s: Document clocks macros" to the asoc tree
-In-Reply-To: <20190926110219.6144-1-m.szyprowski@samsung.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191021180046.8052B2743293@ypsilon.sirena.org.uk>
-Date:   Mon, 21 Oct 2019 19:00:46 +0100 (BST)
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
+References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com> <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com> <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com> <20191021172557.GB5610@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: samsung: i2s: Document clocks macros
+> Am 21.10.2019 um 19:25 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [191021 15:46]:
+>>> Am 21.10.2019 um 17:07 schrieb Rob Herring <robh+dt@kernel.org>:
+>>> On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>>> +Optional properties:
+>>>> +- timer:       the timer to be used by the driver.
+>>>=20
+>>> Needs a better description and vendor prefix at least.
+>>=20
+>> I am not yet sure if it is vendor specific or if all
+>> SGX implementations need some timer.
+>>=20
+>>>=20
+>>> Why is this needed rather than using the OS's timers?
+>>=20
+>> Because nobody understands the current (out of tree and
+>> planned for staging) driver well enough what the timer
+>> is doing. It is currently hard coded that some omap refer
+>> to timer7 and others use timer11.
+>=20
+> Just configure it in the driver based on the compatible
+> value to keep it out of the dts. It's best to stick to
+> standard bindings.
 
-has been applied to the asoc tree at
+IMHO leads to ugly code... Since the timer is not part of
+the SGX IPR module but one of the OMAP timers it is sort
+of hardware connection that can be chosen a little arbitrarily.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+This is the main reason why I think adding it to a device tree
+source so that a board that really requires to use a timer
+for a different purpose, can reassign it. This is not possible
+if we hard-code that into the driver by scanning for
+compatible. In that case the driver must check board compatible
+names...
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+But if we gain a better understanding of its role in the driver
+(does it really need a dedicated timer and for what and which
+properties the timer must have) we can probably replace it.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+>=20
+>>>> +- img,cores:   number of cores. Defaults to <1>.
+>>>=20
+>>> Not discoverable?
+>>=20
+>> Not sure if it is. This is probably available in undocumented
+>> registers of the sgx.
+>=20
+> This too, and whatever non-standrd other properities
+> you might have.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Here it is a feature of the SGX IPR of the SoC, i.e.
+describes that the hardware has one or two cores.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 6cc23ed2ceab880e96ad287d9c85b53659050510 Mon Sep 17 00:00:00 2001
-From: Maciej Falkowski <m.falkowski@samsung.com>
-Date: Thu, 26 Sep 2019 13:02:19 +0200
-Subject: [PATCH] ASoC: samsung: i2s: Document clocks macros
-
-Document clocks macros with their description
-from 'Documentation/devicetree/bindings/sound/samsung-i2s.txt'
-
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20190926110219.6144-1-m.szyprowski@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- include/dt-bindings/sound/samsung-i2s.h | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/include/dt-bindings/sound/samsung-i2s.h b/include/dt-bindings/sound/samsung-i2s.h
-index 77545f14c379..250de0d6c734 100644
---- a/include/dt-bindings/sound/samsung-i2s.h
-+++ b/include/dt-bindings/sound/samsung-i2s.h
-@@ -2,8 +2,14 @@
- #ifndef _DT_BINDINGS_SAMSUNG_I2S_H
- #define _DT_BINDINGS_SAMSUNG_I2S_H
- 
--#define CLK_I2S_CDCLK		0
--#define CLK_I2S_RCLK_SRC	1
--#define CLK_I2S_RCLK_PSR	2
-+#define CLK_I2S_CDCLK		0 /* the CDCLK (CODECLKO) gate clock */
-+
-+#define CLK_I2S_RCLK_SRC	1 /* the RCLKSRC mux clock (corresponding to
-+				   * RCLKSRC bit in IISMOD register)
-+				   */
-+
-+#define CLK_I2S_RCLK_PSR	2 /* the RCLK prescaler divider clock
-+				   * (corresponding to the IISPSR register)
-+				   */
- 
- #endif /* _DT_BINDINGS_SAMSUNG_I2S_H */
--- 
-2.20.1
+BR,
+NIkolaus
 
