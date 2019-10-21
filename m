@@ -2,214 +2,234 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42D3CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4215FCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80CF2173B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D442084C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbfJULQb (ORCPT
+        id S1728187AbfJULTk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:16:31 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:59317 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727831AbfJULQb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:16:31 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id MVfkiUH6Uo1ZhMVfoiLqeg; Mon, 21 Oct 2019 13:16:28 +0200
-Subject: Re: [PATCH v4 0/6] media: Introduce Allwinner H3 deinterlace driver
-To:     Jernej Skrabec <jernej.skrabec@siol.net>, mripard@kernel.org,
-        wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20191017183738.68069-1-jernej.skrabec@siol.net>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8fbb323d-cd36-73cb-2df8-21e2819fa5af@xs4all.nl>
-Date:   Mon, 21 Oct 2019 13:16:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 07:19:40 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:49666 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbfJULTk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 07:19:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C448EBD;
+        Mon, 21 Oct 2019 04:19:05 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C73533F718;
+        Mon, 21 Oct 2019 04:19:04 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 12:19:03 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+Message-ID: <20191021111902.GO47056@e119886-lin.cambridge.arm.com>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191017183738.68069-1-jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMtA5ZUvk5SMyfHDrRDdsscFKWiG0RLda76+iWgeFQobn4VN/CfhpHs5R4tftNnSaA+wIhzE5IJVRc93acbZCex4ojmnDI0q1d2PXBspsHw0nlCoJ1zN
- Tsd8tUJFP+E+CPII+oQzuFg70xlcL3fyt54UIgA6rdtwk4Tymuuwc3Si1U8+aWn5z+qZWt/Ie4mgYxCrxROd74pQYEHrH+86MYT04Ho1cXiOE2Sm+9WBqr9S
- vy+Qk5Nwufy5x9gg7I6t8Qf1ntIkW/ndhzbW3dosALWd+CdP4yoFL6atOKyO4rmWq+iC+957ZcCEYYYkgVClLWKfBwgdIoAvP6lN4NKm7rnkBhdm+ZZCp0P8
- EMhWk1/TjVoCXNMo9i5h4eN3JFybdT6NF7SJLiKKzShsFWvGNDGvCM+jbkoDbQOCEQnh//I3G+RyHTM8C7JU8LHkm9t2MwhSAJDM9AgiYM80g76ZwrgrGKha
- V20ZRBkd1Z6GGntC7OLeEL9c1zugoq1Vw5EM7GusBDoFMEyR+rm3ZzPFQuM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jernej,
+On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
+> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
 
-I found something odd in the compliance output:
+s/shcemas/schemas/
 
-On 10/17/19 8:37 PM, Jernej Skrabec wrote:
-> Starting with H3, Allwinner began to include standalone deinterlace
-> core in multimedia oriented SoCs. This patch series introduces support
-> for it. Note that new SoCs, like H6, have radically different (updated)
-> deinterlace core, which will need a new driver.
-> 
-> v4l2-compliance report:
-> v4l2-compliance SHA: dece02f862f38d8f866230ca9f1015cb93ddfac4, 32 bits
-> 
-> Compliance test for sun8i-di device /dev/video0:
-> 
-> Driver Info:
->         Driver name      : sun8i-di
->         Card type        : sun8i-di
->         Bus info         : platform:sun8i-di
->         Driver version   : 5.3.0
->         Capabilities     : 0x84208000
->                 Video Memory-to-Memory
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps      : 0x04208000
->                 Video Memory-to-Memory
->                 Streaming
->                 Extended Pix Format
-> 
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->         test second /dev/video0 open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
-> 
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
->         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
->         test VIDIOC_QUERYCTRL: OK (Not Supported)
->         test VIDIOC_G/S_CTRL: OK (Not Supported)
->         test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
->         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
->         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->         Standard Controls: 0 Private Controls: 0
-> 
-> Format ioctls:
->         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->         test VIDIOC_G/S_PARM: OK (Not Supported)
->         test VIDIOC_G_FBUF: OK (Not Supported)
->         test VIDIOC_G_FMT: OK
->         test VIDIOC_TRY_FMT: OK
->         test VIDIOC_S_FMT: OK
->         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->         test Cropping: OK (Not Supported)
->         test Composing: OK (Not Supported)
->         test Scaling: OK
+> which is Synopsys DesignWare based PCIe core.
 
-This claims that the driver supports scaling, but I don't think that is right.
+The revision history below doesn't need to be in the commit mesage and
+so you should add a '---' before the following (and thanks for the
+detailed history).
 
-More likely the deinterlacing part is what confuses the compliance test.
+Besides that:
 
-Can you look in v4l2-test-formats.cpp, function testBasicScaling() where it
-sets node->can_scale to true? And see if this is due to a driver bug, or due
-to a bug in the test?
-
-Regards,
-
-	Hans
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
 > 
-> Codec ioctls:
->         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> changes on v4:
+> 	Add "snps,dw-pcie" compatible.
+> 	Rename phy-names property value to pcie.
+> 	And maximum and minimum values to num-lanes.
+> 	Add ref for reset-assert-ms entry and update the
+> 	 description for easy understanding.
+> 	Remove pcie core interrupt entry.
 > 
-> Buffer ioctls:
->         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->         test VIDIOC_EXPBUF: OK
->         test Requests: OK (Not Supported)
+> changes on v3:
+>         Add the appropriate License-Identifier
+>         Rename intel,rst-interval to 'reset-assert-us'
+>         Add additionalProperties: false
+>         Rename phy-names to 'pciephy'
+>         Remove the dtsi node split of SoC and board in the example
+>         Add #interrupt-cells = <1>; or else interrupt parsing will fail
+>         Name yaml file with compatible name
 > 
-> Total for sun8i-di device /dev/video0: 44, Succeeded: 44, Failed: 0, Warnings: 0
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> ---
+>  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
 > 
-> Please take a look.
+> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> new file mode 100644
+> index 000000000000..49dd87ec1e3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCIe RC controller on Intel Gateway SoCs
+> +
+> +maintainers:
+> +  - Dilip Kota <eswara.kota@linux.intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: intel,lgm-pcie
+> +      - const: snps,dw-pcie
+> +
+> +  device_type:
+> +    const: pci
+> +
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: Controller control and status registers.
+> +      - description: PCIe configuration registers.
+> +      - description: Controller application registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: config
+> +      - const: app
+> +
+> +  ranges:
+> +    description: Ranges for the PCI memory and I/O regions.
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: PCIe registers interface clock.
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: pcie
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  num-lanes:
+> +    minimum: 1
+> +    maximum: 2
+> +    description: Number of lanes to use for this port.
+> +
+> +  linux,pci-domain:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: PCI domain ID.
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +  interrupt-map-mask:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  interrupt-map:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  max-link-speed:
+> +    description: Specify PCI Gen for link capability.
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
+> +
+> +  reset-assert-ms:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Delay after asserting reset to the PCIe device.
+> +      Some devices need an interval upto 500ms. By default it is 100ms.
+> +
+> +required:
+> +  - compatible
+> +  - device_type
+> +  - reg
+> +  - reg-names
+> +  - ranges
+> +  - resets
+> +  - clocks
+> +  - phys
+> +  - phy-names
+> +  - reset-gpios
+> +  - num-lanes
+> +  - linux,pci-domain
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie10:pcie@d0e00000 {
+> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
+> +      device_type = "pci";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      reg = <0xd0e00000 0x1000>,
+> +            <0xd2000000 0x800000>,
+> +            <0xd0a41000 0x1000>;
+> +      reg-names = "dbi", "config", "app";
+> +      linux,pci-domain = <0>;
+> +      max-link-speed = <4>;
+> +      bus-range = <0x00 0x08>;
+> +      interrupt-parent = <&ioapic1>;
+> +      #interrupt-cells = <1>;
+> +      interrupt-map-mask = <0 0 0 0x7>;
+> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> +                      <0 0 0 2 &ioapic1 28 1>,
+> +                      <0 0 0 3 &ioapic1 29 1>,
+> +                      <0 0 0 4 &ioapic1 30 1>;
+> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+> +      resets = <&rcu0 0x50 0>;
+> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+> +      phys = <&cb0phy0>;
+> +      phy-names = "pcie";
+> +      status = "okay";
+> +      reset-assert-ms = <500>;
+> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> +      num-lanes = <2>;
+> +    };
+> -- 
+> 2.11.0
 > 
-> Best regards,
-> Jernej
-> 
-> Changes from v3:
-> - added Maxime's a-b tag
-> - moved and fixed Kconfig entry
-> - put clk_set_rate_exclusive() and it's counterpart in PM callbacks
-> 
-> Changes from v2:
-> - added acked-by and review-by tags
-> - fixed schema path in H3 deinterlace binding
-> - moved busy check after format args check
-> 
-> Changes from v1:
-> - updated Maxime's e-mail in DT binding
-> - removed "items" for single item in DT binding
-> - implemented power management
-> - replaced regmap with direct io access
-> - set exclusive clock rate
-> - renamed DEINTERLACE_FRM_CTRL_COEF_CTRL to DEINTERLACE_FRM_CTRL_COEF_ACCESS
-> 
-> Jernej Skrabec (6):
->   dt-bindings: bus: sunxi: Add H3 MBUS compatible
->   clk: sunxi-ng: h3: Export MBUS clock
->   ARM: dts: sunxi: h3/h5: Add MBUS controller node
->   dt-bindings: media: Add Allwinner H3 Deinterlace binding
->   media: sun4i: Add H3 deinterlace driver
->   dts: arm: sun8i: h3: Enable deinterlace unit
-> 
->  .../bindings/arm/sunxi/sunxi-mbus.txt         |    1 +
->  .../media/allwinner,sun8i-h3-deinterlace.yaml |   75 ++
->  MAINTAINERS                                   |    7 +
->  arch/arm/boot/dts/sun8i-h3.dtsi               |   13 +
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |    9 +
->  drivers/clk/sunxi-ng/ccu-sun8i-h3.h           |    4 -
->  drivers/media/platform/Kconfig                |   12 +
->  drivers/media/platform/sunxi/Makefile         |    1 +
->  .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
->  .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1028 +++++++++++++++++
->  .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
->  include/dt-bindings/clock/sun8i-h3-ccu.h      |    2 +-
->  12 files changed, 1386 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun8i-h3-deinterlace.yaml
->  create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
->  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
->  create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
-> 
-
