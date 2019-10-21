@@ -2,46 +2,64 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A844CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0E2CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639372089C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E142089C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:13:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mje5a2I0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfJUNMz (ORCPT
+        id S1727344AbfJUNN6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:12:55 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35552 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727985AbfJUNMz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 09:12:55 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 65F8728A8BD
-Subject: Re: [alsa-devel] [PATCH v5 1/4] ASoC: cros_ec_codec: support WoV
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Tzung-Bi Shih <tzungbi@google.com>, gwendal@google.com,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        cychiang@google.com, drinkcat@google.com, robh+dt@kernel.org,
-        bleung@google.com, dgreid@google.com
-References: <20191019070254.23870-1-tzungbi@google.com>
- <20191019143504.1.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
- <659a3d1f-a8e1-268d-5e95-b328aeed601b@collabora.com>
- <20191021114303.GC4691@sirena.co.uk>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <a4e1530a-b706-2a73-e0b3-ad56cf9085bc@collabora.com>
-Date:   Mon, 21 Oct 2019 15:12:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 09:13:58 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33272 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfJUNN6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 09:13:58 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LDDlPM083649;
+        Mon, 21 Oct 2019 08:13:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571663627;
+        bh=cPzbl8QdR5RPkbPtIl/OHqd294nktWDjC5XGUzJXtfk=;
+        h=From:To:CC:Subject:Date;
+        b=Mje5a2I08a3EnqbRuhagvIhfjbmWlTepzH9IDor/7qo9OGEM6AMUw+e0dw/xAopfs
+         GzBcfcXDMAMZcJ0LUn28MQoRMcmRCx+ZH7mJxtSszkJat4Hz4dPiCXsh6O4KL18xCS
+         DOqLB3DraauH02vwbS070Tqm95TjeanLxeEHqnUo=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LDDlwA106359
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 21 Oct 2019 08:13:47 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 21
+ Oct 2019 08:13:37 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 21 Oct 2019 08:13:37 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LDDE7e017365;
+        Mon, 21 Oct 2019 08:13:14 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
+CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
+        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 0/2] usb: cdns3: Add TI wrapper
+Date:   Mon, 21 Oct 2019 16:13:03 +0300
+Message-ID: <20191021131305.8689-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191021114303.GC4691@sirena.co.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -49,23 +67,38 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi,
 
-On 21/10/19 13:43, Mark Brown wrote:
-> On Mon, Oct 21, 2019 at 01:26:04PM +0200, Enric Balletbo i Serra wrote:
-> 
->> Mark, once applied, could we get an immutable branch from you containing the
->> following already applied patches + this series? We need as we have patches that
->> could conflict on platform/chrome.
-> 
-> Ugh.  You should have mentioned this before the patches were applied,
-> they're on the development branch that has everything in it like I
-> normally do which I don't want to rebase (and I think I did a merge up
-> of the fixes branch since then anyway).  Hopefully Linus will be able to
-> figure out any conflicts that occur.
-> 
+Texas Instruments SoCs have a wrapper module around the Cadence
+USB3 core. It takes care of clocking and powering the core and providing
+initial configuration to the core.
 
-Ok, I was off the latest two weeks so I didn't catch it :-(. I'll try to figure
-out the better way to avoid conflicts knowing that these are already queued.
+This series adds the driver for the TI wrapper and associated DT binding
+document. This is for -next kernel. Thanks.
 
-Thanks,
- Enric.
+cheers,
+-roger
+
+Changelog:
+
+v2:
+- dt-binding fixes to address Rob's comments
+	- convert dt-binding document name to DT schema
+	- get rid of bootstrap properties
+	- fix DT example
+
+Roger Quadros (2):
+  dt-bindings: usb: Add binding for the TI wrapper for Cadence USB3
+    controller
+  usb: cdns3: Add TI specific wrapper driver
+
+ .../devicetree/bindings/usb/ti,j721e-usb.txt  |  52 ++++
+ drivers/usb/cdns3/Kconfig                     |  10 +
+ drivers/usb/cdns3/Makefile                    |   1 +
+ drivers/usb/cdns3/cdns3-ti.c                  | 236 ++++++++++++++++++
+ 4 files changed, 299 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
+ create mode 100644 drivers/usb/cdns3/cdns3-ti.c
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
