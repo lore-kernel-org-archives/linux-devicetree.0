@@ -2,103 +2,204 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF5ACA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B555CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 437C92067B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S9EG7QY/"
+	by mail.kernel.org (Postfix) with ESMTP id 4DB532067B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfJUKg1 (ORCPT
+        id S1726767AbfJUKiJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:36:27 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45272 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbfJUKg0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 06:36:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r1so7535292pgj.12
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 03:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=iVqqU2LAVSCsGxONMpzjN5OaSzKTS+PP+RlrbsDHeMo=;
-        b=S9EG7QY/ZgkmqHhRziKbvL3c/VYqOHXyxeTbUYe3phmidMNW6VBcGWA5qYT94oVvwV
-         FcDAXIrZHnwKaZPodf4BPLNtpvyHt05p/WPYzzGomf3ic9a1bgRqcT47c3YQX1kTBzTP
-         TPm2ahWz0pTsWGK1/SUEJ7Eq8+CeuaX+8RSWgQaP+HdnHfbZfdDo2skD2ZdD0OnEMidt
-         mKa3+5D7lLpBUC5WYONM+bjVgGtcN/CH+LHb3+baXgPFR+unyWMICbOgLOWfzCi/Od3z
-         +zswnyNg6Q+4KhQqLJbYtWR5WeASo8JWdwRweB759Abf+83GPYHQHcfBc+UQYlQBDpIa
-         FLoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=iVqqU2LAVSCsGxONMpzjN5OaSzKTS+PP+RlrbsDHeMo=;
-        b=Xzjfvb9aSI8AFqakstJkEFPgB1wXast7+66lYoL+ifgUXHrGo0Fz86YC4V4y4pWDTF
-         P6IhzaepJKeJkHNjyO/hz/fDRWahc9nw5kLy/mFRCnpj/+qWuaQgdpTfy6fmQigzqYw/
-         hxhzOtr/2Ge0DAWe7WE1MRWwFAfpAQa5vBjA4b9BG1lEjAhFYDYhCjjSX64zLfeNKxY6
-         rAZY4L7eqU9uvs0GXGk0Ikao8pTrOLRlCEjKX5w7UPdkT6+k8neLyJexUIhnauIcEnV0
-         1tydA8DLvbH3NyZEzQ4AqwJggC3ovGztQE5gf8rJPfi/ZHKiUEKxIDd95h8bsVsPlFmU
-         LMAw==
-X-Gm-Message-State: APjAAAX+Oojc93kd22Aabw5CCb3nlu5ItBhTloRHRH/JCnnuZqRJCO5l
-        MD90zDBBu7JfejfiZ0Do8yp0bGEoL6VYOw==
-X-Google-Smtp-Source: APXvYqzEHGDZ6oIR4ZkTsgaawzrSiWXv0qd13sPs8zKa+jMYleM9/V8ML0gtBkC0Oq7Pc4bCnCZdKw==
-X-Received: by 2002:a63:cc4a:: with SMTP id q10mr11017952pgi.221.1571654185644;
-        Mon, 21 Oct 2019 03:36:25 -0700 (PDT)
-Received: from localhost ([49.248.62.222])
-        by smtp.gmail.com with ESMTPSA id e192sm15379176pfh.83.2019.10.21.03.36.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 03:36:25 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
-        masneyb@onstation.org, swboyd@chromium.org, julia.lawall@lip6.fr,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v6 12/15] arm: dts: msm8974: thermal: Add interrupt support
-Date:   Mon, 21 Oct 2019 16:05:31 +0530
-Message-Id: <a2a70ff28e72a14b163a9a9b93ef474ab0836398.1571652874.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1571652874.git.amit.kucheria@linaro.org>
-References: <cover.1571652874.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1571652874.git.amit.kucheria@linaro.org>
-References: <cover.1571652874.git.amit.kucheria@linaro.org>
+        Mon, 21 Oct 2019 06:38:09 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:35437 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726725AbfJUKiJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:38:09 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id MV4diU1Tdo1ZhMV4giLfb1; Mon, 21 Oct 2019 12:38:06 +0200
+Subject: Re: [Patch 07/19] media: ti-vpe: cal: add CSI2 PHY LDO errata support
+To:     Benoit Parrot <bparrot@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
+References: <20191018153437.20614-1-bparrot@ti.com>
+ <20191018153437.20614-8-bparrot@ti.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <68dbd926-0e37-93f7-e03e-def4b4146d32@xs4all.nl>
+Date:   Mon, 21 Oct 2019 12:38:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191018153437.20614-8-bparrot@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfN7I+pVfMgIkvnB5EwZLFJ0MzMPcjgiwikp5JFhEn8sQI3ONVzWrvTz1WXmzHqV32dd4F71xp6LHS8hxF4BjyMGFnGWLPZj+McnqgS56vq8S4Bh7FRGF
+ azKBb52I+vN9gcbpc55rg0mhDafJYNqZWU6iBAh8/agM8cKH8aNp+QISlX5n1eMN87PuBq3vCtUkZ35NYta7W7tx59fugU/ozRxMXV5p4T8m7hNNkRgU/5B1
+ 2hJ9cl6y+exwcglLLHA6iB9+ZUYaQeJFAohkJVQ5zAyDankwfjUCloFx9XNQTlr1LYEWiJwPDV6VuJ8fw2jlltQ7f42ztQrt0m01A2lwTbo=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Register upper-lower interrupt for the tsens controller.
+On 10/18/19 5:34 PM, Benoit Parrot wrote:
+> Apply Errata i913 every time the functional clock is enabled.
+> This should take care of suspend/resume case as well.
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  drivers/media/platform/ti-vpe/cal.c      | 56 +++++++++++++++++++++++-
+>  drivers/media/platform/ti-vpe/cal_regs.h | 27 ++++++++++++
+>  2 files changed, 82 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+> index 62aeedb705e9..3cbc4dca6de8 100644
+> --- a/drivers/media/platform/ti-vpe/cal.c
+> +++ b/drivers/media/platform/ti-vpe/cal.c
+> @@ -284,6 +284,13 @@ static struct cal_data dra72x_cal_data = {
+>  	.flags = 0,
+>  };
+>  
+> +static struct cal_data dra72x_es1_cal_data = {
+> +	.csi2_phy_core = dra72x_cal_csi_phy,
+> +	.num_csi2_phy = ARRAY_SIZE(dra72x_cal_csi_phy),
+> +
+> +	.flags = DRA72_CAL_PRE_ES2_LDO_DISABLE,
+> +};
+> +
+>  /*
+>   * there is one cal_dev structure in the driver, it is shared by
+>   * all instances.
+> @@ -569,9 +576,52 @@ static void cal_get_hwinfo(struct cal_dev *dev)
+>  		hwinfo);
+>  }
+>  
+> +/*
+> + *   Errata i913: CSI2 LDO Needs to be disabled when module is powered on
+> + *
+> + *   Enabling CSI2 LDO shorts it to core supply. It is crucial the 2 CSI2
+> + *   LDOs on the device are disabled if CSI-2 module is powered on
+> + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x1) or in ULPS (0x4845 B304
+> + *   | 0x4845 B384 [28:27] = 0x2) mode. Common concerns include: high
+> + *   current draw on the module supply in active mode.
+> + *
+> + *   Errata does not apply when CSI-2 module is powered off
+> + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x0).
+> + *
+> + * SW Workaround:
+> + *	Set the following register bits to disable the LDO,
+> + *	which is essentially CSI2 REG10 bit 6:
+> + *
+> + *		Core 0:  0x4845 B828 = 0x0000 0040
+> + *		Core 1:  0x4845 B928 = 0x0000 0040
+> + */
+> +static void i913_errata(struct cal_dev *dev, unsigned int port)
+> +{
+> +	u32 reg10 = reg_read(dev->cc[port], CAL_CSI2_PHY_REG10);
+> +
+> +	set_field(&reg10, CAL_CSI2_PHY_REG0_HSCLOCKCONFIG_DISABLE,
+> +		  CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK);
+> +
+> +	cal_dbg(1, dev, "CSI2_%d_REG10 = 0x%08x\n", port, reg10);
+> +	reg_write(dev->cc[port], CAL_CSI2_PHY_REG10, reg10);
+> +}
+> +
+>  static inline int cal_runtime_get(struct cal_dev *dev)
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Tested-by: Brian Masney <masneyb@onstation.org>
----
- arch/arm/boot/dts/qcom-msm8974.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+I'd drop the 'inline' here. It doesn't seem appropriate anymore since this
+function is now more complex.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 33c534370fd5c..c1a3a7d7161cd 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -531,6 +531,8 @@
- 			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
- 			nvmem-cell-names = "calib", "calib_backup";
- 			#qcom,sensors = <11>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow";
- 			#thermal-sensor-cells = <1>;
- 		};
- 
--- 
-2.17.1
+Regards,
+
+	Hans
+
+>  {
+> -	return pm_runtime_get_sync(&dev->pdev->dev);
+> +	int r;
+> +
+> +	r = pm_runtime_get_sync(&dev->pdev->dev);
+> +
+> +	if (dev->flags & DRA72_CAL_PRE_ES2_LDO_DISABLE) {
+> +		/*
+> +		 * Apply errata on both port eveytime we (re-)enable
+> +		 * the clock
+> +		 */
+> +		i913_errata(dev, 0);
+> +		i913_errata(dev, 1);
+> +	}
+> +
+> +	return r;
+>  }
+>  
+>  static inline void cal_runtime_put(struct cal_dev *dev)
+> @@ -2071,6 +2121,10 @@ static const struct of_device_id cal_of_match[] = {
+>  		.compatible = "ti,dra72-cal",
+>  		.data = (void *)&dra72x_cal_data,
+>  	},
+> +	{
+> +		.compatible = "ti,dra72-pre-es2-cal",
+> +		.data = (void *)&dra72x_es1_cal_data,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, cal_of_match);
+> diff --git a/drivers/media/platform/ti-vpe/cal_regs.h b/drivers/media/platform/ti-vpe/cal_regs.h
+> index 68cfc922b422..78d6f015c9ea 100644
+> --- a/drivers/media/platform/ti-vpe/cal_regs.h
+> +++ b/drivers/media/platform/ti-vpe/cal_regs.h
+> @@ -10,6 +10,30 @@
+>  #ifndef __TI_CAL_REGS_H
+>  #define __TI_CAL_REGS_H
+>  
+> +/*
+> + * struct cal_dev.flags possibilities
+> + *
+> + * DRA72_CAL_PRE_ES2_LDO_DISABLE:
+> + *   Errata i913: CSI2 LDO Needs to be disabled when module is powered on
+> + *
+> + *   Enabling CSI2 LDO shorts it to core supply. It is crucial the 2 CSI2
+> + *   LDOs on the device are disabled if CSI-2 module is powered on
+> + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x1) or in ULPS (0x4845 B304
+> + *   | 0x4845 B384 [28:27] = 0x2) mode. Common concerns include: high
+> + *   current draw on the module supply in active mode.
+> + *
+> + *   Errata does not apply when CSI-2 module is powered off
+> + *   (0x4845 B304 | 0x4845 B384 [28:27] = 0x0).
+> + *
+> + * SW Workaround:
+> + *	Set the following register bits to disable the LDO,
+> + *	which is essentially CSI2 REG10 bit 6:
+> + *
+> + *		Core 0:  0x4845 B828 = 0x0000 0040
+> + *		Core 1:  0x4845 B928 = 0x0000 0040
+> + */
+> +#define DRA72_CAL_PRE_ES2_LDO_DISABLE BIT(0)
+> +
+>  #define CAL_NUM_CSI2_PORTS		2
+>  
+>  /* CAL register offsets */
+> @@ -71,6 +95,7 @@
+>  #define CAL_CSI2_PHY_REG0		0x000
+>  #define CAL_CSI2_PHY_REG1		0x004
+>  #define CAL_CSI2_PHY_REG2		0x008
+> +#define CAL_CSI2_PHY_REG10		0x028
+>  
+>  /* CAL Control Module Core Camerrx Control register offsets */
+>  #define CM_CTRL_CORE_CAMERRX_CONTROL	0x000
+> @@ -458,6 +483,8 @@
+>  #define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_SUCCESS		0
+>  #define CAL_CSI2_PHY_REG1_RESET_DONE_STATUS_MASK		GENMASK(29, 28)
+>  
+> +#define CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK		BIT_MASK(6)
+> +
+>  #define CAL_CSI2_PHY_REG2_CCP2_SYNC_PATTERN_MASK		GENMASK(23, 0)
+>  #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC3_MASK		GENMASK(25, 24)
+>  #define CAL_CSI2_PHY_REG2_TRIGGER_CMD_RXTRIGESC2_MASK		GENMASK(27, 26)
+> 
 
