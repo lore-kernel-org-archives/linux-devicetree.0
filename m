@@ -2,113 +2,80 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C59CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9E5CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE8C20B7C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C527C214AE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfJUJo0 (ORCPT
+        id S1727154AbfJUJp0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:44:26 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55365 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfJUJo0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 05:44:26 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iMUEg-00031V-3v; Mon, 21 Oct 2019 11:44:22 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iMUEe-0003mQ-5G; Mon, 21 Oct 2019 11:44:20 +0200
-Date:   Mon, 21 Oct 2019 11:44:20 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, Jun Li <jun.li@nxp.com>
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for fec1
-Message-ID: <20191021094420.wmy5w2tp532dibqm@pengutronix.de>
-References: <1571649512-24041-1-git-send-email-peng.fan@nxp.com>
+        Mon, 21 Oct 2019 05:45:26 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38384 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfJUJp0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 05:45:26 -0400
+Received: by mail-oi1-f195.google.com with SMTP id d140so6177976oib.5;
+        Mon, 21 Oct 2019 02:45:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/BIVqRe9e1+qbtjf6nQVgiNUhRVQqnsmqtD0b6QYouI=;
+        b=q3xPbxL8ETtEdZt0JEUZS4EMdXJyIX+nEdImRlM4YYa5n5xRcaRi8goVD8K9afOavr
+         YtUPUjmBonnSzd4+L0TRHcWn5I6XkMAP/Giy2Uol/j6KWuIKZoMt5d1WrjAbOwKbShvC
+         Z4kQV+TnLpzSL9EQd/6U7X07knOILhl+D76yOnyO1uF8HQ6zxLwhjbgwQDGhuH1XvH6F
+         lj3JBZs0LPACt+WOZFrIebLcy2P01tugr3a7jI8qb8ju6fB94FFEz3TfjqUx9kPIb+Tk
+         jaPiRsHbIJf8HQDcc5ggI7LmQwrz0QMpxU9FnAITDSGbF9YTO0HXFKHJimx9dtX6LMGh
+         1A9w==
+X-Gm-Message-State: APjAAAXs+E6m9gYnCqDuqXH3tmEUTuiXC8y3FYjNHLRPSJSxrPYmB7Hh
+        papkAtSR89MwXeoJu6FfdtEsalcdGA9mkT4AKsY=
+X-Google-Smtp-Source: APXvYqxJ2L4jZ16pz4ZsoqrPbc4GHvuLiMLddP5487vlSqcSPVRRbYGdo5234WGOxjQEIvYBDBWz+jSUeMq6YbJVmGA=
+X-Received: by 2002:aca:882:: with SMTP id 124mr18761031oii.54.1571651124951;
+ Mon, 21 Oct 2019 02:45:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571649512-24041-1-git-send-email-peng.fan@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:43:52 up 156 days, 16:02, 98 users,  load average: 0.12, 0.13,
- 0.10
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <1571137271-33973-1-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1571137271-33973-1-git-send-email-biju.das@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 21 Oct 2019 11:45:13 +0200
+Message-ID: <CAMuHMdUkAOE1e5f60pmA-r5ZXRz1ZM=epPdKnja_BkmiwBXzmQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a774b1: Add VIN and CSI-2 support
+To:     Biju Das <biju.das@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Oct 15, 2019 at 1:01 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add VIN and CSI-2 support to the RZ/G2N SoC specific dtsi.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-On 19-10-21 09:21, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> We should not rely on U-Boot to configure the phy reset.
-> So introduce phy-reset-gpios property to let Linux handle phy reset
-> itself.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> index faefb7182af1..e4d66f7db09d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> @@ -80,6 +80,7 @@
->  	pinctrl-0 = <&pinctrl_fec1>;
->  	phy-mode = "rgmii-id";
->  	phy-handle = <&ethphy0>;
-> +	phy-reset-gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.5.
 
-Where is the pinctrl done?
+Gr{oetje,eeting}s,
 
-Regards,
-  Marco
-
->  	fsl,magic-packet;
->  	status = "okay";
->  
-> -- 
-> 2.16.4
-> 
-> 
-> 
+                        Geert
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
