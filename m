@@ -2,127 +2,136 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA300CA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E88CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A1B2166E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D9521BE5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="inqEST1a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p59UqSQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbfJUMM4 (ORCPT
+        id S1728562AbfJUMON (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:12:56 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:32792 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfJUMMy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 08:12:54 -0400
-Received: by mail-wr1-f54.google.com with SMTP id s1so4942659wro.0
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 05:12:51 -0700 (PDT)
+        Mon, 21 Oct 2019 08:14:13 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41960 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728356AbfJUMON (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 08:14:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p4so13699860wrm.8
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 05:14:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ug6kgZ8QOW8p9olYnlxtYa3obtNRGbiAcS8//CDGv28=;
-        b=inqEST1a6rdLKa1B/0C6T6R0CsruEN5vy5ukFVnUdzLBKUp/4JTrjWv0mAGz89BedA
-         UfXx6IW4sL/v0AzcWIyTz48nmyHNp2bqnjc017MUG0p3d7XtdhyjkBmH+5tShdJznjOo
-         Svq1/pXyzlDefQwr9OXm0J2MecluaH9LuHi+18Pah73Sf5Wjr++d6AV44FEqVst8C0ZY
-         QRcDLZ7uNoojfiUfIwhrii9U6FRuFfo/15MK/qfC4E1uj5OXC3H1YJccfWRO2cO5o3XS
-         wgw34x+TQL1OH3qPUlkT/gDgsRwo5aQ84ROFkzZxZTQinobFTQKyAe5u6DORlVIB2xtr
-         W0MQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7jxHvlIH/GHF2NGpOLWHwkTRpolnPbX/bJ9AbQhHZ50=;
+        b=p59UqSQ7ok5T84ox4VFBup57p/nWydONjxf/yNkt7WFcO4wBEmH+YWZ+pQ6Xd9sjdE
+         gSUIbcE9ffJQyI/0jl2S6ISp+GqiCmZ4CwtinHAkZf3ssil2Cwd6xHNN922f8P6xmbJM
+         1A7w4V4M4aiTNuhFnQdbTE7z3a0w/dAevMvbtl1SHXmxhWzi6KF9O2CXkLIuoQfkfoVZ
+         3UyWrMyNdhTb3JGhDiNqUStJdxz5TF+KqxiY1i2V32UCm4MEszjBdPKhce7iMZSsKThJ
+         n3wht5xCgM8UzqK/jPTh998UCkiYDCDp3nlKnmBkv+6TTkmV/t5UKE5TBBS9ixIRcHNr
+         xDCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Ug6kgZ8QOW8p9olYnlxtYa3obtNRGbiAcS8//CDGv28=;
-        b=dV7SCTjFvhVc2lZG8uY4T/IYHpdgHeLzGSDZV8BKClGbeZ4opL+dFMckaUcM6BxIQt
-         Jbf6AsO7i45a1YSsb8BL0EeFrRp4fa1WwZ2xPh6egoc29pk190YVrVCCEVcyiJkunPQA
-         MDRv5D+Rwl+IpQv5kYZiAV8pHN8mg8aHvgPcCSbxDuXYBiPY9LmWmpPunMtdRYcZSaoX
-         pp4YPk5vtl1AyWnVrxPYRnXYdwBjQ+2TZ3ihJjIS+At5XiuDiDg3qVG1ObOLpCd8e26/
-         P54hPSub4JE9O8zDk9pW9Yrdw6xS8EANaQnYviewRFxh40H2PDiwXTJPSQcYwPevsNyP
-         5KUQ==
-X-Gm-Message-State: APjAAAVbfviwMAiJJNydgMvBOD8L8ZLvvyT3kfyWlu2RT4QPDa33JUsm
-        PhrpKIrTapxHKsnAYyV26hmPg0elBjktIA==
-X-Google-Smtp-Source: APXvYqwkOWiFa1GyuBns3ZT8QnSnTQywnuj2+o19cc6w/MTd9XbSaN0GEL7me6vG9IS86KoDyMHnLw==
-X-Received: by 2002:a5d:6a42:: with SMTP id t2mr3138677wrw.155.1571659971007;
-        Mon, 21 Oct 2019 05:12:51 -0700 (PDT)
-Received: from localhost.localdomain (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id n205sm1958905wmf.22.2019.10.21.05.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 05:12:50 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     robh+dt@kernel.org
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] media: dt-bindings: media: add new rc map names
-Date:   Mon, 21 Oct 2019 14:12:49 +0200
-Message-Id: <20191021121249.25143-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        bh=7jxHvlIH/GHF2NGpOLWHwkTRpolnPbX/bJ9AbQhHZ50=;
+        b=DWNf2E3KQygGN3DiBL8e21aE2KYXJziMhUTzhi1hNGaqwtynxbtGzJC90UCHp3xZy1
+         MWhkzJ6zoG5oOnHLTQ6IzOCsK9YcIQHPAlvAFeMA62SlkOGwkE8eM24x7+f9s5FOJ5Jn
+         DQPVIHeiPwVg+vbqRxvaztagBhE8Qfr/wrvyyRD/+OLDgyt30YU+QNOYyJ4HdDQw/JWU
+         aSVgbwdJyDz76+d7SRLm3q4jBci25kW0oN7AvIbxYnO/Jkz8ZY2S9PZy7Igcv9MQKbO4
+         QNQ2CdzKLyyPuur4qmrgvM7irPq8U6ejPWUtnkfgW53nOL6dYVTSzwpr98Lu1cdyO6Ef
+         JdDQ==
+X-Gm-Message-State: APjAAAVwH3wrxdju3fM2674QPpmzvwDuMQt2orERp9WH3JkqHvbkfErs
+        imbboLQ8MWnCvQDr3uf1R1X7Ug==
+X-Google-Smtp-Source: APXvYqwTt8mxKUqo1qn5DUbfyQDPqC2LuHol4HuaS/wKQN/yN5gkLQelG0gG10cVmYyY/ZB7AYYyLw==
+X-Received: by 2002:adf:ea86:: with SMTP id s6mr18677166wrm.397.1571660051249;
+        Mon, 21 Oct 2019 05:14:11 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id l18sm18941821wrn.48.2019.10.21.05.14.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 21 Oct 2019 05:14:10 -0700 (PDT)
+Subject: Re: [PATCH v2 02/11] mfd: wcd934x: add support to wcd9340/wcd9341
+ codec
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-3-srinivas.kandagatla@linaro.org>
+ <20191021104611.GZ4365@dell>
+ <1af8a875-8f55-6b7e-4204-ecedc1608889@linaro.org>
+ <20191021114520.GD4365@dell>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <38dde3d9-8d7e-7dc0-7cba-137b43cea9d1@linaro.org>
+Date:   Mon, 21 Oct 2019 13:14:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191021114520.GD4365@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add new entries for linux,rc-map-name:
-- rc-khadas
-- rc-odroid
-- rc-tanix-tx3mini
-- rc-wetek-hub
-- rc-wetek-play2
-- rc-x96max
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/media/rc.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rc.yaml b/Documentation/devicetree/bindings/media/rc.yaml
-index 3d5c154fd230..e83db8559443 100644
---- a/Documentation/devicetree/bindings/media/rc.yaml
-+++ b/Documentation/devicetree/bindings/media/rc.yaml
-@@ -83,6 +83,7 @@ properties:
-           - rc-it913x-v1
-           - rc-it913x-v2
-           - rc-kaiomy
-+          - rc-khadas
-           - rc-kworld-315u
-           - rc-kworld-pc150u
-           - rc-kworld-plus-tv-analog
-@@ -100,6 +101,7 @@ properties:
-           - rc-nec-terratec-cinergy-xs
-           - rc-norwood
-           - rc-npgtech
-+          - rc-odroid
-           - rc-pctv-sedna
-           - rc-pinnacle-color
-           - rc-pinnacle-grey
-@@ -120,6 +122,7 @@ properties:
-           - rc-streamzap
-           - rc-su3000
-           - rc-tango
-+          - rc-tanix-tx3mini
-           - rc-tbs-nec
-           - rc-technisat-ts35
-           - rc-technisat-usb2
-@@ -139,7 +142,10 @@ properties:
-           - rc-videomate-k100
-           - rc-videomate-s350
-           - rc-videomate-tv-pvr
-+          - rc-wetek-hub
-+          - rc-wetek-play2
-           - rc-winfast
-           - rc-winfast-usbii-deluxe
-+          - rc-x96max
-           - rc-xbox-dvd
-           - rc-zx-irdec
--- 
-2.22.0
+On 21/10/2019 12:45, Lee Jones wrote:
+> On Mon, 21 Oct 2019, Srinivas Kandagatla wrote:
+> 
+>> Thanks Lee for taking time to review.
+>>
+>> I agree with most of the style related comments, will fix them in next
+>> version. For others I have replied it inline.
+> 
+> [...]
+> 
+>>>> +static int wcd934x_slim_status(struct slim_device *sdev,
+>>>> +			       enum slim_device_status status)
+>>>> +{
+>>>> +	struct device *dev = &sdev->dev;
+>>>> +	struct wcd934x_data *wcd;
+>>>> +	int ret;
+>>>
+>>> This is semantically odd!  Why are you doing most of the
+>>> initialisation and bring-up in 'status' and not 'probe'.  Seems
+>>> broken to me.
+>>
+>> SLIMBus device will not be in a state to communicate before enumeration (at
+>> probe), so all the device initialization is done in status callback where it
+>> is ready for communication.
+> 
+> Why do we need the device to be up *before* calling probe?
+> 
 
+To Initialize the device.
+And SLIMbus device registers access can not be done before enumeration.
+
+
+>> This is same with SoundWire Bus as well!
+> 
+> [...]
+> 
+>>>> +	struct device *dev;
+>>>> +	struct clk *extclk;
+>>>> +	struct regmap *regmap;
+>>>> +	struct slim_device *sdev;
+>>>
+>>> You don't need 'sdev' and 'dev'.
+>>
+>> slim_device instance (sdev) is required by audio codec driver to allocate
+>> stream runtime.
+> 
+> You can extrapolate one from the other.
+That is possible to do! I can give that a try and see in next version!
+
+> 
