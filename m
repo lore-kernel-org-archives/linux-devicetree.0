@@ -2,98 +2,135 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4822CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7309CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC20214B2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:50:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571665840;
-	bh=aEu1uJJTKafM7jVw7dAgeyLCE5JqgyFPy0YM24aRC+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gVbigGHVo8uJBfzXfHYkjH312sRFQcJcEhnZ6FhNeJeTMrpSSyW0HS+IH8jn+8lHV
-	 rxS8P+GchhxmMa6hMXBbM0O64IJFO2UYMBVwUhv1tgKvbRX1EwJWDBW0ZgLR6CkXoj
-	 fAA6Q90YhpJ6/vRliYhdC1lh4fSYPeSVtHuWM7yE=
+	by mail.kernel.org (Postfix) with ESMTP id 98FEB2166E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="g71xQgbU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfJUNuk (ORCPT
+        id S1728842AbfJUN6V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:50:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41954 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbfJUNuj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 09:50:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aEu1uJJTKafM7jVw7dAgeyLCE5JqgyFPy0YM24aRC+U=; b=a/rSfFvy+yPWsunq+u0NBQ2Sy
-        7twL6/L0qz7NtWlv1zjGaLKz8G2pVtdWoW6piUuHvn3mOKxYv88pJ3BpV4xwYgm/G28mb+yi4u3Yn
-        z1+d+NA8V5oeNKrw5nfJFsG0lE0la1gyxAP1NF8IDXh3sZFi6+j9TVlUZ5x9jAod0IDzs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iMY4w-0004GM-Cg; Mon, 21 Oct 2019 13:50:34 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7719B274301C; Mon, 21 Oct 2019 14:50:33 +0100 (BST)
-Date:   Mon, 21 Oct 2019 14:50:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Tzung-Bi Shih <tzungbi@google.com>, gwendal@google.com,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        cychiang@google.com, drinkcat@google.com, robh+dt@kernel.org,
-        bleung@google.com, dgreid@google.com
-Subject: Re: [alsa-devel] [PATCH v5 1/4] ASoC: cros_ec_codec: support WoV
-Message-ID: <20191021135033.GF4691@sirena.co.uk>
-References: <20191019070254.23870-1-tzungbi@google.com>
- <20191019143504.1.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
- <659a3d1f-a8e1-268d-5e95-b328aeed601b@collabora.com>
- <20191021114303.GC4691@sirena.co.uk>
- <a4e1530a-b706-2a73-e0b3-ad56cf9085bc@collabora.com>
+        Mon, 21 Oct 2019 09:58:21 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:3184 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728096AbfJUN6U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 09:58:20 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9LDsQgr030658;
+        Mon, 21 Oct 2019 08:58:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=K+byys6fVG4Ov27yeo/tfyjnL+g5uekxLjyr3Tu6noo=;
+ b=g71xQgbUIYSeXw5AViN5kjY0JDuwDzAZRDQdmv4wVW3J0a1/nRX/AQOexactkVpoXa+r
+ mg6Zd9x0KlT5jxy5MhdZrc0aggh2ZTdPaAFjy2alVPOprHlQ+Owc0PQxhxYBJMstFdHW
+ WKMc4hzyN6+YBvjc5jBqDJBaL//uMJsqCq9gKdKq3YAZpn+QX69Kk2LRHCd4SArplsbS
+ WCWd6jN4QJNJdKnKTsJZv/gIKTsnNPD/OXmWisMmxLkLD8XGP9w7Yzj8s/hfWxwy6S4c
+ A2eaH9NHSrhkJBC3MEVmhvQ191/JGWrKC7w04WPxb/96oxrwJX5Ge+/BGGXrkZGH3gal Kg== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2vqxwnjv0v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 21 Oct 2019 08:58:15 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 21 Oct
+ 2019 14:58:13 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 21 Oct 2019 14:58:13 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 8F7912A1;
+        Mon, 21 Oct 2019 13:58:13 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <lee.jones@linaro.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH RESEND v4 1/3] mfd: wm8998: Remove some unused registers
+Date:   Mon, 21 Oct 2019 14:58:11 +0100
+Message-ID: <20191021135813.13571-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1Y7d0dPL928TPQbc"
-Content-Disposition: inline
-In-Reply-To: <a4e1530a-b706-2a73-e0b3-ad56cf9085bc@collabora.com>
-X-Cookie: Why are you so hard to ignore?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 suspectscore=1
+ phishscore=0 malwarescore=0 mlxlogscore=691 impostorscore=0 spamscore=0
+ bulkscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1910210132
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Save a few bytes by removing some registers from the driver that are not
+currently used and not intended to be used at any point in the future.
 
---1Y7d0dPL928TPQbc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/mfd/wm8998-tables.c           | 12 ------------
+ include/linux/mfd/arizona/registers.h |  7 -------
+ 2 files changed, 19 deletions(-)
 
-On Mon, Oct 21, 2019 at 03:12:50PM +0200, Enric Balletbo i Serra wrote:
+diff --git a/drivers/mfd/wm8998-tables.c b/drivers/mfd/wm8998-tables.c
+index ebf0eadd2075c..9b34a6d760949 100644
+--- a/drivers/mfd/wm8998-tables.c
++++ b/drivers/mfd/wm8998-tables.c
+@@ -806,12 +806,6 @@ static const struct reg_default wm8998_reg_default[] = {
+ 	{ 0x00000EF3, 0x0000 },    /* R3827  - ISRC 2 CTRL 1 */
+ 	{ 0x00000EF4, 0x0001 },    /* R3828  - ISRC 2 CTRL 2 */
+ 	{ 0x00000EF5, 0x0000 },    /* R3829  - ISRC 2 CTRL 3 */
+-	{ 0x00001700, 0x0000 },    /* R5888  - FRF_COEFF_1 */
+-	{ 0x00001701, 0x0000 },    /* R5889  - FRF_COEFF_2 */
+-	{ 0x00001702, 0x0000 },    /* R5890  - FRF_COEFF_3 */
+-	{ 0x00001703, 0x0000 },    /* R5891  - FRF_COEFF_4 */
+-	{ 0x00001704, 0x0000 },    /* R5892  - DAC_COMP_1 */
+-	{ 0x00001705, 0x0000 },    /* R5893  - DAC_COMP_2 */
+ };
+ 
+ static bool wm8998_readable_register(struct device *dev, unsigned int reg)
+@@ -1492,12 +1486,6 @@ static bool wm8998_readable_register(struct device *dev, unsigned int reg)
+ 	case ARIZONA_ISRC_2_CTRL_1:
+ 	case ARIZONA_ISRC_2_CTRL_2:
+ 	case ARIZONA_ISRC_2_CTRL_3:
+-	case ARIZONA_FRF_COEFF_1:
+-	case ARIZONA_FRF_COEFF_2:
+-	case ARIZONA_FRF_COEFF_3:
+-	case ARIZONA_FRF_COEFF_4:
+-	case ARIZONA_V2_DAC_COMP_1:
+-	case ARIZONA_V2_DAC_COMP_2:
+ 		return true;
+ 	default:
+ 		return false;
+diff --git a/include/linux/mfd/arizona/registers.h b/include/linux/mfd/arizona/registers.h
+index bb1a2530ae279..49e24d1de8d47 100644
+--- a/include/linux/mfd/arizona/registers.h
++++ b/include/linux/mfd/arizona/registers.h
+@@ -1186,13 +1186,6 @@
+ #define ARIZONA_DSP4_SCRATCH_1                   0x1441
+ #define ARIZONA_DSP4_SCRATCH_2                   0x1442
+ #define ARIZONA_DSP4_SCRATCH_3                   0x1443
+-#define ARIZONA_FRF_COEFF_1                      0x1700
+-#define ARIZONA_FRF_COEFF_2                      0x1701
+-#define ARIZONA_FRF_COEFF_3                      0x1702
+-#define ARIZONA_FRF_COEFF_4                      0x1703
+-#define ARIZONA_V2_DAC_COMP_1                    0x1704
+-#define ARIZONA_V2_DAC_COMP_2                    0x1705
+-
+ 
+ /*
+  * Field Definitions.
+-- 
+2.11.0
 
-> Ok, I was off the latest two weeks so I didn't catch it :-(. I'll try to figure
-> out the better way to avoid conflicts knowing that these are already queued.
-
-So long as they're easy to resolve it shouldn't be an issue, Linus
-doesn't super mind fixing things up.
-
---1Y7d0dPL928TPQbc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2tt6gACgkQJNaLcl1U
-h9BF/wf8CTYyYmc413jqwsQxB9+4R2QOYPA9MG7qBRZ+z0NinvCl876PH7YNk9Tw
-9CshD9oIKe3LRpyRsAHHlwI38yAAB0n4+/p1UYuQEB/bNoM9P85OIaH/Qj95GnO1
-Pbm4y44PVUPv46aGRPSXt1RtkGVZhRVj4j/IOFu7JkQGT/ZnMHVpzwHAV4uCxlij
-oQjH+C/lWeQsBxEBMio/5nryhSRRb3qXWQPGVSrSNLDci08llkQGGBc3A4jTQyKh
-9k7QO5lopV2ThKdiQv8wSTc1lWTRxDWHORq0RgIrSQCMVrif9SA/hF4FAKRcLhyN
-VSbdH6IbO1dzKpZmtq7z/nKI3l4AiQ==
-=dZWZ
------END PGP SIGNATURE-----
-
---1Y7d0dPL928TPQbc--
