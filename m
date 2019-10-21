@@ -2,320 +2,141 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D99CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832FBCA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7D0214AE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5773521835
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d7rfDVx1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q1zKZDQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfJUFON (ORCPT
+        id S1726039AbfJUFhn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 01:14:13 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36834 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfJUFNc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 01:13:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y22so7648839pfr.3
-        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 22:13:30 -0700 (PDT)
+        Mon, 21 Oct 2019 01:37:43 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43288 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfJUFhn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 01:37:43 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l24so2116970pgh.10
+        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 22:37:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kxuv0f9vOfK2s9wwSd8PriCXWXssg5riIxFhbRkkPeY=;
-        b=d7rfDVx19nYMPFoWYy6LWgYvxHrd559t1aLDXmjt1LNgHHvLHkPq0r51HAhMr/SQ3W
-         ucndnncxJnVamc0eG4GU5mp6htegLeMA+KM/oBefBgOsN70npE98yxOAQVP0HdF9udZO
-         nKf8HW3iMJ7UDpao4eJpoVpToZTnHtst/Rlcqaki9kM+f6AnpNM98H5GPtV5/zBNqokR
-         B7t7aVuT46rmlb8P95eRROBrd6xoPxAfdJoQId1e1jEZauFm/ghzrZD5d8HPoCHt/60n
-         61wIbuhf++qLmATR6TGWW/OnqFf/DE0utqUBY9ss/3jHjG4hvptTOt1cBGC6ZhUV86Jw
-         52DA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bbUNWgsRrwJWrwwWTLHk1qwW37wMYMwgF4F15zaUzzU=;
+        b=Q1zKZDQW5gnuspjNs1usaCrevnshmMvuB+xoli4H2diANik/5uAjAPgEbLMBkD0lDa
+         8o6Dd8ct6/mAxIseE5Z4Pol1DHl+4iJAD/z+Uo1asXgjKmqryzqwZqFxtXj8u1ihsD1R
+         wFuCo1iDhx2oyZCFzbbR8F/iPLuJYY99s6YIeQ+MaKkWV/QyduE3uwe78gUvIrwXNdaG
+         rMgJYhe6WqWFWpFFBmMPruuiBewbcm5uK5rmpqBbM8yG9sv/pGuSXx+eHiyK3nqeLvb0
+         q7aesF0odKzoCxrjExAIxs2ucsaVdQkO3t/ZTtT7do3Gd/H0uUn7wvx7R9mHDDwGnmHO
+         N+VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kxuv0f9vOfK2s9wwSd8PriCXWXssg5riIxFhbRkkPeY=;
-        b=XUJNtGwNoOKUawIVlk7u2kn4RPUfg048+Y1KTdqqtaosdmUYpnKjnZyhSQWkRNt8Wd
-         oVowCUv5GBYs86EI9iIlPhJ8V5xTHBE6cdCNYFDJCBHQPDTsnS9m2Ei1uqBCe4qToq/p
-         z38AuNJnvofi8gtUxpctQdDXVgINKGSTBFx7uV+4r1WJdlWUEwJvwaxzg7PmGdZaN7HS
-         j15C1ziMd9GemA8/1ZmHMcx/uMKbWf2B+YOfF6FGMm9v8MQEl6Zw6YdfPKbvOXxb08xR
-         0u41WWIVbaL1Y/gZgsz4NgkfS0NkOFM2cgL0RUoYVMSavW8o1S8DE85lIIPngxZrk5XY
-         84xg==
-X-Gm-Message-State: APjAAAUCPFq0tzhKujTzuE8uXNEOQbyeUxXa3Xz0rTrv7nZtINxHXErs
-        Stw9wCWiW2mSmRGyzDDVxP2b4A==
-X-Google-Smtp-Source: APXvYqxZoKJ1squvEwBcTcjexvcywOHoilKGzHRG9uuD81Bq1fLgoxgZtMzTcmVkb0/jfR/NSWjKNQ==
-X-Received: by 2002:a63:3f86:: with SMTP id m128mr10755485pga.404.1571634810030;
-        Sun, 20 Oct 2019 22:13:30 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h68sm15716862pfb.149.2019.10.20.22.13.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bbUNWgsRrwJWrwwWTLHk1qwW37wMYMwgF4F15zaUzzU=;
+        b=T//wu3Swv2MfLlJHDvXFcycviLR5g3zeBVmjL8HxvtvcLSCdKZosKGejTg9QgOHQF5
+         ZnRexLHL4q65Kpa+6rw10GQ9x2fXZzN2spZswPi4snT1ps+oZxsAGo6/IuHVHKK086jy
+         gs/9EO3+uGx5ztGqIIzUWbAf7WsNtM5pTkM6R+6mdOrDV7U20RDkZ8otDzYaVwu5SPH2
+         vTRcru0e4UP58URD+u3GrePiLLOADtgxb+Lhc126dfH4ZkSjTuSfceJRjPdHEU3Yr6qL
+         JEvzgW5qAPHCT5xcPqJbVungWN4VmqZqWn0/rOh7I1bvUhn3A8jCFjjRQ25/UWUjQKur
+         t53g==
+X-Gm-Message-State: APjAAAXwwCq4HUEG5CxboIwKceVPLJIVxZv7SO3vup0En9CXieorfsJj
+        x9a4Q+8K4U5Tll0nDy37uJnMaw==
+X-Google-Smtp-Source: APXvYqzhJmsEQMl4XlB026kHJLPEEdGs7zYTphM5q2UH7U3e9SwXsDyeDdrVXbgIgVUq2H5mAsxKoA==
+X-Received: by 2002:a65:4c03:: with SMTP id u3mr23643719pgq.440.1571636262410;
+        Sun, 20 Oct 2019 22:37:42 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h6sm19646988pfg.123.2019.10.20.22.37.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 22:13:28 -0700 (PDT)
+        Sun, 20 Oct 2019 22:37:41 -0700 (PDT)
+Date:   Sun, 20 Oct 2019 22:37:39 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
+To:     kholk11@gmail.com
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 03/11] arm64: dts: qcom: msm8996: Move regulator consumers to db820c
-Date:   Sun, 20 Oct 2019 22:13:14 -0700
-Message-Id: <20191021051322.297560-4-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191021051322.297560-1-bjorn.andersson@linaro.org>
-References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
+        ccross@android.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        agross@kernel.org, marijns95@gmail.com
+Subject: Re: [PATCH 2/5] arm64: dts: pm8004: Add SPMI regulator and add
+ phandles to lsids
+Message-ID: <20191021053739.GH4500@tuxbook-pro>
+References: <20191020150746.64114-1-kholk11@gmail.com>
+ <20191020150746.64114-3-kholk11@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191020150746.64114-3-kholk11@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Supplies for the various components in the SoC depends on board layout,
-so move the supply definitions to db820c.dtsi instead of carrying them
-in the platform dtsi.
+On Sun 20 Oct 08:07 PDT 2019, kholk11@gmail.com wrote:
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 44 ++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi        | 44 --------------------
- 2 files changed, 44 insertions(+), 44 deletions(-)
+> From: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> 
+> Add the SPMI regulator node in the PM8004 LSID5 (as there is where
+> it resides basically 99% of the times) and set the nodes to be
+> disabled by default, as not all boards have both or one of the
+> lsids specified in this generic pm8004 DT.
+> 
+> While at it, also add nice phandles to the lsids specified in this
+> DT, so that we can modify their configuration or add nodes to them
+> from other DTs in a nicer and more human readable fashion.
+> 
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 44ec3eb1c8e8..21e029afb27b 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -142,6 +142,10 @@
- 	status = "okay";
- };
- 
-+&camss {
-+	vdda-supply = <&pm8994_l2>;
-+};
-+
- &sdhc2 {
- 	/* External SD card */
- 	pinctrl-names = "default", "sleep";
-@@ -155,10 +159,28 @@
- 
- &ufsphy {
- 	status = "okay";
-+
-+	vdda-phy-supply = <&pm8994_l28>;
-+	vdda-pll-supply = <&pm8994_l12>;
-+
-+	vdda-phy-max-microamp = <18380>;
-+	vdda-pll-max-microamp = <9440>;
-+
-+	vddp-ref-clk-supply = <&pm8994_l25>;
-+	vddp-ref-clk-max-microamp = <100>;
-+	vddp-ref-clk-always-on;
- };
- 
- &ufshc {
- 	status = "okay";
-+
-+	vcc-supply = <&pm8994_l20>;
-+	vccq-supply = <&pm8994_l25>;
-+	vccq2-supply = <&pm8994_s4>;
-+
-+	vcc-max-microamp = <600000>;
-+	vccq-max-microamp = <450000>;
-+	vccq2-max-microamp = <450000>;
- };
- 
- &msmgpio {
-@@ -369,18 +391,31 @@
- 
- &pcie_phy {
- 	status = "okay";
-+
-+	vdda-phy-supply = <&pm8994_l28>;
-+	vdda-pll-supply = <&pm8994_l12>;
- };
- 
- &usb3phy {
- 	status = "okay";
-+
-+	vdda-phy-supply = <&pm8994_l28>;
-+	vdda-pll-supply = <&pm8994_l12>;
-+
- };
- 
- &hsusb_phy1 {
- 	status = "okay";
-+
-+	vdda-pll-supply = <&pm8994_l12>;
-+	vdda-phy-dpdm-supply = <&pm8994_l24>;
- };
- 
- &hsusb_phy2 {
- 	status = "okay";
-+
-+	vdda-pll-supply = <&pm8994_l12>;
-+	vdda-phy-dpdm-supply = <&pm8994_l24>;
- };
- 
- &usb3 {
-@@ -408,22 +443,31 @@
- 	status = "okay";
- 	perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
- 	vddpe-3v3-supply = <&wlan_en>;
-+	vdda-supply = <&pm8994_l28>;
- };
- 
- &pcie1 {
- 	status = "okay";
- 	perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
-+	vdda-supply = <&pm8994_l28>;
- };
- 
- &pcie2 {
- 	status = "okay";
- 	perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
-+	vdda-supply = <&pm8994_l28>;
- };
- 
- &wcd9335 {
- 	clock-names = "mclk", "slimbus";
- 	clocks = <&div1_mclk>,
- 		 <&rpmcc RPM_SMD_BB_CLK1>;
-+
-+	vdd-buck-supply = <&pm8994_s4>;
-+	vdd-buck-sido-supply = <&pm8994_s4>;
-+	vdd-tx-supply = <&pm8994_s4>;
-+	vdd-rx-supply = <&pm8994_s4>;
-+	vdd-io-supply = <&pm8994_s4>;
- };
- 
- &mdss {
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 36f161547aa6..a297d3223161 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1322,16 +1322,6 @@
- 			reg-names = "phy_mem";
- 			#phy-cells = <0>;
- 
--			vdda-phy-supply = <&pm8994_l28>;
--			vdda-pll-supply = <&pm8994_l12>;
--
--			vdda-phy-max-microamp = <18380>;
--			vdda-pll-max-microamp = <9440>;
--
--			vddp-ref-clk-supply = <&pm8994_l25>;
--			vddp-ref-clk-max-microamp = <100>;
--			vddp-ref-clk-always-on;
--
- 			clock-names = "ref_clk_src", "ref_clk";
- 			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
- 				 <&gcc GCC_UFS_CLKREF_CLK>;
-@@ -1347,14 +1337,6 @@
- 			phys = <&ufsphy>;
- 			phy-names = "ufsphy";
- 
--			vcc-supply = <&pm8994_l20>;
--			vccq-supply = <&pm8994_l25>;
--			vccq2-supply = <&pm8994_s4>;
--
--			vcc-max-microamp = <600000>;
--			vccq-max-microamp = <450000>;
--			vccq2-max-microamp = <450000>;
--
- 			power-domains = <&gcc UFS_GDSC>;
- 
- 			clock-names =
-@@ -1456,9 +1438,6 @@
- 				<&gcc GCC_PCIE_CLKREF_CLK>;
- 			clock-names = "aux", "cfg_ahb", "ref";
- 
--			vdda-phy-supply = <&pm8994_l28>;
--			vdda-pll-supply = <&pm8994_l12>;
--
- 			resets = <&gcc GCC_PCIE_PHY_BCR>,
- 				<&gcc GCC_PCIE_PHY_COM_BCR>,
- 				<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
-@@ -1518,9 +1497,6 @@
- 				<&gcc GCC_USB3_CLKREF_CLK>;
- 			clock-names = "aux", "cfg_ahb", "ref";
- 
--			vdda-phy-supply = <&pm8994_l28>;
--			vdda-pll-supply = <&pm8994_l12>;
--
- 			resets = <&gcc GCC_USB3_PHY_BCR>,
- 				<&gcc GCC_USB3PHY_PHY_BCR>;
- 			reset-names = "phy", "common";
-@@ -1547,9 +1523,6 @@
- 				<&gcc GCC_RX1_USB2_CLKREF_CLK>;
- 			clock-names = "cfg_ahb", "ref";
- 
--			vdda-pll-supply = <&pm8994_l12>;
--			vdda-phy-dpdm-supply = <&pm8994_l24>;
--
- 			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
- 			nvmem-cells = <&qusb2p_hstx_trim>;
- 			status = "disabled";
-@@ -1564,9 +1537,6 @@
- 				<&gcc GCC_RX2_USB2_CLKREF_CLK>;
- 			clock-names = "cfg_ahb", "ref";
- 
--			vdda-pll-supply = <&pm8994_l12>;
--			vdda-phy-dpdm-supply = <&pm8994_l24>;
--
- 			resets = <&gcc GCC_QUSB2PHY_SEC_BCR>;
- 			nvmem-cells = <&qusb2s_hstx_trim>;
- 			status = "disabled";
-@@ -1770,7 +1740,6 @@
- 				"vfe1_stream",
- 				"vfe_ahb",
- 				"vfe_axi";
--			vdda-supply = <&pm8994_l2>;
- 			iommus = <&vfe_smmu 0>,
- 				 <&vfe_smmu 1>,
- 				 <&vfe_smmu 2>,
-@@ -1882,9 +1851,6 @@
- 				pinctrl-0 = <&pcie0_clkreq_default &pcie0_perst_default &pcie0_wake_default>;
- 				pinctrl-1 = <&pcie0_clkreq_sleep &pcie0_perst_default &pcie0_wake_sleep>;
- 
--
--				vdda-supply = <&pm8994_l28>;
--
- 				linux,pci-domain = <0>;
- 
- 				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
-@@ -1937,8 +1903,6 @@
- 				pinctrl-0 = <&pcie1_clkreq_default &pcie1_perst_default &pcie1_wake_default>;
- 				pinctrl-1 = <&pcie1_clkreq_sleep &pcie1_perst_default &pcie1_wake_sleep>;
- 
--
--				vdda-supply = <&pm8994_l28>;
- 				linux,pci-domain = <1>;
- 
- 				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-@@ -1990,8 +1954,6 @@
- 				pinctrl-0 = <&pcie2_clkreq_default &pcie2_perst_default &pcie2_wake_default>;
- 				pinctrl-1 = <&pcie2_clkreq_sleep &pcie2_perst_default &pcie2_wake_sleep >;
- 
--				vdda-supply = <&pm8994_l28>;
--
- 				linux,pci-domain = <2>;
- 				clocks = <&gcc GCC_PCIE_2_PIPE_CLK>,
- 					<&gcc GCC_PCIE_2_AUX_CLK>,
-@@ -2056,12 +2018,6 @@
- 
- 					slim-ifc-dev  = <&tasha_ifd>;
- 
--					vdd-buck-supply = <&pm8994_s4>;
--					vdd-buck-sido-supply = <&pm8994_s4>;
--					vdd-tx-supply = <&pm8994_s4>;
--					vdd-rx-supply = <&pm8994_s4>;
--					vdd-io-supply = <&pm8994_s4>;
--
- 					#sound-dai-cells = <1>;
- 				};
- 			};
--- 
-2.23.0
+Shouldn't all blocks of pm8004 be declared in this file?
 
+> Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/pm8004.dtsi | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm8004.dtsi b/arch/arm64/boot/dts/qcom/pm8004.dtsi
+> index 297b57bfa87a..0abd1abe12fc 100644
+> --- a/arch/arm64/boot/dts/qcom/pm8004.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm8004.dtsi
+> @@ -4,17 +4,23 @@
+>  
+>  &spmi_bus {
+>  
+> -	pmic@4 {
+> +	pm8004_lsid4: pmic@4 {
+>  		compatible = "qcom,pm8004", "qcom,spmi-pmic";
+>  		reg = <0x4 SPMI_USID>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> +		status = "disabled";
+
+I think you should just leave this enabled, boards that doesn't have a
+pm8004 should be able to omit the include of this file.
+
+>  	};
+>  
+> -	pmic@5 {
+> +	pm8004_lsid5: pmic@5 {
+>  		compatible = "qcom,pm8004", "qcom,spmi-pmic";
+>  		reg = <0x5 SPMI_USID>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> +		status = "disabled";
+> +
+> +		pm8004_spmi_regulators: regulators {
+> +			compatible = "qcom,pm8004-regulators";
+> +		};
+
+Looks good.
+
+Regards,
+bjorn
+
+>  	};
+>  };
+> -- 
+> 2.21.0
+> 
