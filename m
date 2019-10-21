@@ -2,127 +2,157 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680A5CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C940CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4314020700
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CED3214D9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571647100;
+	bh=2jgYq72qYxvken8k9IgR5GhzlPu/0qzZrI36kMKmJI4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BUWw7WRRj+RqtFcTEHSNFSG0bHBxuRQRXuNCku1Jq0KjlvFifbdvtbSPV6yBWMIog
+	 7MTa7pLzSFoq8E6R4ugpkq4uVdUboPa9pb8tIRWHBlKwEQ1xYhDD5Au7GfR3xfUnvV
+	 mk6t0tRUvGtO2ySm8ilibADnhKenrq9v0xbKbHfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfJUIbO (ORCPT
+        id S1727021AbfJUIiU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:31:14 -0400
-Received: from mga12.intel.com ([192.55.52.136]:5700 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbfJUIbO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 04:31:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 01:31:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,322,1566889200"; 
-   d="scan'208";a="196047642"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Oct 2019 01:31:13 -0700
-Received: from [10.226.39.21] (unknown [10.226.39.21])
-        by linux.intel.com (Postfix) with ESMTP id AF97658029D;
-        Mon, 21 Oct 2019 01:31:10 -0700 (PDT)
-Subject: Re: [PATCH v4 0/3] PCI: Add Intel PCIe Driver and respective
- dt-binding yaml file
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <CH2PR12MB4007759DFE5F7F105A7D3363DA690@CH2PR12MB4007.namprd12.prod.outlook.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <cf1f6d9c-4145-ef12-4b88-737fe7a5de8c@linux.intel.com>
-Date:   Mon, 21 Oct 2019 16:31:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 04:38:20 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37106 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfJUIiT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 04:38:19 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k32so10290143otc.4;
+        Mon, 21 Oct 2019 01:38:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Isdqq0Ubh24QJiFJ2l26RYaK1W86JQo/S0O5rntTFZ0=;
+        b=Z0TWIWcDFOQa1mesVbE2AV3RFGqL/hqwyU2Kg6KuPVvSfYXID05T9Lq8Gk3tE21XLz
+         Lqxr/dIn1eN5vAla+SYfeNc1MDjotOOO9dk20OHs9aIxNv/OfA1FO2ZBvbM1oM7pgL4I
+         cTF6PMvIVpVv9c7k/6WKB6NBlOvFj8N3gZ6bMN6q6ANZ9+nKeHWJoee807tQf5hMX6kB
+         gAbAQkv3wB+0tIVNtoj4r3qKuC6VWincHXSZDV6fPSm5K0/GuqoapTxT/8bihEdXK4Hw
+         ZPEcLyrz8SQ8uYjOKXYePjVABAWgi0gHnVupXEDuV5aXEtBYQzKxtVUMfOYwfOlDqCx1
+         jEjQ==
+X-Gm-Message-State: APjAAAVfWsfD2y5pccTvY3T37yyWHHJCppKbszvdbiwnsTNp0pd1eR44
+        WKOquBeAI+CmwqVRvhduRGmBoiM8S6NqdWGd5ZE=
+X-Google-Smtp-Source: APXvYqzxJsJuV6BUauy4Sb2At789fmamDYr15BmrQGLKIW7qtsWxPoUU1OE8Ucyvvce+T2vjIx84kc60si7Pd9H8+Xs=
+X-Received: by 2002:a05:6830:1e69:: with SMTP id m9mr17885485otr.262.1571647098420;
+ Mon, 21 Oct 2019 01:38:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CH2PR12MB4007759DFE5F7F105A7D3363DA690@CH2PR12MB4007.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191021034927.19300-1-ran.wang_1@nxp.com>
+In-Reply-To: <20191021034927.19300-1-ran.wang_1@nxp.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 21 Oct 2019 10:38:07 +0200
+Message-ID: <CAJZ5v0hO5Jtr_kyBbCawYc+fS0JQGcU-xfhS9S7DKiFQYJSJvQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Li Biwen <biwen.li@nxp.com>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Gustavo Pimentel,
+On Mon, Oct 21, 2019 at 5:49 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+>
+> Some user might want to go through all registered wakeup sources
+> and doing things accordingly. For example, SoC PM driver might need to
+> do HW programming to prevent powering down specific IP which wakeup
+> source depending on. So add this API to help walk through all registered
+> wakeup source objects on that list and return them one by one.
+>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+> Change in v7:
+>         - Remove define of member *dev in wake_irq to fix conflict with commit
+>         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs"), user
+>         will use ws->dev->parent instead.
+>         - Remove '#include <linux/of_device.h>' because it is not used.
+>
+> Change in v6:
+>         - Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned
+>         with wakeup_sources_stats_seq_start/nex/stop.
+>
+> Change in v5:
+>         - Update commit message, add decription of walk through all wakeup
+>         source objects.
+>         - Add SCU protection in function wakeup_source_get_next().
+>         - Rename wakeup_source member 'attached_dev' to 'dev' and move it up
+>         (before wakeirq).
+>
+> Change in v4:
+>         - None.
+>
+> Change in v3:
+>         - Adjust indentation of *attached_dev;.
+>
+> Change in v2:
+>         - None.
+>
+>  drivers/base/power/wakeup.c | 37 +++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_wakeup.h   |  3 +++
+>  2 files changed, 40 insertions(+)
+>
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 5817b51..dee1b09 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -248,6 +248,43 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+>  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+>
+>  /**
+> + * wakeup_source_get_star - Begin a walk on wakeup source list
 
-On 10/21/2019 4:08 PM, Gustavo Pimentel wrote:
-> Hi,
->
->
-> On Mon, Oct 21, 2019 at 7:39:17, Dilip Kota <eswara.kota@linux.intel.com>
-> wrote:
->
->> Intel PCIe is synopsys based controller utilizes the Designware
-> Please do this general replacement in all your patches.
->
-> s/synopsys/Synopsys
->
-> and
->
-> s/Designware/DesignWare
-Sure, i will update it in the next patch version.
-(In the all other patches naming is proper, i got missed it here.)
-I will ensure and take care of it.
+The "get" in the name suggests acquiring a reference of some kind
+which doesn't happen here.
 
-Regards,
-Dilip
+What about renaming it to wakeup_sources_walk_start()?
 
->
->> framework for host initialization and intel application
->> specific register configurations.
->>
->> Changes on v4:
->> 	Add lane resizing API in PCIe DesignWare driver.
->> 	Intel PCIe driver uses it for lane resizing which
->> 	 is being exposed through sysfs attributes.
->> 	Add Intel PCIe sysfs attributes is in separate patch.
->> 	Address review comments given on v3.
->>
->> Changes on v3:
->> 	Compared to v2, map_irq() patch is removed as it is no longer
->> 	  required for Intel PCIe driver. Intel PCIe driver does platform
->> 	  specific interrupt configuration during core initialization. So
->> 	  changed the subject line too.
->> 	Address v2 review comments for DT binding and PCIe driver
->>
->> Dilip Kota (3):
->>    dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
->>    dwc: PCI: intel: PCIe RC controller driver
->>    pci: intel: Add sysfs attributes to configure pcie link
->>
->>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 ++++
->>   drivers/pci/controller/dwc/Kconfig                 |  10 +
->>   drivers/pci/controller/dwc/Makefile                |   1 +
->>   drivers/pci/controller/dwc/pcie-designware.c       |  43 ++
->>   drivers/pci/controller/dwc/pcie-designware.h       |  15 +
->>   drivers/pci/controller/dwc/pcie-intel-gw.c         | 700 +++++++++++++++
->>   include/uapi/linux/pci_regs.h                      |   1 +
->>   7 files changed, 905 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->>   create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
->>
->> -- 
->> 2.11.0
->
+> + * @srcuidx: Lock index allocated for this caller.
+> + */
+> +struct wakeup_source *wakeup_source_get_start(int *srcuidx)
+
+I don't quite like the calling convention here with passing an int
+pointer to get the SRCU index back.
+
+What about splitting this into, say, wakeup_sources_read_lock() (that
+will return the SRCU index) and wakeup_sources_walk_start() (that will
+return the first list entry)?
+
+Then, you could do something like
+
+idx = wakeup_sources_read_lock();
+
+ws = wakeup_sources_walk_start();
+while (ws) {
+
+        stuff
+
+        ws = wakeup_sources_walk_next();
+}
+
+wakeup_sources_read_unlock(idx);
+
+Or even define for_each_wakeup_source(ws) as
+
+    for (ws = wakeup_sources_walk_start(); ws; ws = wakeup_sources_walk_next())
+
+and use that under a _read_lock()/_read_unlock() pair?
