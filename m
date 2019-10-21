@@ -2,72 +2,103 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530C0CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 20:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E92CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 20:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F72F2086D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 20:53:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YW32VXPa";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YW32VXPa"
+	by mail.kernel.org (Postfix) with ESMTP id 68F6F2084B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 20:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbfJUUxz (ORCPT
+        id S1730243AbfJUUy3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:53:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55346 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729869AbfJUUxy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 16:53:54 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 45636606CF; Mon, 21 Oct 2019 20:53:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571691232;
-        bh=ikBlLAXjuPjJKKZAogZN3uYAQw2bdK9WZzTszkpUbu0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YW32VXPaQDzeQOor7aAd9eGUE1Xuo5R05I5JzTGEmW01F2W2F+xO7iCSxuvcOPJpV
-         VSIKvcz05wdGJrfEyALf570Pc5TNS5MofymtBnG3TVBWkr8zKR34GIBfT6Mmcx1ngX
-         2htcKhmp5udKexcB2HcwxNhOgfxXEkEzJVSohydc=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id E97FF60716;
-        Mon, 21 Oct 2019 20:53:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571691232;
-        bh=ikBlLAXjuPjJKKZAogZN3uYAQw2bdK9WZzTszkpUbu0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YW32VXPaQDzeQOor7aAd9eGUE1Xuo5R05I5JzTGEmW01F2W2F+xO7iCSxuvcOPJpV
-         VSIKvcz05wdGJrfEyALf570Pc5TNS5MofymtBnG3TVBWkr8zKR34GIBfT6Mmcx1ngX
-         2htcKhmp5udKexcB2HcwxNhOgfxXEkEzJVSohydc=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 21 Oct 2019 13:53:51 -0700
-From:   Jeff Johnson <jjohnson@codeaurora.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
-        ath11k@lists.infradead.org
-Subject: Re: [PATCH v2 02/49] ath11k: add Kconfig
-In-Reply-To: <1571565847-10338-3-git-send-email-kvalo@codeaurora.org>
-References: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
- <1571565847-10338-3-git-send-email-kvalo@codeaurora.org>
-Message-ID: <6ffc215251b54d562496d978bdbbcead@codeaurora.org>
-X-Sender: jjohnson@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Mon, 21 Oct 2019 16:54:29 -0400
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139]:59034
+        "EHLO rjones.pdc.gateworks.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730155AbfJUUy2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 16:54:28 -0400
+Received: by rjones.pdc.gateworks.com (Postfix, from userid 1002)
+        id 233A81A40AF6; Mon, 21 Oct 2019 13:54:28 -0700 (PDT)
+From:   Robert Jones <rjones@gateworks.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: [PATCH] ARM: dts: imx: ventana: add fxos8700 on gateworks boards
+Date:   Mon, 21 Oct 2019 13:54:26 -0700
+Message-Id: <20191021205426.28825-1-rjones@gateworks.com>
+X-Mailer: git-send-email 2.9.2
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-20 03:03, Kalle Valo wrote:
-> [...snip...]
-> +config ATH11K_TRACING
-> +	bool "ath11k tracing support"
-> +	depends on ATH11K && EVENT_TRACING
-> +	---help---
-> +	  Select this to ath11k use tracing infrastructure.
+Add fxos8700 iio imu entries for Gateworks ventana SBCs.
 
-Help text does not parse
+Signed-off-by: Robert Jones <rjones@gateworks.com>
+---
+ arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 5 +++++
+ arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 5 +++++
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 5 +++++
+ 3 files changed, 15 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+index 1a9a9d9..2d7d01e 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+@@ -313,6 +313,11 @@
+ 		interrupts = <12 2>;
+ 		wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+ 	};
++
++	fxos8700@1e {
++		compatible = "nxp,fxos8700";
++		reg = <0x1e>;
++	};
+ };
+ 
+ &ldb {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+index 54b2bea..bf1a2c6 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+@@ -304,6 +304,11 @@
+ 		interrupts = <11 2>;
+ 		wakeup-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
+ 	};
++
++	fxos8700@1e {
++		compatible = "nxp,fxos8700";
++		reg = <0x1e>;
++	};
+ };
+ 
+ &ldb {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+index 1b6c133..d9e09a9 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+@@ -361,6 +361,11 @@
+ 		interrupts = <12 2>;
+ 		wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+ 	};
++
++	fxos8700@1e {
++		compatible = "nxp,fxos8700";
++		reg = <0x1e>;
++	};
+ };
+ 
+ &ldb {
+-- 
+2.9.2
+
