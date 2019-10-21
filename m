@@ -1,86 +1,130 @@
-Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAB8CA9EA1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CE6CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 04:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1BB222C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 08:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688332077C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 04:44:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571633051;
+	bh=LVlUwIor1Q0zqTd3c1Z8i6+KPgjp8+NUXpE9o1AUPGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vOGrhedWxxePCo1Of0QEO+ybaqtHY1B9MgMXUeoaE2kcPuk/vcEIKh+AJ65xaPRjs
+	 XaFS58F94hjLgTAsDP29Ud+eaQRrocLoiiWBcr7IaifVZlm1OO50SBVeOfDX7z1sUb
+	 HSIErRtBSbRv8mp5agn06Xp3OUbbteiwieOl+cJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405788AbfJRIdp (ORCPT
+        id S1725874AbfJUEoK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 04:33:45 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:35600 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387458AbfJRIdp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 04:33:45 -0400
-Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 18 Oct 2019
- 16:33:53 +0800
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v2 0/4] add meson secure watchdog driver
-Date:   Fri, 18 Oct 2019 16:33:37 +0800
-Message-ID: <1571387622-35132-1-git-send-email-xingyu.chen@amlogic.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 21 Oct 2019 00:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbfJUEoK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 00:44:10 -0400
+Received: from localhost (unknown [122.167.89.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 102972067B;
+        Mon, 21 Oct 2019 04:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571633049;
+        bh=LVlUwIor1Q0zqTd3c1Z8i6+KPgjp8+NUXpE9o1AUPGg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J6WyMO4de+yhu9NJ87JGfUDk+teLPhNjtBP7DfyEfMwcriRxAM0DBKoshvRyAxjT8
+         Rw2crnxAE4eO4ywbrixkkk++fwl0VQ4ay2UipY6mi6JtLiBPAeQ35wGoGk2Gfi2J3p
+         I0GCNmT+kV4uyMNPvoDXLVL7Vqf5oyYwTpo0ocII=
+Date:   Mon, 21 Oct 2019 10:14:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, bgoswami@codeaurora.org,
+        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
+Subject: Re: [PATCH v3 2/2] soundwire: qcom: add support for SoundWire
+ controller
+Message-ID: <20191021044405.GB2654@vkoul-mobl>
+References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
+ <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.22]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The watchdog controller on the Meson-A/C series SoCs is moved to secure world,
-We have to call SMC instruction to trap the ATF for watchdog operation. These
-operations are different from previous SoCs, so we introduce a new watchdog
-driver to support this kind of SoCs.
+On 11-10-19, 16:44, Srinivas Kandagatla wrote:
 
-Changes since v1 at [0]:
-- add a new dependency in Kconfig
-- simplify/add the return operation
-- remove useless ping operation when setting the timeout
-- fix some return values
-- fix the license statement
+> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct qcom_swrm_ctrl *ctrl = dev_id;
+> +	u32 sts, value;
+> +	unsigned long flags;
+> +
+> +	ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
+> +
+> +	if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
+> +		ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
+> +		dev_err_ratelimited(ctrl->dev,
+> +				    "CMD error, fifo status 0x%x\n",
+> +				     value);
+> +		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
+> +	}
+> +
+> +	if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
+> +	    sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
+> +		schedule_work(&ctrl->slave_work);
 
-[0]:https://lore.kernel.org/linux-amlogic/1570874721-36077-1-git-send-email-xingyu.chen@amlogic.com
+we are in irq thread, so why not do the work here rather than schedule
+it?
 
-Xingyu Chen (4):
-  firmware: meson_sm: add new SMC ID support for accessing secure
-    watchdog
-  dt-bindings: watchdog: add new binding for meson secure watchdog
-  watchdog: add meson secure watchdog driver
-  arm64: dts: a1: add secure watchdog controller
+> +static int qcom_swrm_compute_params(struct sdw_bus *bus)
+> +{
+> +	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+> +	struct sdw_master_runtime *m_rt;
+> +	struct sdw_slave_runtime *s_rt;
+> +	struct sdw_port_runtime *p_rt;
+> +	struct qcom_swrm_port_config *pcfg;
+> +	int i = 0;
+> +
+> +	list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
+> +		list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
+> +			pcfg = &ctrl->pconfig[p_rt->num - 1];
+> +			p_rt->transport_params.port_num = p_rt->num;
+> +			p_rt->transport_params.sample_interval = pcfg->si + 1;
+> +			p_rt->transport_params.offset1 = pcfg->off1;
+> +			p_rt->transport_params.offset2 = pcfg->off2;
+> +		}
+> +
+> +		list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
+> +			list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
+> +				pcfg = &ctrl->pconfig[i];
+> +				p_rt->transport_params.port_num = p_rt->num;
+> +				p_rt->transport_params.sample_interval =
+> +					pcfg->si + 1;
+> +				p_rt->transport_params.offset1 = pcfg->off1;
+> +				p_rt->transport_params.offset2 = pcfg->off2;
+> +				i++;
+> +			}
 
- .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   |  34 ++++
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |   6 +
- drivers/firmware/meson/meson_sm.c                  |   1 +
- drivers/watchdog/Kconfig                           |  17 ++
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/meson_sec_wdt.c                   | 187 +++++++++++++++++++++
- include/linux/firmware/meson/meson_sm.h            |   1 +
- 7 files changed, 247 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
- create mode 100644 drivers/watchdog/meson_sec_wdt.c
+Can you explain this one, am not sure I understood this. This fn is
+supposed to compute and fill up the params, all I can see is filling up!
 
+> +static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
+> +	.hw_params = qcom_swrm_hw_params,
+> +	.prepare = qcom_swrm_prepare,
+> +	.hw_free = qcom_swrm_hw_free,
+> +	.startup = qcom_swrm_startup,
+> +	.shutdown = qcom_swrm_shutdown,
+> +        .set_sdw_stream = qcom_swrm_set_sdw_stream,
+
+why does indent look off to me!
 -- 
-2.7.4
-
+~Vinod
