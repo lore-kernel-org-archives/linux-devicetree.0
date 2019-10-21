@@ -2,195 +2,132 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E4BCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CBCCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8082D2064B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550682064B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:58:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="h3JmjnZQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DoMy1wWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfJUO4j (ORCPT
+        id S1729364AbfJUO6E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:56:39 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:26304 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729260AbfJUO4h (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 10:56:37 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191021145633epoutp03bc265e9fd234caafa0dc172c4cb0ce1f~PsVmhP-ez3243332433epoutp031
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 14:56:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191021145633epoutp03bc265e9fd234caafa0dc172c4cb0ce1f~PsVmhP-ez3243332433epoutp031
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571669793;
-        bh=+fwHAlORDs9KHULyJD+9+LZLSdj4VooLG0tQObW3l6M=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=h3JmjnZQvQkUPKky5bsLTnxRN/wyrsQKmoOYSZNVRCQGvymNh3bZQAxXOa+IyxYFg
-         MMIZvo13slyeCcTUQDzRifGI9p/fzM1YxAz7bpeLw09KlPlKWPVTbKwOGbZ7uQcpFn
-         1q+CXa0mnkJh/NhS9D9EfnxYA47v90ipBysZc53U=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20191021145632epcas5p4d2fd737aa7b5f3b76f3ed7c4b6cef27e~PsVlWxQkP2081220812epcas5p4w;
-        Mon, 21 Oct 2019 14:56:32 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        79.52.04647.027CDAD5; Mon, 21 Oct 2019 23:56:32 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191021145631epcas5p35e11280d6dfe45f86ed5cebd4993e6e0~PsVk050PV2106721067epcas5p3P;
-        Mon, 21 Oct 2019 14:56:31 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191021145631epsmtrp16bae074059a39e386e3aa43eb2bb6263~PsVk0KlSf1793517935epsmtrp1Z;
-        Mon, 21 Oct 2019 14:56:31 +0000 (GMT)
-X-AuditID: b6c32a49-743ff70000001227-76-5dadc7202b3f
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AE.90.03889.F17CDAD5; Mon, 21 Oct 2019 23:56:31 +0900 (KST)
-Received: from pankajdubey02 (unknown [107.111.85.21]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191021145630epsmtip13ca3f50e4302c59a5cb259141fb6d7bd~PsVjVAFXj3275232752epsmtip1O;
-        Mon, 21 Oct 2019 14:56:29 +0000 (GMT)
-From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
-To:     "'Andrew Murray'" <andrew.murray@arm.com>,
-        "'Anvesh Salveru'" <anvesh.s@samsung.com>
-Cc:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
-        <gustavo.pimentel@synopsys.com>, <jingoohan1@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-In-Reply-To: <20191021141541.GS47056@e119886-lin.cambridge.arm.com>
-Subject: RE: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for
- ZRX-DC PHY property
-Date:   Mon, 21 Oct 2019 20:26:28 +0530
-Message-ID: <05ba01d5881f$b98989a0$2c9c9ce0$@samsung.com>
+        Mon, 21 Oct 2019 10:58:04 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:46785 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbfJUO6D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 10:58:03 -0400
+Received: by mail-ua1-f68.google.com with SMTP id m21so3877966ual.13
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 07:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xl5HbtCvAk9GKynQL9GOsijJT7m6YA6GZF9QqoAexoI=;
+        b=DoMy1wWt5SqZIDChScV+zdd7Y/Ie0TLM9sKJrQs2S1hZ+hsiLtUtPUHxCUMMEX8LbO
+         vb3opcGd+/Na4K9DSLQaZaOK1JHr+l+jy0YE6BUfkWll6cIaz78qArRQZsm7zaV6jF/q
+         TbEH7N0DzGXwR4FJv02eq9B2qrJXTP9myHnx6zDjUn3k1fmT6lHKNdfhK6YZjOjXQwxm
+         iJJgca2JS9CzzeIFrgiqXAR40ulixXCiblT2rmpxPf0JYOF/sCaQT7s/wSVAZLyIo2LY
+         r0x2B56H4BEb0qhbjRqzLE0aXuVfEbeXRJz5/OEopQxtmNJmODXX5kZIg130P9JUkZ+H
+         NMQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xl5HbtCvAk9GKynQL9GOsijJT7m6YA6GZF9QqoAexoI=;
+        b=eUm+5Brwj/8zPFmXOdtMzQYqNRvBBhMlk14/ObiHMJ8cq+qYhoOVLQY9mlqt9zB1FQ
+         uFSmg5Hn/25Lgn+f8ebql9VzZtIAS3VsmUY59qTAU8TNuc2+SUdlFK5UPvPYnBzSdnBk
+         nZrbL8ThPV6+MuvayQIowSNH7MOgp6UUMtKLrfAYZpUqeAWUol70ilAUdlltjN96SQtg
+         hZItcbhDhqWPf6xR9tHqsYsScXd6VwS4zvMGJD0JYmITJ0xKHSTVrp/u6kEZChCchHtE
+         KCiFjXv4GqQ2Q71fhugorUfAfBPyc+BxtLgl+5dOyKT7dQ9VDc0tKdhUhFv/kIEOxsc0
+         OXSQ==
+X-Gm-Message-State: APjAAAVFF27urlHibNJts7NLP0GRpccrH20dbBc4SpXDK+yBL5JD8DHX
+        9YvnDNXSw0uOoDbvjC67GGbkntoUYCUlDLUiT9mAgw==
+X-Google-Smtp-Source: APXvYqwR8uDfCggaF5xEo1UJr8wTwbIeCqoiB4/XGD3itd7jHcJkuglR2FjN1rtjKVpnR3u4ZBFOp3qgc5xIPsE/sIw=
+X-Received: by 2002:ab0:331a:: with SMTP id r26mr6107644uao.104.1571669882589;
+ Mon, 21 Oct 2019 07:58:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIRMLiuZPZOXyo/l4tw66QvoFQK5QJ9zQNRAnN1mOWmxkuucA==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGuZ2ZzlApjgXksASxRhFUFgPJSFRQNKlrSHwjgDQyApGW2rL6
-        xB6sIgS3UBZBNtk0kgqKEnCENCoUFZHECEpECaAvYlhUrAxTIm/fPef85/x/cilMxhGuVII6
-        mdWqlYlysQRvf+bttcvT1Brlb56WMDmWDoIZ6KwmmNrseOZWr5lgOkcLSObOz1KSGeosFzMD
-        lSYxUzfyWsTkdfWSoRJFS2ULUjwyjJKKqrYURVvTRbHiirEJKYzds0gx2+YRTkZI9sayiQmp
-        rNZvf4wkvqo/m9CUuaS/5MxYJupx1CNbCuhAmLw7Q/Asox8jWCqW6pFkmX8gMGbliYTHHIJr
-        mfPkquJz7k1caHQhaOY+koJ8BkGTxYNnMe0H5oXKlbWOdARUjz1YYYweR9D4xIdnWzoMLGOV
-        Ip4d6Egw/unDecbprfDe2IrpEUVJ6T3QNRvMl6X0BnheOoELazZBx/dyTPDjCYtf6q2nDkLh
-        4JxYmHGGqb5ekvcJdBG5bG3cKjgEN/SfxAI7wLTJaA3mClNF+VZOgoWaEkwQ5yK4aqoghEYI
-        9Lwtx3lzGO0N9zr9hGP2UPh7QsSXgZZCQb5MmN4G85P91rPuMJ5TJxJYARWGYbwYbTasiWZY
-        E82wJoLh/7EqhDchF1ajU8WxuiBNgJpN89UpVboUdZzvmSRVG1r5WT5HHiKD+TiHaArJ7aSa
-        261RMkKZqstQcQgoTO4o/eC/XJLGKjMusNqk09qURFbHITcKlztLS4jhSBkdp0xmz7GshtWu
-        dkWUrWsmag8s9FUHE1/HyjYelltk3fez+6O73wztOJpnS3k2b29J58IskBO32+1y9KSqYUrC
-        Xtpp7879zQ8vO1sftP6dnYZLK3hhs++XNqpjojEm8vq6SCeHk6EjC/MhLZmL6qxJWcMr+pDX
-        +ehvo/rB2qcNJ7glh1M1chuvA6nHOKctpnA5rotXBvhgWp3yH/wdlkdVAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsWy7bCSnK788bWxBksfK1o0/9/OanF210JW
-        iyVNGRbzj5xjtdh1t4PdYsWXmewWl3fNYbM4O+84m8XS6xeZLFr3HmF34PJYM28No8fOWXfZ
-        PRZsKvXYtKqTzaNvyypGjy37PzN6fN4kF8AexWWTkpqTWZZapG+XwJWx4EwTa8FsyYrTh84x
-        NzAeEOli5OSQEDCReNwynQXEFhLYzSjx+6IVRFxGYvLqFawQtrDEyn/P2bsYuYBqXjJKrJi2
-        lAkkwSagL3HuxzywIhGBKIm/n2+wgBQxgxRNmrWSBaLjLKPE9n13wFZwCjhL/L83D6xbGKjj
-        5pOrYHEWAVWJW1vWMncxcnDwClhK7P0MdgWvgKDEyZlPWEDCzAJ6Em0bGUHCzALyEtvfzmGG
-        OE5B4ufTZVA3OEn0nv/GBlEjLvHy6BH2CYzCs5BMmoUwaRaSSbOQdCxgZFnFKJlaUJybnlts
-        WGCUl1quV5yYW1yal66XnJ+7iREceVpaOxhPnIg/xCjAwajEw3tiydpYIdbEsuLK3EOMEhzM
-        SiK8dwyAQrwpiZVVqUX58UWlOanFhxilOViUxHnl849FCgmkJ5akZqemFqQWwWSZODilGhhD
-        FkctbLhsWmxVuD0iRKHGwS3WRfDFBPs/Cq9sg67JLp++8c2Mls5kbq82262rQ/ZM4aps0jtf
-        cclpbnht3JI5csfurlp4Vqoo3UGewTRXfk1bstS1WTwx+6K0uOJ81vnzOVX//i97ZNmizMrO
-        eR/KzTep8EYfOcax8eUVh7UJVl+8xb/+/aTEUpyRaKjFXFScCAAFamPGuAIAAA==
-X-CMS-MailID: 20191021145631epcas5p35e11280d6dfe45f86ed5cebd4993e6e0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191021122630epcas5p32bd92762c4304035cad5c1822d96e304
-References: <CGME20191021122630epcas5p32bd92762c4304035cad5c1822d96e304@epcas5p3.samsung.com>
-        <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
-        <20191021141541.GS47056@e119886-lin.cambridge.arm.com>
+References: <5DA9EE2F.4030603@zoho.com> <47f6-5dab7580-33-5680128@176712317>
+In-Reply-To: <47f6-5dab7580-33-5680128@176712317>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 21 Oct 2019 16:57:26 +0200
+Message-ID: <CAPDyKFqzT5Gf1R_26Hzyt-_xEshk4k-EW3yUSKw1MVi7ayh3QA@mail.gmail.com>
+Subject: Re: [PATCH 6/6 v2] MMC: JZ4740: Add support for LPM.
+To:     Ezequiel Garcia <ezequiel.garcia@collabora.com>
+Cc:     Zhou Yanjie <zhouyanjie@zoho.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Mark Rutland <mark.rutland@arm.com>, syq@debian.org,
+        Linus Walleij <linus.walleij@linaro.org>, armijn@tjaldur.nl,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mathieu Malaterre <malat@debian.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Andrew Murray <andrew.murray@arm.com>
-> Sent: Monday, October 21, 2019 7:46 PM
-> To: Anvesh Salveru <anvesh.s@samsung.com>
-> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; bhelgaas@google.com;
-> gustavo.pimentel@synopsys.com; jingoohan1@gmail.com; robh+dt@kernel.org;
-> mark.rutland@arm.com; Pankaj Dubey <pankaj.dubey@samsung.com>
-> Subject: Re: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for
-ZRX-DC
-> PHY property
-> 
-> On Mon, Oct 21, 2019 at 05:55:55PM +0530, Anvesh Salveru wrote:
-> > Add support for ZRX-DC compliant PHYs. If PHY is not compliant to
-> > ZRX-DC specification, then after every 100ms link should transition to
-> > recovery state during the low power states which increases power
-> consumption.
-> >
-> > Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-> > property in DesignWare controller DT node.
-> >
-> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > ---
-> >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > index 78494c4050f7..9507ac38ac89 100644
-> > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > @@ -38,6 +38,8 @@ Optional properties:
-> >     for data corruption. CDM registers include standard PCIe
-configuration
-> >     space registers, Port Logic registers, DMA and iATU (internal
-Address
-> >     Translation Unit) registers.
-> > +- snps,phy-zrxdc-compliant: This property is needed if phy complies
-> > +with the
-> 
-> Strictly speaking, this is a property of the phy - not the controller that
-uses it.
-> 
-> If I understand correctly, there are some DW based PCI controllers that
-use a
-> phandle reference in DT to a Phy (such as fsl,imx6q-pcie.txt). Therefore
-it feels
-> like this is in the wrong place. Is there a reason this isn't described in
-the Phy?
+On Sat, 19 Oct 2019 at 22:44, Ezequiel Garcia
+<ezequiel.garcia@collabora.com> wrote:
 >
-
-Yes, from HW point of view this is a property of the PHY. As PHY is the one
-which is ZRXDC compliant or non-compliant. 
-But as the DW controller programming needs to be altered for handling such
-phys, so we added it as a DT binding of DW controller driver. 
-Also it might be possible that, some other PCIe controller (other than
-DesignWare), do not have any such provision in controller H/W and they
-expect PHY itself should expose some SFR to handle such scenario. In such
-cases it is straight-forward to add this binding as part of PHY node.
-
-We can add this as part of PHY binding, but in that case we will end up
-checking PHY binding in DWC driver via PHY nodes which seems little a bit of
-hack. 
-
-Do you have any other better approach to handle this? 
- 
-> Thanks,
-> 
-> Andrew Murray
-> 
-> > +  ZRX-DC specification.
-> >  RC mode:
-> >  - num-viewport: number of view ports configured in hardware. If a
-platform
-> >    does not specify it, the driver assumes 2.
-> > --
-> > 2.17.1
+> On Friday, October 18, 2019 13:54 -03, Zhou Yanjie <zhouyanjie@zoho.com> =
+wrote:
+>
+>
 > >
+> > >
+> > > I also have a general question. Should we perhaps rename the driver
+> > > from jz4740_mmc.c to ingenic.c (and the file for the DT bindings, the
+> > > Kconfig, etc), as that seems like a more appropriate name? No?
+> >
+> > I am very much in favor of this proposal. Now jz4740_mmc.c is not only =
+used
+> > for the JZ4740 processor, it is also used for JZ4725, JZ4760, JZ4770, J=
+Z4780
+> > and X1000, and now Ingenic's processor is no longer named after JZ47xx,
+> > it is divided into three product lines: M, T, and X. It is easy to caus=
+e
+> > some
+> > misunderstandings by using jz4740_mmc.c. At the same time, I think that
+> > some register names also need to be adjusted. For example, the STLPPL
+> > register name has only appeared in JZ4730 and JZ4740, and this register
+> > in all subsequent processors is called CTRL. This time I was confused b=
+y
+> > the STLPPL when I added drivers for the JZ4760's and X1000's LPM.
+> >
+>
+> I am very much against renamings, for several reasons. As Paul already me=
+ntioned, it's pointless and just adds noise to the git-log, making history =
+harder to recover. Driver file names don't really have to reflect the devic=
+e > > exactly. For the compatibility list, it's far easier to just git-grep=
+ for compatible strings, or git-grep Documentation and/or Kconfig.
 
+I have no strong opinions. What matters to me, is that people agree on
+the best option, based on a case by case discussion.
+
+>
+> Renaming macros and register names, is equally pointless and equally git-=
+history invasive. Simply adding some documentation is enough.
+
+Sounds like documentation is what people prefer here - and the DT doc
+seems already fine in regards to that.
+
+Perhaps some more words added to the header in driver's c-file could
+be and option to consider, as today it only mentions "JZ4740 SD/MMC
+controller driver".
+
+Anyway, it's up to you. :-)
+
+Kind regards
+Uffe
