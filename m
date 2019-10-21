@@ -2,36 +2,36 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C402CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A25CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB322067B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F250217D6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfJUIrN (ORCPT
+        id S1727687AbfJUIsQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:47:13 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:50992 "EHLO
+        Mon, 21 Oct 2019 04:48:16 -0400
+Received: from lucky1.263xmail.com ([211.157.147.133]:35674 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfJUIrN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 04:47:13 -0400
-Received: from localhost (unknown [192.168.167.69])
-        by lucky1.263xmail.com (Postfix) with ESMTP id CF07F47337;
-        Mon, 21 Oct 2019 16:47:03 +0800 (CST)
+        with ESMTP id S1727110AbfJUIsQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 04:48:16 -0400
+Received: from localhost (unknown [192.168.167.13])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 19C5A6D701;
+        Mon, 21 Oct 2019 16:44:43 +0800 (CST)
 X-MAIL-GRAY: 1
 X-MAIL-DELIVERY: 0
 X-ADDR-CHECKED4: 1
 X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P14875T140480094390016S1571647617925688_;
-        Mon, 21 Oct 2019 16:47:03 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P14676T139991587989248S1571647478717790_;
+        Mon, 21 Oct 2019 16:44:43 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4558717a49218c1b7cd23fd613e95674>
+X-UNIQUE-TAG: <edcff55a6422f1ea35f4da4024163433>
 X-RL-SENDER: andy.yan@rock-chips.com
 X-SENDER: yxj@rock-chips.com
 X-LOGIN-NAME: andy.yan@rock-chips.com
@@ -45,280 +45,45 @@ Cc:     kever.yang@rock-chips.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
         Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 4/4] arm64: dts: rockchip: Add basic dts for RK3308 EVB
-Date:   Mon, 21 Oct 2019 16:46:57 +0800
-Message-Id: <20191021084657.28629-1-andy.yan@rock-chips.com>
+Subject: [PATCH v2 0/4] Add basic dts support for RK3308
+Date:   Mon, 21 Oct 2019 16:44:37 +0800
+Message-Id: <20191021084437.28279-1-andy.yan@rock-chips.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191021084437.28279-1-andy.yan@rock-chips.com>
-References: <20191021084437.28279-1-andy.yan@rock-chips.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This board use uart4 as debug port and arm core voltage
-is modulated by pwm, logic voltage is fixed to 1.05V.
+RK3308 is a quad Cortex A35 based SOC with rich audio
+interfaces(I2S/PCM/TDM/PDM/SPDIF/VAD/HDMI ARC), which
+designed for intelligent voice interaction and audio
+input/output processing.
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-
----
+As the clk and pinctrl drivers are landed, we post
+the basic dts support, make it convenient for other
+module development.
 
 Changes in v2:
+- Address Heiko's comments in V1
+- Split with the dts file
 - Split binding to a separate patch
 - Power tree update.
 
- arch/arm64/boot/dts/rockchip/Makefile       |   1 +
- arch/arm64/boot/dts/rockchip/rk3308-evb.dts | 230 ++++++++++++++++++++
- 2 files changed, 231 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3308-evb.dts
+Andy Yan (4):
+  dt-bindings: Add doc about rk3308 General Register Files
+  arm64: dts: rockchip: Add core dts for RK3308 SOC
+  dt-bindings: Add doc for rk3308-evb
+  arm64: dts: rockchip: Add basic dts for RK3308 EVB
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 1f18a9392d15..a959434ad46e 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308-evb.dts b/arch/arm64/boot/dts/rockchip/rk3308-evb.dts
-new file mode 100644
-index 000000000000..124a24086684
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3308-evb.dts
-@@ -0,0 +1,230 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/input/input.h>
-+#include "rk3308.dtsi"
-+
-+/ {
-+	model = "Rockchip RK3308 EVB";
-+	compatible = "rockchip,rk3308-evb", "rockchip,rk3308";
-+
-+	chosen {
-+		stdout-path = "serial4:1500000n8";
-+	};
-+
-+	adc-keys0 {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 0>;
-+		io-channel-names = "buttons";
-+		poll-interval = <100>;
-+		keyup-threshold-microvolt = <1800000>;
-+
-+		func-key {
-+			linux,code = <KEY_FN>;
-+			label = "function";
-+			press-threshold-microvolt = <18000>;
-+		};
-+	};
-+
-+	adc-keys1 {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 1>;
-+		io-channel-names = "buttons";
-+		poll-interval = <100>;
-+		keyup-threshold-microvolt = <1800000>;
-+
-+		esc-key {
-+			linux,code = <KEY_MICMUTE>;
-+			label = "micmute";
-+			press-threshold-microvolt = <1130000>;
-+		};
-+
-+		home-key {
-+			linux,code = <KEY_MODE>;
-+			label = "mode";
-+			press-threshold-microvolt = <901000>;
-+		};
-+
-+		menu-key {
-+			linux,code = <KEY_PLAY>;
-+			label = "play";
-+			press-threshold-microvolt = <624000>;
-+		};
-+
-+		vol-down-key {
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			label = "volume down";
-+			press-threshold-microvolt = <300000>;
-+		};
-+
-+		vol-up-key {
-+			linux,code = <KEY_VOLUMEUP>;
-+			label = "volume up";
-+			press-threshold-microvolt = <18000>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwr_key>;
-+
-+		power {
-+			gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			label = "GPIO Key Power";
-+			wakeup-source;
-+			debounce-interval = <100>;
-+		};
-+	};
-+
-+	vcc12v_dcin: vcc12v-dcin {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc12v_dcin";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
-+	vcc5v0_sys: vcc5v0-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vdd_core: vdd-core {
-+		compatible = "pwm-regulator";
-+		pwms = <&pwm0 0 5000 1>;
-+		regulator-name = "vdd_core";
-+		regulator-min-microvolt = <827000>;
-+		regulator-max-microvolt = <1340000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-settling-time-up-us = <250>;
-+		pwm-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vdd_log: vdd-log {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_log";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <1050000>;
-+		regulator-max-microvolt = <1050000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vdd_1v0: vdd-1v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_1v0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1000000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vccio_sdio: vcc_1v8: vcc-1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_1v8";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_io>;
-+	};
-+
-+	vcc_ddr: vcc-ddr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_ddr";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc_io: vcc-io {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_io";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vccio_flash: vccio-flash {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vccio_flash";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_io>;
-+	};
-+
-+	vcc5v0_host: vcc5v0-host {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb_drv>;
-+		regulator-name = "vbus_host";
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vdd_core>;
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vcc_1v8>;
-+};
-+
-+&pinctrl {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rtc_32k>;
-+
-+	buttons {
-+		pwr_key: pwr-key {
-+			rockchip,pins = <0 RK_PA6 0 &pcfg_pull_up>;
-+		};
-+	};
-+
-+	usb {
-+		usb_drv: usb-drv {
-+			rockchip,pins = <0 RK_PC5 0 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	sdio-pwrseq {
-+		wifi_enable_h: wifi-enable-h {
-+			rockchip,pins = <0 RK_PA2 0 &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&pwm0 {
-+	status = "okay";
-+	pinctrl-0 = <&pwm0_pin_pull_down>;
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_xfer>;
-+	status = "okay";
-+};
+ .../devicetree/bindings/arm/rockchip.yaml     |    5 +
+ .../devicetree/bindings/soc/rockchip/grf.txt  |   11 +
+ arch/arm64/boot/dts/rockchip/Makefile         |    1 +
+ arch/arm64/boot/dts/rockchip/rk3308-evb.dts   |  230 +++
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi      | 1838 +++++++++++++++++
+ 5 files changed, 2085 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3308-evb.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3308.dtsi
+
 -- 
 2.17.1
 
