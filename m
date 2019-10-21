@@ -2,260 +2,98 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F328C47E49
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4822CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4E220679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC20214B2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571665840;
+	bh=aEu1uJJTKafM7jVw7dAgeyLCE5JqgyFPy0YM24aRC+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gVbigGHVo8uJBfzXfHYkjH312sRFQcJcEhnZ6FhNeJeTMrpSSyW0HS+IH8jn+8lHV
+	 rxS8P+GchhxmMa6hMXBbM0O64IJFO2UYMBVwUhv1tgKvbRX1EwJWDBW0ZgLR6CkXoj
+	 fAA6Q90YhpJ6/vRliYhdC1lh4fSYPeSVtHuWM7yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbfJUNjO (ORCPT
+        id S1727152AbfJUNuk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:39:14 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:52882 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1729166AbfJUNjN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:39:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68E031007;
-        Mon, 21 Oct 2019 06:38:52 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D49FD3F718;
-        Mon, 21 Oct 2019 06:38:51 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 14:38:50 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
- pcie link
-Message-ID: <20191021133849.GQ47056@e119886-lin.cambridge.arm.com>
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com>
+        Mon, 21 Oct 2019 09:50:40 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41954 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfJUNuj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 09:50:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aEu1uJJTKafM7jVw7dAgeyLCE5JqgyFPy0YM24aRC+U=; b=a/rSfFvy+yPWsunq+u0NBQ2Sy
+        7twL6/L0qz7NtWlv1zjGaLKz8G2pVtdWoW6piUuHvn3mOKxYv88pJ3BpV4xwYgm/G28mb+yi4u3Yn
+        z1+d+NA8V5oeNKrw5nfJFsG0lE0la1gyxAP1NF8IDXh3sZFi6+j9TVlUZ5x9jAod0IDzs=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iMY4w-0004GM-Cg; Mon, 21 Oct 2019 13:50:34 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 7719B274301C; Mon, 21 Oct 2019 14:50:33 +0100 (BST)
+Date:   Mon, 21 Oct 2019 14:50:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Tzung-Bi Shih <tzungbi@google.com>, gwendal@google.com,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        cychiang@google.com, drinkcat@google.com, robh+dt@kernel.org,
+        bleung@google.com, dgreid@google.com
+Subject: Re: [alsa-devel] [PATCH v5 1/4] ASoC: cros_ec_codec: support WoV
+Message-ID: <20191021135033.GF4691@sirena.co.uk>
+References: <20191019070254.23870-1-tzungbi@google.com>
+ <20191019143504.1.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
+ <659a3d1f-a8e1-268d-5e95-b328aeed601b@collabora.com>
+ <20191021114303.GC4691@sirena.co.uk>
+ <a4e1530a-b706-2a73-e0b3-ad56cf9085bc@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="1Y7d0dPL928TPQbc"
 Content-Disposition: inline
-In-Reply-To: <d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <a4e1530a-b706-2a73-e0b3-ad56cf9085bc@collabora.com>
+X-Cookie: Why are you so hard to ignore?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> PCIe RC driver on Intel Gateway SoCs have a requirement
-> of changing link width and speed on the fly.
-> So add the sysfs attributes to show and store the link
-> properties.
-> Add the respective link resize function in pcie DesignWare
-> framework so that Intel PCIe driver can use during link
-> width configuration on the fly.
-> 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c |   9 +++
->  drivers/pci/controller/dwc/pcie-designware.h |   3 +
->  drivers/pci/controller/dwc/pcie-intel-gw.c   | 112 ++++++++++++++++++++++++++-
->  3 files changed, 123 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 4c391bfd681a..662fdcb4f2d6 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -474,6 +474,15 @@ int dw_pcie_link_up(struct dw_pcie *pci)
->  		(!(val & PCIE_PORT_DEBUG1_LINK_IN_TRAINING)));
->  }
->  
-> +void dw_pcie_link_width_resize(struct dw_pcie *pci, u32 lane_width)
-> +{
-> +	u32 val;
-> +
-> +	val =  dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-> +	val &= ~(PORT_MLTI_LNK_WDTH_CHNG | PORT_MLTI_LNK_WDTH);
-> +	val |= PORT_MLTI_LNK_WDTH_CHNG | lane_width;
-> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
-> +}
->  
->  void dw_pcie_upconfig_setup(struct dw_pcie *pci)
->  {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 3beac10e4a4c..fcf0442341fd 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -67,6 +67,8 @@
->  #define PCIE_MSI_INTR0_STATUS		0x830
->  
->  #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
-> +#define PORT_MLTI_LNK_WDTH		GENMASK(5, 0)
-> +#define PORT_MLTI_LNK_WDTH_CHNG		BIT(6)
->  #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
->  
->  #define PCIE_ATU_VIEWPORT		0x900
-> @@ -282,6 +284,7 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
->  u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size);
->  void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
->  int dw_pcie_link_up(struct dw_pcie *pci);
-> +void dw_pcie_link_width_resize(struct dw_pcie *pci, u32 lane_width);
->  void dw_pcie_upconfig_setup(struct dw_pcie *pci);
->  void dw_pcie_link_speed_change(struct dw_pcie *pci, bool enable);
->  void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts);
-> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> index 9142c70db808..b9be0921671d 100644
-> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> @@ -146,6 +146,22 @@ static void intel_pcie_ltssm_disable(struct intel_pcie_port *lpp)
->  	pcie_app_wr_mask(lpp, PCIE_APP_CCR_LTSSM_ENABLE, 0, PCIE_APP_CCR);
->  }
->  
-> +static const char *pcie_link_gen_to_str(int gen)
-> +{
-> +	switch (gen) {
-> +	case PCIE_LINK_SPEED_GEN1:
-> +		return "2.5";
-> +	case PCIE_LINK_SPEED_GEN2:
-> +		return "5.0";
-> +	case PCIE_LINK_SPEED_GEN3:
-> +		return "8.0";
-> +	case PCIE_LINK_SPEED_GEN4:
-> +		return "16.0";
-> +	default:
-> +		return "???";
-> +	}
-> +}
-> +
->  static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
->  {
->  	u32 val;
-> @@ -444,6 +460,91 @@ static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
->  	return ret;
->  }
->  
-> +static ssize_t pcie_link_status_show(struct device *dev,
-> +				     struct device_attribute *attr, char *buf)
-> +{
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> +	u32 reg, width, gen;
-> +
-> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
-> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, reg >> 16);
-> +	gen = FIELD_GET(PCI_EXP_LNKSTA_CLS, reg >> 16);
-> +
-> +	if (gen > lpp->max_speed)
-> +		return -EINVAL;
-> +
-> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
-> +		       width, pcie_link_gen_to_str(gen));
-> +}
-> +static DEVICE_ATTR_RO(pcie_link_status);
-> +
-> +static ssize_t pcie_speed_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	ret = kstrtoul(buf, 10, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val > lpp->max_speed)
-> +		return -EINVAL;
-> +
-> +	lpp->link_gen = val;
-> +	intel_pcie_max_speed_setup(lpp);
-> +	dw_pcie_link_speed_change(&lpp->pci, false);
-> +	dw_pcie_link_speed_change(&lpp->pci, true);
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_WO(pcie_speed);
-> +
-> +/*
-> + * Link width change on the fly is not always successful.
-> + * It also depends on the partner.
-> + */
-> +static ssize_t pcie_width_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	lpp = dev_get_drvdata(dev);
-> +
-> +	ret = kstrtoul(buf, 10, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val > lpp->max_width)
-> +		return -EINVAL;
-> +
-> +	/* HW auto bandwidth negotiation must be enabled */
-> +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
-> +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
-> +	dw_pcie_link_width_resize(&lpp->pci, val);
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_WO(pcie_width);
-> +
-> +static struct attribute *pcie_cfg_attrs[] = {
-> +	&dev_attr_pcie_link_status.attr,
-> +	&dev_attr_pcie_speed.attr,
-> +	&dev_attr_pcie_width.attr,
-> +	NULL,
-> +};
 
-Is there a reason that these are limited only to the Intel driver and
-not the wider set of DWC drivers?
+--1Y7d0dPL928TPQbc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Is there anything specific here about the Intel GW driver?
+On Mon, Oct 21, 2019 at 03:12:50PM +0200, Enric Balletbo i Serra wrote:
 
-Thanks,
+> Ok, I was off the latest two weeks so I didn't catch it :-(. I'll try to figure
+> out the better way to avoid conflicts knowing that these are already queued.
 
-Andrew Murray
+So long as they're easy to resolve it shouldn't be an issue, Linus
+doesn't super mind fixing things up.
 
-> +ATTRIBUTE_GROUPS(pcie_cfg);
-> +
-> +static int intel_pcie_sysfs_init(struct intel_pcie_port *lpp)
-> +{
-> +	return devm_device_add_groups(lpp->pci.dev, pcie_cfg_groups);
-> +}
-> +
->  static void __intel_pcie_remove(struct intel_pcie_port *lpp)
->  {
->  	intel_pcie_core_irq_disable(lpp);
-> @@ -490,8 +591,17 @@ static int intel_pcie_rc_init(struct pcie_port *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
-> +	int ret;
->  
-> -	return intel_pcie_host_setup(lpp);
-> +	ret = intel_pcie_host_setup(lpp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = intel_pcie_sysfs_init(lpp);
-> +	if (ret)
-> +		__intel_pcie_remove(lpp);
-> +
-> +	return ret;
->  }
->  
->  int intel_pcie_msi_init(struct pcie_port *pp)
-> -- 
-> 2.11.0
-> 
+--1Y7d0dPL928TPQbc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2tt6gACgkQJNaLcl1U
+h9BF/wf8CTYyYmc413jqwsQxB9+4R2QOYPA9MG7qBRZ+z0NinvCl876PH7YNk9Tw
+9CshD9oIKe3LRpyRsAHHlwI38yAAB0n4+/p1UYuQEB/bNoM9P85OIaH/Qj95GnO1
+Pbm4y44PVUPv46aGRPSXt1RtkGVZhRVj4j/IOFu7JkQGT/ZnMHVpzwHAV4uCxlij
+oQjH+C/lWeQsBxEBMio/5nryhSRRb3qXWQPGVSrSNLDci08llkQGGBc3A4jTQyKh
+9k7QO5lopV2ThKdiQv8wSTc1lWTRxDWHORq0RgIrSQCMVrif9SA/hF4FAKRcLhyN
+VSbdH6IbO1dzKpZmtq7z/nKI3l4AiQ==
+=dZWZ
+-----END PGP SIGNATURE-----
+
+--1Y7d0dPL928TPQbc--
