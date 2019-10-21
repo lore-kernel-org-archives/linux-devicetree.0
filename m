@@ -2,204 +2,161 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D117CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED90CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312502089C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F082084C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571653695;
+	bh=rBzPRO+ZQr2Ac4LSnoT/X/mZGdMpwM2fGwmupJfj5Dc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eMTP1kMHANg3vzMv0FS7SXjwHt9j8uzVRwrLjrkDUFXtaSp/nyjb4zZWdHYiU98bQ
+	 Dq4grgOO6PrmbtNvNwx0PytRP3zvG9W1V+KtvXDieZ3zjz3faEydzIj3lGj8T/9lg3
+	 QBM6nAEjN5KzNiIlMo2s2lHoqGCt6RwrJm9oxK0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfJUKYu (ORCPT
+        id S1727767AbfJUK2O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:24:50 -0400
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:34158 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727767AbfJUKYu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 06:24:50 -0400
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iMUre-00016G-4C; Mon, 21 Oct 2019 12:24:38 +0200
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9LAOa9m003414
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 21 Oct 2019 12:24:37 +0200
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Subject: [PATCH] arm64: dts: rockchip: Add LED nodes on rk3399-roc-pc
-To:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 21 Oct 2019 06:28:14 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40697 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfJUK2O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 06:28:14 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p59so1183924edp.7;
+        Mon, 21 Oct 2019 03:28:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=32WruUQbRO6vTu7JHKjRq7oaWF4FWya6VgqSM214C+Y=;
+        b=GqnWt1oPns4jziHWbWYSrELHjv0uvgJuBFHe5mru+4mPU2kPsAInsQeYCrhdI7l2Kf
+         k9QoQTIKTcWUpEoysslohOlW8CrFHpMsNb9bqspFQh2eyxHiV+ElOWS2pKy6wl7wDZUU
+         EGDTLyqk/bEZ3yBhItawvQsfUQfqaOM7EulLCF1V6U8ie1yf1AKKuNOSGIxgG5NgcSkW
+         U2Qw3JE7gxC70haUpGJNM6rB7JQaa1AyWwy+5Q7Pmh6+Oeju7xbO9BbVuNZfPeqqrQIv
+         wNZMX0YBKiMcINRBZbZagw30nWHJAHIr6PfGpH3ymlwX354C9ACCccPGXP12Y/M+g3y/
+         83XA==
+X-Gm-Message-State: APjAAAW4zqYLlMZDE+rIDURBtbJPySgk6gJTR5Pmeb3lJzbdxJKCreQo
+        rMkX1jtmVeS7AP1yna3cxAI=
+X-Google-Smtp-Source: APXvYqzhozcd1lqqT8Tpyf3S1ox+0mSMUIdIK4/skr94JIQi3fBFI4Y/wJHBDk8i/MAoWWMpQTVaWA==
+X-Received: by 2002:a50:ec0f:: with SMTP id g15mr24166931edr.59.1571653692310;
+        Mon, 21 Oct 2019 03:28:12 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id w16sm574836edd.93.2019.10.21.03.28.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 03:28:11 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 12:28:09 +0200
+From:   "krzk@kernel.org" <krzk@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <7d8d85c9-5fde-7943-a6b6-639bca38bdc1@fivetechno.de>
-Date:   Mon, 21 Oct 2019 12:24:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/10] ARM: dts: imx6ul-kontron-n6310: Move common SoM
+ nodes to a separate file
+Message-ID: <20191021102809.GA1934@pi3>
+References: <20191016150622.21753-1-frieder.schrempf@kontron.de>
+ <20191016150622.21753-2-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="ma6Nskd4tpvP5vsRVUnUWsgiIS2DwbBnW"
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1571653489;eae68682;
-X-HE-SMSGID: 1iMUre-00016G-4C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191016150622.21753-2-frieder.schrempf@kontron.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ma6Nskd4tpvP5vsRVUnUWsgiIS2DwbBnW
-Content-Type: multipart/mixed; boundary="yJZwcp1Ymsuklh7aGS9WMHUNJ1nnL5i5j";
- protected-headers="v1"
-From: Markus Reichl <m.reichl@fivetechno.de>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Heiko Stuebner <heiko@sntech.de>, Jagan Teki <jagan@amarulasolutions.com>,
- Markus Reichl <m.reichl@fivetechno.de>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Message-ID: <7d8d85c9-5fde-7943-a6b6-639bca38bdc1@fivetechno.de>
-Subject: [PATCH] arm64: dts: rockchip: Add LED nodes on rk3399-roc-pc
+On Wed, Oct 16, 2019 at 03:07:19PM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> The Kontron N6311 and N6411 SoMs are very similar to N6310. In
+> preparation to add support for them, we move the common nodes to a
+> separate file imx6ul-kontron-n6x1x-som-common.dtsi.
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> ---
+>  .../boot/dts/imx6ul-kontron-n6310-som.dtsi    |  95 +-------------
+>  .../dts/imx6ul-kontron-n6x1x-som-common.dtsi  | 123 ++++++++++++++++++
+>  2 files changed, 124 insertions(+), 94 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
+> index a896b2348dd2..47d3ce5d255f 100644
+> --- a/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
+> @@ -6,7 +6,7 @@
+>   */
+>  
+>  #include "imx6ul.dtsi"
+> -#include <dt-bindings/gpio/gpio.h>
+> +#include "imx6ul-kontron-n6x1x-som-common.dtsi"
+>  
+>  / {
+>  	model = "Kontron N6310 SOM";
+> @@ -18,49 +18,7 @@
+>  	};
+>  };
+>  
+> -&ecspi2 {
+> -	cs-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_ecspi2>;
+> -	status = "okay";
+> -
+> -	spi-flash@0 {
+> -		compatible = "mxicy,mx25v8035f", "jedec,spi-nor";
+> -		spi-max-frequency = <50000000>;
+> -		reg = <0>;
+> -	};
+> -};
+> -
+> -&fec1 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_enet1 &pinctrl_enet1_mdio>;
+> -	phy-mode = "rmii";
+> -	phy-handle = <&ethphy1>;
+> -	status = "okay";
+> -
+> -	mdio {
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		ethphy1: ethernet-phy@1 {
+> -			reg = <1>;
+> -			micrel,led-mode = <0>;
+> -			clocks = <&clks IMX6UL_CLK_ENET_REF>;
+> -			clock-names = "rmii-ref";
+> -		};
+> -	};
+> -};
+> -
+> -&fec2 {
+> -	phy-mode = "rmii";
+> -	status = "disabled";
+> -};
+> -
+>  &qspi {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_qspi>;
+> -	status = "okay";
+> -
+>  	spi-flash@0 {
 
---yJZwcp1Ymsuklh7aGS9WMHUNJ1nnL5i5j
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+You left qspi and flash partitions here, while adding it later. It is
+not pure move then and some duplicated stuff remains.
 
-rk3399-roc-pc has three gpio LEDs, enable them.
+Best regards,
+Krzysztof
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
- .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/=
-boot/dts/rockchip/rk3399-roc-pc.dts
-index faf60b2a7673..ba52e1053a2d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-@@ -28,6 +28,33 @@
- 		#clock-cells =3D <0>;
- 	};
-=20
-+	leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&work_led_gpio>, <&diy_led_gpio>, <&yellow_led_gpio>;
-+
-+		work-led {
-+			label =3D "green:work";
-+			gpios =3D <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
-+			default-state =3D "on";
-+			linux,default-trigger =3D "heartbeat";
-+		};
-+
-+		diy-led {
-+			label =3D "red:diy";
-+			gpios =3D <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
-+			default-state =3D "off";
-+			linux,default-trigger =3D "mmc1";
-+		};
-+
-+		yellow-led {
-+			label =3D "yellow:yellow-led";
-+			gpios =3D <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-+			default-state =3D "off";
-+			linux,default-trigger =3D "mmc0";
-+		};
-+	};
-+
- 	sdio_pwrseq: sdio-pwrseq {
- 		compatible =3D "mmc-pwrseq-simple";
- 		clocks =3D <&rk808 1>;
-@@ -494,6 +521,20 @@
- 		};
- 	};
-=20
-+	leds {
-+		work_led_gpio: work_led-gpio {
-+			rockchip,pins =3D <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		diy_led_gpio: diy_led-gpio {
-+			rockchip,pins =3D <0 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		yellow_led_gpio: yellow_led-gpio {
-+			rockchip,pins =3D <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pmic {
- 		vsel1_gpio: vsel1-gpio {
- 			rockchip,pins =3D <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
---=20
-2.20.1
-
-
-
-
-
---yJZwcp1Ymsuklh7aGS9WMHUNJ1nnL5i5j--
-
---ma6Nskd4tpvP5vsRVUnUWsgiIS2DwbBnW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAEBCAAdFiEEVKeIeBh0ZWJOldzLOiXeDmsa/bIFAl2th2QACgkQOiXeDmsa
-/bKXBwv7BhRzi03I9j+Me1Zp9yG27lXAQ6FOPpHmt5GJdmFZkpuurRQQ6lBOJmfd
-61KOr6gNYLLVObMeRcZ30gonXE5TK0lLP6mOajtI4YBB0+/4dy3Kwf5qzmtAIaM3
-47NZ9WiTlxR7Oh1ESVFLxGk7exnMq1R0zF2TLafDZxP1vZXcow7aCpgcx8HMgivf
-DN+uAQ8+mMCd3i7heyBrqDUx4oBQamdPF20SpRSfX6oNMmNbO9Vno2ly8JfXBv9O
-1+ThOXF+wVnO5V3Q2OQdHsyZGt3vZDugnbq9RQXjdpJkJfA3rmuGgCgnOcad0+11
-g0kxyU+0il07SuUVfXVZXGraWYZ4WyOpKkOOD5YhWP8cYSK4tOFQlCpeNo/UykHc
-F6bXAwcc8x5naL2J6L4N4hFmGI4I0woqZsTKNX4gHPi30XHf91mJ5n2TatPCquZ0
-Li6fangI5vix3UEMbiFF09g9rKYg2k8v/UiTjYgkj5qMdklM3qgMTToYYq1rm2ay
-yWfVA1OG
-=KTOi
------END PGP SIGNATURE-----
-
---ma6Nskd4tpvP5vsRVUnUWsgiIS2DwbBnW--
