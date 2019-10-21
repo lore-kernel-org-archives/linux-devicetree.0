@@ -2,130 +2,79 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8110CCA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 02:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EC8CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 02:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5867521744
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 02:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6jF/1TC"
+	by mail.kernel.org (Postfix) with ESMTP id C4B5E218BA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 02:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfJUCG3 (ORCPT
+        id S1726874AbfJUCKp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 22:06:29 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37427 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbfJUCG3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 22:06:29 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p1so6767893pgi.4
-        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 19:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+yWlFQ3j7MPCBznXsMHQtwJpyH73frvubd7zQPjGqcQ=;
-        b=b6jF/1TCbvWbam16ICWlejQoSAC8+hg+CuxDEnF4riYF5Sq4SSUC+vktJEEOp4GwaL
-         R+MVDsuCHRmEkMhueRjh3U4t/xHsfmYAd5Yomv9TltCGadViASJLNsaikB20jqDJxi8n
-         dWVfgkI6OxuV8SrTlzu1UxF84Waqf0ymzK7EjZVebV+jJvqaIuMIp0TTrl4wcLkRQ1cg
-         JRDHJR3HLRAy4g02+T82IvW12A/CAQAGYnqhqse9BnW+Z7pg+VV47mmjQ77JfilZzDiA
-         +4QoCJLF0pzaHnplp75PudT0JDggsOSIJ3OGCzqSRGkdb8VVyWjD0Hk6gS3A5uCtXRqZ
-         bMQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+yWlFQ3j7MPCBznXsMHQtwJpyH73frvubd7zQPjGqcQ=;
-        b=feKjCQihS9OyE6jU/vaq3+lMj2pPprBPbCZUxju0Ona0uKISCDPHTLcfZU6ya1CYgf
-         objDCF4W/Ga3J6wo5l/RVhbzwVXVSomRSMWb7SUyi49l5/0KihsRzxv3kdQ7WwrN+yio
-         OkKaum/H8Il5vMCQrXmz8WeISDjnauTmC0xd7Rxr93Q4Q30iCG9Wa7meVD8Uvp0cUqEy
-         ir5bCHQ9bJ5zIwSNMXa4nY/nzFg7YzhoRW5dg6QQrzVTaCILUNLWXofEY+TFSNKh9kSC
-         a/is+vyt9ei5zZ14Pzx6mGR9gWPIZAse7LOBBS4RAYZ7Qdb5tN7N6nnflMRMsxYdHelV
-         GiMQ==
-X-Gm-Message-State: APjAAAWId2XLuZ+EGaQySOrpAUvq/sS6GcSqzDSpg7Goo0uYZeHv/hXj
-        yxutilIE/0v4LglZKAQNp+6Opw==
-X-Google-Smtp-Source: APXvYqx+O4q4hmJUC+1LMJIMJc8cEyhGSOZvO9jUQMs0EyVIEpjKc4vVl0VNeQL6Dp2g1H3xO8GA+g==
-X-Received: by 2002:a63:b644:: with SMTP id v4mr7468971pgt.249.1571623588138;
-        Sun, 20 Oct 2019 19:06:28 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k23sm12553705pgi.49.2019.10.20.19.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 19:06:26 -0700 (PDT)
-Date:   Sun, 20 Oct 2019 19:06:24 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Chris Goldsworthy <cgoldswo@codeaurora.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] of: reserved_mem: add missing of_node_put() for proper
- ref-counting
-Message-ID: <20191021020624.GE4500@tuxbook-pro>
-References: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
+        Sun, 20 Oct 2019 22:10:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57632 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726866AbfJUCKo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 20 Oct 2019 22:10:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 69E69B03B;
+        Mon, 21 Oct 2019 02:10:43 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 0/3] ARM: Initial RTD1195 and MeLE X1000 support
+Date:   Mon, 21 Oct 2019 04:10:32 +0200
+Message-Id: <20191021021035.7032-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat 19 Oct 18:57 PDT 2019, Chris Goldsworthy wrote:
+Hello,
 
-> Commit d698a388146c ("of: reserved-memory: ignore disabled memory-region
-> nodes") added an early return in of_reserved_mem_device_init_by_idx(), but
-> didn't call of_node_put() on a device_node whose ref-count was incremented
-> in the call to of_parse_phandle() preceding the early exit.
-> 
-> Fixes: d698a388146c ("of: reserved-memory: ignore disabled memory-region nodes")
-> Signed-off-by: Chris Goldsworthy <cgoldswo@codeaurora.org>
-> To: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
+This series adds initial support for Realtek RTD1195 SoC
+and adds a Device Tree for the MeLE X1000 TV set-top-box.
 
-Cc stable@ is used to assist in making sure your patch is backported to
-stable kernels, other than that the purpose Cc here is to indicate that
-specific people have been requested to comment on your patch.
+More details at:
+https://en.opensuse.org/HCL:Mele_X1000
 
-So please skip these from the commit message in the future (for this
-one, wait and see if Rob is willing to trim them as he applies the
-patch).
+Latest experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
 
+Have a lot of fun!
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cheers,
+Andreas
 
-Regards,
-Bjorn
+Cc: devicetree@vger.kernel.org
 
-> ---
->  drivers/of/of_reserved_mem.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 7989703..6bd610e 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -324,8 +324,10 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
->  	if (!target)
->  		return -ENODEV;
->  
-> -	if (!of_device_is_available(target))
-> +	if (!of_device_is_available(target)) {
-> +		of_node_put(target);
->  		return 0;
-> +	}
->  
->  	rmem = __find_rmem(target);
->  	of_node_put(target);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Andreas Färber (3):
+  dt-bindings: arm: realtek: Add RTD1195 and MeLE X1000
+  ARM: Prepare Realtek RTD1195
+  ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
+
+ Documentation/devicetree/bindings/arm/realtek.yaml |   6 +
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/rtd1195-mele-x1000.dts           |  30 +++++
+ arch/arm/boot/dts/rtd1195.dtsi                     | 128 +++++++++++++++++++++
+ arch/arm/mach-realtek/Kconfig                      |  16 +++
+ 7 files changed, 185 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
+ create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
+ create mode 100644 arch/arm/mach-realtek/Kconfig
+
+-- 
+2.16.4
+
