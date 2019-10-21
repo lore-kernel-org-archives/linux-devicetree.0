@@ -2,207 +2,321 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E68CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C0FCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8C0214B2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13A020873
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="cfSL4qBL"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WNtwQkYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfJUNVG (ORCPT
+        id S1728096AbfJUNX2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:21:06 -0400
-Received: from mail-eopbgr70139.outbound.protection.outlook.com ([40.107.7.139]:1774
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728753AbfJUNVF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 09:21:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=USz7txnVNxpWhxGcmem3YVJOSF0AK8XL86C7tbfvj19gOAxOWcOwNCt4g2ujFZsdWOq/HVbhTrmeBl2hYTqOuk6ecx5cQOqAfZOhPmPYnwQ+RUF85xrP2e4AbkNBdjvdxYgE25UUE71ZieiO36wM1V39hJsHFsWuIf0Jml0VgUfaMJTxjrPkjhLJtkgZ6mGoT+T0cHH1yRgGWJrQ9CbOvXArmqqwLA/DQQ0rBN4/ApD8yzy/sjFXHmwb2BBnuvZ1gOTwB459z/wcuP7k98j6mOTtOyOgPvM+RsmTpP8rizlopTtk8vIwoqiQZ4w9rJfKZDsZummUniEbhqCRwUV81w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0le0XmMCz2FDWL9z2VMi85Nf/kGhO+Ofknp32/NLmY=;
- b=libwt47TdhoPkE7UB0EU5h2UU9UyuO+0059HBezsF9eIAg9CNNKRGXUlhgLA5r1K8SuiAYpYpcB3fpo6gKmrGF5xGAiLTZzC+CxnDjMLiYapVGhWrhNEuXYREJNZPrMd4UY/22m1ihvXjgojOyh5nf0ZzlzkjJv+9uUYo4vwdbklU+ReqwbwyMASpdPwCzBrHdResk4fgU1hWNpxPn5T64Wti9Sxi+k9EG+OXzu6Tpo03LWRixa3eAz7638oS4KS32i77uGYqzNlto5+wh8Ifw4b32LFt5BIfCrmmYGi3S7sbdfAdHiOSJGjNXF+laHNXFVX9wuVufye0+7l/iGrmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0le0XmMCz2FDWL9z2VMi85Nf/kGhO+Ofknp32/NLmY=;
- b=cfSL4qBLOXSrorI8Vl9EPck95Zvhq7NeGLoEWeNnXWhYAVljXhyH5mM/E3nOmMrAoLAfuQfqdlih/duCobx8tEN6ABLg1BvJLfnU7kNN+Gva/uXWYADDZDuMBg0nvIrZt9U/cQt8eaGNCCTquvA/fCEw607kPaH+M5v6IzXEaFw=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3403.eurprd02.prod.outlook.com (52.134.71.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Mon, 21 Oct 2019 13:20:58 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
- 13:20:58 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Biwen Li <biwen.li@nxp.com>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [v4,2/2] i2c: mux: pca954x: support property idle-state
-Thread-Topic: [v4,2/2] i2c: mux: pca954x: support property idle-state
-Thread-Index: AQHVh+cyjaomJenpPUeREnQ0DR7+C6dlFOwA
-Date:   Mon, 21 Oct 2019 13:20:58 +0000
-Message-ID: <07b1e1d8-4112-d9b1-2a05-21da09fa020c@axentia.se>
-References: <20191021080048.47189-1-biwen.li@nxp.com>
- <20191021080048.47189-2-biwen.li@nxp.com>
-In-Reply-To: <20191021080048.47189-2-biwen.li@nxp.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR09CA0074.eurprd09.prod.outlook.com
- (2603:10a6:7:3d::18) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 64408f06-f603-4281-0dd8-08d756298294
-x-ms-traffictypediagnostic: DB3PR0202MB3403:
-x-microsoft-antispam-prvs: <DB3PR0202MB3403521D3CFB1B391E23205ABC690@DB3PR0202MB3403.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0197AFBD92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(39830400003)(346002)(366004)(396003)(199004)(189003)(64756008)(3846002)(66556008)(66476007)(229853002)(6116002)(14454004)(71190400001)(71200400001)(6486002)(81166006)(81156014)(8676002)(76176011)(52116002)(99286004)(6246003)(4326008)(2501003)(36756003)(6436002)(508600001)(66946007)(66446008)(4001150100001)(256004)(14444005)(25786009)(54906003)(486006)(86362001)(8936002)(186003)(31696002)(2906002)(102836004)(6506007)(5660300002)(476003)(2616005)(58126008)(66066001)(65956001)(65806001)(26005)(446003)(316002)(53546011)(386003)(7736002)(6512007)(31686004)(305945005)(110136005)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3403;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1Nm4b/zGc1Fcsac402X0m5QKlZ0OFEmmk2Ka8FLmDl5HAzRklUv6Fb+I8JSq/EnFHme8NK7K6DwnPZUKtB4KVxwp1Y+Euk1gEkO3iht8dlqhtdaUj9ccFRW90Xy7oTq+dO30545ev1ynztr7wLpcsmuvgIRjTrdM30rC3RA6DkeiQhcU/xaVEPNMKgEGT4bSFzdzZM8yrzSHdqL+1AFdrfoU+HGbYyWIzuVK5Yck/U/niHn9ZuwhwTm0gIVVPdxRxNxi8sburNhJHkTrxiag+p0Bgl6uqtwzc4SsDDt/2AVKudk3Au/FNRCt+YZisdQu+lMvHDO1XhBFXXU5J+EqA3gwrmv+GjYMZlzrAodtvzjttrBko1T1wWlwqDYy04eoZc2Ct6Qg6r4guKPdqpxd6mlzZxGE1U8bBPN0v+XRCfY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <93F84E40E2746042ADF351B71338A870@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 21 Oct 2019 09:23:28 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:51660 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727962AbfJUNX2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 09:23:28 -0400
+Received: by mail-wm1-f47.google.com with SMTP id q70so6144191wme.1
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 06:23:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CDpQCC3yQaQMDA2jPXME+EFagP8LNoO6pNZidHidAbs=;
+        b=WNtwQkYbCYYxfHd5g5Gg7/NxW/2r1vdfDzKQVM1p0GqmijVDR7ay0t8fQd49OhlVH8
+         v1xTzmO7RCzs8DIzM+GC1R+O/e9f4IXYhWphWBnRs1g9+uSjZ/UW9LNNQ6R6Xe054ORJ
+         rZW1kH/clT1ugXzyFKnFBKBW/sYlqn3lsi+OjTQ52Ws6u5zyNAJmXuHGRrGD/FU/o34N
+         6VMaoced7C9knxUN7e5A0DpnK4WQdf+FwmTioMRySDT67OUqbhIt1+3pNerW9RgQp6Rt
+         0DUE2wRdqWq04NS2c5o1sne3YLzKdy0wiW05agOS2RdADaTvlKraAjujh/a4cgF4HKUu
+         o6nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CDpQCC3yQaQMDA2jPXME+EFagP8LNoO6pNZidHidAbs=;
+        b=SPdB074FP+vp/P2Vn9Q7u3bhhJY18lDc5N5DdLehNLY70j574ok/8RFE2dtyrk8MO0
+         SCaI0cKn6cv8DjWT1OHuZq7vK+5+dqipmoHPVRsW8fr7I50oC7tn8MNu61GJm/G1jd3w
+         rp6X4SVGKN56sAjQ3jMx4O71jzaDPQblZs97exjP2kEhQJsiVRFcwzVFV1bsFLXNjucf
+         Zd670RLn4rkI0Leh41fQ8HXU9fY0zqftPv/Y9Ya3pNF+llqgrUOabA4WQ8dhPUGu3QL4
+         LCAKPlQeHNT45fIAKSEsiMZeClXyu8y9xpDmVzF8S/doQY7skO+Hw8+KDTdcjxXnGCbH
+         Tlsw==
+X-Gm-Message-State: APjAAAWe4fYt8fspDQKjo1v1mpdB+aOmntPTlN+1kCxYpsbDwTIs+jr1
+        LR7G/CPhKR+jLVwuqaZ/Z8MIRQ==
+X-Google-Smtp-Source: APXvYqzMvhIv/kFvCKgvdmqwvVk+AwoAtWuBDkfvwp/J9cbsOyOGAGd2wS++y4H9TfIXc0XMmtYvFg==
+X-Received: by 2002:a05:600c:3cb:: with SMTP id z11mr17883575wmd.134.1571664204796;
+        Mon, 21 Oct 2019 06:23:24 -0700 (PDT)
+Received: from localhost.localdomain (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id k8sm29169887wrg.15.2019.10.21.06.23.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 06:23:24 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] dt-bindings: usb: dwc3: Move Amlogic G12A DWC3 Glue Bindings to YAML schemas
+Date:   Mon, 21 Oct 2019 15:23:22 +0200
+Message-Id: <20191021132322.25256-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64408f06-f603-4281-0dd8-08d756298294
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 13:20:58.2652
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UnoshOIgmy6VrDVeKYZZehuK68G2PED61IfKQr7UHNOUCBInCcyWSIC+4RdCFtkb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3403
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMjAxOS0xMC0yMSAxMDowMCwgQml3ZW4gTGkgd3JvdGU6DQo+IFRoaXMgc3VwcG9ydHMgcHJv
-cGVydHkgaWRsZS1zdGF0ZQ0KPiANCg0KWW91IHNob3VsZCBleHBhbmQgdGhpcyBhIGxpdHRsZSBi
-aXQgdG8gZXhwbGFpbiB0aGF0IGlkbGUtc3RhdGUsIGlmIHByZXNlbnQsDQpvdmVycmlkZXMgaTJj
-LW11eC1pZGxlLWRpc2Nvbm5lY3QuIFlvdSBjb3VsZCBhbHNvIG1lbnRpb24geW91ciB1c2UgY2Fz
-ZQ0Kd2hlcmUgeW91IG5lZWQgdG8gYXZvaWQgZGlzY29ubmVjdHMgb24gcHJvYmUvcmVzdW1lLg0K
-DQo+IFNpZ25lZC1vZmYtYnk6IEJpd2VuIExpIDxiaXdlbi5saUBueHAuY29tPg0KPiAtLS0NCj4g
-Q2hhbmdlIGluIHY0Og0KPiAJLSByZW5hbWUgZnVuY3Rpb24NCj4gCSAgcGNhOTU0eF9jYWxjdWxh
-dGVfY2hhbiAtPiBwY2E5NTR4X3JlZ3ZhbA0KPiANCj4gQ2hhbmdlIGluIHYzOg0KPiAJLSB1cGRh
-dGUgc3ViamVjdCBhbmQgZGVzY3JpcHRpb24NCj4gCS0gYWRkIGEgaGVscGVyIGZ1bmN0aW9uIHBj
-YTk1NHhfY2FsY3VsYXRlX2NoYW4oKQ0KPiANCj4gQ2hhbmdlIGluIHYyOg0KPiAJLSB1cGRhdGUg
-c3ViamVjdCBhbmQgZGVzY3JpcHRpb24NCj4gCS0gYWRkIHByb3BlcnR5IGlkbGUtc3RhdGUNCj4g
-DQo+ICBkcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4LXBjYTk1NHguYyB8IDU5ICsrKysrKysrKysr
-KysrKysrKy0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwg
-MjMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvbXV4ZXMvaTJj
-LW11eC1wY2E5NTR4LmMgYi9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4LXBjYTk1NHguYw0KPiBp
-bmRleCA5MjNhYTNhNWEzZGMuLmU1NjZjNGNkOGJhNSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9p
-MmMvbXV4ZXMvaTJjLW11eC1wY2E5NTR4LmMNCj4gKysrIGIvZHJpdmVycy9pMmMvbXV4ZXMvaTJj
-LW11eC1wY2E5NTR4LmMNCj4gQEAgLTg2LDcgKzg2LDcgQEAgc3RydWN0IHBjYTk1NHggew0KPiAg
-DQo+ICAJdTggbGFzdF9jaGFuOwkJLyogbGFzdCByZWdpc3RlciB2YWx1ZSAqLw0KPiAgCS8qIE1V
-WF9JRExFX0FTX0lTLCBNVVhfSURMRV9ESVNDT05ORUNUIG9yID49IDAgZm9yIGNoYW5uZWwgKi8N
-Cj4gLQlzOCBpZGxlX3N0YXRlOw0KPiArCXMzMiBpZGxlX3N0YXRlOw0KPiAgDQo+ICAJc3RydWN0
-IGkyY19jbGllbnQgKmNsaWVudDsNCj4gIA0KPiBAQCAtMjI5LDIwICsyMjksMjMgQEAgc3RhdGlj
-IGludCBwY2E5NTR4X3JlZ193cml0ZShzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXAsDQo+ICAJCQkJ
-STJDX1NNQlVTX0JZVEUsICZkdW1teSk7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyB1OCBwY2E5NTR4
-X3JlZ3ZhbChzdHJ1Y3QgcGNhOTU0eCAqZGF0YSwgdTggY2hhbikNCj4gK3sNCj4gKwkvKiB3ZSBt
-YWtlIHN3aXRjaGVzIGxvb2sgbGlrZSBtdXhlcywgbm90IHN1cmUgaG93IHRvIGJlIHNtYXJ0ZXIg
-Ki8NCg0KSSBrbm93IHlvdSBhcmUganVzdCBtb3ZpbmcgdGhlIGNvbW1lbnQgYXJvdW5kLCBidXQg
-cGxlYXNlIGZpeCB0aGUgc2VudGVuY2UNCnRvIHN0YXJ0IHdpdGggYSBjYXBpdGFsIGxldHRlciBh
-bmQgZW5kIHdpdGggYSBwZXJpb2QuIFNvcnJ5IEkgZGlkbid0DQpjYXRjaCB0aGlzIGluIHYzLg0K
-DQo+ICsJaWYgKGRhdGEtPmNoaXAtPm11eHR5cGUgPT0gcGNhOTU0eF9pc211eCkNCj4gKwkJcmV0
-dXJuIGNoYW4gfCBkYXRhLT5jaGlwLT5lbmFibGU7DQo+ICsJZWxzZQ0KPiArCQlyZXR1cm4gMSA8
-PCBjaGFuOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgaW50IHBjYTk1NHhfc2VsZWN0X2NoYW4oc3Ry
-dWN0IGkyY19tdXhfY29yZSAqbXV4YywgdTMyIGNoYW4pDQo+ICB7DQo+ICAJc3RydWN0IHBjYTk1
-NHggKmRhdGEgPSBpMmNfbXV4X3ByaXYobXV4Yyk7DQo+ICAJc3RydWN0IGkyY19jbGllbnQgKmNs
-aWVudCA9IGRhdGEtPmNsaWVudDsNCj4gLQljb25zdCBzdHJ1Y3QgY2hpcF9kZXNjICpjaGlwID0g
-ZGF0YS0+Y2hpcDsNCj4gIAl1OCByZWd2YWw7DQo+ICAJaW50IHJldCA9IDA7DQo+ICANCj4gLQkv
-KiB3ZSBtYWtlIHN3aXRjaGVzIGxvb2sgbGlrZSBtdXhlcywgbm90IHN1cmUgaG93IHRvIGJlIHNt
-YXJ0ZXIgKi8NCj4gLQlpZiAoY2hpcC0+bXV4dHlwZSA9PSBwY2E5NTR4X2lzbXV4KQ0KPiAtCQly
-ZWd2YWwgPSBjaGFuIHwgY2hpcC0+ZW5hYmxlOw0KPiAtCWVsc2UNCj4gLQkJcmVndmFsID0gMSA8
-PCBjaGFuOw0KPiAtDQo+ICsJcmVndmFsID0gcGNhOTU0eF9yZWd2YWwoZGF0YSwgKHU4KShjaGFu
-ICYgMHhmZikpOw0KDQpCb3RoIGEgbWFzayBhbmQgYSBjYXN0IHRvIGRvIHdoYXQgdGhlIGNvbXBp
-bGVyIHNob3VsZCBiZSBkb2luZyBhbGwgYnkgaXRzZWxmPw0KSWYgeW91IG5lZWQgdG8ga2lsbCBh
-IHdhcm5pbmcsIG9yIHNvbWV0aGluZywgcGxlYXNlIGRvIGp1c3Qgb25lIG9yIHRoZW0uIEJ1dA0K
-cGVyc29uYWxseSBJIHByZWZlciB0aGUgc2hvcnQsIHN3ZWV0IGFuZCB1bmNsdXR0ZXJlZDoNCg0K
-CXJlZ3ZhbCA9IHBjYTk1NHhfcmVndmFsKGRhdGEsIGNoYW4pOw0KDQo+ICAJLyogT25seSBzZWxl
-Y3QgdGhlIGNoYW5uZWwgaWYgaXRzIGRpZmZlcmVudCBmcm9tIHRoZSBsYXN0IGNoYW5uZWwgKi8N
-Cj4gIAlpZiAoZGF0YS0+bGFzdF9jaGFuICE9IHJlZ3ZhbCkgew0KPiAgCQlyZXQgPSBwY2E5NTR4
-X3JlZ193cml0ZShtdXhjLT5wYXJlbnQsIGNsaWVudCwgcmVndmFsKTsNCj4gQEAgLTI1Niw3ICsy
-NTksNyBAQCBzdGF0aWMgaW50IHBjYTk1NHhfZGVzZWxlY3RfbXV4KHN0cnVjdCBpMmNfbXV4X2Nv
-cmUgKm11eGMsIHUzMiBjaGFuKQ0KPiAgew0KPiAgCXN0cnVjdCBwY2E5NTR4ICpkYXRhID0gaTJj
-X211eF9wcml2KG11eGMpOw0KPiAgCXN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSBkYXRhLT5j
-bGllbnQ7DQo+IC0JczggaWRsZV9zdGF0ZTsNCj4gKwlzMzIgaWRsZV9zdGF0ZTsNCj4gIA0KPiAg
-CWlkbGVfc3RhdGUgPSBSRUFEX09OQ0UoZGF0YS0+aWRsZV9zdGF0ZSk7DQo+ICAJaWYgKGlkbGVf
-c3RhdGUgPj0gMCkNCj4gQEAgLTQwMiw2ICs0MDUsMTcgQEAgc3RhdGljIHZvaWQgcGNhOTU0eF9j
-bGVhbnVwKHN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eGMpDQo+ICAJaTJjX211eF9kZWxfYWRhcHRl
-cnMobXV4Yyk7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpbnQgcGNhOTU0eF9pbml0KHN0cnVjdCBp
-MmNfY2xpZW50ICpjbGllbnQsIHN0cnVjdCBwY2E5NTR4ICpkYXRhKQ0KPiArew0KPiArCWlmIChk
-YXRhLT5pZGxlX3N0YXRlID49IDApIHsNCj4gKwkJZGF0YS0+bGFzdF9jaGFuID0gcGNhOTU0eF9y
-ZWd2YWwoZGF0YSwgKHU4KShkYXRhLT5pZGxlX3N0YXRlICYgMHhmZikpOw0KDQpEaXRvLg0KDQo+
-ICsJfSBlbHNlIHsNCj4gKwkJLyogRGlzY29ubmVjdCBtdWx0aXBsZXhlciAqLw0KPiArCQlkYXRh
-LT5sYXN0X2NoYW4gPSAwOw0KPiArCX0NCj4gKwlyZXR1cm4gaTJjX3NtYnVzX3dyaXRlX2J5dGUo
-Y2xpZW50LCBkYXRhLT5sYXN0X2NoYW4pOw0KDQpIZXJlJ3MgYW5vdGhlciB0aGluZyBJIG1pc3Nl
-ZCBpbiB0aGUgZWFybGllciBpdGVyYXRpb25zLiBJZiBpMmNfc21idXNfd3JpdGVfYnl0ZQ0KZmFp
-bHMgaGVyZSwgSSB0aGluayB5b3Ugc2hvdWxkIHNldCBkYXRhLT5sYXN0X2NoYW4gdG8gemVyby4g
-Rm9yIHRoZSBjYWxsIGZyb20NCnByb2JlIGl0IG9idmlvdXNseSBkb2Vzbid0IG1hdHRlciBtdWNo
-LCBidXQgSSB0aGluayB0aGUgY2FsbCBkdXJpbmcgcmVzdW1lIGlzDQpiZXR0ZXIgb2ZmIHdpdGgg
-c3VjaCBleHRyYSBwcmVjYXV0aW9uIGluIHBsYWNlLg0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+ICt9
-DQo+ICsNCj4gIC8qDQo+ICAgKiBJMkMgaW5pdC9wcm9iaW5nL2V4aXQgZnVuY3Rpb25zDQo+ICAg
-Ki8NCj4gQEAgLTQxMSw3ICs0MjUsNiBAQCBzdGF0aWMgaW50IHBjYTk1NHhfcHJvYmUoc3RydWN0
-IGkyY19jbGllbnQgKmNsaWVudCwNCj4gIAlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXAgPSBjbGll
-bnQtPmFkYXB0ZXI7DQo+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gJmNsaWVudC0+ZGV2Ow0KPiAg
-CXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBkZXYtPm9mX25vZGU7DQo+IC0JYm9vbCBpZGxlX2Rp
-c2Nvbm5lY3RfZHQ7DQo+ICAJc3RydWN0IGdwaW9fZGVzYyAqZ3BpbzsNCj4gIAlzdHJ1Y3QgaTJj
-X211eF9jb3JlICptdXhjOw0KPiAgCXN0cnVjdCBwY2E5NTR4ICpkYXRhOw0KPiBAQCAtNDYyLDIz
-ICs0NzUsMjQgQEAgc3RhdGljIGludCBwY2E5NTR4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpj
-bGllbnQsDQo+ICAJCX0NCj4gIAl9DQo+ICANCj4gLQkvKiBXcml0ZSB0aGUgbXV4IHJlZ2lzdGVy
-IGF0IGFkZHIgdG8gdmVyaWZ5DQo+ICsJZGF0YS0+aWRsZV9zdGF0ZSA9IE1VWF9JRExFX0FTX0lT
-Ow0KPiArCWlmIChvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImlkbGUtc3RhdGUiLCAmZGF0YS0+
-aWRsZV9zdGF0ZSkpIHsNCj4gKwkJaWYgKG5wICYmIG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwg
-ImkyYy1tdXgtaWRsZS1kaXNjb25uZWN0IikpDQo+ICsJCQlkYXRhLT5pZGxlX3N0YXRlID0gTVVY
-X0lETEVfRElTQ09OTkVDVDsNCj4gKwl9DQo+ICsNCj4gKwkvKg0KPiArCSAqIFdyaXRlIHRoZSBt
-dXggcmVnaXN0ZXIgYXQgYWRkciB0byB2ZXJpZnkNCj4gIAkgKiB0aGF0IHRoZSBtdXggaXMgaW4g
-ZmFjdCBwcmVzZW50LiBUaGlzIGFsc28NCj4gLQkgKiBpbml0aWFsaXplcyB0aGUgbXV4IHRvIGRp
-c2Nvbm5lY3RlZCBzdGF0ZS4NCj4gKwkgKiBpbml0aWFsaXplcyB0aGUgbXV4IHRvIGEgY2hhbm5l
-bA0KPiArCSAqIG9yIGRpc2Nvbm5lY3RlZCBzdGF0ZS4NCj4gIAkgKi8NCj4gLQlpZiAoaTJjX3Nt
-YnVzX3dyaXRlX2J5dGUoY2xpZW50LCAwKSA8IDApIHsNCj4gKwlyZXQgPSBwY2E5NTR4X2luaXQo
-Y2xpZW50LCBkYXRhKTsNCj4gKwlpZiAocmV0IDwgMCkgew0KPiAgCQlkZXZfd2FybihkZXYsICJw
-cm9iZSBmYWlsZWRcbiIpOw0KPiAgCQlyZXR1cm4gLUVOT0RFVjsNCj4gIAl9DQo+ICANCj4gLQlk
-YXRhLT5sYXN0X2NoYW4gPSAwOwkJICAgLyogZm9yY2UgdGhlIGZpcnN0IHNlbGVjdGlvbiAqLw0K
-PiAtCWRhdGEtPmlkbGVfc3RhdGUgPSBNVVhfSURMRV9BU19JUzsNCj4gLQ0KPiAtCWlkbGVfZGlz
-Y29ubmVjdF9kdCA9IG5wICYmDQo+IC0JCW9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgImkyYy1t
-dXgtaWRsZS1kaXNjb25uZWN0Iik7DQo+IC0JaWYgKGlkbGVfZGlzY29ubmVjdF9kdCkNCj4gLQkJ
-ZGF0YS0+aWRsZV9zdGF0ZSA9IE1VWF9JRExFX0RJU0NPTk5FQ1Q7DQo+IC0NCj4gIAlyZXQgPSBw
-Y2E5NTR4X2lycV9zZXR1cChtdXhjKTsNCj4gIAlpZiAocmV0KQ0KPiAgCQlnb3RvIGZhaWxfY2xl
-YW51cDsNCj4gQEAgLTUzMSw4ICs1NDUsNyBAQCBzdGF0aWMgaW50IHBjYTk1NHhfcmVzdW1lKHN0
-cnVjdCBkZXZpY2UgKmRldikNCj4gIAlzdHJ1Y3QgaTJjX211eF9jb3JlICptdXhjID0gaTJjX2dl
-dF9jbGllbnRkYXRhKGNsaWVudCk7DQo+ICAJc3RydWN0IHBjYTk1NHggKmRhdGEgPSBpMmNfbXV4
-X3ByaXYobXV4Yyk7DQo+ICANCj4gLQlkYXRhLT5sYXN0X2NoYW4gPSAwOw0KPiAtCXJldHVybiBp
-MmNfc21idXNfd3JpdGVfYnl0ZShjbGllbnQsIDApOw0KPiArCXJldHVybiBwY2E5NTR4X2luaXQo
-Y2xpZW50LCBkYXRhKTsNCj4gIH0NCj4gICNlbmRpZg0KPiAgDQo+IA0KDQo=
+Now that we have the DT validation in place, let's convert the device tree
+bindings for the Amlogic G12A DWC3 Glue Bindings over to a YAML schemas,
+the AXG and GXL glue bindings will be converted later.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/usb/amlogic,dwc3.txt  |  88 ------------
+ .../usb/amlogic,meson-g12a-usb-ctrl.yaml      | 132 ++++++++++++++++++
+ 2 files changed, 132 insertions(+), 88 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+
+diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+index b9f04e617eb7..9a8b631904fd 100644
+--- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+@@ -40,91 +40,3 @@ Example device nodes:
+ 				phy-names = "usb2-phy", "usb3-phy";
+ 			};
+ 		};
+-
+-Amlogic Meson G12A DWC3 USB SoC Controller Glue
+-
+-The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
+-in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
+-only.
+-
+-A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
+-
+-One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
+-
+-The DWC3 Glue controls the PHY routing and power, an interrupt line is
+-connected to the Glue to serve as OTG ID change detection.
+-
+-Required properties:
+-- compatible:	Should be "amlogic,meson-g12a-usb-ctrl"
+-- clocks:	a handle for the "USB" clock
+-- resets:	a handle for the shared "USB" reset line
+-- reg:		The base address and length of the registers
+-- interrupts:	the interrupt specifier for the OTG detection
+-- phys: 	handle to used PHYs on the system
+-	- a <0> phandle can be used if a PHY is not used
+-- phy-names:	names of the used PHYs on the system :
+-	- "usb2-phy0" for USB2 PHY0 if USBHOST_A port is used
+-	- "usb2-phy1" for USB2 PHY1 if USBOTG_B port is used
+-	- "usb3-phy0" for USB3 PHY if USB3_0 is used
+-- dr_mode:	should be "host", "peripheral", or "otg" depending on
+-	the usage and configuration of the OTG Capable port.
+-	- "host" and "peripheral" means a fixed Host or Device only connection
+-	- "otg" means the port can be used as both Host or Device and
+-	  be switched automatically using the OTG ID pin.
+-
+-Optional properties:
+-- vbus-supply:	should be a phandle to the regulator controlling the VBUS
+-		power supply when used in OTG switchable mode
+-
+-Required child nodes:
+-
+-A child node must exist to represent the core DWC3 IP block. The name of
+-the node is not important. The content of the node is defined in dwc3.txt.
+-
+-A child node must exist to represent the core DWC2 IP block. The name of
+-the node is not important. The content of the node is defined in dwc2.txt.
+-
+-PHY documentation is provided in the following places:
+-- Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+-- Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+-
+-Example device nodes:
+-	usb: usb@ffe09000 {
+-			compatible = "amlogic,meson-g12a-usb-ctrl";
+-			reg = <0x0 0xffe09000 0x0 0xa0>;
+-			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+-			#address-cells = <2>;
+-			#size-cells = <2>;
+-			ranges;
+-
+-			clocks = <&clkc CLKID_USB>;
+-			resets = <&reset RESET_USB>;
+-
+-			dr_mode = "otg";
+-
+-			phys = <&usb2_phy0>, <&usb2_phy1>,
+-			       <&usb3_pcie_phy PHY_TYPE_USB3>;
+-			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
+-
+-			dwc2: usb@ff400000 {
+-				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
+-				reg = <0x0 0xff400000 0x0 0x40000>;
+-				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
+-				clock-names = "ddr";
+-				phys = <&usb2_phy1>;
+-				dr_mode = "peripheral";
+-				g-rx-fifo-size = <192>;
+-				g-np-tx-fifo-size = <128>;
+-				g-tx-fifo-size = <128 128 16 16 16>;
+-			};
+-
+-			dwc3: usb@ff500000 {
+-				compatible = "snps,dwc3";
+-				reg = <0x0 0xff500000 0x0 0x100000>;
+-				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+-				dr_mode = "host";
+-				snps,dis_u2_susphy_quirk;
+-				snps,quirk-frame-length-adjustment;
+-			};
+-	};
+diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+new file mode 100644
+index 000000000000..45bcc98ee9a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+@@ -0,0 +1,132 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/usb/amlogic,meson-g12a-usb-ctrl.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Meson G12A DWC3 USB SoC Controller Glue
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++description: |
++  The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
++  in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
++  only.
++
++  A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
++
++  One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
++
++  The DWC3 Glue controls the PHY routing and power, an interrupt line is
++  connected to the Glue to serve as OTG ID change detection.
++
++properties:
++  compatible:
++    enum:
++      - amlogic,meson-g12a-usb-ctrl
++
++  ranges: true
++
++  "#address-cells":
++    enum: [ 1, 2 ]
++
++  "#size-cells":
++    enum: [ 1, 2 ]
++
++  clocks:
++    minItems: 1
++
++  resets:
++    minItems: 1
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  phy-names:
++    items:
++      - const: usb2-phy0 # USB2 PHY0 if USBHOST_A port is used
++      - const: usb2-phy1 # USB2 PHY1 if USBOTG_B port is used
++      - const: usb3-phy0 # USB3 PHY if USB3_0 is used
++
++  phys:
++    minItems: 1
++    maxItems: 3
++
++  dr_mode:
++    enum:
++      - host # fixed Host connection
++      - peripheral # fixed Device connection
++      - otg # Host or Device and switched automatically using the OTG ID pin
++
++  power-domains:
++    maxItems: 1
++
++  vbus-supply:
++    description: VBUS power supply when used in OTG switchable mode
++    maxItems: 1
++
++patternProperties:
++  "^usb@[0-9a-f]+$":
++    type: object
++
++additionalProperties: false
++
++required:
++  - compatible
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
++  - clocks
++  - resets
++  - reg
++  - interrupts
++  - phy-names
++  - phys
++  - dr_mode
++
++examples:
++  - |
++    usb: usb@ffe09000 {
++          compatible = "amlogic,meson-g12a-usb-ctrl";
++          reg = <0x0 0xffe09000 0x0 0xa0>;
++          interrupts = <16>;
++          #address-cells = <1>;
++          #size-cells = <1>;
++          ranges;
++
++          clocks = <&clkc_usb>;
++          resets = <&reset_usb>;
++
++          dr_mode = "otg";
++
++          phys = <&usb2_phy0>, <&usb2_phy1>, <&usb3_phy0>;
++          phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
++
++          dwc2: usb@ff400000 {
++              compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
++              reg = <0xff400000 0x40000>;
++              interrupts = <31>;
++              clocks = <&clkc_usb1>;
++              clock-names = "ddr";
++              phys = <&usb2_phy1>;
++              dr_mode = "peripheral";
++              g-rx-fifo-size = <192>;
++              g-np-tx-fifo-size = <128>;
++              g-tx-fifo-size = <128 128 16 16 16>;
++          };
++
++          dwc3: usb@ff500000 {
++              compatible = "snps,dwc3";
++              reg = <0xff500000 0x100000>;
++              interrupts = <30>;
++              dr_mode = "host";
++              snps,dis_u2_susphy_quirk;
++              snps,quirk-frame-length-adjustment;
++          };
++    };
++
+-- 
+2.22.0
+
