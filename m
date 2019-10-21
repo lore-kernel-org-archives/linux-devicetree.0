@@ -2,96 +2,102 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA7DCA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B291CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949CC20656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DAAB20700
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNPXEVPO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nlR8/GBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbfJUFF4 (ORCPT
+        id S1725802AbfJUFN0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 01:05:56 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36859 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfJUFF4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 01:05:56 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 23so7010151pgk.3;
-        Sun, 20 Oct 2019 22:05:54 -0700 (PDT)
+        Mon, 21 Oct 2019 01:13:26 -0400
+Received: from mail-pg1-f170.google.com ([209.85.215.170]:33083 "EHLO
+        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfJUFN0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 01:13:26 -0400
+Received: by mail-pg1-f170.google.com with SMTP id i76so7029715pgc.0
+        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 22:13:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Pxy+SjxJxYfLUhAFsu0Nbm4mmirWGbXqhMNfG1rN5fc=;
-        b=uNPXEVPOhc7PtyHvjnTOr9Tw37fVORVAovKWrb9mkg1g5++6EKEnlZDnc7iOZJ9eXJ
-         jzDVZkD1sFNTDkJPYgvOY2QBJEWbRj45nvsRwXqY3Nlk/vLaZcpjhGVRsW99sHaKGcLW
-         GakTy01QtnKQRDi+JMaaxT8Xv2cPE/KnCMB57/fuArbOZ1+D/hNl3w17duJl7njCPF7j
-         PeIoqIcRGGdUhP37YmBcbQF/e8G8EBWo0Kmo5iVsDMx2fymFWZMuwduY1J1lz2Vu85GP
-         c4WEBsOBYHjiCTk6AQbPZ439y5u7tQ1FP+cVkWPEnpoVQxqeHdJDvLpeDEY8kxbe0opV
-         8JYA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vTvX2ZoO7TzY2BxJZxSJoG0yIQ3DzcVkh48Y2GNXR2M=;
+        b=nlR8/GBlqaQpZhcCEG1KNYmAF8kFV86aPV3heKZ7aty+qbvXhJDQTcDo3Sgsp4NGvT
+         jkWjQeaK6K/tYk8i+Mbe/pK/ib96IDUbaNdjRBTWuBmDEDDcQeO5pq3q9KRVxBKjHQfW
+         VZ5VULsDVbjCgbrIISLnn+WvucIVrtmkmr4IQ/IoEVmQIdHlMt+Ey8JbBMhNLRuxHZwQ
+         kUWlhjJ8nQEV6vUFLGPvGck0mIwGqw+ZZ8ChMrYMNxuH6/k+uMw8tFu5q71Ikc3Zk1fs
+         5KqkfzzIAAQ3S9NXjcJl7/FLDFS7znUizsULiPbYQ8NAf8CcIZu0oPhbLUNp9cLzWvwl
+         rcZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Pxy+SjxJxYfLUhAFsu0Nbm4mmirWGbXqhMNfG1rN5fc=;
-        b=UUzWmcY0fPVlMAIx5jRuyYA1fZfOErzB2v3w13reHtkiQilgkGPFRHvUiRQIx+8AHi
-         LsQYJx58cBbrlHqzALZx6Vrn+5acD4RWmj3gL/3f5FvPLSDUeVs1lDgrmzLjf0LOcjqB
-         37yosokuinJv1V4Hxb8f14ozQ3vgvBdBaaLB38IpTu8IX49fe6aMN2yq2evfZ1ETMtD3
-         u70clpJyeGLoGFGjYzhp+2e96P7svPWg7/kp8IYAc6HOaZifcILyJdhcAjhDUUbKZZVP
-         rHGY8ZnPYeOOYqN7HQI9d1IM0TxPLYdBGwx6BviU3DdN2LWT4Ak+zs8IlqeNA3LgJxy2
-         ZCWw==
-X-Gm-Message-State: APjAAAWUllt4KCWL8gHbFUJJuM6clDyxyzp8/G2Ru0t4RiRC80qowvap
-        5+RHQRUTZQXDlKmDtULSSos=
-X-Google-Smtp-Source: APXvYqzkDit0WXzbdvh8WzqFu4bucecX6K6NFb7w5V7MWhpjim8QXFo8+etuqfs/ce9dWcE9Io86Sg==
-X-Received: by 2002:a17:90a:8002:: with SMTP id b2mr404997pjn.39.1571634353641;
-        Sun, 20 Oct 2019 22:05:53 -0700 (PDT)
-Received: from localhost.localdomain ([94.204.252.234])
-        by smtp.gmail.com with ESMTPSA id 127sm13611191pfy.56.2019.10.20.22.05.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 20 Oct 2019 22:05:52 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for VIM3L
-Date:   Mon, 21 Oct 2019 09:04:55 +0400
-Message-Id: <1571634295-20154-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vTvX2ZoO7TzY2BxJZxSJoG0yIQ3DzcVkh48Y2GNXR2M=;
+        b=fzJb3gjurewRaLIGmBq53NCD0VaDWDFL5Vq8pZaho2aIOxk/i+3tRDbDV1wmq+SZdn
+         0slrhn4eGAl8fA9L3LVPbVDVGC7Dwn/utWXBz8v2IYkPZ9NU+6NparUyKAu0rSvMboiT
+         t3AkD/BYK+fRCVvt7gIXcd6yUKUawzEGCdQAM9VFZ+ztVxreBYYQ1DaJ52kVOpjyxyk0
+         O7wB1Z/1oA//ET/Y+7pF/p0vNCq/yO10jccNwja8wNR2XQz4W3fZ7FsyFmZ/qYW+1iqr
+         YrMfQXz8eXiwHbJpX3KyDl1dMU0zwkSUtIMJbcuJt5fKYwXXmh7/58yG0OhNDtaUtBgK
+         CCOQ==
+X-Gm-Message-State: APjAAAWieVTx/qvUBFxvt39Q/Ul1ZZdxV9FozLjHjDatAVHE92shkY+p
+        nDVaRRo/Uy/rBtnnFcHRxYlLcg==
+X-Google-Smtp-Source: APXvYqyy5kW+io7pprvVHWwtLdIyuNVF+sU4eQmX9yUQuw6Xz3npw4kLPeNqS4AseF/48jCFDo2P9w==
+X-Received: by 2002:aa7:9295:: with SMTP id j21mr20462574pfa.87.1571634805702;
+        Sun, 20 Oct 2019 22:13:25 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h68sm15716862pfb.149.2019.10.20.22.13.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Oct 2019 22:13:25 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/11] arm64: dts: qcom: msm8996: Introduce IFC6640
+Date:   Sun, 20 Oct 2019 22:13:11 -0700
+Message-Id: <20191021051322.297560-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Chip on the board is S905D3 not S905X3.
+Refactor msm8996 and db820c in order to make it follow the structure of newer
+platforms, move db820c specific things to db820c.dtsi and then introduce the
+Informace 6640 Single Board Computer.
 
-Fixes: 1d7c541b8a5b ("soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L")
+Bjorn Andersson (11):
+  arm64: dts: qcom: db820c: Move non-soc entries out of /soc
+  arm64: dts: qcom: msm8996: Use node references in db820c
+  arm64: dts: qcom: msm8996: Move regulator consumers to db820c
+  arm64: dts: qcom: msm8996: Move regulators to db820c
+  arm64: dts: qcom: db820c: Group root nodes
+  arm64: dts: qcom: db820c: Sort all nodes
+  arm64: dts: qcom: db820c: Remove pin specific files
+  arm64: dts: qcom: msm8996: Pad addresses
+  arm64: dts: qcom: msm8996: Sort all nodes in msm8996.dtsi
+  arm64: dts: qcom: db820c: Use regulator names from schematics
+  arm64: dts: qcom: msm8996: Introduce IFC6640
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- drivers/soc/amlogic/meson-gx-socinfo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ .../boot/dts/qcom/apq8096-db820c-pins.dtsi    |  109 -
+ .../dts/qcom/apq8096-db820c-pmic-pins.dtsi    |   92 -
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi  | 1416 ++++---
+ arch/arm64/boot/dts/qcom/apq8096-ifc6640.dts  |  412 ++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         | 3505 ++++++++---------
+ 6 files changed, 2982 insertions(+), 2553 deletions(-)
+ delete mode 100644 arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
+ delete mode 100644 arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8096-ifc6640.dts
 
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 87ed558..e612dae 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -69,7 +69,7 @@ static const struct meson_gx_package_id {
- 	{ "S922X", 0x29, 0x40, 0xf0 },
- 	{ "A311D", 0x29, 0x10, 0xf0 },
- 	{ "S905X3", 0x2b, 0x5, 0xf },
--	{ "S905X3", 0x2b, 0xb0, 0xf2 },
-+	{ "S905D3", 0x2b, 0xb0, 0xf2 },
- 	{ "A113L", 0x2c, 0x0, 0xf8 },
- };
- 
 -- 
-2.7.4
+2.23.0
 
