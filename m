@@ -2,100 +2,171 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67557CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A47CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1C420656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:43:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571658190;
-	bh=Uc1mZiN26bhX05Z5WaEstN84E/rq90+ldYovSHC25W0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yNbLTcp7ttuQuJKLztXGvntAGgGDd6k7jfaCYbzANlgi++S/dWfrlJRDrq3pm64bK
-	 zuWhT41QRKiSJc4eYYMt17SOGlzYbdgfo+OEfMzmbZ1tBBNPHUPBhb7qpVSh0F75Ft
-	 5wMegfIPJPMMisX+zJiwt1SD4qngy8WwNBaEvzaI=
+	by mail.kernel.org (Postfix) with ESMTP id C954021906
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfJULnJ (ORCPT
+        id S1728566AbfJULn2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:43:09 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53208 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727889AbfJULnI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 07:43:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GIa05QdeyCuYiBMjtkuXZuPCEqcil/OB3E8X/KRg9f8=; b=sSLQpV4xgyAY6dGcffk45c5DN
-        bYwSDBX9NRH33Pns3dCDeOvLco6ycKmY/ahSJuIy5T7lZ9ecs24N9EONYDHm/F4DiFsYxihmc3ZkR
-        RvzbewdbHw/epKuNTuI/2Aj9JLy2vxScz5OIoWgYrY84aYdhvWrAyP97RHO5Meb44fCbA=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Mon, 21 Oct 2019 07:43:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54703 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727889AbfJULn2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 07:43:28 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iMW5Y-00043p-PN; Mon, 21 Oct 2019 11:43:04 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id C3B31274301C; Mon, 21 Oct 2019 12:43:03 +0100 (BST)
-Date:   Mon, 21 Oct 2019 12:43:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Tzung-Bi Shih <tzungbi@google.com>, gwendal@google.com,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        cychiang@google.com, drinkcat@google.com, robh+dt@kernel.org,
-        bleung@google.com, dgreid@google.com
-Subject: Re: [alsa-devel] [PATCH v5 1/4] ASoC: cros_ec_codec: support WoV
-Message-ID: <20191021114303.GC4691@sirena.co.uk>
-References: <20191019070254.23870-1-tzungbi@google.com>
- <20191019143504.1.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
- <659a3d1f-a8e1-268d-5e95-b328aeed601b@collabora.com>
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMW5r-0000lD-GS; Mon, 21 Oct 2019 13:43:23 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMW5n-00081f-On; Mon, 21 Oct 2019 13:43:19 +0200
+Date:   Mon, 21 Oct 2019 13:43:19 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 00/10] Add support for more Kontron i.MX6UL/ULL SoMs and
+ boards
+Message-ID: <20191021114319.krrhdtvycu7zxxie@pengutronix.de>
+References: <20191016150622.21753-1-frieder.schrempf@kontron.de>
+ <20191017081422.65m5dtqznsanfftp@pengutronix.de>
+ <6e6f9cf4-85b3-35e3-1238-11e39855bc08@kontron.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <659a3d1f-a8e1-268d-5e95-b328aeed601b@collabora.com>
-X-Cookie: Why are you so hard to ignore?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6e6f9cf4-85b3-35e3-1238-11e39855bc08@kontron.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 13:41:49 up 156 days, 17:59, 99 users,  load average: 0.02, 0.01,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Frieder,
 
---DSayHWYpDlRfCAAQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 19-10-17 08:24, Schrempf Frieder wrote:
+> Hi Marco,
+> 
+> On 17.10.19 10:14, Marco Felsch wrote:
+> > Hi Frieder,
+> > 
+> > On 19-10-16 15:06, Schrempf Frieder wrote:
+> >> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >>
+> >> In order to support more of the i.MX6UL/ULL-based SoMs and boards by
+> >> Kontron Electronics GmbH, we restructure the devicetrees to share common
+> >> parts and add new devicetrees for the missing boards.
+> >>
+> >> Currently there are the following SoM flavors:
+> >>    * N6310: SoM with i.MX6UL-2, 256MB RAM, 256MB SPI NAND
+> >>    * N6311: SoM with i.MX6UL-2, 512MB RAM, 512MB SPI NAND (new)
+> >>    * N6411: SoM with i.MX6ULL, 512MB RAM, 512MB SPI NAND (new)
+> >>
+> >> Each of the SoMs also features 1MB SPI NOR and an Ethernet PHY. The carrier
+> >> board for the evalkit is the same for all SoMs.
+> >>
+> >> Frieder Schrempf (10):
+> >>    ARM: dts: imx6ul-kontron-n6310: Move common SoM nodes to a separate
+> >>      file
+> >>    ARM: dts: Add support for two more Kontron SoMs N6311 and N6411
+> >>    ARM: dts: imx6ul-kontron-n6310-s: Move common nodes to a separate file
+> >>    ARM: dts: Add support for two more Kontron evalkit boards 'N6311 S'
+> >>      and 'N6411 S'
+> >>    ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen' node with 'stdout-path'
+> >>    ARM: dts: imx6ul-kontron-n6x1x-s: Specify bus-width for SD card and
+> >>      eMMC
+> >>    ARM: dts: imx6ul-kontron-n6x1x-s: Add vbus-supply and overcurrent
+> >>      polarity to usb nodes
+> >>    ARM: dts: imx6ul-kontron-n6x1x-s: Remove an obsolete comment and fix
+> >>      indentation
+> >>    dt-bindings: arm: fsl: Add more Kontron i.MX6UL/ULL compatibles
+> >>    MAINTAINERS: Add an entry for Kontron Electronics ARM board support
+> > 
+> > Did you send all patches to same To: and Cc:?
+> 
+> No, I have a script that runs get_maintainer.pl for each patch. So the 
+> recipients might differ. I only had Krzysztof and Rob as hard-coded 
+> recipients for the whole series.
+> 
+> Do you think I should change this so each recipient receives the whole 
+> series?
 
-On Mon, Oct 21, 2019 at 01:26:04PM +0200, Enric Balletbo i Serra wrote:
+I do it that way because sometimes it is better for the reviewer to see
+the whole context.
 
-> Mark, once applied, could we get an immutable branch from you containing the
-> following already applied patches + this series? We need as we have patches that
-> could conflict on platform/chrome.
+Regards,
+  Marco 
 
-Ugh.  You should have mentioned this before the patches were applied,
-they're on the development branch that has everything in it like I
-normally do which I don't want to rebase (and I think I did a merge up
-of the fixes branch since then anyway).  Hopefully Linus will be able to
-figure out any conflicts that occur.
+> Thanks,
+> Frieder
+> 
+> > 
+> > Regards,
+> >    Marco
+> > 
+> >>
+> >>   .../devicetree/bindings/arm/fsl.yaml          |  14 +
+> >>   MAINTAINERS                                   |   6 +
+> >>   arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts  | 405 +----------------
+> >>   .../boot/dts/imx6ul-kontron-n6310-som.dtsi    |  95 +---
+> >>   arch/arm/boot/dts/imx6ul-kontron-n6311-s.dts  |  16 +
+> >>   .../boot/dts/imx6ul-kontron-n6311-som.dtsi    |  40 ++
+> >>   arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 422 ++++++++++++++++++
+> >>   .../dts/imx6ul-kontron-n6x1x-som-common.dtsi  | 129 ++++++
+> >>   arch/arm/boot/dts/imx6ull-kontron-n6411-s.dts |  16 +
+> >>   .../boot/dts/imx6ull-kontron-n6411-som.dtsi   |  40 ++
+> >>   10 files changed, 685 insertions(+), 498 deletions(-)
+> >>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-s.dts
+> >>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
+> >>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> >>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+> >>   create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-s.dts
+> >>   create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
+> >>
+> >> -- 
+> >> 2.17.1
+> >>
+> >>
+> > 
 
---DSayHWYpDlRfCAAQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2tmcYACgkQJNaLcl1U
-h9CS3wf/aZHpcuMrsOi4FzUhmUl9hMRd9hqhGnfEHe9j8lh09mRayr3O3K95jNkR
-fijdwh59O4VQIfKSR3bvz/dD9ygmkmgFleqzkgelhzDGkkFaKcuJ2z8c1WGZYfrK
-2vRdnZ+pcYAWE+ZkmNkjUJG/6ee+xmn8WlHrzs0IqCqUFoqrSVsUVCpd6h/lm9AQ
-g2q9pCWd0mOwHmmEsd0FvppZtGg3kuJCSq7kKVPGRV3b4pNO0woxG5+DpcDGpHN9
-VWZwEDvJhiYCZkuLZZnhKG8F5srHoUMBuCc48Utl/QF1cOFIL6tINWzj3R/1Y5q9
-sB0BPV6JxMe5fiVi6IA4pC1oFiL2Rg==
-=YCnq
------END PGP SIGNATURE-----
-
---DSayHWYpDlRfCAAQ--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
