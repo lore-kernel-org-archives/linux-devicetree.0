@@ -2,381 +2,893 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E61DCA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DEFCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6692067B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:44:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dysGK81O"
+	by mail.kernel.org (Postfix) with ESMTP id A71242084C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfJUKoB (ORCPT
+        id S1727433AbfJUKox (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:44:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51810 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbfJUKoB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 06:44:01 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q70so5559307wme.1
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 03:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=scLxrXB2JkKl6vta+3mTkAzs1I5wCAnHIXFyhshFKsc=;
-        b=dysGK81OTtl6t75l0UEaZDJAkBvHfbMOONSr32fRuIoZnukYBsO03bIEDhFRqiRLuF
-         1ETEdcHV+Uxpa9tn5lLintCYd1hQu3+wyFUWH+7+7Hhmh0yEBQOa5G22W5d1qIqA29lV
-         416Z9dw+VYQcV/4MPjeU6oSSKLXxy/gb6+Yh7iKyPL1cCBdS7JR3gtCXDJjULMwSh9dT
-         3zgirFv2ndbYtCiDgvDrMKG7ZF6iQJcRvTqo5hPvbCRUubbMCs4aI3wz1CsqSN6YEFnA
-         E3/41go93Dw5cVjmfhOpEMVeGQJPGi2Oj8tRzI+EXfijisFpWvSyOByOzEi+lvvPSWJH
-         23WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=scLxrXB2JkKl6vta+3mTkAzs1I5wCAnHIXFyhshFKsc=;
-        b=flHdWo91ZlZ18JMmmRiYeMtT58xfAkmj5aJ9TfSGsO9rg6veF8nHhRRNUBPE/nhkIh
-         vIVAKL+NGs45neaHVrxbEeLqZ3bQ9iuywdYsDkaJkV8hCCiq5fqRRjsuK9hkpqQppTNe
-         /CKT0bX5/qB65F4VHZBSQc9F9YfouFQhdQAoDsQFu8xl7Qf5l+dLsSDHqefJGDOME73i
-         hDHqWIeO3AHA5YkytDyFidZZANtgDOoqjERM5t6jX1QG0hSCz/wmlS4wmbHyrjWj1uJI
-         ux2OIunZ/8x1u+tOrDTuasAXJ87s6NOW7KUU289TWJzOGZ0qppEF7h4MrKoN39+RmWFw
-         tCpw==
-X-Gm-Message-State: APjAAAWnrxSRJcYLPwtTnhA7xlGwiVDfnTOfnGpOW6lcp1UxvkfnkwEe
-        ai+kgVBfnBDgU1skxBWeFh3cZA==
-X-Google-Smtp-Source: APXvYqyTGarYEKrL+o0UJk/nvWo3S5am2f5UZDs/T+KV0lTBla79+NMRHygXnrDNivC0+YnaU0B/kg==
-X-Received: by 2002:a05:600c:387:: with SMTP id w7mr19099737wmd.138.1571654637571;
-        Mon, 21 Oct 2019 03:43:57 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q66sm15277735wme.39.2019.10.21.03.43.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 03:43:56 -0700 (PDT)
-References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com> <1571382865-41978-2-git-send-email-jian.hu@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        "Rob Herring" <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: clock: meson: add A1 clock controller bindings
-In-reply-to: <1571382865-41978-2-git-send-email-jian.hu@amlogic.com>
-Date:   Mon, 21 Oct 2019 12:43:55 +0200
-Message-ID: <1jv9sibcpg.fsf@starbuckisacylon.baylibre.com>
+        Mon, 21 Oct 2019 06:44:53 -0400
+Received: from mga12.intel.com ([192.55.52.136]:14347 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbfJUKow (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:44:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 03:44:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
+   d="scan'208";a="397284567"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Oct 2019 03:44:50 -0700
+Received: from [10.226.39.21] (unknown [10.226.39.21])
+        by linux.intel.com (Postfix) with ESMTP id 3EB9C58029D;
+        Mon, 21 Oct 2019 03:44:47 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <c46ba3f4187fe53807948b4f10996b89a75c492c.1571638827.git.eswara.kota@linux.intel.com>
+ <CH2PR12MB400751D01BCEE7ABB708280BDA690@CH2PR12MB4007.namprd12.prod.outlook.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <28b5a21b-b636-f7e4-2d27-23c5d900b0d3@linux.intel.com>
+Date:   Mon, 21 Oct 2019 18:44:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CH2PR12MB400751D01BCEE7ABB708280BDA690@CH2PR12MB4007.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Gustavo Pimentel,
 
-On Fri 18 Oct 2019 at 09:14, Jian Hu <jian.hu@amlogic.com> wrote:
-
-> Add the documentation to support Amlogic A1 clock driver,
-> and add A1 clock controller bindings.
+On 10/21/2019 4:29 PM, Gustavo Pimentel wrote:
+> Hi
 >
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> ---
->  .../devicetree/bindings/clock/amlogic,a1-clkc.yaml | 143
-> +++++++++++++++++++++
-
-Those are 2 different controllers, not variants.
-One description (one file) per controller please
-
->  include/dt-bindings/clock/a1-clkc.h                |  98 ++++++++++++++
->  include/dt-bindings/clock/a1-pll-clkc.h            |  16 +++
->  3 files changed, 257 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-clkc.h
->  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+> On Mon, Oct 21, 2019 at 7:39:19, Dilip Kota <eswara.kota@linux.intel.com>
+> wrote:
 >
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
-> new file mode 100644
-> index 0000000..b382eebe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
-> @@ -0,0 +1,143 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-clkc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson A/C serials Clock Control Unit Device Tree Bindings
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +  - Jerome Brunet <jbrunet@baylibre.com>
-> +  - Jian Hu <jian.hu@jian.hu.com>
-> +
-> +description: |+
-> +  The clock controller node should be the child of a syscon node with the
-> +  required property:
-> +
-> +  - compatible:         Should be one of the following:
-> +                        "amlogic,meson-a-analog-sysctrl", "syscon", "simple-mfd"
-> +                        "amlogic,meson-a-periphs-sysctrl", "syscon", "simple-mfd"
-> +
-> +  Refer to the the bindings described in
-> +  Documentation/devicetree/bindings/mfd/syscon.txt
-> +
-> +properties:
-> +  "#clock-cells":
-> +    const: 1
-> +  compatible:
-> +    - enum:
-> +        - amlogic,a1-periphs-clkc
-> +        - amlogic,a1-pll-clkc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 2
-> +    maxItems: 6
-> +
-> +  clock-names:
-> +    minItems: 2
-> +    maxItems: 6
-> +
-> +required:
-> +  - "#clock-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      enum:
-> +        - amlogic,a1-periphs-clkc
-> +
-> +then:
-> +  properties:
-> +    clocks:
-> +      minItems: 2
-> +      maxItems: 2
-> +    items:
-> +     - description: fixed pll gate clock
-> +     - description: hifi pll gate clock
-> +
-> +    clock-names:
-> +      minItems: 2
-> +      maxItems: 2
-> +      items:
-> +        - const: xtal_fixpll
-> +        - const: xtal_hifipll
-> +
-> +else:
-> +  if:
-> +    properties:
-> +      compatible:
-> +        const: amlogic,a1-pll-clkc
-> +
-> +  then:
-> +    properties:
-> +      clocks:
-> +        minItems: 6
-> +        maxItems: 6
-> +        items:
-> +         - description: Input fixed pll div2
-> +         - description: Input fixed pll div3
-> +         - description: Input fixed pll div5
-> +         - description: Input fixed pll div7
-> +         - description: Periph Hifi pll
-> +         - description: Input Oscillator (usually at 24MHz)
-> +
-> +      clock-names:
-> +        minItems: 6
-> +        maxItems: 6
-> +        items:
-> +         - const: fclk_div2
-> +         - const: fclk_div3
-> +         - const: fclk_div5
-> +         - const: fclk_div7
-> +         - const: hifi_pll
-> +         - const: xtal
-> +
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    analog: system-controller@0 {
-> +        compatible = "amlogic,meson-a-analog-sysctrl",
-> +                     "simple-mfd", "syscon";
-> +        reg = <0 0x7c00 0 0x21c>;
-> +
-> +        clkc_pll: pll-clock-controller {
-> +                compatible = "amlogic,a1-pll-clkc";
-> +                #clock-cells = <1>;
-> +                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
-> +                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
-> +                clock-names = "xtal_fixpll", "xtal_hifipll";
-> +        };
-> +    };
-> +
-> +  - |
-> +    periphs: system-controller@1 {
-> +        compatible = "amlogic,meson-a-periphs-sysctrl",
-> +                     "simple-mfd", "syscon";
-> +        reg = <0 0x800 0 0x104>;
-> +
-> +        clkc_periphs: periphs-clock-controller {
-> +                compatible = "amlogic,a1-periphs-clkc";
-> +                #clock-cells = <1>;
-> +                clocks = <&clkc_pll CLKID_FCLK_DIV2>,
-> +                        <&clkc_pll CLKID_FCLK_DIV3>,
-> +                        <&clkc_pll CLKID_FCLK_DIV5>,
-> +                        <&clkc_pll CLKID_FCLK_DIV7>,
-> +                        <&clkc_pll CLKID_HIFI_PLL>,
-> +                        <&xtal>;
-> +                clock-names = "fclk_div2", "fclk_div3", "fclk_div5",
-> +                              "fclk_div7", "hifi_pll", "xtal";
-> +        };
-> +    };
-> diff --git a/include/dt-bindings/clock/a1-clkc.h b/include/dt-bindings/clock/a1-clkc.h
-> new file mode 100644
-> index 0000000..1ba0112
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/a1-clkc.h
-> @@ -0,0 +1,98 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#ifndef __A1_CLKC_H
-> +#define __A1_CLKC_H
-> +
-> +#define CLKID_XTAL_FIXPLL			1
-> +#define CLKID_XTAL_USB_PHY			2
-> +#define CLKID_XTAL_USB_CTRL			3
-> +#define CLKID_XTAL_HIFIPLL			4
-> +#define CLKID_XTAL_SYSPLL			5
-> +#define CLKID_XTAL_DDS				6
-> +#define CLKID_SYS_CLK				7
-> +#define CLKID_CLKTREE				8
-> +#define CLKID_RESET_CTRL			9
-> +#define CLKID_ANALOG_CTRL			10
-> +#define CLKID_PWR_CTRL				11
-> +#define CLKID_PAD_CTRL				12
-> +#define CLKID_SYS_CTRL				13
-> +#define CLKID_TEMP_SENSOR			14
-> +#define CLKID_AM2AXI_DIV			15
-> +#define CLKID_SPICC_B				16
-> +#define CLKID_SPICC_A				17
-> +#define CLKID_CLK_MSR				18
-> +#define CLKID_AUDIO				19
-> +#define CLKID_JTAG_CTRL				20
-> +#define CLKID_SARADC				21
-> +#define CLKID_PWM_EF				22
-> +#define CLKID_PWM_CD				23
-> +#define CLKID_PWM_AB				24
-> +#define CLKID_CEC				25
-> +#define CLKID_I2C_S				26
-> +#define CLKID_IR_CTRL				27
-> +#define CLKID_I2C_M_D				28
-> +#define CLKID_I2C_M_C				29
-> +#define CLKID_I2C_M_B				30
-> +#define CLKID_I2C_M_A				31
-> +#define CLKID_ACODEC				32
-> +#define CLKID_OTP				33
-> +#define CLKID_SD_EMMC_A				34
-> +#define CLKID_USB_PHY				35
-> +#define CLKID_USB_CTRL				36
-> +#define CLKID_SYS_DSPB				37
-> +#define CLKID_SYS_DSPA				38
-> +#define CLKID_DMA				39
-> +#define CLKID_IRQ_CTRL				40
-> +#define CLKID_NIC				41
-> +#define CLKID_GIC				42
-> +#define CLKID_UART_C				43
-> +#define CLKID_UART_B				44
-> +#define CLKID_UART_A				45
-> +#define CLKID_SYS_PSRAM				46
-> +#define CLKID_RSA				47
-> +#define CLKID_CORESIGHT				48
-> +#define CLKID_AM2AXI_VAD			49
-> +#define CLKID_AUDIO_VAD				50
-> +#define CLKID_AXI_DMC				51
-> +#define CLKID_AXI_PSRAM				52
-> +#define CLKID_RAMB				53
-> +#define CLKID_RAMA				54
-> +#define CLKID_AXI_SPIFC				55
-> +#define CLKID_AXI_NIC				56
-> +#define CLKID_AXI_DMA				57
-> +#define CLKID_CPU_CTRL				58
-> +#define CLKID_ROM				59
-> +#define CLKID_PROC_I2C				60
-> +#define CLKID_DSPA_SEL				61
-> +#define CLKID_DSPB_SEL				62
-> +#define CLKID_DSPA_EN_DSPA			63
-> +#define CLKID_DSPA_EN_NIC			64
-> +#define CLKID_DSPB_EN_DSPB			65
-> +#define CLKID_DSPB_EN_NIC			66
-> +#define CLKID_RTC_CLK				67
-> +#define CLKID_CECA_32K				68
-> +#define CLKID_CECB_32K				69
-> +#define CLKID_24M				70
-> +#define CLKID_12M				71
-> +#define CLKID_FCLK_DIV2_DIVN			72
-> +#define CLKID_GEN				73
-> +#define CLKID_SARADC_SEL			74
-> +#define CLKID_SARADC_CLK			75
-> +#define CLKID_PWM_A				76
-> +#define CLKID_PWM_B				77
-> +#define CLKID_PWM_C				78
-> +#define CLKID_PWM_D				79
-> +#define CLKID_PWM_E				80
-> +#define CLKID_PWM_F				81
-> +#define CLKID_SPICC				82
-> +#define CLKID_TS				83
-> +#define CLKID_SPIFC				84
-> +#define CLKID_USB_BUS				85
-> +#define CLKID_SD_EMMC				86
-> +#define CLKID_PSRAM				87
-> +#define CLKID_DMC				88
-> +
-> +#endif /* __A1_CLKC_H */
-> diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
-> new file mode 100644
-> index 0000000..58eae23
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/a1-pll-clkc.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#ifndef __A1_PLL_CLKC_H
-> +#define __A1_PLL_CLKC_H
-> +
-> +#define CLKID_FIXED_PLL				1
-> +#define CLKID_FCLK_DIV2				6
-> +#define CLKID_FCLK_DIV3				7
-> +#define CLKID_FCLK_DIV5				8
-> +#define CLKID_FCLK_DIV7				9
-> +#define CLKID_HIFI_PLL				10
-> +
-> +#endif /* __A1_PLL_CLKC_H */
+>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>> PCIe controller is based of Synopsys DesignWare pci core.
+>>
+>> Intel PCIe driver requires Upconfig support, fast training
+>> sequence configuration and link speed change. So adding the
+>> respective helper functions in the pcie DesignWare framework.
+>> It also programs hardware autonomous speed during speed
+>> configuration so defining it in pci_regs.h.
+> Please do the replacement in all of your patches
+>
+> s/pcie/PCIe
+> s/pci/PCI
+>
+> Also I think the correct term is Upconfigure and not Upconfig
+Yes, i will update it.
+>
+>> Changes on v4:
+>> 	Rename the driver naming and description to
+>> 	 "PCIe RC controller on Intel Gateway SoCs".
+>> 	Use PCIe core register macros defined in pci_regs.h
+>> 	 and remove respective local definitions.
+>> 	Remove pcie core interrupt handling.
+>> 	Move pcie link control speed change, upconfig and FTS.
+>> 	configuration functions to DesignWare framework.
+>> 	Use of_pci_get_max_link_speed().
+>> 	Mark dependency on X86 and COMPILE_TEST in Kconfig.
+>> 	Remove lanes and add n_fts variables in intel_pcie_port structure.
+>> 	Rename rst_interval variable to rst_intrvl in intel_pcie_port structure.
+>> 	Remove intel_pcie_mem_iatu() as it is already perfomed in dw_setup_rc()
+>> 	Move sysfs attributes specific code to separate patch.
+>> 	Remove redundant error handling.
+>> 	Reduce LoCs by doing variable initializations while declaration itself.
+>> 	Add extra line after closing parenthesis.
+>> 	Move intel_pcie_ep_rst_init() out of get_resources()
+>>
+>> changes on v3:
+>> 	Rename PCIe app logic registers with PCIE_APP prefix.
+>> 	PCIE_IOP_CTRL configuration is not required. Remove respective code.
+>> 	Remove wrapper functions for clk enable/disable APIs.
+>> 	Use platform_get_resource_byname() instead of
+>> 	  devm_platform_ioremap_resource() to be similar with DWC framework.
+>> 	Rename phy name to "pciephy".
+>> 	Modify debug message in msi_init() callback to be more specific.
+>> 	Remove map_irq() callback.
+>> 	Enable the INTx interrupts at the time of PCIe initialization.
+>> 	Reduce memory fragmentation by using variable "struct dw_pcie pci"
+>> 	  instead of allocating memory.
+>> 	Reduce the delay to 100us during enpoint initialization
+>> 	  intel_pcie_ep_rst_init().
+>> 	Call  dw_pcie_host_deinit() during remove() instead of directly
+>> 	  calling PCIe core APIs.
+>> 	Rename "intel,rst-interval" to "reset-assert-ms".
+>> 	Remove unused APP logic Interrupt bit macro definitions.
+>>   	Use dwc framework's dw_pcie_setup_rc() for PCIe host specific
+>> 	 configuration instead of redefining the same functionality in
+>> 	 the driver.
+>> 	Move the whole DT parsing specific code to intel_pcie_get_resources()
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>>   drivers/pci/controller/dwc/Kconfig           |  10 +
+>>   drivers/pci/controller/dwc/Makefile          |   1 +
+>>   drivers/pci/controller/dwc/pcie-designware.c |  34 ++
+>>   drivers/pci/controller/dwc/pcie-designware.h |  12 +
+>>   drivers/pci/controller/dwc/pcie-intel-gw.c   | 590 +++++++++++++++++++++++++++
+>>   include/uapi/linux/pci_regs.h                |   1 +
+>>   6 files changed, 648 insertions(+)
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
+>>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index 0ba988b5b5bc..b33ed1cc873d 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -82,6 +82,16 @@ config PCIE_DW_PLAT_EP
+>>   	  order to enable device-specific features PCI_DW_PLAT_EP must be
+>>   	  selected.
+>>   
+>> +config PCIE_INTEL_GW
+>> +        bool "Intel Gateway PCIe host controller support"
+>> +	depends on OF && (X86 || COMPILE_TEST)
+>> +	select PCIE_DW_HOST
+>> +	help
+>> +          Say 'Y' here to enable support for PCIe Host controller driver.
+>> +	  The PCIe controller on Intel Gateway SoCs is based on the Synopsys
+>> +	  DesignWare pcie core and therefore uses the DesignWare core
+>> +	  functions for the driver implementation.
+>> +
+>>   config PCI_EXYNOS
+>>   	bool "Samsung Exynos PCIe controller"
+>>   	depends on SOC_EXYNOS5440 || COMPILE_TEST
+>> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+>> index b30336181d46..99db83cd2f35 100644
+>> --- a/drivers/pci/controller/dwc/Makefile
+>> +++ b/drivers/pci/controller/dwc/Makefile
+>> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>>   obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>>   obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>>   obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>> +obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
+>>   obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>>   obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>>   obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 820488dfeaed..4c391bfd681a 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -474,6 +474,40 @@ int dw_pcie_link_up(struct dw_pcie *pci)
+>>   		(!(val & PCIE_PORT_DEBUG1_LINK_IN_TRAINING)));
+>>   }
+>>   
+>> +
+>> +void dw_pcie_upconfig_setup(struct dw_pcie *pci)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
+>> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL,
+>> +			   val | PORT_MLTI_UPCFG_SUPPORT);
+>> +}
+>> +
+>> +void dw_pcie_link_speed_change(struct dw_pcie *pci, bool enable)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>> +
+>> +	if (enable)
+>> +		val |= PORT_LOGIC_SPEED_CHANGE;
+>> +	else
+>> +		val &= ~PORT_LOGIC_SPEED_CHANGE;
+>> +
+>> +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+>> +}
+>> +
+>> +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>> +	val &= ~PORT_LOGIC_N_FTS;
+>> +	val |= n_fts;
+>> +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+>> +}
+>> +
+>>   static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
+>>   {
+>>   	u32 val;
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 5a18e94e52c8..3beac10e4a4c 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -30,7 +30,12 @@
+>>   #define LINK_WAIT_IATU			9
+>>   
+>>   /* Synopsys-specific PCIe configuration registers */
+>> +#define PCIE_PORT_AFR			0x70C
+>> +#define PORT_AFR_N_FTS_MASK		GENMASK(15, 8)
+>> +#define PORT_AFR_CC_N_FTS_MASK		GENMASK(23, 16)
+>> +
+>>   #define PCIE_PORT_LINK_CONTROL		0x710
+>> +#define PORT_LINK_DLL_LINK_EN		BIT(5)
+>>   #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
+>>   #define PORT_LINK_MODE(n)		FIELD_PREP(PORT_LINK_MODE_MASK, n)
+>>   #define PORT_LINK_MODE_1_LANES		PORT_LINK_MODE(0x1)
+>> @@ -46,6 +51,7 @@
+>>   #define PCIE_PORT_DEBUG1_LINK_IN_TRAINING	BIT(29)
+>>   
+>>   #define PCIE_LINK_WIDTH_SPEED_CONTROL	0x80C
+>> +#define PORT_LOGIC_N_FTS		GENMASK(7, 0)
+>>   #define PORT_LOGIC_SPEED_CHANGE		BIT(17)
+>>   #define PORT_LOGIC_LINK_WIDTH_MASK	GENMASK(12, 8)
+>>   #define PORT_LOGIC_LINK_WIDTH(n)	FIELD_PREP(PORT_LOGIC_LINK_WIDTH_MASK, n)
+>> @@ -60,6 +66,9 @@
+>>   #define PCIE_MSI_INTR0_MASK		0x82C
+>>   #define PCIE_MSI_INTR0_STATUS		0x830
+>>   
+>> +#define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+>> +#define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+>> +
+>>   #define PCIE_ATU_VIEWPORT		0x900
+>>   #define PCIE_ATU_REGION_INBOUND		BIT(31)
+>>   #define PCIE_ATU_REGION_OUTBOUND	0
+>> @@ -273,6 +282,9 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
+>>   u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size);
+>>   void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
+>>   int dw_pcie_link_up(struct dw_pcie *pci);
+>> +void dw_pcie_upconfig_setup(struct dw_pcie *pci);
+>> +void dw_pcie_link_speed_change(struct dw_pcie *pci, bool enable);
+>> +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts);
+>>   int dw_pcie_wait_for_link(struct dw_pcie *pci);
+>>   void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+>>   			       int type, u64 cpu_addr, u64 pci_addr,
+>> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+>> new file mode 100644
+>> index 000000000000..9142c70db808
+>> --- /dev/null
+>> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+>> @@ -0,0 +1,590 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * PCIe host controller driver for Intel Gateway SoCs
+>> + *
+>> + * Copyright (c) 2019 Intel Corporation.
+>> + */
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/of_pci.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/pci_regs.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset.h>
+>> +
+>> +#include "../../pci.h"
+>> +#include "pcie-designware.h"
+>> +
+>> +#define PCIE_CAP_OFST			0x70
+>> +
+>> +#define PORT_AFR_N_FTS_GEN12_DFT	(SZ_128 - 1)
+>> +#define PORT_AFR_N_FTS_GEN3		180
+>> +#define PORT_AFR_N_FTS_GEN4		196
+>> +
+>> +/* PCIe Application logic Registers */
+>> +#define PCIE_APP_CCR			0x10
+>> +#define PCIE_APP_CCR_LTSSM_ENABLE	BIT(0)
+>> +
+>> +#define PCIE_APP_MSG_CR			0x30
+>> +#define PCIE_APP_MSG_XMT_PM_TURNOFF	BIT(0)
+>> +
+>> +#define PCIE_APP_PMC			0x44
+>> +#define PCIE_APP_PMC_IN_L2		BIT(20)
+>> +
+>> +#define PCIE_APP_IRNEN			0xF4
+>> +#define PCIE_APP_IRNCR			0xF8
+>> +#define PCIE_APP_IRN_AER_REPORT		BIT(0)
+>> +#define PCIE_APP_IRN_PME		BIT(2)
+>> +#define PCIE_APP_IRN_RX_VDM_MSG		BIT(4)
+>> +#define PCIE_APP_IRN_PM_TO_ACK		BIT(9)
+>> +#define PCIE_APP_IRN_LINK_AUTO_BW_STAT	BIT(11)
+>> +#define PCIE_APP_IRN_BW_MGT		BIT(12)
+>> +#define PCIE_APP_IRN_MSG_LTR		BIT(18)
+>> +#define PCIE_APP_IRN_SYS_ERR_RC		BIT(29)
+>> +#define PCIE_APP_INTX_OFST		12
+>> +
+>> +#define PCIE_APP_IRN_INT \
+>> +			(PCIE_APP_IRN_AER_REPORT | PCIE_APP_IRN_PME | \
+>> +			PCIE_APP_IRN_RX_VDM_MSG | PCIE_APP_IRN_SYS_ERR_RC | \
+>> +			PCIE_APP_IRN_PM_TO_ACK | PCIE_APP_IRN_MSG_LTR | \
+>> +			PCIE_APP_IRN_BW_MGT | PCIE_APP_IRN_LINK_AUTO_BW_STAT | \
+>> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTA) | \
+>> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTB) | \
+>> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTC) | \
+>> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTD))
+>> +
+>> +#define BUS_IATU_OFFS			SZ_256M
+>> +#define RST_INTRVL_DFT_MS		100
+>> +
+>> +enum {
+>> +	PCIE_LINK_SPEED_AUTO = 0,
+>> +	PCIE_LINK_SPEED_GEN1,
+>> +	PCIE_LINK_SPEED_GEN2,
+>> +	PCIE_LINK_SPEED_GEN3,
+>> +	PCIE_LINK_SPEED_GEN4,
+>> +};
+>> +
+>> +struct intel_pcie_soc {
+>> +	unsigned int pcie_ver;
+>> +	unsigned int pcie_atu_offset;
+>> +	u32 num_viewport;
+>> +};
+>> +
+>> +struct intel_pcie_port {
+>> +	struct dw_pcie		pci;
+>> +	unsigned int		id; /* Physical RC Index */
+>> +	void __iomem		*app_base;
+>> +	struct gpio_desc	*reset_gpio;
+>> +	u32			rst_intrvl;
+>> +	u32			max_speed;
+>> +	u32			link_gen;
+>> +	u32			max_width;
+>> +	u32			n_fts;
+>> +	struct clk		*core_clk;
+>> +	struct reset_control	*core_rst;
+>> +	struct phy		*phy;
+>> +};
+>> +
+>> +static void pcie_update_bits(void __iomem *base, u32 mask, u32 val, u32 ofs)
+>> +{
+>> +	u32 orig, tmp;
+>> +
+>> +	orig = readl(base + ofs);
+>> +
+>> +	tmp = (orig & ~mask) | (val & mask);
+>> +
+>> +	if (tmp != orig)
+>> +		writel(tmp, base + ofs);
+>> +}
+> I'd suggest to the a take on FIELD_PREP() and FIELD_GET() and use more
+> intuitive names such as new and old, instead of orig and tmp.
+Sure, i will update it.
+>
+>> +static inline u32 pcie_app_rd(struct intel_pcie_port *lpp, u32 ofs)
+>> +{
+>> +	return readl(lpp->app_base + ofs);
+>> +}
+>> +
+>> +static inline void pcie_app_wr(struct intel_pcie_port *lpp, u32 val, u32 ofs)
+>> +{
+>> +	writel(val, lpp->app_base + ofs);
+>> +}
+>> +
+>> +static void pcie_app_wr_mask(struct intel_pcie_port *lpp,
+>> +			     u32 mask, u32 val, u32 ofs)
+>> +{
+>> +	pcie_update_bits(lpp->app_base, mask, val, ofs);
+>> +}
+>> +
+>> +static inline u32 pcie_rc_cfg_rd(struct intel_pcie_port *lpp, u32 ofs)
+>> +{
+>> +	return dw_pcie_readl_dbi(&lpp->pci, ofs);
+>> +}
+>> +
+>> +static inline void pcie_rc_cfg_wr(struct intel_pcie_port *lpp, u32 val, u32 ofs)
+>> +{
+>> +	dw_pcie_writel_dbi(&lpp->pci, ofs, val);
+>> +}
+>> +
+>> +static void pcie_rc_cfg_wr_mask(struct intel_pcie_port *lpp,
+>> +				u32 mask, u32 val, u32 ofs)
+>> +{
+>> +	pcie_update_bits(lpp->pci.dbi_base, mask, val, ofs);
+>> +}
+>> +
+>> +static void intel_pcie_ltssm_enable(struct intel_pcie_port *lpp)
+>> +{
+>> +	pcie_app_wr_mask(lpp, PCIE_APP_CCR_LTSSM_ENABLE,
+>> +			 PCIE_APP_CCR_LTSSM_ENABLE, PCIE_APP_CCR);
+>> +}
+>> +
+>> +static void intel_pcie_ltssm_disable(struct intel_pcie_port *lpp)
+>> +{
+>> +	pcie_app_wr_mask(lpp, PCIE_APP_CCR_LTSSM_ENABLE, 0, PCIE_APP_CCR);
+>> +}
+>> +
+>> +static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
+>> +	lpp->max_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+>> +	lpp->max_width = FIELD_GET(PCI_EXP_LNKCAP_MLW, val);
+>> +
+>> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>> +
+>> +	val &= ~(PCI_EXP_LNKCTL_LD | PCI_EXP_LNKCTL_ASPMC);
+>> +	val |= (PCI_EXP_LNKSTA_SLC << 16) | PCI_EXP_LNKCTL_CCC |
+>> +	       PCI_EXP_LNKCTL_RCB;
+>> +	pcie_rc_cfg_wr(lpp, val, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>> +}
+>> +
+>> +static void intel_pcie_max_speed_setup(struct intel_pcie_port *lpp)
+>> +{
+>> +	u32 reg, val;
+>> +
+>> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
+>> +	switch (lpp->link_gen) {
+>> +	case PCIE_LINK_SPEED_GEN1:
+>> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+>> +		reg |= PCI_EXP_LNKCTL2_HASD|
+>> +			PCI_EXP_LNKCTL2_TLS_2_5GT;
+>> +		break;
+>> +	case PCIE_LINK_SPEED_GEN2:
+>> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+>> +		reg |= PCI_EXP_LNKCTL2_HASD|
+>> +			PCI_EXP_LNKCTL2_TLS_5_0GT;
+>> +		break;
+>> +	case PCIE_LINK_SPEED_GEN3:
+>> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+>> +		reg |= PCI_EXP_LNKCTL2_HASD|
+>> +			PCI_EXP_LNKCTL2_TLS_8_0GT;
+>> +		break;
+>> +	case PCIE_LINK_SPEED_GEN4:
+>> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
+>> +		reg |= PCI_EXP_LNKCTL2_HASD|
+>> +			PCI_EXP_LNKCTL2_TLS_16_0GT;
+>> +		break;
+>> +	default:
+>> +		/* Use hardware capability */
+>> +		val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
+>> +		val = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+>> +		reg &= ~PCI_EXP_LNKCTL2_HASD;
+>> +		reg |= val;
+>> +		break;
+>> +	}
+>> +
+>> +	pcie_rc_cfg_wr(lpp, reg, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
+>> +	dw_pcie_link_set_n_fts(&lpp->pci, lpp->n_fts);
+>> +}
+>> +
+>> +
+> Reduce the number of empty lines here.
+Ok, will remove it.
+>
+>> +
+>> +static void intel_pcie_port_logic_setup(struct intel_pcie_port *lpp)
+>> +{
+>> +	u32 val, mask;
+>> +
+>> +	switch (lpp->max_speed) {
+>> +	case PCIE_LINK_SPEED_GEN3:
+>> +		lpp->n_fts = PORT_AFR_N_FTS_GEN3;
+>> +		break;
+>> +	case PCIE_LINK_SPEED_GEN4:
+>> +		lpp->n_fts = PORT_AFR_N_FTS_GEN4;
+>> +		break;
+>> +	default:
+>> +		lpp->n_fts = PORT_AFR_N_FTS_GEN12_DFT;
+>> +		break;
+>> +	}
+>> +
+>> +	mask = PORT_AFR_N_FTS_MASK | PORT_AFR_CC_N_FTS_MASK;
+>> +	val = FIELD_PREP(PORT_AFR_N_FTS_MASK, lpp->n_fts) |
+>> +	       FIELD_PREP(PORT_AFR_CC_N_FTS_MASK, lpp->n_fts);
+>> +	pcie_rc_cfg_wr_mask(lpp, mask, val, PCIE_PORT_AFR);
+>> +
+>> +	/* Port Link Control Register */
+>> +	pcie_rc_cfg_wr_mask(lpp, PORT_LINK_DLL_LINK_EN,
+>> +			    PORT_LINK_DLL_LINK_EN, PCIE_PORT_LINK_CONTROL);
+>> +}
+>> +
+>> +static void intel_pcie_rc_setup(struct intel_pcie_port *lpp)
+>> +{
+>> +	intel_pcie_ltssm_disable(lpp);
+>> +	intel_pcie_link_setup(lpp);
+>> +	dw_pcie_setup_rc(&lpp->pci.pp);
+>> +	dw_pcie_upconfig_setup(&lpp->pci);
+>> +	intel_pcie_port_logic_setup(lpp);
+>> +	intel_pcie_max_speed_setup(lpp);
+>> +}
+>> +
+>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+>> +{
+>> +	struct device *dev = lpp->pci.dev;
+>> +	int ret;
+>> +
+>> +	lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+>> +	if (IS_ERR(lpp->reset_gpio)) {
+>> +		ret = PTR_ERR(lpp->reset_gpio);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* Make initial reset last for 100us */
+>> +	usleep_range(100, 200);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void intel_pcie_core_rst_assert(struct intel_pcie_port *lpp)
+>> +{
+>> +	reset_control_assert(lpp->core_rst);
+>> +}
+>> +
+>> +static void intel_pcie_core_rst_deassert(struct intel_pcie_port *lpp)
+>> +{
+>> +	/*
+>> +	 * One micro-second delay to make sure the reset pulse
+>> +	 * wide enough so that core reset is clean.
+>> +	 */
+>> +	udelay(1);
+>> +	reset_control_deassert(lpp->core_rst);
+>> +
+>> +	/*
+>> +	 * Some SoC core reset also reset PHY, more delay needed
+>> +	 * to make sure the reset process is done.
+>> +	 */
+>> +	usleep_range(1000, 2000);
+>> +}
+>> +
+>> +static void intel_pcie_device_rst_assert(struct intel_pcie_port *lpp)
+>> +{
+>> +	gpiod_set_value_cansleep(lpp->reset_gpio, 1);
+>> +}
+>> +
+>> +static void intel_pcie_device_rst_deassert(struct intel_pcie_port *lpp)
+>> +{
+>> +	msleep(lpp->rst_intrvl);
+>> +	gpiod_set_value_cansleep(lpp->reset_gpio, 0);
+>> +}
+>> +
+>> +static int intel_pcie_app_logic_setup(struct intel_pcie_port *lpp)
+>> +{
+>> +	intel_pcie_device_rst_deassert(lpp);
+>> +	intel_pcie_ltssm_enable(lpp);
+>> +
+>> +	return dw_pcie_wait_for_link(&lpp->pci);
+>> +}
+>> +
+>> +static void intel_pcie_core_irq_disable(struct intel_pcie_port *lpp)
+>> +{
+>> +	pcie_app_wr(lpp, 0, PCIE_APP_IRNEN);
+>> +	pcie_app_wr(lpp, PCIE_APP_IRN_INT,  PCIE_APP_IRNCR);
+>> +}
+>> +
+>> +static int intel_pcie_get_resources(struct platform_device *pdev)
+>> +{
+>> +	struct intel_pcie_port *lpp = platform_get_drvdata(pdev);
+>> +	struct dw_pcie *pci = &lpp->pci;
+>> +	struct device *dev = pci->dev;
+>> +	struct resource *res;
+>> +	int ret;
+>> +
+>> +	ret = device_property_read_u32(dev, "linux,pci-domain", &lpp->id);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to get domain id, errno %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+>> +
+>> +	pci->dbi_base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(pci->dbi_base))
+>> +		return PTR_ERR(pci->dbi_base);
+>> +
+>> +	lpp->core_clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(lpp->core_clk)) {
+>> +		ret = PTR_ERR(lpp->core_clk);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "failed to get clks: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	lpp->core_rst = devm_reset_control_get(dev, NULL);
+>> +	if (IS_ERR(lpp->core_rst)) {
+>> +		ret = PTR_ERR(lpp->core_rst);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "failed to get resets: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = device_property_match_string(dev, "device_type", "pci");
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to find pci device type: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (device_property_read_u32(dev, "reset-assert-ms", &lpp->rst_intrvl))
+>> +		lpp->rst_intrvl = RST_INTRVL_DFT_MS;
+>> +
+>> +	ret = of_pci_get_max_link_speed(dev->of_node);
+>> +		lpp->link_gen = ret < 0 ? 0 : ret;
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+>> +
+>> +	lpp->app_base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(lpp->app_base))
+>> +		return PTR_ERR(lpp->app_base);
+>> +
+>> +	lpp->phy = devm_phy_get(dev, "pcie");
+>> +	if (IS_ERR(lpp->phy)) {
+>> +		ret = PTR_ERR(lpp->phy);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "couldn't get pcie-phy: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void intel_pcie_deinit_phy(struct intel_pcie_port *lpp)
+>> +{
+>> +	phy_exit(lpp->phy);
+>> +}
+>> +
+>> +static int intel_pcie_wait_l2(struct intel_pcie_port *lpp)
+>> +{
+>> +	u32 value;
+>> +	int ret;
+>> +
+>> +	if (lpp->max_speed < PCIE_LINK_SPEED_GEN3)
+>> +		return 0;
+>> +
+>> +	/* Send PME_TURN_OFF message */
+>> +	pcie_app_wr_mask(lpp, PCIE_APP_MSG_XMT_PM_TURNOFF,
+>> +			 PCIE_APP_MSG_XMT_PM_TURNOFF, PCIE_APP_MSG_CR);
+>> +
+>> +	/* Read PMC status and wait for falling into L2 link state */
+>> +	ret = readl_poll_timeout(lpp->app_base + PCIE_APP_PMC, value,
+>> +				 (value & PCIE_APP_PMC_IN_L2), 20,
+>> +				 jiffies_to_usecs(5 * HZ));
+>> +	if (ret)
+>> +		dev_err(lpp->pci.dev, "PCIe link enter L2 timeout!\n");
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void intel_pcie_turn_off(struct intel_pcie_port *lpp)
+>> +{
+>> +	if (dw_pcie_link_up(&lpp->pci))
+>> +		intel_pcie_wait_l2(lpp);
+>> +
+>> +	/* Put endpoint device in reset state */
+>> +	intel_pcie_device_rst_assert(lpp);
+>> +	pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY, 0, PCI_COMMAND);
+>> +}
+>> +
+>> +static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
+>> +{
+>> +	int ret;
+>> +
+>> +	intel_pcie_core_rst_assert(lpp);
+>> +	intel_pcie_device_rst_assert(lpp);
+>> +
+>> +	ret = phy_init(lpp->phy);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	intel_pcie_core_rst_deassert(lpp);
+>> +
+>> +	ret = clk_prepare_enable(lpp->core_clk);
+>> +	if (ret) {
+>> +		dev_err(lpp->pci.dev, "Core clock enable failed: %d\n", ret);
+>> +		goto clk_err;
+>> +	}
+>> +
+>> +	intel_pcie_rc_setup(lpp);
+>> +	ret = intel_pcie_app_logic_setup(lpp);
+>> +	if (ret)
+>> +		goto app_init_err;
+>> +
+>> +	/* Enable integrated interrupts */
+>> +	pcie_app_wr_mask(lpp, PCIE_APP_IRN_INT, PCIE_APP_IRN_INT,
+>> +			 PCIE_APP_IRNEN);
+>> +	return 0;
+>> +
+>> +app_init_err:
+>> +	clk_disable_unprepare(lpp->core_clk);
+>> +clk_err:
+>> +	intel_pcie_core_rst_assert(lpp);
+>> +	intel_pcie_deinit_phy(lpp);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+>> +{
+>> +	intel_pcie_core_irq_disable(lpp);
+>> +	intel_pcie_turn_off(lpp);
+>> +	clk_disable_unprepare(lpp->core_clk);
+>> +	intel_pcie_core_rst_assert(lpp);
+>> +	intel_pcie_deinit_phy(lpp);
+>> +}
+>> +
+>> +static int intel_pcie_remove(struct platform_device *pdev)
+>> +{
+>> +	struct intel_pcie_port *lpp = platform_get_drvdata(pdev);
+>> +	struct pcie_port *pp = &lpp->pci.pp;
+>> +
+>> +	dw_pcie_host_deinit(pp);
+>> +	__intel_pcie_remove(lpp);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __maybe_unused intel_pcie_suspend_noirq(struct device *dev)
+>> +{
+>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>> +	int ret;
+>> +
+>> +	intel_pcie_core_irq_disable(lpp);
+>> +	ret = intel_pcie_wait_l2(lpp);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	intel_pcie_deinit_phy(lpp);
+>> +	clk_disable_unprepare(lpp->core_clk);
+>> +	return ret;
+>> +}
+>> +
+>> +static int __maybe_unused intel_pcie_resume_noirq(struct device *dev)
+>> +{
+>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>> +
+>> +	return intel_pcie_host_setup(lpp);
+>> +}
+>> +
+>> +static int intel_pcie_rc_init(struct pcie_port *pp)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
+>> +
+>> +	return intel_pcie_host_setup(lpp);
+>> +}
+>> +
+>> +int intel_pcie_msi_init(struct pcie_port *pp)
+>> +{
+>> +	/* PCIe MSI/MSIx is handled by MSI in x86 processor */
+>> +	return 0;
+>> +}
+>> +
+>> +u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
+>> +{
+>> +	return cpu_addr + BUS_IATU_OFFS;
+>> +}
+>> +
+>> +static const struct dw_pcie_ops intel_pcie_ops = {
+>> +	.cpu_addr_fixup = intel_pcie_cpu_addr,
+>> +};
+>> +
+>> +static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
+>> +	.host_init =		intel_pcie_rc_init,
+>> +	.msi_host_init =	intel_pcie_msi_init,
+>> +};
+>> +
+>> +static const struct intel_pcie_soc pcie_data = {
+>> +	.pcie_ver =		0x520A,
+>> +	.pcie_atu_offset =	0xC0000,
+>> +	.num_viewport =		3,
+>> +};
+>> +
+>> +static int intel_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct intel_pcie_soc *data;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct intel_pcie_port *lpp;
+>> +	struct pcie_port *pp;
+>> +	struct dw_pcie *pci;
+>> +	int ret;
+>> +
+>> +	lpp = devm_kzalloc(dev, sizeof(*lpp), GFP_KERNEL);
+>> +	if (!lpp)
+>> +		return -ENOMEM;
+>> +
+>> +	platform_set_drvdata(pdev, lpp);
+>> +	pci = &lpp->pci;
+>> +	pci->dev = dev;
+>> +	pp = &pci->pp;
+>> +
+>> +	ret = intel_pcie_get_resources(pdev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = intel_pcie_ep_rst_init(lpp);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	data = device_get_match_data(dev);
+>> +	pci->ops = &intel_pcie_ops;
+>> +	pci->version = data->pcie_ver;
+>> +	pci->atu_base = pci->dbi_base + data->pcie_atu_offset;
+>> +	pp->ops = &intel_pcie_dw_ops;
+>> +
+>> +	ret = dw_pcie_host_init(pp);
+>> +	if (ret) {
+>> +		dev_err(dev, "cannot initialize host\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* Intel PCIe doesn't configure IO region, so configure
+>> +	 * viewport to not to access IO region during register
+>> +	 * read write operations.
+>> +	 */
+>> +	pci->num_viewport = data->num_viewport;
+>> +	dev_info(dev, "Intel PCIe Root Complex Port %d init done\n", lpp->id);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct dev_pm_ops intel_pcie_pm_ops = {
+>> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pcie_suspend_noirq,
+>> +				      intel_pcie_resume_noirq)
+>> +};
+>> +
+>> +static const struct of_device_id of_intel_pcie_match[] = {
+>> +	{ .compatible = "intel,lgm-pcie", .data = &pcie_data },
+>> +	{}
+>> +};
+>> +
+>> +static struct platform_driver intel_pcie_driver = {
+>> +	.probe = intel_pcie_probe,
+>> +	.remove = intel_pcie_remove,
+>> +	.driver = {
+>> +		.name = "intel-gw-pcie",
+>> +		.of_match_table = of_intel_pcie_match,
+>> +		.pm = &intel_pcie_pm_ops,
+>> +	},
+>> +};
+>> +builtin_platform_driver(intel_pcie_driver);
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>> index 29d6e93fd15e..f6e7e402f879 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -673,6 +673,7 @@
+>>   #define  PCI_EXP_LNKCTL2_TLS_8_0GT	0x0003 /* Supported Speed 8GT/s */
+>>   #define  PCI_EXP_LNKCTL2_TLS_16_0GT	0x0004 /* Supported Speed 16GT/s */
+>>   #define  PCI_EXP_LNKCTL2_TLS_32_0GT	0x0005 /* Supported Speed 32GT/s */
+>> +#define  PCI_EXP_LNKCTL2_HASD		0x0200 /* Hw Autonomous Speed Disable */
+> s/Hw/HW
 
+Sure, i will correct it.
+
+Thanks for the valuable inputs.
+
+Regards,
+Dilip
+
+>
+>>   #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+>>   #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+>>   #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
+>> -- 
+>> 2.11.0
+>
