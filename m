@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9BFCA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB47CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7585520659
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441E12067B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:36:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S8Bihem9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dfN7WGSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfJUKgX (ORCPT
+        id S1728388AbfJUKgb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 06:36:23 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37143 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbfJUKgX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 06:36:23 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so8167689pfo.4
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 03:36:22 -0700 (PDT)
+        Mon, 21 Oct 2019 06:36:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44442 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728386AbfJUKga (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 06:36:30 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so8155301pfn.11
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 03:36:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=vAk0yGeiCW4SKIjJnq+f9xqPKX6m5wwJtivbwF55fLs=;
-        b=S8Bihem9RpDcOyr4KCVSnTKgeUfPM47uXgFRw0WH/pp1ZI/CGMgOaRarY4+jS8r4gS
-         PZpQcWGZJydjFrJx+3/rQeLATVNn+cjQP78gMtCe7O3pARui+qlMs6eRZJgxCjP2i+S9
-         zexPLrcg0i73kjZjwihN4Bei1fNq1WVTYQ5v0l6Q7AhZjLbA7OTGd6eZNsBQFLIl0P6z
-         MuP6Jc07fhAxSwYpluUMayVoKIkd89LX0INf8iTC0i3POAmGNGI0l9R2lIvdBYXAixEL
-         U7Bfklp9rj0e4JB2/ZjWLoYflbAl246lin6/JZsAc6eGDBUKkoJem52JZkMxarUnsSqw
-         HkQw==
+        bh=raRv91SuwpaXlGeT2wU6HLI9/SHJRwKCyqG5FDUj7WM=;
+        b=dfN7WGSgkXXOa/URlH/ad/gRg6gnfjIsMBdB5HASF7KGk6e3vgPOKuBUdrQonzvxbl
+         ZabWSM5RBGxt9NZhV2CYQS7Re/oJH5LHCS76bWGl3dYzeWFKFBemK6203svGG9zzeErK
+         R7SubW3IktLLP9997uvwDu5MDI/8VHhY0dVMH+OBFiRIeKkawfreLDLFufFg++ep0JJu
+         8aTHfZcuchruuOfibLzKpvpmuCJQOD9bfiZHBFbS7MXOhnnwVBPG41CS9RisyJfs2Dui
+         lLPGF0KkbdVE34XIzLU+DIbaUYZBrC2+83vdWkUscpdsWoFc7H15PLXEPR/klZ1ea5qr
+         NC9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=vAk0yGeiCW4SKIjJnq+f9xqPKX6m5wwJtivbwF55fLs=;
-        b=gmuNyp5VpCTiB4+TySCcFMhgF8qczNNS3GRfIAcCgUQCRuIISrY0e/rtdxk/008gPb
-         57Z/ZgdVIzOFzDDPVXGFg/uScUbW/M3cDDamG51IESciVmlgpXvGrLwfT/yaFbfxxfxg
-         40FQ4GyaswsoxDmEE63nMqK4rALXkZQyL8yhqqmm/jFOOclBvsf/GvkrMJmSyEUt3O1+
-         1qVxdqPm5t0NpHqLqK23H148GTctS24hd3lVwdaUL2yfMkExTxWWGO1ayM10lkz6YRlm
-         HJvLFvcXdgNklYko/NEI78EjbSvBy7TW2LSAkgw1d/Ymstdtubh6gpaqY73qwaLkv18Q
-         DwOg==
-X-Gm-Message-State: APjAAAV2Z8N/PZ+q9wXCdkApqar3sxVbpe3Clpn5LkyRzeCtHmdEz0P9
-        SzQ9nHKIwRMQ0mCWrUwVu53EbA==
-X-Google-Smtp-Source: APXvYqw5wwC5YcvuabWh6R87MJJua4G4qRlb7eFz5yGtKtbysUKwbLA8bUKJcPJmbaNuXHSaejJowg==
-X-Received: by 2002:a63:7d53:: with SMTP id m19mr25458922pgn.450.1571654182214;
-        Mon, 21 Oct 2019 03:36:22 -0700 (PDT)
+        bh=raRv91SuwpaXlGeT2wU6HLI9/SHJRwKCyqG5FDUj7WM=;
+        b=MZYshLjJ0pCiZWxSQqYsgU6Md5EWgW7SF/AXabDzImUA9xocgcB3ps6T6vy8Ud+G3I
+         Nsc3vQwNnugFBcpszK61dkPHErilLaD/TTwrahCryXK8pnXUNEt0Q7CdppqWRZdXrbQG
+         GflL0WQav688X558WSGMUYv3w6qCAAm9cOJYYuJ040f2+9w4yGgC1bVZCfxGFbo+c7FP
+         TBI4sQ5GzJvy+eZHfiX14FFuxydF2hD3DNK3fu1sTbdZgpTnQwlqUoyIeI2qEf2LZk2+
+         +Npz9ECetZtfBDSjTmUKIXrB9RQW86zPxzKJhZnBnxk5K9fc211o1HoWrFSGQU7o9DZP
+         oYIw==
+X-Gm-Message-State: APjAAAX/T8OdhJqP1YJNZZsoXRi3pMosZGEu2zt2eU149+pkXHiXeaDS
+        x5iBAioDwEPyq9Xgbccsvse3VA==
+X-Google-Smtp-Source: APXvYqwCpYHYXSMroItXhbGj9D6u5ioe8pubcuLdwxrRirA+DapJicFWgsOu+QaSERbHJmDVv7rX+g==
+X-Received: by 2002:a17:90a:86c7:: with SMTP id y7mr26839634pjv.82.1571654189240;
+        Mon, 21 Oct 2019 03:36:29 -0700 (PDT)
 Received: from localhost ([49.248.62.222])
-        by smtp.gmail.com with ESMTPSA id 19sm14665031pjd.23.2019.10.21.03.36.21
+        by smtp.gmail.com with ESMTPSA id y22sm13192289pjn.12.2019.10.21.03.36.28
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 03:36:21 -0700 (PDT)
+        Mon, 21 Oct 2019 03:36:28 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
@@ -65,9 +65,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v6 11/15] arm64: dts: qcs404: thermal: Add interrupt support
-Date:   Mon, 21 Oct 2019 16:05:30 +0530
-Message-Id: <63d6b0b8bba0d217c2f7bb4240c587ead933b6be.1571652874.git.amit.kucheria@linaro.org>
+Subject: [PATCH v6 13/15] arm64: dts: msm8916: thermal: Add interrupt support
+Date:   Mon, 21 Oct 2019 16:05:32 +0530
+Message-Id: <88eff964b708c8aff57b24370d2e14389ace09e9.1571652874.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1571652874.git.amit.kucheria@linaro.org>
 References: <cover.1571652874.git.amit.kucheria@linaro.org>
@@ -82,17 +82,17 @@ Register upper-lower interrupt for the tsens controller.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 2 ++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index a97eeb4569c00..b6a4e60739362 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -290,6 +290,8 @@
- 			nvmem-cells = <&tsens_caldata>;
- 			nvmem-cell-names = "calib";
- 			#qcom,sensors = <10>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 8686e101905cc..807f86a4535e0 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -816,6 +816,8 @@
+ 			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+ 			nvmem-cell-names = "calib", "calib_sel";
+ 			#qcom,sensors = <5>;
 +			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "uplow";
  			#thermal-sensor-cells = <1>;
