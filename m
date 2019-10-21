@@ -2,182 +2,122 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D53CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FDECA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E1020873
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Yn2N3y3T"
+	by mail.kernel.org (Postfix) with ESMTP id 238182089C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571662393;
+	bh=uxGrhZDbF2L+yKtpe/kGnfAuBpoA1iG6MrGYbfiPYMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DB5jnnREniMpJhypE/nwvQmkRlhLug12y40OBBF21e4wIwTk0b0Viv6UaIpuzs0Wu
+	 5LcYOUc0zDTXWBXmR7dpggPIvqQR6AaheFwjPPshDd8wIbZfvHmH2ABoKD+uaPelKr
+	 zWvxLoUX7YglDvVJIPjwE0WQ4TrFSrhsrfV5wuaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfJUMpG (ORCPT
+        id S1727985AbfJUMxM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:45:06 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:43507 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728799AbfJUMoi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 08:44:38 -0400
-Received: by mail-wr1-f47.google.com with SMTP id c2so8585112wrr.10
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 05:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=az5Qk9HV+xwHSQgQsE7jPUxX1AeC/LW+c8v20q7G+To=;
-        b=Yn2N3y3TuMvAi4XTRPu4kdvgMY/oy9tYbogJ5rt8gHn60GNFokeWPQsFaOPsv2e4JE
-         hLL4Z2ZUJDpFho0Voth3CJ565u+qhPNkTkwk1Yg2KKG+JcmnwuA2IbBI/4/7MyYITUAa
-         8xi6COny3LVcsSizEx9+drR7rX6cCve9/xLIpLdpmFcIU+GspciFTGJS4reOLGP6buSi
-         W3OTHBhupUI6RmNiIgX3N2Ko71rgkKgJR0s2QzWjHYBotStGpFwOpFLnJSDsN1kLyBTP
-         AZxyaNGUSV7bG5VUj9NqmkF4HZFPdQKe9TKGELeTusQOGzNPtEuhIwaWwawoBNEdFWA+
-         tCJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=az5Qk9HV+xwHSQgQsE7jPUxX1AeC/LW+c8v20q7G+To=;
-        b=HHa+edO974HPLI8KqwlMdgSo4SCl1ELlOtVD+pZIjPvmx3/1QtqpwFDuhSlohNEBC6
-         jZLUuM0Wyf63LVZBYKRIXK4gj5BPaj2T141HoZ5iQyQ+Z1XPvariZnKnhrAG8fj2Gdhs
-         8hFYRrTu37D2OHRka2ugSuZF5shq9VXMzx1ik9XVmikdMj7Y34rP3dUVOy5EBB8dcjj/
-         8u/jBeGyi1CNp58hgz3tCsx0+JCGT7n1N8wSbeuekdxChVGTDF62HpORgEnhph+SjmFU
-         vUsOLNebdRg3fGYsEkVpveYTHUDxNOyUvz5KbWl1yWiX49S8SSQumqPSCxMwcC6bq651
-         83PQ==
-X-Gm-Message-State: APjAAAX3Vq/LcjhLYNAd4AR2k910Hh59qQTBLs/10pwNX65YA3fTw/T7
-        47ubcwi1rKq4OVEixW8/HHsHYw==
-X-Google-Smtp-Source: APXvYqwTjMGgIWlEorxrxqhBE9HmBj2vfdY8HwuDzMcoG9+YkQTIR233SwrwQ64xJsk6pkFesXsoAw==
-X-Received: by 2002:adf:f58b:: with SMTP id f11mr16074645wro.85.1571661876038;
-        Mon, 21 Oct 2019 05:44:36 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id a17sm10216150wmb.8.2019.10.21.05.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2019 05:44:35 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v4 2/6] dt-bindings: regulator: max77650: convert the binding document to yaml
-Date:   Mon, 21 Oct 2019 14:44:24 +0200
-Message-Id: <20191021124428.2541-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191021124428.2541-1-brgl@bgdev.pl>
-References: <20191021124428.2541-1-brgl@bgdev.pl>
+        Mon, 21 Oct 2019 08:53:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727256AbfJUMxM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 08:53:12 -0400
+Received: from localhost (unknown [122.167.89.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B670620679;
+        Mon, 21 Oct 2019 12:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571662391;
+        bh=uxGrhZDbF2L+yKtpe/kGnfAuBpoA1iG6MrGYbfiPYMY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r4RWmmBtxaaFlwYYdg07Nv47t0QfQGlkcWuDFsx6GsS0CtyZEscBs7zvcW94wE2ML
+         BNBUeJJjg8osPhmy2fXtxoHyXLMXEyHRJZqzRrhO1JJ5un+YrSWsDexBCaz+UPxZh+
+         hxu8etsF5EOf8X+0KJ6IXR8K5+0b/UgnABbLKzQI=
+Date:   Mon, 21 Oct 2019 18:23:07 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v1 3/3] clk: qcom: clk-rpmh: Add support for RPMHCC for
+ SC7180
+Message-ID: <20191021125307.GF2654@vkoul-mobl>
+References: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
+ <1571393364-32697-4-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571393364-32697-4-git-send-email-tdas@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 18-10-19, 15:39, Taniya Das wrote:
+> Add support for clock RPMh driver to vote for ARC and VRM managed
+> clock resources.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/clk/qcom/clk-rpmh.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+> index 96a36f6..7301c77 100644
+> --- a/drivers/clk/qcom/clk-rpmh.c
+> +++ b/drivers/clk/qcom/clk-rpmh.c
+> @@ -391,6 +391,24 @@ static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
+>  	.num_clks = ARRAY_SIZE(sm8150_rpmh_clocks),
+>  };
+> 
+> +static struct clk_hw *sc7180_rpmh_clocks[] = {
+> +	[RPMH_CXO_CLK]		= &sdm845_bi_tcxo.hw,
+> +	[RPMH_CXO_CLK_A]	= &sdm845_bi_tcxo_ao.hw,
+> +	[RPMH_LN_BB_CLK2]	= &sdm845_ln_bb_clk2.hw,
+> +	[RPMH_LN_BB_CLK2_A]	= &sdm845_ln_bb_clk2_ao.hw,
+> +	[RPMH_LN_BB_CLK3]	= &sdm845_ln_bb_clk3.hw,
+> +	[RPMH_LN_BB_CLK3_A]	= &sdm845_ln_bb_clk3_ao.hw,
+> +	[RPMH_RF_CLK1]		= &sdm845_rf_clk1.hw,
+> +	[RPMH_RF_CLK1_A]	= &sdm845_rf_clk1_ao.hw,
+> +	[RPMH_RF_CLK2]		= &sdm845_rf_clk2.hw,
+> +	[RPMH_RF_CLK2_A]	= &sdm845_rf_clk2_ao.hw,
+> +};
+> +
+> +static const struct clk_rpmh_desc clk_rpmh_sc7180 = {
+> +	.clks = sc7180_rpmh_clocks,
+> +	.num_clks = ARRAY_SIZE(sc7180_rpmh_clocks),
+> +};
+> +
+>  static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
+>  					 void *data)
+>  {
+> @@ -471,6 +489,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
+>  static const struct of_device_id clk_rpmh_match_table[] = {
+>  	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
+>  	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
+> +	{ .compatible = "qcom,sc7180-rpmh-clk", .data = &clk_rpmh_sc7180},
 
-Convert the binding document for MAX77650 regulator module to YAML.
+Is the table above not same as sm8150, if so cant we reuse that for
+sc7180?
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../bindings/regulator/max77650-regulator.txt | 41 -------------------
- .../regulator/max77650-regulator.yaml         | 31 ++++++++++++++
- 2 files changed, 31 insertions(+), 41 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/max77650-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
 
-diff --git a/Documentation/devicetree/bindings/regulator/max77650-regulator.txt b/Documentation/devicetree/bindings/regulator/max77650-regulator.txt
-deleted file mode 100644
-index f1cbe813c30f..000000000000
---- a/Documentation/devicetree/bindings/regulator/max77650-regulator.txt
-+++ /dev/null
-@@ -1,41 +0,0 @@
--Regulator driver for MAX77650 PMIC from Maxim Integrated.
--
--This module is part of the MAX77650 MFD device. For more details
--see Documentation/devicetree/bindings/mfd/max77650.txt.
--
--The regulator controller is represented as a sub-node of the PMIC node
--on the device tree.
--
--The device has a single LDO regulator and a SIMO buck-boost regulator with
--three independent power rails.
--
--Required properties:
----------------------
--- compatible:		Must be "maxim,max77650-regulator"
--
--Each rail must be instantiated under the regulators subnode of the top PMIC
--node. Up to four regulators can be defined. For standard regulator properties
--refer to Documentation/devicetree/bindings/regulator/regulator.txt.
--
--Available regulator compatible strings are: "ldo", "sbb0", "sbb1", "sbb2".
--
--Example:
----------
--
--	regulators {
--		compatible = "maxim,max77650-regulator";
--
--		max77650_ldo: regulator@0 {
--			regulator-compatible = "ldo";
--			regulator-name = "max77650-ldo";
--			regulator-min-microvolt = <1350000>;
--			regulator-max-microvolt = <2937500>;
--		};
--
--		max77650_sbb0: regulator@1 {
--			regulator-compatible = "sbb0";
--			regulator-name = "max77650-sbb0";
--			regulator-min-microvolt = <800000>;
--			regulator-max-microvolt = <1587500>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml b/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
-new file mode 100644
-index 000000000000..7d724159f890
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
-@@ -0,0 +1,31 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/max77650-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Regulator driver for MAX77650 PMIC from Maxim Integrated.
-+
-+maintainers:
-+  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+
-+description: |
-+  This module is part of the MAX77650 MFD device. For more details
-+  see Documentation/devicetree/bindings/mfd/max77650.yaml.
-+
-+  The regulator controller is represented as a sub-node of the PMIC node
-+  on the device tree.
-+
-+  The device has a single LDO regulator and a SIMO buck-boost regulator with
-+  three independent power rails.
-+
-+properties:
-+  compatible:
-+    const: maxim,max77650-regulator
-+
-+patternProperties:
-+  "^regulator@[0-3]$":
-+    $ref: "regulator.yaml#"
-+
-+required:
-+  - compatible
 -- 
-2.23.0
-
+~Vinod
