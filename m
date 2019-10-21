@@ -2,118 +2,114 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A024ACA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B08CA9EAB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DFE21928
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DFA21897
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:32:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WK0tvccT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B7CTcHee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfJUDCm (ORCPT
+        id S1726827AbfJUDcZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 23:02:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33900 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfJUDCl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 23:02:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id k20so6852867pgi.1
-        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 20:02:41 -0700 (PDT)
+        Sun, 20 Oct 2019 23:32:25 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38160 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfJUDcZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 23:32:25 -0400
+Received: by mail-pf1-f194.google.com with SMTP id h195so7497897pfe.5
+        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 20:32:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X1eK+NEyVQBtfNuPFEp6l0dI2uta1Eahnc/cFfsNqiQ=;
-        b=WK0tvccTx2DeB4CUYuCDL66HxZtd1Sap9zxjlQofSF2tieZmraP/KeQEMGtHktBXRR
-         5O/pZZ16xe/JWOrMaXp1NByBxB6E5GBsE3x+CfAYMnm38ctfxZtYERtkBTx33Vdx8pBY
-         is+0ex+/W4jVdXtvcRZk4L6CbY9mE0VDQcqI8=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5isXOORphLUvrMfHKnVOGpBGKkTOkoPX8pGWFrNDV6M=;
+        b=B7CTcHeewVhJ8PJ4T2Xy3W1oc8teseNmlcEKmJwiOSX+AE9BBht8hxCbvmNba1BtW/
+         HT5JSKMoaSwpjq1oi1p7ccQkdFNx4MpnzTCmSGY1iqYDQ17kmoUZn1PRp5z8onrgvalO
+         O6ZCyAm/1leCWkg7LleltdNnpTqBtFu5AqwB1eRAyKUQL1l/hRTQg8X0tMjo/CrLpCbe
+         I/7hLc1cON111+NEaqITzUiryaGr2dKwUWvQgLqeKaJj+10cGjJAT303SwSdIt5kqaiq
+         PFhla/rFdW0+7cmsVBNdFvX98tkdYqpcVbjYTU4chE0PJ9yer5n9mCf+PKN4K5VSGdxh
+         yeRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X1eK+NEyVQBtfNuPFEp6l0dI2uta1Eahnc/cFfsNqiQ=;
-        b=AiWhLVZIbCDgOhsIHJr8wMImRfgZwNtu5ZYYzJUtSn1xlGG8QnXa+ZE6dMDyFAxYWz
-         aqZWCdYShXhDinrSPegBuhxZCJCNkYpppbAKZX/tqRJjXqOOphpjJ49dGHI7XswdoEVh
-         lmyOm/Tw7xtq0/LeQfhmNLnLbO7nJOd2gJ7RcUbuy8OCcUmCNYtupQCyIDP6iNlDui+Y
-         FepPC318Uxepw0KhtHHUOY0eCkBnA7LwMboZ+mO3k/yjHhiASEOZBuCfxO9Y2iIjCoCr
-         jc8zJbOmjzg0ZDdR+DYoFziZbMYYC22H/lHsiuq9iYl+dTI6ZNtYe+UTgtPikD1NeNS8
-         HORg==
-X-Gm-Message-State: APjAAAV18rUHpviX+5LbId6L9LiaJpbe/dspKWTgei6UvYn/GmecQvoG
-        GBav1rShcxgk0aVfNZzb3YRV7w==
-X-Google-Smtp-Source: APXvYqxUUoJOAyB2wgSrG9oFIZmiN1g2Uwzzl0ruzJP8tMcRwMsU7LTXKoT32oc7VUPe6nlgSwX5KA==
-X-Received: by 2002:a17:90a:8002:: with SMTP id b2mr149420pjn.39.1571626961198;
-        Sun, 20 Oct 2019 20:02:41 -0700 (PDT)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
-        by smtp.gmail.com with ESMTPSA id x65sm14250600pgb.75.2019.10.20.20.02.38
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5isXOORphLUvrMfHKnVOGpBGKkTOkoPX8pGWFrNDV6M=;
+        b=LbUNE9uCVfqBimSNkGVbniO3OADQE857f1Ay12Smhz1KDdM8ZoibbjlJotqyIADoIT
+         9jmMgi+4VyCDiM8vJaX7OX2azf2Qx1UBif7q3J0Gi/x42XOT8Vx1Pq3CtWHlfdU7udgV
+         Q1bdLmGVnygJRnZl9KkIn2RokVKENeawB+JeCt0X8ickMHmF4hpJEJzfefPMnPbs4qGi
+         6S3klN5kaJA6caGTwThj/kVNxxZ1Aj9ahT2bs/H/c+gG0/9JGjA48ZPs4maog61/1y3u
+         kt08HAZ33hK+XScfSk/NhIchBz5Qax/wy6VMGtBvCve0FhQ5rxy0rbaI09mlvJNRAWs1
+         jD6Q==
+X-Gm-Message-State: APjAAAVt/Oh5+0RSiV1LA16D0QiFuphejW+JwKhvHwNqDk9YLtdcWiBD
+        YdOxsG2nNHRO3CiOxPdIr1EDwge3gro=
+X-Google-Smtp-Source: APXvYqwr234z/kcG49JDU513eFxregAt47Pn/yB3FCwYgKG5t1iFFWQ3JJdHNv7eru9GzZvT1Us3BQ==
+X-Received: by 2002:aa7:8046:: with SMTP id y6mr19860568pfm.222.1571628744255;
+        Sun, 20 Oct 2019 20:32:24 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i6sm13809128pfq.20.2019.10.20.20.32.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 20:02:39 -0700 (PDT)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Sun, 20 Oct 2019 20:32:22 -0700 (PDT)
+Date:   Sun, 20 Oct 2019 20:32:20 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH v2 2/2] HID: google: Add of_match table to Whiskers switch device.
-Date:   Mon, 21 Oct 2019 11:02:33 +0800
-Message-Id: <20191021030233.32592-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
+Message-ID: <20191021033220.GG4500@tuxbook-pro>
+References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a device tree match table.
+On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
----
- drivers/hid/hid-google-hammer.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> LLCC behaviour is controlled by the configuration data set
+> in the llcc-qcom driver, add the same for SC7180 SoC.
+> Also convert the existing bindings to json-schema and add
+> the compatible for SC7180 SoC.
+> 
 
-diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
-index 84f8c127ebdc..b726f8a15044 100644
---- a/drivers/hid/hid-google-hammer.c
-+++ b/drivers/hid/hid-google-hammer.c
-@@ -17,6 +17,7 @@
- #include <linux/hid.h>
- #include <linux/leds.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_data/cros_ec_commands.h>
- #include <linux/platform_data/cros_ec_proto.h>
- #include <linux/platform_device.h>
-@@ -264,12 +265,21 @@ static const struct acpi_device_id cbas_ec_acpi_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, cbas_ec_acpi_ids);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id cbas_ec_of_match[] = {
-+	{ .compatible = "google,cros-cbas" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, cbas_ec_of_match);
-+#endif
-+
- static struct platform_driver cbas_ec_driver = {
- 	.probe = cbas_ec_probe,
- 	.remove = cbas_ec_remove,
- 	.driver = {
- 		.name = "cbas_ec",
- 		.acpi_match_table = ACPI_PTR(cbas_ec_acpi_ids),
-+		.of_match_table = of_match_ptr(cbas_ec_of_match),
- 		.pm = &cbas_ec_pm_ops,
- 	},
- };
--- 
-2.23.0.866.gb869b98d4c-goog
+Thanks for the patches and thanks for the review Stephen. Series applied
 
+Regards,
+Bjorn
+
+> v2:
+>  * Convert bindings to YAML and add compatible for SC7180
+>  * Address Stephen's comments on const
+> 
+> Sai Prakash Ranjan (2):
+>   dt-bindings: msm: Convert LLCC bindings to YAML
+>   dt-bindings: msm: Add LLCC for SC7180
+> 
+> Vivek Gautam (1):
+>   soc: qcom: llcc: Add configuration data for SC7180
+> 
+>  .../devicetree/bindings/arm/msm/qcom,llcc.txt | 41 --------------
+>  .../bindings/arm/msm/qcom,llcc.yaml           | 55 +++++++++++++++++++
+>  drivers/soc/qcom/llcc-qcom.c                  | 15 ++++-
+>  3 files changed, 69 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.yaml
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
