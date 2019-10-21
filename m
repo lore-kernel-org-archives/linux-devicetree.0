@@ -2,81 +2,288 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D383CA9EAC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1419CA9EAC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C0121897
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F9A21A4A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:42:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hG5mgXE6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VWcoC3UU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jscOCbkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfJUDes (ORCPT
+        id S1727020AbfJUDmR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 23:34:48 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47360 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfJUDer (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 23:34:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3FD92602F3; Mon, 21 Oct 2019 03:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571628887;
-        bh=fI7tTnZ9WhKA6PLwrHG4qATFBHcajJ5p+pnrXJfRTag=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hG5mgXE6cUFDxekZFIruNrN7BRBh68GopMGYkdyEr8mCo6gx9zOORNWcmNCS9KuvF
-         clIWEvsjA0mWxz9/kzGZBb1pmLPN1xaCs9PbdTgBJWp5xgM563dixnSUmDE+xM0q79
-         LdpJdWIJwmW+mY0sCtzNMSPj/VRswBACxcTkjg0A=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id B038E6030D;
-        Mon, 21 Oct 2019 03:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571628886;
-        bh=fI7tTnZ9WhKA6PLwrHG4qATFBHcajJ5p+pnrXJfRTag=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VWcoC3UUUfb1pJYIb6nwXlPxdc8u412Q8OmUxlkZRVMyxP3E1CX8xMg/Hf8iZlkd+
-         ATJIBC8mXtB4R1FBq15H35/j+bzYui9p1F0z3/9GfiM2cuyjRgAWl3tZPfBLJcGoDf
-         n2RWz7C9PnNbfI6SJTSA5mR/YQ0Y6E96M0HUGVRM=
+        Sun, 20 Oct 2019 23:42:17 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34166 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfJUDmR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 23:42:17 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m19so9813733otp.1;
+        Sun, 20 Oct 2019 20:42:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WwNptKCIXL03KfSFCpNDwIbTOrNecFxUXSvyhNwAF1o=;
+        b=jscOCbkjE3LquQhr7FG795+BMFTVVG2o+MrpONMzll+dZHgml9UVKKywOM11jtVQ9G
+         G0pPHO2D3Z4goJjzQDJ6mVayZFO/XQKpUr4B6p2iB/9Rw5sEeHBLKhxCi+1s2TiK0ZnC
+         yqb30CTY6qgDCosbTHPdxUOr7Ak2of3UwhDe7s0vzy9s2fSZEnpiCa1HioM/50qWoBYO
+         lZeJbjYC3pitteLMVAgUjiteaXTHrkQB1kNYha/0moX96pzJorblUYGiNaP8gYbt0yqL
+         +k05oWfsViznKQSKY7ZU+chTOqQsDaJAQ9X4Vs+3S+DqBnPhuiejy7NLL0gmo+id2jRb
+         wF5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WwNptKCIXL03KfSFCpNDwIbTOrNecFxUXSvyhNwAF1o=;
+        b=cThitBYbjmi6OXCYUvszGd/wRFwHDH+tTFncIQRZIedKwn41o/F+wiuzQT6T64ZJ2h
+         TipjmFGRmoOr5fB0f3W3+tyxhmWlqBfGaA9FKoC8TkFvF90zQYjpNrfICqMZ82y7QEv7
+         TsPFkJYrWaY5WjhbyE6kF8tfTo7BXKJNb4kHAYTW9vQub65u3du13wDODafRjZ/UUDER
+         uQkFg3uZPgcLg/yDLnXpX57/KF5jWkHVS7cDWeSA4HpwqcOvnuToY+Dfgy8eMRLeK9yz
+         nV/jeBUvCPTQI9bKcKUGSEv5Sf3eCdPfW1CBZUIQa6EqE8qDYirWtv+vbgAeCKdzT6XL
+         nXJg==
+X-Gm-Message-State: APjAAAVNtPmx716+X7ArJuuS8FEhhCWhVbfbud477PdICCtcQpAQq4Ru
+        GDi9pNxYlDb2l3e/2HQUyt+lGU7GEHXSgh4XQcU=
+X-Google-Smtp-Source: APXvYqwbDxAiumFveeAyDjAcA3RuuZXJIQxgx57k3J8A7n30HzjoSDQpOnDmk3kxMRr3wyH5kUdKJVwmYd9QxetBhXo=
+X-Received: by 2002:a9d:3ec:: with SMTP id f99mr15783897otf.353.1571629334258;
+ Sun, 20 Oct 2019 20:42:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 20 Oct 2019 20:34:46 -0700
-From:   cgoldswo@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] of: reserved_mem: add missing of_node_put() for proper
- ref-counting
-In-Reply-To: <20191021020624.GE4500@tuxbook-pro>
-References: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
- <20191021020624.GE4500@tuxbook-pro>
-Message-ID: <7c57d99e9240e1e7198b835a35089cf5@codeaurora.org>
-X-Sender: cgoldswo@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-9-tiny.windzz@gmail.com>
+ <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com>
+ <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
+ <CA+E=qVf9V9iTvCfXXyjqKeviCJOvYpKUO8qw6cQsKqoaRmdKYQ@mail.gmail.com>
+ <20190813200623.2dmxcwibuyolnuhh@core.my.home> <CA+E=qVd-hz68VhL0n+3-HDNua2QsT0dOVY9mRjhb5e5+tBW5Fg@mail.gmail.com>
+ <CAEExFWueWPOvXoE+zj67DuKWeamcLgawfOxanfPp6Jyo9Envzg@mail.gmail.com>
+In-Reply-To: <CAEExFWueWPOvXoE+zj67DuKWeamcLgawfOxanfPp6Jyo9Envzg@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Sun, 20 Oct 2019 20:41:48 -0700
+Message-ID: <CA+E=qVchu9=Qjp9k3QxQ-Dd1oKnfTKQan7AZfbA5k3qk-1N+6A@mail.gmail.com>
+Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan.Cameron@huawei.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        rui.zhang@intel.com, "David S. Miller" <davem@davemloft.net>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Sun, Aug 25, 2019 at 9:14 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+>
+> HI Vasily,
 
-On 2019-10-20 19:06, Bjorn Andersson wrote:
-> Cc stable@ is used to assist in making sure your patch is backported to
-> stable kernels, other than that the purpose Cc here is to indicate that
-> specific people have been requested to comment on your patch.
-> 
-> So please skip these from the commit message in the future
+Hi Yangtao,
 
-Thanks for informing me of this, I've re-read the patch submission
-documentation and will omit the Cc's in the future from the commit
-message (other than Cc stable@).
+Sorry for the late reply,
+
+> On Wed, Aug 14, 2019 at 11:01 AM Vasily Khoruzhick <anarsoul@gmail.com> w=
+rote:
+> >
+> > On Tue, Aug 13, 2019 at 1:06 PM Ond=C5=99ej Jirman <megous@megous.com> =
+wrote:
+> > >
+> > > On Mon, Aug 12, 2019 at 04:54:15PM -0700, Vasily Khoruzhick wrote:
+> > > > On Mon, Aug 12, 2019 at 4:46 PM Frank Lee <tiny.windzz@gmail.com> w=
+rote:
+> > > > >
+> > > > > HI Vasily,
+> > > > >
+> > > > > On Sat, Aug 10, 2019 at 2:17 PM Vasily Khoruzhick <anarsoul@gmail=
+.com> wrote:
+> > > > > >
+> > > > > > On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.c=
+om> wrote:
+> > > > > > >
+> > > > > > > H3 has extra clock, so introduce something in ths_thermal_chi=
+p/ths_device
+> > > > > > > and adds the process of the clock.
+> > > > > > >
+> > > > > > > This is pre-work for supprt it.
+> > > > > > >
+> > > > > > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > > > > > ---
+> > > > > > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
+> > > > > > >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/therma=
+l/sun8i_thermal.c
+> > > > > > > index b934bc81eba7..6f4294c2aba7 100644
+> > > > > > > --- a/drivers/thermal/sun8i_thermal.c
+> > > > > > > +++ b/drivers/thermal/sun8i_thermal.c
+> > > > > > > @@ -54,6 +54,7 @@ struct tsensor {
+> > > > > > >  };
+> > > > > > >
+> > > > > > >  struct ths_thermal_chip {
+> > > > > > > +       bool            has_mod_clk;
+> > > > > > >         int             sensor_num;
+> > > > > > >         int             offset;
+> > > > > > >         int             scale;
+> > > > > > > @@ -69,6 +70,7 @@ struct ths_device {
+> > > > > > >         struct regmap                           *regmap;
+> > > > > > >         struct reset_control                    *reset;
+> > > > > > >         struct clk                              *bus_clk;
+> > > > > > > +       struct clk                              *mod_clk;
+> > > > > > >         struct tsensor                          sensor[MAX_SE=
+NSOR_NUM];
+> > > > > > >  };
+> > > > > > >
+> > > > > > > @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struc=
+t ths_device *tmdev)
+> > > > > > >         if (IS_ERR(tmdev->bus_clk))
+> > > > > > >                 return PTR_ERR(tmdev->bus_clk);
+> > > > > > >
+> > > > > > > +       if (tmdev->chip->has_mod_clk) {
+> > > > > > > +               tmdev->mod_clk =3D devm_clk_get(&pdev->dev, "=
+mod");
+> > > > > > > +               if (IS_ERR(tmdev->mod_clk))
+> > > > > > > +                       return PTR_ERR(tmdev->mod_clk);
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > >         ret =3D reset_control_deassert(tmdev->reset);
+> > > > > > >         if (ret)
+> > > > > > >                 return ret;
+> > > > > > > @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(stru=
+ct ths_device *tmdev)
+> > > > > > >         if (ret)
+> > > > > > >                 goto assert_reset;
+> > > > > > >
+> > > > > > > -       ret =3D sun50i_ths_calibrate(tmdev);
+> > > > > > > +       ret =3D clk_prepare_enable(tmdev->mod_clk);
+> > > > > >
+> > > > > > You have to set rate of modclk before enabling it since you can=
+'t rely
+> > > > > > on whatever bootloader left for you.
+> > > > > >
+> > > > > > Also I found that parameters you're using for PC_TEMP_PERIOD, A=
+CQ0 and
+> > > > > > ACQ1 are too aggressive and may result in high interrupt rate t=
+o the
+> > > > > > point when it may stall RCU. I changed driver a bit to use para=
+ms from
+> > > > > > Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7,=
+ ACQ0
+> > > > > > is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
+> > > > > > details.
+> > > > >
+> > > > > Why is the RCU stall happening, is it caused by a deadlock?
+> > > > > Can you provide log information and your configuration?
+> > > > > I am a bit curious.
+> > > >
+> > > > It's not deadlock, I believe it just can't handle that many interru=
+pts
+> > > > when running at lowest CPU frequency. Even with Philipp's settings
+> > > > there's ~20 interrupts a second from ths. I don't remember how many
+> > > > interrupts were there with your settings.
+> > > >
+> > > > Unfortunately there's nothing interesting in backtraces, I'm using
+> > > > Pine64-LTS board.
+> > >
+> > > Recently there was a similar issue, with buggy CCU driver that caused
+> > > CIR interrupts being fired constantly, and it also resulted in RCU
+> > > stalls. Looks like a comon cause of RCU stalls.
+> > >
+> > > THS timing settings probably need to be made specific to the SoC, bec=
+ause
+> > > I noticed that the same settings lead to wildly different timings on
+> > > different SoCs.
+> > >
+> > > It would be good to measure how often ths interrupt fires with this d=
+river
+> > > on various SoCs.
+> > >
+> > > 20 times a second and more sounds like overkill. I'd expect a useful
+> > > range to be at most 5-10 times a second. That should be enough to sto=
+p
+> > > overheating the SoC due to suddenly increased load, even without a
+> > > heatsink.
+> >
+> > Note that A64 has 3 sensors and each sensor has individual interrupt,
+> > so technically it's 6-7 interrupts per sensor per second
+>
+> You only need to increase the value of the period to reduce the number
+> of interrupts.
+> Can you test the relationship between the period and the number of interr=
+upts
+> when the mod clock does not change and stays 24M?
+
+I played a bit with your settings and 24M,
+
+with PERIOD =3D 57 I get 26 interrupts / second
+with 87 - 18 interrupts / second
+with 116 - 12-15 interrupts / second.
+
+I think we should use 116 for A64 since with it we get reasonable
+number of ths interrupts in a second.
 
 Regards,
+Vasily
 
-Chris.
+> Thx.
+> Yangtao
+>
+> >
+> > > regards,
+> > >         o.
+> > >
+> > > > > Thx,
+> > > > > Yangtao
+> > > > >
+> > > > > >
+> > > > > > [1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1=
+cd88fa9181a2ecbf79e8d513b2
+> > > > > >
+> > > > > >
+> > > > > > >         if (ret)
+> > > > > > >                 goto bus_disable;
+> > > > > > >
+> > > > > > > +       ret =3D sun50i_ths_calibrate(tmdev);
+> > > > > > > +       if (ret)
+> > > > > > > +               goto mod_disable;
+> > > > > > > +
+> > > > > > >         return 0;
+> > > > > > >
+> > > > > > > +mod_disable:
+> > > > > > > +       clk_disable_unprepare(tmdev->mod_clk);
+> > > > > > >  bus_disable:
+> > > > > > >         clk_disable_unprepare(tmdev->bus_clk);
+> > > > > > >  assert_reset:
+> > > > > > > @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platfo=
+rm_device *pdev)
+> > > > > > >  {
+> > > > > > >         struct ths_device *tmdev =3D platform_get_drvdata(pde=
+v);
+> > > > > > >
+> > > > > > > +       clk_disable_unprepare(tmdev->mod_clk);
+> > > > > > >         clk_disable_unprepare(tmdev->bus_clk);
+> > > > > > >         reset_control_assert(tmdev->reset);
+> > > > > > >
+> > > > > > > --
+> > > > > > > 2.17.1
+> > > > > > >
+> > > > > > >
+> > > > > > > _______________________________________________
+> > > > > > > linux-arm-kernel mailing list
+> > > > > > > linux-arm-kernel@lists.infradead.org
+> > > > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > > >
+> > > > _______________________________________________
+> > > > linux-arm-kernel mailing list
+> > > > linux-arm-kernel@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
