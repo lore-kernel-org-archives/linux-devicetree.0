@@ -2,124 +2,93 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2C5CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128BDCA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A69E21906
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:14:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pn/BCboT"
+	by mail.kernel.org (Postfix) with ESMTP id E6BF221906
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbfJUOO5 (ORCPT
+        id S1729137AbfJUOQF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:14:57 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:38133 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728860AbfJUOO5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 10:14:57 -0400
-Received: by mail-vs1-f66.google.com with SMTP id b123so8955333vsb.5
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 07:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yS8qs3B3YGG+1CaBCs+yd01gHNPGrQOZoSsD0Kk0Jog=;
-        b=Pn/BCboTlYXueWFu2lYYLoFGnsbCRWYun52IGpqPIDYrwc2DK/4wSWIlEIAwadC3Ou
-         dg7eBJiJxRYXrT6Ya9KUrMlTMR6vzqKpazwDroPYbKI7s/J1NEL0Rsc4GYU+P1Md7r7A
-         N0PZnApDTKbbzf9lUyHu+zTbPUaEPLIFUwUG+qiArKuGJgSBDB93WbhnHvQ55Bfly0Bg
-         xR0pyZRVdDcRVZVnGK1lHKMSaKowQU4IO4OApws7zDX3vYlltsiAQXfFTgIxakyKHFIt
-         cyeEQvT12qW/TlJhRySJdqZaFqyCWalutZWBk3pTWyqlu9Q7ejExawnfBfc4+yN2KrGm
-         52ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yS8qs3B3YGG+1CaBCs+yd01gHNPGrQOZoSsD0Kk0Jog=;
-        b=rOwcU82FTXW3/xaMqBMA6KT8DCYKJs9BZWKG3vq5MKewjuoR09dLWKqBrGfgwoVkE0
-         6DgK5CTR6Cc91UGjqXcewVVqvW07r/yOGpHHIuloObHj25aP5JAcLp7Pzyw8OpylsIoM
-         xeak/zjHTuu9Lh4xem/Eg5IdbcgcBrNckCetZvUnDkJccf44gvujfKKoyK/4og3JBbkW
-         RgJYnpUFEqv+uWdiP0QSit7er0uFHcft7vqlOGQXi+4jyigP+C82mBrHfE1BSkrrr6KL
-         0x6E1x9V0y4BoN3PSBnx49SeoFs36jTPIP7Hz8Kg3T1vE1CuEQo9iCCwwJl+cYFM4RrS
-         tzbQ==
-X-Gm-Message-State: APjAAAUv6B63L06clxcIgVMcOA7aoijxFVKkibQ8QGysL2QIcQv/ne9U
-        eFiRihBU/UZdfIFnt7yBixN6HIBpHyijcjzGlZHV0Q==
-X-Google-Smtp-Source: APXvYqz9r09sX0s75qmyPEEUmSKArK+VJBphmNsHF6I2eD5KN0VEOGXWfbqgNE20Ygtof4lmLqC1eZzCLfMc1loRLkI=
-X-Received: by 2002:a05:6102:104d:: with SMTP id h13mr13907823vsq.165.1571667296086;
- Mon, 21 Oct 2019 07:14:56 -0700 (PDT)
+        Mon, 21 Oct 2019 10:16:05 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:53870 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1728551AbfJUOQF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:16:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71E1E1007;
+        Mon, 21 Oct 2019 07:15:44 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A115B3F71F;
+        Mon, 21 Oct 2019 07:15:43 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 15:15:41 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Anvesh Salveru <anvesh.s@samsung.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: designware: Add binding for ZRX-DC
+ PHY property
+Message-ID: <20191021141541.GS47056@e119886-lin.cambridge.arm.com>
+References: <CGME20191021122630epcas5p32bd92762c4304035cad5c1822d96e304@epcas5p3.samsung.com>
+ <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
 MIME-Version: 1.0
-References: <1571293310-92563-1-git-send-email-manish.narani@xilinx.com>
-In-Reply-To: <1571293310-92563-1-git-send-email-manish.narani@xilinx.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 21 Oct 2019 16:14:20 +0200
-Message-ID: <CAPDyKFo-8=crHZd9X7JpGJHdEwFs4Pz8rzEtVg6e7QZqE8N8nw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] Arasan SDHCI enhancements and ZynqMP Tap Delays Handling
-To:     Manish Narani <manish.narani@xilinx.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>, jolly.shah@xilinx.com,
-        rajan.vaja@xilinx.com, nava.manne@xilinx.com,
-        Moritz Fischer <mdf@kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        git@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571660755-30270-1-git-send-email-anvesh.s@samsung.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 17 Oct 2019 at 08:22, Manish Narani <manish.narani@xilinx.com> wrote:
->
-> This patch series does the following:
->  - Reorganize the Clock Handling in Arasan SD driver
->  - Adds new sampling clock in Arasan SD driver
->  - Adds support to set Clock Delays in SD Arasan Driver
->  - Add SDIO Tap Delay handling in ZynqMP firmware driver
->  - Add support for ZynqMP Tap Delays setting in Arasan SD driver
->
-> Changes in v2:
->         - Replaced the deprecated calls to clock framework APIs
->         - Added support for dev_clk_get() call to work for SD card clock
->         - Separated the clock data struct
->         - Fragmented the patch series in smaller patches to make it more
->           readable
->
-> Changes in v3:
->         - Reverted "Replaced the deprecated calls to clock framework APIs"
->         - Removed devm_clk_get() call which was added in v2
->
-> Manish Narani (8):
->   mmc: sdhci-of-arasan: Separate out clk related data to another
->     structure
->   dt-bindings: mmc: arasan: Update Documentation for the input clock
->   mmc: sdhci-of-arasan: Add sampling clock for a phy to use
->   dt-bindings: mmc: arasan: Add optional properties for Arasan SDHCI
->   mmc: sdhci-of-arasan: Add support to set clock phase delays for SD
->   firmware: xilinx: Add SDIO Tap Delay nodes
->   dt-bindings: mmc: arasan: Document 'xlnx,zynqmp-8.9a' controller
->   mmc: sdhci-of-arasan: Add support for ZynqMP Platform Tap Delays Setup
->
->  .../devicetree/bindings/mmc/arasan,sdhci.txt  |  40 +-
->  drivers/mmc/host/sdhci-of-arasan.c            | 477 +++++++++++++++++-
->  include/linux/firmware/xlnx-zynqmp.h          |  13 +-
->  3 files changed, 498 insertions(+), 32 deletions(-)
->
-> --
+On Mon, Oct 21, 2019 at 05:55:55PM +0530, Anvesh Salveru wrote:
+> Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
+> specification, then after every 100ms link should transition to recovery
+> state during the low power states which increases power consumption.
+> 
+> Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
+> property in DesignWare controller DT node.
+> 
+> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 78494c4050f7..9507ac38ac89 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -38,6 +38,8 @@ Optional properties:
+>     for data corruption. CDM registers include standard PCIe configuration
+>     space registers, Port Logic registers, DMA and iATU (internal Address
+>     Translation Unit) registers.
+> +- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
+
+Strictly speaking, this is a property of the phy - not the controller that
+uses it.
+
+If I understand correctly, there are some DW based PCI controllers that use
+a phandle reference in DT to a Phy (such as fsl,imx6q-pcie.txt). Therefore
+it feels like this is in the wrong place. Is there a reason this isn't
+described in the Phy?
+
+Thanks,
+
+Andrew Murray
+
+> +  ZRX-DC specification.
+>  RC mode:
+>  - num-viewport: number of view ports configured in hardware. If a platform
+>    does not specify it, the driver assumes 2.
+> -- 
 > 2.17.1
->
-
-Manish, the series looks good to me. However, I expect you to post a
-re-spin, to move some of the new DT bindings into common mmc DT
-bindings, as Rob suggested.
-
-So waiting for another version, before I apply it.
-
-Kind regards
-Uffe
+> 
