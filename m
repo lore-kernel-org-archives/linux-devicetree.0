@@ -2,101 +2,172 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04919CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ECECA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE66120873
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAEE6214B2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 18:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="XmU7ZkYx"
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="r104k429"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfJUSWg (ORCPT
+        id S1729995AbfJUSaa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 14:22:36 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:22262 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfJUSWg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 14:22:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571682152;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ESbJhDnm5bjuVodC9kh4h0sdAOT1wrM2a4p9lLw+WMU=;
-        b=XmU7ZkYxfp33BkQgcl5YpwmrWOM3l9F4xslYbs0zMYcPe1FXsqxa3XsANba9HChcWM
-        4cZ0ZHMZdtIuY8sVtIzzS9lqfLLABXmNe3wvcbzP/ozh5hH9UI2vAifvvWsF6PpFkgPa
-        af7eo60FnAsUhj6NkntPeV3aEl6f1iELqirCKW7anm1T0OUlb5RRRC5CWwjVqR+HXumx
-        rc6lN7ZBZlqyr1hpXGSoAuH7cDwcn3UYriAHPqVPh110ZL6SOhqs81FdQixc1LXzw1pr
-        iaK9jWwik10QrAdrWZjDzEIJ5b3WItr3nK395plCbUZV7lzgu0+Vil3ikaEmYIlirdiM
-        1xRA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCbXA4Ewxc="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9LIMGM7B
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 21 Oct 2019 20:22:16 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH 3/9] DTS: ARM: pandora-common: define wl1251 as child node of mmc3
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191021171321.GZ5610@atomide.com>
-Date:   Mon, 21 Oct 2019 20:22:15 +0200
-Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 21 Oct 2019 14:30:30 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43858 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbfJUSaa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 14:30:30 -0400
+Received: by mail-il1-f194.google.com with SMTP id t5so12950384ilh.10
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 11:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AR63DmWjyzGt6KRdOolpGSBjajplu7OlrmmkLDJcF1w=;
+        b=r104k429d5kD4MhbpW7CsAzUCeS0MvNA2lwEo7M3+M+ZRmetRuneB8nvFRgLuP5tQ6
+         J9AKWyyIKKMOX00v0Kdg61NH+qsyMxoXqdfAltdCnCFK4pEdyXQhccQsFXnzV3ALGMjF
+         SGS27FyioGLGTnffmypWBvmKw8dC6yfr+isAhHG9DtvWsqLqu6xlyJDWEk4lKH/r40B7
+         Wxerfq7p3FpMUFwQs8jVPnsL1bLo1Ve8L9+s4ZS17nQ0yiIO2u6g3DVw1MFsuFNNM+f7
+         AugqoDYUUN0oVT99Q04VqQJ8YWw8013gmT4592iYFmLJkmSN+9FKG8UnkYOwGWeEvV9P
+         czhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AR63DmWjyzGt6KRdOolpGSBjajplu7OlrmmkLDJcF1w=;
+        b=hUsEd/mymyCxO4vXqxUA3LS+TF3BMZHYTCjjgk9tok0Ce7j0PNOVKgKF/9N2b1R0bT
+         kzD6+vYD3A3opSG/7Hflhk44+J9V4ZQugPlji8sHHZU8X6Ji+jVkITRZjn7yGz0929OR
+         f/cwUY2PHwGcDaOz1ttJ4/C8B2uNZJXEEWuVhfC7tTJg0BGQaeg+REisaHWvw0T+0Wd9
+         Mgl2LzW2EB0I3RRA9iv3Sv3PQQpHCIQPfxYGLVhuuDv9VshKm/KLPdWSrs3qHyaASdu6
+         3F+4dj+wW1XOB7sKp++xE/zFJhapW03x1YWLsQlkXxXRwp9jhMF71O9PQB2iugLhiXoA
+         oSyw==
+X-Gm-Message-State: APjAAAUQCuFTyEfFN3hovx6TEGzHNLr28GnaahduYJwyI/PgET1H84ta
+        vK5IP/b4OroAhVcGftwBljnQYYgd1UJ4sJMzj7v7lg==
+X-Google-Smtp-Source: APXvYqxDB3gB2L7gTQbzzkQP9wEvUweroIM30iMNvPJ5rKY/UAIM6U3j7QAfdmgJ+vmcQ6N1I2k2AlTFXOpvzMZTjxM=
+X-Received: by 2002:a92:d24d:: with SMTP id v13mr28009523ilg.112.1571682627649;
+ Mon, 21 Oct 2019 11:30:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191018232124.4126-1-rjones@gateworks.com> <20191021081945.o7knknxacm6uvd3c@pengutronix.de>
+In-Reply-To: <20191021081945.o7knknxacm6uvd3c@pengutronix.de>
+From:   Bobby Jones <rjones@gateworks.com>
+Date:   Mon, 21 Oct 2019 11:30:16 -0700
+Message-ID: <CALAE=UBqEShQ6REhqPEChpXX7-soi4w9vdEu8rO8QfqZqCBS8Q@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dt: add lsm9ds1 iio imu/magn support to gw553x
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0C476142-BC54-4950-8B7A-A422ABC2AEB9@goldelico.com>
-References: <cover.1571430329.git.hns@goldelico.com> <58c57f194e35b2a055a58081a0ea0d3ffcd07b6d.1571430329.git.hns@goldelico.com> <20191021171321.GZ5610@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Oct 21, 2019 at 1:19 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+>
+> Hi Robert,
+>
+> same here, don't name it 'ARM: dt: ...' instead name it 'ARM: dts: imx:
+> ventana: ..' or 'ARM: dts: imx: imx6qdl-gw553x: ..'.
 
-> Am 21.10.2019 um 19:13 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * H. Nikolaus Schaller <hns@goldelico.com> [191018 20:28]:
->> Since v4.7 the dma initialization requires that there is a
->> device tree property for "rx" and "tx" channels which is
->> not provided by the pdata-quirks initialization.
->>=20
->> By conversion of the mmc3 setup to device tree this will
->> finally allows to remove the OpenPandora wlan specific omap3
->> data-quirks.
->>=20
->> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for =
-requesting DMA channel")
->=20
-> Here you have the subject line the wrong way around,
-> please update it to start with "ARM: dts: ...".
+Sorry about that, I'll follow that format from now on.
+>
+> On 19-10-18 16:21, Robert Jones wrote:
+> > Add one node for the accel/gyro i2c device and another for the separate
+> > magnetometer device in the lsm9ds1.
+> >
+> > Signed-off-by: Robert Jones <rjones@gateworks.com>
+> > ---
+> >  arch/arm/boot/dts/imx6qdl-gw553x.dtsi | 31 +++++++++++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
+> > index a106689..55e6922 100644
+> > --- a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
+> > @@ -173,6 +173,25 @@
+> >       pinctrl-0 = <&pinctrl_i2c2>;
+> >       status = "okay";
+> >
+> > +     lsm9ds1_ag@6a {
+> > +             compatible = "st,lsm9ds1-imu";
+>
+> Didn't found this compatible string.
+So this is a compatible string for a driver that's being mainlined
+now. The devicetree bindings for which has already been reviewed-by
+Rob Herring as seen here:
+https://www.spinics.net/lists/linux-iio/msg47297.html. If possible I'd
+prefer to get this in the same kernel release so let me know if
+there's anything else I can do to make that happen.
 
-Ok.
+>
+> > +             reg = <0x6a>;
+> > +             st,drdy-int-pin = <1>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&pinctrl_acc_gyro>;
+> > +             interrupt-parent = <&gpio7>;
+> > +             interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
+> > +     };
+> > +
+> > +     lsm9ds1_m@1c {
+> > +             compatible = "st,lsm9ds1-magn";
+> > +             reg = <0x1c>;
+>
+> Nodes are sorted according their i2c-addresses.
+>
+I'll resubmit with that change, thanks!
+- Bobby
 
+> Regards,
+>   Marco
+>
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&pinctrl_mag>;
+> > +             interrupt-parent = <&gpio1>;
+> > +             interrupts = <2 IRQ_TYPE_EDGE_RISING>;
+> > +     };
+> > +
+> >       ltc3676: pmic@3c {
+> >               compatible = "lltc,ltc3676";
+> >               reg = <0x3c>;
+> > @@ -462,6 +481,18 @@
+> >               >;
+> >       };
+> >
+> > +     pinctrl_acc_gyro: acc_gyrogrp {
+> > +             fsl,pins = <
+> > +                     MX6QDL_PAD_GPIO_18__GPIO7_IO13          0x1b0b0
+> > +             >;
+> > +     };
+> > +
+> > +     pinctrl_mag: maggrp {
+> > +             fsl,pins = <
+> > +                     MX6QDL_PAD_GPIO_2__GPIO1_IO02           0x1b0b0
+> > +             >;
+> > +     };
+> > +
+> >       pinctrl_pps: ppsgrp {
+> >               fsl,pins = <
+> >                       MX6QDL_PAD_ENET_RXD1__GPIO1_IO26        0x1b0b1
+> > --
+> > 2.9.2
+> >
+> >
+> >
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
