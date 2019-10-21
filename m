@@ -2,141 +2,119 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EB4CA9EAC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F75CA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 04:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D4421D80
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 03:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840622053B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 04:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfJUDtU (ORCPT
+        id S1726936AbfJUETL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 23:49:20 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:41982 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfJUDtT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 20 Oct 2019 23:49:19 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 373311A04BB;
-        Mon, 21 Oct 2019 05:49:17 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C869A1A02C8;
-        Mon, 21 Oct 2019 05:49:10 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 05021402E5;
-        Mon, 21 Oct 2019 11:49:02 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v7 2/3] Documentation: dt: binding: fsl: Add 'little-endian' and update Chassis define
-Date:   Mon, 21 Oct 2019 11:49:26 +0800
-Message-Id: <20191021034927.19300-2-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191021034927.19300-1-ran.wang_1@nxp.com>
-References: <20191021034927.19300-1-ran.wang_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 21 Oct 2019 00:19:11 -0400
+Received: from p3plsmtpa06-04.prod.phx3.secureserver.net ([173.201.192.105]:48455
+        "EHLO p3plsmtpa06-04.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725770AbfJUETK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 00:19:10 -0400
+Received: from localhost.localdomain ([136.49.227.119])
+        by :SMTPAUTH: with ESMTPSA
+        id MP2oifB4Hr3FgMP2siDyXQ; Sun, 20 Oct 2019 21:11:51 -0700
+From:   Jeff LaBundy <jeff@labundy.com>
+To:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
+        linux@roeck-us.net, thierry.reding@gmail.com, jic23@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-input@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, Jeff LaBundy <jeff@labundy.com>
+Subject: [PATCH 0/8] Add support for Azoteq IQS620A/621/622/624/625
+Date:   Sun, 20 Oct 2019 23:11:15 -0500
+Message-Id: <1571631083-4962-1-git-send-email-jeff@labundy.com>
+X-Mailer: git-send-email 2.7.4
+X-CMAE-Envelope: MS4wfAu90c0pDaDRunGGnMqsYx9et4CGzqq2jfj1O0Glyz7u6Q0RvSVk+oYHIAxqJNdp4Y9teI7NzfcnwI8pFt7q+rnOBcEi+pmpwFFrUuEvf9wgjirl7FWE
+ E0EVRpNXQ1fkuNe6xOPbECyqH0UpkcvQHifiqMs3cygGs7tEjP43S4AlvQdCwfQJbsHec+CJ/cjuWxHcDe3lcDZAjqkG5lLtgP8R94HVqxFnL0sUnbu9IP7w
+ 4MDeyXJhQ1Kw/OeoW7JumgaXVT61sQ/psa/gQ/ZQ8mI38FUaOVAGamm8DVV80v/tYhC0Hgdv2Xaxw/Y1btvQHOHY+MoQ1xgxOhiOFzc7+U7d3xshPa2m1Rbk
+ h9I1+vgl2x9aVVf/hXIyIl/bwwT1kSVXOGxBKTE64il6wGrEsKF4OQnAGdtFPyI7wAGX8YeNdAsZjLy2VYekyuiFPO50a4C/Ts0yz/KG0ymnsrg8sWd/rXg9
+ hD1B2/irAuPbyy/nekBSufFnB7HIaj5vPl+blZ57Hll6HmITIYPnIolXEsAa/rWvfYuY5F2XVmLsT7TW7NlWkzrh7LhEMlJX5qlVqDq6O2rwRKszIFjGxEuW
+ pDqE7BurjKwLXa3SVAbPo63vGYU1sbdFtfilIz1YYEXuL31Pza1PEgNBjZQoMr+O9dC12fGr0bAjcRUgcwZ31r4z0mwMuGZ3QFG4wyGDxBlO5SfigUitaDJd
+ HznpiQzcjTw7bKLeHURPRqFMXiDG7FXhwmzUsmFzpq3HAQrv4pMGeA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-By default, QorIQ SoC's RCPM register block is Big Endian. But
-there are some exceptions, such as LS1088A and LS2088A, are
-Little Endian. So add this optional property to help identify
-them.
+This series adds support for six-channel members of the Azoteq ProxFusion
+family of sensor devices: IQS620A, IQS621, IQS622, IQS624 and IQS625. Each
+device integrates multiple sensor technologies in a single package.
 
-Actually LS2021A and other Layerscapes won't totally follow Chassis
-2.1, so separate them from powerpc SoC.
+A multi-function device (MFD) driver supports core functions common to all
+devices, including device identification, firmware, interrupt handling and
+runtime power management. The MFD driver is also responsible for adding all
+product-specific sub-devices.
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Change in v7:
-	- None.
+Each device supports self-capacitive, Hall-effect, and (in some cases) mutual-
+inductive sensing. These functions represent keys or switches and are supported
+by an input driver that covers all five devices. An assortment of pwm, hwmon
+and iio drivers support device-specific functions.
 
-Change in v6:
-	- None.
+This series was tested using the following development hardware: IQS620AEV04,
+IQS621EV04, IQS622EV04 and IQS624/5EV04.
 
-Change in v5:
-	- Add 'Reviewed-by: Rob Herring <robh@kernel.org>' to commit message.
-	- Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-cells'.
-	please see https://lore.kernel.org/patchwork/patch/1101022/
+Jeff LaBundy (8):
+  dt-bindings: mfd: iqs62x: Add bindings
+  mfd: Add support for Azoteq IQS620A/621/622/624/625
+  input: keyboard: Add support for Azoteq IQS620A/621/622/624/625
+  hwmon: Add support for Azoteq IQS620AT temperature sensor
+  pwm: Add support for Azoteq IQS620A PWM generator
+  iio: light: Add support for Azoteq IQS621 ambient light sensor
+  iio: proximity: Add support for Azoteq IQS622 proximity sensor
+  iio: position: Add support for Azoteq IQS624/625 angle sensor
 
-Change in v4:
-	- Adjust indectation of 'ls1021a, ls1012a, ls1043a, ls1046a'.
+ Documentation/devicetree/bindings/mfd/iqs62x.txt | 242 +++++++++
+ drivers/hwmon/Kconfig                            |  12 +-
+ drivers/hwmon/Makefile                           |   1 +
+ drivers/hwmon/iqs620at-temp.c                    |  96 ++++
+ drivers/iio/Kconfig                              |   1 +
+ drivers/iio/Makefile                             |   1 +
+ drivers/iio/light/Kconfig                        |  10 +
+ drivers/iio/light/Makefile                       |   1 +
+ drivers/iio/light/iqs621-als.c                   | 361 +++++++++++++
+ drivers/iio/position/Kconfig                     |  19 +
+ drivers/iio/position/Makefile                    |   7 +
+ drivers/iio/position/iqs624-pos.c                | 302 +++++++++++
+ drivers/iio/proximity/Kconfig                    |  10 +
+ drivers/iio/proximity/Makefile                   |   1 +
+ drivers/iio/proximity/iqs622-prox.c              | 334 ++++++++++++
+ drivers/input/keyboard/Kconfig                   |  10 +
+ drivers/input/keyboard/Makefile                  |   1 +
+ drivers/input/keyboard/iqs62x-keys.c             | 340 ++++++++++++
+ drivers/mfd/Kconfig                              |  13 +
+ drivers/mfd/Makefile                             |   2 +
+ drivers/mfd/iqs62x-core.c                        | 638 +++++++++++++++++++++++
+ drivers/mfd/iqs62x-tables.c                      | 424 +++++++++++++++
+ drivers/pwm/Kconfig                              |  10 +
+ drivers/pwm/Makefile                             |   1 +
+ drivers/pwm/pwm-iqs620a.c                        | 167 ++++++
+ include/linux/mfd/iqs62x.h                       | 148 ++++++
+ 26 files changed, 3151 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/iqs62x.txt
+ create mode 100644 drivers/hwmon/iqs620at-temp.c
+ create mode 100644 drivers/iio/light/iqs621-als.c
+ create mode 100644 drivers/iio/position/Kconfig
+ create mode 100644 drivers/iio/position/Makefile
+ create mode 100644 drivers/iio/position/iqs624-pos.c
+ create mode 100644 drivers/iio/proximity/iqs622-prox.c
+ create mode 100644 drivers/input/keyboard/iqs62x-keys.c
+ create mode 100644 drivers/mfd/iqs62x-core.c
+ create mode 100644 drivers/mfd/iqs62x-tables.c
+ create mode 100644 drivers/pwm/pwm-iqs620a.c
+ create mode 100644 include/linux/mfd/iqs62x.h
 
-Change in v3:
-	- None.
-
-Change in v2:
-	- None.
-
- Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-index e284e4e..5a33619 100644
---- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-@@ -5,7 +5,7 @@ and power management.
- 
- Required properites:
-   - reg : Offset and length of the register set of the RCPM block.
--  - fsl,#rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
-+  - #fsl,rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
- 	fsl,rcpm-wakeup property.
-   - compatible : Must contain a chip-specific RCPM block compatible string
- 	and (if applicable) may contain a chassis-version RCPM compatible
-@@ -20,6 +20,7 @@ Required properites:
- 	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
- 	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
- 	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
-+	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
- 
- All references to "1.0" and "2.0" refer to the QorIQ chassis version to
- which the chip complies.
-@@ -27,14 +28,19 @@ Chassis Version		Example Chips
- ---------------		-------------------------------
- 1.0				p4080, p5020, p5040, p2041, p3041
- 2.0				t4240, b4860, b4420
--2.1				t1040, ls1021
-+2.1				t1040,
-+2.1+				ls1021a, ls1012a, ls1043a, ls1046a
-+
-+Optional properties:
-+ - little-endian : RCPM register block is Little Endian. Without it RCPM
-+   will be Big Endian (default case).
- 
- Example:
- The RCPM node for T4240:
- 	rcpm: global-utilities@e2000 {
- 		compatible = "fsl,t4240-rcpm", "fsl,qoriq-rcpm-2.0";
- 		reg = <0xe2000 0x1000>;
--		fsl,#rcpm-wakeup-cells = <2>;
-+		#fsl,rcpm-wakeup-cells = <2>;
- 	};
- 
- * Freescale RCPM Wakeup Source Device Tree Bindings
-@@ -44,7 +50,7 @@ can be used as a wakeup source.
- 
-   - fsl,rcpm-wakeup: Consists of a phandle to the rcpm node and the IPPDEXPCR
- 	register cells. The number of IPPDEXPCR register cells is defined in
--	"fsl,#rcpm-wakeup-cells" in the rcpm node. The first register cell is
-+	"#fsl,rcpm-wakeup-cells" in the rcpm node. The first register cell is
- 	the bit mask that should be set in IPPDEXPCR0, and the second register
- 	cell is for IPPDEXPCR1, and so on.
- 
--- 
+--
 2.7.4
 
