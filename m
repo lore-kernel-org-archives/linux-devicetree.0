@@ -2,403 +2,145 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3243FCA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE190CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF1C920830
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF69214AE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 10:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="K3tpLTNx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbfJUJyt (ORCPT
+        id S1727964AbfJUKTV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:54:49 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11542 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbfJUJyt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:54:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 02:54:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,323,1566889200"; 
-   d="scan'208";a="348690900"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga004.jf.intel.com with ESMTP; 21 Oct 2019 02:54:45 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     kishon@ti.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com,
-        vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: [PATCH v6 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-Date:   Mon, 21 Oct 2019 17:54:36 +0800
-Message-Id: <20191021095436.50303-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191021095436.50303-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20191021095436.50303-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Mon, 21 Oct 2019 06:19:21 -0400
+Received: from mail-eopbgr150072.outbound.protection.outlook.com ([40.107.15.72]:21984
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726725AbfJUKTV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 06:19:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=diQC7wLF7otsRM/AFhAX+7JYhqxNRvAdsm7vwakRbdv2FB+8J4C4YJWinSLxOlNzXF9c9TkB1vSiosHCEsSgh0aiAIXva9p9FJHTQWaZMa3glOt0OZohj+HBLTNbqZR/8/Thhk6NE8NjFQqe9UvYjPlaN17gwLoqBLwKkDjhDTgtwxo4FnpykncdU5HyrAFdTxUvSf2f8SLbTu0KJ2Fv5tDk4l24ARsqDR9bo8YVUFUsDIGPzJmn5VsFTgwM+TZvg0ngQCvtTVDwp8g57jsqPjrujC2uIsAJkDDuY8JxfqGXg99Mk/hgsJFnbyUHvFgV+Qx0Gu5zichaaCnnz8mvWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dkk+GZkBI0DpAKJVpT8J8tIUGiHFQzuv2JyjukZc40U=;
+ b=f50OYOQF87U7RarABitjWSNhnBPoBQEgUqYg9p6HZf/wOXigf1QjR12zmDgRGhBdjpHCP2WhcwJV0cN0+8KXkdos6k7c3TiKh9uj0gedOWSxZIEtfuaq1lKAti8gB0hY756lUP2+Sfp+cjQYKQNt5R4TDKH0m9qunZ55h0ORrYmwayKtYQd8OxMhHGmKU71exwY2DVbSAs2pa4yiNT3yuO6z5QSVM88whW5Bz+oCY0x1Db74ZfrFpDABHGqkXzxA1VMD2V3H0Jr0WKYvywMLSL3I4sdgrh8BgzFM3CWnmYB8sQTAbhIzxou+gKgytX5jEzMpYtxMMkYK8WEUwbLEsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dkk+GZkBI0DpAKJVpT8J8tIUGiHFQzuv2JyjukZc40U=;
+ b=K3tpLTNxmLw/HVnBBPZ9dMF2iG+jYt9lAKY1rqk0HIkxMNwii7z3W8ohN3fjMF+Y1iH2t5+v0Y0vUFK11xLtFr1SZpQCgHv9+VTxqJKeo1Q5+VITSMzcNXEyQcKPXUb3pVRdx8trJhuy1uE9WhqGmKvT8U/BEemXIhndMNJjOto=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6401.eurprd04.prod.outlook.com (20.179.254.97) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.20; Mon, 21 Oct 2019 10:19:17 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::843c:e722:27cb:74e1]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::843c:e722:27cb:74e1%5]) with mapi id 15.20.2347.028; Mon, 21 Oct 2019
+ 10:19:17 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for fec1
+Thread-Topic: [PATCH V2 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for
+ fec1
+Thread-Index: AQHVh/j+k1XoWkwF8kWzRGGsNvXoFQ==
+Date:   Mon, 21 Oct 2019 10:19:17 +0000
+Message-ID: <1571652977-4754-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0016.apcprd03.prod.outlook.com
+ (2603:1096:203:2e::28) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 45350f3a-3511-4b10-25e9-08d756102113
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: AM0PR04MB6401:|AM0PR04MB6401:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB640120B84C6889726F805EBB88690@AM0PR04MB6401.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:175;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(199004)(189003)(66066001)(3846002)(8676002)(8936002)(2906002)(50226002)(81156014)(25786009)(2201001)(81166006)(486006)(476003)(86362001)(478600001)(44832011)(2501003)(14454004)(66476007)(66556008)(64756008)(66446008)(66946007)(2616005)(52116002)(6116002)(305945005)(71200400001)(5660300002)(71190400001)(99286004)(186003)(316002)(7736002)(386003)(4744005)(102836004)(36756003)(6486002)(256004)(110136005)(4326008)(26005)(6512007)(54906003)(6436002)(6506007)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6401;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nTRqU4N/sF8coVMrPBzxr7F8o1+vKkkIpJRgtZeenqbvRKE9AS4KjKoTDxb/Y6K2zyVSIpWrckx+sgA2yyJ7vw70KKE+/DYe2IDuq2y78kCxzo0PQypm1PtA03URWNpFDn9+DbYeWqLq3K30pvSCV3Exth1zWnu47G647AEYuJeITKdZvqa6lobZCTJp3j+PJGMYl/j7wQZS4xc93BKhWf6J1BEqnXLV4PPrwIfYmtiw0BvVWIivmG8s12L3UehvJ9PSnaYfbyKZCQhZsXanBBSrUBh6LYJJk0pe33TvYOAiA9YEFL+223tZwC3lFHlCCIJJRkd/7d2mFD6P62noL5BCXHapvOj/6LrKvIPMigJt+QLbtothnlnsRcD90l2Z71tyRvjJCuDQdvMB3psWl75CAp59Hj+Vf0PVpoSsfKlgcRzP9TFX/PSv8qVr5koa
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45350f3a-3511-4b10-25e9-08d756102113
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 10:19:17.5070
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HRp3jfL2znZeA8Zgq7PKzMiGAJoZlzjMLTfNy/np8zwKsDFb0dFgLBdrgzNo7q5nfQCLuCgv0xZOPalvzxQKHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6401
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-Add support for eMMC PHY on Intel's Lightning Mountain SoC.
+We should not rely on bootloader to configure the phy reset.
+So introduce phy-reset-gpios property to let Linux handle phy reset
+itself.
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/phy/Kconfig                |   1 +
- drivers/phy/Makefile               |   1 +
- drivers/phy/intel/Kconfig          |   9 ++
- drivers/phy/intel/Makefile         |   2 +
- drivers/phy/intel/phy-intel-emmc.c | 283 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 296 insertions(+)
- create mode 100644 drivers/phy/intel/Kconfig
- create mode 100644 drivers/phy/intel/Makefile
- create mode 100644 drivers/phy/intel/phy-intel-emmc.c
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 0263db2ac874..b3ed94b98d9b 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -69,5 +69,6 @@ source "drivers/phy/socionext/Kconfig"
- source "drivers/phy/st/Kconfig"
- source "drivers/phy/tegra/Kconfig"
- source "drivers/phy/ti/Kconfig"
-+source "drivers/phy/intel/Kconfig"
- 
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index c96a1afc95bd..310c149a9df5 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -18,6 +18,7 @@ obj-y					+= broadcom/	\
- 					   cadence/	\
- 					   freescale/	\
- 					   hisilicon/	\
-+					   intel/	\
- 					   lantiq/	\
- 					   marvell/	\
- 					   motorola/	\
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-new file mode 100644
-index 000000000000..4ea6a8897cd7
---- /dev/null
-+++ b/drivers/phy/intel/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Phy drivers for Intel Lightning Mountain(LGM) platform
-+#
-+config PHY_INTEL_EMMC
-+	tristate "Intel EMMC PHY driver"
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the Intel EMMC PHY
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-new file mode 100644
-index 000000000000..6b876a75599d
---- /dev/null
-+++ b/drivers/phy/intel/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-diff --git a/drivers/phy/intel/phy-intel-emmc.c b/drivers/phy/intel/phy-intel-emmc.c
-new file mode 100644
-index 000000000000..1a358e7fd236
---- /dev/null
-+++ b/drivers/phy/intel/phy-intel-emmc.c
-@@ -0,0 +1,283 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel eMMC PHY driver
-+ * Copyright (C) 2019 Intel, Corp.
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* eMMC phy register definitions */
-+#define EMMC_PHYCTRL0_REG	0xa8
-+#define DR_TY_MASK		GENMASK(30, 28)
-+#define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
-+#define OTAPDLYENA		BIT(14)
-+#define OTAPDLYSEL_MASK		GENMASK(13, 10)
-+#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
-+
-+#define EMMC_PHYCTRL1_REG	0xac
-+#define PDB_MASK		BIT(0)
-+#define PDB_SHIFT(x)		(((x) << 0) & PDB_MASK)
-+#define ENDLL_MASK		BIT(7)
-+#define ENDLL_SHIFT(x)		(((x) << 7) & ENDLL_MASK)
-+
-+#define EMMC_PHYCTRL2_REG	0xb0
-+#define FRQSEL_25M		0
-+#define FRQSEL_50M		1
-+#define FRQSEL_100M		2
-+#define FRQSEL_150M		3
-+#define FRQSEL_MASK		GENMASK(24, 22)
-+#define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
-+
-+#define EMMC_PHYSTAT_REG	0xbc
-+#define CALDONE_MASK		BIT(9)
-+#define DLLRDY_MASK		BIT(8)
-+#define IS_CALDONE(x)	((x) & CALDONE_MASK)
-+#define IS_DLLRDY(x)	((x) & DLLRDY_MASK)
-+
-+struct intel_emmc_phy {
-+	struct regmap *syscfg;
-+	struct clk *emmcclk;
-+};
-+
-+static int intel_emmc_phy_power(struct phy *phy, bool on_off)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+	unsigned int caldone;
-+	unsigned int dllrdy;
-+	unsigned int freqsel;
-+	unsigned long rate;
-+	int ret, quot;
-+
-+	/*
-+	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-+	 * initialization of CALIO state M/C DFFs
-+	 */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK,
-+				 PDB_SHIFT(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Already finish power_off above */
-+	if (!on_off)
-+		return 0;
-+
-+	rate = clk_get_rate(priv->emmcclk);
-+	quot = DIV_ROUND_CLOSEST(rate, 50000000);
-+	if (quot > FRQSEL_150M)
-+		dev_warn(&phy->dev, "Unsupported rate: %lu\n", rate);
-+	freqsel = clamp_t(int, quot, FRQSEL_25M, FRQSEL_150M);
-+
-+	/*
-+	 * According to the user manual, calpad calibration
-+	 * cycle takes more than 2us without the minimal recommended
-+	 * value, so we may need a little margin here
-+	 */
-+	udelay(5);
-+
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK,
-+				 PDB_SHIFT(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * According to the user manual, it asks driver to wait 5us for
-+	 * calpad busy trimming. However it is documented that this value is
-+	 * PVT(A.K.A process,voltage and temperature) relevant, so some
-+	 * failure cases are found which indicates we should be more tolerant
-+	 * to calpad busy trimming.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, EMMC_PHYSTAT_REG,
-+				       caldone, IS_CALDONE(caldone),
-+				       0, 50);
-+	if (ret) {
-+		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Set the frequency of the DLL operation */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL2_REG, FRQSEL_MASK,
-+				 FRQSEL_SHIFT(freqsel));
-+	if (ret) {
-+		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Turn on the DLL */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, ENDLL_MASK,
-+				 ENDLL_SHIFT(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-+	 * our source clock is at 50 MHz and that lock time scales linearly
-+	 * with clock speed.  If we are powering on the PHY and the card clock
-+	 * is super slow (like 100 kHZ) this could take as long as 5.1 ms as
-+	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
-+	 * Hopefully we won't be running at 100 kHz, but we should still make
-+	 * sure we wait long enough.
-+	 *
-+	 * NOTE: There appear to be corner cases where the DLL seems to take
-+	 * extra long to lock for reasons that aren't understood.  In some
-+	 * extreme cases we've seen it take up to over 10ms (!).  We'll be
-+	 * generous and give it 50ms.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg,
-+				       EMMC_PHYSTAT_REG,
-+				       dllrdy, IS_DLLRDY(dllrdy),
-+				       0, 50 * USEC_PER_MSEC);
-+	if (ret) {
-+		dev_err(&phy->dev, "dllrdy failed. ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_init(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem. We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 *
-+	 */
-+	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
-+	if (IS_ERR(priv->emmcclk)) {
-+		dev_err(&phy->dev, "ERROR: getting emmcclk\n");
-+		return PTR_ERR(priv->emmcclk);
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_exit(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->emmcclk);
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_power_on(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	/* Drive impedance: 50 Ohm */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, DR_TY_MASK,
-+				 DR_TY_SHIFT(6));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR set drive-impednce-50ohm: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay: disable */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, OTAPDLYENA,
-+				 0);
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR Set output tap delay : %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG,
-+				 OTAPDLYSEL_MASK, OTAPDLYSEL_SHIFT(4));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap dly select: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Power up eMMC phy analog blocks */
-+	return intel_emmc_phy_power(phy, true);
-+}
-+
-+static int intel_emmc_phy_power_off(struct phy *phy)
-+{
-+	/* Power down eMMC phy analog blocks */
-+	return intel_emmc_phy_power(phy, false);
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= intel_emmc_phy_init,
-+	.exit		= intel_emmc_phy_exit,
-+	.power_on	= intel_emmc_phy_power_on,
-+	.power_off	= intel_emmc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int intel_emmc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct intel_emmc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/* Get eMMC phy (accessed via chiptop) regmap */
-+	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "intel,syscon");
-+	if (IS_ERR(priv->syscfg)) {
-+		dev_err(dev, "failed to find syscon\n");
-+		return PTR_ERR(priv->syscfg);
-+	}
-+
-+	generic_phy = devm_phy_create(dev, np, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id intel_emmc_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-emmc-phy" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, intel_emmc_phy_dt_ids);
-+
-+static struct platform_driver intel_emmc_driver = {
-+	.probe		= intel_emmc_phy_probe,
-+	.driver		= {
-+		.name	= "intel-emmc-phy",
-+		.of_match_table = intel_emmc_phy_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(intel_emmc_driver);
-+
-+MODULE_AUTHOR("Peter Harliman Liem <peter.harliman.liem@intel.com>");
-+MODULE_DESCRIPTION("Intel eMMC PHY driver");
--- 
-2.11.0
+V2:
+ U-Boot->bootloader
+ Add R-b tag
+
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot=
+/dts/freescale/imx8mm-evk.dts
+index faefb7182af1..e4d66f7db09d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -80,6 +80,7 @@
+ 	pinctrl-0 =3D <&pinctrl_fec1>;
+ 	phy-mode =3D "rgmii-id";
+ 	phy-handle =3D <&ethphy0>;
++	phy-reset-gpios =3D <&gpio4 22 GPIO_ACTIVE_LOW>;
+ 	fsl,magic-packet;
+ 	status =3D "okay";
+=20
+--=20
+2.16.4
 
