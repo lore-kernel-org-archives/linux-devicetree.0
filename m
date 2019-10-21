@@ -2,122 +2,79 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FDECA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914BDCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238182089C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571662393;
-	bh=uxGrhZDbF2L+yKtpe/kGnfAuBpoA1iG6MrGYbfiPYMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DB5jnnREniMpJhypE/nwvQmkRlhLug12y40OBBF21e4wIwTk0b0Viv6UaIpuzs0Wu
-	 5LcYOUc0zDTXWBXmR7dpggPIvqQR6AaheFwjPPshDd8wIbZfvHmH2ABoKD+uaPelKr
-	 zWvxLoUX7YglDvVJIPjwE0WQ4TrFSrhsrfV5wuaw=
+	by mail.kernel.org (Postfix) with ESMTP id 6DE482166E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 12:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfJUMxM (ORCPT
+        id S1727962AbfJUM63 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 08:53:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727256AbfJUMxM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 08:53:12 -0400
-Received: from localhost (unknown [122.167.89.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B670620679;
-        Mon, 21 Oct 2019 12:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571662391;
-        bh=uxGrhZDbF2L+yKtpe/kGnfAuBpoA1iG6MrGYbfiPYMY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r4RWmmBtxaaFlwYYdg07Nv47t0QfQGlkcWuDFsx6GsS0CtyZEscBs7zvcW94wE2ML
-         BNBUeJJjg8osPhmy2fXtxoHyXLMXEyHRJZqzRrhO1JJ5un+YrSWsDexBCaz+UPxZh+
-         hxu8etsF5EOf8X+0KJ6IXR8K5+0b/UgnABbLKzQI=
-Date:   Mon, 21 Oct 2019 18:23:07 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH v1 3/3] clk: qcom: clk-rpmh: Add support for RPMHCC for
- SC7180
-Message-ID: <20191021125307.GF2654@vkoul-mobl>
-References: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
- <1571393364-32697-4-git-send-email-tdas@codeaurora.org>
+        Mon, 21 Oct 2019 08:58:29 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49455 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727256AbfJUM63 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 08:58:29 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 8A33220021;
+        Mon, 21 Oct 2019 12:58:26 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH v2 1/2] dt-bindings: arm: at91: Document Kizbox2-2 board binding
+Date:   Mon, 21 Oct 2019 14:58:03 +0200
+Message-Id: <20191021125804.23856-1-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571393364-32697-4-git-send-email-tdas@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18-10-19, 15:39, Taniya Das wrote:
-> Add support for clock RPMh driver to vote for ARC and VRM managed
-> clock resources.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  drivers/clk/qcom/clk-rpmh.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-> index 96a36f6..7301c77 100644
-> --- a/drivers/clk/qcom/clk-rpmh.c
-> +++ b/drivers/clk/qcom/clk-rpmh.c
-> @@ -391,6 +391,24 @@ static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
->  	.num_clks = ARRAY_SIZE(sm8150_rpmh_clocks),
->  };
-> 
-> +static struct clk_hw *sc7180_rpmh_clocks[] = {
-> +	[RPMH_CXO_CLK]		= &sdm845_bi_tcxo.hw,
-> +	[RPMH_CXO_CLK_A]	= &sdm845_bi_tcxo_ao.hw,
-> +	[RPMH_LN_BB_CLK2]	= &sdm845_ln_bb_clk2.hw,
-> +	[RPMH_LN_BB_CLK2_A]	= &sdm845_ln_bb_clk2_ao.hw,
-> +	[RPMH_LN_BB_CLK3]	= &sdm845_ln_bb_clk3.hw,
-> +	[RPMH_LN_BB_CLK3_A]	= &sdm845_ln_bb_clk3_ao.hw,
-> +	[RPMH_RF_CLK1]		= &sdm845_rf_clk1.hw,
-> +	[RPMH_RF_CLK1_A]	= &sdm845_rf_clk1_ao.hw,
-> +	[RPMH_RF_CLK2]		= &sdm845_rf_clk2.hw,
-> +	[RPMH_RF_CLK2_A]	= &sdm845_rf_clk2_ao.hw,
-> +};
-> +
-> +static const struct clk_rpmh_desc clk_rpmh_sc7180 = {
-> +	.clks = sc7180_rpmh_clocks,
-> +	.num_clks = ARRAY_SIZE(sc7180_rpmh_clocks),
-> +};
-> +
->  static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
->  					 void *data)
->  {
-> @@ -471,6 +489,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
->  static const struct of_device_id clk_rpmh_match_table[] = {
->  	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
->  	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
-> +	{ .compatible = "qcom,sc7180-rpmh-clk", .data = &clk_rpmh_sc7180},
+Document devicetree's binding for the Kizbox2-2 board of
+Overkiz SAS based on SAMA5D31 SoC.
 
-Is the table above not same as sm8150, if so cant we reuse that for
-sc7180?
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+---
+Changes in v2:
+	- Removed other kizbox2 boards as the main difference between
+	them is the usart configuration, only add the two heads variant
+	for now.
 
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
+ Documentation/devicetree/bindings/arm/atmel-at91.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
--- 
-~Vinod
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+index c0869cb860f3..6dd8be401673 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+@@ -80,6 +80,13 @@ properties:
+           - const: atmel,sama5d3
+           - const: atmel,sama5
+
++      - description: Overkiz kizbox2 board with two heads
++        items:
++          - const: overkiz,kizbox2-2
++          - const: atmel,sama5d31
++          - const: atmel,sama5d3
++          - const: atmel,sama5
++
+       - items:
+           - enum:
+               - atmel,sama5d31
+--
+2.23.0
+
