@@ -2,331 +2,234 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7B2CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562A2CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568102086D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9E62086D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:40:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Puy09oE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfJUHeg (ORCPT
+        id S1727479AbfJUHk6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:34:36 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34345 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfJUHef (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 03:34:35 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMSCs-0004Nz-0r; Mon, 21 Oct 2019 09:34:22 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iMSCp-00056Q-OM; Mon, 21 Oct 2019 09:34:19 +0200
-Date:   Mon, 21 Oct 2019 09:34:19 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
-        linux@roeck-us.net, thierry.reding@gmail.com, jic23@kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH 5/8] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20191021073419.27r4xjqpz2wswerj@pengutronix.de>
-References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
- <1571631083-4962-6-git-send-email-jeff@labundy.com>
+        Mon, 21 Oct 2019 03:40:58 -0400
+Received: from mail-eopbgr80057.outbound.protection.outlook.com ([40.107.8.57]:1702
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727462AbfJUHk6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 03:40:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lbOz4YQ0/eiynkzvkaSv18CmwFPyBEY9zQ8zxQb7ib5k8NizvCJPq3BTtGA5k+Gcgi0o10G52/pHZ6yAUJjfHxh1xpT0U3I5/7hKESMvl8YPY0uxjNM/hTJZIOk16oJfL6JIFvWMz+MA4dFDpCaoYgYsjzh9EyfTw6PtzdHLLrjtoRxXmRVXOSK1UMjaeGPZikrkeOQh9EDNqmHGYEodwGTmpS0ZaWgLuDw7LEo8vj1BxZcTg+qUrLPoFXbdpWi0awmNPGQHDge0UlkOeWviIcbP9Cbb1Q8XLOUDCMD/mxAXtzi9QENlqFxv84mjSX7jXpGAzhH1vygZlVWyp7PDtA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ke36duWD9fK3rgbM15mTV/dP/A2KOXQODYXyC57GJQE=;
+ b=aD8KPt9n8DF80gulTBAcG4uXMuoXoPYjU+cZIzmYdddDqzGUEzTXvqZyKQUDoHANAHI25uDdWrLudmqkcH07LO4KJLVVYIrIwyGqnRoEoDudOYZqeKtEVNQbvc/3aFJAGjXVQ6EhB1o3p7uweSCH7Dc/XbzORBCc3xpvHlvyMQKTbjMGnOZtwSTkun7To9+1NxIaSm2tGG3tY/EXmmCDG3HjocYa354lUk6uBSCFzdoMlhgGI0O0qtCrhAcfZ3OwFJZw7x1qaLEUkg9xM+0ZcFTzmCu3fCpiuHzen/sTlgAq8czPEHm2wDLLJDgNJXndilu7ELyfQbKoFyrAu7uGGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ke36duWD9fK3rgbM15mTV/dP/A2KOXQODYXyC57GJQE=;
+ b=Puy09oE5C0q4YHOLeGqVNcqE+hIZfVfqU/W3ADnTY+IURluat1ip1v1WC25Ac9dwOIOb0avPSGpdk8nWsVo1BTH+hX5C58T/ZOOorShX5Cda/ALqzTStdsFMLOkQA6UV9P49+mJ++h5qpcfccn+/hYl4VAmmd5p/h3aUb/PVazU=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB5369.eurprd04.prod.outlook.com (20.178.106.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.20; Mon, 21 Oct 2019 07:40:48 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::7804:558a:eef9:cc11]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::7804:558a:eef9:cc11%7]) with mapi id 15.20.2347.029; Mon, 21 Oct 2019
+ 07:40:48 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Peter Rosin <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [EXT] Re: [v3,2/2] i2c: mux: pca954x: support property idle-state
+Thread-Topic: [EXT] Re: [v3,2/2] i2c: mux: pca954x: support property
+ idle-state
+Thread-Index: AQHVg9kFy//9JNcSgkK6ygKn6GT14ade+pwAgAW0LXA=
+Date:   Mon, 21 Oct 2019 07:40:48 +0000
+Message-ID: <DB7PR04MB44902378FD1E4052F4FB261A8F690@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20191016040920.8511-1-biwen.li@nxp.com>
+ <20191016040920.8511-2-biwen.li@nxp.com>
+ <6e2fb6b9-4ffe-e6de-744f-a2bfe66a1b6c@axentia.se>
+In-Reply-To: <6e2fb6b9-4ffe-e6de-744f-a2bfe66a1b6c@axentia.se>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 715e42a0-cd90-4940-29c7-08d755f9fda0
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DB7PR04MB5369:|DB7PR04MB5369:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB5369C437E96BF130FD1F7B358F690@DB7PR04MB5369.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0197AFBD92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(376002)(39860400002)(136003)(199004)(189003)(6246003)(256004)(44832011)(110136005)(14444005)(52536014)(186003)(229853002)(5660300002)(316002)(54906003)(476003)(486006)(9686003)(11346002)(446003)(74316002)(4001150100001)(99286004)(7696005)(4326008)(76176011)(66066001)(102836004)(26005)(6506007)(53546011)(66446008)(86362001)(2906002)(6116002)(3846002)(2501003)(7736002)(64756008)(478600001)(55016002)(71190400001)(71200400001)(81156014)(81166006)(8936002)(8676002)(305945005)(6436002)(14454004)(25786009)(66946007)(33656002)(76116006)(66476007)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5369;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4naQmO7zl/5yCSDpauHEBbIz55n+KyzOC4SbMNkHzgsWvkz7fYUnbRg+8e6P0d2xeBHSREt6aeHeAkGZKg7TA7MAHebDA5omxrEzTbJ5F7CWqFhOzptWQ1iybPLpQ/tQ+49+m5hv+HmRQc4twEPKTS6J+Ws4G5Y72vNKQbrCkDTbaAwEf4W4dTKmsLnaB4AE42QeDxXOL77O440QKb7KkorLC8ZTYu+Vyy5FFqbfSsbpLIAlP0LJBoWKkprHzJvQukiOrnnM+ZQCBR6EDtwCmYzMylGeptCGpGjKXN9jW1P2XhFRJFldOKQYWzIzB03pmQ3I4zkcqToGLOiCyiEQXgZz2HFT9X/fD+0tZb7sULIOnCOZVb98QEc9XyjLl6ckJKVayeDbv6AJrQgeMz/kxGDyzTCrKu85DWhxfc53k+ymycfnmkaDe7tkTUEHn+kl
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1571631083-4962-6-git-send-email-jeff@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 715e42a0-cd90-4940-29c7-08d755f9fda0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2019 07:40:48.5534
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QpEcUcatnYsAraDF/2rwLlcRCVZ/jsnv2mfb0vObff8JTuJRXkeZRlqckdW/44DcnSrXKeBSIvpn49Ns4FkQMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5369
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Jeff,
-
-On Sun, Oct 20, 2019 at 11:11:20PM -0500, Jeff LaBundy wrote:
-> This patch adds support for the Azoteq IQS620A, capable of generating
-> a 1-kHz PWM output with duty cycle between 0.4% and 100% (inclusive).
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> ---
->  drivers/pwm/Kconfig       |  10 +++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-iqs620a.c | 167 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 178 insertions(+)
->  create mode 100644 drivers/pwm/pwm-iqs620a.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index e3a2518..712445e 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -222,6 +222,16 @@ config PWM_IMX_TPM
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx-tpm.
->  
-> +config PWM_IQS620A
-> +	tristate "Azoteq IQS620A PWM support"
-> +	depends on MFD_IQS62X
-
-This is only a runtime dependency if I'm not mistaken, so it would be
-great to have
-
-	depends on MFD_IQS62X || COMPILE_TEST
-	depends on REGMAP
-
-here.
-
-> +	help
-> +	  Generic PWM framework driver for the Azoteq IQS620A multi-function
-> +	  sensor.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called pwm-iqs620a.
-> +
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 26326ad..27c9bfa 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
->  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
->  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
->  obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-> +obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
->  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
->  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
->  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
-> diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
-> new file mode 100644
-> index 0000000..6451eb1
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-iqs620a.c
-> @@ -0,0 +1,167 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Azoteq IQS620A PWM Generator
-> + *
-> + * Copyright (C) 2019
-> + * Author: Jeff LaBundy <jeff@labundy.com>
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/iqs62x.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define IQS620_PWR_SETTINGS			0xD2
-> +#define IQS620_PWR_SETTINGS_PWM_OUT		BIT(7)
-> +
-> +#define IQS620_PWM_DUTY_CYCLE			0xD8
-> +
-> +#define IQS620_PWM_PERIOD_NS			1000000
-> +
-> +struct iqs620_pwm_private {
-> +	struct iqs62x_core *iqs62x;
-> +	struct pwm_chip chip;
-> +	struct notifier_block notifier;
-> +	bool ready;
-
-This is always true, so you can drop it.
-
-> +};
-> +
-> +static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			    struct pwm_state *state)
-
-Since
-
-	71523d1812ac ("pwm: Ensure pwm_apply_state() doesn't modify the state argument")
-
-this isn't the right prototype.
-
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +	struct iqs62x_core *iqs62x;
-> +	int error;
-> +	int duty_calc = state->duty_cycle * 256 / IQS620_PWM_PERIOD_NS - 1;
-> +	u8 duty_clamp = clamp(duty_calc, 0, 0xFF);
-> +
-> +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
-> +	iqs62x = iqs620_pwm->iqs62x;
-> +
-> +	error = regmap_write(iqs62x->map, IQS620_PWM_DUTY_CYCLE, duty_clamp);
-> +	if (error)
-> +		return error;
-> +
-> +	state->period = IQS620_PWM_PERIOD_NS;
-> +	state->duty_cycle = (duty_clamp + 1) * IQS620_PWM_PERIOD_NS / 256;
-
-This suggests that if the value in the IQS620_PWM_DUTY_CYCLE is 0 the
-duty cycle is 1/256 ms with a period of 1 ms and the output cannot be
-constant inactive. If this is right please add a paragraph in the
-driver's comment at the top:
-
-	* Limitations:
-	* - The hardware cannot generate a 0% duty cycle
-
-(Please stick to this format, other drivers use it, too.)
-
-How does the hardware behave on changes? For example you're first
-committing the duty cycle and then on/off. Can it happen that between
-
-	pwm_apply_state(pwm, { .duty_cycle = 3900, .period = 1000000, .enabled = true)
-	...
-	pwm_apply_state(pwm, { .duty_cycle = 1000000, .period = 1000000, .enabled = false)
-
-the output is active for longer than 4 µs because the iqs620_pwm_apply
-function is preempted between the two register writes and so we already
-have .duty_cycle = 1000000 but still .enabled = true in the hardware?
-
-Does a change complete the currently running period? Does disabling
-complete the currently running period? If so, does regmap_update_bits
-block until the new setting is active?
-
-The .apply function fails to check for .pwm_polarity. You want something
-like:
-
-	if (state->polarity != PWM_POLARITY_NORMAL)
-		return -ENOTSUPP;
-
-(That's what pwm-rcar and the core (in the absence of .set_polarity for
-old-style drivers) are using. @Thierry: It would be great to fix the
-vaule that should be returned in this case. pwm-lpss and sifive use
--EINVAL.)
-
-> +	return regmap_update_bits(iqs62x->map, IQS620_PWR_SETTINGS,
-> +				  IQS620_PWR_SETTINGS_PWM_OUT,
-> +				  state->enabled ? 0xFF : 0);
-> +}
-> +
-> +static int iqs620_pwm_notifier(struct notifier_block *notifier,
-> +			       unsigned long event_flags, void *context)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +	struct pwm_state state;
-> +	int error;
-> +
-> +	iqs620_pwm = container_of(notifier, struct iqs620_pwm_private,
-> +				  notifier);
-> +
-> +	if (!iqs620_pwm->ready || !(event_flags & BIT(IQS62X_EVENT_SYS_RESET)))
-> +		return NOTIFY_DONE;
-> +
-> +	pwm_get_state(&iqs620_pwm->chip.pwms[0], &state);
-> +
-> +	error = iqs620_pwm_apply(&iqs620_pwm->chip,
-> +				 &iqs620_pwm->chip.pwms[0], &state);
-> +	if (error) {
-> +		dev_err(iqs620_pwm->chip.dev,
-> +			"Failed to re-initialize device: %d\n", error);
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	return NOTIFY_OK;
-
-So the PWM can loose it's state sometimes? When does that happen?
-
-> +}
-> +
-> +static void iqs620_pwm_notifier_unregister(void *context)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm = context;
-> +	int error;
-> +
-> +	error = blocking_notifier_chain_unregister(&iqs620_pwm->iqs62x->nh,
-> +						   &iqs620_pwm->notifier);
-> +	if (error)
-> +		dev_err(iqs620_pwm->chip.dev,
-> +			"Failed to unregister notifier: %d\n", error);
-> +}
-> +
-> +static const struct pwm_ops iqs620_pwm_ops = {
-> +	.apply	= iqs620_pwm_apply,
-
-Please implement a .get_state callback.
-
-> +	.owner	= THIS_MODULE,
-> +};
-> +
-> +static int iqs620_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +	int error;
-> +
-> +	iqs620_pwm = devm_kzalloc(&pdev->dev, sizeof(*iqs620_pwm), GFP_KERNEL);
-> +	if (!iqs620_pwm)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, iqs620_pwm);
-> +	iqs620_pwm->iqs62x = dev_get_drvdata(pdev->dev.parent);
-> +
-> +	iqs620_pwm->chip.dev = &pdev->dev;
-> +	iqs620_pwm->chip.ops = &iqs620_pwm_ops;
-> +	iqs620_pwm->chip.base = -1;
-> +	iqs620_pwm->chip.npwm = 1;
-> +
-> +	iqs620_pwm->notifier.notifier_call = iqs620_pwm_notifier;
-> +	error = blocking_notifier_chain_register(&iqs620_pwm->iqs62x->nh,
-> +						 &iqs620_pwm->notifier);
-> +	if (error) {
-> +		dev_err(&pdev->dev, "Failed to register notifier: %d\n", error);
-> +		return error;
-> +	}
-> +
-> +	error = devm_add_action_or_reset(&pdev->dev,
-> +					 iqs620_pwm_notifier_unregister,
-> +					 iqs620_pwm);
-
-I wonder if this is safe. If in iqs620_pwm_notifier_unregister()
-unregistering of the notifier goes wrong (not sure when this can happen)
-the memory behind iqs620_pwm goes away. Then later iqs620_pwm_notifier
-might be called trying to use *iqs620_pwm ...
-
-> +	if (error) {
-> +		dev_err(&pdev->dev, "Failed to add action: %d\n", error);
-> +		return error;
-> [...]
-> 
-> +static struct platform_driver iqs620_pwm_platform_driver = {
-> +	.driver = {
-> +		.name	= IQS620_DRV_NAME_PWM,
-> +	},
-> +	.probe		= iqs620_pwm_probe,
-> +	.remove		= iqs620_pwm_remove,
-> +};
-
-I'm not a big fan of aligning the = in struct initializers. The downside
-is that if you later add
-
-	.prevent_deferred_probe = true,
-
-you either have to touch all (otherwise unrelated) lines to realign
-which adds churn, or the structure is only partially aligned which looks
-ugly. That's why I stick to a single space before the =.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+PiBPbiAyMDE5LTEwLTE2IDA2OjA5LCBCaXdlbiBMaSB3cm90ZToNCj4gPiBUaGlzIHN1cHBvcnRz
+IHByb3BlcnR5IGlkbGUtc3RhdGUNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpd2VuIExpIDxi
+aXdlbi5saUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZSBpbiB2MzoNCj4gPiAgICAgICAt
+IHVwZGF0ZSBzdWJqZWN0IGFuZCBkZXNjcmlwdGlvbg0KPiA+ICAgICAgIC0gYWRkIGEgaGVscGVy
+IGZ1bmN0aW9uIHBjYTk1NHhfY2FsY3VsYXRlX2NoYW4oKQ0KPiA+DQo+ID4gQ2hhbmdlIGluIHYy
+Og0KPiA+ICAgICAgIC0gdXBkYXRlIHN1YmplY3QgYW5kIGRlc2NyaXB0aW9uDQo+ID4gICAgICAg
+LSBhZGQgcHJvcGVydHkgaWRsZS1zdGF0ZQ0KPiA+DQo+ID4gIGRyaXZlcnMvaTJjL211eGVzL2ky
+Yy1tdXgtcGNhOTU0eC5jIHwgNjQNCj4gPiArKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLQ0K
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKSwgMjUgZGVsZXRpb25zKC0pDQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvbXV4ZXMvaTJjLW11eC1wY2E5NTR4LmMN
+Cj4gPiBiL2RyaXZlcnMvaTJjL211eGVzL2kyYy1tdXgtcGNhOTU0eC5jDQo+ID4gaW5kZXggOTIz
+YWEzYTVhM2RjLi44Nzc3ZDQyOTI2OWMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9pMmMvbXV4
+ZXMvaTJjLW11eC1wY2E5NTR4LmMNCj4gPiArKysgYi9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4
+LXBjYTk1NHguYw0KPiA+IEBAIC04Niw3ICs4Niw3IEBAIHN0cnVjdCBwY2E5NTR4IHsNCj4gPg0K
+PiA+ICAgICAgIHU4IGxhc3RfY2hhbjsgICAgICAgICAgIC8qIGxhc3QgcmVnaXN0ZXIgdmFsdWUg
+Ki8NCj4gPiAgICAgICAvKiBNVVhfSURMRV9BU19JUywgTVVYX0lETEVfRElTQ09OTkVDVCBvciA+
+PSAwIGZvciBjaGFubmVsICovDQo+ID4gLSAgICAgczggaWRsZV9zdGF0ZTsNCj4gPiArICAgICBz
+MzIgaWRsZV9zdGF0ZTsNCj4gPg0KPiA+ICAgICAgIHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQ7
+DQo+ID4NCj4gPiBAQCAtMjI5LDIyICsyMjksMjUgQEAgc3RhdGljIGludCBwY2E5NTR4X3JlZ193
+cml0ZShzdHJ1Y3QgaTJjX2FkYXB0ZXINCj4gKmFkYXAsDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgSTJDX1NNQlVTX0JZVEUsICZkdW1teSk7ICB9DQo+ID4NCj4gPiArc3RhdGlj
+IGludCBwY2E5NTR4X2NhbGN1bGF0ZV9jaGFuKHN0cnVjdCBwY2E5NTR4ICpkYXRhLCB1MzIgY2hh
+bikNCj4gDQo+IFNob3VsZCByZXR1cm4gdTgsIGFuZCAiY2hhbiIgaXMgbm90IHdoYXQgaXMgY2Fs
+Y3VsYXRlZC4gUGVyaGFwcyBuYW1lIHRoZQ0KPiBmdW5jdGlvbiBwY2E5NTR4X3JlZ3ZhbD8NCk9r
+YXksIGdvdCBpdCwgSSB3aWxsIGNoYW5nZSBpdCBpbiB2NC4NCj4gDQo+IChZZXMsIGxhc3RfY2hh
+biBpcyBhbHNvIGNsZWFybHkgYSBiYWQgbmFtZSwgYW5kIEkgc3VzcGVjdCB5b3UgbWF5IGhhdmUN
+Cj4gYmFzZWQgdGhpcyBuYW1lIG9uIGl0LCBidXQgY2hhbmdpbmcgdGhhdCBpcyBhIHNlcGFyYXRl
+IHBhdGNoLikNCj4gDQo+ID4gK3sNCj4gPiArICAgICAvKiB3ZSBtYWtlIHN3aXRjaGVzIGxvb2sg
+bGlrZSBtdXhlcywgbm90IHN1cmUgaG93IHRvIGJlIHNtYXJ0ZXIgKi8NCj4gPiArICAgICBpZiAo
+ZGF0YS0+Y2hpcC0+bXV4dHlwZSA9PSBwY2E5NTR4X2lzbXV4KQ0KPiA+ICsgICAgICAgICAgICAg
+cmV0dXJuIGNoYW4gfCBkYXRhLT5jaGlwLT5lbmFibGU7DQo+ID4gKyAgICAgZWxzZQ0KPiA+ICsg
+ICAgICAgICAgICAgcmV0dXJuIDEgPDwgY2hhbjsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgc3RhdGlj
+IGludCBwY2E5NTR4X3NlbGVjdF9jaGFuKHN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eGMsIHUzMiBj
+aGFuKQ0KPiA+IHsNCj4gPiAgICAgICBzdHJ1Y3QgcGNhOTU0eCAqZGF0YSA9IGkyY19tdXhfcHJp
+dihtdXhjKTsNCj4gPiAgICAgICBzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gZGF0YS0+Y2xp
+ZW50Ow0KPiA+IC0gICAgIGNvbnN0IHN0cnVjdCBjaGlwX2Rlc2MgKmNoaXAgPSBkYXRhLT5jaGlw
+Ow0KPiA+ICAgICAgIHU4IHJlZ3ZhbDsNCj4gPiAgICAgICBpbnQgcmV0ID0gMDsNCj4gPg0KPiA+
+IC0gICAgIC8qIHdlIG1ha2Ugc3dpdGNoZXMgbG9vayBsaWtlIG11eGVzLCBub3Qgc3VyZSBob3cg
+dG8gYmUgc21hcnRlciAqLw0KPiA+IC0gICAgIGlmIChjaGlwLT5tdXh0eXBlID09IHBjYTk1NHhf
+aXNtdXgpDQo+ID4gLSAgICAgICAgICAgICByZWd2YWwgPSBjaGFuIHwgY2hpcC0+ZW5hYmxlOw0K
+PiA+IC0gICAgIGVsc2UNCj4gPiAtICAgICAgICAgICAgIHJlZ3ZhbCA9IDEgPDwgY2hhbjsNCj4g
+PiAtDQo+ID4gKyAgICAgcmVndmFsID0gcGNhOTU0eF9jYWxjdWxhdGVfY2hhbihkYXRhLCBjaGFu
+KTsNCj4gDQo+IEkgdGhpbmsgSSB3b3VsZCBoYXZlIGtlcHQgdGhlIGVtcHR5IGxpbmUgaGVyZS4g
+Tm90IGltcG9ydGFudC4uLg0KPiANCj4gPiAgICAgICAvKiBPbmx5IHNlbGVjdCB0aGUgY2hhbm5l
+bCBpZiBpdHMgZGlmZmVyZW50IGZyb20gdGhlIGxhc3QgY2hhbm5lbCAqLw0KPiA+IC0gICAgIGlm
+IChkYXRhLT5sYXN0X2NoYW4gIT0gcmVndmFsKSB7DQo+ID4gKyAgICAgaWYgKChkYXRhLT5sYXN0
+X2NoYW4gJiAweGZmKSAhPSByZWd2YWwpIHsNCj4gDQo+IFRoZSBjaGFuZ2VzIG9uIHRoaXMgbGlu
+ZSBhcmUgbm90IG5lZWRlZCAobGFzdF9jaGFuIGFuZCByZWd2YWwgYXJlIGJvdGggdTgpDQo+IGFu
+ZCBqdXN0IGNsdXR0ZXJzIHVwIHRoZSBjb2RlLg0KT2theSwgZ290IGl0LCBJIHdpbGwgbm90IGNo
+YW5nZSBpdCBpbiB2NC4NCj4gDQo+ID4gICAgICAgICAgICAgICByZXQgPSBwY2E5NTR4X3JlZ193
+cml0ZShtdXhjLT5wYXJlbnQsIGNsaWVudCwgcmVndmFsKTsNCj4gPiAgICAgICAgICAgICAgIGRh
+dGEtPmxhc3RfY2hhbiA9IHJldCA8IDAgPyAwIDogcmVndmFsOw0KPiA+ICAgICAgIH0NCj4gPiBA
+QCAtMjU2LDcgKzI1OSw3IEBAIHN0YXRpYyBpbnQgcGNhOTU0eF9kZXNlbGVjdF9tdXgoc3RydWN0
+DQo+ID4gaTJjX211eF9jb3JlICptdXhjLCB1MzIgY2hhbikgIHsNCj4gPiAgICAgICBzdHJ1Y3Qg
+cGNhOTU0eCAqZGF0YSA9IGkyY19tdXhfcHJpdihtdXhjKTsNCj4gPiAgICAgICBzdHJ1Y3QgaTJj
+X2NsaWVudCAqY2xpZW50ID0gZGF0YS0+Y2xpZW50Ow0KPiA+IC0gICAgIHM4IGlkbGVfc3RhdGU7
+DQo+ID4gKyAgICAgczMyIGlkbGVfc3RhdGU7DQo+ID4NCj4gPiAgICAgICBpZGxlX3N0YXRlID0g
+UkVBRF9PTkNFKGRhdGEtPmlkbGVfc3RhdGUpOw0KPiA+ICAgICAgIGlmIChpZGxlX3N0YXRlID49
+IDApDQo+ID4gQEAgLTQwMiw2ICs0MDUsMjMgQEAgc3RhdGljIHZvaWQgcGNhOTU0eF9jbGVhbnVw
+KHN0cnVjdA0KPiBpMmNfbXV4X2NvcmUgKm11eGMpDQo+ID4gICAgICAgaTJjX211eF9kZWxfYWRh
+cHRlcnMobXV4Yyk7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgaW50IHBjYTk1NHhfaW5pdChz
+dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LCBzdHJ1Y3QgcGNhOTU0eA0KPiA+ICsqZGF0YSkgew0K
+PiA+ICsgICAgIC8qDQo+ID4gKyAgICAgICogV3JpdGUgdGhlIG11eCByZWdpc3RlciBhdCBhZGRy
+IHRvIHZlcmlmeQ0KPiA+ICsgICAgICAqIHRoYXQgdGhlIG11eCBpcyBpbiBmYWN0IHByZXNlbnQu
+IFRoaXMgYWxzbw0KPiA+ICsgICAgICAqIGluaXRpYWxpemVzIHRoZSBtdXggdG8gYSBjaGFubmVs
+DQo+ID4gKyAgICAgICogb3IgZGlzY29ubmVjdGVkIHN0YXRlLg0KPiA+ICsgICAgICAqLw0KPiAN
+Cj4gQWdhaW4sIHRoaXMgY29tbWVudCBiZWxvbmdzIGluIHBjYTk1NHhfcHJvYmUgYmVmb3JlIHRo
+ZSBjYWxsIHRvIHRoaXMNCj4gZnVuY3Rpb24uDQo+IEl0IGRvZXMgbm90IGFwcGx5IChhdCBsZWFz
+dCBub3QgdGhlIGZpcnN0IHNlbnRlbmNlKSB3aGVuIHBjYTk1NHhfaW5pdCBpcyBjYWxsZWQNCj4g
+ZnJvbSBwY2E5NTR4X3Jlc3VtZS4NCk9rYXksIGdvdCBpdCwgdGhhbmtzLCBJIHdpbGwgbW92ZSBp
+dCBpbiB2NC4NCj4gDQo+IEhtbW0sIGl0IGNvdWxkIGJlIGFyZ3VlZCB0aGF0IHNwZWNpZnlpbmcg
+TVVYX0lETEVfQVNfSVMgc2hvdWxkIG5vdA0KPiB0cmlnZ2VyIGEgZGlzY29ubmVjdCBvbiBpbml0
+IChzaW5jZSB0aGUgbXV4IGlzIGFsd2F5cyBpZGxlIGF0IGluaXQpIGFuZCB0aGF0DQo+IHNvbWUg
+b3RoZXIgbWV0aG9kIHNob3VsZCBiZSB1c2VkIHRvIGRldGVybWluZSBpZiB0aGUgY2hpcCBpcyBw
+cmVzZW50LiBUaGUNCj4gZGlmZmVyZW5jZSBpcyB0aGF0IHdpdGggdGhlIGlkbGUtc3RhdGUgcHJv
+cGVydHkgeW91IGNhbiBleHBsaWNpdGx5IHJlcXVlc3QNCj4gTVVYX0lETEVfQVNfSVMsIHdoaWxl
+IHRoZSBvbGQgY29kZSBvbmx5IGhhZCBzb21lIGRlZmF1bHQgYmVoYXZpb3IgaWYNCj4gaTJjLW11
+eC1pZGxlLWRpc2Nvbm5lY3Qgd2FzIG5vdCBwcmVzZW50Lg0KPiANCj4gVGhlIGVhc3kgd2F5IG91
+dCBvZiB0aGlzIGlzIHRvLCBpbiB0aGUgYmluZGluZywgZG9jdW1lbnQgdGhlIHNpdHVhdGlvbiBh
+bmQgc2F5DQo+IHRoYXQgImlkbGUtc3RhdGUgPSA8TVVYX0lETEVfQVNfSVM+OyIgaXMgbm90IHN1
+cHBvcnRlZCBidXQgdGhhdCBzaW1pbGFyDQo+IGZ1bmN0aW9uYWxpdHkgY2FuIGJlIG9idGFpbmVk
+IGJ5IGxlYXZpbmcgb3V0IGJvdGggdGhlDQo+IGkyYy1tdXgtaWRsZS1kaXNjb25uZWN0IGFuZCBp
+ZGxlLXN0YXRlIHByb3BlcnRpZXMuDQpJIHdpbGwgc3VwcG9ydCBNVVhfSURMRV9BU19JUyBpbiB2
+NC4NCg0KPiANCj4gPiArICAgICBpZiAoZGF0YS0+aWRsZV9zdGF0ZSA+PSAwKSB7DQo+ID4gKyAg
+ICAgICAgICAgICBkYXRhLT5sYXN0X2NoYW4gPSBwY2E5NTR4X2NhbGN1bGF0ZV9jaGFuKGRhdGEs
+DQo+IGRhdGEtPmlkbGVfc3RhdGUpOw0KPiA+ICsgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAg
+ICAgICAvKiBEaXNjb25uZWN0IG11bHRpcGxleGVyICovDQo+ID4gKyAgICAgICAgICAgICBkYXRh
+LT5sYXN0X2NoYW4gPSAwOw0KPiA+ICsgICAgIH0NCj4gPiArICAgICByZXR1cm4gaTJjX3NtYnVz
+X3dyaXRlX2J5dGUoY2xpZW50LCBkYXRhLT5sYXN0X2NoYW4pOyB9DQo+ID4gKw0KPiA+ICAvKg0K
+PiA+ICAgKiBJMkMgaW5pdC9wcm9iaW5nL2V4aXQgZnVuY3Rpb25zDQo+ID4gICAqLw0KPiA+IEBA
+IC00MTEsNyArNDMxLDYgQEAgc3RhdGljIGludCBwY2E5NTR4X3Byb2JlKHN0cnVjdCBpMmNfY2xp
+ZW50ICpjbGllbnQsDQo+ID4gICAgICAgc3RydWN0IGkyY19hZGFwdGVyICphZGFwID0gY2xpZW50
+LT5hZGFwdGVyOw0KPiA+ICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZjbGllbnQtPmRldjsN
+Cj4gPiAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gZGV2LT5vZl9ub2RlOw0KPiA+IC0g
+ICAgIGJvb2wgaWRsZV9kaXNjb25uZWN0X2R0Ow0KPiA+ICAgICAgIHN0cnVjdCBncGlvX2Rlc2Mg
+KmdwaW87DQo+ID4gICAgICAgc3RydWN0IGkyY19tdXhfY29yZSAqbXV4YzsNCj4gPiAgICAgICBz
+dHJ1Y3QgcGNhOTU0eCAqZGF0YTsNCj4gPiBAQCAtNDYyLDIyICs0ODEsMTggQEAgc3RhdGljIGlu
+dCBwY2E5NTR4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50DQo+ICpjbGllbnQsDQo+ID4gICAgICAg
+ICAgICAgICB9DQo+ID4gICAgICAgfQ0KPiA+DQo+ID4gLSAgICAgLyogV3JpdGUgdGhlIG11eCBy
+ZWdpc3RlciBhdCBhZGRyIHRvIHZlcmlmeQ0KPiA+IC0gICAgICAqIHRoYXQgdGhlIG11eCBpcyBp
+biBmYWN0IHByZXNlbnQuIFRoaXMgYWxzbw0KPiA+IC0gICAgICAqIGluaXRpYWxpemVzIHRoZSBt
+dXggdG8gZGlzY29ubmVjdGVkIHN0YXRlLg0KPiA+IC0gICAgICAqLw0KPiA+IC0gICAgIGlmIChp
+MmNfc21idXNfd3JpdGVfYnl0ZShjbGllbnQsIDApIDwgMCkgew0KPiA+ICsgICAgIGRhdGEtPmlk
+bGVfc3RhdGUgPSBNVVhfSURMRV9BU19JUzsNCj4gPiArICAgICBpZiAobnAgJiYgb2ZfcHJvcGVy
+dHlfcmVhZF91MzIobnAsICJpZGxlLXN0YXRlIiwgJmRhdGEtPmlkbGVfc3RhdGUpKQ0KPiB7DQo+
+ID4gKyAgICAgICAgICAgICBpZiAobnAgJiYgb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLA0KPiA+
+ICsgImkyYy1tdXgtaWRsZS1kaXNjb25uZWN0IikpDQo+IA0KPiBZb3UgZG8gbm90IG5lZWQgdG8g
+ZG8gdGhlICJucCAmJiIgcGFydCBmb3IgYm90aCBpZnMsIHNpbmNlIGl0J3MgYWxyZWFkeSBrbm93
+DQo+IHRoYXQgbnAgaXMgbm9uLU5VTEwgd2hlbiB5b3UgaGl0IHRoZSBzZWNvbmQgaWYuIEJ1dCwg
+aXQncyBhIE5PUCBpbiB0aGUgZmlyc3QgaWYsDQo+IHNpbmNlIG9mX3Byb3BlcnR5X3JlYWRfdTMy
+IHJldHVybnMgLUVJTlZBTCBpZiBpdCBpcy4gU28sIEkgc3VnZ2VzdA0KPiANCj4gICAgICAgICBp
+ZiAob2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJpZGxlLXN0YXRlIiwgJmRhdGEtPmlkbGVfc3Rh
+dGUpKSB7DQo+ICAgICAgICAgICAgICAgICBpZiAobnAgJiYgb2ZfcHJvcGVydHlfcmVhZF9ib29s
+KG5wLA0KPiAiaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3QiKSkNCk9rYXksIHRoYW5rcywgSSB3aWxs
+IHJlbW92ZSBpdCBpbiB2NC4NCj4gDQo+IENoZWVycywNCj4gUGV0ZXINCj4gDQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgIGRhdGEtPmlkbGVfc3RhdGUgPSBNVVhfSURMRV9ESVNDT05ORUNUOw0K
+PiA+ICsgICAgIH0NCj4gPiArDQo+ID4gKyAgICAgcmV0ID0gcGNhOTU0eF9pbml0KGNsaWVudCwg
+ZGF0YSk7DQo+ID4gKyAgICAgaWYgKHJldCA8IDApIHsNCj4gPiAgICAgICAgICAgICAgIGRldl93
+YXJuKGRldiwgInByb2JlIGZhaWxlZFxuIik7DQo+ID4gICAgICAgICAgICAgICByZXR1cm4gLUVO
+T0RFVjsNCj4gPiAgICAgICB9DQo+ID4NCj4gPiAtICAgICBkYXRhLT5sYXN0X2NoYW4gPSAwOyAg
+ICAgICAgICAgICAgIC8qIGZvcmNlIHRoZSBmaXJzdCBzZWxlY3Rpb24gKi8NCj4gPiAtICAgICBk
+YXRhLT5pZGxlX3N0YXRlID0gTVVYX0lETEVfQVNfSVM7DQo+ID4gLQ0KPiA+IC0gICAgIGlkbGVf
+ZGlzY29ubmVjdF9kdCA9IG5wICYmDQo+ID4gLSAgICAgICAgICAgICBvZl9wcm9wZXJ0eV9yZWFk
+X2Jvb2wobnAsICJpMmMtbXV4LWlkbGUtZGlzY29ubmVjdCIpOw0KPiA+IC0gICAgIGlmIChpZGxl
+X2Rpc2Nvbm5lY3RfZHQpDQo+ID4gLSAgICAgICAgICAgICBkYXRhLT5pZGxlX3N0YXRlID0gTVVY
+X0lETEVfRElTQ09OTkVDVDsNCj4gPg0KPiA+ICAgICAgIHJldCA9IHBjYTk1NHhfaXJxX3NldHVw
+KG11eGMpOw0KPiA+ICAgICAgIGlmIChyZXQpDQo+ID4gQEAgLTUzMSw4ICs1NDYsNyBAQCBzdGF0
+aWMgaW50IHBjYTk1NHhfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiAgICAgICBzdHJ1
+Y3QgaTJjX211eF9jb3JlICptdXhjID0gaTJjX2dldF9jbGllbnRkYXRhKGNsaWVudCk7DQo+ID4g
+ICAgICAgc3RydWN0IHBjYTk1NHggKmRhdGEgPSBpMmNfbXV4X3ByaXYobXV4Yyk7DQo+ID4NCj4g
+PiAtICAgICBkYXRhLT5sYXN0X2NoYW4gPSAwOw0KPiA+IC0gICAgIHJldHVybiBpMmNfc21idXNf
+d3JpdGVfYnl0ZShjbGllbnQsIDApOw0KPiA+ICsgICAgIHJldHVybiBwY2E5NTR4X2luaXQoY2xp
+ZW50LCBkYXRhKTsNCj4gPiAgfQ0KPiA+ICAjZW5kaWYNCj4gPg0KPiA+DQoNCg==
