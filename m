@@ -2,171 +2,113 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF33CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C59CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF82D20684
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE8C20B7C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 09:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfJUJXP (ORCPT
+        id S1727154AbfJUJo0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 05:23:15 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:34137 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726181AbfJUJXP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 05:23:15 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id MTu4iTW0no1ZhMTu7iLJFS; Mon, 21 Oct 2019 11:23:12 +0200
-Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
-To:     Xia Jiang <xia.jiang@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com
-References: <20191017084033.28299-1-xia.jiang@mediatek.com>
- <20191017084033.28299-6-xia.jiang@mediatek.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <a2e66e05-3248-de84-85d5-b0c7e5a080f1@xs4all.nl>
-Date:   Mon, 21 Oct 2019 11:23:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 21 Oct 2019 05:44:26 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55365 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfJUJo0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 05:44:26 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMUEg-00031V-3v; Mon, 21 Oct 2019 11:44:22 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMUEe-0003mQ-5G; Mon, 21 Oct 2019 11:44:20 +0200
+Date:   Mon, 21 Oct 2019 11:44:20 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Andy Duan <fugang.duan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, Jun Li <jun.li@nxp.com>
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for fec1
+Message-ID: <20191021094420.wmy5w2tp532dibqm@pengutronix.de>
+References: <1571649512-24041-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20191017084033.28299-6-xia.jiang@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBX4zeKC12ZrwQYD4Gu8nAfraoHeArJMkY6+EytbDESkYZwL6hzOhZZRpN2YyL28a5MldlJJB6nzlYnXGUNRb7ceJWpA4Bk5MBEjoV8Cs0hst2h/Odk1
- 8Fs5shOYHZeh9crSahooaj6fyj5giPN1NR0ua8fsM4j2SJwGbq+Z04izzsDSeA9G75THtWPR9wZ9xuodA8Y2K4GP4qxRLA+d8KK2hgpq3aA5vlcL5dFFcnOT
- 5RhOUJVG8LVKln4G80UITRtvYlVx7SpFsUlTYiJKhM19UwVwyPF34gQJrolTJ6eOA14NxOfnbyLF/xUI3437ir1cBaWCO+vp953B2MAGjD3hIjLd4289ABGQ
- e9T0QwmXqzaHf0SF/TvGAoipbEIARzMmlgXJ0r6y7hMuhb6P+Hcl/KN00Il/jKpSQIJG0sQ5zwwQ+qsWEuwf9MORMov7slZNwpxy67OpF1ULkJA+Z1rSroKH
- vuq5UPBjFs4R/60nTOtD7vGNdLbvxZAoiYePq5WrR4REefK/dV+1OGtFMN/Dw76g19gVwBucg7QJatLmhPQbzxGcvj7gMZIXiioAr4k63NMzQA2W22x1W108
- N0G/gIO4wEFQa3Mwgl8SjAifKowzwWwY7Cud+zqZshZM5NxoBhK/2pMjOMN5Cq7k7I4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571649512-24041-1-git-send-email-peng.fan@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:43:52 up 156 days, 16:02, 98 users,  load average: 0.12, 0.13,
+ 0.10
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Xia,
+Hi,
 
-Some comments about the selection code:
-
-On 10/17/19 10:40 AM, Xia Jiang wrote:
-> Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
-> decode and encode have great similarities with function operation.
+On 19-10-21 09:21, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> We should not rely on U-Boot to configure the phy reset.
+> So introduce phy-reset-gpios property to let Linux handle phy reset
+> itself.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
-> v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder,
->     one for decoder.
->     split mtk_jpeg_set_default_params() to two functions, one for
->     encoder, one for decoder.
->     add cropping support for encoder in g/s_selection ioctls.
->     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
->     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 by
->     specification.
->     move width shifting operation behind aligning operation in
->     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
->     fix user abuseing data_offset issue for DMABUF in
->     mtk_jpeg_set_enc_src().
->     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGHT
->                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH from
->                         'int' type to 'unsigned int' type.
->                         fix msleadingly indented of 'else'.
+>  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> v3: delete Change-Id.
->     only test once handler->error after the last v4l2_ctrl_new_std().
->     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch.
-> 
-> v2: fix compliance test fail, check created buffer size in driver.
-> ---
->  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++---
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
->  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
->  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
->  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
->  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
->  7 files changed, 1004 insertions(+), 146 deletions(-)
->  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
->  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
->  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.h
-> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> index faefb7182af1..e4d66f7db09d 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> @@ -80,6 +80,7 @@
+>  	pinctrl-0 = <&pinctrl_fec1>;
+>  	phy-mode = "rgmii-id";
+>  	phy-handle = <&ethphy0>;
+> +	phy-reset-gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
 
-<snip>
-
-> @@ -455,11 +679,19 @@ static int mtk_jpeg_g_selection(struct file *file, void *priv,
->  				struct v4l2_selection *s)
->  {
->  	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
-> +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
->  
-> -	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-> +	if (jpeg->mode == MTK_JPEG_ENC && s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
-> +		return -EINVAL;
-> +
-> +	if (jpeg->mode == MTK_JPEG_DEC &&
-> +	    s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
->  		return -EINVAL;
->  
->  	switch (s->target) {
-> +	case V4L2_SEL_TGT_CROP:
-> +	case V4L2_SEL_TGT_CROP_BOUNDS:
-> +	case V4L2_SEL_TGT_CROP_DEFAULT:
-
-This is wrong...
-
->  	case V4L2_SEL_TGT_COMPOSE:
->  	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
->  		s->r.width = ctx->out_q.w;
-> @@ -484,11 +716,17 @@ static int mtk_jpeg_s_selection(struct file *file, void *priv,
->  				struct v4l2_selection *s)
->  {
->  	struct mtk_jpeg_ctx *ctx = mtk_jpeg_fh_to_ctx(priv);
-> +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
->  
-> -	if (s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-> +	if (jpeg->mode == MTK_JPEG_ENC && s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)
-> +		return -EINVAL;
-> +
-> +	if (jpeg->mode == MTK_JPEG_DEC &&
-> +	    s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
->  		return -EINVAL;
->  
->  	switch (s->target) {
-> +	case V4L2_SEL_TGT_CROP:
-
-...and so is this.
-
-The decoder only supports COMPOSE, the encoder only supports CROP.
-
-This signals support for both cropping and composition for both encoder and
-decoder, and that's wrong. You can see this in the compliance output as well:
-it says that both cropping and composition are 'OK', meaning that both features
-are implemented.
-
-It also claims that the decoder supports scaling. Is that correct? Is there a
-scaler in the JPEG decoder? Usually codecs do not have a scaler.
+Where is the pinctrl done?
 
 Regards,
+  Marco
 
-	Hans
+>  	fsl,magic-packet;
+>  	status = "okay";
+>  
+> -- 
+> 2.16.4
+> 
+> 
+> 
 
->  	case V4L2_SEL_TGT_COMPOSE:
->  		s->r.left = 0;
->  		s->r.top = 0;
-> @@ -658,10 +896,92 @@ static void mtk_jpeg_set_queue_data(struct mtk_jpeg_ctx *ctx,
->  		 param->dec_w, param->dec_h);
->  }
-
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
