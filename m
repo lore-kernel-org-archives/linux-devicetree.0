@@ -2,82 +2,90 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AE4CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9762CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 586F72084C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6D821872
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfJUOaQ (ORCPT
+        id S1727040AbfJUOgc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:30:16 -0400
-Received: from muru.com ([72.249.23.125]:38364 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727406AbfJUOaP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:30:15 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A43AE80CC;
-        Mon, 21 Oct 2019 14:30:46 +0000 (UTC)
-Date:   Mon, 21 Oct 2019 07:30:08 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH v2 07/11] omap: remove old hsmmc.[ch] and in Makefile
-Message-ID: <20191021143008.GS5610@atomide.com>
-References: <cover.1571510481.git.hns@goldelico.com>
- <9bd4c0bb0df26523d7f5265cdb06d86d63dafba8.1571510481.git.hns@goldelico.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9bd4c0bb0df26523d7f5265cdb06d86d63dafba8.1571510481.git.hns@goldelico.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 21 Oct 2019 10:36:32 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:39608 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726987AbfJUOgb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 10:36:31 -0400
+X-Greylist: delayed 368 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Oct 2019 10:36:29 EDT
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Oct 2019 20:00:20 +0530
+IronPort-SDR: vT5ilpa8nvRDneSXUcHtGXGZXqG/FfTAThMd4qBEG39zlVw4x7bYT9vjYSvmaC1H6w+sztqiCP
+ uJv3N4yfZ8W1Vh+79fOOcqX214B5QrVNtUt/1s/F4uIRlNT4bHiiNUMkfPEufen95ayoI41ZgQ
+ OYmw+QfW0QflvLSpFhKDjoEuUhBE5rWc6FGVBShd1Dqt6fMkbwxmZXl8Za6m9n4gVh6HcHKo21
+ 29O0Hc37EupITRjWwekG3Ra39GBahQz5YTf1kFUpT7ddoqrH1f2e+q288berFOUO3AH38FzPND
+ aygV6/ah1QN/XVoPp+M5sfpV
+Received: from rampraka-linux.qualcomm.com ([10.206.25.221])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Oct 2019 19:59:58 +0530
+Received: by rampraka-linux.qualcomm.com (Postfix, from userid 2305851)
+        id 32E2D329D; Mon, 21 Oct 2019 19:59:57 +0530 (IST)
+From:   Ram Prakash Gupta <rampraka@codeaurora.org>
+To:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, rampraka@codeaurora.org,
+        vbadigan@codeaurora.org, cang@codeaurora.org, ppvk@codeaurora.org,
+        adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [RFC 0/6] mmc: Add clock scaling support for mmc driver
+Date:   Mon, 21 Oct 2019 19:59:31 +0530
+Message-Id: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191019 18:43]:
-> --- a/arch/arm/mach-omap2/Makefile
-> +++ b/arch/arm/mach-omap2/Makefile
-> @@ -216,7 +216,6 @@ obj-$(CONFIG_MACH_NOKIA_N8X0)		+= board-n8x0.o
->  
->  # Platform specific device init code
->  
-> -omap-hsmmc-$(CONFIG_MMC_OMAP_HS)	:= hsmmc.o
->  obj-y					+= $(omap-hsmmc-m) $(omap-hsmmc-y)
+This change adds the use of devfreq based clock scaling to MMC.
+This applicable for eMMC and SDCard.
+For some workloads, such as video playback, it isn't necessary
+for these cards to run at high speed. Running at lower
+frequency, in such cases can still meet the deadlines for data
+transfers.
 
-The related obj-y line can go now too, right?
+Scaling down the clock frequency dynamically has power savings
+not only because the bus is running at lower frequency but also
+has an advantage of scaling down the system core voltage, if
+supported. Provide an ondemand clock scaling support similar
+to the cpufreq ondemand governor having two thresholds,
+up_threshold and down_threshold to decide whether to increase
+the frequency or scale it down respectively as per load.
 
-And looks like common.h also has struct omap2_hsmmc_info
-so maybe check by grepping for hsmmc_info to see it's gone.
 
-Regards,
+Ram Prakash Gupta (6):
+  mmc: core: Parse clk scaling dt entries
+  mmc: core: Add core scaling support in driver
+  mmc: core: Initialize clk scaling for mmc and SDCard
+  mmc: core: Add debugfs entries for scaling support
+  mmc: sdhci-msm: Add capability in platfrom host
+  dt-bindings: mmc: sdhci-msm: Add clk scaling dt parameters
 
-Tony
+ .../devicetree/bindings/mmc/sdhci-msm.txt          |  19 +
+ drivers/mmc/core/block.c                           |  19 +-
+ drivers/mmc/core/core.c                            | 777 +++++++++++++++++++++
+ drivers/mmc/core/core.h                            |  17 +
+ drivers/mmc/core/debugfs.c                         |  90 +++
+ drivers/mmc/core/host.c                            | 226 ++++++
+ drivers/mmc/core/mmc.c                             | 246 ++++++-
+ drivers/mmc/core/queue.c                           |   2 +
+ drivers/mmc/core/sd.c                              |  84 ++-
+ drivers/mmc/host/sdhci-msm.c                       |   2 +
+ include/linux/mmc/card.h                           |   7 +
+ include/linux/mmc/host.h                           |  66 ++
+ 12 files changed, 1550 insertions(+), 5 deletions(-)
+
+-- 
+1.9.1
+
