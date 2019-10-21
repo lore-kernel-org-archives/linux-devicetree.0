@@ -2,230 +2,202 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73231CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 16:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CF0CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 16:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F6B2064B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 16:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571674881;
-	bh=Y7oaW/0nI72JG2ZWy1YcBEZ9QdOG7gwptvk2YsxdDrM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VPI6379LvfMseKrss9RXhiDV/s8yE/ZrlY4T6SzVOlQPrudmklvmLqbPzOWwcXe7A
-	 pkpcONqd+tuhnTbsm/R2vM4NgcgPuEIb4lnzCVgi9KCVhoEeVYL+rD3oy9EsdRNWBu
-	 V/BM8pVd9fADPZV5ZhQSOrti4EoVCISTlUyor1B8=
+	by mail.kernel.org (Postfix) with ESMTP id 25A95206C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 16:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbfJUQVU (ORCPT
+        id S1728238AbfJUQnQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 12:21:20 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44483 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfJUQVU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 12:21:20 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r16so10452837edq.11;
-        Mon, 21 Oct 2019 09:21:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J7kXhyBYin2hNshrQsLbIqexvEmaaX5JxfmgulPDAhs=;
-        b=CGr9u20Eu4lRUt+v0PYZHqyWvsAmExvqOXoupAx41lYGj2F5fY1Xz29lqY/18b1Nf1
-         m1CBj5ETQ3XlPpUS+9nbmDuh44fkeGHJuX8Ab1xezRLekjUd1t8qxFRYC5gE32F0MHR9
-         eVfRGZm2PVKM5FwaNDtaY/M/jFpUk45Fpfp6DOJQspMZonQnvyALEwoMeHRLBUVbrlJj
-         L1oQDju4Djah1aAkkMrfFn50VibZ2ZV4qPIYXFMdE3/Eu+GV2xzpYO8+Uh35xo1WW8Eo
-         fM9ikHCwiVJUSEjfaGcvpr4KAxFRl2hVzMCPW8oPTw/AddDwqmaiyNqcYAJXGi3xjYf6
-         O0NA==
-X-Gm-Message-State: APjAAAUOpcPwJO4PEXTpXJDsdizazoWfhlXnxqiH5NJCCo3GHBsGkJQN
-        VHDZTsJAP6x+QSlEhAH5ZWs=
-X-Google-Smtp-Source: APXvYqzJjaDGk3bh7Rvx5mKz/l/mNrNxKhU6SPIZK78xraCXfMm3Bl9vspYovV2bf8f1O66wvaY1DQ==
-X-Received: by 2002:aa7:d915:: with SMTP id a21mr26132055edr.46.1571674877915;
-        Mon, 21 Oct 2019 09:21:17 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id s4sm363303edt.34.2019.10.21.09.21.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 21 Oct 2019 09:21:17 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 18:21:15 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Alim Akhtar <alim.akhtar@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: exynos: Rename children of SysRAM node to
- "sram"
-Message-ID: <20191021162115.GA21883@kozik-lap>
-References: <20191021151440.13505-1-krzk@kernel.org>
- <CAGOxZ531SdYcud3nQ-6hbCRZptUYznTRajVyxwEi-mFmm8-zPg@mail.gmail.com>
+        Mon, 21 Oct 2019 12:43:16 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:58012 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1727582AbfJUQnQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 12:43:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C4F916F8;
+        Mon, 21 Oct 2019 09:42:53 -0700 (PDT)
+Received: from [10.1.196.105] (unknown [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCF4D3F71F;
+        Mon, 21 Oct 2019 09:42:48 -0700 (PDT)
+Subject: Re: [PATCH v6 2/2] soc: amazon: al-pos-edac: Introduce Amazon's
+ Annapurna Labs POS EDAC driver
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     robh+dt@kernel.org, maz@kernel.org, mark.rutland@arm.com,
+        arnd@arndb.de, bp@alien8.de, mchehab@kernel.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        paulmck@linux.ibm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com,
+        ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+        amirkl@amazon.com, barakw@amazon.com
+References: <1570707681-865-1-git-send-email-talel@amazon.com>
+ <1570707681-865-3-git-send-email-talel@amazon.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <e66ff9b9-5fcb-e746-a551-2dc76bbeab48@arm.com>
+Date:   Mon, 21 Oct 2019 17:42:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <1570707681-865-3-git-send-email-talel@amazon.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAGOxZ531SdYcud3nQ-6hbCRZptUYznTRajVyxwEi-mFmm8-zPg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 09:37:24PM +0530, Alim Akhtar wrote:
-> On Mon, Oct 21, 2019 at 8:45 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > The device node name should reflect generic class of a device so rename
-> > the children of SysRAM node to "smp-sysram".  This will be also in sync
-> Typo "smp-sram"
+Hi Talel,
 
-Thanks, indeed.
+On 10/10/2019 12:41, Talel Shenhar wrote:
+> The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+> logging unit that reports an error in case write error (e.g . Attempt to
 
-> > with upcoming DT schema.  No functional change.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> Looks good to me.
+(This is tricky to parse. "error in case write error" -> "error when a write error occurs"?)
 
-Shall I add your review-tag?
-
-Best regards,
-Krzysztof
+> write to a read only register).
+> This error shall be reported to EDAC subsystem as uncorrectable-error.
 
 
-> 
-> >  arch/arm/boot/dts/exynos3250.dtsi               | 4 ++--
-> >  arch/arm/boot/dts/exynos4210-universal_c210.dts | 6 +++---
-> >  arch/arm/boot/dts/exynos4210.dtsi               | 4 ++--
-> >  arch/arm/boot/dts/exynos4412.dtsi               | 4 ++--
-> >  arch/arm/boot/dts/exynos5250.dtsi               | 4 ++--
-> >  arch/arm/boot/dts/exynos54xx.dtsi               | 4 ++--
-> >  6 files changed, 13 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> > index b016b0b68306..044e5da64a76 100644
-> > --- a/arch/arm/boot/dts/exynos3250.dtsi
-> > +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> > @@ -145,12 +145,12 @@
-> >                         #size-cells = <1>;
-> >                         ranges = <0 0x02020000 0x40000>;
-> >
-> > -                       smp-sysram@0 {
-> > +                       smp-sram@0 {
-> >                                 compatible = "samsung,exynos4210-sysram";
-> >                                 reg = <0x0 0x1000>;
-> >                         };
-> >
-> > -                       smp-sysram@3f000 {
-> > +                       smp-sram@3f000 {
-> >                                 compatible = "samsung,exynos4210-sysram-ns";
-> >                                 reg = <0x3f000 0x1000>;
-> >                         };
-> > diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> > index 09d3d54d09ff..a1bdf7830a87 100644
-> > --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> > +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> > @@ -590,16 +590,16 @@
-> >  };
-> >
-> >  &sysram {
-> > -       smp-sysram@0 {
-> > +       smp-sram@0 {
-> >                 status = "disabled";
-> >         };
-> >
-> > -       smp-sysram@5000 {
-> > +       smp-sram@5000 {
-> >                 compatible = "samsung,exynos4210-sysram";
-> >                 reg = <0x5000 0x1000>;
-> >         };
-> >
-> > -       smp-sysram@1f000 {
-> > +       smp-sram@1f000 {
-> >                 status = "disabled";
-> >         };
-> >  };
-> > diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-> > index 554819ae1446..b4466232f0c1 100644
-> > --- a/arch/arm/boot/dts/exynos4210.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4210.dtsi
-> > @@ -79,12 +79,12 @@
-> >                         #size-cells = <1>;
-> >                         ranges = <0 0x02020000 0x20000>;
-> >
-> > -                       smp-sysram@0 {
-> > +                       smp-sram@0 {
-> >                                 compatible = "samsung,exynos4210-sysram";
-> >                                 reg = <0x0 0x1000>;
-> >                         };
-> >
-> > -                       smp-sysram@1f000 {
-> > +                       smp-sram@1f000 {
-> >                                 compatible = "samsung,exynos4210-sysram-ns";
-> >                                 reg = <0x1f000 0x1000>;
-> >                         };
-> > diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-> > index 5022aa574b26..48868947373e 100644
-> > --- a/arch/arm/boot/dts/exynos4412.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> > @@ -195,12 +195,12 @@
-> >                         #size-cells = <1>;
-> >                         ranges = <0 0x02020000 0x40000>;
-> >
-> > -                       smp-sysram@0 {
-> > +                       smp-sram@0 {
-> >                                 compatible = "samsung,exynos4210-sysram";
-> >                                 reg = <0x0 0x1000>;
-> >                         };
-> >
-> > -                       smp-sysram@2f000 {
-> > +                       smp-sram@2f000 {
-> >                                 compatible = "samsung,exynos4210-sysram-ns";
-> >                                 reg = <0x2f000 0x1000>;
-> >                         };
-> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> > index e1f0215e3985..ec983283f573 100644
-> > --- a/arch/arm/boot/dts/exynos5250.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> > @@ -171,12 +171,12 @@
-> >                         #size-cells = <1>;
-> >                         ranges = <0 0x02020000 0x30000>;
-> >
-> > -                       smp-sysram@0 {
-> > +                       smp-sram@0 {
-> >                                 compatible = "samsung,exynos4210-sysram";
-> >                                 reg = <0x0 0x1000>;
-> >                         };
-> >
-> > -                       smp-sysram@2f000 {
-> > +                       smp-sram@2f000 {
-> >                                 compatible = "samsung,exynos4210-sysram-ns";
-> >                                 reg = <0x2f000 0x1000>;
-> >                         };
-> > diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-> > index f78dee801cd9..8aa5117e58ce 100644
-> > --- a/arch/arm/boot/dts/exynos54xx.dtsi
-> > +++ b/arch/arm/boot/dts/exynos54xx.dtsi
-> > @@ -62,12 +62,12 @@
-> >                         #size-cells = <1>;
-> >                         ranges = <0 0x02020000 0x54000>;
-> >
-> > -                       smp-sysram@0 {
-> > +                       smp-sram@0 {
-> >                                 compatible = "samsung,exynos4210-sysram";
-> >                                 reg = <0x0 0x1000>;
-> >                         };
-> >
-> > -                       smp-sysram@53000 {
-> > +                       smp-sram@53000 {
-> >                                 compatible = "samsung,exynos4210-sysram-ns";
-> >                                 reg = <0x53000 0x1000>;
-> >                         };
-> > --
-> > 2.17.1
-> >
-> 
-> 
-> -- 
-> Regards,
-> Alim
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 55199ef..a77d554 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -757,6 +757,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
+>  F:	include/linux/altera_uart.h
+>  F:	include/linux/altera_jtaguart.h
+>  
+> +AMAZON ANNAPURNA LABS POS EDAC DRIVER
+> +M:	Talel Shenhar <talel@amazon.com>
+> +M:	Talel Shenhar <talelshenhar@gmail.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+
+> +F:	drivers/edac/al-pos-edac.c
+
+~s/-/_/
+
+
+> diff --git a/drivers/edac/al_pos_edac.c b/drivers/edac/al_pos_edac.c
+> new file mode 100644
+> index 00000000..a85ab67
+> --- /dev/null
+> +++ b/drivers/edac/al_pos_edac.c
+> @@ -0,0 +1,173 @@
+
+> +static int al_pos_handle(struct al_pos_edac *al_pos)
+> +{
+
+> +	log1 = readl_relaxed(al_pos->mmio_base + AL_POS_ERROR_LOG_1);
+> +	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
+> +		return 0;
+
+[...]
+
+> +	edac_device_handle_ue(al_pos->edac_dev, 0, 0, msg);
+> +
+> +	return 1;
+> +}
+[...]
+
+> +static irqreturn_t al_pos_irq_handler(int irq, void *info)
+> +{
+
+> +	if (al_pos_handle(al_pos))
+> +		return IRQ_HANDLED;
+> +	return IRQ_NONE;
+> +}
+
+
+> +static int al_pos_probe(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *edac_dev;
+> +	struct al_pos_edac *al_pos;
+> +	int ret;
+> +
+> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_pos), DRV_NAME, 1,
+> +					      DRV_NAME, 1, 0, NULL, 0,
+> +					      edac_device_alloc_index());
+> +	if (!edac_dev)
+> +		return -ENOMEM;
+> +
+> +	al_pos = edac_dev->pvt_info;
+> +	al_pos->edac_dev = edac_dev;
+> +	platform_set_drvdata(pdev, al_pos);
+> +
+> +	al_pos->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(al_pos->mmio_base)) {
+> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
+> +			PTR_ERR(al_pos->mmio_base));
+
+edac_device_free_ctl_info(al_pos->edac_dev) or goto err_free_edac ?
+
+> +		return PTR_ERR(al_pos->mmio_base);
+> +	}
+> +
+> +	al_pos->irq = platform_get_irq(pdev, 0);
+> +	if (al_pos->irq <= 0)
+> +		edac_dev->edac_check = al_pos_edac_check;
+> +
+> +	edac_dev->dev = &pdev->dev;
+> +	edac_dev->mod_name = DRV_NAME;
+> +	edac_dev->dev_name = dev_name(&pdev->dev);
+> +	edac_dev->ctl_name = "POS";
+
+Does this show up in sysfs? The 'AL_' prefix may make it easier to find the corresponding
+driver. (The TLA space is a little crowded!)
+
+
+> +	ret = edac_device_add_device(edac_dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to add edac device\n");
+> +		goto err_free_edac;
+> +	}
+> +
+> +	if (al_pos->irq > 0) {
+> +		ret = devm_request_irq(&pdev->dev,
+> +				       al_pos->irq,
+> +				       al_pos_irq_handler,
+
+> +				       0,
+
+Can this be IRQF_SHARED? This lets other devices register the interrupt too, which is
+easily allowed if you can identify whether your device has triggered the interrupt. (which
+you are already doing with the valid bit in your log1 register).
+
+
+> +				       pdev->name,
+> +				       pdev);
+> +		if (ret != 0) {
+> +			dev_err(&pdev->dev,
+> +				"failed to register to irq %d (%d)\n",
+> +				al_pos->irq, ret);
+> +			goto err_remove_edac;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err_remove_edac:
+> +	edac_device_del_device(edac_dev->dev);
+> +err_free_edac:
+> +	edac_device_free_ctl_info(edac_dev);
+> +
+> +	return ret;
+> +}
+
+
+With the edac_dev-leak fixed and the -/_ in MAINTAINERS:
+
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+Thanks,
+
+James
