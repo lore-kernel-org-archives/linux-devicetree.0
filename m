@@ -2,132 +2,110 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2B3CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 21:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C43C47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 22:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380B62067B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 21:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1672720873
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 22:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="036YnA8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbfJUV5r (ORCPT
+        id S1730289AbfJUWVs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 17:57:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:65076 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbfJUV5r (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 17:57:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 14:57:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,325,1566889200"; 
-   d="scan'208";a="209472729"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.143]) ([10.7.153.143])
-  by orsmga002.jf.intel.com with ESMTP; 21 Oct 2019 14:57:43 -0700
-Subject: Re: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
- timeout support
-To:     Peter Rosin <peda@axentia.se>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 21 Oct 2019 18:21:48 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:32994 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbfJUWVs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 18:21:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6uc83vVbAQNL+hWSYNLKkGKf3OFD2g2M4EAFEdxCp8k=; b=036YnA8M35zh7oaZP5i2lrsye
+        EB0cDqf3F8uePuPil4Bamdbm8KtNRvsBdq07e1aHHJgDobEYpDojY9mOeX8YPPd1J2sC+mh+6VDxc
+        /V9CA6YUSYv9pEQ1D6eRYBtf0ymOBj8sxubqz1HIJtD2vM6dH1pOOQwIR9tY0McREESQviSLk1hDT
+        9Aad+EJGZHzyyUWVCsvOL2mAZKl5VCw9Vi52BbeATUdSZaXmXoUrg26XhJ0lkzlnbH06WL0VYhCfN
+        UvtH8sR/oeNe0DxU2hwkxapIuU4gWA+ug0hzwvSwDebQsKNrfX++HAyF36QsP7DTwur0NBbrWwgBa
+        pjPKOdWUg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57354)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iMg3O-0003H1-0z; Mon, 21 Oct 2019 23:21:30 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iMg3G-0003uw-Oy; Mon, 21 Oct 2019 23:21:22 +0100
+Date:   Mon, 21 Oct 2019 23:21:22 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
-        Cedric Le Goater <clg@kaod.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
- <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
- <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
-Date:   Mon, 21 Oct 2019 14:57:43 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] net: ag71xx: port to phylink
+Message-ID: <20191021222122.GM25745@shell.armlinux.org.uk>
+References: <20191021053811.19818-1-o.rempel@pengutronix.de>
+ <20191021053811.19818-2-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021053811.19818-2-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Peter,
+On Mon, Oct 21, 2019 at 07:38:07AM +0200, Oleksij Rempel wrote:
+> +static void ag71xx_mac_validate(struct phylink_config *config,
+> +			    unsigned long *supported,
+> +			    struct phylink_link_state *state)
+>  {
+> -	struct ag71xx *ag = netdev_priv(ndev);
+> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+> +
+> +	if (state->interface != PHY_INTERFACE_MODE_NA &&
+> +	    state->interface != PHY_INTERFACE_MODE_GMII &&
+> +	    state->interface != PHY_INTERFACE_MODE_MII) {
+> +		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+> +		return;
+> +	}
+> +
+> +	phylink_set(mask, MII);
+> +
+> +	/* flow control is not supported */
+> +
+> +	phylink_set(mask, 10baseT_Half);
+> +	phylink_set(mask, 10baseT_Full);
+> +	phylink_set(mask, 100baseT_Half);
+> +	phylink_set(mask, 100baseT_Full);
+>  
+> -	ag71xx_link_adjust(ag, true);
+> +	if (state->interface == PHY_INTERFACE_MODE_NA &&
+> +	    state->interface == PHY_INTERFACE_MODE_GMII) {
 
-On 10/21/2019 2:05 PM, Peter Rosin wrote:
-> On 2019-10-21 22:24, Jae Hyun Yoo wrote:
->> Append a binding to support hardware timeout feature.
->>
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> ---
->>   Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->> index b47f6ccb196a..133bfedf4cdd 100644
->> --- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->> @@ -17,6 +17,8 @@ Optional Properties:
->>   - bus-frequency	: frequency of the bus clock in Hz defaults to 100 kHz when not
->>   		  specified
->>   - multi-master	: states that there is another master active on this bus.
->> +- aspeed,hw-timeout-ms	: Hardware timeout in milliseconds. If it's not
->> +			  specified, the H/W timeout feature will be disabled.
->>   
->>   Example:
->>   
->>
-> 
-> Some SMBus clients support a smbus-timeout-disable binding for disabling
-> timeouts like this, for cases where the I2C adapter in question on occasion
-> is unable to keep the pace. Adding that property thus avoids undesired
-> timeouts when the client is SMBus conformant without it. Your new binding
-> is the reverse situation, where you want to add a timeout where one is
-> otherwise missing.
-> 
-> Anyway, since I2C does not have a specified lowest possible frequency, this
-> feels like something that is more in the SMBus arena. Should the property
-> perhaps be a generic property named smbus-timeout-ms, or something like
-> that?
+This is always false.
 
-Well, I tried upstreaming of the generic timeout property a year ago but
-I agreed that the generic bus timeout property can be set by an ioctl
-command so it didn't need to be added into device tree at that time. Not
-sure if any need has come recently but I haven't heard that. This driver
-still uses the generic timeout property which is provided by i2c core
-for handling command timeouts, and it's out of scope from this patch
-series.
+Apart from that, from just reading the patch I have no further concerns.
 
-> If the above is not wanted or appropriate, then I would personally prefer
-> aspeed,bus-timeout-ms over aspeed,hw-timeout-ms. To me, hw-timeout-ms sounds
-> like a (more serious) timeout between the CPU and the I2C peripheral unit
-> or something like that. But I don't care deeply...
+Thanks.
 
-Changes I submitted in this patch set is for a different purpose which
-is very Aspeed H/W specific, and actually it's a more serious timeout
-setting indeed. If this H/W is used in multi-master environment, it
-could meet a H/W hang that freezes itself in slave mode and it can't
-escape from the state. To resolve the specific case, this H/W provides
-self-recovery feature which monitors abnormal state of SDA, SCL and its
-H/W state machine using the timeout setting to determine the escape
-condition.
-
-Generally, this H/W timeout value is smaller than the generic bus
-timeout value (I'm using 300ms for the H/W timeout while I'm using 1
-second for the generic bus timeout) so I think it should be
-distinguished from the generic bus timeout.
-
-Thanks,
-
-Jae
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
