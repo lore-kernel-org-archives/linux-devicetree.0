@@ -2,171 +2,144 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A47CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85753CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C954021906
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E3420656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L2nU+xgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfJULn2 (ORCPT
+        id S1728258AbfJULpZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:43:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54703 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727889AbfJULn2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 07:43:28 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iMW5r-0000lD-GS; Mon, 21 Oct 2019 13:43:23 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iMW5n-00081f-On; Mon, 21 Oct 2019 13:43:19 +0200
-Date:   Mon, 21 Oct 2019 13:43:19 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 00/10] Add support for more Kontron i.MX6UL/ULL SoMs and
- boards
-Message-ID: <20191021114319.krrhdtvycu7zxxie@pengutronix.de>
-References: <20191016150622.21753-1-frieder.schrempf@kontron.de>
- <20191017081422.65m5dtqznsanfftp@pengutronix.de>
- <6e6f9cf4-85b3-35e3-1238-11e39855bc08@kontron.de>
+        Mon, 21 Oct 2019 07:45:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40593 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfJULpY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 07:45:24 -0400
+Received: by mail-wm1-f68.google.com with SMTP id b24so12432425wmj.5
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 04:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=umMsATXlWgFAfcuZOGKS3dhZXdI24Lzqqx5ELSjQOWM=;
+        b=L2nU+xgCbN5LtkAhVSUAyqXKpaIpDb2NbqaWZD/9o/EUs39LUEO2TGEXCZnz/+1GMK
+         vmYJLj9mwZ8wqiG/kirdJIyY//VurXZfTQCPxCtOY9IL1skWqhSDbep7FMWDaLf13PQ/
+         K/qp+YDO47tUKlxjf4r2zecpRPk3YMUhUEBQLnU3Q0XHC57ZyUaPxmpuZHIIAQIzaN+r
+         Y/Xqo9jpEBUc0N9HPFcmvN3EWnuoZGNRmYXpqVEg0baVbVZf+XMCdVLcukyYbTdNbr2J
+         T9Lw2o/kyFrxYKTVufYqj0aVqDHuuCSO2Xl0SadOAKJWb8w3occPpbjoyIxp+cJPLyhh
+         MHfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=umMsATXlWgFAfcuZOGKS3dhZXdI24Lzqqx5ELSjQOWM=;
+        b=hn4zTpnq25bc3Dm8njpcL5J+cTvFF8OoDovqLL0HhHa1Pwp9zk5PfgdBKmxk0bRS27
+         l1a2IDaQZRX46Mg4FsWN8gvxRbn0X3LguPU7Nk3Wf8BTUN3c7P39H1/Y3ImtYXs4nDHJ
+         oV1D0ti8BpBCGrDwcHp2IFj7HX5gur5ETVNPemOyWx9zpAUzyKQoUYbVZ3HfHB7dRnlx
+         Db1LKPEFLc//hUI1sVtJ36AZfAEd3iOQG9pX4dLaiBY2KKMVMtm++oX7su2BAcHanLux
+         5+lYnammd0LMGhRB4uyMMqXQSi+XR3WZHqWsSg/aMyG1CPfQfBgL5ir0jZ+PwaKG/rZG
+         qKHQ==
+X-Gm-Message-State: APjAAAVXcH7WbfQzq0kAqvMimfr/y0Q7/w1/WnykJ4Opq+UY3AOe/EjX
+        aD2/IvmV4F3YmtbbunzOnF05JQ==
+X-Google-Smtp-Source: APXvYqxEr92jhtBT1uFAamq5FfTEOFtNLr64Fwysmfw5liFBfPgdTxylfL+k5nkA5UswqABKpIGI9A==
+X-Received: by 2002:a1c:6a07:: with SMTP id f7mr6276449wmc.124.1571658322488;
+        Mon, 21 Oct 2019 04:45:22 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id o4sm24943791wre.91.2019.10.21.04.45.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Oct 2019 04:45:22 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 12:45:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 02/11] mfd: wcd934x: add support to wcd9340/wcd9341
+ codec
+Message-ID: <20191021114520.GD4365@dell>
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-3-srinivas.kandagatla@linaro.org>
+ <20191021104611.GZ4365@dell>
+ <1af8a875-8f55-6b7e-4204-ecedc1608889@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6e6f9cf4-85b3-35e3-1238-11e39855bc08@kontron.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 13:41:49 up 156 days, 17:59, 99 users,  load average: 0.02, 0.01,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1af8a875-8f55-6b7e-4204-ecedc1608889@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Frieder,
+On Mon, 21 Oct 2019, Srinivas Kandagatla wrote:
 
-On 19-10-17 08:24, Schrempf Frieder wrote:
-> Hi Marco,
+> Thanks Lee for taking time to review.
 > 
-> On 17.10.19 10:14, Marco Felsch wrote:
-> > Hi Frieder,
-> > 
-> > On 19-10-16 15:06, Schrempf Frieder wrote:
-> >> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> >>
-> >> In order to support more of the i.MX6UL/ULL-based SoMs and boards by
-> >> Kontron Electronics GmbH, we restructure the devicetrees to share common
-> >> parts and add new devicetrees for the missing boards.
-> >>
-> >> Currently there are the following SoM flavors:
-> >>    * N6310: SoM with i.MX6UL-2, 256MB RAM, 256MB SPI NAND
-> >>    * N6311: SoM with i.MX6UL-2, 512MB RAM, 512MB SPI NAND (new)
-> >>    * N6411: SoM with i.MX6ULL, 512MB RAM, 512MB SPI NAND (new)
-> >>
-> >> Each of the SoMs also features 1MB SPI NOR and an Ethernet PHY. The carrier
-> >> board for the evalkit is the same for all SoMs.
-> >>
-> >> Frieder Schrempf (10):
-> >>    ARM: dts: imx6ul-kontron-n6310: Move common SoM nodes to a separate
-> >>      file
-> >>    ARM: dts: Add support for two more Kontron SoMs N6311 and N6411
-> >>    ARM: dts: imx6ul-kontron-n6310-s: Move common nodes to a separate file
-> >>    ARM: dts: Add support for two more Kontron evalkit boards 'N6311 S'
-> >>      and 'N6411 S'
-> >>    ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen' node with 'stdout-path'
-> >>    ARM: dts: imx6ul-kontron-n6x1x-s: Specify bus-width for SD card and
-> >>      eMMC
-> >>    ARM: dts: imx6ul-kontron-n6x1x-s: Add vbus-supply and overcurrent
-> >>      polarity to usb nodes
-> >>    ARM: dts: imx6ul-kontron-n6x1x-s: Remove an obsolete comment and fix
-> >>      indentation
-> >>    dt-bindings: arm: fsl: Add more Kontron i.MX6UL/ULL compatibles
-> >>    MAINTAINERS: Add an entry for Kontron Electronics ARM board support
-> > 
-> > Did you send all patches to same To: and Cc:?
-> 
-> No, I have a script that runs get_maintainer.pl for each patch. So the 
-> recipients might differ. I only had Krzysztof and Rob as hard-coded 
-> recipients for the whole series.
-> 
-> Do you think I should change this so each recipient receives the whole 
-> series?
+> I agree with most of the style related comments, will fix them in next
+> version. For others I have replied it inline.
 
-I do it that way because sometimes it is better for the reviewer to see
-the whole context.
+[...]
 
-Regards,
-  Marco 
-
-> Thanks,
-> Frieder
+> > > +static int wcd934x_bring_up(struct wcd934x_data *wcd)
+> > > +{
+> > > +	struct regmap *rm = wcd->regmap;
+> > 
+> > It's much more common to use 'regmap' or 'map'.
 > 
+> Only reason to make it short here is to save some lines!
+> If you prefer regmap, I will add that in next version!
+
+I doubt it'd save many (any?) lines.
+
+[...]
+
+> > > +static int wcd934x_slim_status(struct slim_device *sdev,
+> > > +			       enum slim_device_status status)
+> > > +{
+> > > +	struct device *dev = &sdev->dev;
+> > > +	struct wcd934x_data *wcd;
+> > > +	int ret;
 > > 
-> > Regards,
-> >    Marco
+> > This is semantically odd!  Why are you doing most of the
+> > initialisation and bring-up in 'status' and not 'probe'.  Seems
+> > broken to me.
+> 
+> SLIMBus device will not be in a state to communicate before enumeration (at
+> probe), so all the device initialization is done in status callback where it
+> is ready for communication.
+
+Why do we need the device to be up *before* calling probe?
+
+> This is same with SoundWire Bus as well!
+
+[...]
+
+> > > +	struct device *dev;
+> > > +	struct clk *extclk;
+> > > +	struct regmap *regmap;
+> > > +	struct slim_device *sdev;
 > > 
-> >>
-> >>   .../devicetree/bindings/arm/fsl.yaml          |  14 +
-> >>   MAINTAINERS                                   |   6 +
-> >>   arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts  | 405 +----------------
-> >>   .../boot/dts/imx6ul-kontron-n6310-som.dtsi    |  95 +---
-> >>   arch/arm/boot/dts/imx6ul-kontron-n6311-s.dts  |  16 +
-> >>   .../boot/dts/imx6ul-kontron-n6311-som.dtsi    |  40 ++
-> >>   arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 422 ++++++++++++++++++
-> >>   .../dts/imx6ul-kontron-n6x1x-som-common.dtsi  | 129 ++++++
-> >>   arch/arm/boot/dts/imx6ull-kontron-n6411-s.dts |  16 +
-> >>   .../boot/dts/imx6ull-kontron-n6411-som.dtsi   |  40 ++
-> >>   10 files changed, 685 insertions(+), 498 deletions(-)
-> >>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-s.dts
-> >>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
-> >>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-> >>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-> >>   create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-s.dts
-> >>   create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
-> >>
-> >> -- 
-> >> 2.17.1
-> >>
-> >>
-> > 
+> > You don't need 'sdev' and 'dev'.
+> 
+> slim_device instance (sdev) is required by audio codec driver to allocate
+> stream runtime.
+
+You can extrapolate one from the other.
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
