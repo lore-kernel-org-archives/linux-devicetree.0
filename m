@@ -2,174 +2,114 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4014CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 17:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB52CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 17:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A392077C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 17:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571678938;
-	bh=Qzg+nSzQSl15mcasjyGbnQQil/A3TPHlMSePYlNANZ8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UGvIP+xw3FBClog8QfZOwFCjg3r3f5ULrrCciradcWwfAJX1+1KWkIwoajRC1cuQa
-	 lqqnzLLeqgy3OUT86YzmYc6D9MCDSJSop0Dw9OFDVAgXE4SNVx39XmO+rnteIrmXg0
-	 Ih47585S1r3K1PP+fqg2BzI9rroEPOwMTN06XqY0=
+	by mail.kernel.org (Postfix) with ESMTP id 64D7620882
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 17:48:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m52aS8bF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbfJUR2z (ORCPT
+        id S1729826AbfJURsl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 13:28:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbfJUR2z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 13:28:55 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 751D32077C;
-        Mon, 21 Oct 2019 17:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571678933;
-        bh=Qzg+nSzQSl15mcasjyGbnQQil/A3TPHlMSePYlNANZ8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RgGKvjMKa74HImO3uxjYKvw0NK90LMd1NHS62oYJe/PK7d2Wn6sNEjJ/2E2hICDBd
-         XByPz58+kfMLYVHX1NC7mvZsqWf+FPP3777xTm0eCgqua4idWWIpn63aYOk4Fv/Qdf
-         Ey7ZtrC9+zWSUcPXn5OWFVJdxwLias2NyrWVNb6U=
-Received: by mail-qt1-f171.google.com with SMTP id e14so2441067qto.1;
-        Mon, 21 Oct 2019 10:28:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAWE5+HVqury7By6WCJIjedzOM76I1r2t/0LNRK6JID2UPap1e4z
-        diXGGJzTrZjDWD1GeRe6bf5Mn8QxxN8RubV/pw==
-X-Google-Smtp-Source: APXvYqycsWbsOq+RkNJmmVCRQvnEVotA2t3MyLrnXmKMy7TpkH+IaWBEzx0jJADgfZO6JSeE0XNQkDJsPHRfKzk4np8=
-X-Received: by 2002:ac8:70c4:: with SMTP id g4mr12467338qtp.136.1571678932597;
- Mon, 21 Oct 2019 10:28:52 -0700 (PDT)
+        Mon, 21 Oct 2019 13:48:41 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45506 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfJURsk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 13:48:40 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LHmYfx106826;
+        Mon, 21 Oct 2019 12:48:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571680114;
+        bh=BIhYVTQWymD4mY31+ZJn/sbNnTMn160ESSh3gpWtn5Y=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=m52aS8bFak5L9jNVz3ugYup3CO4bzxZHoHurehVUKD+hHaunDHVCOtx23YOr/KEL5
+         0dKWKV22SWB3RJjNJbmduJrZQwMxFCqXAsmwVQCA4hVXns0vMr1TbS/wIezsLty1Ww
+         BYK2/A27riGk9EhwQnTLSA1jfV0WKWYZzmURaW+0=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LHmIW1047774
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 21 Oct 2019 12:48:19 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 21
+ Oct 2019 12:48:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 21 Oct 2019 12:48:08 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LHmGFk111774;
+        Mon, 21 Oct 2019 12:48:17 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <tomi.valkeinen@ti.com>, <jjhiblot@ti.com>,
+        <devicetree@vger.kernel.org>
+Subject: [PATCH v7 1/2] dt-bindings: leds: document the "power-supply" property
+Date:   Mon, 21 Oct 2019 19:47:50 +0200
+Message-ID: <20191021174751.4421-2-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191021174751.4421-1-jjhiblot@ti.com>
+References: <20191021174751.4421-1-jjhiblot@ti.com>
 MIME-Version: 1.0
-References: <20191005151404.5fc7386f@archlinux> <1571664677-6984-1-git-send-email-gupt21@gmail.com>
-In-Reply-To: <1571664677-6984-1-git-send-email-gupt21@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 21 Oct 2019 12:28:41 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLoVf4QCYJE_Bak+httr6_bT=iP63waNNiUHz1+PdLhPg@mail.gmail.com>
-Message-ID: <CAL_JsqLoVf4QCYJE_Bak+httr6_bT=iP63waNNiUHz1+PdLhPg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: iio: light: add veml6030 ALS bindings
-To:     Rishi Gupta <gupt21@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>, alexios.zavras@intel.com,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 8:31 AM Rishi Gupta <gupt21@gmail.com> wrote:
->
-> This commit adds device tree bindings for veml6030 ambient
-> light sensor.
->
-> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
-> ---
-> Changes in v3:
-> * None
->
-> Changes in v2:
-> * Corrected grammatical mistake from 'is' to 'are' in description of bindings
->
->  .../devicetree/bindings/iio/light/veml6030.yaml    | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
->
-> diff --git a/Documentation/devicetree/bindings/iio/light/veml6030.yaml b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-> new file mode 100644
-> index 0000000..969b314
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0+
+Most of the LEDs are powered by a voltage/current regulator. Describing it
+in the device-tree makes it possible for the LED core to enable/disable it
+when needed.
 
-(GPL-2.0-only OR BSD-2-Clause) for new bindings please.
+Cc: devicetree@vger.kernel.org
+To: robh+dt@kernel.org
+To: mark.rutland@arm.com
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+---
+ Documentation/devicetree/bindings/leds/common.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/light/veml6030.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: VEML6030 Ambient Light Sensor (ALS)
-> +
-> +maintainers:
-> +  - Rishi Gupta <gupt21@gmail.com>
-> +
-> +description: |
-> +  Bindings for the ambient light sensor veml6030 from Vishay
-> +  Semiconductors over an i2c interface.
-> +
-> +  Irrespective of whether interrupt is used or not, application
-> +  can get the ALS and White channel reading from IIO raw interface.
-> +
-> +  If the interrupts are used, application will receive an IIO event
-> +  whenever configured threshold is crossed.
-> +
-> +  Specifications about the sensor can be found at:
-> +    https://www.vishay.com/docs/84366/veml6030.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - vishay,veml6030
-> +
-> +  reg:
-> +    description:
-> +      I2C address of the device. If the ADDR pin on veml6030
-> +      is pulled up, this address is 0x48. If the ADDR pin is
-> +      pulled down, this address is 0x10.
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+index 6d44f0c38487..dacaf863d687 100644
+--- a/Documentation/devicetree/bindings/leds/common.txt
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -96,6 +96,19 @@ Optional properties for child nodes:
+ - panic-indicator : This property specifies that the LED should be used,
+ 		    if at all possible, as a panic indicator.
+ 
++- power-supply : A voltage/current regulator used to to power the LED. When a
++		 LED is turned off, the LED core disable its regulator. The
++		 same regulator can power many LED (or other) devices. It is
++		 turned off only when all of its users disabled it.
++
++- power-off-delays-ms: This property specifies the delay between the time a LED
++                       is turned off and the time the regulator is turned off.
++                       It can be used to limit the overhead of the regulator
++                       handling if the LED is toggling fast.
++                       ex: if power-off-delays-ms is set to 500 ms, the
++                       regulator will not be turned off until the LED is turned
++                       off for more than 500ms.
++
+ - trigger-sources : List of devices which should be used as a source triggering
+ 		    this LED activity. Some LEDs can be related to a specific
+ 		    device and should somehow indicate its state. E.g. USB 2.0
+@@ -143,6 +156,7 @@ led-controller@0 {
+ 		function = LED_FUNCTION_STATUS;
+ 		linux,default-trigger = "heartbeat";
+ 		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
++		power-supply = <&led_regulator>;
+ 	};
+ 
+ 	led1 {
+-- 
+2.17.1
 
-If you want to define the addresses, then you do:
-
-enum:
-  - 0x10 # ADDR pin pulled down
-  - 0x48 # ADDR pin pulled up
-
-> +    maxItems: 1
-
-And drop this.
-
-> +
-> +  interrupts:
-> +    description:
-> +      interrupt mapping for IRQ. Configure with IRQ_TYPE_LEVEL_LOW.
-> +      Refer to interrupt-controller/interrupts.txt for generic
-> +      interrupt client node bindings.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        light-sensor@10 {
-> +                compatible = "vishay,veml6030";
-> +                reg = <0x10>;
-> +                interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-> +        };
-> +    };
-> +...
-> --
-> 2.7.4
->
