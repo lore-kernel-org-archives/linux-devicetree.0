@@ -2,61 +2,60 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B053DCA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 06:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C7ECA9EBA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 06:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856A8214D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 06:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805E0214AE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 06:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mR5ubwEv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CEk6UIXn"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="clkroPqa";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N+W5bGkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfJUG4S (ORCPT
+        id S1727471AbfJUG4d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 02:56:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35072 "EHLO
+        Mon, 21 Oct 2019 02:56:33 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35514 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfJUG4S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 02:56:18 -0400
+        with ESMTP id S1726480AbfJUG4c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 02:56:32 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1869760850; Mon, 21 Oct 2019 06:56:17 +0000 (UTC)
+        id DC47360610; Mon, 21 Oct 2019 06:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571640977;
-        bh=KcmqfQ8/cSsGGkMXZmT/oM5tHl4nhlithpZt6HoqqQg=;
+        s=default; t=1571640990;
+        bh=Q/SbXN4t4P3qEsV5Q7KG/xDcIs4jorA6XRtE91+xWNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mR5ubwEvo1cue2/M/GAIqDxc/IdM93VJo929NWEyaU55cBM9aAOJIomWGyMqeHsXi
-         o/1ZbwFG2Gwaq94pCLVvMJmOtZSGL+nQYGh3wiBHI+QCJ269tQanza11YDA0u3JmLq
-         tOK/M8w6QPoCCfhiFhsRnTkC3R/U/MquQBjsvW40=
+        b=clkroPqaW8+G5vEbaaJAbbWozO8RDkjNdny8XmOhCxu+kftA1YaRY/I1OY6zhuHR+
+         E0+Ntp8G0QyeqGymDKwKXDgjfIbsMdUqz6CxxBUqMCkhOoWWQMxmijp4mLpULJPKUc
+         wqz98jqJE7WhFFPnvYqp7VuIR9Siybxd83qfTCjQ=
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0861D6081E;
-        Mon, 21 Oct 2019 06:56:13 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1863160610;
+        Mon, 21 Oct 2019 06:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571640976;
-        bh=KcmqfQ8/cSsGGkMXZmT/oM5tHl4nhlithpZt6HoqqQg=;
+        s=default; t=1571640989;
+        bh=Q/SbXN4t4P3qEsV5Q7KG/xDcIs4jorA6XRtE91+xWNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CEk6UIXnXO+4o8e7iAsKjQyWhnaGYEumwxLfR4QplzNRESAIzg1uJgBZld/OmW23P
-         +UTIR+eGC+ZKBbfgWDYS6gqD2C6T/23I69m2970K/jcIoST2XdPM8rEkTybAM7J/qV
-         bgKEET+H8+xFxVJdhoLpTz7Y/wCGQN/nxDjmGqg8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0861D6081E
+        b=N+W5bGkOBhg1NTfxFFP2i2uRXCq9x2czBQGuWVUObkE2HcNrPcPSctSVmTQKy2psQ
+         44hrMgCr8RYi1LHmNPYxnA0trXsfnMNqrC6huEpJcptmMntE3dQT519nkr49+iCQgk
+         qltoSJGBWldSw85wzJbtGgpdnFJwl9D269DpXZ0g=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1863160610
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
 To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>,
         Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 04/13] arm64: dts: sc7180: Add device node for apps_smmu
-Date:   Mon, 21 Oct 2019 12:25:13 +0530
-Message-Id: <20191021065522.24511-5-rnayak@codeaurora.org>
+Subject: [PATCH v2 08/13] arm64: dts: qcom: pm6150: Add PM6150/PM6150L PMIC peripherals
+Date:   Mon, 21 Oct 2019 12:25:17 +0530
+Message-Id: <20191021065522.24511-9-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191021065522.24511-1-rnayak@codeaurora.org>
 References: <20191021065522.24511-1-rnayak@codeaurora.org>
@@ -67,119 +66,182 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
+From: Kiran Gunda <kgunda@codeaurora.org>
 
-Adding device node for APPS SMMU that is connected to
-devices such as display, video, usb, mmc, etc. on SC7180
-chipset.
+Add PM6150/PM6150L peripherals such as PON, GPIOs, ADC and other
+PMIC infra modules.
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
-v2: No change
+v2:
+* Changed to BSD-3-Clause licence
+* Included headers in sc7180-idp.dts
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 88 ++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
+ arch/arm64/boot/dts/qcom/pm6150.dtsi    | 85 +++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/pm6150l.dtsi   | 47 ++++++++++++++
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  2 +
+ 3 files changed, 134 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm6150.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm6150l.dtsi
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 82bf7cdce6b8..c67d32242ca2 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -211,6 +211,94 @@
- 			};
- 		};
- 
-+		apps_smmu: iommu@15000000 {
-+			compatible = "qcom,sc7180-smmu-500", "arm,mmu-500";
-+			reg = <0 0x15000000 0 0x100000>;
-+			#iommu-cells = <2>;
-+			#global-interrupts = <1>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 411 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 412 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/qcom/pm6150.dtsi b/arch/arm64/boot/dts/qcom/pm6150.dtsi
+new file mode 100644
+index 000000000000..20eb928e5ce3
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/pm6150.dtsi
+@@ -0,0 +1,85 @@
++// SPDX-License-Identifier: BSD-3-Clause
++// Copyright (c) 2019, The Linux Foundation. All rights reserved.
++
++#include <dt-bindings/iio/qcom,spmi-vadc.h>
++#include <dt-bindings/input/linux-event-codes.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/spmi/spmi.h>
++#include <dt-bindings/thermal/thermal.h>
++
++&spmi_bus {
++	pm6150_lsid0: pmic@0 {
++		compatible = "qcom,pm6150", "qcom,spmi-pmic";
++		reg = <0x0 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pm6150_pon: pon@800 {
++			compatible = "qcom,pm8998-pon";
++			reg = <0x800>;
++			mode-bootloader = <0x2>;
++			mode-recovery = <0x1>;
++
++			pwrkey {
++				compatible = "qcom,pm8941-pwrkey";
++				interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
++				debounce = <15625>;
++				bias-pull-up;
++				linux,code = <KEY_POWER>;
++			};
 +		};
 +
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
- 			#address-cells = <2>;
++		pm6150_temp: temp-alarm@2400 {
++			compatible = "qcom,spmi-temp-alarm";
++			reg = <0x2400>;
++			interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_RISING>;
++			io-channels = <&pm6150_adc ADC5_DIE_TEMP>;
++			io-channel-names = "thermal";
++			#thermal-sensor-cells = <0>;
++		};
++
++		pm6150_adc: adc@3100 {
++			compatible = "qcom,spmi-adc5";
++			reg = <0x3100>;
++			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#io-channel-cells = <1>;
++
++			adc-chan@ADC5_DIE_TEMP {
++				reg = <ADC5_DIE_TEMP>;
++				label = "die_temp";
++			};
++		};
++
++		pm6150_gpio: gpios@c000 {
++			compatible = "qcom,pm6150-gpio", "qcom,spmi-gpio";
++			reg = <0xc000 0xa00>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
++				     <0 0xc1 0 IRQ_TYPE_NONE>,
++				     <0 0xc2 0 IRQ_TYPE_NONE>,
++				     <0 0xc3 0 IRQ_TYPE_NONE>,
++				     <0 0xc4 0 IRQ_TYPE_NONE>,
++				     <0 0xc5 0 IRQ_TYPE_NONE>,
++				     <0 0xc6 0 IRQ_TYPE_NONE>,
++				     <0 0xc7 0 IRQ_TYPE_NONE>,
++				     <0 0xc8 0 IRQ_TYPE_NONE>,
++				     <0 0xc9 0 IRQ_TYPE_NONE>;
++
++			interrupt-names = "pm6150_gpio1", "pm6150_gpio2",
++					"pm6150_gpio3", "pm6150_gpio4",
++					"pm6150_gpio5", "pm6150_gpio6",
++					"pm6150_gpio7", "pm6150_gpio8",
++					"pm6150_gpio9", "pm6150_gpio10";
++		};
++	};
++
++	pm6150_lsid1: pmic@1 {
++		compatible = "qcom,pm6150", "qcom,spmi-pmic";
++		reg = <0x1 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/pm6150l.dtsi b/arch/arm64/boot/dts/qcom/pm6150l.dtsi
+new file mode 100644
+index 000000000000..b17bb1af9367
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/pm6150l.dtsi
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: BSD-3-Clause
++// Copyright (c) 2019, The Linux Foundation. All rights reserved.
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/spmi/spmi.h>
++
++&spmi_bus {
++	pm6150l_lsid4: pmic@4 {
++		compatible = "qcom,pm6150l", "qcom,spmi-pmic";
++		reg = <0x4 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pm6150l_gpios: gpios@c000 {
++			compatible = "qcom,pm6150l-gpio", "qcom,spmi-gpio";
++			reg = <0xc000 0xc00>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <4 0xc0 0 IRQ_TYPE_NONE>,
++				     <4 0xc1 0 IRQ_TYPE_NONE>,
++				     <4 0xc2 0 IRQ_TYPE_NONE>,
++				     <4 0xc3 0 IRQ_TYPE_NONE>,
++				     <4 0xc4 0 IRQ_TYPE_NONE>,
++				     <4 0xc5 0 IRQ_TYPE_NONE>,
++				     <4 0xc6 0 IRQ_TYPE_NONE>,
++				     <4 0xc7 0 IRQ_TYPE_NONE>,
++				     <4 0xc8 0 IRQ_TYPE_NONE>,
++				     <4 0xc9 0 IRQ_TYPE_NONE>,
++				     <4 0xca 0 IRQ_TYPE_NONE>,
++				     <4 0xcb 0 IRQ_TYPE_NONE>;
++
++			interrupt-names = "pm6150l_gpio1", "pm6150l_gpio2",
++					"pm6150l_gpio3", "pm6150l_gpio4",
++					"pm6150l_gpio5", "pm6150l_gpio6",
++					"pm6150l_gpio7", "pm6150l_gpio8",
++					"pm6150l_gpio9", "pm6150l_gpio10",
++					"pm6150l_gpio11", "pm6150l_gpio12";
++		};
++	};
++
++	pm6150l_lsid5: pmic@5 {
++		compatible = "qcom,pm6150l", "qcom,spmi-pmic";
++		reg = <0x5 SPMI_USID>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index f8b7e098f5b4..1ba389f1fea9 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -8,6 +8,8 @@
+ /dts-v1/;
+ 
+ #include "sc7180.dtsi"
++#include "pm6150.dtsi"
++#include "pm6150l.dtsi"
+ 
+ / {
+ 	model = "Qualcomm Technologies, Inc. SC7180 IDP";
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
