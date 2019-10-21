@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F300CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F910C47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416E520656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F2E20656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 14:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfJUOgr (ORCPT
+        id S1728920AbfJUOgw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 10:36:47 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:7201 "EHLO
+        Mon, 21 Oct 2019 10:36:52 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:30511 "EHLO
         alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726955AbfJUOgr (ORCPT
+        by vger.kernel.org with ESMTP id S1726955AbfJUOgw (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 10:36:47 -0400
+        Mon, 21 Oct 2019 10:36:52 -0400
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Oct 2019 20:00:37 +0530
-IronPort-SDR: CoqWqiQuJKam33EGAsHm4C6rg2qE4DCyKPZMvNips4P7bp0m6cEESitVid6y4A8UEZIxKFGcpR
- K6y8OaFu8T2V3gSKPZQByWWlUNeAxqkNPVyKlUpbYIK0nE2jLJhNz6b0JP1rg/2HN4De8pwzIZ
- gkcaJUnMzgXOos0aW2+4+XWFqJetyzQ6RO8kbXtyBLyJLZD2ER7z5mhwunHxwR197OppAatKrZ
- 1q/dPp5Vo6hPAKdF+/JkwoZN5qmw8JF3/vmEychK6mRDdd7RrqszvBSQ4WWgSjKtzcGLSF4uld
- VJJzTbV1vWXkfHAHeD5iSEdt
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Oct 2019 20:00:43 +0530
+IronPort-SDR: RM22F5kNPP3g5ZlDAHwZuId7j9Cc7qvf6swxUmy+W6o9o5aq7X9Ou0mTAMxxyATPuifh4xbLRr
+ Jol8x2or1AZao+cRlqxDO4Epwgq/Z+c6Gyp4BljuAeUOKDnVbeucZqn/M3pTJ8dGir3Jcv1kYs
+ d1jIvbGg+vdy0UCoDsL38fF4zyZreSnlbAgs+9cn7xvBedow0oq+IpBT3EQNh5tIue4tqrPLov
+ NXVa3CyLsl8EBoITP/TzhjyPJhQaHYdcAtfz51jwhvRtKulfoKNpsT3wQXBDYGK45MMfX8sYnk
+ vHpKL0VwWmP1//ob+DjW3OQs
 Received: from rampraka-linux.qualcomm.com ([10.206.25.221])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Oct 2019 20:00:30 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Oct 2019 20:00:42 +0530
 Received: by rampraka-linux.qualcomm.com (Postfix, from userid 2305851)
-        id 1BFE9329D; Mon, 21 Oct 2019 20:00:29 +0530 (IST)
+        id 7BF69329D; Mon, 21 Oct 2019 20:00:41 +0530 (IST)
 From:   Ram Prakash Gupta <rampraka@codeaurora.org>
 To:     asutoshd@codeaurora.org, stummala@codeaurora.org,
         sayalil@codeaurora.org, rampraka@codeaurora.org,
@@ -42,9 +42,9 @@ Cc:     Sujit Reddy Thumma <sthumma@codeaurora.org>,
         Talel Shenhar <tatias@codeaurora.org>,
         Ritesh Harjani <riteshh@codeaurora.org>,
         "Bao D. Nguyen" <nguyenb@codeaurora.org>
-Subject: [RFC 1/6] mmc: core: Parse clk scaling dt entries
-Date:   Mon, 21 Oct 2019 19:59:32 +0530
-Message-Id: <1571668177-3766-2-git-send-email-rampraka@codeaurora.org>
+Subject: [RFC 4/6] mmc: core: Add debugfs entries for scaling support
+Date:   Mon, 21 Oct 2019 19:59:35 +0530
+Message-Id: <1571668177-3766-5-git-send-email-rampraka@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
 References: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
@@ -53,8 +53,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support to parse clk scaling dt entries in mmc
-driver.
+Add debugfs entries for scaling support.
 
 Signed-off-by: Sujit Reddy Thumma <sthumma@codeaurora.org>
 Signed-off-by: Talel Shenhar <tatias@codeaurora.org>
@@ -68,229 +67,303 @@ Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
 Co-Developed-by: Ram Prakash Gupta <rampraka@codeaurora.org>
 Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
 ---
- drivers/mmc/core/host.c  | 63 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mmc/card.h |  7 +++++
- include/linux/mmc/host.h | 66 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 136 insertions(+)
+ drivers/mmc/core/debugfs.c |  90 ++++++++++++++++++++++++++
+ drivers/mmc/core/host.c    | 153 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 243 insertions(+)
 
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 105b7a7..672f2d6 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -161,6 +161,44 @@ static void mmc_retune_timer(struct timer_list *t)
- 	mmc_retune_needed(host);
- }
+diff --git a/drivers/mmc/core/debugfs.c b/drivers/mmc/core/debugfs.c
+index 09e0c76..a9f1e3f 100644
+--- a/drivers/mmc/core/debugfs.c
++++ b/drivers/mmc/core/debugfs.c
+@@ -222,6 +222,81 @@ static int mmc_clock_opt_set(void *data, u64 val)
+ DEFINE_SIMPLE_ATTRIBUTE(mmc_clock_fops, mmc_clock_opt_get, mmc_clock_opt_set,
+ 	"%llu\n");
  
-+static int mmc_dt_get_array(struct device *dev, const char *prop_name,
-+				u32 **out, int *len, u32 size)
++static int mmc_scale_get(void *data, u64 *val)
 +{
-+	int ret = 0;
-+	struct device_node *np = dev->of_node;
-+	size_t sz;
-+	u32 *arr = NULL;
++	struct mmc_host *host = data;
 +
-+	if (!of_get_property(np, prop_name, len)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+	sz = *len = *len / sizeof(*arr);
-+	if (sz <= 0 || (size > 0 && (sz > size))) {
-+		dev_err(dev, "%s invalid size\n", prop_name);
-+		ret = -EINVAL;
-+		goto out;
-+	}
++	*val = host->clk_scaling.curr_freq;
 +
-+	arr = devm_kcalloc(dev, sz, sizeof(*arr), GFP_KERNEL);
-+	if (!arr) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	ret = of_property_read_u32_array(np, prop_name, arr, sz);
-+	if (ret < 0) {
-+		dev_err(dev, "%s failed reading array %d\n", prop_name, ret);
-+		goto out;
-+	}
-+	*out = arr;
-+out:
-+	if (ret)
-+		*len = 0;
-+	return ret;
-+
++	return 0;
 +}
 +
- /**
-  *	mmc_of_parse() - parse host's device-tree node
-  *	@host: host whose node should be parsed.
-@@ -173,10 +211,12 @@ static void mmc_retune_timer(struct timer_list *t)
- int mmc_of_parse(struct mmc_host *host)
- {
- 	struct device *dev = host->parent;
-+	struct device_node *np = dev->of_node;
- 	u32 bus_width, drv_type, cd_debounce_delay_ms;
- 	int ret;
- 	bool cd_cap_invert, cd_gpio_invert = false;
- 	bool ro_cap_invert, ro_gpio_invert = false;
-+	const char *lower_bus_speed = NULL;
- 
- 	if (!dev || !dev_fwnode(dev))
- 		return 0;
-@@ -340,6 +380,29 @@ int mmc_of_parse(struct mmc_host *host)
- 	device_property_read_u32(dev, "post-power-on-delay-ms",
- 				 &host->ios.power_delay_ms);
- 
-+	if (mmc_dt_get_array(dev, "devfreq,freq-table",
-+				&host->clk_scaling.pltfm_freq_table,
-+				&host->clk_scaling.pltfm_freq_table_sz, 0))
-+		pr_debug("%s: no clock scaling frequencies were supplied\n",
-+				dev_name(dev));
-+	else if (!host->clk_scaling.pltfm_freq_table ||
-+			host->clk_scaling.pltfm_freq_table_sz)
-+		dev_info(dev, "bad dts clock scaling frequencies\n");
++static int mmc_scale_set(void *data, u64 val)
++{
++	int err = 0;
++	struct mmc_host *host = data;
 +
-+	/*
-+	 * Few hosts can support DDR52 mode at the same lower
-+	 * system voltage corner as high-speed mode. In such
-+	 * cases, it is always better to put it in DDR
-+	 * mode which will improve the performance
-+	 * without any power impact.
-+	 */
-+	if (!of_property_read_string(np, "scaling-lower-bus-speed-mode",
-+			&lower_bus_speed)) {
-+		if (!strncmp(lower_bus_speed, "DDR52", strlen(lower_bus_speed)))
-+			host->clk_scaling.lower_bus_speed_mode |=
-+				MMC_SCALING_LOWER_DDR52_MODE;
++	mmc_claim_host(host);
++
++	/* change frequency from sysfs manually */
++	err = mmc_clk_update_freq(host, val, host->clk_scaling.state);
++	if (err == -EAGAIN)
++		err = 0;
++	else if (err)
++		pr_err("%s: clock scale to %llu failed with error %d\n",
++			mmc_hostname(host), val, err);
++	else
++		pr_debug("%s: clock change to %llu finished successfully (%s)\n",
++			mmc_hostname(host), val, current->comm);
++
++	mmc_release_host(host);
++
++	return err;
++}
++
++DEFINE_SIMPLE_ATTRIBUTE(mmc_scale_fops, mmc_scale_get, mmc_scale_set,
++	"%llu\n");
++
++static int mmc_max_clock_get(void *data, u64 *val)
++{
++	struct mmc_host *host = data;
++
++	if (!host)
++		return -EINVAL;
++
++	*val = host->f_max;
++
++	return 0;
++}
++
++static int mmc_max_clock_set(void *data, u64 val)
++{
++	struct mmc_host *host = data;
++	int err = -EINVAL;
++	unsigned long freq = val;
++	unsigned int old_freq;
++
++	if (!host || (val < host->f_min))
++		goto out;
++
++	mmc_claim_host(host);
++	if (host->bus_ops && host->bus_ops->change_bus_speed) {
++		old_freq = host->f_max;
++		host->f_max = freq;
++
++		err = host->bus_ops->change_bus_speed(host, &freq);
++
++		if (err)
++			host->f_max = old_freq;
 +	}
++	mmc_release_host(host);
++out:
++	return err;
++}
 +
- 	return mmc_pwrseq_alloc(host);
++DEFINE_SIMPLE_ATTRIBUTE(mmc_max_clock_fops, mmc_max_clock_get,
++		mmc_max_clock_set, "%llu\n");
++
+ void mmc_add_host_debugfs(struct mmc_host *host)
+ {
+ 	struct dentry *root;
+@@ -235,6 +310,19 @@ void mmc_add_host_debugfs(struct mmc_host *host)
+ 	debugfs_create_file("clock", S_IRUSR | S_IWUSR, root, host,
+ 			    &mmc_clock_fops);
+ 
++	if (!debugfs_create_file("max_clock", 0600, root, host,
++		&mmc_max_clock_fops))
++		goto err_node;
++
++	if (!debugfs_create_file("scale", 0600, root, host,
++		&mmc_scale_fops))
++		goto err_node;
++
++	if (!debugfs_create_bool("skip_clk_scale_freq_update",
++		0600, root,
++		&host->clk_scaling.skip_clk_scale_freq_update))
++		goto err_node;
++
+ #ifdef CONFIG_FAIL_MMC_REQUEST
+ 	if (fail_request)
+ 		setup_fault_attr(&fail_default_attr, fail_request);
+@@ -242,6 +330,8 @@ void mmc_add_host_debugfs(struct mmc_host *host)
+ 	fault_create_debugfs_attr("fail_mmc_request", root,
+ 				  &host->fail_mmc_request);
+ #endif
++err_node:
++	return;
  }
  
-diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
-index 9b6336a..8b577a1 100644
---- a/include/linux/mmc/card.h
-+++ b/include/linux/mmc/card.h
-@@ -244,6 +244,12 @@ struct mmc_card {
- 	struct mmc_host		*host;		/* the host this device belongs to */
- 	struct device		dev;		/* the device */
- 	u32			ocr;		/* the current OCR setting */
-+	unsigned long		clk_scaling_lowest;	/* lowest scaleable
-+							 * frequency
-+							 */
-+	unsigned long		clk_scaling_highest;	/* highest scaleable
-+							 * frequency
-+							 */
- 	unsigned int		rca;		/* relative card address of device */
- 	unsigned int		type;		/* card type */
- #define MMC_TYPE_MMC		0		/* MMC card */
-@@ -306,6 +312,7 @@ struct mmc_card {
- 	struct dentry		*debugfs_root;
- 	struct mmc_part	part[MMC_NUM_PHY_PARTITION]; /* physical partitions */
- 	unsigned int    nr_parts;
-+	unsigned int            part_curr;
+ void mmc_remove_host_debugfs(struct mmc_host *host)
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 9138041..c5b904b 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -522,6 +522,154 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
  
- 	unsigned int		bouncesz;	/* Bounce buffer size */
- 	struct workqueue_struct *complete_wq;	/* Private workqueue */
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index ba70338..bfb47d6 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -9,6 +9,7 @@
+ EXPORT_SYMBOL(mmc_alloc_host);
  
- #include <linux/sched.h>
- #include <linux/device.h>
-+#include <linux/devfreq.h>
- #include <linux/fault-inject.h>
- 
- #include <linux/mmc/core.h>
-@@ -268,9 +269,72 @@ struct mmc_ctx {
- 	struct task_struct *task;
- };
- 
-+enum dev_state {
-+	DEV_SUSPENDING = 1,
-+	DEV_SUSPENDED,
-+	DEV_RESUMED,
++static ssize_t enable_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct mmc_host *host = cls_dev_to_mmc_host(dev);
++
++	if (!host)
++		return -EINVAL;
++
++	return snprintf(buf, PAGE_SIZE, "%d\n", mmc_can_scale_clk(host));
++}
++
++static ssize_t enable_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct mmc_host *host = cls_dev_to_mmc_host(dev);
++	unsigned long value;
++
++	if (!host || !host->card || kstrtoul(buf, 0, &value))
++		return -EINVAL;
++
++	mmc_get_card(host->card, NULL);
++
++	if (!value) {
++		/* Suspend the clock scaling and mask host capability */
++		if (host->clk_scaling.enable)
++			mmc_suspend_clk_scaling(host);
++		host->clk_scaling.enable = false;
++		host->caps2 &= ~MMC_CAP2_CLK_SCALE;
++		host->clk_scaling.state = MMC_LOAD_HIGH;
++		/* Set to max. frequency when disabling */
++		mmc_clk_update_freq(host, host->card->clk_scaling_highest,
++					host->clk_scaling.state);
++	} else if (value) {
++		/* Unmask host capability and resume scaling */
++		host->caps2 |= MMC_CAP2_CLK_SCALE;
++		if (!host->clk_scaling.enable) {
++			host->clk_scaling.enable = true;
++			mmc_resume_clk_scaling(host);
++		}
++	}
++
++	mmc_put_card(host->card, NULL);
++
++	return count;
++}
++
++static ssize_t up_threshold_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct mmc_host *host = cls_dev_to_mmc_host(dev);
++
++	if (!host)
++		return -EINVAL;
++
++	return snprintf(buf, PAGE_SIZE, "%d\n", host->clk_scaling.upthreshold);
++}
++
++#define MAX_PERCENTAGE	100
++static ssize_t up_threshold_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct mmc_host *host = cls_dev_to_mmc_host(dev);
++	unsigned long value;
++
++	if (!host || kstrtoul(buf, 0, &value) || (value > MAX_PERCENTAGE))
++		return -EINVAL;
++
++	host->clk_scaling.upthreshold = value;
++
++	pr_debug("%s: clkscale_up_thresh set to %lu\n",
++			mmc_hostname(host), value);
++	return count;
++}
++
++static ssize_t down_threshold_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct mmc_host *host = cls_dev_to_mmc_host(dev);
++
++	if (!host)
++		return -EINVAL;
++
++	return snprintf(buf, PAGE_SIZE, "%d\n",
++			host->clk_scaling.downthreshold);
++}
++
++static ssize_t down_threshold_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct mmc_host *host = cls_dev_to_mmc_host(dev);
++	unsigned long value;
++
++	if (!host || kstrtoul(buf, 0, &value) || (value > MAX_PERCENTAGE))
++		return -EINVAL;
++
++	host->clk_scaling.downthreshold = value;
++
++	pr_debug("%s: clkscale_down_thresh set to %lu\n",
++			mmc_hostname(host), value);
++	return count;
++}
++
++static ssize_t polling_interval_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct mmc_host *host = cls_dev_to_mmc_host(dev);
++
++	if (!host)
++		return -EINVAL;
++
++	return snprintf(buf, PAGE_SIZE, "%lu milliseconds\n",
++			host->clk_scaling.polling_delay_ms);
++}
++
++static ssize_t polling_interval_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct mmc_host *host = cls_dev_to_mmc_host(dev);
++	unsigned long value;
++
++	if (!host || kstrtoul(buf, 0, &value))
++		return -EINVAL;
++
++	host->clk_scaling.polling_delay_ms = value;
++
++	pr_debug("%s: clkscale_polling_delay_ms set to %lu\n",
++			mmc_hostname(host), value);
++	return count;
++}
++
++DEVICE_ATTR_RW(enable);
++DEVICE_ATTR_RW(polling_interval);
++DEVICE_ATTR_RW(up_threshold);
++DEVICE_ATTR_RW(down_threshold);
++
++static struct attribute *clk_scaling_attrs[] = {
++	&dev_attr_enable.attr,
++	&dev_attr_up_threshold.attr,
++	&dev_attr_down_threshold.attr,
++	&dev_attr_polling_interval.attr,
++	NULL,
 +};
 +
-+enum mmc_load {
-+	MMC_LOAD_HIGH,
-+	MMC_LOAD_LOW,
++static struct attribute_group clk_scaling_attr_grp = {
++	.name = "clk_scaling",
++	.attrs = clk_scaling_attrs,
 +};
 +
-+/**
-+ * struct mmc_devfeq_clk_scaling - main context for MMC clock scaling logic
-+ *
-+ * @lock: spinlock to protect statistics
-+ * @devfreq: struct that represent mmc-host as a client for devfreq
-+ * @devfreq_profile: MMC device profile, mostly polling interval and callbacks
-+ * @ondemand_gov_data: struct supplied to ondemmand governor (thresholds)
-+ * @state: load state, can be HIGH or LOW. used to notify mmc_host_ops callback
-+ * @start_busy: timestamped armed once a data request is started
-+ * @measure_interval_start: timestamped armed once a measure interval started
-+ * @devfreq_abort: flag to sync between different contexts relevant to devfreq
-+ * @skip_clk_scale_freq_update: flag that enable/disable frequency change
-+ * @freq_table_sz: table size of frequencies supplied to devfreq
-+ * @freq_table: frequencies table supplied to devfreq
-+ * @curr_freq: current frequency
-+ * @polling_delay_ms: polling interval for status collection used by devfreq
-+ * @upthreshold: up-threshold supplied to ondemand governor
-+ * @downthreshold: down-threshold supplied to ondemand governor
-+ * @need_freq_change: flag indicating if a frequency change is required
-+ * @is_busy_started: flag indicating if a request is handled by the HW
-+ * @enable: flag indicating if the clock scaling logic is enabled for this host
-+ * @is_suspended: to make devfreq request queued when mmc is suspened
-+ */
-+struct mmc_devfeq_clk_scaling {
-+	spinlock_t	lock;
-+	struct		devfreq *devfreq;
-+	struct		devfreq_dev_profile devfreq_profile;
-+	struct		devfreq_simple_ondemand_data ondemand_gov_data;
-+	enum mmc_load	state;
-+	ktime_t		start_busy;
-+	ktime_t		measure_interval_start;
-+	atomic_t	devfreq_abort;
-+	bool		skip_clk_scale_freq_update;
-+	int		freq_table_sz;
-+	int		pltfm_freq_table_sz;
-+	u32		*freq_table;
-+	u32		*pltfm_freq_table;
-+	unsigned long	total_busy_time_us;
-+	unsigned long	target_freq;
-+	unsigned long	curr_freq;
-+	unsigned long	polling_delay_ms;
-+	unsigned int	upthreshold;
-+	unsigned int	downthreshold;
-+	unsigned int	lower_bus_speed_mode;
-+#define MMC_SCALING_LOWER_DDR52_MODE	1
-+	bool		need_freq_change;
-+	bool		is_busy_started;
-+	bool		enable;
-+	bool		is_suspended;
-+};
-+
- struct mmc_host {
- 	struct device		*parent;
- 	struct device		class_dev;
-+	struct mmc_devfeq_clk_scaling	clk_scaling;
- 	int			index;
- 	const struct mmc_host_ops *ops;
- 	struct mmc_pwrseq	*pwrseq;
-@@ -369,6 +433,7 @@ struct mmc_host {
- #define MMC_CAP2_CQE_DCMD	(1 << 24)	/* CQE can issue a direct command */
- #define MMC_CAP2_AVOID_3_3V	(1 << 25)	/* Host must negotiate down from 3.3V */
- #define MMC_CAP2_MERGE_CAPABLE	(1 << 26)	/* Host can merge a segment over the segment size */
-+#define MMC_CAP2_CLK_SCALE      (1 << 27)       /* Allow dynamic clk scaling */
+ /**
+  *	mmc_add_host - initialise host hardware
+  *	@host: mmc host
+@@ -551,6 +699,10 @@ int mmc_add_host(struct mmc_host *host)
+ #ifdef CONFIG_DEBUG_FS
+ 	mmc_add_host_debugfs(host);
+ #endif
++	err = sysfs_create_group(&host->class_dev.kobj, &clk_scaling_attr_grp);
++	if (err)
++		pr_err("%s: failed to create clk scale sysfs group with err %d\n",
++				__func__, err);
  
- 	int			fixed_drv_type;	/* fixed driver type for non-removable media */
+ 	mmc_start_host(host);
+ 	mmc_register_pm_notifier(host);
+@@ -577,6 +729,7 @@ void mmc_remove_host(struct mmc_host *host)
+ 	mmc_remove_host_debugfs(host);
+ #endif
  
-@@ -462,6 +527,7 @@ struct mmc_host {
- 	bool			cqe_enabled;
- 	bool			cqe_on;
++	sysfs_remove_group(&host->class_dev.kobj, &clk_scaling_attr_grp);
+ 	device_del(&host->class_dev);
  
-+	atomic_t active_reqs;
- 	unsigned long		private[0] ____cacheline_aligned;
- };
- 
+ 	led_trigger_unregister_simple(host->led);
 -- 
 1.9.1
 
