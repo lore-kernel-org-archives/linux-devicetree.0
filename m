@@ -2,234 +2,114 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4215FCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035D1CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D442084C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74AA20679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 11:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571657041;
+	bh=a2UHtRt26/huoScw/p2X1IBkDX1yI2mM4U79evBbDqY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CuWGp6btUhg5ZCGTXI8KHWPHFjUCV1rkNi2rhP93D35EfkiKXscDcpHTnmrokJO+I
+	 +Qo9mxr5V1INMANpQvnkyqy6yUU9y9B9EJ0zDi8tBWFL2d/bEAHQNsOqr0eDk+LX8c
+	 s2sf4wmyZfd3XgGkYf7T03h3suNiclDOjPpvW1Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfJULTk (ORCPT
+        id S1728279AbfJULYB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 07:19:40 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:49666 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfJULTk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 07:19:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C448EBD;
-        Mon, 21 Oct 2019 04:19:05 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C73533F718;
-        Mon, 21 Oct 2019 04:19:04 -0700 (PDT)
-Date:   Mon, 21 Oct 2019 12:19:03 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-Message-ID: <20191021111902.GO47056@e119886-lin.cambridge.arm.com>
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
+        Mon, 21 Oct 2019 07:24:01 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33454 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbfJULYB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 07:24:01 -0400
+Received: by mail-ed1-f67.google.com with SMTP id c4so9725449edl.0;
+        Mon, 21 Oct 2019 04:23:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BVlXhkUOcHB+M6im4W80bsAnmThctBDhzXi/Z0FpqPM=;
+        b=S0V90N+JCrqNnp2dnTE9DRbdC6LfHTIezwPuiDSdPk9RbPLwEEUOEbiFij3ksnRY2a
+         swl+mXCUjqpoKfnsWigLH9jUEeSsPrT0lCqz8jCv7zNaIXiaLang8ux+zBMrAa3Qs4Nt
+         kp31ZpRZo4UKtPx0fVtYp3aNoAIrKXrponiD8ZcvD69VEoPoR8sE8pN07ncfgT4X193B
+         zQdaTLgcfzuQAxb/kLKTBR0mxJQ16NlSI/9qI0886GSxDDd3X+TN78j0NdMyECFn3C1I
+         Sy6gBcvIXCu0v4KWHD4rzxzC3jDfVqGvfeyCv70vGmPk2mQfJegvcJJ5KhiquzID1jfo
+         g2Bw==
+X-Gm-Message-State: APjAAAXrbCYpLnbKDqwO1D4j1d9hml48eaRfvQmKs39b65Ew0Ee9QVHv
+        bOc1/7IME92xRvKKsm1DwEM=
+X-Google-Smtp-Source: APXvYqwff/GiwAwp/7TONncf6a2J4jtHzGlSJbceQ9C74FUOcOXZ54eJ4FoTQ+a8fgD2rHnjfyIlmQ==
+X-Received: by 2002:a17:906:5292:: with SMTP id c18mr21356043ejm.129.1571657037596;
+        Mon, 21 Oct 2019 04:23:57 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id w16sm579189edd.93.2019.10.21.04.23.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 04:23:56 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 13:23:54 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, vireshk@kernel.org,
+        robh+dt@kernel.org, sboyd@kernel.org, roger.lu@mediatek.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v5 1/4] PM / OPP: Support adjusting OPP voltages at
+ runtime
+Message-ID: <20191021112354.GA2262@pi3>
+References: <20191016145756.16004-1-s.nawrocki@samsung.com>
+ <CGME20191016145810eucas1p1b31400c9b2e7f30cdf6deeb4ccee2788@eucas1p1.samsung.com>
+ <20191016145756.16004-2-s.nawrocki@samsung.com>
+ <20191017064258.yfbh7iz3pbzfhdvr@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191017064258.yfbh7iz3pbzfhdvr@vireshk-i7>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
-> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
-
-s/shcemas/schemas/
-
-> which is Synopsys DesignWare based PCIe core.
-
-The revision history below doesn't need to be in the commit mesage and
-so you should add a '---' before the following (and thanks for the
-detailed history).
-
-Besides that:
-
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
+On Thu, Oct 17, 2019 at 12:12:58PM +0530, Viresh Kumar wrote:
+> On 16-10-19, 16:57, Sylwester Nawrocki wrote:
+> > From: Stephen Boyd <sboyd@codeaurora.org>
+> > 
+> > On some SoCs the Adaptive Voltage Scaling (AVS) technique is
+> > employed to optimize the operating voltage of a device. At a
+> > given frequency, the hardware monitors dynamic factors and either
+> > makes a suggestion for how much to adjust a voltage for the
+> > current frequency, or it automatically adjusts the voltage
+> > without software intervention. Add an API to the OPP library for
+> > the former case, so that AVS type devices can update the voltages
+> > for an OPP when the hardware determines the voltage should
+> > change. The assumption is that drivers like CPUfreq or devfreq
+> > will register for the OPP notifiers and adjust the voltage
+> > according to suggestions that AVS makes.
+> > 
+> > This patch is derived from [1] submitted by Stephen.
+> > [1] https://lore.kernel.org/patchwork/patch/599279/
+> > 
+> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> > [s.nawrocki@samsung.com: added handling of OPP min/max voltage]
+> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > ---
+> >  drivers/opp/core.c     | 69 ++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pm_opp.h | 13 ++++++++
+> >  2 files changed, 82 insertions(+)
 > 
-> changes on v4:
-> 	Add "snps,dw-pcie" compatible.
-> 	Rename phy-names property value to pcie.
-> 	And maximum and minimum values to num-lanes.
-> 	Add ref for reset-assert-ms entry and update the
-> 	 description for easy understanding.
-> 	Remove pcie core interrupt entry.
-> 
-> changes on v3:
->         Add the appropriate License-Identifier
->         Rename intel,rst-interval to 'reset-assert-us'
->         Add additionalProperties: false
->         Rename phy-names to 'pciephy'
->         Remove the dtsi node split of SoC and board in the example
->         Add #interrupt-cells = <1>; or else interrupt parsing will fail
->         Name yaml file with compatible name
-> 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
->  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
->  1 file changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> new file mode 100644
-> index 000000000000..49dd87ec1e3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> @@ -0,0 +1,135 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCIe RC controller on Intel Gateway SoCs
-> +
-> +maintainers:
-> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: intel,lgm-pcie
-> +      - const: snps,dw-pcie
-> +
-> +  device_type:
-> +    const: pci
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  reg:
-> +    items:
-> +      - description: Controller control and status registers.
-> +      - description: PCIe configuration registers.
-> +      - description: Controller application registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +      - const: app
-> +
-> +  ranges:
-> +    description: Ranges for the PCI memory and I/O regions.
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: PCIe registers interface clock.
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: pcie
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  num-lanes:
-> +    minimum: 1
-> +    maximum: 2
-> +    description: Number of lanes to use for this port.
-> +
-> +  linux,pci-domain:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: PCI domain ID.
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  interrupt-map-mask:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  interrupt-map:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  max-link-speed:
-> +    description: Specify PCI Gen for link capability.
-> +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller.
-> +
-> +  reset-assert-ms:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Delay after asserting reset to the PCIe device.
-> +      Some devices need an interval upto 500ms. By default it is 100ms.
-> +
-> +required:
-> +  - compatible
-> +  - device_type
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +  - resets
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - reset-gpios
-> +  - num-lanes
-> +  - linux,pci-domain
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie10:pcie@d0e00000 {
-> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
-> +      device_type = "pci";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      reg = <0xd0e00000 0x1000>,
-> +            <0xd2000000 0x800000>,
-> +            <0xd0a41000 0x1000>;
-> +      reg-names = "dbi", "config", "app";
-> +      linux,pci-domain = <0>;
-> +      max-link-speed = <4>;
-> +      bus-range = <0x00 0x08>;
-> +      interrupt-parent = <&ioapic1>;
-> +      #interrupt-cells = <1>;
-> +      interrupt-map-mask = <0 0 0 0x7>;
-> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> +                      <0 0 0 2 &ioapic1 28 1>,
-> +                      <0 0 0 3 &ioapic1 29 1>,
-> +                      <0 0 0 4 &ioapic1 30 1>;
-> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
-> +      resets = <&rcu0 0x50 0>;
-> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-> +      phys = <&cb0phy0>;
-> +      phy-names = "pcie";
-> +      status = "okay";
-> +      reset-assert-ms = <500>;
-> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-> +      num-lanes = <2>;
-> +    };
-> -- 
-> 2.11.0
-> 
+> Applied. Thanks.
+
+Hi Viresh,
+
+Can you provide a stable tag with this patch so I can take soc/samsung
+driver?
+
+Best regards,
+Krzysztof
+
