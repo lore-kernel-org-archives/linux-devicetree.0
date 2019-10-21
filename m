@@ -2,254 +2,266 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3B9CA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 20:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE58ACA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 20:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEE52067B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 20:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E3720882
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 20:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbfJUUY1 (ORCPT
+        id S1730252AbfJUUej (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 16:24:27 -0400
-Received: from mga17.intel.com ([192.55.52.151]:41470 "EHLO mga17.intel.com"
+        Mon, 21 Oct 2019 16:34:39 -0400
+Received: from muru.com ([72.249.23.125]:38734 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729388AbfJUUY1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 Oct 2019 16:24:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Oct 2019 13:24:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,324,1566889200"; 
-   d="scan'208";a="209450425"
-Received: from maru.jf.intel.com ([10.54.51.77])
-  by orsmga002.jf.intel.com with ESMTP; 21 Oct 2019 13:24:25 -0700
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
-        Cedric Le Goater <clg@kaod.org>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH i2c-next 2/2] i2c: aspeed: add slave inactive timeout support
-Date:   Mon, 21 Oct 2019 13:24:14 -0700
-Message-Id: <20191021202414.17484-3-jae.hyun.yoo@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
-References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
+        id S1729406AbfJUUej (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 16:34:39 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 5793880CC;
+        Mon, 21 Oct 2019 20:35:09 +0000 (UTC)
+Date:   Mon, 21 Oct 2019 13:34:31 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 08/10] ARM: OMAP2+: Drop legacy platform data for am3 and
+ am4 mcasp
+Message-ID: <20191021203431.GG5610@atomide.com>
+References: <20191018163220.3504-1-tony@atomide.com>
+ <20191018163220.3504-9-tony@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018163220.3504-9-tony@atomide.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In case of multi-master environment, if a peer master incorrectly handles
-a bus in the middle of a transaction, I2C hardware hangs in slave state
-and it can't escape from the slave state, so this commit adds slave
-inactive timeout support to recover the bus in the case.
+* Tony Lindgren <tony@atomide.com> [191018 16:33]:
+> We can now probe devices with ti-sysc interconnect driver and dts
+> data. Let's drop the related platform data and custom ti,hwmods
+> dts property.
+> 
+> As we're just dropping data, and the early platform data init
+> is based on the custom ti,hwmods property, we want to drop both
+> the platform data and ti,hwmods property in a single patch.
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Reviewed-by: Tao Ren <taoren@fb.com>
+Sorry this one left behind some empty platform data causing an
+on bbb. Updated patch below.
+
+Regards,
+
+Tony
+
+8< ---------------------
+From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Thu, 17 Oct 2019 13:26:56 -0700
+Subject: [PATCHv2] ARM: OMAP2+: Drop legacy platform data for am3 and am4
+ mcasp
+
+We can now probe devices with ti-sysc interconnect driver and dts
+data. Let's drop the related platform data and custom ti,hwmods
+dts property.
+
+As we're just dropping data, and the early platform data init
+is based on the custom ti,hwmods property, we want to drop both
+the platform data and ti,hwmods property in a single patch.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/i2c/busses/i2c-aspeed.c | 83 ++++++++++++++++++++++++++++++---
- 1 file changed, 77 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/am33xx-l4.dtsi              |  2 -
+ arch/arm/boot/dts/am437x-l4.dtsi              |  2 -
+ .../omap_hwmod_33xx_43xx_common_data.h        |  4 --
+ .../omap_hwmod_33xx_43xx_interconnect_data.c  | 16 -------
+ .../omap_hwmod_33xx_43xx_ipblock_data.c       | 45 -------------------
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |  2 -
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |  2 -
+ 7 files changed, 73 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-index a7be6f24450b..d43687cd2ddc 100644
---- a/drivers/i2c/busses/i2c-aspeed.c
-+++ b/drivers/i2c/busses/i2c-aspeed.c
-@@ -7,6 +7,7 @@
-  *  Copyright 2017 Google, Inc.
-  */
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -1039,7 +1039,6 @@
  
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/err.h>
-@@ -43,6 +44,7 @@
+ 		target-module@38000 {			/* 0x48038000, ap 16 02.0 */
+ 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+-			ti,hwmods = "mcasp0";
+ 			reg = <0x38000 0x4>,
+ 			      <0x38004 0x4>;
+ 			reg-names = "rev", "sysc";
+@@ -1070,7 +1069,6 @@
  
- /* Device Register Definition */
- /* 0x00 : I2CD Function Control Register  */
-+#define ASPEED_I2CD_BUS_AUTO_RECOVERY_EN		BIT(17)
- #define ASPEED_I2CD_MULTI_MASTER_DIS			BIT(15)
- #define ASPEED_I2CD_SDA_DRIVE_1T_EN			BIT(8)
- #define ASPEED_I2CD_M_SDA_DRIVE_1T_EN			BIT(7)
-@@ -58,10 +60,14 @@
- #define ASPEED_I2CD_TIME_SCL_HIGH_MASK			GENMASK(19, 16)
- #define ASPEED_I2CD_TIME_SCL_LOW_SHIFT			12
- #define ASPEED_I2CD_TIME_SCL_LOW_MASK			GENMASK(15, 12)
-+#define ASPEED_I2CD_TIME_TIMEOUT_BASE_DIVISOR_SHIFT	8
-+#define ASPEED_I2CD_TIME_TIMEOUT_BASE_DIVISOR_MASK	GENMASK(9, 8)
- #define ASPEED_I2CD_TIME_BASE_DIVISOR_MASK		GENMASK(3, 0)
- #define ASPEED_I2CD_TIME_SCL_REG_MAX			GENMASK(3, 0)
-+
- /* 0x08 : I2CD Clock and AC Timing Control Register #2 */
--#define ASPEED_NO_TIMEOUT_CTRL				0
-+#define ASPEED_I2CD_TIMEOUT_CYCLES_SHIFT		0
-+#define ASPEED_I2CD_TIMEOUT_CYCLES_MASK			GENMASK(4, 0)
+ 		target-module@3c000 {			/* 0x4803c000, ap 20 32.0 */
+ 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+-			ti,hwmods = "mcasp1";
+ 			reg = <0x3c000 0x4>,
+ 			      <0x3c004 0x4>;
+ 			reg-names = "rev", "sysc";
+diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
+--- a/arch/arm/boot/dts/am437x-l4.dtsi
++++ b/arch/arm/boot/dts/am437x-l4.dtsi
+@@ -810,7 +810,6 @@
  
- /* 0x0c : I2CD Interrupt Control Register &
-  * 0x10 : I2CD Interrupt Status Register
-@@ -69,6 +75,7 @@
-  * These share bit definitions, so use the same values for the enable &
-  * status bits.
-  */
-+#define ASPEED_I2CD_INTR_SLAVE_INACTIVE_TIMEOUT		BIT(15)
- #define ASPEED_I2CD_INTR_SDA_DL_TIMEOUT			BIT(14)
- #define ASPEED_I2CD_INTR_BUS_RECOVER_DONE		BIT(13)
- #define ASPEED_I2CD_INTR_SLAVE_MATCH			BIT(7)
-@@ -84,8 +91,11 @@
- 		 ASPEED_I2CD_INTR_SCL_TIMEOUT |				       \
- 		 ASPEED_I2CD_INTR_ABNORMAL |				       \
- 		 ASPEED_I2CD_INTR_ARBIT_LOSS)
-+#define ASPEED_I2CD_INTR_SLAVE_ERRORS					       \
-+		ASPEED_I2CD_INTR_SLAVE_INACTIVE_TIMEOUT
- #define ASPEED_I2CD_INTR_ALL						       \
--		(ASPEED_I2CD_INTR_SDA_DL_TIMEOUT |			       \
-+		(ASPEED_I2CD_INTR_SLAVE_INACTIVE_TIMEOUT |		       \
-+		 ASPEED_I2CD_INTR_SDA_DL_TIMEOUT |			       \
- 		 ASPEED_I2CD_INTR_BUS_RECOVER_DONE |			       \
- 		 ASPEED_I2CD_INTR_SCL_TIMEOUT |				       \
- 		 ASPEED_I2CD_INTR_ABNORMAL |				       \
-@@ -151,6 +161,7 @@ struct aspeed_i2c_bus {
- 							   u32 divisor);
- 	unsigned long			parent_clk_frequency;
- 	u32				bus_frequency;
-+	u32				hw_timeout_ms;
- 	/* Transaction state. */
- 	enum aspeed_i2c_master_state	master_state;
- 	struct i2c_msg			*msgs;
-@@ -240,6 +251,14 @@ static int aspeed_i2c_recover_bus(struct aspeed_i2c_bus *bus)
- }
+ 		target-module@38000 {			/* 0x48038000, ap 14 04.0 */
+ 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+-			ti,hwmods = "mcasp0";
+ 			reg = <0x38000 0x4>,
+ 			      <0x38004 0x4>;
+ 			reg-names = "rev", "sysc";
+@@ -842,7 +841,6 @@
  
- #if IS_ENABLED(CONFIG_I2C_SLAVE)
-+static int aspeed_i2c_check_slave_error(u32 irq_status)
-+{
-+	if (irq_status & ASPEED_I2CD_INTR_SLAVE_INACTIVE_TIMEOUT)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
- static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
- {
- 	u32 command, irq_handled = 0;
-@@ -249,6 +268,14 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
- 	if (!slave)
- 		return 0;
+ 		target-module@3c000 {			/* 0x4803c000, ap 16 2a.0 */
+ 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+-			ti,hwmods = "mcasp1";
+ 			reg = <0x3c000 0x4>,
+ 			      <0x3c004 0x4>;
+ 			reg-names = "rev", "sysc";
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+@@ -36,8 +36,6 @@ extern struct omap_hwmod_ocp_if am33xx_l4_ls__epwmss1;
+ extern struct omap_hwmod_ocp_if am33xx_l4_ls__epwmss2;
+ extern struct omap_hwmod_ocp_if am33xx_l3_s__gpmc;
+ extern struct omap_hwmod_ocp_if am33xx_l4_ls__spinlock;
+-extern struct omap_hwmod_ocp_if am33xx_l4_ls__mcasp0;
+-extern struct omap_hwmod_ocp_if am33xx_l4_ls__mcasp1;
+ extern struct omap_hwmod_ocp_if am33xx_l4_ls__mcspi0;
+ extern struct omap_hwmod_ocp_if am33xx_l4_ls__mcspi1;
+ extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer2;
+@@ -75,8 +73,6 @@ extern struct omap_hwmod am33xx_epwmss0_hwmod;
+ extern struct omap_hwmod am33xx_epwmss1_hwmod;
+ extern struct omap_hwmod am33xx_epwmss2_hwmod;
+ extern struct omap_hwmod am33xx_gpmc_hwmod;
+-extern struct omap_hwmod am33xx_mcasp0_hwmod;
+-extern struct omap_hwmod am33xx_mcasp1_hwmod;
+ extern struct omap_hwmod am33xx_rtc_hwmod;
+ extern struct omap_hwmod am33xx_spi0_hwmod;
+ extern struct omap_hwmod am33xx_spi1_hwmod;
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
+@@ -166,22 +166,6 @@ struct omap_hwmod_ocp_if am33xx_l4_ls__spinlock = {
+ 	.user		= OCP_USER_MPU,
+ };
  
-+	if (aspeed_i2c_check_slave_error(irq_status)) {
-+		dev_dbg(bus->dev, "received slave error interrupt: 0x%08x\n",
-+			irq_status);
-+		irq_handled |= (irq_status & ASPEED_I2CD_INTR_SLAVE_ERRORS);
-+		bus->slave_state = ASPEED_I2C_SLAVE_INACTIVE;
-+		return irq_handled;
-+	}
-+
- 	command = readl(bus->base + ASPEED_I2C_CMD_REG);
+-/* l4 ls -> mcasp0 */
+-struct omap_hwmod_ocp_if am33xx_l4_ls__mcasp0 = {
+-	.master		= &am33xx_l4_ls_hwmod,
+-	.slave		= &am33xx_mcasp0_hwmod,
+-	.clk		= "l4ls_gclk",
+-	.user		= OCP_USER_MPU,
+-};
+-
+-/* l4 ls -> mcasp1 */
+-struct omap_hwmod_ocp_if am33xx_l4_ls__mcasp1 = {
+-	.master		= &am33xx_l4_ls_hwmod,
+-	.slave		= &am33xx_mcasp1_hwmod,
+-	.clk		= "l4ls_gclk",
+-	.user		= OCP_USER_MPU,
+-};
+-
+ /* l4 ls -> mcspi0 */
+ struct omap_hwmod_ocp_if am33xx_l4_ls__mcspi0 = {
+ 	.master		= &am33xx_l4_ls_hwmod,
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+@@ -468,47 +468,6 @@ struct omap_hwmod am33xx_gpmc_hwmod = {
+ 	},
+ };
  
- 	/* Slave was requested, restart state machine. */
-@@ -386,7 +413,7 @@ static void aspeed_i2c_next_msg_or_stop(struct aspeed_i2c_bus *bus)
- 	}
- }
+-/*
+- * 'mcasp' class
+- */
+-static struct omap_hwmod_class_sysconfig am33xx_mcasp_sysc = {
+-	.rev_offs	= 0x0,
+-	.sysc_offs	= 0x4,
+-	.sysc_flags	= SYSC_HAS_SIDLEMODE,
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+-	.sysc_fields	= &omap_hwmod_sysc_type3,
+-};
+-
+-static struct omap_hwmod_class am33xx_mcasp_hwmod_class = {
+-	.name		= "mcasp",
+-	.sysc		= &am33xx_mcasp_sysc,
+-};
+-
+-/* mcasp0 */
+-struct omap_hwmod am33xx_mcasp0_hwmod = {
+-	.name		= "mcasp0",
+-	.class		= &am33xx_mcasp_hwmod_class,
+-	.clkdm_name	= "l3s_clkdm",
+-	.main_clk	= "mcasp0_fck",
+-	.prcm		= {
+-		.omap4	= {
+-			.modulemode	= MODULEMODE_SWCTRL,
+-		},
+-	},
+-};
+-
+-/* mcasp1 */
+-struct omap_hwmod am33xx_mcasp1_hwmod = {
+-	.name		= "mcasp1",
+-	.class		= &am33xx_mcasp_hwmod_class,
+-	.clkdm_name	= "l3s_clkdm",
+-	.main_clk	= "mcasp1_fck",
+-	.prcm		= {
+-		.omap4	= {
+-			.modulemode	= MODULEMODE_SWCTRL,
+-		},
+-	},
+-};
  
--static int aspeed_i2c_is_irq_error(u32 irq_status)
-+static int aspeed_i2c_check_master_error(u32 irq_status)
- {
- 	if (irq_status & ASPEED_I2CD_INTR_ARBIT_LOSS)
- 		return -EAGAIN;
-@@ -417,9 +444,9 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_bus *bus, u32 irq_status)
- 	 * should clear the command queue effectively taking us back to the
- 	 * INACTIVE state.
- 	 */
--	ret = aspeed_i2c_is_irq_error(irq_status);
-+	ret = aspeed_i2c_check_master_error(irq_status);
- 	if (ret) {
--		dev_dbg(bus->dev, "received error interrupt: 0x%08x\n",
-+		dev_dbg(bus->dev, "received master error interrupt: 0x%08x\n",
- 			irq_status);
- 		irq_handled |= (irq_status & ASPEED_I2CD_INTR_MASTER_ERRORS);
- 		if (bus->master_state != ASPEED_I2C_MASTER_INACTIVE) {
-@@ -875,6 +902,7 @@ static u32 aspeed_i2c_25xx_get_clk_reg_val(struct device *dev, u32 divisor)
- /* precondition: bus.lock has been acquired. */
- static int aspeed_i2c_init_clk(struct aspeed_i2c_bus *bus)
- {
-+	u32 timeout_base_divisor, timeout_tick_us, timeout_cycles;
- 	u32 divisor, clk_reg_val;
- 
- 	divisor = DIV_ROUND_UP(bus->parent_clk_frequency, bus->bus_frequency);
-@@ -883,8 +911,46 @@ static int aspeed_i2c_init_clk(struct aspeed_i2c_bus *bus)
- 			ASPEED_I2CD_TIME_THDSTA_MASK |
- 			ASPEED_I2CD_TIME_TACST_MASK);
- 	clk_reg_val |= bus->get_clk_reg_val(bus->dev, divisor);
-+
-+	if (bus->hw_timeout_ms) {
-+		u8 div_max = ASPEED_I2CD_TIME_TIMEOUT_BASE_DIVISOR_MASK >>
-+			     ASPEED_I2CD_TIME_TIMEOUT_BASE_DIVISOR_SHIFT;
-+		u8 cycles_max = ASPEED_I2CD_TIMEOUT_CYCLES_MASK >>
-+				ASPEED_I2CD_TIMEOUT_CYCLES_SHIFT;
-+
-+		timeout_base_divisor = 0;
-+
-+		do {
-+			timeout_tick_us = 1000 * (16384 <<
-+						  (timeout_base_divisor << 1)) /
-+					  (bus->parent_clk_frequency / 1000);
-+
-+			if (timeout_base_divisor == div_max ||
-+			    timeout_tick_us * ASPEED_I2CD_TIMEOUT_CYCLES_MASK >=
-+			    bus->hw_timeout_ms * 1000)
-+				break;
-+		} while (timeout_base_divisor++ < div_max);
-+
-+		if (timeout_tick_us) {
-+			timeout_cycles = DIV_ROUND_UP(bus->hw_timeout_ms * 1000,
-+						      timeout_tick_us);
-+			if (timeout_cycles == 0)
-+				timeout_cycles = 1;
-+			else if (timeout_cycles > cycles_max)
-+				timeout_cycles = cycles_max;
-+		} else {
-+			timeout_cycles = 0;
-+		}
-+	} else {
-+		timeout_base_divisor = 0;
-+		timeout_cycles = 0;
-+	}
-+
-+	clk_reg_val |= FIELD_PREP(ASPEED_I2CD_TIME_TIMEOUT_BASE_DIVISOR_MASK,
-+				  timeout_base_divisor);
-+
- 	writel(clk_reg_val, bus->base + ASPEED_I2C_AC_TIMING_REG1);
--	writel(ASPEED_NO_TIMEOUT_CTRL, bus->base + ASPEED_I2C_AC_TIMING_REG2);
-+	writel(timeout_cycles, bus->base + ASPEED_I2C_AC_TIMING_REG2);
- 
- 	return 0;
- }
-@@ -899,6 +965,11 @@ static int aspeed_i2c_init(struct aspeed_i2c_bus *bus,
- 	/* Disable everything. */
- 	writel(0, bus->base + ASPEED_I2C_FUN_CTRL_REG);
- 
-+	device_property_read_u32(&pdev->dev, "aspeed,hw-timeout-ms",
-+				 &bus->hw_timeout_ms);
-+	if (bus->hw_timeout_ms)
-+		fun_ctrl_reg |= ASPEED_I2CD_BUS_AUTO_RECOVERY_EN;
-+
- 	ret = aspeed_i2c_init_clk(bus);
- 	if (ret < 0)
- 		return ret;
+ /*
+  * 'rtc' class
+@@ -819,8 +778,6 @@ static void omap_hwmod_am33xx_clkctrl(void)
+ 	CLKCTRL(am33xx_epwmss0_hwmod, AM33XX_CM_PER_EPWMSS0_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_epwmss1_hwmod, AM33XX_CM_PER_EPWMSS1_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_epwmss2_hwmod, AM33XX_CM_PER_EPWMSS2_CLKCTRL_OFFSET);
+-	CLKCTRL(am33xx_mcasp0_hwmod, AM33XX_CM_PER_MCASP0_CLKCTRL_OFFSET);
+-	CLKCTRL(am33xx_mcasp1_hwmod, AM33XX_CM_PER_MCASP1_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_spi0_hwmod, AM33XX_CM_PER_SPI0_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_spi1_hwmod, AM33XX_CM_PER_SPI1_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_spinlock_hwmod, AM33XX_CM_PER_SPINLOCK_CLKCTRL_OFFSET);
+@@ -875,8 +832,6 @@ static void omap_hwmod_am43xx_clkctrl(void)
+ 	CLKCTRL(am33xx_epwmss0_hwmod, AM43XX_CM_PER_EPWMSS0_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_epwmss1_hwmod, AM43XX_CM_PER_EPWMSS1_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_epwmss2_hwmod, AM43XX_CM_PER_EPWMSS2_CLKCTRL_OFFSET);
+-	CLKCTRL(am33xx_mcasp0_hwmod, AM43XX_CM_PER_MCASP0_CLKCTRL_OFFSET);
+-	CLKCTRL(am33xx_mcasp1_hwmod, AM43XX_CM_PER_MCASP1_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_spi0_hwmod, AM43XX_CM_PER_SPI0_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_spi1_hwmod, AM43XX_CM_PER_SPI1_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_spinlock_hwmod, AM43XX_CM_PER_SPINLOCK_CLKCTRL_OFFSET);
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+@@ -422,8 +422,6 @@ static struct omap_hwmod_ocp_if *am33xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am33xx_l4_hs__pruss,
+ 	&am33xx_l4_per__dcan0,
+ 	&am33xx_l4_per__dcan1,
+-	&am33xx_l4_ls__mcasp0,
+-	&am33xx_l4_ls__mcasp1,
+ 	&am33xx_l4_ls__timer2,
+ 	&am33xx_l4_ls__timer3,
+ 	&am33xx_l4_ls__timer4,
+diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+@@ -786,8 +786,6 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am43xx_l3_s__qspi,
+ 	&am33xx_l4_per__dcan0,
+ 	&am33xx_l4_per__dcan1,
+-	&am33xx_l4_ls__mcasp0,
+-	&am33xx_l4_ls__mcasp1,
+ 	&am33xx_l4_ls__timer2,
+ 	&am33xx_l4_ls__timer3,
+ 	&am33xx_l4_ls__timer4,
 -- 
 2.23.0
-
