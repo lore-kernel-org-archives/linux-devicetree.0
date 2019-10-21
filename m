@@ -2,70 +2,70 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5287CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681A7CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE8420B7C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1722064A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 08:29:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="b15R4qU/"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VVzpKYIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfJUIWe (ORCPT
+        id S1727406AbfJUI32 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 04:22:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35328 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfJUIWd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 04:22:33 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l10so12365533wrb.2
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 01:22:31 -0700 (PDT)
+        Mon, 21 Oct 2019 04:29:28 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39294 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfJUI31 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 04:29:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r141so2206415wme.4
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 01:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=p4b0S+rSUdExawknYnPEdrH70wxnzRDH8rK9g/QHRHw=;
-        b=b15R4qU/W01wcelTGjdUdXNtoIoUMyaUUBM/JVE16d66NZOfq/ERBvgmKuRJLwHNVZ
-         fHAoJcgAfswDADrKFHvcxOyjUcriRcDTQU29YGaLaFe3XyJ5KajsbcpaEgAOGIpyWJeN
-         bE1avIjEHMuDo/q5R5v7rmnnCwDPd/GYPk2dQCnD3Lb2LGt3uYoh5eXORiXJSAhW12Od
-         /m9ApPCLDfJeKsDAqUW+jOZF7emzHQvjpW1t4ZDOUdpeGdr3UWBOwobqrcm0cHYV/D9t
-         INNGqG5Hsosa3QdyL6J4zS89UxWGE4uzM5ll9yExlidZ9H71iwxHAVzviRp17h3TfsfJ
-         ht5A==
+        bh=coXvyfIqdHK/We6V/H3RTuVXLMy1eJQlx9ttStPuOrw=;
+        b=VVzpKYIJGVij00KCpp98F515pIzOj1ZpKqRxowfpIm9Xo+lf/GSiaXB1EnPxrjhvQh
+         XsSeMjH+mBOf2yyKHtEaICvmvKp/spv4NRKNE0K2THD+/rybdlpS6TUnv2lHrRFzWJEi
+         GhbXWLGED34qPHRJVz2s3H/EQJrC1KTqQB/+MIXO3Gd6Fn+cqe4BKiskkA0CivlYyWCJ
+         UEcuR9s4D+R3ockdP+HkE8xgAXeXvePDfoRQX/KMiFIZJSWyPra/Kmvr68Tu8f4epsxo
+         FGDR98FDPWYL1v9UXvZQ83AeKoBGMRhbLLTe9kJEbSdBpmU3aRynYe07942NtkV1fUec
+         /ioQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=p4b0S+rSUdExawknYnPEdrH70wxnzRDH8rK9g/QHRHw=;
-        b=rJh4hpDsCSd1appmn1jkFOtUHKTtypKrczWLFXUxfRKH1dHaKZCwLEGJyR5w6T2IGn
-         ZJ1S0vdPB4IqCMrAq72sDsRSbfgtWn8HFQix8fvyiZWjvHZAl4O+HdQBYzyAHxHpKrRc
-         2MV6IhJAGlcauchQ0HhUt2RQpXmpY7OJFzLZbxkAMCRkB6eRGu/dsXkyHvIFO3VRUHls
-         RA0gTEkQTNhxohxEdcBt0oUsWZ75A9L9h3NpmMHtx6IZoDG0Y7SKl5OY6tHvLfkDBY2N
-         t4EFhUjYccK10p5VUinRhuYVFJxgDRAD4D/hq5THUzsvgUHUiqCgrfwmLcnvQMeZ4k38
-         Swtg==
-X-Gm-Message-State: APjAAAXmjpfWzoGbfub02zpjdKC9IyRceyYYRL0/bD5aguOpaZ2OvHz/
-        gby1UR1vPJXIBhPZWbmBD8aR+w==
-X-Google-Smtp-Source: APXvYqzpZiMoyCo757L6iVge6sfOoO380VCWlpCTAfJGMyH6dM1STMcvheK0pc0SEiNI45WQ04iSoQ==
-X-Received: by 2002:a5d:46cb:: with SMTP id g11mr19581095wrs.346.1571646150318;
-        Mon, 21 Oct 2019 01:22:30 -0700 (PDT)
+        bh=coXvyfIqdHK/We6V/H3RTuVXLMy1eJQlx9ttStPuOrw=;
+        b=UbAnvC6qLN0jlzhnVHqI9IOqz1Qeoq0R6Is0sixxStzswiFcnEdB+Gxp79LJZtWQ01
+         Kxh3aCQtIHurqQADHjRpeP1KjJHAX1VxUfrli2nLv9Rr3s48pv1pV4i4vucvaBE8Fjx3
+         gZqQ94kJBT1xRTVZq2SNbYprY5+rfvSaqARfLamzo1hYdGVqDwFpsrITnecb4JsAXZnj
+         /8rXq+H5hKyd5qlJtDVDgz/0ku6xS3MxrwRD4egzISKktWAzsFn+FqO2tYwTfUjiuyBd
+         e2XkSxwEuon2m4zHYEsh1dWIYoehJaOtParjdA4zOLPSUM2dkY7kufkwKD0rZpydgm+1
+         ki1A==
+X-Gm-Message-State: APjAAAW4ErTdMyiWYoOs9sl0XqbX0AdWcprNlOJ1jt+XhqFIaJnYFss1
+        bGczBFXOyjtJ/BRw9XAIMh0qBA==
+X-Google-Smtp-Source: APXvYqzjBSLPJrXO23eiYpzCuLxigE0b3+VXjylLTHBwDcAKbyN+SwtxhwmKn1UZfN3HphuHnR0dBQ==
+X-Received: by 2002:a7b:caea:: with SMTP id t10mr19002070wml.38.1571646563828;
+        Mon, 21 Oct 2019 01:29:23 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id j63sm15666612wmj.46.2019.10.21.01.22.29
+        by smtp.gmail.com with ESMTPSA id a71sm13415679wme.11.2019.10.21.01.29.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 01:22:29 -0700 (PDT)
-Subject: Re: [PATCH v2] soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for
- VIM3L
+        Mon, 21 Oct 2019 01:29:23 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: meson: khadas-vim3: move audio nodes to
+ common dtsi
 To:     Christian Hewitt <christianshewitt@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Kevin Hilman <khilman@baylibre.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1571646004-21269-1-git-send-email-christianshewitt@gmail.com>
+References: <1571416185-6449-1-git-send-email-christianshewitt@gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -118,12 +118,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <7d8e80b5-0b37-691a-3375-6a37cc774a95@baylibre.com>
-Date:   Mon, 21 Oct 2019 10:22:29 +0200
+Message-ID: <94b2292f-3399-ab63-9b5b-1b37da93be1a@baylibre.com>
+Date:   Mon, 21 Oct 2019 10:29:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1571646004-21269-1-git-send-email-christianshewitt@gmail.com>
+In-Reply-To: <1571416185-6449-1-git-send-email-christianshewitt@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -132,33 +132,265 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 21/10/2019 10:20, Christian Hewitt wrote:
-> Chip on the board is S905D3 not S905X3:
+On 18/10/2019 18:29, Christian Hewitt wrote:
+> Move VIM3 audio nodes to meson-khadas-vim3.dtsi to enable audio for all
+> boards in the VIM3 family including VIM3L.
 > 
-> [    0.098998] soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (b0:2) Detected
+> This change depends on [1] being merged/applied first.
 > 
-> Change from v1: use 0xf0 mask instead of 0xf2 as advised by Neil Armstrong.
-> 
-> Fixes: 1d7c541b8a5b ("soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L")
+> [1] https://patchwork.kernel.org/patch/11198535/
 > 
 > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->  drivers/soc/amlogic/meson-gx-socinfo.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi   | 89 ----------------------
+>  arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi | 88 +++++++++++++++++++++
+>  2 files changed, 88 insertions(+), 89 deletions(-)
 > 
-> diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-> index 87ed558..01fc0d2 100644
-> --- a/drivers/soc/amlogic/meson-gx-socinfo.c
-> +++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-> @@ -69,7 +69,7 @@ static const struct meson_gx_package_id {
->  	{ "S922X", 0x29, 0x40, 0xf0 },
->  	{ "A311D", 0x29, 0x10, 0xf0 },
->  	{ "S905X3", 0x2b, 0x5, 0xf },
-> -	{ "S905X3", 0x2b, 0xb0, 0xf2 },
-> +	{ "S905D3", 0x2b, 0xb0, 0xf0 },
->  	{ "A113L", 0x2c, 0x0, 0xf8 },
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> index 69019d0..190e934 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> @@ -5,8 +5,6 @@
+>   * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
+>   */
+>  
+> -#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+> -
+>  / {
+>  	vddcpu_a: regulator-vddcpu-a {
+>  		/*
+> @@ -45,69 +43,6 @@
+>  		regulator-boot-on;
+>  		regulator-always-on;
+>  	};
+> -
+> -	sound {
+> -		compatible = "amlogic,axg-sound-card";
+> -		model = "G12A-KHADAS-VIM3";
+> -		audio-aux-devs = <&tdmout_b>;
+> -		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
+> -				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
+> -				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
+> -				"TDM_B Playback", "TDMOUT_B OUT";
+> -
+> -		assigned-clocks = <&clkc CLKID_MPLL2>,
+> -				  <&clkc CLKID_MPLL0>,
+> -				  <&clkc CLKID_MPLL1>;
+> -		assigned-clock-parents = <0>, <0>, <0>;
+> -		assigned-clock-rates = <294912000>,
+> -				       <270950400>,
+> -				       <393216000>;
+> -		status = "okay";
+> -
+> -		dai-link-0 {
+> -			sound-dai = <&frddr_a>;
+> -		};
+> -
+> -		dai-link-1 {
+> -			sound-dai = <&frddr_b>;
+> -		};
+> -
+> -		dai-link-2 {
+> -			sound-dai = <&frddr_c>;
+> -		};
+> -
+> -		/* 8ch hdmi interface */
+> -		dai-link-3 {
+> -			sound-dai = <&tdmif_b>;
+> -			dai-format = "i2s";
+> -			dai-tdm-slot-tx-mask-0 = <1 1>;
+> -			dai-tdm-slot-tx-mask-1 = <1 1>;
+> -			dai-tdm-slot-tx-mask-2 = <1 1>;
+> -			dai-tdm-slot-tx-mask-3 = <1 1>;
+> -			mclk-fs = <256>;
+> -
+> -			codec {
+> -				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
+> -			};
+> -		};
+> -
+> -		/* hdmi glue */
+> -		dai-link-4 {
+> -			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
+> -
+> -			codec {
+> -				sound-dai = <&hdmi_tx>;
+> -			};
+> -		};
+> -	};
+> -};
+> -
+> -&arb {
+> -	status = "okay";
+> -};
+> -
+> -&clkc_audio {
+> -	status = "okay";
 >  };
 >  
+>  &cpu0 {
+> @@ -152,18 +87,6 @@
+>  	clock-latency = <50000>;
+>  };
+>  
+> -&frddr_a {
+> -        status = "okay";
+> -};
+> -
+> -&frddr_b {
+> -	status = "okay";
+> -};
+> -
+> -&frddr_c {
+> -	status = "okay";
+> -};
+> -
+>  &pwm_ab {
+>  	pinctrl-0 = <&pwm_a_e_pins>;
+>  	pinctrl-names = "default";
+> @@ -179,15 +102,3 @@
+>  	clock-names = "clkin1";
+>  	status = "okay";
+>  };
+> -
+> -&tdmif_b {
+> -	status = "okay";
+> -};
+> -
+> -&tdmout_b {
+> -	status = "okay";
+> -};
+> -
+> -&tohdmitx {
+> -	status = "okay";
+> -};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> index 90815fa..3f5c373 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> @@ -7,6 +7,7 @@
+>  
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/gpio/meson-g12a-gpio.h>
+> +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+>  
+>  / {
+>  	model = "Khadas VIM3";
+> @@ -76,6 +77,61 @@
+>  		clock-names = "ext_clock";
+>  	};
+>  
+> +	sound {
+> +		compatible = "amlogic,axg-sound-card";
+> +		model = "G12A-KHADAS-VIM3";
+> +		audio-aux-devs = <&tdmout_b>;
+> +		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
+> +				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
+> +				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
+> +				"TDM_B Playback", "TDMOUT_B OUT";
+> +
+> +		assigned-clocks = <&clkc CLKID_MPLL2>,
+> +				  <&clkc CLKID_MPLL0>,
+> +				  <&clkc CLKID_MPLL1>;
+> +		assigned-clock-parents = <0>, <0>, <0>;
+> +		assigned-clock-rates = <294912000>,
+> +				       <270950400>,
+> +				       <393216000>;
+> +		status = "okay";
+> +
+> +		dai-link-0 {
+> +			sound-dai = <&frddr_a>;
+> +		};
+> +
+> +		dai-link-1 {
+> +			sound-dai = <&frddr_b>;
+> +		};
+> +
+> +		dai-link-2 {
+> +			sound-dai = <&frddr_c>;
+> +		};
+> +
+> +		/* 8ch hdmi interface */
+> +		dai-link-3 {
+> +			sound-dai = <&tdmif_b>;
+> +			dai-format = "i2s";
+> +			dai-tdm-slot-tx-mask-0 = <1 1>;
+> +			dai-tdm-slot-tx-mask-1 = <1 1>;
+> +			dai-tdm-slot-tx-mask-2 = <1 1>;
+> +			dai-tdm-slot-tx-mask-3 = <1 1>;
+> +			mclk-fs = <256>;
+> +
+> +			codec {
+> +				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
+> +			};
+> +		};
+> +
+> +		/* hdmi glue */
+> +		dai-link-4 {
+> +			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
+> +
+> +			codec {
+> +				sound-dai = <&hdmi_tx>;
+> +			};
+> +		};
+> +	};
+> +
+>  	dc_in: regulator-dc_in {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "DC_IN";
+> @@ -171,6 +227,14 @@
+>  	};
+>  };
+>  
+> +&arb {
+> +	status = "okay";
+> +};
+> +
+> +&clkc_audio {
+> +	status = "okay";
+> +};
+> +
+>  &cec_AO {
+>  	pinctrl-0 = <&cec_ao_a_h_pins>;
+>  	pinctrl-names = "default";
+> @@ -206,6 +270,18 @@
+>          amlogic,tx-delay-ns = <2>;
+>  };
+>  
+> +&frddr_a {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_b {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_c {
+> +	status = "okay";
+> +};
+> +
+>  &hdmi_tx {
+>  	status = "okay";
+>  	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
+> @@ -328,6 +404,18 @@
+>  	vqmmc-supply = <&emmc_1v8>;
+>  };
+>  
+> +&tdmif_b {
+> +	status = "okay";
+> +};
+> +
+> +&tdmout_b {
+> +	status = "okay";
+> +};
+> +
+> +&tohdmitx {
+> +	status = "okay";
+> +};
+> +
+>  &uart_A {
+>  	status = "okay";
+>  	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
 > 
 
 Acked-by: Neil Armstrong <narmstrong@baylibre.com>
