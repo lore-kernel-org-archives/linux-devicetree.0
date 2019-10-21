@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3543CA9EBA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B4BCA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C1D20B7C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BA821479
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 05:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TQTYIIQL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z1z4IYXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfJUFOE (ORCPT
+        id S1725926AbfJUFOK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 01:14:04 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42467 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfJUFNg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 01:13:36 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f14so6999602pgi.9
-        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 22:13:36 -0700 (PDT)
+        Mon, 21 Oct 2019 01:14:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34307 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbfJUFNc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 01:13:32 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b128so7658454pfa.1
+        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 22:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=neUH3MpZ6PzcWK0pI8MqCIfgDTXdx3TfQP/vFsVjZuw=;
-        b=TQTYIIQLHyyoWDFFQE3HbGxwyCsLxnLfL6DqshMYHmbiSg575HP2B2jVQOaiIh2UtJ
-         ReLVblQ/fsUHV7TqldzwD5rFZD8hq2prUNnoxWDB+6M143NZHEcgppbzszDRWLS28Kt/
-         eQjHkYoI2DVEeczj51q9cjWlj6tw1xfL+YeuSqu6eAe33uA5GAEdu171xBGHv91r3m8e
-         BHn6vbAY7mFi5nDeQWlpSimh0oK5bbcu/FYBh+oTu56MbvnJYMGqEKSJJHaEhp9qew6m
-         EMMKcZgHp1bvd3yyhB/o2sMBJgsZfQltuzyTf/XplUBVFDlqUF5SLVsePC7CbOT4ryrb
-         YOrw==
+        bh=20aHMxbij8FJFTKqROAV7Z+Rskif7/iGK/zL9OH7uLs=;
+        b=z1z4IYXz96qxq880Iwjgd+IYD7ELShq8e9Q3fDDdh9HK1wXlvjZLS1TZH1bnQA4Ql4
+         Ogh4KlYgp1dit8TCYkIh7nnVc+RUmnIiBIsDBPaOM7fmZkr2brfoKpXTfzKp78yiQit4
+         YXeAu3E6+zPTBzd1r5F3F0iAAqT2pd+WPU4lt4xCbIwGaeddgX3AseDnjDCKuNWl+Lsn
+         Ky8t04CRCZ2rAlvSypPKsBFXORWH2NgsyRo9cAn3rEJIBRTtF6A/RIxQGpeiU7wBqDVU
+         WNPQ2luI3fgLM5bn84jVgFRwwYprltg+WFRNk9D+QmlJZmHLXT3T2qUKKUkB7wzFS9Sr
+         32CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=neUH3MpZ6PzcWK0pI8MqCIfgDTXdx3TfQP/vFsVjZuw=;
-        b=iSZ50/BcjSNWtLgI0a+ZjE1TTk5cH2g5j7p9wfD+PTrf3i8AWf/rOILVrJa22oDfjx
-         Nf5kl8hqlAACBaBlZ5pwVqgyAg7XYFbu2F1DdujPQtjmQ+k60rP3OMTJPM0PBkABDqj0
-         KyYoN7AU3LiSvSiiHooOg3vzLvwnhz5PR1ZL5kTUW3YT/N9QRYXT7ruxHJZCOHEWjCHq
-         XiT9FwLOIc5DlXdDLPdYk838gXv5GhoTUPYwQuTRaIgo6aIxv+mCEIL6cSsiOx8rO845
-         ULSG46o7NXPugtLrHlRiky9G1lYGXnS3xn6xboT3TTWjtugPj5srvqmH2J1Y+PY5zxBG
-         xaKg==
-X-Gm-Message-State: APjAAAXlrrLaH4ZHFmGMPDbW5D2YzwziOHoXQEDAxipH0Ym+NU19kaEv
-        8MsN6EEAKXWMvLzMTRcGZN1ciA==
-X-Google-Smtp-Source: APXvYqxhL5IxCG/H/X8ULwVjGleXRGgoJK4b4LyFFbqE/lSNwphVUv7K4sFiE5tTX7VdAKNbpYDMFg==
-X-Received: by 2002:a65:49ca:: with SMTP id t10mr4612088pgs.310.1571634815362;
-        Sun, 20 Oct 2019 22:13:35 -0700 (PDT)
+        bh=20aHMxbij8FJFTKqROAV7Z+Rskif7/iGK/zL9OH7uLs=;
+        b=aXQyGwvTJjSG1RAy+n0+TPU9RYsBkQ5iqaryAb/OwgC/xcFZCEJFl+wiOot4vKt0hS
+         QjNQOjOxj8ijzJm9SmVhlpndykKwlRWnztgwSRYrKLrGyN5qWGLm5nDtK7C4NHSdxlvH
+         mSzd1KHc4f28SpK7/I6zzD5c5nMkEd7SZk1kXyiC3ik4HUQQWSabeun0wcOEoq3xTYft
+         JIb/TZ8oRYshs2frf6W/x/joOh3TPO7V29TzW6vdDd+lfrnAkLzejvaqqPjFwDmRc+/g
+         o74YiGZ9ZmkAqdjBA+PRRbmakA6PGbboqQ6Va9YdhvjsVxFxoE5yqduG6w9aRUyLuzJ0
+         ehOQ==
+X-Gm-Message-State: APjAAAU5tHqpWkSU3V5hMOFoGsRoDqR7vbj4HqtAXDNDPkUk16j/OcCf
+        3AfRZkpDJM4JLNFys1WJq0k4GX/md9Q=
+X-Google-Smtp-Source: APXvYqzKNDTHv4ReWf/4B9uqWAUyRJU/KWHFPn7EDDwqK3fko6F+RvI9+UIOYBX+ipjT7f7rtlebYw==
+X-Received: by 2002:a65:4608:: with SMTP id v8mr23253446pgq.366.1571634811304;
+        Sun, 20 Oct 2019 22:13:31 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h68sm15716862pfb.149.2019.10.20.22.13.34
+        by smtp.gmail.com with ESMTPSA id h68sm15716862pfb.149.2019.10.20.22.13.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 22:13:34 -0700 (PDT)
+        Sun, 20 Oct 2019 22:13:30 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 07/11] arm64: dts: qcom: db820c: Remove pin specific files
-Date:   Sun, 20 Oct 2019 22:13:18 -0700
-Message-Id: <20191021051322.297560-8-bjorn.andersson@linaro.org>
+Subject: [PATCH 04/11] arm64: dts: qcom: msm8996: Move regulators to db820c
+Date:   Sun, 20 Oct 2019 22:13:15 -0700
+Message-Id: <20191021051322.297560-5-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191021051322.297560-1-bjorn.andersson@linaro.org>
 References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
@@ -73,457 +73,409 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rather than scattering pinctrl definitions in various files, merge the
-nodes into db820c.dtsi to make it easier to navigate.
+As the definition of available PMICs and the names of their outputs are
+board specifc move this to db820c.dtsi
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../boot/dts/qcom/apq8096-db820c-pins.dtsi    | 109 ----------
- .../dts/qcom/apq8096-db820c-pmic-pins.dtsi    |  92 ---------
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi  | 192 +++++++++++++++++-
- 3 files changed, 190 insertions(+), 203 deletions(-)
- delete mode 100644 arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
- delete mode 100644 arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 308 ++++++++++---------
+ arch/arm64/boot/dts/qcom/msm8996.dtsi        |  53 +---
+ 2 files changed, 156 insertions(+), 205 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-deleted file mode 100644
-index a5cc80d6e82f..000000000000
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-+++ /dev/null
-@@ -1,109 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
-- */
--&msmgpio {
--	sdc2_cd_on: sdc2_cd_on {
--		mux {
--			pins = "gpio38";
--			function = "gpio";
--		};
--
--		config {
--			pins = "gpio38";
--			bias-pull-up;		/* pull up */
--			drive-strength = <16>;	/* 16 MA */
--		};
--	};
--
--	sdc2_cd_off: sdc2_cd_off {
--		mux {
--			pins = "gpio38";
--			function = "gpio";
--		};
--
--		config {
--			pins = "gpio38";
--			bias-pull-up;		/* pull up */
--			drive-strength = <2>;	/* 2 MA */
--		};
--	};
--
--	blsp1_uart1_default: blsp1_uart1_default {
--		mux {
--			pins = "gpio41", "gpio42", "gpio43", "gpio44";
--			function = "blsp_uart2";
--		};
--
--		config {
--			pins = "gpio41", "gpio42", "gpio43", "gpio44";
--			drive-strength = <16>;
--			bias-disable;
--		};
--	};
--
--	blsp1_uart1_sleep: blsp1_uart1_sleep {
--		mux {
--			pins = "gpio41", "gpio42", "gpio43", "gpio44";
--			function = "gpio";
--		};
--
--		config {
--			pins = "gpio41", "gpio42", "gpio43", "gpio44";
--			drive-strength = <2>;
--			bias-disable;
--		};
--	};
--
--	hdmi_hpd_active: hdmi_hpd_active {
--		mux {
--			pins = "gpio34";
--			function = "hdmi_hot";
--		};
--
--		config {
--			pins = "gpio34";
--			bias-pull-down;
--			drive-strength = <16>;
--		};
--	};
--
--	hdmi_hpd_suspend: hdmi_hpd_suspend {
--		mux {
--			pins = "gpio34";
--			function = "hdmi_hot";
--		};
--
--		config {
--			pins = "gpio34";
--			bias-pull-down;
--			drive-strength = <2>;
--		};
--	};
--
--	hdmi_ddc_active: hdmi_ddc_active {
--		mux {
--			pins = "gpio32", "gpio33";
--			function = "hdmi_ddc";
--		};
--
--		config {
--			pins = "gpio32", "gpio33";
--			drive-strength = <2>;
--			bias-pull-up;
--		};
--	};
--
--	hdmi_ddc_suspend: hdmi_ddc_suspend {
--		mux {
--			pins = "gpio32", "gpio33";
--			function = "hdmi_ddc";
--		};
--
--		config {
--			pins = "gpio32", "gpio33";
--			drive-strength = <2>;
--			bias-pull-down;
--		};
--	};
--};
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-deleted file mode 100644
-index 31a3e3311ad5..000000000000
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c-pmic-pins.dtsi
-+++ /dev/null
-@@ -1,92 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
--&pm8994_gpios {
--
--	pinctrl-names = "default";
--	pinctrl-0 = <&ls_exp_gpio_f &bt_en_gpios>;
--
--	ls_exp_gpio_f: pm8994_gpio5 {
--		pinconf {
--			pins = "gpio5";
--			output-low;
--			power-source = <2>; // PM8994_GPIO_S4, 1.8V
--		};
--	};
--
--	bt_en_gpios: bt_en_gpios {
--		pinconf {
--			pins = "gpio19";
--			function = PMIC_GPIO_FUNC_NORMAL;
--			output-low;
--			power-source = <PM8994_GPIO_S4>; // 1.8V
--			qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
--			bias-pull-down;
--		};
--	};
--
--	wlan_en_gpios: wlan_en_gpios {
--		pinconf {
--			pins = "gpio8";
--			function = PMIC_GPIO_FUNC_NORMAL;
--			output-low;
--			power-source = <PM8994_GPIO_S4>; // 1.8V
--			qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
--			bias-pull-down;
--		};
--	};
--
--	audio_mclk: clk_div1 {
--		pinconf {
--			pins = "gpio15";
--			function = "func1";
--			power-source = <PM8994_GPIO_S4>; // 1.8V
--		};
--	};
--
--	volume_up_gpio: pm8996_gpio2 {
--		pinconf {
--			pins = "gpio2";
--			function = "normal";
--			input-enable;
--			drive-push-pull;
--			bias-pull-up;
--			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
--			power-source = <PM8994_GPIO_S4>; // 1.8V
--		};
--	};
--
--	divclk4_pin_a: divclk4 {
--		pinconf {
--			pins = "gpio18";
--			function = PMIC_GPIO_FUNC_FUNC2;
--
--			bias-disable;
--			power-source = <PM8994_GPIO_S4>;
--		};
--	};
--
--	usb3_vbus_det_gpio: pm8996_gpio22 {
--		pinconf {
--			pins = "gpio22";
--			function = PMIC_GPIO_FUNC_NORMAL;
--			input-enable;
--			bias-pull-down;
--			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
--			power-source = <PM8994_GPIO_S4>; // 1.8V
--		};
--	};
--};
--
--&pmi8994_gpios {
--	usb2_vbus_det_gpio: pmi8996_gpio6 {
--		pinconf {
--			pins = "gpio6";
--			function = PMIC_GPIO_FUNC_NORMAL;
--			input-enable;
--			bias-pull-down;
--			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
--			power-source = <PM8994_GPIO_S4>; // 1.8V
--		};
--	};
--};
 diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 99990a139938..6c64deecf950 100644
+index 21e029afb27b..fc6273b0215d 100644
 --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
 +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -6,10 +6,9 @@
- #include "msm8996.dtsi"
- #include "pm8994.dtsi"
- #include "pmi8994.dtsi"
--#include "apq8096-db820c-pins.dtsi"
--#include "apq8096-db820c-pmic-pins.dtsi"
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
- #include <dt-bindings/sound/qcom,q6afe.h>
- #include <dt-bindings/sound/qcom,q6asm.h>
+@@ -513,163 +513,165 @@
+ 			gpios = <&pm8994_gpios 2 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
++};
  
-@@ -384,6 +383,110 @@
- 		"NC", /* GPIO_147 */
- 		"NC", /* GPIO_148 */
- 		"NC"; /* GPIO_149 */
+-	rpm-glink {
+-		rpm_requests {
+-			pm8994-regulators {
+-				vdd_l1-supply = <&pm8994_s3>;
+-				vdd_l2_l26_l28-supply = <&pm8994_s3>;
+-				vdd_l3_l11-supply = <&pm8994_s3>;
+-				vdd_l4_l27_l31-supply = <&pm8994_s3>;
+-				vdd_l5_l7-supply = <&pm8994_s5>;
+-				vdd_l14_l15-supply = <&pm8994_s5>;
+-				vdd_l20_l21-supply = <&pm8994_s5>;
+-				vdd_l25-supply = <&pm8994_s3>;
+-
+-				s3 {
+-					regulator-min-microvolt = <1300000>;
+-					regulator-max-microvolt = <1300000>;
+-				};
+-
+-				/**
+-				 * 1.8v required on LS expansion
+-				 * for mezzanine boards
+-				 */
+-				s4 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <1800000>;
+-					regulator-always-on;
+-				};
+-				s5 {
+-					regulator-min-microvolt = <2150000>;
+-					regulator-max-microvolt = <2150000>;
+-				};
+-				s7 {
+-					regulator-min-microvolt = <800000>;
+-					regulator-max-microvolt = <800000>;
+-				};
+-
+-				l1 {
+-					regulator-min-microvolt = <1000000>;
+-					regulator-max-microvolt = <1000000>;
+-				};
+-				l2 {
+-					regulator-min-microvolt = <1250000>;
+-					regulator-max-microvolt = <1250000>;
+-				};
+-				l3 {
+-					regulator-min-microvolt = <850000>;
+-					regulator-max-microvolt = <850000>;
+-				};
+-				l4 {
+-					regulator-min-microvolt = <1225000>;
+-					regulator-max-microvolt = <1225000>;
+-				};
+-				l6 {
+-					regulator-min-microvolt = <1200000>;
+-					regulator-max-microvolt = <1200000>;
+-				};
+-				l8 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <1800000>;
+-				};
+-				l9 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <1800000>;
+-				};
+-				l10 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <1800000>;
+-				};
+-				l11 {
+-					regulator-min-microvolt = <1150000>;
+-					regulator-max-microvolt = <1150000>;
+-				};
+-				l12 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <1800000>;
+-				};
+-				l13 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <2950000>;
+-				};
+-				l14 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <1800000>;
+-				};
+-				l15 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <1800000>;
+-				};
+-				l16 {
+-					regulator-min-microvolt = <2700000>;
+-					regulator-max-microvolt = <2700000>;
+-				};
+-				l17 {
+-					regulator-min-microvolt = <2500000>;
+-					regulator-max-microvolt = <2500000>;
+-				};
+-				l18 {
+-					regulator-min-microvolt = <2700000>;
+-					regulator-max-microvolt = <2900000>;
+-				};
+-				l19 {
+-					regulator-min-microvolt = <3000000>;
+-					regulator-max-microvolt = <3000000>;
+-				};
+-				l20 {
+-					regulator-min-microvolt = <2950000>;
+-					regulator-max-microvolt = <2950000>;
+-					regulator-allow-set-load;
+-				};
+-				l21 {
+-					regulator-min-microvolt = <2950000>;
+-					regulator-max-microvolt = <2950000>;
+-					regulator-allow-set-load;
+-					regulator-system-load = <200000>;
+-				};
+-				l22 {
+-					regulator-min-microvolt = <3300000>;
+-					regulator-max-microvolt = <3300000>;
+-				};
+-				l23 {
+-					regulator-min-microvolt = <2800000>;
+-					regulator-max-microvolt = <2800000>;
+-				};
+-				l24 {
+-					regulator-min-microvolt = <3075000>;
+-					regulator-max-microvolt = <3075000>;
+-				};
+-				l25 {
+-					regulator-min-microvolt = <1200000>;
+-					regulator-max-microvolt = <1200000>;
+-					regulator-allow-set-load;
+-				};
+-				l27 {
+-					regulator-min-microvolt = <1000000>;
+-					regulator-max-microvolt = <1000000>;
+-				};
+-				l28 {
+-					regulator-min-microvolt = <925000>;
+-					regulator-max-microvolt = <925000>;
+-					regulator-allow-set-load;
+-				};
+-				l29 {
+-					regulator-min-microvolt = <2800000>;
+-					regulator-max-microvolt = <2800000>;
+-				};
+-				l30 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <1800000>;
+-				};
+-				l32 {
+-					regulator-min-microvolt = <1800000>;
+-					regulator-max-microvolt = <1800000>;
+-				};
+-			};
++&rpm_requests {
++	pm8994-regulators {
++		compatible = "qcom,rpm-pm8994-regulators";
 +
-+	sdc2_cd_on: sdc2_cd_on {
-+		mux {
-+			pins = "gpio38";
-+			function = "gpio";
++		vdd_l1-supply = <&pm8994_s3>;
++		vdd_l2_l26_l28-supply = <&pm8994_s3>;
++		vdd_l3_l11-supply = <&pm8994_s3>;
++		vdd_l4_l27_l31-supply = <&pm8994_s3>;
++		vdd_l5_l7-supply = <&pm8994_s5>;
++		vdd_l14_l15-supply = <&pm8994_s5>;
++		vdd_l20_l21-supply = <&pm8994_s5>;
++		vdd_l25-supply = <&pm8994_s3>;
++
++		pm8994_s3: s3 {
++			regulator-min-microvolt = <1300000>;
++			regulator-max-microvolt = <1300000>;
 +		};
 +
-+		config {
-+			pins = "gpio38";
-+			bias-pull-up;		/* pull up */
-+			drive-strength = <16>;	/* 16 MA */
++		/**
++		 * 1.8v required on LS expansion
++		 * for mezzanine boards
++		 */
++		pm8994_s4: s4 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
 +		};
-+	};
-+
-+	sdc2_cd_off: sdc2_cd_off {
-+		mux {
-+			pins = "gpio38";
-+			function = "gpio";
++		pm8994_s5: s5 {
++			regulator-min-microvolt = <2150000>;
++			regulator-max-microvolt = <2150000>;
 +		};
-+
-+		config {
-+			pins = "gpio38";
-+			bias-pull-up;		/* pull up */
-+			drive-strength = <2>;	/* 2 MA */
-+		};
-+	};
-+
-+	blsp1_uart1_default: blsp1_uart1_default {
-+		mux {
-+			pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+			function = "blsp_uart2";
++		pm8994_s7: s7 {
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <800000>;
 +		};
 +
-+		config {
-+			pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+			drive-strength = <16>;
-+			bias-disable;
++		pm8994_l1: l1 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
 +		};
-+	};
-+
-+	blsp1_uart1_sleep: blsp1_uart1_sleep {
-+		mux {
-+			pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+			function = "gpio";
++		pm8994_l2: l2 {
++			regulator-min-microvolt = <1250000>;
++			regulator-max-microvolt = <1250000>;
 +		};
-+
-+		config {
-+			pins = "gpio41", "gpio42", "gpio43", "gpio44";
-+			drive-strength = <2>;
-+			bias-disable;
++		pm8994_l3: l3 {
++			regulator-min-microvolt = <850000>;
++			regulator-max-microvolt = <850000>;
 +		};
-+	};
-+
-+	hdmi_hpd_active: hdmi_hpd_active {
-+		mux {
-+			pins = "gpio34";
-+			function = "hdmi_hot";
++		pm8994_l4: l4 {
++			regulator-min-microvolt = <1225000>;
++			regulator-max-microvolt = <1225000>;
 +		};
-+
-+		config {
-+			pins = "gpio34";
-+			bias-pull-down;
-+			drive-strength = <16>;
++		pm8994_l6: l6 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
 +		};
-+	};
-+
-+	hdmi_hpd_suspend: hdmi_hpd_suspend {
-+		mux {
-+			pins = "gpio34";
-+			function = "hdmi_hot";
++		pm8994_l8: l8 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
 +		};
-+
-+		config {
-+			pins = "gpio34";
-+			bias-pull-down;
-+			drive-strength = <2>;
++		pm8994_l9: l9 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
 +		};
-+	};
-+
-+	hdmi_ddc_active: hdmi_ddc_active {
-+		mux {
-+			pins = "gpio32", "gpio33";
-+			function = "hdmi_ddc";
++		pm8994_l10: l10 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
 +		};
-+
-+		config {
-+			pins = "gpio32", "gpio33";
-+			drive-strength = <2>;
-+			bias-pull-up;
++		pm8994_l11: l11 {
++			regulator-min-microvolt = <1150000>;
++			regulator-max-microvolt = <1150000>;
 +		};
-+	};
-+
-+	hdmi_ddc_suspend: hdmi_ddc_suspend {
-+		mux {
-+			pins = "gpio32", "gpio33";
-+			function = "hdmi_ddc";
++		pm8994_l12: l12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
 +		};
-+
-+		config {
-+			pins = "gpio32", "gpio33";
-+			drive-strength = <2>;
-+			bias-pull-down;
++		pm8994_l13: l13 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2950000>;
 +		};
-+	};
- };
++		pm8994_l14: l14 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		pm8994_l15: l15 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		pm8994_l16: l16 {
++			regulator-min-microvolt = <2700000>;
++			regulator-max-microvolt = <2700000>;
++		};
++		pm8994_l17: l17 {
++			regulator-min-microvolt = <2500000>;
++			regulator-max-microvolt = <2500000>;
++		};
++		pm8994_l18: l18 {
++			regulator-min-microvolt = <2700000>;
++			regulator-max-microvolt = <2900000>;
++		};
++		pm8994_l19: l19 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++		};
++		pm8994_l20: l20 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++			regulator-allow-set-load;
++		};
++		pm8994_l21: l21 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++			regulator-allow-set-load;
++			regulator-system-load = <200000>;
++		};
++		pm8994_l22: l22 {
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++		pm8994_l23: l23 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++		};
++		pm8994_l24: l24 {
++			regulator-min-microvolt = <3075000>;
++			regulator-max-microvolt = <3075000>;
++		};
++		pm8994_l25: l25 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-allow-set-load;
++		};
++		pm8994_l27: l27 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++		pm8994_l28: l28 {
++			regulator-min-microvolt = <925000>;
++			regulator-max-microvolt = <925000>;
++			regulator-allow-set-load;
++		};
++		pm8994_l29: l29 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++		};
++		pm8994_l30: l30 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		pm8994_l32: l32 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
+ 		};
+ 	};
++};
  
- &pcie0 {
-@@ -436,6 +539,80 @@
- 		"PMIC_SLB",
- 		"PMIC_BUA",
- 		"USB_VBUS_DET";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ls_exp_gpio_f &bt_en_gpios>;
-+
-+	ls_exp_gpio_f: pm8994_gpio5 {
-+		pinconf {
-+			pins = "gpio5";
-+			output-low;
-+			power-source = <2>; // PM8994_GPIO_S4, 1.8V
-+		};
-+	};
-+
-+	bt_en_gpios: bt_en_gpios {
-+		pinconf {
-+			pins = "gpio19";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			output-low;
-+			power-source = <PM8994_GPIO_S4>; // 1.8V
-+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	wlan_en_gpios: wlan_en_gpios {
-+		pinconf {
-+			pins = "gpio8";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			output-low;
-+			power-source = <PM8994_GPIO_S4>; // 1.8V
-+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	audio_mclk: clk_div1 {
-+		pinconf {
-+			pins = "gpio15";
-+			function = "func1";
-+			power-source = <PM8994_GPIO_S4>; // 1.8V
-+		};
-+	};
-+
-+	volume_up_gpio: pm8996_gpio2 {
-+		pinconf {
-+			pins = "gpio2";
-+			function = "normal";
-+			input-enable;
-+			drive-push-pull;
-+			bias-pull-up;
-+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+			power-source = <PM8994_GPIO_S4>; // 1.8V
-+		};
-+	};
-+
-+	divclk4_pin_a: divclk4 {
-+		pinconf {
-+			pins = "gpio18";
-+			function = PMIC_GPIO_FUNC_FUNC2;
-+
-+			bias-disable;
-+			power-source = <PM8994_GPIO_S4>;
-+		};
-+	};
-+
-+	usb3_vbus_det_gpio: pm8996_gpio22 {
-+		pinconf {
-+			pins = "gpio22";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			input-enable;
-+			bias-pull-down;
-+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+			power-source = <PM8994_GPIO_S4>; // 1.8V
-+		};
-+	};
- };
++/ {
+ 	usb2_id: usb2-id {
+ 		compatible = "linux,extcon-usb-gpio";
+ 		id-gpio = <&pmi8994_gpios 6 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index a297d3223161..48b5981d01b0 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -467,7 +467,7 @@
  
- &pm8994_mpps {
-@@ -462,6 +639,17 @@
- 		"NC",
- 		"NC",
- 		"NC";
-+
-+	usb2_vbus_det_gpio: pmi8996_gpio6 {
-+		pinconf {
-+			pins = "gpio6";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			input-enable;
-+			bias-pull-down;
-+			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+			power-source = <PM8994_GPIO_S4>; // 1.8V
-+		};
-+	};
- };
+ 		mboxes = <&apcs_glb 0>;
  
- &rpm_requests {
+-		rpm_requests {
++		rpm_requests: rpm-requests {
+ 			compatible = "qcom,rpm-msm8996";
+ 			qcom,glink-channels = "rpm_requests";
+ 
+@@ -509,57 +509,6 @@
+ 					};
+ 				};
+ 			};
+-
+-			pm8994-regulators {
+-				compatible = "qcom,rpm-pm8994-regulators";
+-
+-				pm8994_s1: s1 {};
+-				pm8994_s2: s2 {};
+-				pm8994_s3: s3 {};
+-				pm8994_s4: s4 {};
+-				pm8994_s5: s5 {};
+-				pm8994_s6: s6 {};
+-				pm8994_s7: s7 {};
+-				pm8994_s8: s8 {};
+-				pm8994_s9: s9 {};
+-				pm8994_s10: s10 {};
+-				pm8994_s11: s11 {};
+-				pm8994_s12: s12 {};
+-
+-				pm8994_l1: l1 {};
+-				pm8994_l2: l2 {};
+-				pm8994_l3: l3 {};
+-				pm8994_l4: l4 {};
+-				pm8994_l5: l5 {};
+-				pm8994_l6: l6 {};
+-				pm8994_l7: l7 {};
+-				pm8994_l8: l8 {};
+-				pm8994_l9: l9 {};
+-				pm8994_l10: l10 {};
+-				pm8994_l11: l11 {};
+-				pm8994_l12: l12 {};
+-				pm8994_l13: l13 {};
+-				pm8994_l14: l14 {};
+-				pm8994_l15: l15 {};
+-				pm8994_l16: l16 {};
+-				pm8994_l17: l17 {};
+-				pm8994_l18: l18 {};
+-				pm8994_l19: l19 {};
+-				pm8994_l20: l20 {};
+-				pm8994_l21: l21 {};
+-				pm8994_l22: l22 {};
+-				pm8994_l23: l23 {};
+-				pm8994_l24: l24 {};
+-				pm8994_l25: l25 {};
+-				pm8994_l26: l26 {};
+-				pm8994_l27: l27 {};
+-				pm8994_l28: l28 {};
+-				pm8994_l29: l29 {};
+-				pm8994_l30: l30 {};
+-				pm8994_l31: l31 {};
+-				pm8994_l32: l32 {};
+-			};
+-
+ 		};
+ 	};
+ 
 -- 
 2.23.0
 
