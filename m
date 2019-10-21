@@ -2,141 +2,133 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25AECA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC63CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55CD2166E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FD92089C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 13:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vx3vntD3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q9YWvNv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfJUNO2 (ORCPT
+        id S1728858AbfJUNTd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 09:14:28 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33406 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728840AbfJUNO2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 09:14:28 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9LDEKJ6083939;
-        Mon, 21 Oct 2019 08:14:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571663660;
-        bh=HV6iaivoaFG9onDrZhTj+eWHfIehxFTqG6sv4XHOH80=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vx3vntD3GVVm6efCVc5xOZ3unu/awcqin8fki0KiMBfcpeLns31LNr9BY+PJc9l1M
-         JbeFSBs6gLlOs/xzrDpr8aOPF5mIOMb1GiThOrI9OawPGJ5JueD1b1v/7hURrI+pkb
-         9JR7OPkp7yQ8XndeXQU/WFRJ+wxNF40adFjuJX0w=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9LDE5nu044321
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 21 Oct 2019 08:14:05 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 21
- Oct 2019 08:13:55 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 21 Oct 2019 08:14:04 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9LDDE7f017365;
-        Mon, 21 Oct 2019 08:13:17 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
-CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
-        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/2] dt-bindings: usb: Add binding for the TI wrapper for Cadence USB3 controller
-Date:   Mon, 21 Oct 2019 16:13:04 +0300
-Message-ID: <20191021131305.8689-2-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191021131305.8689-1-rogerq@ti.com>
-References: <20191021131305.8689-1-rogerq@ti.com>
+        Mon, 21 Oct 2019 09:19:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39227 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728842AbfJUNTd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 09:19:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c6so1750528wrm.6
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 06:19:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=IzXM9qRz/JzRTDA5ooE2NgWm+U2lHG9aYE8mnLThYtI=;
+        b=q9YWvNv9ifnEpmf4fcGn790DbawpBkhYQbpIVJg3hYiigRmAsjCJXHurvRjsJbr33y
+         GKAj9CRq9suFR+sT8bkXA66eo/oOwaQ8tVIgh8xTeyUwi3LXse8r+RohW9AKTnYXoZOJ
+         G30a0Fwt09369m1iUluNcYAKO/M8Hjw81Wl0xvLiTo4rpxSjJbUz8GYnKERP1UGsco/V
+         1AQp5U49KV73xRt8DhQWnoscHp1SDZ4FmHCi2q/M7u0w1ekqC+6fe7vPC9M2+U4Tu61t
+         wRem0MnPSHUthaSTQfUD8G9zahBK5zqx0/4Wr/SUvo5wn0J5soLVVBwAEM5zeqsGdw05
+         /q2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=IzXM9qRz/JzRTDA5ooE2NgWm+U2lHG9aYE8mnLThYtI=;
+        b=ss3O3D4oE1YlGRy7ZU/CHqDcTPxHObot7fcwKqZizMzUj7U1Vz2Y3kDwc1UsVnOlON
+         7Xi3ZHG4QKQx6u9atiLG5RFwGXFvXSC8WfyJpcvvSKCr145meCMuRTBeq75yYKILNbyr
+         kHxCmQdaWeV0m3O4pt+E82CPPpffO46wRHKvbkOKK2sOcDB+Bfc7MkhRlUfFTMv+lLo6
+         7VWkhCfuv5xd4J8/1iljZmR6eZGkCjvLWUUVniKm87gLuo3lublPXbbWqiw0Xx/Az37N
+         OVjx+hjyUzZSylLQx0rH7lrmfjMNclZcACz+xWZ7XesHx9HA8PMbPL6LyXgAB37AOAF3
+         2AIA==
+X-Gm-Message-State: APjAAAU51h0arX1aVgsgFfwGmABIu9UzKbUy92KEnd6dBpIwCKlkJUyZ
+        c2j4mnKcFcw3Ed95U7JQd0QmEg==
+X-Google-Smtp-Source: APXvYqzT82vjBtgcUeW0B+ywGszX0nXKvrB7d+PAaK9wi8U2cK7Uo07kUF1C0Fq2aDGrCrxNy/dEjw==
+X-Received: by 2002:a5d:4b8b:: with SMTP id b11mr5442650wrt.78.1571663969894;
+        Mon, 21 Oct 2019 06:19:29 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id v10sm11291181wmg.48.2019.10.21.06.19.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 21 Oct 2019 06:19:29 -0700 (PDT)
+Date:   Mon, 21 Oct 2019 14:19:27 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 02/11] mfd: wcd934x: add support to wcd9340/wcd9341
+ codec
+Message-ID: <20191021131927.GJ4365@dell>
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-3-srinivas.kandagatla@linaro.org>
+ <20191021104611.GZ4365@dell>
+ <1af8a875-8f55-6b7e-4204-ecedc1608889@linaro.org>
+ <20191021114520.GD4365@dell>
+ <38dde3d9-8d7e-7dc0-7cba-137b43cea9d1@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <38dde3d9-8d7e-7dc0-7cba-137b43cea9d1@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TI platforms have a wrapper module around the Cadence USB3
-controller. Add binding information for that.
+On Mon, 21 Oct 2019, Srinivas Kandagatla wrote:
 
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- .../devicetree/bindings/usb/ti,j721e-usb.txt  | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
+> 
+> 
+> On 21/10/2019 12:45, Lee Jones wrote:
+> > On Mon, 21 Oct 2019, Srinivas Kandagatla wrote:
+> > 
+> > > Thanks Lee for taking time to review.
+> > > 
+> > > I agree with most of the style related comments, will fix them in next
+> > > version. For others I have replied it inline.
+> > 
+> > [...]
+> > 
+> > > > > +static int wcd934x_slim_status(struct slim_device *sdev,
+> > > > > +			       enum slim_device_status status)
+> > > > > +{
+> > > > > +	struct device *dev = &sdev->dev;
+> > > > > +	struct wcd934x_data *wcd;
+> > > > > +	int ret;
+> > > > 
+> > > > This is semantically odd!  Why are you doing most of the
+> > > > initialisation and bring-up in 'status' and not 'probe'.  Seems
+> > > > broken to me.
+> > > 
+> > > SLIMBus device will not be in a state to communicate before enumeration (at
+> > > probe), so all the device initialization is done in status callback where it
+> > > is ready for communication.
+> > 
+> > Why do we need the device to be up *before* calling probe?
+> > 
+> 
+> To Initialize the device.
+> And SLIMbus device registers access can not be done before enumeration.
 
-diff --git a/Documentation/devicetree/bindings/usb/ti,j721e-usb.txt b/Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
-new file mode 100644
-index 000000000000..bac57c26b09b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
-@@ -0,0 +1,52 @@
-+Binding for the TI specific wrapper for the Cadence USBSS-DRD controller
-+
-+Required properties:
-+  - compatible: Should contain "ti,j721e-usb"
-+  - reg: Physical base address and size of the wrappers register area.
-+  - power-domains: Should contain a phandle to a PM domain provider node
-+                   and an args specifier containing the USB device id
-+                   value. This property is as per the binding documentation:
-+                   Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-+  - clocks: Clock phandles to usb2_refclk and lpm_clk
-+  - clock-names: Should contain "ref" and "lpm"
-+
-+Optional properties:
-+ - ti,usb2-only: If present, it restricts the controller to USB2.0 mode of
-+		 operation. Must be present if USB3 PHY is not available
-+		 for USB.
-+ - ti,vbus-divider: Should be present if USB VBUS line is connected to the
-+		 VBUS pin of the SoC via a 1/3 voltage divider.
-+
-+Sub-nodes:
-+The USB2 PHY and the Cadence USB3 controller should be the sub-nodes.
-+
-+Example:
-+
-+	ti_usb0: cdns_usb@4104000 {
-+		compatible = "ti,j721e-usb";
-+		reg = <0x00 0x4104000 0x00 0x100>;
-+		power-domains = <&k3_pds 288 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 288 15>, <&k3_clks 288 3>;
-+		clock-names = "ref", "lpm";
-+		assigned-clocks = <&k3_clks 288 15>;	/* USB2_REFCLK */
-+		assigned-clock-parents = <&k3_clks 288 16>; /* HFOSC0 */
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		usb0: usb@6000000 {
-+			compatible = "cdns,usb3";
-+			reg = <0x00 0x6000000 0x00 0x10000>,
-+			      <0x00 0x6010000 0x00 0x10000>,
-+			      <0x00 0x6020000 0x00 0x10000>;
-+			reg-names = "otg", "xhci", "dev";
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,	/* irq.0 */
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,	/* irq.6 */
-+				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;	/* otgirq.0 */
-+			interrupt-names = "host",
-+					  "peripheral",
-+					  "otg";
-+			maximum-speed = "super-speed";
-+			dr_mode = "otg";
-+		};
-+	};
+I'm not sure why you need any hardware to be enabled before calling
+.probe(). That is the purpose of .probe(). The only way in which I can
+see this being a requirement is if information located on the device
+is required in order to do device-driver matching.
+
+In which case, how was the .status() function matched?
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
