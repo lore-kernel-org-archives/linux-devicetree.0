@@ -1,131 +1,131 @@
-Return-Path: <SRS0=9JgI=YN=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ED2CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 23:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8110CCA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 02:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06B721929
-	for <linux-devicetree@archiver.kernel.org>; Sun, 20 Oct 2019 23:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5867521744
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 02:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HpSfZmtT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6jF/1TC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfJTXAv (ORCPT
+        id S1726733AbfJUCG3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 20 Oct 2019 19:00:51 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44117 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfJTXAv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 19:00:51 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q12so8492276lfc.11
-        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 16:00:50 -0700 (PDT)
+        Sun, 20 Oct 2019 22:06:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37427 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfJUCG3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Oct 2019 22:06:29 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p1so6767893pgi.4
+        for <devicetree@vger.kernel.org>; Sun, 20 Oct 2019 19:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VYr9aCDj4PnFzDPIIIY7KJpxkUoLJ3Nn3QAOb6G38+I=;
-        b=HpSfZmtTANCZMC/v1YzmmGiA43QviDigJusdPALJuCYSz00i9zTFOWSoPg/jBN5nHL
-         Ipr5P771YvUTRXy1TJtWDzU7/erC4mDnz8W8YnSJQP5EhDVOJgQExQ6L2pH1imzU8T0t
-         7tan04vCe14WIxFfOfYgjZ7LZaHhEQACvV31sDqS2T/NBWyENeq8VImOZW2C2J0YxiN1
-         MDHgvy4hn8OmGUWnCqgvUDLMAJ1PmPI0W8pBqJD6ZGCHKUD7MkThqfIoGFs5ocZ+B1vr
-         +NtzjtJTlzxIVkiAwGptXM5NfY+A6xZgUCP2yeGMzuk/EWzXLbrEoofUpSLW95q1vJyj
-         Yc6A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+yWlFQ3j7MPCBznXsMHQtwJpyH73frvubd7zQPjGqcQ=;
+        b=b6jF/1TCbvWbam16ICWlejQoSAC8+hg+CuxDEnF4riYF5Sq4SSUC+vktJEEOp4GwaL
+         R+MVDsuCHRmEkMhueRjh3U4t/xHsfmYAd5Yomv9TltCGadViASJLNsaikB20jqDJxi8n
+         dWVfgkI6OxuV8SrTlzu1UxF84Waqf0ymzK7EjZVebV+jJvqaIuMIp0TTrl4wcLkRQ1cg
+         JRDHJR3HLRAy4g02+T82IvW12A/CAQAGYnqhqse9BnW+Z7pg+VV47mmjQ77JfilZzDiA
+         +4QoCJLF0pzaHnplp75PudT0JDggsOSIJ3OGCzqSRGkdb8VVyWjD0Hk6gS3A5uCtXRqZ
+         bMQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VYr9aCDj4PnFzDPIIIY7KJpxkUoLJ3Nn3QAOb6G38+I=;
-        b=Czb7GnI6WYPfGJEnef2zIJHo74zHvn3MPnSfIJRX3WtLh3JgptrNfHpnTcPnSdAT/v
-         fFVygaScQjwxE/leU1UvVx1694rOnN8kS7WnOpkbAXe+cCJTSCRacwzsjJcsDOpqAU+w
-         YuuK+mKQIPtupxoQ9zBlAeZy00+cVN9mHUa/rsjOvXV/QPLmW2twiZZvNKYYY3Ebzf7K
-         RTN5uAsUymnD70V7xb9CgklXo0x5IgYitycChH5k2BpJR9h6knAHrMcrhlQ9WAozjkYA
-         91QUyyDiRJUyxR++29j5nDpDhckd0Jm0rFeObg9EZ3XAWyTUD82/BALE08qaZIyGFdoY
-         35Bw==
-X-Gm-Message-State: APjAAAV307blj+TZUKl9lvdOpKuxjtvrPLbKv/vn9o1A0Ur9qhaknmOU
-        3OHrNfkLnM4xaCUPvXsyC9ls5A==
-X-Google-Smtp-Source: APXvYqzBwh2aw+V1KrR2jzfKHGhhMkxOeOADzXN51+d7Nj8sASEsVsiB9ZrnumS5H9z6k5nG43JiEQ==
-X-Received: by 2002:a19:6b04:: with SMTP id d4mr2780699lfa.182.1571612449275;
-        Sun, 20 Oct 2019 16:00:49 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-79c8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.200.121])
-        by smtp.gmail.com with ESMTPSA id 77sm6011174ljf.85.2019.10.20.16.00.44
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+yWlFQ3j7MPCBznXsMHQtwJpyH73frvubd7zQPjGqcQ=;
+        b=feKjCQihS9OyE6jU/vaq3+lMj2pPprBPbCZUxju0Ona0uKISCDPHTLcfZU6ya1CYgf
+         objDCF4W/Ga3J6wo5l/RVhbzwVXVSomRSMWb7SUyi49l5/0KihsRzxv3kdQ7WwrN+yio
+         OkKaum/H8Il5vMCQrXmz8WeISDjnauTmC0xd7Rxr93Q4Q30iCG9Wa7meVD8Uvp0cUqEy
+         ir5bCHQ9bJ5zIwSNMXa4nY/nzFg7YzhoRW5dg6QQrzVTaCILUNLWXofEY+TFSNKh9kSC
+         a/is+vyt9ei5zZ14Pzx6mGR9gWPIZAse7LOBBS4RAYZ7Qdb5tN7N6nnflMRMsxYdHelV
+         GiMQ==
+X-Gm-Message-State: APjAAAWId2XLuZ+EGaQySOrpAUvq/sS6GcSqzDSpg7Goo0uYZeHv/hXj
+        yxutilIE/0v4LglZKAQNp+6Opw==
+X-Google-Smtp-Source: APXvYqx+O4q4hmJUC+1LMJIMJc8cEyhGSOZvO9jUQMs0EyVIEpjKc4vVl0VNeQL6Dp2g1H3xO8GA+g==
+X-Received: by 2002:a63:b644:: with SMTP id v4mr7468971pgt.249.1571623588138;
+        Sun, 20 Oct 2019 19:06:28 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k23sm12553705pgi.49.2019.10.20.19.06.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2019 16:00:45 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-mtd@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/2 v4] mtd: add DT bindings for the Intel IXP4xx Flash
-Date:   Mon, 21 Oct 2019 01:00:41 +0200
-Message-Id: <20191020230042.7364-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Sun, 20 Oct 2019 19:06:26 -0700 (PDT)
+Date:   Sun, 20 Oct 2019 19:06:24 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Chris Goldsworthy <cgoldswo@codeaurora.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] of: reserved_mem: add missing of_node_put() for proper
+ ref-counting
+Message-ID: <20191021020624.GE4500@tuxbook-pro>
+References: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Intel IXP4xx
-flash controller, a simple physmap which however need a
-specific big-endian or mixed-endian access pattern to the
-memory.
+On Sat 19 Oct 18:57 PDT 2019, Chris Goldsworthy wrote:
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v3->v4:
-- Rebase on v5.4-rc1
-- Resend
-ChangeLog v2->v3:
-- Rebase on v5.1-rc1
-- Resend
-ChangeLog v1->v2:
-- Collect Rob's Review tag.
----
- .../bindings/mtd/intel,ixp4xx-flash.txt       | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/intel,ixp4xx-flash.txt
+> Commit d698a388146c ("of: reserved-memory: ignore disabled memory-region
+> nodes") added an early return in of_reserved_mem_device_init_by_idx(), but
+> didn't call of_node_put() on a device_node whose ref-count was incremented
+> in the call to of_parse_phandle() preceding the early exit.
+> 
+> Fixes: d698a388146c ("of: reserved-memory: ignore disabled memory-region nodes")
+> Signed-off-by: Chris Goldsworthy <cgoldswo@codeaurora.org>
+> To: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
 
-diff --git a/Documentation/devicetree/bindings/mtd/intel,ixp4xx-flash.txt b/Documentation/devicetree/bindings/mtd/intel,ixp4xx-flash.txt
-new file mode 100644
-index 000000000000..4bdcb92ae381
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/intel,ixp4xx-flash.txt
-@@ -0,0 +1,22 @@
-+Flash device on Intel IXP4xx SoC
-+
-+This flash is regular CFI compatible (Intel or AMD extended) flash chips with
-+specific big-endian or mixed-endian memory access pattern.
-+
-+Required properties:
-+- compatible : must be "intel,ixp4xx-flash", "cfi-flash";
-+- reg : memory address for the flash chip
-+- bank-width : width in bytes of flash interface, should be <2>
-+
-+For the rest of the properties, see mtd-physmap.txt.
-+
-+The device tree may optionally contain sub-nodes describing partitions of the
-+address space. See partition.txt for more detail.
-+
-+Example:
-+
-+flash@50000000 {
-+	compatible = "intel,ixp4xx-flash", "cfi-flash";
-+	reg = <0x50000000 0x01000000>;
-+	bank-width = <2>;
-+};
--- 
-2.21.0
+Cc stable@ is used to assist in making sure your patch is backported to
+stable kernels, other than that the purpose Cc here is to indicate that
+specific people have been requested to comment on your patch.
 
+So please skip these from the commit message in the future (for this
+one, wait and see if Rob is willing to trim them as he applies the
+patch).
+
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/of/of_reserved_mem.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index 7989703..6bd610e 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -324,8 +324,10 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
+>  	if (!target)
+>  		return -ENODEV;
+>  
+> -	if (!of_device_is_available(target))
+> +	if (!of_device_is_available(target)) {
+> +		of_node_put(target);
+>  		return 0;
+> +	}
+>  
+>  	rmem = __find_rmem(target);
+>  	of_node_put(target);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
