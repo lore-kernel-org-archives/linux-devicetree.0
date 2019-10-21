@@ -2,323 +2,130 @@ Return-Path: <SRS0=tRzh=YO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CC9CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A943CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E412089C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40AAA21928
+	for <linux-devicetree@archiver.kernel.org>; Mon, 21 Oct 2019 07:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3KLxSok"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f4plsD5O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfJUHuy (ORCPT
+        id S1727047AbfJUHw1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 03:50:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52696 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfJUHuy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 03:50:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r19so12071539wmh.2;
-        Mon, 21 Oct 2019 00:50:51 -0700 (PDT)
+        Mon, 21 Oct 2019 03:52:27 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41622 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfJUHw0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 03:52:26 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f20so9262920edv.8
+        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 00:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lAch51dUhj4NuzLLw8/8w9QHfn4X/4BidztkzB9RvfQ=;
-        b=M3KLxSok8AgAVfLEchFOsfRv+wuA0XZdvQG+6LHQ74itWTxD32ECYi2MubLeR05VOe
-         82pgZCQND+alVXLmVAyUfPkDFHW7oITqbFs8NLR+BjxjbrC4IbYxS0iCp2RLS5GIlNjB
-         O52mIcClJhojW5n2TEMZw/VleX58HI9GuiIs1fPJrmFJlGIptEwmFOmkhrEGJlOeBT9B
-         2j8UwRXYooiokJjK36vzUFcvWAcI45B5wdkilEjvp90Z+gQIE1cC5kQqWwVzm30VLNfM
-         kXFF0l1A2KnkSCnS/ObuG3c1UlKsqLHdiB8jPJwaJeW7yzyfaPXQzAS3Zpo4XcevG4WW
-         m8hQ==
+        bh=lshseq5695iLMWS2/yTnU4q4phMFdnGbVyLcqMyDgNw=;
+        b=f4plsD5OF7QI01+J/daaDJeoz3LkteQ6BQB7+jftsCG7vHACEuYAS0/ifg1VOZ+2bv
+         DVnIY34EwF6RV/LyAIkxxcICf5gDAB5lJnzvHZwPiIbqUNd0/Lda6KhsIL7Vv666qS53
+         0dm2LtJmUWVBz3Z6INSe5m7WXyh7OwRPV6IN4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lAch51dUhj4NuzLLw8/8w9QHfn4X/4BidztkzB9RvfQ=;
-        b=oYayn0yDzHBXMoCO7Vcpd00ZbONeXe7km4CA74bDOGBMrHhdFhiIt/4FTAKjiid/bp
-         6IMNzTFJNCbFbwIvL0gNyMZEv0LD0nOGuLooR/lK01PrcMlRtfMdJ6jh9Fhvw3XM0lT3
-         2u3iToNdKkmkJrmipbut+gW9Q00bDeBuMbq066x5ee87pJ56VQ/lTJ5pDhBFKmlaLjrt
-         JWK384IdB8I4EVaD1GbEm6nDX2lQz5+sCBRrOJ8V852ONnWfmTeLrrC5Sadez9CmgHDK
-         6rrkBskAv1yrYBcXIfPa1yPmsWV54Y23lYFg3CsZkcivQYUPes8eHYioksvXQeYTfx/p
-         jwnA==
-X-Gm-Message-State: APjAAAWGenavlLXQZ2EN8czYcbSjrMv1/+GE6KSSlzXCRHeHQW6ItAEi
-        qtomnGH3KIpIcREIFba1KAp9l7pcRkRMy0ffzjo=
-X-Google-Smtp-Source: APXvYqyHHiaGrYwtb7fLd+aNGzjSJ73p77CHEpRF07Iqth1hDCiTYqW1YQmFQ9v6qhJoxVWBOg9brhbBqFfefuR9ij0=
-X-Received: by 2002:a7b:c4d4:: with SMTP id g20mr16489854wmk.123.1571644250026;
- Mon, 21 Oct 2019 00:50:50 -0700 (PDT)
+        bh=lshseq5695iLMWS2/yTnU4q4phMFdnGbVyLcqMyDgNw=;
+        b=Nq0oC8ALvPnIBUcEorh7O+z7XTvoahnSFTPWqLoNs+VVjheqMTbRgYiAaETqmcLCtB
+         uWiUepOKZ10yk4BfJJV9Q/7dbDJsOSjXj3FE7J+8g+3GQhQ9dE3Ho+776QpwmVqry1zD
+         YiJ0ehI+kgymsgrN6NHDZCsBbyNJtqBkKDtdU3DiQ7tXzn1ikwmxDj/l1pXowhrgZ3Y9
+         qCD7yJr5iuTaxLz+R+nlAlL5sqhvLJcxBMi5yLsAnDrmFp7FIdpI9FFpN3jLUPeMMZOo
+         nkOc6KK4fb72nEtjGG6D6SMGUOAlqRFBreq23tcxv2Mocy6J0mhPNnveIaizon/tsMPo
+         A3ug==
+X-Gm-Message-State: APjAAAU+illfpx1FB4rCGfaMxivJXYIaM56N3xjmIliYJwwnv2iqoRTy
+        pUL81YTcz2H0jKKY2c7BS58g/3hMZLVGyQC+ZiYK+A==
+X-Google-Smtp-Source: APXvYqzlkUpYGQn2syS3ZLVsVWF/tTk0yVfY4fQyTuFCwfaWNooQm7u2tuJVHYSsQtBTu3rWlHNporZiD288c1BLvm4=
+X-Received: by 2002:aa7:d8c6:: with SMTP id k6mr23548337eds.87.1571644344157;
+ Mon, 21 Oct 2019 00:52:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191020150746.64114-1-kholk11@gmail.com> <20191020150746.64114-5-kholk11@gmail.com>
- <20191021055207.GJ4500@tuxbook-pro>
-In-Reply-To: <20191021055207.GJ4500@tuxbook-pro>
-From:   AngeloGioacchino Del Regno <kholk11@gmail.com>
-Date:   Mon, 21 Oct 2019 09:50:38 +0200
-Message-ID: <CAK7fi1bTRWtMr6y+ugZ-jBKA5xTM=J+_ePL62AMqyJ19bYwMQw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] arm64: dts: qcom: Add MSM8976 SoC support dts files
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org,
-        ccross@android.com, Mark Rutland <mark.rutland@arm.com>,
+References: <20190906100514.30803-1-roger.lu@mediatek.com> <20190906100514.30803-4-roger.lu@mediatek.com>
+In-Reply-To: <20190906100514.30803-4-roger.lu@mediatek.com>
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Date:   Mon, 21 Oct 2019 15:51:48 +0800
+Message-ID: <CANdKZ0dAWWy7QMMZhNHAha5ZpcBo1GHebPc5_FRu5gvBc569QA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] PM / AVS: SVS: Introduce SVS engine
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Kevin Hilman <khilman@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, marijns95@gmail.com
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        HenryC Chen <HenryC.Chen@mediatek.com>, yt.lee@mediatek.com,
+        Angus Lin <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Il giorno lun 21 ott 2019 alle ore 07:52 Bjorn Andersson
-<bjorn.andersson@linaro.org> ha scritto:
->
-> On Sun 20 Oct 08:07 PDT 2019, kholk11@gmail.com wrote:
-> [..]
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8976-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8976-pins.dtsi
-> > new file mode 100644
-> > index 000000000000..1abeba8b8d18
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/msm8976-pins.dtsi
-> > @@ -0,0 +1,2119 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
-> > + * Copyright (c) 2016-2019 AngeloGioacchino Del Regno <kholk11@gmail.com>
-> > + */
-> > +
-> > +&tlmm {
->
-> Please inline this in msm8974.dtsi, it makes it easier to find nodes
-> than when they are sprinkled in various *pins.dtsi files.
->
->
-> Note also that a lot of these configs are specific to loire, rather than
-> msm8976. So preferably they should be specified there instead of in the
-> platform.
->
+Hi Roger,
 
-Well, no... the loire pin config is another story.... this
-configuration comes in reality
-from the Qualcomm's MSM8976 MTP initial standard configuration (which I've
-"translated" from that 3.10 downstream "thing" to the new pinctrl
-style some time
-ago), so, if some of this configuration effectively does apply to the somc loire
-platform, that's because the hardware engineers were kind to not
-change everything
-from the ground up....
+On Fri, Sep 6, 2019 at 6:06 PM Roger Lu <roger.lu@mediatek.com> wrote:
+> ...
+> +static int svs_resource_setup(struct mtk_svs *svs)
+> ...
+> +               for (i = 0, freq = (u32)-1; i < svsb->opp_count; i++, freq--) {
+> +                       opp = dev_pm_opp_find_freq_floor(svsb->dev, &freq);
+> +                       if (IS_ERR(opp)) {
+> +                               pr_err("%s: error opp entry!!, err = %ld\n",
+> +                                      svsb->name, PTR_ERR(opp));
+> +                               return PTR_ERR(opp);
+> +                       }
+> +
+> +                       svsb->opp_freqs[i] = freq;
+> +                       svsb->opp_volts[i] = dev_pm_opp_get_voltage(opp);
+> +                       svsb->freqs_pct[i] = percent(svsb->opp_freqs[i],
+> +                                                    svsb->freq_base) & 0xff;
 
-I didn't append this thingy to the msm8976.dtsi because it's a veeeery
-long list of
-pins and, since I saw it done like that already for MSM8916/8992/8994/8996/8998,
-I thought it was a good idea to follow that kind of style.. but I can
-totally understand
-your point of having to open a myriad of files here and there to find
-what you want
-being less comfortable than having what you need just immediately right there!
+Should have dev_pm_opp_put(opp); here.
 
-Shorter said: sure! I will move this stuff in msm8976.dtsi and I'll
-delete any pin
-configuration that is strictly tied to the MTP (or any other) platform
-to keep it
-clean and short.
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> ...
+> +static int svs_status_proc_show(struct seq_file *m, void *v)
+> ...
+> +       for (i = 0, freq = (u32)-1; i < svsb->opp_count; i++, freq--) {
+> +               opp = dev_pm_opp_find_freq_floor(svsb->dev, &freq);
+> +               if (IS_ERR(opp)) {
+> +                       seq_printf(m, "%s: error opp entry!!, err = %ld\n",
+> +                                  svsb->name, PTR_ERR(opp));
+> +                       return PTR_ERR(opp);
+> +               }
+> +
+> +               seq_printf(m, "opp_freqs[%02u]: %lu, volts[%02u]: %lu, ",
+> +                          i, freq, i, dev_pm_opp_get_voltage(opp));
+> +               seq_printf(m, "svsb_volts[%02u]: 0x%x, freqs_pct[%02u]: %u\n",
+> +                          i, svsb->volts[i], i, svsb->freqs_pct[i]);
 
-> > +     cdc_reset_ctrl {
-> > +             cdc_reset_line_sus: cdc_reset_sleep {
-> > +                     mux {
->
-> You don't have to split mux and config into subnodes (you don't even
-> need the last level subnode anymore)...
->
+Same here.
 
-Sorry for that, there's some confusion around looking at other *-pins files
-and I thought it was fine to keep it like that.
-
-Will change it!
-
-> > +                             pins = "gpio133";
-> > +                             function = "gpio";
-> > +                     };
-> > +                     config {
-> > +                             pins = "gpio133";
-> > +                             drive-strength = <16>;
-> > +                             bias-disable;
-> > +                             output-low;
-> > +                     };
-> > +             };
-> [..]
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8976.dtsi b/arch/arm64/boot/dts/qcom/msm8976.dtsi
-> [..]
-> > +     firmware {
-> > +             scm: scm {
-> > +                     compatible = "qcom,scm";
->
-> Please add a more specific compatible as well.
->
-
-Oops! Yeah, adding it.
-
-> > +                     clocks = <&gcc GCC_CRYPTO_CLK>,
-> > +                              <&gcc GCC_CRYPTO_AXI_CLK>,
-> > +                              <&gcc GCC_CRYPTO_AHB_CLK>;
-> > +                     clock-names = "core", "bus", "iface";
-> > +                     #reset-cells = <1>;
-> > +
-> > +                     qcom,dload-mode = <&tcsr 0x6100>;
-> > +             };
-> > +     };
-> [..]
-> > +     smd {
-> > +             compatible = "qcom,smd";
-> > +
-> > +             rpm {
-> > +                     interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-> > +                     qcom,ipc = <&apcs 8 0>;
-> > +                     qcom,smd-edge = <15>;
-> > +
-> > +                     rpm_requests {
-> > +                             compatible = "qcom,rpm-msm8976";
-> > +                             qcom,smd-channels = "rpm_requests";
-> > +
-> > +                             rpmcc: qcom,rpmcc {
-> > +                                     compatible = "qcom,rpmcc-msm8976";
-> > +                                     #clock-cells = <1>;
-> > +                             };
-> > +
-> > +                             rpmpd: power-controller {
-> > +                                     compatible = "qcom,msm8976-rpmpd";
-> > +                                     #power-domain-cells = <1>;
-> > +                                     operating-points-v2 = <&rpmpd_opp_table>;
-> > +                             };
-> > +
-> > +                             smd_rpm_regulators: pm8950-regulators {
->
-> We've seen several times before where devices of a specific platform
-> comes with different set of pmics, so please omit the pmic configuration
-> from msm8976.dtsi, give rpm_requests a label and add these regulators in
-> the loire.dtsi
->
-
-I would never have any objections on that. I even knew it already, but
-sometimes my brain plays bad jokes on me, apparently.
-
-Consider it done!
-
-> > +                                     compatible = "qcom,rpm-pm8950-regulators";
-> > +
-> > +                                     pm8950_s1: s1 {};
-> > +                                     pm8950_s2: s2 {};
-> > +                                     pm8950_s3: s3 {};
-> > +                                     pm8950_s4: s4 {};
-> > +                                     pm8950_s5: s5 {};
-> > +                                     pm8950_s6: s6 {};
-> > +
-> > +                                     pm8950_l1: l1 {};
-> > +                                     pm8950_l2: l2 {};
-> > +                                     pm8950_l3: l3 {};
-> > +                                     pm8950_l4: l4 {};
-> > +                                     pm8950_l5: l5 {};
-> > +                                     pm8950_l6: l6 {};
-> > +                                     pm8950_l7: l7 {};
-> > +                                     pm8950_l8: l8 {};
-> > +                                     pm8950_l9: l9 {};
-> > +                                     pm8950_l10: l10 {};
-> > +                                     pm8950_l11: l11 {};
-> > +                                     pm8950_l12: l12 {};
-> > +                                     pm8950_l13: l13 {};
-> > +                                     pm8950_l14: l14 {};
-> > +                                     pm8950_l15: l15 {};
-> > +                                     pm8950_l16: l16 {};
-> > +                                     pm8950_l17: l17 {};
-> > +                                     pm8950_l18: l18 {};
-> > +                                     pm8950_l19: l19 {};
-> > +                                     pm8950_l20: l20 {};
-> > +                                     pm8950_l21: l21 {};
-> > +                                     pm8950_l22: l22 {};
-> > +                                     pm8950_l23: l23 {};
-> > +                             };
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> > +     soc: soc {
-> > +             #address-cells = <1>;
-> > +             #size-cells = <1>;
-> > +             ranges = <0 0 0 0xffffffff>;
-> > +             compatible = "simple-bus";
-> > +
-> > +             tcsr_mutex_regs: syscon@1905000 {
-> > +                     compatible = "syscon";
-> > +                     reg = <0x1905000 0x20000>;
->
-> Please pad the address to 8 digits (to make it easier for me to see if
-> things are sorted) and please sort all nodes based on address and then
-> by name.
->
-> > +             };
-> [..]
-> > +             smsm {
->
-> Non-mmio nodes should not live under /soc, please move them to /.
->
-> > +                     compatible = "qcom,smsm";
-> > +
-> > +                     #address-cells = <1>;
-> > +                     #size-cells = <0>;
-> > +
-> > +                     qcom,ipc-1 = <&apcs 8 12>;
-> > +                     qcom,ipc-2 = <&apcs 8 9>;
-> > +                     qcom,ipc-3 = <&apcs 8 18>;
-> > +
-> > +                     apps_smsm: apps@0 {
-> > +                             reg = <0>;
-> > +                             #qcom,smem-state-cells = <1>;
-> > +                     };
-> > +
-> > +                     hexagon_smsm: hexagon@1 {
-> > +                             reg = <1>;
-> > +                             interrupts = <0 290 IRQ_TYPE_EDGE_RISING>;
-> > +
-> > +                             interrupt-controller;
-> > +                             #interrupt-cells = <2>;
-> > +                     };
-> > +
-> > +                     wcnss_smsm: wcnss@6 {
-> > +                             reg = <6>;
-> > +                             interrupts = <GIC_SPI 144 IRQ_TYPE_EDGE_RISING>;
-> > +
-> > +                             interrupt-controller;
-> > +                             #interrupt-cells = <2>;
-> > +                     };
-> > +             };
-> [..]
-> > +
-> > +             hexagon@4080000 {
->
-> remoteproc@4080000
->
-> > +                     compatible = "qcom,q6v5-pil";
-> > +                     reg = <0x04080000 0x100>,
-> > +                           <0x04020000 0x040>;
-> > +
-> > +                     reg-names = "qdsp6", "rmb";
-> > +
-> > +                     interrupts-extended = <&intc 0 293 1>,
-> > +                                           <&adsp_smp2p_in 0 0>,
->
-> The compatible indicates that this is the modem, but this says "adsp".
-> Can you please confirm the Hexagon configuration on this platform?
->
-> > +                                           <&adsp_smp2p_in 2 0>,
-> > +                                           <&adsp_smp2p_in 1 0>,
-> > +                                           <&adsp_smp2p_in 3 0>;
-> > +                     interrupt-names = "wdog", "fatal", "ready",
-> > +                                       "handover", "stop-ack";
-> > +
->
-> Regards,
-> Bjorn
-
-And about the rest, yep, I'll check, recheck and fix :)))
-
-Thanks for the review!
-Angelo
+> +       }
+> +
+> +       return 0;
+> +}
+> ...
