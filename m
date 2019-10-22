@@ -2,153 +2,163 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877CCCA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA65CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511FB20679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r/JyeL5K"
+	by mail.kernel.org (Postfix) with ESMTP id A5C1021872
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388470AbfJVIlf (ORCPT
+        id S2388494AbfJVIpV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:41:35 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:33775 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387479AbfJVIle (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 04:41:34 -0400
-Received: by mail-vs1-f66.google.com with SMTP id p13so10803879vso.0
-        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 01:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+fNIb96drh1xO0TilCLRu1LM7UoTRnZM7kYcybXZZVI=;
-        b=r/JyeL5Ka9U5RT4RbTK4lE7v6G80uwWF2A/K82EdLA3gkZUkiwloz46ev+0TomOH/I
-         Leyl7dGJc6GxL1SsZk2dkOnPSa8fqJ3oRurtzlLnG/RophMY4RA5Pul6ocqL9+RJWdNF
-         A3Gtzqe2Ht8r7KthkwsOHrHdS/aaXFILkaWMPTaXh05WhL1Fvmo2HlpPNyRvkr9DbVXz
-         +BYHF9QejlfuaSherGs/mhghe8EgWFPiQq7LvwgAYKvvVU1HiBZt1P8AK+kDPmSgaR3s
-         J8d6SYc7+iMKjBfzWp1BL5jdlT3FMMj9xI2FrfBacaXNTTjgO7sGRzRVYfKgcef5QuLk
-         YUwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+fNIb96drh1xO0TilCLRu1LM7UoTRnZM7kYcybXZZVI=;
-        b=eDU3F0c/ADG/KhGrZM0YEmdj1HpAKFTABNkfwh3b/oOr7AwwUZQnwD9ZFckdAcC+jW
-         OlOicDyKb5RL/0Xedw+JliHdGRI/Irj4qt/OqxxxeMGmK2Wp2tDTQXWs/RO7kLpQNvVj
-         QEuexbmSr+4fIHRb7yp2JCE9k0XvrzbDJZ4QJg+3MrtensN1z5vpzY1PVWqLUj9S+J6b
-         ek/gSCmBzVxt0R+SNpLEqG5OLeV8WlEdnFNrQY9n8xR6iNWzLk51SPIIvyktMIE3g8ED
-         e6pO936urKVKqAB86p8MepINbsxnb6lrSvlsFhmMrRWVYK5ykoInyGze1yHcAfd4SwG8
-         jUHA==
-X-Gm-Message-State: APjAAAWoVzeqgNlf1BKJoHgpWxih5oBUrfkDFA9a7V2qo0Xu+lOchHLD
-        hqNiTvHL3nrPjSKJX9IQm2ltGIE1E+vUXp22J2orgQ==
-X-Google-Smtp-Source: APXvYqz5lGGoNSc7oCX8jbdYDhLkAc+nXbw5QReJDvgmckqyROQvK3k02ncSlqhZq74x/kqrfE+a5uo1U8kZBhaLV9U=
-X-Received: by 2002:a67:ebc2:: with SMTP id y2mr1119820vso.191.1571733691759;
- Tue, 22 Oct 2019 01:41:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
-In-Reply-To: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 22 Oct 2019 10:40:55 +0200
-Message-ID: <CAPDyKFoZEc-m7NMnaAa5bjtCSp4wyJqic3cLHk95xracoWcCUA@mail.gmail.com>
-Subject: Re: [RFC 0/6] mmc: Add clock scaling support for mmc driver
-To:     Ram Prakash Gupta <rampraka@codeaurora.org>
-Cc:     Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        cang@codeaurora.org, ppvk@codeaurora.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Tue, 22 Oct 2019 04:45:21 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:34128 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388485AbfJVIpV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:45:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 37CFAFB03;
+        Tue, 22 Oct 2019 10:45:17 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id J_7FrQl3FDaI; Tue, 22 Oct 2019 10:45:15 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 1D2F949BFC; Tue, 22 Oct 2019 10:45:15 +0200 (CEST)
+Date:   Tue, 22 Oct 2019 10:45:14 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        Arnd Bergmann <arnd@arndb.de>, Jonas Karlman <jonas@kwiboo.se>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v7 2/2] drm/bridge: Add NWL MIPI DSI host controller
+ support
+Message-ID: <20191022084514.GA30274@bogon.m.sigxcpu.org>
+References: <e0304ab9320cbbf3e63d78449e50975c036b2633.1571494140.git.agx@sigxcpu.org>
+ <201910211901.yB3b4mYu%lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201910211901.yB3b4mYu%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 21 Oct 2019 at 16:30, Ram Prakash Gupta <rampraka@codeaurora.org> wrote:
->
-> This change adds the use of devfreq based clock scaling to MMC.
-> This applicable for eMMC and SDCard.
-> For some workloads, such as video playback, it isn't necessary
-> for these cards to run at high speed. Running at lower
-> frequency, in such cases can still meet the deadlines for data
-> transfers.
->
-> Scaling down the clock frequency dynamically has power savings
-> not only because the bus is running at lower frequency but also
-> has an advantage of scaling down the system core voltage, if
-> supported. Provide an ondemand clock scaling support similar
-> to the cpufreq ondemand governor having two thresholds,
-> up_threshold and down_threshold to decide whether to increase
-> the frequency or scale it down respectively as per load.
+Hi,
+On Mon, Oct 21, 2019 at 07:11:12PM +0800, kbuild test robot wrote:
+> Hi "Guido,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.4-rc4 next-20191018]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see
+> https://stackoverflow.com/a/37406982]
 
-This sounds simple, but what the series is doing is far more
-complicated but scaling the bus clock, as it also re-negotiates the
-bus speed mode.
+The base for this series is next-20191018 where drm_panel_bridge_add()
+list it's second argument (89958b7cd9555a5d82556cc9a1f4c62fffda6f96).
 
-Each time the triggering point for scaling up/down is hit, then a
-series of commands needs to be sent to the card, including running the
-tuning procedure. The point is, for sure, this doesn't come for free,
-both from a latency point of view, but also from an energy cost point
-of view. So, whether this really improves the behaviour, seems like
-very use case sensitive, right!?
+Cheers,
+ -- Guido
 
-Overall, when it comes to use cases, we have very limited knowledge
-about them at the mmc block layer level. I think it should remain like
-that. If at any place at all, this information is better maintained by
-the generic block layer and potentially the configured I/O scheduler.
+> 
+> url:    https://github.com/0day-ci/linux/commits/Guido-G-nther/dt-bindings-display-bridge-Add-binding-for-NWL-mipi-dsi-host-controller/20191021-180825
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 7d194c2100ad2a6dded545887d02754948ca5241
+> config: mips-allmodconfig (attached as .config)
+> compiler: mips-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=mips 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/gpu/drm/bridge/nwl-dsi.c: In function 'nwl_dsi_host_attach':
+> >> drivers/gpu/drm/bridge/nwl-dsi.c:384:12: error: too few arguments to function 'drm_panel_bridge_add'
+>       bridge = drm_panel_bridge_add(panel);
+>                ^~~~~~~~~~~~~~~~~~~~
+>    In file included from include/drm/drm_crtc.h:44:0,
+>                     from include/drm/drm_atomic_helper.h:31,
+>                     from drivers/gpu/drm/bridge/nwl-dsi.c:24:
+>    include/drm/drm_bridge.h:432:20: note: declared here
+>     struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
+>                        ^~~~~~~~~~~~~~~~~~~~
+> 
+> vim +/drm_panel_bridge_add +384 drivers/gpu/drm/bridge/nwl-dsi.c
+> 
+>    358	
+>    359	static int nwl_dsi_host_attach(struct mipi_dsi_host *dsi_host,
+>    360				       struct mipi_dsi_device *device)
+>    361	{
+>    362		struct nwl_dsi *dsi = container_of(dsi_host, struct nwl_dsi, dsi_host);
+>    363		struct device *dev = dsi->dev;
+>    364		struct drm_bridge *bridge;
+>    365		struct drm_panel *panel;
+>    366		int ret;
+>    367	
+>    368		DRM_DEV_INFO(dev, "lanes=%u, format=0x%x flags=0x%lx\n", device->lanes,
+>    369			     device->format, device->mode_flags);
+>    370	
+>    371		if (device->lanes < 1 || device->lanes > 4)
+>    372			return -EINVAL;
+>    373	
+>    374		dsi->lanes = device->lanes;
+>    375		dsi->format = device->format;
+>    376		dsi->dsi_mode_flags = device->mode_flags;
+>    377	
+>    378		ret = drm_of_find_panel_or_bridge(dsi->dev->of_node, 1, 0, &panel,
+>    379						  &bridge);
+>    380		if (ret)
+>    381			return ret;
+>    382	
+>    383		if (panel) {
+>  > 384			bridge = drm_panel_bridge_add(panel);
+>    385			if (IS_ERR(bridge))
+>    386				return PTR_ERR(bridge);
+>    387		}
+>    388	
+>    389		dsi->panel_bridge = bridge;
+>    390		drm_bridge_add(&dsi->bridge);
+>    391	
+>    392		return 0;
+>    393	}
+>    394	
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-This brings me to a question about the tests you have you run. Can you
-share some information and data about that?
 
->
->
-> Ram Prakash Gupta (6):
->   mmc: core: Parse clk scaling dt entries
->   mmc: core: Add core scaling support in driver
->   mmc: core: Initialize clk scaling for mmc and SDCard
->   mmc: core: Add debugfs entries for scaling support
->   mmc: sdhci-msm: Add capability in platfrom host
->   dt-bindings: mmc: sdhci-msm: Add clk scaling dt parameters
->
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |  19 +
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-I noticed that the DT patch was put last in the series, but the
-parsing is implemented in the first patch. Please flip this around. If
-you want to implement DT parsing of new bindings, please make sure to
-discuss the new bindings first.
-
->  drivers/mmc/core/block.c                           |  19 +-
->  drivers/mmc/core/core.c                            | 777 +++++++++++++++++++++
->  drivers/mmc/core/core.h                            |  17 +
->  drivers/mmc/core/debugfs.c                         |  90 +++
->  drivers/mmc/core/host.c                            | 226 ++++++
->  drivers/mmc/core/mmc.c                             | 246 ++++++-
->  drivers/mmc/core/queue.c                           |   2 +
->  drivers/mmc/core/sd.c                              |  84 ++-
->  drivers/mmc/host/sdhci-msm.c                       |   2 +
->  include/linux/mmc/card.h                           |   7 +
->  include/linux/mmc/host.h                           |  66 ++
->  12 files changed, 1550 insertions(+), 5 deletions(-)
-
-This is a lot of new code in the mmc core, which I would then need to
-maintain, of course. I have to admit, I am a bit concerned about that,
-so you have to convince me that there are good reasons for me to apply
-this.
-
-As I stated above, I think the approach looks quite questionable in
-general. And even if you can share measurement, that it improves the
-behaviour, I suspect (without a deeper code review) that some of the
-code better belongs in common block device layer.
-
-Kind regards
-Uffe
