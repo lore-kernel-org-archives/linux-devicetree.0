@@ -2,79 +2,75 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D76CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24BECA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4770F214B2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BAC21920
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNj120IA"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Z1ji21Yf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388937AbfJVMNM (ORCPT
+        id S2388517AbfJVMNn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:13:12 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42464 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388106AbfJVMNM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 08:13:12 -0400
-Received: by mail-io1-f65.google.com with SMTP id i26so10760096iog.9;
-        Tue, 22 Oct 2019 05:13:11 -0700 (PDT)
+        Tue, 22 Oct 2019 08:13:43 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44764 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387888AbfJVMNn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 08:13:43 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 21so13908446otj.11
+        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 05:13:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=7VUSL4glh9tdmGltrbXAxLhst/cC64H17TVs7Wd2ISI=;
-        b=KNj120IAsn18ftYPNYtGAMO522hDC71q+lnhMtWOYXoXlDsQo9QgcVuidnJk/ml7tr
-         UbqrQwC1U8wazJ7pHfzxOF7LsixYPLXxRE9/JTcNA33V/m2jTWO+KAELTbrPE8q0D6HW
-         S9+0vi0V/9gTXRujRZeQ8kuvFFrKCsEWVB5YHsGdr//QG36RtI8w7Ivuc3u3oSfL7y0U
-         07cTguxrdcpKQNMzG+oFAzr+Ziun2e0ahAEXELyZvsQxszVck3Pxet4kl1tSkrZdOCHp
-         z0Jy+6K1Gkapib2IaHiK6EzZNdk0P8i9rV92PT0J1kYTE863bAcw/RHuDUMxThwvDmiy
-         imCQ==
+        bh=lTda5Ge0EByHNIbd5X5BYoVMZ38RqoZsUImPxrYPgzw=;
+        b=Z1ji21Yfvsjz2p8tLXV1U2tylHt5sdFNTvnDmHcShOIwiuyupj7RKWsz7GnuJ1wmZB
+         a4jNTxfUGF7c8Nqak3/5npU3IELIMIzJDl72f21NvPT/2nLR1GxpQMB5+y0L0Ywx0/YA
+         nwNnrPinZj9HatAvNI04lvuCZMRPJjo14h330nvsPLYiqZt6znd7ZNnoSt31YnCH7HCD
+         vQK2KNutR4qOSwM3S498G++nEMFxBsO+7jGYQViO2B9pYAHY8keqUhqRHonylQpBRifh
+         499L5Bs7+8ZW3hFneqJSpqEDCmT5oLblWQ34blXCQDmwPmEhbDOKhDABULRJ1kLchUrC
+         Pa/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7VUSL4glh9tdmGltrbXAxLhst/cC64H17TVs7Wd2ISI=;
-        b=AHDOiZeYzU4MPkOHoXOO0vH/+DIHujzqaI8diCJGXU4j0MsjLjd/pa4ycqUeNzKgeP
-         saHkRriQTVpqOcKobXdUI6nkDvuYLxDhKYaUSAI0hN9OSQX6iNQJZcyA/Hczcod19V5H
-         WmlbzSjGeQ16xOFnGq2c3M1NndvbeYW0sy8OGE+sN634XkJJcBZKBbLsClTZLs6V8TL4
-         jQwNwCT8y0vICEs0Njv6eOSGz7O6LYZQ/xi3UWHObOAKjDgGAQurWQDdAOvV76ra7+bX
-         SKYeTJ0jA5j7Xt8qxgHo4u09L/UphqL8v5Df99LBhsLqYy1iyis2S/52vV6kEPf8bOhH
-         O05Q==
-X-Gm-Message-State: APjAAAX+Il5atyqjZDHhNPeGO++AoQ1OJipAEPaaVpS/Ra6odzXPzqUa
-        b/XixEDpYwC93152KBqfa3IN1HceH6VHssd9rw0=
-X-Google-Smtp-Source: APXvYqz9BuIKcbppibeFWeJbwe4oRUtRoe+yhYAEZFYke6YfzSl3wycLo6ueyYsgQWQ8Is+1lpwo08JP+zHbKn3n89w=
-X-Received: by 2002:a02:92c9:: with SMTP id c9mr3507699jah.0.1571746391225;
- Tue, 22 Oct 2019 05:13:11 -0700 (PDT)
+        bh=lTda5Ge0EByHNIbd5X5BYoVMZ38RqoZsUImPxrYPgzw=;
+        b=cUqRMX6bn/KjTF3vzuZCZuip7TmEMyBVxoQ264iUVM4XXC+6Utix6a6fZALD+ULyf7
+         bkw3/uxdmay0k1PIVH1Zvzp23DLzmzZkL7Hr5UzDtgvrIxnNSjltuxVx/XafAHmeRAuW
+         7h11f/PxVuS0nNEp4/ASM7Y2Pge2BIzq07v/vXkQcrJcnT/jNqxsBZzThE7/XmIBQNAn
+         m7ANZRt09BHbGIp5lFv/TQarwbGdCxU4Qcb7aar4bQxArxl+H4ZjtT5+2QbgAwkDbLnj
+         dwUjrNspYk3aGuuPF43MmcYhjX9EJAStqQoWjrXkVHOxTQErVTRDIOQAZbAN+oMnS3gz
+         9ClQ==
+X-Gm-Message-State: APjAAAWyp4Pihjau54lmispP+IYWsQjKIao9g7UwCoZTJ/KB6SDnBOB/
+        C4SyuPrx3+B6qEzZ9hCeTsO5k+9ek92cFV9Y5Gm5+sodaDU=
+X-Google-Smtp-Source: APXvYqx8ckHmAQl3TNhvrytWx65vvrk83xrh73bSuCEmVamvYtkVmJR8tyNutZepz08l3tWBWYDS5rYy2nHZsr2u6cU=
+X-Received: by 2002:a9d:344a:: with SMTP id v68mr2534837otb.85.1571746421021;
+ Tue, 22 Oct 2019 05:13:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
- <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
- <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
- <20190909134033.s26eiurpat3iekse@pali> <20190909163543.GQ52127@atomide.com>
-In-Reply-To: <20190909163543.GQ52127@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 22 Oct 2019 07:13:00 -0500
-Message-ID: <CAHCN7xJjMNOLT5oPn8CArApM5b2ksPon8eALq=gUi0ZqoLjGHQ@mail.gmail.com>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
+ <CAMpxmJUrY9YK==6Mf5MoRTUDwmXJ6v5EM-VLXCNXJ8ZNK+xHyA@mail.gmail.com>
+ <CAAFQd5BEcE0m7Jg1ZnmrF+jwH6Yn8+vYqT1L2wc2zkZ5vRCRAg@mail.gmail.com>
+ <CAMpxmJU_Vws0oGf+GQCEbs-NHFCniO8c2CbXrKy9oEVC_KUhMQ@mail.gmail.com>
+ <CAAFQd5D=T+x7j+Lst8AQt0epLckPJv_bXtNGs3Dk=kbdbfw53Q@mail.gmail.com> <20191022111908.GC5554@sirena.co.uk>
+In-Reply-To: <20191022111908.GC5554@sirena.co.uk>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 22 Oct 2019 14:13:29 +0200
+Message-ID: <CAMpxmJUtYjF7L7W_OG6AP6CuLeW_1JPcgNxyBj201GJKfb+H9w@mail.gmail.com>
+Subject: Re: [PATCH v4] misc: eeprom: at24: support pm_runtime control
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Walmsley <paul@pwsan.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
+        linux-devicetree <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
@@ -82,47 +78,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 11:35 AM Tony Lindgren <tony@atomide.com> wrote:
+wt., 22 pa=C5=BA 2019 o 13:19 Mark Brown <broonie@kernel.org> napisa=C5=82(=
+a):
 >
-> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [190909 13:41]:
-> > On Monday 09 September 2019 08:37:09 Adam Ford wrote:
-> > > I applied this on 5.3 and it is working.  I assume the same is true i=
-n for-next.
+> On Tue, Oct 22, 2019 at 07:33:54PM +0900, Tomasz Figa wrote:
+> > On Tue, Oct 22, 2019 at 6:00 PM Bartosz Golaszewski
 >
-> Hmm I noticed I stopped getting RNG data after several rmmod modprobe
-> cycles, or several hd /dev/random reads. Anybody else seeing that?
+> > > > I can see that the core returns the dummy regulator if
+> > > > have_full_constraints() [1]. That is always true for DT systems, bu=
+t
+> > > > for others it's false by default, unless someone explicitly calls
+> > > > regulator_has_full_constraints() [2].
 >
-> > > Do you want to submit a formal patch?  I  can mark it as 'tested-by'
-> > > This really helps speed up the startup sequence on boards with sshd
-> > > because it delays for nearly 80 seconds waiting for entropy without
-> > > the hwrng.
-> >
-> > Hi! When applying a patch, could you please disable this rng for n900?
-> >
-> > In omap3-n900.dts for rng should be status =3D "disabled" (as Tony alre=
-ady
-> > wrote), similarly like for aes.
+> ACPI systems are also always marked as having full constraints, only
+> systems with board files will see this.
 >
-> Yeah I'll post a proper patch after -rc1.
-
-Tony,
-
-I am just following up on this.  Without the HWRNG there are some
-tools and daemons like sshd which wait a long time at startup.  The
-patch you sent really helps speed up the startup time in these cases.
-At least in my case, it shaves 80 seconds off by eliminating the
-delays.
-
-Do you think you'll have time to post a more formal patch?  If not, I
-can do it.  I just don't know which mailing list is the more
-appropriate.  I was able to verity your patch on a DM3730 and OMAP3530
-
-Thanks,
-
-adam
-
-
+> > > Not tested yet, but from the code it looks like it will then keep
+> > > returning EPROBE_DEFER which doesn't sound right really, especially
+> > > since we're printing an error message too. Shouldn't it be -ENODEV?
 >
-> Regards,
+> > That's an interesting finding. Liam, Mark, what's the proper way to
+> > bulk get optional regulators?
 >
-> Tony
+> The ambiguously named regulator_get_optional().  This should *only* be
+> used for regulators that may be physically absent in the system, other
+> regulators should use normal regulator_get().  It is vanishingly
+> unlikely that all the supplies for a device will be optional.
+
+I take it that this driver should also use regular regulator_bulk_get() the=
+n?
+
+I think the question about the return value of
+regulator_resolve_supply() still stands though: is it normal that it
+returns EPROBE_DEFER if it can't resolve the supply on systems without
+full_constraints? This will cause the driver to loop on probe
+deferral, right?
+
+Bart
