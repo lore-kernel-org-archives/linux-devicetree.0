@@ -4,242 +4,266 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E898ACA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 02:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A72CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 02:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4E12089E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 02:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4EF214B2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 02:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbfJVCZe (ORCPT
+        id S1730887AbfJVC0P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:25:34 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41047 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729573AbfJVCZd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 22:25:33 -0400
-X-UUID: caea0f03342d45e499b882d25fcff76c-20191022
-X-UUID: caea0f03342d45e499b882d25fcff76c-20191022
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 361787558; Tue, 22 Oct 2019 10:25:28 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 22 Oct 2019 10:25:25 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 22 Oct 2019 10:25:26 +0800
-Message-ID: <1571711126.561.2.camel@mtksdaap41>
-Subject: Re: [PATCH v4] misc: eeprom: at24: support pm_runtime control
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>, <devicetree@vger.kernel.org>
-Date:   Tue, 22 Oct 2019 10:25:26 +0800
-In-Reply-To: <CAAFQd5DuETr-N8efWYz7F-qrw1R-gL6fss2Ag1XezapojiakhQ@mail.gmail.com>
-References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
-         <CAAFQd5DuETr-N8efWYz7F-qrw1R-gL6fss2Ag1XezapojiakhQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 21 Oct 2019 22:26:15 -0400
+Received: from p3plsmtpa06-05.prod.phx3.secureserver.net ([173.201.192.106]:39427
+        "EHLO p3plsmtpa06-05.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730786AbfJVC0P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 22:26:15 -0400
+Received: from labundy.com ([136.49.227.119])
+        by :SMTPAUTH: with ESMTPSA
+        id MjsBiH1esLAS6MjsDiXjWF; Mon, 21 Oct 2019 19:26:14 -0700
+Date:   Mon, 21 Oct 2019 21:26:11 -0500
+From:   Jeff LaBundy <jeff@labundy.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
+        thierry.reding@gmail.com, jic23@kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH 4/8] hwmon: Add support for Azoteq IQS620AT temperature
+ sensor
+Message-ID: <20191022022611.GA2091@labundy.com>
+References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
+ <1571631083-4962-5-git-send-email-jeff@labundy.com>
+ <20191021153825.GA15359@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021153825.GA15359@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-CMAE-Envelope: MS4wfGJXJ7DKDqeffUp2x5+zWn/LaqyoEP3xy95w1Y78+RlMEddsI4mewX72fPuQnAgxR4Z7lgs/aCmFg1BckHEMss2fZ9C1uc8v9dmTBXoDJzclpMYQYbBq
+ 1jAtutivnffzYKh2uukMvwhcThkY8w5tQnThDTApdEoYkf+lh7pX8tAW4jj7c7UZYv7moIo66HstekJFcR23tTJqgev/YFgCDWTyU5ZC5klfppSWtd/2742j
+ 0BXveaq3EGWep0RQ+ZUsohAm79Ux2e9rDT2pS5dYngPWCMNXxx+jCg8oabYSSsylay7ioyaa/WHsx4ikTG4mQSu3sqhfP/iDS5lWsHsJxqdGFm8BmYTAJCmR
+ EoL58591QT7m2AXMbZz8swPyM/jBZeCjrIvy2rWpbg00FqL1U1a6Nrj/A7/dMbf396gGaNepb99PPz94xifqjSRSKjz0Vo+CUZi8tB4UBJqPgkPYnrZTp13u
+ Zm3WM2MGSCc3y53eSupeP4aDGEphBO2z0UPKjLwTXR7WLFJcNy9NpKC+XLfpvoUZTxDmOHXrTwB7x208/23o+AvJQQ9XmBU6sbJKXfkNLiJ1F/MhEl/j+/ib
+ C0SZEEf5/7UkbNsUouwLrSt1OiL7aox0rs9qb7FeIfYPKZFL7Oebmy48KAbLgf7zaByVKurK69/v/Nk9RlyAHMe+DeHCN6ohlBNm5fsznilSSctiV777zgFB
+ raGopmm02rQ=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2019-10-18 at 18:24 +0900, Tomasz Figa wrote:
-> Hi Bibby,
+Hi Guenter,
+
+Thank you for your prompt review.
+
+On Mon, Oct 21, 2019 at 08:38:25AM -0700, Guenter Roeck wrote:
+> On Sun, Oct 20, 2019 at 11:11:19PM -0500, Jeff LaBundy wrote:
+> > This patch adds support for the Azoteq IQS620AT temperature sensor,
+> > capable of reporting its absolute die temperature.
+> > 
+> > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
 > 
-> On Fri, Oct 18, 2019 at 5:26 PM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
-> >
-> > Although in the most platforms, the power of eeprom and i2c
-> > are alway on, some platforms disable the eeprom and i2c power
-> > in order to meet low power request.
-> > This patch add the pm_runtime ops to control power to support
-> > all platforms.
-> >
-> > Changes since v3:
-> >  - remove redundant calling function
-> >  - change SIMPLE_DEV_PM_OPS to SET_RUNTIME_PM_OPS
-> >  - change supply name
-> >
-> > Changes since v2:
-> >  - rebase onto v5.4-rc1
-> >  - pm_runtime_disable and regulator_bulk_disable at
-> >    err return in probe function
-> >
-> > Changes since v1:
-> >  - remove redundant code
-> >  - fixup coding style
-> >
-> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Seems to me this might be more feasible as iio driver.
+> Jonathan, what do you think ?
+> 
+
+Interestingly enough, this actually started as an iio driver; however the
+"When to Use" slide of [0] made me suspect that conventional devices with
+the temperature sensing element integrated on the die belong in hwmon.
+
+I then found the highly similar ad7314, which Jonathan himself appears to
+have converted from iio to hwmon. Therefore, I placed this where existing
+drivers seemed to match the most, especially since the temperature sensors
+in iio generally use IR or a thermocouple.
+
+That being said, I would be happy to move this into iio so long as Jonathan
+does not mind, as it would limit the blast radius of this patch series.
+
 > > ---
-> >  drivers/misc/eeprom/at24.c | 64 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 64 insertions(+)
-> >
-> > diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> > index 2cccd82a3106..68ced4f25916 100644
-> > --- a/drivers/misc/eeprom/at24.c
-> > +++ b/drivers/misc/eeprom/at24.c
-> > @@ -22,6 +22,7 @@
-> >  #include <linux/nvmem-provider.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/pm_runtime.h>
-> > +#include <linux/regulator/consumer.h>
-> >  #include <linux/gpio/consumer.h>
-> >
-> >  /* Address pointer is 16 bit. */
-> > @@ -67,6 +68,12 @@
-> >   * which won't work on pure SMBus systems.
-> >   */
-> >
-> > +static const char * const at24_supply_names[] = {
-> > +       "vcc", "i2c",
+> >  drivers/hwmon/Kconfig         | 12 +++++-
+> >  drivers/hwmon/Makefile        |  1 +
+> >  drivers/hwmon/iqs620at-temp.c | 96 +++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 108 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/hwmon/iqs620at-temp.c
+> > 
+> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> > index 13a6b4a..3e56be6 100644
+> > --- a/drivers/hwmon/Kconfig
+> > +++ b/drivers/hwmon/Kconfig
+> > @@ -385,6 +385,16 @@ config SENSORS_ATXP1
+> >  	  This driver can also be built as a module. If so, the module
+> >  	  will be called atxp1.
+> >  
+> > +config SENSORS_IQS620AT
+> > +	tristate "Azoteq IQS620AT temperature sensor"
+> > +	depends on MFD_IQS62X
+> > +	help
+> > +	  Say Y here if you want to build support for the Azoteq IQS620AT
+> > +	  temperature sensor.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called iqs620at-temp.
+> > +
+> >  config SENSORS_DS620
+> >  	tristate "Dallas Semiconductor DS620"
+> >  	depends on I2C
+> > @@ -1593,7 +1603,7 @@ config SENSORS_ADS7871
+> >  
+> >  config SENSORS_AMC6821
+> >  	tristate "Texas Instruments AMC6821"
+> > -	depends on I2C 
+> > +	depends on I2C
+> 
+> No unrelated changes, please, and most definitely no
+> unrelated whitespace changes.
+> 
+
+Sorry about that; it seems the original file had some trailing whitespace
+here and my editor cropped it automatically. Unfortunately I didn't catch
+it until after I sent out the series.
+
+> >  	help
+> >  	  If you say yes here you get support for the Texas Instruments
+> >  	  AMC6821 hardware monitoring chips.
+> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> > index 40c036e..2360add 100644
+> > --- a/drivers/hwmon/Makefile
+> > +++ b/drivers/hwmon/Makefile
+> > @@ -83,6 +83,7 @@ obj-$(CONFIG_SENSORS_IIO_HWMON) += iio_hwmon.o
+> >  obj-$(CONFIG_SENSORS_INA209)	+= ina209.o
+> >  obj-$(CONFIG_SENSORS_INA2XX)	+= ina2xx.o
+> >  obj-$(CONFIG_SENSORS_INA3221)	+= ina3221.o
+> > +obj-$(CONFIG_SENSORS_IQS620AT)	+= iqs620at-temp.o
+> >  obj-$(CONFIG_SENSORS_IT87)	+= it87.o
+> >  obj-$(CONFIG_SENSORS_JC42)	+= jc42.o
+> >  obj-$(CONFIG_SENSORS_K8TEMP)	+= k8temp.o
+> > diff --git a/drivers/hwmon/iqs620at-temp.c b/drivers/hwmon/iqs620at-temp.c
+> > new file mode 100644
+> > index 0000000..0af49b6
+> > --- /dev/null
+> > +++ b/drivers/hwmon/iqs620at-temp.c
+> > @@ -0,0 +1,96 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Azoteq IQS620AT Temperature Sensor
+> > + *
+> > + * Copyright (C) 2019
+> > + * Author: Jeff LaBundy <jeff@labundy.com>
+> > + */
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/hwmon.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/mfd/iqs62x.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +#define IQS620_TEMP_UI_OUT			0x1A
+> > +
+> > +static umode_t iqs620_temp_is_visible(const void *drvdata,
+> > +				      enum hwmon_sensor_types type,
+> > +				      u32 attr, int channel)
+> > +{
+> > +	if (type != hwmon_temp || attr != hwmon_temp_input)
+> > +		return 0;
+> > +
+> > +	return 0444;
+> > +}
+> > +
+> > +static int iqs620_temp_read(struct device *dev, enum hwmon_sensor_types type,
+> > +			    u32 attr, int channel, long *val)
+> > +{
+> > +	struct iqs62x_core *iqs62x = dev_get_drvdata(dev);
+> > +	int error;
+> > +	__le16 val_buf;
+> > +
+> > +	if (type != hwmon_temp || attr != hwmon_temp_input)
+> > +		return -EINVAL;
+> 
+> 			-EOPNOTSUPP
+
+Sure thing; will do.
+
+> > +
+> > +	error = regmap_raw_read(iqs62x->map, IQS620_TEMP_UI_OUT, &val_buf,
+> > +				sizeof(val_buf));
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	*val = (le16_to_cpu(val_buf) - 100) * 1000;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct hwmon_ops iqs620_temp_ops = {
+> > +	.is_visible = iqs620_temp_is_visible,
+> > +	.read = iqs620_temp_read,
 > > +};
 > > +
-> > +#define AT24_NUM_SUPPLIES ARRAY_SIZE(at24_supply_names)
+> > +static const struct hwmon_channel_info *iqs620_temp_channel_info[] = {
+> > +	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
+> > +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
+> > +	NULL
+> > +};
 > > +
-> >  struct at24_client {
-> >         struct i2c_client *client;
-> >         struct regmap *regmap;
-> > @@ -91,6 +98,8 @@ struct at24_data {
-> >
-> >         struct gpio_desc *wp_gpio;
-> >
-> > +       bool has_supplies;
-> > +       struct regulator_bulk_data supplies[AT24_NUM_SUPPLIES];
-> >         /*
-> >          * Some chips tie up multiple I2C addresses; dummy devices reserve
-> >          * them for us, and we'll use them with SMBus calls.
-> > @@ -662,6 +671,17 @@ static int at24_probe(struct i2c_client *client)
-> >         at24->client[0].client = client;
-> >         at24->client[0].regmap = regmap;
-> >
-> > +       regulator_bulk_set_supply_names(at24->supplies,
-> > +                                       at24_supply_names, AT24_NUM_SUPPLIES);
-> > +       err =  devm_regulator_bulk_get(&at24->client[0].client->dev,
-> > +                                      AT24_NUM_SUPPLIES, at24->supplies);
-> > +       if (err == -ENODEV)
-> > +               at24->has_supplies = NULL;
+> > +static const struct hwmon_chip_info iqs620_temp_chip_info = {
+> > +	.ops = &iqs620_temp_ops,
+> > +	.info = iqs620_temp_channel_info,
+> > +};
+> > +
+> > +static int iqs620_temp_probe(struct platform_device *pdev)
+> > +{
+> > +	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
+> > +	struct device *hdev;
+> > +	int error = 0;
+> > +
+> > +	hdev = devm_hwmon_device_register_with_info(&pdev->dev,
+> > +						    iqs62x->dev_desc->dev_name,
+> > +						    iqs62x,
+> > +						    &iqs620_temp_chip_info,
+> > +						    NULL);
+> > +	if (IS_ERR(hdev)) {
+> > +		error = PTR_ERR(hdev);
+> > +		dev_err(&pdev->dev, "Failed to register device: %d\n", error);
 > 
-> has_supplies is a bool, so the right value would be false.
+> Such an error would either be static, caused by bad attributes,
+> or a bad name, which is already logged, or a memory allocation
+> failure, which is also already logged. The error message does
+> therefore not add any value.
 > 
-> > +       else if (err == 0)
-> 
-> nit: One would typically use !err here as the condition.
-> 
-> > +               at24->has_supplies = !err;
-> 
-> In this branch, err is always 0, so !err is always true and we can
-> just directly assign true to the field.
 
-Got it.
-> 
-> > +       else
-> > +               return err;
-> > +
-> >         at24->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
-> >         if (IS_ERR(at24->wp_gpio))
-> >                 return PTR_ERR(at24->wp_gpio);
-> > @@ -701,6 +721,14 @@ static int at24_probe(struct i2c_client *client)
-> >
-> >         i2c_set_clientdata(client, at24);
-> >
-> > +       if (at24->has_supplies) {
-> > +               err = regulator_bulk_enable(AT24_NUM_SUPPLIES, at24->supplies);
-> > +               if (err) {
-> > +                       dev_err(dev, "Failed to enable power regulators\n");
-> > +                       return err;
-> > +               }
-> > +       }
-> > +
-> >         /* enable runtime pm */
-> >         pm_runtime_set_active(dev);
-> >         pm_runtime_enable(dev);
-> > @@ -713,6 +741,9 @@ static int at24_probe(struct i2c_client *client)
-> >         pm_runtime_idle(dev);
-> >         if (err) {
-> >                 pm_runtime_disable(dev);
-> > +               if (at24->has_supplies)
-> > +                       regulator_bulk_disable(AT24_NUM_SUPPLIES,
-> > +                                              at24->supplies);
-> >                 return -ENODEV;
-> >         }
-> >
-> > @@ -725,15 +756,48 @@ static int at24_probe(struct i2c_client *client)
-> >
-> >  static int at24_remove(struct i2c_client *client)
-> >  {
-> > +       struct at24_data *at24 = i2c_get_clientdata(client);
-> > +
-> >         pm_runtime_disable(&client->dev);
-> >         pm_runtime_set_suspended(&client->dev);
-> > +       if (at24->has_supplies)
-> > +               regulator_bulk_disable(AT24_NUM_SUPPLIES, at24->supplies);
-> 
-> It's a weird behavior, but pm_runtime_disable() doesn't guarantee that
-> the device is actually resumed after the call returns. See [1].
-> We should move the regulator disable before we call
-> pm_runtime_set_suspended() and add !pm_runtime_status_suspended() as
-> an additional condition to the if.
-> 
-OK, I will modify it in the next version.
+Sure thing; I'll remove the error message.
 
-> By the way, that behavior is actually contradicting other parts of the
-> runtime PM core. For example pm_runtime_active() returns true if
-> dev->power.disable_depth is non-zero, but as per the above, the device
-> could as well be suspended. Rafael, is this expected?
-> 
-> [1] https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/base/power/runtime.c#L1316
-> 
+> > +	}
 > > +
-> > +       return 0;
+> > +	return error;
 > > +}
 > > +
-> > +static int __maybe_unused at24_suspend(struct device *dev)
-> > +{
-> > +       struct i2c_client *client = to_i2c_client(dev);
-> > +       struct at24_data *at24 = i2c_get_clientdata(client);
+> > +static struct platform_driver iqs620_temp_platform_driver = {
+> > +	.driver = {
+> > +		.name	= IQS620_DRV_NAME_TEMP,
+> > +	},
+> > +	.probe		= iqs620_temp_probe,
+> > +};
+> > +module_platform_driver(iqs620_temp_platform_driver);
 > > +
-> > +       if (at24->has_supplies)
-> > +               return regulator_bulk_disable(AT24_NUM_SUPPLIES,
-> > +                                             at24->supplies);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int __maybe_unused at24_resume(struct device *dev)
-> > +{
-> > +       struct i2c_client *client = to_i2c_client(dev);
-> > +       struct at24_data *at24 = i2c_get_clientdata(client);
-> > +
-> > +       if (at24->has_supplies)
-> > +               return regulator_bulk_enable(AT24_NUM_SUPPLIES,
-> > +                                            at24->supplies);
-> >
-> >         return 0;
-> >  }
-> >
-> > +static const struct dev_pm_ops at24_pm_ops = {
-> > +       SET_RUNTIME_PM_OPS(at24_suspend, at24_resume, NULL)
+> > +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
+> > +MODULE_DESCRIPTION("Azoteq IQS620AT Temperature Sensor");
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_ALIAS("platform:" IQS620_DRV_NAME_TEMP);
+> > -- 
+> > 2.7.4
+> > 
 > 
-> Do we also need pm_runtime_force_suspend() and
-> pm_runtime_force_resume() as system sleep PM ops or it isn't possible
-> for the device to be runtime active when entering the system suspend?
-Yes, you're right, I will add those two function as system sleep PM ops.
 
-> 
-> Best regards,
-> Tomasz
+Kind regards,
+Jeff LaBundy
 
-
+[0]: https://elinux.org/images/b/ba/ELC_2017_-_Industrial_IO_and_You-_Nonsense_Hacks%21.pdf
