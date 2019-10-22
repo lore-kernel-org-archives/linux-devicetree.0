@@ -2,91 +2,180 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A47CCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDCDCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D9420684
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0007520684
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571764205;
+	bh=xTmSlesjwuvQB/ttZuJe9Q+nvlZ4oNZrThcEz9NFU1o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vpNgiNOWbtXv3eYD1dKemIGdzgbzY4hpfzyJQK4PpnByHPSX6u0TONfR92+4+JQSv
+	 AV92cZj5Fv7vkU8FAA2kOq+z9OfSUq1dhMD/f/8eeWGZsEFHflouFioYWUwIr+UOLw
+	 dqS50BltcmG5CU5Kh4H4RRiWeWqoqZvBIUDrXy9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbfJVRJH (ORCPT
+        id S1730701AbfJVRKB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:09:07 -0400
-Received: from mga03.intel.com ([134.134.136.65]:60073 "EHLO mga03.intel.com"
+        Tue, 22 Oct 2019 13:10:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730727AbfJVRJH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:09:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:09:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="200854750"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.143]) ([10.7.153.143])
-  by orsmga003.jf.intel.com with ESMTP; 22 Oct 2019 10:09:06 -0700
-Subject: Re: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
- timeout support
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Peter Rosin <peda@axentia.se>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
-        Cedric Le Goater <clg@kaod.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
- <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
- <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
- <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
- <20191022045655.GA975@kunai>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <5cd54c07-4e97-9ed9-1427-d46a7133ee53@linux.intel.com>
-Date:   Tue, 22 Oct 2019 10:09:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1731061AbfJVRKB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:10:01 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE2432084B;
+        Tue, 22 Oct 2019 17:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571764199;
+        bh=xTmSlesjwuvQB/ttZuJe9Q+nvlZ4oNZrThcEz9NFU1o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZwC1wWWJoVKj2W0uHHHyi/uRfU9F9ta+GpWogpLu6jfNlMy0J3u9X53qF2/KagU3/
+         mOQQtcJMVrYJBFO6UctQRbcaOgCQLeYpjQaC0H4XeDO4MqFwUGFf9Z7jpibSEoswoQ
+         X1FE7VMyRtOaudpsbMt9cVBULG4UsUQOvTd1KThE=
+Received: by mail-qk1-f173.google.com with SMTP id u22so16921744qkk.11;
+        Tue, 22 Oct 2019 10:09:59 -0700 (PDT)
+X-Gm-Message-State: APjAAAVHg/4/ansEh9TK/6nqYqbu4MQrrh8ZkvYZgn40louHn8VseQ7Z
+        lTXugJ5qm5nXvkEJsKPloMysmYtUrflX6TQJwA==
+X-Google-Smtp-Source: APXvYqwm/98XLMtQMVPE560nGDd/xxKOCJ+oWLPvKwkCs1ZvfHH0yztYXkoT3fICY0k3/UPNlTOQ8Ty6T5Y03ASJyAY=
+X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr4056323qkl.152.1571764198912;
+ Tue, 22 Oct 2019 10:09:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191022045655.GA975@kunai>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191014191256.12697-1-robh@kernel.org> <72f211ff-4d5a-933c-eb08-22916d8f50c7@arm.com>
+In-Reply-To: <72f211ff-4d5a-933c-eb08-22916d8f50c7@arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 22 Oct 2019 12:09:47 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+McnE1q6=5fpBm0FC4GONDDRNCqQafYzbsWfW6soAT9Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+McnE1q6=5fpBm0FC4GONDDRNCqQafYzbsWfW6soAT9Q@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: iommu: Convert Arm SMMUv3 to DT schema
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/21/2019 9:56 PM, Wolfram Sang wrote:
-> 
->> Changes I submitted in this patch set is for a different purpose which
->> is very Aspeed H/W specific, and actually it's a more serious timeout
->> setting indeed. If this H/W is used in multi-master environment, it
->> could meet a H/W hang that freezes itself in slave mode and it can't
->> escape from the state. To resolve the specific case, this H/W provides
->> self-recovery feature which monitors abnormal state of SDA, SCL and its
->> H/W state machine using the timeout setting to determine the escape
->> condition.
-> 
-> Thanks for the summary. I just wonder on what the timeout value depends.
-> Do we really need to put in DT or can we derive it e.g. from the
-> compatible value in the driver?
+On Tue, Oct 22, 2019 at 11:54 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 14/10/2019 20:12, Rob Herring wrote:
+> > Convert the Arm SMMv3 binding to the DT schema format.
+> >
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Robin Murphy <Robin.Murphy@arm.com>
+> > Cc: iommu@lists.linux-foundation.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > v2:
+> > - Refine interrupt definition based on Robin's comments
+> >
+> >   .../devicetree/bindings/iommu/arm,smmu-v3.txt |  77 --------------
+> >   .../bindings/iommu/arm,smmu-v3.yaml           | 100 ++++++++++++++++++
+> >   2 files changed, 100 insertions(+), 77 deletions(-)
+> >   delete mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
+> >   create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
 
-It could be derived from the bus timeout value by computing 'divide by
-x' roughly but it couldn't cover all use cases because this H/W timeout
-value would depends on each environment. There are many factors that
-can affect it such as bus speed, peer-master's bus driving
-characteristic, average transaction period on the bus and so on thus
-it may need fine adjustments through a DT setting, I think.
+[...]
 
-Thanks,
+> > +  interrupt-names:
+> > +    oneOf:
+> > +      - const: combined
+> > +        description:
+> > +          The combined interrupt is optional, and should only be provided if the
+> > +          hardware supports just a single, combined interrupt line.
+> > +          If provided, then the combined interrupt will be used in preference to
+> > +          any others.
+> > +      - items:
+> > +          - const: eventq     # Event Queue not empt
+> > +          - const: priq       # PRI Queue not empty
+> > +          - const: cmdq-sync  # CMD_SYNC complete
+> > +          - const: gerror     # Global Error activated
+>
+> Isn't this effectively redundant with the 4-item case of the version
+> below? If it's purely about the ordering, and we can't express "one or
+> more of any of:" without spelling out all 64 possible permutations, then
+> TBH I'd rather just settle on a single definition that can work for all
+> current cases and update the Fast Model DT if necessary.
 
-Jae
+We can allow any order if needed (such as already having lots of
+permutations), but in general the order is supposed to be defined.
+
+Updating the Fast Model DT seems okay to me. I'll shift the comments
+to the below entry and drop this one (and fix the example).
+
+> Otherwise, though, this looks like a fair starting point to me;
+>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+Thanks.
+
+>
+> > +      - minItems: 2
+> > +        maxItems: 4
+> > +        items:
+> > +          - const: eventq
+> > +          - const: gerror
+> > +          - const: priq
+> > +          - const: cmdq-sync
+> > +
+> > +  '#iommu-cells':
+> > +    const: 1
+> > +
+> > +  dma-coherent:
+> > +    description: |
+> > +      Present if page table walks made by the SMMU are cache coherent with the
+> > +      CPU.
+> > +
+> > +      NOTE: this only applies to the SMMU itself, not masters connected
+> > +      upstream of the SMMU.
+> > +
+> > +  msi-parent: true
+> > +
+> > +  hisilicon,broken-prefetch-cmd:
+> > +    type: boolean
+> > +    description: Avoid sending CMD_PREFETCH_* commands to the SMMU.
+> > +
+> > +  cavium,cn9900-broken-page1-regspace:
+> > +    type: boolean
+> > +    description:
+> > +      Replaces all page 1 offsets used for EVTQ_PROD/CONS, PRIQ_PROD/CONS
+> > +      register access with page 0 offsets. Set for Cavium ThunderX2 silicon that
+> > +      doesn't support SMMU page1 register space.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - '#iommu-cells'
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |+
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +    iommu@2b400000 {
+> > +            compatible = "arm,smmu-v3";
+> > +            reg = <0x2b400000 0x20000>;
+> > +            interrupts = <GIC_SPI 74 IRQ_TYPE_EDGE_RISING>,
+> > +                         <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>,
+> > +                         <GIC_SPI 77 IRQ_TYPE_EDGE_RISING>,
+> > +                         <GIC_SPI 79 IRQ_TYPE_EDGE_RISING>;
+> > +            interrupt-names = "eventq", "priq", "cmdq-sync", "gerror";
+> > +            dma-coherent;
+> > +            #iommu-cells = <1>;
+> > +            msi-parent = <&its 0xff0000>;
+> > +    };
+> >
