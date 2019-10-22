@@ -2,144 +2,162 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE73C47E49
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E610CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D4321A4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A70218AE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:12:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQ+WxYKF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="e4pUg7w5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387711AbfJVPHV (ORCPT
+        id S1731435AbfJVPME (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:07:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36162 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387575AbfJVPHV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 11:07:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 23so10130678pgk.3;
-        Tue, 22 Oct 2019 08:07:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MBSZDKa9xV4z2i+6bWwRnZbkMv2YTAGUd9qpSzUgq2U=;
-        b=WQ+WxYKFio8mTUCpO6BaWvQmsWiqrfsB0lI8zXv39O8TU0oC7SCbUw4sQIq7eSluEA
-         1IpSAHYd9iwge9Y/3NCIMz3u5ZFgJPA7WMqvfdzPkyjGduTPJF2O8XJ2dq4Eb5Vs9Edw
-         9q9b+HZUN0x2Krro/9Fu7s+I8+6fToM/aQ/UEXK3dH1++D8Sj9nw9BtsDDZevo7MxcDp
-         afYKftE9BcP3BWTeuoxxh2Fmv7TrP7E56X+34aT1lItYOTFMn9tVXMKaWs26Z2susd2z
-         1wPE8E07+KvjNYYW6ILPHa//TdXaEewM/R6/we0tJlvjwEmu14kmQW8Hh+j2lowl+IcL
-         Lqnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=MBSZDKa9xV4z2i+6bWwRnZbkMv2YTAGUd9qpSzUgq2U=;
-        b=KHr5klNky8FbTExZ6RWura13IrDInXufujyrxDb9RAOD8TB6zPWsYO9zyjukZMnWg9
-         9uzqf5QN2DlA1kYejk94Fi9TvtmrcqFdLpxMI+XhoAqUPxUz+S1lJPrH8F/idy/7xKHM
-         ajlz9grdlmVZjk9+Ic9Wk8hbyam4Z7HWgqkixc28SbKvNCpQMGYlksdPIlPPpxyNyYOe
-         Fdlbxnl01YsLozoCLPdOn2OJs9nTeWrezo3T0c/IFHSsH9sLaS+OyNWUq2EBky+ChGii
-         aD2jTaCxANoB3BBMWEjd71LIUTPntB+Eq4rS19dZcgDnh4KkoOOUCaiy3vRyRJN61xcD
-         PfZQ==
-X-Gm-Message-State: APjAAAUg2PhQW/kMgtGGaOug0b8wI2QxWBecOQZXTuOQNu+LxOJzBg5D
-        IhbNhKGdERYJGgnvQlSb7kJGRxnB
-X-Google-Smtp-Source: APXvYqy75eUT9bI6FNEw/o5RLnWQH65cRFB1+vCj27mJwt1pKpJF/sburXnk3wvexABvZ8JScA/4QQ==
-X-Received: by 2002:a17:90a:8d13:: with SMTP id c19mr5266993pjo.136.1571756840190;
-        Tue, 22 Oct 2019 08:07:20 -0700 (PDT)
-Received: from localhost.localdomain ([240f:34:212d:1:368e:e048:68f1:84e7])
-        by smtp.gmail.com with ESMTPSA id k66sm19882001pjb.11.2019.10.22.08.07.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 22 Oct 2019 08:07:19 -0700 (PDT)
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 22 Oct 2019 11:12:04 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:20834 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731217AbfJVPMB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 11:12:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571757118;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Pqwznfr/SwLHT8oLe0EESmmfaLFtEj2ZVFAktZnberQ=;
+        b=e4pUg7w5M4VeqeJD5qwE1M23omT0TREZXfY58Mwj3ZGxkYGzKfw4uyTEzPc2zWRP8T
+        zKBZZqHVK2Fat7DdhrN+FnU3oI0BndP30WKxAVy5RYYE3I6RPMqVMFDzwoi+kO9ApvR7
+        +BxUMcbmYSXRUVAoMfTQm0JKOpBP8m5EFm9Pjar1yHfGGFgRGCkEiIriomZVuDcbp7Je
+        1lQNIzwi4EBk8hCkAZRR6ciFg/5k7hjdt3NmpnMP87F33rIpM7W3m5VhtzEZJjQ/b2hC
+        bXl9tOiUDFmmH865qsR/hYpOSwB6QVgo92p361lZvhOetmJiiNvOJnCJCwINeMS22dEl
+        9l/w==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/zswDWtng=="
+X-RZG-CLASS-ID: mo00
+Received: from mbp-13-nikolaus.fritz.box
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id R0b2a8v9MFBmRcM
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 22 Oct 2019 17:11:48 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191022150202.GJ5610@atomide.com>
+Date:   Tue, 22 Oct 2019 17:11:48 +0200
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 2/2] leds: meter: add leds-meter binding
-Date:   Wed, 23 Oct 2019 00:06:52 +0900
-Message-Id: <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571756812-19005-1-git-send-email-akinobu.mita@gmail.com>
-References: <1571756812-19005-1-git-send-email-akinobu.mita@gmail.com>
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CC62CE92-28DF-406E-B61C-22F8F341AAFB@goldelico.com>
+References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com> <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com> <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com> <20191021172557.GB5610@atomide.com> <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com> <20191022150202.GJ5610@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT binding for leds-meter.
+Hi Tony,
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
- .../devicetree/bindings/leds/leds-meter.yaml       | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.yaml
+> Am 22.10.2019 um 17:02 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [191021 18:08]:
+>>=20
+>>> Am 21.10.2019 um 19:25 schrieb Tony Lindgren <tony@atomide.com>:
+>>>=20
+>>> * H. Nikolaus Schaller <hns@goldelico.com> [191021 15:46]:
+>>>>> Am 21.10.2019 um 17:07 schrieb Rob Herring <robh+dt@kernel.org>:
+>>>>> On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>>>>> +Optional properties:
+>>>>>> +- timer:       the timer to be used by the driver.
+>>>>>=20
+>>>>> Needs a better description and vendor prefix at least.
+>>>>=20
+>>>> I am not yet sure if it is vendor specific or if all
+>>>> SGX implementations need some timer.
+>>>>=20
+>>>>>=20
+>>>>> Why is this needed rather than using the OS's timers?
+>>>>=20
+>>>> Because nobody understands the current (out of tree and
+>>>> planned for staging) driver well enough what the timer
+>>>> is doing. It is currently hard coded that some omap refer
+>>>> to timer7 and others use timer11.
+>>>=20
+>>> Just configure it in the driver based on the compatible
+>>> value to keep it out of the dts. It's best to stick to
+>>> standard bindings.
+>>=20
+>> IMHO leads to ugly code... Since the timer is not part of
+>> the SGX IPR module but one of the OMAP timers it is sort
+>> of hardware connection that can be chosen a little arbitrarily.
+>>=20
+>> This is the main reason why I think adding it to a device tree
+>> source so that a board that really requires to use a timer
+>> for a different purpose, can reassign it. This is not possible
+>> if we hard-code that into the driver by scanning for
+>> compatible. In that case the driver must check board compatible
+>> names...
+>>=20
+>> But if we gain a better understanding of its role in the driver
+>> (does it really need a dedicated timer and for what and which
+>> properties the timer must have) we can probably replace it.
+>=20
+> Well how about just leave out the timer from the binding
+> for now, and just carry a patch for it until it is known
+> if/why it's really needed?
+>=20
+> If it's needed, yeah I agree a timer property should be
+> used.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-new file mode 100644
-index 0000000..d5dfa261
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic LED level meter
-+
-+maintainers:
-+  - Akinobu Mita <akinobu.mita@gmail.com>
-+
-+description:
-+  Generic LED level meter consists of multiple LED devices by different drivers.
-+
-+properties:
-+  compatible:
-+    const: meter-leds
-+
-+  leds:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    minItems: 1
-+    description: List of phandles to LED node that are members of a level meter.
-+
-+  brightness-weights:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 1
-+    description: Each integer represents a contribution ratio within a level
-+      meter.
-+
-+required:
-+ - compatible
-+ - leds
-+
-+examples:
-+  - |
-+    leds {
-+        compatible = "meter-leds";
-+        leds = <&led0>, <&led1>, <&led2>, <&led3>;
-+        brightness-weights = <3 1 1 1>;
-+    };
-+
-+...
--- 
-2.7.4
+Ok, fine. I'll split the bindings into a patch without and
+keep a private patch to add this for our development tree.
+Then we either need it or drop it.
+
+>=20
+>>>>>> +- img,cores:   number of cores. Defaults to <1>.
+>>>>>=20
+>>>>> Not discoverable?
+>>>>=20
+>>>> Not sure if it is. This is probably available in undocumented
+>>>> registers of the sgx.
+>>>=20
+>>> This too, and whatever non-standrd other properities
+>>> you might have.
+>>=20
+>> Here it is a feature of the SGX IPR of the SoC, i.e.
+>> describes that the hardware has one or two cores.
+>=20
+> Here you can have a standard dts binding by putting this
+> into driver struct of_device_id match .data. Then when
+> somebody figures out how to read that from the hardware,
+> it can be just dropped.
+
+Hm. How should that work? Some SoC have the sgx544 as single
+core and others as dual core. This imho does not fit into
+the "img,sgx544-$revision" scheme which could be matched to.
+
+But maybe we do it the same as with the timer for the moment,
+i.e. keep it in some unpublished patch set.
+
+At the moment I have more problems understanding how the yaml
+thing works. I understand and fully support the overall goal,
+but it is quite difficult to get a start here. And there do not
+seem to be tools or scripts to help converting from old style
+text format (even if not perfect, this would be helpful) and
+I have no yaml editor that helps keeping the indentation
+correct. So this slows down a v2 a little bit.
+
+BR and thanks,
+Nikolaus
 
