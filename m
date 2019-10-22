@@ -2,123 +2,146 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C76C47E49
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 03:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F53CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 03:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9F82173B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 03:22:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkDtJy+o"
+	by mail.kernel.org (Postfix) with ESMTP id C440D21783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 03:42:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571715747;
+	bh=Co3JhqRHABlYSAEd0JeFkgSLwV0P0FKoYxiM594GFf0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=gLrVVAkpevs7ORjs8CyTzXDjvVgRFhbEH6t5yq1QyQ1f5i+2xt3/4qxnRaVgUtv+Y
+	 7LkQzHfC0fTxrOxl2I/xUAhSmsAVeOhfovM77xcxoBJLfhst04jD4BbIFRwBlIS6wB
+	 9cOuL7l8CXGmeARFm2+QpAeMG0zH9krY095hVNts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387473AbfJVDWt (ORCPT
+        id S1730460AbfJVDm1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 23:22:49 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36056 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730156AbfJVDWs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 23:22:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id j11so7637021plk.3;
-        Mon, 21 Oct 2019 20:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ktjQEDZTM5vr66tIybOMYDqM0GssdJmiaPiXVHKGvHE=;
-        b=dkDtJy+ogm/ooMKxFR+W1KnGqlR6ZmXhXUvZMmGhSiPp22uLhtTpfsZ5WuY1baFp9a
-         LgcBEzBSZeCluGunH6Ri0c1ndwMuaiT3to2dTPA0gqOEe6ru4ZqnUxVxJohzkbqogee9
-         OlvtKoXZaz227YcEu3MpSTuOyFG70N+YFos5czdE69QNSXhwyFmGoTH1kEJI98U/Mn1F
-         zJReNgGXEjHCQ0iLj2MJYcTQJhUVbn3gYds/t2j1/eZVOdkNpLOU9D+kkuCypMQu546d
-         dL7qGYqRKigEhMbAwQxdUw+9a7KrUov23d9GAAabjlzcFrLijOOQucDzY8NIHb/30ZMP
-         oQ/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ktjQEDZTM5vr66tIybOMYDqM0GssdJmiaPiXVHKGvHE=;
-        b=ZDchsapbSU3h4RNfovgX6UujYdGZXhlOggD883Db4I1dMHhTJR0k8E0Ict+BMJVhat
-         nnry6A2Cl0D1d34pD9orVVz2ZoPD7wXvCdJTVwJasvRoi6Ms4+kypbkQHrFoUJUjdmqm
-         xiS5JWjCDYF3qA2A++53VrM+8J0nihsk6N9onqQFmk9QQao6lqGIRvuBb8rwl2dM/c5A
-         wld9L9QnwNRNOkCAuWteL4djFet/qHmsYd2gP6iEwFb2q8kKOD8zY9BkNWbsJIi0Qr1Z
-         UDe0kZRdEYyaiUQiUgjjP8xJ9QecRYhAnF8IZuTdbKbcjUo6NSQHg4UnQanb4oQ3q6CH
-         vT3Q==
-X-Gm-Message-State: APjAAAUDafPYqWlbuuBxBW5nlBwRxlJ0cb9NyPmuJQeKzRnUoxKxoVtT
-        ZCjAvKrzRvQodEjqt6URVlvNHqFr
-X-Google-Smtp-Source: APXvYqxiL+g5UerW/p2FC+aAarTSUIn7gq/OzWK07PYqQH+0AutS9s21wDLktL4nfAIRMVo0ugp2ww==
-X-Received: by 2002:a17:902:1:: with SMTP id 1mr948164pla.338.1571714567878;
-        Mon, 21 Oct 2019 20:22:47 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e17sm591942pgg.5.2019.10.21.20.22.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 20:22:46 -0700 (PDT)
-Subject: Re: [PATCH 4/8] hwmon: Add support for Azoteq IQS620AT temperature
- sensor
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
-        thierry.reding@gmail.com, jic23@kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
- <1571631083-4962-5-git-send-email-jeff@labundy.com>
- <20191021153825.GA15359@roeck-us.net> <20191022022611.GA2091@labundy.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <f9610e3d-d923-1ffe-233f-e94cace41f64@roeck-us.net>
-Date:   Mon, 21 Oct 2019 20:22:44 -0700
+        Mon, 21 Oct 2019 23:42:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730370AbfJVDm0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Oct 2019 23:42:26 -0400
+Received: from [192.168.1.27] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F45E2086D;
+        Tue, 22 Oct 2019 03:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571715745;
+        bh=Co3JhqRHABlYSAEd0JeFkgSLwV0P0FKoYxiM594GFf0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=uO5jgiAkPVO+klwmrabb33n9Nf0ZVlk1115MeHHzGI9gxGH2vWJHoXbGEcxB0Pfag
+         Ce/bC40FDiNAhL0DEfQbcl16jFLuU1YmL1EKUWDUmOCHAksYdEn1Dl7lBQC+/0te1I
+         OJLkCoXEXXkPXZXb/qkuzoDCgODRSJM0FstFeTjA=
+Subject: Re: [PATCHv2] arm64: dts: agilex: add QSPI support for Intel Agilex
+To:     Ley Foon Tan <ley.foon.tan@intel.com>,
+        "Ooi, Joyce" <joyce.ooi@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ong Hean Loong <hean.loong.ong@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>
+References: <1571218846-12306-1-git-send-email-joyce.ooi@intel.com>
+ <1571360401.2504.3.camel@intel.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1a497a81-da4c-973b-3bfe-4d676e4a3715@kernel.org>
+Date:   Mon, 21 Oct 2019 22:42:23 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191022022611.GA2091@labundy.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1571360401.2504.3.camel@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/21/19 7:26 PM, Jeff LaBundy wrote:
-> Hi Guenter,
-> 
-> Thank you for your prompt review.
-> 
-> On Mon, Oct 21, 2019 at 08:38:25AM -0700, Guenter Roeck wrote:
->> On Sun, Oct 20, 2019 at 11:11:19PM -0500, Jeff LaBundy wrote:
->>> This patch adds support for the Azoteq IQS620AT temperature sensor,
->>> capable of reporting its absolute die temperature.
->>>
->>> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+
+
+On 10/17/19 8:00 PM, Ley Foon Tan wrote:
+> On Wed, 2019-10-16 at 02:40 -0700, Ooi, Joyce wrote:
+>> This patch adds QSPI flash interface in device tree for Intel Agilex
 >>
->> Seems to me this might be more feasible as iio driver.
->> Jonathan, what do you think ?
+>> Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
+>> ---
+>> v2: update the qspi_rootfs partition size
+>> ---
+>>  arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts | 35
+>> ++++++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
 >>
-> 
-> Interestingly enough, this actually started as an iio driver; however the
-> "When to Use" slide of [0] made me suspect that conventional devices with
-> the temperature sensing element integrated on the die belong in hwmon.
-> 
-> I then found the highly similar ad7314, which Jonathan himself appears to
-> have converted from iio to hwmon. Therefore, I placed this where existing
-> drivers seemed to match the most, especially since the temperature sensors
-> in iio generally use IR or a thermocouple.
-> 
-> That being said, I would be happy to move this into iio so long as Jonathan
-> does not mind, as it would limit the blast radius of this patch series.
-> 
+>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+>> b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+>> index 7814a9e..8de8118 100644
+>> --- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+>> @@ -73,3 +73,38 @@
+>>  &watchdog0 {
+>>  	status = "okay";
+>>  };
+>> +
+>> +&qspi {
+>> +	flash@0 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		compatible = "mt25qu02g";
+>> +		reg = <0>;
+>> +		spi-max-frequency = <50000000>;
+> QSPI can support up to 100MHz.
 
-I don't recall why the ad7314 driver was moved. With a conversion time of 40uS
-it is most definitely not a typical use case for a hwmon sensor.
+I've updated the patch accordingly.
 
-Anyway, not worth arguing about. Just don't complain later. There is an
-iio->hwmon bridge, but no hwmon->iio bridge, so the decision does have some
-impact. Specifically, userspace will have to implement both hwmon and iio
-access to handle the chip.
+Dinh
 
-Guenter
+
