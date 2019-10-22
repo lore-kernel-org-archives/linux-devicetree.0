@@ -2,124 +2,123 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FE8CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF8DCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309A220700
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE3E20700
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571756634;
+	bh=rmpwQCjfGuqLDmqMSNQ8zZsMTW/7BEIs2k2WdOE+VD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wmAVP4rwZQlRjXyOFlIYlxGO/6VSj8WDlDejZ0R0JEFNcBGriTdJsVkAXQs/SVPjq
+	 VzUY8b6fE5B+Nao3uz/LPE+RBQob+UQuXOWFDj9IqRmT32GXW3zATTrX5dK4MpnKgn
+	 BZ39hRI5fJny/aH5ttjMsYp1opM3oFpi1oxMcbuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731549AbfJVPCH (ORCPT
+        id S1727851AbfJVPDy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:02:07 -0400
-Received: from muru.com ([72.249.23.125]:38870 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727152AbfJVPCH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:02:07 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 51D4180FA;
-        Tue, 22 Oct 2019 15:02:40 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 08:02:02 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Tue, 22 Oct 2019 11:03:54 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44082 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfJVPDx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 11:03:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RmIdZzkMlhT4XIZZALZZtiYeWB4cN5wVHBIJe3nZc3s=; b=CbPOtXprnRODc2crZ2YG669z+
+        N9F+6veJtoCzxuqP1cvJImzecTk+fMk39UW8bN8nFhvVr726A7cy0lmUd9AyUG79P3TkdlAoRYXU2
+        8/zobJ6IeCJInQcGNcC1KjJB8PeCG7w94nhsLLVI1V0+8obMuOeftzD2JpD+viyy6tJlM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iMvhL-0006rk-Qc; Tue, 22 Oct 2019 15:03:47 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 029B42743259; Tue, 22 Oct 2019 16:03:46 +0100 (BST)
+Date:   Tue, 22 Oct 2019 16:03:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
-Message-ID: <20191022150202.GJ5610@atomide.com>
-References: <cover.1571424390.git.hns@goldelico.com>
- <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
- <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com>
- <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com>
- <20191021172557.GB5610@atomide.com>
- <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
+        linux-devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4] misc: eeprom: at24: support pm_runtime control
+Message-ID: <20191022150346.GF5554@sirena.co.uk>
+References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
+ <CAMpxmJUrY9YK==6Mf5MoRTUDwmXJ6v5EM-VLXCNXJ8ZNK+xHyA@mail.gmail.com>
+ <CAAFQd5BEcE0m7Jg1ZnmrF+jwH6Yn8+vYqT1L2wc2zkZ5vRCRAg@mail.gmail.com>
+ <CAMpxmJU_Vws0oGf+GQCEbs-NHFCniO8c2CbXrKy9oEVC_KUhMQ@mail.gmail.com>
+ <CAAFQd5D=T+x7j+Lst8AQt0epLckPJv_bXtNGs3Dk=kbdbfw53Q@mail.gmail.com>
+ <20191022111908.GC5554@sirena.co.uk>
+ <CAMpxmJUtYjF7L7W_OG6AP6CuLeW_1JPcgNxyBj201GJKfb+H9w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Zi0sgQQBxRFxMTsj"
 Content-Disposition: inline
-In-Reply-To: <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAMpxmJUtYjF7L7W_OG6AP6CuLeW_1JPcgNxyBj201GJKfb+H9w@mail.gmail.com>
+X-Cookie: Whip it, whip it good!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191021 18:08]:
-> 
-> > Am 21.10.2019 um 19:25 schrieb Tony Lindgren <tony@atomide.com>:
-> > 
-> > * H. Nikolaus Schaller <hns@goldelico.com> [191021 15:46]:
-> >>> Am 21.10.2019 um 17:07 schrieb Rob Herring <robh+dt@kernel.org>:
-> >>> On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >>>> +Optional properties:
-> >>>> +- timer:       the timer to be used by the driver.
-> >>> 
-> >>> Needs a better description and vendor prefix at least.
-> >> 
-> >> I am not yet sure if it is vendor specific or if all
-> >> SGX implementations need some timer.
-> >> 
-> >>> 
-> >>> Why is this needed rather than using the OS's timers?
-> >> 
-> >> Because nobody understands the current (out of tree and
-> >> planned for staging) driver well enough what the timer
-> >> is doing. It is currently hard coded that some omap refer
-> >> to timer7 and others use timer11.
-> > 
-> > Just configure it in the driver based on the compatible
-> > value to keep it out of the dts. It's best to stick to
-> > standard bindings.
-> 
-> IMHO leads to ugly code... Since the timer is not part of
-> the SGX IPR module but one of the OMAP timers it is sort
-> of hardware connection that can be chosen a little arbitrarily.
-> 
-> This is the main reason why I think adding it to a device tree
-> source so that a board that really requires to use a timer
-> for a different purpose, can reassign it. This is not possible
-> if we hard-code that into the driver by scanning for
-> compatible. In that case the driver must check board compatible
-> names...
-> 
-> But if we gain a better understanding of its role in the driver
-> (does it really need a dedicated timer and for what and which
-> properties the timer must have) we can probably replace it.
 
-Well how about just leave out the timer from the binding
-for now, and just carry a patch for it until it is known
-if/why it's really needed?
+--Zi0sgQQBxRFxMTsj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If it's needed, yeah I agree a timer property should be
-used.
+On Tue, Oct 22, 2019 at 02:13:29PM +0200, Bartosz Golaszewski wrote:
+> wt., 22 pa=C5=BA 2019 o 13:19 Mark Brown <broonie@kernel.org> napisa=C5=
+=82(a):
 
-> >>>> +- img,cores:   number of cores. Defaults to <1>.
-> >>> 
-> >>> Not discoverable?
-> >> 
-> >> Not sure if it is. This is probably available in undocumented
-> >> registers of the sgx.
-> > 
-> > This too, and whatever non-standrd other properities
-> > you might have.
-> 
-> Here it is a feature of the SGX IPR of the SoC, i.e.
-> describes that the hardware has one or two cores.
+> > The ambiguously named regulator_get_optional().  This should *only* be
+> > used for regulators that may be physically absent in the system, other
+> > regulators should use normal regulator_get().  It is vanishingly
+> > unlikely that all the supplies for a device will be optional.
 
-Here you can have a standard dts binding by putting this
-into driver struct of_device_id match .data. Then when
-somebody figures out how to read that from the hardware,
-it can be just dropped.
+> I take it that this driver should also use regular regulator_bulk_get() t=
+hen?
 
-Regards,
+It's really up to whoever maintains the driver but I'd recommend it
+since it tends to be easier.
 
-Tony
+> I think the question about the return value of
+> regulator_resolve_supply() still stands though: is it normal that it
+> returns EPROBE_DEFER if it can't resolve the supply on systems without
+> full_constraints? This will cause the driver to loop on probe
+> deferral, right?
+
+Yes, that's right.  The idea is that anything using regulators will call
+that once it's finished setting up constraints, if you're not using
+regulators at all you should compile out the API entirely.
+
+--Zi0sgQQBxRFxMTsj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2vGlIACgkQJNaLcl1U
+h9BSugf9GL1Zv61ZSplUSbs5M8h3CYM/EfV5MBdouqJ7QLGNTmLpLfB8etUMgmoI
+1Fs4m45SEFdmURyu3kM8LtTZ+FIRg2ogGl1L4YxoCpQh9crlQydPV+UwwTVe+u+E
+eDo1x26RBf/wG4z1NT01m+V2dH6wtYQ0U0/hD/m2pq1SJP/GGQjhdTBr6eLNOelN
+gTj+LKhEC1nBa/yCfpYW5/3QFfg6RH+9YikhL8ZJMVMREuQ80R3pyk9MJJC7hckC
+ArgpkaHd5AUqOu1rgCck3a73CVyf5FTP0kNn5Tvi7bDYD3R86mUTPzFQSHoIlbY3
+ES6VFJ3VNlF/DQy1aWyP+RLuWlfgqg==
+=iRfU
+-----END PGP SIGNATURE-----
+
+--Zi0sgQQBxRFxMTsj--
