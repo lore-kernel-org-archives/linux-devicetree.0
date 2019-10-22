@@ -2,186 +2,91 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA04CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A47CCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DEA21872
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Sacs5uUs"
+	by mail.kernel.org (Postfix) with ESMTP id 20D9420684
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732346AbfJVRBS (ORCPT
+        id S1731906AbfJVRJH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:01:18 -0400
-Received: from mail-eopbgr720065.outbound.protection.outlook.com ([40.107.72.65]:65312
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730768AbfJVRBR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:01:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V8XcNa+yjyt1MqU8sO4RME5s6YvHBd5mMmJGsWyslk6Zd+GUuYXxUsgm/H5PIWEqrKfSjcjDaiEgP8ThOy05k+wRWU8SUgLklgTAu+R6vQGMivQnVScoBF4VXaIJbNGSLF4oNsVI5dvMCcTzhcvuqFv6fj3vbS8+jBJNPDTmyskSAX8rzympsKCxsxTjrgyutPW0S2amPYjBv2HkyudpBC6iUStrwYoA3FT0ILVK7mPIo+pbsXlM+W8QpTI6REtd8XKqGOsNU+pbfjvmKWyQ5nVila6jUHrS/AqSbIo8dCAyMXXCoYogEh8uzfXEm1gIukCx9sfTxAzZIr1Ly2qbzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WU76ojE5cyfLDJ4NzqiIRVsIPhl67djomZGnU4Ca31w=;
- b=OMMLPvE3MChqrc8Gz7ZSv50LKYuEDR0+WYGAIeuFBU3aE5fegjTsfayL6rcQXE5gF95yzrdpF0No2UJ/txye4/lxe7ByFhgsgDr+YCbeHANsqQ/Rcirg8Tyigv8+B4g9fWTtQMM5//MGmOgq0TnCnIxmzk7tg9n1VEPd3+2edPpNB4tVmhGhstK7+gHkKj70l0TO3ReJEOmsFlTuNNduFIbNpimxS40T1zVKd/MNHhjINuhJuHM4sgq8rj4nfw7m2hn+AKZgxX+CkjaANE+hcCriFUcdSDUlNGWrJ6dUQ6MvZ/vGnZ4XDLh/SzUcAvo1yczRl1vi4gVNgQn9n6vJSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WU76ojE5cyfLDJ4NzqiIRVsIPhl67djomZGnU4Ca31w=;
- b=Sacs5uUs9cuRw21FntbXSwRqM6NOzsGN42dgxkxRwalzGoWHs5ZBVR/IEllFZ8MZKsNvQ6Z1nqPNlMFxSHA6Eez4aKYUkhSt7pcB8EKwzxcNE7XxIHSa1uRFrTHI/OpU6FepoxwhGdZrwiE05xpXEvUFW4OwYjByRmTldqrvz7g=
-Received: from BN7PR02CA0007.namprd02.prod.outlook.com (2603:10b6:408:20::20)
- by DM6PR02MB5354.namprd02.prod.outlook.com (2603:10b6:5:47::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.24; Tue, 22 Oct
- 2019 17:00:43 +0000
-Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::200) by BN7PR02CA0007.outlook.office365.com
- (2603:10b6:408:20::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.16 via Frontend
- Transport; Tue, 22 Oct 2019 17:00:43 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
- via Frontend Transport; Tue, 22 Oct 2019 17:00:43 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iMxWU-0006Ap-Ea; Tue, 22 Oct 2019 10:00:42 -0700
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iMxWP-0005GT-1M; Tue, 22 Oct 2019 10:00:37 -0700
-Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9MH0XNG022072;
-        Tue, 22 Oct 2019 10:00:33 -0700
-Received: from [10.140.184.180] (helo=ubuntu)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@ubuntu>)
-        id 1iMxWK-0005B3-Pg; Tue, 22 Oct 2019 10:00:33 -0700
-Received: by ubuntu (Postfix, from userid 13245)
-        id DA455101132; Tue, 22 Oct 2019 22:30:30 +0530 (IST)
-From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-To:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        dan.j.williams@intel.com, michal.simek@xilinx.com,
-        anirudha.sarangi@xilinx.com, nick.graumann@gmail.com,
-        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
-        mcgrof@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH -next 5/6] dmaengine: xilinx_dma: Extend dma_config struct to store irq routine handle
-Date:   Tue, 22 Oct 2019 22:30:21 +0530
-Message-Id: <1571763622-29281-6-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-References: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--5.725-7.0-31-1
-X-imss-scan-details: No--5.725-7.0-31-1;No--5.725-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(189003)(199004)(476003)(2616005)(446003)(103686004)(50226002)(478600001)(81156014)(8936002)(81166006)(8676002)(356004)(6666004)(70206006)(70586007)(126002)(486006)(50466002)(11346002)(186003)(5660300002)(14444005)(26005)(336012)(426003)(47776003)(76176011)(6266002)(305945005)(7416002)(107886003)(4326008)(36756003)(106002)(2906002)(48376002)(16586007)(42186006)(316002)(51416003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5354;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        Tue, 22 Oct 2019 13:09:07 -0400
+Received: from mga03.intel.com ([134.134.136.65]:60073 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730727AbfJVRJH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:09:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:09:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
+   d="scan'208";a="200854750"
+Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.143]) ([10.7.153.143])
+  by orsmga003.jf.intel.com with ESMTP; 22 Oct 2019 10:09:06 -0700
+Subject: Re: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
+ timeout support
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Peter Rosin <peda@axentia.se>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
+        Cedric Le Goater <clg@kaod.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
+ <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
+ <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
+ <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
+ <20191022045655.GA975@kunai>
+From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Message-ID: <5cd54c07-4e97-9ed9-1427-d46a7133ee53@linux.intel.com>
+Date:   Tue, 22 Oct 2019 10:09:06 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 63cdd267-7f3f-412b-2891-08d757115ff0
-X-MS-TrafficTypeDiagnostic: DM6PR02MB5354:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB53548A4BD99512C0389FBDAAC7680@DM6PR02MB5354.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 01986AE76B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UD9A4z2kc1lQ+EhzEl7IgGpBvMu6LJSm9Z2jheJTtL8NNliULP8MAKBrLH6HEuB5NXwaqeYsh+Z7ijR6mQw4ykpRD+UKInV7Blnhh+At22oaZbdXmD56aIAACUBeHoQNCal8XXpkMkv3Bww7ZHU/fHgCGE6MoJBagvUgkovm5m9ZYDnTZKPEPo83FtFB81uLyP5BQfaYCWqsjo6T8qmEWPMgCfi2ki/4kUywGI5cnKQQigxOvfZjk5FhclE7atAFsEONh5b3sqyQbU+jDqQrCPDUv2cw6xceZIZpo8Zejy+95qC4/ZmA2PalgiB9Yrqg5HsWMWr2VUJ4WWPwWx9l2vGWHJ9GaXbAO0dUJN2O3VcenCdoXrR6RzbjFGq0T/DFtdG1aihp3v9+qxntSfz1aZ0xrBfr1mkQdq3i/i+/hVIAfg/LzGjFcSnuyzRKvq9K
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2019 17:00:43.0428
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63cdd267-7f3f-412b-2891-08d757115ff0
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5354
+In-Reply-To: <20191022045655.GA975@kunai>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Extend dma_config structure to store irq routine handle. It enables runtime
-handler selection based on xdma_ip_type and serves as preparatory patch for
-adding MCDMA IP support.
+On 10/21/2019 9:56 PM, Wolfram Sang wrote:
+> 
+>> Changes I submitted in this patch set is for a different purpose which
+>> is very Aspeed H/W specific, and actually it's a more serious timeout
+>> setting indeed. If this H/W is used in multi-master environment, it
+>> could meet a H/W hang that freezes itself in slave mode and it can't
+>> escape from the state. To resolve the specific case, this H/W provides
+>> self-recovery feature which monitors abnormal state of SDA, SCL and its
+>> H/W state machine using the timeout setting to determine the escape
+>> condition.
+> 
+> Thanks for the summary. I just wonder on what the timeout value depends.
+> Do we really need to put in DT or can we derive it e.g. from the
+> compatible value in the driver?
 
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Suggested-by: Vinod Koul <vkoul@kernel.org>
----
-Changes since RFC:
-New patch. It serve as a preparatory patch for MCDMA driver support.
----
- drivers/dma/xilinx/xilinx_dma.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+It could be derived from the bus timeout value by computing 'divide by
+x' roughly but it couldn't cover all use cases because this H/W timeout
+value would depends on each environment. There are many factors that
+can affect it such as bus speed, peer-master's bus driving
+characteristic, average transaction period on the bus and so on thus
+it may need fine adjustments through a DT setting, I think.
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 6d45865..25042a9 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -391,6 +391,7 @@ struct xilinx_dma_config {
- 	int (*clk_init)(struct platform_device *pdev, struct clk **axi_clk,
- 			struct clk **tx_clk, struct clk **txs_clk,
- 			struct clk **rx_clk, struct clk **rxs_clk);
-+	irqreturn_t (*irq_handler)(int irq, void *data);
- };
- 
- /**
-@@ -2402,8 +2403,8 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
- 
- 	/* Request the interrupt */
- 	chan->irq = irq_of_parse_and_map(node, 0);
--	err = request_irq(chan->irq, xilinx_dma_irq_handler, IRQF_SHARED,
--			  "xilinx-dma-controller", chan);
-+	err = request_irq(chan->irq, xdev->dma_config->irq_handler,
-+			  IRQF_SHARED, "xilinx-dma-controller", chan);
- 	if (err) {
- 		dev_err(xdev->dev, "unable to request IRQ %d\n", chan->irq);
- 		return err;
-@@ -2497,16 +2498,19 @@ static struct dma_chan *of_dma_xilinx_xlate(struct of_phandle_args *dma_spec,
- static const struct xilinx_dma_config axidma_config = {
- 	.dmatype = XDMA_TYPE_AXIDMA,
- 	.clk_init = axidma_clk_init,
-+	.irq_handler = xilinx_dma_irq_handler,
- };
- 
- static const struct xilinx_dma_config axicdma_config = {
- 	.dmatype = XDMA_TYPE_CDMA,
- 	.clk_init = axicdma_clk_init,
-+	.irq_handler = xilinx_dma_irq_handler,
- };
- 
- static const struct xilinx_dma_config axivdma_config = {
- 	.dmatype = XDMA_TYPE_VDMA,
- 	.clk_init = axivdma_clk_init,
-+	.irq_handler = xilinx_dma_irq_handler,
- };
- 
- static const struct of_device_id xilinx_dma_of_ids[] = {
--- 
-2.7.4
+Thanks,
 
+Jae
