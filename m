@@ -2,163 +2,198 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA65CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01436CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C1021872
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B3221906
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="JyGeA52f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388494AbfJVIpV (ORCPT
+        id S2388470AbfJVIpX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:45:21 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:34128 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388485AbfJVIpV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:45:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 37CFAFB03;
-        Tue, 22 Oct 2019 10:45:17 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id J_7FrQl3FDaI; Tue, 22 Oct 2019 10:45:15 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 1D2F949BFC; Tue, 22 Oct 2019 10:45:15 +0200 (CEST)
-Date:   Tue, 22 Oct 2019 10:45:14 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        Arnd Bergmann <arnd@arndb.de>, Jonas Karlman <jonas@kwiboo.se>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        Tue, 22 Oct 2019 04:45:23 -0400
+Received: from mail-eopbgr00121.outbound.protection.outlook.com ([40.107.0.121]:26593
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388490AbfJVIpX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 04:45:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NH6ICw/aGJGLXiBO1oiObwDqLU8GftqOiP767cGnR6reQmnHQbqaylRVOjUs3ra76WMR/MFiD9KnzY6YoGyMVHEypYoa5msaAvgSSG7XIG6oJGqsl5lzSF97t/6dvCUL3VKV0OJMqOBzScXdAU6GLzkwd4haGWxp52j8Kc3IhYc4gkgaC6wgaMi3k6cVR5tmjR2g3E7IOrLIJ2xFndjCYvk6I3map847qZe9+HAJc7dxLsIurSjyq8Z5BIjoAY2q42yTVzvHH6QW7UAFh0c3VQ73QYnxTnF0PT7Y4El4OuUM5H/kWEpf1nSanZScQuaYrRtYI3eFZRwc95O3uaiDhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9RDd6uHjnaIl18b9/q1LJ/A6qy5517LdOU+CAcC+MiA=;
+ b=TxUdCh5SdODfPQD99jlSdzEnyonsC3uFG8BBHuS6QBU7bZsVMrI5XqbCuWrA9YzpXrJFO4MwkRjt8o4RNERUo4BroFjIkYvbiQ2Y3KG17fG8QFQSvSsDo6R7OUSjY6Q4iNezPhLZ3+n29KL0a3vJMQksRjLZo5S+bqVYkEUyB/JjsY7gJCzch/e6JOC3YFAVpCogEYOhPk0kHuo8xKJ41fkM+kA6jWzcm8NAXmhEYsmpdb9DUyp5PIK8/hKXu0xk8Cs3TP+95WJwjoAZJdWwzEC16uuckWdz6Miqlw47s32jaQX1RGtH/pazmvM7S9YeG6orbU82gLhPOYuG/z5q4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9RDd6uHjnaIl18b9/q1LJ/A6qy5517LdOU+CAcC+MiA=;
+ b=JyGeA52ffsz9qpXXEdEFFSALP+9cfSZIWSCbTjEQYDTKNRLN3yCTggqufdCYkiKHlwRInQhR5iL8Pqv+zqs5gZn4m5VQgEhX0KrpdXAzCASaJN7RE5wWnTDQEdGjuG/b8t8R0HJXfgNjgEAXiEVnbDYRABoCiR1kJaUuEXs6xTA=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3340.eurprd02.prod.outlook.com (52.134.67.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Tue, 22 Oct 2019 08:45:18 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.029; Tue, 22 Oct 2019
+ 08:45:17 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joel Stanley <joel@jms.id.au>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v7 2/2] drm/bridge: Add NWL MIPI DSI host controller
- support
-Message-ID: <20191022084514.GA30274@bogon.m.sigxcpu.org>
-References: <e0304ab9320cbbf3e63d78449e50975c036b2633.1571494140.git.agx@sigxcpu.org>
- <201910211901.yB3b4mYu%lkp@intel.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
+        Cedric Le Goater <clg@kaod.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
+ timeout support
+Thread-Topic: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
+ timeout support
+Thread-Index: AQHViE2KU5aZojIjkUqCdR4ab3gQm6dlt3EA///tFICAALTpgA==
+Date:   Tue, 22 Oct 2019 08:45:17 +0000
+Message-ID: <b98827fa-462a-060b-efc7-27fe5d7742ff@axentia.se>
+References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
+ <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
+ <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
+ <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
+In-Reply-To: <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0102CA0053.eurprd01.prod.exchangelabs.com
+ (2603:10a6:7:7d::30) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9c73b2ee-2f98-46ee-46ee-08d756cc29f3
+x-ms-traffictypediagnostic: DB3PR0202MB3340:
+x-microsoft-antispam-prvs: <DB3PR0202MB3340855FD970AFD95B1783C4BC680@DB3PR0202MB3340.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01986AE76B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(346002)(366004)(396003)(39830400003)(199004)(52314003)(189003)(6512007)(54906003)(6436002)(99286004)(6506007)(386003)(53546011)(6246003)(229853002)(110136005)(58126008)(6486002)(25786009)(66066001)(65806001)(65956001)(102836004)(8936002)(4326008)(26005)(52116002)(76176011)(81156014)(81166006)(8676002)(316002)(5660300002)(186003)(7416002)(71200400001)(256004)(14444005)(66946007)(305945005)(6116002)(3846002)(86362001)(31696002)(66446008)(64756008)(66556008)(66476007)(4001150100001)(2906002)(11346002)(476003)(486006)(36756003)(508600001)(14454004)(31686004)(446003)(71190400001)(7736002)(2616005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3340;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fn4FipVxJlznXQexa6vcgCYlFcElZLKNZhs5iuxQcsBnm/aFtkVR7sY6nYcq96lVeMoS02TKUIRn0vT7GYzk7fbPwwAHcbs05kU/5e1JYkJQQ+/eRT6cmbCsE99AJOP7CXhpSz2sAf1KRxTdo6G4y/fh18aNXmRGBUmbZc4yDWP5doupqeXgd5vBLhzr0f7WUMq/i1u8lv03V9jpuN6XoNWvwQkSu1klbawffZ+rhWqhwQP/jgdpnK5k9eKiM+cufKCcCQCA0WEe3tLtPLQZmid7jlXzviqmyqkrjLBwMprFQ/DTDUsT7vD10z3NAtiVcYkBD0DjnM0SRAYxhHO0Aoe8ilUQ+6KbaOfj5AqO9Fspfn2Q6jX2HRdX5rr78DIljv3Fq+NLdR+jZ3wOsi33SxOBqe9JqIZu5TSfPwkOMxkkzKYJHOnxnTErmSfhqTWG
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7084A791E746C8458A822A468C1DDC13@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201910211901.yB3b4mYu%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c73b2ee-2f98-46ee-46ee-08d756cc29f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Oct 2019 08:45:17.8657
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: s/uZAiNNWtS+LEk6fQyPy4opUMAHDU6rylu/WPazBum4gEOjYR6VHXTGI8UWBELj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3340
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-On Mon, Oct 21, 2019 at 07:11:12PM +0800, kbuild test robot wrote:
-> Hi "Guido,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.4-rc4 next-20191018]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see
-> https://stackoverflow.com/a/37406982]
-
-The base for this series is next-20191018 where drm_panel_bridge_add()
-list it's second argument (89958b7cd9555a5d82556cc9a1f4c62fffda6f96).
-
-Cheers,
- -- Guido
-
-> 
-> url:    https://github.com/0day-ci/linux/commits/Guido-G-nther/dt-bindings-display-bridge-Add-binding-for-NWL-mipi-dsi-host-controller/20191021-180825
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 7d194c2100ad2a6dded545887d02754948ca5241
-> config: mips-allmodconfig (attached as .config)
-> compiler: mips-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=mips 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/gpu/drm/bridge/nwl-dsi.c: In function 'nwl_dsi_host_attach':
-> >> drivers/gpu/drm/bridge/nwl-dsi.c:384:12: error: too few arguments to function 'drm_panel_bridge_add'
->       bridge = drm_panel_bridge_add(panel);
->                ^~~~~~~~~~~~~~~~~~~~
->    In file included from include/drm/drm_crtc.h:44:0,
->                     from include/drm/drm_atomic_helper.h:31,
->                     from drivers/gpu/drm/bridge/nwl-dsi.c:24:
->    include/drm/drm_bridge.h:432:20: note: declared here
->     struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
->                        ^~~~~~~~~~~~~~~~~~~~
-> 
-> vim +/drm_panel_bridge_add +384 drivers/gpu/drm/bridge/nwl-dsi.c
-> 
->    358	
->    359	static int nwl_dsi_host_attach(struct mipi_dsi_host *dsi_host,
->    360				       struct mipi_dsi_device *device)
->    361	{
->    362		struct nwl_dsi *dsi = container_of(dsi_host, struct nwl_dsi, dsi_host);
->    363		struct device *dev = dsi->dev;
->    364		struct drm_bridge *bridge;
->    365		struct drm_panel *panel;
->    366		int ret;
->    367	
->    368		DRM_DEV_INFO(dev, "lanes=%u, format=0x%x flags=0x%lx\n", device->lanes,
->    369			     device->format, device->mode_flags);
->    370	
->    371		if (device->lanes < 1 || device->lanes > 4)
->    372			return -EINVAL;
->    373	
->    374		dsi->lanes = device->lanes;
->    375		dsi->format = device->format;
->    376		dsi->dsi_mode_flags = device->mode_flags;
->    377	
->    378		ret = drm_of_find_panel_or_bridge(dsi->dev->of_node, 1, 0, &panel,
->    379						  &bridge);
->    380		if (ret)
->    381			return ret;
->    382	
->    383		if (panel) {
->  > 384			bridge = drm_panel_bridge_add(panel);
->    385			if (IS_ERR(bridge))
->    386				return PTR_ERR(bridge);
->    387		}
->    388	
->    389		dsi->panel_bridge = bridge;
->    390		drm_bridge_add(&dsi->bridge);
->    391	
->    392		return 0;
->    393	}
->    394	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+T24gMjAxOS0xMC0yMSAyMzo1NywgSmFlIEh5dW4gWW9vIHdyb3RlOg0KPiBIaSBQZXRlciwNCj4g
+DQo+IE9uIDEwLzIxLzIwMTkgMjowNSBQTSwgUGV0ZXIgUm9zaW4gd3JvdGU6DQo+PiBPbiAyMDE5
+LTEwLTIxIDIyOjI0LCBKYWUgSHl1biBZb28gd3JvdGU6DQo+Pj4gQXBwZW5kIGEgYmluZGluZyB0
+byBzdXBwb3J0IGhhcmR3YXJlIHRpbWVvdXQgZmVhdHVyZS4NCj4+Pg0KPj4+IFNpZ25lZC1vZmYt
+Ynk6IEphZSBIeXVuIFlvbyA8amFlLmh5dW4ueW9vQGxpbnV4LmludGVsLmNvbT4NCj4+PiAtLS0N
+Cj4+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWFzcGVlZC50
+eHQgfCAyICsrDQo+Pj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+Pj4NCj4+
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMt
+YXNwZWVkLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWFz
+cGVlZC50eHQNCj4+PiBpbmRleCBiNDdmNmNjYjE5NmEuLjEzM2JmZWRmNGNkZCAxMDA2NDQNCj4+
+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hc3BlZWQu
+dHh0DQo+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMt
+YXNwZWVkLnR4dA0KPj4+IEBAIC0xNyw2ICsxNyw4IEBAIE9wdGlvbmFsIFByb3BlcnRpZXM6DQo+
+Pj4gICAtIGJ1cy1mcmVxdWVuY3kJOiBmcmVxdWVuY3kgb2YgdGhlIGJ1cyBjbG9jayBpbiBIeiBk
+ZWZhdWx0cyB0byAxMDAga0h6IHdoZW4gbm90DQo+Pj4gICAJCSAgc3BlY2lmaWVkDQo+Pj4gICAt
+IG11bHRpLW1hc3Rlcgk6IHN0YXRlcyB0aGF0IHRoZXJlIGlzIGFub3RoZXIgbWFzdGVyIGFjdGl2
+ZSBvbiB0aGlzIGJ1cy4NCj4+PiArLSBhc3BlZWQsaHctdGltZW91dC1tcwk6IEhhcmR3YXJlIHRp
+bWVvdXQgaW4gbWlsbGlzZWNvbmRzLiBJZiBpdCdzIG5vdA0KPj4+ICsJCQkgIHNwZWNpZmllZCwg
+dGhlIEgvVyB0aW1lb3V0IGZlYXR1cmUgd2lsbCBiZSBkaXNhYmxlZC4NCj4+PiAgIA0KPj4+ICAg
+RXhhbXBsZToNCj4+PiAgIA0KPj4+DQo+Pg0KPj4gU29tZSBTTUJ1cyBjbGllbnRzIHN1cHBvcnQg
+YSBzbWJ1cy10aW1lb3V0LWRpc2FibGUgYmluZGluZyBmb3IgZGlzYWJsaW5nDQo+PiB0aW1lb3V0
+cyBsaWtlIHRoaXMsIGZvciBjYXNlcyB3aGVyZSB0aGUgSTJDIGFkYXB0ZXIgaW4gcXVlc3Rpb24g
+b24gb2NjYXNpb24NCj4+IGlzIHVuYWJsZSB0byBrZWVwIHRoZSBwYWNlLiBBZGRpbmcgdGhhdCBw
+cm9wZXJ0eSB0aHVzIGF2b2lkcyB1bmRlc2lyZWQNCj4+IHRpbWVvdXRzIHdoZW4gdGhlIGNsaWVu
+dCBpcyBTTUJ1cyBjb25mb3JtYW50IHdpdGhvdXQgaXQuIFlvdXIgbmV3IGJpbmRpbmcNCj4+IGlz
+IHRoZSByZXZlcnNlIHNpdHVhdGlvbiwgd2hlcmUgeW91IHdhbnQgdG8gYWRkIGEgdGltZW91dCB3
+aGVyZSBvbmUgaXMNCj4+IG90aGVyd2lzZSBtaXNzaW5nLg0KPj4NCj4+IEFueXdheSwgc2luY2Ug
+STJDIGRvZXMgbm90IGhhdmUgYSBzcGVjaWZpZWQgbG93ZXN0IHBvc3NpYmxlIGZyZXF1ZW5jeSwg
+dGhpcw0KPj4gZmVlbHMgbGlrZSBzb21ldGhpbmcgdGhhdCBpcyBtb3JlIGluIHRoZSBTTUJ1cyBh
+cmVuYS4gU2hvdWxkIHRoZSBwcm9wZXJ0eQ0KPj4gcGVyaGFwcyBiZSBhIGdlbmVyaWMgcHJvcGVy
+dHkgbmFtZWQgc21idXMtdGltZW91dC1tcywgb3Igc29tZXRoaW5nIGxpa2UNCj4+IHRoYXQ/DQo+
+IA0KPiBXZWxsLCBJIHRyaWVkIHVwc3RyZWFtaW5nIG9mIHRoZSBnZW5lcmljIHRpbWVvdXQgcHJv
+cGVydHkgYSB5ZWFyIGFnbyBidXQNCj4gSSBhZ3JlZWQgdGhhdCB0aGUgZ2VuZXJpYyBidXMgdGlt
+ZW91dCBwcm9wZXJ0eSBjYW4gYmUgc2V0IGJ5IGFuIGlvY3RsDQo+IGNvbW1hbmQgc28gaXQgZGlk
+bid0IG5lZWQgdG8gYmUgYWRkZWQgaW50byBkZXZpY2UgdHJlZSBhdCB0aGF0IHRpbWUuIE5vdA0K
+PiBzdXJlIGlmIGFueSBuZWVkIGhhcyBjb21lIHJlY2VudGx5IGJ1dCBJIGhhdmVuJ3QgaGVhcmQg
+dGhhdC4gVGhpcyBkcml2ZXINCj4gc3RpbGwgdXNlcyB0aGUgZ2VuZXJpYyB0aW1lb3V0IHByb3Bl
+cnR5IHdoaWNoIGlzIHByb3ZpZGVkIGJ5IGkyYyBjb3JlDQo+IGZvciBoYW5kbGluZyBjb21tYW5k
+IHRpbWVvdXRzLCBhbmQgaXQncyBvdXQgb2Ygc2NvcGUgZnJvbSB0aGlzIHBhdGNoDQo+IHNlcmll
+cy4NCj4gDQo+PiBJZiB0aGUgYWJvdmUgaXMgbm90IHdhbnRlZCBvciBhcHByb3ByaWF0ZSwgdGhl
+biBJIHdvdWxkIHBlcnNvbmFsbHkgcHJlZmVyDQo+PiBhc3BlZWQsYnVzLXRpbWVvdXQtbXMgb3Zl
+ciBhc3BlZWQsaHctdGltZW91dC1tcy4gVG8gbWUsIGh3LXRpbWVvdXQtbXMgc291bmRzDQo+PiBs
+aWtlIGEgKG1vcmUgc2VyaW91cykgdGltZW91dCBiZXR3ZWVuIHRoZSBDUFUgYW5kIHRoZSBJMkMg
+cGVyaXBoZXJhbCB1bml0DQo+PiBvciBzb21ldGhpbmcgbGlrZSB0aGF0LiBCdXQgSSBkb24ndCBj
+YXJlIGRlZXBseS4uLg0KPiANCj4gQ2hhbmdlcyBJIHN1Ym1pdHRlZCBpbiB0aGlzIHBhdGNoIHNl
+dCBpcyBmb3IgYSBkaWZmZXJlbnQgcHVycG9zZSB3aGljaA0KPiBpcyB2ZXJ5IEFzcGVlZCBIL1cg
+c3BlY2lmaWMsIGFuZCBhY3R1YWxseSBpdCdzIGEgbW9yZSBzZXJpb3VzIHRpbWVvdXQNCj4gc2V0
+dGluZyBpbmRlZWQuIElmIHRoaXMgSC9XIGlzIHVzZWQgaW4gbXVsdGktbWFzdGVyIGVudmlyb25t
+ZW50LCBpdA0KPiBjb3VsZCBtZWV0IGEgSC9XIGhhbmcgdGhhdCBmcmVlemVzIGl0c2VsZiBpbiBz
+bGF2ZSBtb2RlIGFuZCBpdCBjYW4ndA0KPiBlc2NhcGUgZnJvbSB0aGUgc3RhdGUuIFRvIHJlc29s
+dmUgdGhlIHNwZWNpZmljIGNhc2UsIHRoaXMgSC9XIHByb3ZpZGVzDQo+IHNlbGYtcmVjb3Zlcnkg
+ZmVhdHVyZSB3aGljaCBtb25pdG9ycyBhYm5vcm1hbCBzdGF0ZSBvZiBTREEsIFNDTCBhbmQgaXRz
+DQo+IEgvVyBzdGF0ZSBtYWNoaW5lIHVzaW5nIHRoZSB0aW1lb3V0IHNldHRpbmcgdG8gZGV0ZXJt
+aW5lIHRoZSBlc2NhcGUNCj4gY29uZGl0aW9uLg0KDQpBcmUgeW91IHNheWluZyB0aGF0IHRoZSBh
+c3BlZWQgSFcgaXMgYnVnZ3kgYW5kIHRoYXQgdGhpcyBhYm5vcm1hbCBzdGF0ZQ0KaXMgc2VsZiBp
+bmZsaWN0ZWQgYnkgdGhlIGFzcGVlZCBIVyBldmVuIGlmIG90aGVyIG1hc3RlcnMgb24gdGhlIGJ1
+cw0KYmVoYXZlIHNhbmVseT8gQmVjYXVzZSBJIGRpZG4ndCBxdWl0ZSByZWFkIGl0IHRoYXQgd2F5
+IGF0IGFsbC4uLg0KDQpUbyBtZSwgaXQgc291bmRlZCAqZXhhY3RseSogbGlrZSB0aGUgc3RhdGUg
+STJDIGNsaWVudHMgZW5kIHVwIGluIHdoZW4gYW4NCkkyQyBtYXN0ZXIgImRpZXMiIGFuZCBzdG9w
+cyBjb21tdW5pY2F0aW5nIGluIHRoZSBtaWRkbGUgb2YgYSB0cmFuc2FjdGlvbi4NCkkuZS4gdGhl
+IHRoaW5nIHRoYXQgdGhlIFNNQnVzIHRpbWVvdXQgaXMgZGVzaWduZWQgdG8gcHJldmVudCAoYW5k
+IHRoZQ0Kc3RhdGUgdGhlIEkyQyBuaW5lLWNsay1yZWNvdmVyeSBzZXF1ZW5jZSBhZGRyZXNzZXMp
+LiBUaGUgb25seSB0d2lzdCAodGhhdA0KSSBzYXcpIHdhcyB0aGF0IHRoZSBhc3BlZWQgSFcgaXMg
+YWxzbyBhIG1hc3RlciBhbmQgdGhhdCB0aGUgYXNwZWVkIG1hc3Rlcg0KZHJpdmVyIGlzIGNvbXBs
+ZXRlbHkgbG9ja2VkIG91dCBmcm9tIHRoZSBidXMgd2hpbGUgc29tZSBvYm5veGlvdXMgbWFzdGVy
+DQpmYWlscyB0byBjb21wbGV0ZSBpdHMgdHJhbnNhY3Rpb24gKG9yIHdoYXRldmVyIGl0IHdhcyB1
+cCB0bykuDQoNCklmIHRoaXMgY2FuIG9ubHkgYmUgdHJpZ2dlcmVkIHdoZW4gdGhlIEhXIGlzIGFj
+dGluZyBhcyBhIHNsYXZlLCBhbmQgYnkNCmFib3J0ZWQgb3Igb3RoZXJ3aXNlIGZ1bmt5IG1hc3Rl
+ciBhY3Rpdml0eSBvbiB0aGUgYnVzLCB0aGVuIEkgd291bGRuJ3QNCmNhbGwgaXQgYW4gSFcgaXNz
+dWUuIFRoZW4gaXQgd291bGQgYmUgYSBidXMgaXNzdWUuIEkuZS4gc29tZXRoaW5nIG5lZWRpbmcN
+CmEgYnVzLXRpbWVvdXQgaW5zdGVhZCBvZiBhIGh3LXRpbWVvdXQuDQoNCkkgZG9uJ3QgaGF2ZSB0
+aGUgc3BlY2lmaWNzLCBzbyBJIGNhbid0IHRlbGwgd2hpY2ggd2F5IGl0IGlzLiBJJ20ganVzdA0K
+cmVhY3RpbmcgdG8gdGhlIHByZXNlbnRlZCBpbmZvcm1hdGlvbi4NCg0KQ2hlZXJzLA0KUGV0ZXIN
+Cg0KPiBHZW5lcmFsbHksIHRoaXMgSC9XIHRpbWVvdXQgdmFsdWUgaXMgc21hbGxlciB0aGFuIHRo
+ZSBnZW5lcmljIGJ1cw0KPiB0aW1lb3V0IHZhbHVlIChJJ20gdXNpbmcgMzAwbXMgZm9yIHRoZSBI
+L1cgdGltZW91dCB3aGlsZSBJJ20gdXNpbmcgMQ0KPiBzZWNvbmQgZm9yIHRoZSBnZW5lcmljIGJ1
+cyB0aW1lb3V0KSBzbyBJIHRoaW5rIGl0IHNob3VsZCBiZQ0KPiBkaXN0aW5ndWlzaGVkIGZyb20g
+dGhlIGdlbmVyaWMgYnVzIHRpbWVvdXQuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBKYWUNCj4gDQoN
+Cg==
