@@ -2,116 +2,128 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24BECA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1DCCA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 12:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BAC21920
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 12:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 627C9218AE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 12:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Z1ji21Yf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jid6ntUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388517AbfJVMNn (ORCPT
+        id S2389056AbfJVMYX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 08:13:43 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44764 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387888AbfJVMNn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 08:13:43 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 21so13908446otj.11
-        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 05:13:42 -0700 (PDT)
+        Tue, 22 Oct 2019 08:24:23 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36297 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388023AbfJVMYX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 08:24:23 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c22so6852044wmd.1
+        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 05:24:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lTda5Ge0EByHNIbd5X5BYoVMZ38RqoZsUImPxrYPgzw=;
-        b=Z1ji21Yfvsjz2p8tLXV1U2tylHt5sdFNTvnDmHcShOIwiuyupj7RKWsz7GnuJ1wmZB
-         a4jNTxfUGF7c8Nqak3/5npU3IELIMIzJDl72f21NvPT/2nLR1GxpQMB5+y0L0Ywx0/YA
-         nwNnrPinZj9HatAvNI04lvuCZMRPJjo14h330nvsPLYiqZt6znd7ZNnoSt31YnCH7HCD
-         vQK2KNutR4qOSwM3S498G++nEMFxBsO+7jGYQViO2B9pYAHY8keqUhqRHonylQpBRifh
-         499L5Bs7+8ZW3hFneqJSpqEDCmT5oLblWQ34blXCQDmwPmEhbDOKhDABULRJ1kLchUrC
-         Pa/Q==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ut7DiejZhR1eCG20yMrwS8a1hqYS2ddBi/U75ecWkFY=;
+        b=jid6ntUK0esQpG508NqfQT8zlE0uB1es+ezydvxrncS5YL4nlvOrDTIZAThJNt1JBz
+         UrQKQDEA9sdYPOvuhFTDlPdmpkopnU/enaASQsHEBQaqZrYTdNIQqGCDfElQymPwO8Ll
+         s+thwC7xS0XKxFqUyXqcA73LqBGFRnP99zXtj2Vt+p5Zrbnmv+JAR3tbjblJ1nUHlgYu
+         b9YpZJ97WC7Ig6r49FwggaBC2uFCe2oUjfQFjPdo0DFpaOBtfs5rwa92IUbItW9vWfPg
+         z9+rRt5ubyBiRN150rIQRhZOKeDwPfYRcLpQVmo+SWKDJzrsxhT4se8JkiP5gzWwVAkg
+         J93w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lTda5Ge0EByHNIbd5X5BYoVMZ38RqoZsUImPxrYPgzw=;
-        b=cUqRMX6bn/KjTF3vzuZCZuip7TmEMyBVxoQ264iUVM4XXC+6Utix6a6fZALD+ULyf7
-         bkw3/uxdmay0k1PIVH1Zvzp23DLzmzZkL7Hr5UzDtgvrIxnNSjltuxVx/XafAHmeRAuW
-         7h11f/PxVuS0nNEp4/ASM7Y2Pge2BIzq07v/vXkQcrJcnT/jNqxsBZzThE7/XmIBQNAn
-         m7ANZRt09BHbGIp5lFv/TQarwbGdCxU4Qcb7aar4bQxArxl+H4ZjtT5+2QbgAwkDbLnj
-         dwUjrNspYk3aGuuPF43MmcYhjX9EJAStqQoWjrXkVHOxTQErVTRDIOQAZbAN+oMnS3gz
-         9ClQ==
-X-Gm-Message-State: APjAAAWyp4Pihjau54lmispP+IYWsQjKIao9g7UwCoZTJ/KB6SDnBOB/
-        C4SyuPrx3+B6qEzZ9hCeTsO5k+9ek92cFV9Y5Gm5+sodaDU=
-X-Google-Smtp-Source: APXvYqx8ckHmAQl3TNhvrytWx65vvrk83xrh73bSuCEmVamvYtkVmJR8tyNutZepz08l3tWBWYDS5rYy2nHZsr2u6cU=
-X-Received: by 2002:a9d:344a:: with SMTP id v68mr2534837otb.85.1571746421021;
- Tue, 22 Oct 2019 05:13:41 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ut7DiejZhR1eCG20yMrwS8a1hqYS2ddBi/U75ecWkFY=;
+        b=f171hGlOBkP8FEJ7RXpgwMyIrtwR81iMcSS+9ieLhGxl7T0h1bC17UQcCCdrPpW5vY
+         mbToi4q9jOKqb6dX/Hh+giKV+iwbNd0Tv+zkvGFeKD7O6H4UiQtYepLE9f1Qq/LP7V5l
+         QwI4eEeR5DEaCeR99Cb32KlBFkdFBS5tdIuILpXS85gDqjTu20xsRtttq1kng2VjOQgX
+         Q/GE56hNSzLycovfeu2YT93maH6dtebVPLvj31/MoSlBFGy8nNWCyap/oIDn3nqgQNm+
+         pQBpWGSgxxwhFDthoSBVh+pmxGboaIeTvn5FwjVPfdYH9CmhgGqe/tD21/28BlTlDOpG
+         0Bow==
+X-Gm-Message-State: APjAAAXNo/RQUchdAcnn4fIo8XXueqku/xeeFV6s+L4gMb++9wvKOKD8
+        KQrtNw77if5ZWLo3xu/BShGZuQ==
+X-Google-Smtp-Source: APXvYqwgjPDPNW7a1xJ2Rc6OO4jAurB2ZpMNxcJUVeFXsu+xl+Or1DkHLx+C8XVRN8u73S9NUcWQwg==
+X-Received: by 2002:a7b:cb54:: with SMTP id v20mr2708736wmj.91.1571747060898;
+        Tue, 22 Oct 2019 05:24:20 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id u26sm19101660wrd.87.2019.10.22.05.24.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 22 Oct 2019 05:24:19 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dt-bindings: nvmem: add binding for Rockchip OTP
+ controller
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com
+References: <20190925184957.14338-1-heiko@sntech.de>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <3b5f4018-82b1-946d-d81d-252eb872d5d1@linaro.org>
+Date:   Tue, 22 Oct 2019 13:24:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
- <CAMpxmJUrY9YK==6Mf5MoRTUDwmXJ6v5EM-VLXCNXJ8ZNK+xHyA@mail.gmail.com>
- <CAAFQd5BEcE0m7Jg1ZnmrF+jwH6Yn8+vYqT1L2wc2zkZ5vRCRAg@mail.gmail.com>
- <CAMpxmJU_Vws0oGf+GQCEbs-NHFCniO8c2CbXrKy9oEVC_KUhMQ@mail.gmail.com>
- <CAAFQd5D=T+x7j+Lst8AQt0epLckPJv_bXtNGs3Dk=kbdbfw53Q@mail.gmail.com> <20191022111908.GC5554@sirena.co.uk>
-In-Reply-To: <20191022111908.GC5554@sirena.co.uk>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 22 Oct 2019 14:13:29 +0200
-Message-ID: <CAMpxmJUtYjF7L7W_OG6AP6CuLeW_1JPcgNxyBj201GJKfb+H9w@mail.gmail.com>
-Subject: Re: [PATCH v4] misc: eeprom: at24: support pm_runtime control
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190925184957.14338-1-heiko@sntech.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 22 pa=C5=BA 2019 o 13:19 Mark Brown <broonie@kernel.org> napisa=C5=82(=
-a):
->
-> On Tue, Oct 22, 2019 at 07:33:54PM +0900, Tomasz Figa wrote:
-> > On Tue, Oct 22, 2019 at 6:00 PM Bartosz Golaszewski
->
-> > > > I can see that the core returns the dummy regulator if
-> > > > have_full_constraints() [1]. That is always true for DT systems, bu=
-t
-> > > > for others it's false by default, unless someone explicitly calls
-> > > > regulator_has_full_constraints() [2].
->
-> ACPI systems are also always marked as having full constraints, only
-> systems with board files will see this.
->
-> > > Not tested yet, but from the code it looks like it will then keep
-> > > returning EPROBE_DEFER which doesn't sound right really, especially
-> > > since we're printing an error message too. Shouldn't it be -ENODEV?
->
-> > That's an interesting finding. Liam, Mark, what's the proper way to
-> > bulk get optional regulators?
->
-> The ambiguously named regulator_get_optional().  This should *only* be
-> used for regulators that may be physically absent in the system, other
-> regulators should use normal regulator_get().  It is vanishingly
-> unlikely that all the supplies for a device will be optional.
 
-I take it that this driver should also use regular regulator_bulk_get() the=
-n?
 
-I think the question about the return value of
-regulator_resolve_supply() still stands though: is it normal that it
-returns EPROBE_DEFER if it can't resolve the supply on systems without
-full_constraints? This will cause the driver to loop on probe
-deferral, right?
+On 25/09/2019 19:49, Heiko Stuebner wrote:
+> Newer Rockchip SoCs use a different IP for accessing special one-
+> time-programmable memory, so add a binding for these controllers.
+> 
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
-Bart
+Applied both, thanks,
+srini
+
+> ---
+>   .../bindings/nvmem/rockchip-otp.txt           | 25 +++++++++++++++++++
+>   1 file changed, 25 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
+> new file mode 100644
+> index 000000000000..40f649f7c2e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
+> @@ -0,0 +1,25 @@
+> +Rockchip internal OTP (One Time Programmable) memory device tree bindings
+> +
+> +Required properties:
+> +- compatible: Should be one of the following.
+> +  - "rockchip,px30-otp" - for PX30 SoCs.
+> +  - "rockchip,rk3308-otp" - for RK3308 SoCs.
+> +- reg: Should contain the registers location and size
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +- clock-names: Should be "otp", "apb_pclk" and "phy".
+> +- resets: Must contain an entry for each entry in reset-names.
+> +  See ../../reset/reset.txt for details.
+> +- reset-names: Should be "phy".
+> +
+> +See nvmem.txt for more information.
+> +
+> +Example:
+> +	otp: otp@ff290000 {
+> +		compatible = "rockchip,px30-otp";
+> +		reg = <0x0 0xff290000 0x0 0x4000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		clocks = <&cru SCLK_OTP_USR>, <&cru PCLK_OTP_NS>,
+> +			 <&cru PCLK_OTP_PHY>;
+> +		clock-names = "otp", "apb_pclk", "phy";
+> +	};
+> 
