@@ -2,150 +2,121 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7024CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28B2CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835572064B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7095020700
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:41:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FJaqOA+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfJVNiA (ORCPT
+        id S1730945AbfJVNld (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:38:00 -0400
-Received: from 19.mo7.mail-out.ovh.net ([178.33.251.118]:46572 "EHLO
-        19.mo7.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388388AbfJVNiA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 09:38:00 -0400
-X-Greylist: delayed 776 seconds by postgrey-1.27 at vger.kernel.org; Tue, 22 Oct 2019 09:37:58 EDT
-Received: from player793.ha.ovh.net (unknown [10.108.42.176])
-        by mo7.mail-out.ovh.net (Postfix) with ESMTP id 71E7013895E
-        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 15:19:49 +0200 (CEST)
-Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
-        (Authenticated sender: sebastien.szymanski@armadeus.com)
-        by player793.ha.ovh.net (Postfix) with ESMTPSA id A5AE2B3E4570;
-        Tue, 22 Oct 2019 13:19:35 +0000 (UTC)
-From:   =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Julien Boibessot <julien.boibessot@armadeus.com>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 9/9] ARM: dts: imx6qdl-apf6dev: use DRM bindings
-Date:   Tue, 22 Oct 2019 15:16:55 +0200
-Message-Id: <20191022131655.25737-10-sebastien.szymanski@armadeus.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191022131655.25737-1-sebastien.szymanski@armadeus.com>
-References: <20191022131655.25737-1-sebastien.szymanski@armadeus.com>
+        Tue, 22 Oct 2019 09:41:33 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:52447 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726142AbfJVNlc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 09:41:32 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9MDf9EN023993;
+        Tue, 22 Oct 2019 15:41:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=PHnNpeOdbXGQynUc5JNgL2qz+nampoSlHPLGeS01Zp0=;
+ b=FJaqOA+9PRB8vd17zEuNNPHGpg7DCIwXrjIseHdwXWVRkZ4oTEJdBmQihL/jKh+2kcTn
+ 3djoMkk+ReNeJVL2BmdsoMrSBBergpI0ZH7QSsZRPmXQfSPlMtrCKS/BfzuIEJUQ3qv+
+ 7QIRpje2lq024m7G7aSH1cf7c9Af0bRdEGYd9qqX5MfAlPcQ/wD88u3VwJJUpvk+F2W3
+ 9LIch0n/JuZh9VbJJoLBWttHZpA6NHE0EhQsHWep3mHDZHu74xs7CVcc88i/CGlTtBB2
+ zHaWiywNvbid2PwJ0Yn6YKCqUGz/BeJJMx5WWWRAnIiUNLJuz5+JRRzSs/cVCt86pEIV Yw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vqr8w7sra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Oct 2019 15:41:15 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C2421100034;
+        Tue, 22 Oct 2019 15:41:12 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 91EEE2AE209;
+        Tue, 22 Oct 2019 15:41:12 +0200 (CEST)
+Received: from [10.48.1.171] (10.75.127.48) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 22 Oct
+ 2019 15:41:11 +0200
+Subject: Re: [PATCH v2] i2c: i2c-stm32f7: remove warning when compiling with
+ W=1
+To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>,
+        <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+References: <1571145118-3522-1-git-send-email-alain.volmat@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <c10c0652-3f9e-ea5c-98f2-206af86b0fe4@st.com>
+Date:   Tue, 22 Oct 2019 15:41:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 141018965105529925
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrkeejgdeivdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+In-Reply-To: <1571145118-3522-1-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-22_03:2019-10-22,2019-10-22 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Describe the parallel LCD using simple panel driver.
+Hello
 
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
----
- arch/arm/boot/dts/imx6qdl-apf6dev.dtsi | 50 ++++++++++++++------------
- 1 file changed, 28 insertions(+), 22 deletions(-)
+Looks good
 
-diff --git a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-index f617089be9cc..0aae958640db 100644
---- a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-@@ -21,33 +21,27 @@
- 
- 	disp0 {
- 		compatible = "fsl,imx-parallel-display";
--		interface-pix-fmt = "bgr666";
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_ipu1_disp1>;
--
--		display-timings {
--			lw700 {
--				clock-frequency = <33000033>;
--				hactive = <800>;
--				vactive = <480>;
--				hback-porch = <96>;
--				hfront-porch = <96>;
--				vback-porch = <20>;
--				vfront-porch = <21>;
--				hsync-len = <64>;
--				vsync-len = <4>;
--				hsync-active = <1>;
--				vsync-active = <1>;
--				de-active = <1>;
--				pixelclk-active = <1>;
--			};
--		};
-+		pinctrl-0 = <&pinctrl_ipu1_disp0>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
- 
--		port {
- 			display_in: endpoint {
- 				remote-endpoint = <&ipu1_di0_disp0>;
- 			};
- 		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			display_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+			};
-+		};
- 	};
- 
- 	gpio-keys {
-@@ -76,6 +70,18 @@
- 		};
- 	};
- 
-+	panel {
-+		compatible = "armadeus,st0700-adapt";
-+		power-supply = <&reg_3p3v>;
-+		backlight = <&backlight>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&display_out>;
-+			};
-+		};
-+	};
-+
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3P3V";
-@@ -351,7 +357,7 @@
- 		>;
- 	};
- 
--	pinctrl_ipu1_disp1: ipu1disp1grp {
-+	pinctrl_ipu1_disp0: ipu1disp0grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK	0x100b1
- 			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15		0x100b1
--- 
-2.21.0
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
+Thx
+Regards
+
+On 10/15/19 3:11 PM, Alain Volmat wrote:
+> Remove the following warning:
+> 
+> drivers/i2c/busses/i2c-stm32f7.c:315:
+> warning: cannot understand function prototype:
+> 'struct stm32f7_i2c_spec i2c_specs[] =
+> 
+> Replace a comment starting with /** by simply /* to avoid having
+> it interpreted as a kernel-doc comment.
+> 
+> Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> ---
+> Changes in v2: update commit description
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index d36cf08461f7..7aa4a47792a7 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -305,7 +305,7 @@ struct stm32f7_i2c_dev {
+>  	struct regmap *regmap;
+>  };
+>  
+> -/**
+> +/*
+>   * All these values are coming from I2C Specification, Version 6.0, 4th of
+>   * April 2014.
+>   *
+> 
