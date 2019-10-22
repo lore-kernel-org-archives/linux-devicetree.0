@@ -2,86 +2,103 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FBACA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 16:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECC2CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 16:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC832184C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 16:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B11A2184C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 16:22:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PTE3mUKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732277AbfJVQVj (ORCPT
+        id S2388875AbfJVQVz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 12:21:39 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:27441 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731132AbfJVQVj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:21:39 -0400
-X-IronPort-AV: E=Sophos;i="5.68,216,1569250800"; 
-   d="scan'208";a="29713005"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 23 Oct 2019 01:21:38 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C5C544012BF1;
-        Wed, 23 Oct 2019 01:21:34 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-ide@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Simon Horman <horms@verge.net.au>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a774b1: Add SATA controller node
-Date:   Tue, 22 Oct 2019 17:21:19 +0100
-Message-Id: <1571761279-17347-3-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571761279-17347-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1571761279-17347-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Tue, 22 Oct 2019 12:21:55 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60160 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388850AbfJVQVz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 12:21:55 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MGLnv5056454;
+        Tue, 22 Oct 2019 11:21:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571761309;
+        bh=DD73lBbCr3Pa+uKFhQsH89wix/dQZe17+r9X7rL61Nk=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=PTE3mUKBxTYrv8vEN29J+VjZgu2ZqG19zMlWGuGWF7kyWTV8K7qApbeAUziO998ND
+         v6HID/tjLT5YDNXXgG1N/o5okKxjg0XAGmprFJU3+ugztHixkZvMwZ4Y5/kBQjljJh
+         jyyJNaTKhd1WLJAgnq6fJrr0dyyjkTRS+DYbs+UQ=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MGLn94063952
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 22 Oct 2019 11:21:49 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
+ Oct 2019 11:21:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 22 Oct 2019 11:21:39 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x9MGLYN0005740;
+        Tue, 22 Oct 2019 11:21:34 -0500
+Date:   Tue, 22 Oct 2019 11:21:34 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 1/3] ARM: dts: am43xx: add support for clkout1 clock
+Message-ID: <20191022162134.fpawonjdjvd5kxza@ti.com>
+References: <20191016184954.14048-1-bparrot@ti.com>
+ <20191016184954.14048-2-bparrot@ti.com>
+ <20191022154816.GO5610@atomide.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191022154816.GO5610@atomide.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the SATA controller node to the RZ/G2N SoC specific
-dtsi.
+Tony Lindgren <tony@atomide.com> wrote on Tue [2019-Oct-22 08:48:16 -0700]:
+> * Benoit Parrot <bparrot@ti.com> [191016 18:47]:
+> > --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+> > +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> > @@ -704,6 +704,60 @@
+> >  		ti,bit-shift = <8>;
+> >  		reg = <0x2a48>;
+> >  	};
+> > +
+> > +	clkout1_osc_div_ck: clkout1_osc_div_ck {
+> > +		#clock-cells = <0>;
+> > +		compatible = "ti,divider-clock";
+> > +		clocks = <&sys_clkin_ck>;
+> > +		ti,bit-shift = <20>;
+> > +		ti,max-div = <4>;
+> > +		reg = <0x4100>;
+> > +	};
+> 
+> Here too please describe why the clock names are not generic.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774b1.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Tero originally had this patch in the kernel so this is somewhat of a
+revert. Since these "clock" were removed. If the name syntax is no longer
+valid for some reason, then I will need a little more informations to
+proceed.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-index 80b8b2e..1267bb5 100644
---- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-@@ -1404,6 +1404,17 @@
- 			status = "disabled";
- 		};
- 
-+		sata: sata@ee300000 {
-+			compatible = "renesas,sata-r8a774b1",
-+				     "renesas,rcar-gen3-sata";
-+			reg = <0 0xee300000 0 0x200000>;
-+			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 815>;
-+			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
-+			resets = <&cpg 815>;
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@f1010000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
--- 
-2.7.4
+Tero, can you assist here?
 
+Benoit
+
+> 
+> Regards,
+> 
+> Tony
