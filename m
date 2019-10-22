@@ -2,87 +2,121 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320E9CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F39CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D43921A4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6E22086D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 16:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571760237;
+	bh=wZqpmahqkdwN8bSUWflCybWpGAN6ZEbtQZB3qCoZljg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wboBNnqZzp1j39pAe+6GRhdb/V++8az/bzstrtKXY/6KsqtjGwqGO88ZcjgsptVqu
+	 6JqSTRpmssal0XJOGXDsLKoUb9Ml1qTU4fqrICHf03ITTTHPoYTwxyiqe9gQiee0b6
+	 8xnWulESq+1mvBfr9PKOqITN03XoR+trS3HM1Mlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388366AbfJVPsw (ORCPT
+        id S2389098AbfJVQD4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:48:52 -0400
-Received: from 14.mo6.mail-out.ovh.net ([46.105.56.113]:54596 "EHLO
-        14.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387659AbfJVPsw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 11:48:52 -0400
-Received: from player793.ha.ovh.net (unknown [10.109.159.152])
-        by mo6.mail-out.ovh.net (Postfix) with ESMTP id C12591E4386
-        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 15:19:35 +0200 (CEST)
-Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
-        (Authenticated sender: sebastien.szymanski@armadeus.com)
-        by player793.ha.ovh.net (Postfix) with ESMTPSA id 1FB76B3E44A4;
-        Tue, 22 Oct 2019 13:19:22 +0000 (UTC)
-From:   =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Julien Boibessot <julien.boibessot@armadeus.com>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 8/9] ARM: dts: imx6qdl-apf6dev: add backlight support
-Date:   Tue, 22 Oct 2019 15:16:54 +0200
-Message-Id: <20191022131655.25737-9-sebastien.szymanski@armadeus.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191022131655.25737-1-sebastien.szymanski@armadeus.com>
-References: <20191022131655.25737-1-sebastien.szymanski@armadeus.com>
+        Tue, 22 Oct 2019 12:03:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387746AbfJVQD4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 12:03:56 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E39F21906;
+        Tue, 22 Oct 2019 16:03:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571760235;
+        bh=wZqpmahqkdwN8bSUWflCybWpGAN6ZEbtQZB3qCoZljg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kfdQNIrvB/s9H8KQC7rO59/l3ydNVyU/ihPEcbQgqHc8iYlLgPGNP53znI1XGkZbp
+         zKp9BNTuVAovRoYJsjf0ve98p9jxSW+o5aOdHl3RUA2eSeb5OZHAVyfbDGCyhl2YOe
+         swTrBGgRroC8KtsMuhpKGF8CHBPraGYjLhOee4NY=
+Received: by mail-qt1-f174.google.com with SMTP id c21so27497198qtj.12;
+        Tue, 22 Oct 2019 09:03:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAUiRov13Q4nl311SaYm+NmPw+IsM68HfJdrep2TI4MIJE9HtocR
+        N6y9j05t/isX8pmBUPOcEbPa5te3nymJcMoqGg==
+X-Google-Smtp-Source: APXvYqyyB49iT/626fOA+V3xooxxBwy9dN/zE/XUizKQfbN9LeELAEH0K+nxf/XITvR19bMhVI+BTk4qKYDqfrxtpdo=
+X-Received: by 2002:ac8:44d9:: with SMTP id b25mr4261906qto.300.1571760234567;
+ Tue, 22 Oct 2019 09:03:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 137078316207461445
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrkeejgdeivdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
+ <20191017191152.GA11222@bogus> <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
+ <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com> <20191022140604.ovmooly47qax2sms@smtp.gmail.com>
+In-Reply-To: <20191022140604.ovmooly47qax2sms@smtp.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 22 Oct 2019 11:03:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
+Message-ID: <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add PWM backlight support.
+On Tue, Oct 22, 2019 at 9:06 AM Marcelo Schmitt
+<marcelo.schmitt1@gmail.com> wrote:
+>
+> Hi,
+>
+> I ran the DTC and CHECK for AD7292 schema however, the target '__build'
+> did not run due to errors found in regulator/fixed-regulator.yaml and
+> arm/allwinner,sun4i-a10-csi.yaml.
 
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
----
- arch/arm/boot/dts/imx6qdl-apf6dev.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Fixes for those are still pending in -next. Use 'make -k' and ignore those.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-index 9067355d8541..f617089be9cc 100644
---- a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-@@ -11,6 +11,14 @@
- 		stdout-path = &uart4;
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm3 0 191000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <0>;
-+		power-supply = <&reg_5v>;
-+	};
-+
- 	disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "bgr666";
--- 
-2.21.0
+>
+> I recall seeing something about the maxItems requirement over regulator
+> supplies being changed on the iio mailing list, so I updated my repo
+> locally, cloned and reinstalled the dt-schema toolset. However, I still
+> can't make it go through the '__build' target.
+>
+> Python 3.7.5rc1 is my default python and I got the following pip3
+> packages installed:
+>
+> ruamel.yaml        0.16.5
+> ruamel.yaml.clib   0.2.0
+> rfc3987            1.3.8
+> jsonschema         3.0.1
+> dtschema           0.0.1  at $HOME/<iio repo dir>/dt-schema
+>
+> Debian Bullseye packages installed:
+> python3-yaml/testing,now 5.1.2-1
+> libyaml-dev/testing,now 0.2.2-1
+>
+> I was only able to run DTC after installing the libyaml-dev package, so
+> I think it might be worth to add it to the project dependencies at
+> https://github.com/robherring/dt-schema.
 
+Strictly speaking, it's not a dependency for dt-schema. It's
+documented in Documentation/devicetree/writing-schema.rst. I've added
+a pointer to that in bindings/submitting-patches.txt. I'm not sure how
+else to make it more obvious.
+
+BTW, You will get a useful error message if libyaml is missing when
+building 'make dtbs_check'. I need to make that work for
+dt_binding_check.
+
+> apt-get install libyaml-dev
+
+You need the lib too, but that tends to already be installed. IIRC,
+installing the headers doesn't install the lib automatically.
+
+In any case, I wanted to avoid putting in distro specific instructions
+in the kernel.
+
+Rob
