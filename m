@@ -2,179 +2,188 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C010CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C5CCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CCD20679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 08:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E3C21906
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="I1yriIhi"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NPdYdKUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbfJVIuS (ORCPT
+        id S2388197AbfJVJAx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 04:50:18 -0400
-Received: from mout02.posteo.de ([185.67.36.66]:52535 "EHLO mout02.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbfJVIuS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 04:50:18 -0400
-X-Greylist: delayed 424 seconds by postgrey-1.27 at vger.kernel.org; Tue, 22 Oct 2019 04:50:16 EDT
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id C9F94240101
-        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 10:43:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-        t=1571733790; bh=d7ljr2KXEchtO4eaUj9aJnzgDAtIamCjSvrcjvTlHgc=;
-        h=Subject:To:Cc:From:Openpgp:Autocrypt:Date:From;
-        b=I1yriIhielZarY2gAYculDOCoorKztv6Wz+v08f2L6Jbc+TRN13GHPiA9ATWy3p+8
-         QkzU6HRrA2mUvh2EgFIA76o2AOuFtx3MuRAsNCgF6DV8GGAwUdVl/Nrw88XKTwL3vL
-         9/E+SwpfXWEWy8AtrNiLIqKtIN8aoVO8dOX5TZ+T4qx7xizqaPiKOaAdeT8Ab69rkW
-         6hoCPIGq496oyWu2zRREyk2KuIZ0IMdcjYFR23NLL0o2TMJLtkK7AVJJSKzbwWggKo
-         TkieDjjqERumJSN0RugxIdq31TB4jem02AQowPwkgSD9x/ikqaSeTCCYKCvlq2pwzn
-         2UKcaGUcmANng==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 46y6Tn74Zyz9rxM;
-        Tue, 22 Oct 2019 10:43:09 +0200 (CEST)
-Subject: Re: [PATCH] dt-bindings: mma8452: Re-word 'interrupt-names'
- description
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-iio@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191022035626.13002-1-andrew.smirnov@gmail.com>
-From:   Martin Kepplinger <martink@posteo.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=martink@posteo.de; keydata=
- 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
-Message-ID: <1a1bdf10-2505-6baf-8030-ce5e0e2b55a9@posteo.de>
-Date:   Tue, 22 Oct 2019 10:43:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 05:00:53 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34998 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388200AbfJVJAx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 05:00:53 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z6so13526741otb.2
+        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 02:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SmTLxbn2kKefvgWPjhHzSbawevdf2jyzIFbZjdoYSRg=;
+        b=NPdYdKUERvhHHpDIQDQ10hQSaorrKLuN5YWANO4U0/NWqkNM3RjRbsf5GGEb3gvNzo
+         SsBGswPQXsfJL7nd5ujenDOTDw0zdF+Kk0QwWM8UbJfOHwZI0y9ZifHWOwLHq+p9r7fB
+         hzKYVu6sXLuzyRDgomv1eIJmmxo4mr1LOksIbFOOonnTIwEzJ9grpSnjBIpRmGZL/zQs
+         tZs1Hnsw0ZsXBUiFaXlP1kNPmusiHa4QUHGR+T/AHPgKLnGBW+FoqlD1UVhoUym4Zb9e
+         Pxd766NKKd6autGVDbbVPsgfsg6oCYes9BcqDIUtJyDfutunx/4MWUd5hMYp0ReYEaSf
+         QwqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SmTLxbn2kKefvgWPjhHzSbawevdf2jyzIFbZjdoYSRg=;
+        b=jKNINYS4ClHjr8w0X3GRRkBtdOC/W+iv1iT4T0uda8DVIPsjVHJu2B4224a4NkqE7M
+         DSi/0dqSrjO1hKc/guPkdTGEinCUq03d2aGaUMVtROHua/lTTIXzMBDDuncAenzaC5na
+         m3N7bT4Tb6PKN4s2N+6g6aJ7Q1gKDrp8TOrF8fdx6bAGeoL49nk52s52h/MSTjREngol
+         nAZvvv4zwIk3Qzp8epAZK1CMZ/j13MgfTs+tu70y0+L31eN9CLk5EC4+rFlycND0urBg
+         NYiDUPCg0J4gMlccrAdjdPkxO/8U1Zzn045DsCZoXyF4/6jvUFqhjI6LarcpZSoTZ2Fp
+         yRuw==
+X-Gm-Message-State: APjAAAXcvLV+FixIiu5T9Cydh1dX+XbwzebOWxIld/6sbO7R+hL3wxuO
+        3+9lUaYfIkVj1DlmuIcyYU0U1TgrkPisIqrBWVDHmQ==
+X-Google-Smtp-Source: APXvYqxK70rUBBV0XfA7M24a/ljeTChWrfW93JCYkDOciFIXXAsfdw2GaOUcpIuroku/WN8Nq46exL0BMTqFo/Kd158=
+X-Received: by 2002:a9d:6c96:: with SMTP id c22mr1811694otr.194.1571734850788;
+ Tue, 22 Oct 2019 02:00:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191022035626.13002-1-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
+ <CAMpxmJUrY9YK==6Mf5MoRTUDwmXJ6v5EM-VLXCNXJ8ZNK+xHyA@mail.gmail.com> <CAAFQd5BEcE0m7Jg1ZnmrF+jwH6Yn8+vYqT1L2wc2zkZ5vRCRAg@mail.gmail.com>
+In-Reply-To: <CAAFQd5BEcE0m7Jg1ZnmrF+jwH6Yn8+vYqT1L2wc2zkZ5vRCRAg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 22 Oct 2019 11:00:39 +0200
+Message-ID: <CAMpxmJU_Vws0oGf+GQCEbs-NHFCniO8c2CbXrKy9oEVC_KUhMQ@mail.gmail.com>
+Subject: Re: [PATCH v4] misc: eeprom: at24: support pm_runtime control
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 22.10.19 05:56, Andrey Smirnov wrote:
-> Current wording in the binding documentation doesn't make it 100%
-> clear that only one of "INT1" and "INT2" will ever be used by the
-> driver and that specifying both has no advantages. Re-word it to make
-> this aspect a bit more explicit.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: linux-iio@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/iio/accel/mma8452.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> index e132394375a1..b27b6bee9eb6 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-> @@ -17,7 +17,7 @@ Optional properties:
->  
->    - interrupts: interrupt mapping for GPIO IRQ
->  
-> -  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
-> +  - interrupt-names: should contain "INT1" or "INT2", the accelerometer's
->  		     interrupt line in use.
->  
->    - vdd-supply: phandle to the regulator that provides vdd power to the accelerometer.
-> 
+wt., 22 pa=C5=BA 2019 o 09:27 Tomasz Figa <tfiga@chromium.org> napisa=C5=82=
+(a):
+>
+> On Tue, Oct 22, 2019 at 1:53 AM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> >
+> > pt., 18 pa=C5=BA 2019 o 10:26 Bibby Hsieh <bibby.hsieh@mediatek.com> na=
+pisa=C5=82(a):
+> > >
+> > > Although in the most platforms, the power of eeprom and i2c
+> > > are alway on, some platforms disable the eeprom and i2c power
+> > > in order to meet low power request.
+> > > This patch add the pm_runtime ops to control power to support
+> > > all platforms.
+> > >
+> > > Changes since v3:
+> > >  - remove redundant calling function
+> > >  - change SIMPLE_DEV_PM_OPS to SET_RUNTIME_PM_OPS
+> > >  - change supply name
+> > >
+> > > Changes since v2:
+> > >  - rebase onto v5.4-rc1
+> > >  - pm_runtime_disable and regulator_bulk_disable at
+> > >    err return in probe function
+> > >
+> > > Changes since v1:
+> > >  - remove redundant code
+> > >  - fixup coding style
+> > >
+> > > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > > ---
+> > >  drivers/misc/eeprom/at24.c | 64 ++++++++++++++++++++++++++++++++++++=
+++
+> > >  1 file changed, 64 insertions(+)
+> > >
+> > > diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> > > index 2cccd82a3106..68ced4f25916 100644
+> > > --- a/drivers/misc/eeprom/at24.c
+> > > +++ b/drivers/misc/eeprom/at24.c
+> > > @@ -22,6 +22,7 @@
+> > >  #include <linux/nvmem-provider.h>
+> > >  #include <linux/regmap.h>
+> > >  #include <linux/pm_runtime.h>
+> > > +#include <linux/regulator/consumer.h>
+> > >  #include <linux/gpio/consumer.h>
+> > >
+> > >  /* Address pointer is 16 bit. */
+> > > @@ -67,6 +68,12 @@
+> > >   * which won't work on pure SMBus systems.
+> > >   */
+> > >
+> > > +static const char * const at24_supply_names[] =3D {
+> > > +       "vcc", "i2c",
+> > > +};
+> > > +
+> > > +#define AT24_NUM_SUPPLIES ARRAY_SIZE(at24_supply_names)
+> > > +
+> > >  struct at24_client {
+> > >         struct i2c_client *client;
+> > >         struct regmap *regmap;
+> > > @@ -91,6 +98,8 @@ struct at24_data {
+> > >
+> > >         struct gpio_desc *wp_gpio;
+> > >
+> > > +       bool has_supplies;
+> > > +       struct regulator_bulk_data supplies[AT24_NUM_SUPPLIES];
+> > >         /*
+> > >          * Some chips tie up multiple I2C addresses; dummy devices re=
+serve
+> > >          * them for us, and we'll use them with SMBus calls.
+> > > @@ -662,6 +671,17 @@ static int at24_probe(struct i2c_client *client)
+> > >         at24->client[0].client =3D client;
+> > >         at24->client[0].regmap =3D regmap;
+> > >
+> > > +       regulator_bulk_set_supply_names(at24->supplies,
+> > > +                                       at24_supply_names, AT24_NUM_S=
+UPPLIES);
+> > > +       err =3D  devm_regulator_bulk_get(&at24->client[0].client->dev=
+,
+> > > +                                      AT24_NUM_SUPPLIES, at24->suppl=
+ies);
+> > > +       if (err =3D=3D -ENODEV)
+> > > +               at24->has_supplies =3D NULL;
+> >
+> > I just gave this a spin and noticed that this will never happen - the
+> > regulator core will use a dummy regulator if none is defined in DT.
+> > The only way for this to make sense would be to use
+> > regulator_get_optional() for each supply separately. But actually I
+> > think we should just leave it this way and remove this if. In the end:
+> > this chip needs some power supply, so dummy regulator makes sense.
+>
+> Thanks for testing. I'd still like to make sure what happens on non-DT
+> platforms.
+>
+> I can see that the core returns the dummy regulator if
+> have_full_constraints() [1]. That is always true for DT systems, but
+> for others it's false by default, unless someone explicitly calls
+> regulator_has_full_constraints() [2].
+>
 
-Acked-by: Martin Kepplinger <martink@posteo.de>
+Not tested yet, but from the code it looks like it will then keep
+returning EPROBE_DEFER which doesn't sound right really, especially
+since we're printing an error message too. Shouldn't it be -ENODEV?
 
-thanks,
+Bart
 
-                           martin
-
+> [1] https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/regulator/co=
+re.c#L1787
+> [2] https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/regulator/co=
+re.c#L120
+>
+> Best regards,
+> Tomasz
