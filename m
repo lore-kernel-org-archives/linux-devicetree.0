@@ -2,99 +2,108 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEEFCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 04:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A9CCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 05:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BD521783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 04:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B2420B7C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 05:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbfJVE46 (ORCPT
+        id S1731159AbfJVFMb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 00:56:58 -0400
-Received: from sauhun.de ([88.99.104.3]:54142 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfJVE46 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 00:56:58 -0400
-Received: from localhost (x4e37421f.dyn.telefonica.de [78.55.66.31])
-        by pokefinder.org (Postfix) with ESMTPSA id 884872C0139;
-        Tue, 22 Oct 2019 06:56:56 +0200 (CEST)
-Date:   Tue, 22 Oct 2019 06:56:56 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc:     Peter Rosin <peda@axentia.se>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
+        Tue, 22 Oct 2019 01:12:31 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55071 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731172AbfJVFMb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 01:12:31 -0400
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1iMmT0-00060g-Df; Tue, 22 Oct 2019 07:12:22 +0200
+Subject: Re: [PATCH v3 1/5] net: ag71xx: port to phylink
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>,
+        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paul Burton <paul.burton@mips.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
-        Cedric Le Goater <clg@kaod.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
- timeout support
-Message-ID: <20191022045655.GA975@kunai>
-References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
- <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
- <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
- <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Chris Snook <chris.snook@gmail.com>, netdev@vger.kernel.org,
+        linux-mips@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>
+References: <20191021053811.19818-1-o.rempel@pengutronix.de>
+ <20191021053811.19818-2-o.rempel@pengutronix.de>
+ <20191021222122.GM25745@shell.armlinux.org.uk>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <bf684928-0800-69df-f5cd-5d1db6958804@pengutronix.de>
+Date:   Tue, 22 Oct 2019 07:12:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Content-Disposition: inline
-In-Reply-To: <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191021222122.GM25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
+On 22.10.19 00:21, Russell King - ARM Linux admin wrote:
+> On Mon, Oct 21, 2019 at 07:38:07AM +0200, Oleksij Rempel wrote:
+>> +static void ag71xx_mac_validate(struct phylink_config *config,
+>> +			    unsigned long *supported,
+>> +			    struct phylink_link_state *state)
+>>   {
+>> -	struct ag71xx *ag = netdev_priv(ndev);
+>> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+>> +
+>> +	if (state->interface != PHY_INTERFACE_MODE_NA &&
+>> +	    state->interface != PHY_INTERFACE_MODE_GMII &&
+>> +	    state->interface != PHY_INTERFACE_MODE_MII) {
+>> +		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+>> +		return;
+>> +	}
+>> +
+>> +	phylink_set(mask, MII);
+>> +
+>> +	/* flow control is not supported */
+>> +
+>> +	phylink_set(mask, 10baseT_Half);
+>> +	phylink_set(mask, 10baseT_Full);
+>> +	phylink_set(mask, 100baseT_Half);
+>> +	phylink_set(mask, 100baseT_Full);
+>>   
+>> -	ag71xx_link_adjust(ag, true);
+>> +	if (state->interface == PHY_INTERFACE_MODE_NA &&
+>> +	    state->interface == PHY_INTERFACE_MODE_GMII) {
+> 
+> This is always false.
 
-> Changes I submitted in this patch set is for a different purpose which
-> is very Aspeed H/W specific, and actually it's a more serious timeout
-> setting indeed. If this H/W is used in multi-master environment, it
-> could meet a H/W hang that freezes itself in slave mode and it can't
-> escape from the state. To resolve the specific case, this H/W provides
-> self-recovery feature which monitors abnormal state of SDA, SCL and its
-> H/W state machine using the timeout setting to determine the escape
-> condition.
+... I shame to myself :(
 
-Thanks for the summary. I just wonder on what the timeout value depends.
-Do we really need to put in DT or can we derive it e.g. from the
-compatible value in the driver?
+> Apart from that, from just reading the patch I have no further concerns.
 
+ok. thx!
 
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
+Kind regards,
+Oleksij Rempel
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2ujBMACgkQFA3kzBSg
-KbYZZg/+ILRBsr6VA2yU97i07DYrhNgIs0GsfqAA3zqC+JhbF/dyORbZWno4fIxZ
-+qHvJ6pTQCR/jWA4aP1kO/NL9EU3nWIICyZHIFJpXBtwrH9mGP1+hlnyrWc2uaZC
-JpOw3AKSYevrQb0RksLu16ZddmlMHO0+Qi2rkhh4LGcsdCiUZRSOEeoaQkiyS3Cy
-hsb1uqiGFQFdq/gFv08rpW2ja7TGS/HMzs8RdXlOI03bL6ORXU9QCV6H2oIBl00v
-9YQYHo9lV5PtRTweCpaN0o+9XLmP1y4A7kHS1lr9YVoRVT67HniEisum3t6UPR2H
-B5Ha1IVzBYuqtoq0vhuiowNVmV9OROoM+alQxhw3g6HPT0K+d5GmD9k6aPNXWCod
-rBT7QTBslplAZJNo6R2tGvh0wIYWU0PMJ+ZSsS9YdigSqMXfd8C1p2R6ZphdyCk7
-dHfEaPa4iuUGYaJWiHFROYni/GhG1EBN3kpUSphG5ETA6Ur16blwXyAZy7oVm5xO
-IsIVfsJYBiV/1O77xE7FUF8gXpIalsLLH7/AXH80JexMqZBpu5hg6N6GhbN7K4rl
-wZBpfCNq9Rvy65BvFL4Vmw2elrZmo9S7vYs907eZ1ZJNWB9TVpqe+z0c9FNMuAKx
-o1ZttPvRuKUhoQTMnQ734eW74vmmrl4IfguSGshRymILa5AaX1Q=
-=INXh
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
