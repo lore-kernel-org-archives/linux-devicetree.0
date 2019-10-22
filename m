@@ -2,177 +2,93 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3994BCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A94BCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D45521783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fhnLAxHZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5A80221872
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389235AbfJVNXt (ORCPT
+        id S1731061AbfJVNaV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:23:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33030 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389226AbfJVNXt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 09:23:49 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MDNkTf003907;
-        Tue, 22 Oct 2019 08:23:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571750626;
-        bh=WDj6QPyW6ZuJ8MWf4ORoc/EmksLmyGtH8kZua5ibgLg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=fhnLAxHZYDfYYM2OyO/UElKIsrskrnSj2aYhKyL6+3N3VO1pG7j4DvU8vlBBjTzVM
-         1xSO4d2lsSsAx72glZk7CP2EC7lWk9i6Y0RLP90bAtZtfh86I0VLgv0AX1uTTHb2lY
-         qrbGY09KeuZVPXeHHDpGd/ZKmihcqDIjdpzICJZw=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MDNVbd068725
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Oct 2019 08:23:31 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
- Oct 2019 08:23:21 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 22 Oct 2019 08:23:30 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9MDMplb126427;
-        Tue, 22 Oct 2019 08:22:58 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <kishon@ti.com>
-CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
-        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 3/3] phy: ti: j721e-wiz: Manage typec-gpio-dir
-Date:   Tue, 22 Oct 2019 16:22:49 +0300
-Message-ID: <20191022132249.869-4-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191022132249.869-1-rogerq@ti.com>
-References: <20191022132249.869-1-rogerq@ti.com>
+        Tue, 22 Oct 2019 09:30:21 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:26819 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730981AbfJVNaU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 09:30:20 -0400
+X-UUID: fe6f9d5ca1904e649a664df5bf5a9507-20191022
+X-UUID: fe6f9d5ca1904e649a664df5bf5a9507-20191022
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 522666648; Tue, 22 Oct 2019 21:30:16 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 22 Oct 2019 21:30:14 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 22 Oct 2019 21:30:13 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: [RESEND, PATCH 1/1] arm: dts: mediatek: add mt7629 pwm support
+Date:   Tue, 22 Oct 2019 21:30:01 +0800
+Message-ID: <1571751001-28588-2-git-send-email-sam.shih@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1571751001-28588-1-git-send-email-sam.shih@mediatek.com>
+References: <1571751001-28588-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Based on this GPIO state we need to configure LN10
-bit to swap lane0 and lane1 if required (flipped connector).
+This adds pwm support for MT7629.
+Used:
+https://patchwork.kernel.org/patch/11160851/
 
-Type-C companions typically need some time after the cable is
-plugged before and before they reflect the correct status of
-Type-C plug orientation on the DIR line.
-
-Type-C Spec specifies CC attachment debounce time (tCCDebounce)
-of 100 ms (min) to 200 ms (max).
-
-Use the DT property to figure out if we need to add delay
-or not before sampling the Type-C DIR line.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 ---
- drivers/phy/ti/phy-j721e-wiz.c | 41 ++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ arch/arm/boot/dts/mt7629.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-index 2a95da843e9f..2becdbcb762a 100644
---- a/drivers/phy/ti/phy-j721e-wiz.c
-+++ b/drivers/phy/ti/phy-j721e-wiz.c
-@@ -9,6 +9,8 @@
- #include <dt-bindings/phy/phy.h>
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/mux/consumer.h>
-@@ -22,6 +24,7 @@
- #define WIZ_SERDES_CTRL		0x404
- #define WIZ_SERDES_TOP_CTRL	0x408
- #define WIZ_SERDES_RST		0x40c
-+#define WIZ_SERDES_TYPEC	0x410
- #define WIZ_LANECTL(n)		(0x480 + (0x40 * (n)))
+diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+index 9608bc2ccb3f..24375fc5f936 100644
+--- a/arch/arm/boot/dts/mt7629.dtsi
++++ b/arch/arm/boot/dts/mt7629.dtsi
+@@ -241,6 +241,21 @@
+ 			status = "disabled";
+ 		};
  
- #define WIZ_MAX_LANES		4
-@@ -29,6 +32,8 @@
- #define WIZ_DIV_NUM_CLOCKS_16G	2
- #define WIZ_DIV_NUM_CLOCKS_10G	1
- 
-+#define WIZ_SERDES_TYPEC_LN10_SWAP	BIT(30)
++		pwm: pwm@11006000 {
++			compatible = "mediatek,mt7629-pwm";
++			reg = <0x11006000 0x1000>;
++			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&topckgen CLK_TOP_PWM_SEL>,
++				 <&pericfg CLK_PERI_PWM_PD>,
++				 <&pericfg CLK_PERI_PWM1_PD>;
++			clock-names = "top", "main", "pwm1";
++			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
++			assigned-clock-parents =
++					<&topckgen CLK_TOP_UNIVPLL2_D4>;
++			num-pwms = <1>;
++			status = "disabled";
++		};
 +
- enum wiz_lane_standard_mode {
- 	LANE_MODE_GEN1,
- 	LANE_MODE_GEN2,
-@@ -206,6 +211,8 @@ struct wiz {
- 	u32			num_lanes;
- 	struct platform_device	*serdes_pdev;
- 	struct reset_controller_dev wiz_phy_reset_dev;
-+	struct gpio_desc	*gpio_typec_dir;
-+	int			typec_dir_delay;
- };
- 
- static int wiz_reset(struct wiz *wiz)
-@@ -703,6 +710,21 @@ static int wiz_phy_reset_deassert(struct reset_controller_dev *rcdev,
- 	struct wiz *wiz = dev_get_drvdata(dev);
- 	int ret;
- 
-+	/* if typec-dir gpio was specified, set LN10 SWAP bit based on that */
-+	if (id == 0 && wiz->gpio_typec_dir) {
-+		if (wiz->typec_dir_delay)
-+			msleep_interruptible(wiz->typec_dir_delay);
-+
-+		if (gpiod_get_value_cansleep(wiz->gpio_typec_dir)) {
-+			regmap_update_bits(wiz->regmap, WIZ_SERDES_TYPEC,
-+					   WIZ_SERDES_TYPEC_LN10_SWAP,
-+					   WIZ_SERDES_TYPEC_LN10_SWAP);
-+		} else {
-+			regmap_update_bits(wiz->regmap, WIZ_SERDES_TYPEC,
-+					   WIZ_SERDES_TYPEC_LN10_SWAP, 0);
-+		}
-+	}
-+
- 	if (id == 0) {
- 		ret = regmap_field_write(wiz->phy_reset_n, true);
- 		return ret;
-@@ -789,6 +811,25 @@ static int wiz_probe(struct platform_device *pdev)
- 		goto err_addr_to_resource;
- 	}
- 
-+	wiz->gpio_typec_dir = devm_gpiod_get_optional(dev, "typec-dir",
-+						      GPIOD_IN);
-+	if (IS_ERR(wiz->gpio_typec_dir)) {
-+		ret = PTR_ERR(wiz->gpio_typec_dir);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to request typec-dir gpio: %d\n",
-+				ret);
-+		goto err_addr_to_resource;
-+	}
-+
-+	if (wiz->gpio_typec_dir) {
-+		ret = of_property_read_u32(node, "typec-dir-debounce",
-+					   &wiz->typec_dir_delay);
-+		if (ret && ret != -EINVAL) {
-+			dev_err(dev, "Invalid typec-dir-debounce property\n");
-+			goto err_addr_to_resource;
-+		}
-+	}
-+
- 	wiz->dev = dev;
- 	wiz->regmap = regmap;
- 	wiz->num_lanes = num_lanes;
+ 		i2c: i2c@11007000 {
+ 			compatible = "mediatek,mt7629-i2c",
+ 				     "mediatek,mt2712-i2c";
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
 
