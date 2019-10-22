@@ -2,221 +2,111 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B5ACA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 03:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8FDCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 03:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2C92184C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 03:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE94720700
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 03:56:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXU/xjF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730855AbfJVDyw (ORCPT
+        id S1730550AbfJVD4f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 23:54:52 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:49216 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730359AbfJVDyw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 23:54:52 -0400
-X-UUID: eaa763e80c2c4dc084d4e5010da78248-20191022
-X-UUID: eaa763e80c2c4dc084d4e5010da78248-20191022
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <anthony.huang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2084867818; Tue, 22 Oct 2019 11:54:45 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 22 Oct 2019 11:54:43 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 22 Oct 2019 11:54:43 +0800
-From:   Anthony Huang <anthony.huang@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Anthony Huang <anthony.huang@mediatek.com>
-Subject: [RFC PATCH 1/2] dt-bindings: soc: mediatek: Add document for mmdvfs driver
-Date:   Tue, 22 Oct 2019 11:51:52 +0800
-Message-ID: <1571716313-10215-2-git-send-email-anthony.huang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1571716313-10215-1-git-send-email-anthony.huang@mediatek.com>
-References: <1571716313-10215-1-git-send-email-anthony.huang@mediatek.com>
+        Mon, 21 Oct 2019 23:56:35 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41734 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730460AbfJVD4f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 23:56:35 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t3so9091310pga.8;
+        Mon, 21 Oct 2019 20:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NQpTtZM/y7qP8DVtXmZT0zjDljcg+h3NWyKjsVAn7Xw=;
+        b=XXU/xjF64L/4degM8Hl+Xc3iqW37zWSuv0EPTS2tbPWlUNinGZGD8iwgEJN5+mA6BO
+         biQPbuWTu/GMguYnrSih+BBVsWIJlun9jDpRCfx1QHBb5OnorOnc6FFiqu4nEJ2R5LkV
+         aEqU3JOtw8DyU9FrYeWqRPgvN7nC6ieWtl23ll4DEdrrUvPVGHdaXLCksexnWExGO5eN
+         UGS6FM3LUeHs71LCLPmGC3V6NzcCiH+WH8LWBtyqD3CF1Q0go5kuU98Zs1mzEpHKyRAJ
+         lgjHir0+yBlquSTOlkjGb6LElGpVB+RKpxHQn+7Nl8PeIlPCrkwC70kgaKEokapGxqy6
+         biRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NQpTtZM/y7qP8DVtXmZT0zjDljcg+h3NWyKjsVAn7Xw=;
+        b=Tr5YHc0L1tcp9TpdM9PWeFShYZ1n6rgCA/q57L6YYqvzSEsbbbr560UF7cFZmiqD1o
+         xO35HQUiW+mokLUWd8xx7C6ewHBWWkooJfRzv220+8KZNo6vVVrFzYnB0LRKGoHZ+XLQ
+         DVmZry2WTzAm+CGHwdZ7Ji1zGwvn1ni3SiaML0jNR49bc1vLCwwgoPWhFa7DHrFM2uCv
+         ShMPq35R2PDjy5A4IsC7ppjkxUjmmSctSyAqdiB/KSkIDqHLZymSoFnZUhqvnS4gFAGu
+         Pky1IWITx0RWQlL8/bRRbxBauggRvoc9wLvJuM15BUw5z8f4kdfzc6AYt1XY9pH5JAYw
+         82Vg==
+X-Gm-Message-State: APjAAAXdpAz9sTlygsnQ4i2iOeipI0b+zCm9OwlaDavf8OgMsO9ySRRd
+        wGD9y4JQcywrX/xHV1sGZsqj3ANC
+X-Google-Smtp-Source: APXvYqzazOxR80J2OqRZUk9yky/b+C+CGXJTxn2/FjuXPiDf2Tob/yx8o6Qs10Z6X487h8pmc1VV0g==
+X-Received: by 2002:a62:28b:: with SMTP id 133mr1691809pfc.242.1571716592662;
+        Mon, 21 Oct 2019 20:56:32 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id l22sm14955769pgj.4.2019.10.21.20.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2019 20:56:31 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-iio@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: mma8452: Re-word 'interrupt-names' description
+Date:   Mon, 21 Oct 2019 20:56:26 -0700
+Message-Id: <20191022035626.13002-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This document describes the properties what mtk mmdvfs
-device node support.
+Current wording in the binding documentation doesn't make it 100%
+clear that only one of "INT1" and "INT2" will ever be used by the
+driver and that specifying both has no advantages. Re-word it to make
+this aspect a bit more explicit.
 
-Signed-off-by: Anthony Huang <anthony.huang@mediatek.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: linux-iio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- .../devicetree/bindings/soc/mediatek/mmdvfs.txt    |  149 ++++++++++++++++++++
- 1 file changed, 149 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mmdvfs.txt
+ Documentation/devicetree/bindings/iio/accel/mma8452.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/mmdvfs.txt b/Documentation/devicetree/bindings/soc/mediatek/mmdvfs.txt
-new file mode 100644
-index 0000000..bf33d79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/mediatek/mmdvfs.txt
-@@ -0,0 +1,149 @@
-+Mediatek MMDVFS driver binding
-+=========================================
-+
-+The Mediatek MMDVFS(Multimedia Dynamic Voltage and Frequency Scaling) driver
-+is used to set clk for Mediatek multimedia hardwares, such as display, camera,
-+mdp and video codec. MMDVFS driver reads which clock muxes and clock sources
-+are used on this platform from DTS, and sets current clock according to current
-+voltage informed by regulator callback.
-+
-+
-+Required properties:
-+- compatible : shall contain "mediatek,mmdvfs".
-+- operating-points-v2: contains any one of opp tables for multimedia modules.
-+                       MMDVFS uses it to get voltage setting on this platform.
-+- mediatek,support_mux: contains a list of clock mux names defined
-+                        in clock-names.
-+- mediatek,mux_*: a series of properties with "mediatek,mux_" prefix.
-+		  Each property represents one clock mux, and its value is a
-+		  list of all the clock sources for it. The postfix * and every
-+		  item in the property must be from the clock-names.
-+- clock, clock-names: lists all clock muxes and clock sources for multimedia
-+		      hardwares.
-+
-+Optional properties:
-+If the platform needs frequency hopping for some clock sources, these following
-+properties should be set.
-+
-+- mediatek,support_hopping: a list of clock names supporting frequency hopping.
-+- mediatek,hopping_*: a cell with the same size as opp numbers of an opp table
-+		      for any MM module and each entry represents the clock
-+		      rate for each opp. For example, the first entry is the
-+		      clock rate set in opp-0, and the second entry is the
-+		      clock rate set in opp-1.
-+- mediatek,action: a cell with one entry.
-+		   It represents the action taken when setting clocks.
-+		   0 or this property is not set:
-+		   	Do not set frequency hopping and just set clock mux.
-+		   1:
-+		   	If the voltage is increasing, set frequency hopping
-+		   	first. If the voltage is decreasing, set clock mux
-+		   	first.
-+
-+Example:
-+	opp_table_mm: opp-table-mm {
-+		compatible = "operating-points-v2";
-+
-+		opp-0 {
-+			opp-hz = /bits/ 64 <315000000>;
-+			opp-microvolt = <650000>;
-+		};
-+		opp-1 {
-+			opp-hz = /bits/ 64 <450000000>;
-+			opp-microvolt = <725000>;
-+		};
-+		opp-2 {
-+			opp-hz = /bits/ 64 <606000000>;
-+			opp-microvolt = <825000>;
-+		};
-+	};
-+
-+	opp_table_cam: opp-table-cam {
-+		compatible = "operating-points-v2";
-+
-+		opp-0 {
-+			opp-hz = /bits/ 64 <315000000>;
-+			opp-microvolt = <650000>;
-+		};
-+		opp-1 {
-+			opp-hz = /bits/ 64 <416000000>;
-+			opp-microvolt = <725000>;
-+		};
-+		opp-2 {
-+			opp-hz = /bits/ 64 <560000000>;
-+			opp-microvolt = <825000>;
-+		};
-+	};
-+	.... /* Other opp tables for multimedia modules */
-+
-+	mmdvfs {
-+		compatible = "mediatek,mmdvfs";
-+
-+		operating-points-v2 = <&opp_table_mm>;
-+
-+		mediatek,support_mux = "mm", "cam", "img", "ipe",
-+			"venc", "vdec", "dpe", "ccu";
-+
-+		mediatek,mux_mm = "clk_mmpll_d5_d2",
-+			"clk_mmpll_d7", "clk_tvdpll_mainpll_d2_ck";
-+		mediatek,mux_cam = "clk_mmpll_d5_d2",
-+			"clk_univpll_d3", "clk_adsppll_d5";
-+		mediatek,mux_img = "clk_mmpll_d5_d2",
-+			"clk_univpll_d3", "clk_tvdpll_mainpll_d2_ck";
-+		mediatek,mux_ipe = "clk_mmpll_d5_d2",
-+			"clk_univpll_d3", "clk_mainpll_d2";
-+		mediatek,mux_venc = "clk_mainpll_d3",
-+			"clk_mmpll_d7", "clk_mmpll_d5";
-+		mediatek,mux_vdec = "clk_univpll_d2_d2",
-+			"clk_univpll_d3", "clk_univpll_d2";
-+		mediatek,mux_dpe = "clk_mainpll_d3",
-+			"clk_mmpll_d7", "clk_mainpll_d2";
-+		mediatek,mux_ccu = "clk_mmpll_d5_d2",
-+			"clk_univpll_d3", "clk_adsppll_d5";
-+
-+		mediatek,support_hopping = "clk_mmpll_ck";
-+		mediatek,hopping_clk_mmpll_ck = <630000000 630000000 650000000>;
-+		mediatek,action = <1>;
-+
-+
-+		clocks = <&topckgen CLK_TOP_MM>,
-+			<&topckgen CLK_TOP_CAM>,
-+			<&topckgen CLK_TOP_IMG>,
-+			<&topckgen CLK_TOP_IPE>,
-+			<&topckgen CLK_TOP_VENC>,
-+			<&topckgen CLK_TOP_VDEC>,
-+			<&topckgen CLK_TOP_DPE>,
-+			<&topckgen CLK_TOP_CCU>,
-+			<&topckgen CLK_TOP_MMPLL_D5>,
-+			<&topckgen CLK_TOP_UNIVPLL_D2>,
-+			<&topckgen CLK_TOP_TVDPLL_MAINPLL_D2_CK>,
-+			<&topckgen CLK_TOP_ADSPPLL_D5>,
-+			<&topckgen CLK_TOP_MAINPLL_D2>,
-+			<&topckgen CLK_TOP_MMPLL_D6>,
-+			<&topckgen CLK_TOP_MMPLL_D7>,
-+			<&topckgen CLK_TOP_UNIVPLL_D3>,
-+			<&topckgen CLK_TOP_MAINPLL_D3>,
-+			<&topckgen CLK_TOP_MMPLL_D5_D2>,
-+			<&topckgen CLK_TOP_UNIVPLL_D2_D2>,
-+			<&topckgen CLK_TOP_MMPLL_CK>;
-+		clock-names = "mm",
-+			"cam",
-+			"img",
-+			"ipe",
-+			"venc",
-+			"vdec",
-+			"dpe",
-+			"ccu",
-+			"clk_mmpll_d5",
-+			"clk_univpll_d2",
-+			"clk_tvdpll_mainpll_d2_ck",
-+			"clk_adsppll_d5",
-+			"clk_mainpll_d2",
-+			"clk_mmpll_d6",
-+			"clk_mmpll_d7",
-+			"clk_univpll_d3",
-+			"clk_mainpll_d3",
-+			"clk_mmpll_d5_d2",
-+			"clk_univpll_d2_d2",
-+			"clk_mmpll_ck";
-+	};
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+index e132394375a1..b27b6bee9eb6 100644
+--- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -17,7 +17,7 @@ Optional properties:
+ 
+   - interrupts: interrupt mapping for GPIO IRQ
+ 
+-  - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
++  - interrupt-names: should contain "INT1" or "INT2", the accelerometer's
+ 		     interrupt line in use.
+ 
+   - vdd-supply: phandle to the regulator that provides vdd power to the accelerometer.
 -- 
-1.7.9.5
+2.21.0
 
