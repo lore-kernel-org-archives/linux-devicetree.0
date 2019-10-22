@@ -2,145 +2,104 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA450C47E49
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 10:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF0BCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 10:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BA421906
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 10:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1E5E21783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 10:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571739833;
-	bh=lj1xDu2d7HyT+htIIh0laut/HwTqamtxfwIV/3EMPOc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K2DoqlN3+SimdkmRAZqrTwX1qTyKohTPyVzDC8W0o3O1vme/Q3HRymrxUKRK0OZMJ
-	 yD4oOXOKUgZAhN3s4bDzb6yNt+XTelMsSFowb7jeqDLImaEGwmDgepnVtf2KojSMKY
-	 fuOuSd2SFuK3iUC24QHBCA0tyPE9AXrDQ0rACi4M=
+	s=default; t=1571740065;
+	bh=GRD7MZeVdKR1vgtr0TQS+zdY9FPxRAIwfXXcdGpmZOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WX0byMFwHQVMUWpJy4PDFXWiR6JgjQqxSFpPDuFdDaBDEVMGHIloyDK2071dEQd02
+	 iiFug7E0gbGaR9YeHGx9irO29t2xMV+PJMtTxE9Mnd5Ls0FItMqn/wdIwJShGUo7mQ
+	 Bf0f43oxh+GUCbobAWjJ+FM+pwCwrtm+rZqGM+os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731757AbfJVKXx (ORCPT
+        id S1731556AbfJVK1p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:23:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727582AbfJVKXw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:23:52 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF57A21783;
-        Tue, 22 Oct 2019 10:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571739831;
-        bh=lj1xDu2d7HyT+htIIh0laut/HwTqamtxfwIV/3EMPOc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Fp4nf5R0ZkD1m+Wps2id7kxQEty1smFenzQKHUjZmM2exR3Ldi7roNbt+jTHwsaua
-         51PPWj09dR+fin0Wpbvv5y06P0KDudIL7Ruri9kKt/nbOWxH3L6bFiGOQlRFQPORPS
-         nPan3/4fUXojhW+WYXvN7LnR0KEjt8A7kRxthU9s=
-Date:   Tue, 22 Oct 2019 11:23:46 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 2/2] dt-bindings: iio: Add ltc2983 documentation
-Message-ID: <20191022112346.5b9180f0@archlinux>
-In-Reply-To: <CAL_Jsq+5SYOPDOJJJ8+OuGpQ=PKB2JmbQ=yGN1fyuZnuQnAJ2Q@mail.gmail.com>
-References: <20191011084038.45829-1-nuno.sa@analog.com>
-        <20191011084038.45829-2-nuno.sa@analog.com>
-        <20191012115745.069119b0@archlinux>
-        <20191014143950.GA6163@bogus>
-        <CAL_Jsq+Hju1KtvfjEJNGsS9maC3LDn0FcQJe6Wp+y-YgiAP=+w@mail.gmail.com>
-        <20191015214435.5d51835a@archlinux>
-        <20191021162736.7409baa7@archlinux>
-        <CAL_Jsq+5SYOPDOJJJ8+OuGpQ=PKB2JmbQ=yGN1fyuZnuQnAJ2Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 22 Oct 2019 06:27:45 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59614 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbfJVK1p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 06:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GRD7MZeVdKR1vgtr0TQS+zdY9FPxRAIwfXXcdGpmZOg=; b=Cvn5TPX6Q/YA59sDtrK567pcC
+        x2Jug15Avnz0PUuMDv1tHQ9lT9p/RnP3yAdK4YvZjwosOkgjdrav3JTKUeju+DmUqD1R20db9ZlmU
+        zEp0eeuDtYD8JNPmufP8I9MglkAsS5bThdcGjpGermwb83ah82Qm1B3Zs5o3tesMJxHX0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iMrO7-0006NA-On; Tue, 22 Oct 2019 10:27:39 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 18CE02743259; Tue, 22 Oct 2019 11:27:39 +0100 (BST)
+Date:   Tue, 22 Oct 2019 11:27:38 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v4 2/6] dt-bindings: regulator: max77650: convert the
+ binding document to yaml
+Message-ID: <20191022102738.GB5554@sirena.co.uk>
+References: <20191021124428.2541-1-brgl@bgdev.pl>
+ <20191021124428.2541-3-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
+Content-Disposition: inline
+In-Reply-To: <20191021124428.2541-3-brgl@bgdev.pl>
+X-Cookie: Whip it, whip it good!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 21 Oct 2019 12:21:41 -0500
-Rob Herring <robh@kernel.org> wrote:
 
-> On Mon, Oct 21, 2019 at 10:27 AM Jonathan Cameron <jic23@kernel.org> wrot=
-e:
-> >
-> > On Tue, 15 Oct 2019 21:44:35 +0100
-> > Jonathan Cameron <jic23@kernel.org> wrote:
-> > =20
-> > > On Tue, 15 Oct 2019 09:19:10 -0500
-> > > Rob Herring <robh@kernel.org> wrote:
-> > > =20
-> > > > On Mon, Oct 14, 2019 at 9:39 AM Rob Herring <robh@kernel.org> wrote=
-: =20
-> > > > >
-> > > > > On Sat, Oct 12, 2019 at 11:57:45AM +0100, Jonathan Cameron wrote:=
- =20
-> > > > > > On Fri, 11 Oct 2019 10:40:38 +0200
-> > > > > > Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
-> > > > > > =20
-> > > > > > > Document the LTC2983 temperature sensor devicetree bindings.
-> > > > > > >
-> > > > > > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com> =20
-> > > > > >
-> > > > > > I'm happy with this, but will be waiting for Rob to have a chan=
-ce
-> > > > > > for a final look before applying. =20
-> > > > >
-> > > > > LGTM, but I need to add the int64-matrix type to the core schema =
-first
-> > > > > or this will give you errors. I should get to that in the next da=
-y or
-> > > > > so. =20
-> > > >
-> > > > Now added, so please update dtschema and check.
-> > > >
-> > > > Reviewed-by: Rob Herring <robh@kernel.org> =20
-> > >
-> > > /home/jic23/src/kernel/iio/Documentation/devicetree/bindings/iio/temp=
-erature/adi,ltc2983.example.dt.yaml: ltc2983@0: thermocouple@20:adi,custom-=
-thermocouple:0:0: 18446744073659331616 is greater than the maximum of 92233=
-72036854775807
-> > > /home/jic23/src/kernel/iio/Documentation/devicetree/bindings/iio/temp=
-erature/adi,ltc2983.example.dt.yaml: ltc2983@0: thermocouple@20:adi,custom-=
-thermocouple:0:2: 18446744073679351616 is greater than the maximum of 92233=
-72036854775807
-> > > /home/jic23/src/kernel/iio/Documentation/devicetree/bindings/iio/temp=
-erature/adi,ltc2983.example.dt.yaml: ltc2983@0: thermocouple@20:adi,custom-=
-thermocouple:0:4: 18446744073704251616 is greater than the maximum of 92233=
-72036854775807
-> > >
-> > > Which is odd.  I haven't looked into it beyond testing and reverting =
-the
-> > > patch as out of time for today. =20
-> >
-> > I'm still getting this and not sure why.  Rob? =20
+--Pd0ReVV5GZGQvF3a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Oct 21, 2019 at 02:44:24PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >=20
-> Just realized I failed to send my draft...
->=20
-> This is dtc yaml output not maintaining the sign, so everything is
-> unsigned. (I had mentioned this and then promptly forgot.) I'll need
-> to figure out how to plumb this thru dtc. For now, its probably
-> easiest to just change to uint64-matrix with a comment that it should
-> be signed.
->=20
-> Rob
-Thanks.  Made the change and added the note to the docs.
+> Convert the binding document for MAX77650 regulator module to YAML.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Thanks,
+--Pd0ReVV5GZGQvF3a
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Jonathan
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2u2ZoACgkQJNaLcl1U
+h9C1gQf5Ad6I48RubPUMRfKZLJmmrTX3xcIgwSG/sD+od1xoySZz+IrL2rHEHLqJ
+HSvhxiGnDgRWfdgQaZ6zigH0oMQOdHCLF1UYEiUDJfcQZQEFf0M5eC3018FHUI1E
+SsT2svNjuHED+P52Ti/UPRwPJSz7g++DSc/uYoW+2qrlGYYvM28q0e6LKKqKV4oW
+L7PJ3QwiZzo4zxNhmKTrBGH/nvH8lxY71DZHGEl89V87kbSx01b+MSw8iIubifM6
+R2a/EowiqjZc4gvO1Uu0VlY7Lnk2h3m63hFZsYnhckRvaF/0OkvAlHOfafyZwSxE
+5yM4xQKLWjHAUIuIBGEiej78Ds3+Sg==
+=NvkN
+-----END PGP SIGNATURE-----
 
+--Pd0ReVV5GZGQvF3a--
