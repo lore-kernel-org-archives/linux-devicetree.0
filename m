@@ -2,174 +2,122 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E808CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B65CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 18:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E7632075A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 17:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE1F21872
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 18:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571769820;
+	bh=A3vL0CJVtMwgJjE/UunL6amdwwIt9HFwNthqGj5zB5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Fd5x4NtB95LRh7ftV8m+831lhcwqlWDb7ursRPpRzHEaj4s35mDxbCleLHeBUKYFk
+	 5HKE2ZCBcbThWUoOAZo/BPIaYuQSkQnU0ugeT40UY7CSe3VSzxoUAsEzE3I7e1VrQd
+	 +FdjXxOkCR8MRx7ULv1dtDloTCK5ajyCXfNZgvXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbfJVRo4 (ORCPT
+        id S1732436AbfJVSnk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 13:44:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:51841 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727226AbfJVRo4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 13:44:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 10:44:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,217,1569308400"; 
-   d="scan'208";a="200866188"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.143]) ([10.7.153.143])
-  by orsmga003.jf.intel.com with ESMTP; 22 Oct 2019 10:44:55 -0700
-Subject: Re: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
- timeout support
-To:     Peter Rosin <peda@axentia.se>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
-        Cedric Le Goater <clg@kaod.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
- <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
- <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
- <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
- <b98827fa-462a-060b-efc7-27fe5d7742ff@axentia.se>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <7806ece8-1d7c-7aa8-20af-6f5f964bec64@linux.intel.com>
-Date:   Tue, 22 Oct 2019 10:44:55 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 14:43:40 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45307 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732393AbfJVSnj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 14:43:39 -0400
+Received: by mail-ed1-f68.google.com with SMTP id y7so6178643edo.12;
+        Tue, 22 Oct 2019 11:43:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MaK9HZRo2yPA34xjdPj8WIVzo4X/HVsTE3eZR+WBcic=;
+        b=WwR/XSHAiRFFo4wQcTon1ii+X3ISus9Wr4wAOV/uyQ+9FSt1qE7BnhiGxqzpT64GMB
+         jqnE0EyrABOUaGJvlhcTtxHjLgocZHgUUAXcXvMh5Q1vTv6iMLsNyW81orK9ZZKiMuE4
+         2fhDnvEhwE6tH361dkh/mNC+HravKWxWo+o4aVMf/PpmRRTPBKRoRIyiv5SYQJ5QsI2d
+         Cxs19hGfqWcJgkKXXtsu0eaBa/vOzvAdpnlil3kqRxNTp8XngV7WplTQDb/LeQgtx4fp
+         5CXoMUqCxiy1LbvSjTVMk8O8BjJjEISnyQS0WOFv49sTR1+zNUStZ8UlptZTaXLD5uyU
+         KOxg==
+X-Gm-Message-State: APjAAAUsFFaGYTjjgFtVTCMv82Ag8RVcRYJrO4AQnvhwfC+iQTdxmxIC
+        0ZfLbs5CR2DRbE2Ff+A7e8s=
+X-Google-Smtp-Source: APXvYqwaza4IQ48vd2aWTDDcq9RRblSoEI8imxQjQ2w9B33BxUNL8U7MIIpmrU+/Ly8hAxGL9ziPmQ==
+X-Received: by 2002:a17:906:69cc:: with SMTP id g12mr28731760ejs.235.1571769817645;
+        Tue, 22 Oct 2019 11:43:37 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id w19sm123844ejo.3.2019.10.22.11.43.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 22 Oct 2019 11:43:36 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 20:43:34 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, vireshk@kernel.org,
+        robh+dt@kernel.org, sboyd@kernel.org, roger.lu@mediatek.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v5 1/4] PM / OPP: Support adjusting OPP voltages at
+ runtime
+Message-ID: <20191022184334.GA8305@kozik-lap>
+References: <20191016145756.16004-1-s.nawrocki@samsung.com>
+ <CGME20191016145810eucas1p1b31400c9b2e7f30cdf6deeb4ccee2788@eucas1p1.samsung.com>
+ <20191016145756.16004-2-s.nawrocki@samsung.com>
+ <20191017064258.yfbh7iz3pbzfhdvr@vireshk-i7>
+ <20191021112354.GA2262@pi3>
+ <20191022022341.yd6ykeszsuprmop2@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <b98827fa-462a-060b-efc7-27fe5d7742ff@axentia.se>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191022022341.yd6ykeszsuprmop2@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/22/2019 1:45 AM, Peter Rosin wrote:
-> On 2019-10-21 23:57, Jae Hyun Yoo wrote:
->> Hi Peter,
->>
->> On 10/21/2019 2:05 PM, Peter Rosin wrote:
->>> On 2019-10-21 22:24, Jae Hyun Yoo wrote:
->>>> Append a binding to support hardware timeout feature.
->>>>
->>>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->>>> ---
->>>>    Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 2 ++
->>>>    1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->>>> index b47f6ccb196a..133bfedf4cdd 100644
->>>> --- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->>>> @@ -17,6 +17,8 @@ Optional Properties:
->>>>    - bus-frequency	: frequency of the bus clock in Hz defaults to 100 kHz when not
->>>>    		  specified
->>>>    - multi-master	: states that there is another master active on this bus.
->>>> +- aspeed,hw-timeout-ms	: Hardware timeout in milliseconds. If it's not
->>>> +			  specified, the H/W timeout feature will be disabled.
->>>>    
->>>>    Example:
->>>>    
->>>>
->>>
->>> Some SMBus clients support a smbus-timeout-disable binding for disabling
->>> timeouts like this, for cases where the I2C adapter in question on occasion
->>> is unable to keep the pace. Adding that property thus avoids undesired
->>> timeouts when the client is SMBus conformant without it. Your new binding
->>> is the reverse situation, where you want to add a timeout where one is
->>> otherwise missing.
->>>
->>> Anyway, since I2C does not have a specified lowest possible frequency, this
->>> feels like something that is more in the SMBus arena. Should the property
->>> perhaps be a generic property named smbus-timeout-ms, or something like
->>> that?
->>
->> Well, I tried upstreaming of the generic timeout property a year ago but
->> I agreed that the generic bus timeout property can be set by an ioctl
->> command so it didn't need to be added into device tree at that time. Not
->> sure if any need has come recently but I haven't heard that. This driver
->> still uses the generic timeout property which is provided by i2c core
->> for handling command timeouts, and it's out of scope from this patch
->> series.
->>
->>> If the above is not wanted or appropriate, then I would personally prefer
->>> aspeed,bus-timeout-ms over aspeed,hw-timeout-ms. To me, hw-timeout-ms sounds
->>> like a (more serious) timeout between the CPU and the I2C peripheral unit
->>> or something like that. But I don't care deeply...
->>
->> Changes I submitted in this patch set is for a different purpose which
->> is very Aspeed H/W specific, and actually it's a more serious timeout
->> setting indeed. If this H/W is used in multi-master environment, it
->> could meet a H/W hang that freezes itself in slave mode and it can't
->> escape from the state. To resolve the specific case, this H/W provides
->> self-recovery feature which monitors abnormal state of SDA, SCL and its
->> H/W state machine using the timeout setting to determine the escape
->> condition.
+On Tue, Oct 22, 2019 at 07:53:41AM +0530, Viresh Kumar wrote:
+> On 21-10-19, 13:23, Krzysztof Kozlowski wrote:
+> > On Thu, Oct 17, 2019 at 12:12:58PM +0530, Viresh Kumar wrote:
+> > > On 16-10-19, 16:57, Sylwester Nawrocki wrote:
+> > > > From: Stephen Boyd <sboyd@codeaurora.org>
+> > > > 
+> > > > On some SoCs the Adaptive Voltage Scaling (AVS) technique is
+> > > > employed to optimize the operating voltage of a device. At a
+> > > > given frequency, the hardware monitors dynamic factors and either
+> > > > makes a suggestion for how much to adjust a voltage for the
+> > > > current frequency, or it automatically adjusts the voltage
+> > > > without software intervention. Add an API to the OPP library for
+> > > > the former case, so that AVS type devices can update the voltages
+> > > > for an OPP when the hardware determines the voltage should
+> > > > change. The assumption is that drivers like CPUfreq or devfreq
+> > > > will register for the OPP notifiers and adjust the voltage
+> > > > according to suggestions that AVS makes.
+> > > > 
+> > > > This patch is derived from [1] submitted by Stephen.
+> > > > [1] https://lore.kernel.org/patchwork/patch/599279/
+> > > > 
+> > > > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> > > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> > > > [s.nawrocki@samsung.com: added handling of OPP min/max voltage]
+> > > > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > > > ---
+> > > >  drivers/opp/core.c     | 69 ++++++++++++++++++++++++++++++++++++++++++
+> > > >  include/linux/pm_opp.h | 13 ++++++++
+> > > >  2 files changed, 82 insertions(+)
+> > > 
+> > > Applied. Thanks.
+> > 
+> > Hi Viresh,
+> > 
+> > Can you provide a stable tag with this patch so I can take soc/samsung
+> > driver?
 > 
-> Are you saying that the aspeed HW is buggy and that this abnormal state
-> is self inflicted by the aspeed HW even if other masters on the bus
-> behave sanely? Because I didn't quite read it that way at all...
+> opp-5.4-support-adjust-voltages
 
-I don't think it's an Aspeed HW bug. Actually, this HW can be exposed to
-very severe environments if it is used as a Baseboard Management
-Controller which needs two or more multi-masters on a bus depends on
-HW design. Also, it should expect unknown or buggy device attachment
-on a bus through add-on card slots. Aspeed HW provides HW timeout
-feature to support exceptional cases handling which comes from the
-severe use cases.
+Thanks, merged.
 
-> To me, it sounded *exactly* like the state I2C clients end up in when an
-> I2C master "dies" and stops communicating in the middle of a transaction.
-> I.e. the thing that the SMBus timeout is designed to prevent (and the
-> state the I2C nine-clk-recovery sequence addresses). The only twist (that
-> I saw) was that the aspeed HW is also a master and that the aspeed master
-> driver is completely locked out from the bus while some obnoxious master
-> fails to complete its transaction (or whatever it was up to).
+Best regards,
+Krzysztof
 
-If this HW runs on a single-master bus, any master dying issue will be
-cured by recovery logic which this driver already has and the logic uses
-the bus timeout setting you are saying.
-
-This patch set is mainly focusing on a 'slave mode hang' issue on a
-'multi-master' bus which can't be covered by the recovery logic.
-
-> If this can only be triggered when the HW is acting as a slave, and by
-> aborted or otherwise funky master activity on the bus, then I wouldn't
-> call it an HW issue. Then it would be a bus issue. I.e. something needing
-> a bus-timeout instead of a hw-timeout.
-
-Here is an example. In a multi-node BMC system, a peer master can be
-shutdown in the middle of transaction, then this Aspeed HW keeps waiting
-for a next event from the peer master but it can't happen because the
-peer master was already shutdown. If we enable the 'slave inactive
-timeout feature' using the HW timeout setting, the this HW can escape
-from the waiting state. If we don't, this HW hangs forever in the
-waiting state and it's the reason why I implemented this patch set.
-
-The hw-timeout setting needs fine tuning depends on HW environment so
-it should be different from the bus-timeout.
-
-Thanks,
-
-Jae
