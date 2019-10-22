@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C498CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF56CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F7821783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D971B21872
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:46:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fvUU4X0S"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v/XhJrE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388181AbfJVLqv (ORCPT
+        id S2388631AbfJVLq4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:46:51 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:53464 "EHLO
+        Tue, 22 Oct 2019 07:46:56 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:38212 "EHLO
         mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387977AbfJVLqu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 07:46:50 -0400
-Received: by mail-vk1-f202.google.com with SMTP id q5so7491937vkg.20
-        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 04:46:50 -0700 (PDT)
+        with ESMTP id S2387977AbfJVLq4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 07:46:56 -0400
+Received: by mail-vk1-f202.google.com with SMTP id s17so1694373vkb.5
+        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 04:46:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=q90rWJEkGm2l9nI3fLz2Cj+itxcilYQDCfUCXu1yWQg=;
-        b=fvUU4X0Sib4BfXVWA9CPePFVHefO+pH8Ci8fFdRiFSB5iTPQA+ra5mL+VLYXS7IZNR
-         zt4DCioEFPM6+qZU7/V76QviJtdzE8pWUIIYz25OGqu8fcCg/ad/mBFD0X3VMj6iE6sl
-         5e5jBG8G1FjxHr/xlaM66aihrErDmJqsgHtVlTctEF8nGdpQyh3/iGguis1EpaVIXxFc
-         r9FVu8lnN5mq2/lZJKIog6SciWR7ePKbkaMVHBwIX4gQOmsutILG/GhOmCeRGTxxkxUJ
-         a75pPUwAB59Lx1guwRD0KIOKxiPcMXxt31Pn9IJzZN9q+c/Rv4tOuPJCaKinGj7AQDa0
-         0CQg==
+        bh=6PvO4YGcBPU7HqTKrAMBpr5jWnrEO6vhCWHVgxtCZF0=;
+        b=v/XhJrE4hvhwOzEGcKs+eQoCDnnCj5mUo5POIAosRXGG9AR786k5ivdMEx0u1rAa0G
+         6FwQqiAnM4B6RlupEtxMjyDNTPzx34+E+/70eATGUSkjoJ8W8GvCVILVpBm2wwS0OLtF
+         FsHUuxV6o+LY4rkICqCZ2pv588XXJ85QW0p3TajaPFxkmYIuxmsJAgn01++mJD7sr8FX
+         qQK7k3vaWYUeu/1UDlFrcRHs8lKDl5yseG5047lhqeRkvc7QVEOoMnskxTlBn2dviIYF
+         WvDKYhDmT/6v2QcIjvBcyBFdj5zYQORvKyeT9rKwpfGTE+vQjTOHSioHV293JvSx2+5k
+         jm2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=q90rWJEkGm2l9nI3fLz2Cj+itxcilYQDCfUCXu1yWQg=;
-        b=j6Kg+znK5RbiM15BGCmPGh2bcESlMgIBX6aO60bivSDjPCsBxd+hQ2K7l529FTB3UJ
-         lkPy43KXE91VxS4Efwnxi2Ojz49Qh5ZYMR0v9WjPtSY1dy4Jrq9/hyWRf0TBpMeWkWql
-         Vi+z9b2SqbYWEy0w8lsvO/7mA/tQur8av3pNiPqFibJuJu/7f9bJiRgDpaIjh83Jaenm
-         eftK4Xbr0TCAzySb2sL4mvkfA3IvhuYM1VyLOJOxChG/hRlANpVwaxsQsjwHqSc4TYMl
-         OhlDyBRQgN5WyyW9fGpUhDfs+K8GF+1eKDHxzUaQp1KOiwmTQX/LFuMtkUAHwolAovRJ
-         uAUw==
-X-Gm-Message-State: APjAAAWSFAqmbvw/xnKPo5XLs/1A5MGNIDMK5kDcYTEPfTg+Tt+rptgM
-        yy3ZGScRxWlDXG/Fkq/8AQVOIc85UPdx
-X-Google-Smtp-Source: APXvYqzsB+mP+SYK0nkZDI+E5ctlzYSDa2qZV3FsZvCzlBqBSD0WoJVKv1DehaXyYVIbfl0rJsvRLOUyAOTG
-X-Received: by 2002:a67:8841:: with SMTP id k62mr1532968vsd.101.1571744809794;
- Tue, 22 Oct 2019 04:46:49 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 19:45:00 +0800
+        bh=6PvO4YGcBPU7HqTKrAMBpr5jWnrEO6vhCWHVgxtCZF0=;
+        b=oTbfiPg1QbEcSP7n55sXnguthwYw+WXxOhnbpQo7EgLPfnI56zBCz/b6KkI8ZQe08P
+         cVNiZnK4haAQ08bUMiL6RNXafbC+E4JoDPsnWIVtSkvJ78BtXpeZ43+JyZ2cI8beyjIN
+         x263yn21LgasI0PeRej/XzgdVQmfqHX4iPvG9Boq9zjmN+ePDAF/5QpTu3avnDwjmCKg
+         Lqb3GjQO2+PJGDaP0UzVgWxO11NYpVMxYeavaxmJn+pcD9TjzVKOnSxk8YwlHeTU17xa
+         o+vNaHlcsRwNO69IxX8BR949kdop/usctFZpTJD/MT+kDoHymkDMEspbC4eU0gzcKHzB
+         0ttg==
+X-Gm-Message-State: APjAAAVTerC+22LdrBCzqD1k+DTr9tjMKfOD0KSsXAGlQRvHBZc0T8zN
+        mu4MzJOy7Gby6GMagSogbInziNP48LIX
+X-Google-Smtp-Source: APXvYqwY1rlBy1N3hHiRYbjJlOMwfLIOQOq0dmz2amkEN+2rQ4+TI3BcHF+QmqbKwaRye4ZzLeXpjHYP/Bkz
+X-Received: by 2002:a67:f2da:: with SMTP id a26mr1534141vsn.60.1571744814867;
+ Tue, 22 Oct 2019 04:46:54 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 19:45:01 +0800
 In-Reply-To: <20191022114505.196852-1-tzungbi@google.com>
-Message-Id: <20191022193301.1.I3039014cf259de5e4d6315fc05dff111591a0901@changeid>
+Message-Id: <20191022193301.2.I66284413ef7dbbf4b6ea7735f71807ebd35bf7e8@changeid>
 Mime-Version: 1.0
 References: <20191022114505.196852-1-tzungbi@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 1/6] ASoC: hdmi-codec: add PCM trigger operator
+Subject: [PATCH 2/6] drm: bridge: it6505: bridge to hdmi-codec
 From:   Tzung-Bi Shih <tzungbi@google.com>
 To:     broonie@kernel.org, robh+dt@kernel.org, narmstrong@baylibre.com
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
@@ -71,101 +71,204 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-HDMI codec may be also interested in PCM triggers.  Add PCM trigger
-operator.
+From: Allen Chen <allen.chen@ite.com.tw>
 
+Bridge to hdmi-codec to support audio feature.
+
+It is observed that some DP-to-HDMI dongles will get into bad states
+if sending InfoFrame without audio data.  Defer to enable it6505's
+audio feature when PCM triggers START or RESUME.
+
+Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
 Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
 ---
- include/sound/hdmi-codec.h    | 13 +++++++++++++
- sound/soc/codecs/hdmi-codec.c | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ drivers/gpu/drm/bridge/ite-it6505.c | 152 ++++++++++++++++++++++++++++
+ 1 file changed, 152 insertions(+)
 
-diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
-index 83b17682e01c..9de462ef170d 100644
---- a/include/sound/hdmi-codec.h
-+++ b/include/sound/hdmi-codec.h
-@@ -50,6 +50,13 @@ struct hdmi_codec_params {
- typedef void (*hdmi_codec_plugged_cb)(struct device *dev,
- 				      bool plugged);
+diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
+index 5e046f677343..1d19184d2056 100644
+--- a/drivers/gpu/drm/bridge/ite-it6505.c
++++ b/drivers/gpu/drm/bridge/ite-it6505.c
+@@ -26,6 +26,8 @@
+ #include <drm/drm_dp_helper.h>
+ #include <drm/drm_edid.h>
  
-+enum {
-+	HDMI_CODEC_TRIGGER_EVENT_STOP,
-+	HDMI_CODEC_TRIGGER_EVENT_START,
-+	HDMI_CODEC_TRIGGER_EVENT_SUSPEND,
-+	HDMI_CODEC_TRIGGER_EVENT_RESUME,
-+};
++#include <sound/hdmi-codec.h>
 +
- struct hdmi_codec_pdata;
- struct hdmi_codec_ops {
- 	/*
-@@ -66,6 +73,12 @@ struct hdmi_codec_ops {
- 			 struct hdmi_codec_daifmt *fmt,
- 			 struct hdmi_codec_params *hparms);
- 
-+	/*
-+	 * PCM trigger callback.
-+	 * Optional
-+	 */
-+	int (*trigger)(struct device *dev, int event);
-+
- 	/*
- 	 * Shuts down the audio stream.
- 	 * Mandatory
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index b5fd8f08726e..1ba2fa26ba03 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -565,12 +565,42 @@ static int hdmi_codec_digital_mute(struct snd_soc_dai *dai, int mute)
- 	return 0;
+ #define AX 0
+ #define BX 1
+ #define AUDSEL I2S
+@@ -146,6 +148,7 @@ struct it6505 {
+ 	struct notifier_block event_nb;
+ 	struct extcon_dev *extcon;
+ 	struct work_struct extcon_wq;
++	struct delayed_work delayed_audio;
+ 	enum sys_status status;
+ 	bool hbr;
+ 	u8 en_ssc;
+@@ -1223,6 +1226,149 @@ static void it6505_set_audio(struct it6505 *it6505)
+ 	dptxset(it6505, 0xD3, 0x20, 0x00);
  }
  
-+static int hdmi_codec_trigger(struct snd_pcm_substream *substream, int cmd,
-+			      struct snd_soc_dai *dai)
++static void it6505_delayed_audio(struct work_struct *work)
 +{
-+	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
-+	int event;
++	struct it6505 *it6505 = container_of(work, struct it6505,
++					     delayed_audio.work);
 +
-+	if (!hcp->hcd.ops->trigger)
-+		return 0;
++	it6505_set_audio(it6505);
++	it6505->en_audio = 1;
++}
 +
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_STOP:
-+		event = HDMI_CODEC_TRIGGER_EVENT_STOP;
++static int it6505_audio_hw_params(struct device *dev, void *data,
++				  struct hdmi_codec_daifmt *daifmt,
++				  struct hdmi_codec_params *params)
++{
++	struct it6505 *it6505 = dev_get_drvdata(dev);
++	unsigned int channel_num = params->cea.channels;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "setting %d Hz, %d bit, %d channels\n",
++			     params->sample_rate, params->sample_width,
++			     channel_num);
++
++	if (!it6505->bridge.encoder)
++		return -ENODEV;
++
++	switch (params->sample_rate) {
++	case 24000:
++		it6505->aud_fs = AUD24K;
 +		break;
-+	case SNDRV_PCM_TRIGGER_START:
-+		event = HDMI_CODEC_TRIGGER_EVENT_START;
++	case 32000:
++		it6505->aud_fs = AUD32K;
 +		break;
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+		event = HDMI_CODEC_TRIGGER_EVENT_SUSPEND;
++	case 44100:
++		it6505->aud_fs = AUD44P1K;
 +		break;
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+		event = HDMI_CODEC_TRIGGER_EVENT_RESUME;
++	case 48000:
++		it6505->aud_fs = AUD48K;
++		break;
++	case 88200:
++		it6505->aud_fs = AUD88P2K;
++		break;
++	case 96000:
++		it6505->aud_fs = AUD96K;
++		break;
++	case 176400:
++		it6505->aud_fs = AUD176P4K;
++		break;
++	case 192000:
++		it6505->aud_fs = AUD192K;
++		break;
++	default:
++		DRM_DEV_DEBUG_DRIVER(dev, "sample rate: %d Hz not support",
++				     params->sample_rate);
++		return -EINVAL;
++	}
++
++	switch (params->sample_width) {
++	case 16:
++		it6505->audwordlength = AUD16BIT;
++		break;
++	case 18:
++		it6505->audwordlength = AUD18BIT;
++		break;
++	case 20:
++		it6505->audwordlength = AUD20BIT;
++		break;
++	case 24:
++	case 32:
++		it6505->audwordlength = AUD24BIT;
++		break;
++	default:
++		DRM_DEV_DEBUG_DRIVER(dev, "wordlength: %d bit not support",
++				     params->sample_width);
++		return -EINVAL;
++	}
++
++	if (channel_num == 0 || channel_num % 2) {
++		DRM_DEV_DEBUG_DRIVER(dev, "channel number: %d not support",
++				     channel_num);
++		return -EINVAL;
++	}
++	it6505->aud_ch = channel_num;
++
++	return 0;
++}
++
++static int it6505_audio_trigger(struct device *dev, int event)
++{
++	struct it6505 *it6505 = dev_get_drvdata(dev);
++
++	DRM_DEV_DEBUG_DRIVER(dev, "event: %d", event);
++	switch (event) {
++	case HDMI_CODEC_TRIGGER_EVENT_START:
++	case HDMI_CODEC_TRIGGER_EVENT_RESUME:
++		queue_delayed_work(system_wq, &it6505->delayed_audio,
++				   msecs_to_jiffies(180));
++		break;
++	case HDMI_CODEC_TRIGGER_EVENT_STOP:
++	case HDMI_CODEC_TRIGGER_EVENT_SUSPEND:
++		cancel_delayed_work(&it6505->delayed_audio);
 +		break;
 +	default:
 +		return -EINVAL;
 +	}
 +
-+	return hcp->hcd.ops->trigger(dai->dev->parent, event);
++	return 0;
 +}
 +
- static const struct snd_soc_dai_ops hdmi_codec_i2s_dai_ops = {
- 	.startup	= hdmi_codec_startup,
- 	.shutdown	= hdmi_codec_shutdown,
- 	.hw_params	= hdmi_codec_hw_params,
- 	.set_fmt	= hdmi_codec_i2s_set_fmt,
- 	.digital_mute	= hdmi_codec_digital_mute,
-+	.trigger	= hdmi_codec_trigger,
- };
++static void it6505_audio_shutdown(struct device *dev, void *data)
++{
++	struct it6505 *it6505 = dev_get_drvdata(dev);
++
++	dptxset(it6505, 0xE8, 0x22, 0x00);
++	dptxset(it6505, 0x05, 0x02, 0x02);
++	it6505->en_audio = 0;
++}
++
++static const struct hdmi_codec_ops it6505_audio_codec_ops = {
++	.hw_params = it6505_audio_hw_params,
++	.trigger = it6505_audio_trigger,
++	.audio_shutdown = it6505_audio_shutdown,
++};
++
++static int it6505_register_audio_driver(struct device *dev)
++{
++	struct it6505 *it6505 = dev_get_drvdata(dev);
++	struct hdmi_codec_pdata codec_data = {
++		.ops = &it6505_audio_codec_ops,
++		.max_i2s_channels = 8,
++		.i2s = 1,
++	};
++	struct platform_device *pdev;
++
++	pdev = platform_device_register_data(dev, HDMI_CODEC_DRV_NAME,
++					     PLATFORM_DEVID_AUTO, &codec_data,
++					     sizeof(codec_data));
++	if (IS_ERR(pdev))
++		return PTR_ERR(pdev);
++
++	INIT_DELAYED_WORK(&it6505->delayed_audio, it6505_delayed_audio);
++
++	DRM_DEV_DEBUG_DRIVER(dev, "bound to %s", HDMI_CODEC_DRV_NAME);
++	return 0;
++}
++
+ /***************************************************************************
+  * DPCD Read and EDID
+  ***************************************************************************/
+@@ -2460,6 +2606,12 @@ static int it6505_i2c_probe(struct i2c_client *client,
+ 		return err;
+ 	}
  
- static const struct snd_soc_dai_ops hdmi_codec_spdif_dai_ops = {
-@@ -578,6 +608,7 @@ static const struct snd_soc_dai_ops hdmi_codec_spdif_dai_ops = {
- 	.shutdown	= hdmi_codec_shutdown,
- 	.hw_params	= hdmi_codec_hw_params,
- 	.digital_mute	= hdmi_codec_digital_mute,
-+	.trigger	= hdmi_codec_trigger,
- };
- 
- #define HDMI_RATES	(SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 |\
++	err = it6505_register_audio_driver(dev);
++	if (err < 0) {
++		DRM_DEV_ERROR(dev, "Failed to register audio driver: %d", err);
++		return err;
++	}
++
+ 	/* Register aux channel */
+ 	it6505->aux.name = "DP-AUX";
+ 	it6505->aux.dev = dev;
 -- 
 2.23.0.866.gb869b98d4c-goog
 
