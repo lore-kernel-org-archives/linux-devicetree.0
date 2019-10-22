@@ -2,200 +2,282 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F6FCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC9CCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D47E521A4A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A24D2084B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571735916;
+	bh=Hlu8GaM3pyER1WvD6ECYPessAWesR9RC+922Q+vHyEo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=i0novn0C4QotEVybRen/RawtJO1kuLR6+s9aDVnZkVDi4kSvA8aHJJqdyzR8deTu6
+	 Pe8OT3VliTfIfo7W9UTMuBRFo6wNfmGzxOYIIeDs4OK1cCWCuI/TPX2uyWVNxOKF/K
+	 3/t5+9pJs6DVBCOe45dRPpnXo58TPtvr/yUJv3h0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731409AbfJVJHy (ORCPT
+        id S1731110AbfJVJSc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:07:54 -0400
-Received: from mga03.intel.com ([134.134.136.65]:25818 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731234AbfJVJHy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 05:07:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 02:07:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
-   d="scan'208";a="196377052"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Oct 2019 02:07:52 -0700
-Received: from [10.226.39.21] (unknown [10.226.39.21])
-        by linux.intel.com (Postfix) with ESMTP id F2EA9580127;
-        Tue, 22 Oct 2019 02:07:48 -0700 (PDT)
-Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <20191021171736.GA233393@google.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <0914051f-b726-f15f-7f86-c0b26ff0f04c@linux.intel.com>
-Date:   Tue, 22 Oct 2019 17:07:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 05:18:32 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37248 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730247AbfJVJSc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 05:18:32 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i16so13568285oie.4;
+        Tue, 22 Oct 2019 02:18:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nuz84DmbVNqkBwZM2dSH7bNPNbMKWhjIIPtW7H0YPbs=;
+        b=MPDm7Fm3Eo027By8vapjzYhqtuUXysOvIwesTAILCwGG2gFBzdgQ8UIqRz4UJdoCGk
+         OlMafMdWO9SgJabIhzuRAz76bQUKnFc1rL7kJNJzLJGNXYXu/Pv3elElVjgp+sP+QMC/
+         RAOqnxJwMIDxtP3yjHMDLmP3q8geZ8FosHPZ4agcP1mRnQQC2Obsj7/VESs9kaFwGyF2
+         embbeL291r5NDxr73hnWyiYyQmEQeXCawpaQRIm23tEhMISvNmAswvj9fdI7rE94orFI
+         ggUMGEfakkJnC+L0mB0V3FByvsm9r0IRPLMxO8YB8GHukA2ErPDoFnh5E+3L2CSjeF6i
+         p/ow==
+X-Gm-Message-State: APjAAAXqW6aFb1oNHuZ98UgMqSugMkWwhYlUIxtRSXsvowFVTXP7BZey
+        Br3bJNWc0AURP70W8VBJHO6amtdLx4fs4OC2rJA=
+X-Google-Smtp-Source: APXvYqwwDlsgGkAn9HrCd8VV+9jpvEy0YfjvtOplz9BjtCnFCm2kwmx5+01G/UWl5wByWCylJuSaEQxiHp/YzPN/6bE=
+X-Received: by 2002:aca:b6c5:: with SMTP id g188mr2084579oif.103.1571735910539;
+ Tue, 22 Oct 2019 02:18:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191021171736.GA233393@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191022075123.17057-1-ran.wang_1@nxp.com> <20191022075123.17057-3-ran.wang_1@nxp.com>
+In-Reply-To: <20191022075123.17057-3-ran.wang_1@nxp.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 22 Oct 2019 11:18:18 +0200
+Message-ID: <CAJZ5v0jdy+4ZRci2LWsb7vPTQ8Yyb7S0CF2C92zhBXg_xe67ug@mail.gmail.com>
+Subject: Re: [PATCH 3/3] soc: fsl: add RCPM driver
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>,
+        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn Helgaas,
-
-On 10/22/2019 1:17 AM, Bjorn Helgaas wrote:
-> On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
->> Add support to PCIe RC controller on Intel Gateway SoCs.
->> PCIe controller is based of Synopsys DesignWare pci core.
->>
->> Intel PCIe driver requires Upconfig support, fast training
->> sequence configuration and link speed change. So adding the
->> respective helper functions in the pcie DesignWare framework.
->> It also programs hardware autonomous speed during speed
->> configuration so defining it in pci_regs.h.
->>
->> +static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
->> +{
->> +	u32 val;
->> +
->> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
->> +	lpp->max_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
->> +	lpp->max_width = FIELD_GET(PCI_EXP_LNKCAP_MLW, val);
->> +
->> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
->> +
->> +	val &= ~(PCI_EXP_LNKCTL_LD | PCI_EXP_LNKCTL_ASPMC);
->> +	val |= (PCI_EXP_LNKSTA_SLC << 16) | PCI_EXP_LNKCTL_CCC |
->> +	       PCI_EXP_LNKCTL_RCB;
-> Link Control is only 16 bits wide, so "PCI_EXP_LNKSTA_SLC << 16"
-> wouldn't make sense.  But I guess you're writing a device-specific
-> register that is not actually the Link Control as documented in PCIe
-> r5.0, sec 7.5.3.7, even though the bits are similar?
-It is not device specific.
-You are correct about register size that pcie spec mentions 
-PCIE_EXP_LNKCTL at 0x10 and PCIE_EXP_LNKSTS at 0x12 each of 2bytes. 
-Accessing 4bytes at offset 0x10 ends up accessing LNK control and status 
-register.
-In Synopsys PCIe controller LINK_CONTROL_LINK_STATUS_REG is of 4bytes 
-size at offset 0x10,
-In both the cases everything is same except the size of the register, so 
-i used PCIE_EXP_LNKCTL macro which is already defined in pci_regs.h
-
-
+On Tue, Oct 22, 2019 at 9:52 AM Ran Wang <ran.wang_1@nxp.com> wrote:
 >
-> Likewise, PCI_EXP_LNKCTL_RCB is RO for Root Ports, but maybe you're
-> telling the device what it should advertise in its Link Control?
-You are correct, PCI_EXP_LNKCTL_RCB is RO. I will remove it.
+> The NXP's QorIQ Processors based on ARM Core have RCPM module
+> (Run Control and Power Management), which performs system level
+> tasks associated with power management such as wakeup source control.
 >
-> PCI_EXP_LNKCTL_CCC is RW.  But doesn't it depend on the components on
-> both ends of the link?  Do you know what device is at the other end?
-> I would have assumed that you'd have to start with CCC==0, which
-> should be most conservative, then set CCC=1 only if you know both ends
-> have a common clock.
-PCIe RC and endpoint device are having the common clock so set the CCC=1.
+> This driver depends on PM wakeup source framework which help to
+> collect wake information.
 >
->> +	pcie_rc_cfg_wr(lpp, val, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
->> +}
->> +
->> +static void intel_pcie_max_speed_setup(struct intel_pcie_port *lpp)
->> +{
->> +	u32 reg, val;
->> +
->> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
->> +	switch (lpp->link_gen) {
->> +	case PCIE_LINK_SPEED_GEN1:
->> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
->> +		reg |= PCI_EXP_LNKCTL2_HASD|
->> +			PCI_EXP_LNKCTL2_TLS_2_5GT;
->> +		break;
->> +	case PCIE_LINK_SPEED_GEN2:
->> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
->> +		reg |= PCI_EXP_LNKCTL2_HASD|
->> +			PCI_EXP_LNKCTL2_TLS_5_0GT;
->> +		break;
->> +	case PCIE_LINK_SPEED_GEN3:
->> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
->> +		reg |= PCI_EXP_LNKCTL2_HASD|
->> +			PCI_EXP_LNKCTL2_TLS_8_0GT;
->> +		break;
->> +	case PCIE_LINK_SPEED_GEN4:
->> +		reg &= ~PCI_EXP_LNKCTL2_TLS;
->> +		reg |= PCI_EXP_LNKCTL2_HASD|
->> +			PCI_EXP_LNKCTL2_TLS_16_0GT;
->> +		break;
->> +	default:
->> +		/* Use hardware capability */
->> +		val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
->> +		val = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
->> +		reg &= ~PCI_EXP_LNKCTL2_HASD;
->> +		reg |= val;
->> +		break;
->> +	}
->> +
->> +	pcie_rc_cfg_wr(lpp, reg, PCIE_CAP_OFST + PCI_EXP_LNKCTL2);
->> +	dw_pcie_link_set_n_fts(&lpp->pci, lpp->n_fts);
-> There are other users of of_pci_get_max_link_speed() that look sort of
-> similar to this (dra7xx_pcie_establish_link(),
-> ks_pcie_set_link_speed(), tegra_pcie_prepare_host()).  Do these *need*
-> to be different, or is there something that could be factored out?
-dra7xx_pcie_establish_link() and ks_pcie_set_link_speed() are doing 
-speed configuration for GEN1 and GEN1 &2 respectively.
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+> Change in v8:
+>         - Adjust related API usage to meet wakeup.c's update in patch 1/3.
+>         - Add sanity checking for the case of ws->dev or ws->dev->parent
+>           is null.
+>
+> Change in v7:
+>         - Replace 'ws->dev' with 'ws->dev->parent' to get aligned with
+>         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs")
+>         - Remove '+obj-y += ftm_alarm.o' since it is wrong.
+>         - Cosmetic work.
+>
+> Change in v6:
+>         - Adjust related API usage to meet wakeup.c's update in patch 1/3.
+>
+> Change in v5:
+>         - Fix v4 regression of the return value of wakeup_source_get_next()
+>         didn't pass to ws in while loop.
+>         - Rename wakeup_source member 'attached_dev' to 'dev'.
+>         - Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-cells'.
+>         please see https://lore.kernel.org/patchwork/patch/1101022/
+>
+> Change in v4:
+>         - Remove extra ',' in author line of rcpm.c
+>         - Update usage of wakeup_source_get_next() to be less confusing to the
+> reader, code logic remain the same.
+>
+> Change in v3:
+>         - Some whitespace ajdustment.
+>
+> Change in v2:
+>         - Rebase Kconfig and Makefile update to latest mainline.
+>
+>  drivers/soc/fsl/Kconfig  |   8 +++
+>  drivers/soc/fsl/Makefile |   1 +
+>  drivers/soc/fsl/rcpm.c   | 133 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 142 insertions(+)
+>  create mode 100644 drivers/soc/fsl/rcpm.c
+>
+> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+> index f9ad8ad..4918856 100644
+> --- a/drivers/soc/fsl/Kconfig
+> +++ b/drivers/soc/fsl/Kconfig
+> @@ -40,4 +40,12 @@ config DPAA2_CONSOLE
+>           /dev/dpaa2_mc_console and /dev/dpaa2_aiop_console,
+>           which can be used to dump the Management Complex and AIOP
+>           firmware logs.
+> +
+> +config FSL_RCPM
+> +       bool "Freescale RCPM support"
+> +       depends on PM_SLEEP
+> +       help
+> +         The NXP QorIQ Processors based on ARM Core have RCPM module
+> +         (Run Control and Power Management), which performs all device-level
+> +         tasks associated with power management, such as wakeup source control.
+>  endmenu
+> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
+> index 71dee8d..906f1cd 100644
+> --- a/drivers/soc/fsl/Makefile
+> +++ b/drivers/soc/fsl/Makefile
+> @@ -6,6 +6,7 @@
+>  obj-$(CONFIG_FSL_DPAA)                 += qbman/
+>  obj-$(CONFIG_QUICC_ENGINE)             += qe/
+>  obj-$(CONFIG_CPM)                      += qe/
+> +obj-$(CONFIG_FSL_RCPM)                 += rcpm.o
+>  obj-$(CONFIG_FSL_GUTS)                 += guts.o
+>  obj-$(CONFIG_FSL_MC_DPIO)              += dpio/
+>  obj-$(CONFIG_DPAA2_CONSOLE)            += dpaa2-console.o
+> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
+> new file mode 100644
+> index 0000000..3ed135e
+> --- /dev/null
+> +++ b/drivers/soc/fsl/rcpm.c
+> @@ -0,0 +1,133 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// rcpm.c - Freescale QorIQ RCPM driver
+> +//
+> +// Copyright 2019 NXP
+> +//
+> +// Author: Ran Wang <ran.wang_1@nxp.com>
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +#include <linux/suspend.h>
+> +#include <linux/kernel.h>
+> +
+> +#define RCPM_WAKEUP_CELL_MAX_SIZE      7
+> +
+> +struct rcpm {
+> +       unsigned int    wakeup_cells;
+> +       void __iomem    *ippdexpcr_base;
+> +       bool            little_endian;
+> +};
+> +
 
-intel_pcie_max_speed_setup() can be moved to dwc framework and dra7xx and ks_pcie drivers can call.
+Please add a kerneldoc comment describing this routine.
 
->
->> +}
->> +
->> +
->> +
-> Remove extra blank lines here.
-i will remove it.
->
->> +static void intel_pcie_port_logic_setup(struct intel_pcie_port *lpp)
->> ...
->> +	/* Intel PCIe doesn't configure IO region, so configure
->> +	 * viewport to not to access IO region during register
->> +	 * read write operations.
->> +	 */
-> This comment doesn't describe the code.  Is there supposed to be some
-> code here that configures the viewport?  Where do we tell the viewport
-> not to access IO?
->
-> I guess maybe this means something like "tell
-> dw_pcie_access_other_conf() not to program an outbound ATU for I/O"?
-> I don't know that structure well enough to write this in a way that
-> makes sense, but this code doesn't look like it's configuring any
-> viewports.
-Yes, you are correct. Telling not to program an outbound ATU for IO.
-I will update the description.
-> Please use usual multi-line comment style, i.e.,
->
->    /*
->     * Intel PCIe ...
->     */
-Sure, i will correct it.
+> +static int rcpm_pm_prepare(struct device *dev)
+> +{
+> +       int i, ret, idx;
+> +       void __iomem *base;
+> +       struct wakeup_source    *ws;
+> +       struct rcpm             *rcpm;
+> +       struct device_node      *np = dev->of_node;
+> +       u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
+> +
+> +       rcpm = dev_get_drvdata(dev);
+> +       if (!rcpm)
+> +               return -EINVAL;
+> +
+> +       base = rcpm->ippdexpcr_base;
+> +       idx = wakeup_sources_read_lock();
+> +
+> +       /* Begin with first registered wakeup source */
+> +       for_each_wakeup_source(ws) {
+> +
+> +               /* skip object which is not attached to device */
+> +               if (!ws->dev || !ws->dev->parent)
+> +                       continue;
+> +
+> +               ret = device_property_read_u32_array(ws->dev->parent,
+> +                               "fsl,rcpm-wakeup", value,
+> +                               rcpm->wakeup_cells + 1);
+> +
+> +               /*  Wakeup source should refer to current rcpm device */
+> +               if (ret || (np->phandle != value[0])) {
+> +                       dev_info(dev, "%s doesn't refer to this rcpm\n",
+> +                                       ws->name);
 
-Thanks for reviewing and providing the valuable inputs!
-Regards,
-Dilip
+IMO printing this message is not useful in general, because it looks
+like you just want to skip wakeup sources that aren't associated with
+rcpm devices.
 
->> +	pci->num_viewport = data->num_viewport;
->> +	dev_info(dev, "Intel PCIe Root Complex Port %d init done\n", lpp->id);
->> +
->> +	return ret;
->> +}
+Maybe use pr_debug() to print it?  Or maybe use pr_debug() to print a
+message if you have found a suitable device?  Wouldn't that be more
+useful?
+
+> +                       continue;
+> +               }
+> +
+
+It would be good to add a comment explaining what the code below does
+here.  Or explain that in the function's kerneldoc comment.
+
+> +               for (i = 0; i < rcpm->wakeup_cells; i++) {
+
+It looks like 'tmp' can be defined in this block.
+
+And I would store the value of value[i+1] in tmp upfront, that is
+
+u32 tmp = value[i+1];
+
+> +                       /* We can only OR related bits */
+> +                       if (value[i + 1]) {
+
+Also I would do
+
+if (!tmp)
+        continue;
+
+to reduce the indentation level.
+
+> +                               if (rcpm->little_endian) {
+> +                                       tmp = ioread32(base + i * 4);
+> +                                       tmp |= value[i + 1];
+> +                                       iowrite32(tmp, base + i * 4);
+
+So it is sufficient to do
+
+tmp |= ioread32(base + i * 4);
+iowrite32(tmp, base + i * 4);
+
+here and analogously below.
+
+You may as well define
+
+void __iomem *address = base + i * 4;
+
+and use it everywhere in this block instead of the (base + I * 4) expression.
+
+> +                               } else {
+> +                                       tmp = ioread32be(base + i * 4);
+> +                                       tmp |= value[i + 1];
+> +                                       iowrite32be(tmp, base + i * 4);
+> +                               }
+> +                       }
+> +               }
+> +       }
+> +
+> +       wakeup_sources_read_unlock(idx);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct dev_pm_ops rcpm_pm_ops = {
+> +       .prepare =  rcpm_pm_prepare,
+> +};
+> +
