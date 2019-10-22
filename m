@@ -2,162 +2,413 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E610CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32174CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A70218AE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A9C921925
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="e4pUg7w5"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="OpfKbGjz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbfJVPME (ORCPT
+        id S1732435AbfJVPec (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:12:04 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:20834 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731217AbfJVPMB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 11:12:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571757118;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Pqwznfr/SwLHT8oLe0EESmmfaLFtEj2ZVFAktZnberQ=;
-        b=e4pUg7w5M4VeqeJD5qwE1M23omT0TREZXfY58Mwj3ZGxkYGzKfw4uyTEzPc2zWRP8T
-        zKBZZqHVK2Fat7DdhrN+FnU3oI0BndP30WKxAVy5RYYE3I6RPMqVMFDzwoi+kO9ApvR7
-        +BxUMcbmYSXRUVAoMfTQm0JKOpBP8m5EFm9Pjar1yHfGGFgRGCkEiIriomZVuDcbp7Je
-        1lQNIzwi4EBk8hCkAZRR6ciFg/5k7hjdt3NmpnMP87F33rIpM7W3m5VhtzEZJjQ/b2hC
-        bXl9tOiUDFmmH865qsR/hYpOSwB6QVgo92p361lZvhOetmJiiNvOJnCJCwINeMS22dEl
-        9l/w==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/zswDWtng=="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id R0b2a8v9MFBmRcM
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 22 Oct 2019 17:11:48 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191022150202.GJ5610@atomide.com>
-Date:   Tue, 22 Oct 2019 17:11:48 +0200
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+        Tue, 22 Oct 2019 11:34:32 -0400
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25468 "EHLO
+        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731132AbfJVPec (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 11:34:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571758459; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=VM8d8TG0UkQUXJhkGRyq6tPSwzd4oYRjvIT3kAmptT0NU3ebzAmK0pp85O/G7T3g4xWCbn9fi9V1zEbL7dMv2aGg8gC3VXY6Y1swpUXp6SQdqG66kfKzVd8Eo1fFxOGQWjq3SAGhQ0iO2WolVbeZZMoDFPw/9w/i87hZfgUv03I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1571758459; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=ZXbig6E8b/tWIKOtV/0hhGq8bIrBW1WS7sv4TOTio54=; 
+        b=EptJCT7nneiIEVNwmrNUlXSdARumf60HDrDUXADRRYcyZnIo7Ltzj7bRgFLUK3Wt29TEuwpQd9qOHzVysQt1VOTQ0/9LHBi3iITpTnfQd9NhtChjesGDu/KHKSCt/mnlUSfQV8wKr5lWvQIPQISR8dXguSWTqYAOx9ZFVOW34ng=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=AdPiqw7MvozC2KMz0rpnkzpow/7Pcgw+zxGPBAlpeVsItL84D+JuudTZW3s0uH+XxK9iT32OSCBH
+    qae8HqeNfcU4tJ8rbuosEcnUrAxxCQCSf4mTn+mRLEh5of1sOJDO  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571758459;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        l=9724; bh=ZXbig6E8b/tWIKOtV/0hhGq8bIrBW1WS7sv4TOTio54=;
+        b=OpfKbGjz/nANZYvpKCDqJgnrw4XR9o3vHGwXf/xh7hk+e7DOBDRSWAQtfCziogHv
+        gJVob1rWDIywSdUGjLiISRdDZ1zm8DWb6fmEkgS7BpMcdmVH3R9LlV9mOkE1EwoN330
+        A/jZ1lUGcIY3LtqHy/vyTVIybH60cPDhtsrJ+SHg=
+Received: from [192.168.10.218] (171.221.113.199 [171.221.113.199]) by mx.zohomail.com
+        with SMTPS id 1571758456839761.6658526977002; Tue, 22 Oct 2019 08:34:16 -0700 (PDT)
+Subject: Re: [PATCH 2/2] clk: Ingenic: Add CGU driver for X1000.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+ <1571421006-12771-3-git-send-email-zhouyanjie@zoho.com>
+ <1571661080.3.0@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, sboyd@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, mturquette@baylibre.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DAF216B.5060507@zoho.com>
+Date:   Tue, 22 Oct 2019 23:34:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
+MIME-Version: 1.0
+In-Reply-To: <1571661080.3.0@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <CC62CE92-28DF-406E-B61C-22F8F341AAFB@goldelico.com>
-References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com> <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com> <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com> <20191021172557.GB5610@atomide.com> <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com> <20191022150202.GJ5610@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tony,
 
-> Am 22.10.2019 um 17:02 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * H. Nikolaus Schaller <hns@goldelico.com> [191021 18:08]:
->>=20
->>> Am 21.10.2019 um 19:25 schrieb Tony Lindgren <tony@atomide.com>:
->>>=20
->>> * H. Nikolaus Schaller <hns@goldelico.com> [191021 15:46]:
->>>>> Am 21.10.2019 um 17:07 schrieb Rob Herring <robh+dt@kernel.org>:
->>>>> On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>>>> +Optional properties:
->>>>>> +- timer:       the timer to be used by the driver.
->>>>>=20
->>>>> Needs a better description and vendor prefix at least.
->>>>=20
->>>> I am not yet sure if it is vendor specific or if all
->>>> SGX implementations need some timer.
->>>>=20
->>>>>=20
->>>>> Why is this needed rather than using the OS's timers?
->>>>=20
->>>> Because nobody understands the current (out of tree and
->>>> planned for staging) driver well enough what the timer
->>>> is doing. It is currently hard coded that some omap refer
->>>> to timer7 and others use timer11.
->>>=20
->>> Just configure it in the driver based on the compatible
->>> value to keep it out of the dts. It's best to stick to
->>> standard bindings.
->>=20
->> IMHO leads to ugly code... Since the timer is not part of
->> the SGX IPR module but one of the OMAP timers it is sort
->> of hardware connection that can be chosen a little arbitrarily.
->>=20
->> This is the main reason why I think adding it to a device tree
->> source so that a board that really requires to use a timer
->> for a different purpose, can reassign it. This is not possible
->> if we hard-code that into the driver by scanning for
->> compatible. In that case the driver must check board compatible
->> names...
->>=20
->> But if we gain a better understanding of its role in the driver
->> (does it really need a dedicated timer and for what and which
->> properties the timer must have) we can probably replace it.
->=20
-> Well how about just leave out the timer from the binding
-> for now, and just carry a patch for it until it is known
-> if/why it's really needed?
->=20
-> If it's needed, yeah I agree a timer property should be
-> used.
+Hi Paul,
 
-Ok, fine. I'll split the bindings into a patch without and
-keep a private patch to add this for our development tree.
-Then we either need it or drop it.
+On 2019=E5=B9=B410=E6=9C=8821=E6=97=A5 20:31, Paul Cercueil wrote:
+> Hi Zhou,
+>
+>
+> Le sam., oct. 19, 2019 at 01:50, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+> =C3=A9crit :
+>> Add support for the clocks provided by the CGU in the Ingenic X1000
+>> SoC, making use of the cgu code to do the heavy lifting.
+>>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>  drivers/clk/ingenic/Kconfig     |  10 ++
+>>  drivers/clk/ingenic/Makefile    |   1 +
+>>  drivers/clk/ingenic/x1000-cgu.c | 253=20
+>> ++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 264 insertions(+)
+>>  create mode 100644 drivers/clk/ingenic/x1000-cgu.c
+>>
+>> diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
+>> index fe8db93..2aebf0d 100644
+>> --- a/drivers/clk/ingenic/Kconfig
+>> +++ b/drivers/clk/ingenic/Kconfig
+>> @@ -45,4 +45,14 @@ config INGENIC_CGU_JZ4780
+>>
+>>        If building for a JZ4780 SoC, you want to say Y here.
+>>
+>> +config INGENIC_CGU_X1000
+>> +    bool "Ingenic X1000 CGU driver"
+>> +    default MACH_X1000
+>> +    select INGENIC_CGU_COMMON
+>> +    help
+>> +      Support the clocks provided by the CGU hardware on Ingenic X1000
+>> +      and compatible SoCs.
+>> +
+>> +      If building for a X1000 SoC, you want to say Y here.
+>> +
+>>  endmenu
+>> diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
+>> index 250570a..0f0e784 100644
+>> --- a/drivers/clk/ingenic/Makefile
+>> +++ b/drivers/clk/ingenic/Makefile
+>> @@ -4,3 +4,4 @@ obj-$(CONFIG_INGENIC_CGU_JZ4740)    +=3D jz4740-cgu.o
+>>  obj-$(CONFIG_INGENIC_CGU_JZ4725B)    +=3D jz4725b-cgu.o
+>>  obj-$(CONFIG_INGENIC_CGU_JZ4770)    +=3D jz4770-cgu.o
+>>  obj-$(CONFIG_INGENIC_CGU_JZ4780)    +=3D jz4780-cgu.o
+>> +obj-$(CONFIG_INGENIC_CGU_X1000)        +=3D x1000-cgu.o
+>> diff --git a/drivers/clk/ingenic/x1000-cgu.c=20
+>> b/drivers/clk/ingenic/x1000-cgu.c
+>> new file mode 100644
+>> index 00000000..c9d744c
+>> --- /dev/null
+>> +++ b/drivers/clk/ingenic/x1000-cgu.c
+>> @@ -0,0 +1,253 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * X1000 SoC CGU driver
+>> + * Copyright (c) 2019 Zhou Yanjie <zhouyanjie@zoho.com>
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/of.h>
+>> +#include <dt-bindings/clock/x1000-cgu.h>
+>> +#include "cgu.h"
+>> +
+>> +/* CGU register offsets */
+>> +#define CGU_REG_CPCCR        0x00
+>> +#define CGU_REG_APLL        0x10
+>> +#define CGU_REG_MPLL        0x14
+>> +#define CGU_REG_CLKGR        0x20
+>> +#define CGU_REG_OPCR        0x24
+>> +#define CGU_REG_DDRCDR        0x2c
+>> +#define CGU_REG_MACPHYCDR    0x54
+>> +#define CGU_REG_I2SCDR        0x60
+>> +#define CGU_REG_LPCDR        0x64
+>> +#define CGU_REG_MSC0CDR        0x68
+>> +#define CGU_REG_I2SCDR1        0x70
+>> +#define CGU_REG_SSICDR        0x74
+>> +#define CGU_REG_CIMCDR        0x7c
+>> +#define CGU_REG_PCMCDR        0x84
+>> +#define CGU_REG_MSC1CDR        0xa4
+>> +#define CGU_REG_CMP_INTR    0xb0
+>> +#define CGU_REG_CMP_INTRE    0xb4
+>> +#define CGU_REG_DRCG        0xd0
+>> +#define CGU_REG_CLOCKSTATUS    0xd4
+>> +#define CGU_REG_PCMCDR1        0xe0
+>> +#define CGU_REG_MACPHYC        0xe8
+>> +
+>> +/* bits within the OPCR register */
+>> +#define OPCR_SPENDN0        (1 << 7)
+>> +#define OPCR_SPENDN1        (1 << 6)
+>
+> Please use the BIT() macro from <linux/bitops.h>
+>
 
->=20
->>>>>> +- img,cores:   number of cores. Defaults to <1>.
->>>>>=20
->>>>> Not discoverable?
->>>>=20
->>>> Not sure if it is. This is probably available in undocumented
->>>> registers of the sgx.
->>>=20
->>> This too, and whatever non-standrd other properities
->>> you might have.
->>=20
->> Here it is a feature of the SGX IPR of the SoC, i.e.
->> describes that the hardware has one or two cores.
->=20
-> Here you can have a standard dts binding by putting this
-> into driver struct of_device_id match .data. Then when
-> somebody figures out how to read that from the hardware,
-> it can be just dropped.
+OK, I'll change it in v2.
 
-Hm. How should that work? Some SoC have the sgx544 as single
-core and others as dual core. This imho does not fit into
-the "img,sgx544-$revision" scheme which could be matched to.
+>
+>> +
+>> +static struct ingenic_cgu *cgu;
+>> +
+>> +static const s8 pll_od_encoding[8] =3D {
+>> +    0x0, 0x1, -1, 0x2, -1, -1, -1, 0x3,
+>> +};
+>> +
+>> +static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] =3D {
+>> +
+>> +    /* External clocks */
+>> +
+>> +    [X1000_CLK_EXCLK] =3D { "ext", CGU_CLK_EXT },
+>> +    [X1000_CLK_RTCLK] =3D { "rtc", CGU_CLK_EXT },
+>> +
+>> +    /* PLLs */
+>> +
+>> +    [X1000_CLK_APLL] =3D {
+>> +        "apll", CGU_CLK_PLL,
+>> +        .parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>> +        .pll =3D {
+>> +            .reg =3D CGU_REG_APLL,
+>> +            .m_shift =3D 24,
+>> +            .m_bits =3D 7,
+>> +            .m_offset =3D 1,
+>> +            .n_shift =3D 18,
+>> +            .n_bits =3D 5,
+>> +            .n_offset =3D 1,
+>> +            .od_shift =3D 16,
+>> +            .od_bits =3D 2,
+>> +            .od_max =3D 8,
+>> +            .od_encoding =3D pll_od_encoding,
+>> +            .bypass_bit =3D 9,
+>> +            .enable_bit =3D 8,
+>> +            .stable_bit =3D 10,
+>> +        },
+>> +    },
+>> +
+>> +    [X1000_CLK_MPLL] =3D {
+>> +        "mpll", CGU_CLK_PLL,
+>> +        .parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>> +        .pll =3D {
+>> +            .reg =3D CGU_REG_MPLL,
+>> +            .m_shift =3D 24,
+>> +            .m_bits =3D 7,
+>> +            .m_offset =3D 1,
+>> +            .n_shift =3D 18,
+>> +            .n_bits =3D 5,
+>> +            .n_offset =3D 1,
+>> +            .od_shift =3D 16,
+>> +            .od_bits =3D 2,
+>> +            .od_max =3D 8,
+>> +            .od_encoding =3D pll_od_encoding,
+>> +            .bypass_bit =3D 6,
+>> +            .enable_bit =3D 7,
+>> +            .stable_bit =3D 0,
+>> +        },
+>> +    },
+>> +
+>> +    /* Muxes & dividers */
+>> +
+>> +    [X1000_CLK_SCLKA] =3D {
+>> +        "sclk_a", CGU_CLK_MUX,
+>> +        .parents =3D { -1, X1000_CLK_EXCLK, X1000_CLK_APLL, -1 },
+>> +        .mux =3D { CGU_REG_CPCCR, 30, 2 },
+>> +    },
+>> +
+>> +    [X1000_CLK_CPUMUX] =3D {
+>> +        "cpu_mux", CGU_CLK_MUX,
+>> +        .parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+>> +        .mux =3D { CGU_REG_CPCCR, 28, 2 },
+>> +    },
+>> +
+>> +    [X1000_CLK_CPU] =3D {
+>> +        "cpu", CGU_CLK_DIV,
+>> +        .parents =3D { X1000_CLK_CPUMUX, -1, -1, -1 },
+>> +        .div =3D { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
+>> +    },
+>> +
+>> +    [X1000_CLK_L2CACHE] =3D {
+>> +        "l2cache", CGU_CLK_DIV,
+>> +        .parents =3D { X1000_CLK_CPUMUX, -1, -1, -1 },
+>> +        .div =3D { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
+>> +    },
+>> +
+>> +    [X1000_CLK_AHB0] =3D {
+>> +        "ahb0", CGU_CLK_MUX | CGU_CLK_DIV,
+>> +        .parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+>> +        .mux =3D { CGU_REG_CPCCR, 26, 2 },
+>> +        .div =3D { CGU_REG_CPCCR, 8, 1, 4, 21, -1, -1 },
+>> +    },
+>> +
+>> +    [X1000_CLK_AHB2PMUX] =3D {
+>> +        "ahb2_apb_mux", CGU_CLK_MUX,
+>> +        .parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+>> +        .mux =3D { CGU_REG_CPCCR, 24, 2 },
+>> +    },
+>> +
+>> +    [X1000_CLK_AHB2] =3D {
+>> +        "ahb2", CGU_CLK_DIV,
+>> +        .parents =3D { X1000_CLK_AHB2PMUX, -1, -1, -1 },
+>> +        .div =3D { CGU_REG_CPCCR, 12, 1, 4, 20, -1, -1 },
+>> +    },
+>> +
+>> +    [X1000_CLK_PCLK] =3D {
+>> +        "pclk", CGU_CLK_DIV,
+>> +        .parents =3D { X1000_CLK_AHB2PMUX, -1, -1, -1 },
+>> +        .div =3D { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
+>> +    },
+>> +
+>> +    [X1000_CLK_DDR] =3D {
+>> +        "ddr", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
+>> +        .parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+>> +        .mux =3D { CGU_REG_DDRCDR, 30, 2 },
+>> +        .div =3D { CGU_REG_DDRCDR, 0, 1, 4, 29, 28, 27 },
+>> +        .gate =3D { CGU_REG_CLKGR, 31 },
+>> +    },
+>> +
+>> +    [X1000_CLK_MAC] =3D {
+>> +        "mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
+>> +        .parents =3D { X1000_CLK_SCLKA, X1000_CLK_MPLL},
+>> +        .mux =3D { CGU_REG_MACPHYCDR, 31, 1 },
+>> +        .div =3D { CGU_REG_DDRCDR, 0, 1, 8, 29, 28, 27 },
+>> +        .gate =3D { CGU_REG_CLKGR, 25 },
+>> +    },
+>> +
+>> +    [X1000_CLK_MSCMUX] =3D {
+>> +        "msc_mux", CGU_CLK_MUX,
+>> +        .parents =3D { X1000_CLK_SCLKA, X1000_CLK_MPLL},
+>> +        .mux =3D { CGU_REG_MSC0CDR, 31, 1 },
+>> +    },
+>> +
+>> +    [X1000_CLK_MSC0] =3D {
+>> +        "msc0", CGU_CLK_DIV | CGU_CLK_GATE,
+>> +        .parents =3D { X1000_CLK_MSCMUX, -1, -1, -1 },
+>> +        .div =3D { CGU_REG_MSC0CDR, 0, 2, 8, 29, 28, 27 },
+>> +        .gate =3D { CGU_REG_CLKGR, 4 },
+>> +    },
+>> +
+>> +    [X1000_CLK_MSC1] =3D {
+>> +        "msc1", CGU_CLK_DIV | CGU_CLK_GATE,
+>> +        .parents =3D { X1000_CLK_MSCMUX, -1, -1, -1 },
+>> +        .div =3D { CGU_REG_MSC1CDR, 0, 2, 8, 29, 28, 27 },
+>> +        .gate =3D { CGU_REG_CLKGR, 5 },
+>> +    },
+>> +
+>> +    [X1000_CLK_SSIPLL] =3D {
+>> +        "ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
+>> +        .parents =3D { X1000_CLK_SCLKA, X1000_CLK_MPLL, -1, -1 },
+>> +        .mux =3D { CGU_REG_SSICDR, 31, 1 },
+>> +        .div =3D { CGU_REG_SSICDR, 0, 1, 8, 29, 28, 27 },
+>> +    },
+>> +
+>> +    [X1000_CLK_SSIMUX] =3D {
+>> +        "ssi_mux", CGU_CLK_MUX,
+>> +        .parents =3D { X1000_CLK_EXCLK, X1000_CLK_SSIPLL, -1, -1 },
+>> +        .mux =3D { CGU_REG_SSICDR, 30, 1 },
+>> +    },
+>> +
+>> +    /* Gate-only clocks */
+>> +
+>> +    [X1000_CLK_SFC] =3D {
+>> +        "sfc", CGU_CLK_GATE,
+>> +        .parents =3D { X1000_CLK_SSIPLL, -1, -1, -1 },
+>> +        .gate =3D { CGU_REG_CLKGR, 2 },
+>> +    },
+>> +
+>> +    [X1000_CLK_UART0] =3D {
+>> +        "uart0", CGU_CLK_GATE,
+>> +        .parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>> +        .gate =3D { CGU_REG_CLKGR, 14 },
+>> +    },
+>> +
+>> +    [X1000_CLK_UART1] =3D {
+>> +        "uart1", CGU_CLK_GATE,
+>> +        .parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>> +        .gate =3D { CGU_REG_CLKGR, 15 },
+>> +    },
+>> +
+>> +    [X1000_CLK_UART2] =3D {
+>> +        "uart2", CGU_CLK_GATE,
+>> +        .parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>> +        .gate =3D { CGU_REG_CLKGR, 16 },
+>> +    },
+>> +
+>> +    [X1000_CLK_SSI] =3D {
+>> +        "ssi", CGU_CLK_GATE,
+>> +        .parents =3D { X1000_CLK_SSIMUX, -1, -1, -1 },
+>> +        .gate =3D { CGU_REG_CLKGR, 19 },
+>> +    },
+>> +
+>> +    [X1000_CLK_PDMA] =3D {
+>> +        "pdma", CGU_CLK_GATE,
+>> +        .parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+>> +        .gate =3D { CGU_REG_CLKGR, 21 },
+>> +    },
+>> +};
+>> +
+>> +static void __init x1000_cgu_init(struct device_node *np)
+>> +{
+>> +    int retval;
+>> +
+>> +    cgu =3D ingenic_cgu_new(x1000_cgu_clocks,
+>> +                  ARRAY_SIZE(x1000_cgu_clocks), np);
+>> +    if (!cgu) {
+>> +        pr_err("%s: failed to initialise CGU\n", __func__);
+>> +        return;
+>> +    }
+>> +
+>> +    retval =3D ingenic_cgu_register_clocks(cgu);
+>> +    if (retval) {
+>> +        pr_err("%s: failed to register CGU Clocks\n", __func__);
+>> +        return;
+>
+> Does this SoC has the LPM bit in the LCR register like on the other SoCs?
+> If so, call ingenic_cgu_register_syscore_ops() here.
+>
 
-But maybe we do it the same as with the timer for the moment,
-i.e. keep it in some unpublished patch set.
+Yes, it has, I'll change it in v2.
 
-At the moment I have more problems understanding how the yaml
-thing works. I understand and fully support the overall goal,
-but it is quite difficult to get a start here. And there do not
-seem to be tools or scripts to help converting from old style
-text format (even if not perfect, this would be helpful) and
-I have no yaml editor that helps keeping the indentation
-correct. So this slows down a v2 a little bit.
+>
+>> +    }
+>> +}
+>> +CLK_OF_DECLARE(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
+>
+> Please use CLK_OF_DECLARE_DRIVER like the other CGU drivers.
+>
 
-BR and thanks,
-Nikolaus
+sure, I'll change it in v2.
+
+Best regards!
+
+> Cheers,
+> -Paul
+>
+>
+>
+
+
 
