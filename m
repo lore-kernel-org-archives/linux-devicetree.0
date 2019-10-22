@@ -2,68 +2,69 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B61CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 06:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614C7CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 06:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7B721783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 06:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E4621872
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 06:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E35Ikevn"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MfrXq7Pm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oFLfKQJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbfJVGK0 (ORCPT
+        id S2387637AbfJVGPY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 02:10:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56774 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfJVGK0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 02:10:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=B6AH70ZBqgtLx0kFQk1RVKIXF77SHd+j+wHyRoQQppM=; b=E35IkevnJRlH//2pPhthVoGCf
-        DwV1C6o7i488Gmwp0jRbs24uKrWtWh9cE5FdD2rrdDN1IpZyh0Gb4LSDMHoJnmmv+wdQeoCETC2fk
-        YjUmtNj8yLDVJRv/qH0bcl3K1lROlaTHO1AhBUu/Hnr4FdO4C1lACwx/BMrNhFcBfIA+Ugf91pkYa
-        8GIFJiHDEg0P91TLnITFQ4jT2t7TK5I/BStK9zypPRsL02dvunoiwHoaQ8NnkJBKZvQ+dOznN95OG
-        A9eJz9yjPOKuQbuZEHJAFemkwOtweLF8urR2XrKGa0gnYoBgMoNhQRjQ4WB9hEnieREJQ8gT6izRw
-        J9jYe7Gag==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iMnNB-0008GE-Cx; Tue, 22 Oct 2019 06:10:25 +0000
-Subject: Re: [PATCH v4 5/5] net: dsa: add support for Atheros AR9331 build-in
- switch
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
-References: <20191022055743.6832-1-o.rempel@pengutronix.de>
- <20191022055743.6832-6-o.rempel@pengutronix.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <84867591-e4a2-cda5-d85c-f3c65b6a2668@infradead.org>
-Date:   Mon, 21 Oct 2019 23:10:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 22 Oct 2019 02:15:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46760 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387488AbfJVGPY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 02:15:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F1EAC60716; Tue, 22 Oct 2019 06:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571724923;
+        bh=oeDinmeIyEmHGbM2kXwZ1rSYY0UZ8x6QIofWRLfG2rc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MfrXq7PmYsKcqoywn6kq67/7J9L+PKz8kWIbtiWiNyhE86zhQqbSrt065l4DIJ7P4
+         Bysymhlxgs4WeCWYm+trrS7/LhDSithxPOR+3FR184UMr0Z0YBzAE0Q867KBg6x2mR
+         eRVmaqDCPDIzMwcwcYxN++WnaDszh5tgwG/5igqQ=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BF1176078F;
+        Tue, 22 Oct 2019 06:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571724922;
+        bh=oeDinmeIyEmHGbM2kXwZ1rSYY0UZ8x6QIofWRLfG2rc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=oFLfKQJ4Y3SjophrXAvU3JsTEHzKIMbOlvdJa200wXoXFWlfJV5Oc2WkCqMKWJcuS
+         AY2Q0MhMX8UZk5brkJ1d/cl22KXv6+pjUTAL0XT+dA7LJoL4wkEh+yOYALrHhikMv6
+         Beg9P3OOwRanSwoCcfjTODFa7V8ePTdPXyp/cyGg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BF1176078F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2 02/13] arm64: dts: sc7180: Add minimal dts/dtsi files
+ for SC7180 soc
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+References: <20191021065522.24511-1-rnayak@codeaurora.org>
+ <20191021065522.24511-3-rnayak@codeaurora.org>
+ <20191022000833.GI20212@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <759a74e3-f2da-3200-0819-2c3d6fdd57e6@codeaurora.org>
+Date:   Tue, 22 Oct 2019 11:45:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191022055743.6832-6-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191022000833.GI20212@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
@@ -71,38 +72,163 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/21/19 10:57 PM, Oleksij Rempel wrote:
-> Provide basic support for Atheros AR9331 build-in switch. So far it
+Hi Matthias, thanks for the review
 
-                                           built-in
-
-> works as port multiplexer without any hardware offloading support.
+On 10/22/2019 5:38 AM, Matthias Kaehlcke wrote:
+> Hi Rajendra,
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
+> I don't have all the hardware documentation for a full review, but
+> find a few comments inline.
+> 
+[]..
 
-> diff --git a/drivers/net/dsa/qca/Kconfig b/drivers/net/dsa/qca/Kconfig
-> new file mode 100644
-> index 000000000000..7e4978f46642
-> --- /dev/null
-> +++ b/drivers/net/dsa/qca/Kconfig
-> @@ -0,0 +1,11 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config NET_DSA_AR9331
-> +	tristate "Atheros AR9331 Ethernet switch support"
-> +	depends on NET_DSA
-> +	select NET_DSA_TAG_AR9331
-> +	select REGMAP
-> +	---help---
-> +	  This enables support for the Atheros AR9331 build-in Ethernet
+>> +#include "sc7180.dtsi"
+>> +
+>> +/ {
+>> +	model = "Qualcomm Technologies, Inc. SC7180 IDP";
+>> +	compatible = "qcom,sc7180-idp";
+>> +
+>> +	aliases {
+>> +		serial0 = &uart2;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +};
+>> +
+>> +&qupv3_id_0 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&uart2 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +/* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>> +
+>> +&qup_uart2_default {
+>> +	pinconf-tx {
+>> +		pins = "gpio44";
+>> +		drive-strength = <2>;
+>> +		bias-disable;
+>> +	};
+>> +
+>> +	pinconf-rx {
+>> +		pins = "gpio45";
+>> +		drive-strength = <2>;
+>> +		bias-pull-up;
+>> +	};
+>> +};
+> 
+> This config seems reasonable as default for a UART in general.
+> Would it make sense to configure these in the SoC .dtsi?
 
-	                                              built-in
+I think the general rule of thumb that was followed was to have
+all pinmux configurations in soc file and all pinconf setting in
+the board, even though it meant a bit of duplication in some cases.
+See [1] for some discussions around it that happened in the past.
 
-> +	  switch.
-> +
-> +
+[1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1603693.html
 
-Thanks.
+> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> new file mode 100644
+>> index 000000000000..82bf7cdce6b8
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -0,0 +1,300 @@
+>> +// SPDX-License-Identifier: BSD-3-Clause
+>> +/*
+>> + * SC7180 SoC device tree source
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> 
+> Note: depends on "Add Global Clock controller (GCC) driver for SC7180"
+> (https://patchwork.kernel.org/project/linux-arm-msm/list/?submitter=179717)
+> which isn't merged yet.
+
+Right, I did mention it in the cover letter, perhaps I should have mentioned it
+as part of this patch as well.
+
+[]..
+>> +
+>> +	soc: soc {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges = <0 0 0 0 0x10 0>;
+>> +		dma-ranges = <0 0 0 0  0x10 0>;
+>> +		compatible = "simple-bus";
+>> +
+>> +		gcc: clock-controller@100000 {
+>> +			compatible = "qcom,gcc-sc7180";
+> 
+> 
+> 
+>> +			reg = <0 0x00100000 0 0x1f0000>;
+>> +			#clock-cells = <1>;
+>> +			#reset-cells = <1>;
+>> +			#power-domain-cells = <1>;
+>> +		};
+>> +
+>> +		qupv3_id_0: geniqup@ac0000 {
+> 
+> The QUP enumeration is a bit confusing. The Hardware Register
+> Description has QUPV3_0_QUPV3_ID_0 at 0x00800000 and
+> QUPV3_1_QUPV3_ID_0 at 0x00a00000. This QUP apparently is
+> the latter. In the SDM845 DT the QUP @ac0000 has the label
+> 'qupv3_id_1', I guess this should be the same here.
+
+I had a re-look at the documentation again and yes, you are
+right, this seems exactly same as on sdm845 except that on
+sdm845 the 2 blocks were named QUPV3_0_QUPV3_ID_1 at 0x00800000
+and QUPV3_1_QUPV3_ID_1 at 0x00a00000.
+I will match this up with the labeling approach we followed on
+sdm845. Thanks.
+
+> 
+>> +			compatible = "qcom,geni-se-qup";
+>> +			reg = <0 0x00ac0000 0 0x6000>;
+>> +			clock-names = "m-ahb", "s-ahb";
+>> +			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
+>> +				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
+>> +			#address-cells = <2>;
+>> +			#size-cells = <2>;
+>> +			ranges;
+>> +			status = "disabled";
+>> +
+>> +			uart2: serial@a88000 {
+>> +				compatible = "qcom,geni-debug-uart";
+>> +				reg = <0 0x00a88000 0 0x4000>;
+> 
+> Related to the comment above: on SDM845 this UART has the label
+> 'uart10'. I understand these are different SoCs, but could you
+> please clarify the enumeration of the SC7180 QUPs and their ports?
+
+I will move this to uart10 once I have the qup instance marked with id_1.
+On sdm845 the qup_id_0 had SE instances from 0 to 7 and qup_id_1 had it
+from 8 to 15. I will follow the same here so this uart instance would
+remain the same as on sdm845, which is uart10.
+
+thanks,
+Rajendra
+
+> 
+>> +				clock-names = "se";
+>> +				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
+>> +				pinctrl-names = "default";
+>> +				pinctrl-0 = <&qup_uart2_default>;
+>> +				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+
+
+
 -- 
-~Randy
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
