@@ -2,123 +2,233 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DEECA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 02:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC1ECA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 02:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599D02166E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 02:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wAGpi/i7"
+	by mail.kernel.org (Postfix) with ESMTP id 8F84421783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 02:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbfJVCXu (ORCPT
+        id S1730469AbfJVCXz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 21 Oct 2019 22:23:50 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46196 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfJVCXt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 22:23:49 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q5so9629849pfg.13
-        for <devicetree@vger.kernel.org>; Mon, 21 Oct 2019 19:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AT7Vp+yACQ0gxVA6T92L6+q4sc2TtEu5B2tW7M476fE=;
-        b=wAGpi/i7ToUnIHcgrBtOEeq9mKLemYp/7q8F4wQ/P1xghZ3Y/qiLVkjGKKUF2gZX2Q
-         pJoV0/cyU1QmMb5z1/vwfhE/rUxstwDIpHLgS/6MU8e/4artDj0yGxvvhCoRZbyLjbqh
-         uQ46+srG8EwwfpDLEILPDreo9TJu4K7WQmN+rDN5NoS1TRv10eQ/1WkenUw9cXcZLKVM
-         ayb82Zy28qa7/4Gyptku1v1M9M71FlhQzs7Vx2tWtcKicL+gR6y5AMRX9rMHLKLTHRT3
-         0Flf5YUfHgKm3tRu00ElqgxLV7OZW8AEPfCf/kFOXYdAZYRcHxTWNBK/nQKKYYyse3Jv
-         KQKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AT7Vp+yACQ0gxVA6T92L6+q4sc2TtEu5B2tW7M476fE=;
-        b=fObqTfTl15D3ru38qCQ9VxBeDJsnK4EwxxKyiOWZUjYdCX8rfZvF5HR0l2Gz1md8Ya
-         VIX/qaAFSd1ysqW4EopNqeGBy/hooYUcSY/lb/LWthEJSstm0SuUrCCuN8BK8WGBlt4E
-         Qzy+GxiNwxTUv2zTg/zICgUMgTjrgf/oLM/UIKc+/PsC4aXsJ9h5heh/ZAi1PuYcFXoe
-         e/pKHwhQ+w6kbsnyjanAHDDVVN7FF7JcdXf02nB08neO9Q5oxfVHIqPihrBgncuLbm7I
-         r8xGKYnCRWV7VckkI8+gbHPBhMmIMKi5eB7HUCYDqTKhBHKjtBsB4p7DhUKDTuHWCBYW
-         iLMA==
-X-Gm-Message-State: APjAAAWmSpbC8X9ZT0AuaohQPy0ve+9AwzKS5QdqBHYNjskf7uuq6YEo
-        0PRFWQdWX/snB80lQSq5vBN3Vg==
-X-Google-Smtp-Source: APXvYqwD3LLESW9dtqRG9tRzGlNIUWLCdXMmmkM+V9LqAW0lYd0ou/d6RHGdRS4wqzKpk402x4m9pQ==
-X-Received: by 2002:a65:67d0:: with SMTP id b16mr1165736pgs.64.1571711027447;
-        Mon, 21 Oct 2019 19:23:47 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id 62sm16643422pfg.164.2019.10.21.19.23.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Oct 2019 19:23:45 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 07:53:41 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, vireshk@kernel.org,
-        robh+dt@kernel.org, sboyd@kernel.org, roger.lu@mediatek.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 1/4] PM / OPP: Support adjusting OPP voltages at
- runtime
-Message-ID: <20191022022341.yd6ykeszsuprmop2@vireshk-i7>
-References: <20191016145756.16004-1-s.nawrocki@samsung.com>
- <CGME20191016145810eucas1p1b31400c9b2e7f30cdf6deeb4ccee2788@eucas1p1.samsung.com>
- <20191016145756.16004-2-s.nawrocki@samsung.com>
- <20191017064258.yfbh7iz3pbzfhdvr@vireshk-i7>
- <20191021112354.GA2262@pi3>
+        Mon, 21 Oct 2019 22:23:55 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:45087 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730370AbfJVCXz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Oct 2019 22:23:55 -0400
+X-UUID: b37edfc96e36415cb91f859bb3dd4aac-20191022
+X-UUID: b37edfc96e36415cb91f859bb3dd4aac-20191022
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1111580350; Tue, 22 Oct 2019 10:23:50 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 22 Oct 2019 10:23:47 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 22 Oct 2019 10:23:48 +0800
+Message-ID: <1571711028.561.0.camel@mtksdaap41>
+Subject: Re: [PATCH v4] misc: eeprom: at24: support pm_runtime control
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>
+Date:   Tue, 22 Oct 2019 10:23:48 +0800
+In-Reply-To: <CAMpxmJUrY9YK==6Mf5MoRTUDwmXJ6v5EM-VLXCNXJ8ZNK+xHyA@mail.gmail.com>
+References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
+         <CAMpxmJUrY9YK==6Mf5MoRTUDwmXJ6v5EM-VLXCNXJ8ZNK+xHyA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021112354.GA2262@pi3>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 21-10-19, 13:23, Krzysztof Kozlowski wrote:
-> On Thu, Oct 17, 2019 at 12:12:58PM +0530, Viresh Kumar wrote:
-> > On 16-10-19, 16:57, Sylwester Nawrocki wrote:
-> > > From: Stephen Boyd <sboyd@codeaurora.org>
-> > > 
-> > > On some SoCs the Adaptive Voltage Scaling (AVS) technique is
-> > > employed to optimize the operating voltage of a device. At a
-> > > given frequency, the hardware monitors dynamic factors and either
-> > > makes a suggestion for how much to adjust a voltage for the
-> > > current frequency, or it automatically adjusts the voltage
-> > > without software intervention. Add an API to the OPP library for
-> > > the former case, so that AVS type devices can update the voltages
-> > > for an OPP when the hardware determines the voltage should
-> > > change. The assumption is that drivers like CPUfreq or devfreq
-> > > will register for the OPP notifiers and adjust the voltage
-> > > according to suggestions that AVS makes.
-> > > 
-> > > This patch is derived from [1] submitted by Stephen.
-> > > [1] https://lore.kernel.org/patchwork/patch/599279/
-> > > 
-> > > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> > > [s.nawrocki@samsung.com: added handling of OPP min/max voltage]
-> > > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > > ---
-> > >  drivers/opp/core.c     | 69 ++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/pm_opp.h | 13 ++++++++
-> > >  2 files changed, 82 insertions(+)
-> > 
-> > Applied. Thanks.
+On Mon, 2019-10-21 at 18:53 +0200, Bartosz Golaszewski wrote:
+> pt., 18 paź 2019 o 10:26 Bibby Hsieh <bibby.hsieh@mediatek.com> napisał(a):
+> >
+> > Although in the most platforms, the power of eeprom and i2c
+> > are alway on, some platforms disable the eeprom and i2c power
+> > in order to meet low power request.
+> > This patch add the pm_runtime ops to control power to support
+> > all platforms.
+> >
+> > Changes since v3:
+> >  - remove redundant calling function
+> >  - change SIMPLE_DEV_PM_OPS to SET_RUNTIME_PM_OPS
+> >  - change supply name
+> >
+> > Changes since v2:
+> >  - rebase onto v5.4-rc1
+> >  - pm_runtime_disable and regulator_bulk_disable at
+> >    err return in probe function
+> >
+> > Changes since v1:
+> >  - remove redundant code
+> >  - fixup coding style
+> >
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > ---
+> >  drivers/misc/eeprom/at24.c | 64 ++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 64 insertions(+)
+> >
+> > diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> > index 2cccd82a3106..68ced4f25916 100644
+> > --- a/drivers/misc/eeprom/at24.c
+> > +++ b/drivers/misc/eeprom/at24.c
+> > @@ -22,6 +22,7 @@
+> >  #include <linux/nvmem-provider.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/pm_runtime.h>
+> > +#include <linux/regulator/consumer.h>
+> >  #include <linux/gpio/consumer.h>
+> >
+> >  /* Address pointer is 16 bit. */
+> > @@ -67,6 +68,12 @@
+> >   * which won't work on pure SMBus systems.
+> >   */
+> >
+> > +static const char * const at24_supply_names[] = {
+> > +       "vcc", "i2c",
+> > +};
+> > +
+> > +#define AT24_NUM_SUPPLIES ARRAY_SIZE(at24_supply_names)
+> > +
+> >  struct at24_client {
+> >         struct i2c_client *client;
+> >         struct regmap *regmap;
+> > @@ -91,6 +98,8 @@ struct at24_data {
+> >
+> >         struct gpio_desc *wp_gpio;
+> >
+> > +       bool has_supplies;
+> > +       struct regulator_bulk_data supplies[AT24_NUM_SUPPLIES];
+> >         /*
+> >          * Some chips tie up multiple I2C addresses; dummy devices reserve
+> >          * them for us, and we'll use them with SMBus calls.
+> > @@ -662,6 +671,17 @@ static int at24_probe(struct i2c_client *client)
+> >         at24->client[0].client = client;
+> >         at24->client[0].regmap = regmap;
+> >
+> > +       regulator_bulk_set_supply_names(at24->supplies,
+> > +                                       at24_supply_names, AT24_NUM_SUPPLIES);
+> > +       err =  devm_regulator_bulk_get(&at24->client[0].client->dev,
+> > +                                      AT24_NUM_SUPPLIES, at24->supplies);
+> > +       if (err == -ENODEV)
+> > +               at24->has_supplies = NULL;
 > 
-> Hi Viresh,
+> I just gave this a spin and noticed that this will never happen - the
+> regulator core will use a dummy regulator if none is defined in DT.
+> The only way for this to make sense would be to use
+> regulator_get_optional() for each supply separately. But actually I
+> think we should just leave it this way and remove this if. In the end:
+> this chip needs some power supply, so dummy regulator makes sense.
 > 
-> Can you provide a stable tag with this patch so I can take soc/samsung
-> driver?
+> Bart
+OK, I will remove this if in next version.
 
-opp-5.4-support-adjust-voltages
+Thanks for the experiment.:D
 
--- 
-viresh
+Bibby
+
+> 
+> > +       else if (err == 0)
+> > +               at24->has_supplies = !err;
+> > +       else
+> > +               return err;
+> > +
+> >         at24->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
+> >         if (IS_ERR(at24->wp_gpio))
+> >                 return PTR_ERR(at24->wp_gpio);
+> > @@ -701,6 +721,14 @@ static int at24_probe(struct i2c_client *client)
+> >
+> >         i2c_set_clientdata(client, at24);
+> >
+> > +       if (at24->has_supplies) {
+> > +               err = regulator_bulk_enable(AT24_NUM_SUPPLIES, at24->supplies);
+> > +               if (err) {
+> > +                       dev_err(dev, "Failed to enable power regulators\n");
+> > +                       return err;
+> > +               }
+> > +       }
+> > +
+> >         /* enable runtime pm */
+> >         pm_runtime_set_active(dev);
+> >         pm_runtime_enable(dev);
+> > @@ -713,6 +741,9 @@ static int at24_probe(struct i2c_client *client)
+> >         pm_runtime_idle(dev);
+> >         if (err) {
+> >                 pm_runtime_disable(dev);
+> > +               if (at24->has_supplies)
+> > +                       regulator_bulk_disable(AT24_NUM_SUPPLIES,
+> > +                                              at24->supplies);
+> >                 return -ENODEV;
+> >         }
+> >
+> > @@ -725,15 +756,48 @@ static int at24_probe(struct i2c_client *client)
+> >
+> >  static int at24_remove(struct i2c_client *client)
+> >  {
+> > +       struct at24_data *at24 = i2c_get_clientdata(client);
+> > +
+> >         pm_runtime_disable(&client->dev);
+> >         pm_runtime_set_suspended(&client->dev);
+> > +       if (at24->has_supplies)
+> > +               regulator_bulk_disable(AT24_NUM_SUPPLIES, at24->supplies);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int __maybe_unused at24_suspend(struct device *dev)
+> > +{
+> > +       struct i2c_client *client = to_i2c_client(dev);
+> > +       struct at24_data *at24 = i2c_get_clientdata(client);
+> > +
+> > +       if (at24->has_supplies)
+> > +               return regulator_bulk_disable(AT24_NUM_SUPPLIES,
+> > +                                             at24->supplies);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int __maybe_unused at24_resume(struct device *dev)
+> > +{
+> > +       struct i2c_client *client = to_i2c_client(dev);
+> > +       struct at24_data *at24 = i2c_get_clientdata(client);
+> > +
+> > +       if (at24->has_supplies)
+> > +               return regulator_bulk_enable(AT24_NUM_SUPPLIES,
+> > +                                            at24->supplies);
+> >
+> >         return 0;
+> >  }
+> >
+> > +static const struct dev_pm_ops at24_pm_ops = {
+> > +       SET_RUNTIME_PM_OPS(at24_suspend, at24_resume, NULL)
+> > +};
+> > +
+> >  static struct i2c_driver at24_driver = {
+> >         .driver = {
+> >                 .name = "at24",
+> > +               .pm = &at24_pm_ops,
+> >                 .of_match_table = at24_of_match,
+> >                 .acpi_match_table = ACPI_PTR(at24_acpi_ids),
+> >         },
+> > --
+> > 2.18.0
+> >
+
+
