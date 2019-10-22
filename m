@@ -2,122 +2,131 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B65CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 18:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAA4CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE1F21872
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 18:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571769820;
-	bh=A3vL0CJVtMwgJjE/UunL6amdwwIt9HFwNthqGj5zB5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fd5x4NtB95LRh7ftV8m+831lhcwqlWDb7ursRPpRzHEaj4s35mDxbCleLHeBUKYFk
-	 5HKE2ZCBcbThWUoOAZo/BPIaYuQSkQnU0ugeT40UY7CSe3VSzxoUAsEzE3I7e1VrQd
-	 +FdjXxOkCR8MRx7ULv1dtDloTCK5ajyCXfNZgvXE=
+	by mail.kernel.org (Postfix) with ESMTP id 0D744205ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 19:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6gaYXo+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732436AbfJVSnk (ORCPT
+        id S1727851AbfJVTBV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 14:43:40 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45307 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732393AbfJVSnj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 14:43:39 -0400
-Received: by mail-ed1-f68.google.com with SMTP id y7so6178643edo.12;
-        Tue, 22 Oct 2019 11:43:38 -0700 (PDT)
+        Tue, 22 Oct 2019 15:01:21 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38366 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732517AbfJVTBV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 15:01:21 -0400
+Received: by mail-io1-f66.google.com with SMTP id u8so21766777iom.5;
+        Tue, 22 Oct 2019 12:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VfxSHYvmdEv1sm79e3HTi1RwgAIgEe7zqfMJ263x0xg=;
+        b=m6gaYXo+SBJ6yxQUD50EHP8m/o2zWCUkcm4zfRYWPqsxcCaBtfI4gR70AjPI0kgvRn
+         oCBJaeHHmvWwyrNPxa4K3iZBQtYc/YciryW1xokRbVbPel4OAQ7wD3RdVFT+QbqAs+F5
+         PNNim372/STeko7kwHy7AUVu0XinaDph2biqSG7OFr66mu66wVP9slSSX6L8361YyVbX
+         OToJI9/0WCGDmYz1T7ylnPlyUNEkU0JcnkGqSYmNelV95xkG9izQyosIY7Lsb5CeSKKA
+         +/XTgAK8JkkRzYT4SgeRBxN3/f6/fF8O8r7Gz0ca473uHMql5bZDE40m1U3Nq0GX1mEe
+         Pi3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MaK9HZRo2yPA34xjdPj8WIVzo4X/HVsTE3eZR+WBcic=;
-        b=WwR/XSHAiRFFo4wQcTon1ii+X3ISus9Wr4wAOV/uyQ+9FSt1qE7BnhiGxqzpT64GMB
-         jqnE0EyrABOUaGJvlhcTtxHjLgocZHgUUAXcXvMh5Q1vTv6iMLsNyW81orK9ZZKiMuE4
-         2fhDnvEhwE6tH361dkh/mNC+HravKWxWo+o4aVMf/PpmRRTPBKRoRIyiv5SYQJ5QsI2d
-         Cxs19hGfqWcJgkKXXtsu0eaBa/vOzvAdpnlil3kqRxNTp8XngV7WplTQDb/LeQgtx4fp
-         5CXoMUqCxiy1LbvSjTVMk8O8BjJjEISnyQS0WOFv49sTR1+zNUStZ8UlptZTaXLD5uyU
-         KOxg==
-X-Gm-Message-State: APjAAAUsFFaGYTjjgFtVTCMv82Ag8RVcRYJrO4AQnvhwfC+iQTdxmxIC
-        0ZfLbs5CR2DRbE2Ff+A7e8s=
-X-Google-Smtp-Source: APXvYqwaza4IQ48vd2aWTDDcq9RRblSoEI8imxQjQ2w9B33BxUNL8U7MIIpmrU+/Ly8hAxGL9ziPmQ==
-X-Received: by 2002:a17:906:69cc:: with SMTP id g12mr28731760ejs.235.1571769817645;
-        Tue, 22 Oct 2019 11:43:37 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id w19sm123844ejo.3.2019.10.22.11.43.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 22 Oct 2019 11:43:36 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 20:43:34 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, vireshk@kernel.org,
-        robh+dt@kernel.org, sboyd@kernel.org, roger.lu@mediatek.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 1/4] PM / OPP: Support adjusting OPP voltages at
- runtime
-Message-ID: <20191022184334.GA8305@kozik-lap>
-References: <20191016145756.16004-1-s.nawrocki@samsung.com>
- <CGME20191016145810eucas1p1b31400c9b2e7f30cdf6deeb4ccee2788@eucas1p1.samsung.com>
- <20191016145756.16004-2-s.nawrocki@samsung.com>
- <20191017064258.yfbh7iz3pbzfhdvr@vireshk-i7>
- <20191021112354.GA2262@pi3>
- <20191022022341.yd6ykeszsuprmop2@vireshk-i7>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VfxSHYvmdEv1sm79e3HTi1RwgAIgEe7zqfMJ263x0xg=;
+        b=lTsSZHPjuXU+p6N7MfZ79GghAdLjSjitYQiozhsEc9amPVuAENnNWDQV7JIsrdWO+9
+         ZDCRQuEzxXDiEMOF1VR9CnFlXyLSZZyDZkXWpj8o+A13L1SExtdZKdOA8KcIhTX2yvyM
+         LSYUpRbyOkAaAHUjLLVwmkHgdNb+aMKKPvXKLLFqxYL024iPG/LKyMatIeA3eCAWbsvU
+         kKQ/OSKD8zipOXsReixdz5xr9SXGFYWmRgGzv87X6GCFA5mrykP+aRJeWO0lDaW0O651
+         Ht7kmNUlfylwlbVj4P8vda9uyubMAhjFLQxe5hiz4ji+95NJtNUXYGIEnAgJ4Qki3q5m
+         MdOw==
+X-Gm-Message-State: APjAAAVosGGHqL6eFiAumZYqB3/Gi+QHkQLn2uAwMYr4yJQ0VPKP2uV5
+        Y+BpRxoemX9WwfaqtBquchGn2eC3N/8lOpS/vnU=
+X-Google-Smtp-Source: APXvYqzQASMPJfj+YZm2OBbuJQoz80q16/O9naj7kf1/88RbHylyV8nyZmARfqkPQXvQ0Q9vaSY+MetI2GXnLHntuLQ=
+X-Received: by 2002:a02:c519:: with SMTP id s25mr5378905jam.3.1571770880220;
+ Tue, 22 Oct 2019 12:01:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191022022341.yd6ykeszsuprmop2@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191007220540.30690-1-aford173@gmail.com> <20191022162223.GU5610@atomide.com>
+In-Reply-To: <20191022162223.GU5610@atomide.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Tue, 22 Oct 2019 14:01:08 -0500
+Message-ID: <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 07:53:41AM +0530, Viresh Kumar wrote:
-> On 21-10-19, 13:23, Krzysztof Kozlowski wrote:
-> > On Thu, Oct 17, 2019 at 12:12:58PM +0530, Viresh Kumar wrote:
-> > > On 16-10-19, 16:57, Sylwester Nawrocki wrote:
-> > > > From: Stephen Boyd <sboyd@codeaurora.org>
-> > > > 
-> > > > On some SoCs the Adaptive Voltage Scaling (AVS) technique is
-> > > > employed to optimize the operating voltage of a device. At a
-> > > > given frequency, the hardware monitors dynamic factors and either
-> > > > makes a suggestion for how much to adjust a voltage for the
-> > > > current frequency, or it automatically adjusts the voltage
-> > > > without software intervention. Add an API to the OPP library for
-> > > > the former case, so that AVS type devices can update the voltages
-> > > > for an OPP when the hardware determines the voltage should
-> > > > change. The assumption is that drivers like CPUfreq or devfreq
-> > > > will register for the OPP notifiers and adjust the voltage
-> > > > according to suggestions that AVS makes.
-> > > > 
-> > > > This patch is derived from [1] submitted by Stephen.
-> > > > [1] https://lore.kernel.org/patchwork/patch/599279/
-> > > > 
-> > > > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> > > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> > > > [s.nawrocki@samsung.com: added handling of OPP min/max voltage]
-> > > > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > > > ---
-> > > >  drivers/opp/core.c     | 69 ++++++++++++++++++++++++++++++++++++++++++
-> > > >  include/linux/pm_opp.h | 13 ++++++++
-> > > >  2 files changed, 82 insertions(+)
-> > > 
-> > > Applied. Thanks.
-> > 
-> > Hi Viresh,
-> > 
-> > Can you provide a stable tag with this patch so I can take soc/samsung
-> > driver?
-> 
-> opp-5.4-support-adjust-voltages
+On Tue, Oct 22, 2019 at 11:22 AM Tony Lindgren <tony@atomide.com> wrote:
+>
+> Hi,
+>
+> * Adam Ford <aford173@gmail.com> [191007 15:06]:
+> > The some in the OMAP3 family have a bandgap thermal sensor, but
+> > omap2plus has it disabled.
+> >
+> > This patch enables the OMAP3_THERMAL by default like the rest of
+> > the OMAP family.
+>
+> Looks like this breaks off mode during idle for omap3, and that's
+> probably why it never got enabled. The difference in power
+> consumption during idle is about 7mW vs 32mW for the SoC as
+> measured from torpedo shunt for main_battery_som.
+>
+> I think the right fix might be simply to add handling for
+> CPU_CLUSTER_PM_ENTER to the related thermal driver to disable
+> it during idle like we have for gpio-omap.c for example.
 
-Thanks, merged.
+I am not sure I know where to start on fixing that issue.  Would you
+entertain enabling the driver if we set the device tree to 'disabled'
+by default?  This way if people want to to use it, it can be enabled
+on a per-device option.  Once the power stuff gets resolved, we might
+be able to enable it by default.  For people who are planning on using
+the DM3730 @ 1GHz in high temp environments, I am not sure they'll
+care about low power.
 
-Best regards,
-Krzysztof
+I'll try to look into it when I have time, but I was hoping a
+compromise might be a reasonable work-around.
 
+adam
+>
+> Regards,
+>
+> Tony
+>
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> >
+> > diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+> > index 8f1c2b6f9e56..7e14a8c8bb29 100644
+> > --- a/arch/arm/configs/omap2plus_defconfig
+> > +++ b/arch/arm/configs/omap2plus_defconfig
+> > @@ -292,6 +292,7 @@ CONFIG_THERMAL_GOV_FAIR_SHARE=y
+> >  CONFIG_THERMAL_GOV_USER_SPACE=y
+> >  CONFIG_CPU_THERMAL=y
+> >  CONFIG_TI_THERMAL=y
+> > +CONFIG_OMAP3_THERMAL=y
+> >  CONFIG_OMAP4_THERMAL=y
+> >  CONFIG_OMAP5_THERMAL=y
+> >  CONFIG_DRA752_THERMAL=y
+> > --
+> > 2.17.1
+> >
