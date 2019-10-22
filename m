@@ -2,94 +2,124 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467E1CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 14:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FE8CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDF521872
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 14:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309A220700
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbfJVOfL (ORCPT
+        id S1731549AbfJVPCH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 10:35:11 -0400
-Received: from 3.mo179.mail-out.ovh.net ([178.33.251.175]:40366 "EHLO
-        3.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732039AbfJVOfK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 10:35:10 -0400
-Received: from player793.ha.ovh.net (unknown [10.108.35.158])
-        by mo179.mail-out.ovh.net (Postfix) with ESMTP id AD6DD14633E
-        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 15:18:24 +0200 (CEST)
-Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
-        (Authenticated sender: sebastien.szymanski@armadeus.com)
-        by player793.ha.ovh.net (Postfix) with ESMTPSA id F286CB3E3F70;
-        Tue, 22 Oct 2019 13:18:10 +0000 (UTC)
-From:   =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Tue, 22 Oct 2019 11:02:07 -0400
+Received: from muru.com ([72.249.23.125]:38870 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727152AbfJVPCH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:02:07 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 51D4180FA;
+        Tue, 22 Oct 2019 15:02:40 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 08:02:02 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Julien Boibessot <julien.boibessot@armadeus.com>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 3/9] ARM: dts: imx6qdl-apf6: add phy to fec
-Date:   Tue, 22 Oct 2019 15:16:49 +0200
-Message-Id: <20191022131655.25737-4-sebastien.szymanski@armadeus.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191022131655.25737-1-sebastien.szymanski@armadeus.com>
-References: <20191022131655.25737-1-sebastien.szymanski@armadeus.com>
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+Message-ID: <20191022150202.GJ5610@atomide.com>
+References: <cover.1571424390.git.hns@goldelico.com>
+ <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
+ <CAL_Jsq+obsTSU3iP1wm_3-FsAJ4Mxiz0NbMY1_h5NeFn67Sj+A@mail.gmail.com>
+ <CEA29A3B-4116-4FE3-8E18-0C97353688DC@goldelico.com>
+ <20191021172557.GB5610@atomide.com>
+ <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 117093590818575429
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrkeejgdeivdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C6CD5A50-7F0A-4F56-ABB9-CAEDF7E47A5D@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the mdio bus and the phy to the fec-node.
+* H. Nikolaus Schaller <hns@goldelico.com> [191021 18:08]:
+> 
+> > Am 21.10.2019 um 19:25 schrieb Tony Lindgren <tony@atomide.com>:
+> > 
+> > * H. Nikolaus Schaller <hns@goldelico.com> [191021 15:46]:
+> >>> Am 21.10.2019 um 17:07 schrieb Rob Herring <robh+dt@kernel.org>:
+> >>> On Fri, Oct 18, 2019 at 1:46 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >>>> +Optional properties:
+> >>>> +- timer:       the timer to be used by the driver.
+> >>> 
+> >>> Needs a better description and vendor prefix at least.
+> >> 
+> >> I am not yet sure if it is vendor specific or if all
+> >> SGX implementations need some timer.
+> >> 
+> >>> 
+> >>> Why is this needed rather than using the OS's timers?
+> >> 
+> >> Because nobody understands the current (out of tree and
+> >> planned for staging) driver well enough what the timer
+> >> is doing. It is currently hard coded that some omap refer
+> >> to timer7 and others use timer11.
+> > 
+> > Just configure it in the driver based on the compatible
+> > value to keep it out of the dts. It's best to stick to
+> > standard bindings.
+> 
+> IMHO leads to ugly code... Since the timer is not part of
+> the SGX IPR module but one of the OMAP timers it is sort
+> of hardware connection that can be chosen a little arbitrarily.
+> 
+> This is the main reason why I think adding it to a device tree
+> source so that a board that really requires to use a timer
+> for a different purpose, can reassign it. This is not possible
+> if we hard-code that into the driver by scanning for
+> compatible. In that case the driver must check board compatible
+> names...
+> 
+> But if we gain a better understanding of its role in the driver
+> (does it really need a dedicated timer and for what and which
+> properties the timer must have) we can probably replace it.
 
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
----
- arch/arm/boot/dts/imx6qdl-apf6.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Well how about just leave out the timer from the binding
+for now, and just carry a patch for it until it is known
+if/why it's really needed?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-apf6.dtsi b/arch/arm/boot/dts/imx6qdl-apf6.dtsi
-index 10981c74c90d..37cbdfd4fb33 100644
---- a/arch/arm/boot/dts/imx6qdl-apf6.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apf6.dtsi
-@@ -11,7 +11,21 @@
- 	phy-mode = "rgmii-id";
- 	phy-reset-duration = <10>;
- 	phy-reset-gpios = <&gpio1 24 GPIO_ACTIVE_LOW>;
-+	phy-handle = <&ethphy1>;
- 	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+			interrupt-parent = <&gpio1>;
-+			interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
-+			status = "okay";
-+		};
-+	};
- };
- 
- /* Bluetooth */
--- 
-2.21.0
+If it's needed, yeah I agree a timer property should be
+used.
 
+> >>>> +- img,cores:   number of cores. Defaults to <1>.
+> >>> 
+> >>> Not discoverable?
+> >> 
+> >> Not sure if it is. This is probably available in undocumented
+> >> registers of the sgx.
+> > 
+> > This too, and whatever non-standrd other properities
+> > you might have.
+> 
+> Here it is a feature of the SGX IPR of the SoC, i.e.
+> describes that the hardware has one or two cores.
+
+Here you can have a standard dts binding by putting this
+into driver struct of_device_id match .data. Then when
+somebody figures out how to read that from the hardware,
+it can be just dropped.
+
+Regards,
+
+Tony
