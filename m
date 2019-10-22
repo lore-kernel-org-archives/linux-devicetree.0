@@ -2,165 +2,145 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7009CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FC6CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCF721929
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:11:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjSlWjFE"
+	by mail.kernel.org (Postfix) with ESMTP id 9910C21906
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 13:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfJVNL0 (ORCPT
+        id S1732029AbfJVNTr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 09:11:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40781 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731831AbfJVNLY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 09:11:24 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x127so10634407pfb.7;
-        Tue, 22 Oct 2019 06:11:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wx2HYWwlccBZe9F7TCrEPqIRliFBD3jD76Ss0J71NWg=;
-        b=mjSlWjFEnTjEmGr3MXAqZC3scwFZ+ySu2S1C5ZhGJLvdzupNcnNZc31y6yqoNlcP/c
-         8u1tI4HtwPDU9t20Y2WAIQAwW/FPJmtZqX7YJ4BTesmPalcSI2mVoPyaD8kTrCMh69zo
-         e1e2UEZCffMrFpCBYNRO0wtvTZ6dgoolVOn9Hb4fwekT/jaf5Z8tOVTuyLi3jtCBWhjk
-         b2JSPCIyj1LIjsqLeDyo2guNJUVyQiO5V0NyL1IthssyBmTDo/zRy+s7QXRyYZ1jmO2f
-         HEcNdErrbmJaokvVz6YoT/LsuyAKAK+p6e5MtFk0NHgZWiCUzk9SVquMIbELrSOxOQf/
-         AvQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wx2HYWwlccBZe9F7TCrEPqIRliFBD3jD76Ss0J71NWg=;
-        b=kCE9mEo0MR5Wc6rd4kPLFg+zUX+/97st52JG4MOMeIfFqlUMf8weXzZjpLaiKoZH7r
-         9s41+GB8BFb2h1I252dy5N51F46gCv3jVrsLb2R5Nu/mG5bsEoFqXT5qxjCmy25YJZMh
-         8Z+675SBJ7Jhin25a2XHYsrlX2a+Xg3I1B6nGak12tWeD734nGRRZsXUlCjBH7YoP+tR
-         ejXmxyg2xOyyPRgcITGR7J/eiOUViDCMuyO8EsanCU1xvP0naq5mv1vaqvQtj6CYTsSx
-         NQq2KkKPJbf+sJzK1nay2zuKGTPrN55TfVijU5v5s7Nf1RzLHyrfPE8IkL90t2sdnSaK
-         Sjxg==
-X-Gm-Message-State: APjAAAWNy0urq1bq0vL5HUUOoP5yXy/nTX7UfRZFO4nxg4+hqi/gyv1X
-        +04OTpb5TuBt7LB8m4QeU4M=
-X-Google-Smtp-Source: APXvYqzDOnm4YsAZLzrjepNDDeRv2eyTwK0AKhVwbNOsMzrvCHIO44bHP4nQPn4icPGrlphY024Uug==
-X-Received: by 2002:a63:1c03:: with SMTP id c3mr3623236pgc.198.1571749883749;
-        Tue, 22 Oct 2019 06:11:23 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.109.161])
-        by smtp.gmail.com with ESMTPSA id v68sm19517839pfv.47.2019.10.22.06.11.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 22 Oct 2019 06:11:23 -0700 (PDT)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH v5 2/3] dt-bindings: iio: light: add veml6030 ALS bindings
-Date:   Tue, 22 Oct 2019 18:41:13 +0530
-Message-Id: <1571749873-8964-1-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 22 Oct 2019 09:19:47 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:44554 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730197AbfJVNTq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 09:19:46 -0400
+X-AuditID: c0a8fbf4-183ff70000001fa6-21-5daf01f0cfc3
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 55.A6.08102.0F10FAD5; Tue, 22 Oct 2019 15:19:44 +0200 (CEST)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Tue, 22 Oct 2019 15:19:38 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Subject: Re: [RFC PATCH 10/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+Thread-Topic: [RFC PATCH 10/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+Thread-Index: AQHVhNC0M8qm8vzoP0yjRB+AhWv9dadepj4AgAXpHQCAAH9rgIABfMWA
+Date:   Tue, 22 Oct 2019 13:19:37 +0000
+Message-ID: <5611c687e6fc86fefb750faf2f726472e22a7d57.camel@fi.rohmeurope.com>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+         <f8f8c323d378244afe4e94f48c0a94bb296cbbe0.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+         <CAMpxmJWXQccY8HsM6MXYBW8KC0U+7iOk+Ve-4nk=cpa=Zuk1cg@mail.gmail.com>
+         <3ae3507649f2e9a66053a99b4a71e29786fc3d34.camel@fi.rohmeurope.com>
+         <CAMpxmJVABg-UAzZtaQKu5ADBhi1P7CNArmstxHi5ZfdPiSKyYw@mail.gmail.com>
+In-Reply-To: <CAMpxmJVABg-UAzZtaQKu5ADBhi1P7CNArmstxHi5ZfdPiSKyYw@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F351C861A47E7F41A6F91205DB16805C@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0gTYRjHe+9ud+fy4pza3uz3akRFmeQfb2URRHFR9IOCoFp26eVW8ya3
+        WVn+IYTkjwT7YdJwGtKWNdNaRWmWYqtsRSXlNDJrZoFh9sO0hmbtNkv/er883+f7fJ4/npfG
+        Ve/IGNogWgRJ5I0aUkk0VAy6FnwF1bpFTeUR6HxzC4WO9Too9MPmIVCRr4tEZe6nCpT/+LoC
+        vb5xhUBv++8DNPAyB0Onhy5g6NvxDgW6VjYE0IvaEhLd6KkC6IHzJYnsrc0YKrE3EajZsxq9
+        8dwnUfYdN4WGvVeJldFcZWkl4L60ZVNcaeURrsb6huJcl3JJrt1bR3IP225iXHGpH+MqnD8p
+        rs81bZNy+/iEPbzlwBZDihi7Yvd4/e0SG5nWOf3Q9dcOPAv8mpYHwmjIxsNXDi8paxXrBdD/
+        cW0eUAZ0E4An/G4iD9A0ySbAvFeU3BPFLoOfW59gssZZKw0LnME5kewOWHK1jQj17IQ9fe9H
+        9BpY96s4mCVYLXTYzwQ1w26AnY5KKsTyY7C9qAiXjTB2M+wrPRcMA3YqzM3qHYGpoevjT0Vo
+        aRaer3uGh3Q07H4/PFLXwDt+X3BnnJ0Lq2tjQ9GV0N7vBiE9E57O943sEAEfne0iCsFE6xiC
+        dTRtHZO2jklbx6TPAcUlAFN5gzGFtwhxCyUhfaFk0qcGniRTqguELubHLfCncW0jwGjQCCbR
+        mCaaiReqdKoJe0zJGXrerE+U0o2CuRFAGtdEMe2LLutUTDKfcViQTP+syTShUTNzfCd0KlZm
+        7ReENEH6506haQ1k1OOqdaoISUgRDu01GC2jNkaHycOVMVFmQUwWJD7dok+UzyPRHLgP2QoP
+        cLfJccacxqcGqqGoB8ynC7tt5TjtttnLcRUhmkQhRs3Uy62s3KpPF/+DPgE1DTSRTI3shge+
+        zf85nwIILIBwTnLKCAs/asVkAdtg5oSpFbnX3u5bf6rY83vWn4PrmRxiMKMw083Whyf1z35n
+        2Du5o+r7vRexG7cMdeaT3zttd4ed+5e1PkpavHTGkvxspZasWqp9Hq64uDyHKlh3quxoXPns
+        hJNnH3av0hZpu3rrwa45LQ9ajB21PfFiVwEpbs30OY8tLx6wfmjwxmsIs56Pm4dLZv4vIobw
+        YvMDAAA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds device tree bindings for veml6030 ambient
-light sensor.
-
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
----
-Changes in v5:
-* None
-
-Changes in v4:
-* Added enum in reg property
-* Removed maxItems from reg property
-
-Changes in v3:
-* None
-
-Changes in v2:
-* Corrected grammatical mistake from 'is' to 'are' in description of bindings
-
- .../devicetree/bindings/iio/light/veml6030.yaml    | 62 ++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/light/veml6030.yaml b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-new file mode 100644
-index 0000000..0ff9b11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/veml6030.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: VEML6030 Ambient Light Sensor (ALS)
-+
-+maintainers:
-+  - Rishi Gupta <gupt21@gmail.com>
-+
-+description: |
-+  Bindings for the ambient light sensor veml6030 from Vishay
-+  Semiconductors over an i2c interface.
-+
-+  Irrespective of whether interrupt is used or not, application
-+  can get the ALS and White channel reading from IIO raw interface.
-+
-+  If the interrupts are used, application will receive an IIO event
-+  whenever configured threshold is crossed.
-+
-+  Specifications about the sensor can be found at:
-+    https://www.vishay.com/docs/84366/veml6030.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,veml6030
-+
-+  reg:
-+    description:
-+      I2C address of the device.
-+    enum:
-+      - 0x10 # ADDR pin pulled down
-+      - 0x48 # ADDR pin pulled up
-+
-+  interrupts:
-+    description:
-+      interrupt mapping for IRQ. Configure with IRQ_TYPE_LEVEL_LOW.
-+      Refer to interrupt-controller/interrupts.txt for generic
-+      interrupt client node bindings.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        light-sensor@10 {
-+                compatible = "vishay,veml6030";
-+                reg = <0x10>;
-+                interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-+        };
-+    };
-+...
--- 
-2.7.4
-
+SGVsbG8gQmFydG9zeiwNCg0KSnVzdCBhIHNob3J0IG5vdGUgYXQgdGhpcyBwb2ludC4NCg0KT24g
+TW9uLCAyMDE5LTEwLTIxIGF0IDE2OjM2ICswMjAwLCBCYXJ0b3N6IEdvbGFzemV3c2tpIHdyb3Rl
+Og0KPiBwb24uLCAyMSBwYcW6IDIwMTkgbyAwOTowMCBWYWl0dGluZW4sIE1hdHRpDQo+IDxNYXR0
+aS5WYWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+IG5hcGlzYcWCKGEpOg0KPiA+IE9uIFRodSwg
+MjAxOS0xMC0xNyBhdCAxNDo0NSArMDIwMCwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToNCj4g
+PiA+IGN6dy4sIDE3IHBhxbogMjAxOSBvIDExOjUzIE1hdHRpIFZhaXR0aW5lbg0KPiA+ID4gDQo+
+ID4gPiA+ICtzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBiZDcxODI4X2dwaW8gPSB7DQo+
+ID4gPiA+ICsgICAgICAgLmRyaXZlciA9IHsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIC5uYW1l
+ID0gImJkNzE4MjgtZ3BpbyINCj4gPiA+ID4gKyAgICAgICB9LA0KPiA+ID4gPiArICAgICAgIC5w
+cm9iZSA9IGJkNzE4MjhfcHJvYmUsDQo+ID4gPiA+ICt9Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICtt
+b2R1bGVfcGxhdGZvcm1fZHJpdmVyKGJkNzE4MjhfZ3Bpbyk7DQo+ID4gPiA+ICsNCj4gPiA+ID4g
+K01PRFVMRV9BVVRIT1IoIk1hdHRpIFZhaXR0aW5lbiA8DQo+ID4gPiA+IG1hdHRpLnZhaXR0aW5l
+bkBmaS5yb2htZXVyb3BlLmNvbT4NCj4gPiA+ID4gIik7DQo+ID4gPiA+ICtNT0RVTEVfREVTQ1JJ
+UFRJT04oIkJENzE4Mjggdm9sdGFnZSByZWd1bGF0b3IgZHJpdmVyIik7DQo+ID4gPiA+ICtNT0RV
+TEVfTElDRU5TRSgiR1BMIik7DQo+ID4gPiANCj4gPiA+IERvbid0IHlvdSBuZWVkIGEgTU9EVUxF
+X0FMSUFTKCkgaGVyZSBzaW5jZSB0aGlzIGlzIGFuIE1GRCBzdWItDQo+ID4gPiBtb2R1bGU/DQo+
+ID4gDQo+ID4gSSBtdXN0IGFkbWl0IEkgZG9uJ3Qga25vdyB0aGUgZGV0YWlscyBvZiBob3cgbW9k
+dWxlIGxvYWRpbmcgaXMNCj4gPiBkb25lLiBJDQo+ID4gdXNlZCBzeXN0ZW0gd2hlcmUgbW9kdWxl
+cyBhcmUgbG9hZCBieSBzY3JpcHRzLiAoSSBndWVzcyB0aGUgbW9kdWxlDQo+ID4gYWxpYXMgY291
+bGQgYmUgdXNlZCB0byBhbGxvdyBhdXRvbWF0aWMgbW9kdWxlIGxvYWRpbmcgW2J5IHVkZXY/XSkN
+Cj4gPiANCj4gPiBDYW4geW91IHBsZWFzZSBlZHVjYXRlIG1lIC0gSWYgSSBhZGQgbW9kdWxlIGFs
+aWFzZXMgbWF0Y2hpbmcgdGhlDQo+ID4gc3ViLQ0KPiA+IGRldmljZSBuYW1lIGdpdmVuIGluIGlu
+IE1GRCBjZWxsIC0gc2hvdWxkIHRoZSBzdWIgbW9kdWxlIGxvYWRpbmcgYmUNCj4gPiBhdXRvbWF0
+aWMgd2hlbiBNRkQgZHJpdmVyIGdldHMgcHJvYmVkPyBGb3Igc29tZSByZWFzb24gSSBkaWRuJ3Qg
+Z2V0DQo+ID4gdGhhdCB3b3JraW5nIG9uIG15IHRlc3QgYmVkLiBPciBtYXliZSBJIG1pc3VuZGVy
+c3Rvb2Qgc29tZXRoaW5nLg0KPiA+IA0KPiANCj4gSWYgdGhlIGdwaW8gbW9kdWxlIGlzIGEgc3Vi
+LW5vZGUgb24gdGhlIGRldmljZSB0cmVlIHRoYW4geW91IG1heSBuZWVkDQo+IHRvIHVzZSBhIHN1
+Yi1jb21wYXRpYmxlIHRvIGdldCB0aGUgbW9kdWxlIGxvYWRlZCBieSB1ZGV2Lg0KPiANCj4gQmFy
+dA0KPiANCj4gPiBFZywgdGhpcyBzaG91bGQgYmUgZW5vdWdoIGZvciBHUElPIHN1Yi1tb2R1bGUg
+dG8gYmUgYWxzbyBsb2FkOg0KPiA+IA0KPiA+IE1GRDoNCj4gPiBzdGF0aWMgc3RydWN0IG1mZF9j
+ZWxsIGJkNzE4MjhfbWZkX2NlbGxzW10gPSB7DQo+ID4gICAgICAgICB7IC5uYW1lID0gImJkNzE4
+MjgtcG1pYyIsIH0sDQo+ID4gICAgICAgICB7IC5uYW1lID0gImJkNzE4MjgtZ3BpbyIsIH0sDQo+
+ID4gLi4uDQo+ID4gcmV0ID0gZGV2bV9tZmRfYWRkX2RldmljZXMoJmkyYy0+ZGV2LCBQTEFURk9S
+TV9ERVZJRF9BVVRPLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJkNzE4MjhfbWZk
+X2NlbGxzLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFSUkFZX1NJWkUoYmQ3MTgy
+OF9tZmRfY2VsbHMpLCBOVUxMLCAwLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
+Z21hcF9pcnFfZ2V0X2RvbWFpbihpcnFfZGF0YSkpOw0KPiA+IA0KPiA+IEdQSU8gZHJpdmVyOg0K
+PiA+IE1PRFVMRV9BTElBUygicGxhdGZvcm06YmQ3MTgyOC1ncGlvIik7DQo+ID4gDQo+ID4gSSBo
+YWQgdGhlIHN1Yi1kZXZpY2VzIHByb2JlZCBldmVuIHdpdGhvdXQgdGhlIE1PRFVMRV9BTElBUyAt
+IGJ1dA0KPiA+IG1hbnVhbA0KPiA+IGxvYWRpbmcgaXMgcmVxdWlyZWQuIEkgd2lsbCBnbGFkbHkg
+YWRkIHRoZSBhbGlhcyBpZiBpdCBzaG91bGQNCj4gPiBlbmFibGUNCj4gPiB0aGUgYXV0b21hdGlj
+IG1vZHVsZSBsb2FkaW5nLg0KDQpJIGhhZCBzb21lIHByb2JsZW1zIHdpdGggbXkgdGVzdCBzZXR1
+cC4gQWZ0ZXIgSSBmaXhlZCB0aG9zZSBJIHdhcyBhYmxlDQp0byB0ZXN0IHRoZSBhdXRvbWF0aWMg
+bW9kdWxlIGxvYWRpbmcuIFRoZSBzdWItZGV2aWNlcyBkbyBub3QgbmVlZCBvd24NCmNvbXBhdGli
+bGUgdG8gYmUgbG9hZCAtIHRoZXkgb25seSBuZWVkIHRoZSBjb3JyZWN0IG1vZHVsZV9hbGlhczoN
+CiJwbGF0Zm9ybTpzdWItZGV2aWNlLW5hbWUtdXNlZC1pbi1tZmQtY2VsbCIuIElmIHRoaXMgaXMg
+YWRkZWQsIHRoZQ0KbW9kdWxlIGZvciBzdWItZGV2aWNlIGlzIGxvYWQgd2hlbiBNRkQgY2VsbCB3
+aXRoIG5hbWUgbWF0Y2hpbmcgdGhlDQphbGlhcyBpcyBpbnN0YW50aWF0ZWQuDQoNClNvIHRvIHlv
+dXIgb3JpZ2luYWwgcXVlc3Rpb24gLSB5ZXMsIE1PRFVMRV9BTElBUygpIGlzIG5lZWRlZCBmb3IN
+CmF1dG9tYXRlZCBsb2FkaW5nLiBObyBjb21wYXRpYmxlIGlzIHJlcXVpcmVkIHRoZW4gOikNCg0K
+VGhhbmtzIGZvciBwb2ludGluZyBtZSB0byBjb3JyZWN0IGRpcmVjdGlvbiBoZXJlISBJdCdzIGFs
+d2F5cyBuaWNlIHRvDQpsZWFybiBzb21ldGhpbmcgbmV3IQ0KDQpCciwNCglNYXR0aSBWYWl0dGlu
+ZW4NCg==
