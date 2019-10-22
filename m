@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A8CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DB0CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E553A21783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80AF121872
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:47:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rWB904Gc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SIBiN9mi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388821AbfJVLrB (ORCPT
+        id S2388820AbfJVLrG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:47:01 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:35161 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387977AbfJVLrB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 07:47:01 -0400
-Received: by mail-qt1-f201.google.com with SMTP id d6so17344451qtn.2
-        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 04:47:00 -0700 (PDT)
+        Tue, 22 Oct 2019 07:47:06 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:49125 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387977AbfJVLrF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 07:47:05 -0400
+Received: by mail-pf1-f202.google.com with SMTP id z13so13174666pfr.15
+        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 04:47:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ZsrVaR6vc/qnzUA4wVz/77TV1vtgZkJHUiseGtW32fE=;
-        b=rWB904Gcs2qVJZUdeAyoeepfzKedgnQjJZ4jfO3wA6WjqYb2giKU5Pzx6ySfLtL2A0
-         C6G6kK2HU9Bq/aW8NNHtf4gVgn+a7FpdApE4JmhpKiKxDBdyJd5ELjOwCOUHnqAEC6ju
-         p9UzXTH32R+O8Ob6C2dZTmDtGa3SCOUtc35f7m5G7APRhN3dqXcFTbK7RaQizelauCeW
-         iMcqQAFx9SxO10nufCXxuspyLOK8zXPgo1FF7o2TKgZuNIcuq0cEjSqoZFlV/sw3o0ES
-         qitFE0wo1hMeoSthzVhddP3lGNji2i8tKc+iG/apvGVcxGXfpqXwlRRIQTE4qIxwHAd6
-         DFEQ==
+        bh=bhx4XpOMOAvSvKbY+GNWUpjZmdRh9xAzVtH8yGRzOsQ=;
+        b=SIBiN9miBukP2vHVz9yb1Z7FzYKWBp7bstUfIx/l48YcGQot4ut6+8V5YUJL6c1Vqp
+         0A/NHXnagesp/88Em+/Q++21OMqJgdwe9fSH0k6LaOG4jpyJyc5tDwISjoBwE6mLxDSa
+         5veKygBQcZRHA4AZSjrCwhGgXe5MlbkeCUSywhc1nboAqBjXAADehO5RiEnoH+Ya/rkn
+         8ncAtmX9QmchPk8cZwR0wLlGED4guLq/cpUFd7MfjP5n9FZtZt9lRPqBFKOrIKm+5r9x
+         hpFDohJpJTr9QNLCYOEN8Ii6mALgfaNKpGwWnkxxYn5ezvpwhygwN7nAytfE7CPmcqJN
+         cXOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ZsrVaR6vc/qnzUA4wVz/77TV1vtgZkJHUiseGtW32fE=;
-        b=qbpojtwSe5nSyJ+1y1G2msOvkIWNV4XJa5Dj2HOP+yUhuD9qRoSqHbpP6rusEg9TqM
-         b9zby2jpImXeZkrpjMdv5AJyKjMICOhCVlqDMD+Q4zFOz1+CnJN2Tapyw0T2XOsQWG9B
-         tPwEZZIX+63nhUjjiWQI61DjXgJylZycZHt9Si0q1BLL9SUrLs7wzbvOFE6hPwJZuOIf
-         QwYeuvr7BxPvBEXVfKuFSG4iJBPXILThSunIlD768lBcmFHW+OGAc7bCetWohcS7OQMc
-         VqKEm8OK9gVP/xMq5A8qzKQdYaTXVS8EYa9lc4fuI/HfU0bTtc6LQtYnG6EX101OLIhT
-         66Rg==
-X-Gm-Message-State: APjAAAXZMHlaPfN8nRy54Cw+JPrtGDeBOHnM6TCasyhn2Uj2yB8ocZqs
-        pBNUkpbOtZZMbiox8NUcnc3dr1sm/sog
-X-Google-Smtp-Source: APXvYqwP2XO0+wPKaNKqstjcgNhdUynq5gHMc5aDViFMW7a988Y2xcf+1D8ZFjFrBT2cjoj1ZcA528RiWWjN
-X-Received: by 2002:a37:8dc6:: with SMTP id p189mr2474821qkd.132.1571744819983;
- Tue, 22 Oct 2019 04:46:59 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 19:45:02 +0800
+        bh=bhx4XpOMOAvSvKbY+GNWUpjZmdRh9xAzVtH8yGRzOsQ=;
+        b=NI8ikPLwISWIWhIDlRZYGI8+xors/N9KTTkcf2J4ouqUWgILDBW44K43PwqV+/My+f
+         y0IqGw6qNCTjte3pL88NUzwpZylmVk+Axv+FaBG8TSMX6X89pVuZkGgB2X/KjOtmm0mN
+         //oUUQEZXey/khGWyuBGLDxN2XNAXuddLgMxBNTV6wf5hpNgq0HH97J5L+EtDZGIqJWI
+         nUCTRjoNtaVFPocZIsZrKJCx6H0hRnbBnUwN8ITql+krqj8gBt3qz6a+mOAV+rl5t2T1
+         dwiRl61JTEWzDxQMTI6tT+OSkYegqE/8YGDqMgjh7zSQ8HUBv+0E3mTw9ipvEFPd79lB
+         m9Xw==
+X-Gm-Message-State: APjAAAUl/q7rlKRwtlgiFEBDejPSfII0SmFiUdYrzv04MSXM4gvYehgF
+        q+VTRtt+uAye0DrGn8uI+qIkxxR/3RYo
+X-Google-Smtp-Source: APXvYqxav0HrOfMpw4960RSWWzv7KqgN4pnD2wXbdoyd8cYu/tGEv/ffv9S5k7+O4gnGu3yAJgDijmZjv4MQ
+X-Received: by 2002:a63:6116:: with SMTP id v22mr3089716pgb.95.1571744825052;
+ Tue, 22 Oct 2019 04:47:05 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 19:45:03 +0800
 In-Reply-To: <20191022114505.196852-1-tzungbi@google.com>
-Message-Id: <20191022193301.3.I37696eb1321a21846f9e5a9eb14dfac7dbe10663@changeid>
+Message-Id: <20191022193301.4.I659b5e6b25155890b85eb1c361e60f92d2500b7e@changeid>
 Mime-Version: 1.0
 References: <20191022114505.196852-1-tzungbi@google.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH 3/6] ASoC: dt-bindings: mt8183: add a property "mediatek,hdmi-codec"
+Subject: [PATCH 4/6] ASoC: mediatek: mt8183: use hdmi-codec
 From:   Tzung-Bi Shih <tzungbi@google.com>
 To:     broonie@kernel.org, robh+dt@kernel.org, narmstrong@baylibre.com
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
@@ -71,33 +71,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add an optional property "mediatek,hdmi-codec".
+Add DAI link to use hdmi-codec.
 
 Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
 ---
- .../bindings/sound/mt8183-mt6358-ts3a227-max98357.txt           | 2 ++
- 1 file changed, 2 insertions(+)
+ .../mt8183/mt8183-mt6358-ts3a227-max98357.c      | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-index decaa013a07e..cc2845287e61 100644
---- a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-+++ b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-@@ -8,6 +8,7 @@ Optional properties:
- - mediatek,headset-codec: the phandles of ts3a227 codecs
- - mediatek,ec-codec: the phandle of EC codecs.
-                      See google,cros-ec-codec.txt for more details.
-+- mediatek,hdmi-codec: the phandles of HDMI codec
+diff --git a/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c b/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c
+index 0555f7d73d05..258f1416fae1 100644
+--- a/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c
++++ b/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c
+@@ -191,7 +191,7 @@ SND_SOC_DAILINK_DEFS(i2s5,
  
- Example:
+ SND_SOC_DAILINK_DEFS(tdm,
+ 	DAILINK_COMP_ARRAY(COMP_CPU("TDM")),
+-	DAILINK_COMP_ARRAY(COMP_DUMMY()),
++	DAILINK_COMP_ARRAY(COMP_CODEC(NULL, "i2s-hifi")),
+ 	DAILINK_COMP_ARRAY(COMP_EMPTY()));
  
-@@ -15,6 +16,7 @@ Example:
- 		compatible = "mediatek,mt8183_mt6358_ts3a227_max98357";
- 		mediatek,headset-codec = <&ts3a227>;
- 		mediatek,ec-codec = <&ec_codec>;
-+		mediatek,hdmi-codec = <&it6505dptx>;
- 		mediatek,platform = <&afe>;
- 	};
+ static int mt8183_mt6358_tdm_startup(struct snd_pcm_substream *substream)
+@@ -479,7 +479,7 @@ static int
+ mt8183_mt6358_ts3a227_max98357_dev_probe(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = &mt8183_mt6358_ts3a227_max98357_card;
+-	struct device_node *platform_node, *ec_codec;
++	struct device_node *platform_node, *ec_codec, *hdmi_codec;
+ 	struct snd_soc_dai_link *dai_link;
+ 	struct mt8183_mt6358_ts3a227_max98357_priv *priv;
+ 	int ret;
+@@ -496,9 +496,12 @@ mt8183_mt6358_ts3a227_max98357_dev_probe(struct platform_device *pdev)
  
+ 	ec_codec = of_parse_phandle(pdev->dev.of_node, "mediatek,ec-codec", 0);
+ 
++	hdmi_codec = of_parse_phandle(pdev->dev.of_node,
++				      "mediatek,hdmi-codec", 0);
++
+ 	for_each_card_prelinks(card, i, dai_link) {
+-		if (dai_link->platforms->name)
+-			continue;
++		if (!dai_link->platforms->name)
++			dai_link->platforms->of_node = platform_node;
+ 
+ 		if (ec_codec && strcmp(dai_link->name, "Wake on Voice") == 0) {
+ 			dai_link->cpus[0].name = NULL;
+@@ -509,9 +512,10 @@ mt8183_mt6358_ts3a227_max98357_dev_probe(struct platform_device *pdev)
+ 			dai_link->codecs[0].dai_name = "Wake on Voice";
+ 			dai_link->platforms[0].of_node = ec_codec;
+ 			dai_link->ignore = 0;
+-		} else {
+-			dai_link->platforms->of_node = platform_node;
+ 		}
++
++		if (hdmi_codec && strcmp(dai_link->name, "TDM") == 0)
++			dai_link->codecs->of_node = hdmi_codec;
+ 	}
+ 
+ 	mt8183_mt6358_ts3a227_max98357_headset_dev.dlc.of_node =
 -- 
 2.23.0.866.gb869b98d4c-goog
 
