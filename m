@@ -2,250 +2,220 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01831CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 10:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F8ECA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 10:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9B3214B2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 10:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF5621783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 10:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731802AbfJVKPo (ORCPT
+        id S1731824AbfJVKSL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 06:15:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:8000 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfJVKPo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 06:15:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 03:15:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
-   d="scan'208";a="201625935"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 22 Oct 2019 03:15:43 -0700
-Received: from [10.226.39.21] (unknown [10.226.39.21])
-        by linux.intel.com (Postfix) with ESMTP id E4EEA58029F;
-        Tue, 22 Oct 2019 03:15:39 -0700 (PDT)
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
- <20191021111902.GO47056@e119886-lin.cambridge.arm.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <0394d6dd-e665-4f00-a600-21fd10acbd9d@linux.intel.com>
-Date:   Tue, 22 Oct 2019 18:15:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 22 Oct 2019 06:18:11 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42247 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731333AbfJVKSJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 06:18:09 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMrEk-0004Q1-Om; Tue, 22 Oct 2019 12:17:58 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iMrEi-00089j-Iv; Tue, 22 Oct 2019 12:17:56 +0200
+Date:   Tue, 22 Oct 2019 12:17:56 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
+        robh+dt@kernel.org, jacopo+renesas@jmondi.org,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
+        hans.verkuil@cisco.com, mchehab@kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v10 03/14] media: v4l2-fwnode: add initial connector
+ parsing support
+Message-ID: <20191022101756.7uiwdve7goywruzd@pengutronix.de>
+References: <20190830101646.6530-1-m.felsch@pengutronix.de>
+ <20190830101646.6530-4-m.felsch@pengutronix.de>
+ <20191002070303.GK896@valkosipuli.retiisi.org.uk>
+ <20191002080735.yyoxo5wg35t7k26x@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191021111902.GO47056@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002080735.yyoxo5wg35t7k26x@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:17:19 up 157 days, 16:35, 97 users,  load average: 0.09, 0.07,
+ 0.04
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrew Murray,
+Hi Sakari,
 
-On 10/21/2019 7:19 PM, Andrew Murray wrote:
-> On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
->> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
-> s/shcemas/schemas/
->
->> which is Synopsys DesignWare based PCIe core.
-> The revision history below doesn't need to be in the commit mesage and
-> so you should add a '---' before the following (and thanks for the
-> detailed history).
->
-> Besides that:
->
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+gentle ping.
 
-Thank you for the review. I will fix the conventions
-
-Regards,
-Dilip
-
->
->> changes on v4:
->> 	Add "snps,dw-pcie" compatible.
->> 	Rename phy-names property value to pcie.
->> 	And maximum and minimum values to num-lanes.
->> 	Add ref for reset-assert-ms entry and update the
->> 	 description for easy understanding.
->> 	Remove pcie core interrupt entry.
->>
->> changes on v3:
->>          Add the appropriate License-Identifier
->>          Rename intel,rst-interval to 'reset-assert-us'
->>          Add additionalProperties: false
->>          Rename phy-names to 'pciephy'
->>          Remove the dtsi node split of SoC and board in the example
->>          Add #interrupt-cells = <1>; or else interrupt parsing will fail
->>          Name yaml file with compatible name
->>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> ---
->>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
->>   1 file changed, 135 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->> new file mode 100644
->> index 000000000000..49dd87ec1e3d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->> @@ -0,0 +1,135 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: PCIe RC controller on Intel Gateway SoCs
->> +
->> +maintainers:
->> +  - Dilip Kota <eswara.kota@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: intel,lgm-pcie
->> +      - const: snps,dw-pcie
->> +
->> +  device_type:
->> +    const: pci
->> +
->> +  "#address-cells":
->> +    const: 3
->> +
->> +  "#size-cells":
->> +    const: 2
->> +
->> +  reg:
->> +    items:
->> +      - description: Controller control and status registers.
->> +      - description: PCIe configuration registers.
->> +      - description: Controller application registers.
->> +
->> +  reg-names:
->> +    items:
->> +      - const: dbi
->> +      - const: config
->> +      - const: app
->> +
->> +  ranges:
->> +    description: Ranges for the PCI memory and I/O regions.
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    description: PCIe registers interface clock.
->> +
->> +  phys:
->> +    maxItems: 1
->> +
->> +  phy-names:
->> +    const: pcie
->> +
->> +  reset-gpios:
->> +    maxItems: 1
->> +
->> +  num-lanes:
->> +    minimum: 1
->> +    maximum: 2
->> +    description: Number of lanes to use for this port.
->> +
->> +  linux,pci-domain:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: PCI domain ID.
->> +
->> +  '#interrupt-cells':
->> +    const: 1
->> +
->> +  interrupt-map-mask:
->> +    description: Standard PCI IRQ mapping properties.
->> +
->> +  interrupt-map:
->> +    description: Standard PCI IRQ mapping properties.
->> +
->> +  max-link-speed:
->> +    description: Specify PCI Gen for link capability.
->> +
->> +  bus-range:
->> +    description: Range of bus numbers associated with this controller.
->> +
->> +  reset-assert-ms:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Delay after asserting reset to the PCIe device.
->> +      Some devices need an interval upto 500ms. By default it is 100ms.
->> +
->> +required:
->> +  - compatible
->> +  - device_type
->> +  - reg
->> +  - reg-names
->> +  - ranges
->> +  - resets
->> +  - clocks
->> +  - phys
->> +  - phy-names
->> +  - reset-gpios
->> +  - num-lanes
->> +  - linux,pci-domain
->> +  - interrupt-map
->> +  - interrupt-map-mask
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    pcie10:pcie@d0e00000 {
->> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
->> +      device_type = "pci";
->> +      #address-cells = <3>;
->> +      #size-cells = <2>;
->> +      reg = <0xd0e00000 0x1000>,
->> +            <0xd2000000 0x800000>,
->> +            <0xd0a41000 0x1000>;
->> +      reg-names = "dbi", "config", "app";
->> +      linux,pci-domain = <0>;
->> +      max-link-speed = <4>;
->> +      bus-range = <0x00 0x08>;
->> +      interrupt-parent = <&ioapic1>;
->> +      #interrupt-cells = <1>;
->> +      interrupt-map-mask = <0 0 0 0x7>;
->> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
->> +                      <0 0 0 2 &ioapic1 28 1>,
->> +                      <0 0 0 3 &ioapic1 29 1>,
->> +                      <0 0 0 4 &ioapic1 30 1>;
->> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
->> +      resets = <&rcu0 0x50 0>;
->> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
->> +      phys = <&cb0phy0>;
->> +      phy-names = "pcie";
->> +      status = "okay";
->> +      reset-assert-ms = <500>;
->> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
->> +      num-lanes = <2>;
->> +    };
->> -- 
->> 2.11.0
->>
+On 19-10-02 10:07, Marco Felsch wrote:
+> Hi Sakari,
+> 
+> On 19-10-02 10:03, Sakari Ailus wrote:
+> > Hi Marco,
+> > 
+> > On Fri, Aug 30, 2019 at 12:16:35PM +0200, Marco Felsch wrote:
+> > > The patch adds the initial connector parsing code, so we can move from a
+> > > driver specific parsing code to a generic one. Currently only the
+> > > generic fields and the analog-connector specific fields are parsed. Parsing
+> > > the other connector specific fields can be added by a simple callbacks.
+> > > 
+> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > ---
+> > > [1] https://patchwork.kernel.org/cover/10794703/
+> > > 
+> > > v10:
+> > > - drop V4L2_CONN_HDMI support
+> > > - adapt pr_err msg to reflect new state (-> connector is unkown)
+> > > 
+> > > v9:
+> > > - Fix leading semicolon found by kbuild semicolon.cocci
+> > > 
+> > > v8:
+> > > - V4L2_CON_* -> V4L2_CONN_*
+> > > - tvnorms -> sdtv-standards
+> > > - adapt to new v4l2_fwnode_connector_analog member
+> > > - return error in case of V4L2_CONN_HDMI
+> > > 
+> > > v7:
+> > > @Jacopo: I dropped your r b tag becuase of the amount of changes I
+> > > made..
+> > > 
+> > > - drop unnecessary comments
+> > > - fix commet style
+> > > - s/v4l2_fwnode_connector_conv.name/v4l2_fwnode_connector_conv.compatible/
+> > > - make label size variable and drop V4L2_CONNECTOR_MAX_LABEL usage
+> > > - do not assign a default label in case of no label was specified
+> > > - remove useless /* fall through */ comments
+> > > - add support for N connector links
+> > > - rename local variables to be more meaningful
+> > > - adjust kernedoc
+> > > - add v4l2_fwnode_connector_free()
+> > > - improve error handling (use different error values)
+> > > - make use of pr_warn_once()
+> > > 
+> > > v6:
+> > > - use unsigned count var
+> > > - fix comment and style issues
+> > > - place '/* fall through */' to correct places
+> > > - fix error handling and cleanup by releasing fwnode
+> > > - drop vga and dvi parsing support as those connectors are rarely used
+> > >   these days
+> > > 
+> > > v5:
+> > > - s/strlcpy/strscpy/
+> > > 
+> > > v2-v4:
+> > > - nothing since the patch was squashed from series [1] into this
+> > >   series.
+> > > 
+> > >  drivers/media/v4l2-core/v4l2-fwnode.c | 129 ++++++++++++++++++++++++++
+> > >  include/media/v4l2-fwnode.h           |  38 ++++++++
+> > >  2 files changed, 167 insertions(+)
+> > > 
+> > > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > index 3bd1888787eb..0bfa7cbf78df 100644
+> > > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > @@ -595,6 +595,135 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+> > >  
+> > > +static const struct v4l2_fwnode_connector_conv {
+> > > +	enum v4l2_connector_type type;
+> > > +	const char *compatible;
+> > > +} connectors[] = {
+> > > +	{
+> > > +		.type = V4L2_CONN_COMPOSITE,
+> > > +		.compatible = "composite-video-connector",
+> > > +	}, {
+> > > +		.type = V4L2_CONN_SVIDEO,
+> > > +		.compatible = "svideo-connector",
+> > > +	},
+> > > +};
+> > > +
+> > > +static enum v4l2_connector_type
+> > > +v4l2_fwnode_string_to_connector_type(const char *con_str)
+> > > +{
+> > > +	unsigned int i;
+> > > +
+> > > +	for (i = 0; i < ARRAY_SIZE(connectors); i++)
+> > > +		if (!strcmp(con_str, connectors[i].compatible))
+> > > +			return connectors[i].type;
+> > > +
+> > > +	return V4L2_CONN_UNKNOWN;
+> > > +}
+> > > +
+> > > +static int
+> > > +v4l2_fwnode_connector_parse_analog(struct fwnode_handle *fwnode,
+> > > +				   struct v4l2_fwnode_connector *vc)
+> > > +{
+> > > +	u32 stds;
+> > > +	int ret;
+> > > +
+> > > +	ret = fwnode_property_read_u32(fwnode, "sdtv-standards", &stds);
+> > > +
+> > > +	/* The property is optional. */
+> > > +	vc->connector.analog.sdtv_stds = ret ? V4L2_STD_ALL : stds;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +void v4l2_fwnode_connector_free(struct v4l2_fwnode_connector *connector)
+> > > +{
+> > > +	unsigned int i;
+> > > +
+> > > +	if (IS_ERR_OR_NULL(connector))
+> > > +		return;
+> > > +
+> > > +	for (i = 0; i < connector->nr_of_links; i++)
+> > > +		v4l2_fwnode_put_link(&connector->links[i]);
+> > > +	kfree(connector->links);
+> > 
+> > Please assign connector->links NULL here, and nr_of_links to zero.
+> 
+> Okay, I can do that.
+> 
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_free);
+> > > +
+> > > +int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
+> > > +				      struct v4l2_fwnode_connector *connector)
+> > > +{
+> > > +	struct fwnode_handle *remote_pp, *remote_ep;
+> > > +	const char *type_name;
+> > > +	unsigned int i = 0, ep_num = 0;
+> > > +	int err;
+> > > +
+> > > +	memset(connector, 0, sizeof(*connector));
+> > > +
+> > > +	remote_pp = fwnode_graph_get_remote_port_parent(fwnode);
+> > 
+> > How do you know a remote endpoint is a connector, and not another device's
+> > endpoint?
+> 
+> Well, I think that the caller won't use this function if it isn't a
+> connector. If it helps I can check if the compatible of the remote ends
+> with "-connector".
+> 
+> Regards,
+>   Marco
