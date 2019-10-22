@@ -2,344 +2,118 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C206CA9EBA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9C2CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E052184C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A406D21783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 11:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571742061;
-	bh=3wr2brRuPL3nrxk9/+udPN9G8ogjlg23jMUoDvyxk+k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2eUyZPTM5rDyNQYVTW2b18onGncnRmClNX2P7Dz9K6tTyptiF7g4BemrsFJ10WjPI
-	 9d2VNloGnYpFb5NW/L6MgfKjbB8+LbHSyZEAsG5d/K8iLFz0HFoEimrFFgdLCpMszO
-	 hCoXfG4B+2a5S969/RqRUDF0Vw7+KVvB419TkA+c=
+	s=default; t=1571743155;
+	bh=SHfq3a5iJ6eIhC8ydjfdFltbzxN6zd8AVgIIhOszetI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RYMoWUwu7pAkL6rScCfdx0pXPfO7A6x8VUcX5CMJHH9pKGArHmhj6KN/Gn3kadIp+
+	 ZfCVuSP8rehENxvTqWm2WjdO0YVaQzVPBEGD7VbVFp/b+EGASS5eu6enTt3ap/sWmv
+	 PX70Txi3093KNT7ynlezqpaW5Bukl/ULGZRrYEzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbfJVLBA (ORCPT
+        id S2388292AbfJVLTP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 07:01:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbfJVLA7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 07:00:59 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDEEE21783;
-        Tue, 22 Oct 2019 11:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571742058;
-        bh=3wr2brRuPL3nrxk9/+udPN9G8ogjlg23jMUoDvyxk+k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OW/zqk0hi6SfASYvNIGLiANYFDtusXa3A6NDHzMdckQrZ6Rt9DE+cRw3etOvdjo+P
-         3S/ja/s9cnWBUY8g6s8EpDcUAB/wayph/AlomQ0h5Y3ifGmB5SzIGJAsKGq1k5iwub
-         yMFpAfhZnR02eyIBHVyBiqu7HIp3nhV9yo4jcduU=
-Date:   Tue, 22 Oct 2019 12:00:51 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jdelvare@suse.com,
-        linux@roeck-us.net, thierry.reding@gmail.com,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH 1/8] dt-bindings: mfd: iqs62x: Add bindings
-Message-ID: <20191022120051.686ed9f9@archlinux>
-In-Reply-To: <1571631083-4962-2-git-send-email-jeff@labundy.com>
-References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
-        <1571631083-4962-2-git-send-email-jeff@labundy.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 22 Oct 2019 07:19:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33278 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387405AbfJVLTO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 07:19:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qr4z6oo7+Ton4jDBY5r2uXEtGOqskUXoAvq8PxTdUVk=; b=ZuOmX8stWnXGunirZHU1q4j3k
+        ay81XB280IBkZfnGDl22OZu5tQRwnWkZo+UdYaElANVOV4nNu4y15+N60Zyi2nxCaWmztdRUeF08f
+        XVlT2e+s2zY8s82Ik3WuUJxyKRZtzhKCIespxxhwqBZgyeoW0AjoMWfyCxnsvpXr5OzvM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iMsBx-0006S8-FB; Tue, 22 Oct 2019 11:19:09 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 715442743259; Tue, 22 Oct 2019 12:19:08 +0100 (BST)
+Date:   Tue, 22 Oct 2019 12:19:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4] misc: eeprom: at24: support pm_runtime control
+Message-ID: <20191022111908.GC5554@sirena.co.uk>
+References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
+ <CAMpxmJUrY9YK==6Mf5MoRTUDwmXJ6v5EM-VLXCNXJ8ZNK+xHyA@mail.gmail.com>
+ <CAAFQd5BEcE0m7Jg1ZnmrF+jwH6Yn8+vYqT1L2wc2zkZ5vRCRAg@mail.gmail.com>
+ <CAMpxmJU_Vws0oGf+GQCEbs-NHFCniO8c2CbXrKy9oEVC_KUhMQ@mail.gmail.com>
+ <CAAFQd5D=T+x7j+Lst8AQt0epLckPJv_bXtNGs3Dk=kbdbfw53Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5D=T+x7j+Lst8AQt0epLckPJv_bXtNGs3Dk=kbdbfw53Q@mail.gmail.com>
+X-Cookie: Whip it, whip it good!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 20 Oct 2019 23:11:16 -0500
-Jeff LaBundy <jeff@labundy.com> wrote:
 
-> This patch adds binding documentation for six-channel members of the
-> Azoteq ProxFusion family of sensor devices.
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+--H8ygTp4AXg6deix2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm not sure if Lee has made the switch for mfd entirely yet, but
-mostly new dt bindings need to be in yaml format as it allows
-automated parsing of the examples + bindings using them for
-correctness.
+On Tue, Oct 22, 2019 at 07:33:54PM +0900, Tomasz Figa wrote:
+> On Tue, Oct 22, 2019 at 6:00 PM Bartosz Golaszewski
 
-One comment inline.  I'm far from an expert on most of the stuff here
-so will leave it for others!
+> > > I can see that the core returns the dummy regulator if
+> > > have_full_constraints() [1]. That is always true for DT systems, but
+> > > for others it's false by default, unless someone explicitly calls
+> > > regulator_has_full_constraints() [2].
 
-Jonathan
+ACPI systems are also always marked as having full constraints, only
+systems with board files will see this.
 
+> > Not tested yet, but from the code it looks like it will then keep
+> > returning EPROBE_DEFER which doesn't sound right really, especially
+> > since we're printing an error message too. Shouldn't it be -ENODEV?
 
-> ---
->  Documentation/devicetree/bindings/mfd/iqs62x.txt | 242 +++++++++++++++++++++++
->  1 file changed, 242 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/iqs62x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/iqs62x.txt b/Documentation/devicetree/bindings/mfd/iqs62x.txt
-> new file mode 100644
-> index 0000000..089f567
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/iqs62x.txt
-> @@ -0,0 +1,242 @@
-> +Azoteq IQS620A/621/622/624/625 ProxFusion Sensor Family
-> +
-> +Required properties:
-> +
-> +- compatible			: Must be equal to one of the following:
-> +				  "azoteq,iqs620a"
-> +				  "azoteq,iqs621"
-> +				  "azoteq,iqs622"
-> +				  "azoteq,iqs624"
-> +				  "azoteq,iqs625"
-> +
-> +- reg				: I2C slave address for the device.
-> +
-> +- interrupts			: GPIO to which the device's active-low RDY
-> +				  output is connected (see [0]).
-> +
-> +Optional properties:
-> +
-> +- linux,fw-file			: Specifies the name of the calibration and
-> +				  configuration file selected by the driver.
-> +				  If this property is omitted, the filename
-> +				  is selected based on the device name with
-> +				  ".bin" as the extension (e.g. iqs620a.bin
-> +				  for IQS620A).
-> +
-> +All devices accommodate a child node (e.g. "keys") that represents touch key
-> +support. Required properties for the "keys" child node include:
-> +
-> +- compatible			: Must be equal to one of the following:
-> +				  "azoteq,iqs620a-keys"
-> +				  "azoteq,iqs621-keys"
-> +				  "azoteq,iqs622-keys"
-> +				  "azoteq,iqs624-keys"
-> +				  "azoteq,iqs625-keys"
-> +
-> +- linux,keycodes		: Specifies an array of up to 16 numeric key-
-> +				  codes corresponding to each available touch
-> +				  or proximity event. An 'x' in the following
-> +				  table indicates an event is supported for a
-> +				  given device; specify 0 for unused events.
-> +
-> +  ----------------------------------------------------------------------------
-> +  | #  | Event                 | IQS620A | IQS621 | IQS622 | IQS624 | IQS625 |
-> +  ----------------------------------------------------------------------------
-> +  | 0  | CH0 Touch             |    x    |    x   |    x   |    x   |    x   |
-> +  |    | Antenna 1 Touch*      |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 1  | CH0 Proximity         |    x    |    x   |    x   |    x   |    x   |
-> +  |    | Antenna 1 Proximity*  |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 2  | CH1 Touch             |    x    |    x   |    x   |    x   |    x   |
-> +  |    | Antenna 1 Deep Touch* |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 3  | CH1 Proximity         |    x    |    x   |    x   |    x   |    x   |
-> +  ----------------------------------------------------------------------------
-> +  | 4  | CH2 Touch             |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 5  | CH2 Proximity         |    x    |        |        |        |        |
-> +  |    | Antenna 2 Proximity*  |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 6  | Metal (+) Touch**     |    x    |    x   |        |        |        |
-> +  |    | Antenna 2 Deep Touch* |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 7  | Metal (+) Proximity** |    x    |    x   |        |        |        |
-> +  |    | Antenna 2 Touch*      |    x    |        |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 8  | Metal (-) Touch**     |    x    |    x   |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 9  | Metal (-) Proximity** |    x    |    x   |        |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 10 | SAR Active***         |    x    |        |    x   |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 11 | SAR Quick Release***  |    x    |        |    x   |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 12 | SAR Movement***       |    x    |        |    x   |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 13 | SAR Filter Halt***    |    x    |        |    x   |        |        |
-> +  ----------------------------------------------------------------------------
-> +  | 14 | Wheel Up              |         |        |        |    x   |        |
-> +  ----------------------------------------------------------------------------
-> +  | 15 | Wheel Down            |         |        |        |    x   |        |
-> +  ----------------------------------------------------------------------------
-> +  *   Dual-channel SAR. Replaces CH0-2 and metal touch and proximity events if
-> +      enabled via firmware.
-> +  **  "+" and "-" refer to the polarity of the channel's delta (LTA - counts),
-> +      where "LTA" is defined as the channel's long-term average.
-> +  *** Single-channel SAR. Replaces CH0-2 touch and proximity events if enabled
-> +      via firmware.
-> +
-> +The "keys" child node supports "hall_switch_north" and "hall_switch_south"
-> +child nodes that represent north-field and south-field Hall-effect sensor
-> +events, respectively (IQS620A/621/622 only). Required properties include:
-> +
-> +- linux,code			: Numeric switch code.
-> +
-> +Optional properties for the "hall_switch_north" and "hall_switch_south" nodes:
-> +
-> +- azoteq,use-prox		: Boolean to specify that Hall-effect sensor
-> +				  reporting must use the device's wide-range
-> +				  proximity threshold instead of its narrow-
-> +				  range touch threshold.
-> +
-> +Note: North/south-field orientation is reversed on the IQS620AXzCSR device due
-> +      to its flip-chip package.
-> +
-> +The IQS620A supports a PWM controller node; required properties include:
-> +
-> +- compatible			: Must be equal to "azoteq,iqs620a-pwm".
-> +
-> +- #pwm-cells			: Must be equal to 2 (see [1]).
-> +
-> +The IQS622 supports an additional child node (e.g. "prox") that represents
-> +active IR detection; required properties include:
-> +
-> +- compatible			: Must be equal to "azoteq,iqs622-prox".
-> +
-> +Optional properties for the "prox" child node:
-> +
-> +- azoteq,use-prox		: Boolean to specify that IR threshold event
-> +				  reporting must use the device's wide-range
-> +				  proximity threshold instead of its narrow-
-> +				  range touch threshold.
-This one is certainly interesting.  Does it always make sense to
-set this only at boot?  Of could we control this from userspace?
+> That's an interesting finding. Liam, Mark, what's the proper way to
+> bulk get optional regulators?
 
-It sits somewhere between a hardware requirement that we should
-put in DT and a policy decision.  I can conceive of devices where both
-options make sense, but also ones where only one does.
+The ambiguously named regulator_get_optional().  This should *only* be
+used for regulators that may be physically absent in the system, other
+regulators should use normal regulator_get().  It is vanishingly
+unlikely that all the supplies for a device will be optional.
 
-> +
-> +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +[1]: Documentation/devicetree/bindings/pwm/pwm.txt
-> +
-> +Example 1: Dual capacitive buttons with additional "air button," unipolar lid
-> +	   switch and panel-mounted LED.
-> +
-> +	&i2c1 {
-> +		/* ... */
-> +
-> +		iqs620a: iqs620a@44 {
-> +			compatible = "azoteq,iqs620a";
-> +			reg = <0x44>;
-> +			interrupt-parent = <&gpio>;
-> +			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +			iqs620a_keys: keys {
-> +				compatible = "azoteq,iqs620a-keys";
-> +
-> +				linux,keycodes = <KEY_SELECT>,
-> +						 <KEY_MENU>,
-> +						 <KEY_OK>,
-> +						 <KEY_MENU>;
-> +
-> +				hall_switch_south {
-> +					linux,code = <SW_LID>;
-> +					azoteq,use-prox;
-> +				};
-> +			};
-> +
-> +			iqs620a_pwm: pwm {
-> +				compatible = "azoteq,iqs620a-pwm";
-> +				#pwm-cells = <2>;
-> +			};
-> +		};
-> +
-> +		/* ... */
-> +	};
-> +
-> +	pwmleds {
-> +		compatible = "pwm-leds";
-> +
-> +		panel {
-> +			pwms = <&iqs620a_pwm 0 1000000>;
-> +			max-brightness = <255>;
-> +		};
-> +	};
-> +
-> +Example 2: Single inductive button with bipolar dock/tablet-mode switch.
-> +
-> +	&i2c1 {
-> +		/* ... */
-> +
-> +		iqs620a: iqs620a@44 {
-> +			compatible = "azoteq,iqs620a";
-> +			reg = <0x44>;
-> +			interrupt-parent = <&gpio>;
-> +			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +			linux,fw-file = "iqs620a_coil.bin";
-> +
-> +			iqs620a_keys: keys {
-> +				compatible = "azoteq,iqs620a-keys";
-> +
-> +				linux,keycodes = <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <KEY_MUTE>;
-> +
-> +				hall_switch_north {
-> +					linux,code = <SW_DOCK>;
-> +				};
-> +
-> +				hall_switch_south {
-> +					linux,code = <SW_TABLET_MODE>;
-> +				};
-> +			};
-> +		};
-> +
-> +		/* ... */
-> +	};
-> +
-> +Example 3: Dual capacitive buttons with volume knob.
-> +
-> +	&i2c1 {
-> +		/* ... */
-> +
-> +		iqs624: iqs624@44 {
-> +			compatible = "azoteq,iqs624";
-> +			reg = <0x44>;
-> +			interrupt-parent = <&gpio>;
-> +			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +			iqs624_keys: keys {
-> +				compatible = "azoteq,iqs624-keys";
-> +
-> +				linux,keycodes = <BTN_0>,
-> +						 <0>,
-> +						 <BTN_1>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <0>,
-> +						 <KEY_VOLUMEUP>,
-> +						 <KEY_VOLUMEDOWN>;
-> +			};
-> +		};
-> +
-> +		/* ... */
-> +	};
+--H8ygTp4AXg6deix2
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2u5asACgkQJNaLcl1U
+h9AI3gf8COsJvW+lx7Lpb6/0susCMMK1GWIj6oVow1u666q9ibEgppq/FkU7GN39
+F2GCBXXn6YIwykHAsYTA/WjJuwjzQWjYJTO84MQT5HSNq6WUsKOoIBfzHVV3o6Od
+8AcmZbpv7tlMbhxZR/wdByOlH4ulTixx8G8hpzykLpcMzf05NzlWPDBuYgrDVTPH
+hu2GkxZLiWrVknzE1aFOpE4X636PIPIFz/e1gAA3VNiWjts9kuC2lpL+jhDO1QOf
+oVlnSn7TUvOFazxIeMSmLPsOap3dOcFcpXreyQxRD9d6tvgZ8IR/cOCP5f+468Wn
+/5ZyzRHMaUjaP3TuIXnIfjmaZmBePg==
+=KAhK
+-----END PGP SIGNATURE-----
+
+--H8ygTp4AXg6deix2--
