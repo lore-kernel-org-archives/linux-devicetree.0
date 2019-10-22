@@ -2,176 +2,65 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1C2CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B773CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536E2218AE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571759271;
-	bh=AejEtY/BzekHga8zdI53AO/Lgt0U9aGhqsnmnZTTvEk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ezWnIzX7XxmbLjy/4sEUifC/KZzjsrixuP7GTYkQbMSovw2VmAefh21lqwWyAI9Y+
-	 E38Fsz7NqqKFNFpKLgBP2ktnKNG+5gFDKIqbBr2k6pDBazjTzZj7+mmjL3F7BYfYId
-	 JuVvZll+nEXSTsfNH613fRUOARzIVyD1uO3aqpns=
+	by mail.kernel.org (Postfix) with ESMTP id 3976B214B2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 15:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387981AbfJVPru (ORCPT
+        id S2388061AbfJVPsT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 11:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46160 "EHLO mail.kernel.org"
+        Tue, 22 Oct 2019 11:48:19 -0400
+Received: from muru.com ([72.249.23.125]:38940 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387922AbfJVPru (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:47:50 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37E52214B2;
-        Tue, 22 Oct 2019 15:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571759269;
-        bh=AejEtY/BzekHga8zdI53AO/Lgt0U9aGhqsnmnZTTvEk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=uIwo/poRGQ2nZ+Ll0BT/EKjrLOkddCaonISjJKhlgNes7MYBprmOjkz0hJ5OVg9cU
-         SQwcO1uSROrdizd+ThAd4149harMVJFT99FKVFGco96K5/coENG9iWDFQHEpNGGv7T
-         uPkDFfV/Iu1SCgCew3BL5GqvjsqY5Ahn2GhbVQJU=
-From:   Maxime Ripard <mripard@kernel.org>
-To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH] dt-bindings: can: Convert Allwinner A10 CAN controller to a schema
-Date:   Tue, 22 Oct 2019 17:47:45 +0200
-Message-Id: <20191022154745.41865-1-mripard@kernel.org>
-X-Mailer: git-send-email 2.23.0
+        id S2387922AbfJVPsT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 11:48:19 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0B04980FA;
+        Tue, 22 Oct 2019 15:48:53 +0000 (UTC)
+Date:   Tue, 22 Oct 2019 08:48:16 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch 1/3] ARM: dts: am43xx: add support for clkout1 clock
+Message-ID: <20191022154816.GO5610@atomide.com>
+References: <20191016184954.14048-1-bparrot@ti.com>
+ <20191016184954.14048-2-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016184954.14048-2-bparrot@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The older Allwinner SoCs have a CAN controller that is supported in Linux,
-with a matching Device Tree binding.
+* Benoit Parrot <bparrot@ti.com> [191016 18:47]:
+> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> @@ -704,6 +704,60 @@
+>  		ti,bit-shift = <8>;
+>  		reg = <0x2a48>;
+>  	};
+> +
+> +	clkout1_osc_div_ck: clkout1_osc_div_ck {
+> +		#clock-cells = <0>;
+> +		compatible = "ti,divider-clock";
+> +		clocks = <&sys_clkin_ck>;
+> +		ti,bit-shift = <20>;
+> +		ti,max-div = <4>;
+> +		reg = <0x4100>;
+> +	};
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
+Here too please describe why the clock names are not generic.
 
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- .../net/can/allwinner,sun4i-a10-can.yaml      | 51 +++++++++++++++++++
- .../devicetree/bindings/net/can/sun4i_can.txt | 36 -------------
- 2 files changed, 51 insertions(+), 36 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/can/allwinner,sun4i-a10-can.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/can/sun4i_can.txt
+Regards,
 
-diff --git a/Documentation/devicetree/bindings/net/can/allwinner,sun4i-a10-can.yaml b/Documentation/devicetree/bindings/net/can/allwinner,sun4i-a10-can.yaml
-new file mode 100644
-index 000000000000..770af7c46114
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/allwinner,sun4i-a10-can.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/can/allwinner,sun4i-a10-can.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 CAN Controller Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - const: allwinner,sun7i-a20-can
-+          - const: allwinner,sun4i-a10-can
-+      - const: allwinner,sun4i-a10-can
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/sun7i-a20-ccu.h>
-+
-+    can0: can@1c2bc00 {
-+        compatible = "allwinner,sun7i-a20-can",
-+                     "allwinner,sun4i-a10-can";
-+        reg = <0x01c2bc00 0x400>;
-+        interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&ccu CLK_APB1_CAN>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/net/can/sun4i_can.txt b/Documentation/devicetree/bindings/net/can/sun4i_can.txt
-deleted file mode 100644
-index f69845e6feaf..000000000000
---- a/Documentation/devicetree/bindings/net/can/sun4i_can.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--Allwinner A10/A20 CAN controller Device Tree Bindings
-------------------------------------------------------
--
--Required properties:
--- compatible: "allwinner,sun4i-a10-can"
--- reg: physical base address and size of the Allwinner A10/A20 CAN register map.
--- interrupts: interrupt specifier for the sole interrupt.
--- clock: phandle and clock specifier.
--
--Example
---------
--
--SoC common .dtsi file:
--
--	can0_pins_a: can0@0 {
--		allwinner,pins = "PH20","PH21";
--		allwinner,function = "can";
--		allwinner,drive = <0>;
--		allwinner,pull = <0>;
--	};
--...
--	can0: can@1c2bc00 {
--		compatible = "allwinner,sun4i-a10-can";
--		reg = <0x01c2bc00 0x400>;
--		interrupts = <0 26 4>;
--		clocks = <&apb1_gates 4>;
--		status = "disabled";
--	};
--
--Board specific .dts file:
--
--	can0: can@1c2bc00 {
--		pinctrl-names = "default";
--		pinctrl-0 = <&can0_pins_a>;
--		status = "okay";
--	};
--- 
-2.23.0
-
+Tony
