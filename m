@@ -2,217 +2,181 @@ Return-Path: <SRS0=sT6Z=YP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A19CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FB5CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A3C21928
-	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571736402;
-	bh=a8ajCuUEi9OCz+CiDcpF2qO4JKoD1fP8Oo4msrdZ8Tk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NR6THRW4OPvnGWG+eL0VSE0PAJ6YeCg1cdaxz/a+wRMFA34OyqnEyczM3m3oWHfOY
-	 a93NQ5tWOjMz9P5axRz2VbdL5gSYOqgmphOfPWaYaPCoXuoLu4vQSk1bHEB6U+3YJA
-	 HGj/ZrppFF4LxAIwdb+vRhDngk6WZArYTVsmVK2Q=
+	by mail.kernel.org (Postfix) with ESMTP id 821A82064B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 22 Oct 2019 09:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731273AbfJVJ0i (ORCPT
+        id S1731497AbfJVJ1p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 05:26:38 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44062 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731217AbfJVJ0i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 05:26:38 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 21so13534853otj.11;
-        Tue, 22 Oct 2019 02:26:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7e3ngfUWD69prUYE+IQGbpsBsUEu9n83CImOve8PLh0=;
-        b=qnSBguEdg3PlNSdjdkzXLQT/xrve6TBfx5LAyyYoox0BZfdpqctMqUb30/VK8Jsw3e
-         YcoP5pHbfkQnu+l7HKSlKNSTaAimujf5ExHI3/N87dr8GSvu0k+xsGBt1fQBQrvCHR9/
-         BXwFjvpySXbyF77Mk7sgrro0yFz1wmUGlGPxA7UHe5AgycAhd/Q/3txhFLMGM/Yajb7f
-         z6cOYNtptLcHzuVVmwyOIgfzdHHHyL+q5tOEiuwzHV/9exhwlk+iUbb2LISrBJ92+mvj
-         BmNbFLzoS0iwKLz7w2rBGWR0ENgEcT87gyehwwDjGysX7Jrcpg2OAuHAW9AnbixIa3Ds
-         YAmA==
-X-Gm-Message-State: APjAAAViGg8uRH2m8oYnxRFPN11SeUzrNDcen28+JqFD5+eq6S8MjwA3
-        z2xLcB4If+gwocwMOt9W14JBGwoN6IZ0PBPJmxsznNDy
-X-Google-Smtp-Source: APXvYqys/ZtV6eqp8MKmYWagePQMB32nL6cvMnFYVvIgMgRDLMLJ/tc6rc8qd/YY1BlNX+dRzq896nFEBtR3GkL5HX8=
-X-Received: by 2002:a9d:459b:: with SMTP id x27mr1770619ote.167.1571736397010;
- Tue, 22 Oct 2019 02:26:37 -0700 (PDT)
+        Tue, 22 Oct 2019 05:27:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:32819 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731229AbfJVJ1p (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 05:27:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 02:27:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,326,1566889200"; 
+   d="scan'208";a="227638156"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Oct 2019 02:27:43 -0700
+Received: from [10.226.39.21] (unknown [10.226.39.21])
+        by linux.intel.com (Postfix) with ESMTP id BED79580127;
+        Tue, 22 Oct 2019 02:27:39 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
+ link
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <20191021171832.GA232571@google.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <187a1a7d-80bd-a0e9-a0d9-7fc53bff8907@linux.intel.com>
+Date:   Tue, 22 Oct 2019 17:27:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191022075123.17057-1-ran.wang_1@nxp.com>
-In-Reply-To: <20191022075123.17057-1-ran.wang_1@nxp.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 22 Oct 2019 11:26:26 +0200
-Message-ID: <CAJZ5v0g4uyh7Xv2PuVuF1KrpBCXzSPa+vCJh6C7LTEeyvBDNjg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>,
-        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191021171832.GA232571@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 9:51 AM Ran Wang <ran.wang_1@nxp.com> wrote:
->
-> Some user might want to go through all registered wakeup sources
-> and doing things accordingly. For example, SoC PM driver might need to
-> do HW programming to prevent powering down specific IP which wakeup
-> source depending on. So add this API to help walk through all registered
-> wakeup source objects on that list and return them one by one.
->
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
-> ---
-> Change in v8
->         - Rename wakeup_source_get_next() to wakeup_sources_walk_next().
->         - Add wakeup_sources_read_lock() to take over locking job of
->           wakeup_source_get_star().
->         - Rename wakeup_source_get_start() to wakeup_sources_walk_start().
->         - Replace wakeup_source_get_stop() with wakeup_sources_read_unlock().
->         - Define macro for_each_wakeup_source(ws).
->
-> Change in v7:
->         - Remove define of member *dev in wake_irq to fix conflict with commit
->         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs"), user
->         will use ws->dev->parent instead.
->         - Remove '#include <linux/of_device.h>' because it is not used.
->
-> Change in v6:
->         - Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned
->         with wakeup_sources_stats_seq_start/nex/stop.
->
-> Change in v5:
->         - Update commit message, add decription of walk through all wakeup
->         source objects.
->         - Add SCU protection in function wakeup_source_get_next().
->         - Rename wakeup_source member 'attached_dev' to 'dev' and move it up
->         (before wakeirq).
->
-> Change in v4:
->         - None.
->
-> Change in v3:
->         - Adjust indentation of *attached_dev;.
->
-> Change in v2:
->         - None.
->
->  drivers/base/power/wakeup.c | 42 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_wakeup.h   |  9 +++++++++
->  2 files changed, 51 insertions(+)
->
-> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> index 5817b51..8c7a5f9 100644
-> --- a/drivers/base/power/wakeup.c
-> +++ b/drivers/base/power/wakeup.c
-> @@ -248,6 +248,48 @@ void wakeup_source_unregister(struct wakeup_source *ws)
->  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
->
->  /**
-> + * wakeup_sources_read_lock - Lock wakeup source list for read.
+Hi Bjorn Helgaas,
 
-Please document the return value.
-
-> + */
-> +int wakeup_sources_read_lock(void)
-> +{
-> +       return srcu_read_lock(&wakeup_srcu);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_sources_read_lock);
-> +
-> +/**
-> + * wakeup_sources_read_unlock - Unlock wakeup source list.
-
-Please document the argument.
-
-> + */
-> +void wakeup_sources_read_unlock(int idx)
-> +{
-> +       srcu_read_unlock(&wakeup_srcu, idx);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_sources_read_unlock);
-> +
-> +/**
-> + * wakeup_sources_walk_start - Begin a walk on wakeup source list
-
-Please document the return value and add a note that the wakeup
-sources list needs to be locked for reading for this to be safe.
-
-> + */
-> +struct wakeup_source *wakeup_sources_walk_start(void)
-> +{
-> +       struct list_head *ws_head = &wakeup_sources;
-> +
-> +       return list_entry_rcu(ws_head->next, struct wakeup_source, entry);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_start);
-> +
-> +/**
-> + * wakeup_sources_walk_next - Get next wakeup source from the list
-> + * @ws: Previous wakeup source object
-
-Please add a note that the wakeup sources list needs to be locked for
-reading for this to be safe.
-
-> + */
-> +struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws)
-> +{
-> +       struct list_head *ws_head = &wakeup_sources;
-> +
-> +       return list_next_or_null_rcu(ws_head, &ws->entry,
-> +                               struct wakeup_source, entry);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_next);
-> +
-> +/**
->   * device_wakeup_attach - Attach a wakeup source object to a device object.
->   * @dev: Device to handle.
->   * @ws: Wakeup source object to attach to @dev.
-> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> index 661efa0..aa3da66 100644
-> --- a/include/linux/pm_wakeup.h
-> +++ b/include/linux/pm_wakeup.h
-> @@ -63,6 +63,11 @@ struct wakeup_source {
->         bool                    autosleep_enabled:1;
->  };
+On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+> On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+>> On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+>>> PCIe RC driver on Intel Gateway SoCs have a requirement
+>>> of changing link width and speed on the fly.
+> Please add more details about why this is needed.  Since you're adding
+> sysfs files, it sounds like it's not actually the *driver* that needs
+> this; it's something in userspace?
+We have use cases to change the link speed and width on the fly.
+One is EMI check and other is power saving.
+Some battery backed applications have to switch PCIe link from higher 
+GEN to GEN1 and width to x1. During the cases like
+external power supply got disconnected or broken. Once external power 
+supply is connected then switch PCIe link to higher GEN and width.
 >
-> +#define for_each_wakeup_source(ws) \
-> +       for ((ws) = wakeup_sources_walk_start();        \
-> +            (ws);                                      \
-> +            (ws) = wakeup_sources_walk_next((ws)))
-> +
->  #ifdef CONFIG_PM_SLEEP
+> The normal scenario is that the hardware negotiates link widths and
+> speeds without any software involvement (PCIe r5.0, sec 1.2).
 >
->  /*
-> @@ -92,6 +97,10 @@ extern void wakeup_source_remove(struct wakeup_source *ws);
->  extern struct wakeup_source *wakeup_source_register(struct device *dev,
->                                                     const char *name);
->  extern void wakeup_source_unregister(struct wakeup_source *ws);
-> +extern int wakeup_sources_read_lock(void);
-> +extern void wakeup_sources_read_unlock(int idx);
-> +extern struct wakeup_source *wakeup_sources_walk_start(void);
-> +extern struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws);
->  extern int device_wakeup_enable(struct device *dev);
->  extern int device_wakeup_disable(struct device *dev);
->  extern void device_set_wakeup_capable(struct device *dev, bool capable);
-> --
-> 2.7.4
+> If this is to work around hardware defects, we should try to do that
+> inside the kernel because we can't expect userspace to do it reliably.
 >
+> As Andrew points out below, this all sounds like it should be generic
+> rather than Intel-specific.
+>
+>>> So add the sysfs attributes to show and store the link
+>>> properties.
+>>> Add the respective link resize function in pcie DesignWare
+>>> framework so that Intel PCIe driver can use during link
+>>> width configuration on the fly.
+>>> ...
+>>> +static ssize_t pcie_link_status_show(struct device *dev,
+>>> +				     struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>>> +	u32 reg, width, gen;
+>>> +
+>>> +	reg = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>>> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, reg >> 16);
+>>> +	gen = FIELD_GET(PCI_EXP_LNKSTA_CLS, reg >> 16);
+>>> +
+>>> +	if (gen > lpp->max_speed)
+>>> +		return -EINVAL;
+>>> +
+>>> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
+>>> +		       width, pcie_link_gen_to_str(gen));
+>>> +}
+>>> +static DEVICE_ATTR_RO(pcie_link_status);
+> We already have generic current_link_speed and current_link_width
+> files.
+
+Thanks for pointing it. I will remove the pcie_link_status.
+
+Regards,
+Dilip
+
+>
+>>> +static ssize_t pcie_speed_store(struct device *dev,
+>>> +				struct device_attribute *attr,
+>>> +				const char *buf, size_t len)
+>>> +{
+>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>>> +	unsigned long val;
+>>> +	int ret;
+>>> +
+>>> +	ret = kstrtoul(buf, 10, &val);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	if (val > lpp->max_speed)
+>>> +		return -EINVAL;
+>>> +
+>>> +	lpp->link_gen = val;
+>>> +	intel_pcie_max_speed_setup(lpp);
+>>> +	dw_pcie_link_speed_change(&lpp->pci, false);
+>>> +	dw_pcie_link_speed_change(&lpp->pci, true);
+>>> +
+>>> +	return len;
+>>> +}
+>>> +static DEVICE_ATTR_WO(pcie_speed);
+>>> +
+>>> +/*
+>>> + * Link width change on the fly is not always successful.
+>>> + * It also depends on the partner.
+>>> + */
+>>> +static ssize_t pcie_width_store(struct device *dev,
+>>> +				struct device_attribute *attr,
+>>> +				const char *buf, size_t len)
+>>> +{
+>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+>>> +	unsigned long val;
+>>> +	int ret;
+>>> +
+>>> +	lpp = dev_get_drvdata(dev);
+>>> +
+>>> +	ret = kstrtoul(buf, 10, &val);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	if (val > lpp->max_width)
+>>> +		return -EINVAL;
+>>> +
+>>> +	/* HW auto bandwidth negotiation must be enabled */
+>>> +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
+>>> +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>>> +	dw_pcie_link_width_resize(&lpp->pci, val);
+>>> +
+>>> +	return len;
+>>> +}
+>>> +static DEVICE_ATTR_WO(pcie_width);
+>>> +
+>>> +static struct attribute *pcie_cfg_attrs[] = {
+>>> +	&dev_attr_pcie_link_status.attr,
+>>> +	&dev_attr_pcie_speed.attr,
+>>> +	&dev_attr_pcie_width.attr,
+>>> +	NULL,
+>>> +};
+>> Is there a reason that these are limited only to the Intel driver and
+>> not the wider set of DWC drivers?
+>>
+>> Is there anything specific here about the Intel GW driver?
