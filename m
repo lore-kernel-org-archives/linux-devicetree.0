@@ -2,47 +2,49 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9A9CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 22:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03845C47E49
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 22:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7422084C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 22:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7C92084C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 22:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436721AbfJWWNr (ORCPT
+        id S2436699AbfJWWNy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 18:13:47 -0400
-Received: from mailoutvs7.siol.net ([185.57.226.198]:47548 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2436699AbfJWWNq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 18:13:46 -0400
+        Wed, 23 Oct 2019 18:13:54 -0400
+Received: from mailoutvs60.siol.net ([185.57.226.251]:47610 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2436743AbfJWWNx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 18:13:53 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id B96D552317E;
-        Thu, 24 Oct 2019 00:13:42 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTP id C122E523296;
+        Thu, 24 Oct 2019 00:13:49 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
 Received: from mail.siol.net ([127.0.0.1])
         by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 1Wzt-WYyU-Me; Thu, 24 Oct 2019 00:13:42 +0200 (CEST)
+        with ESMTP id HSLJu33wNG5n; Thu, 24 Oct 2019 00:13:49 +0200 (CEST)
 Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 3A66C523296;
-        Thu, 24 Oct 2019 00:13:42 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPS id 7BB47523102;
+        Thu, 24 Oct 2019 00:13:49 +0200 (CEST)
 Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
         (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 1247E523102;
-        Thu, 24 Oct 2019 00:13:40 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPSA id 31B9F523296;
+        Thu, 24 Oct 2019 00:13:47 +0200 (CEST)
 From:   Jernej Skrabec <jernej.skrabec@siol.net>
 To:     mripard@kernel.org, wens@csie.org
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
         hverkuil@xs4all.nl, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: [PATCH v5 0/6] media: Introduce Allwinner H3 deinterlace driver
-Date:   Thu, 24 Oct 2019 00:13:26 +0200
-Message-Id: <20191023221332.3674175-1-jernej.skrabec@siol.net>
+Subject: [PATCH v5 3/6] ARM: dts: sunxi: h3/h5: Add MBUS controller node
+Date:   Thu, 24 Oct 2019 00:13:29 +0200
+Message-Id: <20191023221332.3674175-4-jernej.skrabec@siol.net>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191023221332.3674175-1-jernej.skrabec@siol.net>
+References: <20191023221332.3674175-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
@@ -50,156 +52,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Starting with H3, Allwinner began to include standalone deinterlace
-core in multimedia oriented SoCs. This patch series introduces support
-for it. Note that new SoCs, like H6, have radically different (updated)
-deinterlace core, which will need a new driver.
+Both, H3 and H5, contain MBUS, which is the bus used by DMA devices to
+access system memory.
 
-v4l2-compliance report:
-v4l2-compliance SHA: dece02f862f38d8f866230ca9f1015cb93ddfac4, 32 bits
+MBUS controller is responsible for arbitration between channels based
+on set priority and can do some other things as well, like report
+bandwidth used. It also maps RAM region to different address than CPU.
 
-Compliance test for sun8i-di device /dev/video0:
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+---
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Driver Info:
-        Driver name      : sun8i-di
-        Card type        : sun8i-di
-        Bus info         : platform:sun8i-di
-        Driver version   : 5.3.0
-        Capabilities     : 0x84208000
-                Video Memory-to-Memory
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps      : 0x04208000
-                Video Memory-to-Memory
-                Streaming
-                Extended Pix Format
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second /dev/video0 open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-        test VIDIOC_QUERYCTRL: OK (Not Supported)
-        test VIDIOC_G/S_CTRL: OK (Not Supported)
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-        test VIDIOC_G/S_PARM: OK (Not Supported)
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK
-        test VIDIOC_TRY_FMT: OK
-        test VIDIOC_S_FMT: OK
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-        test VIDIOC_EXPBUF: OK
-        test Requests: OK (Not Supported)
-
-Total for sun8i-di device /dev/video0: 44, Succeeded: 44, Failed: 0, Warn=
-ings: 0
-
-Please take a look.
-
-Best regards,
-Jernej
-
-Changes from v4:
-- Added me as maintaner of the binding
-- Noted that scaling is supported in Kconfig entry and driver code
-
-Changes from v3:
-- added Maxime's a-b tag
-- moved and fixed Kconfig entry
-- put clk_set_rate_exclusive() and it's counterpart in PM callbacks
-
-Changes from v2:
-- added acked-by and review-by tags
-- fixed schema path in H3 deinterlace binding
-- moved busy check after format args check
-
-Changes from v1:
-- updated Maxime's e-mail in DT binding
-- removed "items" for single item in DT binding
-- implemented power management
-- replaced regmap with direct io access
-- set exclusive clock rate
-- renamed DEINTERLACE_FRM_CTRL_COEF_CTRL to DEINTERLACE_FRM_CTRL_COEF_ACC=
-ESS
-
-Jernej Skrabec (6):
-  dt-bindings: bus: sunxi: Add H3 MBUS compatible
-  clk: sunxi-ng: h3: Export MBUS clock
-  ARM: dts: sunxi: h3/h5: Add MBUS controller node
-  dt-bindings: media: Add Allwinner H3 Deinterlace binding
-  media: sun4i: Add H3 deinterlace driver
-  dts: arm: sun8i: h3: Enable deinterlace unit
-
- .../bindings/arm/sunxi/sunxi-mbus.txt         |    1 +
- .../media/allwinner,sun8i-h3-deinterlace.yaml |   76 ++
- MAINTAINERS                                   |    8 +
- arch/arm/boot/dts/sun8i-h3.dtsi               |   13 +
- arch/arm/boot/dts/sunxi-h3-h5.dtsi            |    9 +
- drivers/clk/sunxi-ng/ccu-sun8i-h3.h           |    4 -
- drivers/media/platform/Kconfig                |   13 +
- drivers/media/platform/sunxi/Makefile         |    1 +
- .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
- .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1028 +++++++++++++++++
- .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
- include/dt-bindings/clock/sun8i-h3-ccu.h      |    2 +-
- 12 files changed, 1389 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun=
-8i-h3-deinterlace.yaml
- create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
- create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
- create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
-
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi=
+-h3-h5.dtsi
+index 107eeafad20a..66bee3bea633 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -109,6 +109,7 @@
+ 		compatible =3D "simple-bus";
+ 		#address-cells =3D <1>;
+ 		#size-cells =3D <1>;
++		dma-ranges;
+ 		ranges;
+=20
+ 		display_clocks: clock@1000000 {
+@@ -544,6 +545,14 @@
+ 			};
+ 		};
+=20
++		mbus: dram-controller@1c62000 {
++			compatible =3D "allwinner,sun8i-h3-mbus";
++			reg =3D <0x01c62000 0x1000>;
++			clocks =3D <&ccu 113>;
++			dma-ranges =3D <0x00000000 0x40000000 0xc0000000>;
++			#interconnect-cells =3D <1>;
++		};
++
+ 		spi0: spi@1c68000 {
+ 			compatible =3D "allwinner,sun8i-h3-spi";
+ 			reg =3D <0x01c68000 0x1000>;
 --=20
 2.23.0
 
