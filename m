@@ -2,113 +2,82 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9613CCA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ADFCA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B862086D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:16:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="G3KKv5JB";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hEB1c2Y4"
+	by mail.kernel.org (Postfix) with ESMTP id 3E14D2086D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389590AbfJWMQj (ORCPT
+        id S2391200AbfJWMTs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:16:39 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51792 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730796AbfJWMQj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:16:39 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EFF6D60112; Wed, 23 Oct 2019 12:16:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571832998;
-        bh=IuBmUElM00WvUbGKM5X/tRqNg/9nafBDP5xAYZmqdbs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=G3KKv5JB0RyFdGVhD863CarOsbVBbU/gBH4y/WHqBgx6C8t2l8ikRImGMe6iI38mk
-         Qzaa2aysKBDb7axTL5HKnzo7reO9dtglGwTPl4sANW/VB7DR7HsekRaBvTb3mWHGCv
-         pThCRi3hl+YeOD6/ihpJOJ+B0Y2Vb9gLfftuP4oE=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id C9E2C6083E;
-        Wed, 23 Oct 2019 12:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571832996;
-        bh=IuBmUElM00WvUbGKM5X/tRqNg/9nafBDP5xAYZmqdbs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hEB1c2Y4RBvXQ98RHnaVzSXE/MQXh3M3lmd3m5eSkqxM7uZ22JcLJ9FQR3faod26s
-         zgIIoi2rY8yK80JFFUODer7Z5ZWho36Mq3DBUk6SvnBRoxWxCLeDKFiWERcm5SONz1
-         6NYq7bIO0bdiB5+R5me2oJ7m4gYMRpOk5eHHn1EA=
+        Wed, 23 Oct 2019 08:19:48 -0400
+Received: from sauhun.de ([88.99.104.3]:39604 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbfJWMTr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:19:47 -0400
+Received: from localhost (p54B33207.dip0.t-ipconnect.de [84.179.50.7])
+        by pokefinder.org (Postfix) with ESMTPSA id E608B2C001C;
+        Wed, 23 Oct 2019 14:19:44 +0200 (CEST)
+Date:   Wed, 23 Oct 2019 14:19:44 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Eugen.Hristev@microchip.com
+Cc:     peda@axentia.se, mark.rutland@arm.com,
+        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
+        robh+dt@kernel.org, Nicolas.Ferre@microchip.com
+Subject: Re: [PATCH v5 0/9] i2c: add support for filters
+Message-ID: <20191023121944.GA2011@kunai>
+References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
+ <c17182ac-67dd-d11f-5daf-066bf446b969@microchip.com>
+ <20191021140515.GC26782@ninjato>
+ <f5bd0c1f-9a72-6661-146b-ef5de77e31ff@axentia.se>
+ <c1f5c3f0-860e-e86a-5658-49e2100225a9@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 23 Oct 2019 17:46:35 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Maulik Shah <mkshah@codeaurora.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v3 05/11] arm64: dts: qcom: sc7180: Add cmd_db reserved
- area
-In-Reply-To: <20191023090219.15603-6-rnayak@codeaurora.org>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-6-rnayak@codeaurora.org>
-Message-ID: <5bb4acef7f11af9e9c4016743d668f57@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Disposition: inline
+In-Reply-To: <c1f5c3f0-860e-e86a-5658-49e2100225a9@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-23 14:32, Rajendra Nayak wrote:
-> From: Maulik Shah <mkshah@codeaurora.org>
-> 
-> Command_db provides mapping for resource key and address managed
-> by remote processor. Add cmd_db reserved memory area.
-> 
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index f17684148595..dfa49ef2bce0 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -32,6 +32,18 @@
->  		};
->  	};
-> 
-> +	reserved_memory: reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		cmd_db: reserved-memory@80820000 {
 
-aop_cmd_db_mem: memory@80820000 {
-please use ^^ instead
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +			reg = <0x0 0x80820000 0x0 0x20000>;
-> +			compatible = "qcom,cmd-db";
-> +			no-map;
-> +		};
-> +	};
-> +
->  	cpus {
->  		#address-cells = <2>;
->  		#size-cells = <0>;
+> Send another version of the patch with the nit ?
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+That would be easiest for me.
+
+Thanks!
+
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2wRVwACgkQFA3kzBSg
+KbY+cg//beA6zQrkT9jDDrRJUPM3LpUWqzeo8RMreuQzJp6Pw1X8BSuxLanDvhT0
+PlKK59ZEhsXHtaXiyw2yVN1h3WILCiWryq81eyw8+ZgLkoQS++cBIdBwB/ZswY4t
+vtHV+9mc82sCVJYEH9UKp75wqEQ41dOTL478itGb89ESJ2R772foKlipQwQ1zzTJ
+gS35TGxdmwuiJ3JCgDs1bkCorwpY4OBjF9H1QTWXqfyoTgRPguBM8NYXmj21Cn+r
+VRFMvpmFlxGsSC35Zx0Fb1Q1QxZNb49TwC1nnNnBhUSkAP9rmrW8SrofbMZ3Dekx
+A3pVvyhzi6IO0sEvbmtbm64tP/nk5Yf4n3DmVbHufOQ/wKWtXWIhsqC/p4BA6TZw
+xB4yJbxsljD+HLbigCjP2KpsonYeBAFG9O0RRqMQG8bp59BnzCvZambx6fadjI6x
+32J9dHsSgfrXsG2ABcQY9+JFqv0SjlHo/5VmtnjV+kExa8jwx+f2YDbqcxr99PR4
+kdfsAWOE28CZowJFKn84jUaabmISqHz9ejUCNvNTeuAC2yxvRqUCzoUpguZnqEgn
+c5y7u8byZWNlOcUNRnCIfen19LmZagkZM9xn48Dtcp8RCBZRZEIeWnIvuaaix7V9
++kNWRT3uArzuZDD7A+CyefduySTQj1UZkJfzYyYKEL3fLAh4ZxQ=
+=ywNb
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
