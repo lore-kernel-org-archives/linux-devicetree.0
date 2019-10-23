@@ -2,90 +2,249 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBB1CA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 08:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490A5CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 08:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD4621872
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 08:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A44C21872
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 08:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390034AbfJWIQw (ORCPT
+        id S2390201AbfJWIUz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:16:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54084 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389987AbfJWIQw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:16:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 23006BFE2;
-        Wed, 23 Oct 2019 08:16:50 +0000 (UTC)
-Subject: Re: [PATCH v5.1 RESEND] dt-bindings: hwrng: Add Samsung Exynos 5250+
- True RNG bindings
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?=c5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Joe Perches <joe@perches.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org,
-        Otto Sabart <ottosabart@seberm.com>,
-        Rob Herring <robh@kernel.org>
-References: <CGME20190111132222eucas1p1d80caf8ba30422bc5fe1a1fac4cf48e8@eucas1p1.samsung.com>
- <CAL_JsqKt-ujsB-t9A=4dEAjqrvcquUG+qF3tFg1YCqmup_5wcw@mail.gmail.com>
- <20190111132139.12333-1-l.stelmach@samsung.com>
- <CAJKOXPfM+EUzBBBhrtSFw5-e7hiimsFT8okcd8J9gGyFdzd2+w@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <58f7d127-b798-04b8-1bc6-d37a8af273f7@suse.de>
-Date:   Wed, 23 Oct 2019 10:16:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <CAJKOXPfM+EUzBBBhrtSFw5-e7hiimsFT8okcd8J9gGyFdzd2+w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 23 Oct 2019 04:20:55 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:57485 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390020AbfJWIUz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:20:55 -0400
+X-IronPort-AV: E=Sophos;i="5.68,220,1569250800"; 
+   d="scan'208";a="29789660"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 23 Oct 2019 17:20:53 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 937174007F2B;
+        Wed, 23 Oct 2019 17:20:53 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] dt-bindings: usb: renesas_usbhs: convert bindings to json-schema
+Date:   Wed, 23 Oct 2019 17:20:08 +0900
+Message-Id: <1571818808-12495-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi guys,
+Convert Renesas USBHS (HS-USB) controller bindings documentation
+to json-schema.
 
-Am 26.03.19 um 12:42 schrieb Krzysztof Kozlowski:
-> On Fri, 11 Jan 2019 at 14:22, Łukasz Stelmach <l.stelmach@samsung.com> wrote:
->>
->> Add binding documentation for the True Random Number Generator
->> found on Samsung Exynos 5250+ SoCs.
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
->> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
->> ---
-> 
-> Rob,
-> Could you apply this directly? You acked this some time ago but it
-> never went through drivers tree. Lukasz resent this patch and it is
-> waiting since then.
-> The driver implementing compatible is already in mainline.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ .../devicetree/bindings/usb/renesas,usbhs.txt      |  58 ----------
+ .../devicetree/bindings/usb/renesas,usbhs.yaml     | 121 +++++++++++++++++++++
+ 2 files changed, 121 insertions(+), 58 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/usb/renesas,usbhs.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
 
-For some reason this text file in linux-next is lonely in devicetree/...
-rather than living in Documentation/devicetree/... - please fix that.
-The patch here looks correct, so not sure what went wrong:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/devicetree/bindings/rng/samsung,exynos5250-trng.txt?h=next-20191023&id=85552c22f03c9066c33f26f34538b67fee6a91a8
-
-Thanks,
-Andreas
-
+diff --git a/Documentation/devicetree/bindings/usb/renesas,usbhs.txt b/Documentation/devicetree/bindings/usb/renesas,usbhs.txt
+deleted file mode 100644
+index 06abe99..00000000
+--- a/Documentation/devicetree/bindings/usb/renesas,usbhs.txt
++++ /dev/null
+@@ -1,58 +0,0 @@
+-Renesas Electronics USBHS driver
+-
+-Required properties:
+-  - compatible: Must contain one or more of the following:
+-
+-	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
+-	- "renesas,usbhs-r8a7744" for r8a7744 (RZ/G1N) compatible device
+-	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
+-	- "renesas,usbhs-r8a77470" for r8a77470 (RZ/G1C) compatible device
+-	- "renesas,usbhs-r8a774a1" for r8a774a1 (RZ/G2M) compatible device
+-	- "renesas,usbhs-r8a774b1" for r8a774b1 (RZ/G2N) compatible device
+-	- "renesas,usbhs-r8a774c0" for r8a774c0 (RZ/G2E) compatible device
+-	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
+-	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
+-	- "renesas,usbhs-r8a7792" for r8a7792 (R-Car V2H) compatible device
+-	- "renesas,usbhs-r8a7793" for r8a7793 (R-Car M2-N) compatible device
+-	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
+-	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+-	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
+-	- "renesas,usbhs-r8a77965" for r8a77965 (R-Car M3-N) compatible device
+-	- "renesas,usbhs-r8a77990" for r8a77990 (R-Car E3) compatible device
+-	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
+-	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
+-	- "renesas,usbhs-r7s9210" for r7s9210 (RZ/A2) compatible device
+-	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
+-	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 or RZ/G2 compatible devices
+-	- "renesas,rza1-usbhs" for RZ/A1 compatible device
+-	- "renesas,rza2-usbhs" for RZ/A2 compatible device
+-
+-	When compatible with the generic version, nodes must list the
+-	SoC-specific version corresponding to the platform first followed
+-	by the generic version.
+-
+-  - reg: Base address and length of the register for the USBHS
+-  - interrupts: Interrupt specifier for the USBHS
+-  - clocks: A list of phandle + clock specifier pairs.
+-	    - In case of "renesas,rcar-gen3-usbhs", two clocks are required.
+-	      First clock should be peripheral and second one should be host.
+-	    - In case of except above, one clock is required. First clock
+-	      should be peripheral.
+-
+-Optional properties:
+-  - renesas,buswait: Integer to use BUSWAIT register
+-  - renesas,enable-gpio: A gpio specifier to check GPIO determining if USB
+-			 function should be enabled
+-  - phys: phandle + phy specifier pair
+-  - phy-names: must be "usb"
+-  - dmas: Must contain a list of references to DMA specifiers.
+-  - dma-names : named "ch%d", where %d is the channel number ranging from zero
+-                to the number of channels (DnFIFOs) minus one.
+-
+-Example:
+-	usbhs: usb@e6590000 {
+-		compatible = "renesas,usbhs-r8a7790", "renesas,rcar-gen2-usbhs";
+-		reg = <0 0xe6590000 0 0x100>;
+-		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
+-	};
+diff --git a/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
+new file mode 100644
+index 00000000..cb80a06
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
+@@ -0,0 +1,121 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/renesas,usbhs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas USBHS (HS-USB) controller
++
++maintainers:
++  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - renesas,usbhs-r7s72100 # RZ/A1
++          - const: renesas,rza1-usbhs
++
++      - items:
++          - enum:
++              - renesas,usbhs-r7s9210 # RZ/A2
++          - const: renesas,rza2-usbhs
++
++      - items:
++          - enum:
++              - renesas,usbhs-r8a7743  # RZ/G1M
++              - renesas,usbhs-r8a7744  # RZ/G1N
++              - renesas,usbhs-r8a7745  # RZ/G1E
++              - renesas,usbhs-r8a77470 # RZ/G1C
++              - renesas,usbhs-r8a7790  # R-Car H2
++              - renesas,usbhs-r8a7791  # R-Car M2-W
++              - renesas,usbhs-r8a7792  # R-Car V2H
++              - renesas,usbhs-r8a7793  # R-Car M2-N
++              - renesas,usbhs-r8a7794  # R-Car E2
++          - const: renesas,rcar-gen2-usbhs
++
++      - items:
++          - enum:
++              - renesas,usbhs-r8a774a1 # RZ/G2M
++              - renesas,usbhs-r8a774b1 # RZ/G2N
++              - renesas,usbhs-r8a774c0 # RZ/G2E
++              - renesas,usbhs-r8a7795  # R-Car H3
++              - renesas,usbhs-r8a7796  # R-Car M3-W
++              - renesas,usbhs-r8a77965 # R-Car M3-N
++              - renesas,usbhs-r8a77990 # R-Car E3
++              - renesas,usbhs-r8a77995 # R-Car D3
++          - const: renesas,rcar-gen3-usbhs
++
++  reg:
++    # base address and length of the registers block for the controller.
++    maxItems: 1
++
++  clocks:
++    # clock phandle and specifier pair(s).
++    minItems: 1
++    maxItems: 2
++
++  interrupts:
++    maxItems: 1
++
++  renesas,buswait:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Integer to use BUSWAIT register.
++
++  renesas,enable-gpio:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      gpio specifier to check GPIO determining if USB function should be
++      enabled.
++
++  phys:
++    description: phandle + phy specifier pair.
++
++  phy-names:
++    const: usb
++
++  dmas:
++    minItems: 2
++    maxItems: 4
++
++  dma-names:
++    minItems: 2
++    maxItems: 4
++    items:
++      enum: [ch0, ch1, ch2, ch3]
++
++  dr_mode:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: |
++      See generic.txt.
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    minItems: 1
++    maxItems: 2
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7790-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a7790-sysc.h>
++
++    usbhs: usb@e6590000 {
++        compatible = "renesas,usbhs-r8a7790", "renesas,rcar-gen2-usbhs";
++        reg = <0 0xe6590000 0 0x100>;
++        interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&cpg CPG_MOD 704>;
++    };
++
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.7.4
+
