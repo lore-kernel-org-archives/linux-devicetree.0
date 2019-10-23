@@ -2,95 +2,117 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F572CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDA9CA9EBB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5001821906
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571822475;
-	bh=ELePjSrzkUYxtLR5wDyqHFnbIP5bKxMjDtTkTeORMSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GSeSqLHO3Uxc6hNh0oNB2agHfdSeN8W4tXVP1VfngcDk6+m34WfzAlicJBiTRkTkL
-	 al4s0Khhh6ijBV/KxPndiW0tNpvl06AzitmPVPOA/7/lcVIvyDcOWcSRzwOA44WxGg
-	 8yEhBxloqH6NlWpEHRwIxmxpK9325hDxwsoBqLN0=
+	by mail.kernel.org (Postfix) with ESMTP id C4D9521A4A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="plSwP6c6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403764AbfJWJVL (ORCPT
+        id S2403895AbfJWJbS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:21:11 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43506 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403757AbfJWJVL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 05:21:11 -0400
-Received: by mail-ed1-f68.google.com with SMTP id q24so9215343edr.10;
-        Wed, 23 Oct 2019 02:21:10 -0700 (PDT)
+        Wed, 23 Oct 2019 05:31:18 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40161 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404066AbfJWJbS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 05:31:18 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b24so18887291wmj.5
+        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 02:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=2fLQAYivjPCeFhrnS0eAbtLcKwI/jjUTQJtAub9j6h8=;
+        b=plSwP6c6mLqj8vkc7p9cJc1rbasnfbXWCxxziBoPaInno3/XEo+2lmnN2HKb3mng3y
+         tYdqtYrpxH1mA80BuazCzz8AKwvOVTCbjnSSs3m5XVf+trbtHa5TntpXxJcnw+P7+8Ge
+         gRWgy5U0wtzomDDu+DfmIsyVbWAxuBLLW7qp8G39q+jjv+eJ1CwMjsisd3/vmUs5NEOb
+         B9sQQbrPK2U/TKjclRAaDLPlcTBZGqbul8HMqEKMkLrRlhS1sCO1ptnKQkRd0DYALnvi
+         P5kZG5BNVrgxUfiU8KlCWnMqp7q5B4QSDiLRw/prg85Dkhy+aY6QfrDGUA3h87jRTcQP
+         lQyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RR8CC8SQ8Dt9vU2p+011hdqVQSDGaSdoOwPBwDXuWag=;
-        b=Ll4N4XtDP4JpSj2M02FePNghQcFL9Cmf0OqSqmghmzOKF8i2xSfNgTFwiGUxeoX7A3
-         6Ym9nn4tR0mUUItPivyq6jEblhKs2w9QhFLKzsygjChMQ5BcHnJVGcDnKCHqXMwDcpBg
-         mUTTnBOX9I6m/HwMWkOjO8Xky+QQCRzp1L8PyMK7zmPLbnTLFGIgAGMTWdoA4XE5+NP+
-         4Sj/3i70RcBLT/UgrcUqcVLHhxl9tUwFJFWUN27msTIuE+L05wXtyKgMbOsUtOB+FmSI
-         Bs5lBUwi4s0t8c9dDDl0Wzk1x4GGuLQYfaLQY8XfWT2UTC5yu0i+GZ5tx+TMSy1IFlPD
-         /A/Q==
-X-Gm-Message-State: APjAAAVrPZy94t8TWrdU23RkpZvWGnXHeXxXF6VUy79udb0LhlcLp1Vl
-        jfI1Rs9b6wheauiNvJAnBTg=
-X-Google-Smtp-Source: APXvYqxuVcaV+VBzNpgps2gFjmkQkSUYEY/wz9MqeGbZAanEIxv8UUUdlRAUYHNvjy6Ht6iiwKFRMA==
-X-Received: by 2002:a17:906:76c9:: with SMTP id q9mr31542254ejn.53.1571822469791;
-        Wed, 23 Oct 2019 02:21:09 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id o22sm739665edv.26.2019.10.23.02.21.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 02:21:08 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 11:21:06 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Chanwoo Choi <cw00.choi@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH RESEND] dt-bindings: max77693: fix missing curly brace
-Message-ID: <20191023092106.GB10247@pi3>
-References: <20191023080427.GA18784@localhost.localdomain>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=2fLQAYivjPCeFhrnS0eAbtLcKwI/jjUTQJtAub9j6h8=;
+        b=BEufMCkPJ4keLmVde/OiT+jpmhw5XrE7JsnDFmsN6DXQU5vGXwtMst0h6EhjAla52w
+         mfAF4J/SIaJV6YDDr7X5+q/YbxAbpaXns6HKlE1V3DUjwwvS0Vvp0Ggx7qRLm/iYGJNY
+         nuIrA2DTC0b5gEFiWD8Y3Zk5DRqMVhPGR6GQVtra4IdSt6L3mxN97HNWN/6XTd/Lc3tO
+         ZSSC7RMUFbzAlXSBEI9VJPE8D8Sa+GiTAR/jeJyOcIKa8AJjw6763F1NjspQlh1UxgK0
+         JKXTHFSGASg/XvpkP46y+teGIHDzHQZiplX6kh8dzjLPGP/mYAQFR1ddVFBtSzyk+Vqs
+         Odwg==
+X-Gm-Message-State: APjAAAWJWajk2/AGAf90nrfdqqeNnqM87JY320Gu9ikUejIjN4sAGTSI
+        vmxoGo6z6CglmHCO4H9dxTBRog==
+X-Google-Smtp-Source: APXvYqykfve4PxGAzNbeonYmDixqLBfWcdLX29lVDVQi9qir+N9Q6u3ur5hniBnheE7/KszY9XK5Eg==
+X-Received: by 2002:a1c:5415:: with SMTP id i21mr3193435wmb.120.1571823075340;
+        Wed, 23 Oct 2019 02:31:15 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id u1sm31823556wru.90.2019.10.23.02.31.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 23 Oct 2019 02:31:14 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 10:30:58 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, dmitry.torokhov@gmail.com,
+        jdelvare@suse.com, linux@roeck-us.net, thierry.reding@gmail.com,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH 1/8] dt-bindings: mfd: iqs62x: Add bindings
+Message-ID: <20191023093058.GA19477@dell>
+References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
+ <1571631083-4962-2-git-send-email-jeff@labundy.com>
+ <20191022120051.686ed9f9@archlinux>
+ <20191023033646.GB4458@labundy.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191023080427.GA18784@localhost.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191023033646.GB4458@labundy.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 11:04:27AM +0300, Matti Vaittinen wrote:
-> Add missing curly brace to charger node example.
+On Tue, 22 Oct 2019, Jeff LaBundy wrote:
+
+> Hi Jonathan,
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
+> On Tue, Oct 22, 2019 at 12:00:51PM +0100, Jonathan Cameron wrote:
+> > On Sun, 20 Oct 2019 23:11:16 -0500
+> > Jeff LaBundy <jeff@labundy.com> wrote:
+> > 
+> > > This patch adds binding documentation for six-channel members of the
+> > > Azoteq ProxFusion family of sensor devices.
+> > > 
+> > > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> > 
+> > I'm not sure if Lee has made the switch for mfd entirely yet, but
+> > mostly new dt bindings need to be in yaml format as it allows
+> > automated parsing of the examples + bindings using them for
+> > correctness.
+> > 
 > 
-> Resending as I forgot to add the LKML in first attempt. Sorry peeps.
+> I'll wait for Lee or Rob's cue, but I'm happy to move to yaml if it's time
+> to make the switch here.
+> 
+> > One comment inline.  I'm far from an expert on most of the stuff here
+> > so will leave it for others!
 
-LKML is nice as it agregates all patches but more important is the list
-specific to the subsystem:
-devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+It would make sense.
 
-(+Cc)
-
-You also keep cc-ing wrong email at localhost.
-
-For the patch itself:
-
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Best regards,
-Krzysztof
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
