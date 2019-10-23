@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7428CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 02:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709C5CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 02:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7872053B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 02:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4528C2053B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 02:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mOy5hTZQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cz1S/hEA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389290AbfJWCn5 (ORCPT
+        id S2389297AbfJWCoQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 22:43:57 -0400
-Received: from mail-pf1-f174.google.com ([209.85.210.174]:34842 "EHLO
-        mail-pf1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730655AbfJWCn5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 22:43:57 -0400
-Received: by mail-pf1-f174.google.com with SMTP id 205so11924528pfw.2
-        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 19:43:55 -0700 (PDT)
+        Tue, 22 Oct 2019 22:44:16 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39152 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfJWCoQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 22:44:16 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v4so11920580pff.6
+        for <devicetree@vger.kernel.org>; Tue, 22 Oct 2019 19:44:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=mofPZU0gDfCeMdQs09aoNyZbpVsgKBRv49oSTcbrnzI=;
-        b=mOy5hTZQlIbUw/dLIeqJ54nqXPthp1Z+w+N0xfknDKFXtqQwMk7Wnfn5/rNspav5uV
-         MDdW15WOQGDrNUHwqTPtFPR2ayZOR8PMkZQPsCoIGFkMa15/YWeG535VD4rhqVXQc9QF
-         hbxhmYfc7eY5CvzZRVxMHsmJhf0O38G/wX6CI=
+        bh=5W92hpu9o2rfIqUdBJQ593S46hA9FmRbacTloyOcBmk=;
+        b=Cz1S/hEASfHabZysQzaNJmmdPyjwvzDxCl1oMvCDts3RUy9CMp1HWjleV6TLy73uQZ
+         VEVjfHBa1t4z4EZf/BVd8O1H/KZg6D1UKruKKNxzP9xuOSjWEmzWS9GqonDPvhBi5yQz
+         pftvpUgBN2d7vkXepwS8iDeeHqzPoFjpvnHdo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=mofPZU0gDfCeMdQs09aoNyZbpVsgKBRv49oSTcbrnzI=;
-        b=FQEJGGviiX9TD9HslnZjDtW2iaLq1QUJ0jHkk6wphpSJEnkh7tBxq2SK2zD87hcfor
-         zbigqaXok9ZedK4rNo6bs7qu2L0t+2ArUcbzglI8vMrCkt71V3zDNeLKR2FAMW7bVxLR
-         hgE+1fh4R5J1zXLKiK/U6PzqzBGXVVartHPKfIA9rCafObWZtOc71in1SauWfR6/Juj5
-         0iu/oq+6e/2tFTA28DmWXjsKlrkqAKrY3+WTwXbx326qaEyXabKNXfBOQO037o1uf3y4
-         UjmrfFDfDqOw83vVOvH4TqdBCvUlP1Swn+iLsMRNGXIFETr7AMpr4M1pwixCXwhiISTg
-         nE7A==
-X-Gm-Message-State: APjAAAWJc91h1ZMkXRCx50dg6ZPfgQbMlbAANPxk1QM8sob/NP1iZ+a7
-        zpklxg6Z4uF4d0W/XqHEcChOGA==
-X-Google-Smtp-Source: APXvYqxv+U6sKv24k78c6mmhFtzdjMFTEVjKujp5UDRJgvxJ5YW1F0J5Ur7LHviLgSGCAZnRoVmNKQ==
-X-Received: by 2002:a63:fe56:: with SMTP id x22mr7379113pgj.282.1571798635041;
-        Tue, 22 Oct 2019 19:43:55 -0700 (PDT)
+        bh=5W92hpu9o2rfIqUdBJQ593S46hA9FmRbacTloyOcBmk=;
+        b=iyZTXPAOIB0NooQgh+I/LWo3LmCsG1GKILxL1ExwCuLebFNGD+JdFr+8kdVutJ+jTK
+         uiY/YAJ5TFg3MnTXKdGRvym4TX/XNEPwWuYCHsnhO1EX/g1eIWpDJVJaJOzkqrXBh7lQ
+         5+i2kYYOIhWXLS0HtmOzJU2rxKZG8QwnxrNuJxHvmVCkp7XXbVZlJ3PlxXgdp6sPV1/8
+         p3jv0Nm0bZaR208LwWJgZLi8LOQviy7LOPkVhMqiYQ1SdVBK8qmN35FMw5WcluClwnzU
+         wPGlYrCJlWFTZzsq1Ib3Zk6qTzLK/sGXojQATmpNjGmbWaD7DE9hvynccA79ZmMo0H+u
+         OUZg==
+X-Gm-Message-State: APjAAAW2/SmDVeMTbVlIE0dAcKB0X9GBGkIS0715okg5IurXZLHzl4Ex
+        I3F/HDGT0CzCPKpzrhkzE9VEZg==
+X-Google-Smtp-Source: APXvYqx3SnrbDx9WrU4Kjo0xAHrjmP5RwWDnuypSKuZ+TG2NTLP+7/l2++P8mHJJIiGGuejLVOoLJg==
+X-Received: by 2002:a17:90a:246c:: with SMTP id h99mr8213439pje.127.1571798656034;
+        Tue, 22 Oct 2019 19:44:16 -0700 (PDT)
 Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
-        by smtp.gmail.com with ESMTPSA id o64sm45970901pjb.24.2019.10.22.19.43.52
+        by smtp.gmail.com with ESMTPSA id h2sm30134631pfq.108.2019.10.22.19.44.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 19:43:54 -0700 (PDT)
+        Tue, 22 Oct 2019 19:44:15 -0700 (PDT)
 From:   Ikjoon Jang <ikjn@chromium.org>
 To:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
@@ -62,9 +62,9 @@ Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         linux-kernel@vger.kernel.org,
         Nicolas Boitchat <drinkcat@chromium.org>,
         Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH v3 1/2] dt-bindings: input: Add DT bindings for Whiskers switch
-Date:   Wed, 23 Oct 2019 10:43:48 +0800
-Message-Id: <20191023024348.225969-1-ikjn@chromium.org>
+Subject: [PATCH v3 2/2] HID: google: Add of_match table to Whiskers switch device.
+Date:   Wed, 23 Oct 2019 10:44:10 +0800
+Message-Id: <20191023024410.226524-1-ikjn@chromium.org>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,42 +73,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the DT binding document for Hammer's TABLET_MODE switch.
+Add a device tree match table.
 
 Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- .../devicetree/bindings/input/cros-cbas.yaml  | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/cros-cbas.yaml
+ drivers/hid/hid-google-hammer.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/cros-cbas.yaml b/Documentation/devicetree/bindings/input/cros-cbas.yaml
-new file mode 100644
-index 000000000000..3bc989c6a295
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/cros-cbas.yaml
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/cros-cbas.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
+index 84f8c127ebdc..b726f8a15044 100644
+--- a/drivers/hid/hid-google-hammer.c
++++ b/drivers/hid/hid-google-hammer.c
+@@ -17,6 +17,7 @@
+ #include <linux/hid.h>
+ #include <linux/leds.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_data/cros_ec_commands.h>
+ #include <linux/platform_data/cros_ec_proto.h>
+ #include <linux/platform_device.h>
+@@ -264,12 +265,21 @@ static const struct acpi_device_id cbas_ec_acpi_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, cbas_ec_acpi_ids);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id cbas_ec_of_match[] = {
++	{ .compatible = "google,cros-cbas" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, cbas_ec_of_match);
++#endif
 +
-+title: ChromeOS Hammer's Base Attached Switch
-+
-+maintainers:
-+  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-+
-+description:
-+  This device is used to signal when a detachable base is attached to a
-+  Chrome OS tablet. The node for this device must be under a cros-ec node
-+  like google,cros-ec-spi or google,cros-ec-i2c.
-+
-+properties:
-+  compatible:
-+    const: google,cros-cbas
-+
-+required:
-+  - compatible
+ static struct platform_driver cbas_ec_driver = {
+ 	.probe = cbas_ec_probe,
+ 	.remove = cbas_ec_remove,
+ 	.driver = {
+ 		.name = "cbas_ec",
+ 		.acpi_match_table = ACPI_PTR(cbas_ec_acpi_ids),
++		.of_match_table = of_match_ptr(cbas_ec_of_match),
+ 		.pm = &cbas_ec_pm_ops,
+ 	},
+ };
 -- 
 2.23.0.866.gb869b98d4c-goog
 
