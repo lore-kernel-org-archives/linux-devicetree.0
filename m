@@ -2,154 +2,125 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A148CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AF8CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5B820650
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58D420650
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:10:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNFK7rbG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBvZU4+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbfJWUKF (ORCPT
+        id S2389803AbfJWUKW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:10:05 -0400
-Received: from mail-ed1-f49.google.com ([209.85.208.49]:34066 "EHLO
-        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730318AbfJWUKF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 16:10:05 -0400
-Received: by mail-ed1-f49.google.com with SMTP id b72so7815429edf.1;
-        Wed, 23 Oct 2019 13:10:03 -0700 (PDT)
+        Wed, 23 Oct 2019 16:10:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46931 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389786AbfJWUKW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 16:10:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n15so12669196wrw.13;
+        Wed, 23 Oct 2019 13:10:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
-         :content-disposition:user-agent;
-        bh=C1NbfjOuUTsXYRctJ+TahLyVOHakGWGNdk4fyJjLp9A=;
-        b=jNFK7rbG6GM43VxqVeMfmX0GUT/q18dLyodhNk8SHuNYeY8X7fC9oW7VEPm+C3J2Kz
-         W1ZizKY60mZn8HGXuafW1xDpdwHlfedQexRfm5y/emsdCz54V4oP6eltP2XWyCd52Tal
-         2dUg0OdoY4/G1Y5b9U9F2Vw7l6NNZ+b+K0UzkeJ7RR7x9Bv48C8yTookFgKqdI5DF9W7
-         qnWZtevkurE0uHqLQfQ8VgFMT7AyzOUOscfvofm5lmpXME//G9/oCBgymH4cG+yWuiT4
-         TYSqoh9uHv2NYm7W6Vs6if0QI5iUrE8sjYBfiGDy9GpYVZcSu1txKHuX+b2VMmvD9eR3
-         gwyA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bpwS+F/PeAnITy9k+IFP+J0FMYCUcRVSLDnqP4k8tK4=;
+        b=hBvZU4+rsFkkIkAEUe2UK9p+3+5+JWXtPl1AZcdpLaBuLUxk+tc9T4L0jRNaLQMGVw
+         L+y3LVknu1uoc9CULFzf8dej8BNFwUTSnBIZzaZ6iMqnEGcQ10BglL/pjhbRsbFxA0nG
+         TUqdThzwoDwZu8AijYEmyE0CjhaPz4jnW2qwRoJzTgGNO4lhQchAbhoHa8LC0QfcPbOv
+         g1q9PZPUfgx5oe/ytQHpOxqMmbMNySxPiEVN4Udp/G5hmQpBdyBv4D+tK0ktG3Ky/40m
+         h+3TAhalZNBLSbza7mE3tyVo0jG0X1Kgu7C9aFGpwlAh61iL9Qo30+bbPsMNkVnN2H8m
+         4Cnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:mime-version:content-disposition:user-agent;
-        bh=C1NbfjOuUTsXYRctJ+TahLyVOHakGWGNdk4fyJjLp9A=;
-        b=I5KOLmqggJH+RI21RsNNNnVcL44HR+6ys4p9vZjkz7WyOFJXXDyKS32UHhIgJNc2bq
-         SJe4QPAvGNuD4C16T3zLj1mn6rSnbfQCMZ8sUPT43zCJxtAi6tuAe1yL+HT0v3qGwd1L
-         RMGUwBijVCqAQu2Ht8vbzw1/FRrv02IyU12/Q/m5c7QhzsqHaFkwn7yF2hcBIJVMnCNQ
-         fBnUiAO9m6aw9cwXUc0meFBeJXvJtgWSMk+ISoVZ6BnD2JtNtfBHrgBcF8PPv58eEIFn
-         uFXNq8p2GE5y5BNsV08Xic7yh96K3/HY/tlIR+xS99ZG8vMMfdaCNsxtgz9eLhG4dEP9
-         7pFg==
-X-Gm-Message-State: APjAAAU914NEC7E9dQ++PiyvfQxU4ripvoLnxb5TV9MoFEelqvr/DKhO
-        wGFRxYFOTxtDY9tJAdTKNxc=
-X-Google-Smtp-Source: APXvYqzYe28YjM3kzXcH00uYMzHG30FNnyv6ODvygeohVjBtT4lsFb7SivWJLOWKsqkEcP8yonn7kg==
-X-Received: by 2002:a17:906:858d:: with SMTP id v13mr24700263ejx.61.1571861402855;
-        Wed, 23 Oct 2019 13:10:02 -0700 (PDT)
-Received: from localhost (ip1f113d5e.dynamic.kabel-deutschland.de. [31.17.61.94])
-        by smtp.gmail.com with ESMTPSA id a20sm842757edt.95.2019.10.23.13.10.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 13:10:02 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 22:10:00 +0200
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     fugang.duan@nxp.com
-Cc:     festevam@gmail.com,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org
-Subject: fec driver: ethernet rx is deaf on variscite imx6ul board
-Message-ID: <20191023201000.GE20321@ripley>
-Mail-Followup-To: fugang.duan@nxp.com, festevam@gmail.com,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bpwS+F/PeAnITy9k+IFP+J0FMYCUcRVSLDnqP4k8tK4=;
+        b=dxd1ArwrZjuJxpHEaGY2XYn4dahMUkk3ADNBqViPLrxwMLfhkMOEXVaw6T6k6+DttR
+         WYxv2+edP3zy2+mOWSku4sl3qJXLJZmENZF5w1/kQgFVHelqkgdcyt1s7kot8KG/7vNO
+         OLhZs22c9AvX96LA+gaQCvOtkcReipPRUX8F6yWx9hlOeHIxKha8wgW2M7CacnrNOQww
+         lK4a5SrENkgOsiE1ji9t87VLqe5adQkYv9pH7705U67fQLbWbq0IYrL4RvWn6BkSPAbk
+         6beO/Ko5CYHZbLUeRR8IbMR/6n96jYSQ20uiz0VrxNCfuw6AYlP7DBjHhXDejVo/4izN
+         A0qA==
+X-Gm-Message-State: APjAAAUGhjRQOtEW6B7xfhhUMlCF03Puluz5cezHTFzzssRA/JzHUKyr
+        UiXFvdSHNYGQNwbCQr1VcYI=
+X-Google-Smtp-Source: APXvYqwp9Wm0ez8TH/4MwrhNc/lRRV96afQBfhg751QLdG3fu7ojJDzZdlM9I3dHNw1gPuQ8UjiZig==
+X-Received: by 2002:a5d:568b:: with SMTP id f11mr449675wrv.301.1571861419759;
+        Wed, 23 Oct 2019 13:10:19 -0700 (PDT)
+Received: from Red.localdomain (lfbn-1-7036-79.w90-116.abo.wanadoo.fr. [90.116.209.79])
+        by smtp.googlemail.com with ESMTPSA id h17sm277261wmb.33.2019.10.23.13.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 13:10:18 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 0/4] crypto: add sun8i-ss driver for Allwinner Security System
+Date:   Wed, 23 Oct 2019 22:10:12 +0200
+Message-Id: <20191023201016.26195-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Hello
 
-I use the following nodes in my devicetree to get two ethernet ports
-working with fec driver on a Variscite DART-6UL SoM Board (imx6ul).
+This patch serie adds support for the second version of Allwinner Security System.
+The first generation of the Security System is already handled by the sun4i-ss driver.
+Due to major change, the first driver cannot handle the second one.
+This new Security System is present on A80 and A83T SoCs.
 
-But ethernet RX is deaf and not working. Some clue whats is the issue
-here? 
+For the moment, the driver support only DES3/AES in ECB/CBC mode.
+Patchs for CTR/CTS, RSA and RNGs will came later.
 
-Best regards,
+This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
+and tested on:
+sun8i-a83t-bananapi-m3
+sun9i-a80-cubieboard4
 
-Oliver
+This serie is based on top of the "crypto: add sun8i-ce driver for
+Allwinner crypto engine" serie.
 
-&fec1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_enet1>;
-	phy-mode = "rmii";
-	phy-reset-gpios = <&gpio5 0 1>;
-	phy-reset-duration = <100>;
-	phy-handle = <&ethphy0>;
-};
+Regards
 
-&fec2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_enet2>;
-	phy-mode = "rmii";
-	phy-handle = <&ethphy1>;
-	phy-reset-gpios = <&gpio1 10 1>;
-	phy-reset-duration = <100>;
+Changes since v1:
+- fixed uninitialized err in sun8i_ss_allocate_chanlist
+- Added missing commit description on DT Documentation patch
 
-	mdio {
-		#address-cells = <1>;
-		#size-cells = <0>;
+Corentin Labbe (4):
+  crypto: Add Allwinner sun8i-ss cryptographic offloader
+  dt-bindings: crypto: Add DT bindings documentation for sun8i-ss
+    Security System
+  ARM: dts: sun8i: a83t: Add Security System node
+  ARM: dts: sun9i: a80: Add Security System node
 
-		ethphy0: ethernet-phy@1 {
-			compatible = "ethernet-phy-ieee802.3-c22";
-			micrel,rmii-reference-clock-select-25-mhz;
-			clocks = <&clk_rmii_ref>;
-			clock-names = "rmii-ref";
-			reg = <1>;
-		};
+ .../bindings/crypto/allwinner,sun8i-ss.yaml   |  64 ++
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  10 +
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  10 +
+ drivers/crypto/allwinner/Kconfig              |  28 +
+ drivers/crypto/allwinner/Makefile             |   1 +
+ drivers/crypto/allwinner/sun8i-ss/Makefile    |   2 +
+ .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 438 ++++++++++++
+ .../crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 642 ++++++++++++++++++
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h  | 218 ++++++
+ 9 files changed, 1413 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/Makefile
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
 
-		ethphy1: ethernet-phy@3 {
-			compatible = "ethernet-phy-ieee802.3-c22";
-			micrel,rmii-reference-clock-select-25-mhz;
-			clocks = <&clk_rmii_ref>;
-			clock-names = "rmii-ref";
-			reg = <3>;
-		};
-	};
-};
-	pinctrl_enet1: enet1grp {
-		fsl,pins = <
-			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
-		>;
-	};
+-- 
+2.21.0
 
-	pinctrl_enet2: enet2grp {
-		fsl,pins = <
-			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
-			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
-			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
-			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
-			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
-			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
-			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
-			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
-			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x1b0b0
-		>;
-	};
