@@ -2,82 +2,253 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ADFCA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0482ACA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E14D2086D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA1521906
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391200AbfJWMTs (ORCPT
+        id S2405292AbfJWMWK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:19:48 -0400
-Received: from sauhun.de ([88.99.104.3]:39604 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfJWMTr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:19:47 -0400
-Received: from localhost (p54B33207.dip0.t-ipconnect.de [84.179.50.7])
-        by pokefinder.org (Postfix) with ESMTPSA id E608B2C001C;
-        Wed, 23 Oct 2019 14:19:44 +0200 (CEST)
-Date:   Wed, 23 Oct 2019 14:19:44 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Eugen.Hristev@microchip.com
-Cc:     peda@axentia.se, mark.rutland@arm.com,
-        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
-        robh+dt@kernel.org, Nicolas.Ferre@microchip.com
-Subject: Re: [PATCH v5 0/9] i2c: add support for filters
-Message-ID: <20191023121944.GA2011@kunai>
-References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
- <c17182ac-67dd-d11f-5daf-066bf446b969@microchip.com>
- <20191021140515.GC26782@ninjato>
- <f5bd0c1f-9a72-6661-146b-ef5de77e31ff@axentia.se>
- <c1f5c3f0-860e-e86a-5658-49e2100225a9@microchip.com>
+        Wed, 23 Oct 2019 08:22:10 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59511 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfJWMWJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:22:09 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iNFeJ-0007BK-Iw; Wed, 23 Oct 2019 14:21:59 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iNFeH-0006U1-9u; Wed, 23 Oct 2019 14:21:57 +0200
+Date:   Wed, 23 Oct 2019 14:21:57 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>, mchehab@kernel.org,
+        hans.verkuil@cisco.com, jacopo+renesas@jmondi.org,
+        robh+dt@kernel.org, laurent.pinchart@ideasonboard.com,
+        devicetree@vger.kernel.org, kernel@pengutronix.de,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v10 03/14] media: v4l2-fwnode: add initial connector
+ parsing support
+Message-ID: <20191023122157.qu3eodamlye5zsax@pengutronix.de>
+References: <20190830101646.6530-1-m.felsch@pengutronix.de>
+ <20190830101646.6530-4-m.felsch@pengutronix.de>
+ <20191002070303.GK896@valkosipuli.retiisi.org.uk>
+ <20191002080735.yyoxo5wg35t7k26x@pengutronix.de>
+ <20191023105739.GN5433@paasikivi.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c1f5c3f0-860e-e86a-5658-49e2100225a9@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191023105739.GN5433@paasikivi.fi.intel.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:17:38 up 158 days, 18:35, 98 users,  load average: 0.09, 0.05,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Sakari,
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 19-10-23 13:57, Sakari Ailus wrote:
+> Hi Marco,
+> 
+> Apologies for the delay.
 
-> Send another version of the patch with the nit ?
+No problem.
 
-That would be easiest for me.
+> On Wed, Oct 02, 2019 at 10:07:35AM +0200, Marco Felsch wrote:
+> > Hi Sakari,
+> > 
+> > On 19-10-02 10:03, Sakari Ailus wrote:
+> > > Hi Marco,
+> > > 
+> > > On Fri, Aug 30, 2019 at 12:16:35PM +0200, Marco Felsch wrote:
+> > > > The patch adds the initial connector parsing code, so we can move from a
+> > > > driver specific parsing code to a generic one. Currently only the
+> > > > generic fields and the analog-connector specific fields are parsed. Parsing
+> > > > the other connector specific fields can be added by a simple callbacks.
+> > > > 
+> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > ---
+> > > > [1] https://patchwork.kernel.org/cover/10794703/
+> > > > 
+> > > > v10:
+> > > > - drop V4L2_CONN_HDMI support
+> > > > - adapt pr_err msg to reflect new state (-> connector is unkown)
+> > > > 
+> > > > v9:
+> > > > - Fix leading semicolon found by kbuild semicolon.cocci
+> > > > 
+> > > > v8:
+> > > > - V4L2_CON_* -> V4L2_CONN_*
+> > > > - tvnorms -> sdtv-standards
+> > > > - adapt to new v4l2_fwnode_connector_analog member
+> > > > - return error in case of V4L2_CONN_HDMI
+> > > > 
+> > > > v7:
+> > > > @Jacopo: I dropped your r b tag becuase of the amount of changes I
+> > > > made..
+> > > > 
+> > > > - drop unnecessary comments
+> > > > - fix commet style
+> > > > - s/v4l2_fwnode_connector_conv.name/v4l2_fwnode_connector_conv.compatible/
+> > > > - make label size variable and drop V4L2_CONNECTOR_MAX_LABEL usage
+> > > > - do not assign a default label in case of no label was specified
+> > > > - remove useless /* fall through */ comments
+> > > > - add support for N connector links
+> > > > - rename local variables to be more meaningful
+> > > > - adjust kernedoc
+> > > > - add v4l2_fwnode_connector_free()
+> > > > - improve error handling (use different error values)
+> > > > - make use of pr_warn_once()
+> > > > 
+> > > > v6:
+> > > > - use unsigned count var
+> > > > - fix comment and style issues
+> > > > - place '/* fall through */' to correct places
+> > > > - fix error handling and cleanup by releasing fwnode
+> > > > - drop vga and dvi parsing support as those connectors are rarely used
+> > > >   these days
+> > > > 
+> > > > v5:
+> > > > - s/strlcpy/strscpy/
+> > > > 
+> > > > v2-v4:
+> > > > - nothing since the patch was squashed from series [1] into this
+> > > >   series.
+> > > > 
+> > > >  drivers/media/v4l2-core/v4l2-fwnode.c | 129 ++++++++++++++++++++++++++
+> > > >  include/media/v4l2-fwnode.h           |  38 ++++++++
+> > > >  2 files changed, 167 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > > index 3bd1888787eb..0bfa7cbf78df 100644
+> > > > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > > @@ -595,6 +595,135 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+> > > >  
+> > > > +static const struct v4l2_fwnode_connector_conv {
+> > > > +	enum v4l2_connector_type type;
+> > > > +	const char *compatible;
+> > > > +} connectors[] = {
+> > > > +	{
+> > > > +		.type = V4L2_CONN_COMPOSITE,
+> > > > +		.compatible = "composite-video-connector",
+> > > > +	}, {
+> > > > +		.type = V4L2_CONN_SVIDEO,
+> > > > +		.compatible = "svideo-connector",
+> > > > +	},
+> > > > +};
+> > > > +
+> > > > +static enum v4l2_connector_type
+> > > > +v4l2_fwnode_string_to_connector_type(const char *con_str)
+> > > > +{
+> > > > +	unsigned int i;
+> > > > +
+> > > > +	for (i = 0; i < ARRAY_SIZE(connectors); i++)
+> > > > +		if (!strcmp(con_str, connectors[i].compatible))
+> > > > +			return connectors[i].type;
+> > > > +
+> > > > +	return V4L2_CONN_UNKNOWN;
+> > > > +}
+> > > > +
+> > > > +static int
+> > > > +v4l2_fwnode_connector_parse_analog(struct fwnode_handle *fwnode,
+> > > > +				   struct v4l2_fwnode_connector *vc)
+> > > > +{
+> > > > +	u32 stds;
+> > > > +	int ret;
+> > > > +
+> > > > +	ret = fwnode_property_read_u32(fwnode, "sdtv-standards", &stds);
+> > > > +
+> > > > +	/* The property is optional. */
+> > > > +	vc->connector.analog.sdtv_stds = ret ? V4L2_STD_ALL : stds;
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +void v4l2_fwnode_connector_free(struct v4l2_fwnode_connector *connector)
+> > > > +{
+> > > > +	unsigned int i;
+> > > > +
+> > > > +	if (IS_ERR_OR_NULL(connector))
+> > > > +		return;
+> > > > +
+> > > > +	for (i = 0; i < connector->nr_of_links; i++)
+> > > > +		v4l2_fwnode_put_link(&connector->links[i]);
+> > > > +	kfree(connector->links);
+> > > 
+> > > Please assign connector->links NULL here, and nr_of_links to zero.
+> > 
+> > Okay, I can do that.
+> > 
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_free);
+> > > > +
+> > > > +int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
+> > > > +				      struct v4l2_fwnode_connector *connector)
+> > > > +{
+> > > > +	struct fwnode_handle *remote_pp, *remote_ep;
+> > > > +	const char *type_name;
+> > > > +	unsigned int i = 0, ep_num = 0;
+> > > > +	int err;
+> > > > +
+> > > > +	memset(connector, 0, sizeof(*connector));
+> > > > +
+> > > > +	remote_pp = fwnode_graph_get_remote_port_parent(fwnode);
+> > > 
+> > > How do you know a remote endpoint is a connector, and not another device's
+> > > endpoint?
+> > 
+> > Well, I think that the caller won't use this function if it isn't a
+> > connector. If it helps I can check if the compatible of the remote ends
+> > with "-connector".
+> 
+> The function is called by a driver. A driver shouldn't know what's at the
+> other end of the graph arc; the information should come from the firmware
+> instead.
+> 
+> On some board there could be another device where you have a connector now.
+> 
+> As the connector has its own compatible string, there could be a connector
+> driver to tell this is actually a connector, even if there's nothing to
+> control. It'd be a very tiny driver.
 
-Thanks!
+Yes I know a connector driver would be the best. This also have the
+advantage to do drop the connector handling in each subdev driver.. But
+unfortunately I haven't the time yet. Would it be okay for you too check
+that the remote is a connector and if not to exit?
 
+Regards,
+  Marco
 
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
+> -- 
+> Regards,
+> 
+> Sakari Ailus
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2wRVwACgkQFA3kzBSg
-KbY+cg//beA6zQrkT9jDDrRJUPM3LpUWqzeo8RMreuQzJp6Pw1X8BSuxLanDvhT0
-PlKK59ZEhsXHtaXiyw2yVN1h3WILCiWryq81eyw8+ZgLkoQS++cBIdBwB/ZswY4t
-vtHV+9mc82sCVJYEH9UKp75wqEQ41dOTL478itGb89ESJ2R772foKlipQwQ1zzTJ
-gS35TGxdmwuiJ3JCgDs1bkCorwpY4OBjF9H1QTWXqfyoTgRPguBM8NYXmj21Cn+r
-VRFMvpmFlxGsSC35Zx0Fb1Q1QxZNb49TwC1nnNnBhUSkAP9rmrW8SrofbMZ3Dekx
-A3pVvyhzi6IO0sEvbmtbm64tP/nk5Yf4n3DmVbHufOQ/wKWtXWIhsqC/p4BA6TZw
-xB4yJbxsljD+HLbigCjP2KpsonYeBAFG9O0RRqMQG8bp59BnzCvZambx6fadjI6x
-32J9dHsSgfrXsG2ABcQY9+JFqv0SjlHo/5VmtnjV+kExa8jwx+f2YDbqcxr99PR4
-kdfsAWOE28CZowJFKn84jUaabmISqHz9ejUCNvNTeuAC2yxvRqUCzoUpguZnqEgn
-c5y7u8byZWNlOcUNRnCIfen19LmZagkZM9xn48Dtcp8RCBZRZEIeWnIvuaaix7V9
-+kNWRT3uArzuZDD7A+CyefduySTQj1UZkJfzYyYKEL3fLAh4ZxQ=
-=ywNb
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
