@@ -2,158 +2,214 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F31DC47E49
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B329DCA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4539221906
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7389521906
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SFyMEXu2"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="GEFDqWLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390039AbfJWMfc (ORCPT
+        id S2390652AbfJWMkS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:35:32 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55154 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389888AbfJWMfc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:35:32 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NCZOCf042095;
-        Wed, 23 Oct 2019 07:35:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571834124;
-        bh=J7vtenKEXuXVl0lBap8CU6gDxo4xRoiS6Zd5T9c5dKg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SFyMEXu20tZIWaqh9ZFMFCk6M9eL4V0NRo7Uw/hCdXSUdVjorjdJqwwfshKplTE0f
-         Or9hPOZLJfuxNUXYKW6OgMTETbPciRm5uHLMo+y8Xxu1Yedhb0XTUUGUvPN+CjBqpl
-         4cCHKmi4zhZK5rIGX9ZErgbyfe2WTGyshfCTUUss=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9NCZNL9010837
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 23 Oct 2019 07:35:23 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
- Oct 2019 07:35:23 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 23 Oct 2019 07:35:13 -0500
-Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCZMVS045311;
-        Wed, 23 Oct 2019 07:35:23 -0500
-Subject: Re: [PATCH 2/2] leds: meter: add leds-meter binding
-To:     Akinobu Mita <akinobu.mita@gmail.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-References: <1571756812-19005-1-git-send-email-akinobu.mita@gmail.com>
- <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0f58e263-7e56-b4f7-51c1-a37e107a1afe@ti.com>
-Date:   Wed, 23 Oct 2019 07:34:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 23 Oct 2019 08:40:18 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:45986 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732361AbfJWMkS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:40:18 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: SzpqzQEN5+FUaVsDQt9S24yfGZaDHg1Oj5OikdNNoV4NSYMb7bfFwCUBvurfTq71IxoByvn6gA
+ BQz+EuGSLU1yl8UP3GVLoWgcFH9it0tgEmsSu+xzbFj1AHZQ+jmSyNU4rokai6UZiKXbBSQnzE
+ Ff1XlzI0ecSEZpp7ZkKemdvP/N5HTpDWyHH8Ap/Wg7bC1pT7fRKlRX5dAHwiYb+G8brkJ4eBqH
+ OJmnZUTvpjTM8uc5oKl/dCr4Rw0BPg54ODmVBR/cLCS/tjH6tXHv8rHsZ1wwGAHcNzMCWA/1hE
+ rms=
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="55338755"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Oct 2019 05:40:16 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 23 Oct 2019 05:40:15 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 23 Oct 2019 05:40:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CmKczHQMvz2GBZP6tK7s4UbB6xXQe7duMxhLqL6ZBEFAqQkKW/lEqCiyGd41w+NHKUNipngEVzr1PnKOTJECA+RjWTYs6IQ/K4TnIvj9GCMgnfG6zuC3WaHOXYn6O3KEngmw8amiWiJnFRQrqmHnhWPZHaximOf5RBFhOLZrP/IGrePgum86FvKT3OZsqJGN/OJlYlIib+x2JEPvm0cZi/N/4WetvacLbjvvbmrvS3baY8e2i/Fm3SkbCc2p/uTKVnLVnbqqCdntQJN8UuGZJFSxTTRlpUnY46jbfCCAUIZ8ZZTGVriyguuWZv9URTngPu5s58pBsIeB9rdPJsJvcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6OAziD565bi+FCwA8JoD/DHQfByjBDR/u2LXTDTxz18=;
+ b=LPmaduzgBtptpN/4UTuDbiUI9aOmVauPxE9/imsqoSp3+CGrScZtduG0oBPLBCq/2vHZCTGPwjWw/bIAaKX4JleFzi8PEHF1zmyqg28aEhyQv+XBad97OP1MoOG6NCfLfNvTfXJ5lAkmfkRvks3JSr2QKjajvV5OTLzEi5Ar6DVLYN7ayPGiR2aliewj5pMdGJrDUn7gxxmR5DpMKRFiZjTsc5yQNNFUVieXPL9E4vgHedcQuMX/AZ9wUmmMlBt0IQtsK5O+zxFKzTNf8NxVDN0E9mnyQ8ewsW3p9jGoDK46+p6vQ1+SjLV3Kbrx22nmOP4X/yb3xWLdeqFEO6IfMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6OAziD565bi+FCwA8JoD/DHQfByjBDR/u2LXTDTxz18=;
+ b=GEFDqWLM7LixQQ++UryGUYJYRbCvffYqAXpcw0iBEAj2DxeiFJTe6PKzSpQA4BzIR82qr3JXzS3dK3KGirmVfvKzr/3Zjghz4nTp3eKrNav3IKn0uhwrIVFP458LsOr6Qcg95a8UcNnlEFLfg40YFTiiEr7Qmr14rqNWllt8b1o=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1276.namprd11.prod.outlook.com (10.168.108.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Wed, 23 Oct 2019 12:40:14 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::b125:76c1:c9b1:34f4]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::b125:76c1:c9b1:34f4%10]) with mapi id 15.20.2367.025; Wed, 23 Oct
+ 2019 12:40:14 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <robh+dt@kernel.org>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <wsa@the-dreams.de>,
+        <peda@axentia.se>, <Ludovic.Desroches@microchip.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Eugen.Hristev@microchip.com>
+Subject: [PATCH v6 3/9] i2c: add support for filters optional properties
+Thread-Topic: [PATCH v6 3/9] i2c: add support for filters optional properties
+Thread-Index: AQHViZ8EmqljGdrD10aSBxnDJd1ZDQ==
+Date:   Wed, 23 Oct 2019 12:40:14 +0000
+Message-ID: <1571834060-31580-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, ro-RO
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0096.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:18::36) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-mailer: git-send-email 2.7.4
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 527f708c-15ab-4338-adb9-08d757b62699
+x-ms-traffictypediagnostic: DM5PR11MB1276:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB1276EB92610121842431745DE86B0@DM5PR11MB1276.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(39860400002)(346002)(396003)(189003)(199004)(14454004)(6486002)(50226002)(8676002)(81156014)(107886003)(5660300002)(256004)(14444005)(36756003)(4326008)(6512007)(6436002)(81166006)(478600001)(476003)(66066001)(110136005)(71190400001)(8936002)(25786009)(2616005)(71200400001)(64756008)(66446008)(6116002)(66556008)(186003)(305945005)(66476007)(386003)(7736002)(66946007)(6506007)(2201001)(99286004)(86362001)(316002)(102836004)(26005)(52116002)(2906002)(3846002)(486006)(2501003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1276;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9jCsnqYapvXDxFSVwohndTWCwnbUyso+JyLYmOeBQg1Z0g2JMTnMzhaqoxHz4+oc3/pmDOTaz1rexk6SOsEBSq3aHF3gHhngp8CAxCqt0brJg3SELxLZPI5vmrKEmL4uGbVoqMEpsk2jRiQpgqchH2w8kA2DU6aGqmcCZl5/csaziU7v3lK9JnDwjx41S2qc/Mk04b36/e+VTiF1jb61BcVM5LTOBFa1kbSPwq9Nxd4o1/I/IgeCfnYqogceaJyN197jI/jTu4czMM91QY43yV5Da+oASgorjrI8hCCBA787XYEqBSQ7BJpDiFsBhzZC9eQEHN2xqQgOyk8seGE24N1GeSfbpmqpXtm9vr85q+4sZr5sisEgR28VR/9UznM4i/SH0qAKGYYQrcLLY/NUidnlx0qIJ/r1fwXuAqXjD0vaYvs4lspi0G3PYh9qTN7H
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 527f708c-15ab-4338-adb9-08d757b62699
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 12:40:14.3192
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AcMEzcFZFGKSl4Sg+LkKQfMYfuWPzyCUwIKJVUM6H2VjKZT6K7kNKG9O6FB8MZzB/qXC8rq6MUSCYQh/N9HyV2Rt24H8XdTGNN1AjcXnY7w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1276
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Akinobu
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-On 10/22/19 10:06 AM, Akinobu Mita wrote:
-> Add DT binding for leds-meter.
+i2c-digital-filter-width-ns:
+This optional timing property specifies the width of the spikes on the i2c
+lines (in ns) that can be filtered out by built-in digital filters which ar=
+e
+embedded in some i2c controllers.
+i2c-analog-filter-cutoff-frequency:
+This optional timing property specifies the cutoff frequency of a low-pass
+analog filter built-in i2c controllers. This low pass filter is used to fil=
+ter
+out high frequency noise on the i2c lines. Specified in Hz.
+Include these properties in the timings structure and read them as integers=
+.
 
-$subject should be
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
 
-  dt-bindings: leds: Add leds-meter binding
+Hello Wolfram,
 
-And this patch should be first in the series
+I modified the comment as requested.
+I only resent this patch.
 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Bjorn Andersson <bjorn@kryo.se>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
->   .../devicetree/bindings/leds/leds-meter.yaml       | 42 ++++++++++++++++++++++
->   1 file changed, 42 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.yaml
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-> new file mode 100644
-> index 0000000..d5dfa261
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic LED level meter
-> +
-> +maintainers:
-> +  - Akinobu Mita <akinobu.mita@gmail.com>
-> +
-> +description:
-> +  Generic LED level meter consists of multiple LED devices by different drivers.
-> +
-> +properties:
-> +  compatible:
-> +    const: meter-leds
-> +
-> +  leds:
+Thanks !
+Eugen
 
-This seems a bit generic for the property name
 
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    minItems: 1
-> +    description: List of phandles to LED node that are members of a level meter.
-> +
-> +  brightness-weights:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 1
-> +    description: Each integer represents a contribution ratio within a level
-> +      meter.
+ drivers/i2c/i2c-core-base.c | 6 ++++++
+ include/linux/i2c.h         | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
-This description is a bit vague I would not be sure what I would set 
-this to.
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 5f6a498..6a5183c 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -1656,6 +1656,12 @@ void i2c_parse_fw_timings(struct device *dev, struct=
+ i2c_timings *t, bool use_de
+ 		t->sda_fall_ns =3D t->scl_fall_ns;
+=20
+ 	device_property_read_u32(dev, "i2c-sda-hold-time-ns", &t->sda_hold_ns);
++
++	device_property_read_u32(dev, "i2c-digital-filter-width-ns",
++				 &t->digital_filter_width_ns);
++
++	device_property_read_u32(dev, "i2c-analog-filter-cutoff-frequency",
++				 &t->analog_filter_cutoff_freq_hz);
+ }
+ EXPORT_SYMBOL_GPL(i2c_parse_fw_timings);
+=20
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 1361637..aaf57d9 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -575,6 +575,10 @@ struct i2c_lock_operations {
+  * @scl_int_delay_ns: time IP core additionally needs to setup SCL in ns
+  * @sda_fall_ns: time SDA signal takes to fall in ns; t(f) in the I2C spec=
+ification
+  * @sda_hold_ns: time IP core additionally needs to hold SDA in ns
++ * @digital_filter_width_ns: width in ns of spikes on i2c lines that the I=
+P core
++ *	digital filter can filter out
++ * @analog_filter_cutoff_freq_hz: threshold frequency for the low pass IP =
+core
++ *	analog filter
+  */
+ struct i2c_timings {
+ 	u32 bus_freq_hz;
+@@ -583,6 +587,8 @@ struct i2c_timings {
+ 	u32 scl_int_delay_ns;
+ 	u32 sda_fall_ns;
+ 	u32 sda_hold_ns;
++	u32 digital_filter_width_ns;
++	u32 analog_filter_cutoff_freq_hz;
+ };
+=20
+ /**
+--=20
+2.7.4
 
-Dan
-
-> +
-> +required:
-> + - compatible
-> + - leds
-> +
-> +examples:
-> +  - |
-> +    leds {
-> +        compatible = "meter-leds";
-> +        leds = <&led0>, <&led1>, <&led2>, <&led3>;
-> +        brightness-weights = <3 1 1 1>;
-> +    };
-> +
-> +...
