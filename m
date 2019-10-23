@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596D7CA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141AECA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0A821906
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E338D2084C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404175AbfJWKNd (ORCPT
+        id S2404341AbfJWKOK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:13:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54006 "EHLO mx1.suse.de"
+        Wed, 23 Oct 2019 06:14:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53884 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404135AbfJWKNd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:13:33 -0400
+        id S2404124AbfJWKNc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:13:32 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E6D88B595;
+        by mx1.suse.de (Postfix) with ESMTP id 69B9AB55C;
         Wed, 23 Oct 2019 10:13:30 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
@@ -30,9 +30,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v2 08/11] ARM: dts: rtd1195: Add reset nodes
-Date:   Wed, 23 Oct 2019 12:13:14 +0200
-Message-Id: <20191023101317.26656-9-afaerber@suse.de>
+Subject: [PATCH v2 07/11] arm64: dts: realtek: Add RTD129x UART resets
+Date:   Wed, 23 Oct 2019 12:13:13 +0200
+Message-Id: <20191023101317.26656-8-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191023101317.26656-1-afaerber@suse.de>
 References: <20191023101317.26656-1-afaerber@suse.de>
@@ -44,50 +44,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add reset controller nodes for Realtek RTD1195 SoC.
+Associate the UART nodes with the corresponding reset controller bits.
 
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- v2: New
+ v1 -> v2:
+ * Rebased, moved from rtd1295.dtsi to rtd129x.dtsi
  
- arch/arm/boot/dts/rtd1195.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
-index 475740c67d26..fdcaf48a26f2 100644
---- a/arch/arm/boot/dts/rtd1195.dtsi
-+++ b/arch/arm/boot/dts/rtd1195.dtsi
-@@ -93,6 +93,30 @@
- 		#size-cells = <1>;
- 		ranges;
+diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+index 282ab8bfaad1..15d321d9515c 100644
+--- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+@@ -79,6 +79,7 @@
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+ 			clock-frequency = <27000000>;
++			resets = <&iso_reset 8>;
+ 			status = "disabled";
+ 		};
  
-+		reset1: reset-controller@18000000 {
-+			compatible = "snps,dw-low-reset";
-+			reg = <0x18000000 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
-+		reset2: reset-controller@18000004 {
-+			compatible = "snps,dw-low-reset";
-+			reg = <0x18000004 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
-+		reset3: reset-controller@18000008 {
-+			compatible = "snps,dw-low-reset";
-+			reg = <0x18000008 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
-+		iso_reset: reset-controller@18007088 {
-+			compatible = "snps,dw-low-reset";
-+			reg = <0x18007088 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
- 		wdt: watchdog@18007680 {
- 			compatible = "realtek,rtd1295-watchdog";
- 			reg = <0x18007680 0x100>;
+@@ -88,6 +89,7 @@
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+ 			clock-frequency = <432000000>;
++			resets = <&reset2 28>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -97,6 +99,7 @@
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+ 			clock-frequency = <432000000>;
++			resets = <&reset2 27>;
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.16.4
 
