@@ -7,54 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C96CA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317FACA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA4420640
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DE520640
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:58:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nlFeiilp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="feccwS9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405396AbfJWM6a (ORCPT
+        id S2405472AbfJWM6m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:58:30 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59272 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405381AbfJWM6a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:58:30 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NCwRmW048039;
-        Wed, 23 Oct 2019 07:58:27 -0500
+        Wed, 23 Oct 2019 08:58:42 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50296 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405447AbfJWM6l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:58:41 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NCwblk040880;
+        Wed, 23 Oct 2019 07:58:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571835508;
-        bh=NpTgzRPuWtGy7XqgqTEEYzUMhl497x1SrGIY18ty3Pk=;
+        s=ti-com-17Q1; t=1571835517;
+        bh=P6eFdtK+KQxmYKfuUnnvAtDNy0O8X0nYyKSWPvRJKzQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nlFeiilpoPvPFSz8cdpQxdL3AV7krjQPRQrJG8p2bgzLtj3zC01Km/HR2SrHiM9C2
-         eN9qc/HIIw+UHC6EUhB7oVnAeB83vW7swah0Spab9aSk4yIarVPbwIGaMKWWyf25TK
-         7e1bt1qqdrsP3r6Dtg0mziRRjT1riQxIy1nyFnPQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCwRAF064656;
-        Wed, 23 Oct 2019 07:58:27 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        b=feccwS9eartm0CHg3TNaBNKDEvBSxz1DZR8iDZAw+onlM3l+aXBHnwXmC0zj2eQJH
+         r8BkI9wLm2D5TWYX9XC9wh56NvPp3iLobs4eYJZXV/LWm9ec5nZJ1G49iODWs4yJ6O
+         +s6vpVrIvv1V2rvbvwyGmCsg6GVYh0sQRnWRurc8=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9NCwbUo042820
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Oct 2019 07:58:37 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
- Oct 2019 07:58:17 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 07:58:27 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 23 Oct 2019 07:58:17 -0500
+ Frontend Transport; Wed, 23 Oct 2019 07:58:27 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCw5oC061147;
-        Wed, 23 Oct 2019 07:58:25 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCw5oG061147;
+        Wed, 23 Oct 2019 07:58:35 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
 CC:     Anil Varughese <aniljoy@cadence.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v2 08/14] phy: cadence: Sierra: Get reset control "array" for each link
-Date:   Wed, 23 Oct 2019 18:27:29 +0530
-Message-ID: <20191023125735.4713-9-kishon@ti.com>
+Subject: [PATCH v2 12/14] phy: cadence: Sierra: Use correct dev pointer in cdns_sierra_phy_remove()
+Date:   Wed, 23 Oct 2019 18:27:33 +0530
+Message-ID: <20191023125735.4713-13-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191023125735.4713-1-kishon@ti.com>
 References: <20191023125735.4713-1-kishon@ti.com>
@@ -66,28 +67,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A link may have multiple lanes each with a separate reset. Get
-reset control "array" in order to reset all the lanes associated
-with the link.
+commit 44d30d622821d3b ("phy: cadence: Add driver for Sierra PHY"),
+incorrectly used parent device pointer to get driver data. Fix it here.
 
+Fixes: 44d30d622821d3b ("phy: cadence: Add driver for Sierra PHY")
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
  drivers/phy/cadence/phy-cadence-sierra.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index b555d4c3633b..2648a01f90b3 100644
+index affede8c4368..04c28cbb6d39 100644
 --- a/drivers/phy/cadence/phy-cadence-sierra.c
 +++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -497,7 +497,7 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
- 		struct phy *gphy;
+@@ -623,7 +623,7 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
  
- 		sp->phys[node].lnk_rst =
--			of_reset_control_get_exclusive_by_index(child, 0);
-+			of_reset_control_array_get_exclusive(child);
+ static int cdns_sierra_phy_remove(struct platform_device *pdev)
+ {
+-	struct cdns_sierra_phy *phy = dev_get_drvdata(pdev->dev.parent);
++	struct cdns_sierra_phy *phy = platform_get_drvdata(pdev);
+ 	int i;
  
- 		if (IS_ERR(sp->phys[node].lnk_rst)) {
- 			dev_err(dev, "failed to get reset %s\n",
+ 	reset_control_assert(phy->phy_rst);
 -- 
 2.17.1
 
