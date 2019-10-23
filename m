@@ -2,83 +2,159 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51450CA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 17:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30620CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 18:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC3321872
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 17:42:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6IWwyvR"
+	by mail.kernel.org (Postfix) with ESMTP id 0CEB320663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 18:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbfJWRmd (ORCPT
+        id S1731220AbfJWSjv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:42:33 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54323 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731112AbfJWRmd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 13:42:33 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g7so4142828wmk.4;
-        Wed, 23 Oct 2019 10:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qyufOw3HRZ5Y+yJocgS7vdEDGBbk3VE9ga0vjTsSbTQ=;
-        b=F6IWwyvR76H6/j/VtUC5EBPTbqS+a55iPP3aSdS1XpvvK5b53hVUMZJmZ9W3nschI4
-         x5FTXPz57+PPBt/lG3PBlGHebT2wZkd0BtjvTwpM8JP7ZqGFIs+wVVKThyHQGjjKcHTU
-         EiJQuhgocG8nBomI2q3BDjBRuEUVrS0Cx0icvcbfjIjOCfW59mT6FPLla+KvOLaU7HF/
-         JaSLYYSKdDFsvEzcmqZVQn6y3cFWZ6nH+pcMZYPQX6eWWkLk9MMxVkVvlk547nUPqFCe
-         MTGULciOp9fD0ckimYut8f7bTUFqmI1+kPyeMr+rlNkN5TJo8rqK+mCYuJAKsbz3A6cw
-         BKVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qyufOw3HRZ5Y+yJocgS7vdEDGBbk3VE9ga0vjTsSbTQ=;
-        b=AT0rQsGLKkR2owsQoFpXxhuEXzvDp0Dc/rjPCQ6foe4KKUYXvsauCAtKQ1EJ8IEcGf
-         IOKXWEQ9cxrm/egOhleHqlv5uhx4DHi7Lsp+VYmkvxcnywntJGUmWzlp0yymM5yH6vue
-         JhOeBa2jUozr5rUIY1cXarKUohUkK6ks7wHmkGSHT6GE49qOYpb24OOUbWIDTVBqkk1N
-         nl26TmzF4OUQUgrIisHoHu+8TiNoAXuPl4P4h9Y7Gs75LCBWvMpFwSI/g77Xwlv65148
-         VpSmXxrvqfMw/5di4tCvTpsKck3Nk3NJpLV57CRN+Vp1sZHIjkk7lfDHzNF1c4lPwI++
-         w1CQ==
-X-Gm-Message-State: APjAAAVErMWiIWql1IqooOujIQLruAJgvmwtTbUjxjf/EjKEzCYBru+t
-        rAISR9qiVj89nX/gWpFvFtTgGTFn
-X-Google-Smtp-Source: APXvYqzV3LbOWAqCLGm0AsZaPgIlWEQdvlIrvLWPLD7WRj1pK0qJQkyQ/7osnO05sUmPsw0AcVfEPw==
-X-Received: by 2002:a1c:e40b:: with SMTP id b11mr999746wmh.152.1571852549878;
-        Wed, 23 Oct 2019 10:42:29 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id w22sm7695035wmi.7.2019.10.23.10.42.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 10:42:29 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH] ARM: dts: bcm: HR2: add label to sp805 watchdog
-Date:   Wed, 23 Oct 2019 10:42:25 -0700
-Message-Id: <20191023174225.14337-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191022221956.10746-1-chris.packham@alliedtelesis.co.nz>
-References: <20191022221956.10746-1-chris.packham@alliedtelesis.co.nz>
+        Wed, 23 Oct 2019 14:39:51 -0400
+Received: from muru.com ([72.249.23.125]:39496 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729043AbfJWSjv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 14:39:51 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 6D38B80CF;
+        Wed, 23 Oct 2019 18:40:24 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH] ARM: dts: Configure omap3 rng
+Date:   Wed, 23 Oct 2019 11:39:42 -0700
+Message-Id: <20191023183942.12142-1-tony@atomide.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 23 Oct 2019 11:19:56 +1300, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
-> This allows boards the option of adding properties or disabling the
-> watchdog entirely.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
+Looks like omap3 RNG is similar to the omap2 rng, let's get it working
+by configring the dts node for it.
 
-Applied to devicetree/next, thanks!
---
-Florian
+We must also add rng_ick to core_l4_clkdm as noted by Adam Ford.
+
+And please note that the RNG is likely disabled on HS devices. At least
+n900 does not have it accessible, and instead omap3-rom-rng driver must
+be used. So let's tag RNG as disabled on n900 as noted by Pali Rohár
+<pali.rohar@gmail.com>.
+
+On am3517 at least the clocks need to be configured to get it working
+as noted by Adam Ford, so let's tag it disabled for now.
+
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Adam Ford <aford173@gmail.com>
+Cc: Pali Rohár <pali.rohar@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+
+Sorry for the delay on getting this posted, please test.
+
+---
+ arch/arm/boot/dts/am3517.dtsi                 |  6 +++++
+ arch/arm/boot/dts/omap3-n900.dts              |  5 ++++
+ arch/arm/boot/dts/omap3.dtsi                  | 25 +++++++++++++++++++
+ .../boot/dts/omap34xx-omap36xx-clocks.dtsi    |  2 +-
+ 4 files changed, 37 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/am3517.dtsi b/arch/arm/boot/dts/am3517.dtsi
+--- a/arch/arm/boot/dts/am3517.dtsi
++++ b/arch/arm/boot/dts/am3517.dtsi
+@@ -115,6 +115,12 @@
+ 	};
+ };
+ 
++/* Not currently working, probably needs at least different clocks */
++&rng_target {
++	status = "disabled";
++	/delete-property/ clocks;
++};
++
+ /* Table Table 5-79 of the TRM shows 480ab000 is reserved */
+ &usb_otg_hs {
+ 	status = "disabled";
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -1013,6 +1013,11 @@
+ 	};
+ };
+ 
++/* RNG not directly accessible on n900, se omap3-rom-rng instead */
++&rng_target {
++	status = "disabled";
++};
++
+ &usb_otg_hs {
+ 	interface-type = <0>;
+ 	usb-phy = <&usb2_phy>;
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -8,6 +8,7 @@
+  * kind, whether express or implied.
+  */
+ 
++#include <dt-bindings/bus/ti-sysc.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/pinctrl/omap.h>
+@@ -502,6 +503,30 @@
+ 			status = "disabled";
+ 		};
+ 
++		/* Likely needs to be tagged disabled on HS devices */
++		rng_target: target-module@480a0000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
++			reg = <0x480a003c 0x4>,
++			      <0x480a0040 0x4>,
++			      <0x480a0044 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>;
++			ti,syss-mask = <1>;
++			clocks = <&rng_ick>;
++			clock-names = "ick";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x480a0000 0x2000>;
++
++			rng: rng@0 {
++				compatible = "ti,omap2-rng";
++				reg = <0x0 0x2000>;
++				interrupts = <52>;
++			};
++		};
++
+ 		mcbsp2: mcbsp@49022000 {
+ 			compatible = "ti,omap3-mcbsp";
+ 			reg = <0x49022000 0xff>,
+diff --git a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi b/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
+--- a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
++++ b/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
+@@ -260,6 +260,6 @@
+ 			 <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
+ 			 <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>, <&icr_ick>,
+ 			 <&des2_ick>, <&mspro_ick>, <&mailboxes_ick>,
+-			 <&mspro_fck>;
++			 <&rng_ick>, <&mspro_fck>;
+ 	};
+ };
+-- 
+2.23.0
