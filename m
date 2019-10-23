@@ -2,172 +2,129 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAD6CA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F7ECA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B3F205C9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2892084B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GhGkXWfx"
+	dkim=pass (2048-bit key) header.d=antmicro-com.20150623.gappssmtp.com header.i=@antmicro-com.20150623.gappssmtp.com header.b="iWWJBSsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403945AbfJWJm5 (ORCPT
+        id S1729191AbfJWJqx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:42:57 -0400
-Received: from mail-eopbgr150048.outbound.protection.outlook.com ([40.107.15.48]:27259
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2403785AbfJWJm5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:42:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mTXE3jwTl9sWThKUvY3eM9AdBk/vXZireBVT5qIBP+/6fPAp0wAIojeI29nuQoURWzH/KP8TUzFYC/JPBU3CfyasoPYTSbFG/vI3h3du37vuYYh3H5CZyLinq08k/FEGlvRh3NAzQedkvlQ0pwv1nKBtWc3R/3gcLgxAbt/pmDDBH1gbORTQYuOTd6D0PWWZJgNanx4AR22KTn68mtMLTNB3f4TAUBhygfoX1/KXSASqshyt1ozZsYC7sXuV8ybs0XgEYqGBJ6Se7XwMkUSJC0p06sFgkRZap0N9HBgtwiPfl+hdm84ovjjsBe2A+KBHFuT46+OAuXOTxHUplkVN6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nd0122bT0bggbOWKO3dzgaiVb6kidz6dNtmzt+r/aSk=;
- b=j3TKgEtF4M3JXoVhhFl5FdvmAWFq/8alWffXmfym5W3ETml/M5ZZu6oI3nCdA7nGOR+NsghN5yUMOEyNjry1a+OwsEBz9nX9kD3t9G3sr68rll/HDB/MCqeZl5DsrES9h2CMwdKQO2QO9O0oU2M74pnVgsUbdbqCX9mJ55SHA5mUolrhFRbhnJoL2eLliwag7VAOd9OBNSIsW2WPcpBgVTuEkiMUTSByRNSVzEjogeJtT07AAs/CJHiwQsD7yshtC7647RYkLMUHCSD4vIesPWs7h9Mga1aIJypM8oob8Bt1yTGybOdJDSo/FTVqvSwigpNSGl/rMWRsQgesleZYpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nd0122bT0bggbOWKO3dzgaiVb6kidz6dNtmzt+r/aSk=;
- b=GhGkXWfxZCWgXzQ2uTk4npZMUybBQDqDvHu0LRbbGwJt1RyDZcprsmONFc54GSJcKzygjFl3kwg3obc9JzG7JlbRgA4RHCOKwZ9nY2ZkNdD+dfrPGhU1hFvHJZkBBb8KTSgRJ8TPFmq4MoeE2Q14U8JjbOWCHFtA6+sbDDo+lSQ=
-Received: from DB8PR04MB6826.eurprd04.prod.outlook.com (52.133.243.14) by
- DB8PR04MB5931.eurprd04.prod.outlook.com (20.179.11.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Wed, 23 Oct 2019 09:42:45 +0000
-Received: from DB8PR04MB6826.eurprd04.prod.outlook.com
- ([fe80::bcee:92dc:277f:6a78]) by DB8PR04MB6826.eurprd04.prod.outlook.com
- ([fe80::bcee:92dc:277f:6a78%7]) with mapi id 15.20.2387.021; Wed, 23 Oct 2019
- 09:42:45 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Wed, 23 Oct 2019 05:46:53 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44427 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390656AbfJWJqw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 05:46:52 -0400
+Received: by mail-lf1-f68.google.com with SMTP id g3so3287344lfb.11
+        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 02:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=NUrailuYahzDYxkjJS54qJtYYGOoPtD3tuebWIbgYWw=;
+        b=iWWJBSsJMWh1Sxb4ok0cc4yWTbK22wcrpajWflfoJ5mqYzLy07wUSgAxJlGypl8z/q
+         9MVuHNt+EQ/9e8qsWdk/bHxYVi5GitY8dOZ+wHlGHCMYnzRIF0smxhm2fjUXKVKBsfLO
+         22UibMFwZBSCiO+AWUXbaLYCQVMuAti7Asu/nZ3TJplyEIWg9ZRaciU0UOFhKDoYQKCl
+         OEjfHC/REyqAsqI/wO+CThHnIDKGTM4NZsEz0zm52Ay2m3kfAZjYE4hw4wY7mCYjQdsI
+         pvZRSqSUSbXbtECtL/0lrKKkT5nPJPDuPw8Z1oq02RO9+tQn2wmnNK6LqGSgb2xRTb1P
+         Ku4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=NUrailuYahzDYxkjJS54qJtYYGOoPtD3tuebWIbgYWw=;
+        b=tTwdW+qRqDJ3YAZASqYS+q4IQRlaozi1fwmx6zsvf/Mn4Phz2TUfX1Dct4B+gmW08s
+         wiKZHQ/Lxgd/aA4MJj8TaTsq9rfoNADSUhp8jcSODJ0R7Knn5Ezxc0ANzPpniGs/Iv7t
+         JUrEFkln8R7DVOhoAwG8VQhCjynLi+1TZKrvy28mlpmRM7MzaN3ZtKpxcZ2BiMVCNFuu
+         Sm1est1fHob0jZRQuUYsRo/8Q2vDWhaGQ/Hk5QkrgkmdzfnGMhuxASncReX89gzasdYL
+         gTXouSZdvYFZo3C/E7WLYXnrpZRIElODaNHgzaj1R10WTI05k4RNCgKXVN73pQ8ufhaJ
+         /pJA==
+X-Gm-Message-State: APjAAAWxqjA4mTLMDGNR3SRzgy6m3mQPqseOdmhrZQg7ZA5tT1BqbTi9
+        foy/u3Wzg7dqYv9fVZudFvZbZQ==
+X-Google-Smtp-Source: APXvYqyiMaknslJYi92ku9LKesfFa2KrWv5Ps1HmUYO6mVbOAVW1HiJIA3EQ9rCcz+fX/7UgngQNjg==
+X-Received: by 2002:ac2:4c15:: with SMTP id t21mr19713464lfq.7.1571824010612;
+        Wed, 23 Oct 2019 02:46:50 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id z6sm2124716lfa.10.2019.10.23.02.46.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 02:46:49 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 11:46:44 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Anson Huang <anson.huang@nxp.com>,
-        Biwen Li <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH v9 3/3] soc: fsl: add RCPM driver
-Thread-Topic: [PATCH v9 3/3] soc: fsl: add RCPM driver
-Thread-Index: AQHViXs93WsdxAf3IEa22DXFaDvA7Kdn8POAgAACqbA=
-Date:   Wed, 23 Oct 2019 09:42:45 +0000
-Message-ID: <DB8PR04MB682655D179242325ED6EC1FDF16B0@DB8PR04MB6826.eurprd04.prod.outlook.com>
-References: <20191023082423.12569-1-ran.wang_1@nxp.com>
- <20191023082423.12569-3-ran.wang_1@nxp.com>
- <CAJZ5v0i-gfRTzbDL5SBp_XfOYCkJPENpOjU+Pd3wi5aOjZd1HQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i-gfRTzbDL5SBp_XfOYCkJPENpOjU+Pd3wi5aOjZd1HQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ran.wang_1@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9a371491-ade7-4ea8-acc8-08d7579d5bdd
-x-ms-traffictypediagnostic: DB8PR04MB5931:|DB8PR04MB5931:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB5931CA44F4F29CF853322568F16B0@DB8PR04MB5931.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(39860400002)(366004)(199004)(189003)(476003)(81166006)(99286004)(53546011)(7696005)(102836004)(76176011)(186003)(54906003)(446003)(52536014)(33656002)(11346002)(486006)(5660300002)(86362001)(26005)(6506007)(66066001)(71200400001)(229853002)(71190400001)(2906002)(6116002)(3846002)(6246003)(316002)(6436002)(9686003)(55016002)(14444005)(66556008)(76116006)(66946007)(66476007)(64756008)(66446008)(25786009)(7736002)(6916009)(8676002)(478600001)(14454004)(8936002)(74316002)(305945005)(7416002)(4326008)(81156014)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5931;H:DB8PR04MB6826.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zNfNlbxH0s3WFB0MA6R7VBkktcj4nVNqvabprN3aU1iusnw16LVLay9rh3W0UZP7wr5aidG9MGC/rc9ZWwkqPwxkyA0wgnhR+8wmqUTNcnjti+OWbaC+SXQ4hcsM35wVt99seQXltpOFNcjLQu9/F+YMtQHAj4+bb/Yp4QHArpNDKGXoQczFuJd1Dcvg4tiMczO8MwYOjLOsl6e2cNisAtbTedt0ZQhN9UBinGwMezrKeyU7oIVtCKWrS8xhwLkB++9cE1jJWRu2iGQkIF9DxzwQ/AhLWzkPteiT5BWI85cVANG5OA/MyMYlerWxOKEyvqSGjUt80wQC4uA6QLB40KXUC70d8VcbpJcFtmuxMvWaoBSRw/vo4oxoRB110fDITMyyXmNXGt8IAMZIwiUK0i0pox5poCl+CVMNBdQuKGFR9KDVtjNkewM+VHi8GMBA
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] LiteUART serial driver
+Message-ID: <20191023114634.13657-0-mholenko@antmicro.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a371491-ade7-4ea8-acc8-08d7579d5bdd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 09:42:45.7586
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: z7cYpci37/bNTSi4HFSxUjcYB2R1EBszf9RBiZ0/AA54LsQvz/Z1KB+l5ni5noxQ8XwtML8htkjGzLi6tVEQEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5931
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgUmFmYWVsLA0KDQpPbiBXZWRuZXNkYXksIE9jdG9iZXIgMjMsIDIwMTkgMTc6MTIsIFJhZmFl
-bCBKLiBXeXNvY2tpIHdyb3RlOg0KPiANCj4gT24gV2VkLCBPY3QgMjMsIDIwMTkgYXQgMTA6MjQg
-QU0gUmFuIFdhbmcgPHJhbi53YW5nXzFAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBUaGUgTlhQ
-J3MgUW9ySVEgUHJvY2Vzc29ycyBiYXNlZCBvbiBBUk0gQ29yZSBoYXZlIFJDUE0gbW9kdWxlIChS
-dW4NCj4gPiBDb250cm9sIGFuZCBQb3dlciBNYW5hZ2VtZW50KSwgd2hpY2ggcGVyZm9ybXMgc3lz
-dGVtIGxldmVsIHRhc2tzDQo+ID4gYXNzb2NpYXRlZCB3aXRoIHBvd2VyIG1hbmFnZW1lbnQgc3Vj
-aCBhcyB3YWtldXAgc291cmNlIGNvbnRyb2wuDQo+ID4NCj4gPiBUaGlzIGRyaXZlciBkZXBlbmRz
-IG9uIFBNIHdha2V1cCBzb3VyY2UgZnJhbWV3b3JrIHdoaWNoIGhlbHAgdG8NCj4gPiBjb2xsZWN0
-IHdha2UgaW5mb3JtYXRpb24uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBSYW4gV2FuZyA8cmFu
-LndhbmdfMUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZSBpbiB2OToNCj4gPiAgICAgICAg
-IC0gQWRkIGtlcm5lbGRvYyBmb3IgcmNwbV9wbV9wcmVwYXJlKCkuDQo+ID4gICAgICAgICAtIFVz
-ZSBwcl9kZWJ1ZygpIHRvIHJlcGxhY2UgZGV2X2luZm8oKSwgdG8gcHJpbnQgbWVzc2FnZSB3aGVu
-IGRlY2lkZQ0KPiA+ICAgICAgICAgICBza2lwIGN1cnJlbnQgd2FrZXVwIG9iamVjdCwgdGhpcyBp
-cyBtYWlubHkgZm9yIGRlYnVnZ2luZyAoaW4gb3JkZXINCj4gPiAgICAgICAgICAgdG8gZGV0ZWN0
-IHBvdGVudGlhbCBpbXByb3BlciBpbXBsZW1lbnRhdGlvbiBvbiBkZXZpY2UgdHJlZSB3aGljaA0K
-PiA+ICAgICAgICAgICBtaWdodCBjYXVzZSB0aGlzIHNraXApLg0KPiA+ICAgICAgICAgLSBSZWZh
-Y3RvciBsb29waW5nIGltcGxlbWVudGF0aW9uIGluIHJjcG1fcG1fcHJlcGFyZSgpLCBhZGQgbW9y
-ZQ0KPiA+ICAgICAgICAgICBjb21tZW50cyB0byBoZWxwIGNsYXJpZnkuDQo+ID4NCj4gPiBDaGFu
-Z2UgaW4gdjg6DQo+ID4gICAgICAgICAtIEFkanVzdCByZWxhdGVkIEFQSSB1c2FnZSB0byBtZWV0
-IHdha2V1cC5jJ3MgdXBkYXRlIGluIHBhdGNoIDEvMy4NCj4gPiAgICAgICAgIC0gQWRkIHNhbml0
-eSBjaGVja2luZyBmb3IgdGhlIGNhc2Ugb2Ygd3MtPmRldiBvciB3cy0+ZGV2LT5wYXJlbnQNCj4g
-PiAgICAgICAgICAgaXMgbnVsbC4NCj4gPg0KPHNuaXA+DQo+ID4gKw0KPiA+ICsgICAgICAgICAg
-ICAgICAvKiAgV2FrZXVwIHNvdXJjZSBzaG91bGQgcmVmZXIgdG8gY3VycmVudCByY3BtIGRldmlj
-ZSAqLw0KPiA+ICsgICAgICAgICAgICAgICBpZiAocmV0IHx8IChucC0+cGhhbmRsZSAhPSB2YWx1
-ZVswXSkpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBwcl9kZWJ1ZygiJXMgZG9lc24n
-dCByZWZlciB0byB0aGlzIHJjcG1cbiIsDQo+ID4gKyB3cy0+bmFtZSk7DQo+IA0KPiBJJ20gc3Rp
-bGwgcXVpdGUgdW5zdXJlIHdoeSBpdCBpcyB1c2VmdWwgdG8gcHJpbnQgdGhpcyBtZXNzYWdlIGlu
-c3RlYWQgb2YgcHJpbnRpbmcgb25lDQo+IHdoZW4gdGhlIHdha2V1cCBzb3VyY2UgZG9lcyBtYXRj
-aCAodGhlcmUgbWF5IGJlIG1hbnkgd2FrZXVwIHNvdXJjZQ0KPiBvYmplY3RzIHlvdSBkb24ndCBj
-YXJlIGFib3V0IGluIHByaW5jaXBsZSksIGJ1dCB3aGF0ZXZlci4NCg0KT0ssIG15IHByZXZpb3Vz
-IGlkZWEgd2FzIHRoYXQgdXNlciBtaWdodCBsaWtlbHkgbWlzLXVuZGVyc3RhbmQgcmVsYXRlZCBk
-ZXNjcmlwdGlvbiBpbg0KYmluZGluZ3Mgd2hlbiBhZGRpbmcgbm9kZSBhbmQgcHJvcGVydHkgImZz
-bCxyY3BtLXdha2V1cCIuIEFkZCB0aGlzIHByaW50IG1pZ2h0DQpoZWxwIGhpbS9oZXIgdG8gZ2V0
-IGFsZXJ0ZWQgdGhhdCBSQ1BNIGRyaXZlciBkb2Vzbid0IHN1Y2Nlc3NmdWxseSBwYXJzaW5nIGlu
-Zm8gd2hpY2gNCnRoZXkgZGlkbid0IGV4cGVjdC4gQ3VycmVudGx5IG9uIExTMTA4OEFSREIgYm9h
-cmQsIEkgY2FuIG9ubHkgc2VlIG9uZSB3YWtldXAgc291cmNlDQp0aGUgUkNQTSBkcml2ZXIgZG9l
-c27igJl0IG5lZWQgdG8gY2FyZS4NCg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbnRp
-bnVlOw0KPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAv
-KiBQcm9wZXJ0eSAiI2ZzbCxyY3BtLXdha2V1cC1jZWxscyIgb2YgcmNwbSBub2RlIGRlZmluZXMg
-dGhlDQo+ID4gKyAgICAgICAgICAgICAgICAqIG51bWJlciBvZiBJUFBERVhQQ1IgcmVnaXN0ZXIg
-Y2VsbHMsIGFuZCAiZnNsLHJjcG0td2FrZXVwIg0KPiA+ICsgICAgICAgICAgICAgICAgKiBvZiB3
-YWtldXAgc291cmNlIElQIGNvbnRhaW5zIGFuIGludGVnZXIgYXJyYXk6IDxwaGFuZGxlIHRvDQo+
-ID4gKyAgICAgICAgICAgICAgICAqIFJDUE0gbm9kZSwgSVBQREVYUENSMCBzZXR0aW5nLCBJUFBE
-RVhQQ1IxIHNldHRpbmcsDQo+ID4gKyAgICAgICAgICAgICAgICAqIElQUERFWFBDUjIgc2V0dGlu
-ZywgZXRjPi4NCj4gPiArICAgICAgICAgICAgICAgICoNCj4gPiArICAgICAgICAgICAgICAgICog
-U28gd2Ugd2lsbCBnbyB0aG91Z2h0IHRoZW0gYW5kIGRvIHByb2dyYW1taW5nIGFjY29yZG5nbHku
-DQo+ID4gKyAgICAgICAgICAgICAgICAqLw0KPiA+ICsgICAgICAgICAgICAgICBmb3IgKGkgPSAw
-OyBpIDwgcmNwbS0+d2FrZXVwX2NlbGxzOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICB1MzIgdG1wID0gdmFsdWVbaSArIDFdOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IHZvaWQgX19pb21lbSAqYWRkcmVzcyA9IGJhc2UgKyBpICogNDsNCj4gPiArDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgaWYgKCF0bXApDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBjb250aW51ZTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgLyog
-V2UgY2FuIG9ubHkgT1IgcmVsYXRlZCBiaXRzICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgaWYgKHJjcG0tPmxpdHRsZV9lbmRpYW4pIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHRtcCB8PSBpb3JlYWQzMihhZGRyZXNzKTsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGlvd3JpdGUzMih0bXAsIGFkZHJlc3MpOw0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB0bXAgfD0gaW9yZWFkMzJiZShhZGRyZXNzKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGlvd3JpdGUzMmJlKHRtcCwgYWRkcmVzcyk7DQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgfQ0KPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gKyAgICAgICB9DQo+ID4gKw0K
-PiA+ICsgICAgICAgd2FrZXVwX3NvdXJjZXNfcmVhZF91bmxvY2soaWR4KTsNCj4gPiArDQo+ID4g
-KyAgICAgICByZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVj
-dCBkZXZfcG1fb3BzIHJjcG1fcG1fb3BzID0gew0KPiA+ICsgICAgICAgLnByZXBhcmUgPSAgcmNw
-bV9wbV9wcmVwYXJlLA0KPiA+ICt9Ow0KPiANCj4gRm9yIHRoZSBhYm92ZToNCj4gDQo+IFJldmll
-d2VkLWJ5OiBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+DQoN
-ClRoYW5rcyBmb3IgeW91ciB0aW1lLg0KDQpSZWdhcmRzLA0KUmFuDQo=
+This patchset introduces support for LiteUART
+- serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
+
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
+
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
+
+Changes in v2:
+- binding description rewritten to a yaml schema file
+- added litex.h header with common register access functions
+
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
+
+Mateusz Holenko (1):
+  litex: add common LiteX header
+
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   8 +
+ drivers/tty/serial/Kconfig                    |  30 ++
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 373 ++++++++++++++++++
+ include/linux/litex.h                         |  59 +++
+ include/uapi/linux/serial_core.h              |   3 +
+ 8 files changed, 514 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
+
+-- 
+2.23.0
+
