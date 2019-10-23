@@ -2,227 +2,305 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC4CCA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 11:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BF7CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 11:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8386920650
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 11:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ai2B7eM6"
+	by mail.kernel.org (Postfix) with ESMTP id 0F6D821920
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 11:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571829626;
+	bh=aRuWDdDz0ALYschCEyXmLCyrVzvYwcAu78247GK/ix8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=px2HDmceYmvij57sYvevw825FL33yk6WI6HI8xkdAh3PEbu/Lw+XUvvrCvzC4iQmG
+	 TgvOwtPah06k8/9M4awI8Wd9rDBPIK+m3bqYpqSy1CGnHqcXT1nfoLPlWLSAhoi5qp
+	 6z8Lovgj5zR1ZLHUnqCov+x50qIXFp9tt1K2kckY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404329AbfJWLBv (ORCPT
+        id S2404629AbfJWLUZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:01:51 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:60967 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404270AbfJWLBu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 07:01:50 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: dzE5Gzzpu15wWm9IL/0HgdTSH2B9PQyIRFcdtxNVhH+Lx8klXJuZr9+w/UtJe3k9deJqcpA/rS
- 1MWAnR/GYTj2NLywghWe9FdsYMdkyffx6LGHGhIV4yPKc0ADOyCF+TMTQaYbIcjscxm67nm3oV
- 5e6ynpsgK4QgpdA5qjJgW4S10idNsJ3xShwEAaa4tiNflah/ZbIqZSlbPB90sWONO+EF49M0RR
- kxCkq8MiWXST3Ob6enm+9KUV4qeLA1iA+q3jrc+2BgxUaUWySI8uX/+TtX+1Bs18FIUqLC9Wlv
- A0Q=
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="52655432"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Oct 2019 04:01:49 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 23 Oct 2019 04:01:43 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 23 Oct 2019 04:01:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oKUVnxK+H+UoWKtC5dcBFwwchl2/suQqY/bu/f0prRYlu3rKH3FWX6QO/QoF8qlBFK+8mbvmf0CbH/F6Xi2FsZFAWOcJ+JdTCzC9k/7Ub0mYKWUXgXJ/OfBVBzUcyjMgJsTmCLrczyFWtj1YHVC5625UlsQBvoOV9y6ThIaxmj9KowfnXMf/hScHInXWjp5gj31WmSyzjJhpCZ6ae8KIMRqT/88dEguihaT1j4POXOVj59VKp08/uAZTkfHek5plAiv2dg0aGgwzhzvADFAYRrhu+hSTpYS50Iah7HMLHURzM4FcXf37UcUJBwCnmg6BYVKToUzaF/N+vBFOrVQ3bQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4jIP3V9NVr6XW+xJT6tnaK8Mz96lqbbC0IewN2mV2U8=;
- b=iko7BLAWwHlq3fjGsAUWgXNzIYnReCQaJBBVKndg8PGLuEdJEpArV6OVrbweD7kMk0NOkZxd5OVzFd0imFTlf1zbtrah9kgfUIPf6LlEc6V7tMrOy7mC5fbIz/x0zOfFnNFywNJHBImlrhZS7hW9tzlmJP1bfQvh9LcFEgRBuk3IzhMaNCbVBXxnFgJ5qAa6t42DBCbuK6m8QseX1bmQ74VQPDvfP9aVumLiMX4QunkIAURNqOYXy/sqPAZNyw8W+UQMGhl3VmWKwjA9kKa4KyReNfOz0GEWOUe2R4hMDDUlJV2lPoijowcIAcguIqNK4WK8mqos6iS+P9d35QlZjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4jIP3V9NVr6XW+xJT6tnaK8Mz96lqbbC0IewN2mV2U8=;
- b=ai2B7eM6lU0gL9y7nXLK5mMxP5KDiS2ptD0fcG4nrlrO7oCRA3VAjngYmYhoSd0qGw5ronqodx5LeqicuqsvOIPo3zvuV4t7JH3bnDyO0E/ZX+8Hq0UIk4RnFE2JoTZSZzMIAUgujyShOO98em3ZVsTR8fVaLwpG66rgeyD9gXo=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB2057.namprd11.prod.outlook.com (10.168.104.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Wed, 23 Oct 2019 11:01:40 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::b125:76c1:c9b1:34f4]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::b125:76c1:c9b1:34f4%10]) with mapi id 15.20.2367.022; Wed, 23 Oct
- 2019 11:01:40 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <peda@axentia.se>, <wsa@the-dreams.de>
-CC:     <mark.rutland@arm.com>, <Ludovic.Desroches@microchip.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <alexandre.belloni@bootlin.com>,
-        <robh+dt@kernel.org>, <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH v5 0/9] i2c: add support for filters
-Thread-Topic: [PATCH v5 0/9] i2c: add support for filters
-Thread-Index: AQHVaHpLr7113TR4Hk2itVe9BFeajadO9gMAgBZqJ4CAABXHgIAC2ggA
-Date:   Wed, 23 Oct 2019 11:01:40 +0000
-Message-ID: <c1f5c3f0-860e-e86a-5658-49e2100225a9@microchip.com>
-References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
- <c17182ac-67dd-d11f-5daf-066bf446b969@microchip.com>
- <20191021140515.GC26782@ninjato>
- <f5bd0c1f-9a72-6661-146b-ef5de77e31ff@axentia.se>
-In-Reply-To: <f5bd0c1f-9a72-6661-146b-ef5de77e31ff@axentia.se>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR0202CA0007.eurprd02.prod.outlook.com
- (2603:10a6:208:1::20) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20191023135604197
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bc5685d9-7589-40cb-91ed-08d757a86187
-x-ms-traffictypediagnostic: DM5PR11MB2057:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB20577C55704E4FFF71047F1BE86B0@DM5PR11MB2057.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(376002)(346002)(39860400002)(199004)(189003)(36756003)(7736002)(305945005)(6512007)(6116002)(3846002)(2906002)(6246003)(107886003)(25786009)(478600001)(4001150100001)(4326008)(14454004)(256004)(14444005)(102836004)(8936002)(81156014)(8676002)(81166006)(476003)(99286004)(486006)(31686004)(446003)(11346002)(66946007)(66446008)(66476007)(66556008)(64756008)(66066001)(110136005)(6436002)(54906003)(229853002)(71190400001)(5660300002)(6486002)(71200400001)(52116002)(26005)(386003)(6506007)(53546011)(2616005)(316002)(76176011)(86362001)(186003)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB2057;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yEsmK0T0Ca7WgifFzWgeRjh2buCI1i1Ll/7PC/cIAThR9PNOm2MJgJ9m58ViYqKa07QTf7LlBXTCe0qKH1ZCs2SOq4JqYB/wil2jhPVmf6k1qPpJKrUIQdBQUFP8EZXm91VTIfDVSvQj8ZBYg40JNQAYom3QL33YPWpGGSgbQF1w0oJYPCBWEButZPHWM3X5RVPhiHfwpgrpVF6okzo0l0yKK23Uvh1SaK+VNqiugTfZOuROfkAJeyp15o63uMg9VMPH9jw7Z5rjyp3zQtjnwVDHmqrf1v1A74hvn0PM4gjCT2cvs4j/s3xcTospWA8Vc5VoVgnfgOxNp+vLC2p8C+JsJyIlROZtdHg33s/OBlf6UzHdvh8Qfcn1X/dXOQZWNMZwioKKPp5bBji1dNZlgLuf8lBYFJFPqXGnSiqWS0tOZNeWcEKHX8Qkwr1OFt3j
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <B3A0FB639092C0468D6D620D672A992D@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 23 Oct 2019 07:20:25 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35289 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390386AbfJWLUZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 07:20:25 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k2so4761967edx.2;
+        Wed, 23 Oct 2019 04:20:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U1Iv9oLwBhuv6+4c57usa5tS2bPjjw9Q5y32EOCdMPE=;
+        b=oX+Xkpd3D2iXdVNaoAfwOSfwK+m+/utG5ARYn4Tqa6FrN3eT+T9byRyHtWLxDKi/Ao
+         l3k03Vu37vlyBJShh5oq3RKUdwq3m4/+Gp/VhZsjpSNBG/6hZ383xyYoV0xFRcxJMIa8
+         2rKTJkYY/wTj0bL+B8ukhKjNJkSHL6xCr7Rhaq4VdXUmkP5/qKOvIf1zz7Fy9NrcYGDg
+         z78y/V00exYQNOJFLmuJ9wNMeBe75gSnccQT/PR6MiakNld+Er3hL1bdJeI8ylNIPVAw
+         8o5I6D4w8SVjOkkZhJ3Df4koTLo0nO108KN/Qnc+qqssAEl2Qv9C4OqOX8V/EBHKuX0G
+         DWYQ==
+X-Gm-Message-State: APjAAAWiiNSS9y/EAtu/+j7Ueayg56pnh7zIjmFvRwJuQ33ovv1qEUTw
+        lTxF+G3rGWdyKeULpA/hBgo=
+X-Google-Smtp-Source: APXvYqy24GIYro5b1SoxVfr90EPpn8DCMCQe6kqjHK5M83joyPKQX8ukV30FpXmPc6MEabt8o9/tvw==
+X-Received: by 2002:a17:906:e296:: with SMTP id gg22mr14621989ejb.211.1571829622111;
+        Wed, 23 Oct 2019 04:20:22 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id j5sm873792edj.62.2019.10.23.04.20.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 04:20:21 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 13:20:19 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-pm@vger.kernel.org, sboyd@kernel.org, vireshk@kernel.org,
+        b.zolnierkie@samsung.com, roger.lu@mediatek.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        m.szyprowski@samsung.com
+Subject: Re: [PATCH v5 3/4] soc: samsung: Add Exynos Adaptive Supply Voltage
+ driver
+Message-ID: <20191023112019.GA10883@pi3>
+References: <20191016145756.16004-1-s.nawrocki@samsung.com>
+ <CGME20191016145813eucas1p1623db169f1ee93f88cb2c75090804747@eucas1p1.samsung.com>
+ <20191016145756.16004-4-s.nawrocki@samsung.com>
+ <20191022190419.GB8305@kozik-lap>
+ <ccd20b0e-9c4c-93cd-2e7e-40aef1bb336c@samsung.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc5685d9-7589-40cb-91ed-08d757a86187
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 11:01:40.1770
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6YSZaRHedoGKGnA7Mpr0qg6fQzGDESad2f/eSkoCDlsOU4AH2aJ51Lh8KAPuzbVnhLCehgXW4j1ZkmnaGUbApac8AuDVyGcanbil9uzB2pA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB2057
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ccd20b0e-9c4c-93cd-2e7e-40aef1bb336c@samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Oct 23, 2019 at 12:48:34PM +0200, Sylwester Nawrocki wrote:
+> Hi Krzysztof,
+> 
+> On 10/22/19 21:04, Krzysztof Kozlowski wrote:
+>  
+> > I wanted to apply this patch but spotted some unusual printk... 
+> > and then started looking for more...
+> > 
+> > Sparse complains:
+> > ../drivers/soc/samsung/exynos5422-asv.c:457:5: warning: symbol 
+> > 'exynos5422_asv_init' was not declared. Should it be static?
+>  
+> #include "exynos5422-asv.h" should be added to 
+> drivers/soc/samsung/exynos5422-asv.c.
+> 
+> >>  drivers/soc/samsung/Kconfig          |  10 +
+> >>  drivers/soc/samsung/Makefile         |   3 +
+> >>  drivers/soc/samsung/exynos-asv.c     | 179 ++++++++++
+> >>  drivers/soc/samsung/exynos-asv.h     |  82 +++++
+> >>  drivers/soc/samsung/exynos5422-asv.c | 509 +++++++++++++++++++++++++++
+> >>  drivers/soc/samsung/exynos5422-asv.h |  25 ++
+> >>  6 files changed, 808 insertions(+)
+> >>  create mode 100644 drivers/soc/samsung/exynos-asv.c
+> >>  create mode 100644 drivers/soc/samsung/exynos-asv.h
+> >>  create mode 100644 drivers/soc/samsung/exynos5422-asv.c
+> >>  create mode 100644 drivers/soc/samsung/exynos5422-asv.h
+> >>
+> 
+> >> +++ b/drivers/soc/samsung/exynos-asv.c
+> 
+> >> +#include <linux/cpu.h>
+> >> +#include <linux/delay.h>
+> > 
+> > Do you use this header?
+> 
+> It can be removed now, after conversion to dev_pm_opp_adjust_voltage().
+> 
+> >> +static int exynos_asv_probe(struct platform_device *pdev)
+> >> +{
+> >> +	int (*probe_func)(struct exynos_asv *asv);
+> >> +	struct exynos_asv *asv;
+> >> +	struct device *cpu_dev;
+> >> +	u32 product_id = 0;
+> >> +	int ret, i;
+> >> +
+> >> +	cpu_dev = get_cpu_device(0);
+> >> +	ret = dev_pm_opp_get_opp_count(cpu_dev);
+> >> +	if (ret < 0)
+> >> +		return -EPROBE_DEFER;
+> >> +
+> >> +	asv = devm_kzalloc(&pdev->dev, sizeof(*asv), GFP_KERNEL);
+> >> +	if (!asv)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	asv->chipid_regmap = syscon_node_to_regmap(pdev->dev.of_node);
+> > 
+> > Since this binds to the same node as chipid, why do you need syscon for
+> > it? Why regular IO access does not work? Eventually, if this has to be
+> > regmap because of locking (does it?), then maybe simply
+> > device_node_to_regmap()?
+> 
+> We just need regmap available to any of the two drivers whichever needs it
+> first. device_node_to_regmap() sounds like a good idea. Then we could drop
+> "syscon" compatible from the binding.
 
+OK, let's keep the regmap for safe access to the same region by multiple
+drivers.
 
-On 21.10.2019 18:23, Peter Rosin wrote:
+> 
+> >> +	if (IS_ERR(asv->chipid_regmap)) {
+> >> +		dev_err(&pdev->dev, "Could not find syscon regmap\n");
+> >> +		return PTR_ERR(asv->chipid_regmap);
+> >> +	}
+> >> +
+> >> +	regmap_read(asv->chipid_regmap, EXYNOS_CHIPID_REG_PRO_ID, &product_id);
+> >> +
+> >> +	switch (product_id & EXYNOS_MASK) {
+> >> +	case 0xE5422000:
+> >> +		probe_func = exynos5422_asv_init;
+> >> +		break;
+> >> +	default:
+> >> +		dev_err(&pdev->dev, "Unsupported product ID: %#x", product_id);
+> > 
+> > Is this going to scream for every Exynos matching the 4210-chipid?
+> 
+> Yes, it should really be dev_info() or removed entirely.
 
->=20
-> On 2019-10-21 16:05, Wolfram Sang wrote:
->> On Mon, Oct 07, 2019 at 07:53:21AM +0000, Eugen.Hristev@microchip.com wr=
-ote:
->>>
->>>
->>> On 11.09.2019 11:24, Eugen Hristev - M18282 wrote:
->>>> From: Eugen Hristev <eugen.hristev@microchip.com>
->>>>
->>>> Hello,
->>>>
->>>> This series adds support for analog and digital filters for i2c contro=
-llers
->>>>
->>>> This series is based on the series:
->>>> [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
->>>> and later
->>>> [PATCH v4 0/9] i2c: add support for filters
->>>> and enhanced to add the bindings for all controllers plus an extra bin=
-dings
->>>> for the width of the spikes in nanoseconds (digital filters) and cut-o=
-ff
->>>> frequency (analog filters)
->>>>
->>>> First, bindings are created for
->>>> 'i2c-analog-filter'
->>>> 'i2c-digital-filter'
->>>> 'i2c-digital-filter-width-ns'
->>>> 'i2c-analog-filter-cutoff-frequency'
->>>>
->>>> The support is added in the i2c core to retrieve filter width/cutoff f=
-requency
->>>> and add it to the timings structure.
->>>> Next, the at91 driver is enhanced for supporting digital filter, advan=
-ced
->>>> digital filter (with selectable spike width) and the analog filter.
->>>>
->>>> Finally the device tree for two boards are modified to make use of the
->>>> new properties.
->>>>
->>>> This series is the result of the comments on the ML in the direction
->>>> requested: to make the bindings globally available for i2c drivers.
->>>>
->>>> Changes in v5:
->>>> - renamed i2c-filter-width-ns to i2c-digital-filter-width-ns as this
->>>> is applicable only to digital filter
->>>> - created new binding i2c-digital-filter-width-ns for analog filters.
->>>
->>> Hello Wolfram and Peter,
->>>
->>> Are you happy with the changes in this version? I haven't heard from yo=
-u
->>> since this latest update.
->>> I am interested to know if anymore changes are required or maybe we can
->>> move further with this support.
->>
->> So, I had a look now and I am happy. I will give Peter one more day to
->> comment, otherwise I'll apply it tomorrow.
->=20
-> I had another read-through and only found one nit which is in a separate
-> message. You can add
->=20
-> Reviewed-by: Peter Rosin <peda@axentia.se>
->=20
-> for the whole series.
+Remove it entirely please or leave it to dev_dbg (but even then add some
+calming message like "Unsupported ...., skipping ASV"). Driver binds on
+many devices and lack of ASV is kind of regular (till now there was no
+ASV at all).
 
-Hello Peter and Wolfram,
+> 
+> >> +		return -ENODEV;
+> >> +	}
+> 
+> 
+> >> +++ b/drivers/soc/samsung/exynos-asv.h
+> 
+> >> +enum {
+> >> +	EXYNOS_ASV_SUBSYS_ID_ARM,
+> >> +	EXYNOS_ASV_SUBSYS_ID_EGL = EXYNOS_ASV_SUBSYS_ID_ARM,
+> >> +	EXYNOS_ASV_SUBSYS_ID_KFC,
+> >> +	EXYNOS_ASV_SUBSYS_ID_INT,
+> >> +	EXYNOS_ASV_SUBSYS_ID_MIF,
+> >> +	EXYNOS_ASV_SUBSYS_ID_G3D,
+> >> +	EXYNOS_ASV_SUBSYS_ID_CAM,
+> >> +	EXYNOS_ASV_SUBSYS_ID_MAX
+> >> +};
+> > 
+> > I cannot find usage of it in generic part of ASV driver. What's the
+> > purpose? Isn't it specific to Exynos5422?
+> 
+> It was meant as generic enumeration of available subsystems, it's not
+> Exynos5422 specific. It could be moved to the exynos5422 part of the 
+> driver (limited to EXYNOS_ASV_SUBSYS_ID_ARM, EXYNOS_ASV_SUBSYS_ID_KFC)
+> until support for of ther subsystems than CPU clusters is added.
+> The CPUs are now matched by compatible.
 
-Thanks for reviewing.
-Send another version of the patch with the nit ?
-Or how would you like to proceed ?
+Then let's move it to exynos5422 part, and later make it generic if
+needed.
 
-Thanks,
-Eugen
+> 
+> >> +struct regmap;
+> >> +
+> >> +/* HPM, IDS values to select target group */
+> 
+> >> +struct exynos_asv_subsys {
+> >> +	struct exynos_asv *asv;
+> >> +	const char *cpu_dt_compat;
+> >> +	int id;
+> >> +	struct exynos_asv_table table;
+> >> +
+> >> +	unsigned int base_volt;
+> >> +	unsigned int offset_volt_h;
+> >> +	unsigned int offset_volt_l;
+> >> +};
+> >> +
+> >> +struct exynos_asv {
+> >> +	struct device *dev;
+> >> +	struct regmap *chipid_regmap;
+> >> +	struct exynos_asv_subsys subsys[2];
+> >> +
+> >> +	int (*opp_get_voltage)(struct exynos_asv_subsys *subs, int level,
+> >> +			       unsigned int voltage);
+> >> +	unsigned int group;
+> >> +	unsigned int table;
+> >> +
+> >> +	/* True if SG fields from PKG_ID register should be used */
+> >> +	bool use_sg;
+> >> +	/* ASV bin read from DT */
+> >> +	int of_bin;
+> >> +};
+> >> +
+> >> +static inline u32 __asv_get_table_entry(struct exynos_asv_table *table,
+> > 
+> > 'table' looks here like pointer to const.
+> 
+> Yes, const could be added here.
+> 
+> >> +					unsigned int row, unsigned int col)
+> >> +{
+> >> +	return table->buf[row * (table->num_cols) + col];
+> >> +}
+> >> +
+> >> +static inline u32 exynos_asv_opp_get_voltage(struct exynos_asv_subsys *subsys,
+> >> +					unsigned int level, unsigned int group)
+> >> +{
+> > 
+> > The same, for subsys.
+> 
+> Agreed.
+>  
+> >> +	return __asv_get_table_entry(&subsys->table, level, group + 1);
+> >> +}
+> 
+> >> +++ b/drivers/soc/samsung/exynos5422-asv.c
+> 
+> >> +#include <linux/bitrev.h>
+> >> +#include <linux/device.h>
+> > 
+> > Is it used?
+> > 
+> >> +#include <linux/errno.h>
+> >> +#include <linux/of.h>
+> > 
+> > The same?
+> 
+> Some might be not used now, I will check it again.
+> 
+> >> +#include <linux/regmap.h>
+> >> +#include <linux/soc/samsung/exynos-chipid.h>
+> >> +#include <linux/slab.h>
+> >> +
+> >> +#include "exynos-asv.h"
+> 
+> 
+> >> +static int exynos5422_asv_opp_get_voltage(struct exynos_asv_subsys *subsys,
+> >> +				int level, unsigned int volt)
+> > 
+> > subsys is not modified.
+>  
+> 
+> >> +static unsigned int exynos5422_asv_parse_table(struct exynos_asv *asv,
+> >> +				      unsigned int pkg_id)
+> >> +{
+> > 
+> > The same, for asv. Looks BTW unused...
+> 
+> Indeed the asv argument should be dropped now.
+> 
+> >> +	return (pkg_id >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
+> >> +}
+> 
+> >> +int exynos5422_asv_init(struct exynos_asv *asv)
+> >> +{
+> >> +	struct exynos_asv_subsys *subsys;
+> >> +	unsigned int table_index;
+> >> +	unsigned int pkg_id;
+> >> +	bool bin2;
+> >> +
+> > 
+> > How about checking if asv != null? It's a header exposed function.
+> 
+> Do we really need it? The caller will ensure that asv is not null.
 
->=20
-> Cheers,
-> Peter
->=20
->> Thanks for your patience and keeping at it!
->>
->=20
->=20
->=20
+Indeed, it's not needed. Skip my comment.
+
+Best regards,
+Krzysztof
