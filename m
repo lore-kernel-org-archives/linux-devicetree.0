@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE013CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9638ACA9EBF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A5421928
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765292086D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404032AbfJWPpg (ORCPT
+        id S2406907AbfJWPph (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:45:36 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37738 "EHLO
+        Wed, 23 Oct 2019 11:45:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37856 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436473AbfJWPpg (ORCPT
+        with ESMTP id S2403986AbfJWPpg (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 11:45:36 -0400
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3C5CF28F984;
-        Wed, 23 Oct 2019 16:45:34 +0100 (BST)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5A6C528F98C;
+        Wed, 23 Oct 2019 16:45:35 +0100 (BST)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -49,9 +49,9 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org,
         Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH v3 20/21] dt-bindings: display: panel: Add the LTA089AC29000 variant
-Date:   Wed, 23 Oct 2019 17:45:11 +0200
-Message-Id: <20191023154512.9762-21-boris.brezillon@collabora.com>
+Subject: [PATCH v3 21/21] ARM: dts: imx: imx51-zii-rdu1: Fix the display pipeline definition
+Date:   Wed, 23 Oct 2019 17:45:12 +0200
+Message-Id: <20191023154512.9762-22-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191023154512.9762-1-boris.brezillon@collabora.com>
 References: <20191023154512.9762-1-boris.brezillon@collabora.com>
@@ -62,30 +62,64 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The LTA089AC29000 and LT089AC29000 are not exactly the same. Let's add
-a new compatible for the LTA variant.
+The current definition does not represent the exact display pipeline we
+have on the board: the LVDS panel is actually connected through a
+parallel -> LVDS bridge. Let's fix that so the driver can select the
+proper bus format on the CRTC end.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
- .../bindings/display/panel/toshiba,lt089ac29000.txt          | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Changes in v3:
+* None
 
-diff --git a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-index 89826116628c..26ebfa098966 100644
---- a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-+++ b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-@@ -1,7 +1,10 @@
- Toshiba 8.9" WXGA (1280x768) TFT LCD panel
+Changes in v2:
+* None
+---
+ arch/arm/boot/dts/imx51-zii-rdu1.dts | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index 3596060f52e7..3fb84ea7f993 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -95,6 +95,28 @@
+ 			reg = <1>;
  
- Required properties:
--- compatible: should be "toshiba,lt089ac29000"
-+- compatible: should be one of the following
-+	      "toshiba,lt089ac29000"
-+	      "toshiba,lta089ac29000"
+ 			display_out: endpoint {
++				remote-endpoint = <&lvds_encoder_in>;
++			};
++		};
++	};
 +
- - power-supply: as specified in the base binding
++	lvds-encoder {
++		compatible = "lvds-encoder";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			bus-width = <24>;
++			lvds_encoder_in: endpoint {
++				remote-endpoint = <&display_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			data-mapping = "jeida-24";
++			lvds_encoder_out: endpoint {
+ 				remote-endpoint = <&panel_in>;
+ 			};
+ 		};
+@@ -110,7 +132,7 @@
  
- This binding is compatible with the simple-panel binding, which is specified
+ 		port {
+ 			panel_in: endpoint {
+-				remote-endpoint = <&display_out>;
++				remote-endpoint = <&lvds_encoder_out>;
+ 			};
+ 		};
+ 	};
 -- 
 2.21.0
 
