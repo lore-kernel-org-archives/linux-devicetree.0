@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD71DCA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53621CA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935A120640
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2699320640
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l1JQE5C3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tzn2NI+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405435AbfJWM6g (ORCPT
+        id S2405410AbfJWM6e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:58:36 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59294 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405427AbfJWM6f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:58:35 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NCwWd7048082;
-        Wed, 23 Oct 2019 07:58:32 -0500
+        Wed, 23 Oct 2019 08:58:34 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50288 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405421AbfJWM6e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:58:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NCwKxH040803;
+        Wed, 23 Oct 2019 07:58:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571835512;
-        bh=0wNKaASInt1k8YuOc3I1egQn9FpeL+eFcyUOwrqISs4=;
+        s=ti-com-17Q1; t=1571835500;
+        bh=FYnyDkp8O13hgdHJFePiQ3GXV91GcizfC8VXOBovgOI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=l1JQE5C3aWW7yVYhShj9uouFzz3QI0VDPiY6VYGUB57V5WOYTxX0jGVo02szOJcI9
-         95HaIJh5MtOHg7Q3NNJojoyqgUDT/AGaBJ5UNYXXOlXRn/u6XO07smeZQKNare4Su7
-         C7UIGcuR+0FSf7swN7CiPQL/8FPrn6y+XDsMugm8=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9NCwWOA070367
+        b=Tzn2NI+ig2NSGbsj3yXw+3L1hMkMnusfWQBJT0WZpwD87D3R/NEGNNz7F2H2RT4oA
+         d6lhETb4U2zhFg45SDmVke4vHRDztsV0uf+MRL+2Mx/q4EuWinqsq/X65JgkGlL3CX
+         C7ZmneF2LfdyjajsWwm/NHbv1oSwdQ2G5B4cXavs=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9NCwKmW100596
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 23 Oct 2019 07:58:32 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 23 Oct 2019 07:58:20 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
- Oct 2019 07:58:22 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 07:58:20 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 23 Oct 2019 07:58:22 -0500
+ Frontend Transport; Wed, 23 Oct 2019 07:58:10 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCw5oE061147;
-        Wed, 23 Oct 2019 07:58:30 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCw5o9061147;
+        Wed, 23 Oct 2019 07:58:18 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
 CC:     Anil Varughese <aniljoy@cadence.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v2 10/14] phy: cadence: Sierra: Change MAX_LANES of Sierra to 16
-Date:   Wed, 23 Oct 2019 18:27:31 +0530
-Message-ID: <20191023125735.4713-11-kishon@ti.com>
+Subject: [PATCH v2 05/14] phy: cadence: Sierra: Make cdns_sierra_phy_init() as phy_ops
+Date:   Wed, 23 Oct 2019 18:27:26 +0530
+Message-ID: <20191023125735.4713-6-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191023125735.4713-1-kishon@ti.com>
 References: <20191023125735.4713-1-kishon@ti.com>
@@ -67,76 +67,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sierra SERDES IP supports upto 16 lanes (though not all of it
-will be enabled in a platform). Allow Sierra driver to support a
-maximum of upto 16 lanes.
+Instead of invoking cdns_sierra_phy_init() from probe, add it in
+phy_ops so that it's initialized when the PHY consumer invokes
+phy_init()
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/phy/cadence/phy-cadence-sierra.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/phy/cadence/phy-cadence-sierra.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index 82f7617b2dac..dd54a0ab89b7 100644
+index 89a3b732c311..5c617248841f 100644
 --- a/drivers/phy/cadence/phy-cadence-sierra.c
 +++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -139,7 +139,7 @@
- #define SIERRA_PHY_PLL_CFG				0xe
- 
- #define SIERRA_MACRO_ID					0x00007364
--#define SIERRA_MAX_LANES				4
-+#define SIERRA_MAX_LANES				16
- #define PLL_LOCK_TIME					100000
- 
- static const struct reg_field macro_id_type =
-@@ -197,6 +197,7 @@ struct cdns_sierra_phy {
- 	struct regmap_field *pllctrl_lock[SIERRA_MAX_LANES];
- 	struct clk *clk;
- 	int nsubnodes;
-+	u32 num_lanes;
- 	bool autoconf;
+@@ -174,7 +174,7 @@ static struct regmap_config cdns_sierra_phy_config_ctrl_config = {
+ 	.reg_read = cdns_regmap_read,
  };
  
-@@ -233,6 +234,18 @@ static struct regmap_config cdns_sierra_lane_cdb_config[] = {
- 	SIERRA_LANE_CDB_REGMAP_CONF("1"),
- 	SIERRA_LANE_CDB_REGMAP_CONF("2"),
- 	SIERRA_LANE_CDB_REGMAP_CONF("3"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("4"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("5"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("6"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("7"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("8"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("9"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("10"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("11"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("12"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("13"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("14"),
-+	SIERRA_LANE_CDB_REGMAP_CONF("15"),
- };
+-static void cdns_sierra_phy_init(struct phy *gphy)
++static int cdns_sierra_phy_init(struct phy *gphy)
+ {
+ 	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
+ 	struct cdns_sierra_phy *phy = dev_get_drvdata(gphy->dev.parent);
+@@ -183,6 +183,10 @@ static void cdns_sierra_phy_init(struct phy *gphy)
+ 	struct cdns_reg_pairs *vals;
+ 	u32 num_regs;
  
- static struct regmap_config cdns_sierra_common_cdb_config = {
-@@ -546,6 +559,8 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
- 			}
- 		}
- 
-+		sp->num_lanes += sp->phys[node].num_lanes;
++	/* Initialise the PHY registers, unless auto configured */
++	if (phy->autoconf)
++		return 0;
 +
- 		gphy = devm_phy_create(dev, child, &ops);
+ 	if (ins->phy_type == PHY_TYPE_PCIE) {
+ 		num_regs = phy->init_data->pcie_regs;
+ 		vals = phy->init_data->pcie_vals;
+@@ -190,7 +194,7 @@ static void cdns_sierra_phy_init(struct phy *gphy)
+ 		num_regs = phy->init_data->usb_regs;
+ 		vals = phy->init_data->usb_vals;
+ 	} else {
+-		return;
++		return -EINVAL;
+ 	}
+ 	for (i = 0; i < ins->num_lanes; i++) {
+ 		for (j = 0; j < num_regs ; j++) {
+@@ -198,6 +202,8 @@ static void cdns_sierra_phy_init(struct phy *gphy)
+ 			regmap_write(regmap, vals[j].off, vals[j].val);
+ 		}
+ 	}
++
++	return 0;
+ }
  
- 		if (IS_ERR(gphy)) {
-@@ -559,6 +574,11 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
+ static int cdns_sierra_phy_on(struct phy *gphy)
+@@ -216,6 +222,7 @@ static int cdns_sierra_phy_off(struct phy *gphy)
+ }
+ 
+ static const struct phy_ops ops = {
++	.init		= cdns_sierra_phy_init,
+ 	.power_on	= cdns_sierra_phy_on,
+ 	.power_off	= cdns_sierra_phy_off,
+ 	.owner		= THIS_MODULE,
+@@ -436,10 +443,6 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
+ 		sp->phys[node].phy = gphy;
+ 		phy_set_drvdata(gphy, &sp->phys[node]);
+ 
+-		/* Initialise the PHY registers, unless auto configured */
+-		if (!sp->autoconf)
+-			cdns_sierra_phy_init(gphy);
+-
+ 		node++;
  	}
  	sp->nsubnodes = node;
- 
-+	if (sp->num_lanes > SIERRA_MAX_LANES) {
-+		dev_err(dev, "Invalid lane configuration\n");
-+		goto put_child2;
-+	}
-+
- 	/* If more than one subnode, configure the PHY as multilink */
- 	if (!sp->autoconf && sp->nsubnodes > 1)
- 		regmap_field_write(sp->phy_pll_cfg_1, 0x1);
 -- 
 2.17.1
 
