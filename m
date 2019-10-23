@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3244CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE013CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8410F2086D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A5421928
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436470AbfJWPpf (ORCPT
+        id S2404032AbfJWPpg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:45:35 -0400
+        Wed, 23 Oct 2019 11:45:36 -0400
 Received: from bhuna.collabora.co.uk ([46.235.227.227]:37738 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436486AbfJWPpe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 11:45:34 -0400
+        with ESMTP id S2436473AbfJWPpg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 11:45:36 -0400
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A6C5928F907;
-        Wed, 23 Oct 2019 16:45:32 +0100 (BST)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3C5CF28F984;
+        Wed, 23 Oct 2019 16:45:34 +0100 (BST)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -49,9 +49,9 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org,
         Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH v3 18/21] drm/bridge: panel: Propage bus format/flags
-Date:   Wed, 23 Oct 2019 17:45:09 +0200
-Message-Id: <20191023154512.9762-19-boris.brezillon@collabora.com>
+Subject: [PATCH v3 20/21] dt-bindings: display: panel: Add the LTA089AC29000 variant
+Date:   Wed, 23 Oct 2019 17:45:11 +0200
+Message-Id: <20191023154512.9762-21-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191023154512.9762-1-boris.brezillon@collabora.com>
 References: <20191023154512.9762-1-boris.brezillon@collabora.com>
@@ -62,35 +62,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-So that the previous bridge element in the chain knows which input
-format the panel bridge expects.
+The LTA089AC29000 and LT089AC29000 are not exactly the same. Let's add
+a new compatible for the LTA variant.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
-Changes in v3:
-* Adjust things to match the new bus-format negotiation approach
-* Use drm_atomic_helper_bridge_propagate_bus_fmt
-* Don't implement ->atomic_check() (the core now takes care of bus
-  flags propagation)
+ .../bindings/display/panel/toshiba,lt089ac29000.txt          | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Changes in v2:
-* Adjust things to match the new bus-format negotiation approach
----
- drivers/gpu/drm/bridge/panel.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
-index f4e293e7cf64..a70c363a2bd0 100644
---- a/drivers/gpu/drm/bridge/panel.c
-+++ b/drivers/gpu/drm/bridge/panel.c
-@@ -127,6 +127,7 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
- 	.enable = panel_bridge_enable,
- 	.disable = panel_bridge_disable,
- 	.post_disable = panel_bridge_post_disable,
-+	.atomic_get_input_bus_fmts = drm_atomic_helper_bridge_propagate_bus_fmt,
- };
+diff --git a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
+index 89826116628c..26ebfa098966 100644
+--- a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
++++ b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
+@@ -1,7 +1,10 @@
+ Toshiba 8.9" WXGA (1280x768) TFT LCD panel
  
- /**
+ Required properties:
+-- compatible: should be "toshiba,lt089ac29000"
++- compatible: should be one of the following
++	      "toshiba,lt089ac29000"
++	      "toshiba,lta089ac29000"
++
+ - power-supply: as specified in the base binding
+ 
+ This binding is compatible with the simple-panel binding, which is specified
 -- 
 2.21.0
 
