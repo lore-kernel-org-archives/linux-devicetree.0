@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1DCCA9EBE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3244CA9EBB
 	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09442084C
+	by mail.kernel.org (Postfix) with ESMTP id 8410F2086D
 	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436472AbfJWPpf (ORCPT
+        id S2436470AbfJWPpf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 23 Oct 2019 11:45:35 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37856 "EHLO
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37738 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436471AbfJWPpf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 11:45:35 -0400
+        with ESMTP id S2436486AbfJWPpe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 11:45:34 -0400
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7181C28F90E;
-        Wed, 23 Oct 2019 16:45:33 +0100 (BST)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A6C5928F907;
+        Wed, 23 Oct 2019 16:45:32 +0100 (BST)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -49,9 +49,9 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org,
         Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH v3 19/21] drm/panel: simple: Add support for Toshiba LTA089AC29000 panel
-Date:   Wed, 23 Oct 2019 17:45:10 +0200
-Message-Id: <20191023154512.9762-20-boris.brezillon@collabora.com>
+Subject: [PATCH v3 18/21] drm/bridge: panel: Propage bus format/flags
+Date:   Wed, 23 Oct 2019 17:45:09 +0200
+Message-Id: <20191023154512.9762-19-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191023154512.9762-1-boris.brezillon@collabora.com>
 References: <20191023154512.9762-1-boris.brezillon@collabora.com>
@@ -62,70 +62,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a new entry for the Toshiba LTA089AC29000 panel.
+So that the previous bridge element in the chain knows which input
+format the panel bridge expects.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
 Changes in v3:
-* None
----
- drivers/gpu/drm/panel/panel-simple.c | 36 ++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+* Adjust things to match the new bus-format negotiation approach
+* Use drm_atomic_helper_bridge_propagate_bus_fmt
+* Don't implement ->atomic_check() (the core now takes care of bus
+  flags propagation)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5d487686d25c..27c92b44bd95 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2937,6 +2937,39 @@ static const struct panel_desc toshiba_lt089ac29000 = {
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+Changes in v2:
+* Adjust things to match the new bus-format negotiation approach
+---
+ drivers/gpu/drm/bridge/panel.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+index f4e293e7cf64..a70c363a2bd0 100644
+--- a/drivers/gpu/drm/bridge/panel.c
++++ b/drivers/gpu/drm/bridge/panel.c
+@@ -127,6 +127,7 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
+ 	.enable = panel_bridge_enable,
+ 	.disable = panel_bridge_disable,
+ 	.post_disable = panel_bridge_post_disable,
++	.atomic_get_input_bus_fmts = drm_atomic_helper_bridge_propagate_bus_fmt,
  };
  
-+static const struct drm_display_mode toshiba_lta089ac29000_mode = {
-+	.clock = 79500,
-+	.hdisplay = 1280,
-+	.hsync_start = 1280 + 192,
-+	.hsync_end = 1280 + 192 + 128,
-+	.htotal = 1280 + 192 + 128 + 64,
-+	.vdisplay = 768,
-+	.vsync_start = 768 + 20,
-+	.vsync_end = 768 + 20 + 7,
-+	.vtotal = 768 + 20 + 7 + 3,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc toshiba_lta089ac29000 = {
-+	.modes = &toshiba_lta089ac29000_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 194,
-+		.height = 116,
-+	},
-+	/*
-+	 * FIXME:
-+	 * The panel supports 2 bus formats: jeida-24 and jeida-18. The
-+	 * mode is selected through the 8b6b_SEL pin. If anyone ever needs
-+	 * support for jeida-18 we should probably parse the 'data-mapping'
-+	 * property.
-+	 * In the unlikely event where 8b6b_SEL is connected to a GPIO, we'd
-+	 * need a new infra to allow bus format negotiation at the panel level.
-+	 */
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
-+};
-+
- static const struct drm_display_mode tpk_f07a_0102_mode = {
- 	.clock = 33260,
- 	.hdisplay = 800,
-@@ -3392,6 +3425,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "toshiba,lt089ac29000",
- 		.data = &toshiba_lt089ac29000,
-+	}, {
-+		.compatible = "toshiba,lta089ac29000",
-+		.data = &toshiba_lta089ac29000,
- 	}, {
- 		.compatible = "tpk,f07a-0102",
- 		.data = &tpk_f07a_0102,
+ /**
 -- 
 2.21.0
 
