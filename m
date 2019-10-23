@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB2DCA9EB7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D5FCA9EB9
 	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A162086D
+	by mail.kernel.org (Postfix) with ESMTP id 554672084C
 	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436487AbfJWPpc (ORCPT
+        id S2436464AbfJWPpc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 23 Oct 2019 11:45:32 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37738 "EHLO
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37856 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436464AbfJWPpc (ORCPT
+        with ESMTP id S2436466AbfJWPpc (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 11:45:32 -0400
 Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4E57E28F96E;
-        Wed, 23 Oct 2019 16:45:30 +0100 (BST)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7DB1D28F969;
+        Wed, 23 Oct 2019 16:45:29 +0100 (BST)
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -49,9 +49,9 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org,
         Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH v3 15/21] drm/imx: pd: Use bus format/flags provided by the bridge when available
-Date:   Wed, 23 Oct 2019 17:45:06 +0200
-Message-Id: <20191023154512.9762-16-boris.brezillon@collabora.com>
+Subject: [PATCH v3 14/21] drm/bridge: Add the necessary bits to support bus format negotiation
+Date:   Wed, 23 Oct 2019 17:45:05 +0200
+Message-Id: <20191023154512.9762-15-boris.brezillon@collabora.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191023154512.9762-1-boris.brezillon@collabora.com>
 References: <20191023154512.9762-1-boris.brezillon@collabora.com>
@@ -62,294 +62,489 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that bridges can expose the bus format/flags they expect, we can
-use those instead of the relying on the display_info provided by the
-connector (which is only valid if the encoder is directly connected
-to bridge element driving the panel/display).
+drm_bridge_state is extended to describe the input and output bus
+configuration. This bus configuration is exposed through the
+drm_bus_cfg struct which contains 2 properties: the bus format and
+the bus flags.
 
-We also explicitly expose the bus formats supported by our encoder by
-filling encoder->output_bus_caps with proper info.
+Bus format negotiation is automated by the core, drivers just have
+to implement the ->atomic_get_{output,input}_bus_fmts() hooks if they
+want to take part to this negotiation. Negotiation happens in reserve
+order, starting from the last element of the chain (the one directly
+connected to the display) up to the first element of the chain (the one
+connected to the encoder).
+During this negotiation all supported formats are tested until we find
+one that works, meaning that the formats array should be in decreasing
+preference order (assuming the driver has a preference order).
+
+Note that the bus format negotiation works even if some elements in the
+chain don't implement the ->atomic_get_{output,input}_bus_fmts() hooks.
+In that case, the core advertises only MEDIA_BUS_FMT_FIXED and let
+the previous bridge element decide what to do (most of the time, bridge
+drivers will pick a default bus format of extract this piece of
+information from somewhere else, like a FW property).
+
+Bus flags negotiation is left to drivers which can simply propagate the
+flags from the input of the next bridge element if there's no conversion
+done inside the bridge, or tweak them if the bridge does some kind of
+signal inversion.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
-Hi Philipp,
-
-I think I addressed all your comments except the addition of
-SYNC_DRIVE_POSEDGE/NEGEDGE flags, which would require changing
-ipu_crtc_mode_set_nofb() to take those flags into account or
-turning those flags into their PIXDATA counterpart. If you don't mind,
-I'd like to leave that for later.
-
-Regards,
-
-Boris
-
-Changes in v3 (all suggested by Philipp):
-* Adjust to match core changes
-* Propagate output format to input format
-* Pick a default value when output_fmt = _FIXED
-* Add missing BGR888 and GBR888 fmts to imx_pd_bus_fmts[]
+Changes in v3:
+* Fix the commit message (Reported by Laurent)
+* Document the fact that bus formats should not be directly modified by
+  drivers (Suggested by Laurent)
+* Document the fact that format order matters (Suggested by Laurent)
+* Propagate bus flags by default
+* Document the fact that drivers can tweak bus flags if needed
+* Let ->atomic_get_{output,input}_bus_fmts() allocate the bus format
+  array (Suggested by Laurent)
+* Add a drm_atomic_helper_bridge_propagate_bus_fmt()
+* Mandate that bridge drivers return accurate input_fmts even if they
+  are known to be the first element in the bridge chain
 
 Changes in v2:
-* Adjust things to match the new bus-format negotiation infra
+* Rework things to support more complex use cases
 ---
- drivers/gpu/drm/imx/parallel-display.c | 174 +++++++++++++++++++++----
- 1 file changed, 150 insertions(+), 24 deletions(-)
+ drivers/gpu/drm/drm_bridge.c | 257 ++++++++++++++++++++++++++++++++++-
+ include/drm/drm_bridge.h     | 106 +++++++++++++++
+ 2 files changed, 362 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
-index 35518e5de356..28ae083df3ca 100644
---- a/drivers/gpu/drm/imx/parallel-display.c
-+++ b/drivers/gpu/drm/imx/parallel-display.c
-@@ -24,6 +24,7 @@
- struct imx_parallel_display {
- 	struct drm_connector connector;
- 	struct drm_encoder encoder;
-+	struct drm_bridge bridge;
- 	struct device *dev;
- 	void *edid;
- 	int edid_len;
-@@ -31,7 +32,7 @@ struct imx_parallel_display {
- 	u32 bus_flags;
- 	struct drm_display_mode mode;
- 	struct drm_panel *panel;
--	struct drm_bridge *bridge;
+diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+index 990e056296bd..6022fb3d406a 100644
+--- a/drivers/gpu/drm/drm_bridge.c
++++ b/drivers/gpu/drm/drm_bridge.c
+@@ -641,13 +641,251 @@ static int drm_atomic_bridge_check(struct drm_bridge *bridge,
+ 	return 0;
+ }
+ 
++static int select_bus_fmt_recursive(struct drm_bridge *first,
++				    struct drm_bridge *cur,
++				    struct drm_crtc_state *crtc_state,
++				    struct drm_connector_state *conn_state,
++				    u32 out_bus_fmt)
++{
++	struct drm_bridge_state *cur_state;
++	unsigned int num_in_bus_fmts, i;
++	struct drm_bridge *prev;
++	u32 *in_bus_fmts;
++	int ret;
++
++	prev = drm_bridge_chain_get_prev_bridge(cur);
++	cur_state = drm_atomic_get_new_bridge_state(crtc_state->state, cur);
++	if (WARN_ON(!cur_state))
++		return -EINVAL;
++
++	/*
++	 * Bus format negotiation is not supported by this bridge, let's pass
++	 * MEDIA_BUS_FMT_FIXED to the previous bridge in the chain and hope
++	 * that it can handle this situation gracefully (by providing
++	 * appropriate default values).
++	 */
++	if (!cur->funcs->atomic_get_input_bus_fmts) {
++		if (cur != first) {
++			ret = select_bus_fmt_recursive(first, prev, crtc_state,
++						       conn_state,
++						       MEDIA_BUS_FMT_FIXED);
++			if (ret)
++				return ret;
++		}
++
++		cur_state->input_bus_cfg.fmt = MEDIA_BUS_FMT_FIXED;
++		cur_state->output_bus_cfg.fmt = out_bus_fmt;
++		return 0;
++	}
++
++	in_bus_fmts = cur->funcs->atomic_get_input_bus_fmts(cur, cur_state,
++							    crtc_state,
++							    conn_state,
++							    out_bus_fmt,
++							    &num_in_bus_fmts);
++	if (!num_in_bus_fmts)
++		return -ENOTSUPP;
++	else if (!in_bus_fmts)
++		return -ENOMEM;
++
++	if (first == cur) {
++		cur_state->input_bus_cfg.fmt = in_bus_fmts[0];
++		cur_state->output_bus_cfg.fmt = out_bus_fmt;
++		kfree(in_bus_fmts);
++		return 0;
++	}
++
++	for (i = 0; i < num_in_bus_fmts; i++) {
++		ret = select_bus_fmt_recursive(first, prev, crtc_state,
++					       conn_state, in_bus_fmts[i]);
++		if (ret != -ENOTSUPP)
++			break;
++	}
++
++	if (!ret) {
++		cur_state->input_bus_cfg.fmt = in_bus_fmts[i];
++		cur_state->output_bus_cfg.fmt = out_bus_fmt;
++	}
++
++	kfree(in_bus_fmts);
++	return ret;
++}
++
++/*
++ * This function is called by &drm_atomic_bridge_chain_check() just before
++ * calling &drm_bridge_funcs.atomic_check() on all elements of the chain.
++ * It's providing bus format negotiation between bridge elements. The
++ * negotiation happens in reverse order, starting from the last element in
++ * the chain up to @bridge.
++ *
++ * Negotiation starts by retrieving supported output bus formats on the last
++ * bridge element and testing them one by one. The test is recursive, meaning
++ * that for each tested output format, the whole chain will be walked backward,
++ * and each element will have to choose an input bus format that can be
++ * transcoded to the requested output format. When a bridge element does not
++ * support transcoding into a specific output format -ENOTSUPP is returned and
++ * the next bridge element will have to try a different format. If none of the
++ * combinations worked, -ENOTSUPP is returned and the atomic modeset will fail.
++ *
++ * This implementation is relying on
++ * &drm_bridge_funcs.atomic_get_output_bus_fmts() and
++ * &drm_bridge_funcs.atomic_get_input_bus_fmts() to gather supported
++ * input/output formats.
++ * When &drm_bridge_funcs.atomic_get_output_bus_fmts() is not implemented by
++ * the last element of the chain, &drm_atomic_bridge_chain_select_bus_fmts()
++ * tries a single format: &drm_connector.display_info.bus_formats[0] if
++ * available, MEDIA_BUS_FMT_FIXED otherwise.
++ * When &drm_bridge_funcs.atomic_get_input_bus_fmts() is not implemented,
++ * &drm_atomic_bridge_chain_select_bus_fmts() skips the negotiation on the
++ * bridge element that lacks this hook and asks the previous element in the
++ * chain to try MEDIA_BUS_FMT_FIXED. It's up to bridge drivers to decide what
++ * to do in that case (fail if they want to enforce bus format negotiation, or
++ * provide a reasonable default if they need to support pipelines where not
++ * all elements support bus format negotiation).
++ */
++static int
++drm_atomic_bridge_chain_select_bus_fmts(struct drm_bridge *bridge,
++					struct drm_crtc_state *crtc_state,
++					struct drm_connector_state *conn_state)
++{
++	struct drm_connector *conn = conn_state->connector;
++	struct drm_encoder *encoder = bridge->encoder;
++	struct drm_bridge_state *last_bridge_state;
++	unsigned int i, num_out_bus_fmts;
++	struct drm_bridge *last_bridge;
++	u32 *out_bus_fmts;
++	int ret = 0;
++
++	last_bridge = list_last_entry(&encoder->bridge_chain,
++				      struct drm_bridge, chain_node);
++	last_bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
++							    last_bridge);
++	if (WARN_ON(!last_bridge_state))
++		return -EINVAL;
++
++	if (last_bridge->funcs->atomic_get_output_bus_fmts) {
++		const struct drm_bridge_funcs *funcs = last_bridge->funcs;
++
++		out_bus_fmts = funcs->atomic_get_output_bus_fmts(last_bridge,
++							last_bridge_state,
++							crtc_state,
++							conn_state,
++							&num_out_bus_fmts);
++		if (!num_out_bus_fmts)
++			return -ENOTSUPP;
++		else if (!out_bus_fmts)
++			return -ENOMEM;
++	} else {
++		num_out_bus_fmts = 1;
++		out_bus_fmts = kzalloc(sizeof(*out_bus_fmts), GFP_KERNEL);
++		if (!out_bus_fmts)
++			return -ENOMEM;
++
++		if (conn->display_info.num_bus_formats &&
++		    conn->display_info.bus_formats)
++			out_bus_fmts[0] = conn->display_info.bus_formats[0];
++		else
++			out_bus_fmts[0] = MEDIA_BUS_FMT_FIXED;
++	}
++
++	for (i = 0; i < num_out_bus_fmts; i++) {
++		ret = select_bus_fmt_recursive(bridge, last_bridge, crtc_state,
++					       conn_state, out_bus_fmts[i]);
++		if (ret != -ENOTSUPP)
++			break;
++	}
++
++	kfree(out_bus_fmts);
++
++	return ret;
++}
++
++static void
++drm_atomic_bridge_propagate_bus_flags(struct drm_bridge *bridge,
++				      struct drm_connector *conn,
++				      struct drm_atomic_state *state)
++{
++	struct drm_bridge_state *bridge_state, *next_bridge_state;
 +	struct drm_bridge *next_bridge;
- };
- 
- static inline struct imx_parallel_display *con_to_imxpd(struct drm_connector *c)
-@@ -44,6 +45,11 @@ static inline struct imx_parallel_display *enc_to_imxpd(struct drm_encoder *e)
- 	return container_of(e, struct imx_parallel_display, encoder);
- }
- 
-+static inline struct imx_parallel_display *bridge_to_imxpd(struct drm_bridge *b)
-+{
-+	return container_of(b, struct imx_parallel_display, bridge);
++	u32 output_flags;
++
++	bridge_state = drm_atomic_get_new_bridge_state(state, bridge);
++	next_bridge = drm_bridge_chain_get_next_bridge(bridge);
++
++	/*
++	 * Let's try to apply the most common case here, that is, propagate
++	 * display_info flags for the last bridge, and propagate the input
++	 * flags of the next bridge element to the output end of the current
++	 * bridge when the bridge is not the last one.
++	 * There are exceptions to this rule, like when signal inversion is
++	 * happening at the board level, but that's something drivers can deal
++	 * with from their &drm_bridge_funcs.atomic_check() implementation by
++	 * simply overriding the flags value we've set here.
++	 */
++	if (!next_bridge) {
++		output_flags = conn->display_info.bus_flags;
++	} else {
++		next_bridge_state = drm_atomic_get_new_bridge_state(state,
++								next_bridge);
++		output_flags = next_bridge_state->input_bus_cfg.flags;
++	}
++
++	bridge_state->output_bus_cfg.flags = output_flags;
++
++	/*
++	 * Propage the output flags to the input end of the bridge. Again, it's
++	 * not necessarily what all bridges want, but that's what most of them
++	 * do, and by doing that by default we avoid forcing drivers to
++	 * duplicate the "dummy propagation" logic.
++	 */
++	bridge_state->input_bus_cfg.flags = output_flags;
 +}
 +
- static int imx_pd_connector_get_modes(struct drm_connector *connector)
- {
- 	struct imx_parallel_display *imxpd = con_to_imxpd(connector);
-@@ -89,37 +95,151 @@ static struct drm_encoder *imx_pd_connector_best_encoder(
- 	return &imxpd->encoder;
- }
- 
--static void imx_pd_encoder_enable(struct drm_encoder *encoder)
-+static void imx_pd_bridge_enable(struct drm_bridge *bridge)
- {
--	struct imx_parallel_display *imxpd = enc_to_imxpd(encoder);
-+	struct imx_parallel_display *imxpd = bridge_to_imxpd(bridge);
- 
- 	drm_panel_prepare(imxpd->panel);
- 	drm_panel_enable(imxpd->panel);
- }
- 
--static void imx_pd_encoder_disable(struct drm_encoder *encoder)
-+static void imx_pd_bridge_disable(struct drm_bridge *bridge)
- {
--	struct imx_parallel_display *imxpd = enc_to_imxpd(encoder);
-+	struct imx_parallel_display *imxpd = bridge_to_imxpd(bridge);
- 
- 	drm_panel_disable(imxpd->panel);
- 	drm_panel_unprepare(imxpd->panel);
- }
- 
--static int imx_pd_encoder_atomic_check(struct drm_encoder *encoder,
--				       struct drm_crtc_state *crtc_state,
--				       struct drm_connector_state *conn_state)
-+static const u32 imx_pd_bus_fmts[] = {
-+	MEDIA_BUS_FMT_RGB888_1X24,
-+	MEDIA_BUS_FMT_BGR888_1X24,
-+	MEDIA_BUS_FMT_GBR888_1X24,
-+	MEDIA_BUS_FMT_RGB666_1X18,
-+	MEDIA_BUS_FMT_RGB666_1X24_CPADHI,
-+	MEDIA_BUS_FMT_RGB565_1X16,
-+};
-+
-+static u32 *
-+imx_pd_bridge_atomic_get_output_bus_fmts(struct drm_bridge *bridge,
-+					 struct drm_bridge_state *bridge_state,
-+					 struct drm_crtc_state *crtc_state,
-+					 struct drm_connector_state *conn_state,
-+					 unsigned int *num_output_fmts)
-+{
-+	struct drm_display_info *di = &conn_state->connector->display_info;
-+	struct imx_parallel_display *imxpd = bridge_to_imxpd(bridge);
-+	u32 *output_fmts;
-+
-+	if (!imxpd->bus_format && !di->num_bus_formats)
-+		*num_output_fmts = ARRAY_SIZE(imx_pd_bus_fmts);
-+	else
-+		*num_output_fmts = 1;
-+
-+	output_fmts = kcalloc(*num_output_fmts, sizeof(*output_fmts),
-+			      GFP_KERNEL);
-+	if (!output_fmts)
-+		return NULL;
-+
-+	if (!imxpd->bus_format && di->num_bus_formats)
-+		output_fmts[0] = di->bus_formats[0];
-+	else if (!imxpd->bus_format)
-+		memcpy(output_fmts, imx_pd_bus_fmts,
-+		       ARRAY_SIZE(imx_pd_bus_fmts));
-+	else
-+		output_fmts[0] = imxpd->bus_format;
-+
-+	return output_fmts;
-+}
-+
-+static u32 *
-+imx_pd_bridge_atomic_get_input_bus_fmts(struct drm_bridge *bridge,
++/**
++ * drm_atomic_helper_bridge_propagate_bus_fmt() - Propagate output format to
++ *						  the input end of a bridge
++ * @bridge: bridge control structure
++ * @bridge_state: new bridge state
++ * @crtc_state: new CRTC state
++ * @conn_state: new connector state
++ * @output_fmt: tested output bus format
++ * @num_input_fmts: will contain the size of the returned array
++ *
++ * Helper that propagate the output format to the input end of bridge.
++ * Particularly useful for dummy bridge elements like the panel_bridge.
++ *
++ * RETURNS:
++ * a valid format array of size @num_input_fmts, or NULL if the allocation
++ * failed or if @num_input_fmts is set to 0
++ */
++u32 *
++drm_atomic_helper_bridge_propagate_bus_fmt(struct drm_bridge *bridge,
 +					struct drm_bridge_state *bridge_state,
 +					struct drm_crtc_state *crtc_state,
 +					struct drm_connector_state *conn_state,
 +					u32 output_fmt,
 +					unsigned int *num_input_fmts)
 +{
-+	struct imx_parallel_display *imxpd = bridge_to_imxpd(bridge);
 +	u32 *input_fmts;
 +
-+	*num_input_fmts = 0;
-+	if (output_fmt == MEDIA_BUS_FMT_FIXED) {
-+		/*
-+		 * The next bridge does not support bus format negotiation,
-+		 * let's use the default RGB888 value.
-+		 */
-+		*num_input_fmts = 1;
-+		output_fmt = MEDIA_BUS_FMT_RGB888_1X24;
-+	} else if (!imxpd->bus_format) {
-+		unsigned int i;
-+
-+		for (i = 0; i < ARRAY_SIZE(imx_pd_bus_fmts); i++) {
-+			if (imx_pd_bus_fmts[i] == output_fmt) {
-+				*num_input_fmts = 1;
-+				break;
-+			}
-+		}
-+	} else if (imxpd->bus_format == output_fmt) {
-+		*num_input_fmts = 1;
-+	}
-+
-+	if (!*num_input_fmts)
-+		return NULL;
-+
-+	input_fmts = kcalloc(*num_input_fmts, sizeof(*input_fmts),
-+			     GFP_KERNEL);
++	*num_input_fmts = 1;
++	input_fmts = kzalloc(sizeof(*input_fmts), GFP_KERNEL);
 +	if (!input_fmts)
 +		return NULL;
 +
 +	input_fmts[0] = output_fmt;
 +	return input_fmts;
 +}
++EXPORT_SYMBOL(drm_atomic_helper_bridge_propagate_bus_fmt);
 +
-+static int imx_pd_bridge_atomic_check(struct drm_bridge *bridge,
-+				      struct drm_bridge_state *bridge_state,
-+				      struct drm_crtc_state *crtc_state,
-+				      struct drm_connector_state *conn_state)
+ /**
+  * drm_atomic_bridge_chain_check() - Do an atomic check on the bridge chain
+  * @bridge: bridge control structure
+  * @crtc_state: new CRTC state
+  * @conn_state: new connector state
+  *
+- * Calls &drm_bridge_funcs.atomic_check() (falls back on
++ * First trigger a bus format negotiation before calling
++ * &drm_bridge_funcs.atomic_check() (falls back on
+  * &drm_bridge_funcs.mode_fixup()) op for all the bridges in the encoder chain,
+  * starting from the last bridge to the first. These are called before calling
+  * &drm_encoder_helper_funcs.atomic_check()
+@@ -659,12 +897,29 @@ int drm_atomic_bridge_chain_check(struct drm_bridge *bridge,
+ 				  struct drm_crtc_state *crtc_state,
+ 				  struct drm_connector_state *conn_state)
  {
- 	struct imx_crtc_state *imx_crtc_state = to_imx_crtc_state(crtc_state);
- 	struct drm_display_info *di = &conn_state->connector->display_info;
--	struct imx_parallel_display *imxpd = enc_to_imxpd(encoder);
-+	struct imx_parallel_display *imxpd = bridge_to_imxpd(bridge);
-+	struct drm_bridge_state *next_bridge_state = NULL;
-+	struct drm_bridge *next_bridge;
-+	u32 bus_flags, bus_fmt;
-+	unsigned int i;
++	struct drm_connector *conn = conn_state->connector;
+ 	struct drm_encoder *encoder = bridge->encoder;
+ 	struct drm_bridge *iter;
++	int ret;
++
++	ret = drm_atomic_bridge_chain_select_bus_fmts(bridge, crtc_state,
++						      conn_state);
++	if (ret)
++		return ret;
  
--	if (!imxpd->bus_format && di->num_bus_formats) {
--		imx_crtc_state->bus_flags = di->bus_flags;
--		imx_crtc_state->bus_format = di->bus_formats[0];
--	} else {
--		imx_crtc_state->bus_flags = imxpd->bus_flags;
--		imx_crtc_state->bus_format = imxpd->bus_format;
-+	next_bridge = drm_bridge_chain_get_next_bridge(bridge);
-+	if (next_bridge)
-+		next_bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
-+								    next_bridge);
-+
-+	if (next_bridge_state)
-+		bus_flags = next_bridge_state->input_bus_cfg.flags;
-+	else if (!imxpd->bus_format && di->num_bus_formats)
-+		bus_flags = di->bus_flags;
-+	else
-+		bus_flags = imxpd->bus_flags;
-+
-+	bus_fmt = bridge_state->input_bus_cfg.fmt;
-+	for (i = 0; i < ARRAY_SIZE(imx_pd_bus_fmts); i++) {
-+		if (imx_pd_bus_fmts[i] == bus_fmt)
-+			break;
- 	}
-+
-+	if (i == ARRAY_SIZE(imx_pd_bus_fmts))
-+		return -EINVAL;
-+
-+	if (bus_flags &
-+	    ~(DRM_BUS_FLAG_DE_LOW | DRM_BUS_FLAG_DE_HIGH |
-+	      DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-+	      DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE))
-+		return -EINVAL;
-+
-+	bridge_state->output_bus_cfg.flags = bus_flags;
-+	bridge_state->input_bus_cfg.flags = bus_flags;
-+	imx_crtc_state->bus_flags = bus_flags;
-+	imx_crtc_state->bus_format = bridge_state->input_bus_cfg.fmt;
- 	imx_crtc_state->di_hsync_pin = 2;
- 	imx_crtc_state->di_vsync_pin = 3;
+ 	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
+ 		int ret;
  
-@@ -143,10 +263,12 @@ static const struct drm_encoder_funcs imx_pd_encoder_funcs = {
- 	.destroy = imx_drm_encoder_destroy,
++		/*
++		 * Bus flags are propagated by default. If a bridge needs to
++		 * tweak the input bus flags for any reason, it should happen
++		 * in its &drm_bridge_funcs.atomic_check() implementation such
++		 * that preceding bridges in the chain can propagate the new
++		 * bus flags.
++		 */
++		drm_atomic_bridge_propagate_bus_flags(iter, conn,
++						      crtc_state->state);
++
+ 		ret = drm_atomic_bridge_check(iter, crtc_state, conn_state);
+ 		if (ret)
+ 			return ret;
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index 3fb518494640..d37aaf34b882 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -34,15 +34,43 @@ struct drm_bridge;
+ struct drm_bridge_timings;
+ struct drm_panel;
+ 
++/**
++ * struct drm_bus_cfg - bus configuration
++ * @fmt: format used on this bus. This field should not be directly modified
++ *	 by drivers (&drm_atomic_bridge_chain_select_bus_fmts() takes care of
++ *	 the bus format negotiation).
++ * @flags: DRM_BUS_ flags used on this bus. Drivers should set the output bus
++ *	   flags to the input bus flags of the next bridge element (unless they
++ *	   have a good reason not to, like a passive signal inversion between
++ *	   those 2 elements). Input bus flags can be different from the output
++ *	   ones if there's some kind of conversion happening inside the bridge,
++ *	   but most of the times it's safe to just propagate the output bus
++ *	   flags to the input end.
++ *	   This bus flags selection/propagation should be done in the driver
++ *	   &drm_bridge_funcs.atomic_check() hook.
++ *
++ * Encodes the bus format and bus flags used by one end of the bridge or
++ * by the encoder output.
++ */
++struct drm_bus_cfg {
++	u32 fmt;
++	u32 flags;
++};
++
+ /**
+  * struct drm_bridge_state - Atomic bridge state object
+  * @base: inherit from &drm_private_state
+  * @bridge: the bridge this state refers to
++ * @input_bus_info: input bus information
++ * @output_bus_info: output bus information
+  */
+ struct drm_bridge_state {
+ 	struct drm_private_state base;
+ 
+ 	struct drm_bridge *bridge;
++
++	struct drm_bus_cfg input_bus_cfg;
++	struct drm_bus_cfg output_bus_cfg;
  };
  
--static const struct drm_encoder_helper_funcs imx_pd_encoder_helper_funcs = {
--	.enable = imx_pd_encoder_enable,
--	.disable = imx_pd_encoder_disable,
--	.atomic_check = imx_pd_encoder_atomic_check,
-+static const struct drm_bridge_funcs imx_pd_bridge_funcs = {
-+	.enable = imx_pd_bridge_enable,
-+	.disable = imx_pd_bridge_disable,
-+	.atomic_check = imx_pd_bridge_atomic_check,
-+	.atomic_get_input_bus_fmts = imx_pd_bridge_atomic_get_input_bus_fmts,
-+	.atomic_get_output_bus_fmts = imx_pd_bridge_atomic_get_output_bus_fmts,
- };
+ static inline struct drm_bridge_state *
+@@ -393,6 +421,69 @@ struct drm_bridge_funcs {
+ 	void (*atomic_destroy_state)(struct drm_bridge *bridge,
+ 				     struct drm_bridge_state *state);
  
- static int imx_pd_register(struct drm_device *drm,
-@@ -166,11 +288,13 @@ static int imx_pd_register(struct drm_device *drm,
++	/**
++	 * @atomic_get_output_bus_fmts:
++	 *
++	 * Return the supported bus formats on the output end of a bridge.
++	 * The returned array must be allocated with kmalloc() and will be
++	 * freed by the caller, if the allocation fails, NULL should be
++	 * returned. num_output_fmts must be set to the returned array size.
++	 * Formats listed in the returned array should be listed in decreasing
++	 * preference order (the core will try all formats until it finds one
++	 * that works).
++	 *
++	 * This method is only called on the last element of the bridge chain
++	 * as part of the bus format negotiation process that happens in
++	 * &drm_atomic_bridge_chain_select_bus_fmts().
++	 * This method is optional. When not implemented, the core will
++	 * fallback to &drm_connector.display_info.bus_formats[0] if
++	 * &drm_connector.display_info.num_bus_formats > 0,
++	 * MEDIA_BUS_FMT_FIXED otherwise.
++	 */
++	u32 *(*atomic_get_output_bus_fmts)(struct drm_bridge *bridge,
++					   struct drm_bridge_state *bridge_state,
++					   struct drm_crtc_state *crtc_state,
++					   struct drm_connector_state *conn_state,
++					   unsigned int *num_output_fmts);
++
++	/**
++	 * @atomic_get_input_bus_fmts:
++	 *
++	 * Return the supported bus formats on the input end of a bridge for
++	 * a specific output bus format.
++	 * The returned array must be allocated with kmalloc() and will be
++	 * freed by the caller, if the allocation fails, NULL should be
++	 * returned. num_output_fmts must be set to the returned array size.
++	 * Formats listed in the returned array should be listed in decreasing
++	 * preference order (the core will try all formats until it finds one
++	 * that works).
++	 *
++	 * This method is called on all element of the bridge chain as part of
++	 * the bus format negotiation process that happens in
++	 * &drm_atomic_bridge_chain_select_bus_fmts().
++	 * This method is optional. When not implemented, the core will bypass
++	 * bus format negotiation on this element of the bridge without
++	 * failing, and the previous element in the chain will be passed
++	 * MEDIA_BUS_FMT_FIXED as its output bus format.
++	 *
++	 * Bridge drivers that need to support being linked to bridges that are
++	 * not supporting bus format negotiation should handle the
++	 * output_fmt == MEDIA_BUS_FMT_FIXED case appropriately, by selecting a
++	 * sensible default value or extracting this information from somewhere
++	 * else (FW property, &drm_display_mode, &drm_display_info, ...)
++	 *
++	 * Note: even if input format selection on the first bridge has no
++	 * impact on the negotiation process (bus format negotiation stops once
++	 * we reach the first element of the chain), drivers are expected to
++	 * return accurate input formats.
++	 */
++	u32 *(*atomic_get_input_bus_fmts)(struct drm_bridge *bridge,
++					  struct drm_bridge_state *bridge_state,
++					  struct drm_crtc_state *crtc_state,
++					  struct drm_connector_state *conn_state,
++					  u32 output_fmt,
++					  unsigned int *num_input_fmts);
++
+ 	/**
+ 	 * @atomic_check:
+ 	 *
+@@ -407,6 +498,13 @@ struct drm_bridge_funcs {
+ 	 * called when &drm_bridge_funcs.atomic_check() is implemented, so only
+ 	 * one of them should be provided.
+ 	 *
++	 * If drivers need to tweak &drm_bridge_state.input_bus_cfg.flags or
++	 * &drm_bridge_state.input_bus_cfg.flags it should should happen in
++	 * this function. By default those fields are set to the next bridge
++	 * &drm_bridge_state.input_bus_cfg.flags value or
++	 * &drm_connector.display_info.bus_flags if the bridge is the last
++	 * element in the chain.
++	 *
+ 	 * RETURNS:
+ 	 * zero if the check passed, a negative error code otherwise.
  	 */
- 	imxpd->connector.dpms = DRM_MODE_DPMS_OFF;
+@@ -594,6 +692,14 @@ void drm_atomic_bridge_chain_pre_enable(struct drm_bridge *bridge,
+ void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
+ 				    struct drm_atomic_state *state);
  
--	drm_encoder_helper_add(encoder, &imx_pd_encoder_helper_funcs);
- 	drm_encoder_init(drm, encoder, &imx_pd_encoder_funcs,
- 			 DRM_MODE_ENCODER_NONE, NULL);
- 
--	if (!imxpd->bridge) {
-+	imxpd->bridge.funcs = &imx_pd_bridge_funcs;
-+	drm_bridge_attach(encoder, &imxpd->bridge, NULL);
++u32 *
++drm_atomic_helper_bridge_propagate_bus_fmt(struct drm_bridge *bridge,
++					struct drm_bridge_state *bridge_state,
++					struct drm_crtc_state *crtc_state,
++					struct drm_connector_state *conn_state,
++					u32 output_fmt,
++					unsigned int *num_input_fmts);
 +
-+	if (!imxpd->next_bridge) {
- 		drm_connector_helper_add(&imxpd->connector,
- 				&imx_pd_connector_helper_funcs);
- 		drm_connector_init(drm, &imxpd->connector,
-@@ -181,8 +305,9 @@ static int imx_pd_register(struct drm_device *drm,
- 	if (imxpd->panel)
- 		drm_panel_attach(imxpd->panel, &imxpd->connector);
- 
--	if (imxpd->bridge) {
--		ret = drm_bridge_attach(encoder, imxpd->bridge, NULL);
-+	if (imxpd->next_bridge) {
-+		ret = drm_bridge_attach(encoder, imxpd->next_bridge,
-+					&imxpd->bridge);
- 		if (ret < 0) {
- 			dev_err(imxpd->dev, "failed to attach bridge: %d\n",
- 				ret);
-@@ -227,7 +352,8 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
- 	imxpd->bus_format = bus_format;
- 
- 	/* port@1 is the output port */
--	ret = drm_of_find_panel_or_bridge(np, 1, 0, &imxpd->panel, &imxpd->bridge);
-+	ret = drm_of_find_panel_or_bridge(np, 1, 0, &imxpd->panel,
-+					  &imxpd->next_bridge);
- 	if (ret && ret != -ENODEV)
- 		return ret;
- 
+ void __drm_atomic_helper_bridge_reset(struct drm_bridge *bridge,
+ 				      struct drm_bridge_state *state);
+ struct drm_bridge_state *
 -- 
 2.21.0
 
