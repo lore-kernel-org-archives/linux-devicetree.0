@@ -2,93 +2,69 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01722CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42311CA9EBE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA33820650
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571861687;
-	bh=K+5kWyjgHEH576RCDcnH7iIPrHhHcUXBXT/q2q9lHsk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kwyuj1V8gxG36f3oK0hSGKZpWfMuszdTqWVXC5pDO1VO7GrGUVZZ4liosjW2xHD/x
-	 2A9j3tyOb/mczaimel9XkiIHc8KMznK/2PGF/IuY8N01ULRvXBwYk7k4/V2jRBw1r/
-	 lf92URQZAcMFmtU3bUhMrFEKzIAmk+k9fM1+1N+M=
+	by mail.kernel.org (Postfix) with ESMTP id 17FA2222BE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:28:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lON9ljuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389949AbfJWUOn (ORCPT
+        id S2403800AbfJWU2c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:14:43 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35867 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfJWUOn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 16:14:43 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c7so7813010otm.3;
-        Wed, 23 Oct 2019 13:14:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yHCtWGntZMmI9Nauyb+KPzomFg4uDRjl1jF3iEvwjaM=;
-        b=Fj+iE2N+xH9VUumDo7aHKQCh2uA/dzMoIp5DfzpEfy+2D2um09sU8SVWke60YX8h4S
-         deU1sjupiTV3gDfs3pvKaxdfhW4mIBXCNLOuL1xlscutRoLM4zQ/IzZLscEcNrAf0lVX
-         vp8FEv3/rpPLZE3i9fbZ58QUf5PJFJ1ZjTzznZOgk0+hLGWNpQN2GKnwpCU+0AOX6ZtV
-         PA1YTidBUfeMS3lhTXrPS7y+NC5csugIYYqoIJoEUI0G55IJgbengcst86PBoM9U6Y4d
-         BEkjOGMAOJXLpDiZbwd69zg/eMpF8NbSDqlu2YWu8MecjT244WVYe4/lSeQNBInh8ywB
-         Zbeg==
-X-Gm-Message-State: APjAAAUSxYnKXnP3B1TcGon2LPUm3g1IICsp5mxOqJX0j57XD+tyoDdE
-        JOpI57+Dkf7bvu/mT6BRWJmSfXw=
-X-Google-Smtp-Source: APXvYqw1NRgPEgXyubbpFlPakz4U6gDoQjfqDh0u6EixhMw4HkgZOmWsMBDfY/9q/FOxoBgbY7o+sA==
-X-Received: by 2002:a05:6830:1f09:: with SMTP id u9mr9254960otg.310.1571861682686;
-        Wed, 23 Oct 2019 13:14:42 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t10sm5992688oib.49.2019.10.23.13.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 13:14:41 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 15:14:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Goldsworthy <cgoldswo@codeaurora.org>
-Cc:     robh+dt@kernel.org, Chris Goldsworthy <cgoldswo@codeaurora.org>,
-        devicetree@vger.kernel.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] of: reserved_mem: add missing of_node_put() for proper
- ref-counting
-Message-ID: <20191023201440.GA29860@bogus>
-References: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
+        Wed, 23 Oct 2019 16:28:32 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60584 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389290AbfJWU2c (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 16:28:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=I//eq1/vaFb5Y3ZMl2D7kOhYQLf6hJifxlxn0JlbBX4=; b=lON9ljuZWneQh4o9RYMVR/GYuA
+        M2JpLff6MvEDRsR6KahdwTfYvV7b8AoLjWowVfhDe0DK+Vi5290EzQZ5PXGbe3t1e31GDFxLhP06E
+        OjrQgyB4t60wpS774zpFk5VA8N3LXTTbjboMADpVGOp9uoo7s5vEEOHYb9aTCxmgvrPY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iNNF5-0008UU-A7; Wed, 23 Oct 2019 22:28:27 +0200
+Date:   Wed, 23 Oct 2019 22:28:27 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     fugang.duan@nxp.com, festevam@gmail.com,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: fec driver: ethernet rx is deaf on variscite imx6ul board
+Message-ID: <20191023202827.GA30147@lunn.ch>
+References: <20191023201000.GE20321@ripley>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571536644-13840-1-git-send-email-cgoldswo@codeaurora.org>
+In-Reply-To: <20191023201000.GE20321@ripley>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 19 Oct 2019 18:57:24 -0700, Chris Goldsworthy wrote:
-> Commit d698a388146c ("of: reserved-memory: ignore disabled memory-region
-> nodes") added an early return in of_reserved_mem_device_init_by_idx(), but
-> didn't call of_node_put() on a device_node whose ref-count was incremented
-> in the call to of_parse_phandle() preceding the early exit.
+On Wed, Oct 23, 2019 at 10:10:00PM +0200, Oliver Graute wrote:
+> Hello,
 > 
-> Fixes: d698a388146c ("of: reserved-memory: ignore disabled memory-region nodes")
-> Signed-off-by: Chris Goldsworthy <cgoldswo@codeaurora.org>
-> To: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  drivers/of/of_reserved_mem.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> I use the following nodes in my devicetree to get two ethernet ports
+> working with fec driver on a Variscite DART-6UL SoM Board (imx6ul).
 > 
+> But ethernet RX is deaf and not working. Some clue whats is the issue
+> here? 
 
-Applied, thanks.
+Hi Oliver
 
-Rob
+Does TX work?
+
+Have you tried other rgmii variants for phy-mode?
+
+     Andrew
