@@ -2,139 +2,121 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E95CA9EB7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 13:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6129BCA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F77B21D7E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 13:51:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HxDBxkpt"
+	by mail.kernel.org (Postfix) with ESMTP id 3E6B52173B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391874AbfJWNvN (ORCPT
+        id S2392255AbfJWOgv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:51:13 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42615 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390181AbfJWNvN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 09:51:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r1so12406108wrs.9
-        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 06:51:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:from:to:cc:references:openpgp:message-id:date:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=2OzqeB6lct/4fO2u5biFD/hH4qN2HDn6dJHGOqFVmZI=;
-        b=HxDBxkpt/TeXHVriMyGDqLhs0MthlNjNAeNVQezlsLSQGK5tb6zxiwSXKeqdzWC7M2
-         SDbjsOENSXQOZ6vlfQ6Sd7bWNWdXml01yl4gGJkjjgS9rSzuaNUQEgYmERynar2gG9MB
-         nCMyKy33R80dzElC4mKKGnIHMQoj94S59WbUtrnog2S1J09cumyqSoYNFnyw/KSIQgKF
-         dzuESK/bbrY6UCLc9qFhJqAcyiBqrdWaioVM+iGIrGk7WZpNO7KXNa3LeB5BkBWPhyie
-         yPZs/GpUej/2Y+Eg1NvBgrxbubRoDOYCS8IKitb+M1QGkwm1f1+gs568w4pasyj3XqEe
-         Zwag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:openpgp:message-id
-         :date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2OzqeB6lct/4fO2u5biFD/hH4qN2HDn6dJHGOqFVmZI=;
-        b=uhHwRM1nZAiNPkzsyY4i2ZVQJOPDpl9r57vxr3smsGyURGKjWipVt2/vEbC+52U8NY
-         g0dmjd3n5amTtyuDpSFFGaP/OvpjOWKAP5Ck30n8Xi/khv4x5aZnBrXH6a6CkqbdHG1Q
-         R8dyYfcBJiacyik+oA9w3mLICoT8NWEs7hjRGcqoVDm2vZ2teq63NIukes4jHxNSTD0T
-         J39TXMPCYrkd3WObX12aZbtWLNAodGmZlf8bSWRN6Wew2jSqU3kmGzIIoK41kMsYnVPR
-         7bU+kahNP0KJqmCIx6AaLZ4gfLU8kR3VkPzqdcjZK/r+7erILG4ZF81jE56CgAKaMFdH
-         wE6A==
-X-Gm-Message-State: APjAAAWXclQlhAip+6Hy41zOnw6ksACMs+IIsR/nnjJWfK3tlPKqsbWr
-        Df/q8QEnS5BolUEDRNJQhXk4Lw==
-X-Google-Smtp-Source: APXvYqz38URZiwF3jYVFDirDMkOyKsDUee5Q74pCUjTu27Axp8SUi5Xd93x6B2Mphtf8iU4RtObptw==
-X-Received: by 2002:a5d:6b0e:: with SMTP id v14mr8459368wrw.280.1571838670680;
-        Wed, 23 Oct 2019 06:51:10 -0700 (PDT)
-Received: from [192.168.27.135] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id u68sm26145822wmu.12.2019.10.23.06.51.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 06:51:10 -0700 (PDT)
-Subject: Re: [PATCH 5/5] ARM: dts: qcom: msm8974: add interconnect nodes
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191013080804.10231-1-masneyb@onstation.org>
- <20191013080804.10231-6-masneyb@onstation.org>
- <d154b0c6-fc39-bebc-d1b5-cc179fb6055d@linaro.org>
- <20191023124753.GA14218@onstation.org>
- <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
-Openpgp: preference=signencrypt
-Message-ID: <94f957c6-c26b-b1f5-4d0f-6c9aff0a03cd@linaro.org>
-Date:   Wed, 23 Oct 2019 16:51:09 +0300
+        Wed, 23 Oct 2019 10:36:51 -0400
+Received: from muru.com ([72.249.23.125]:39262 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732328AbfJWOgv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:36:51 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id D2A4B80CF;
+        Wed, 23 Oct 2019 14:37:23 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 07:36:46 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
+Message-ID: <20191023143646.GG5610@atomide.com>
+References: <20191007220540.30690-1-aford173@gmail.com>
+ <20191022162223.GU5610@atomide.com>
+ <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
+ <20191022221919.GF5610@atomide.com>
+ <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23.10.19 г. 16:39 ч., Georgi Djakov wrote:
-> On 23.10.19 г. 15:47 ч., Brian Masney wrote:
->> On Wed, Oct 23, 2019 at 02:50:19PM +0300, Georgi Djakov wrote:
->>> On 13.10.19 г. 11:08 ч., Brian Masney wrote:
->>>> Add interconnect nodes that's needed to support bus scaling.
->>>>
->>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
->>>> ---
->>>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
->>>>  1 file changed, 60 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
->>>> @@ -1152,6 +1207,11 @@
->>>>  				              "core",
->>>>  				              "vsync";
->>>>  
->>>> +				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
->>>> +				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
->>>
->>> Who will be the requesting bandwidth to DDR and ocmem? Is it the display or GPU
->>> or both? The above seem like GPU-related interconnects, so maybe these
->>> properties should be in the GPU DT node.
->>
->> The display is what currently requests the interconnect path,
->> specifically mdp5_setup_interconnect() in
->> drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c. The Freedreno GPU bindings
->> currently don't have interconnect support. Maybe this is something that
->> I should add to that driver as well?
+* H. Nikolaus Schaller <hns@goldelico.com> [191023 04:42]:
 > 
-> The "mdp0-mem" and "mdp1-mem" paths mentioned in the mdp5_kms.c are the two
-> interconnects between the display and DDR memory. There is actually a patch [1]
-> to add to GPU bindings, but it seems that we missed to pick it up.
+> > Am 23.10.2019 um 00:19 schrieb Tony Lindgren <tony@atomide.com>:
+> > 
+> > * Adam Ford <aford173@gmail.com> [191022 19:01]:
+> >> On Tue, Oct 22, 2019 at 11:22 AM Tony Lindgren <tony@atomide.com> wrote:
+> >>> 
+> >>> Hi,
+> >>> 
+> >>> * Adam Ford <aford173@gmail.com> [191007 15:06]:
+> >>>> The some in the OMAP3 family have a bandgap thermal sensor, but
+> >>>> omap2plus has it disabled.
+> >>>> 
+> >>>> This patch enables the OMAP3_THERMAL by default like the rest of
+> >>>> the OMAP family.
+> >>> 
+> >>> Looks like this breaks off mode during idle for omap3, and that's
+> >>> probably why it never got enabled. The difference in power
+> >>> consumption during idle is about 7mW vs 32mW for the SoC as
+> >>> measured from torpedo shunt for main_battery_som.
+> >>> 
+> >>> I think the right fix might be simply to add handling for
+> >>> CPU_CLUSTER_PM_ENTER to the related thermal driver to disable
+> >>> it during idle like we have for gpio-omap.c for example.
+> >> 
+> >> I am not sure I know where to start on fixing that issue.  Would you
+> >> entertain enabling the driver if we set the device tree to 'disabled'
+> >> by default?  This way if people want to to use it, it can be enabled
+> >> on a per-device option.  Once the power stuff gets resolved, we might
+> >> be able to enable it by default.  For people who are planning on using
+> >> the DM3730 @ 1GHz in high temp environments, I am not sure they'll
+> >> care about low power.
+> > 
+> > They should both work fine together though. They are not mutually
+> > exclusive features.
+> > 
+> >> I'll try to look into it when I have time, but I was hoping a
+> >> compromise might be a reasonable work-around.
+> > 
+> > It should be hopefully a trivial fix.. I have not looked at the
+> > driver code though.
+> 
+> If I am taken right, it is the drivers/thermal/ti-soc-thermal/ti-*.c
+> which is a common driver for omap3, omap4, omap5. They only differ
+> in the thermal data and which registers and bits are used to access
+> the ADC.
 
-It was actually merged in v5.2.
+Yes so it seems. Enabling OMAP3_THERMAL adds support to
+of_ti_bandgap_match[] for omap3 and causes the issue.
 
-BR,
-Georgi
+> So is this problem with off mode also known for omap4 and omap5?
 
->>>> +				interconnect-names = "mdp0-mem",
->>>> +				                     "mdp1-mem";
->>>
->>> As the second path is not to DDR, but to ocmem, it might be better to call it
->>> something like "gpu-ocmem".
->>
->> I used what mdp5_kms.c expected.
-> 
-> This is for the display and here [2] are some patches for the GPU. Not sure how
-> the NoCs are configured on 8974 by default, but if you notice any blue/black
-> screens, you may need to request bandwidth for display too.
-> 
-> Thanks,
-> Georgi
-> 
-> [1]
-> https://lore.kernel.org/r/1555703787-10897-1-git-send-email-jcrouse@codeaurora.org
-> [2] https://lore.kernel.org/r/20181220173026.3857-1-jcrouse@codeaurora.org
-> 
+Probably. But we don't have off mode working for omap4, and
+it cannot be used for omap5 AFAIK.
+
+My guess is we need to call clk_disable() and call
+ti_bandgap_save_ctxt() on CPU_CLUSTER_PM_ENTER similar to
+what ti_bandgap_suspend does. And then restore it on
+CPU_CLUSTER_PM_EXIT.
+
+There's a similar example already in gpio_omap_cpu_notifier().
+Not sure if there is some related errata to deal with too,
+probably the old Nokia n900 or n9 would provide some hints
+on what exactly needs to be done.
+
+Regards,
+
+Tony
