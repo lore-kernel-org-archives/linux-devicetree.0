@@ -2,109 +2,100 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D4DCA9EBF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA85C47E49
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D7C214B2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47879214B2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391309AbfJWM30 (ORCPT
+        id S2391321AbfJWM3q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:29:26 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:39198 "EHLO
+        Wed, 23 Oct 2019 08:29:46 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:39200 "EHLO
         xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732293AbfJWM30 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:29:26 -0400
+        with ESMTP id S2391317AbfJWM3q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:29:46 -0400
 Received: from ramsan ([84.194.98.4])
         by xavier.telenet-ops.be with bizsmtp
-        id H0VK2100A05gfCL010VKSW; Wed, 23 Oct 2019 14:29:23 +0200
+        id H0Vl2100V05gfCL010VlWv; Wed, 23 Oct 2019 14:29:46 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNFlP-0000Fs-7w; Wed, 23 Oct 2019 14:29:19 +0200
+        id 1iNFlp-0000eP-Qu; Wed, 23 Oct 2019 14:29:45 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNFlP-0003BL-6Y; Wed, 23 Oct 2019 14:29:19 +0200
+        id 1iNFlp-0003Dw-Pv; Wed, 23 Oct 2019 14:29:45 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Magnus Damm <magnus.damm@gmail.com>,
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 5/5] dt-bindings: power: Add r8a77961 SYSC power domain definitions
-Date:   Wed, 23 Oct 2019 14:29:11 +0200
-Message-Id: <20191023122911.12166-6-geert+renesas@glider.be>
+Subject: [PATCH v2 1/4] dt-bindings: clock: renesas: cpg-mssr: Document r8a77961 support
+Date:   Wed, 23 Oct 2019 14:29:38 +0200
+Message-Id: <20191023122941.12342-2-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191023122911.12166-1-geert+renesas@glider.be>
-References: <20191023122911.12166-1-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191023122941.12342-1-geert+renesas@glider.be>
+References: <20191023122941.12342-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add power domain indices for the R-Car M3-W+ (R8A77961) SoC.
+Add DT binding documentation for the Clock Pulse Generator / Module
+Standby and Software Reset block in the Renesas R-Car M3-W+ (R8A77961)
+SoC.
 
-Based on Rev. 2.00 of the R-Car Series, 3rd Generation, Hardware User’s
-Manual (Jul. 31, 2019).
+Update all references to R-Car M3-W from "r8a7796" to "r8a77960", to
+avoid confusion between R-Car M3-W (R8A77960) and M3-W+.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
 v2:
-  - Add Reviewed-by.
+  - Add Reviewed-by,
+  - Update R-Car M3-W references.
 ---
- include/dt-bindings/power/r8a77961-sysc.h | 32 +++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a77961-sysc.h
+ .../devicetree/bindings/clock/renesas,cpg-mssr.txt    | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/include/dt-bindings/power/r8a77961-sysc.h b/include/dt-bindings/power/r8a77961-sysc.h
-new file mode 100644
-index 0000000000000000..7a3800996f7c0252
---- /dev/null
-+++ b/include/dt-bindings/power/r8a77961-sysc.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2019 Glider bvba
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A77961_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A77961_SYSC_H__
-+
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A77961_PD_CA57_CPU0		 0
-+#define R8A77961_PD_CA57_CPU1		 1
-+#define R8A77961_PD_CA53_CPU0		 5
-+#define R8A77961_PD_CA53_CPU1		 6
-+#define R8A77961_PD_CA53_CPU2		 7
-+#define R8A77961_PD_CA53_CPU3		 8
-+#define R8A77961_PD_CA57_SCU		12
-+#define R8A77961_PD_CR7			13
-+#define R8A77961_PD_A3VC		14
-+#define R8A77961_PD_3DG_A		17
-+#define R8A77961_PD_3DG_B		18
-+#define R8A77961_PD_CA53_SCU		21
-+#define R8A77961_PD_A3IR		24
-+#define R8A77961_PD_A2VC1		26
-+
-+/* Always-on power area */
-+#define R8A77961_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A77961_SYSC_H__ */
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+index b5edebeb12b40638..d67f57e0dfd22fbe 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+@@ -27,7 +27,8 @@ Required Properties:
+       - "renesas,r8a7793-cpg-mssr" for the r8a7793 SoC (R-Car M2-N)
+       - "renesas,r8a7794-cpg-mssr" for the r8a7794 SoC (R-Car E2)
+       - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC (R-Car H3)
+-      - "renesas,r8a7796-cpg-mssr" for the r8a7796 SoC (R-Car M3-W)
++      - "renesas,r8a7796-cpg-mssr" for the r8a77960 SoC (R-Car M3-W)
++      - "renesas,r8a77961-cpg-mssr" for the r8a77961 SoC (R-Car M3-W+)
+       - "renesas,r8a77965-cpg-mssr" for the r8a77965 SoC (R-Car M3-N)
+       - "renesas,r8a77970-cpg-mssr" for the r8a77970 SoC (R-Car V3M)
+       - "renesas,r8a77980-cpg-mssr" for the r8a77980 SoC (R-Car V3H)
+@@ -42,10 +43,10 @@ Required Properties:
+   - clock-names: List of external parent clock names. Valid names are:
+       - "extal" (r7s9210, r8a7743, r8a7744, r8a7745, r8a77470, r8a774a1,
+ 		 r8a774b1, r8a774c0, r8a7790, r8a7791, r8a7792, r8a7793,
+-		 r8a7794, r8a7795, r8a7796, r8a77965, r8a77970, r8a77980,
+-		 r8a77990, r8a77995)
+-      - "extalr" (r8a774a1, r8a774b1, r8a7795, r8a7796, r8a77965, r8a77970,
+-		  r8a77980)
++		 r8a7794, r8a7795, r8a77960, r8a77961, r8a77965, r8a77970,
++		 r8a77980, r8a77990, r8a77995)
++      - "extalr" (r8a774a1, r8a774b1, r8a7795, r8a77960, r8a77961, r8a77965,
++		  r8a77970, r8a77980)
+       - "usb_extal" (r8a7743, r8a7744, r8a7745, r8a77470, r8a7790, r8a7791,
+ 		     r8a7793, r8a7794)
+ 
 -- 
 2.17.1
 
