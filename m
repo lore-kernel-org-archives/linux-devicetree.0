@@ -2,101 +2,231 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2FBCA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5DCCA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C342421920
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TKGm0J68";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ijXsFS4I"
+	by mail.kernel.org (Postfix) with ESMTP id DE8C621872
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571821618;
+	bh=rLzFMviBq1IW3xz0y6OVf/ZnK34FeVYbm2iAMwRl5mI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Xl0l0hikTN0KLloa1XqW4Ex/g9iqjbGv1+dGssMjQfnab4xRz8q93jnFttl9gd3XP
+	 yEN+4ED9sGefxIBsCFPDFoukdBRzQqwZXOjVjpY3bCEF5PsTVBLBexi6TanJxePPUq
+	 j5y3DVR1YwJqFmJRYDWMSp4pBl6Js8CZ9jyoP/f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390669AbfJWJCp (ORCPT
+        id S2390578AbfJWJG5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:02:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41682 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390380AbfJWJCp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 05:02:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4D5186087F; Wed, 23 Oct 2019 09:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571821364;
-        bh=H3K/p5Nd/IErHMiHrvlWQlFJ9DJTBQ5fShmQbLBtkxM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TKGm0J68Fwzlg22QjwzMe23LTxwXd5ayeI0pEz2QXIr3mkhgnJ8VTW9eyl6iKtUfw
-         /GvrNBxwCGmz2OJpKV+jSg6XLHhfeIM561XPJ0Uc2L2nx3aMX7T+S5lAQev+P+0gDc
-         javUy5HMiaLp23jhzLHAG4oinwwPV0B/JFfvKVcQ=
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48F9F602E0;
-        Wed, 23 Oct 2019 09:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571821363;
-        bh=H3K/p5Nd/IErHMiHrvlWQlFJ9DJTBQ5fShmQbLBtkxM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ijXsFS4Ii1aIJgX0Jd5STR7e+Op1vN/aPVV5QmKjsfOZM7y9bCG+BKQKd6BbkZ8+R
-         n0ui0HnB1YdsRwh7oaZgD70hSoeG7rt0yKmSrzqCtP7SzkBYz7XkSEo3FZeJdTlqmB
-         TRcU8mFgfuGF+40J3UgWGPScXuEfScaM5y+GMc9M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 48F9F602E0
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v3 01/11] dt-bindings: qcom: Add SC7180 bindings
-Date:   Wed, 23 Oct 2019 14:32:09 +0530
-Message-Id: <20191023090219.15603-2-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191023090219.15603-1-rnayak@codeaurora.org>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
+        Wed, 23 Oct 2019 05:06:57 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35470 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390231AbfJWJG5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 05:06:57 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x3so16753894oig.2;
+        Wed, 23 Oct 2019 02:06:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FBj8GLla1LYyB2CdUTD0DNJdp/9JV1zJyBmNqUMEb5E=;
+        b=WKqYHFw5AwFrCKmX0JvRtKLaJtV+hWtTJKPbzpU2XBeWIlORfVgUbHinz7gZgCG7Mj
+         D933jqJO6uNqjHL8a2XsPe3QZIA88ZcTL2u72PJedae/QhRl7+TRF+BGFbQopTP29x3V
+         yX5ZuFCmid8Fw4uEXNuR3meru3UCcZjeGzmqdsbMi8Ao3K7xHIvGi0qK/v/AJ2kNOrfX
+         6GyzKSs9ynTD2Tt0KyvkqczndRKVIUsfGquOcCZpcDL93Cq6LmYKGJDGT0TtFQ8Ttqyq
+         XAvFZ70Rm3l1pnO4IQ7wrccwoL1FXSY5sI2xACddbqjhzCFR2j2K6+1IRP4AxCKEj8WP
+         X3Bw==
+X-Gm-Message-State: APjAAAXzr4DWklBOu0sZIpiCARzAr5o1q0gddF/qCoNpuWOGEcSi4IPZ
+        GlTIHmH8+AZeRov+dCKaWcPkzyEOpIdnvR1DpAo=
+X-Google-Smtp-Source: APXvYqyTirHnxPx9RjJnt0t5BfWKP5pSpiJnq+2XRPKiTpfW8z3VJ5oCRR5WKfiwapiGyf/vUU3yqd6A2ed8cyxSsVw=
+X-Received: by 2002:aca:5885:: with SMTP id m127mr6878786oib.110.1571821614375;
+ Wed, 23 Oct 2019 02:06:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191023082423.12569-1-ran.wang_1@nxp.com>
+In-Reply-To: <20191023082423.12569-1-ran.wang_1@nxp.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 23 Oct 2019 11:06:43 +0200
+Message-ID: <CAJZ5v0jvQaREhg94f-COdYTt58gMP7YvqdEH0oYiS9Z56tg-XQ@mail.gmail.com>
+Subject: Re: [PATCH v9 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>,
+        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a SoC string 'sc7180' for the qualcomm SC7180 SoC.
-Also add a new board type 'idp'
+On Wed, Oct 23, 2019 at 10:24 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+>
+> Some user might want to go through all registered wakeup sources
+> and doing things accordingly. For example, SoC PM driver might need to
+> do HW programming to prevent powering down specific IP which wakeup
+> source depending on. So add this API to help walk through all registered
+> wakeup source objects on that list and return them one by one.
+>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
----
- Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+OK, thanks for making all of the requested changes:
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-index e39d8f02e33c..0a60ea051541 100644
---- a/Documentation/devicetree/bindings/arm/qcom.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-@@ -36,6 +36,7 @@ description: |
-   	mdm9615
-   	ipq8074
-   	sdm845
-+  	sc7180
- 
-   The 'board' element must be one of the following strings:
- 
-@@ -46,6 +47,7 @@ description: |
-   	sbc
-   	hk01
-   	qrd
-+  	idp
- 
-   The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
-   where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
+and please feel free to push this through the appropriate
+arch/platform tree.  Alternatively, please let me know if you want me
+to take this series, but then I need an ACK from the appropriate
+maintainer(s) on patch 3.
+
+> ---
+> Change in v9:
+>         - Supplement comments for wakeup_sources_read_lock(),
+>           wakeup_sources_read_unlock, wakeup_sources_walk_start and
+>           wakeup_sources_walk_next().
+>
+> Change in v8:
+>         - Rename wakeup_source_get_next() to wakeup_sources_walk_next().
+>         - Add wakeup_sources_read_lock() to take over locking job of
+>           wakeup_source_get_star().
+>         - Rename wakeup_source_get_start() to wakeup_sources_walk_start().
+>         - Replace wakeup_source_get_stop() with wakeup_sources_read_unlock().
+>         - Define macro for_each_wakeup_source(ws).
+>
+> Change in v7:
+>         - Remove define of member *dev in wake_irq to fix conflict with commit
+>         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs"), user
+>         will use ws->dev->parent instead.
+>         - Remove '#include <linux/of_device.h>' because it is not used.
+>
+> Change in v6:
+>         - Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned
+>         with wakeup_sources_stats_seq_start/nex/stop.
+>
+> Change in v5:
+>         - Update commit message, add decription of walk through all wakeup
+>         source objects.
+>         - Add SCU protection in function wakeup_source_get_next().
+>         - Rename wakeup_source member 'attached_dev' to 'dev' and move it up
+>         (before wakeirq).
+>
+> Change in v4:
+>         - None.
+>
+> Change in v3:
+>         - Adjust indentation of *attached_dev;.
+>
+> Change in v2:
+>         - None.
+>
+>  drivers/base/power/wakeup.c | 54 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_wakeup.h   |  9 ++++++++
+>  2 files changed, 63 insertions(+)
+>
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 5817b51..70a9edb 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -248,6 +248,60 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+>  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+>
+>  /**
+> + * wakeup_sources_read_lock - Lock wakeup source list for read.
+> + *
+> + * Returns an index of srcu lock for struct wakeup_srcu.
+> + * This index must be passed to the matching wakeup_sources_read_unlock().
+> + */
+> +int wakeup_sources_read_lock(void)
+> +{
+> +       return srcu_read_lock(&wakeup_srcu);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_read_lock);
+> +
+> +/**
+> + * wakeup_sources_read_unlock - Unlock wakeup source list.
+> + * @idx: return value from corresponding wakeup_sources_read_lock()
+> + */
+> +void wakeup_sources_read_unlock(int idx)
+> +{
+> +       srcu_read_unlock(&wakeup_srcu, idx);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_read_unlock);
+> +
+> +/**
+> + * wakeup_sources_walk_start - Begin a walk on wakeup source list
+> + *
+> + * Returns first object of the list of wakeup sources.
+> + *
+> + * Note that to be safe, wakeup sources list needs to be locked by calling
+> + * wakeup_source_read_lock() for this.
+> + */
+> +struct wakeup_source *wakeup_sources_walk_start(void)
+> +{
+> +       struct list_head *ws_head = &wakeup_sources;
+> +
+> +       return list_entry_rcu(ws_head->next, struct wakeup_source, entry);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_start);
+> +
+> +/**
+> + * wakeup_sources_walk_next - Get next wakeup source from the list
+> + * @ws: Previous wakeup source object
+> + *
+> + * Note that to be safe, wakeup sources list needs to be locked by calling
+> + * wakeup_source_read_lock() for this.
+> + */
+> +struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws)
+> +{
+> +       struct list_head *ws_head = &wakeup_sources;
+> +
+> +       return list_next_or_null_rcu(ws_head, &ws->entry,
+> +                               struct wakeup_source, entry);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_next);
+> +
+> +/**
+>   * device_wakeup_attach - Attach a wakeup source object to a device object.
+>   * @dev: Device to handle.
+>   * @ws: Wakeup source object to attach to @dev.
+> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+> index 661efa0..aa3da66 100644
+> --- a/include/linux/pm_wakeup.h
+> +++ b/include/linux/pm_wakeup.h
+> @@ -63,6 +63,11 @@ struct wakeup_source {
+>         bool                    autosleep_enabled:1;
+>  };
+>
+> +#define for_each_wakeup_source(ws) \
+> +       for ((ws) = wakeup_sources_walk_start();        \
+> +            (ws);                                      \
+> +            (ws) = wakeup_sources_walk_next((ws)))
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>
+>  /*
+> @@ -92,6 +97,10 @@ extern void wakeup_source_remove(struct wakeup_source *ws);
+>  extern struct wakeup_source *wakeup_source_register(struct device *dev,
+>                                                     const char *name);
+>  extern void wakeup_source_unregister(struct wakeup_source *ws);
+> +extern int wakeup_sources_read_lock(void);
+> +extern void wakeup_sources_read_unlock(int idx);
+> +extern struct wakeup_source *wakeup_sources_walk_start(void);
+> +extern struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws);
+>  extern int device_wakeup_enable(struct device *dev);
+>  extern int device_wakeup_disable(struct device *dev);
+>  extern void device_set_wakeup_capable(struct device *dev, bool capable);
+> --
+> 2.7.4
+>
