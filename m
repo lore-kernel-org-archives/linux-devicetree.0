@@ -2,284 +2,291 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74C7CA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146FBCA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 17:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D712086D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB02D21906
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 17:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVVxCOX9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIjn6zOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfJWRDA (ORCPT
+        id S1730143AbfJWRcf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:03:00 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45481 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfJWRDA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 13:03:00 -0400
-Received: by mail-ed1-f66.google.com with SMTP id y7so8800211edo.12;
-        Wed, 23 Oct 2019 10:02:58 -0700 (PDT)
+        Wed, 23 Oct 2019 13:32:35 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33540 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730133AbfJWRcf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 13:32:35 -0400
+Received: by mail-io1-f65.google.com with SMTP id z19so26020866ior.0
+        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 10:32:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lfyYJCpihwCnIIE7ruVuey3YIuD1cBFEnblxL3Pf/GI=;
-        b=MVVxCOX9LRMQ36a3zNVyY+afvH1vtKyY26cuhVBsZxf2IIbcJVSLjlQSbIN93RUx87
-         5qKNEkqJ5jiuKu2gkZO7WelpuY14JiMDCgIsMHIauPcipDsQAcVrr3FnkTlWeVefe+fT
-         qZsWYa4FBlP3s3WjQVeMbCTL0P0Tr8p3CuykPaplANBe+9/enfRdK5o7aSD6iNgfuTYp
-         vY+F7iOG8ig/11r6XtjeNvobRL5SOtWqVMNBXClHzFga5wb8yY0FKPH46iGe6rJCe0N7
-         Vr9rz0HzA4WOZa7Yj5K04ixXEldjtZOkx4eLWQkM+mGzAftjOY4y16i3aQDfiKOJ1XNy
-         K+Uw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FHddi31URb1ZVMU1f/OlQcKL3JwlroIUzHSEfU1rm9E=;
+        b=iIjn6zOkon2+vy3u6ieqyT3hIL8hquUtW4WVxARJ6GHQwHgVlZingSEfEw9ylY7oSA
+         1F16bAeKpgTLYL8UJtX2Etu3picTNixpMhzj/ekoOwp/cmGSBH7kGopfJcid2JgAy8Zk
+         1ekeWPNa7uy0YtmbrdEsazn/sa0lGt/eFUJMFsJwBgjiSuI4qlqblHgEO7XKfG3qksLr
+         IDlP36H3VVyB02zXq77wDIDehyaKyQ3jmqrMyVY2/qASiIgVPru4z632XnyVSIxYBQHb
+         w03wb0KJl4xmm3rZ2KTkP2qYtu2ybDHY5MESrnzdRpr3BOw+46Vdgg7SldIhK+UA0OV0
+         GUcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=lfyYJCpihwCnIIE7ruVuey3YIuD1cBFEnblxL3Pf/GI=;
-        b=iQkfF7Q8QdRq6JEzciz2hrz7PeZCa/Oxb4p8WhAPkx57Su9gL2nttKBP7tTEffJjxM
-         a0OVxcKhREUn4rmnILRZNPGgRqdpR+Xcd3MgageVwZeCJU23UTBATjV6bJlM3225M638
-         wv79zrnDPQVYg5Yvic8IS0Kj3SB8Ng7MENRUNRo7SRnRpvyvTEzpCV1yAHfElJKizbpE
-         PQo1MM+RoMESW0s2xN5/oVNVt+cmGJUjYqWl6/nwmoRwfk2/wXzKdAPUcEmJQiVCABHs
-         SmC4kCdwKmcaoNmDPPYvseQM2xW7epwlapG6N6PZEGLXUw+HDMDVDdvKufguDSJ3cx3a
-         hJ0A==
-X-Gm-Message-State: APjAAAVNgVE1DtXZYBjXNojpDAh4dtmfwC9bsnVdClRsx72PkRO8ZmsV
-        weFKrOwIg+EnfOUY9XYOkKE=
-X-Google-Smtp-Source: APXvYqzymVs1QDqA/1YTAp6vInBkMYtF8XzZI8GIvyIFLORM5ghcENbZoOm+z/Kuq5t0R4oLkuwDLA==
-X-Received: by 2002:a17:906:6a15:: with SMTP id o21mr33246404ejr.79.1571850177503;
-        Wed, 23 Oct 2019 10:02:57 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id sb3sm62677ejb.64.2019.10.23.10.02.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 10:02:56 -0700 (PDT)
-Subject: Re: [PATCH RFC 2/2] irqchip/gic: Allow the use of SGI interrupts
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Thanu Rangarajan <thanu.rangarajan@arm.com>
-References: <20191023000547.7831-1-f.fainelli@gmail.com>
- <20191023000547.7831-3-f.fainelli@gmail.com>
- <112a725164b7fe321f27357fd4cd772f@www.loen.fr>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <fdb77138-3df8-ef51-6519-e630b6228eb0@gmail.com>
-Date:   Wed, 23 Oct 2019 10:02:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FHddi31URb1ZVMU1f/OlQcKL3JwlroIUzHSEfU1rm9E=;
+        b=AoS8DKIKl3oCboueHLVxBtTI0z6oSog/sEGDcAYn9obxVXWZCVwsvlV3fxennnSZ9y
+         7wsQISXPy7skd7YY9aZtx8hntij5Q/idH+iUTVEY6eD5znm8uw49WTN73qaxQjrM6v8r
+         0ICH92lG1FgJ0o1nicLtFX1ODrS5HKa3rNylfeauGHl83Lpe9Qp2ZWDPE/PMqmXnpWM3
+         2e67mr3NBlMXCX1AeFDYOnrCqARLJqJ/uKycKCQcgEuZH9el99Cy++cAOjix6L5z/qLl
+         GhpWkt9tE8u6wSs4dQCL8YgkY9VtnwFOHWESrgQcwQO5NhzaF3zmAmrG7QGDs1nIZ1RO
+         Ai+A==
+X-Gm-Message-State: APjAAAWa15Lj0ov/59h58pHA5z28PtFyjFI9iYxdeoqBXDxreeP56+ra
+        g1VAQ1ldUnMzkbzv7KLEu04YPcaStrCuQgJY5nQqrA==
+X-Google-Smtp-Source: APXvYqxyBYMtAL3D/OX0ZAdgMK8IVMiPoByH/BDSVN52PLwP4Oc1eswZzBzK266InVy9jGWBwrafm+J4exhXkFSElJs=
+X-Received: by 2002:a6b:d104:: with SMTP id l4mr4641180iob.50.1571851952354;
+ Wed, 23 Oct 2019 10:32:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <112a725164b7fe321f27357fd4cd772f@www.loen.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
+In-Reply-To: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 23 Oct 2019 11:32:21 -0600
+Message-ID: <CANLsYkzkk9yPezSyU50TmWjDAZ-5D2Hmo0YztQzm+mnyZf1Www@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: zynq: enablement of coresight topology
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Zumeng Chen <zumeng.chen@windriver.com>,
+        Quanyang Wang <quanyang.wang@windriver.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Crosthwaite <peter.crosthwaite@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robherring2@gmail.com>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        u-boot@lists.denx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello marc,
+Hi Michal,
 
-On 10/23/19 6:22 AM, Marc Zyngier wrote:
-> Hi Florian,
-> 
-> Needless to say, I mostly have questions...
-> 
-> On 2019-10-23 01:05, Florian Fainelli wrote:
->> SGI interrupts are a convenient way for trusted firmware to target a
->> specific set of CPUs. Update the ARM GIC code to allow the translation
->> and mapping of SGI interrupts.
->>
->> Since the kernel already uses SGIs for various inter-processor interrupt
->> activities, we specifically make sure that we do not let users of the
->> IRQ API to even try to map those.
->>
->> Internal IPIs remain dispatched through handle_IPI() while public SGIs
->> get promoted to a normal interrupt flow management.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  drivers/irqchip/irq-gic.c | 41 +++++++++++++++++++++++++++------------
->>  1 file changed, 29 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
->> index 30ab623343d3..dcfdbaacdd64 100644
->> --- a/drivers/irqchip/irq-gic.c
->> +++ b/drivers/irqchip/irq-gic.c
->> @@ -385,7 +385,10 @@ static void __exception_irq_entry
->> gic_handle_irq(struct pt_regs *regs)
->>               * Pairs with the write barrier in gic_raise_softirq
->>               */
->>              smp_rmb();
->> -            handle_IPI(irqnr, regs);
->> +            if (irqnr < NR_IPI)
->> +                handle_IPI(irqnr, regs);
->> +            else
->> +                handle_domain_irq(gic->domain, irqnr, regs);
-> 
-> Double EOI, UNPREDICTABLE territory, your state machine is now dead.
+I was not CC'ed on the original post so I just noticed this today,
+hence the late reply.  I don't know if you were looking for feedback
+or already picked up the patch but here it is anyway.
 
-Oh yes, the interrupt flow now also goes through ->irq_eoi (that's the
-whole point), meh.
+On Wed, 9 Oct 2019 at 08:07, Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> From: Zumeng Chen <zumeng.chen@windriver.com>
+>
+> This patch is to build the coresight topology structure of zynq-7000
+> series according to the docs of coresight and userguide of zynq-7000.
+>
+> Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
+> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>
+>  arch/arm/boot/dts/zynq-7000.dtsi | 158 +++++++++++++++++++++++++++++++
+>  1 file changed, 158 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index ca6425ad794c..86430ad76fee 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -59,6 +59,40 @@
+>                 regulator-always-on;
+>         };
+>
+> +       replicator {
+> +               compatible = "arm,coresight-static-replicator";
+> +               clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +               clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +
+> +               out-ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       /* replicator output ports */
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               replicator_out_port0: endpoint {
+> +                                       remote-endpoint = <&tpiu_in_port>;
+> +                               };
+> +                       };
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               replicator_out_port1: endpoint {
+> +                                       remote-endpoint = <&etb_in_port>;
+> +                               };
+> +                       };
+> +               };
+> +               in-ports {
+> +                       /* replicator input port */
+> +                       port {
+> +                               replicator_in_port0: endpoint {
+> +                                       slave-mode;
 
-> 
->>  #endif
->>              continue;
->>          }
->> @@ -1005,20 +1008,34 @@ static int gic_irq_domain_translate(struct
->> irq_domain *d,
->>          if (fwspec->param_count < 3)
->>              return -EINVAL;
->>
->> -        /* Get the interrupt number and add 16 to skip over SGIs */
->> -        *hwirq = fwspec->param[1] + 16;
->> -
->> -        /*
->> -         * For SPIs, we need to add 16 more to get the GIC irq
->> -         * ID number
->> -         */
->> -        if (!fwspec->param[0])
->> +        *hwirq = fwspec->param[1];
->> +        switch (fwspec->param[0]) {
->> +        case 0:
->> +            /*
->> +             * For SPIs, we need to add 16 more to get the GIC irq
->> +             * ID number
->> +             */
->> +            *hwirq += 16;
->> +            /* fall through */
->> +        case 1:
->> +            /* Add 16 to skip over SGIs */
->>              *hwirq += 16;
->> +            *type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
->>
->> -        *type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
->> +            /* Make it clear that broken DTs are... broken */
->> +            WARN_ON(*type == IRQ_TYPE_NONE);
->> +            break;
->> +        case 2:
->> +            /* Refuse to map internal IPIs */
->> +            if (*hwirq < NR_IPI)
-> 
-> So depending on how the kernel uses SGIs, you can or cannot use these SGIs.
-> That looks like a good way to corner ourselves into not being to change
-> much.
+The slave-mode property is no longer required and probably an
+oversight since it doesn't appear elsewhere in this patch.
 
-arch/arm/kernel/smp.c has a forward looking statement about SGI numbering:
+> +                                       remote-endpoint = <&funnel_out_port>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+>         amba: amba {
+>                 compatible = "simple-bus";
+>                 #address-cells = <1>;
+> @@ -365,5 +399,129 @@
+>                         reg = <0xf8005000 0x1000>;
+>                         timeout-sec = <10>;
+>                 };
+> +
+> +               etb@f8801000 {
+> +                       compatible = "arm,coresight-etb10", "arm,primecell";
+> +                       reg = <0xf8801000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       in-ports {
+> +                               port {
+> +                                       etb_in_port: endpoint {
+> +                                               remote-endpoint = <&replicator_out_port1>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               tpiu@f8803000 {
+> +                       compatible = "arm,coresight-tpiu", "arm,primecell";
+> +                       reg = <0xf8803000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       in-ports {
+> +                               port {
+> +                                       tpiu_in_port: endpoint {
+> +                                               remote-endpoint = <&replicator_out_port0>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@f8804000 {
+> +                       compatible = "arm,coresight-static-funnel", "arm,primecell";
+> +                       reg = <0xf8804000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +
+> +                       /* funnel output ports */
+> +                       out-ports {
+> +                               port {
+> +                                       funnel_out_port: endpoint {
+> +                                               remote-endpoint =
+> +                                                       <&replicator_in_port0>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       in-ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               /* funnel input ports */
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       funnel0_in_port0: endpoint {
+> +                                               remote-endpoint = <&ptm0_out_port>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <1>;
+> +                                       funnel0_in_port1: endpoint {
+> +                                               remote-endpoint = <&ptm1_out_port>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg = <2>;
+> +                                       funnel0_in_port2: endpoint {
+> +                                       };
+> +                               };
+> +
+> +                               port@3 {
+> +                                       reg = <3>;
+> +                                       funnel0_in_port3: endpoint {
+> +                                               remote-endpoint = <&itm_out_port>;
+> +                                       };
+> +                               };
+> +                               /* The other input ports are not connect to anything */
+> +                       };
+> +               };
+> +
+> +               /* ITM is not supported by kernel, only leave device node here */
+> +               itm@f8805000 {
+> +                       compatible = "arm,coresight-etm3x", "arm,primecell";
 
-        /*
-         * SGI8-15 can be reserved by secure firmware, and thus may
-         * not be usable by the kernel. Please keep the above limited
-         * to at most 8 entries.
-         */
+If I remember correctly ITM and ETMv3 are quite different - please
+remove entirely.
 
-is this something that can be used as an universal and unbreakable rule
-for the ARM64 kernel as well in order to ensure SGIs 8-15 can be usable
-through the IRQ API or is this simply not a guarantee at all?
+> +                       reg = <0xf8805000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       out-ports {
+> +                               port {
+> +                                       itm_out_port: endpoint {
+> +                                               remote-endpoint = <&funnel0_in_port3>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               ptm@f889c000 {
+> +                       compatible = "arm,coresight-etm3x", "arm,primecell";
+> +                       reg = <0xf889c000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       cpu = <&cpu0>;
+> +                       out-ports {
+> +                               port {
+> +                                       ptm0_out_port: endpoint {
+> +                                               remote-endpoint = <&funnel0_in_port0>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               ptm@f889d000 {
+> +                       compatible = "arm,coresight-etm3x", "arm,primecell";
+> +                       reg = <0xf889d000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       cpu = <&cpu1>;
+> +                       out-ports {
+> +                               port {
+> +                                       ptm1_out_port: endpoint {
+> +                                               remote-endpoint = <&funnel0_in_port1>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
 
-> 
-> Also, do you expect this to work for both Group-0 and Group-1 interrupts
-> (since you imply that this works as a communication medium with the secure
-> side)? Given that the kernel running in NS has no way to enable/disable
-> Group-0 interrupts, this looks terminally flawed. Or is that Group-1 only?
+With the above:
 
-That would be Group-1 interrupts only, are you suggesting there is an
-additional check being done that such SGIs are actually part of Group-1?
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-> 
-> How do we describe which SGIs are guaranteed to be available to Linux?
-
-In our case, the Device Tree mailbox node gets populated its interrupts
-property with the SGI number(s), and that same number is also passed as
-a configuration parameter to the trusted firmware. Or are you echoing
-back to your earlier comment about the fact that if the kernel changes
-its own definition of NR_IPI then we suddenly start breaking IRQ API
-uses of SGIs in a certain range?
-
-> 
->> +                return -EPERM;
->> +
->> +            *type = IRQ_TYPE_NONE;
-> 
-> Or not. SGI are edge triggered, by definition.
-> 
->> +            break;
->> +        default:
->> +            break;
->> +        }
->>
->> -        /* Make it clear that broken DTs are... broken */
->> -        WARN_ON(*type == IRQ_TYPE_NONE);
-> 
-> Really?
-
-Given the comment in gic_set_type() about SGIs, the WARN_ON() was moved
-above to continue checking for GIC_SPI and GIC_PPI, but we should
-extract the type from the Devic eTree and only permit an edge mask.
--- 
-Florian
+>         };
+>  };
+> --
+> 2.17.1
+>
