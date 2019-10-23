@@ -2,37 +2,40 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AEECA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B9DCA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E626621872
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08B021920
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391068AbfJWKN3 (ORCPT
+        id S2404248AbfJWKNi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:13:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53770 "EHLO mx1.suse.de"
+        Wed, 23 Oct 2019 06:13:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54006 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390935AbfJWKN3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:13:29 -0400
+        id S2404204AbfJWKNf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:13:35 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 546CEB4D6;
-        Wed, 23 Oct 2019 10:13:27 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 3EFF2B67E;
+        Wed, 23 Oct 2019 10:13:33 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 00/11] arm64: Realtek RTD1295 reset controllers
-Date:   Wed, 23 Oct 2019 12:13:06 +0200
-Message-Id: <20191023101317.26656-1-afaerber@suse.de>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH v2 11/11] ARM: dts: rtd1195: Adopt reset constants
+Date:   Wed, 23 Oct 2019 12:13:17 +0200
+Message-Id: <20191023101317.26656-12-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191023101317.26656-1-afaerber@suse.de>
+References: <20191023101317.26656-1-afaerber@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -41,65 +44,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Replace reset controller indices with constants.
 
-This series adds reset controllers for the Realtek RTD1295 and RTD1195 SoCs.
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ v2: New
+ 
+ arch/arm/boot/dts/rtd1195.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-v2 adopts reset-simple driver and DesignWare bindings as simplification
-and covers RTD1195, too.
-
-Note that reset-simple driver would allow to cover RTD1195's reset1-3 in one
-DT node, but it only maps the first resource, so RTD1295's reset4 would need
-to remain separate due to a gap in between. I've therefore left them all as
-separate nodes for now.
-
-Also note that my initial 32-bit arm patch already selects RESET_CONTROLLER,
-to avoid needing a separate patch here to add that one line as done for arm64.
-
-If I can take the bindings patches through the Realtek tree then I can squash
-the two final DT patches depending on them into the patches added the resets,
-otherwise they need to go into v5.6 or be merged via a topic branch.
-
-More experimental patches at:
-https://github.com/afaerber/linux/commits/rtd1295-next
-
-Have a lot of fun!
-
-Cheers,
-Andreas
-
-v1 -> v2:
-* Drop custom reset driver
-* Drop "realtek,rtd1295-reset" binding
-* Reordered to not depend on irqchip or clk patches
-* Extended with RTD1195 patches
-
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org
-
-Andreas Färber (11):
-  dt-bindings: reset: Add Realtek RTD1295
-  dt-bindings: reset: Add Realtek RTD1195
-  reset: simple: Keep alphabetical order
-  reset: simple: Add Realtek RTD1195/RTD1295
-  arm64: realtek: Select reset controller
-  arm64: dts: realtek: Add RTD129x reset controller nodes
-  arm64: dts: realtek: Add RTD129x UART resets
-  ARM: dts: rtd1195: Add reset nodes
-  ARM: dts: rtd1195: Add UART resets
-  arm64: dts: realtek: Adopt RTD129x reset constants
-  ARM: dts: rtd1195: Adopt reset constants
-
- arch/arm/boot/dts/rtd1195.dtsi              |  27 +++++++
- arch/arm64/Kconfig.platforms                |   1 +
- arch/arm64/boot/dts/realtek/rtd129x.dtsi    |  34 +++++++++
- drivers/reset/Kconfig                       |   5 +-
- include/dt-bindings/reset/realtek,rtd1195.h |  74 +++++++++++++++++++
- include/dt-bindings/reset/realtek,rtd1295.h | 111 ++++++++++++++++++++++++++++
- 6 files changed, 250 insertions(+), 2 deletions(-)
- create mode 100644 include/dt-bindings/reset/realtek,rtd1195.h
- create mode 100644 include/dt-bindings/reset/realtek,rtd1295.h
-
+diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
+index e2cdcbcf70f4..9ccf8fa04718 100644
+--- a/arch/arm/boot/dts/rtd1195.dtsi
++++ b/arch/arm/boot/dts/rtd1195.dtsi
+@@ -13,6 +13,7 @@
+ /memreserve/ 0x18100000 0x01000000; /* nor */
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset/realtek,rtd1195.h>
+ 
+ / {
+ 	compatible = "realtek,rtd1195";
+@@ -128,7 +129,7 @@
+ 			reg = <0x18007800 0x400>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			resets = <&iso_reset 8>;
++			resets = <&iso_reset RTD1195_ISO_RSTN_UR0>;
+ 			clock-frequency = <27000000>;
+ 			status = "disabled";
+ 		};
+@@ -138,7 +139,7 @@
+ 			reg = <0x1801b200 0x100>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			resets = <&reset2 28>;
++			resets = <&reset2 RTD1195_RSTN_UR1>;
+ 			clock-frequency = <27000000>;
+ 			status = "disabled";
+ 		};
 -- 
 2.16.4
 
