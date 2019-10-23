@@ -2,150 +2,154 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2E5CA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A148CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528F320650
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5B820650
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 20:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SlGscV6u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNFK7rbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732484AbfJWUHJ (ORCPT
+        id S1730337AbfJWUKF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:07:09 -0400
-Received: from mail-eopbgr60056.outbound.protection.outlook.com ([40.107.6.56]:26385
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730450AbfJWUHJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 16:07:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HavgujDjrOJaUDO/kjV29ZFyxa48586+e+olwiBRD0KGfzR52XIMixIaBAx+YrmyLaHjkjM0bbp6tWEK1PXWmRtVCYbQfrlLcXlqleUj9q0vk10+8LOMUiZtsx8I2jX7QgZgBuNYtuN/iVfxU8CaT4HuRUOOXHLChfFiKb6bSXpQZM8EBjwAL5BOLfbUgSa3tAXiwOoNKP3JpeznSpaZXBBzu5Wbdzzc/1OOtalb8ZDoibvWM/Lu0wYxnruqeVtzCyCP9xkmsbudtAesrBgQjVuacVUmGTPWj2mut6EDST8Nk2N9Y6GSwFY9FnWQ+CgrbxvDMjq4m6wkkeBOUX7asg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btlRay3yp9k/vMTHvGvVM5ycBW7OvOsN5xwkzn1H+v8=;
- b=G4Him6BKajnKsZ9kKZC6grfF7AT+jV8G6J1L708Fuu2NHzmeLVULJp49mah3n9rfNgF3TMc02CUXAlNuI+Wsf728Z2/tp1ZhMPfmZkVC/uZXaKbbDgA1uUmr91M61uZefRPXwQXLkxZAI13tb/9asiIHHbyfG5134qmvu0v4Kn37Wu+dC3ytLP/QP1eLsIfwZsQkEToYGznSyynFA6tSwqcTOd933YICG6QXipjtV5DClbh1FsFKPRFgPEYSN31Z5itLj8++2d33owM4jeFIq+nYmExD7rsrEsRnb1kZ5t03KG5yNS7/1o6a727hvulA5r3agCDzKrFPL+vWUm2LXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btlRay3yp9k/vMTHvGvVM5ycBW7OvOsN5xwkzn1H+v8=;
- b=SlGscV6umKHhArMOVP73SRAVDdMC9z+oS0OeerUe4vfOXyPgdR+FVQBKbbISxsSFjjRXBTFCmEfsX4OJQSYMbEi4kqtg3WVAAPFx2Mewa8ySfxuCYJ8EiDFZ8jsT+yARKFTGl2vSvJ5ATlBJiEpPkucNJpz4jyR4wHgk61YduOg=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
- VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Wed, 23 Oct 2019 20:07:05 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6%3]) with mapi id 15.20.2387.019; Wed, 23 Oct 2019
- 20:07:05 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Ran Wang <ran.wang_1@nxp.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Anson Huang <anson.huang@nxp.com>,
-        Biwen Li <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH v9 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Thread-Topic: [PATCH v9 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Thread-Index: AQHViXs7pjvy0YmnJESZ+DezIHv14qdn72mAgAAM0YCAAKtBgA==
-Date:   Wed, 23 Oct 2019 20:07:05 +0000
-Message-ID: <VE1PR04MB6687A70243B9764F1356442C8F6B0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20191023082423.12569-1-ran.wang_1@nxp.com>
- <CAJZ5v0jvQaREhg94f-COdYTt58gMP7YvqdEH0oYiS9Z56tg-XQ@mail.gmail.com>
- <DB8PR04MB68261D8B18D39DF170ECC7C8F16B0@DB8PR04MB6826.eurprd04.prod.outlook.com>
-In-Reply-To: <DB8PR04MB68261D8B18D39DF170ECC7C8F16B0@DB8PR04MB6826.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9e96d190-6828-418a-7fbe-08d757f493cf
-x-ms-traffictypediagnostic: VE1PR04MB6687:|VE1PR04MB6687:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6687EA5F673D647B8B2839D98F6B0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(51914003)(199004)(13464003)(189003)(55016002)(476003)(186003)(71190400001)(71200400001)(256004)(14454004)(6436002)(446003)(26005)(7696005)(5660300002)(52536014)(478600001)(66946007)(14444005)(53546011)(11346002)(54906003)(76116006)(102836004)(25786009)(99286004)(66476007)(64756008)(8676002)(8936002)(81156014)(66556008)(66446008)(110136005)(81166006)(9686003)(305945005)(6246003)(86362001)(7736002)(229853002)(4326008)(316002)(33656002)(3846002)(6116002)(6506007)(76176011)(486006)(2906002)(7416002)(74316002)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6687;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OO6dGbREqJKG2+d0hxBuOb4FGQa2VqQOCXMD1cYaEZxkpcDhYQlNdHsK0RvR7EGt7WAlXbOY3iqHOBY47Zohy2wTwA018vu3g0jhgwMse1zUsQ+26QhV04mp9x1EHrTSUyFK/fadosrqo90PbDAWcZRmM7wBzAvsMUqFRn9jHOL5X9cSDzSlMcROteYXwyOlWbpKMA47ggBog4axZgTfIxP2uwuCexRr6fRsrEbf0OiIRyczp8dCY35/BzBc5C7Fs70IP8HzKfkrcVKLBnm2PaQFgf5Ya7Lz2yMIde1uiPBQr2iz56eh8mCAZymri8y/6FIwZZOP+UJbn9uZ7bB1vYXSldfaTzT0Unj2HwMSg2LQ4qK0xD2aZJcjZ7P1TKchRig01jOTfL7gdhxYPuCbeu15YWOmj4rbaQBCsOz43oFMU0S4g8KbU0EmKSifHePa
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 23 Oct 2019 16:10:05 -0400
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:34066 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730318AbfJWUKF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 16:10:05 -0400
+Received: by mail-ed1-f49.google.com with SMTP id b72so7815429edf.1;
+        Wed, 23 Oct 2019 13:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
+         :content-disposition:user-agent;
+        bh=C1NbfjOuUTsXYRctJ+TahLyVOHakGWGNdk4fyJjLp9A=;
+        b=jNFK7rbG6GM43VxqVeMfmX0GUT/q18dLyodhNk8SHuNYeY8X7fC9oW7VEPm+C3J2Kz
+         W1ZizKY60mZn8HGXuafW1xDpdwHlfedQexRfm5y/emsdCz54V4oP6eltP2XWyCd52Tal
+         2dUg0OdoY4/G1Y5b9U9F2Vw7l6NNZ+b+K0UzkeJ7RR7x9Bv48C8yTookFgKqdI5DF9W7
+         qnWZtevkurE0uHqLQfQ8VgFMT7AyzOUOscfvofm5lmpXME//G9/oCBgymH4cG+yWuiT4
+         TYSqoh9uHv2NYm7W6Vs6if0QI5iUrE8sjYBfiGDy9GpYVZcSu1txKHuX+b2VMmvD9eR3
+         gwyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:mime-version:content-disposition:user-agent;
+        bh=C1NbfjOuUTsXYRctJ+TahLyVOHakGWGNdk4fyJjLp9A=;
+        b=I5KOLmqggJH+RI21RsNNNnVcL44HR+6ys4p9vZjkz7WyOFJXXDyKS32UHhIgJNc2bq
+         SJe4QPAvGNuD4C16T3zLj1mn6rSnbfQCMZ8sUPT43zCJxtAi6tuAe1yL+HT0v3qGwd1L
+         RMGUwBijVCqAQu2Ht8vbzw1/FRrv02IyU12/Q/m5c7QhzsqHaFkwn7yF2hcBIJVMnCNQ
+         fBnUiAO9m6aw9cwXUc0meFBeJXvJtgWSMk+ISoVZ6BnD2JtNtfBHrgBcF8PPv58eEIFn
+         uFXNq8p2GE5y5BNsV08Xic7yh96K3/HY/tlIR+xS99ZG8vMMfdaCNsxtgz9eLhG4dEP9
+         7pFg==
+X-Gm-Message-State: APjAAAU914NEC7E9dQ++PiyvfQxU4ripvoLnxb5TV9MoFEelqvr/DKhO
+        wGFRxYFOTxtDY9tJAdTKNxc=
+X-Google-Smtp-Source: APXvYqzYe28YjM3kzXcH00uYMzHG30FNnyv6ODvygeohVjBtT4lsFb7SivWJLOWKsqkEcP8yonn7kg==
+X-Received: by 2002:a17:906:858d:: with SMTP id v13mr24700263ejx.61.1571861402855;
+        Wed, 23 Oct 2019 13:10:02 -0700 (PDT)
+Received: from localhost (ip1f113d5e.dynamic.kabel-deutschland.de. [31.17.61.94])
+        by smtp.gmail.com with ESMTPSA id a20sm842757edt.95.2019.10.23.13.10.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 13:10:02 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 22:10:00 +0200
+From:   Oliver Graute <oliver.graute@gmail.com>
+To:     fugang.duan@nxp.com
+Cc:     festevam@gmail.com,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org
+Subject: fec driver: ethernet rx is deaf on variscite imx6ul board
+Message-ID: <20191023201000.GE20321@ripley>
+Mail-Followup-To: fugang.duan@nxp.com, festevam@gmail.com,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e96d190-6828-418a-7fbe-08d757f493cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 20:07:05.8581
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uTzE0P3KOt4dSHYh0h8rQSpS+5NMzbTXut0jK51yIPTM1gZAEvvgellZmsYOW/QSdVfREHtTQ799fqkHqB6YXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6687
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFuIFdhbmcgPHJhbi53
-YW5nXzFAbnhwLmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBPY3RvYmVyIDIzLCAyMDE5IDQ6NTMg
-QU0NCj4gVG86IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWxAa2VybmVsLm9yZz4NCj4gQ2M6IFJh
-ZmFlbCBKIC4gV3lzb2NraSA8cmp3QHJqd3lzb2NraS5uZXQ+OyBSb2IgSGVycmluZw0KPiA8cm9i
-aCtkdEBrZXJuZWwub3JnPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBNYXJrIFJ1dGxh
-bmQNCj4gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgUGF2ZWwgTWFjaGVrIDxwYXZlbEB1Y3cuY3o+
-OyBBbnNvbiBIdWFuZw0KPiA8YW5zb24uaHVhbmdAbnhwLmNvbT47IEJpd2VuIExpIDxiaXdlbi5s
-aUBueHAuY29tPjsgTGVuIEJyb3duDQo+IDxsZW4uYnJvd25AaW50ZWwuY29tPjsgR3JlZyBLcm9h
-aC1IYXJ0bWFuDQo+IDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IGxpbnV4cHBjLWRldiA8
-bGludXhwcGMtDQo+IGRldkBsaXN0cy5vemxhYnMub3JnPjsgTGludXggQVJNIDxsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc+OyBMaW51eCBQTSA8bGludXgtcG1Admdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBS
-RTogW1BBVENIIHY5IDEvM10gUE06IHdha2V1cDogQWRkIHJvdXRpbmUgdG8gaGVscCBmZXRjaCB3
-YWtldXANCj4gc291cmNlIG9iamVjdC4NCj4gDQo+IEhpIFJhZmFlbCwNCj4gDQo+IE9uIFdlZG5l
-c2RheSwgT2N0b2JlciAyMywgMjAxOSAxNzowNywgUmFmYWVsIEouIFd5c29ja2kgd3JvdGU6DQo+
-ID4NCj4gPiBPbiBXZWQsIE9jdCAyMywgMjAxOSBhdCAxMDoyNCBBTSBSYW4gV2FuZyA8cmFuLndh
-bmdfMUBueHAuY29tPg0KPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBTb21lIHVzZXIgbWlnaHQgd2Fu
-dCB0byBnbyB0aHJvdWdoIGFsbCByZWdpc3RlcmVkIHdha2V1cCBzb3VyY2VzIGFuZA0KPiA+ID4g
-ZG9pbmcgdGhpbmdzIGFjY29yZGluZ2x5LiBGb3IgZXhhbXBsZSwgU29DIFBNIGRyaXZlciBtaWdo
-dCBuZWVkIHRvDQo+ID4gPiBkbyBIVyBwcm9ncmFtbWluZyB0byBwcmV2ZW50IHBvd2VyaW5nIGRv
-d24gc3BlY2lmaWMgSVAgd2hpY2ggd2FrZXVwDQo+ID4gPiBzb3VyY2UgZGVwZW5kaW5nIG9uLiBT
-byBhZGQgdGhpcyBBUEkgdG8gaGVscCB3YWxrIHRocm91Z2ggYWxsDQo+ID4gPiByZWdpc3RlcmVk
-IHdha2V1cCBzb3VyY2Ugb2JqZWN0cyBvbiB0aGF0IGxpc3QgYW5kIHJldHVybiB0aGVtIG9uZSBi
-eQ0KPiBvbmUuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogUmFuIFdhbmcgPHJhbi53YW5n
-XzFAbnhwLmNvbT4NCj4gPiA+IFRlc3RlZC1ieTogTGVvbmFyZCBDcmVzdGV6IDxsZW9uYXJkLmNy
-ZXN0ZXpAbnhwLmNvbT4NCj4gPg0KPiA+IE9LLCB0aGFua3MgZm9yIG1ha2luZyBhbGwgb2YgdGhl
-IHJlcXVlc3RlZCBjaGFuZ2VzOg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBhdGllbnQgZGlyZWN0
-aW9uIDopDQo+IEFjdHVhbGx5IExlbyBhbmQgbWUgcGxhbmVkIHRvIGhhdmUgYSBmMmYgZGlzY3Vz
-c2lvbiB3aXRoIHlvdSBhYm91dCB0aGlzIHBhdGNoDQo+IG9uIExQQyAyMDE5IGJ1dCB1bmZvcnR1
-bmF0ZWx5IG1pc3NlZCB0aGUgb3Bwb3J0dW5pdHkgZmluYWxseSAodjYgcmV2aWV3IHdhcw0KPiBw
-ZW5kaW5nIGF0IHRpbWUpLg0KPiANCj4gPiBSZXZpZXdlZC1ieTogUmFmYWVsIEouIFd5c29ja2kg
-PHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29tPg0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoN
-Cj4gPg0KPiA+IGFuZCBwbGVhc2UgZmVlbCBmcmVlIHRvIHB1c2ggdGhpcyB0aHJvdWdoIHRoZSBh
-cHByb3ByaWF0ZSBhcmNoL3BsYXRmb3JtDQo+IHRyZWUuDQo+IA0KPiBZZXMsIHdlIHdpbGwgZG8g
-dGhpcyBsYXRlci4NCj4gDQo+ID4gQWx0ZXJuYXRpdmVseSwgcGxlYXNlIGxldCBtZSBrbm93IGlm
-IHlvdSB3YW50IG1lIHRvIHRha2UgdGhpcyBzZXJpZXMsDQo+ID4gYnV0IHRoZW4gSSBuZWVkIGFu
-IEFDSyBmcm9tIHRoZSBhcHByb3ByaWF0ZQ0KPiA+IG1haW50YWluZXIocykgb24gcGF0Y2ggMy4N
-Cj4gDQo+IFRoYW5rcyBhZ2FpbiwgSSB3aWxsIHdhaXQgTGVvJ3MgY29tbWVudCBvbiBwYXRjaCAz
-Lg0KDQpJIHdpbGwgZG8gYW5vdGhlciByZXZpZXcgb24gcGF0Y2ggMyBhbmQgYXBwbHkgdGhlIHNl
-cmllcyB0aHJvdWdoIG15IHNvYy9mc2wgdHJlZS4NCg0KUmVnYXJkcywNCkxlbw0K
+Hello,
+
+I use the following nodes in my devicetree to get two ethernet ports
+working with fec driver on a Variscite DART-6UL SoM Board (imx6ul).
+
+But ethernet RX is deaf and not working. Some clue whats is the issue
+here? 
+
+Best regards,
+
+Oliver
+
+&fec1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_enet1>;
+	phy-mode = "rmii";
+	phy-reset-gpios = <&gpio5 0 1>;
+	phy-reset-duration = <100>;
+	phy-handle = <&ethphy0>;
+};
+
+&fec2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_enet2>;
+	phy-mode = "rmii";
+	phy-handle = <&ethphy1>;
+	phy-reset-gpios = <&gpio1 10 1>;
+	phy-reset-duration = <100>;
+
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ethphy0: ethernet-phy@1 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			micrel,rmii-reference-clock-select-25-mhz;
+			clocks = <&clk_rmii_ref>;
+			clock-names = "rmii-ref";
+			reg = <1>;
+		};
+
+		ethphy1: ethernet-phy@3 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			micrel,rmii-reference-clock-select-25-mhz;
+			clocks = <&clk_rmii_ref>;
+			clock-names = "rmii-ref";
+			reg = <3>;
+		};
+	};
+};
+	pinctrl_enet1: enet1grp {
+		fsl,pins = <
+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
+			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
+		>;
+	};
+
+	pinctrl_enet2: enet2grp {
+		fsl,pins = <
+			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
+			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
+			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
+			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
+			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
+			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
+			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
+			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
+			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x1b0b0
+		>;
+	};
