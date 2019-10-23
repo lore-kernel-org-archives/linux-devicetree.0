@@ -2,278 +2,806 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4768CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 21:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0A7CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 21:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5525421906
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 21:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4587721906
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 21:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="OjQltdX5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmwbtQQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404637AbfJWVRX (ORCPT
+        id S2406141AbfJWV7Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:17:23 -0400
-Received: from mail-eopbgr30102.outbound.protection.outlook.com ([40.107.3.102]:7342
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404502AbfJWVRX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:17:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DyhriQS6zOUnsUzUBVG83+wWJO4mp6g5PIEG/99ke0TRimjQ/UrXvSs7jN55AafDClK7IDNjtpdmIg4EsmmI9nWEIzccT59L70+AufSHPWRuoiuwBNI9jc5Dvh82kUNIbn2szqL7FN6lVlvToJ7rlxCGvToBWEvAXIyZ7c8+WKGJn7UWaQbVlk/8EIFd1YlpMjxfHLv6JEYFaY7ItcUy3JYU2HcnpSTWaMaZJd2uglNBhpwN6Gf+n6FyiL/p6H0eUXolTSETt3zgV6EGMfLu5/27Mrr3Mmz0ytu4iqoBWFa9rCB/Sd9l+0+koQawFwHo27O5pBjYXQht6L8iu4UrvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UERwcSG8wNnvtau2mk0R0dTTqBsoTfuBWL3z11zCDN4=;
- b=PPNFhL1tNrP+jtHdCcf8hsz6lDg+7HmaOT7tX3m7pT+gqXn9wrsI6q9Ktkyu14AEUTUO2Ky9gvGwV6AbdwQAyEJuWFMVj5AYQUBic1jK2+OTjSya2bIqeT9+BnhIFDNevH6g9jAI5NCXuJI6mYdVSicRXF4HLG3yNFCKWnhGVW/cFIUqkcsmisvA0wEFJcFEMi9VeDDXwUGhhqCjYTC7Djzmf89KyXBgvuEcyuK2L2fVBzgZ7T17lkAhPWMCyMbj0tkSu04aIAXV85aPNp+oozhFFCR/kJcWSMB/nN4Qo8dBT1zEqB5mDNcV6SBNGThjnsTyaVQ9/F7rHm8HzUuuqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UERwcSG8wNnvtau2mk0R0dTTqBsoTfuBWL3z11zCDN4=;
- b=OjQltdX5CVgCntGD3ChBnwaaCBWqlbmcmMk9/WUlxuPFNFr9cFG2mVZt2ttNbuht3S4Oj0TvN+8j0kKx75WvXJa2nu80Z7UTTzu8nzeA5E51bM7WAbSIGVpf5P40Wz/U2RmcApyvV++NoM5m8oaV70eJOzeoWLzm2yQaz0OwO74=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3563.eurprd02.prod.outlook.com (52.134.66.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Wed, 23 Oct 2019 21:17:16 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.029; Wed, 23 Oct 2019
- 21:17:16 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
-        Cedric Le Goater <clg@kaod.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
- timeout support
-Thread-Topic: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
- timeout support
-Thread-Index: AQHViE2KU5aZojIjkUqCdR4ab3gQm6dlt3EA///tFICAANZwgIAAdUSAgAHNpAA=
-Date:   Wed, 23 Oct 2019 21:17:16 +0000
-Message-ID: <6eba3e62-9215-0c39-258b-7abfb394bc48@axentia.se>
-References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
- <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
- <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
- <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
- <b98827fa-462a-060b-efc7-27fe5d7742ff@axentia.se>
- <7806ece8-1d7c-7aa8-20af-6f5f964bec64@linux.intel.com>
-In-Reply-To: <7806ece8-1d7c-7aa8-20af-6f5f964bec64@linux.intel.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Wed, 23 Oct 2019 17:59:24 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34063 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405035AbfJWV7Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 17:59:24 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v3so608863wmh.1;
+        Wed, 23 Oct 2019 14:59:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tRHYNEj6Qv0wyecWdVtjcYp2Pz0m73O5k6aoM2K0y24=;
+        b=UmwbtQQH10MzE1m06vK83IYrIiBkcc8Ag2Pgs9nPz/wlbcvc350vX6c5KZ2UGKPKoT
+         5JjHuO+OLygjfT1dtC0XkWrt8Z72QyXETDbsn3rrGj+LNNOG5tTWzXcLn8Wl1q+vjYhZ
+         bcZxya4UEzPhTlX/dhdM119o+fULyDHiaT1/FcplvZor6jMU8gXAnpSPPqBIgDdnGF0A
+         Zzr0LB/oWc7XjT6MiT+E8+TZEqVSDK8GaGTTv+qUh6IrCMEouvb7iZl5h22pbT2eJmEB
+         +2E1HxijGbISYJP8GCs+C0zM82FRbz6GPxHCyYC356z7XKCzczQvnSQbgX6yswGa+Hyu
+         VkMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tRHYNEj6Qv0wyecWdVtjcYp2Pz0m73O5k6aoM2K0y24=;
+        b=bB4S0RY6kIIjQeKX4geL5s+SipGmklPsEf62R98dOnhvrUvBRc6E9mhjoUP3QS5ihY
+         8AexM+VhngHZwV3SBPIg1c+e9L17WV8cBTlSrqKXoixkGeA+ICN7WHPS2dm03A1EK6Tf
+         oPLfsWmyMct7ni4OFbvb3rCYcs0qe+xutzvQrCyXl3kGw+ERigF3bQCse1hPcmfrDhUX
+         RDo6ooBQ2T7y9rvoHIe6dc0qSeLsNR4J6Uk1yFDhrWpulvhKZW2R9hG5/8Ma1FrMZQ8K
+         UWO3eWA/S4vEJRW6jGlwtrY2PgQ0fVXStRjlYKCoCtc1OCpcUvjHm+iZeo+TWg3dX0Lo
+         0ROQ==
+X-Gm-Message-State: APjAAAUZcGFWNfbXdTgpVTMbX6lryAMu6dqr6x/Cpk/wIoH3N3ygyB6K
+        Ve8lvTZ+LAbmlIDTTaCpDPAK/FFL
+X-Google-Smtp-Source: APXvYqy3onossQAQcpFqWVovAFG7gwAVJAKmIonrYlu0BNw9NDy6upbxsP0eEuwdgi2DAlTzqZHUpA==
+X-Received: by 2002:a1c:6144:: with SMTP id v65mr1864515wmb.53.1571867957033;
+        Wed, 23 Oct 2019 14:59:17 -0700 (PDT)
+Received: from [192.168.1.19] (chh49.neoplus.adsl.tpnet.pl. [83.31.5.49])
+        by smtp.gmail.com with ESMTPSA id p10sm25274396wrx.2.2019.10.23.14.59.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 14:59:16 -0700 (PDT)
+Subject: Re: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
+ BD71828 PMIC
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>
+Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com>
+ <fbd4960b219099b7a48ef24019ba829f866edb3b.camel@fi.rohmeurope.com>
+ <4570db9c-7bc8-f131-269a-248b87e25e38@gmail.com>
+ <201df0f7319b94eb581a040a2b1b07dbfed12e94.camel@fi.rohmeurope.com>
+ <c5761d78-3334-adaa-b871-cb6da356483b@gmail.com>
+ <8974a3974377d0623ed968563b035e701191440e.camel@fi.rohmeurope.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e9d1c529-90ef-34bf-d893-02a109ba19ba@gmail.com>
+Date:   Wed, 23 Oct 2019 23:59:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1P190CA0001.EURP190.PROD.OUTLOOK.COM (2603:10a6:3:bc::11)
- To DB3PR0202MB3434.eurprd02.prod.outlook.com (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8fcbcdf4-cb7d-4f9b-f28b-08d757fe6122
-x-ms-traffictypediagnostic: DB3PR0202MB3563:
-x-microsoft-antispam-prvs: <DB3PR0202MB35630C74D714FD713F80B4FABC6B0@DB3PR0202MB3563.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39830400003)(366004)(346002)(376002)(396003)(52314003)(199004)(189003)(76176011)(71200400001)(11346002)(476003)(229853002)(52116002)(2616005)(8936002)(99286004)(4001150100001)(65806001)(66066001)(65956001)(6512007)(186003)(81156014)(2906002)(446003)(486006)(3846002)(7736002)(71190400001)(6116002)(58126008)(26005)(31686004)(5024004)(31696002)(256004)(6436002)(316002)(14444005)(25786009)(66476007)(66556008)(81166006)(386003)(66946007)(110136005)(86362001)(66446008)(64756008)(53546011)(6506007)(54906003)(6246003)(5660300002)(7416002)(14454004)(508600001)(8676002)(4326008)(36756003)(102836004)(6486002)(305945005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3563;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: T/2sv/WbZQROfHYLsOzoMwKyaHN8Miu2nRJd2puxulsO0s+TYSD6tIyketk05Pdz0OuVZUN8neaQ/g+/5Ty+XMzg7zPkNgG94VCl2M/VkYrcopfdnfEPFGzDUZGf0zmBXzgNgCN0E6oku/VVFLQW90Tn8UVKacp9uDwWlV6p5glW4hudWqcY9MG6pUXlS140HDucsIEWDbssJMpKJh6opxDR7oyE+pp72W1kXchKyQzbjTbl4YvlCmWAaYuv+ATYPWINK582oGEPj18jeSeLNfH5Io0VzrfK+/p8Q+FRn9a2gudD0fLGMw07FRCQRvriC3APRDNwa44GZvcOsW+GdXMTDxcusxCCpxvNzEeUJ6fnU8QwyyO8FicddMQXsA02TgNgtaC+v1oZeJNrV+WcwLp0F8wjmn+KA8rd+v5XMXrVrTg0Gz2EKbFTztuUWQly
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <44CDB0B8FC357E42A488B1F579254AB4@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8fcbcdf4-cb7d-4f9b-f28b-08d757fe6122
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 21:17:16.1123
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ey3rpRYjGQfu1vWkkbZ/APNGoIpqYWv541ZVuETMMIGRqIfTt09UjSARnsZic1dO
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3563
+In-Reply-To: <8974a3974377d0623ed968563b035e701191440e.camel@fi.rohmeurope.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMjAxOS0xMC0yMiAxOTo0NCwgSmFlIEh5dW4gWW9vIHdyb3RlOg0KPiBPbiAxMC8yMi8yMDE5
-IDE6NDUgQU0sIFBldGVyIFJvc2luIHdyb3RlOg0KPj4gT24gMjAxOS0xMC0yMSAyMzo1NywgSmFl
-IEh5dW4gWW9vIHdyb3RlOg0KPj4+IEhpIFBldGVyLA0KPj4+DQo+Pj4gT24gMTAvMjEvMjAxOSAy
-OjA1IFBNLCBQZXRlciBSb3NpbiB3cm90ZToNCj4+Pj4gT24gMjAxOS0xMC0yMSAyMjoyNCwgSmFl
-IEh5dW4gWW9vIHdyb3RlOg0KPj4+Pj4gQXBwZW5kIGEgYmluZGluZyB0byBzdXBwb3J0IGhhcmR3
-YXJlIHRpbWVvdXQgZmVhdHVyZS4NCj4+Pj4+DQo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBKYWUgSHl1
-biBZb28gPGphZS5oeXVuLnlvb0BsaW51eC5pbnRlbC5jb20+DQo+Pj4+PiAtLS0NCj4+Pj4+ICAg
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWFzcGVlZC50eHQgfCAy
-ICsrDQo+Pj4+PiAgICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+Pj4+Pg0KPj4+
-Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJj
-LWFzcGVlZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1h
-c3BlZWQudHh0DQo+Pj4+PiBpbmRleCBiNDdmNmNjYjE5NmEuLjEzM2JmZWRmNGNkZCAxMDA2NDQN
-Cj4+Pj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWFz
-cGVlZC50eHQNCj4+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
-MmMvaTJjLWFzcGVlZC50eHQNCj4+Pj4+IEBAIC0xNyw2ICsxNyw4IEBAIE9wdGlvbmFsIFByb3Bl
-cnRpZXM6DQo+Pj4+PiAgICAtIGJ1cy1mcmVxdWVuY3kJOiBmcmVxdWVuY3kgb2YgdGhlIGJ1cyBj
-bG9jayBpbiBIeiBkZWZhdWx0cyB0byAxMDAga0h6IHdoZW4gbm90DQo+Pj4+PiAgICAJCSAgc3Bl
-Y2lmaWVkDQo+Pj4+PiAgICAtIG11bHRpLW1hc3Rlcgk6IHN0YXRlcyB0aGF0IHRoZXJlIGlzIGFu
-b3RoZXIgbWFzdGVyIGFjdGl2ZSBvbiB0aGlzIGJ1cy4NCj4+Pj4+ICstIGFzcGVlZCxody10aW1l
-b3V0LW1zCTogSGFyZHdhcmUgdGltZW91dCBpbiBtaWxsaXNlY29uZHMuIElmIGl0J3Mgbm90DQo+
-Pj4+PiArCQkJICBzcGVjaWZpZWQsIHRoZSBIL1cgdGltZW91dCBmZWF0dXJlIHdpbGwgYmUgZGlz
-YWJsZWQuDQo+Pj4+PiAgICANCj4+Pj4+ICAgIEV4YW1wbGU6DQo+Pj4+PiAgICANCj4+Pj4+DQo+
-Pj4+DQo+Pj4+IFNvbWUgU01CdXMgY2xpZW50cyBzdXBwb3J0IGEgc21idXMtdGltZW91dC1kaXNh
-YmxlIGJpbmRpbmcgZm9yIGRpc2FibGluZw0KPj4+PiB0aW1lb3V0cyBsaWtlIHRoaXMsIGZvciBj
-YXNlcyB3aGVyZSB0aGUgSTJDIGFkYXB0ZXIgaW4gcXVlc3Rpb24gb24gb2NjYXNpb24NCj4+Pj4g
-aXMgdW5hYmxlIHRvIGtlZXAgdGhlIHBhY2UuIEFkZGluZyB0aGF0IHByb3BlcnR5IHRodXMgYXZv
-aWRzIHVuZGVzaXJlZA0KPj4+PiB0aW1lb3V0cyB3aGVuIHRoZSBjbGllbnQgaXMgU01CdXMgY29u
-Zm9ybWFudCB3aXRob3V0IGl0LiBZb3VyIG5ldyBiaW5kaW5nDQo+Pj4+IGlzIHRoZSByZXZlcnNl
-IHNpdHVhdGlvbiwgd2hlcmUgeW91IHdhbnQgdG8gYWRkIGEgdGltZW91dCB3aGVyZSBvbmUgaXMN
-Cj4+Pj4gb3RoZXJ3aXNlIG1pc3NpbmcuDQo+Pj4+DQo+Pj4+IEFueXdheSwgc2luY2UgSTJDIGRv
-ZXMgbm90IGhhdmUgYSBzcGVjaWZpZWQgbG93ZXN0IHBvc3NpYmxlIGZyZXF1ZW5jeSwgdGhpcw0K
-Pj4+PiBmZWVscyBsaWtlIHNvbWV0aGluZyB0aGF0IGlzIG1vcmUgaW4gdGhlIFNNQnVzIGFyZW5h
-LiBTaG91bGQgdGhlIHByb3BlcnR5DQo+Pj4+IHBlcmhhcHMgYmUgYSBnZW5lcmljIHByb3BlcnR5
-IG5hbWVkIHNtYnVzLXRpbWVvdXQtbXMsIG9yIHNvbWV0aGluZyBsaWtlDQo+Pj4+IHRoYXQ/DQo+
-Pj4NCj4+PiBXZWxsLCBJIHRyaWVkIHVwc3RyZWFtaW5nIG9mIHRoZSBnZW5lcmljIHRpbWVvdXQg
-cHJvcGVydHkgYSB5ZWFyIGFnbyBidXQNCj4+PiBJIGFncmVlZCB0aGF0IHRoZSBnZW5lcmljIGJ1
-cyB0aW1lb3V0IHByb3BlcnR5IGNhbiBiZSBzZXQgYnkgYW4gaW9jdGwNCj4+PiBjb21tYW5kIHNv
-IGl0IGRpZG4ndCBuZWVkIHRvIGJlIGFkZGVkIGludG8gZGV2aWNlIHRyZWUgYXQgdGhhdCB0aW1l
-LiBOb3QNCj4+PiBzdXJlIGlmIGFueSBuZWVkIGhhcyBjb21lIHJlY2VudGx5IGJ1dCBJIGhhdmVu
-J3QgaGVhcmQgdGhhdC4gVGhpcyBkcml2ZXINCj4+PiBzdGlsbCB1c2VzIHRoZSBnZW5lcmljIHRp
-bWVvdXQgcHJvcGVydHkgd2hpY2ggaXMgcHJvdmlkZWQgYnkgaTJjIGNvcmUNCj4+PiBmb3IgaGFu
-ZGxpbmcgY29tbWFuZCB0aW1lb3V0cywgYW5kIGl0J3Mgb3V0IG9mIHNjb3BlIGZyb20gdGhpcyBw
-YXRjaA0KPj4+IHNlcmllcy4NCj4+Pg0KPj4+PiBJZiB0aGUgYWJvdmUgaXMgbm90IHdhbnRlZCBv
-ciBhcHByb3ByaWF0ZSwgdGhlbiBJIHdvdWxkIHBlcnNvbmFsbHkgcHJlZmVyDQo+Pj4+IGFzcGVl
-ZCxidXMtdGltZW91dC1tcyBvdmVyIGFzcGVlZCxody10aW1lb3V0LW1zLiBUbyBtZSwgaHctdGlt
-ZW91dC1tcyBzb3VuZHMNCj4+Pj4gbGlrZSBhIChtb3JlIHNlcmlvdXMpIHRpbWVvdXQgYmV0d2Vl
-biB0aGUgQ1BVIGFuZCB0aGUgSTJDIHBlcmlwaGVyYWwgdW5pdA0KPj4+PiBvciBzb21ldGhpbmcg
-bGlrZSB0aGF0LiBCdXQgSSBkb24ndCBjYXJlIGRlZXBseS4uLg0KPj4+DQo+Pj4gQ2hhbmdlcyBJ
-IHN1Ym1pdHRlZCBpbiB0aGlzIHBhdGNoIHNldCBpcyBmb3IgYSBkaWZmZXJlbnQgcHVycG9zZSB3
-aGljaA0KPj4+IGlzIHZlcnkgQXNwZWVkIEgvVyBzcGVjaWZpYywgYW5kIGFjdHVhbGx5IGl0J3Mg
-YSBtb3JlIHNlcmlvdXMgdGltZW91dA0KPj4+IHNldHRpbmcgaW5kZWVkLiBJZiB0aGlzIEgvVyBp
-cyB1c2VkIGluIG11bHRpLW1hc3RlciBlbnZpcm9ubWVudCwgaXQNCj4+PiBjb3VsZCBtZWV0IGEg
-SC9XIGhhbmcgdGhhdCBmcmVlemVzIGl0c2VsZiBpbiBzbGF2ZSBtb2RlIGFuZCBpdCBjYW4ndA0K
-Pj4+IGVzY2FwZSBmcm9tIHRoZSBzdGF0ZS4gVG8gcmVzb2x2ZSB0aGUgc3BlY2lmaWMgY2FzZSwg
-dGhpcyBIL1cgcHJvdmlkZXMNCj4+PiBzZWxmLXJlY292ZXJ5IGZlYXR1cmUgd2hpY2ggbW9uaXRv
-cnMgYWJub3JtYWwgc3RhdGUgb2YgU0RBLCBTQ0wgYW5kIGl0cw0KPj4+IEgvVyBzdGF0ZSBtYWNo
-aW5lIHVzaW5nIHRoZSB0aW1lb3V0IHNldHRpbmcgdG8gZGV0ZXJtaW5lIHRoZSBlc2NhcGUNCj4+
-PiBjb25kaXRpb24uDQo+Pg0KPj4gQXJlIHlvdSBzYXlpbmcgdGhhdCB0aGUgYXNwZWVkIEhXIGlz
-IGJ1Z2d5IGFuZCB0aGF0IHRoaXMgYWJub3JtYWwgc3RhdGUNCj4+IGlzIHNlbGYgaW5mbGljdGVk
-IGJ5IHRoZSBhc3BlZWQgSFcgZXZlbiBpZiBvdGhlciBtYXN0ZXJzIG9uIHRoZSBidXMNCj4+IGJl
-aGF2ZSBzYW5lbHk/IEJlY2F1c2UgSSBkaWRuJ3QgcXVpdGUgcmVhZCBpdCB0aGF0IHdheSBhdCBh
-bGwuLi4NCj4gDQo+IEkgZG9uJ3QgdGhpbmsgaXQncyBhbiBBc3BlZWQgSFcgYnVnLiBBY3R1YWxs
-eSwgdGhpcyBIVyBjYW4gYmUgZXhwb3NlZCB0bw0KPiB2ZXJ5IHNldmVyZSBlbnZpcm9ubWVudHMg
-aWYgaXQgaXMgdXNlZCBhcyBhIEJhc2Vib2FyZCBNYW5hZ2VtZW50DQo+IENvbnRyb2xsZXIgd2hp
-Y2ggbmVlZHMgdHdvIG9yIG1vcmUgbXVsdGktbWFzdGVycyBvbiBhIGJ1cyBkZXBlbmRzIG9uDQo+
-IEhXIGRlc2lnbi4gQWxzbywgaXQgc2hvdWxkIGV4cGVjdCB1bmtub3duIG9yIGJ1Z2d5IGRldmlj
-ZSBhdHRhY2htZW50DQo+IG9uIGEgYnVzIHRocm91Z2ggYWRkLW9uIGNhcmQgc2xvdHMuIEFzcGVl
-ZCBIVyBwcm92aWRlcyBIVyB0aW1lb3V0DQo+IGZlYXR1cmUgdG8gc3VwcG9ydCBleGNlcHRpb25h
-bCBjYXNlcyBoYW5kbGluZyB3aGljaCBjb21lcyBmcm9tIHRoZQ0KPiBzZXZlcmUgdXNlIGNhc2Vz
-Lg0KPiANCj4+IFRvIG1lLCBpdCBzb3VuZGVkICpleGFjdGx5KiBsaWtlIHRoZSBzdGF0ZSBJMkMg
-Y2xpZW50cyBlbmQgdXAgaW4gd2hlbiBhbg0KPj4gSTJDIG1hc3RlciAiZGllcyIgYW5kIHN0b3Bz
-IGNvbW11bmljYXRpbmcgaW4gdGhlIG1pZGRsZSBvZiBhIHRyYW5zYWN0aW9uLg0KPj4gSS5lLiB0
-aGUgdGhpbmcgdGhhdCB0aGUgU01CdXMgdGltZW91dCBpcyBkZXNpZ25lZCB0byBwcmV2ZW50IChh
-bmQgdGhlDQo+PiBzdGF0ZSB0aGUgSTJDIG5pbmUtY2xrLXJlY292ZXJ5IHNlcXVlbmNlIGFkZHJl
-c3NlcykuIFRoZSBvbmx5IHR3aXN0ICh0aGF0DQo+PiBJIHNhdykgd2FzIHRoYXQgdGhlIGFzcGVl
-ZCBIVyBpcyBhbHNvIGEgbWFzdGVyIGFuZCB0aGF0IHRoZSBhc3BlZWQgbWFzdGVyDQo+PiBkcml2
-ZXIgaXMgY29tcGxldGVseSBsb2NrZWQgb3V0IGZyb20gdGhlIGJ1cyB3aGlsZSBzb21lIG9ibm94
-aW91cyBtYXN0ZXINCj4+IGZhaWxzIHRvIGNvbXBsZXRlIGl0cyB0cmFuc2FjdGlvbiAob3Igd2hh
-dGV2ZXIgaXQgd2FzIHVwIHRvKS4NCj4gDQo+IElmIHRoaXMgSFcgcnVucyBvbiBhIHNpbmdsZS1t
-YXN0ZXIgYnVzLCBhbnkgbWFzdGVyIGR5aW5nIGlzc3VlIHdpbGwgYmUNCj4gY3VyZWQgYnkgcmVj
-b3ZlcnkgbG9naWMgd2hpY2ggdGhpcyBkcml2ZXIgYWxyZWFkeSBoYXMgYW5kIHRoZSBsb2dpYyB1
-c2VzDQo+IHRoZSBidXMgdGltZW91dCBzZXR0aW5nIHlvdSBhcmUgc2F5aW5nLg0KPiANCj4gVGhp
-cyBwYXRjaCBzZXQgaXMgbWFpbmx5IGZvY3VzaW5nIG9uIGEgJ3NsYXZlIG1vZGUgaGFuZycgaXNz
-dWUgb24gYQ0KPiAnbXVsdGktbWFzdGVyJyBidXMgd2hpY2ggY2FuJ3QgYmUgY292ZXJlZCBieSB0
-aGUgcmVjb3ZlcnkgbG9naWMuDQo+IA0KPj4gSWYgdGhpcyBjYW4gb25seSBiZSB0cmlnZ2VyZWQg
-d2hlbiB0aGUgSFcgaXMgYWN0aW5nIGFzIGEgc2xhdmUsIGFuZCBieQ0KPj4gYWJvcnRlZCBvciBv
-dGhlcndpc2UgZnVua3kgbWFzdGVyIGFjdGl2aXR5IG9uIHRoZSBidXMsIHRoZW4gSSB3b3VsZG4n
-dA0KPj4gY2FsbCBpdCBhbiBIVyBpc3N1ZS4gVGhlbiBpdCB3b3VsZCBiZSBhIGJ1cyBpc3N1ZS4g
-SS5lLiBzb21ldGhpbmcgbmVlZGluZw0KPj4gYSBidXMtdGltZW91dCBpbnN0ZWFkIG9mIGEgaHct
-dGltZW91dC4NCj4gDQo+IEhlcmUgaXMgYW4gZXhhbXBsZS4gSW4gYSBtdWx0aS1ub2RlIEJNQyBz
-eXN0ZW0sIGEgcGVlciBtYXN0ZXIgY2FuIGJlDQo+IHNodXRkb3duIGluIHRoZSBtaWRkbGUgb2Yg
-dHJhbnNhY3Rpb24sIHRoZW4gdGhpcyBBc3BlZWQgSFcga2VlcHMgd2FpdGluZw0KPiBmb3IgYSBu
-ZXh0IGV2ZW50IGZyb20gdGhlIHBlZXIgbWFzdGVyIGJ1dCBpdCBjYW4ndCBoYXBwZW4gYmVjYXVz
-ZSB0aGUNCj4gcGVlciBtYXN0ZXIgd2FzIGFscmVhZHkgc2h1dGRvd24uIElmIHdlIGVuYWJsZSB0
-aGUgJ3NsYXZlIGluYWN0aXZlDQo+IHRpbWVvdXQgZmVhdHVyZScgdXNpbmcgdGhlIEhXIHRpbWVv
-dXQgc2V0dGluZywgdGhlIHRoaXMgSFcgY2FuIGVzY2FwZQ0KPiBmcm9tIHRoZSB3YWl0aW5nIHN0
-YXRlLiBJZiB3ZSBkb24ndCwgdGhpcyBIVyBoYW5ncyBmb3JldmVyIGluIHRoZQ0KPiB3YWl0aW5n
-IHN0YXRlIGFuZCBpdCdzIHRoZSByZWFzb24gd2h5IEkgaW1wbGVtZW50ZWQgdGhpcyBwYXRjaCBz
-ZXQuDQo+IA0KPiBUaGUgaHctdGltZW91dCBzZXR0aW5nIG5lZWRzIGZpbmUgdHVuaW5nIGRlcGVu
-ZHMgb24gSFcgZW52aXJvbm1lbnQgc28NCj4gaXQgc2hvdWxkIGJlIGRpZmZlcmVudCBmcm9tIHRo
-ZSBidXMtdGltZW91dC4NCg0KWWVhaCwgb2ssIHNvIHlvdSdyZSBiYXNpY2FsbHkgY29uZmlybWlu
-ZyBldmVyeXRoaW5nIEkgc2FpZC4gSSBkbw0Kc2Vuc2Ugc29tZSBjb25mdXNpb24gdGhvdWdoLCBh
-cyB5b3UgY29tZSBhY3Jvc3MgYXMgYSBiaXQNCmRlZmVuc2l2ZSBhbmQgc2VlbSB0byB0aGluayB0
-aGF0IEkgYW0gYWdhaW5zdCB0aGUgd2hvbGUgbm90aW9uIG9mDQp0aGUgcGF0Y2hlcy4gQW5kIHRo
-YXQncyBub3QgdGhlIGNhc2UgYXQgYWxsISBNeSBvbmx5IGlzc3VlIGlzDQp3aXRoIHRoZSBuYW1p
-bmcuIEFuZCBJIGhhcHBlbiB0byB0aGluayBody10aW1lb3V0LW1zIGlzIGEgcmVhbGx5DQpiYWQg
-bmFtZS4gSXQncyB3YXkgdG9vIGJyb2FkIGFuZCBjYW4gbWVhbiBqdXN0IGFib3V0IGFueXRoaW5n
-Lg0KV2hlbiBJIHJlYWQgdGhhdCwgSSB0aGluayBvZiBzb21lIHdvcmthcm91bmQgZm9yIGJyb2tl
-biBoYXJkd2FyZSwNCm5vdCBub3JtYWwgdGhpbmdzIGxpa2UgdGhlIG90aGVyIG1hc3RlcnMgb24g
-dGhlIGJ1cyBkb2luZw0KY29uZnVzaW5nIHRoaW5ncy4gRnVua3kgYnVzIGFjdGl2aXR5IGZyb20g
-cmVtb3RlIG1hc3RlcnMgaXMNCnNpbXBseSBub3QgYW4gSFcgaXNzdWUgaW4gbXkgYm9vaywgYXQg
-bGVhc3Qgbm90IGFuIEhXIGlzc3VlIG9uDQp0aGUgbG9jYWwgc2lkZSBvZiB0aGUgYnVzLiBJdCdz
-IGp1c3Qgc29tZXRoaW5nIHlvdSAqbXVzdCBleHBlY3QqLg0KDQpMZXQgbWUgbGlzdCBzb21lIHNj
-ZW5hcmlvcywgc28gdGhhdCBJIGNhbiBkZXNjcmliZSB3aHkgSSBjYW1lIHVwDQp3aXRoIG15IHN1
-Z2dlc3RlZCBhbHRlcm5hdGUgbmFtaW5nOg0KDQpTdXBwb3NlIHlvdSBoYXZlIGEgc2ltcGxlIHNl
-dHVwIHdpdGggYSBidXMgZmVhdHVyaW5nIGEgc2luZ2xlDQphc3BlZWQgbWFzdGVyIGFuZCBhIHNp
-bmdsZSBzbGF2ZS4gSWYgdGhlIHNsYXZlIGlzLCBzYXksIGEgamM0Mg0KdGVtcGVyYXR1cmUgc2Vu
-c29yLCB0aGVuIGl0IGJ5IGRlZmF1bHQgd2lsbCBmb2xsb3cgdGhlIFNNQnVzIHNwZWMNCmFuZCBp
-bXBsZW1lbnQgYSBidXMgdGltZW91dC4gTWVhbmluZyB0aGF0IGlmIHRoZSBtYXN0ZXIgaXMNCnN0
-YWxsaW5nIGZvciB0b28gbG9uZywgdGhlbiB0aGUgamM0MiBzbGF2ZSB3aWxsIHRpbWVvdXQgdGhl
-DQp0cmFuc2FjdGlvbiBhbmQgbWFrZSBpdHNlbGYgYXZhaWxhYmxlIHRvIGFueSBwb3RlbnRpYWwg
-b3RoZXINCm1hc3RlcnMgb24gdGhlIGJ1cy4gVGhlIGpjNDIgY2hpcCBkb2VzIG5vdCBrbm93IHRo
-YXQgaXQgaXMgb24gYQ0Kc2luZ2xlIG1hc3RlciBidXMuIEJ1dCB0aGlzIGlzIG9ubHkgdGhlIGRl
-ZmF1bHQsIHlvdSBjYW4gdGVsbCB0aGUNCmpjNDIgZHJpdmVyIHRvIGRpc2FibGUgdGhpcyB0aW1l
-b3V0LCB3aGljaCBpcyBzb21ldGltZXMgY3J1Y2lhbA0KZm9yIHJlbGlhYmxlIGJlaGF2aW9yLCBl
-LmcuIGlmIHRoZSBtYXN0ZXIgaXMgbm90IGFsd2F5cyBhYmxlIHRvDQprZWVwIHRoZSBkZWFkbGlu
-ZXMgZm9yIHdoYXRldmVyIHJlYXNvbi4NCg0KTmV4dCBzY2VuYXJpby4gU3VwcG9zZSB5b3UgaGF2
-ZSBhIHNpbXBsZSBzZXR1cCB3aXRoIGEgYnVzDQpmZWF0dXJpbmcgYSBzaW5nbGUgcmVtb3RlIG1h
-c3RlciBvZiBzb21lIHNvcnQgYW5kIHRoZSBhc3BlZWQNCmFjdGluZyBhcyBzbGF2ZSBvbmx5LiBT
-aW5jZSB0aGVyZSBpcyBvbmx5IGEgc2luZ2xlIG1hc3RlciwgYW5kDQp0aGVyZSBhcmUgbm8gb3Ro
-ZXIgc2xhdmVzIG9uIHRoZSBidXMsIHRoZXJlJ3Mgbm8gcG9pbnQgZm9yIHRoZQ0KYXNwZWVkIHRv
-IGFjdCBhcyBtYXN0ZXIuIFRoZSBhc3BlZWQgd2l0aG91dCB5b3VyIHBhdGNoZXMgYmVoYXZlDQph
-cyB0aGUgamM0MiBjaGlwIGFib3ZlLCB3aGVuIGl0IGhhcyBiZWVuIGluc3RydWN0ZWQgdG8gL3Jl
-bW92ZQ0KdGhlIHRpbWVvdXQvLiBBbmQgdGhhdCdzIGZpbmUgaW4gdGhpcyBzY2VuYXJpbyBzaW5j
-ZSB0aGVyZSBpcw0Kb25seSBvbmUgbWFzdGVyIGFuZCB0aGUgYXNwZWVkLCBhcyBzbGF2ZSwgY2Fu
-IGRlZmVyIHJlY292ZXJpbmcNCnRoZSBidXMgdG8gdGhhdCBtYXN0ZXIuIFNvLCB3aGVuIGFzcGVl
-ZCBpcyBvcGVyYXRpbmcgYXMNCnNsYXZlLW9ubHksIHRoZXNlIHBhdGNoZXMgZW5hYmxlIHRoZSBh
-ZGRpdGlvbiBvZiB0aGUgc2FtZSB0aW1lb3V0DQp0aGF0IHdhcyB0aGVyZSBieSBkZWZhdWx0IGlu
-IHRoZSBmaXJzdCBzY2VuYXJpby4NCg0KRmluYWwgc2NlbmFyaW8sIHNvbWUgYXMgbGFzdCBidXQg
-d2l0aCBzb21lIG90aGVyIHNsYXZlKHMpIG9uIHRoZQ0KYnVzLiBOb3csIGl0IGJlY29tZXMgaW50
-ZXJlc3RpbmcgZm9yIHRoZSBhc3BlZWQgdG8gYWN0IGFzIG1hc3RlciwNCmFuZCBpdCBiZWNvbWVz
-IGludGVyZXN0aW5nIGluZGVlZCB0byBoYXZlIGEgdGltZW91dCB0aGF0ICJicmVha3MNCm91dCIg
-d2hlbiBzb21lIHJlbW90ZSBtYXN0ZXIgaG9ncyB0aGUgYXNwZWVkIGluIHNsYXZlIG1vZGUuDQoN
-CkkgY2xhaW0gdGhhdCB0aGUgdGltZW91dHMgbWVudGlvbmVkIGluIGFsbCB0aGVzZSBzY2VuYXJp
-b3MgYXJlDQpyZWxhdGVkLiBJbiB0aGUgZmlyc3Qgc2NlbmFyaW8sIHlvdSBkaXNhYmxlIHRoZSB0
-aW1lb3V0IGJ5IGFkZGluZw0Kc21idXMtdGltZW91dC1kaXNhYmxlIHRvIHRoZSByZWxldmFudCBk
-ZXZpY2UgdHJlZSBub2RlLiBJIHdhcw0KbWVyZWx5IHN1Z2dlc3RpbmcgdGhhdCwgc2luY2UgdGhl
-IHRpbWVvdXRzIGFyZSBiYXNpY2FsbHkgZG9pbmcNCnRoZSBzYW1lIHRoaW5nIGluIGFsbCBzY2Vu
-YXJpb3MsIHRoZSBuYW1pbmcgc2hvdWxkIHBlcmhhcHMgYmUNCmNvbnNpc3RlbnQgYW5kIGJlIHNv
-bWV0aGluZyBtb3JlIHNwZWNpZmljIHRoYW4gaHctdGltZW91dC1tcy4gV2hhdA0KcG9wcGVkIHVw
-IHdhcyBidXMtdGltZW91dC1tcyBvciBzbWJ1cy10aW1lb3V0LW1zLiBJIHN1cHBvc2UNCnJlbW90
-ZS10aW1lb3V0LW1zLCBvciBzb21ldGhpbmcsIHdvdWxkIGFsc28gd29yay4uLg0KDQpOb3RlIHRo
-YXQgdGhlIHRpbWVvdXRzIEknbSB0YWxraW5nIGFib3V0IGhhcyBub3RoaW5nIHRvIGRvIHdpdGgN
-CnRoZSBhZGFwdGVyIHRpbWVvdXQgaW4gdGhlIGxpbnV4IEkyQyBjb3JlLiBUaGlzIGlzIGFsbCBh
-Ym91dA0KdGltZW91dHMgd2hlbiBhY3RpbmcgYXMgSTJDIHNsYXZlIGFuZCB0aGUgcmVtb3RlIG1h
-c3RlciBmYWlscyB0bw0KY29tcGxldGUgKG9yIG90aGVyd2lzZSBtZXNzZXMgdXApIHRyYW5zZmVy
-cy4NCg0KSSBob3BlIHRoYXQgY2xhcmlmaWVzIG15IHBvc2l0aW9uIQ0KDQpDaGVlcnMsDQpQZXRl
-cg0K
+Hi Matti,
+
+On 10/23/19 10:37 AM, Vaittinen, Matti wrote:
+> Morning Jacek,
+> 
+> Thanks for the reply again. I did some cleaning to this mail as it was
+> getting lengthy.
+> 
+> On Tue, 2019-10-22 at 19:40 +0200, Jacek Anaszewski wrote:
+>> Matti,
+>>
+>> On 10/22/19 2:40 PM, Vaittinen, Matti wrote:
+>>> Hello Jacek,
+>>>
+>>> Thanks for the clarifications. I think I now understand the LED
+>>> subsystem a bit better :)
+>>>
+>>> On Mon, 2019-10-21 at 21:09 +0200, Jacek Anaszewski wrote:
+>>>> Hi Matti,
+>>>>
+>>>> On 10/21/19 10:00 AM, Vaittinen, Matti wrote:
+>>>>> Hello Dan,
+>>>>>
+>>>>> Thanks for taking the time to check my driver :) I truly
+>>>>> appreciate
+>>>>> all
+>>>>> the help!
+>>>>>
+>>>>> A "fundamental question" regarding these review comments is
+>>>>> whether
+>>>>> I
+>>>>> should add DT entries for these LEDs or not. I thought I
+>>>>> shouldn't
+>>>>> but
+>>>>> I would like to get a comment from Rob regarding it.
+>>>>
+>>>> If the LED controller is a part of MFD device probed from DT then
+>>>> there is no doubt it should have corresponding DT sub-node.
+>>>
+>>> Sorry but I still see no much benefit from adding this information
+>>> in
+>>> DT. Why should it have corresponding DT-node if the LED properties
+>>> are
+>>> fixed and if we only wish to allow user-space control and have no
+>>> dependencies to other devices in DT? 
+>>>
+>>> In this specific case the information we can provide from DT is
+>>> supposed to be fixed. No board based variation. Furthermore, there
+>>> is
+>>> not much generic driver/led core functionality which would be able
+>>> to
+>>> parse and utilize relevant information from DT. I think we can only
+>>> give the name (function) and colour. And they are supposed to be
+>>> fixed
+>>> and thus could be just hard-coded in driver. Hard-coding these
+>>> would be
+>>> simpler and less error prone for users (no DT bindings to write)
+>>> and
+>>> simpler to create and probably also to maintain (no separate
+>>> binding
+>>> documents needed for LEDs).
+>>
+>> AFAICS it is possible to connect LED of arbitrary color to the iouts
+>> of this device. If this is the case then it is justified to have DT
+>> node only to allow for LED name customization.
+> 
+> In theory, yes. In practice (if I understand it correctly) the color in
+> this case is only visible in sysfs path name. I am not at all sure that
+> reflecting the (unlikely) color change in path name is worth the
+> hassle. Besides - if this happens, then the driver and DT can be
+> changed.
+
+Driver should not be changed. We have DT for conveying board specific
+parameters.
+
+> It is easier to add DT entries than remove them. If you see
+> the color change support as really crucial - then I could even consider
+> defaulting the colours to amber and green if no colour property is
+> present in DT.
+
+You don't need to default to anything. The color section will be left
+empty if the property is not provided.
+
+> I see no point in _requiring_ the DT entry to be there.
+
+I'm referring to this later in this message.
+
+> If we like being prepared for the theoretical possibilities - what if
+> x86 is used to control this PMIC? I guess we wouldn't have DT there
+> then (And no - I don't see such use-case).
+
+We have fwnode abstraction for that. You can also check:
+Documentation/firmware-guide/acpi/dsd/leds.rst.
+
+>>> But assuming this is Ok to DT-folks and if you insist - I will add
+>>> LED
+>>> information to DT for the next patches. Hopefully this extra
+>>> complexity
+>>> helps in some oddball use-case which I can't foresee =)
+>>>
+>>> Then what comes to the DT format.
+>>>
+>>> Do you think LED subsystem should try to follow the convention with
+>>> other sub-systems and not introduce multiple compatibles for single
+>>> device? MFD can handle instantiating the sub-devices just fine even
+>>> when sub-devices have no own compatible property or of_match. Maybe
+>>> we
+>>> should also avoid unnecessary sub-nodes when they are not really
+>>> required.
+>>
+>> This is beyond my scope of responsibility. It is MFD subsystem thing
+>> to
+>> choose the way of LED class driver instantiation. When it comes to
+>> LED subsystem - it expects single compatible pertaining to a physical
+>> device.
+> 
+> Sorry but I don't quite follow. What the LED subsystem does with the
+> compatible property? How does it expect this?
+
+In case of DT based MFD cell probing you must initialize of_compatible
+property of struct mfd_cell element which will then be matched
+with struct platform_driver -> driver -> of_match_table in the LED
+class driver. Basing on that a relevant platform_device is passed
+to the probe function. Its child struct device's of_node property comes
+already initialized to the pointer to the corresponding child node
+in MFD node.
+
+>> Nonetheless, so far we used to have separate compatibles for drivers
+>> of
+>> MFD devices' LED cells. If we are going to change that I'd like to
+>> see
+>> explicit DT maintainer's statement confirming that.
+> 
+> I don't expect that existing DTs would be changed. 
+
+I didn't suggest that.
+
+> But as I said, the
+> consensus amongst most of the subsystenm maintainers and DT maintainers
+> seems to be that sub-devices should not have own compatibles. I hope
+> Rob acks this here - but knowing he is a busy guy I add some old
+> discussions from which I have gathered my understanding:
+> 
+> BD71837 - first patch where regulators had compatible - Mark (regulator
+> maintainer instructed me to drop it):
+> https://lore.kernel.org/linux-clk/20180524140118.GS4828@sirena.org.uk/
+> 
+> And here Stephen (the clk subsystem maintainer) told me to drop whole
+> clocks sub-node (including the compatible):
+> https://lore.kernel.org/linux-clk/152777867392.144038.18188452389972834689@swboyd.mtv.corp.google.com/
+
+Still, there are MFD drivers using of_compatible for matching cell
+drivers. I don't follow current trends on MFD subsystem side.
+You've got to wait for review feedback from Lee Jones anyway
+to find out how to proceed with MFD bindings.
+
+>> And one benefit of having separate nodes per MFD cells is that we can
+>> easily discern the support for which cells is to be turned on.
+> 
+> We don't want to do DT modifications to drop some sub-device support
+> out. The DT is HW description and sub-blocks are still there. We drop
+> the support by KConfig. 
+
+How would you describe the purpose of 'status = "disabled"' DT
+assignment then?
+
+Anyway, I entirely disagree here - it is perfectly proper approach
+to define platform capabilities by modifying dts file alone.
+This way you can easily create multiple versions of platform
+configurations. It may be often impractical to enable all available
+platform features, at least from business point of view. And recompiling
+dts is lightweight operation in comparison to kernel compilation.
+
+Not saying that in some cases there are secret keys required for
+encrypting kernel images, that may not always be at hand.
+
+> Only 'configuration' we could bring from DT is
+> the amount of connected LEDs (as you said). But on the other hand -
+> whether preparing for such unlikely design is reasonable (or needed) is
+> questionable.
+
+LED naming related data is vital as well.
+
+>>> 	pmic: pmic@4b {
+>>> 		compatible = "rohm,bd71828";
+>>> 		reg = <0x4b>;
+>>> 		interrupt-parent = <&gpio1>;
+>>> 		interrupts = <29 GPIO_ACTIVE_LOW>;
+>>> 		clocks = <&osc 0>;
+>>> 		#clock-cells = <0>;
+>>> 		clock-output-names = "bd71828-32k-out";
+>>> 		gpio-controller;
+>>> 		#gpio-cells = <2>;
+>>> 		ngpios = <4>;
+>>> 		gpio-reserved-ranges = <0 1 2 1>;
+>>> 		gpio-line-names = "EPDEN";
+>>> 		rohm,dvs-vsel-gpios = <&gpio1 12 0>,
+>>> 				      <&gpio1 13 0>;
+>>> 		regulators {
+>>> 			...
+>>> 		};
+>>> 		
+>>> 		chg-led {
+>>> 			function = LED_FUNCTION_CHARGING;
+>>> 			color = LED_COLOR_ID_AMBER;
+>>> 		};
+>>>
+>>> 		pwr-led {
+>>> 			function = LED_FUNCTION_POWER;
+>>> 			color = LED_COLOR_ID_GREEN;
+>>> 		};
+>>
+>> This way you would probably need to probe LED class driver twice,
+>> instead of letting it behave in a standard way and parse child LED
+>> nodes.
+> 
+> No. Please note that probing the MFD sub-drivers is _not_ bound to
+> device-tree nodes. MFD sub-devices can be probed just fine even if they
+> have no DT entries. When we add MFD cell for LED driver, the
+> corresponding LED driver is probed. No DT magic needed for this.
+> 
+> What the LED driver (as other sub-device drivers) is required to do is
+> to obtain the pointer to parent device's DT node and find information
+> which is relevant for it. Ideally, the subsystem framework can extract
+> the properties which are common for whole subsystem (like color and
+> function in case of LEDs) and driver only parses the DT if it has some
+> custom properties. Again, ideally the driver has sane defaults - or
+> some other 'platform data' mechanism if no DT information is found.
+> There is architectures which do not support DT.
+
+LED common bindings define that each LED should be described
+using child node. And we've enforced sticking to this standard
+for last two years strictly.
+
+LED core mechanism for LED name composition also relies on this
+DT design - it expects single 'color' and 'function' properties to
+be present in the passed fwnode.
+
+LED class registration function registers single LED and it has been
+always LED class driver's responsibility to call it for every LED
+connected to the LED controller iouts.
+
+> In case of BD71828 LEDs my first idea was to go with only the 'sane
+> defaults' option as I saw no much configurability. The DT snippet above
+> contains LED information as per your suggestion.
+> 
+> What the LED sub driver for BD71828 would now do is calling 
+> devm_led_classdev_register_ext with the DT information of BD71828
+> device. Eg, it should use the MFD dt node (because this is the real
+> device) and not just part of it. devm_led_classdev_register_ext should
+> then extract the LED specific information. I have not checked the
+> implementation of devm_led_classdev_register_ext in details - but it
+> should ignore non led properties and just walk through the LED
+> information and create the sysfs interfaces etc. for all LEDs it finds.
+
+This function does not work like that, as explained above.
+Please first get acquainted with the way how existing LED class drivers
+approach LED registration. Because otherwise we're wasting each
+others' time.
+
+> (In my example this is the chg-led and pwr-led sub-nodes). Furthermore,
+> if no LED information is found from DT I would expect
+> devm_led_classdev_register_ext to fail with well-defined return value
+> so that the driver could do what it now does - Eg, use "sane defaults"
+> to register the default class-devices for green and amber LEDs. The
+> default led class dev naming should of course be same format as it
+> would be if DT was populated with green and amber led information. 
+
+Please go through 5.4-rc1 patches related to LED naming improvements
+You can also refer to Documentation/leds/leds-class.rst,
+"LED Device Naming" section for starter.
+
+>>> 	};
+>>>
+>>> How do you see this? Or do you really wish to have this one extra
+>>> node:
+>>>
+>>> 	pmic: pmic@4b {
+>>> 		compatible = "rohm,bd71828";
+>>> 		
+>>> reg = <0x4b>;
+>>> 		interrupt-parent = <&gpio1>;
+>>> 		interru
+>>> pts = <29 GPIO_ACTIVE_LOW>;
+>>> 		clocks = <&osc 0>;
+>>> 		
+>>> #clock-cells = <0>;
+>>> 		clock-output-names = "bd71828-32k-out";
+>>> 		gpio-controller;
+>>> 		#gpio-cells = <2>;
+>>> 	
+>>> 	ngpios = <4>;
+>>> 		gpio-reserved-ranges = <0 1 2 1>;
+>>> 	
+>>> 	gpio-line-names = "EPDEN";
+>>> 		rohm,dvs-vsel-gpios =
+>>> <&gpio1 12 0>,
+>>> 				      <&gpio1 13 0>;
+>>> 		
+>>> regulators {
+>>> 			...
+>>> 		};
+>>> 		
+>>> 		leds-dummy {
+>>
+>> Why leds-dummy ?
+> 
+> Because there is no real led controller device in any "MFD bus". It is
+> just one MFD device with controls for two LEDs. 
+> 
+>> The convention is to have led-controller@unit-address as the parent
+>> LED
+>> controller node.
+> 
+> What is the unit address here? 0x4b is the I2C slave address and it is
+> the MFD node address. There is no addressing for LED controller as
+> there is no separate LED controller device. There is only one device,
+> the PMIC which is MFD device as it has multiple functions meld in. One
+> of these functions is LED control and requires LED driver.
+
+For MFD cell you can have just "led".
+
+>>> 			chg-led {
+>> s/chg-led/led0/
+>>
+>>> 				function = LED_FUNCTION_CHARGING;
+>>> 				color = LED_COLOR_ID_AMBER;
+>>> 			};
+>>>
+>>> 			pwr-led {
+>>
+>> s/pwr-led/led1/
+>>
+>> This is ePAPR requirement that DT node name should describe the
+>> general class of device.
+> 
+> Thanks. I had some problems with these node names as I wanted to make
+> them generic (led) but also to include some information what leds they
+> are. A bit same idea as I see in node names like "chan1" and "chan345"
+> that are used in ti-lmu bindings I checked for the example. But I am
+> fine with renaming them in this example! I just don't think we should
+> have this extra node as I mentioned.
+
+I wonder what Rob and Lee will say here. I personally would
+like to stick to LED common bindings and have this extra node.
+We define standards for a reason after all.
+
+>>> 				function = LED_FUNCTION_POWER;
+>>> 				color = LED_COLOR_ID_GREEN;
+>>> 			};
+>>
+>> Common LED bindings say this is the proper way to go. However you
+>> would need compatible to probe LED class driver in DT based way.
+> 
+> No. I don't. MFD will probe the LED class driver as long as the name of
+> the driver matches to MFD cell name. 
+
+If you initialize only of_compatible in struct mfd_cell element then it
+will use only that for matching. I bet I was checking that five years
+ago while working on leds-max77693 driver.
+
+> So we only need MFD driver to be
+> probed based on the compatible. Rest of the sub-device drivers will be
+> probed by MFD. What I am missing is MODULE_ALIAS in LED driver for
+> loading the module when MFD is searching for it if it is not modprobed
+> via scripts or built in-kernel. I have understood this is the standard
+> way with MFD nowadays - I am positive Lee will kick me if I am wrong ;)
+> (I think I have bullied him that much in the past :/ )
+
+Last sentence confirms my observation that you're strongly inclined
+to contest status quo :-)
+
+>> If you plan to do it otherwise then it makes no sense to have
+>> DT nodes for LEDs.
+> 
+> That was my point. This is why I did not have LEDs in DT in first
+> place. But as I said above - as a result of this discussion I have
+> started thinking that maybe I could check if I can easily add support
+> for providing LED information also via DT and fall back to defaults if
+> no LED information is found. (to allow color change or to omit one of
+> the LEDs as you suggested)
+> 
+>>>>>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>>>>>> index b0fdeef10bd9..ec59f28bcb39 100644
+>>>>>>> --- a/drivers/leds/Kconfig
+>>>>>>> +++ b/drivers/leds/Kconfig
+>>>>>>> @@ -529,6 +529,16 @@ config LEDS_BD2802
+>>>>>>>   	  This option enables support for BD2802GU RGB LED
+>>>>>>> driver chips
+>>>>>>>   	  accessed via the I2C bus.
+>>>>>>>   
+>>>>>>> +config LEDS_BD71828
+>>>>>>> +	tristate "LED driver for LED pins on ROHM BD71828 PMIC"
+>>>>>>> +	depends on LEDS_CLASS
+>>>>>> doesn't this have a dependency on MFD_ROHM_BD71828
+>>>>>>> +	depends on I2C
+>>>>>>> +	help
+>>>>>>> +	  This option enables support for LED outputs located
+>>>>>>> on ROHM
+>>>>>>> +	   BD71828 power management IC. ROHM BD71828 has two
+>>>>>>> led output
+>>>>>>> pins
+>>>>>>> +	   which can be left to indicate HW states or
+>>>>>>> controlled by SW.
+>>>>>>> Say
+>>>>>>> +	   yes here if you want to enable SW control for these
+>>>>>>> LEDs.
+>>>>>>> +
+>>>>>>
+>>>>>> Add module statement
+>>>>>
+>>>>> What is the module statement? Do you mean the 'if you compile
+>>>>> this
+>>>>> as a
+>>>>> module it will be called blahblah' or 'choose M to blahblah'?
+>>>>>
+>>>>> I've never understood why some entries have those statements.
+>>>>> 'Choose
+>>>>> M' stuff is help for config system - why should each module
+>>>>> explain
+>>>>> how
+>>>>> to use configs? This information should be in more generic
+>>>>> documentation. Furthermore, the 'tristate' there already says
+>>>>> you
+>>>>> can
+>>>>> compile this as a module. Module name on the other hand really
+>>>>> is
+>>>>> module's property but it may well change if one changes the
+>>>>> name of
+>>>>> the
+>>>>> file. That should not require change in KConfig. Furthermore,
+>>>>> where
+>>>>> do
+>>>>> you need the module name? And if you really need the module
+>>>>> name
+>>>>> you
+>>>>> should check the config name from Makefile to be sure -
+>>>>> module/file
+>>>>> names in comments or docs tend to get outdated.
+>>>>>
+>>>>> After all this being said - I can add any boilerplate text in
+>>>>> KConfig
+>>>>> if necessary - I just see zero benefit from this. And if you
+>>>>> didn't
+>>>>> mean this - can you then please tell me what is the module
+>>>>> statement?
+>>>>
+>>>> Yes, like you noticed, this is boilerplate so please follow the
+>>>> convention. If you'd like to discuss its relevance please submit
+>>>> a message to kernel-janitors@vger.kernel.org.
+>>>
+>>> I did follow the convention. There is 67 tristated LED drivers
+>>> which do
+>>> NOT add this module building babbling in description. Then there is
+>>> 14
+>>> drivers which do. So common convention even in LED subsystem is to
+>>> NOT
+>>> include meaningless mumbojumbo there.
+>>>
+>>> So even regarding convention it is better to have short description
+>>> to
+>>> the point. That actually makes the requiring boilerplate even more
+>>> useless. But as I said, I can put any meaningless letters there.
+>>> (again, if I can't convince you to reconsider how you like the LED
+>>> subsystem to appear like). Knowing how hard it is to help people
+>>> reducing waste - it's may be easier for me than discussing this
+>>> further
+>>> :(
+>>
+>> I will not insist - it's up to you. Unless Dan who raised the
+>> issue sees that differently.
+> 
+> Thanks :) Dan, I would like to hear your thoughts on this - do you
+> still think this is a fatal issue for you?
+> 
+>>>>>>> +#define BD71828_LED_TO_DATA(l) ((l)->id == ID_GREEN_LED ?
+>>>>>>> \
+>>>>>>> +	container_of((l), struct bd71828_leds, green) : \
+>>>>>>> +	container_of((l), struct bd71828_leds, amber))
+>>>>>>
+>>>>>> I don't think we should be defining the color as the
+>>>>>> variable.
+>>>>>> The 
+>>>>>> outputs can drive any color LED.
+>>>>>
+>>>>> I used the colors mentioned in BD71828 data-sheet. It is true
+>>>>> someone
+>>>>> might use different LEDs on their board but at least this
+>>>>> naming
+>>>>> allows
+>>>>> one to match the output to one in data-sheet. I can add comment
+>>>>> explaining this if you thin it's worth mentioning.
+>>>>
+>>>> I see you've come up with below definitions in rohm-bd71828.h:
+>>>>
+>>>> #define BD71828_MASK_LED_AMBER		0x80
+>>>> #define BD71828_MASK_LED_GREEN		0x40
+>>>>
+>>>> Is this how those bit fields are named in the data sheet?
+>>>
+>>> The leds are through the document referred as "GRNLED" and
+>>> "AMBLED".
+>>> These specific bits are named "AMBLED_FORCE_ON" and
+>>> "GRNLED_FORCE_ON".
+>>
+>> OK, so then it's reasonable to use those names in the driver.
+>> I would only add a comment next to the definitions, highlighting
+>> that their names don't imply the scope of supported colors as this is
+>> entirely irrelevant.
+> 
+> I'll add a note here. 
+> 
+>>
+>>>>>>> +
+>>>>>>> +	bd71828 = dev_get_drvdata(pdev->dev.parent);
+>>>>>>> +	l = devm_kzalloc(&pdev->dev, sizeof(*l), GFP_KERNEL);
+>>>>>>> +	if (!l)
+>>>>>>> +		return -ENOMEM;
+>>>>>>> +	l->bd71828 = bd71828;
+>>>>>>> +	a = &l->amber;
+>>>>>>> +	g = &l->green;
+>>>>>>> +	a->id = ID_AMBER_LED;
+>>>>>>> +	g->id = ID_GREEN_LED;
+>>>>>>> +	a->force_mask = BD71828_MASK_LED_AMBER;
+>>>>>>> +	g->force_mask = BD71828_MASK_LED_GREEN;
+>>>>>>> +
+>>>>>>> +	a->l.name = ANAME;
+>>>>>>> +	g->l.name = GNAME;
+>>>>>>> +	a->l.brightness_set_blocking =
+>>>>>>> bd71828_led_brightness_set;
+>>>>>>> +	g->l.brightness_set_blocking =
+>>>>>>> bd71828_led_brightness_set;
+>>>>>>> +
+>>>>>>> +	ret = devm_led_classdev_register(&pdev->dev, &g->l);
+>>>>>>> +	if (ret)
+>>>>>>> +		return ret;
+>>>>>>> +
+>>>>>>> +	return devm_led_classdev_register(&pdev->dev, &a->l);
+>>>>
+>>>> This way you force users to always register two LED class devices
+>>>> whereas they might need only one. Please compare how other LED
+>>>> class
+>>>> drivers handle DT parsing and LED class device registration.
+>>>
+>>> I am not sure if I understand correctly what you mean by using only
+>>> one
+>>> class device. As I (hopefully) somewhere said - users can't control
+>>> only one of these LEDs. If they decide to enable one led by SW,
+>>> then
+>>> they inevitably control also the other. Thus it is better that user
+>>> gets control to both of the LEDs if they take the control for one.
+>>>
+>>> Or do you mean I could achieve the control for both of these LEDs
+>>> via
+>>> only one class device?
+>>
+>> AFAIU the LEDs, when in SW mode, can be controlled independently,
+>> right?
+> 
+> Yes and no. Both of the LEDs can be forced on/off individually - as
+> long as one of them is forced ON. If both LEDs are tried to be forced
+> OFF - then both LEDs are controlled by HW. If both are controlled by HW
+> and then one is forced ON - the other is also no longer controlled by
+> HW and is forced OFF.
+> 
+> Eg, bits 0x80 and 0x40 are conrols for these LEDs. 0x80 for one, 0x40
+> for the other. Setting bit means LED is on, clearing means LED is off -
+> with the HW control twist... If either of the bits is set - then both
+> leds are controlled by these bits (SW control). If both bits are
+> cleared, then LEDs are controlled by HW (likely to be off but not for
+> sure).
+
+Thank you for the explanation. So they can be represented by separate
+LED class devices. Driver logic will just need to update the state of
+the sibling LED if it will be affected.
+
+>> Because if not then there is no point in having separate LED class
+>> devices.
+>>
+>> But if I get it right, then allowing for registering only one LED
+>> class
+>> device is entirely justifiable - think of a situation when the iout
+>> remains not connected on the board.
+> 
+> Yes. This might be unlikely - but this is the reason why I consider
+> adding the DT support. I just am not sure if covering this scenario now
+> is worth the hassle. I tend to think we should only add the DT support
+> if someone actually produces a board where this LED is not connected.
+
+Could you share what board you're working with?
+
+>>> Yet another thing for me to learn =) I looked at the trigger
+>>> properties
+>>> in DT. That looked like a way to make the LED framework to "bind"
+>>> the
+>>> LED state to some trigger. (For example make the LED framework to
+>>> toggle specific LED state when USB device is plugged?)
+>>>
+>>> If this is the case then it might not be relevant for BD71828. Here
+>>> the
+>>> LED is by-default controlled by HW. Eg, when charger starts
+>>> charging
+>>> the battery, the PMIC will lit the LED. It will do so also when
+>>> power
+>>> button is pressed or certain problems are detected. This reqires no
+>>> SW
+>>> interaction.
+>>
+>> The trigger can be always deactivated from sysfs as well as set up
+>> again.
+>>
+>>> What this driver intends to do is to allow SW to take over this.
+>>> Eg, if
+>>> system is designed so that it is preferably to use these LEDs for
+>>> some
+>>> other purpose it can be done by loading this LED driver and
+>>> allowing
+>>> user-space to control these LEDs via sysfs.
+>>
+>> So the LED trigger interface would help to signalize in which state
+>> the LED is. If the trigger is set then it means the LED is under hw
+>> control.
+> 
+> This might be handy. I need to check the data-sheet because I think
+> there was own control for using one of the LEDs for charge indicator.
+> It might be that by-default the HW control of LEDs means that only the
+> power button presses are signaled via these LEDs. This trigger thing
+> could be handy for enabling/disabling also the charge indication as
+> well as for checking if LEDs are in forced state - although this might
+> be somewhat complicated because the 'turn led on' bit is connected to
+> the 'trigger'. Eg, even if the trigger says that SW is controlling LED,
+> turning off the LED may mean that trigger changes. But well, this is
+> the HW design we are dealing with at this time :/ In any case, I'll
+> leave this as further dev item for now.
+> 
+> Again, thanks for all the help!
+> 
+> Br,
+> 	Matti Vaittinen
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
