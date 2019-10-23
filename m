@@ -2,121 +2,163 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6129BCA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CACCA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6B52173B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A04E21920
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joIZ9tzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392255AbfJWOgv (ORCPT
+        id S2392316AbfJWOpe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:36:51 -0400
-Received: from muru.com ([72.249.23.125]:39262 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732328AbfJWOgv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:36:51 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D2A4B80CF;
-        Wed, 23 Oct 2019 14:37:23 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 07:36:46 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
-Message-ID: <20191023143646.GG5610@atomide.com>
-References: <20191007220540.30690-1-aford173@gmail.com>
- <20191022162223.GU5610@atomide.com>
- <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
- <20191022221919.GF5610@atomide.com>
- <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
+        Wed, 23 Oct 2019 10:45:34 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33078 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390038AbfJWOpe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 10:45:34 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y8so1685630plk.0;
+        Wed, 23 Oct 2019 07:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UfkRvTHI0TSo8+R107qzTfBUu8VqMHSbtU9EyUrYSU0=;
+        b=joIZ9tzVLAYTKuiLxokdZttIrssP4jwkkfFd/xB45y2sDx5bkrc30Pt3K1AZAfio4I
+         wSutl2X7g7aqA3qUwAnvko4pDpu302OOoVsXZV8IvapHvmUcHx4ahWsWXWH0wvTPXNUF
+         o9gUoHfMigDP3ReX9uhhTvP1ypreqwYfE/BjUnWlePFAFVCDPyfZVrbIUO2sEtjVa8qI
+         uU2GfeL2IB931GpvH1mQ6lEfCGofoqOIklXxRiujMqX6PmF/SUMP2p2Kq1t87TU4xTtI
+         AE8NOI9qdfCxYTqLl8D+Z8/cqTGmL+4m6fpTHiNDZGtMrkwN0WwhLTio2KjZzS3Fj1VA
+         82Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UfkRvTHI0TSo8+R107qzTfBUu8VqMHSbtU9EyUrYSU0=;
+        b=UF5fnhJYSt6C+HI9HyX4ffT/l6QOc/WbEiuNZRswpRQafuEpqxtraPjEuY4wlagg2V
+         pqrc4wi/Mv6tynJ4b7DfJ9LM09Kt7Bp8ScPGYtHUXT10PMUxgk+58bNFZ/zx8tIZwIJ+
+         d+k/jGAI7MOc09c34JFMhIBVJw6Ul9QPGRftdNW6jlbeiN+TzqlcopXt44xCi+mw1t1B
+         lNsyFE9vt/rIovYYSTPmMx7CiIh+/4RgA4+fG3fnU3ptcakq1MkG0/CIgr9leMXcF59T
+         7Katsx0cUWXh2wLpZgACFiuCMSe6XxEgFYk8BoDUH3jDv43zH+YXGH/1TYUuUbVyJRwC
+         eKGA==
+X-Gm-Message-State: APjAAAUKv1R9mBOY7xwBiGwlS72mgIWFhUTRirjvMLL+my2W+ll4xwR6
+        oQVk3dAxtAatO47vV/aTLblgGccyMg90QKQegMw=
+X-Google-Smtp-Source: APXvYqzE51JWBiCAWVsJuS9s05A3RmWCs7VMEuyNVjtdUTRivBrpN5FJhh7XBhl3+fgy2ziv6xrtvArXc+CYDR30HbA=
+X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr10292296plk.192.1571841933501;
+ Wed, 23 Oct 2019 07:45:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1571756812-19005-1-git-send-email-akinobu.mita@gmail.com>
+ <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com> <0f58e263-7e56-b4f7-51c1-a37e107a1afe@ti.com>
+In-Reply-To: <0f58e263-7e56-b4f7-51c1-a37e107a1afe@ti.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Wed, 23 Oct 2019 23:45:21 +0900
+Message-ID: <CAC5umyjr+NNxi=LDf-DCKL0yUEHYWQ5D_on1SP_9V+P56mY3EA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] leds: meter: add leds-meter binding
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn@kryo.se>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191023 04:42]:
-> 
-> > Am 23.10.2019 um 00:19 schrieb Tony Lindgren <tony@atomide.com>:
-> > 
-> > * Adam Ford <aford173@gmail.com> [191022 19:01]:
-> >> On Tue, Oct 22, 2019 at 11:22 AM Tony Lindgren <tony@atomide.com> wrote:
-> >>> 
-> >>> Hi,
-> >>> 
-> >>> * Adam Ford <aford173@gmail.com> [191007 15:06]:
-> >>>> The some in the OMAP3 family have a bandgap thermal sensor, but
-> >>>> omap2plus has it disabled.
-> >>>> 
-> >>>> This patch enables the OMAP3_THERMAL by default like the rest of
-> >>>> the OMAP family.
-> >>> 
-> >>> Looks like this breaks off mode during idle for omap3, and that's
-> >>> probably why it never got enabled. The difference in power
-> >>> consumption during idle is about 7mW vs 32mW for the SoC as
-> >>> measured from torpedo shunt for main_battery_som.
-> >>> 
-> >>> I think the right fix might be simply to add handling for
-> >>> CPU_CLUSTER_PM_ENTER to the related thermal driver to disable
-> >>> it during idle like we have for gpio-omap.c for example.
-> >> 
-> >> I am not sure I know where to start on fixing that issue.  Would you
-> >> entertain enabling the driver if we set the device tree to 'disabled'
-> >> by default?  This way if people want to to use it, it can be enabled
-> >> on a per-device option.  Once the power stuff gets resolved, we might
-> >> be able to enable it by default.  For people who are planning on using
-> >> the DM3730 @ 1GHz in high temp environments, I am not sure they'll
-> >> care about low power.
-> > 
-> > They should both work fine together though. They are not mutually
-> > exclusive features.
-> > 
-> >> I'll try to look into it when I have time, but I was hoping a
-> >> compromise might be a reasonable work-around.
-> > 
-> > It should be hopefully a trivial fix.. I have not looked at the
-> > driver code though.
-> 
-> If I am taken right, it is the drivers/thermal/ti-soc-thermal/ti-*.c
-> which is a common driver for omap3, omap4, omap5. They only differ
-> in the thermal data and which registers and bits are used to access
-> the ADC.
+2019=E5=B9=B410=E6=9C=8823=E6=97=A5(=E6=B0=B4) 21:35 Dan Murphy <dmurphy@ti=
+.com>:
+>
+> Akinobu
+>
+> On 10/22/19 10:06 AM, Akinobu Mita wrote:
+> > Add DT binding for leds-meter.
+>
+> $subject should be
+>
+>   dt-bindings: leds: Add leds-meter binding
+>
+> And this patch should be first in the series
 
-Yes so it seems. Enabling OMAP3_THERMAL adds support to
-of_ti_bandgap_match[] for omap3 and causes the issue.
+OK.
 
-> So is this problem with off mode also known for omap4 and omap5?
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Bjorn Andersson <bjorn@kryo.se>
+> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Dan Murphy <dmurphy@ti.com>
+> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > ---
+> >   .../devicetree/bindings/leds/leds-meter.yaml       | 42 +++++++++++++=
++++++++++
+> >   1 file changed, 42 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.=
+yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/D=
+ocumentation/devicetree/bindings/leds/leds-meter.yaml
+> > new file mode 100644
+> > index 0000000..d5dfa261
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
+> > @@ -0,0 +1,42 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Generic LED level meter
+> > +
+> > +maintainers:
+> > +  - Akinobu Mita <akinobu.mita@gmail.com>
+> > +
+> > +description:
+> > +  Generic LED level meter consists of multiple LED devices by differen=
+t drivers.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: meter-leds
+> > +
+> > +  leds:
+>
+> This seems a bit generic for the property name
 
-Probably. But we don't have off mode working for omap4, and
-it cannot be used for omap5 AFAIK.
+I have no problem with changing to more descriptive name like "meter-leds".
+But this property is parsed by of_led_get(), so we need to change of_led_ge=
+t()
+to take additional 'prefix' parameter.  I would like to hear led-backlight
+authors' opinion.
 
-My guess is we need to call clk_disable() and call
-ti_bandgap_save_ctxt() on CPU_CLUSTER_PM_ENTER similar to
-what ti_bandgap_suspend does. And then restore it on
-CPU_CLUSTER_PM_EXIT.
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +    minItems: 1
+> > +    description: List of phandles to LED node that are members of a le=
+vel meter.
+> > +
+> > +  brightness-weights:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +    minItems: 1
+> > +    description: Each integer represents a contribution ratio within a=
+ level
+> > +      meter.
+>
+> This description is a bit vague I would not be sure what I would set
+> this to.
 
-There's a similar example already in gpio_omap_cpu_notifier().
-Not sure if there is some related errata to deal with too,
-probably the old Nokia n900 or n9 would provide some hints
-on what exactly needs to be done.
-
-Regards,
-
-Tony
+OK.  I'll add some description and examples like I wrote in the commit
+message for patch 1/2.
