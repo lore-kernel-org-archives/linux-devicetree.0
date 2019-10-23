@@ -2,333 +2,105 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D87CA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48951CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED7221920
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:48:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tuqacLYk"
+	by mail.kernel.org (Postfix) with ESMTP id 1EA85214B2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 10:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390588AbfJWKst (ORCPT
+        id S2390638AbfJWKxC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:48:49 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:49732 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390540AbfJWKss (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 06:48:48 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191023104846euoutp01a0d5881512dcc1886b61d8ae4369ab06~QQP1YwWOp1742417424euoutp01k
-        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 10:48:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191023104846euoutp01a0d5881512dcc1886b61d8ae4369ab06~QQP1YwWOp1742417424euoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571827726;
-        bh=4J7gfhNSSVkz/hTa1HYEN56M/lHsqUW4MDuMxwJnr2k=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=tuqacLYkFV7pMu5TRDKGJWXQwc2mgrDSXdQh/9Ku8AE6o+E3WW+PbSWangr7Gyqxb
-         i6SAf7sYbJprf3E4wZgObWQI/8OcrXaZe72bDrcFoncUxskHrWqcM04OaeGNdmkeln
-         Mx9UtN9Kddy03XYfxBpD/Xl7FuwCElhIgcUHtRdM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191023104845eucas1p2d964dacb4e7f3f8e0c78ffe3fba94625~QQP0l7Ilf0349903499eucas1p21;
-        Wed, 23 Oct 2019 10:48:45 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 94.24.04469.D0030BD5; Wed, 23
-        Oct 2019 11:48:45 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191023104845eucas1p2f011bbc6a6200824e329208f407a2871~QQP0LW5xH1120011200eucas1p2H;
-        Wed, 23 Oct 2019 10:48:45 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191023104845eusmtrp2746075daab7c09ffbe7c2fd569175836~QQP0KTZO50714107141eusmtrp2U;
-        Wed, 23 Oct 2019 10:48:45 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-21-5db0300d5af0
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id E3.5A.04117.D0030BD5; Wed, 23
-        Oct 2019 11:48:45 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191023104844eusmtip128ceb1c5ad40705fbd39b15cef921b40~QQPzoNOZ42579225792eusmtip1b;
-        Wed, 23 Oct 2019 10:48:44 +0000 (GMT)
-Subject: Re: [PATCH v5 3/4] soc: samsung: Add Exynos Adaptive Supply Voltage
- driver
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-pm@vger.kernel.org, sboyd@kernel.org, vireshk@kernel.org,
-        b.zolnierkie@samsung.com, roger.lu@mediatek.com,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        m.szyprowski@samsung.com
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <ccd20b0e-9c4c-93cd-2e7e-40aef1bb336c@samsung.com>
-Date:   Wed, 23 Oct 2019 12:48:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Wed, 23 Oct 2019 06:53:02 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36703 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390491AbfJWKxC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 06:53:02 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iNEG8-0006gT-J6; Wed, 23 Oct 2019 12:52:56 +0200
+Received: from ukl by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iNEG7-0004Jp-Ok; Wed, 23 Oct 2019 12:52:55 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Richard Leitner <richard.leitner@skidata.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Carsten Stelling <carsten.stelling@goerlitz.com>
+Subject: [PATCH 3/3] usb: usb251xb: Add support for USB2422
+Date:   Wed, 23 Oct 2019 12:52:50 +0200
+Message-Id: <20191023105250.16537-3-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191023105250.16537-1-u.kleine-koenig@pengutronix.de>
+References: <20191023105250.16537-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191022190419.GB8305@kozik-lap>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTcRTG+2/37l616d00PGlZjCQKfFlZXCqsIGhiUF+CUkatvKjkpuw6
-        TSUUbZKmNv2QcwzfMHwJ003TtFSYc8ssRQUtbKboB1GUckoMUXNeJb/9znmewzkPHJIv7sUD
-        yERVKqNWKZIkAk+sw+YaDhGGt8rDTTMXaJO+BaerrMM4PTLSStDmuQmcdhZbEa0f6eXRzVYH
-        QWt7rAQ9PmcS0FsTJoxum7EJrnnJzE0FAllbXbbs+WAfJitpb0IypznoDh7jeSWOSUpMY9Rh
-        kQ89E94XGQUppdKnC61dRA76croQeZBARcDaSh9WiDxJMdWA4LPTweOKNQRzLuue4kTww7bA
-        3x/p1tkITqhH0NDfiLhiGYHr1VuB2+VL3YWeyhLkZj/qDExu/sXdJj5VxIPfDhvuFgSUFIoH
-        OJOQioSaoVXMzRgVDPXmnJ11JHmEugdD6wrOIoLBivldiwcVCuOOxd1RPuUPuWuNOMcnoHPZ
-        uHfpGAH6oRiOb0DZaiXBsS8s2tv3+Bhsd1XtZgYqD0HRxymCK3QIftmrEee6DP32Udx9EH8n
-        TUt3GNe+Dovftgl3Gyhv+L4s4m7whrKOcj7XFsKLfDHnPgUbTeU8jgPg5fw2pkMSw4FkhgNp
-        DAfSGP7vrUZYE/JnNKwynmGlKiY9lFUoWY0qPvRxstKMdr5qaMu++gGtjz2yIIpEksNC/Z93
-        cjGuSGMzlBYEJF/iJ/wZ3iwXC+MUGZmMOvmBWpPEsBYUSGISf2HWoZlYMRWvSGWeMEwKo95X
-        eaRHQA7KlovMRXmtNR0L0/qoLNGb6qWlr88KbJYBdlQ3e9EWPZ0xELXps3myGMmPg3F2wyso
-        LaJKaow6568KtGfOB2ffLtXmT/lc3a7V3rr5Oj2oUd0ee6nNlCUkXEmadSx6Jb4uW3X0k7Gz
-        dpAXeT630Xxf2zUZElJeoZs1iC1BNRKMTVBIz/LVrOIf8PlWSVEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xu7q8BhtiDe7vlrHYOGM9q8X8I+dY
-        Lc6f38BusenxNVaLz71HGC1mnN/HZLH2yF12i9a9R9gtLj/eyGbx79pGFovND46xOXB7bFrV
-        yeaxeUm9R8vJ/SwefVtWMXp83iQXwBqlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwe
-        a2VkqqRvZ5OSmpNZllqkb5egl7G1Zw5bwUTDihcbdrI3MJ5S72Lk5JAQMJHYNeEYexcjF4eQ
-        wFJGiY+f7jB3MXIAJaQk5rcoQdQIS/y51sUGUfOaUWLbg7lsIAlhgVCJvfP6GEFsEQFNiet/
-        v7OCFDEL9DBJnOxfzwjR8ZRR4u2UtawgVWwChhK9RyE6eAXsJBae/sQCYrMIqEos39TADGKL
-        CkRIPN9+A6pGUOLkzCdgNZwCehKX774CizMLqEv8mXeJGcIWl2j6spIVwpaX2P52DvMERqFZ
-        SNpnIWmZhaRlFpKWBYwsqxhFUkuLc9Nzi430ihNzi0vz0vWS83M3MQKjc9uxn1t2MHa9Cz7E
-        KMDBqMTD6/B+XawQa2JZcWXuIUYJDmYlEd47BmtjhXhTEiurUovy44tKc1KLDzGaAj03kVlK
-        NDkfmDjySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwrjux+/h3
-        KQfDZiHtnie/3gh4bPBlyG5myvj5yn7LNKujljdjbrNKCssvWs96Oq/MI+pMa1D8v+1y4Rlv
-        15a/UdPM8uJVKNuSXTY9/UTmt5ffS6VuT8yxO3819tvlFyklJneeX3sl/GByHFt2YeAGDlnX
-        G1KMvK0qjrVpydO6Y6ROLQ2bduyKEktxRqKhFnNRcSIALnoN3+QCAAA=
-X-CMS-MailID: 20191023104845eucas1p2f011bbc6a6200824e329208f407a2871
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191016145813eucas1p1623db169f1ee93f88cb2c75090804747
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191016145813eucas1p1623db169f1ee93f88cb2c75090804747
-References: <20191016145756.16004-1-s.nawrocki@samsung.com>
-        <CGME20191016145813eucas1p1623db169f1ee93f88cb2c75090804747@eucas1p1.samsung.com>
-        <20191016145756.16004-4-s.nawrocki@samsung.com>
-        <20191022190419.GB8305@kozik-lap>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+The USB2422 uses a different package that the USB251x and only comes in
+a variant with 2 downstream ports. Other than that it is software
+compatible.
 
-On 10/22/19 21:04, Krzysztof Kozlowski wrote:
+Tested-by: Carsten Stelling <carsten.stelling@goerlitz.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/usb/misc/usb251xb.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index d91ef9cf3623..7e4e4787f746 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -154,6 +154,14 @@ struct usb251xb_data {
+ 	char product_str[USB251XB_STRING_BUFSIZE / 2]; /* ASCII string */
+ };
  
-> I wanted to apply this patch but spotted some unusual printk... 
-> and then started looking for more...
-> 
-> Sparse complains:
-> ../drivers/soc/samsung/exynos5422-asv.c:457:5: warning: symbol 
-> 'exynos5422_asv_init' was not declared. Should it be static?
++static const struct usb251xb_data usb2422_data = {
++	.product_id = 0x2422,
++	.port_cnt = 2,
++	.led_support = false,
++	.bat_support = true,
++	.product_str = "USB2422",
++};
++
+ static const struct usb251xb_data usb2512b_data = {
+ 	.product_id = 0x2512,
+ 	.port_cnt = 2,
+@@ -588,6 +596,9 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
  
-#include "exynos5422-asv.h" should be added to 
-drivers/soc/samsung/exynos5422-asv.c.
-
->>  drivers/soc/samsung/Kconfig          |  10 +
->>  drivers/soc/samsung/Makefile         |   3 +
->>  drivers/soc/samsung/exynos-asv.c     | 179 ++++++++++
->>  drivers/soc/samsung/exynos-asv.h     |  82 +++++
->>  drivers/soc/samsung/exynos5422-asv.c | 509 +++++++++++++++++++++++++++
->>  drivers/soc/samsung/exynos5422-asv.h |  25 ++
->>  6 files changed, 808 insertions(+)
->>  create mode 100644 drivers/soc/samsung/exynos-asv.c
->>  create mode 100644 drivers/soc/samsung/exynos-asv.h
->>  create mode 100644 drivers/soc/samsung/exynos5422-asv.c
->>  create mode 100644 drivers/soc/samsung/exynos5422-asv.h
->>
-
->> +++ b/drivers/soc/samsung/exynos-asv.c
-
->> +#include <linux/cpu.h>
->> +#include <linux/delay.h>
-> 
-> Do you use this header?
-
-It can be removed now, after conversion to dev_pm_opp_adjust_voltage().
-
->> +static int exynos_asv_probe(struct platform_device *pdev)
->> +{
->> +	int (*probe_func)(struct exynos_asv *asv);
->> +	struct exynos_asv *asv;
->> +	struct device *cpu_dev;
->> +	u32 product_id = 0;
->> +	int ret, i;
->> +
->> +	cpu_dev = get_cpu_device(0);
->> +	ret = dev_pm_opp_get_opp_count(cpu_dev);
->> +	if (ret < 0)
->> +		return -EPROBE_DEFER;
->> +
->> +	asv = devm_kzalloc(&pdev->dev, sizeof(*asv), GFP_KERNEL);
->> +	if (!asv)
->> +		return -ENOMEM;
->> +
->> +	asv->chipid_regmap = syscon_node_to_regmap(pdev->dev.of_node);
-> 
-> Since this binds to the same node as chipid, why do you need syscon for
-> it? Why regular IO access does not work? Eventually, if this has to be
-> regmap because of locking (does it?), then maybe simply
-> device_node_to_regmap()?
-
-We just need regmap available to any of the two drivers whichever needs it
-first. device_node_to_regmap() sounds like a good idea. Then we could drop
-"syscon" compatible from the binding.
-
->> +	if (IS_ERR(asv->chipid_regmap)) {
->> +		dev_err(&pdev->dev, "Could not find syscon regmap\n");
->> +		return PTR_ERR(asv->chipid_regmap);
->> +	}
->> +
->> +	regmap_read(asv->chipid_regmap, EXYNOS_CHIPID_REG_PRO_ID, &product_id);
->> +
->> +	switch (product_id & EXYNOS_MASK) {
->> +	case 0xE5422000:
->> +		probe_func = exynos5422_asv_init;
->> +		break;
->> +	default:
->> +		dev_err(&pdev->dev, "Unsupported product ID: %#x", product_id);
-> 
-> Is this going to scream for every Exynos matching the 4210-chipid?
-
-Yes, it should really be dev_info() or removed entirely.
-
->> +		return -ENODEV;
->> +	}
-
-
->> +++ b/drivers/soc/samsung/exynos-asv.h
-
->> +enum {
->> +	EXYNOS_ASV_SUBSYS_ID_ARM,
->> +	EXYNOS_ASV_SUBSYS_ID_EGL = EXYNOS_ASV_SUBSYS_ID_ARM,
->> +	EXYNOS_ASV_SUBSYS_ID_KFC,
->> +	EXYNOS_ASV_SUBSYS_ID_INT,
->> +	EXYNOS_ASV_SUBSYS_ID_MIF,
->> +	EXYNOS_ASV_SUBSYS_ID_G3D,
->> +	EXYNOS_ASV_SUBSYS_ID_CAM,
->> +	EXYNOS_ASV_SUBSYS_ID_MAX
->> +};
-> 
-> I cannot find usage of it in generic part of ASV driver. What's the
-> purpose? Isn't it specific to Exynos5422?
-
-It was meant as generic enumeration of available subsystems, it's not
-Exynos5422 specific. It could be moved to the exynos5422 part of the 
-driver (limited to EXYNOS_ASV_SUBSYS_ID_ARM, EXYNOS_ASV_SUBSYS_ID_KFC)
-until support for of ther subsystems than CPU clusters is added.
-The CPUs are now matched by compatible.
-
->> +struct regmap;
->> +
->> +/* HPM, IDS values to select target group */
-
->> +struct exynos_asv_subsys {
->> +	struct exynos_asv *asv;
->> +	const char *cpu_dt_compat;
->> +	int id;
->> +	struct exynos_asv_table table;
->> +
->> +	unsigned int base_volt;
->> +	unsigned int offset_volt_h;
->> +	unsigned int offset_volt_l;
->> +};
->> +
->> +struct exynos_asv {
->> +	struct device *dev;
->> +	struct regmap *chipid_regmap;
->> +	struct exynos_asv_subsys subsys[2];
->> +
->> +	int (*opp_get_voltage)(struct exynos_asv_subsys *subs, int level,
->> +			       unsigned int voltage);
->> +	unsigned int group;
->> +	unsigned int table;
->> +
->> +	/* True if SG fields from PKG_ID register should be used */
->> +	bool use_sg;
->> +	/* ASV bin read from DT */
->> +	int of_bin;
->> +};
->> +
->> +static inline u32 __asv_get_table_entry(struct exynos_asv_table *table,
-> 
-> 'table' looks here like pointer to const.
-
-Yes, const could be added here.
-
->> +					unsigned int row, unsigned int col)
->> +{
->> +	return table->buf[row * (table->num_cols) + col];
->> +}
->> +
->> +static inline u32 exynos_asv_opp_get_voltage(struct exynos_asv_subsys *subsys,
->> +					unsigned int level, unsigned int group)
->> +{
-> 
-> The same, for subsys.
-
-Agreed.
+ static const struct of_device_id usb251xb_of_match[] = {
+ 	{
++		.compatible = "microchip,usb2422",
++		.data = &usb2422_data,
++	}, {
+ 		.compatible = "microchip,usb2512b",
+ 		.data = &usb2512b_data,
+ 	}, {
+@@ -688,6 +699,7 @@ static int usb251xb_i2c_probe(struct i2c_client *i2c,
+ }
  
->> +	return __asv_get_table_entry(&subsys->table, level, group + 1);
->> +}
-
->> +++ b/drivers/soc/samsung/exynos5422-asv.c
-
->> +#include <linux/bitrev.h>
->> +#include <linux/device.h>
-> 
-> Is it used?
-> 
->> +#include <linux/errno.h>
->> +#include <linux/of.h>
-> 
-> The same?
-
-Some might be not used now, I will check it again.
-
->> +#include <linux/regmap.h>
->> +#include <linux/soc/samsung/exynos-chipid.h>
->> +#include <linux/slab.h>
->> +
->> +#include "exynos-asv.h"
-
-
->> +static int exynos5422_asv_opp_get_voltage(struct exynos_asv_subsys *subsys,
->> +				int level, unsigned int volt)
-> 
-> subsys is not modified.
- 
-
->> +static unsigned int exynos5422_asv_parse_table(struct exynos_asv *asv,
->> +				      unsigned int pkg_id)
->> +{
-> 
-> The same, for asv. Looks BTW unused...
-
-Indeed the asv argument should be dropped now.
-
->> +	return (pkg_id >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
->> +}
-
->> +int exynos5422_asv_init(struct exynos_asv *asv)
->> +{
->> +	struct exynos_asv_subsys *subsys;
->> +	unsigned int table_index;
->> +	unsigned int pkg_id;
->> +	bool bin2;
->> +
-> 
-> How about checking if asv != null? It's a header exposed function.
-
-Do we really need it? The caller will ensure that asv is not null.
-
->> +	regmap_read(asv->chipid_regmap, EXYNOS_CHIPID_REG_PKG_ID, &pkg_id);
-
+ static const struct i2c_device_id usb251xb_id[] = {
++	{ "usb2422", 0 },
+ 	{ "usb2512b", 0 },
+ 	{ "usb2512bi", 0 },
+ 	{ "usb2513b", 0 },
 -- 
-Regards,
-Sylwester
+2.23.0
+
