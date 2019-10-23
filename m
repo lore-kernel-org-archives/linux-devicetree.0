@@ -2,123 +2,158 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48790CA9EC2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F31DC47E49
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAA8214B2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4539221906
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 12:35:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SFyMEXu2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389953AbfJWMdw (ORCPT
+        id S2390039AbfJWMfc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:33:52 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:35712 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391612AbfJWMdp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:33:45 -0400
-Received: from ramsan ([84.194.98.4])
-        by laurent.telenet-ops.be with bizsmtp
-        id H0Zk2100d05gfCL010ZkaV; Wed, 23 Oct 2019 14:33:44 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNFpg-0003uD-4t; Wed, 23 Oct 2019 14:33:44 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNFpg-0003Qc-3g; Wed, 23 Oct 2019 14:33:44 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Magnus Damm <magnus.damm@gmail.com>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 09/11] arm64: dts: renesas: Add support for Salvator-XS with R-Car M3-W+
-Date:   Wed, 23 Oct 2019 14:33:40 +0200
-Message-Id: <20191023123342.13100-10-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191023123342.13100-1-geert+renesas@glider.be>
-References: <20191023123342.13100-1-geert+renesas@glider.be>
+        Wed, 23 Oct 2019 08:35:32 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55154 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389888AbfJWMfc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 08:35:32 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NCZOCf042095;
+        Wed, 23 Oct 2019 07:35:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571834124;
+        bh=J7vtenKEXuXVl0lBap8CU6gDxo4xRoiS6Zd5T9c5dKg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SFyMEXu20tZIWaqh9ZFMFCk6M9eL4V0NRo7Uw/hCdXSUdVjorjdJqwwfshKplTE0f
+         Or9hPOZLJfuxNUXYKW6OgMTETbPciRm5uHLMo+y8Xxu1Yedhb0XTUUGUvPN+CjBqpl
+         4cCHKmi4zhZK5rIGX9ZErgbyfe2WTGyshfCTUUss=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9NCZNL9010837
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Oct 2019 07:35:23 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
+ Oct 2019 07:35:23 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 23 Oct 2019 07:35:13 -0500
+Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCZMVS045311;
+        Wed, 23 Oct 2019 07:35:23 -0500
+Subject: Re: [PATCH 2/2] leds: meter: add leds-meter binding
+To:     Akinobu Mita <akinobu.mita@gmail.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn@kryo.se>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+References: <1571756812-19005-1-git-send-email-akinobu.mita@gmail.com>
+ <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <0f58e263-7e56-b4f7-51c1-a37e107a1afe@ti.com>
+Date:   Wed, 23 Oct 2019 07:34:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial support for the Renesas Salvator-X 2nd version development
-board equipped with an R-Car M3-W+ SiP with 8 (2 x 4) GiB of RAM.
+Akinobu
 
-The memory map is as follows:
-  - Bank0: 4GiB RAM : 0x000048000000 -> 0x000bfffffff
-		      0x000480000000 -> 0x004ffffffff
-  - Bank1: 4GiB RAM : 0x000600000000 -> 0x006ffffffff
+On 10/22/19 10:06 AM, Akinobu Mita wrote:
+> Add DT binding for leds-meter.
 
-Based on a patch in the BSP by Takeshi Kihara
-<takeshi.kihara.df@renesas.com>.
+$subject should be
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
-v2:
-  - Add Reviewed-by, Tested-by.
----
- arch/arm64/boot/dts/renesas/Makefile          |  1 +
- .../boot/dts/renesas/r8a77961-salvator-xs.dts | 31 +++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a77961-salvator-xs.dts
+  dt-bindings: leds: Add leds-meter binding
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 937a3e4c3fadebb3..8fdbd2267384186b 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -15,6 +15,7 @@ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-xs.dtb
- dtb-$(CONFIG_ARCH_R8A77960) += r8a7796-salvator-x.dtb r8a7796-m3ulcb.dtb
- dtb-$(CONFIG_ARCH_R8A77960) += r8a7796-m3ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A77960) += r8a7796-salvator-xs.dtb
-+dtb-$(CONFIG_ARCH_R8A77961) += r8a77961-salvator-xs.dtb
- dtb-$(CONFIG_ARCH_R8A77965) += r8a77965-salvator-x.dtb r8a77965-salvator-xs.dtb
- dtb-$(CONFIG_ARCH_R8A77965) += r8a77965-m3nulcb.dtb
- dtb-$(CONFIG_ARCH_R8A77965) += r8a77965-m3nulcb-kf.dtb
-diff --git a/arch/arm64/boot/dts/renesas/r8a77961-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a77961-salvator-xs.dts
-new file mode 100644
-index 0000000000000000..4abd78ac1cd597d9
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a77961-salvator-xs.dts
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the Salvator-X 2nd version board with R-Car M3-W+
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a77961.dtsi"
-+#include "salvator-xs.dtsi"
-+
-+/ {
-+	model = "Renesas Salvator-X 2nd version board based on r8a77961";
-+	compatible = "renesas,salvator-xs", "renesas,r8a77961";
-+
-+	memory@48000000 {
-+		device_type = "memory";
-+		/* first 128MB is reserved for secure area. */
-+		reg = <0x0 0x48000000 0x0 0x78000000>;
-+	};
-+
-+	memory@400000000 {
-+		device_type = "memory";
-+		reg = <0x4 0x80000000 0x0 0x80000000>;
-+	};
-+
-+	memory@600000000 {
-+		device_type = "memory";
-+		reg = <0x6 0x00000000 0x1 0x00000000>;
-+	};
-+};
--- 
-2.17.1
+And this patch should be first in the series
 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Bjorn Andersson <bjorn@kryo.se>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+>   .../devicetree/bindings/leds/leds-meter.yaml       | 42 ++++++++++++++++++++++
+>   1 file changed, 42 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/Documentation/devicetree/bindings/leds/leds-meter.yaml
+> new file mode 100644
+> index 0000000..d5dfa261
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
+> @@ -0,0 +1,42 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic LED level meter
+> +
+> +maintainers:
+> +  - Akinobu Mita <akinobu.mita@gmail.com>
+> +
+> +description:
+> +  Generic LED level meter consists of multiple LED devices by different drivers.
+> +
+> +properties:
+> +  compatible:
+> +    const: meter-leds
+> +
+> +  leds:
+
+This seems a bit generic for the property name
+
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    minItems: 1
+> +    description: List of phandles to LED node that are members of a level meter.
+> +
+> +  brightness-weights:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 1
+> +    description: Each integer represents a contribution ratio within a level
+> +      meter.
+
+This description is a bit vague I would not be sure what I would set 
+this to.
+
+Dan
+
+> +
+> +required:
+> + - compatible
+> + - leds
+> +
+> +examples:
+> +  - |
+> +    leds {
+> +        compatible = "meter-leds";
+> +        leds = <&led0>, <&led1>, <&led2>, <&led3>;
+> +        brightness-weights = <3 1 1 1>;
+> +    };
+> +
+> +...
