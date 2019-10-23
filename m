@@ -2,163 +2,220 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CACCA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F87ECA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A04E21920
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8EF21928
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joIZ9tzV"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VsRj7qkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392316AbfJWOpe (ORCPT
+        id S2391513AbfJWOz2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:45:34 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33078 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390038AbfJWOpe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 10:45:34 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y8so1685630plk.0;
-        Wed, 23 Oct 2019 07:45:34 -0700 (PDT)
+        Wed, 23 Oct 2019 10:55:28 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:14869 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390614AbfJWOz2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 10:55:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UfkRvTHI0TSo8+R107qzTfBUu8VqMHSbtU9EyUrYSU0=;
-        b=joIZ9tzVLAYTKuiLxokdZttIrssP4jwkkfFd/xB45y2sDx5bkrc30Pt3K1AZAfio4I
-         wSutl2X7g7aqA3qUwAnvko4pDpu302OOoVsXZV8IvapHvmUcHx4ahWsWXWH0wvTPXNUF
-         o9gUoHfMigDP3ReX9uhhTvP1ypreqwYfE/BjUnWlePFAFVCDPyfZVrbIUO2sEtjVa8qI
-         uU2GfeL2IB931GpvH1mQ6lEfCGofoqOIklXxRiujMqX6PmF/SUMP2p2Kq1t87TU4xTtI
-         AE8NOI9qdfCxYTqLl8D+Z8/cqTGmL+4m6fpTHiNDZGtMrkwN0WwhLTio2KjZzS3Fj1VA
-         82Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UfkRvTHI0TSo8+R107qzTfBUu8VqMHSbtU9EyUrYSU0=;
-        b=UF5fnhJYSt6C+HI9HyX4ffT/l6QOc/WbEiuNZRswpRQafuEpqxtraPjEuY4wlagg2V
-         pqrc4wi/Mv6tynJ4b7DfJ9LM09Kt7Bp8ScPGYtHUXT10PMUxgk+58bNFZ/zx8tIZwIJ+
-         d+k/jGAI7MOc09c34JFMhIBVJw6Ul9QPGRftdNW6jlbeiN+TzqlcopXt44xCi+mw1t1B
-         lNsyFE9vt/rIovYYSTPmMx7CiIh+/4RgA4+fG3fnU3ptcakq1MkG0/CIgr9leMXcF59T
-         7Katsx0cUWXh2wLpZgACFiuCMSe6XxEgFYk8BoDUH3jDv43zH+YXGH/1TYUuUbVyJRwC
-         eKGA==
-X-Gm-Message-State: APjAAAUKv1R9mBOY7xwBiGwlS72mgIWFhUTRirjvMLL+my2W+ll4xwR6
-        oQVk3dAxtAatO47vV/aTLblgGccyMg90QKQegMw=
-X-Google-Smtp-Source: APXvYqzE51JWBiCAWVsJuS9s05A3RmWCs7VMEuyNVjtdUTRivBrpN5FJhh7XBhl3+fgy2ziv6xrtvArXc+CYDR30HbA=
-X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr10292296plk.192.1571841933501;
- Wed, 23 Oct 2019 07:45:33 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1571842526; x=1603378526;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ZcS6iGC6ZW39+YwuXUhER1NX3nIKpR9Zdk1NwCB3k3s=;
+  b=VsRj7qkS9omF6E8tDNGel3K6Eh+e5wcByyZJNscd+UI28YdlHA8Da5q8
+   ggAGw/BoJmDMPrZOjvWUVKfbWbxg4j6bMvZmY0Gk6aaEsLWFcDoS0iZm1
+   srBfnjMOgINPLMp6+2LEhG2HH/OEz+CiOpXh3hfdSOWrVSN2dOih6znQv
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.68,221,1569283200"; 
+   d="scan'208";a="432633064"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 23 Oct 2019 14:55:23 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id E242F1A0A5F;
+        Wed, 23 Oct 2019 14:55:22 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 23 Oct 2019 14:55:22 +0000
+Received: from [10.125.238.52] (10.43.162.31) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 23 Oct
+ 2019 14:55:13 +0000
+Subject: Re: [PATCH v6 2/2] soc: amazon: al-pos-edac: Introduce Amazon's
+ Annapurna Labs POS EDAC driver
+To:     James Morse <james.morse@arm.com>
+CC:     <robh+dt@kernel.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
+        <arnd@arndb.de>, <bp@alien8.de>, <mchehab@kernel.org>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <paulmck@linux.ibm.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
+References: <1570707681-865-1-git-send-email-talel@amazon.com>
+ <1570707681-865-3-git-send-email-talel@amazon.com>
+ <e66ff9b9-5fcb-e746-a551-2dc76bbeab48@arm.com>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <e80b86e1-861e-1497-8f2b-0269aa9865ad@amazon.com>
+Date:   Wed, 23 Oct 2019 17:55:07 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <1571756812-19005-1-git-send-email-akinobu.mita@gmail.com>
- <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com> <0f58e263-7e56-b4f7-51c1-a37e107a1afe@ti.com>
-In-Reply-To: <0f58e263-7e56-b4f7-51c1-a37e107a1afe@ti.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Wed, 23 Oct 2019 23:45:21 +0900
-Message-ID: <CAC5umyjr+NNxi=LDf-DCKL0yUEHYWQ5D_on1SP_9V+P56mY3EA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] leds: meter: add leds-meter binding
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <e66ff9b9-5fcb-e746-a551-2dc76bbeab48@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.162.31]
+X-ClientProxiedBy: EX13P01UWA004.ant.amazon.com (10.43.160.127) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-2019=E5=B9=B410=E6=9C=8823=E6=97=A5(=E6=B0=B4) 21:35 Dan Murphy <dmurphy@ti=
-.com>:
->
-> Akinobu
->
-> On 10/22/19 10:06 AM, Akinobu Mita wrote:
-> > Add DT binding for leds-meter.
->
-> $subject should be
->
->   dt-bindings: leds: Add leds-meter binding
->
-> And this patch should be first in the series
 
-OK.
-
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Bjorn Andersson <bjorn@kryo.se>
-> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Dan Murphy <dmurphy@ti.com>
-> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> > ---
-> >   .../devicetree/bindings/leds/leds-meter.yaml       | 42 +++++++++++++=
-+++++++++
-> >   1 file changed, 42 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.=
-yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/D=
-ocumentation/devicetree/bindings/leds/leds-meter.yaml
-> > new file mode 100644
-> > index 0000000..d5dfa261
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-> > @@ -0,0 +1,42 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Generic LED level meter
-> > +
-> > +maintainers:
-> > +  - Akinobu Mita <akinobu.mita@gmail.com>
-> > +
-> > +description:
-> > +  Generic LED level meter consists of multiple LED devices by differen=
-t drivers.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: meter-leds
-> > +
-> > +  leds:
+On 10/21/2019 7:42 PM, James Morse wrote:
+> Hi Talel,
 >
-> This seems a bit generic for the property name
-
-I have no problem with changing to more descriptive name like "meter-leds".
-But this property is parsed by of_led_get(), so we need to change of_led_ge=
-t()
-to take additional 'prefix' parameter.  I would like to hear led-backlight
-authors' opinion.
-
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +    minItems: 1
-> > +    description: List of phandles to LED node that are members of a le=
-vel meter.
-> > +
-> > +  brightness-weights:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +    minItems: 1
-> > +    description: Each integer represents a contribution ratio within a=
- level
-> > +      meter.
+> On 10/10/2019 12:41, Talel Shenhar wrote:
+>> The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+>> logging unit that reports an error in case write error (e.g . Attempt to
+> (This is tricky to parse. "error in case write error" -> "error when a write error occurs"?)
+ack
 >
-> This description is a bit vague I would not be sure what I would set
-> this to.
-
-OK.  I'll add some description and examples like I wrote in the commit
-message for patch 1/2.
+>> write to a read only register).
+>> This error shall be reported to EDAC subsystem as uncorrectable-error.
+>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 55199ef..a77d554 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -757,6 +757,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
+>>   F:	include/linux/altera_uart.h
+>>   F:	include/linux/altera_jtaguart.h
+>>   
+>> +AMAZON ANNAPURNA LABS POS EDAC DRIVER
+>> +M:	Talel Shenhar <talel@amazon.com>
+>> +M:	Talel Shenhar <talelshenhar@gmail.com>
+>> +S:	Maintained
+>> +F:	Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+>> +F:	drivers/edac/al-pos-edac.c
+> ~s/-/_/
+ack
+>
+>
+>> diff --git a/drivers/edac/al_pos_edac.c b/drivers/edac/al_pos_edac.c
+>> new file mode 100644
+>> index 00000000..a85ab67
+>> --- /dev/null
+>> +++ b/drivers/edac/al_pos_edac.c
+>> @@ -0,0 +1,173 @@
+>> +static int al_pos_handle(struct al_pos_edac *al_pos)
+>> +{
+>> +	log1 = readl_relaxed(al_pos->mmio_base + AL_POS_ERROR_LOG_1);
+>> +	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
+>> +		return 0;
+> [...]
+>
+>> +	edac_device_handle_ue(al_pos->edac_dev, 0, 0, msg);
+>> +
+>> +	return 1;
+>> +}
+> [...]
+>
+>> +static irqreturn_t al_pos_irq_handler(int irq, void *info)
+>> +{
+>> +	if (al_pos_handle(al_pos))
+>> +		return IRQ_HANDLED;
+>> +	return IRQ_NONE;
+>> +}
+>
+>> +static int al_pos_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev;
+>> +	struct al_pos_edac *al_pos;
+>> +	int ret;
+>> +
+>> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_pos), DRV_NAME, 1,
+>> +					      DRV_NAME, 1, 0, NULL, 0,
+>> +					      edac_device_alloc_index());
+>> +	if (!edac_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	al_pos = edac_dev->pvt_info;
+>> +	al_pos->edac_dev = edac_dev;
+>> +	platform_set_drvdata(pdev, al_pos);
+>> +
+>> +	al_pos->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(al_pos->mmio_base)) {
+>> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
+>> +			PTR_ERR(al_pos->mmio_base));
+> edac_device_free_ctl_info(al_pos->edac_dev) or goto err_free_edac ?
+ack, shall add managed handling using devm
+>
+>> +		return PTR_ERR(al_pos->mmio_base);
+>> +	}
+>> +
+>> +	al_pos->irq = platform_get_irq(pdev, 0);
+>> +	if (al_pos->irq <= 0)
+>> +		edac_dev->edac_check = al_pos_edac_check;
+>> +
+>> +	edac_dev->dev = &pdev->dev;
+>> +	edac_dev->mod_name = DRV_NAME;
+>> +	edac_dev->dev_name = dev_name(&pdev->dev);
+>> +	edac_dev->ctl_name = "POS";
+> Does this show up in sysfs? The 'AL_' prefix may make it easier to find the corresponding
+> driver. (The TLA space is a little crowded!)
+ack
+>
+>
+>> +	ret = edac_device_add_device(edac_dev);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "Failed to add edac device\n");
+>> +		goto err_free_edac;
+>> +	}
+>> +
+>> +	if (al_pos->irq > 0) {
+>> +		ret = devm_request_irq(&pdev->dev,
+>> +				       al_pos->irq,
+>> +				       al_pos_irq_handler,
+>> +				       0,
+> Can this be IRQF_SHARED? This lets other devices register the interrupt too, which is
+> easily allowed if you can identify whether your device has triggered the interrupt. (which
+> you are already doing with the valid bit in your log1 register).
+ack
+>
+>
+>> +				       pdev->name,
+>> +				       pdev);
+>> +		if (ret != 0) {
+>> +			dev_err(&pdev->dev,
+>> +				"failed to register to irq %d (%d)\n",
+>> +				al_pos->irq, ret);
+>> +			goto err_remove_edac;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err_remove_edac:
+>> +	edac_device_del_device(edac_dev->dev);
+>> +err_free_edac:
+>> +	edac_device_free_ctl_info(edac_dev);
+>> +
+>> +	return ret;
+>> +}
+>
+> With the edac_dev-leak fixed and the -/_ in MAINTAINERS:
+>
+> Reviewed-by: James Morse <james.morse@arm.com>
+thanks. shall post v7 with the fixes
+>
+>
+> Thanks,
+>
+> James
