@@ -2,305 +2,194 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BF7CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 11:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D94ACA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 11:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6D821920
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 11:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571829626;
-	bh=aRuWDdDz0ALYschCEyXmLCyrVzvYwcAu78247GK/ix8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=px2HDmceYmvij57sYvevw825FL33yk6WI6HI8xkdAh3PEbu/Lw+XUvvrCvzC4iQmG
-	 TgvOwtPah06k8/9M4awI8Wd9rDBPIK+m3bqYpqSy1CGnHqcXT1nfoLPlWLSAhoi5qp
-	 6z8Lovgj5zR1ZLHUnqCov+x50qIXFp9tt1K2kckY=
+	by mail.kernel.org (Postfix) with ESMTP id EDAF420650
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 11:50:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KaGKOlu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404629AbfJWLUZ (ORCPT
+        id S1733180AbfJWLu0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:20:25 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35289 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390386AbfJWLUZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 07:20:25 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k2so4761967edx.2;
-        Wed, 23 Oct 2019 04:20:22 -0700 (PDT)
+        Wed, 23 Oct 2019 07:50:26 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36440 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388679AbfJWLu0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 07:50:26 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c22so10246077wmd.1
+        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 04:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=wDYk9ecxVmBs+fLPH4NRWrGaP2z4tJFrCfIWmLCCUuk=;
+        b=KaGKOlu8YrKxfNkM1N0LQQcM5xZYyJR+rVFsi0De4kZtD7uAZp8VWGNqlQVeo6Im52
+         iPmveajFItIOTHJix9H0JOU+2IVkb3BXnkxcsGeB2IWfNLlGAoE9FCXLBHyKfqi002RB
+         1EQMmowGvO9CHqnXHRlpH8E6VVat2qBPT3f9AZ1JJbuebnSSJltD7LldgvpkgjMEgP6M
+         zSVgR0OQiBwAeECibJD/ho4PYMaQaVPRSqhQ26NBkxpRRAZd0X0S7Mk0OEeBwkOBYEh4
+         BZGLuIEk96a2BdRQPZBV3JKVM19Bsy6TH88FO8K63nuOSCDEHaMpCn/5OHhgbZCWLO6g
+         JTPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U1Iv9oLwBhuv6+4c57usa5tS2bPjjw9Q5y32EOCdMPE=;
-        b=oX+Xkpd3D2iXdVNaoAfwOSfwK+m+/utG5ARYn4Tqa6FrN3eT+T9byRyHtWLxDKi/Ao
-         l3k03Vu37vlyBJShh5oq3RKUdwq3m4/+Gp/VhZsjpSNBG/6hZ383xyYoV0xFRcxJMIa8
-         2rKTJkYY/wTj0bL+B8ukhKjNJkSHL6xCr7Rhaq4VdXUmkP5/qKOvIf1zz7Fy9NrcYGDg
-         z78y/V00exYQNOJFLmuJ9wNMeBe75gSnccQT/PR6MiakNld+Er3hL1bdJeI8ylNIPVAw
-         8o5I6D4w8SVjOkkZhJ3Df4koTLo0nO108KN/Qnc+qqssAEl2Qv9C4OqOX8V/EBHKuX0G
-         DWYQ==
-X-Gm-Message-State: APjAAAWiiNSS9y/EAtu/+j7Ueayg56pnh7zIjmFvRwJuQ33ovv1qEUTw
-        lTxF+G3rGWdyKeULpA/hBgo=
-X-Google-Smtp-Source: APXvYqy24GIYro5b1SoxVfr90EPpn8DCMCQe6kqjHK5M83joyPKQX8ukV30FpXmPc6MEabt8o9/tvw==
-X-Received: by 2002:a17:906:e296:: with SMTP id gg22mr14621989ejb.211.1571829622111;
-        Wed, 23 Oct 2019 04:20:22 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id j5sm873792edj.62.2019.10.23.04.20.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 04:20:21 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 13:20:19 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-pm@vger.kernel.org, sboyd@kernel.org, vireshk@kernel.org,
-        b.zolnierkie@samsung.com, roger.lu@mediatek.com,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        m.szyprowski@samsung.com
-Subject: Re: [PATCH v5 3/4] soc: samsung: Add Exynos Adaptive Supply Voltage
- driver
-Message-ID: <20191023112019.GA10883@pi3>
-References: <20191016145756.16004-1-s.nawrocki@samsung.com>
- <CGME20191016145813eucas1p1623db169f1ee93f88cb2c75090804747@eucas1p1.samsung.com>
- <20191016145756.16004-4-s.nawrocki@samsung.com>
- <20191022190419.GB8305@kozik-lap>
- <ccd20b0e-9c4c-93cd-2e7e-40aef1bb336c@samsung.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wDYk9ecxVmBs+fLPH4NRWrGaP2z4tJFrCfIWmLCCUuk=;
+        b=CEGFHCxwqghmNhculbNaElF3fdo2i/knzA4v2nyMv8fAz8oP3+O5qm+AQTycMX9vb/
+         ZNTK3muJybnNzIffEfI24fxmbtrGdUnYke9v+fgaC2nAllzBrsnskPMeONoZ2vae16bJ
+         LLcIidFL9vCCNPDecgvzkIIigQWKAFTNXkt1vsGdYCDP8e5YwUzx/CB7mRGoRIP7E2GG
+         5+WuemyC+DIohVmi09AfT58mcvpiCRN8aK9+lUum/mV91iYDR/todR5jRinwj7vFo8CX
+         RbZ1Keb395v5ftckNnJrcAh2YEz133C9cZAONyzMJPVJC8+Iw6d5R+yRlvZpztG3zmaD
+         pPfQ==
+X-Gm-Message-State: APjAAAVc0jk+lpwYx6UCmxDN1PRQCltP86w453o+cz5AA7+Rkq+ryfx5
+        ZJXSRMspzCYfxVFt6xNXeiRyyA==
+X-Google-Smtp-Source: APXvYqy/5LGwNsdjQoZRl8FIEKa93VFwqP0nK7ixRAhHPotJv2ZJeht3bwVZ2vma4fAkn5NDziu6+A==
+X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr7692758wml.10.1571831422367;
+        Wed, 23 Oct 2019 04:50:22 -0700 (PDT)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id j19sm38467203wre.0.2019.10.23.04.50.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 04:50:21 -0700 (PDT)
+Subject: Re: [PATCH 5/5] ARM: dts: qcom: msm8974: add interconnect nodes
+To:     Brian Masney <masneyb@onstation.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20191013080804.10231-1-masneyb@onstation.org>
+ <20191013080804.10231-6-masneyb@onstation.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Message-ID: <d154b0c6-fc39-bebc-d1b5-cc179fb6055d@linaro.org>
+Date:   Wed, 23 Oct 2019 14:50:19 +0300
 MIME-Version: 1.0
+In-Reply-To: <20191013080804.10231-6-masneyb@onstation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ccd20b0e-9c4c-93cd-2e7e-40aef1bb336c@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:48:34PM +0200, Sylwester Nawrocki wrote:
-> Hi Krzysztof,
+Hi Brian,
+
+Thanks for the patch!
+
+On 13.10.19 г. 11:08 ч., Brian Masney wrote:
+> Add interconnect nodes that's needed to support bus scaling.
 > 
-> On 10/22/19 21:04, Krzysztof Kozlowski wrote:
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> index bdbde5125a56..ed98d14a88b1 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /dts-v1/;
 >  
-> > I wanted to apply this patch but spotted some unusual printk... 
-> > and then started looking for more...
-> > 
-> > Sparse complains:
-> > ../drivers/soc/samsung/exynos5422-asv.c:457:5: warning: symbol 
-> > 'exynos5422_asv_init' was not declared. Should it be static?
+> +#include <dt-bindings/interconnect/qcom,msm8974.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-msm8974.h>
+>  #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+> @@ -1106,6 +1107,60 @@
+>  			};
+>  		};
 >  
-> #include "exynos5422-asv.h" should be added to 
-> drivers/soc/samsung/exynos5422-asv.c.
-> 
-> >>  drivers/soc/samsung/Kconfig          |  10 +
-> >>  drivers/soc/samsung/Makefile         |   3 +
-> >>  drivers/soc/samsung/exynos-asv.c     | 179 ++++++++++
-> >>  drivers/soc/samsung/exynos-asv.h     |  82 +++++
-> >>  drivers/soc/samsung/exynos5422-asv.c | 509 +++++++++++++++++++++++++++
-> >>  drivers/soc/samsung/exynos5422-asv.h |  25 ++
-> >>  6 files changed, 808 insertions(+)
-> >>  create mode 100644 drivers/soc/samsung/exynos-asv.c
-> >>  create mode 100644 drivers/soc/samsung/exynos-asv.h
-> >>  create mode 100644 drivers/soc/samsung/exynos5422-asv.c
-> >>  create mode 100644 drivers/soc/samsung/exynos5422-asv.h
-> >>
-> 
-> >> +++ b/drivers/soc/samsung/exynos-asv.c
-> 
-> >> +#include <linux/cpu.h>
-> >> +#include <linux/delay.h>
-> > 
-> > Do you use this header?
-> 
-> It can be removed now, after conversion to dev_pm_opp_adjust_voltage().
-> 
-> >> +static int exynos_asv_probe(struct platform_device *pdev)
-> >> +{
-> >> +	int (*probe_func)(struct exynos_asv *asv);
-> >> +	struct exynos_asv *asv;
-> >> +	struct device *cpu_dev;
-> >> +	u32 product_id = 0;
-> >> +	int ret, i;
-> >> +
-> >> +	cpu_dev = get_cpu_device(0);
-> >> +	ret = dev_pm_opp_get_opp_count(cpu_dev);
-> >> +	if (ret < 0)
-> >> +		return -EPROBE_DEFER;
-> >> +
-> >> +	asv = devm_kzalloc(&pdev->dev, sizeof(*asv), GFP_KERNEL);
-> >> +	if (!asv)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	asv->chipid_regmap = syscon_node_to_regmap(pdev->dev.of_node);
-> > 
-> > Since this binds to the same node as chipid, why do you need syscon for
-> > it? Why regular IO access does not work? Eventually, if this has to be
-> > regmap because of locking (does it?), then maybe simply
-> > device_node_to_regmap()?
-> 
-> We just need regmap available to any of the two drivers whichever needs it
-> first. device_node_to_regmap() sounds like a good idea. Then we could drop
-> "syscon" compatible from the binding.
+> +		bimc: interconnect@fc380000 {
+> +			reg = <0xfc380000 0x6a000>;
+> +			compatible = "qcom,msm8974-bimc";
+> +			#interconnect-cells = <1>;
+> +			clock-names = "bus", "bus_a";
+> +			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+> +			         <&rpmcc RPM_SMD_BIMC_A_CLK>;
+> +		};
+> +
+> +		cnoc: interconnect@fc480000 {
+> +			reg = <0xfc480000 0x4000>;
+> +			compatible = "qcom,msm8974-cnoc";
+> +			#interconnect-cells = <1>;
+> +			clock-names = "bus", "bus_a";
+> +			clocks = <&rpmcc RPM_SMD_CNOC_CLK>,
+> +			         <&rpmcc RPM_SMD_CNOC_A_CLK>;
+> +		};
+> +
+> +		mmssnoc: interconnect@fc478000 {
+> +			reg = <0xfc478000 0x4000>;
+> +			compatible = "qcom,msm8974-mmssnoc";
+> +			#interconnect-cells = <1>;
+> +			clock-names = "bus", "bus_a";
+> +			clocks = <&mmcc MMSS_S0_AXI_CLK>,
+> +			         <&mmcc MMSS_S0_AXI_CLK>;
+> +		};
+> +
+> +		ocmemnoc: interconnect@fc470000 {
+> +			reg = <0xfc470000 0x4000>;
+> +			compatible = "qcom,msm8974-ocmemnoc";
+> +			#interconnect-cells = <1>;
+> +			clock-names = "bus", "bus_a";
+> +			clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> +			         <&rpmcc RPM_SMD_OCMEMGX_A_CLK>;
+> +		};
+> +
+> +		pnoc: interconnect@fc468000 {
+> +			reg = <0xfc468000 0x4000>;
+> +			compatible = "qcom,msm8974-pnoc";
+> +			#interconnect-cells = <1>;
+> +			clock-names = "bus", "bus_a";
+> +			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+> +			         <&rpmcc RPM_SMD_PNOC_A_CLK>;
+> +		};
+> +
+> +		snoc: interconnect@fc460000 {
+> +			reg = <0xfc460000 0x4000>;
+> +			compatible = "qcom,msm8974-snoc";
+> +			#interconnect-cells = <1>;
+> +			clock-names = "bus", "bus_a";
+> +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+> +			         <&rpmcc RPM_SMD_SNOC_A_CLK>;
+> +		};
 
-OK, let's keep the regmap for safe access to the same region by multiple
-drivers.
+It would have been nice to have the DT nodes sorted by address, but i suppose it
+doesn't make much difference, as the rest of the nodes in this file are unsorted
+anyway.
 
-> 
-> >> +	if (IS_ERR(asv->chipid_regmap)) {
-> >> +		dev_err(&pdev->dev, "Could not find syscon regmap\n");
-> >> +		return PTR_ERR(asv->chipid_regmap);
-> >> +	}
-> >> +
-> >> +	regmap_read(asv->chipid_regmap, EXYNOS_CHIPID_REG_PRO_ID, &product_id);
-> >> +
-> >> +	switch (product_id & EXYNOS_MASK) {
-> >> +	case 0xE5422000:
-> >> +		probe_func = exynos5422_asv_init;
-> >> +		break;
-> >> +	default:
-> >> +		dev_err(&pdev->dev, "Unsupported product ID: %#x", product_id);
-> > 
-> > Is this going to scream for every Exynos matching the 4210-chipid?
-> 
-> Yes, it should really be dev_info() or removed entirely.
-
-Remove it entirely please or leave it to dev_dbg (but even then add some
-calming message like "Unsupported ...., skipping ASV"). Driver binds on
-many devices and lack of ASV is kind of regular (till now there was no
-ASV at all).
-
-> 
-> >> +		return -ENODEV;
-> >> +	}
-> 
-> 
-> >> +++ b/drivers/soc/samsung/exynos-asv.h
-> 
-> >> +enum {
-> >> +	EXYNOS_ASV_SUBSYS_ID_ARM,
-> >> +	EXYNOS_ASV_SUBSYS_ID_EGL = EXYNOS_ASV_SUBSYS_ID_ARM,
-> >> +	EXYNOS_ASV_SUBSYS_ID_KFC,
-> >> +	EXYNOS_ASV_SUBSYS_ID_INT,
-> >> +	EXYNOS_ASV_SUBSYS_ID_MIF,
-> >> +	EXYNOS_ASV_SUBSYS_ID_G3D,
-> >> +	EXYNOS_ASV_SUBSYS_ID_CAM,
-> >> +	EXYNOS_ASV_SUBSYS_ID_MAX
-> >> +};
-> > 
-> > I cannot find usage of it in generic part of ASV driver. What's the
-> > purpose? Isn't it specific to Exynos5422?
-> 
-> It was meant as generic enumeration of available subsystems, it's not
-> Exynos5422 specific. It could be moved to the exynos5422 part of the 
-> driver (limited to EXYNOS_ASV_SUBSYS_ID_ARM, EXYNOS_ASV_SUBSYS_ID_KFC)
-> until support for of ther subsystems than CPU clusters is added.
-> The CPUs are now matched by compatible.
-
-Then let's move it to exynos5422 part, and later make it generic if
-needed.
-
-> 
-> >> +struct regmap;
-> >> +
-> >> +/* HPM, IDS values to select target group */
-> 
-> >> +struct exynos_asv_subsys {
-> >> +	struct exynos_asv *asv;
-> >> +	const char *cpu_dt_compat;
-> >> +	int id;
-> >> +	struct exynos_asv_table table;
-> >> +
-> >> +	unsigned int base_volt;
-> >> +	unsigned int offset_volt_h;
-> >> +	unsigned int offset_volt_l;
-> >> +};
-> >> +
-> >> +struct exynos_asv {
-> >> +	struct device *dev;
-> >> +	struct regmap *chipid_regmap;
-> >> +	struct exynos_asv_subsys subsys[2];
-> >> +
-> >> +	int (*opp_get_voltage)(struct exynos_asv_subsys *subs, int level,
-> >> +			       unsigned int voltage);
-> >> +	unsigned int group;
-> >> +	unsigned int table;
-> >> +
-> >> +	/* True if SG fields from PKG_ID register should be used */
-> >> +	bool use_sg;
-> >> +	/* ASV bin read from DT */
-> >> +	int of_bin;
-> >> +};
-> >> +
-> >> +static inline u32 __asv_get_table_entry(struct exynos_asv_table *table,
-> > 
-> > 'table' looks here like pointer to const.
-> 
-> Yes, const could be added here.
-> 
-> >> +					unsigned int row, unsigned int col)
-> >> +{
-> >> +	return table->buf[row * (table->num_cols) + col];
-> >> +}
-> >> +
-> >> +static inline u32 exynos_asv_opp_get_voltage(struct exynos_asv_subsys *subsys,
-> >> +					unsigned int level, unsigned int group)
-> >> +{
-> > 
-> > The same, for subsys.
-> 
-> Agreed.
+> +
+>  		mdss: mdss@fd900000 {
+>  			status = "disabled";
 >  
-> >> +	return __asv_get_table_entry(&subsys->table, level, group + 1);
-> >> +}
-> 
-> >> +++ b/drivers/soc/samsung/exynos5422-asv.c
-> 
-> >> +#include <linux/bitrev.h>
-> >> +#include <linux/device.h>
-> > 
-> > Is it used?
-> > 
-> >> +#include <linux/errno.h>
-> >> +#include <linux/of.h>
-> > 
-> > The same?
-> 
-> Some might be not used now, I will check it again.
-> 
-> >> +#include <linux/regmap.h>
-> >> +#include <linux/soc/samsung/exynos-chipid.h>
-> >> +#include <linux/slab.h>
-> >> +
-> >> +#include "exynos-asv.h"
-> 
-> 
-> >> +static int exynos5422_asv_opp_get_voltage(struct exynos_asv_subsys *subsys,
-> >> +				int level, unsigned int volt)
-> > 
-> > subsys is not modified.
+> @@ -1152,6 +1207,11 @@
+>  				              "core",
+>  				              "vsync";
 >  
-> 
-> >> +static unsigned int exynos5422_asv_parse_table(struct exynos_asv *asv,
-> >> +				      unsigned int pkg_id)
-> >> +{
-> > 
-> > The same, for asv. Looks BTW unused...
-> 
-> Indeed the asv argument should be dropped now.
-> 
-> >> +	return (pkg_id >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
-> >> +}
-> 
-> >> +int exynos5422_asv_init(struct exynos_asv *asv)
-> >> +{
-> >> +	struct exynos_asv_subsys *subsys;
-> >> +	unsigned int table_index;
-> >> +	unsigned int pkg_id;
-> >> +	bool bin2;
-> >> +
-> > 
-> > How about checking if asv != null? It's a header exposed function.
-> 
-> Do we really need it? The caller will ensure that asv is not null.
+> +				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
+> +				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
 
-Indeed, it's not needed. Skip my comment.
+Who will be the requesting bandwidth to DDR and ocmem? Is it the display or GPU
+or both? The above seem like GPU-related interconnects, so maybe these
+properties should be in the GPU DT node.
 
-Best regards,
-Krzysztof
+> +				interconnect-names = "mdp0-mem",
+> +				                     "mdp1-mem";
+
+As the second path is not to DDR, but to ocmem, it might be better to call it
+something like "gpu-ocmem".
+
+Thanks,
+Georgi
+
+> +
+>  				ports {
+>  					#address-cells = <1>;
+>  					#size-cells = <0>;
+>
