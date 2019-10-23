@@ -2,122 +2,107 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4016CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 23:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C717CCA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 23:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE622064B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 23:08:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bp4Q67s7"
+	by mail.kernel.org (Postfix) with ESMTP id 8E5562084C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 23:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571874343;
+	bh=Fa2BUPBPRcQjdyWWpFyyHoW4dQxZIcz9syU46fPjnKI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NSchC/MNtQA76lEOYrjDwPp5RXrY2OY+PaHc4pob3kYFBWPFepnp09Val4RpkKM+H
+	 J9OS9ewMtEcmVjfckFhCuYqLfd2O1yWCaYoup8lqJTMfWmsJzq7eDWANAOqt6BHqas
+	 Oa8L9mMKgxBc6h9yBsRp0Z48T5UCsrTBVcXu/+9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406308AbfJWXI6 (ORCPT
+        id S1731522AbfJWXpn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 19:08:58 -0400
-Received: from mail-pl1-f173.google.com ([209.85.214.173]:34392 "EHLO
-        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbfJWXI5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 19:08:57 -0400
-Received: by mail-pl1-f173.google.com with SMTP id k7so10860142pll.1;
-        Wed, 23 Oct 2019 16:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QxDr+e6+5QdQzyCN6NaD0cQCCfsuFPgUpkpn762LbCY=;
-        b=Bp4Q67s74UcB2h4To3GUb4bxX5cdnjSsAdYj4JFcXpIT1HEAI87HRAsD2nB29jxrd2
-         vIkwH16XY+uUPjU0fDSqzMZey8SAbAR/mCS/GzV5eibEJDilwceCXlB6++2GcFcYu5iX
-         diVQmUb2lI3ZOndtT1fSZdxndVXsW44qUid4v7X/Sspsy5uN4qpOH89t2Ir+tvILvHbV
-         rloY1MH0q048K378e5hXc6g9CQYeltPBJ0r7U4OXYkQ6m/Hrlrc1JYYDjIj+NHJtAm9Y
-         5s0GYTiTKYfoqH9usNTvxwujFyEdJb81yaF3Q/9Saj15wEQZ8JWpeEew77wRKdbKlgW5
-         V3kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QxDr+e6+5QdQzyCN6NaD0cQCCfsuFPgUpkpn762LbCY=;
-        b=tI4Ozhm2I3IqKJ87z4EiFcIy/DCSVUk+QWApQ3/kquDz9TMeKMGb5V/bkOfTWc9KAq
-         do6VEAdZh/H7tYlBwZSbpAFI1aWil5F30KvW9851a7tM3WduaZRLv7JN6c7ddGX6CXIJ
-         qQwa0JqUXf3K4ZB60/XrGfJ612e4jBX5v3BDLk6+7Vo2Pqj86ZocIKJqwXd56q+mvcsy
-         ORDwy1dk4b9KHnmuILvXM/BVYdYNbimpxiBoF9vhPYYmztmszh5TpKiH0uQT4WqvMENy
-         tsVk7uZJYaPaZ1q0Uyl6+rY4vU1K9HkXMrAU652aFbnCY/nMDLOkkOqlsMdNzNKl1juU
-         uUNg==
-X-Gm-Message-State: APjAAAXQlDUTrvwJ8iF18YpFD/cB8hcvm884h75ieMiq95CXH5eYd6pU
-        deqbwRXyMZNzCJYfxfzXxQg=
-X-Google-Smtp-Source: APXvYqyUSrOsqTEVS/KFil0C4ircSVPx3Y670+4lzr4ms8Rlx8BKye/k/4pDNTv6EatZDUf/FITCUQ==
-X-Received: by 2002:a17:902:fe88:: with SMTP id x8mr8185982plm.266.1571872136538;
-        Wed, 23 Oct 2019 16:08:56 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b18sm24620716pfi.157.2019.10.23.16.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 16:08:55 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 16:08:52 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     lee.jones@linaro.org, jdelvare@suse.com, linux@roeck-us.net,
-        thierry.reding@gmail.com, jic23@kernel.org,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH 3/8] input: keyboard: Add support for Azoteq
- IQS620A/621/622/624/625
-Message-ID: <20191023230852.GB35946@dtor-ws>
-References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
- <1571631083-4962-4-git-send-email-jeff@labundy.com>
- <20191023002254.GW35946@dtor-ws>
- <20191023012913.GA3233@labundy.com>
+        Wed, 23 Oct 2019 19:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbfJWXpm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 19:45:42 -0400
+Received: from mail-yw1-f43.google.com (mail-yw1-f43.google.com [209.85.161.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FB212084C;
+        Wed, 23 Oct 2019 23:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571874342;
+        bh=Fa2BUPBPRcQjdyWWpFyyHoW4dQxZIcz9syU46fPjnKI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tA9Qqei3FhXSnB6neknr+m6VKuRlDXX5FuvMql6gJUtN7mx7PvTa45NEp2xjOYGL1
+         cGr6CzFFB6rrHDAK1kZH3KE6/YHDKCN9enufBCDoDZBm6x8DslCKNvCwlS7T4yCTwI
+         hl3IboeGHDLkCCGFIe0Q3BGQfdpZm3HhbQG6uQQ4=
+Received: by mail-yw1-f43.google.com with SMTP id d5so2448285ywk.9;
+        Wed, 23 Oct 2019 16:45:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAUphaqRr894cJExS/kShWSzyLF6Lm1Lw/RPp9Wu6F79l/WT/oEj
+        IbKY0pn93zDyFXSeX4RWQctZFRGF35K7ebSakA==
+X-Google-Smtp-Source: APXvYqyFLY8JEsxRT4xuHCHY1O1xGIo/yncNBmpBlQbPJqs9qHVdgTyVJ0Tp+2CyWQP/88e55lcfuUKbBeS/tmTHYMA=
+X-Received: by 2002:a81:748a:: with SMTP id p132mr4577615ywc.174.1571874341350;
+ Wed, 23 Oct 2019 16:45:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023012913.GA3233@labundy.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191014061617.10296-1-daniel@0x0f.com> <20191023200228.GA29675@bogus>
+ <20191023224357.GA26445@goma>
+In-Reply-To: <20191023224357.GA26445@goma>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 23 Oct 2019 18:45:29 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKTiieO_7gM4YNGV-BAT67Mi+PX4Gqyyd7nowZsjhnFqQ@mail.gmail.com>
+Message-ID: <CAL_JsqKTiieO_7gM4YNGV-BAT67Mi+PX4Gqyyd7nowZsjhnFqQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: arm: Initial MStar vendor prefixes and
+ compatible strings
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 08:29:13PM -0500, Jeff LaBundy wrote:
-> Hi Dmitry,
-> 
-> Thank you for your prompt review.
-> 
-> On Tue, Oct 22, 2019 at 05:22:54PM -0700, Dmitry Torokhov wrote:
-> > Hi Jeff,
-> > 
-> > On Sun, Oct 20, 2019 at 11:11:18PM -0500, Jeff LaBundy wrote:
-> > > +	/*
-> > > +	 * Each frame contains at most one wheel event (up or down), in which
-> > > +	 * case a full keystroke is emulated.
-> > > +	 */
-> > > +	if (event_flags & BIT(IQS62X_EVENT_WHEEL_UP)) {
-> > > +		input_report_key(iqs62x_keys->input,
-> > > +				 iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_UP],
-> > > +				 0);
-> > > +		input_sync(iqs62x_keys->input);
-> > > +	} else if (event_flags & BIT(IQS62X_EVENT_WHEEL_DN)) {
-> > > +		input_report_key(iqs62x_keys->input,
-> > > +				 iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_DN],
-> > > +				 0);
-> > 
-> > Not '1'?
-> > 
-> 
-> We pick up the '1' in the first of the two for loops above so long as the wheel
-> moved "enough." In this case (and this case only), a subsequent '0' is sent to
-> emulate a full press/release cycle (2 * {EV_KEY + EV_SYN}) for wheel "ticks."
-> 
-> I will update the comment to say "...in which case a complementary release cycle
-> is emulated." If I have misunderstood your concern, please let me know.
+On Wed, Oct 23, 2019 at 5:44 PM Daniel Palmer <daniel@0x0f.com> wrote:
+>
+> On Wed, Oct 23, 2019 at 03:02:28PM -0500, Rob Herring wrote:
+> > > +# SPDX-License-Identifier: (GPL-2.0+ OR X11)
+> >
+> > (GPL-2.0-only OR BSD-2-Clause) is preferred. Any reason to differ?
+>
+> I used the sunxi file as a template and thought they had some
+> reason to do that. I'll change it to just GPL-2.0.
 
-Ah, sorry, no, I misread the code.
+That wasn't a choice, but dual license it please.
 
-Thanks.
+> > > +      - description: thingy.jp BreadBee
+> > > +        items:
+> > > +          - const: thingyjp,breadbee
+> > > +          - const: mstar,infinity
+> > > +          - const: mstar,infinity3
+> >
+> > infinity vs. infinity3? What's the difference? It's generally sufficient
+> > to just list a board compatible and a SoC compatible.
+>
+> Apart from some very slight differences (max clock speed, different PWM block)
+> they are the same and the PCB for the BreadBee can take either the msc313(i1) or
+> msc313e(i3). My v2 patch will remove the mstar,infinity line from there and move
+> it to a second board called the breadbee-crust to handle the i1 configuration.
 
--- 
-Dmitry
+Sounds like you want:
+
+items:
+ - const: thingyjp,breadbee
+ - enum:
+     - mstar,infinity
+     - mstar,infinity3
+
+If one board can do both chips. Though if the same PCB is populated
+differently beyond the SoC, then maybe 2 board compatibles makes
+sense.
+
+Why not use the part numbers (msc313...)?
+
+Rob
