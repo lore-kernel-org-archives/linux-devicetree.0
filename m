@@ -2,231 +2,127 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5DCCA9EB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2440DC47E49
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8C621872
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:06:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571821618;
-	bh=rLzFMviBq1IW3xz0y6OVf/ZnK34FeVYbm2iAMwRl5mI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xl0l0hikTN0KLloa1XqW4Ex/g9iqjbGv1+dGssMjQfnab4xRz8q93jnFttl9gd3XP
-	 yEN+4ED9sGefxIBsCFPDFoukdBRzQqwZXOjVjpY3bCEF5PsTVBLBexi6TanJxePPUq
-	 j5y3DVR1YwJqFmJRYDWMSp4pBl6Js8CZ9jyoP/f4=
+	by mail.kernel.org (Postfix) with ESMTP id EE2A920663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:08:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ffzA9wrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390578AbfJWJG5 (ORCPT
+        id S2390394AbfJWJIm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:06:57 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35470 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390231AbfJWJG5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 05:06:57 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x3so16753894oig.2;
-        Wed, 23 Oct 2019 02:06:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FBj8GLla1LYyB2CdUTD0DNJdp/9JV1zJyBmNqUMEb5E=;
-        b=WKqYHFw5AwFrCKmX0JvRtKLaJtV+hWtTJKPbzpU2XBeWIlORfVgUbHinz7gZgCG7Mj
-         D933jqJO6uNqjHL8a2XsPe3QZIA88ZcTL2u72PJedae/QhRl7+TRF+BGFbQopTP29x3V
-         yX5ZuFCmid8Fw4uEXNuR3meru3UCcZjeGzmqdsbMi8Ao3K7xHIvGi0qK/v/AJ2kNOrfX
-         6GyzKSs9ynTD2Tt0KyvkqczndRKVIUsfGquOcCZpcDL93Cq6LmYKGJDGT0TtFQ8Ttqyq
-         XAvFZ70Rm3l1pnO4IQ7wrccwoL1FXSY5sI2xACddbqjhzCFR2j2K6+1IRP4AxCKEj8WP
-         X3Bw==
-X-Gm-Message-State: APjAAAXzr4DWklBOu0sZIpiCARzAr5o1q0gddF/qCoNpuWOGEcSi4IPZ
-        GlTIHmH8+AZeRov+dCKaWcPkzyEOpIdnvR1DpAo=
-X-Google-Smtp-Source: APXvYqyTirHnxPx9RjJnt0t5BfWKP5pSpiJnq+2XRPKiTpfW8z3VJ5oCRR5WKfiwapiGyf/vUU3yqd6A2ed8cyxSsVw=
-X-Received: by 2002:aca:5885:: with SMTP id m127mr6878786oib.110.1571821614375;
- Wed, 23 Oct 2019 02:06:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191023082423.12569-1-ran.wang_1@nxp.com>
-In-Reply-To: <20191023082423.12569-1-ran.wang_1@nxp.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 23 Oct 2019 11:06:43 +0200
-Message-ID: <CAJZ5v0jvQaREhg94f-COdYTt58gMP7YvqdEH0oYiS9Z56tg-XQ@mail.gmail.com>
-Subject: Re: [PATCH v9 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Wed, 23 Oct 2019 05:08:42 -0400
+Received: from mail-eopbgr1410127.outbound.protection.outlook.com ([40.107.141.127]:42816
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732361AbfJWJIm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:08:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FZ9G/phpGvaVVURm2c11yD4VJWPpdt7AwWoyjd0mPEb6/iMiibn9SVDXmWcGH3oUZ9e48dYb3kr+Fu6FI5btOcLOW8YITm3BPT7Cw2BHtPH6kAYHNnbtid13z63UobAVef+rCHZ+LgpPFB5BsZ8xvrvnAj9NyeSFmNPUQ83VP2w3JsILtBY4WFLWmPFzL1OeR07bOUmaWoxT2Lkk68SN7HZU5H1d/St+hZMXei6ZhA8fImz8UCyk3YoBVVA8DrD4FcFASnfZNFmRgig638hZPBmKCuuU+p/kcZJ+0dA/q6iSFcdWY1k+iivnOSYjl344sPZt3c4Wj+B1+Rl1ilIhmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=al5K/n55m+Ws6l5eJ/WuBMVj4c50PM0ry1AXUGrei0I=;
+ b=jBAU09RnS0HosvN6FXO+yK5YnFhimtpPN68g9r22FCSt0Uy7w+5pLlfWkLy/0yvIbnVYrhJzC98bf5rkeYNdxclXcT6KS1Gj+UvzUwkmqTEcer0byiyRsiGmlm1V0HQVezp9dwbjNqxiUaK+2hVy/Xp1/lBy302n+dlIZ1X/qjRHG+x0fOpx3hCNuiEyEtW6c320tkwQeIRnei6QAM+xoLkcJbGdRYeFTUU93t230tm7Sb9t4lOyx7VrWGdOofxXez2rjUdyaAZ+Z3jnG1n4EVRJz6SXNwdjjObAIlSkqnnqriEiyaycm5lq4cMD7HYeu1lNm00sHMFe5UWQN0pzWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=al5K/n55m+Ws6l5eJ/WuBMVj4c50PM0ry1AXUGrei0I=;
+ b=ffzA9wrNJIRyyOBx5ov8vo4Nl1Rq6boiT3U78EVTUHU6y2ac1iepvWrgBOPa8OQQxXQgz68Fv1O5pkAzfMoieIt+e5S39QKOsbA+7sn5fTrTnKzdIFRkXVhIIc8EyU9TucXzmTPGtr75Hu65u6zaaHZH7yH1UqxodFY0B41r5O8=
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
+ TY1PR01MB1884.jpnprd01.prod.outlook.com (52.133.161.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Wed, 23 Oct 2019 09:08:37 +0000
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::18df:cd2b:3b80:f287]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::18df:cd2b:3b80:f287%7]) with mapi id 15.20.2387.019; Wed, 23 Oct 2019
+ 09:08:37 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>,
-        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: RE: [PATCH 1/2] ata: sata_rcar: Add r8a774b1 support
+Thread-Topic: [PATCH 1/2] ata: sata_rcar: Add r8a774b1 support
+Thread-Index: AQHViPTHTKrJp1MwG0yyW1gvVALjSadn0okAgAAeN/A=
+Date:   Wed, 23 Oct 2019 09:08:37 +0000
+Message-ID: <TY1PR01MB177027159CE21F3C07790712C06B0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1571761279-17347-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1571761279-17347-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdVggP40u8_+9yZFAO5_E0_qbnDM5hy1k+n6RWkYKOssYw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVggP40u8_+9yZFAO5_E0_qbnDM5hy1k+n6RWkYKOssYw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 46df5d73-d789-4d0e-9721-08d75798971f
+x-ms-traffictypediagnostic: TY1PR01MB1884:|TY1PR01MB1884:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY1PR01MB1884C61119042F4B5A156122C06B0@TY1PR01MB1884.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(396003)(346002)(376002)(366004)(189003)(199004)(7736002)(55016002)(66476007)(86362001)(66066001)(4326008)(256004)(14454004)(316002)(2906002)(74316002)(66556008)(81156014)(54906003)(9686003)(71190400001)(64756008)(8936002)(5660300002)(71200400001)(76116006)(66946007)(305945005)(6246003)(66446008)(81166006)(7696005)(6506007)(186003)(6916009)(6116002)(76176011)(53546011)(446003)(33656002)(25786009)(3846002)(486006)(476003)(44832011)(8676002)(478600001)(7416002)(4744005)(6436002)(102836004)(99286004)(52536014)(229853002)(11346002)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1884;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zHL4GNZjq5P/c3EPaxK5GvSSYNTx4wgAw2Pe3x2gNdt9JegiXYOkvXgMDTOa5vSWFAt84JN3HnugRWxaEMi9LXvP6+URNjb+0dqKvg2C+ek8VitVCD1+UFhMEHFtjjwH/F7RhAt5UA4W3t1phHZaaf62M2G/5lX9i8+jRHkUX/6gZVDC7ujZuM96EH+OdIS2l8DOGrMyEHVA5OaWcKwGzTzeD6CQjSffQRK75GAowpZf+0HsXFWoIRYLf9T+5YVgaRyVeEnldFsgGH96d/S0dEcSTIO1Q4h9u0ulToJQVNS7+ZH+PE3eq79jE88jBW3JrY5PC3eJenUYReBYRvyNHgYghu8pXaB7RYHpQxfaPCBFTD/k0jHLPFipIHIIIp18NI27h5VbGUW5S43OVEHpX0FSoRG4/25/lGUPR1rIUzRdW8gztb+0kemqcIDyYipJ
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46df5d73-d789-4d0e-9721-08d75798971f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 09:08:37.6141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Isl97LubXAGt7fRzw26Zdb/b5KQ/cdQXp7w/9O+BBcWJIq4Zf45lckljH2LSbzyvpOfQH2Z2ebjmWgcS5D6ag5OXKYN+DOcsZ30Ms7cwBKI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1884
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 10:24 AM Ran Wang <ran.wang_1@nxp.com> wrote:
->
-> Some user might want to go through all registered wakeup sources
-> and doing things accordingly. For example, SoC PM driver might need to
-> do HW programming to prevent powering down specific IP which wakeup
-> source depending on. So add this API to help walk through all registered
-> wakeup source objects on that list and return them one by one.
->
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>
-
-OK, thanks for making all of the requested changes:
-
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-and please feel free to push this through the appropriate
-arch/platform tree.  Alternatively, please let me know if you want me
-to take this series, but then I need an ACK from the appropriate
-maintainer(s) on patch 3.
-
-> ---
-> Change in v9:
->         - Supplement comments for wakeup_sources_read_lock(),
->           wakeup_sources_read_unlock, wakeup_sources_walk_start and
->           wakeup_sources_walk_next().
->
-> Change in v8:
->         - Rename wakeup_source_get_next() to wakeup_sources_walk_next().
->         - Add wakeup_sources_read_lock() to take over locking job of
->           wakeup_source_get_star().
->         - Rename wakeup_source_get_start() to wakeup_sources_walk_start().
->         - Replace wakeup_source_get_stop() with wakeup_sources_read_unlock().
->         - Define macro for_each_wakeup_source(ws).
->
-> Change in v7:
->         - Remove define of member *dev in wake_irq to fix conflict with commit
->         c8377adfa781 ("PM / wakeup: Show wakeup sources stats in sysfs"), user
->         will use ws->dev->parent instead.
->         - Remove '#include <linux/of_device.h>' because it is not used.
->
-> Change in v6:
->         - Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned
->         with wakeup_sources_stats_seq_start/nex/stop.
->
-> Change in v5:
->         - Update commit message, add decription of walk through all wakeup
->         source objects.
->         - Add SCU protection in function wakeup_source_get_next().
->         - Rename wakeup_source member 'attached_dev' to 'dev' and move it up
->         (before wakeirq).
->
-> Change in v4:
->         - None.
->
-> Change in v3:
->         - Adjust indentation of *attached_dev;.
->
-> Change in v2:
->         - None.
->
->  drivers/base/power/wakeup.c | 54 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_wakeup.h   |  9 ++++++++
->  2 files changed, 63 insertions(+)
->
-> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> index 5817b51..70a9edb 100644
-> --- a/drivers/base/power/wakeup.c
-> +++ b/drivers/base/power/wakeup.c
-> @@ -248,6 +248,60 @@ void wakeup_source_unregister(struct wakeup_source *ws)
->  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
->
->  /**
-> + * wakeup_sources_read_lock - Lock wakeup source list for read.
-> + *
-> + * Returns an index of srcu lock for struct wakeup_srcu.
-> + * This index must be passed to the matching wakeup_sources_read_unlock().
-> + */
-> +int wakeup_sources_read_lock(void)
-> +{
-> +       return srcu_read_lock(&wakeup_srcu);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_sources_read_lock);
-> +
-> +/**
-> + * wakeup_sources_read_unlock - Unlock wakeup source list.
-> + * @idx: return value from corresponding wakeup_sources_read_lock()
-> + */
-> +void wakeup_sources_read_unlock(int idx)
-> +{
-> +       srcu_read_unlock(&wakeup_srcu, idx);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_sources_read_unlock);
-> +
-> +/**
-> + * wakeup_sources_walk_start - Begin a walk on wakeup source list
-> + *
-> + * Returns first object of the list of wakeup sources.
-> + *
-> + * Note that to be safe, wakeup sources list needs to be locked by calling
-> + * wakeup_source_read_lock() for this.
-> + */
-> +struct wakeup_source *wakeup_sources_walk_start(void)
-> +{
-> +       struct list_head *ws_head = &wakeup_sources;
-> +
-> +       return list_entry_rcu(ws_head->next, struct wakeup_source, entry);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_start);
-> +
-> +/**
-> + * wakeup_sources_walk_next - Get next wakeup source from the list
-> + * @ws: Previous wakeup source object
-> + *
-> + * Note that to be safe, wakeup sources list needs to be locked by calling
-> + * wakeup_source_read_lock() for this.
-> + */
-> +struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws)
-> +{
-> +       struct list_head *ws_head = &wakeup_sources;
-> +
-> +       return list_next_or_null_rcu(ws_head, &ws->entry,
-> +                               struct wakeup_source, entry);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_sources_walk_next);
-> +
-> +/**
->   * device_wakeup_attach - Attach a wakeup source object to a device object.
->   * @dev: Device to handle.
->   * @ws: Wakeup source object to attach to @dev.
-> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> index 661efa0..aa3da66 100644
-> --- a/include/linux/pm_wakeup.h
-> +++ b/include/linux/pm_wakeup.h
-> @@ -63,6 +63,11 @@ struct wakeup_source {
->         bool                    autosleep_enabled:1;
->  };
->
-> +#define for_each_wakeup_source(ws) \
-> +       for ((ws) = wakeup_sources_walk_start();        \
-> +            (ws);                                      \
-> +            (ws) = wakeup_sources_walk_next((ws)))
-> +
->  #ifdef CONFIG_PM_SLEEP
->
->  /*
-> @@ -92,6 +97,10 @@ extern void wakeup_source_remove(struct wakeup_source *ws);
->  extern struct wakeup_source *wakeup_source_register(struct device *dev,
->                                                     const char *name);
->  extern void wakeup_source_unregister(struct wakeup_source *ws);
-> +extern int wakeup_sources_read_lock(void);
-> +extern void wakeup_sources_read_unlock(int idx);
-> +extern struct wakeup_source *wakeup_sources_walk_start(void);
-> +extern struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws);
->  extern int device_wakeup_enable(struct device *dev);
->  extern int device_wakeup_disable(struct device *dev);
->  extern void device_set_wakeup_capable(struct device *dev, bool capable);
-> --
-> 2.7.4
->
+SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjay4NCg0KPiBGcm9tOiBs
+aW51eC1yZW5lc2FzLXNvYy1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LXJlbmVzYXMtc29j
+LW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIEdlZXJ0IFV5dHRlcmhvZXZlbg0K
+PiBTZW50OiAyMyBPY3RvYmVyIDIwMTkgMDg6MjANCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJd
+IGF0YTogc2F0YV9yY2FyOiBBZGQgcjhhNzc0YjEgc3VwcG9ydA0KPiANCj4gZHQtYmluZGluZ3M6
+ID8NCg0KQ2FuIGRvLCB3aWxsIHNlbmQgYSB2MiBmb3IgdGhpcy4NCg0KVGhhbmtzLA0KRmFiDQoN
+Cj4gDQo+IE9uIFR1ZSwgT2N0IDIyLCAyMDE5IGF0IDY6MjEgUE0gRmFicml6aW8gQ2FzdHJvDQo+
+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IERvY3VtZW50IFNB
+VEEgc3VwcG9ydCBmb3IgdGhlIFJaL0cyTiwgbm8gZHJpdmVyIGNoYW5nZSByZXF1aXJlZC4NCj4g
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJw
+LnJlbmVzYXMuY29tPg0KPiANCj4gUmV2aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2Vl
+cnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2
+ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02
+OGsub3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBl
+b3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8g
+am91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhh
+dC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
