@@ -2,126 +2,140 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78291CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 06:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5463CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 06:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3452084C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 06:48:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="saF7jt8b"
+	by mail.kernel.org (Postfix) with ESMTP id 7564E2084C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 06:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571813490;
+	bh=hBmd5KPV6GhZmi3teZ7pgUcmVyOexynGR7kSJghi+Ig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qKAZnrha2zpxaHbQrGWZaLQe1ExyXFXMYvRpksmDHetYiSkE+O/CbeJtnEA3NZq1a
+	 XWqrh2ji7FKWuGDURgQzvE+8oIpdGwfvA55KpXh8hM4/NRccd9/haP9cb/VfP7qorN
+	 +2XIzuCuYKT7JRhYNh+0xCd7zarmbhr9qafVrzGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfJWGs3 (ORCPT
+        id S2389484AbfJWGva (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 02:48:29 -0400
-Received: from mail-eopbgr70053.outbound.protection.outlook.com ([40.107.7.53]:19910
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727194AbfJWGs3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 02:48:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JjgKGwFUDC0vxykAnrqLRQJBCV2c5BOUtfPpCxeTAPPhw+9rMGjZGFKFcf65IdxJamfl9yw5qZFVynUcqfj4owsrLqUa85AQneSVTSxcbaELPnZKd2JqDzMJbMISIOywVPnJLEJ41+7oxglzpoKoVDnu87iPleOqqVqnzjIDOR6jX4te6d+EC6j59ts3PhEhkE9/JupC36/MlAulvO0I3v4lw6ocdcXwDqfd8rpJ5lxefJkvyV3fQ1HkuPPWvT04pxSLPUeNcL3FCF40SDWa8Zt20YCFl976q+Kb6x2VWn/fURqTxkqshetZ3s1JHySUSTth3NXMd+53NX2fGWNK0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hidAdPdzkEpK/e/fJQSeFOby+oop34J6oEDhBtSY+qM=;
- b=cOtGS8ecB2qHjb/maer31BrfZ9GcnSxalIL4/4Lh21t6OHxM5h+XtMlYnjfmXvBvEMVPee+LuapmHUrQMrQejZS2cy6pYVvm/yrMlGnc+BRz0eGy/Q6CCHoFNRIA4l3KjVOKyBXJlLvk4tf19tGG82V9Ot685GYDCT2GkIdpdDHE69vjeDP/zXETyGd4b4AhtfBmEV6c4cxe25XAqNrBblyTtyRSDhlKs4rbgmlqglRpuus6BBo54eXUyge8y/4OZi9StBtWkypZe8HVJSQEMp+MXQHII9sLy7KsdP8XhJbyc2x9hWnueqrG8cXE9aKqdwJo+nbpQjvTmYXRoLLwpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hidAdPdzkEpK/e/fJQSeFOby+oop34J6oEDhBtSY+qM=;
- b=saF7jt8b7Rcj6V5XK2jzc5Et9K9OChzUxHAunHVyWcC8SXAGFSlVeuUC7FsRiPWnk1aXn/Yqz0gURw5r6HZU9oM4oFnFsXY2/RgcHSWrJ/TOQgv26JNad6cj908Ssb+PFPP+O8mM2pv1QGOXoyM/AD3jrajmeeV9EaP1SLQVPJg=
-Received: from VI1PR04MB4094.eurprd04.prod.outlook.com (52.133.13.160) by
- VI1PR04MB5710.eurprd04.prod.outlook.com (20.178.125.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.28; Wed, 23 Oct 2019 06:48:24 +0000
-Received: from VI1PR04MB4094.eurprd04.prod.outlook.com
- ([fe80::b835:b58c:26b2:ca8f]) by VI1PR04MB4094.eurprd04.prod.outlook.com
- ([fe80::b835:b58c:26b2:ca8f%7]) with mapi id 15.20.2347.030; Wed, 23 Oct 2019
- 06:48:24 +0000
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm: Remove duplicated machine
- compatible
-Thread-Topic: [PATCH 1/2] arm64: dts: imx8mm: Remove duplicated machine
- compatible
-Thread-Index: AQHViWxjRVElS5Fll02b6XXQulFHGKdnyOGA
-Date:   Wed, 23 Oct 2019 06:48:24 +0000
-Message-ID: <1b7a2290851c051236eb66263a10ca96cc54b3a1.camel@nxp.com>
-References: <1571812481-28308-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1571812481-28308-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fabd60c7-f2c5-479a-5ae0-08d757850051
-x-ms-traffictypediagnostic: VI1PR04MB5710:|VI1PR04MB5710:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB5710A8314EC291A7F38B4E10F96B0@VI1PR04MB5710.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(366004)(396003)(346002)(136003)(199004)(189003)(11346002)(2201001)(2906002)(36756003)(446003)(316002)(486006)(86362001)(110136005)(3846002)(6116002)(5660300002)(229853002)(25786009)(2616005)(476003)(7416002)(44832011)(2501003)(4744005)(6246003)(6506007)(71200400001)(71190400001)(305945005)(91956017)(4001150100001)(118296001)(99286004)(7736002)(76176011)(4326008)(14454004)(76116006)(66446008)(66556008)(64756008)(6436002)(66946007)(66476007)(186003)(6486002)(256004)(14444005)(50226002)(102836004)(81156014)(478600001)(66066001)(8676002)(6512007)(26005)(81166006)(8936002)(99106002)(32563001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5710;H:VI1PR04MB4094.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /b762f7flnO1RjHqlryzgjThk33hnQz8yR1fLNZFlWADufEFqFE/emuh0YyuDV+LhL0wIYBGGfDyJAFUv6jA/8Y3xod3GlJ+Sv5AFevB3vTve7QMP4IhEPNd+zP4lGM0j1oSUTa69kZlblDSpds1bPP3comC0kNkpFHRG0MeHXL1Agy2qc9B5m/Nq3CyVUPqjaZo9gw9aeJY1dsts+RvJmNabM5fH9U4E/T1EDFKAuCftol/84Vs0/gu6HRmrLKp813pK/YphIL0OVL//wRrceDEtgXbUqRPouH8OdXWFFyJeXiKSW/Vh1uTJMD8feNDcky3tPnrbBwZMMO2QS1IoAldZ1dmHEpFzcQp9sn7e39ULzNGzgj992W4ucxm+r4YjhY8OUYamRoktzamMXWd/XyKM9rE7XQGYccuvYwqqqKnsG1OjNtobsmU8L7F+xXx
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <006D86FE64EB55448FAD648DE0068501@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 23 Oct 2019 02:51:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbfJWGva (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 02:51:30 -0400
+Received: from localhost (unknown [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 884232064A;
+        Wed, 23 Oct 2019 06:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571813489;
+        bh=hBmd5KPV6GhZmi3teZ7pgUcmVyOexynGR7kSJghi+Ig=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zg/KpCnvvZCquZPkNV/bKcz4j8uihmbrrjeSjyqVX03QfN/9c4lefnzZgpNmiVCys
+         j9LRFc4+UxKCVkjHtE8FQBcP+//WlTQTgezIXfawEDfRUvCqRwFo9Mg/ctX9a4l1EO
+         l0sVppcq7djBD2yKfJ09z9t6wATXSxZFZtShIXZ4=
+Date:   Wed, 23 Oct 2019 08:51:26 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
+ binding
+Message-ID: <20191023065126.ckqgvqkzeqtt3j3m@gilmour>
+References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
+ <20191003115154.6f2jgj3dnqsved2y@gilmour>
+ <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
+ <20191007100535.6gp6b3h6ueyeln3b@gilmour>
+ <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
+ <20191007104835.v6iqpoolqtajryik@gilmour>
+ <CAL_JsqLVkikYVpjs1m+QqsOK2CfSm9+LfZWXbWEoszeSt3RGaA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fabd60c7-f2c5-479a-5ae0-08d757850051
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 06:48:24.2513
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tU7Vy1h8fKMu6Z+pAh9VER/906YcYVyV86GXfcD6bWYyskikk3I4j0JZGeVCQOCgi4h5R/g2sv6GXSZ8WpDY/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5710
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="meupzleynumtgrf3"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLVkikYVpjs1m+QqsOK2CfSm9+LfZWXbWEoszeSt3RGaA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEwLTIzIGF0IDE0OjM0ICswODAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4g
-TWFjaGluZSBjb21wYXRpYmxlIHN0cmluZyBub3JtYWxseSBpcyBsb2NhdGVkIGluIGJvYXJkIERU
-LCByZW1vdmUNCj4gdGhlIGR1cGxpY2F0ZWQgb25lIGZyb20gU29DIGR0c2kuDQo+IA0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCg0KUmV2aWV3ZWQt
-Ynk6IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCg0KPiAtLS0NCj4gIGFy
-Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpIHwgMSAtDQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvaW14OG1tLmR0c2kNCj4gaW5kZXggOTI1ODE1MC4uNWZmOWI2YiAxMDA2NDQNCj4gLS0t
-IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4gKysrIGIvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4gQEAgLTEyLDcgKzEyLDYg
-QEANCj4gICNpbmNsdWRlICJpbXg4bW0tcGluZnVuYy5oIg0KPiAgDQo+ICAvIHsNCj4gLQljb21w
-YXRpYmxlID0gImZzbCxpbXg4bW0iOw0KPiAgCWludGVycnVwdC1wYXJlbnQgPSA8JmdpYz47DQo+
-ICAJI2FkZHJlc3MtY2VsbHMgPSA8Mj47DQo+ICAJI3NpemUtY2VsbHMgPSA8Mj47DQo=
+
+--meupzleynumtgrf3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Rob,
+
+On Tue, Oct 22, 2019 at 11:17:35AM -0500, Rob Herring wrote:
+> On Mon, Oct 7, 2019 at 5:48 AM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Mon, Oct 07, 2019 at 03:45:29PM +0530, Amit Kucheria wrote:
+> > > On Mon, Oct 7, 2019 at 3:35 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > >
+> > > > On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
+> > > > > On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
+> > > > > > > This new binding fails dt_binding_check due to a typo. Fix it up.
+> > > > > > >
+> > > > > > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
+> > > > > > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
+> > > > > > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
+> > > > > > > make[2]: *** Waiting for unfinished jobs....
+> > > > > > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
+> > > > > > > make[1]: *** [dt_binding_check] Error 2
+> > > > > > >
+> > > > > > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> > > > > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > > > >
+> > > > > > Thanks for your patch.
+> > > > > >
+> > > > > > It has already been submitted though:
+> > > > > > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
+> > > > > >
+> > > > > > I'm not sure why it hasn't been applied yet though :/
+> > > > >
+> > > > > Perhaps a Fixes tag will allow more attention to it?
+> > > >
+> > > > I've added a fixes tag and merged it through the sunxi tree.
+> > > >
+> > > > Sorry for the time it took, and thanks for sending that fix!
+> > >
+> > > Will it get merged for -rc2?
+> >
+> > -rc2 was released yesterday, so we're a bit late for that, but it's
+> >  going to be in next tomorrow.
+>
+> Is this going to Linus anytime soon? It is affecting anyone submitting
+> bindings against current -rc's.
+
+Sorry for the delay, I just sent a PR
+
+Maxime
+
+--meupzleynumtgrf3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXa/4bgAKCRDj7w1vZxhR
+xUD5AQDHOQrg1fK8A/nnxv6B5Ya2z3WganmGJXv2EF+TFJppWwEA2zroQ3o10xRD
+FT086EzZEJZgS5tYvtRNiHiZJZpaRQM=
+=enB/
+-----END PGP SIGNATURE-----
+
+--meupzleynumtgrf3--
