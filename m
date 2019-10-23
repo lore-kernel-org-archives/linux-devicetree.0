@@ -2,129 +2,85 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBC1CA9EBA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 00:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47E6CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 00:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F8D214B2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 00:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A372086D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 00:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="swV0escK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="y9NLf0at"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfJWAa6 (ORCPT
+        id S1727154AbfJWAf4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:30:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37460 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbfJWAa6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 20:30:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so11722844pfo.4;
-        Tue, 22 Oct 2019 17:30:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5oxnSNQHQFeYV0UsIIwvbFJNUuX8LHvVFO8Sr+wl/BM=;
-        b=swV0escK/orz3y+AekbcFYzEiTZQ8ZQzTQBtEqEfRPWAQDPS+w1ndI6JHIq13pGL0s
-         eBr1PmvcL6fQL5yydIJ7QB+jA8Qraxc/BYzwRJguohOVQ0VyoC7vamSAoog0bjdntozZ
-         79hBS6smAq0zyj6i+FdRdJT1H4X6cLWdw7x6Pwtj+JaK2h9a9AYCOrm3jcGF7NejEptW
-         04EfIaJQWqt/xbo5uyo8CJ8A5N7EBL5jfoHZ3bZLMdzOLnFPbfvQW0m6hnKDL/50XmOs
-         B+BgirCITjB0UZtOQPT/nr5o83KWjlVwchrsohmVcq9MRLPR5B6TmzlXuuubDL2BslaB
-         FYQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5oxnSNQHQFeYV0UsIIwvbFJNUuX8LHvVFO8Sr+wl/BM=;
-        b=fZ9eYsr6kOFIKRjGwpU0pZWeu1UyiSJlMaYT9sk+h0vBn7lypqobrZ7PoxTxoz/UFd
-         H4DlmHdaDKm2ew5z2988+jL04i3JhiDoz66/RHt4OMW25hdZieZ8iuSmdEC+3Ddp9b8L
-         PuuhiSontJ/YQBR2OCKI+C101O3f3IU3cFeU9eth6SKimEwTyvAHfvOLJR8CrUdjM3ag
-         UAYObY0p8hYFYIlQ250qV3SMhGnJoqQau8LhKJlY4TXfV7P/4A+IGnnqJiGthh98ACOr
-         VUM/D+nnVfGm9W9NtZHMzXlM8ncr+2fpRLt93NsqsyIUIHBE9u/ZSl27qOqoQsQ7/7hm
-         7gFw==
-X-Gm-Message-State: APjAAAW2ZtLLWKhAUCk0guGtbdGvGxogDR7e4gESYbs2Y9wWXV0vCNkA
-        99tQfhq5H9pp2CfPbvIexQxK4ECR
-X-Google-Smtp-Source: APXvYqyjIanCBYTND7scHT1k/bkgTaf4UkJyDEnZHW4SAUBW/bacOa/L8z+H3KjUjozKzHmvFTS2Jw==
-X-Received: by 2002:a63:7356:: with SMTP id d22mr6710137pgn.230.1571790657426;
-        Tue, 22 Oct 2019 17:30:57 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id o64sm45783084pjb.24.2019.10.22.17.30.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 17:30:56 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 17:30:54 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 22 Oct 2019 20:35:56 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58718 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727140AbfJWAf4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 Oct 2019 20:35:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=6Z1DBBH/xUKUXF6UckwoFUZ5ZnN9nnX2q+E7Z7EAe2Q=; b=y9NLf0atN/EmyK6I1GyF2uyzPc
+        Wef1EEQatx+CogP0iIpR5QX2/xoGcAmg+ahCmFHstkzlyen5Yw0d8g5664osChhKqFiChQ1FxotsZ
+        8VTDFSCkt1zIan4zR5AzDg3UQjMMe9Kmwk9uQr3EA/rF3vm0xr/w0hhDljIR8XVCrprE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iN4cp-0004IX-0w; Wed, 23 Oct 2019 02:35:43 +0200
+Date:   Wed, 23 Oct 2019 02:35:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Nicolas Boitchat <drinkcat@chromium.org>
-Subject: Re: [PATCH v2 2/2] HID: google: Add of_match table to Whiskers
- switch device.
-Message-ID: <20191023003054.GY35946@dtor-ws>
-References: <20191021030233.32592-1-ikjn@chromium.org>
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 2/5] dt-bindings: net: dsa: qca,ar9331 switch
+ documentation
+Message-ID: <20191023003543.GE5707@lunn.ch>
+References: <20191022055743.6832-1-o.rempel@pengutronix.de>
+ <20191022055743.6832-3-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021030233.32592-1-ikjn@chromium.org>
+In-Reply-To: <20191022055743.6832-3-o.rempel@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 11:02:33AM +0800, Ikjoon Jang wrote:
-> Add a device tree match table.
+On Tue, Oct 22, 2019 at 07:57:40AM +0200, Oleksij Rempel wrote:
+> Atheros AR9331 has built-in 5 port switch. The switch can be configured
+> to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
+> ethernet controller or to be used directly by the switch over second ethernet
+> controller.
 > 
-> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Hi Oleksij
 
-> ---
->  drivers/hid/hid-google-hammer.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
-> index 84f8c127ebdc..b726f8a15044 100644
-> --- a/drivers/hid/hid-google-hammer.c
-> +++ b/drivers/hid/hid-google-hammer.c
-> @@ -17,6 +17,7 @@
->  #include <linux/hid.h>
->  #include <linux/leds.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
->  #include <linux/platform_device.h>
-> @@ -264,12 +265,21 @@ static const struct acpi_device_id cbas_ec_acpi_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, cbas_ec_acpi_ids);
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id cbas_ec_of_match[] = {
-> +	{ .compatible = "google,cros-cbas" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, cbas_ec_of_match);
-> +#endif
-> +
->  static struct platform_driver cbas_ec_driver = {
->  	.probe = cbas_ec_probe,
->  	.remove = cbas_ec_remove,
->  	.driver = {
->  		.name = "cbas_ec",
->  		.acpi_match_table = ACPI_PTR(cbas_ec_acpi_ids),
-> +		.of_match_table = of_match_ptr(cbas_ec_of_match),
->  		.pm = &cbas_ec_pm_ops,
->  	},
->  };
+What we never really discussed is how this MUXing of the PHY works.
 
--- 
-Dmitry
+What i'm worried about is that when we do understand how it works, we
+cannot properly support it using this binding.
+
+Please could you try to find information about this.
+
+Thanks
+	Andrew
