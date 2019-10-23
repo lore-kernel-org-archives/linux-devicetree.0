@@ -2,158 +2,118 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364D8CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 03:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174DFCA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 04:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A4021920
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 03:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF4E2086D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 04:41:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBkAkT8K"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="VNyzV54e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732114AbfJWDnO (ORCPT
+        id S1731551AbfJWEls (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 22 Oct 2019 23:43:14 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43959 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730808AbfJWDnO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Oct 2019 23:43:14 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a194so14436443qkg.10;
-        Tue, 22 Oct 2019 20:43:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1VLjmkD3Rwi0EmWCkc7vL9OT1uRUJflAVuUFK1TCUfs=;
-        b=jBkAkT8KEpSceUnUT5D05nwe+iUUaw4Z2mTUBn3UmLbvelJfBJ0apbdnjAvMT5YvY3
-         ntlBx/J1kfkGuRuxJfFxXJf2vGgCVZTHEIHO57WyPJwTDbFtfIHT+ZKaN/KMYhlFvbZg
-         l5uHyObZQT100bTkbf22/rl6axphYwccnbaGlNbtA7ZHNCnG5G+uK+fKnMQcl0zxeKhy
-         OjEkXlm2lczwehiMu+tWksfrRrrhUMMho7Ws55ENPgLgFzE/p/4SpSz1sJWyxxny2pCR
-         I84UJUFwbPpDwBAgMSF7HEay+FmmXN2jMIRe5bgfbKXigapMT68B3xN3ohWxw4Xv9+yv
-         6X3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1VLjmkD3Rwi0EmWCkc7vL9OT1uRUJflAVuUFK1TCUfs=;
-        b=ClIVLf5A/lh41Z4zexUPHGBx4y87X1oWdoUcY48xVnwq/m5ywxPqqB8yzGxTHfkvxE
-         BB40oYAQcN2UmESTZullRmDqKSzySBma9/JBcj7/ZA5PIgE3VQxXu/EsU3m4FmyJetah
-         4us3ClohzwsqdkXDAcPYOQcXL7LbTe7ZXxzyFokge9LshpWSTodH4K4l0Whg62y1P7+i
-         UVuWpu18A+FLWK1VnzoakdB6+h5UsZpdMm6QQFUZOroZkIIoYtds0eBcklxG3Rp7xTUn
-         /NmmwrGOVUeaoKkffCFM1omcS3b96ZTJNi88v1rn1DvqeF5KkDzpaQT3nxRVIICXvKbO
-         fQeQ==
-X-Gm-Message-State: APjAAAW4KF0I6+UiKmotqvdVAkHXTM+nTWIYMPNq8rtfv9Ml1pnRlg9T
-        SiF3NWgFVzJ5fFKRZ52Hz6rinSVbuGc=
-X-Google-Smtp-Source: APXvYqyfwugcAWTEZOsrSK/23d7kNjtNUgsTU3k7oaizdL5WSdU/HGKgK5xsqWdRyhpv5GrVnl6Udw==
-X-Received: by 2002:a37:9a8a:: with SMTP id c132mr6452527qke.92.1571802192882;
-        Tue, 22 Oct 2019 20:43:12 -0700 (PDT)
-Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
-        by smtp.gmail.com with ESMTPSA id c15sm146qkc.101.2019.10.22.20.43.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 20:43:12 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 00:43:07 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-Message-ID: <20191023034305.f6zm6hyvh3nlltas@smtp.gmail.com>
-References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
- <20191017191152.GA11222@bogus>
- <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
- <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com>
- <20191022140604.ovmooly47qax2sms@smtp.gmail.com>
- <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
-MIME-Version: 1.0
+        Wed, 23 Oct 2019 00:41:48 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:33465 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731487AbfJWEls (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 00:41:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571805705;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=p84wWu+8rvP9qG2T8V0aa5d86OgYm2mqo8DV3AkG+rs=;
+        b=VNyzV54eE7PwwLNOZAlH8ZpE256I1w/OGPgOpYoK2dVLHZXLmFmM5fuvaVvgG4OdSt
+        ktBnSnl9rE+o9gcJkrolwVhAzpa12wFxKko6N+llTNVgvRIfrXUqwm/64EehxC3oeSrT
+        iJnSAUan4erlDRxUv5gQKyJU7zFFgUAECdIJ5AY0FMjapNQ94vcZ83oJB0ZXfSgxXbWm
+        cuXtp2YO6ClRp/WzAx+9o2hGt+L46XUttKT2eFKN4LO4/4+GV9899HXGyQRwbSuXhjTJ
+        DF0JJf4PUunUwnEHPna/fegYaQ4CYG8vzWuQL7Gvw5b0M6y1oqmlrUWKTIKNEDfEjHbb
+        W2+g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PswDOqm1w="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id R0b2a8v9N4fBSsx
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 23 Oct 2019 06:41:11 +0200 (CEST)
+Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191022221919.GF5610@atomide.com>
+Date:   Wed, 23 Oct 2019 06:41:11 +0200
+Cc:     Adam Ford <aford173@gmail.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
+References: <20191007220540.30690-1-aford173@gmail.com> <20191022162223.GU5610@atomide.com> <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com> <20191022221919.GF5610@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
 
-OK, thanks for the explanation.
+> Am 23.10.2019 um 00:19 schrieb Tony Lindgren <tony@atomide.com>:
+> 
+> * Adam Ford <aford173@gmail.com> [191022 19:01]:
+>> On Tue, Oct 22, 2019 at 11:22 AM Tony Lindgren <tony@atomide.com> wrote:
+>>> 
+>>> Hi,
+>>> 
+>>> * Adam Ford <aford173@gmail.com> [191007 15:06]:
+>>>> The some in the OMAP3 family have a bandgap thermal sensor, but
+>>>> omap2plus has it disabled.
+>>>> 
+>>>> This patch enables the OMAP3_THERMAL by default like the rest of
+>>>> the OMAP family.
+>>> 
+>>> Looks like this breaks off mode during idle for omap3, and that's
+>>> probably why it never got enabled. The difference in power
+>>> consumption during idle is about 7mW vs 32mW for the SoC as
+>>> measured from torpedo shunt for main_battery_som.
+>>> 
+>>> I think the right fix might be simply to add handling for
+>>> CPU_CLUSTER_PM_ENTER to the related thermal driver to disable
+>>> it during idle like we have for gpio-omap.c for example.
+>> 
+>> I am not sure I know where to start on fixing that issue.  Would you
+>> entertain enabling the driver if we set the device tree to 'disabled'
+>> by default?  This way if people want to to use it, it can be enabled
+>> on a per-device option.  Once the power stuff gets resolved, we might
+>> be able to enable it by default.  For people who are planning on using
+>> the DM3730 @ 1GHz in high temp environments, I am not sure they'll
+>> care about low power.
+> 
+> They should both work fine together though. They are not mutually
+> exclusive features.
+> 
+>> I'll try to look into it when I have time, but I was hoping a
+>> compromise might be a reasonable work-around.
+> 
+> It should be hopefully a trivial fix.. I have not looked at the
+> driver code though.
 
-I indeed missed some details from the documentation. I will be more
-careful on my next readings.
+If I am taken right, it is the drivers/thermal/ti-soc-thermal/ti-*.c
+which is a common driver for omap3, omap4, omap5. They only differ
+in the thermal data and which registers and bits are used to access
+the ADC.
 
-I see there are other documentation files at Documentation/devicetree/
-and Documentation/devicetree/bindings/. Besides these, would you
-recommend other documentation and/or material for those who want to
-write dt-bindings that validate with dt-schema?
+So is this problem with off mode also known for omap4 and omap5?
 
-Thanks in advance,
+BR,
+Nikolaus
 
-Marcelo
-
-On 10/22, Rob Herring wrote:
-> On Tue, Oct 22, 2019 at 9:06 AM Marcelo Schmitt
-> <marcelo.schmitt1@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > I ran the DTC and CHECK for AD7292 schema however, the target '__build'
-> > did not run due to errors found in regulator/fixed-regulator.yaml and
-> > arm/allwinner,sun4i-a10-csi.yaml.
-> 
-> Fixes for those are still pending in -next. Use 'make -k' and ignore those.
-> 
-> >
-> > I recall seeing something about the maxItems requirement over regulator
-> > supplies being changed on the iio mailing list, so I updated my repo
-> > locally, cloned and reinstalled the dt-schema toolset. However, I still
-> > can't make it go through the '__build' target.
-> >
-> > Python 3.7.5rc1 is my default python and I got the following pip3
-> > packages installed:
-> >
-> > ruamel.yaml        0.16.5
-> > ruamel.yaml.clib   0.2.0
-> > rfc3987            1.3.8
-> > jsonschema         3.0.1
-> > dtschema           0.0.1  at $HOME/<iio repo dir>/dt-schema
-> >
-> > Debian Bullseye packages installed:
-> > python3-yaml/testing,now 5.1.2-1
-> > libyaml-dev/testing,now 0.2.2-1
-> >
-> > I was only able to run DTC after installing the libyaml-dev package, so
-> > I think it might be worth to add it to the project dependencies at
-> > https://github.com/robherring/dt-schema.
-> 
-> Strictly speaking, it's not a dependency for dt-schema. It's
-> documented in Documentation/devicetree/writing-schema.rst. I've added
-> a pointer to that in bindings/submitting-patches.txt. I'm not sure how
-> else to make it more obvious.
-> 
-> BTW, You will get a useful error message if libyaml is missing when
-> building 'make dtbs_check'. I need to make that work for
-> dt_binding_check.
-> 
-> > apt-get install libyaml-dev
-> 
-> You need the lib too, but that tends to already be installed. IIRC,
-> installing the headers doesn't install the lib automatically.
-> 
-> In any case, I wanted to avoid putting in distro specific instructions
-> in the kernel.
-> 
-> Rob
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "Kernel USP" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo%2B2BAVqfX8yGQ%40mail.gmail.com.
