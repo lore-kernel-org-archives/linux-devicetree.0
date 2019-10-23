@@ -4,107 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132C9CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 22:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A089CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 22:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C3321A4C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 22:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4765321929
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 22:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436820AbfJWWO4 (ORCPT
+        id S2407935AbfJWWjK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 18:14:56 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:53267 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2436772AbfJWWO4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 18:14:56 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from kblaiech@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 24 Oct 2019 00:14:53 +0200
-Received: from farm-1.mtbu.labs.mlnx (farm-1.mtbu.labs.mlnx [10.15.2.31])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x9NMEqtu019145;
-        Wed, 23 Oct 2019 18:14:52 -0400
-Received: (from kblaiech@localhost)
-        by farm-1.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x9NMEqbK007588;
-        Wed, 23 Oct 2019 18:14:52 -0400
-From:   Khalil Blaiech <kblaiech@mellanox.com>
-To:     Rob Herring <robh@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        David Woods <dwoods@mellanox.com>
-Cc:     Khalil Blaiech <kblaiech@mellanox.com>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, arm-soc <arm@kernel.org>
-Subject: [PATCH v6 2/2] dt-bindings: i2c: I2C binding for Mellanox BlueField SoC
-Date:   Wed, 23 Oct 2019 18:14:42 -0400
-Message-Id: <c9c9dee31683c08282150d88301af999b7be6403.1571868492.git.kblaiech@mellanox.com>
-X-Mailer: git-send-email 2.1.2
-In-Reply-To: <cover.1571868492.git.kblaiech@mellanox.com>
-References: <cover.1571868492.git.kblaiech@mellanox.com>
-In-Reply-To: <cover.1571868492.git.kblaiech@mellanox.com>
-References: <cover.1571868492.git.kblaiech@mellanox.com>
+        Wed, 23 Oct 2019 18:39:10 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:57324 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407932AbfJWWjK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 18:39:10 -0400
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iNPHR-0004FB-3T; Thu, 24 Oct 2019 00:39:01 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     kishon@ti.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bivvy.bi@rock-chips.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 1/3] phy: add PHY_MODE_LVDS
+Date:   Thu, 24 Oct 2019 00:38:49 +0200
+Message-Id: <20191023223851.3030-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Added device tree bindings documentation for Mellanox BlueField
-I2C SMBus controller.
+There are combo phys out there that can be switched between doing
+dsi and lvds. So add a mode definition for it.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Khalil Blaiech <kblaiech@mellanox.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
+ include/linux/phy/phy.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-new file mode 100644
-index 0000000..566ea86
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-@@ -0,0 +1,42 @@
-+Device tree configuration for the Mellanox I2C SMBus on BlueField SoCs
-+
-+Required Properties:
-+
-+- compatible : should be "mellanox,i2c-mlxbf1" or "mellanox,i2c-mlxbf2".
-+
-+- reg : address offset and length of the device registers. The
-+	registers consist of the following set of resources:
-+		1) Smbus block registers.
-+		2) Cause master registers.
-+		3) Cause slave registers.
-+		4) Cause coalesce registers (if compatible isn't set
-+		   to "mellanox,i2c-mlxbf1").
-+
-+- interrupts : interrupt number.
-+
-+Optional Properties:
-+
-+- clock-frequency : bus frequency used to configure timing registers;
-+			allowed values are 100000, 400000 and 1000000;
-+			those are expressed in Hz. Default is 100000.
-+
-+Example:
-+
-+i2c@2804000 {
-+	compatible = "mellanox,i2c-mlxbf1";
-+	reg =	<0x02804000 0x800>,
-+		<0x02801200 0x020>,
-+		<0x02801260 0x020>;
-+	interrupts = <57>;
-+	clock-frequency = <100000>;
-+};
-+
-+i2c@2808800 {
-+	compatible = "mellanox,i2c-mlxbf2";
-+	reg =	<0x02808800 0x600>,
-+	        <0x02808e00 0x020>,
-+		<0x02808e20 0x020>,
-+		<0x02808e40 0x010>;
-+	interrupts = <57>;
-+	clock-frequency = <400000>;
-+};
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 15032f145063..56d3a100006a 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -38,7 +38,8 @@ enum phy_mode {
+ 	PHY_MODE_PCIE,
+ 	PHY_MODE_ETHERNET,
+ 	PHY_MODE_MIPI_DPHY,
+-	PHY_MODE_SATA
++	PHY_MODE_SATA,
++	PHY_MODE_LVDS,
+ };
+ 
+ /**
 -- 
-2.1.2
+2.23.0
 
