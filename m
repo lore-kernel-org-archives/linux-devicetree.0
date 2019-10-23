@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765D3C47E49
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E95CA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 13:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C63F21872
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F77B21D7E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 13:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WTeLh8M3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HxDBxkpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391624AbfJWNjZ (ORCPT
+        id S2391874AbfJWNvN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:39:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39088 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390757AbfJWNjZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 09:39:25 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r141so10118801wme.4
-        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 06:39:24 -0700 (PDT)
+        Wed, 23 Oct 2019 09:51:13 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42615 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390181AbfJWNvN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 09:51:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r1so12406108wrs.9
+        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 06:51:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:message-id:date:mime-version
+        h=subject:from:to:cc:references:openpgp:message-id:date:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=5T/MoSeXRvOkVox5hp0mSxwsnPbBwGiugOsPGPiVrU8=;
-        b=WTeLh8M3lxNhpkfwYwFMHlcPhKIXYRT0p9/eP9nI54LGkFxOxk8DhkIGWl2q4NFVHl
-         2EA7zM0yapmyaIetbOq2dc+BjjnvfxL7amqvYonpgiDt710d/mKF1L9uh5llf2Xh7rkf
-         A/ErZoT5sPtCN32j+1ScJ1VEWQP6Top+BG8t/WSLVuz5qoKI6S3wodXQ23DNW/13PhOS
-         xWu74+92vmUXgvyZQOGWtqJ887kZh+v27wvQBDhdBSXH5s4vmkQNt//dTxba6fU3beq3
-         gkUqqRwzx11uv0fudpX/lrYtz17W3mVa76N7wLtRmXGjUD86E43D8Ji0wkD6ZLiOhUwY
-         YWfQ==
+        bh=2OzqeB6lct/4fO2u5biFD/hH4qN2HDn6dJHGOqFVmZI=;
+        b=HxDBxkpt/TeXHVriMyGDqLhs0MthlNjNAeNVQezlsLSQGK5tb6zxiwSXKeqdzWC7M2
+         SDbjsOENSXQOZ6vlfQ6Sd7bWNWdXml01yl4gGJkjjgS9rSzuaNUQEgYmERynar2gG9MB
+         nCMyKy33R80dzElC4mKKGnIHMQoj94S59WbUtrnog2S1J09cumyqSoYNFnyw/KSIQgKF
+         dzuESK/bbrY6UCLc9qFhJqAcyiBqrdWaioVM+iGIrGk7WZpNO7KXNa3LeB5BkBWPhyie
+         yPZs/GpUej/2Y+Eg1NvBgrxbubRoDOYCS8IKitb+M1QGkwm1f1+gs568w4pasyj3XqEe
+         Zwag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:message-id
          :date:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=5T/MoSeXRvOkVox5hp0mSxwsnPbBwGiugOsPGPiVrU8=;
-        b=RwGvlmHasY9QdRa7asR+aqPQLcz1gP90vJxjJ6nO6BvYhu2/KZAHSGDDbphwX4PsIg
-         ax3FeKFstPBdLUzyS/pmPZoM9VuO1pFbGQjuEK96fP/AW4ddGBhBpHCAbYrnUzIliyuQ
-         c1JZHWsA+Gn8l40lOGTpqC7lM/wAS+Ta2ARgSEFR/BySmnebiI3Cq+4eavrIjWlu8IPm
-         dkOwu7+Zn9nMww4N0oBCiymhSPjwAYU12MTU4GGgLZYJJmAVpBebZ5jjQFHfy/mjgfWu
-         Z55pq0qVCrMub3AVoifZv8wyVx34lP4VpLpcI9xt2GjZp4mswtZUttyeT7LYJC3qaBwi
-         1qQA==
-X-Gm-Message-State: APjAAAUFCOvtTfvhPGsUJ0HCX4KTaPGyOipLI2M6fVLwQeuNFNq2cxAR
-        8anvwbSNIrg9pfvMiBOsGOk0+g==
-X-Google-Smtp-Source: APXvYqyuEJaMFICfXNABHTPXz7GkIecaJLIiU1WeYhAN+gYZFSeibrU2kiSo91fXlKup1iWBQ4gD9A==
-X-Received: by 2002:a1c:9c0c:: with SMTP id f12mr7972419wme.133.1571837963549;
-        Wed, 23 Oct 2019 06:39:23 -0700 (PDT)
+        bh=2OzqeB6lct/4fO2u5biFD/hH4qN2HDn6dJHGOqFVmZI=;
+        b=uhHwRM1nZAiNPkzsyY4i2ZVQJOPDpl9r57vxr3smsGyURGKjWipVt2/vEbC+52U8NY
+         g0dmjd3n5amTtyuDpSFFGaP/OvpjOWKAP5Ck30n8Xi/khv4x5aZnBrXH6a6CkqbdHG1Q
+         R8dyYfcBJiacyik+oA9w3mLICoT8NWEs7hjRGcqoVDm2vZ2teq63NIukes4jHxNSTD0T
+         J39TXMPCYrkd3WObX12aZbtWLNAodGmZlf8bSWRN6Wew2jSqU3kmGzIIoK41kMsYnVPR
+         7bU+kahNP0KJqmCIx6AaLZ4gfLU8kR3VkPzqdcjZK/r+7erILG4ZF81jE56CgAKaMFdH
+         wE6A==
+X-Gm-Message-State: APjAAAWXclQlhAip+6Hy41zOnw6ksACMs+IIsR/nnjJWfK3tlPKqsbWr
+        Df/q8QEnS5BolUEDRNJQhXk4Lw==
+X-Google-Smtp-Source: APXvYqz38URZiwF3jYVFDirDMkOyKsDUee5Q74pCUjTu27Axp8SUi5Xd93x6B2Mphtf8iU4RtObptw==
+X-Received: by 2002:a5d:6b0e:: with SMTP id v14mr8459368wrw.280.1571838670680;
+        Wed, 23 Oct 2019 06:51:10 -0700 (PDT)
 Received: from [192.168.27.135] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id b5sm19095690wmj.18.2019.10.23.06.39.22
+        by smtp.googlemail.com with ESMTPSA id u68sm26145822wmu.12.2019.10.23.06.51.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 06:39:22 -0700 (PDT)
+        Wed, 23 Oct 2019 06:51:10 -0700 (PDT)
 Subject: Re: [PATCH 5/5] ARM: dts: qcom: msm8974: add interconnect nodes
+From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     Brian Masney <masneyb@onstation.org>
 Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
@@ -66,12 +67,12 @@ References: <20191013080804.10231-1-masneyb@onstation.org>
  <20191013080804.10231-6-masneyb@onstation.org>
  <d154b0c6-fc39-bebc-d1b5-cc179fb6055d@linaro.org>
  <20191023124753.GA14218@onstation.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
+ <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
 Openpgp: preference=signencrypt
-Message-ID: <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
-Date:   Wed, 23 Oct 2019 16:39:21 +0300
+Message-ID: <94f957c6-c26b-b1f5-4d0f-6c9aff0a03cd@linaro.org>
+Date:   Wed, 23 Oct 2019 16:51:09 +0300
 MIME-Version: 1.0
-In-Reply-To: <20191023124753.GA14218@onstation.org>
+In-Reply-To: <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -80,55 +81,60 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23.10.19 г. 15:47 ч., Brian Masney wrote:
-> On Wed, Oct 23, 2019 at 02:50:19PM +0300, Georgi Djakov wrote:
->> On 13.10.19 г. 11:08 ч., Brian Masney wrote:
->>> Add interconnect nodes that's needed to support bus scaling.
+On 23.10.19 г. 16:39 ч., Georgi Djakov wrote:
+> On 23.10.19 г. 15:47 ч., Brian Masney wrote:
+>> On Wed, Oct 23, 2019 at 02:50:19PM +0300, Georgi Djakov wrote:
+>>> On 13.10.19 г. 11:08 ч., Brian Masney wrote:
+>>>> Add interconnect nodes that's needed to support bus scaling.
+>>>>
+>>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
+>>>>  1 file changed, 60 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>>>> @@ -1152,6 +1207,11 @@
+>>>>  				              "core",
+>>>>  				              "vsync";
+>>>>  
+>>>> +				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
+>>>> +				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
 >>>
->>> Signed-off-by: Brian Masney <masneyb@onstation.org>
->>> ---
->>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
->>>  1 file changed, 60 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
->>> @@ -1152,6 +1207,11 @@
->>>  				              "core",
->>>  				              "vsync";
->>>  
->>> +				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
->>> +				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
+>>> Who will be the requesting bandwidth to DDR and ocmem? Is it the display or GPU
+>>> or both? The above seem like GPU-related interconnects, so maybe these
+>>> properties should be in the GPU DT node.
 >>
->> Who will be the requesting bandwidth to DDR and ocmem? Is it the display or GPU
->> or both? The above seem like GPU-related interconnects, so maybe these
->> properties should be in the GPU DT node.
+>> The display is what currently requests the interconnect path,
+>> specifically mdp5_setup_interconnect() in
+>> drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c. The Freedreno GPU bindings
+>> currently don't have interconnect support. Maybe this is something that
+>> I should add to that driver as well?
 > 
-> The display is what currently requests the interconnect path,
-> specifically mdp5_setup_interconnect() in
-> drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c. The Freedreno GPU bindings
-> currently don't have interconnect support. Maybe this is something that
-> I should add to that driver as well?
+> The "mdp0-mem" and "mdp1-mem" paths mentioned in the mdp5_kms.c are the two
+> interconnects between the display and DDR memory. There is actually a patch [1]
+> to add to GPU bindings, but it seems that we missed to pick it up.
 
-The "mdp0-mem" and "mdp1-mem" paths mentioned in the mdp5_kms.c are the two
-interconnects between the display and DDR memory. There is actually a patch [1]
-to add to GPU bindings, but it seems that we missed to pick it up.
+It was actually merged in v5.2.
 
-> 
->>> +				interconnect-names = "mdp0-mem",
->>> +				                     "mdp1-mem";
->>
->> As the second path is not to DDR, but to ocmem, it might be better to call it
->> something like "gpu-ocmem".
-> 
-> I used what mdp5_kms.c expected.
-
-This is for the display and here [2] are some patches for the GPU. Not sure how
-the NoCs are configured on 8974 by default, but if you notice any blue/black
-screens, you may need to request bandwidth for display too.
-
-Thanks,
+BR,
 Georgi
 
-[1]
-https://lore.kernel.org/r/1555703787-10897-1-git-send-email-jcrouse@codeaurora.org
-[2] https://lore.kernel.org/r/20181220173026.3857-1-jcrouse@codeaurora.org
-
+>>>> +				interconnect-names = "mdp0-mem",
+>>>> +				                     "mdp1-mem";
+>>>
+>>> As the second path is not to DDR, but to ocmem, it might be better to call it
+>>> something like "gpu-ocmem".
+>>
+>> I used what mdp5_kms.c expected.
+> 
+> This is for the display and here [2] are some patches for the GPU. Not sure how
+> the NoCs are configured on 8974 by default, but if you notice any blue/black
+> screens, you may need to request bandwidth for display too.
+> 
+> Thanks,
+> Georgi
+> 
+> [1]
+> https://lore.kernel.org/r/1555703787-10897-1-git-send-email-jcrouse@codeaurora.org
+> [2] https://lore.kernel.org/r/20181220173026.3857-1-jcrouse@codeaurora.org
+> 
