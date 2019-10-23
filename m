@@ -2,117 +2,104 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDA9CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F378CA9EB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D9521A4A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:31:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="plSwP6c6"
+	by mail.kernel.org (Postfix) with ESMTP id 3C6F421A4A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 09:34:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403895AbfJWJbS (ORCPT
+        id S2390868AbfJWJew (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:31:18 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40161 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404066AbfJWJbS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 05:31:18 -0400
-Received: by mail-wm1-f65.google.com with SMTP id b24so18887291wmj.5
-        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 02:31:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=2fLQAYivjPCeFhrnS0eAbtLcKwI/jjUTQJtAub9j6h8=;
-        b=plSwP6c6mLqj8vkc7p9cJc1rbasnfbXWCxxziBoPaInno3/XEo+2lmnN2HKb3mng3y
-         tYdqtYrpxH1mA80BuazCzz8AKwvOVTCbjnSSs3m5XVf+trbtHa5TntpXxJcnw+P7+8Ge
-         gRWgy5U0wtzomDDu+DfmIsyVbWAxuBLLW7qp8G39q+jjv+eJ1CwMjsisd3/vmUs5NEOb
-         B9sQQbrPK2U/TKjclRAaDLPlcTBZGqbul8HMqEKMkLrRlhS1sCO1ptnKQkRd0DYALnvi
-         P5kZG5BNVrgxUfiU8KlCWnMqp7q5B4QSDiLRw/prg85Dkhy+aY6QfrDGUA3h87jRTcQP
-         lQyQ==
+        Wed, 23 Oct 2019 05:34:52 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40475 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390165AbfJWJew (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 05:34:52 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u22so2314665lji.7;
+        Wed, 23 Oct 2019 02:34:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=2fLQAYivjPCeFhrnS0eAbtLcKwI/jjUTQJtAub9j6h8=;
-        b=BEufMCkPJ4keLmVde/OiT+jpmhw5XrE7JsnDFmsN6DXQU5vGXwtMst0h6EhjAla52w
-         mfAF4J/SIaJV6YDDr7X5+q/YbxAbpaXns6HKlE1V3DUjwwvS0Vvp0Ggx7qRLm/iYGJNY
-         nuIrA2DTC0b5gEFiWD8Y3Zk5DRqMVhPGR6GQVtra4IdSt6L3mxN97HNWN/6XTd/Lc3tO
-         ZSSC7RMUFbzAlXSBEI9VJPE8D8Sa+GiTAR/jeJyOcIKa8AJjw6763F1NjspQlh1UxgK0
-         JKXTHFSGASg/XvpkP46y+teGIHDzHQZiplX6kh8dzjLPGP/mYAQFR1ddVFBtSzyk+Vqs
-         Odwg==
-X-Gm-Message-State: APjAAAWJWajk2/AGAf90nrfdqqeNnqM87JY320Gu9ikUejIjN4sAGTSI
-        vmxoGo6z6CglmHCO4H9dxTBRog==
-X-Google-Smtp-Source: APXvYqykfve4PxGAzNbeonYmDixqLBfWcdLX29lVDVQi9qir+N9Q6u3ur5hniBnheE7/KszY9XK5Eg==
-X-Received: by 2002:a1c:5415:: with SMTP id i21mr3193435wmb.120.1571823075340;
-        Wed, 23 Oct 2019 02:31:15 -0700 (PDT)
-Received: from dell ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id u1sm31823556wru.90.2019.10.23.02.31.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 23 Oct 2019 02:31:14 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 10:30:58 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>, dmitry.torokhov@gmail.com,
-        jdelvare@suse.com, linux@roeck-us.net, thierry.reding@gmail.com,
-        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH 1/8] dt-bindings: mfd: iqs62x: Add bindings
-Message-ID: <20191023093058.GA19477@dell>
-References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
- <1571631083-4962-2-git-send-email-jeff@labundy.com>
- <20191022120051.686ed9f9@archlinux>
- <20191023033646.GB4458@labundy.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=sEQ9zSFknQ5RX9v6VO5JzIVVMvyimeBxeFDrpRcw3v8=;
+        b=cwqPZr2DhJ7AkUuJAY/hQmSKlmwtTlt46sMIsXOROzfhDNbGAp/daW6uauhwpAl2li
+         WcItL+9qnoyPyVk/KjjpG0atLm0ahX/UQZuskwuVS5CIY1lnozLPcK2rLegyMfBB57LO
+         vyNQhJATJoSKAKOxVl71hh6w5FapBzCxn9TzR64hLswaETrpj3FK38BekP86suXPeV5z
+         WWuG041Prb9Hp++f4lFuOgfbhe3pu7PcsD9c+7xpYFxtc/4sREHu4FA2dA1trwjwOagV
+         xLS3Ng+Om6GXPTGKizBYAAoGC/04jJPfqGTUnaQmWRQb0nnEbwJ5Cj5GnSRLg+8W+W1p
+         ZOKA==
+X-Gm-Message-State: APjAAAWhgbtECfWT5ddFNQTIGLC97cf3X132w7zY2j1BPaY5RwSlgVg9
+        T+8I9F8sz32pDcrPM0oWjmo=
+X-Google-Smtp-Source: APXvYqzOztLkcfZE4lM2Jhw5qA4q5TDB61647ftMC4bUulC9/P9LlKwlAqZtIgZqea7TnsB2Nf3w3w==
+X-Received: by 2002:a2e:9691:: with SMTP id q17mr5831618lji.223.1571823290485;
+        Wed, 23 Oct 2019 02:34:50 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id g3sm10040533lja.61.2019.10.23.02.34.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 02:34:49 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 12:34:37 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH RESEND 2] dt-bindings: max77693: fix missing curly brace
+Message-ID: <20191023093437.GA30570@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191023033646.GB4458@labundy.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 22 Oct 2019, Jeff LaBundy wrote:
+Add missing curly brace to charger node example.
 
-> Hi Jonathan,
-> 
-> On Tue, Oct 22, 2019 at 12:00:51PM +0100, Jonathan Cameron wrote:
-> > On Sun, 20 Oct 2019 23:11:16 -0500
-> > Jeff LaBundy <jeff@labundy.com> wrote:
-> > 
-> > > This patch adds binding documentation for six-channel members of the
-> > > Azoteq ProxFusion family of sensor devices.
-> > > 
-> > > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> > 
-> > I'm not sure if Lee has made the switch for mfd entirely yet, but
-> > mostly new dt bindings need to be in yaml format as it allows
-> > automated parsing of the examples + bindings using them for
-> > correctness.
-> > 
-> 
-> I'll wait for Lee or Rob's cue, but I'm happy to move to yaml if it's time
-> to make the switch here.
-> 
-> > One comment inline.  I'm far from an expert on most of the stuff here
-> > so will leave it for others!
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
 
-It would make sense.
+Resending once more.  Sorry again guys. This time I added also the DT folks
+and used correct email for Bartlomiej.
+
+ Documentation/devicetree/bindings/mfd/max77693.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+index a3c60a7a3be1..0ced96e16c16 100644
+--- a/Documentation/devicetree/bindings/mfd/max77693.txt
++++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+@@ -175,6 +175,7 @@ Example:
+ 			maxim,thermal-regulation-celsius = <75>;
+ 			maxim,battery-overcurrent-microamp = <3000000>;
+ 			maxim,charge-input-threshold-microvolt = <4300000>;
++		};
+ 
+ 		led {
+ 			compatible = "maxim,max77693-led";
+-- 
+2.21.0
+
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
