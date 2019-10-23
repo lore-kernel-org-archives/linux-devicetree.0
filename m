@@ -2,158 +2,161 @@ Return-Path: <SRS0=bPG9=YQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E92CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B267BCA9EB7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D885421920
-	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 14:56:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571842577;
-	bh=O2JkHUKjlciDA80wKo06uckw4Sa9xy92fBX8r3Vt/Pw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nycLM/wWltdnfI98SYJF+dUyIQCeG77ra3neWz/xKiXFuB9Zv8XJJegxYb7Ue6jY+
-	 qT5E9a4PqrBHJvhoOPQjFYtllSdPvOJhfWja/UgQk4YfZiEwnrrsQbVHouR83hTgD2
-	 9/ZFLStwkE/OpQwpJaF654J9tN9kxSmkzx+BZ1LY=
+	by mail.kernel.org (Postfix) with ESMTP id 920A12173B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 23 Oct 2019 15:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406400AbfJWO4R (ORCPT
+        id S2406600AbfJWPU3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:56:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52928 "EHLO mail.kernel.org"
+        Wed, 23 Oct 2019 11:20:29 -0400
+Received: from muru.com ([72.249.23.125]:39326 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405356AbfJWO4R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:56:17 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C483021920;
-        Wed, 23 Oct 2019 14:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571842575;
-        bh=O2JkHUKjlciDA80wKo06uckw4Sa9xy92fBX8r3Vt/Pw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=b/h5uvCEXDJoWAACpB7mlIdd5VKCHuJHc8W+0BnYV8LN46IrcKvYaA47zQASHSSrg
-         rRC/qfbq+tfJD3Ug2mc4rrVOJYLkHlCPeVIC4IVeLQgexmMPKwGwgqcY9BkkZUCuMC
-         oj6CoCV/MiW39mvwpDHRya2tOuIu6I2cvdOtkI2Y=
-Received: by mail-qt1-f175.google.com with SMTP id d17so18098007qto.3;
-        Wed, 23 Oct 2019 07:56:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAUp2Zhgbvo51TxcRLyQDcWsNPftlOkpBH0g8BRfUOpHglEN9fo0
-        /OVKTDmZHGJtNAurp6Rx0z4ip2qskakLiDVGBA==
-X-Google-Smtp-Source: APXvYqzVZzf6EZ9mYlLTYZ3eAw6y9++ux0xd/vX/zGDjRONjf8x1gNwbYI3NzJBCFQSBukbt9b/ycsUtWjs8uGertvA=
-X-Received: by 2002:ac8:741a:: with SMTP id p26mr9624872qtq.143.1571842574962;
- Wed, 23 Oct 2019 07:56:14 -0700 (PDT)
+        id S2390636AbfJWPU3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:20:29 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 29A6F80CF;
+        Wed, 23 Oct 2019 15:21:03 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 08:20:25 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 07/10] ARM: OMAP2+: Drop legacy platform data for dra7 rng
+Message-ID: <20191023152025.GJ5610@atomide.com>
+References: <20191018163220.3504-1-tony@atomide.com>
+ <20191018163220.3504-8-tony@atomide.com>
 MIME-Version: 1.0
-References: <1571756812-19005-1-git-send-email-akinobu.mita@gmail.com> <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1571756812-19005-3-git-send-email-akinobu.mita@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 23 Oct 2019 09:56:03 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ3+Ys5_JD0qnf7acS5wXUpAyU=Wdbfigud4p6fT1f9eg@mail.gmail.com>
-Message-ID: <CAL_JsqJ3+Ys5_JD0qnf7acS5wXUpAyU=Wdbfigud4p6fT1f9eg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] leds: meter: add leds-meter binding
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018163220.3504-8-tony@atomide.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 10:07 AM Akinobu Mita <akinobu.mita@gmail.com> wrote:
->
-> Add DT binding for leds-meter.
-
-What's an leds meter? Need a better explanation to understand if this
-makes sense at all, but some comments on the schema below.
-
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Bjorn Andersson <bjorn@kryo.se>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+* Tony Lindgren <tony@atomide.com> [191018 16:33]:
 > ---
->  .../devicetree/bindings/leds/leds-meter.yaml       | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.yaml
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-> new file mode 100644
-> index 0000000..d5dfa261
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: GPL-2.0
+>  arch/arm/boot/dts/dra7-l4.dtsi            |  1 -
+>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 36 -----------------------
+>  2 files changed, 37 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+> --- a/arch/arm/boot/dts/dra7-l4.dtsi
+> +++ b/arch/arm/boot/dts/dra7-l4.dtsi
+> @@ -1898,7 +1898,6 @@
+>  
+>  		target-module@90000 {			/* 0x48090000, ap 55 12.0 */
+>  			compatible = "ti,sysc-omap2", "ti,sysc";
+> -			ti,hwmods = "rng";
+>  			reg = <0x91fe0 0x4>,
+>  			      <0x91fe4 0x4>;
+>  			reg-names = "rev", "sysc";
 
-(GPL-2.0-only OR BSD-2-Clause) for new bindings.
+Looks like I missed the patch description on this patch,
+updated patch below with description and Signed-off-by
+added.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic LED level meter
-> +
-> +maintainers:
-> +  - Akinobu Mita <akinobu.mita@gmail.com>
-> +
-> +description:
-> +  Generic LED level meter consists of multiple LED devices by different drivers.
-> +
-> +properties:
-> +  compatible:
-> +    const: meter-leds
-> +
-> +  leds:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    minItems: 1
+Regards,
 
-No need for this as the minimum for arrays is already 1. And it
-doesn't work either. You'd need the $ref under an 'allOf'.
+Tony
 
-> +    description: List of phandles to LED node that are members of a level meter.
-> +
-> +  brightness-weights:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 1
-> +    description: Each integer represents a contribution ratio within a level
-> +      meter.
-> +
-> +required:
-> + - compatible
-> + - leds
+8< ------------------
+From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Mon, 21 Oct 2019 14:16:40 -0700
+Subject: [PATCH] ARM: OMAP2+: Drop legacy platform data for dra7 rng
 
-Add a:
+We can now probe devices with ti-sysc interconnect driver and dts
+data. Let's drop the related platform data and custom ti,hwmods
+dts property.
 
-additionalProperties: false
+As we're just dropping data, and the early platform data init
+is based on the custom ti,hwmods property, we want to drop both
+the platform data and ti,hwmods property in a single patch.
 
-> +
-> +examples:
-> +  - |
-> +    leds {
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/dra7-l4.dtsi            |  1 -
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 36 -----------------------
+ 2 files changed, 37 deletions(-)
 
-Needs to be a name that's not also a property name. 'leds-meter' or
-'meter-leds' perhaps. And define the name above under a $nodename
-property.
-
-> +        compatible = "meter-leds";
-> +        leds = <&led0>, <&led1>, <&led2>, <&led3>;
-> +        brightness-weights = <3 1 1 1>;
-> +    };
-> +
-> +...
-> --
-> 2.7.4
->
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -1898,7 +1898,6 @@
+ 
+ 		target-module@90000 {			/* 0x48090000, ap 55 12.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "rng";
+ 			reg = <0x91fe0 0x4>,
+ 			      <0x91fe4 0x4>;
+ 			reg-names = "rev", "sysc";
+diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+@@ -1432,34 +1432,6 @@ static struct omap_hwmod dra7xx_des_hwmod = {
+ 	},
+ };
+ 
+-/* rng */
+-static struct omap_hwmod_class_sysconfig dra7xx_rng_sysc = {
+-	.rev_offs       = 0x1fe0,
+-	.sysc_offs      = 0x1fe4,
+-	.sysc_flags     = SYSC_HAS_AUTOIDLE | SYSC_HAS_SIDLEMODE,
+-	.idlemodes      = SIDLE_FORCE | SIDLE_NO,
+-	.sysc_fields    = &omap_hwmod_sysc_type1,
+-};
+-
+-static struct omap_hwmod_class dra7xx_rng_hwmod_class = {
+-	.name           = "rng",
+-	.sysc           = &dra7xx_rng_sysc,
+-};
+-
+-static struct omap_hwmod dra7xx_rng_hwmod = {
+-	.name           = "rng",
+-	.class          = &dra7xx_rng_hwmod_class,
+-	.flags		= HWMOD_SWSUP_SIDLE,
+-	.clkdm_name     = "l4sec_clkdm",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = DRA7XX_CM_L4SEC_RNG_CLKCTRL_OFFSET,
+-			.context_offs = DRA7XX_RM_L4SEC_RNG_CONTEXT_OFFSET,
+-			.modulemode   = MODULEMODE_HWCTRL,
+-		},
+-	},
+-};
+-
+ /*
+  * 'usb_otg_ss' class
+  *
+@@ -2070,13 +2042,6 @@ static struct omap_hwmod_ocp_if dra7xx_l4_per1__des = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
+-/* l4_per1 -> rng */
+-static struct omap_hwmod_ocp_if dra7xx_l4_per1__rng = {
+-	.master         = &dra7xx_l4_per1_hwmod,
+-	.slave          = &dra7xx_rng_hwmod,
+-	.user           = OCP_USER_MPU,
+-};
+-
+ /* l4_per3 -> usb_otg_ss1 */
+ static struct omap_hwmod_ocp_if dra7xx_l4_per3__usb_otg_ss1 = {
+ 	.master		= &dra7xx_l4_per3_hwmod,
+@@ -2239,7 +2204,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+ /* GP-only hwmod links */
+ static struct omap_hwmod_ocp_if *dra7xx_gp_hwmod_ocp_ifs[] __initdata = {
+ 	&dra7xx_l4_wkup__timer12,
+-	&dra7xx_l4_per1__rng,
+ 	NULL,
+ };
+ 
+-- 
+2.23.0
