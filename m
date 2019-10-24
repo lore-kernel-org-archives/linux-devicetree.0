@@ -2,289 +2,207 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C469CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170F4CA9EBB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB1A20679
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC0320679
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iDAJ/s2T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439095AbfJXLl6 (ORCPT
+        id S1726369AbfJXLnN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:41:58 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42807 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407878AbfJXLl5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:41:57 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z12so18847120lfj.9;
-        Thu, 24 Oct 2019 04:41:54 -0700 (PDT)
+        Thu, 24 Oct 2019 07:43:13 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46657 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfJXLnN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:43:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t8so18857606lfc.13
+        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 04:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YA2/6tugEUXajeImGkJKBKEZmtx66gdb7sqhmJwslGY=;
+        b=iDAJ/s2TGKVZ6cOgbobRLZao9OgQZQi4YmUL9dKbcSs9e/KS4Niu41OX1MSx/i5GY7
+         PPhVqnHLpGXdNJAiKdPcVumOOKcYfz//oupiPnFZCbsLrtNYDgkYZy0Cirn3qvpxjb20
+         5iIKRqM0RltwLAddbhLY4hIK0961eF/WNoi5rAE9X5r3ZtDdqL6z2cF7ge8/NS82H4AO
+         YJUxt+tlC9o5KD60L1uGr8CoFCx9qB8gEZPlXyB1S7rAxB6TlxYJOghSGRVJBiqKJ4f7
+         IjN4SwgefFkxpBLTKCgS3tvS+QsdWyDy217bxwUsQFWJFJJpEQuiU4sFgTpW21s5junV
+         mqPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m3o/lWfrwRFPHJi2BOThyBDN3PdB2H+vW0rhvq41yII=;
-        b=tRjKyjUUktfzWLNXiquXV4c+n0HyyiyU1q6FIGkkxiRQ0IdBWo+bsMSfKjet62xY1B
-         gYZISvqzoglkl1mJlfI7jV/NyiejbYPA3cSSbF2DEuH18k678LNVyUC04Ap9/Wwbaxz2
-         qNf/hL+QZvmusI8kMb7mOr3x6VzOVUCPfLRSmAQWr+Bexgeqpg4LFVlmMBOombibCyT/
-         5R51QFyZA2sDywGIP3QasB40g6Ig+yKGKxWStiBX0mRmBo7ycYrSMTMGSemPe3fx1Nzc
-         BA7XvO2Sx++lHTasEAXevhEB3zCTAiKLdT0nSRmxTv9xC0Vea5NTo1r7Ox1VIqsA1snR
-         nWNA==
-X-Gm-Message-State: APjAAAXyFLEGVIB3A+o1ZX39jrDG3L412t6aLRrYmfCyUnpVSzY7wsRa
-        gmP4WwNeJMTM9LJ40pX4sF8=
-X-Google-Smtp-Source: APXvYqzrbGQ0ttrOhQLi4AqqOXsG/uNNge6qqlhyHnCTkSlAS+M74Xd2zhLobDiLUr03QDL4RM5A4A==
-X-Received: by 2002:ac2:5e90:: with SMTP id b16mr13561107lfq.119.1571917313794;
-        Thu, 24 Oct 2019 04:41:53 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id u8sm18047678lfb.36.2019.10.24.04.41.52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YA2/6tugEUXajeImGkJKBKEZmtx66gdb7sqhmJwslGY=;
+        b=KwPK4xyS1zxGbc5LPX7KfWLXBY7f8RtyMlcNSeQqvYqdY+MW5pDaI/Nm0rNSI+lgWh
+         0Bu2oC/UNkz7VYIQjgq7CzhkR8UqHXtArQzuB9K0BG/VOqYRjSIfvf7kjZe6KedCgKci
+         vN7e+uxEH9WduRbTra/zlrZZOqItRnYIyS0q8ULpPmuvGyk7KbC5VTsqNoW25EVdtXYE
+         twQYVqNJ2k0M4xV7P8kHm3GAf0gfEsNlPr9A1JzFTsRQIsQ9qczB7HTPcTtR+eA6Rj1e
+         Ga+lBa4sQ9F1kdBZkcMNwDMX/ik7rwa/AFD2d4c9VcPmjO0CW7GerfqA+VN8jTyL0sxA
+         AyLw==
+X-Gm-Message-State: APjAAAXoL7hdCDRZGFnAsNU7p8MLvd9xb0kDFzoTB9E08TWgXBfuWzC/
+        66Xw/eEOD7lODq7X1dfwnCwrFQ==
+X-Google-Smtp-Source: APXvYqx8kdrGIfury192V5XJYpRNsCP56CqynHKeZKfMOB1fdCbLg4LcLpygidy1qE2MCVmHRS5ULw==
+X-Received: by 2002:ac2:5443:: with SMTP id d3mr24940890lfn.58.1571917390330;
+        Thu, 24 Oct 2019 04:43:10 -0700 (PDT)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id e14sm4001846ljb.75.2019.10.24.04.43.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 04:41:53 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 14:41:45 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828 bindings
-Message-ID: <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 24 Oct 2019 04:43:09 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/3 v4] drm/panel: Add generic DSI panel YAML bindings
+Date:   Thu, 24 Oct 2019 13:43:03 +0200
+Message-Id: <20191024114305.15581-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ROHM BD71828 Power management IC integrates 7 buck converters, 7 LDOs,
-a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
-and a 32.768 kHz clock gate.
+This adds a starting point for processing and defining generic
+bindings used by DSI panels. We just define one single bool
+property to force the panel into video mode for now.
 
-Document the dt bindings drivers are using.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: devicetree@vger.kernel.org
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
+ChangeLog v3->v4:
+- Rename into display/dsi-controller.yaml
+- Require a virtual channel number for the DSI panel, as
+  DSI have this 2-bit virtual address field.
+- Bring in some but not all properties from the existing MIPI
+  DSI bindings. This schema can be used with simpler panels but
+  not complex panels with multiple virtual channels for the
+  moment. Let's handle it when we get there.
+- Add an example.
+ChangeLog v2->v3:
+- Make a more complete DSI panel binding including the controller
+  and its address-cells and size-cells and a pattern for the panel
+  nodes. The panel is one per DSI master, the reg property is
+  compulsory but should always be 0 (as far as I can tell) as
+  only one panel can be connected. The bus doesn't really have
+  any addresses for the panel, the address/reg notation seems
+  to be cargo-culted from the port graphs and is not necessary
+  to parse some device trees, it is used to tell whether the
+  node is a panel or not rather than any addressing.
+- I have no idea how many displays you can daisychain on a single
+  DSI master, I just guess 15 will be enough. The MIPI-specs
+  are memberwalled. Someone who knows can tell perhaps?
+ChangeLog v1->v2:
+- New patch after feedback.
+---
+ .../bindings/display/dsi-controller.yaml      | 88 +++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/dsi-controller.yaml
 
-No changes since v1
-
- .../bindings/mfd/rohm,bd71828-pmic.txt        | 180 ++++++++++++++++++
- 1 file changed, 180 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
+diff --git a/Documentation/devicetree/bindings/display/dsi-controller.yaml b/Documentation/devicetree/bindings/display/dsi-controller.yaml
 new file mode 100644
-index 000000000000..125efa9f3de0
+index 000000000000..2a6d872a40c5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
-@@ -0,0 +1,180 @@
-+* ROHM BD71828 Power Management Integrated Circuit bindings
++++ b/Documentation/devicetree/bindings/display/dsi-controller.yaml
+@@ -0,0 +1,88 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/panel-dsi-common.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+BD71828GW is a single-chip power management IC for battery-powered portable
-+devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA single-cell
-+linear charger. Also included is a Coulomb counter, a real-time clock (RTC),
-+and a 32.768 kHz clock gate.
++title: Common Properties for DSI Display Panels
 +
-+Required properties:
-+ - compatible			: Should be "rohm,bd71828".
-+ - reg				: I2C slave address.
-+ - interrupt-parent		: Phandle to the parent interrupt controller.
-+ - interrupts			: The interrupt line the device is connected to.
-+ - clocks			: The parent clock connected to PMIC.
-+ - #clock-cells			: Should be 0.
-+ - regulators			: List of child nodes that specify the
-+				  regulators. Please see
-+				  ../regulator/rohm,bd71828-regulator.txt
-+ - gpio-controller		: To indicate BD71828 acts as a GPIO controller.
-+ - #gpio-cells			: Should be 2. The first cell is the pin number
-+				  and the second cell is used to specify flags.
-+				  See ../gpio/gpio.txt for more information.
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
 +
-+The BD71828 RUN state is divided into 4 configurable run-levels named RUN0,
-+RUN1, RUN2 and RUN3. Bucks 1, 2, 6 and 7 can be either controlled individually
-+via I2C, or some/all of them can be bound to run-levels and controlled as a
-+group. If bucks are controlled individually these run-levels are ignored. See
-+../regulator/rohm,bd71828-regulator.txt for how to define regulator voltages
-+for run-levels. Run-levels can be changed by I2C or GPIO depending on PMIC's OTP
-+configuration.
++description: |
++  This document defines device tree properties common to DSI, Display
++  Serial Interface panels. It doesn't constitute a device tree binding
++  specification by itself but is meant to be referenced by device tree
++  bindings.
 +
-+Optional properties:
-+- clock-output-names		: Should contain name for output clock.
-+- rohm,dvs-vsel-gpios		: GPIOs used to control PMIC run-levels. Should
-+				  describe two GPIOs. (See run-level control in
-+				  data-sheet). If this property is omitted but
-+				  some bucks are marked to be controlled by
-+				  run-levels - then OTP option allowing
-+				  run-level control via I2C is assumed.
-+- gpio-reserved-ranges		: Usage of GPIO pins can be changed via OTP.
-+				  This property can be used to mark the pins
-+				  which should not be configured for GPIO.
-+				  Please see the ../gpio/gpio.txt for more
-+				  information.
++  When referenced from panel device tree bindings the properties defined in
++  this document are defined as follows. The panel device tree bindings are
++  responsible for defining whether each property is required or optional.
 +
-+Example:
++  Notice: this binding concerns DSI panels connected directly to a master
++  without any intermediate port graph to the panel. Each DSI master
++  can control exactly one panel. They should all just have a node "panel"
++  for their panel with their reg-property set to 0.
 +
-+        /* external oscillator node */
-+        osc: oscillator {
-+                compatible = "fixed-clock";
-+                #clock-cells = <1>;
-+                clock-frequency  = <32768>;
-+                clock-output-names = "osc";
-+        };
++properties:
++  $nodename:
++    pattern: "^dsi-controller(@.*)?$"
 +
-+	pmic: pmic@4b {
-+		compatible = "rohm,bd71828";
-+		reg = <0x4b>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <29 GPIO_ACTIVE_LOW>;
-+		clocks = <&osc 0>;
-+		#clock-cells = <0>;
-+		clock-output-names = "bd71828-32k-out";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <4>;
-+		gpio-reserved-ranges = <0 1 2 1>;
-+		gpio-line-names = "EPDEN";
-+		rohm,dvs-vsel-gpios = <&gpio1 12 0>,
-+				      <&gpio1 13 0>;
-+		regulators {
-+			buck1: BUCK1 {
-+				regulator-name = "buck1";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-ramp-delay = <2500>;
-+				rohm,dvs-runlvl-ctrl;
-+				rohm,dvs-runlevel0-voltage = <500000>;
-+				rohm,dvs-runlevel1-voltage = <506250>;
-+				rohm,dvs-runlevel2-voltage = <512500>;
-+				rohm,dvs-runlevel3-voltage = <518750>;
-+				regulator-boot-on;
-+			};
-+			buck2: BUCK2 {
-+				regulator-name = "buck2";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-ramp-delay = <2500>;
-+				rohm,dvs-runlvl-ctrl;
-+				rohm,dvs-runlevel0-voltage = <500000>;
-+				rohm,dvs-runlevel1-voltage = <506250>;
-+				rohm,dvs-runlevel2-voltage = <512500>;
-+				rohm,dvs-runlevel3-voltage = <518750>;
-+				regulator-boot-on;
-+			};
-+			buck3: BUCK3 {
-+				regulator-name = "buck3";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-boot-on;
-+			};
-+			buck4: BUCK4 {
-+				regulator-name = "buck4";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+			};
-+			buck5: BUCK5 {
-+				regulator-name = "buck5";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+			buck6: BUCK6 {
-+				regulator-name = "buck6";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-ramp-delay = <2500>;
-+				rohm,dvs-runlvl-ctrl;
-+				rohm,dvs-runlevel0-voltage = <500000>;
-+				rohm,dvs-runlevel1-voltage = <506250>;
-+				rohm,dvs-runlevel2-voltage = <512500>;
-+				rohm,dvs-runlevel3-voltage = <518750>;
-+				regulator-boot-on;
-+			};
-+			buck7: BUCK7 {
-+				regulator-name = "buck7";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-ramp-delay = <2500>;
-+				rohm,dvs-runlvl-ctrl;
-+				rohm,dvs-runlevel0-voltage = <500000>;
-+				rohm,dvs-runlevel1-voltage = <506250>;
-+				rohm,dvs-runlevel2-voltage = <512500>;
-+				rohm,dvs-runlevel3-voltage = <518750>;
-+				regulator-boot-on;
-+			};
-+			ldo1: LDO1 {
-+				regulator-name = "ldo1";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+			ldo2: LDO2 {
-+				regulator-name = "ldo2";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+			ldo3: LDO3 {
-+				regulator-name = "ldo3";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+			ldo4: LDO4 {
-+				regulator-name = "ldo4";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+			ldo5: LDO5 {
-+				regulator-name = "ldo5";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+			ldo6: LDO6 {
-+				regulator-name = "ldo6";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+			};
-+			ldo7_reg: LDO7 {
-+				regulator-name = "ldo7";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+		};
-+	};
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^panel@[0-3]$":
++    type: object
++
++    properties:
++      reg:
++        minimum: 0
++        maximum: 3
++        description:
++          The virtual channel number of a DSI peripheral. Must be in the range
++          from 0 to 3, as DSI uses a 2-bit addressing scheme. Some DSI
++          peripherals respond to more than a single virtual channel. In that
++          case the reg property can take multiple entries, one for each virtual
++          channel that the peripheral responds to.
++
++      clock-master:
++        type: boolean
++        description:
++           Should be enabled if the host is being used in conjunction with
++           another DSI host to drive the same peripheral. Hardware supporting
++           such a configuration generally requires the data on both the busses
++           to be driven by the same clock. Only the DSI host instance
++           controlling this clock should contain this property.
++
++      enforce-video-mode:
++        type: boolean
++        description:
++          The best option is usually to run a panel in command mode, as this
++          gives better control over the panel hardware. However for different
++          reasons like broken hardware, missing features or testing, it may be
++          useful to be able to force a command mode-capable panel into video
++          mode.
++
++    required:
++      - reg
++
++examples:
++  - |
++    dsi-controller@55aa55aa {
++      compatible = "acme,foo";
++      reg = <0x55aa55aa>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++      panel@0 {
++        compatible = "acme,bar";
++        reg = <0>;
++        vddi-supply = <&foo>;
++        reset-gpios = <&foo_gpio 0 GPIO_ACTIVE_LOW>;
++      };
++    };
++
++...
 -- 
 2.21.0
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
