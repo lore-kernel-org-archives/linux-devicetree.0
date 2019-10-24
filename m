@@ -2,128 +2,239 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6AEC47E49
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C878CA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6E621906
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C10921928
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392163AbfJXLfC (ORCPT
+        id S2393448AbfJXLk1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:35:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41511 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390184AbfJXLfB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:35:01 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 94so416269oty.8;
-        Thu, 24 Oct 2019 04:35:01 -0700 (PDT)
+        Thu, 24 Oct 2019 07:40:27 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39465 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfJXLk1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:40:27 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y3so24654174ljj.6;
+        Thu, 24 Oct 2019 04:40:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J4PbOQfqm9akiqgjwMOPLZWIcMjV9yQd7nxa6MaNJhw=;
-        b=ihyAPG0rMfnTB9Vdu/pONpu45Qq+AS3ePmk42gGqVS5BwAgQttfZ/2uIWaRgS3NZZC
-         O2thCVzfkrnWEHJ3uO/d/R3nrYTb4tqioo+TQN48JENPRzw/eDpq35w7Gut9e1UYXfY1
-         rw5iUA4Zn+/dtUKLO1ddWbigChkMm2p9+A0G76+kBxO8tucMikeHzCxsvSK+cgDDOY2X
-         T6zytIhg3nFKRcewkkAC8ww3wLc84LrzXn2Muz/5v9yvdyF8QSYb9eDYnNACfPfohlA1
-         5eKwyGHMtABNAZBegSvCnCDpNK4V+BUOsbgbvs0uRb+L6GAzOgFQPbX33doIUaLdXZwr
-         TlgQ==
-X-Gm-Message-State: APjAAAWq2C6Xe6VcjaB9C9jWINyDhHYoCZ8J+ILUFjstVYu+ahIftg5X
-        0iOkaFAYRsnOlvMcl5zCPkFeU0jJBqXzm7qQdeI=
-X-Google-Smtp-Source: APXvYqx2VCYaJ04ssYc62/0iTmPxcEDnkTjfMDN/WmE/qVFET5J3lGb2kaY7rRUjTSwtt6GQGuoBP77OFhxkM3SxTc0=
-X-Received: by 2002:a9d:7d19:: with SMTP id v25mr1847064otn.250.1571916900501;
- Thu, 24 Oct 2019 04:35:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <1571915821-1620-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1571915821-1620-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1571915821-1620-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 24 Oct 2019 13:34:49 +0200
-Message-ID: <CAMuHMdU=58w=4A0WcqytFfyV_Q11BgYaDNsMsA8Z15mnm--ang@mail.gmail.com>
-Subject: Re: [PATCH 2/3] clk: renesas: rcar-usb2-clock-sel: Add multiple
- clocks management
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=uSgig7KmNQdKc2MYqqBMJQw/qpd26XOI1r2j5DbH9XY=;
+        b=g5ulz8b85Lnslj4+JnRh7dKtZ/O49P0GkejSA/0Yeuyel2dYjfj3M3tQ8QMUv2PPFe
+         A91GmBgt2EhLB4xKMhpfZL+VV2j7n8odF1P8tpkGA05xgEsbZX8G0UUZ3vqQPjkQKJvu
+         TnBTFvLJ24Srbg4s4LD8Ks7RRJnIJrHOT3PxTwLOCz4d5ckyK0C3BCP+qFJ92Y3qrhKg
+         0iYZ2OUltYy9J8gDq/1YpfIB6sJ7DF4yNFdA5nBDdMkE1jDnKzBiXZNp7lfEMMitjrTC
+         BR37IKwwKecSXgGX7Ks5M3DjQujyMmUp1ZnYsPGKK+TSDEaNkBHPqBOSo+ivAfyyGJaS
+         R0+A==
+X-Gm-Message-State: APjAAAVl65umtP6OoAhln80NbvEx2vf7UTAgS7VNaOkrA9wWrKHEWpU0
+        y1maQ/Dm427T+8cVJHjA7pM=
+X-Google-Smtp-Source: APXvYqxjec6OZ9BRsNQGsaXhb8I78IjpvaYjJNidtuoA7dfEvHAXv6LtAH75rrW77yW0ZWJevBXHGA==
+X-Received: by 2002:a2e:a0c9:: with SMTP id f9mr26083774ljm.77.1571917222882;
+        Thu, 24 Oct 2019 04:40:22 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id p6sm6545157lfc.35.2019.10.24.04.40.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 04:40:21 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 14:40:08 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RFC PATCH v2 00/13] Support ROHM BD71828 PMIC
+Message-ID: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Patch series introducing support for ROHM BD71828 PMIC
 
-On Thu, Oct 24, 2019 at 1:17 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> This hardware needs to enable clocks of both host and peripheral.
-> So, this patch adds multiple clocks management.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
+regulators can either be controlled individually via I2C. Bucks 1,2,6 and
+7 can also be assigned to a "regulator group" controlled by run-levels.
+Eg. Run level specific voltages and enable/disable statuses for each of
+these bucks can be set via register interface. The buck run-level group
+assignment (selection if buck is to be controlled individually or via
+run-levels) can be changed at run-time via I2C.
 
-Thanks for your patch!
+Run level changes can then be initiated wither via I2C writes or GPIO.
+and when run-level is changed, state of all bucks which are set to be
+controlled via run-levels are changed accrdingly.
 
-> --- a/drivers/clk/renesas/rcar-usb2-clock-sel.c
-> +++ b/drivers/clk/renesas/rcar-usb2-clock-sel.c
-> @@ -53,14 +60,32 @@ static void usb2_clock_sel_disable_extal_only(struct usb2_clock_sel_priv *priv)
->
->  static int usb2_clock_sel_enable(struct clk_hw *hw)
->  {
-> -       usb2_clock_sel_enable_extal_only(to_priv(hw));
-> +       struct usb2_clock_sel_priv *priv = to_priv(hw);
-> +       int i, ret;
-> +
-> +       for (i = 0; i < CLK_NUM; i++) {
-> +               ret = clk_prepare_enable(priv->clks[i]);
-> +               if (ret) {
-> +                       while (--i >= 0)
-> +                               clk_disable_unprepare(priv->clks[i]);
-> +                       return ret;
-> +               }
-> +       }
+This control mechanism selection (I2C or GPIO) is selected by data in
+one time programmable PMIC memory area (during production) and can't be
+changed later.
 
-You can use the clk_bulk_* APIs, instead of open-coding the same
-operation.
+In addition to the bucks and LDOs there are:
 
-> @@ -131,6 +156,14 @@ static int rcar_usb2_clock_sel_probe(struct platform_device *pdev)
->         pm_runtime_enable(dev);
->         pm_runtime_get_sync(dev);
+- The usual clk gate
+- 4 IO pins (mostly usable as GPO or tied to specific purpose)
+- power button support
+- RTC
+- two LEDs
+- battery charger
+- HALL sensor input
 
-pm_runtime_get_sync() will have already enabled the first module clock listed in
-the DT "clocks" property.
+This patch series adds support to regulators, clk, RTC, GPIOs and LEDs.
+Power-supply driver for charger is "under construction" and not included
+in this RFC series.
 
-If you want the driver to manage all clocks itself, perhaps the PM Runtime
-calls should be dropped?
+Reason for RFC status is the regulator grouping to run-levels. I don't
+know what would be the best way to do what patches 8,9 and 10 intend to
+provide. (Sure some of this is visible also patches 2 and 3 which
+provide dt binding documents.) All suggestions are welcome. Rest of the
+patches should be business as usual.
 
-> +       priv->clks[CLK_INDEX_EHCI_OHCI] = devm_clk_get(dev, "ehci_ohci");
-> +       if (IS_ERR(priv->clks[CLK_INDEX_EHCI_OHCI]))
-> +               return PTR_ERR(priv->clks[CLK_INDEX_EHCI_OHCI]);
-> +
-> +       priv->clks[CLK_INDEX_HS_USB] = devm_clk_get(dev, "hs-usb-if");
-> +       if (IS_ERR(priv->clks[CLK_INDEX_HS_USB]))
-> +               return PTR_ERR(priv->clks[CLK_INDEX_HS_USB]);
-> +
->         clk = devm_clk_get(dev, "usb_extal");
->         if (!IS_ERR(clk) && !clk_prepare_enable(clk)) {
->                 priv->extal = !!clk_get_rate(clk);
+Changelog v2: Mainly RTC and GPIO fixes suggested by Alexandre and Bartosz.
+	      LED changes are still under discussion and not included in
+	      this version.
+  General
+    -Patch ordering changed to provide dt binding documents right after the
+     MFD core.
+  DT-Bindings for regulators (Patch 3)
+    -Fix typo in PMIC model number
+  RTC (patch 11)
+    -Reverted renaming in order to reduce patch size.
+    -Reworded commit message
+  BD71828 regulator (patch 7)
+    -Add MODULE_ALIAS
+  GPIO (patch 12)
+    -Remove file-name from comment
+    -prefix IN and OUT defines with chip type
+    -improved documentation for the INPUT only pin.
+    -removed empty left-over function
+    -removed unnecessary #ifdef CONFIG_OF_GPIO
+    -removed unnecessary error print
+    -Add MODULE_ALIAS
 
-Gr{oetje,eeting}s,
+Patch 1:
+        BD71828 MFD core.
+Patch 2:
+	dt-bindings for BD71828 PMIC
+Patch 3:
+        dt-bindings for regulators on BD71828 PMIC
+Patch 4:
+	Power button support using GPIO keys.
+Patch 5:
+        CLK gate support using existing clk-bd718x7
+Patch 6:
+        Split existing bd718x7 regulator driver to generic ROHM dt
+        parsing portion (used by more than one ROHM drivers) and
+        bd718x8 specific parts
+Patch 7:
+        Basic regulator support (individual control via I2C). This
+        should be pretty standard stuff.
+Patch 8:
+        Add support for getting regulator voltages when GPIO controlled
+        run-levels are used. Allow specifying voltages for run-levels
+        via DT. Allow controlling run-levels via sysfs entries (I am not
+        happy about this. Probably should only provide in-kernel API for
+        this or is there better ideas? Showing can be done vis sysfs?
+        Debugfs?)
+Patch 9:
+        Support setting/getting run-levels when they are controlled via
+        I2C instead of GPIO. Add in-kernel API for settin run-level
+        voltages for regulators at run-time.
+Patch 10:
+        Add in-kernel APIs for changing the RUN-level. Safer than sysfs
+        I guess. But is there some better method for controlling this
+        kind of dynamic group of regulators?
+Patch 11:
+        Support BD71828 RTC block using BD70528 RTC driver
+Patch 12:
+        Allow control of GP(I)O pins on BD71828 via GPIO subsystem
+Patch 13:
+        Support toggling the LEDs
 
-                        Geert
+This patch series is based on v5.3-rc4
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+---
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Matti Vaittinen (13):
+  mfd: bd71828: Support ROHM BD71828 PMIC - core
+  dt-bindings: mfd: Document ROHM BD71828 bindings
+  dt-bindings: regulator: Document ROHM BD71282 regulator bindings
+  mfd: input: bd71828: Add power-key support
+  clk: bd718x7: Support ROHM BD71828 clk block
+  regulator: bd718x7: Split driver to common and bd718x7 specific parts
+  regulator: bd71828: Basic support for ROHM bd71828 PMIC regulators
+  regulator: bd71828: Add GPIO based run-level control for regulators
+  regulator: bd71828: enhanced run-level support
+  regulator: bd71828: Support in-kernel APIs to change run-level
+  rtc: bd70528 add BD71828 support
+  gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
+  led: bd71828: Support LED outputs on ROHM BD71828 PMIC
+
+ .../bindings/mfd/rohm,bd71828-pmic.txt        |  180 ++
+ .../regulator/rohm,bd71828-regulator.txt      |  164 ++
+ drivers/clk/Kconfig                           |    6 +-
+ drivers/clk/clk-bd718x7.c                     |   15 +-
+ drivers/gpio/Kconfig                          |   12 +
+ drivers/gpio/Makefile                         |    1 +
+ drivers/gpio/gpio-bd71828.c                   |  151 ++
+ drivers/leds/Kconfig                          |   10 +
+ drivers/leds/Makefile                         |    1 +
+ drivers/leds/leds-bd71828.c                   |   97 ++
+ drivers/mfd/Kconfig                           |   15 +
+ drivers/mfd/Makefile                          |    2 +-
+ drivers/mfd/rohm-bd71828.c                    |  350 ++++
+ drivers/regulator/Kconfig                     |   16 +
+ drivers/regulator/Makefile                    |    2 +
+ drivers/regulator/bd71828-regulator.c         | 1443 +++++++++++++++++
+ drivers/regulator/bd718x7-regulator.c         |  183 +--
+ drivers/regulator/rohm-regulator.c            |   95 ++
+ drivers/rtc/Kconfig                           |    5 +-
+ drivers/rtc/rtc-bd70528.c                     |  145 +-
+ include/linux/mfd/rohm-bd70528.h              |   13 +-
+ include/linux/mfd/rohm-bd71828.h              |  432 +++++
+ include/linux/mfd/rohm-generic.h              |   45 +
+ include/linux/mfd/rohm-shared.h               |   27 +
+ 24 files changed, 3247 insertions(+), 163 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.txt
+ create mode 100644 drivers/gpio/gpio-bd71828.c
+ create mode 100644 drivers/leds/leds-bd71828.c
+ create mode 100644 drivers/mfd/rohm-bd71828.c
+ create mode 100644 drivers/regulator/bd71828-regulator.c
+ create mode 100644 drivers/regulator/rohm-regulator.c
+ create mode 100644 include/linux/mfd/rohm-bd71828.h
+ create mode 100644 include/linux/mfd/rohm-shared.h
+
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
