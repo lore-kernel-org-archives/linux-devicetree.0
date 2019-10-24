@@ -2,212 +2,104 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F981CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 17:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE5CCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E553120659
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 17:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C6220650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571938838;
+	bh=38D6aIWXdpZobEE28Qe0pvULa8PgIjrmUVlYVr/Dtzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1gqAUeAgCZJNXZnIDXPlW5W3RigUxnfFQWGjPr81YPKqLEUCpMY05y+oWAKFb6GWK
+	 43T+1sAP2p3UKaB/1KQb8/ZRcW5Nai8tYkyTeec1xTG4XnIjZllEqiv0lSCOt7kXq6
+	 nVd01Evt95Rg8dod/kcroBkYAetCVj/wZKK8b79s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394017AbfJXR1a (ORCPT
+        id S2503898AbfJXRkh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:27:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51977 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394016AbfJXR1a (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:27:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 10:27:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
-   d="scan'208";a="282007280"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.148]) ([10.7.153.148])
-  by orsmga001.jf.intel.com with ESMTP; 24 Oct 2019 10:27:28 -0700
-Subject: Re: [PATCH i2c-next 1/2] dt-bindings: i2c: aspeed: add hardware
- timeout support
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Peter Rosin <peda@axentia.se>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>,
-        Cedric Le Goater <clg@kaod.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-References: <20191021202414.17484-1-jae.hyun.yoo@linux.intel.com>
- <20191021202414.17484-2-jae.hyun.yoo@linux.intel.com>
- <0a629f7b-b829-c332-27d8-dc825205ff72@axentia.se>
- <7abf933b-cb18-10af-9c1b-163ec65ffae5@linux.intel.com>
- <b98827fa-462a-060b-efc7-27fe5d7742ff@axentia.se>
- <7806ece8-1d7c-7aa8-20af-6f5f964bec64@linux.intel.com>
- <6eba3e62-9215-0c39-258b-7abfb394bc48@axentia.se>
- <CAFd5g46Zv6E=PcU6=aX65rg2TRY5y3nWB8CYjGJioU_zpfcOUw@mail.gmail.com>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <5f883aea-a849-eade-5a91-3ac35d2d6b73@linux.intel.com>
-Date:   Thu, 24 Oct 2019 10:27:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 13:40:37 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36548 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729458AbfJXRkh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 13:40:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=38D6aIWXdpZobEE28Qe0pvULa8PgIjrmUVlYVr/Dtzo=; b=UrwC+/oXjoR9QUbfvRsF7a4pX
+        LfjSZFwkmu2MObkuAZHsxv8PkjFtmBacGXrvSyCqaTZ70Qhj27VgQacMQg2u9RtmsVAPCx4L5wDoB
+        dK+rNLl2zl0v1qrq3r2xL0r1Eig61JeWco/XrWDcIk4mAYpf0t8WlVJS+aMoBg+d22UeE=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iNh6A-0003qE-EO; Thu, 24 Oct 2019 17:40:34 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 6BD46274293C; Thu, 24 Oct 2019 18:40:33 +0100 (BST)
+Date:   Thu, 24 Oct 2019 18:40:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] spi: set bits_per_word based on controller's
+ bits_per_word_mask
+Message-ID: <20191024174033.GG46373@sirena.co.uk>
+References: <20191024110757.25820-1-alvaro.gamez@hazent.com>
+ <20191024110757.25820-4-alvaro.gamez@hazent.com>
+ <20191024111300.GD5207@sirena.co.uk>
+ <20191024125436.GA8878@salem.gmr.ssr.upm.es>
+ <20191024131129.GE46373@sirena.co.uk>
+ <20191024131856.GA32609@salem.gmr.ssr.upm.es>
+ <20191024134116.GF46373@sirena.co.uk>
+ <20191024140731.GA2950@salem.gmr.ssr.upm.es>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g46Zv6E=PcU6=aX65rg2TRY5y3nWB8CYjGJioU_zpfcOUw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iJXiJc/TAIT2rh2r"
+Content-Disposition: inline
+In-Reply-To: <20191024140731.GA2950@salem.gmr.ssr.upm.es>
+X-Cookie: Filmed before a live audience.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/23/2019 5:09 PM, Brendan Higgins wrote:
-> On Wed, Oct 23, 2019 at 2:17 PM Peter Rosin <peda@axentia.se> wrote:
->>
->> On 2019-10-22 19:44, Jae Hyun Yoo wrote:
->>> On 10/22/2019 1:45 AM, Peter Rosin wrote:
->>>> On 2019-10-21 23:57, Jae Hyun Yoo wrote:
->>>>> Hi Peter,
->>>>>
->>>>> On 10/21/2019 2:05 PM, Peter Rosin wrote:
->>>>>> On 2019-10-21 22:24, Jae Hyun Yoo wrote:
->>>>>>> Append a binding to support hardware timeout feature.
->>>>>>>
->>>>>>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->>>>>>> ---
->>>>>>>     Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 2 ++
->>>>>>>     1 file changed, 2 insertions(+)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->>>>>>> index b47f6ccb196a..133bfedf4cdd 100644
->>>>>>> --- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->>>>>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->>>>>>> @@ -17,6 +17,8 @@ Optional Properties:
->>>>>>>     - bus-frequency        : frequency of the bus clock in Hz defaults to 100 kHz when not
->>>>>>>                      specified
->>>>>>>     - multi-master : states that there is another master active on this bus.
->>>>>>> +- aspeed,hw-timeout-ms   : Hardware timeout in milliseconds. If it's not
->>>>>>> +                   specified, the H/W timeout feature will be disabled.
->>>>>>>
->>>>>>>     Example:
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> Some SMBus clients support a smbus-timeout-disable binding for disabling
->>>>>> timeouts like this, for cases where the I2C adapter in question on occasion
->>>>>> is unable to keep the pace. Adding that property thus avoids undesired
->>>>>> timeouts when the client is SMBus conformant without it. Your new binding
->>>>>> is the reverse situation, where you want to add a timeout where one is
->>>>>> otherwise missing.
->>>>>>
->>>>>> Anyway, since I2C does not have a specified lowest possible frequency, this
->>>>>> feels like something that is more in the SMBus arena. Should the property
->>>>>> perhaps be a generic property named smbus-timeout-ms, or something like
->>>>>> that?
->>>>>
->>>>> Well, I tried upstreaming of the generic timeout property a year ago but
->>>>> I agreed that the generic bus timeout property can be set by an ioctl
->>>>> command so it didn't need to be added into device tree at that time. Not
->>>>> sure if any need has come recently but I haven't heard that. This driver
->>>>> still uses the generic timeout property which is provided by i2c core
->>>>> for handling command timeouts, and it's out of scope from this patch
->>>>> series.
->>>>>
->>>>>> If the above is not wanted or appropriate, then I would personally prefer
->>>>>> aspeed,bus-timeout-ms over aspeed,hw-timeout-ms. To me, hw-timeout-ms sounds
->>>>>> like a (more serious) timeout between the CPU and the I2C peripheral unit
->>>>>> or something like that. But I don't care deeply...
->>>>>
->>>>> Changes I submitted in this patch set is for a different purpose which
->>>>> is very Aspeed H/W specific, and actually it's a more serious timeout
->>>>> setting indeed. If this H/W is used in multi-master environment, it
->>>>> could meet a H/W hang that freezes itself in slave mode and it can't
->>>>> escape from the state. To resolve the specific case, this H/W provides
->>>>> self-recovery feature which monitors abnormal state of SDA, SCL and its
->>>>> H/W state machine using the timeout setting to determine the escape
->>>>> condition.
->>>>
->>>> Are you saying that the aspeed HW is buggy and that this abnormal state
->>>> is self inflicted by the aspeed HW even if other masters on the bus
->>>> behave sanely? Because I didn't quite read it that way at all...
->>>
->>> I don't think it's an Aspeed HW bug. Actually, this HW can be exposed to
->>> very severe environments if it is used as a Baseboard Management
->>> Controller which needs two or more multi-masters on a bus depends on
->>> HW design. Also, it should expect unknown or buggy device attachment
->>> on a bus through add-on card slots. Aspeed HW provides HW timeout
->>> feature to support exceptional cases handling which comes from the
->>> severe use cases.
->>>
->>>> To me, it sounded *exactly* like the state I2C clients end up in when an
->>>> I2C master "dies" and stops communicating in the middle of a transaction.
->>>> I.e. the thing that the SMBus timeout is designed to prevent (and the
->>>> state the I2C nine-clk-recovery sequence addresses). The only twist (that
->>>> I saw) was that the aspeed HW is also a master and that the aspeed master
->>>> driver is completely locked out from the bus while some obnoxious master
->>>> fails to complete its transaction (or whatever it was up to).
->>>
->>> If this HW runs on a single-master bus, any master dying issue will be
->>> cured by recovery logic which this driver already has and the logic uses
->>> the bus timeout setting you are saying.
->>>
->>> This patch set is mainly focusing on a 'slave mode hang' issue on a
->>> 'multi-master' bus which can't be covered by the recovery logic.
->>>
->>>> If this can only be triggered when the HW is acting as a slave, and by
->>>> aborted or otherwise funky master activity on the bus, then I wouldn't
->>>> call it an HW issue. Then it would be a bus issue. I.e. something needing
->>>> a bus-timeout instead of a hw-timeout.
->>>
->>> Here is an example. In a multi-node BMC system, a peer master can be
->>> shutdown in the middle of transaction, then this Aspeed HW keeps waiting
->>> for a next event from the peer master but it can't happen because the
->>> peer master was already shutdown. If we enable the 'slave inactive
->>> timeout feature' using the HW timeout setting, the this HW can escape
->>> from the waiting state. If we don't, this HW hangs forever in the
->>> waiting state and it's the reason why I implemented this patch set.
->>>
->>> The hw-timeout setting needs fine tuning depends on HW environment so
->>> it should be different from the bus-timeout.
->>
->> Yeah, ok, so you're basically confirming everything I said. I do
->> sense some confusion though, as you come across as a bit
->> defensive and seem to think that I am against the whole notion of
->> the patches. And that's not the case at all! My only issue is
->> with the naming. And I happen to think hw-timeout-ms is a really
->> bad name. It's way too broad and can mean just about anything.
->> When I read that, I think of some workaround for broken hardware,
->> not normal things like the other masters on the bus doing
->> confusing things. Funky bus activity from remote masters is
->> simply not an HW issue in my book, at least not an HW issue on
->> the local side of the bus. It's just something you *must expect*.
-> 
-> Sorry for not jumping in earlier, but I agree with Peter.
-> 
-> I like the name bus-timeout-ms better. It was not immediately clear
-> from reading your commit descriptions what this was all about.
 
-Okay, I can change the name if the 'aspeed,hw-timeout-ms' is
-inappropriate but I still doubt using of 'bus-timeout-ms'.
+--iJXiJc/TAIT2rh2r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The 'bus-timeout-ms' is being used for some client drivers in hwmon
-subsystem but it's not being used for any adapter driver currently.
-Since adapter drivers also use timeout value which I2C core provides,
-it could make confusion with it if I use 'bus-timeout-ms' for an adapter
-node in DT. Though, I and Wolfram agreed last year that the adapter
-timeout property can't be added into DT because it's purely S/W property
-so using of 'bus-timeout-ms' in DT for H/W property setting of an
-adapter device could be acceptable if we make consensus here.
+On Thu, Oct 24, 2019 at 04:07:32PM +0200, Alvaro Gamez Machado wrote:
 
-Please share your thoughts or suggest a better name for it.
+> I guess there could be some workarounds to help in that situation. But I see
+> that as an hypothetical occurrence whereas I have with me a physical board
+> that needs 32 bits in both master and slave that I want to access using
+> spidev and cannot. Lots of I's in that sentence, I know :)
 
-Thanks,
+If you want to access this using spidev then add support for changing
+the word size to spidev and use that as I think Geert already suggested.
 
-Jae
+--iJXiJc/TAIT2rh2r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2x4hAACgkQJNaLcl1U
+h9BOTQf/Y7I13e4P1YBoPchD6sUtdfHEdI1LvdVkRsWIXam2Vock1GHBwIl8bF4F
+ydXeyJLBc40t4HvXLhFKIGG/09jwhtmlQhRaHJVAHlms6XjOFB1gNAXcA2m6HKxJ
+5nxRGXhtoNIjDIIkSVCzmamNTQhG4qXreZU174YAsdLFKAvJji+izwZpXd3GLBs9
+1lJy/3fjaAsHOwWVNrHwO2s4VmzA1pjzMq6CpbU0swPiud3/w7QdoCvNFnBglPMN
+e7Rd3B4FBRYkky8v/4W6OtnfOrtJu4mOeh6qprLVUYZ6wv97fzb6w3M7RKVQ5IJU
+6g03ZyB6h65BMkOgSJYoA22h3Iwi8A==
+=RPG/
+-----END PGP SIGNATURE-----
+
+--iJXiJc/TAIT2rh2r--
