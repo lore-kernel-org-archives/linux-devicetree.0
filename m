@@ -2,204 +2,151 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9439CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDAACA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BABA205F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LErg4eJH"
+	by mail.kernel.org (Postfix) with ESMTP id 1816D205F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393062AbfJXJYA (ORCPT
+        id S2438226AbfJXJ0r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:24:00 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38008 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390225AbfJXJX7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 05:23:59 -0400
-Received: by mail-ed1-f68.google.com with SMTP id y8so5807586edu.5
-        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 02:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2Fg4OORdS56GYlEdlxxKyHlR08HjtyPW5mXDJkHAU3c=;
-        b=LErg4eJHixvsMHo3T4UdsdOcjyo5lbO9XudSeZq6rpgNnkVpGr/b0G90t4XOSP66/E
-         yPiEP9VtvxDCkUlH7d1janZhA4XnWhbkjvm/cOE2ToCJXuDoxd+uba3V89MU7eceWGgo
-         3dPD97YPgwTyy5neIrYaAT8SNNB8krsO2ClP8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2Fg4OORdS56GYlEdlxxKyHlR08HjtyPW5mXDJkHAU3c=;
-        b=qt1n/9U6Um5z1CkNaZRDWc7U2SsW5ldA8BRuvLA2av32lCSI+sO2WPUVT+9SE9N8P5
-         Akfmn4Q1lRNyltfwjlaHunyrAAJSEBUaC9okbcwtjqfSM/8ndfiJbVwMPvwtii8FSia9
-         m5XiN9OZGA0DBNZzHm1YW8Z6+eGMj9n72K5yiIInReKh/8yeAR+lHv+vplvgYqNlnJrX
-         9A1EzaTrtReHsrF7XGJq2QpsZ2nNaq7ZslIH9awa7PLFVcqMrAk8PoO7cGt5URGBASbE
-         9u+oXbZ70jLVPqpZ4KZsjPyxrUzWk6oDgae2vn3uchnSAXFKdam2rYWLwNFQB5u9I2WN
-         sOPg==
-X-Gm-Message-State: APjAAAVdkd3Z8c5MMOPzWMq9b94Pc5bpfnacDDN7VfahCTkg8UnQTQkZ
-        y9cLuQvWYDF85JNeFwWf5NfB16rDqOhQNg==
-X-Google-Smtp-Source: APXvYqwrVxTOXBhFsZzGueJ0vGWrsElEzfqDAJ7R2u4cXj0RYY0mI2YJvOdJdTqAE67TBbdGQwlxyg==
-X-Received: by 2002:a05:6402:128c:: with SMTP id w12mr42908034edv.284.1571909037677;
-        Thu, 24 Oct 2019 02:23:57 -0700 (PDT)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
-        by smtp.gmail.com with ESMTPSA id g43sm473645edb.14.2019.10.24.02.23.55
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2019 02:23:56 -0700 (PDT)
-Received: by mail-wr1-f44.google.com with SMTP id z11so1845021wro.11
-        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 02:23:55 -0700 (PDT)
-X-Received: by 2002:a5d:6a42:: with SMTP id t2mr2809593wrw.155.1571909035112;
- Thu, 24 Oct 2019 02:23:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191017084033.28299-1-xia.jiang@mediatek.com>
- <20191017084033.28299-6-xia.jiang@mediatek.com> <20191023103945.GA41089@chromium.org>
- <1571906317.6254.64.camel@mhfsdcap03>
-In-Reply-To: <1571906317.6254.64.camel@mhfsdcap03>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Thu, 24 Oct 2019 18:23:43 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
-Message-ID: <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 24 Oct 2019 05:26:47 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52978 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408872AbfJXJ0q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:26:46 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ACF15200874;
+        Thu, 24 Oct 2019 11:26:43 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0325320086D;
+        Thu, 24 Oct 2019 11:26:37 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B4780402C4;
+        Thu, 24 Oct 2019 17:26:28 +0800 (SGT)
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>
+Cc:     Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH v10 2/3] Documentation: dt: binding: fsl: Add 'little-endian' and update Chassis define
+Date:   Thu, 24 Oct 2019 17:26:43 +0800
+Message-Id: <20191024092644.26583-2-ran.wang_1@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191024092644.26583-1-ran.wang_1@nxp.com>
+References: <20191024092644.26583-1-ran.wang_1@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 5:38 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
->
-> On Wed, 2019-10-23 at 19:39 +0900, Tomasz Figa wrote:
-> > Hi Xia,
-> >
-> > On Thu, Oct 17, 2019 at 04:40:38PM +0800, Xia Jiang wrote:
-> > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jp=
-eg
-> > > decode and encode have great similarities with function operation.
-> > >
-> > > Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> > > ---
-> > > v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder=
-,
-> > >     one for decoder.
-> > >     split mtk_jpeg_set_default_params() to two functions, one for
-> > >     encoder, one for decoder.
-> > >     add cropping support for encoder in g/s_selection ioctls.
-> > >     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
-> > >     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 b=
-y
-> > >     specification.
-> > >     move width shifting operation behind aligning operation in
-> > >     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
-> > >     fix user abuseing data_offset issue for DMABUF in
-> > >     mtk_jpeg_set_enc_src().
-> > >     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGH=
-T
-> > >                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH fro=
-m
-> > >                         'int' type to 'unsigned int' type.
-> > >                         fix msleadingly indented of 'else'.
-> > >
-> > > v3: delete Change-Id.
-> > >     only test once handler->error after the last v4l2_ctrl_new_std().
-> > >     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch=
-.
-> > >
-> > > v2: fix compliance test fail, check created buffer size in driver.
-> > > ---
-> > >  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++-=
---
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
-> > >  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
-> > >  7 files changed, 1004 insertions(+), 146 deletions(-)
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.=
-h
-> > >
-> >
-> > First of all, thanks for the patch!
-> >
-> > Please check my comments below.
-> >
-> > My general feeling about this code is that the encoder hardware block i=
-s
-> > completely orthogonal from the decoder block and there is very little c=
-ode
-> > reuse from the original decoder driver.
-> >
-> > Moreover, a lot of existing code now needs if (decoder) { ... } else {.=
-.. }
-> > segments, which complicates the code.
-> >
-> > Would it perhaps make sense to instead create a separate mtk-jpeg-enc
-> > driver?
-> >
-> Dear Tomasz,
->
-> Thanks for your comments.
->
-> My reasons about the architecture of jpeg enc driver are as follows:
->
-> The first internal design and realization of jpeg enc driver was a
-> separate driver, but found that mtk_jpeg_core.c and mtk_jpeg_enc_core.c
-> have lots of reuse.Because that  the core.c mainly contains realization
-> of v4L2 ioctl functions and some logic which are high similarity between
-> encoder and decoder.
->
-> The jpeg encoder and decoder are two independent hardwares exactly, so
-> the code about hardware specification(register setting) are
-> separated(mtk_jpeg_enc_hw.c and mtk_jpeg_dec_hw.c).
->
-> As for 17 existing code segments contain if(decoder){} else {}, they are
-> not complicated IMHO.The complicated(multilayer nested) functions are
-> separated in V4 version as Hans recommendation.
->
-> By the way,the upstreamed module s5p-jpeg
-> (https://elixir.bootlin.com/linux/latest/source/drivers/media/platform/s5=
-p-jpeg/jpeg-core.c#L1998) also use encoder and decoder mode in the common c=
-ore.c, but their encoder and decoder are the same hardware.Maybe our jpeg e=
-nc and dec are designed into one hardware in the future.In that case the cu=
-rrent architecture is more compatible.
->
-> So I prefer the current design.
->
+By default, QorIQ SoC's RCPM register block is Big Endian. But
+there are some exceptions, such as LS1088A and LS2088A, are
+Little Endian. So add this optional property to help identify
+them.
 
-Would you be able to give some numbers to show the code reuse to
-justify using the same driver? From my observation, a new driver would
-result in a significantly cleaner code. If there is a further hardware
-architecture change, that would likely require another driver, because
-it wouldn't be compatible with existing programming model anyway.
+Actually LS2021A and other Layerscapes won't totally follow Chassis
+2.1, so separate them from powerpc SoC.
 
-Regardless of that, if we end up with reusing the same driver, I'd
-like you to fix the issues existing in the current base before adding
-the encoder functionality.
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Change in v10:
+	- None
 
-Best regards,
-Tomasz
+Change in v9:
+	- None
+
+Change in v8:
+	- None.
+
+Change in v7:
+	- None.
+
+Change in v6:
+	- None.
+
+Change in v5:
+	- Add 'Reviewed-by: Rob Herring <robh@kernel.org>' to commit message.
+	- Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-cells'.
+	please see https://lore.kernel.org/patchwork/patch/1101022/
+
+Change in v4:
+	- Adjust indectation of 'ls1021a, ls1012a, ls1043a, ls1046a'.
+
+Change in v3:
+	- None.
+
+Change in v2:
+	- None.
+
+ Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+index e284e4e..5a33619 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+@@ -5,7 +5,7 @@ and power management.
+ 
+ Required properites:
+   - reg : Offset and length of the register set of the RCPM block.
+-  - fsl,#rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
++  - #fsl,rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
+ 	fsl,rcpm-wakeup property.
+   - compatible : Must contain a chip-specific RCPM block compatible string
+ 	and (if applicable) may contain a chassis-version RCPM compatible
+@@ -20,6 +20,7 @@ Required properites:
+ 	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
+ 	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
+ 	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
++	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
+ 
+ All references to "1.0" and "2.0" refer to the QorIQ chassis version to
+ which the chip complies.
+@@ -27,14 +28,19 @@ Chassis Version		Example Chips
+ ---------------		-------------------------------
+ 1.0				p4080, p5020, p5040, p2041, p3041
+ 2.0				t4240, b4860, b4420
+-2.1				t1040, ls1021
++2.1				t1040,
++2.1+				ls1021a, ls1012a, ls1043a, ls1046a
++
++Optional properties:
++ - little-endian : RCPM register block is Little Endian. Without it RCPM
++   will be Big Endian (default case).
+ 
+ Example:
+ The RCPM node for T4240:
+ 	rcpm: global-utilities@e2000 {
+ 		compatible = "fsl,t4240-rcpm", "fsl,qoriq-rcpm-2.0";
+ 		reg = <0xe2000 0x1000>;
+-		fsl,#rcpm-wakeup-cells = <2>;
++		#fsl,rcpm-wakeup-cells = <2>;
+ 	};
+ 
+ * Freescale RCPM Wakeup Source Device Tree Bindings
+@@ -44,7 +50,7 @@ can be used as a wakeup source.
+ 
+   - fsl,rcpm-wakeup: Consists of a phandle to the rcpm node and the IPPDEXPCR
+ 	register cells. The number of IPPDEXPCR register cells is defined in
+-	"fsl,#rcpm-wakeup-cells" in the rcpm node. The first register cell is
++	"#fsl,rcpm-wakeup-cells" in the rcpm node. The first register cell is
+ 	the bit mask that should be set in IPPDEXPCR0, and the second register
+ 	cell is for IPPDEXPCR1, and so on.
+ 
+-- 
+2.7.4
+
