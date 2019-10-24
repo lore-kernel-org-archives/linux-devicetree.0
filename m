@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB44DCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFFCCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962102166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F8721872
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="js0nZAfz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NR/IRoHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438650AbfJXKKa (ORCPT
+        id S2407420AbfJXKKV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:10:30 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41624 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438612AbfJXKKa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 06:10:30 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OAANZc124464;
-        Thu, 24 Oct 2019 05:10:23 -0500
+        Thu, 24 Oct 2019 06:10:21 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35988 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388677AbfJXKKP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 06:10:15 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OAA840122594;
+        Thu, 24 Oct 2019 05:10:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571911823;
-        bh=GF0YCeVR6JL6hzbMYjpu9XNNzB9GXjetMPl8CEuVNls=;
+        s=ti-com-17Q1; t=1571911808;
+        bh=ev8TwWPRRUGNWW0e0DSMY6L3jAmXyGZdE2LhdK+82XU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=js0nZAfzg33Z5kQcrrIEdTpllx18IHupN/cQzRL4ZTLkbt4brVKmHEmbL4/M4gOq/
-         Fd7ZmbtDeFsSo06sGSY6xxFVFLTiALhEDQJX1S6YU1ccCC5rOPfn1QSBZICOAScUZT
-         cBaCqd4hR9GY0zJj6TXAOIGiKlFYGCrRBYeRBNXk=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9OAANqr123771
+        b=NR/IRoHVxF1jfqieU5NgFtFHym+X8KsyA4vOZ3ffSacD4JWiLEQJkwi0BWbbxAb6a
+         a1DC/GkjNr/QOjSRzk6eVfF4ww9ElYfx3JhJgGMH5WUfVMhRihl5owZamXwwqhRGg8
+         Y/c+s35phsAyE+hEpJt7jxKg1o009exdW/VHdT8M=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9OAA8CZ072321
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 24 Oct 2019 05:10:23 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 24 Oct 2019 05:10:08 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
- Oct 2019 05:10:12 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 05:10:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 24 Oct 2019 05:10:23 -0500
+ Frontend Transport; Thu, 24 Oct 2019 05:09:57 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OAALUh029093;
-        Thu, 24 Oct 2019 05:10:22 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OAA6Cj020501;
+        Thu, 24 Oct 2019 05:10:07 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     <netdev@vger.kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
@@ -61,9 +61,9 @@ CC:     Florian Fainelli <f.fainelli@gmail.com>,
         Ivan Vecera <ivecera@redhat.com>,
         Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v5 net-next 12/12] arm: omap2plus_defconfig: enable new cpsw switchdev driver
-Date:   Thu, 24 Oct 2019 13:09:14 +0300
-Message-ID: <20191024100914.16840-13-grygorii.strashko@ti.com>
+Subject: [PATCH v5 net-next 10/12] ARM: dts: dra7: add dt nodes for new cpsw switch dev driver
+Date:   Thu, 24 Oct 2019 13:09:12 +0300
+Message-ID: <20191024100914.16840-11-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191024100914.16840-1-grygorii.strashko@ti.com>
 References: <20191024100914.16840-1-grygorii.strashko@ti.com>
@@ -75,22 +75,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add CONFIG_TI_CPSW_SWITCHDEV option to enable new cpsw switchdev driver
+Add DT nodes for new cpsw switch dev driver.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm/configs/omap2plus_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/dra7-l4.dtsi | 52 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index d3f50971e451..c271d409b610 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -554,3 +554,4 @@ CONFIG_DEBUG_INFO_DWARF4=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_SCHEDSTATS=y
- # CONFIG_DEBUG_BUGVERBOSE is not set
-+CONFIG_TI_CPSW_SWITCHDEV=y
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index 5cac2dd58241..2f3a19edc7af 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3079,6 +3079,58 @@
+ 					phys = <&phy_gmii_sel 2>;
+ 				};
+ 			};
++
++			mac_sw: switch@0 {
++				compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
++				reg = <0x0 0x4000>;
++				ranges = <0 0 0x4000>;
++				clocks = <&gmac_main_clk>;
++				clock-names = "fck";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				syscon = <&scm_conf>;
++				status = "disabled";
++
++				interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "rx_thresh", "rx", "tx", "misc";
++
++				ethernet-ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					cpsw_port1: port@1 {
++						reg = <1>;
++						label = "port1";
++						mac-address = [ 00 00 00 00 00 00 ];
++						phys = <&phy_gmii_sel 1>;
++					};
++
++					cpsw_port2: port@2 {
++						reg = <2>;
++						label = "port2";
++						mac-address = [ 00 00 00 00 00 00 ];
++						phys = <&phy_gmii_sel 2>;
++					};
++				};
++
++				davinci_mdio_sw: mdio@1000 {
++					compatible = "ti,cpsw-mdio","ti,davinci_mdio";
++					clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0>;
++					clock-names = "fck";
++					#address-cells = <1>;
++					#size-cells = <0>;
++					bus_freq = <1000000>;
++					reg = <0x1000 0x100>;
++				};
++
++				cpts {
++					clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 25>;
++					clock-names = "cpts";
++				};
++			};
+ 		};
+ 	};
+ };
 -- 
 2.17.1
 
