@@ -2,42 +2,44 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B4FCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51785CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790A321929
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21CAF21925
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbfJXSaj (ORCPT
+        id S2504070AbfJXSf2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:30:39 -0400
-Received: from sauhun.de ([88.99.104.3]:43626 "EHLO pokefinder.org"
+        Thu, 24 Oct 2019 14:35:28 -0400
+Received: from sauhun.de ([88.99.104.3]:43716 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfJXSai (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:30:38 -0400
+        id S1726155AbfJXSf2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 14:35:28 -0400
 Received: from localhost (x4d0bc9de.dyn.telefonica.de [77.11.201.222])
-        by pokefinder.org (Postfix) with ESMTPSA id 5D3C52C011D;
-        Thu, 24 Oct 2019 20:30:36 +0200 (CEST)
-Date:   Thu, 24 Oct 2019 20:30:35 +0200
+        by pokefinder.org (Postfix) with ESMTPSA id 5BDF02C04AE;
+        Thu, 24 Oct 2019 20:35:26 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 20:35:26 +0200
 From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Eugen.Hristev@microchip.com
-Cc:     peda@axentia.se, mark.rutland@arm.com,
-        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
-        robh+dt@kernel.org, Nicolas.Ferre@microchip.com
-Subject: Re: [PATCH v5 0/9] i2c: add support for filters
-Message-ID: <20191024183035.GA1870@kunai>
-References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH] i2c: i2c-stm32f7: rework slave_id allocation
+Message-ID: <20191024183525.GD1870@kunai>
+References: <1571144589-3066-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
+        protocol="application/pgp-signature"; boundary="rz+pwK2yUstbofK6"
 Content-Disposition: inline
-In-Reply-To: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <1571144589-3066-1-git-send-email-alain.volmat@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -45,69 +47,44 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---+QahgC5+KEYLbs62
+--rz+pwK2yUstbofK6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 11, 2019 at 08:24:14AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
+On Tue, Oct 15, 2019 at 03:03:09PM +0200, Alain Volmat wrote:
+> The IP can handle two slave addresses. One address can either be
+> 7 bits or 10 bits while the other can only be 7 bits.
+> In order to ensure that a 10 bits address can always be allocated
+> (assuming there is only one 7 bits address already allocated),
+> pick up the 7-bits only address slot in priority when performing a 7-bits
+> address allocation.
 >=20
-> Hello,
+> Fixes: 60d609f3 ("i2c: i2c-stm32f7: Add slave support")
 >=20
-> This series adds support for analog and digital filters for i2c controlle=
-rs
->=20
-> This series is based on the series:
-> [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
-> and later
-> [PATCH v4 0/9] i2c: add support for filters
-> and enhanced to add the bindings for all controllers plus an extra bindin=
-gs
-> for the width of the spikes in nanoseconds (digital filters) and cut-off
-> frequency (analog filters)
->=20
-> First, bindings are created for
-> 'i2c-analog-filter'
-> 'i2c-digital-filter'
-> 'i2c-digital-filter-width-ns'
-> 'i2c-analog-filter-cutoff-frequency'
->=20
-> The support is added in the i2c core to retrieve filter width/cutoff freq=
-uency
-> and add it to the timings structure.
-> Next, the at91 driver is enhanced for supporting digital filter, advanced
-> digital filter (with selectable spike width) and the analog filter.
->=20
-> Finally the device tree for two boards are modified to make use of the
-> new properties.
->=20
-> This series is the result of the comments on the ML in the direction
-> requested: to make the bindings globally available for i2c drivers.
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 
-Applied patches 1-7 to for-next (patch 3 is v6). Thanks for your
-patience and thanks to Ludovic and Peter for the review! Patches 8-9
-should go via the at91 tree.
+Applied to for-next, thanks!
 
 
---+QahgC5+KEYLbs62
+--rz+pwK2yUstbofK6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2x7ccACgkQFA3kzBSg
-Kba+Dg//cHsbTuGv5z7zSiIUbnmUbVpJKyL+PUx03ES4RnXIjjdVJRM/sgyTocpE
-zkokcnhPi9H4kv7O7CFo8VGVsQ1v1aBOgLSF9sRvdGB0kdEwRDJGypFLdmYFPpSE
-fwxxDvhwCtKkxBtKwxCAmx7aP5wemaNemm1l2dTkC0dLZsfSce/HZQ7Q11MK5V7Y
-I7gJMneVuUIw98wcLnut83YULvXC5HJNyKyhmRRivqE5+TZoJTwVIhxiFswjCTNO
-Br6JoVz0ODQBmGUOCH4dFkI5X5CsBSRwRNC4V4x0ygr2iIjR/Rd/TU422wqylJk2
-91d7wRXozOk/4f//UCxt3nlTeCXhgSUsO+7j6ljkjCHFxY3ONXdJ05lTMPZXJUAc
-m0qVQjU73ZMl08RAItQOwcaQi1qiGcNHXJN40aJu3/z7dLjLgCPCKAUjnQTDWrrz
-rwZejgvmHmTOd+zM3mmweCFu5v9qkuEeL7UCqLrGYyUHQPF3ycm5N96FkMbgbVnX
-lROYUlXXOXp3QBSzqZ/EavNT26siD6joTXpKZMPml5u4VgmJ9MJ1AW7iTHwPZyYk
-vqubo6pR02wJ95b9vyEr7OohP5sewbrNpHsk+8Tzyp4AlbcmdoIqMPgVb/77mpKN
-frMOQ5tiehviyqrYqbv1IbJANmRg3UQD7RzDRX0lMIMW/BMyHxw=
-=u9NZ
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2x7u0ACgkQFA3kzBSg
+KbYt7RAAlOWKsmZkKq0ugHqSQYr08yUKywJd6XHETx5vGcJPNGSQMR/vdJlGlyWj
+hEYV6ArZssUiQtgdzNOiFQqKj9D536DaomVrdluuQkY4JrJgffLl3aIBKw+cMubF
+GAdg24aaCCgEWLk+Y1ZWN8MvKdzLNL0Fy4w78yZL5sTxUW2jRIvTnG+LzAnbkDWA
+eJUP/xIjSNgbzjWsZ0ZxXx7gcFfokMgZdZCgln+az/3KAWHyTVSvfI18bXVuG3wi
+yoM98jJIl12fqxkNI82c2vS/UvCUJVN7CMDO6rkg70IOQt2bsoteGsK1/URIREQM
+ZXpjUSuxw6hAwuDQsXu2FmdDFjnpXBBgw71y+A3CLZoxV0g2FbITkGc+8t8Cn7zY
+cfqPbqG0v/B7fXscy+tleE9NTcH9E/wNt36RnWP0/kyILBzHbsCu2U/vj782Ynr1
+QfufwfRydQWuZaY1VxtZ6hC0ez4CDRD9kgDLjQrc9atpOilDDCU+Jxo3TboCRaQ9
+RiS4POvlaawN+i9CjtDOFxBcoz9hafvrUYW6oAQvBVSrQP4/Tv4oPFf9f1yP69A6
+jhdJrLjF7sF06ejko8Q4psTN2WxNkW4jtxlV4DlMwgC2cnCuEnfjXsAviUHOSDWa
+7bE2j9nE4aYjieUAx6Jod2BXpToAjhV4uEOWYz2v9nFCnfHpuUA=
+=EBnH
 -----END PGP SIGNATURE-----
 
---+QahgC5+KEYLbs62--
+--rz+pwK2yUstbofK6--
