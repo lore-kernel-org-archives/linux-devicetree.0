@@ -2,98 +2,251 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ED2CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 08:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D15CCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 08:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FF42070B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 08:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rJQOBe1u"
+	by mail.kernel.org (Postfix) with ESMTP id 14A352166E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 08:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571905637;
+	bh=3/0NJxWLDuGRa0pi/Aw8SPuVDgpBexipgnIiNiKI0io=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=TSjKLF84/tr2V7r/tC/YuR43txVPLC+u8dZlFbsEw22T8GT7BJ8pfREyngVVp2wux
+	 7gOhsKhuPKu1+WJQOlGytxidYsE/BAN0xmmY/v4cVqON3ZE4dgxPKluY6VDRI9A+/8
+	 BhG3Ojx1yPSpmVS1OXz5EyAK4BQEs3G6ZNwd2HV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfJXIXh (ORCPT
+        id S2438185AbfJXI1Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:23:37 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:37317 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfJXIXg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 04:23:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1571905416; x=1603441416;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=gV1uCKgOFL33Nz6B+2EEkpVP1jfS42r2O4AG2rmABoo=;
-  b=rJQOBe1uHRWLXH892iKAnVneRPZFrn0XoyW2lsie8JHkV8Nzgy1OCF4t
-   JgSTdwAIQJZVXJeW/COgQlG1iNn2nsazIdHJnt8RczG/urb4k0nHIIn7I
-   eMiKJfC4O10vXVCLaef6aoMK8W+Bn9pC2LbqpdOQGOv8dJr11woMyMEWp
-   g=;
-IronPort-SDR: 4Oo6PCDFMFRVX1TQT8chabGriYeL4cxGzLv9wCl+1ri5zi3RrX89uzqvinHKz+MhCpBecoc92c
- CIBEyg1J3ADw==
-X-IronPort-AV: E=Sophos;i="5.68,224,1569283200"; 
-   d="scan'208";a="109256"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 24 Oct 2019 08:23:34 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id E0F46221844;
-        Thu, 24 Oct 2019 08:23:32 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 24 Oct 2019 08:23:32 +0000
-Received: from [10.125.238.52] (10.43.160.8) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 24 Oct
- 2019 08:23:22 +0000
-Subject: Re: [PATCH v6 1/2] dt-bindings: soc: al-pos: Amazon's Annapurna Labs
- POS
-To:     Rob Herring <robh@kernel.org>
-CC:     <robh+dt@kernel.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
-        <arnd@arndb.de>, <bp@alien8.de>, <mchehab@kernel.org>,
-        <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <paulmck@linux.ibm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-edac@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
-        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <amirkl@amazon.com>, <barakw@amazon.com>
-References: <1570707681-865-1-git-send-email-talel@amazon.com>
- <1570707681-865-2-git-send-email-talel@amazon.com>
- <20191011134223.GA11275@bogus>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <46b8eebd-5f18-d5ab-a9a5-aa0edd4bcd48@amazon.com>
-Date:   Thu, 24 Oct 2019 11:23:17 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 24 Oct 2019 04:27:16 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:55749 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726325AbfJXI1Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 04:27:16 -0400
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iNYSb-0003IV-AU; Thu, 24 Oct 2019 10:27:09 +0200
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH RFC 2/2] irqchip/gic: Allow the use of SGI interrupts
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-In-Reply-To: <20191011134223.GA11275@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.160.8]
-X-ClientProxiedBy: EX13D17UWC002.ant.amazon.com (10.43.162.61) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 24 Oct 2019 09:27:08 +0100
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Thanu Rangarajan <thanu.rangarajan@arm.com>
+In-Reply-To: <fdb77138-3df8-ef51-6519-e630b6228eb0@gmail.com>
+References: <20191023000547.7831-1-f.fainelli@gmail.com>
+ <20191023000547.7831-3-f.fainelli@gmail.com>
+ <112a725164b7fe321f27357fd4cd772f@www.loen.fr>
+ <fdb77138-3df8-ef51-6519-e630b6228eb0@gmail.com>
+Message-ID: <4a17f340ca1687e55855e34058d084b8@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, souvik.chakravarty@arm.com, james.quinlan@broadcom.com, sudeep.holla@arm.com, thanu.rangarajan@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 10/11/2019 4:42 PM, Rob Herring wrote:
-> On Thu, 10 Oct 2019 14:41:20 +0300, Talel Shenhar wrote:
->> Document Amazon's Annapurna Labs POS SoC binding.
+On 2019-10-23 18:02, Florian Fainelli wrote:
+> Hello marc,
+>
+> On 10/23/19 6:22 AM, Marc Zyngier wrote:
+>> Hi Florian,
 >>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
->> ---
->>   .../bindings/edac/amazon,al-pos-edac.yaml          | 41 ++++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+>> Needless to say, I mostly have questions...
 >>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+>> On 2019-10-23 01:05, Florian Fainelli wrote:
+>>> SGI interrupts are a convenient way for trusted firmware to target 
+>>> a
+>>> specific set of CPUs. Update the ARM GIC code to allow the 
+>>> translation
+>>> and mapping of SGI interrupts.
+>>>
+>>> Since the kernel already uses SGIs for various inter-processor 
+>>> interrupt
+>>> activities, we specifically make sure that we do not let users of 
+>>> the
+>>> IRQ API to even try to map those.
+>>>
+>>> Internal IPIs remain dispatched through handle_IPI() while public 
+>>> SGIs
+>>> get promoted to a normal interrupt flow management.
+>>>
+>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>> ---
+>>>  drivers/irqchip/irq-gic.c | 41 
+>>> +++++++++++++++++++++++++++------------
+>>>  1 file changed, 29 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+>>> index 30ab623343d3..dcfdbaacdd64 100644
+>>> --- a/drivers/irqchip/irq-gic.c
+>>> +++ b/drivers/irqchip/irq-gic.c
+>>> @@ -385,7 +385,10 @@ static void __exception_irq_entry
+>>> gic_handle_irq(struct pt_regs *regs)
+>>>               * Pairs with the write barrier in gic_raise_softirq
+>>>               */
+>>>              smp_rmb();
+>>> -            handle_IPI(irqnr, regs);
+>>> +            if (irqnr < NR_IPI)
+>>> +                handle_IPI(irqnr, regs);
+>>> +            else
+>>> +                handle_domain_irq(gic->domain, irqnr, regs);
+>>
+>> Double EOI, UNPREDICTABLE territory, your state machine is now dead.
+>
+> Oh yes, the interrupt flow now also goes through ->irq_eoi (that's 
+> the
+> whole point), meh.
 
+Indeed. But to be honest, we should probably consider moving all the 
+SGI
+handling to normal interrupts. There's hardly any reason why we should 
+keep
+SGIs out of the normal interrupt model, other than maybe performance 
+(and
+that's pretty dubious).
 
-Thanks Rob, shall add your reviewed-by with a minor fix, add "-only" to 
-the GPL.
+>
+>>
+>>>  #endif
+>>>              continue;
+>>>          }
+>>> @@ -1005,20 +1008,34 @@ static int gic_irq_domain_translate(struct
+>>> irq_domain *d,
+>>>          if (fwspec->param_count < 3)
+>>>              return -EINVAL;
+>>>
+>>> -        /* Get the interrupt number and add 16 to skip over SGIs 
+>>> */
+>>> -        *hwirq = fwspec->param[1] + 16;
+>>> -
+>>> -        /*
+>>> -         * For SPIs, we need to add 16 more to get the GIC irq
+>>> -         * ID number
+>>> -         */
+>>> -        if (!fwspec->param[0])
+>>> +        *hwirq = fwspec->param[1];
+>>> +        switch (fwspec->param[0]) {
+>>> +        case 0:
+>>> +            /*
+>>> +             * For SPIs, we need to add 16 more to get the GIC irq
+>>> +             * ID number
+>>> +             */
+>>> +            *hwirq += 16;
+>>> +            /* fall through */
+>>> +        case 1:
+>>> +            /* Add 16 to skip over SGIs */
+>>>              *hwirq += 16;
+>>> +            *type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+>>>
+>>> -        *type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+>>> +            /* Make it clear that broken DTs are... broken */
+>>> +            WARN_ON(*type == IRQ_TYPE_NONE);
+>>> +            break;
+>>> +        case 2:
+>>> +            /* Refuse to map internal IPIs */
+>>> +            if (*hwirq < NR_IPI)
+>>
+>> So depending on how the kernel uses SGIs, you can or cannot use 
+>> these SGIs.
+>> That looks like a good way to corner ourselves into not being to 
+>> change
+>> much.
+>
+> arch/arm/kernel/smp.c has a forward looking statement about SGI 
+> numbering:
+>
+>         /*
+>          * SGI8-15 can be reserved by secure firmware, and thus may
+>          * not be usable by the kernel. Please keep the above limited
+>          * to at most 8 entries.
+>          */
+>
+> is this something that can be used as an universal and unbreakable 
+> rule
+> for the ARM64 kernel as well in order to ensure SGIs 8-15 can be 
+> usable
+> through the IRQ API or is this simply not a guarantee at all?
 
+There is no guarantee whatsoever. There's an ARM recommendation about 
+the
+above split, but that's it. Hardly something that can be enforced.
+
+Now, your firmware is the one that gives you the DT, so if it is 
+inconsistent
+in configuring the interrupt and presenting it to the kernel, tough 
+luck.
+
+>> Also, do you expect this to work for both Group-0 and Group-1 
+>> interrupts
+>> (since you imply that this works as a communication medium with the 
+>> secure
+>> side)? Given that the kernel running in NS has no way to 
+>> enable/disable
+>> Group-0 interrupts, this looks terminally flawed. Or is that Group-1 
+>> only?
+>
+> That would be Group-1 interrupts only, are you suggesting there is an
+> additional check being done that such SGIs are actually part of 
+> Group-1?
+
+You can try and change the configuration of that interrupt (priority, 
+for
+example), and see if that sticks. If it doesn't, you're in trouble (and
+nothing you can do about it).
+
+>>
+>> How do we describe which SGIs are guaranteed to be available to 
+>> Linux?
+>
+> In our case, the Device Tree mailbox node gets populated its 
+> interrupts
+> property with the SGI number(s), and that same number is also passed 
+> as
+> a configuration parameter to the trusted firmware. Or are you echoing
+> back to your earlier comment about the fact that if the kernel 
+> changes
+> its own definition of NR_IPI then we suddenly start breaking IRQ API
+> uses of SGIs in a certain range?
+
+That's indeed my worry. There is also the fact that the kernel itself 
+will
+never expose such reservation in DT, so we'd have to tread carefully 
+here.
+We probably need to specify that *only* SGI8-15 are allowed to be 
+described
+as such.
+
+Another thing: why don't you use a PPI? If you use a GICv2, you're also 
+using
+ancient cores, and they have PPIs to spare. Or do you rely on being 
+able to
+inject interrupts from one core to another?
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
