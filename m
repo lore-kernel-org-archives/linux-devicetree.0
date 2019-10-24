@@ -2,27 +2,27 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63BCCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6948CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC53721929
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9554321929
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfJXUN2 (ORCPT
+        id S1726566AbfJXUNc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:13:28 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:50087 "EHLO
+        Thu, 24 Oct 2019 16:13:32 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:49927 "EHLO
         relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfJXUN2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 16:13:28 -0400
+        with ESMTP id S1726505AbfJXUNb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 16:13:31 -0400
 Received: from localhost (unknown [78.193.40.249])
         (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 3545B200002;
-        Thu, 24 Oct 2019 20:13:24 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 49E32200005;
+        Thu, 24 Oct 2019 20:13:29 +0000 (UTC)
 From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
 To:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -33,10 +33,12 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH v2 0/5] Add i2c bus recovery support for Atmel SoCs
-Date:   Thu, 24 Oct 2019 22:12:57 +0200
-Message-Id: <20191024201302.23376-1-kamel.bouhara@bootlin.com>
+Subject: [PATCH v2 2/5] dt-bindings: i2c: at91: document optional bus recovery properties
+Date:   Thu, 24 Oct 2019 22:12:59 +0200
+Message-Id: <20191024201302.23376-3-kamel.bouhara@bootlin.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191024201302.23376-1-kamel.bouhara@bootlin.com>
+References: <20191024201302.23376-1-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -44,27 +46,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some Atmel SoCs actually doesn't support the clear command for recovery.
-This patch serie merge the two support for both i2c bus recovery
-mechanism (clear command and gpio/pinctrl).
+The at91 I2C controller can support bus recovery by re-assigning SCL
+and SDA to gpios. Add the optional pinctrl and gpio properties to do
+so.
 
-Codrin Ciubotariu (1):
-  i2c: at91: Send bus clear command if SCL or SDA is down
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-at91.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Kamel Bouhara (4):
-  dt-bindings: i2c: at91: document optional bus recovery properties
-  i2c: at91: implement i2c bus recovery
-  ARM: at91/dt: sama5d3: add i2c gpio pinctrl
-  ARM: at91/dt: sama5d4: add i2c gpio pinctrl
-
- .../devicetree/bindings/i2c/i2c-at91.txt      | 10 +++
- arch/arm/boot/dts/sama5d3.dtsi                | 33 ++++++-
- arch/arm/boot/dts/sama5d4.dtsi                | 33 ++++++-
- drivers/i2c/busses/i2c-at91-core.c            |  8 ++
- drivers/i2c/busses/i2c-at91-master.c          | 86 +++++++++++++++++++
- drivers/i2c/busses/i2c-at91.h                 | 15 +++-
- 6 files changed, 178 insertions(+), 7 deletions(-)
-
---
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+index b7cec17c3daf..8ea2ce5d8610 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+@@ -19,8 +19,13 @@ Optional properties:
+   capable I2C controllers.
+ - i2c-sda-hold-time-ns: TWD hold time, only available for "atmel,sama5d4-i2c"
+   and "atmel,sama5d2-i2c".
++- scl-gpios: specify the gpio related to SCL pin
++- sda-gpios: specify the gpio related to SDA pin
++- pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
++  bus recovery, call it "gpio" state
+ - Child nodes conforming to i2c bus binding
+ 
++
+ Examples :
+ 
+ i2c0: i2c@fff84000 {
+@@ -55,6 +60,11 @@ i2c0: i2c@f8034600 {
+ 	clocks = <&flx0>;
+ 	atmel,fifo-size = <16>;
+ 	i2c-sda-hold-time-ns = <336>;
++	pinctrl-names = "default", "gpio";
++	pinctrl-0 = <&pinctrl_i2c0>;
++	pinctrl-1 = <&pinctrl_i2c0_gpio>;
++	sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
++	scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
+ 
+ 	wm8731: wm8731@1a {
+ 		compatible = "wm8731";
+-- 
 2.23.0
 
