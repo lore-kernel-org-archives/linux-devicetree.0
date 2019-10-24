@@ -2,333 +2,218 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330ABCA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87221CA9EBB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 07:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0992A2084C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571903334;
-	bh=EZiLfvPLIkNqKLlERVgWdhgZyGMBwAdHnHWnnmkVgD4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GZqVL1982qTsiVbO6+KoEkBgfapjuqEKRnJXS79CfsjvpGqQQFvTsAk5gjlQeCSp4
-	 hynz8SEha1q9WfNH9SZbfBIuU4jRmYW8QV/k5b4iizqj3+kL3aJuwJovYtvcJQPUWm
-	 wOfJOwjdu2FZWBnOsZ2ecGRmyspVDPNGX64a2pf4=
+	by mail.kernel.org (Postfix) with ESMTP id 533742166E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 07:58:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="HWbN10vy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408735AbfJXHst (ORCPT
+        id S2408810AbfJXH6l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404701AbfJXHst (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:48:49 -0400
-Received: from localhost.localdomain (unknown [122.181.210.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6E72166E;
-        Thu, 24 Oct 2019 07:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571903328;
-        bh=EZiLfvPLIkNqKLlERVgWdhgZyGMBwAdHnHWnnmkVgD4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCXdt7uIxjhsm4jDqw4rt7MSZNISDxVCfS1qW9Q8RBOBIoD/f0qVMeQaafvL3ee4+
-         t8Pp0dN08lFKHWUqx8DPlAr89ZJFpD8ExRWYRn1iwBPuTRFNtUKAS5Hv4Wf6D/S0EL
-         yQZrlaaYXkcaxk8t82g+Vp8c4muH6QYo223pEdUw=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Thu, 24 Oct 2019 03:58:41 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36702 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408694AbfJXH6l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 03:58:41 -0400
+Received: by mail-il1-f193.google.com with SMTP id s75so11752583ilc.3
+        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 00:58:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/iwX4UjOQjn2lNb7lRka6gT7CCeFZoS1/ylA6WSmhrA=;
+        b=HWbN10vyE4qOXGOmTtdtAb1M6RjfxZ/QZpix5Ndgxwxa8hADczts4OYkxPzWo5HulL
+         1+8AvnBsivuTtDCQO9POwAdEU7Ku2B41ssTUuRiobwGOFCZRniblrUwfFTUpiTf5ESQg
+         pykuGl3iM0Z15cmp/J/fsbu6gwfPv1waz1d4s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/iwX4UjOQjn2lNb7lRka6gT7CCeFZoS1/ylA6WSmhrA=;
+        b=FSb8G5hXl+Gh9VA4SmuvKCsHabnPWP1d69yu6WTlGabRG/4NZEP0faeqrPMVrcmUix
+         y9TOHHyujzYIOi+sTdrDRqpXuKpKiHbqJT3uBDwf8fu/i/mm0nS4oDbMDlvzgWe+kc5r
+         bFAs29AR12fPshtYdck077uHsCbrO2ldkgD3OpwwAbnp1sNTmFTa6dy1aSUA8dJzmFiK
+         VMnl9XKbfw7EL2t3yYDK11S3eBblEaVMdt28m3eR1td+aurqgQbrvuWXh5RsyvKMhjLX
+         OOHlJjIfslWyQAHtftC+aYoGY9omlAI9TJ5Fnf0OnAihIDATYrRsNVUuMI5C6ZsUrw3K
+         tsoQ==
+X-Gm-Message-State: APjAAAV0XTqYpic41BfMA0NxhHTyikMCrvdAyeY4vl0pckXTJG4oTfRf
+        F9JyVhhMGFhOus7gd/vjmEpu83SyxNKthKHTXJEdQA==
+X-Google-Smtp-Source: APXvYqwOnD4ookxu9fpEx7h0rJ1trgaJEt/X4F/4abU6xodrQ4R1ekY6BSv7j2O++aWyan6hxZmdqNNdkkAvzgJdwjE=
+X-Received: by 2002:a92:5d8f:: with SMTP id e15mr10504428ilg.173.1571903919957;
+ Thu, 24 Oct 2019 00:58:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+ <20191005141913.22020-6-jagan@amarulasolutions.com> <20191007105708.raxavxk4n7bvxh7x@gilmour>
+ <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
+ <20191016080306.44pmo3rfmtnkgosq@gilmour> <CAMty3ZCTE=W+TNRvdowec-eYB625j97uG8F3fzVMtRFsKsqFFQ@mail.gmail.com>
+ <20191017095225.ntx647ivegaldlyf@gilmour>
+In-Reply-To: <20191017095225.ntx647ivegaldlyf@gilmour>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 24 Oct 2019 13:28:28 +0530
+Message-ID: <CAMty3ZAvqRLh16vFd-63h4+SzQkNydGfNKX_pByqFD-hZfncpQ@mail.gmail.com>
+Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v3 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
-Date:   Thu, 24 Oct 2019 13:18:02 +0530
-Message-Id: <20191024074802.26526-4-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191024074802.26526-1-vkoul@kernel.org>
-References: <20191024074802.26526-1-vkoul@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SM8150 UFS PHY is v4 of QMP phy. Add support for V4 QMP phy register
-defines and support for SM8150 QMP UFS PHY.
+On Thu, Oct 17, 2019 at 3:22 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Wed, Oct 16, 2019 at 02:19:44PM +0530, Jagan Teki wrote:
+> > On Wed, Oct 16, 2019 at 1:33 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
+> > > > On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > > >
+> > > > > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
+> > > > > > Add MIPI DSI pipeline for Allwinner A64.
+> > > > > >
+> > > > > > - dsi node, with A64 compatible since it doesn't support
+> > > > > >   DSI_SCLK gating unlike A33
+> > > > > > - dphy node, with A64 compatible with A33 fallback since
+> > > > > >   DPHY on A64 and A33 is similar
+> > > > > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
+> > > > > >
+> > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> > > > > > ---
+> > > > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
+> > > > > >  1 file changed, 38 insertions(+)
+> > > > > >
+> > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > index 69128a6dfc46..ad4170b8aee0 100644
+> > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > @@ -382,6 +382,12 @@
+> > > > > >                                       #address-cells = <1>;
+> > > > > >                                       #size-cells = <0>;
+> > > > > >                                       reg = <1>;
+> > > > > > +
+> > > > > > +                                     tcon0_out_dsi: endpoint@1 {
+> > > > > > +                                             reg = <1>;
+> > > > > > +                                             remote-endpoint = <&dsi_in_tcon0>;
+> > > > > > +                                             allwinner,tcon-channel = <1>;
+> > > > > > +                                     };
+> > > > > >                               };
+> > > > > >                       };
+> > > > > >               };
+> > > > > > @@ -1003,6 +1009,38 @@
+> > > > > >                       status = "disabled";
+> > > > > >               };
+> > > > > >
+> > > > > > +             dsi: dsi@1ca0000 {
+> > > > > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
+> > > > > > +                     reg = <0x01ca0000 0x1000>;
+> > > > > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
+> > > > > > +                     clock-names = "bus";
+> > > > >
+> > > > > This won't validate with the bindings you have either here, since it
+> > > > > still expects bus and mod.
+> > > > >
+> > > > > I guess in that cas, we can just drop clock-names, which will require
+> > > > > a bit of work on the driver side as well.
+> > > >
+> > > > Okay.
+> > > > mod clock is not required for a64, ie reason we have has_mod_clk quirk
+> > > > patch. Adjust the clock-names: on dt-bindings would make sense here,
+> > > > what do you think?
+> > >
+> > > I'm confused, what are you suggesting?
+> >
+> > Sorry for the confusion.
+> >
+> > The mod clock is not required for A64 and we have a patch for handling
+> > mod clock using has_mod_clk quirk(on the series), indeed the mod clock
+> > is available in A31 and not needed for A64. So, to satisfy this
+> > requirement the clock-names on dt-bindings can update to make mod
+> > clock-name is optional and bus clock is required.
+>
+> No, the bus clock name is not needed if there's only one clock.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 120 ++++++++++++++++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp.h |  96 ++++++++++++++++++++++
- 2 files changed, 216 insertions(+)
+Okay, is it because the same clock handle it on PHY side?
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 39e8deb8001e..091e20303a14 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -165,6 +165,11 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
- 	[QPHY_PCS_READY_STATUS]		= 0x160,
- };
- 
-+static const unsigned int sm8150_ufsphy_regs_layout[] = {
-+	[QPHY_START_CTRL]		= 0x00,
-+	[QPHY_PCS_READY_STATUS]		= 0x180,
-+};
-+
- static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
- 	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
-@@ -879,6 +884,93 @@ static const struct qmp_phy_init_tbl msm8998_usb3_pcs_tbl[] = {
- 	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
- };
- 
-+static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0xd9),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_SEL, 0x11),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_HS_SWITCH_SEL, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP_EN, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE_MAP, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_IVCO, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE_INITVAL2, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_HSCLK_SEL, 0x11),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DEC_START_MODE0, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CP_CTRL_MODE0, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_RCTRL_MODE0, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_CCTRL_MODE0, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP1_MODE0, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP2_MODE0, 0x0c),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0, 0xac),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0, 0x1e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DEC_START_MODE1, 0x98),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CP_CTRL_MODE1, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_RCTRL_MODE1, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_CCTRL_MODE1, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP1_MODE1, 0x32),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP2_MODE1, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1, 0xdd),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1, 0x23),
-+
-+	/* Rate B */
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE_MAP, 0x06),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_ufsphy_tx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_1_DIVIDER_BAND0_1, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_2_DIVIDER_BAND0_1, 0x03),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_3_DIVIDER_BAND0_1, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_4_DIVIDER_BAND0_1, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_LANE_MODE_1, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_TRAN_DRVR_EMP_EN, 0x0c),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_ufsphy_rx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_LVL, 0x24),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_CNTRL, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_DEGLITCH_CNTRL, 0x1e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_BAND, 0x18),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_FO_GAIN, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_PI_CONTROLS, 0xf1),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_LOW, 0x80),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_PI_CTRL2, 0x80),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FO_GAIN, 0x0c),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_GAIN, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_TERM_BW, 0x1b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL4, 0x1d),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_MEASURE_TIME, 0x10),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_LOW, 0xc0),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_HIGH, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_LOW, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH2, 0xf6),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH3, 0x3b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH4, 0x3d),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_LOW, 0xe0),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH, 0xc8),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH2, 0xc8),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH3, 0x3b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH4, 0xb1),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_LOW, 0xe0),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH, 0xc8),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH2, 0xc8),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH3, 0x3b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH4, 0xb1),
-+
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_ufsphy_pcs_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_V4_RX_SIGDET_CTRL2, 0x6d),
-+	QMP_PHY_INIT_CFG(QPHY_V4_TX_LARGE_AMP_DRV_LVL, 0x0a),
-+	QMP_PHY_INIT_CFG(QPHY_V4_TX_SMALL_AMP_DRV_LVL, 0x02),
-+	QMP_PHY_INIT_CFG(QPHY_V4_TX_MID_TERM_CTRL1, 0x43),
-+	QMP_PHY_INIT_CFG(QPHY_V4_DEBUG_BUS_CLKSEL, 0x1f),
-+	QMP_PHY_INIT_CFG(QPHY_V4_RX_MIN_HIBERN8_TIME, 0xff),
-+	QMP_PHY_INIT_CFG(QPHY_V4_MULTI_LANE_CTRL1, 0x02),
-+};
- 
- /* struct qmp_phy_cfg - per-PHY initialization config */
- struct qmp_phy_cfg {
-@@ -1276,6 +1368,31 @@ static const struct qmp_phy_cfg msm8998_usb3phy_cfg = {
- 	.is_dual_lane_phy       = true,
- };
- 
-+static const struct qmp_phy_cfg sm8150_ufsphy_cfg = {
-+	.type			= PHY_TYPE_UFS,
-+	.nlanes			= 2,
-+
-+	.serdes_tbl		= sm8150_ufsphy_serdes_tbl,
-+	.serdes_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_serdes_tbl),
-+	.tx_tbl			= sm8150_ufsphy_tx_tbl,
-+	.tx_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_tx_tbl),
-+	.rx_tbl			= sm8150_ufsphy_rx_tbl,
-+	.rx_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_rx_tbl),
-+	.pcs_tbl		= sm8150_ufsphy_pcs_tbl,
-+	.pcs_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_pcs_tbl),
-+	.clk_list		= sdm845_ufs_phy_clk_l,
-+	.num_clks		= ARRAY_SIZE(sdm845_ufs_phy_clk_l),
-+	.vreg_list		= qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.regs			= sm8150_ufsphy_regs_layout,
-+
-+	.start_ctrl		= SERDES_START,
-+	.pwrdn_ctrl		= SW_PWRDN,
-+
-+	.is_dual_lane_phy	= true,
-+	.no_pcs_sw_reset	= true,
-+};
-+
- static void qcom_qmp_phy_configure(void __iomem *base,
- 				   const unsigned int *regs,
- 				   const struct qmp_phy_init_tbl tbl[],
-@@ -1998,6 +2115,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,msm8998-qmp-usb3-phy",
- 		.data = &msm8998_usb3phy_cfg,
-+	}, {
-+		.compatible = "qcom,sm8150-qmp-ufs-phy",
-+		.data = &sm8150_ufsphy_cfg,
- 	},
- 	{ },
- };
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
-index 335ea5d7ef40..ab6ff9b45a32 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
-@@ -313,4 +313,100 @@
- #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG4		0x5c
- #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5		0x60
- 
-+/* Only for QMP V4 PHY - QSERDES COM registers */
-+#define QSERDES_V4_COM_PLL_IVCO				0x058
-+#define QSERDES_V4_COM_CMN_IPTRIM			0x060
-+#define QSERDES_V4_COM_CP_CTRL_MODE0			0x074
-+#define QSERDES_V4_COM_CP_CTRL_MODE1			0x078
-+#define QSERDES_V4_COM_PLL_RCTRL_MODE0			0x07c
-+#define QSERDES_V4_COM_PLL_RCTRL_MODE1			0x080
-+#define QSERDES_V4_COM_PLL_CCTRL_MODE0			0x084
-+#define QSERDES_V4_COM_PLL_CCTRL_MODE1			0x088
-+#define QSERDES_V4_COM_SYSCLK_EN_SEL			0x094
-+#define QSERDES_V4_COM_LOCK_CMP_EN			0x0a4
-+#define QSERDES_V4_COM_LOCK_CMP1_MODE0			0x0ac
-+#define QSERDES_V4_COM_LOCK_CMP2_MODE0			0x0b0
-+#define QSERDES_V4_COM_LOCK_CMP1_MODE1			0x0b4
-+#define QSERDES_V4_COM_DEC_START_MODE0			0x0bc
-+#define QSERDES_V4_COM_LOCK_CMP2_MODE1			0x0b8
-+#define QSERDES_V4_COM_DEC_START_MODE1			0x0c4
-+#define QSERDES_V4_COM_VCO_TUNE_MAP			0x10c
-+#define QSERDES_V4_COM_VCO_TUNE_INITVAL2		0x124
-+#define QSERDES_V4_COM_HSCLK_SEL			0x158
-+#define QSERDES_V4_COM_HSCLK_HS_SWITCH_SEL		0x15c
-+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0	0x1ac
-+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0	0x1b0
-+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1	0x1b4
-+#define QSERDES_V4_COM_BIN_VCOCAL_HSCLK_SEL		0x1bc
-+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1	0x1b8
-+
-+/* Only for QMP V4 PHY - TX registers */
-+#define QSERDES_V4_TX_LANE_MODE_1			0x84
-+#define QSERDES_V4_TX_PWM_GEAR_1_DIVIDER_BAND0_1	0xd8
-+#define QSERDES_V4_TX_PWM_GEAR_2_DIVIDER_BAND0_1	0xdC
-+#define QSERDES_V4_TX_PWM_GEAR_3_DIVIDER_BAND0_1	0xe0
-+#define QSERDES_V4_TX_PWM_GEAR_4_DIVIDER_BAND0_1	0xe4
-+#define QSERDES_V4_TX_TRAN_DRVR_EMP_EN			0xb8
-+
-+/* Only for QMP V4 PHY - RX registers */
-+#define QSERDES_V4_RX_UCDR_FO_GAIN			0x008
-+#define QSERDES_V4_RX_UCDR_SO_GAIN			0x014
-+#define QSERDES_V4_RX_UCDR_FASTLOCK_FO_GAIN		0x030
-+#define QSERDES_V4_RX_UCDR_SO_SATURATION_AND_ENABLE	0x034
-+#define QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_LOW		0x03c
-+#define QSERDES_V4_RX_UCDR_PI_CONTROLS			0x044
-+#define QSERDES_V4_RX_UCDR_PI_CTRL2			0x048
-+#define QSERDES_V4_RX_AC_JTAG_ENABLE			0x068
-+#define QSERDES_V4_RX_AC_JTAG_MODE			0x078
-+#define QSERDES_V4_RX_RX_TERM_BW			0x080
-+#define QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2		0x0ec
-+#define QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3		0x0f0
-+#define QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL4		0x0f4
-+#define QSERDES_V4_RX_RX_IDAC_TSETTLE_LOW		0x0f8
-+#define QSERDES_V4_RX_RX_IDAC_TSETTLE_HIGH		0x0fc
-+#define QSERDES_V4_RX_RX_IDAC_MEASURE_TIME		0x100
-+#define QSERDES_V4_RX_RX_OFFSET_ADAPTOR_CNTRL2		0x114
-+#define QSERDES_V4_RX_SIGDET_CNTRL			0x11c
-+#define QSERDES_V4_RX_SIGDET_LVL			0x120
-+#define QSERDES_V4_RX_SIGDET_DEGLITCH_CNTRL		0x124
-+#define QSERDES_V4_RX_RX_BAND				0x128
-+#define QSERDES_V4_RX_RX_MODE_00_LOW			0x170
-+#define QSERDES_V4_RX_RX_MODE_00_HIGH			0x174
-+#define QSERDES_V4_RX_RX_MODE_00_HIGH2			0x178
-+#define QSERDES_V4_RX_RX_MODE_00_HIGH3			0x17c
-+#define QSERDES_V4_RX_RX_MODE_00_HIGH4			0x180
-+#define QSERDES_V4_RX_RX_MODE_01_LOW			0x184
-+#define QSERDES_V4_RX_RX_MODE_01_HIGH			0x188
-+#define QSERDES_V4_RX_RX_MODE_01_HIGH2			0x18c
-+#define QSERDES_V4_RX_RX_MODE_01_HIGH3			0x190
-+#define QSERDES_V4_RX_RX_MODE_01_HIGH4			0x194
-+#define QSERDES_V4_RX_RX_MODE_10_LOW			0x198
-+#define QSERDES_V4_RX_RX_MODE_10_HIGH			0x19c
-+#define QSERDES_V4_RX_RX_MODE_10_HIGH2			0x1a0
-+#define QSERDES_V4_RX_RX_MODE_10_HIGH3			0x1a4
-+#define QSERDES_V4_RX_RX_MODE_10_HIGH4			0x1a8
-+#define QSERDES_V4_RX_DCC_CTRL1				0x1bc
-+
-+/* Only for QMP V4 PHY - PCS registers */
-+#define QPHY_V4_PHY_START				0x000
-+#define QPHY_V4_POWER_DOWN_CONTROL			0x004
-+#define QPHY_V4_SW_RESET				0x008
-+#define QPHY_V4_TIMER_20US_CORECLK_STEPS_MSB		0x00c
-+#define QPHY_V4_TIMER_20US_CORECLK_STEPS_LSB		0x010
-+#define QPHY_V4_PLL_CNTL				0x02c
-+#define QPHY_V4_TX_LARGE_AMP_DRV_LVL			0x030
-+#define QPHY_V4_TX_SMALL_AMP_DRV_LVL			0x038
-+#define QPHY_V4_BIST_FIXED_PAT_CTRL			0x060
-+#define QPHY_V4_TX_HSGEAR_CAPABILITY			0x074
-+#define QPHY_V4_RX_HSGEAR_CAPABILITY			0x0b4
-+#define QPHY_V4_DEBUG_BUS_CLKSEL			0x124
-+#define QPHY_V4_LINECFG_DISABLE				0x148
-+#define QPHY_V4_RX_MIN_HIBERN8_TIME			0x150
-+#define QPHY_V4_RX_SIGDET_CTRL2				0x158
-+#define QPHY_V4_TX_PWM_GEAR_BAND			0x160
-+#define QPHY_V4_TX_HS_GEAR_BAND				0x168
-+#define QPHY_V4_PCS_READY_STATUS			0x180
-+#define QPHY_V4_TX_MID_TERM_CTRL1			0x1d8
-+#define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
-+
- #endif
--- 
-2.20.1
+>
+> > I'm not exactly sure, this is correct but trying to understand if it
+> > is possible or not? something like
+> >
+> >    clocks:
+> >       minItems: 1
+> >       maxItems: 2
+> >      items:
+> >        - description: Bus Clock
+> >        - description: Module Clock
+>
+> That's correct.
+>
+> >    clock-names:
+> >       minItems: 1
+> >       maxItems: 2
+> >      items:
+> >        - const: bus
+> >        - const: mod
+>
+> Here, just keep the current clock-names definition, and make it
+> required only for SoCs that are not the A64
 
+Okay, please have a look here I have pasted the diff for comments.
+
+   clocks:
++    minItems: 2
+     items:
+       - description: Bus Clock
+       - description: Module Clock
+@@ -64,14 +65,26 @@ required:
+   - compatible
+   - reg
+   - interrupts
+-  - clocks
+-  - clock-names
+   - phys
+   - phy-names
+   - resets
+   - vcc-dsi-supply
+   - port
+
++allOf:
++  - if:
++      properties:
++         compatible:
++           contains:
++             const: allwinner,sun6i-a31-mipi-dsi
++      then:
++        properties:
++          clocks:
++            minItems: 2
++        required:
++          - clocks
++          - clock-names
++
+ additionalProperties: false
+
+I have marked minItems: 2 on clocks since we need to use minimum of 2
+clocks like both bus and mod not mod clock alone.
+
+Please let me know your comments.
+
+Jagan.
