@@ -2,79 +2,73 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB4BCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A45CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59260205C9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C447920856
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501989AbfJXMrb (ORCPT
+        id S2502147AbfJXMui (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 08:47:31 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:45336 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbfJXMrb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 08:47:31 -0400
+        Thu, 24 Oct 2019 08:50:38 -0400
+Received: from albert.telenet-ops.be ([195.130.137.90]:46830 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730753AbfJXMui (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 08:50:38 -0400
 Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id HQnS2100Q5USYZQ01QnSZK; Thu, 24 Oct 2019 14:47:29 +0200
+        by albert.telenet-ops.be with bizsmtp
+        id HQqb2100X5USYZQ06QqcDc; Thu, 24 Oct 2019 14:50:36 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNcWU-0005zN-E1; Thu, 24 Oct 2019 14:47:26 +0200
+        id 1iNcZX-00060i-TG; Thu, 24 Oct 2019 14:50:35 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNcWU-0003jQ-CN; Thu, 24 Oct 2019 14:47:26 +0200
+        id 1iNcZX-0003ow-Qx; Thu, 24 Oct 2019 14:50:35 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>,
         Olof Johansson <olof@lixom.net>
-Cc:     Chanho Min <chanho.min@lge.com>,
+Cc:     Barry Song <baohua@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v6] arm64: dts: lg1313: DT fix s/#interrupts-cells/#interrupt-cells/
-Date:   Thu, 24 Oct 2019 14:47:25 +0200
-Message-Id: <20191024124725.14282-1-geert+renesas@glider.be>
+Subject: [PATCH v2 resend] ARM: dts: atlas7: Fix "debounce-interval" property misspelling
+Date:   Thu, 24 Oct 2019 14:50:33 +0200
+Message-Id: <20191024125033.14643-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The standard DT property is called "#interrupt-cells".
+"debounce_interval" was never supported.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Chanho Min <chanho.min@lge.com>
+Cc: Barry Song <baohua@kernel.org>
 ---
-Any chance this can be fixed after the 5th submission in 3 years?
-Thanks!
-
-v3:
-  - Add Acked-by,
-
 v2:
-  - New.
+  - No changes.
 ---
- arch/arm64/boot/dts/lg/lg1313.dtsi | 2 +-
+ arch/arm/boot/dts/atlas7-evb.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
-index 82c6645b58b77436..ac23592ab0114c03 100644
---- a/arch/arm64/boot/dts/lg/lg1313.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
-@@ -124,7 +124,7 @@
- 	amba {
- 		#address-cells = <2>;
- 		#size-cells = <1>;
--		#interrupts-cells = <3>;
-+		#interrupt-cells = <3>;
+diff --git a/arch/arm/boot/dts/atlas7-evb.dts b/arch/arm/boot/dts/atlas7-evb.dts
+index e0c0291ac9fdbeee..e0515043d1451c39 100644
+--- a/arch/arm/boot/dts/atlas7-evb.dts
++++ b/arch/arm/boot/dts/atlas7-evb.dts
+@@ -119,7 +119,7 @@
+ 				label = "rearview key";
+ 				linux,code = <KEY_CAMERA>;
+ 				gpios = <&gpio_1 3 GPIO_ACTIVE_LOW>;
+-				debounce_interval = <100>;
++				debounce-interval = <100>;
+ 			};
+ 		};
  
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
 -- 
 2.17.1
 
