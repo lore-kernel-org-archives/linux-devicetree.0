@@ -2,155 +2,98 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC36CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443D4CA9EBB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B6021872
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:56:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="hbo6HBAL"
+	by mail.kernel.org (Postfix) with ESMTP id 1BAE3205C9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbfJXM4t (ORCPT
+        id S2502306AbfJXNBx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 08:56:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40593 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730113AbfJXM4t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 08:56:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id p6so21100837iod.7
-        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 05:56:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aTdM6kx15igVuSSKMbiCTSzmlWnq1yiOzOY1SuHhFrs=;
-        b=hbo6HBALmJDGv9jgxlTtf+xksm9OJfWjLr2jEs1YgJaKNaoOQZiQIwRBkCZXab9vC8
-         xlZ7f1bHG9D+YTORvlGPIf0LAoOoY5uPWuaoiiz8LEammkRzU8H5R/4MLt5ZAOXKal79
-         TECVYmuEMl7GwJJokwPwayW76Qjpo9wnLDenY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aTdM6kx15igVuSSKMbiCTSzmlWnq1yiOzOY1SuHhFrs=;
-        b=AhUmq5B09QpYsKmT3Ao4vZ3EZfCwmKHb6eeD1hTjkbPPDaiEuT1jt+BjGAKUY3Boc1
-         +gj8KFQVhEI4h08mmhs3RRbqy8Y+CM1UWblvvkkxJP8QDXEjlNDnCLpinU5Jsjsc2x6V
-         /YZatJjC4cBPV/BRfi6fgyywO0tgy91JENWC0jk8uK5gjUrA4JjPMwhRUJVFfUjXwCGw
-         e3nZ0J6f6tjiQMS6GjLtfxh76P9b1ZIoYrX7+1vxMMC/Lb20vT74kafYzxOeksIB3N2E
-         JegEkC6OQTslXo303C3dTi1SbvhZvNU+nJjj1M7tPRS7QQCBHGk5eYe15K0EoedN2bEr
-         oN4Q==
-X-Gm-Message-State: APjAAAWC0thhdXdMvqT07FxL9DaXP8WD6+BI0e6G+iu3vynlD/lJay2e
-        RDnb8jp5Uze/jWeY/PmHgr6j6m3RY4gBt862orzkLg==
-X-Google-Smtp-Source: APXvYqzkszCGtKnl0Ho1P2Ch5cLL32TntiFQ+qXfuG+AJKZ9bQz72BttFsscY6YYlFZWJiYiZXLcIz32vRnBFLkhYy0=
-X-Received: by 2002:a02:694e:: with SMTP id e75mr14609645jac.85.1571921807602;
- Thu, 24 Oct 2019 05:56:47 -0700 (PDT)
+        Thu, 24 Oct 2019 09:01:53 -0400
+Received: from salem.gmr.ssr.upm.es ([138.4.36.7]:38044 "EHLO
+        salem.gmr.ssr.upm.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502314AbfJXNBw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 09:01:52 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 09:01:51 EDT
+Received: by salem.gmr.ssr.upm.es (Postfix, from userid 1000)
+        id 828CDAC0077; Thu, 24 Oct 2019 14:54:37 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 14:54:37 +0200
+From:   Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] spi: set bits_per_word based on controller's
+ bits_per_word_mask
+Message-ID: <20191024125436.GA8878@salem.gmr.ssr.upm.es>
+References: <20191024110757.25820-1-alvaro.gamez@hazent.com>
+ <20191024110757.25820-4-alvaro.gamez@hazent.com>
+ <20191024111300.GD5207@sirena.co.uk>
 MIME-Version: 1.0
-References: <20191005141913.22020-1-jagan@amarulasolutions.com>
- <20191005141913.22020-6-jagan@amarulasolutions.com> <20191007105708.raxavxk4n7bvxh7x@gilmour>
- <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
- <20191016080306.44pmo3rfmtnkgosq@gilmour> <CAMty3ZCTE=W+TNRvdowec-eYB625j97uG8F3fzVMtRFsKsqFFQ@mail.gmail.com>
- <20191017095225.ntx647ivegaldlyf@gilmour>
-In-Reply-To: <20191017095225.ntx647ivegaldlyf@gilmour>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 24 Oct 2019 18:26:36 +0530
-Message-ID: <CAMty3ZDYcwJ4XMm45BLjXnvPXeu-rMAiN5v=CDhvuLsAm5tf=Q@mail.gmail.com>
-Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024111300.GD5207@sirena.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 3:22 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Wed, Oct 16, 2019 at 02:19:44PM +0530, Jagan Teki wrote:
-> > On Wed, Oct 16, 2019 at 1:33 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
-> > > > On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > > >
-> > > > > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
-> > > > > > Add MIPI DSI pipeline for Allwinner A64.
-> > > > > >
-> > > > > > - dsi node, with A64 compatible since it doesn't support
-> > > > > >   DSI_SCLK gating unlike A33
-> > > > > > - dphy node, with A64 compatible with A33 fallback since
-> > > > > >   DPHY on A64 and A33 is similar
-> > > > > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
-> > > > > >
-> > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-> > > > > > ---
-> > > > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
-> > > > > >  1 file changed, 38 insertions(+)
-> > > > > >
-> > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > > > > index 69128a6dfc46..ad4170b8aee0 100644
-> > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > > > > @@ -382,6 +382,12 @@
-> > > > > >                                       #address-cells = <1>;
-> > > > > >                                       #size-cells = <0>;
-> > > > > >                                       reg = <1>;
-> > > > > > +
-> > > > > > +                                     tcon0_out_dsi: endpoint@1 {
-> > > > > > +                                             reg = <1>;
-> > > > > > +                                             remote-endpoint = <&dsi_in_tcon0>;
-> > > > > > +                                             allwinner,tcon-channel = <1>;
-> > > > > > +                                     };
-> > > > > >                               };
-> > > > > >                       };
-> > > > > >               };
-> > > > > > @@ -1003,6 +1009,38 @@
-> > > > > >                       status = "disabled";
-> > > > > >               };
-> > > > > >
-> > > > > > +             dsi: dsi@1ca0000 {
-> > > > > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
-> > > > > > +                     reg = <0x01ca0000 0x1000>;
-> > > > > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
-> > > > > > +                     clock-names = "bus";
-> > > > >
-> > > > > This won't validate with the bindings you have either here, since it
-> > > > > still expects bus and mod.
-> > > > >
-> > > > > I guess in that cas, we can just drop clock-names, which will require
-> > > > > a bit of work on the driver side as well.
-> > > >
-> > > > Okay.
-> > > > mod clock is not required for a64, ie reason we have has_mod_clk quirk
-> > > > patch. Adjust the clock-names: on dt-bindings would make sense here,
-> > > > what do you think?
-> > >
-> > > I'm confused, what are you suggesting?
-> >
-> > Sorry for the confusion.
-> >
-> > The mod clock is not required for A64 and we have a patch for handling
-> > mod clock using has_mod_clk quirk(on the series), indeed the mod clock
-> > is available in A31 and not needed for A64. So, to satisfy this
-> > requirement the clock-names on dt-bindings can update to make mod
-> > clock-name is optional and bus clock is required.
->
-> No, the bus clock name is not needed if there's only one clock.
+On Thu, Oct 24, 2019 at 12:13:00PM +0100, Mark Brown wrote:
+> On Thu, Oct 24, 2019 at 01:07:57PM +0200, Alvaro Gamez Machado wrote:
+> > By leaving this value unset, a default value of 8 was being set later on.
+> > 
+> > If it happens that the SPI master driver doesn't support this value of 8,
+> > there will be an initial inconsistency between the SPI master and the device
+> > itself. This isn't a problem for most devices because kernel drivers
+> 
+> This will break things, client devices are working on the basis that the
+> default transfer width is 8 bits.  As I've repeatedly said if we have
+> different parts of the system with different ideas about the word size
+> we're going to end up with data corruption.  Please take this feedback
+> on board.
 
-Looks like we need "bus" clock required since the
-devm_regmap_init_mmio_clk is created only if bus clock-names added in
-dt.
+Oh, ok. I didn't understand this cleary from previous mails, now I see what
+you mean.
+
+I think then the only way this would be feasible is to check if 8 bits is an
+acceptable number for the master and, if it isn't, apply the lowest
+available data width. I believe this cannot break anything, as it leaves 8
+as the default unless the master can't work with that number, in which case
+it really doesn't matter what client device wants because the hardware can't
+provide it.
+
+Thanks!
+
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 794e20e54237..4e26ac79e133 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -3079,8 +3079,12 @@ int spi_setup(struct spi_device *spi)
+                return -EINVAL;
+        }
+ 
+-       if (!spi->bits_per_word)
+-               spi->bits_per_word = 8;
++       if (!spi->bits_per_word) {
++               if (spi->controller->bits_per_word_mask & SPI_BPW_MASK(8))
++                       spi->bits_per_word = 8;
++               else
++                       spi->bits_per_word = ffs(spi->controller->bits_per_word_mask);
++       }
+ 
+        status = __spi_validate_bits_per_word(spi->controller,
+                                              spi->bits_per_word);
+
+
+
+
+
+-- 
+Alvaro G. M.
