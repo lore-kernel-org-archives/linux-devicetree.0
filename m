@@ -2,182 +2,173 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C157CA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B87CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5243E21906
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OT4cDmsU"
+	by mail.kernel.org (Postfix) with ESMTP id 1B5A52166E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503504AbfJXQje (ORCPT
+        id S2410181AbfJXRFZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:39:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52806 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503681AbfJXQje (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 12:39:34 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p21so2137075wmg.2
-        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 09:39:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=6airdfmWbPo+9H8q8yF8Fow5EQ+bKYy5OYJZbu/8klg=;
-        b=OT4cDmsUunbscfxvhDw+rIVX2AsuGIv9mDVd9Lz1JmIYVvwuXSxmr+inrLJOCkaPlp
-         Z57x8PvO+vWADTq1pOJQK78YuP5oUWFPIpmVNDmTi+yAc0QbSG2tr9ojk+PQ6S98bUxo
-         egLtniHBPwO+5iTboWMsWoM/TMqXQFup6d2H4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=6airdfmWbPo+9H8q8yF8Fow5EQ+bKYy5OYJZbu/8klg=;
-        b=a2nCA3EAtNafxxsmxaiVhsnk28sbnAFARR1zlCX0sP6vOsTm7uBgt3e3oMW67y3T4+
-         lFKpb/yh+9bnljOoAJKydNkhybhxF3g+1/NWmoTEe1X/bJL/yt6bRAeGcEiYGG5HmRGR
-         MJSebLFHqsve4hDZYrjaf647Rxbi83Qsl0rslbbFGBAB0B35kBDYBURTQDi7XNAMSSDi
-         nFNiyTZhAfYbM77PSz5XY8VBpCrYDTUCXbmZvYZJX0CwU37nkrGBtbWF1wSNFQ7b8WcE
-         UPt970W+X/9xtMw2KtKmNZT8OHZDnlTYChiOxl/gNyKSvLHIW5/QSKp5PUFat5sP3EPX
-         txKA==
-X-Gm-Message-State: APjAAAWtLgtpqk9XJJZPkZB/teTBxQ02VBtaQ5toimTSY8gHLOfZdjrY
-        PXIYreBHcDLz7v/CzJlQr23fgw==
-X-Google-Smtp-Source: APXvYqz3vCdn5X+pVSPFYILymZ7NnZuRiPFSO7yPCexT8xbKvyQr1f9rcrSOfkcoYmxikGkdR5xgng==
-X-Received: by 2002:a1c:48c4:: with SMTP id v187mr5904648wma.27.1571935172517;
-        Thu, 24 Oct 2019 09:39:32 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id x7sm37064980wrg.63.2019.10.24.09.39.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 09:39:31 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: brcm: Add bindings for
- xgs-iproc
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191024004816.5539-1-chris.packham@alliedtelesis.co.nz>
- <20191024004816.5539-2-chris.packham@alliedtelesis.co.nz>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <db6d6cc7-6844-7079-7115-da1eb9c1feac@broadcom.com>
-Date:   Thu, 24 Oct 2019 09:39:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 13:05:25 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:34300 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410170AbfJXRFZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 13:05:25 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: dTzbzup2PDTL1ft7e2VxNAcemzw2cAxVjj32wRrm9+7FzrcmgC6IggiOGjXpht6kLf8o8r+uBh
+ wb2H0ecdo1UisR+/q2pMKgKS86ZbuMT1zvNtej1xLG5f0Vp43hnrIZjtoescD/bIqhlI+wcCWv
+ YCNejmVQr6JaeO9DNCoqFWnV9AippM1dkIk0QbXIoG6aNkH1tqaxUXgo+3/UZcoQsmjT25bk2J
+ 2tC13Gc6O8etHnASx70oUdhx2Qoyo95kKvK6537HVy1GSHHvkQ/p1JYckbR5a3fTvmuIDJah6s
+ T3M=
+X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
+   d="scan'208";a="52806866"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Oct 2019 10:05:24 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 24 Oct 2019 10:05:23 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Thu, 24 Oct 2019 10:05:20 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mpm@selenic.com>, <herbert@gondor.apana.org.au>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <arnd@arndb.de>,
+        <Tudor.Ambarus@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH 2/2] hwrng: atmel: add new platform support for sam9x60
+Date:   Thu, 24 Oct 2019 20:04:52 +0300
+Message-ID: <20191024170452.2145-2-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191024170452.2145-1-codrin.ciubotariu@microchip.com>
+References: <20191024170452.2145-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20191024004816.5539-2-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chris,
+Add platform support for the new IP found on sam9x60 SoC. For this
+version, if the peripheral clk is above 100MHz, the HALFR bit must be
+set. This bit is available only if the IP can generate a random number
+every 168 cycles (instead of 84).
 
-On 2019-10-23 5:48 p.m., Chris Packham wrote:
-> This GPIO controller is present on a number of Broadcom switch ASICs
-> with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-> blocks but different enough to require a separate driver.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->
-> Notes:
->      Changes in v3:
->      - incorporate review comments from Rob and Bart
->      
->      Changes in v2:
->      - Document as DT schema
->      - Include ngpios, #gpio-cells and gpio-controller properties
->
->   .../bindings/gpio/brcm,xgs-iproc.yaml         | 70 +++++++++++++++++++
->   1 file changed, 70 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> new file mode 100644
-> index 000000000000..ec1fd3a64aa2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-This doc needs to have gpio in the name to make all other gpio binding 
-documents.
-ie.
-brcm,xgs-iproc-gpio.yaml.
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom XGS iProc GPIO controller
-> +
-> +maintainers:
-> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-> +
-> +description: |
-> +  This controller is the Chip Common A GPIO present on a number of Broadcom
-> +  switch ASICs with integrated SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    const: brcm,iproc-gpio-cca
-> +
-> +  reg:
-> +    items:
-> +      - description: the I/O address containing the GPIO controller
-> +                     registers.
-> +      - description: the I/O address containing the Chip Common A interrupt
-> +                     registers.
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +      const: 2
-> +
-> +  ngpios:
-> +    minimum: 0
-> +    maximum: 32
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +
-> +dependencies:
-> +  interrupt-controller: [ interrupts ]
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    gpio@18000060 {
-> +        compatible = "brcm,iproc-gpio-cca";
-> +        #gpio-cells = <2>;
-> +        reg = <0x18000060 0x50>,
-> +              <0x18000000 0x50>;
-> +        ngpios = <12>;
-> +        gpio-controller;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +
-> +...
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
+ drivers/char/hw_random/atmel-rng.c | 39 ++++++++++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/char/hw_random/atmel-rng.c b/drivers/char/hw_random/atmel-rng.c
+index e55705745d5e..0aa9425e6c3e 100644
+--- a/drivers/char/hw_random/atmel-rng.c
++++ b/drivers/char/hw_random/atmel-rng.c
+@@ -14,14 +14,22 @@
+ #include <linux/clk.h>
+ #include <linux/io.h>
+ #include <linux/hw_random.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ 
+ #define TRNG_CR		0x00
++#define TRNG_MR		0x04
+ #define TRNG_ISR	0x1c
+ #define TRNG_ODATA	0x50
+ 
+ #define TRNG_KEY	0x524e4700 /* RNG */
+ 
++#define TRNG_HALFR	BIT(0) /* generate RN every 168 cycles */
++
++struct atmel_trng_pdata {
++	bool has_half_rate;
++};
++
+ struct atmel_trng {
+ 	struct clk *clk;
+ 	void __iomem *base;
+@@ -63,6 +71,7 @@ static int atmel_trng_probe(struct platform_device *pdev)
+ {
+ 	struct atmel_trng *trng;
+ 	struct resource *res;
++	const struct atmel_trng_pdata *pdata;
+ 	int ret;
+ 
+ 	trng = devm_kzalloc(&pdev->dev, sizeof(*trng), GFP_KERNEL);
+@@ -77,6 +86,17 @@ static int atmel_trng_probe(struct platform_device *pdev)
+ 	trng->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(trng->clk))
+ 		return PTR_ERR(trng->clk);
++	pdata = of_device_get_match_data(&pdev->dev);
++	if (!pdata)
++		return -ENODEV;
++
++	if (pdata->has_half_rate) {
++		unsigned long rate = clk_get_rate(trng->clk);
++
++		/* if peripheral clk is above 100MHz, set HALFR */
++		if (rate > 100000000)
++			writel(TRNG_HALFR, trng->base + TRNG_MR);
++	}
+ 
+ 	ret = clk_prepare_enable(trng->clk);
+ 	if (ret)
+@@ -141,9 +161,24 @@ static const struct dev_pm_ops atmel_trng_pm_ops = {
+ };
+ #endif /* CONFIG_PM */
+ 
++static struct atmel_trng_pdata at91sam9g45_config = {
++	.has_half_rate = false,
++};
++
++static struct atmel_trng_pdata sam9x60_config = {
++	.has_half_rate = true,
++};
++
+ static const struct of_device_id atmel_trng_dt_ids[] = {
+-	{ .compatible = "atmel,at91sam9g45-trng" },
+-	{ /* sentinel */ }
++	{
++		.compatible = "atmel,at91sam9g45-trng",
++		.data = &at91sam9g45_config,
++	}, {
++		.compatible = "microchip,sam9x60-trng",
++		.data = &sam9x60_config,
++	}, {
++		/* sentinel */
++	}
+ };
+ MODULE_DEVICE_TABLE(of, atmel_trng_dt_ids);
+ 
+-- 
+2.20.1
 
