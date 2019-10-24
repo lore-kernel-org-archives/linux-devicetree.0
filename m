@@ -7,140 +7,185 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B91C47E49
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3B6CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 19:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DB321A4C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE6121929
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 19:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571943588;
-	bh=a+uIvZuoQVHuTrFvBOzthw/TKu6zM/j2cbpgzHnS7NU=;
+	s=default; t=1571943799;
+	bh=ePbGhKrM0X2X47Ig0cCqNbkm6vptO7VyM2yJnt4HOIA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zSatSQKXQw74z0s/usMbIaCRaW6eY4TEZtITpp1cOe0bS7P2az8u1lk2xnUCAEk6z
-	 4Klit39UQLaUc0NBgLWc3W0wB7VHvuJYCKBs7eN2KxeugwPCoZ/1yBPU8oxT+eH8in
-	 3u8a2iPIJq9e/8aNcf3Ue3JmN+QZ9/1WkrVqR+g8=
+	b=qSz+Ff6VEkBbBtM1asrFv1Pj9gLU2GPel5/bw5+v3VSOuuzUmUQwIOBGGqvdrcoch
+	 YwIMOCHdHc6SiUX5okVSu4HQqh1wGXMjCY60fvUOoHPE2hX4rXLDZng8ojZR+DKFfC
+	 bc7iOdvmok/CwHhMMSsTWuac+AW2s/HuIeT5zS8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394154AbfJXS7s (ORCPT
+        id S2392263AbfJXTDS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:59:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40846 "EHLO mail.kernel.org"
+        Thu, 24 Oct 2019 15:03:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390034AbfJXS7r (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:59:47 -0400
+        id S2391577AbfJXTDS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:03:18 -0400
 Received: from localhost (unknown [109.190.253.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E6C42166E;
-        Thu, 24 Oct 2019 18:59:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBE492070B;
+        Thu, 24 Oct 2019 19:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571943587;
-        bh=a+uIvZuoQVHuTrFvBOzthw/TKu6zM/j2cbpgzHnS7NU=;
+        s=default; t=1571943797;
+        bh=ePbGhKrM0X2X47Ig0cCqNbkm6vptO7VyM2yJnt4HOIA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WcOVK2MoQPmQQSsCISXcIBuI7zyFW7PCPi3sEWyZrvsujyJU9KqXd8Lz9FuUcEycP
-         LovoXS6q0NzSjx0T9bwgKdiO0D2IdOC+9eCmPibS/8rcntyqRQWHweq3RvmcIYOhW0
-         RouTokS1q8E5knnKBp9KdlV/2jWAkeeZMIoYyjos=
-Date:   Thu, 24 Oct 2019 20:24:05 +0200
+        b=RtSj9ZsU+Qi/+k4LBe1ymBcSWx41hn33zdDT0kZRVK/BKRx2NjzZaugw+m+Ax7OgR
+         1of8SxMH/iJeyGtG2GxLaBGjUnkI9tRXqPBq3sj8s9batNIfLycusnajxA8I1HUfEF
+         l9r+xiRzlYUv7fKlZKX/QOAKdLIBdxgGFsrUltjA=
+Date:   Thu, 24 Oct 2019 20:27:49 +0200
 From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 2/4] dt-bindings: crypto: Add DT bindings
- documentation for sun8i-ss Security System
-Message-ID: <20191024182405.a4x5vc4hxwsev2hp@hendrix>
-References: <20191023201016.26195-1-clabbe.montjoie@gmail.com>
- <20191023201016.26195-3-clabbe.montjoie@gmail.com>
- <20191024065005.hdypdl2dgqsrry5i@gilmour>
- <20191024093118.GA15113@Red>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+Message-ID: <20191024182749.czihj3gnvj5yz2eo@hendrix>
+References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+ <20191005141913.22020-6-jagan@amarulasolutions.com>
+ <20191007105708.raxavxk4n7bvxh7x@gilmour>
+ <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
+ <20191016080306.44pmo3rfmtnkgosq@gilmour>
+ <CAMty3ZCTE=W+TNRvdowec-eYB625j97uG8F3fzVMtRFsKsqFFQ@mail.gmail.com>
+ <20191017095225.ntx647ivegaldlyf@gilmour>
+ <CAMty3ZAvqRLh16vFd-63h4+SzQkNydGfNKX_pByqFD-hZfncpQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191024093118.GA15113@Red>
+In-Reply-To: <CAMty3ZAvqRLh16vFd-63h4+SzQkNydGfNKX_pByqFD-hZfncpQ@mail.gmail.com>
 User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 11:31:18AM +0200, Corentin Labbe wrote:
-> On Thu, Oct 24, 2019 at 08:50:05AM +0200, Maxime Ripard wrote:
-> > Hi,
+On Thu, Oct 24, 2019 at 01:28:28PM +0530, Jagan Teki wrote:
+> On Thu, Oct 17, 2019 at 3:22 PM Maxime Ripard <mripard@kernel.org> wrote:
 > >
-> > On Wed, Oct 23, 2019 at 10:10:14PM +0200, Corentin Labbe wrote:
-> > > This patch adds documentation for Device-Tree bindings of the
-> > > Security System cryptographic offloader driver.
+> > On Wed, Oct 16, 2019 at 02:19:44PM +0530, Jagan Teki wrote:
+> > > On Wed, Oct 16, 2019 at 1:33 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > >
+> > > > On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
+> > > > > On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > > > >
+> > > > > > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
+> > > > > > > Add MIPI DSI pipeline for Allwinner A64.
+> > > > > > >
+> > > > > > > - dsi node, with A64 compatible since it doesn't support
+> > > > > > >   DSI_SCLK gating unlike A33
+> > > > > > > - dphy node, with A64 compatible with A33 fallback since
+> > > > > > >   DPHY on A64 and A33 is similar
+> > > > > > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
+> > > > > > >
+> > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> > > > > > > ---
+> > > > > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
+> > > > > > >  1 file changed, 38 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > > index 69128a6dfc46..ad4170b8aee0 100644
+> > > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > > @@ -382,6 +382,12 @@
+> > > > > > >                                       #address-cells = <1>;
+> > > > > > >                                       #size-cells = <0>;
+> > > > > > >                                       reg = <1>;
+> > > > > > > +
+> > > > > > > +                                     tcon0_out_dsi: endpoint@1 {
+> > > > > > > +                                             reg = <1>;
+> > > > > > > +                                             remote-endpoint = <&dsi_in_tcon0>;
+> > > > > > > +                                             allwinner,tcon-channel = <1>;
+> > > > > > > +                                     };
+> > > > > > >                               };
+> > > > > > >                       };
+> > > > > > >               };
+> > > > > > > @@ -1003,6 +1009,38 @@
+> > > > > > >                       status = "disabled";
+> > > > > > >               };
+> > > > > > >
+> > > > > > > +             dsi: dsi@1ca0000 {
+> > > > > > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
+> > > > > > > +                     reg = <0x01ca0000 0x1000>;
+> > > > > > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
+> > > > > > > +                     clock-names = "bus";
+> > > > > >
+> > > > > > This won't validate with the bindings you have either here, since it
+> > > > > > still expects bus and mod.
+> > > > > >
+> > > > > > I guess in that cas, we can just drop clock-names, which will require
+> > > > > > a bit of work on the driver side as well.
+> > > > >
+> > > > > Okay.
+> > > > > mod clock is not required for a64, ie reason we have has_mod_clk quirk
+> > > > > patch. Adjust the clock-names: on dt-bindings would make sense here,
+> > > > > what do you think?
+> > > >
+> > > > I'm confused, what are you suggesting?
 > > >
-> > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > > ---
-> > >  .../bindings/crypto/allwinner,sun8i-ss.yaml   | 64 +++++++++++++++++++
-> > >  1 file changed, 64 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+> > > Sorry for the confusion.
 > > >
-> > > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
-> > > new file mode 100644
-> > > index 000000000000..99b7736975bc
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
-> > > @@ -0,0 +1,64 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/crypto/allwinner,sun8i-ss.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Allwinner Security System v2 driver
-> > > +
-> > > +maintainers:
-> > > +  - Corentin Labbe <corentin.labbe@gmail.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - allwinner,sun8i-a83t-crypto
-> > > +      - allwinner,sun9i-a80-crypto
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: Bus clock
-> > > +      - description: Module clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: bus
-> > > +      - const: mod
-> > > +
-> > > +  resets:
-> > > +    maxItems: 1
+> > > The mod clock is not required for A64 and we have a patch for handling
+> > > mod clock using has_mod_clk quirk(on the series), indeed the mod clock
+> > > is available in A31 and not needed for A64. So, to satisfy this
+> > > requirement the clock-names on dt-bindings can update to make mod
+> > > clock-name is optional and bus clock is required.
 > >
-> > The A83t at least has a reset line, so please make a condition to have
-> > it required.
+> > No, the bus clock name is not needed if there's only one clock.
+>
+> Okay, is it because the same clock handle it on PHY side?
+
+No, because there's only one clock and thus you don't need to
+differentiate them.
+
 > >
+> > > I'm not exactly sure, this is correct but trying to understand if it
+> > > is possible or not? something like
+> > >
+> > >    clocks:
+> > >       minItems: 1
+> > >       maxItems: 2
+> > >      items:
+> > >        - description: Bus Clock
+> > >        - description: Module Clock
+> >
+> > That's correct.
+> >
+> > >    clock-names:
+> > >       minItems: 1
+> > >       maxItems: 2
+> > >      items:
+> > >        - const: bus
+> > >        - const: mod
+> >
+> > Here, just keep the current clock-names definition, and make it
+> > required only for SoCs that are not the A64
 >
-> Hello
+> Okay, please have a look here I have pasted the diff for comments.
 >
-> The A80 have one also, so I need to set minItems: 1
-> But setting both minItems: 1 and maxItems:1 lead to a check failure:
->
-> properties:resets: {'minItems': 1, 'maxItems': 1} is not valid under
-> any of the given schemas
->
-> How to do that ?
+>    clocks:
+> +    minItems: 2
+>      items:
+>        - description: Bus Clock
+>        - description: Module Clock
 
-IIRC the meta-schema prevent having both because the tooling will
-insert it for you.
+Didn't you tell me that you didn't need the module clock?
 
-It doesn't really matter at this level though. maxItems alone will
-make sure that there's a single element, and the schemas in the tools
-will make sure that the type for resets is correct.
+How do you handle the case were you just have the bus clock then?
 
-What you'd need here though would be to add resets to the list of
-required properties, otherwise it will only be checked against if the
-property is there.
+Maxime
