@@ -2,121 +2,128 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8736CCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A740BCA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5930720679
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:41:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571924481;
-	bh=luVH3DOzTKzdwuOvFet7P5MihG7cFzi04EgU67To+6M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1msn2knNpmO5+RhXnkSZBf/fbuLw5a5bisBhpl3Tvo0WMrQshfYwdvq/Ji9THyHBp
-	 Rc69urc+/+k+pED3E4Au4YBElN8qN5XXSIg3sGBgG9uZCyDUDcIwkZpMYGlD33852h
-	 IsalfC3DyNub+PtPxZdiFgvlYoBS6B35YzxAhjdY=
+	by mail.kernel.org (Postfix) with ESMTP id 7CCFC21906
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:46:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HqRzEDUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389294AbfJXNlU (ORCPT
+        id S2393677AbfJXNqQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:41:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58184 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387547AbfJXNlU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 09:41:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jQ+K+Qkm5Eu3uAlOrgsS/hGb6gv3j9J+2wAQuR3xOJ4=; b=sFXM/igr8xbZq+syxmiIS4OWs
-        7cikJfS3dYSX40kv9pPxZY77S4GMPWUdxpkhbLt8Lc56d+g0nhvSq0jPMlO3TWsowYzIlcFdudwoA
-        JqCuaDWdt42q9DQdxl2T7qDVEiQ41Y/ZxGnItAq/GyKl7r4jDffefAeyc734/hSUHoMPI=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNdMb-0003d8-C3; Thu, 24 Oct 2019 13:41:17 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8A642274293C; Thu, 24 Oct 2019 14:41:16 +0100 (BST)
-Date:   Thu, 24 Oct 2019 14:41:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>,
-        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] spi: set bits_per_word based on controller's
- bits_per_word_mask
-Message-ID: <20191024134116.GF46373@sirena.co.uk>
-References: <20191024110757.25820-1-alvaro.gamez@hazent.com>
- <20191024110757.25820-4-alvaro.gamez@hazent.com>
- <20191024111300.GD5207@sirena.co.uk>
- <20191024125436.GA8878@salem.gmr.ssr.upm.es>
- <20191024131129.GE46373@sirena.co.uk>
- <20191024131856.GA32609@salem.gmr.ssr.upm.es>
+        Thu, 24 Oct 2019 09:46:16 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:52663 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393672AbfJXNqP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 09:46:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1571924774; x=1603460774;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=vkZQhzMWV/fyOBV+LDd85sbkFNcBkgjmi8yYaRFWN1c=;
+  b=HqRzEDUvViqLaTnw84MGA2zw+ovupwGaJQbD8cpekEpbOlFwfy+VhTj9
+   Nb3rveeV1cYfQ7C3gMhCgYJj4zjUe1I54Dg9rwB0wD/p0QBG6aDW37kPN
+   eQoxWJ+AmuNno3xfHOdRCDxVgvxwTW0BsUdKZrelzqLTSXW0y7gJbHTqa
+   M=;
+X-IronPort-AV: E=Sophos;i="5.68,224,1569283200"; 
+   d="scan'208";a="762792918"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 24 Oct 2019 13:46:12 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id B6CC6A26BE;
+        Thu, 24 Oct 2019 13:46:08 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 24 Oct 2019 13:46:07 +0000
+Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.161.34) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 24 Oct 2019 13:45:59 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <james.morse@arm.com>, <talel@amazon.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <nicolas.ferre@microchip.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
+Subject: [PATCH v7 0/2] Amazon's Annapurna Labs POS Driver
+Date:   Thu, 24 Oct 2019 16:45:44 +0300
+Message-ID: <1571924746-8107-1-git-send-email-talel@amazon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ChQOR20MqfxkMJg9"
-Content-Disposition: inline
-In-Reply-To: <20191024131856.GA32609@salem.gmr.ssr.upm.es>
-X-Cookie: Filmed before a live audience.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D21UWA004.ant.amazon.com (10.43.160.252) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Amazon's Annapurna Labs SoCs include a Point of Serialization error logging
+unit that reports an error when a write error occurs (e.g. attempt to write
+to a read only register).This error shall be reported via the EDAC
+subsystem as uncorrectable-error.
 
---ChQOR20MqfxkMJg9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch series introduces the support for this unit.
 
-On Thu, Oct 24, 2019 at 03:18:57PM +0200, Alvaro Gamez Machado wrote:
-> On Thu, Oct 24, 2019 at 02:11:29PM +0100, Mark Brown wrote:
+Changes since v6:
+=================
+- reworked the commit message for the driver patch
+- dt-bindings: added -only to  GPL-2.0
+- fixed filename in MAINTAINERS
+- added driver managed unwind
 
-> > No, that still leaves the slave driver thinking it's sending 8 bits when
-> > really it's sending something else - the default is just 8 bits, if the
-> > controller can't do it then the transfer can't happen and there's an
-> > error.  It's not a good idea to carry on if we're likely to introduce
-> > data corruption.
+Changes since v5:
+=================
+- added missing include to dt binding
 
-> Well, yes. But I don't think that's a software issue but a hardware one.
+Changes since v4:
+================
+- fixed dt binding according to new dt scheme
+- added back the use of _relaxed accessors
 
-> If you have a board that has a SPI master that cannot talk to an 8 bits
-> device and you expect to communicate with anything that accepts 8 bits
-> you're not going to be able to. Either the kernel raises an error or it
-> shuts up and tries its best. I understand the first option is better, but I
-> also think that's not a software issue, that hardware simply cannot work as
-> is regardless of what we do in software. The hardware devices simply can't
-> talk to each other.
+Changes since v3:
+=================
+- ported to be edac device
+- converted dt-bindings to new scheme
+- added unit address to dt example
 
-Sure, but then it's going to be easier to diagnose problems if the
-software says that it's identified a data format problem than it is to
-try to figure out the results of data corruption.  There is also the
-possibility that if the formats the hardware needs to use can be made to
-align through rewriting software can persuade things to interoperate
-(eg, if all the transfers are multiples of 32 bits then a device can
-probably work with a controller that only supports 32 bit words even if
-the device expects a byte stream) but that requires explicit code rather
-than just silently accepting the data and hoping for the best.
+Changes since v2:
+=================
+- squashed left shifting fix to the driver
 
---ChQOR20MqfxkMJg9
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since v1:
+=================
+- move MODULE_ to the end of the file
+- simplified resource remapping devm_platform_ioremap_resource()
+- use platform_get_irq() instead of irq_of_parse_and_map()
+- removed the use of _relaxed accessor in favor to the regular ones
+- removed driver selected based on arch
+- added casting to u64 before left shifting (reported by kbuild test robot)
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2xqfsACgkQJNaLcl1U
-h9AJPwf/eBixL70rvrXmAkP/RrgemqHi86jCbwZJYCVt6vx1k7YDsO2xH4caw5c7
-fz+y7LOfHpPkXsZQJq82kaTxh8G62VWSvo8sGZw7yv5wQdhdVf1FCCzxAIsfZah0
-oP9BCsWfrawXt8pG9MFbFtVkqFnOpiq+dG9ipC3VjMl0k59qxT5kvtap5YNMEKEG
-fJn1ReujajXzf4FrcicPqqr7VFKeuwNrxxixVNQt60obrwnGyTy1irfRBCDQts8/
-6lIPt3CBg/CL9ZuelWR+1Tv2Uu41JOoYKany8ougCpPfwplDhS1ejGCI9tO9scNG
-AbCslema/C0KCwURbBXeTc2aHfv30Q==
-=pijI
------END PGP SIGNATURE-----
+Talel Shenhar (2):
+  dt-bindings: soc: al-pos: Amazon's Annapurna Labs POS
+  soc: amazon: al-pos-edac: Introduce Amazon's Annapurna Labs POS EDAC
+    driver
 
---ChQOR20MqfxkMJg9--
+ .../bindings/edac/amazon,al-pos-edac.yaml          |  41 +++++
+ MAINTAINERS                                        |   7 +
+ drivers/edac/Kconfig                               |   6 +
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/al_pos_edac.c                         | 174 +++++++++++++++++++++
+ 5 files changed, 229 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+ create mode 100644 drivers/edac/al_pos_edac.c
+
+-- 
+2.7.4
+
