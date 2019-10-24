@@ -2,91 +2,106 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7B1CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA4DCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014E2205F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7950F2166E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440098AbfJXSok (ORCPT
+        id S2408205AbfJXS7C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:44:40 -0400
-Received: from sauhun.de ([88.99.104.3]:43808 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437082AbfJXSok (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:44:40 -0400
-Received: from localhost (x4d0bc9de.dyn.telefonica.de [77.11.201.222])
-        by pokefinder.org (Postfix) with ESMTPSA id 5D9E82C011D;
-        Thu, 24 Oct 2019 20:44:38 +0200 (CEST)
-Date:   Thu, 24 Oct 2019 20:44:37 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        Thu, 24 Oct 2019 14:59:02 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:35496 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390034AbfJXS7B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 14:59:01 -0400
+X-Greylist: delayed 1503 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 14:59:01 EDT
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1iNhve-0007jA-Qd; Thu, 24 Oct 2019 13:33:47 -0500
+Message-ID: <ef150e9eb155eff410194ba5362ef404ce117c4a.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Ran Wang <ran.wang_1@nxp.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
         devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH v2] i2c: i2c-stm32f7: remove warning when compiling with
- W=1
-Message-ID: <20191024184437.GE1870@kunai>
-References: <1571145118-3522-1-git-send-email-alain.volmat@st.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a+b56+3nqLzpiR9O"
-Content-Disposition: inline
-In-Reply-To: <1571145118-3522-1-git-send-email-alain.volmat@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Date:   Thu, 24 Oct 2019 13:33:45 -0500
+In-Reply-To: <20191021034927.19300-2-ran.wang_1@nxp.com>
+References: <20191021034927.19300-1-ran.wang_1@nxp.com>
+         <20191021034927.19300-2-ran.wang_1@nxp.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: ran.wang_1@nxp.com, rjw@rjwysocki.net, robh+dt@kernel.org, leoyang.li@nxp.com, mark.rutland@arm.com, pavel@ucw.cz, biwen.li@nxp.com, len.brown@intel.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v7 2/3] Documentation: dt: binding: fsl: Add
+ 'little-endian' and update Chassis define
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, 2019-10-21 at 11:49 +0800, Ran Wang wrote:
+> By default, QorIQ SoC's RCPM register block is Big Endian. But
+> there are some exceptions, such as LS1088A and LS2088A, are
+> Little Endian. So add this optional property to help identify
+> them.
+> 
+> Actually LS2021A and other Layerscapes won't totally follow Chassis
+> 2.1, so separate them from powerpc SoC.
 
---a+b56+3nqLzpiR9O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Did you mean LS1021A and "don't" instead of "won't", given the change to the
+examples?
 
-On Tue, Oct 15, 2019 at 03:11:58PM +0200, Alain Volmat wrote:
-> Remove the following warning:
->=20
-> drivers/i2c/busses/i2c-stm32f7.c:315:
-> warning: cannot understand function prototype:
-> 'struct stm32f7_i2c_spec i2c_specs[] =3D
->=20
-> Replace a comment starting with /** by simply /* to avoid having
-> it interpreted as a kernel-doc comment.
->=20
-> Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> Change in v5:
+> 	- Add 'Reviewed-by: Rob Herring <robh@kernel.org>' to commit message.
+> 	- Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-
+> cells'.
+> 	please see https://lore.kernel.org/patchwork/patch/1101022/
 
-Applied to for-current, thanks!
+I'm not sure why Rob considers this the "correct form" -- there are other
+examples of the current form, such as ibm,#dma-address-cells and ti,#tlb-
+entries, and the current form makes more logical sense (# is part of the
+property name, not the vendor).  Oh well.
+
+> Required properites:
+>    - reg : Offset and length of the register set of the RCPM block.
+> -  - fsl,#rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
+> +  - #fsl,rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
+>  	fsl,rcpm-wakeup property.
+>    - compatible : Must contain a chip-specific RCPM block compatible string
+>  	and (if applicable) may contain a chassis-version RCPM compatible
+> @@ -20,6 +20,7 @@ Required properites:
+>  	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
+>  	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
+>  	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
+> +	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
+
+Is there something actually called "2.1+"?  It looks a bit like an attempt to
+claim compatibility with all future versions.  If the former, is it a name
+that comes from the hardware side with an intent for it to describe a stable
+interface, or are we later going to see a patch changing some by-then-existing 
+device trees from "2.1+" to "2.1++" when some new incompatibility is found?
+
+Perhaps it would be better to bind to the specific chip compatibles.
+
+-Scott
 
 
---a+b56+3nqLzpiR9O
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2x8RUACgkQFA3kzBSg
-Kbbyqw/8D1GESh2wz7RCGgify6hbIO/FgUOUJigLMBvN7ElqmAgJbf23OvTg1zQx
-67AJ5QhuUzw3oXySC2ntHIbBvM5pfiJjCp3knOLIrjWCUVZ2KvBPEprieW5tpBj6
-sXy+6ZzojJj8vpA6LqmIu/jX0vMo9NBGLUGkWcnkklz0J0k3U+0VzdAUHGvVpJGd
-xWUxHGG8q5vJ5Y4t1RDktRj+vraHaV7SZwp5QL5+tD0LDZ1e00pqupVpHL+vEzIj
-GPljclhyWiF/fQzBpY4MZWZ2Gpk4ZCJ5aL2oQtY9HTzy3UmPQJAu2ZjfDzAwM2cy
-UfX9vpo9Uzg5k3sphhQz8lL35KYeRNj/HHGn4ricMT05G6AnLZ3PvPN3N6XL7dbk
-BFnN1xaDmiF0izsXGQQbkpHvywAL/glYaImGZ2B4cKUN58JXavsmFsW6qM1mlrNl
-hAFPFwJWffGJRW91lxC++v4LwjkpuypnRghWwy6sllU28/MgBESKnQwDqW4X3hmA
-SsUijLNTRUgUWjgbUJ7s0YQ0zOEP/3U0k/Jv8XY8aLRu38fJ5jCxREQinZF6+Ner
-G1DvSW9mfisN2HQqV9lWdADiiM5qfDyqJMT+SkSkXuaYqWqn9FNSFNn9bWjVRqut
-aTEeMGUPOljpMtVflUPoV6nPF8LhFNXGhKaZqx5RkGQD9blcWaQ=
-=yMm2
------END PGP SIGNATURE-----
-
---a+b56+3nqLzpiR9O--
