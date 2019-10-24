@@ -2,121 +2,128 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B53BCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 06:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A01CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 06:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC822166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 06:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D571F20856
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 06:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Y0Ugk/Gk"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="hyFdNMn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408530AbfJXGWn (ORCPT
+        id S2437795AbfJXGs3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 02:22:43 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35332 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727750AbfJXGWn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 02:22:43 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z6so19680149otb.2
-        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 23:22:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yZG9jtnuedOt/dHRAYWtgX9vQPKuKorOkKTpY87wyXk=;
-        b=Y0Ugk/GkYYSJvfvSLIIRehaDu7G67d+YIEMhVeWgQ6hkMbNhBCGfy/0Ti7kxXNizWQ
-         hMbjNMj+HgU8BbK7r0tTchIFVVQbV5lhYo8/lG/R1mVuI4F2cvog2Y4YcJgMdHG5CteZ
-         uirFwSv4l+I+eYBe1BRuO2vM6IPfVSWHf6iNqKsviquihddTxgf10/zDKQu/gnDl10mF
-         kbPz3KsxZrayQyuzNyiwIVIk8meycKiYg7Mg93ladWbWIRjMbZIgtFhKfU7ssbHgjwzD
-         rTbkpI1mUHKts4Wn2qyoFblGlASbBIUxPsGLJF+uGyhAvLuQ/3Cz8fF8AvVBunekpIy9
-         S/wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yZG9jtnuedOt/dHRAYWtgX9vQPKuKorOkKTpY87wyXk=;
-        b=ilAoKtnffJtiuFJ5nWT8XLZ1K3IwdcZQuFRHoc22Qp19Pk3KrEu1r0UZEzOUtQFfa3
-         q1dN/jLEVtLeIFYNDRLcqDUJ2vcGNt2uaEoZsriudK1BBkmx6aPUYoKv6QtS2+yo1U/c
-         kofTCOaWfW7APGv+WiTdpq656lGXiSpsZdL87342eGhELCE3z+MvUaR9z9siYAsCXydF
-         z9v80zkbB1W65zBwGZ37e376zVP91RNwJ44yvawvKUIx0Wn98Y950ZjqLv26+TufNojU
-         ee7b1MUt6pCJLH2ckO43SBVkbb9hXuV48PA29eHHvn9Ko2QhK3y/ciwrLezFsJh07gXU
-         gHKw==
-X-Gm-Message-State: APjAAAXC1jsd1GE72FKTQTQb05Cs1Y8ljDKcTP3yf7CO9Wgenu74X+T0
-        alfVPbU3UuWJqai+Wq5lCTNmSZc9GfIsJIOh5E+6ig==
-X-Google-Smtp-Source: APXvYqxJku0jD1DLeuOdSJmz+cYvJj75K9Mr00GQYG+N9hxnoES/hgjbwd23TIaXuqUWdX5hvF6wbbZk3Q31ac5fT4k=
-X-Received: by 2002:a9d:7dd6:: with SMTP id k22mr10090655otn.256.1571898160578;
- Wed, 23 Oct 2019 23:22:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018082557.3696-1-bibby.hsieh@mediatek.com> <20191018082557.3696-2-bibby.hsieh@mediatek.com>
-In-Reply-To: <20191018082557.3696-2-bibby.hsieh@mediatek.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 24 Oct 2019 08:22:29 +0200
-Message-ID: <CAMpxmJW_HQnL8i5FnKcVUs=ZyrnaFe6X+oqG38-v=O05d5vNxw@mail.gmail.com>
+        Thu, 24 Oct 2019 02:48:29 -0400
+Received: from mail-eopbgr20115.outbound.protection.outlook.com ([40.107.2.115]:41122
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437772AbfJXGs2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 02:48:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oQwJ/yXWhE9thgzQc5tDs+2LjL7p+lpNQ92X97gbjasU6P+RzMlWfHZ/R61qx1iXiLuoLnclyZpuWO5qUHLiF880oOYXlHFL4WTAjdVgUtQWp+uQ3Yae6F+vLHEdCV9UnGdyK6FpwU8XpYQJOiZO08LCLXAHUXEqFpEsXADO4FrPlwWn9wOdqPgSGkbhgwaE1QMbO1sLCZFGBG9HOE6xvKQiIsmWqmNt24ysNacMRTU79VhPks5h7igWSyLoHtOsKMG+CMTISJ4mo0OVdVqYSsTpCXsb2HKaak1BPXs+clhnfIhV8J1F57/un5Zvjnok6TPLglMWJuX+zqX7aceVHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kH+2tS8dKDTbBHWsbwFbvgDdsFZt5jRFwq/0ZRrsfcU=;
+ b=RLWOt6orO0Bg2pAlwa+niS8oLjS2rvxlmsKXoeKdAqol4a8JL8fTf6U6EYc7tRRN1YcayC8gFIbZ5gXpXm1AOl4COcw7SWtUPNZI//kafEPCmv5FSM7hs4Cy1OykuJ2fEEluMpA4hsAD+fTmaX7L3g02K5s+pG4Rk5cWwRc/iZg/hQ4x5VLYi3urmU8vD/0ANAg1n81V6BCkhjiac3DGL29XRvabSYXDeTE43ICgrd2rMSk+JdGruEk+mat0ZtIbu/kNk4+W8AjIjCeuoGrIUrkabFrgdPUyMzdhUIeKUQdIwMOeRsdejennQGAUBdm9GftSa05SJmhkgmTIMWaI0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kH+2tS8dKDTbBHWsbwFbvgDdsFZt5jRFwq/0ZRrsfcU=;
+ b=hyFdNMn7jC1TyWgJ/Hr0pSSZv/yfILDg7gexOwejHo2bIahkeoT6T4kqt/jStjMGLXaaRk8seF0cqRK+B4GRPzOalIZHBffCdyAL2UePunp2xndIEDyjuMT86LOa9dz8uFBKiCGRNUr1a3MxorrdViUtKo50lMc94GJDZ/MuwA4=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3324.eurprd02.prod.outlook.com (52.134.67.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.20; Thu, 24 Oct 2019 06:48:23 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.030; Thu, 24 Oct 2019
+ 06:48:23 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+CC:     "tfiga@chromium.org" <tfiga@chromium.org>,
+        "drinkcat@chromium.org" <drinkcat@chromium.org>,
+        "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 Subject: Re: [PATCH v2] dt-binding: eeprom: at24: add supply properties
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thread-Topic: [PATCH v2] dt-binding: eeprom: at24: add supply properties
+Thread-Index: AQHVhY2ytpixntn4Q02Xj2kF/r5ULKdpYu6A
+Date:   Thu, 24 Oct 2019 06:48:23 +0000
+Message-ID: <b8d637a1-d565-14ec-dc5d-19610e0cd01e@axentia.se>
+References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
+ <20191018082557.3696-2-bibby.hsieh@mediatek.com>
+In-Reply-To: <20191018082557.3696-2-bibby.hsieh@mediatek.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1P192CA0017.EURP192.PROD.OUTLOOK.COM (2603:10a6:3:fe::27)
+ To DB3PR0202MB3434.eurprd02.prod.outlook.com (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c86827d4-5823-4f00-804d-08d7584e29dc
+x-ms-traffictypediagnostic: DB3PR0202MB3324:
+x-microsoft-antispam-prvs: <DB3PR0202MB33249E06ED5959C73605F681BC6A0@DB3PR0202MB3324.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1824;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(136003)(366004)(39830400003)(189003)(199004)(6246003)(54906003)(76176011)(7736002)(110136005)(4001150100001)(4326008)(58126008)(53546011)(6506007)(31686004)(25786009)(2501003)(256004)(316002)(386003)(52116002)(6512007)(36756003)(186003)(31696002)(102836004)(86362001)(305945005)(99286004)(71190400001)(71200400001)(26005)(3846002)(476003)(2616005)(65956001)(66066001)(65806001)(446003)(486006)(6116002)(229853002)(2906002)(6436002)(11346002)(6486002)(66946007)(64756008)(66446008)(66556008)(66476007)(508600001)(14454004)(81166006)(81156014)(8936002)(5660300002)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3324;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UxBgYBByVrLcarBc7TlB8uDJln1cQkCxd1kkuTYMdWN4VbV8vWUiCOO+SbaZKwgjYd1+eVGfD4esVDy/t/gnwe6cH5AecmyVNlLdDcKijisf5jVeKq/COQmdB41r/Ir35A9AHccGQBaLqwoQsqsAUIb+zuFIKTAs8/C+C4CCtlhAz7sPpDKFtPUlAc3GH3GZIOnNFo5EIWs5q7EZlq0xIkUWq3pWp16cZWqgvRO2qWLjVTO1vyiCrbRESGn+N1E7NDDK7fpQ9WIFNDBN5Lh8MFgxWlYh2Ew5bBMAjx/HZtpVX3d1sYIOBGhyoy7Zo16Z8JoadrDq+tCMMkoafpadJtnnVUDZg58NDrIpZNkiEwH273fOAPSVip2iZylTdAHHOYwflGiati/+UXlIb5MeX1TsNhSgSbpLI+h6L6qROoEqCFBDJ98Y+ntnA4hVu0d+
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FFE1E3D30A3CAC4DA39EC313A15C9B2C@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: c86827d4-5823-4f00-804d-08d7584e29dc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 06:48:23.0993
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lM5LRVXGlBaaB2J8hfjFvLPtfZdLhOWnkXFLZDVnWlWJq2+PTEc8PeCnWCWKP3ab
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3324
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pt., 18 pa=C5=BA 2019 o 10:26 Bibby Hsieh <bibby.hsieh@mediatek.com> napisa=
-=C5=82(a):
->
-> In some platforms, they disable the power-supply of eeprom and i2c due
-> to power consumption reduction.
->
-> This patch add two supply properties: vcc-supply, i2c-supply.
->
-> Changes since v1:
->  - change supply name
->  - rebase to next
->
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/eeprom/at24.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documen=
-tation/devicetree/bindings/eeprom/at24.yaml
-> index e8778560d966..578487a5d9b7 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> @@ -167,6 +167,14 @@ properties:
->      minimum: 1
->      maximum: 8
->
-> +  vcc-supply:
-> +    description:
-> +      phandle of the regulator that provides the supply voltage.
-> +
-> +  i2c-sypply:
-> +    description:
-> +      phandle to the regulator that provides power to i2c.
-> +
-
-Something was bothering me about this patch so I came back to take a
-look. Can you explain what i2c actually stands for in this doc? I hope
-I'm misinterpreting something and it isn't that the driver disables
-the regulator powering the i2c bus controller?
-
-Bart
-
->  required:
->    - compatible
->    - reg
-> --
-> 2.18.0
->
+T24gMjAxOS0xMC0xOCAxMDoyNSwgQmliYnkgSHNpZWggd3JvdGU6DQo+IEluIHNvbWUgcGxhdGZv
+cm1zLCB0aGV5IGRpc2FibGUgdGhlIHBvd2VyLXN1cHBseSBvZiBlZXByb20gYW5kIGkyYyBkdWUN
+Cj4gdG8gcG93ZXIgY29uc3VtcHRpb24gcmVkdWN0aW9uLg0KPiANCj4gVGhpcyBwYXRjaCBhZGQg
+dHdvIHN1cHBseSBwcm9wZXJ0aWVzOiB2Y2Mtc3VwcGx5LCBpMmMtc3VwcGx5Lg0KPiANCj4gQ2hh
+bmdlcyBzaW5jZSB2MToNCj4gIC0gY2hhbmdlIHN1cHBseSBuYW1lDQo+ICAtIHJlYmFzZSB0byBu
+ZXh0DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCaWJieSBIc2llaCA8YmliYnkuaHNpZWhAbWVkaWF0
+ZWsuY29tPg0KPiAtLS0NCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9lZXBy
+b20vYXQyNC55YW1sIHwgOCArKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9u
+cygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9lZXByb20vYXQyNC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Vl
+cHJvbS9hdDI0LnlhbWwNCj4gaW5kZXggZTg3Nzg1NjBkOTY2Li41Nzg0ODdhNWQ5YjcgMTAwNjQ0
+DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9lZXByb20vYXQyNC55
+YW1sDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9lZXByb20vYXQy
+NC55YW1sDQo+IEBAIC0xNjcsNiArMTY3LDE0IEBAIHByb3BlcnRpZXM6DQo+ICAgICAgbWluaW11
+bTogMQ0KPiAgICAgIG1heGltdW06IDgNCj4gIA0KPiArICB2Y2Mtc3VwcGx5Og0KPiArICAgIGRl
+c2NyaXB0aW9uOg0KPiArICAgICAgcGhhbmRsZSBvZiB0aGUgcmVndWxhdG9yIHRoYXQgcHJvdmlk
+ZXMgdGhlIHN1cHBseSB2b2x0YWdlLg0KPiArDQo+ICsgIGkyYy1zeXBwbHk6DQoNCnMvc3lwcGx5
+L3N1cHBseS8NCg0KQ2hlZXJzLA0KUGV0ZXINCg0KPiArICAgIGRlc2NyaXB0aW9uOg0KPiArICAg
+ICAgcGhhbmRsZSB0byB0aGUgcmVndWxhdG9yIHRoYXQgcHJvdmlkZXMgcG93ZXIgdG8gaTJjLg0K
+PiArDQo+ICByZXF1aXJlZDoNCj4gICAgLSBjb21wYXRpYmxlDQo+ICAgIC0gcmVnDQo+IA0KDQo=
