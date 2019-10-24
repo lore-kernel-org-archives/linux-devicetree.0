@@ -4,109 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AB8CA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B823CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5EE21929
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A18321872
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571956398;
-	bh=zv/+Cg7FqzWfk4zoUYYas2gkXufxYiBgGui3pLf7Im0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=luFNuztynzUfBSB3j0qGW2/aQJaMxAp/pP9dPuoD9wkh+6lDy4lD5HuiYE/bUS4Py
-	 h6NumkJx2XoOUeT1ekJY5BH1CqHa+TBd07NCInZpCSQPITw4JBsk5RVtceYp5/2oVw
-	 BwgwUGMuGJfLFiXIM4l6vyrxwc1qPAHXNnpayRfg=
+	s=default; t=1571956507;
+	bh=UxS1/0iOkIcZ9qv0FyZweVUjggL6cG18LH/dVZuywE0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=kvtoiA0KHNYcxoqWFsjN4oeCi+Oa3CeTylmGDPG2CEfnicDZ0hLA9EGSJTwYhPSYQ
+	 TDdZWspLlSEkP68NVAROFPqBsyDsVSgag9sxZifUHMv4RcYVVXHwNoMD2IuE30urHw
+	 2t8CpHBOdfVOS3aZlcQO6SHbNfUQUdDKzabbDdCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731695AbfJXWdR (ORCPT
+        id S1731812AbfJXWfG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:33:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37404 "EHLO mail.kernel.org"
+        Thu, 24 Oct 2019 18:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbfJXWdR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:33:17 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F45221D71;
-        Thu, 24 Oct 2019 22:33:16 +0000 (UTC)
+        id S1731543AbfJXWfG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 18:35:06 -0400
+Subject: Re: [GIT PULL] Devicetree fixes for v5.4, round 2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571956396;
-        bh=zv/+Cg7FqzWfk4zoUYYas2gkXufxYiBgGui3pLf7Im0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bhedDmGWQVxjj/0LqpYmP4rIMIPZ4nUxgoeLK1IdNfMq7BlRbprrfMVQ//KlzTzQ1
-         JYU5Zx2YujkbWZVeF5x4X0jAZe9sDHIBPMVs7AitGNDIuEvsAOgXQEfdjyrVE1hs1p
-         jz6LMrYnBCKaFNffzUhzsHM7ihKu0plvzWu9zkoc=
-Received: by mail-qt1-f179.google.com with SMTP id m15so380045qtq.2;
-        Thu, 24 Oct 2019 15:33:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAVsUSwMX4zXM24FnGJ3+DiLOr5d8aZWGJ6CYY7ihQ1uhhgM8MvY
-        HMKw9ZLyCTdDVs8h2CJl7ZAEdpbfPMvS/oF9Hw==
-X-Google-Smtp-Source: APXvYqzpZiq+VxT8v6OnoJFomiqo/yUa7OZtDUCbwhGR9BMysDk7zHRDlulknPdgAbB0q10WoWnbr5qfzCNc76cK/Yk=
-X-Received: by 2002:ac8:741a:: with SMTP id p26mr40504qtq.143.1571956395662;
- Thu, 24 Oct 2019 15:33:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
- <20191021033220.GG4500@tuxbook-pro> <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
- <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
-In-Reply-To: <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 24 Oct 2019 17:33:04 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
-Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1571956506;
+        bh=UxS1/0iOkIcZ9qv0FyZweVUjggL6cG18LH/dVZuywE0=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=1dYf/QBvnWfqCzu5YO0ZwW1gzZYOX2OnYQcJryTef6+J7q0ILUCEOzLknyrB7DdNI
+         12QaNcf9rWQByorXpfOBYm4apBC1q8yFMwkHS2/I6gAeuGsCeDgVdHCwP5WwdoHbl4
+         lxKxtTJWYx084fsIAbmfXtjSn5y2GcJMHI6b5FZA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191024222255.GA25776@bogus>
+References: <20191024222255.GA25776@bogus>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191024222255.GA25776@bogus>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ tags/devicetree-fixes-for-5.4-2
+X-PR-Tracked-Commit-Id: 5dba51754b04a941a1064f584e7a7f607df3f9bc
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 39a38bcba4ab6e5285b07675b0e42c96eec35e67
+Message-Id: <157195650608.8812.1605642294686975929.pr-tracker-bot@kernel.org>
+Date:   Thu, 24 Oct 2019 22:35:06 +0000
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 6:00 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi Rob,
->
-> On 2019-10-24 01:19, Rob Herring wrote:
-> > On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> >>
-> >> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
-> >>
-> >> > LLCC behaviour is controlled by the configuration data set
-> >> > in the llcc-qcom driver, add the same for SC7180 SoC.
-> >> > Also convert the existing bindings to json-schema and add
-> >> > the compatible for SC7180 SoC.
-> >> >
-> >>
-> >> Thanks for the patches and thanks for the review Stephen. Series
-> >> applied
-> >
-> > And they break dt_binding_check. Please fix.
-> >
->
-> I did check this and think that the error log from dt_binding_check is
-> not valid because it says cache-level is a required property [1], but
-> there is no such property in LLCC bindings.
+The pull request you sent on Thu, 24 Oct 2019 17:22:55 -0500:
 
-Then you should point out the issue and not just submit stuff ignoring
-it. It has to be resolved one way or another.
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.4-2
 
-If you refer to the DT spec[1], cache-level is required. The schema is
-just enforcing that now. It's keying off the node name of
-'cache-controller'.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/39a38bcba4ab6e5285b07675b0e42c96eec35e67
 
-Rob
+Thank you!
 
-[1] https://github.com/devicetree-org/devicetree-specification/blob/master/source/devicenodes.rst#multi-level-and-shared-cache-nodes-cpuscpul-cache
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
