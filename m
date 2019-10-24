@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8C7CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D138CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404D02166E
+	by mail.kernel.org (Postfix) with ESMTP id D7B9921655
 	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1571918281;
-	bh=Tm93S0n0+H80LaP4BT1i45cBmshmmwwGVjqrWQOW5yU=;
+	bh=JkFky/ITUM9jzgQK7Q/6LJi4fMQZ9He6VFRlQ+WKMQ4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=SAvyAS+rakIJVRVlmi+z5Mud34BrEetT2XzeF0941EXpGa6R5ULGwtBLuWWRQVOKR
-	 7x/labA7RjknLcEF44lTEJE8pUKn20ez4+LN7rNKwXTLJGLk/aZVNlMprkNzsnaQdk
-	 OSHf9GoF8TQD887Y9M6dVT3hTYGx0iaPnAW3hrUA=
+	b=j0AV4pNa66/fDyQidXmkNu7ReaRv6Mo2LJc3zQUv4tR6kl2SuIgsSaaNQFlOngGYr
+	 BbQqmWwBso3uLp6fKBjLH/52p4JAszvbWqzxBi+UNIfK+dYRLFk0CpWkmYiKXPbK68
+	 BtBwYByZFiA0fBxQcyesgmhMtiymxWCTCiSDdWOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409266AbfJXL6A (ORCPT
+        id S2409269AbfJXL6B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:58:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53696 "EHLO
+        Thu, 24 Oct 2019 07:58:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53666 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409254AbfJXL6A (ORCPT
+        with ESMTP id S2409253AbfJXL6A (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:58:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
@@ -33,17 +33,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=6Fr03L50fl93+YebJv4nFx8wK7Qt3CGRJxXT2ySx5HQ=; b=o6JnZZXUBbd3
-        DRds99rxZRbA8n83RxzfBRO8gdYN9im5BAwAzpjgrvVOW0R8rt3TTmiJlR6nyYRXGFXtx/royWSG/
-        rwYknVJg6c50APL1mHjCQct80ZHKzsSNHBv9mhWQjcNVHAO+xkzXbbHXDOOtV99vthJ747oSHSZmJ
-        o0vCg=;
+        List-Archive; bh=NwY0+e/21+fQpJVaYWikXqj2GnmkWOwotVlTdrqTWwg=; b=Zlacs+o0ZY4D
+        9KwJbesgdEuhb2xJ33sV0tFBqG+zqVDoRdaGm29/sgcZV9qU/NtUMU/psmyknRFodNppEYkjMdmzy
+        kgH/8/F8d424sNP1RsnnJCB0gYmhePV8X1GOs2yF6atOFUbMnpDqxCBFdTIunlXAiNw93nCJh6h50
+        DZHRU=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iNbkc-0003Ri-5F; Thu, 24 Oct 2019 11:57:58 +0000
+        id 1iNbkb-0003Rh-TL; Thu, 24 Oct 2019 11:57:57 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8FD5D2743259; Thu, 24 Oct 2019 12:57:57 +0100 (BST)
+        id 5EB4C274293C; Thu, 24 Oct 2019 12:57:57 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
 Cc:     devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
@@ -51,10 +51,10 @@ Cc:     devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
         Michal Simek <michal.simek@xilinx.com>,
         Rob Herring <robh+dt@kernel.org>,
         Shubhrajyoti Datta <shubhraj@xilinx.com>
-Subject: Applied "spi: xilinx: add description of new property xlnx,num-transfer-bits" to the spi tree
-In-Reply-To: <20191024110757.25820-2-alvaro.gamez@hazent.com>
+Subject: Applied "spi: xilinx: Add DT support for selecting transfer word width" to the spi tree
+In-Reply-To: <20191024110757.25820-3-alvaro.gamez@hazent.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191024115757.8FD5D2743259@ypsilon.sirena.org.uk>
+Message-Id: <20191024115757.5EB4C274293C@ypsilon.sirena.org.uk>
 Date:   Thu, 24 Oct 2019 12:57:57 +0100 (BST)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -63,7 +63,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 The patch
 
-   spi: xilinx: add description of new property xlnx,num-transfer-bits
+   spi: xilinx: Add DT support for selecting transfer word width
 
 has been applied to the spi tree at
 
@@ -88,45 +88,47 @@ to this mail.
 Thanks,
 Mark
 
-From e3354b17b4ac10ad2c23e244444ab38927a69ee9 Mon Sep 17 00:00:00 2001
+From e58f7d15e6beb255b3907054a0536db77c979a31 Mon Sep 17 00:00:00 2001
 From: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Date: Thu, 24 Oct 2019 13:07:55 +0200
-Subject: [PATCH] spi: xilinx: add description of new property
- xlnx,num-transfer-bits
+Date: Thu, 24 Oct 2019 13:07:56 +0200
+Subject: [PATCH] spi: xilinx: Add DT support for selecting transfer word width
 
-This property is used to set the number of bits per transfer (bits_per_word).
-
-Xilinx' IP core allows either 8, 16 or 32, and is non changeable on runtime,
-only when instantiating the core.
+This core supports either 8, 16 or 32 bits as word width. This value is only
+settable on instantiation, and thus we need to support any of them by means
+of the device tree.
 
 Signed-off-by: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Link: https://lore.kernel.org/r/20191024110757.25820-2-alvaro.gamez@hazent.com
+Link: https://lore.kernel.org/r/20191024110757.25820-3-alvaro.gamez@hazent.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/spi-xilinx.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/spi/spi-xilinx.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-index dc924a5f71db..5f4ed3e5c994 100644
---- a/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-@@ -8,7 +8,8 @@ Required properties:
- 			  number.
+diff --git a/drivers/spi/spi-xilinx.c b/drivers/spi/spi-xilinx.c
+index d5f9d5fbb3e8..8dd2bb99cb4d 100644
+--- a/drivers/spi/spi-xilinx.c
++++ b/drivers/spi/spi-xilinx.c
+@@ -391,7 +391,7 @@ static int xilinx_spi_probe(struct platform_device *pdev)
+ 	struct xilinx_spi *xspi;
+ 	struct xspi_platform_data *pdata;
+ 	struct resource *res;
+-	int ret, num_cs = 0, bits_per_word = 8;
++	int ret, num_cs = 0, bits_per_word;
+ 	struct spi_master *master;
+ 	u32 tmp;
+ 	u8 i;
+@@ -403,6 +403,11 @@ static int xilinx_spi_probe(struct platform_device *pdev)
+ 	} else {
+ 		of_property_read_u32(pdev->dev.of_node, "xlnx,num-ss-bits",
+ 					  &num_cs);
++		ret = of_property_read_u32(pdev->dev.of_node,
++					   "xlnx,num-transfer-bits",
++					   &bits_per_word);
++		if (ret)
++			bits_per_word = 8;
+ 	}
  
- Optional properties:
--- xlnx,num-ss-bits	: Number of chip selects used.
-+- xlnx,num-ss-bits	 : Number of chip selects used.
-+- xlnx,num-transfer-bits : Number of bits per transfer. This will be 8 if not specified
- 
- Example:
- 	axi_quad_spi@41e00000 {
-@@ -17,5 +18,6 @@ Example:
- 			interrupts = <0 31 1>;
- 			reg = <0x41e00000 0x10000>;
- 			xlnx,num-ss-bits = <0x1>;
-+			xlnx,num-transfer-bits = <32>;
- 	};
- 
+ 	if (!num_cs) {
 -- 
 2.20.1
 
