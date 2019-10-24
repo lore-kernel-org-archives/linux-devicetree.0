@@ -2,132 +2,98 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF9DCA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 08:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ED2CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 08:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A44D2166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 08:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FF42070B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 08:23:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rctbzubu"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rJQOBe1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfJXIT2 (ORCPT
+        id S1726951AbfJXIXh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:19:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40154 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438075AbfJXIT1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 04:19:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o28so24963932wro.7
-        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 01:19:26 -0700 (PDT)
+        Thu, 24 Oct 2019 04:23:37 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:37317 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfJXIXg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 04:23:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bwpDjxlqC/mR626oiSg3Rt01CrIhV7qqzUguEfa254s=;
-        b=rctbzubuNGhdxVH1cHUWtH6wBzi8gxCG7yptBsEwlS4gWYi5kvsNmT5BF4Sx07qp03
-         58+QCW2JdBBoM9MZBOrilx3qjwt1pb3RAsdbjhrSXDYYFb4wml6EVX3Bs/aywQ4UNhG8
-         g19cVHb9HkAZ9rUULh4jSiUc2yNbtPugmpoip64TkSO4UIAAG18+IJE9hjxcq2qm8KJL
-         e2ayVuB/OBKuH/SKnTWW1287Id3pdrM8Kq8mS6QRWQ+9KMQAWQLgo0JsGf2XDVB07rnm
-         ovkLyNEZQ+K3iQzF/ep2WCT0oIDVsJbkvCmePPccdB22nf8flh0RBaX0s5BG6ckHuscZ
-         9Gug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=bwpDjxlqC/mR626oiSg3Rt01CrIhV7qqzUguEfa254s=;
-        b=TbCMlW7KRuSua/xqoENplcyBdwE4vyFBYXMFdnAzfdp2fSznnYqE9xu4FAMDrZ3/wE
-         WdwhC2j6WSAXMxQgkjg2cZj0VgIFe/cH+uNgMWa2f9MUb6JgwwRXBUKnWc7EZtxq/tyz
-         PtTxiYlttjyrrG3latODzLe3EaxsY2RZ7lJgKq6Vr6a3/l3O589JoFHlAYekolvSOyu+
-         7/lVaF0Eb+vF+nR6L6o6ZVbzWMDOmQWaGbrek8oHGQoeY7dgTB+7x/yAe3tvWWn7J6Wz
-         eiRJR+1xLaeJbxF5ox4ojIOl7dDmAjzCTcsVaJI+VknkhBboMEkCMmz1YwhLs8A54cfQ
-         XVag==
-X-Gm-Message-State: APjAAAX7lk73T0B1P+x5PPSS+X8PoLeSXzPYDmTJJIenDlIF45zO9I6X
-        FsQ5dLlgUI6vx4vdrlVI/aapxA==
-X-Google-Smtp-Source: APXvYqzeWDHSLcoAOmOaHrCuIDnceXDiEw2PFxiRUtr8YD5A9NrQvgKoaJB8J6nksskgcWcq450hBA==
-X-Received: by 2002:adf:c448:: with SMTP id a8mr2657636wrg.233.1571905165370;
-        Thu, 24 Oct 2019 01:19:25 -0700 (PDT)
-Received: from dell ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id u1sm35262518wru.90.2019.10.24.01.19.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 24 Oct 2019 01:19:24 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 09:19:23 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tianping Fang <tianping.fang@mediatek.com>
-Subject: [GIT PULL] Immutable branch between MFD, Power and RTC due for the
- v5.5 merge window
-Message-ID: <20191024081923.GJ15843@dell>
-References: <20190910070446.639-1-frank-w@public-files.de>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1571905416; x=1603441416;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=gV1uCKgOFL33Nz6B+2EEkpVP1jfS42r2O4AG2rmABoo=;
+  b=rJQOBe1uHRWLXH892iKAnVneRPZFrn0XoyW2lsie8JHkV8Nzgy1OCF4t
+   JgSTdwAIQJZVXJeW/COgQlG1iNn2nsazIdHJnt8RczG/urb4k0nHIIn7I
+   eMiKJfC4O10vXVCLaef6aoMK8W+Bn9pC2LbqpdOQGOv8dJr11woMyMEWp
+   g=;
+IronPort-SDR: 4Oo6PCDFMFRVX1TQT8chabGriYeL4cxGzLv9wCl+1ri5zi3RrX89uzqvinHKz+MhCpBecoc92c
+ CIBEyg1J3ADw==
+X-IronPort-AV: E=Sophos;i="5.68,224,1569283200"; 
+   d="scan'208";a="109256"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 24 Oct 2019 08:23:34 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id E0F46221844;
+        Thu, 24 Oct 2019 08:23:32 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 24 Oct 2019 08:23:32 +0000
+Received: from [10.125.238.52] (10.43.160.8) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 24 Oct
+ 2019 08:23:22 +0000
+Subject: Re: [PATCH v6 1/2] dt-bindings: soc: al-pos: Amazon's Annapurna Labs
+ POS
+To:     Rob Herring <robh@kernel.org>
+CC:     <robh+dt@kernel.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
+        <arnd@arndb.de>, <bp@alien8.de>, <mchehab@kernel.org>,
+        <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <paulmck@linux.ibm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
+        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <amirkl@amazon.com>, <barakw@amazon.com>
+References: <1570707681-865-1-git-send-email-talel@amazon.com>
+ <1570707681-865-2-git-send-email-talel@amazon.com>
+ <20191011134223.GA11275@bogus>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <46b8eebd-5f18-d5ab-a9a5-aa0edd4bcd48@amazon.com>
+Date:   Thu, 24 Oct 2019 11:23:17 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191011134223.GA11275@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.160.8]
+X-ClientProxiedBy: EX13D17UWC002.ant.amazon.com (10.43.162.61) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enjoy!
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+On 10/11/2019 4:42 PM, Rob Herring wrote:
+> On Thu, 10 Oct 2019 14:41:20 +0300, Talel Shenhar wrote:
+>> Document Amazon's Annapurna Labs POS SoC binding.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> ---
+>>   .../bindings/edac/amazon,al-pos-edac.yaml          | 41 ++++++++++++++++++++++
+>>   1 file changed, 41 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+>>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-are available in the Git repository at:
+Thanks Rob, shall add your reviewed-by with a minor fix, add "-only" to 
+the GPL.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-power-rtc-v5.5
-
-for you to fetch changes up to 9d0863baff497880c1427d3ea7b89b303ace9675:
-
-  MAINTAINERS: add Mediatek shutdown drivers (2019-10-24 09:04:00 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, Power and RTC due for the v5.5 merge window
-
-----------------------------------------------------------------
-Josef Friedl (6):
-      dt-bindings: rtc: mediatek: add missing mt6397 rtc
-      rtc: mt6397: move some common definitions into rtc.h
-      rtc: mt6397: improvements of rtc driver
-      rtc: mt6397: add compatible for mt6323
-      power: reset: add driver for mt6323 poweroff
-      MAINTAINERS: add Mediatek shutdown drivers
-
- .../devicetree/bindings/rtc/rtc-mt6397.txt         |  29 ++++++
- MAINTAINERS                                        |   7 ++
- drivers/power/reset/Kconfig                        |  10 ++
- drivers/power/reset/Makefile                       |   1 +
- drivers/power/reset/mt6323-poweroff.c              |  97 +++++++++++++++++++
- drivers/rtc/rtc-mt6397.c                           | 107 ++++-----------------
- include/linux/mfd/mt6397/rtc.h                     |  71 ++++++++++++++
- 7 files changed, 236 insertions(+), 86 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
- create mode 100644 drivers/power/reset/mt6323-poweroff.c
- create mode 100644 include/linux/mfd/mt6397/rtc.h
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
