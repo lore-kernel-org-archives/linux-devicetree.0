@@ -2,133 +2,133 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D138CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24A9CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B9921655
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571918281;
-	bh=JkFky/ITUM9jzgQK7Q/6LJi4fMQZ9He6VFRlQ+WKMQ4=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=j0AV4pNa66/fDyQidXmkNu7ReaRv6Mo2LJc3zQUv4tR6kl2SuIgsSaaNQFlOngGYr
-	 BbQqmWwBso3uLp6fKBjLH/52p4JAszvbWqzxBi+UNIfK+dYRLFk0CpWkmYiKXPbK68
-	 BtBwYByZFiA0fBxQcyesgmhMtiymxWCTCiSDdWOA=
+	by mail.kernel.org (Postfix) with ESMTP id C85AC21655
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:00:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFJf8rPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409269AbfJXL6B (ORCPT
+        id S2409287AbfJXL77 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:58:01 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53666 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409253AbfJXL6A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:58:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=NwY0+e/21+fQpJVaYWikXqj2GnmkWOwotVlTdrqTWwg=; b=Zlacs+o0ZY4D
-        9KwJbesgdEuhb2xJ33sV0tFBqG+zqVDoRdaGm29/sgcZV9qU/NtUMU/psmyknRFodNppEYkjMdmzy
-        kgH/8/F8d424sNP1RsnnJCB0gYmhePV8X1GOs2yF6atOFUbMnpDqxCBFdTIunlXAiNw93nCJh6h50
-        DZHRU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNbkb-0003Rh-TL; Thu, 24 Oct 2019 11:57:57 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5EB4C274293C; Thu, 24 Oct 2019 12:57:57 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Cc:     devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
+        Thu, 24 Oct 2019 07:59:59 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:43974 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409273AbfJXL76 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:59:58 -0400
+Received: by mail-ua1-f66.google.com with SMTP id c25so1766849uap.10
+        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 04:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HQknb1r4LbQcuicy72xSu/tgsIIaO3/jaqndS1RuQsc=;
+        b=VFJf8rPVcfBhCVGRiyWkFLZVnbUFpTifhzTj5iKAGigKUYb2mx6ocPrzDzt6IJChrs
+         oOOO15Q/mhQIUzQPhtxvo0TNjytFVHYbU7kRUIRJ9vEQB3hX1ULsEXYVSfyrc3EpN7hf
+         Cw1B4hyYPGiCX+Bqb+qgxl3inKrOU8PJRNFNQSNXyp/nBjSq0ew9NnWXz5IocrCkXRwB
+         hA4KZF1HTMR2ym6jT85fQiHJ5AgYmgXz7ELPcVkznCESu75Xrol0sfEGsse5mdY1+LaR
+         MHx7VEOcg9hUEPRqPuC7CXOjt/MOtoiaAjdLsFOHYcr33rEJl1usNxI1z5roeADziwwk
+         dH/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HQknb1r4LbQcuicy72xSu/tgsIIaO3/jaqndS1RuQsc=;
+        b=F3lb+WBHCX6eHSKZnEyQfkWk2/Glannpx7qdVU/bR5gR1F5bf7cIZabyU0i6nrWROm
+         vfBYjSpPflKVeIF0MCLVsU0l50Ub5kqFMtD6xI5DjUwSvj5X03b2+kJag5ziHnUuuIVx
+         P1b9WFOMownIBsQg8j9z/4NV/34Tfw1IbPTKhTY9E5s9kNpU251FGaUfpHh8CTqm5OID
+         bMnW0K43fqUDbnUdpseQdV5oSRn0S//BPqu5+rP4vgbWjNSyETeeQFWDxMBy78vuKo2V
+         eJ5I9Vi9x40tRgnIk4SfrKYHx0t5OUt1RQHE1quZ28US9uXo34YhSSgBTDz8IEzOCE6j
+         UB3g==
+X-Gm-Message-State: APjAAAVjqX4M0ZyriQRkdPoklBXEDoqxWYPlhC2oNf0dVHj33jMFufom
+        830dzCHZVoR6NTZULfXogzrSGkPIPuW9rD0IkFgXDA==
+X-Google-Smtp-Source: APXvYqx8rjUk6KPqTIkjXHT1x3MUAIDpq7Im00SmJqvx96HxmfrRAzRMzoQEKZ+wnRhBT8VyGXo59Y1YR0OaexZHsWY=
+X-Received: by 2002:ab0:7043:: with SMTP id v3mr8397635ual.84.1571918395846;
+ Thu, 24 Oct 2019 04:59:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com> <9b53139b7043572b3846a214694dbf8fe1f56f50.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <9b53139b7043572b3846a214694dbf8fe1f56f50.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 24 Oct 2019 13:59:44 +0200
+Message-ID: <CACRpkdZ5CC4mtNYrurx_2M_3BN6Tu7rQ=d4-y-HOsDbRteKjjA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 12/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>
-Subject: Applied "spi: xilinx: Add DT support for selecting transfer word width" to the spi tree
-In-Reply-To: <20191024110757.25820-3-alvaro.gamez@hazent.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191024115757.5EB4C274293C@ypsilon.sirena.org.uk>
-Date:   Thu, 24 Oct 2019 12:57:57 +0100 (BST)
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Hi Matti,
 
-   spi: xilinx: Add DT support for selecting transfer word width
+Thanks for your patch!
 
-has been applied to the spi tree at
+On Thu, Oct 24, 2019 at 1:51 PM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+> ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+> to be used for general purposes. First 3 can be used as outputs
+> and 4.th pin can be used as input. Allow them to be controlled
+> via GPIO framework.
+>
+> The driver assumes all of the pins are configured as GPIOs and
+> trusts that the reserved pins in other OTP configurations are
+> excluded from control using "gpio-reserved-ranges" device tree
+> property (or left untouched by GPIO users).
+>
+> Typical use for 4.th pin (input) is to use it as HALL sensor
+> input so that this pin state is toggled when HALL sensor detects
+> LID position change (from close to open or open to close). PMIC
+> HW implements some extra logic which allows PMIC to power-up the
+> system when this pin is toggled. Please see the data sheet for
+> details of GPIO options which can be selcted by OTP settings.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+spelling of selected
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Overall looks very good.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> +// SPDX-License-Identifier: GPL-2.0
 
-Thanks,
-Mark
+I think they want you to use GPL-2.0-only these days.
 
-From e58f7d15e6beb255b3907054a0536db77c979a31 Mon Sep 17 00:00:00 2001
-From: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Date: Thu, 24 Oct 2019 13:07:56 +0200
-Subject: [PATCH] spi: xilinx: Add DT support for selecting transfer word width
+> +#define BD71828_OUT 0
+> +#define BD71828_IN 1
 
-This core supports either 8, 16 or 32 bits as word width. This value is only
-settable on instantiation, and thus we need to support any of them by means
-of the device tree.
+These have nothing to do with BD71828, just skip these defines
+and hardcode 0/1 in the code called from gpiolib. If we want defines
+for this they should be generically named and put in
+<linux/gpio/driver.h>
 
-Signed-off-by: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Link: https://lore.kernel.org/r/20191024110757.25820-3-alvaro.gamez@hazent.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-xilinx.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Nice use of the config API!
 
-diff --git a/drivers/spi/spi-xilinx.c b/drivers/spi/spi-xilinx.c
-index d5f9d5fbb3e8..8dd2bb99cb4d 100644
---- a/drivers/spi/spi-xilinx.c
-+++ b/drivers/spi/spi-xilinx.c
-@@ -391,7 +391,7 @@ static int xilinx_spi_probe(struct platform_device *pdev)
- 	struct xilinx_spi *xspi;
- 	struct xspi_platform_data *pdata;
- 	struct resource *res;
--	int ret, num_cs = 0, bits_per_word = 8;
-+	int ret, num_cs = 0, bits_per_word;
- 	struct spi_master *master;
- 	u32 tmp;
- 	u8 i;
-@@ -403,6 +403,11 @@ static int xilinx_spi_probe(struct platform_device *pdev)
- 	} else {
- 		of_property_read_u32(pdev->dev.of_node, "xlnx,num-ss-bits",
- 					  &num_cs);
-+		ret = of_property_read_u32(pdev->dev.of_node,
-+					   "xlnx,num-transfer-bits",
-+					   &bits_per_word);
-+		if (ret)
-+			bits_per_word = 8;
- 	}
- 
- 	if (!num_cs) {
--- 
-2.20.1
-
+Yours,
+Linus Walleij
