@@ -4,170 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E6DCA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 05:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3ABCCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 05:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648DD2166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 05:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A035B21655
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 05:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437500AbfJXF1l (ORCPT
+        id S2406880AbfJXFlq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 01:27:41 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:16107 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2437483AbfJXF1l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 01:27:41 -0400
-X-UUID: 0e8cd25ca29a44f7ae721eeffc9bd8b2-20191024
-X-UUID: 0e8cd25ca29a44f7ae721eeffc9bd8b2-20191024
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 640199279; Thu, 24 Oct 2019 13:27:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 24 Oct 2019 13:27:32 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 24 Oct 2019 13:27:33 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v16 3/5] soc: mediatek: cmdq: add polling function
-Date:   Thu, 24 Oct 2019 13:27:30 +0800
-Message-ID: <20191024052732.7767-4-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191024052732.7767-1-bibby.hsieh@mediatek.com>
-References: <20191024052732.7767-1-bibby.hsieh@mediatek.com>
+        Thu, 24 Oct 2019 01:41:46 -0400
+Received: from mailoutvs11.siol.net ([185.57.226.202]:36445 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2406827AbfJXFlq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 01:41:46 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 88EFC522F95;
+        Thu, 24 Oct 2019 07:41:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id k3lB39qpMVLr; Thu, 24 Oct 2019 07:41:42 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 3B77C522FB0;
+        Thu, 24 Oct 2019 07:41:42 +0200 (CEST)
+Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id BABB2522F95;
+        Thu, 24 Oct 2019 07:41:41 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Michael Lange <linuxstuff@milaw.biz>
+Subject: [PATCH] arm64: dts: allwinner: h6: tanix-tx6: Add IR remote mapping
+Date:   Thu, 24 Oct 2019 07:41:35 +0200
+Message-Id: <20191024054135.3819223-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-add polling function in cmdq helper functions
+Tanix TX6 box comes with a remote. Add a mapping for it.
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Suggested-by: Michael Lange <linuxstuff@milaw.biz>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c   | 35 ++++++++++++++++++++++++
- include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
- include/linux/soc/mediatek/mtk-cmdq.h    | 32 ++++++++++++++++++++++
- 3 files changed, 68 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 11bfcc150ebd..8743c6ae7ac5 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -214,6 +214,41 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
- }
- EXPORT_SYMBOL(cmdq_pkt_clear_event);
- 
-+int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-+		  u16 offset, u32 value)
-+{
-+	struct cmdq_instruction inst = { {0} };
-+	int err;
-+
-+	inst.op = CMDQ_CODE_POLL;
-+	inst.value = value;
-+	inst.offset = offset;
-+	inst.subsys = subsys;
-+	err = cmdq_pkt_append_command(pkt, inst);
-+
-+	return err;
-+}
-+EXPORT_SYMBOL(cmdq_pkt_poll);
-+
-+int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
-+		       u16 offset, u32 value, u32 mask)
-+{
-+	struct cmdq_instruction inst = { {0} };
-+	int err;
-+
-+	inst.op = CMDQ_CODE_MASK;
-+	inst.mask = ~mask;
-+	err = cmdq_pkt_append_command(pkt, inst);
-+	if (err < 0)
-+		return err;
-+
-+	offset = offset | 0x1;
-+	err = cmdq_pkt_poll(pkt, subsys, offset, value);
-+
-+	return err;
-+}
-+EXPORT_SYMBOL(cmdq_pkt_poll_mask);
-+
- static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
- {
- 	struct cmdq_instruction inst = { {0} };
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index 678760548791..a4dc45fbec0a 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -55,6 +55,7 @@
- enum cmdq_code {
- 	CMDQ_CODE_MASK = 0x02,
- 	CMDQ_CODE_WRITE = 0x04,
-+	CMDQ_CODE_POLL = 0x08,
- 	CMDQ_CODE_JUMP = 0x10,
- 	CMDQ_CODE_WFE = 0x20,
- 	CMDQ_CODE_EOC = 0x40,
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 9618debb9ceb..92bd5b5c6341 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -99,6 +99,38 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
-  */
- int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
- 
-+/**
-+ * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
-+ *		     execute an instruction that wait for a specified
-+ *		     hardware register to check for the value w/o mask.
-+ *		     All GCE hardware threads will be blocked by this
-+ *		     instruction.
-+ * @pkt:	the CMDQ packet
-+ * @subsys:	the CMDQ sub system code
-+ * @offset:	register offset from CMDQ sub system
-+ * @value:	the specified target register value
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-+		  u16 offset, u32 value);
-+
-+/**
-+ * cmdq_pkt_poll_mask() - Append polling command to the CMDQ packet, ask GCE to
-+ *		          execute an instruction that wait for a specified
-+ *		          hardware register to check for the value w/ mask.
-+ *		          All GCE hardware threads will be blocked by this
-+ *		          instruction.
-+ * @pkt:	the CMDQ packet
-+ * @subsys:	the CMDQ sub system code
-+ * @offset:	register offset from CMDQ sub system
-+ * @value:	the specified target register value
-+ * @mask:	the specified target register mask
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_poll_mask(struct cmdq_pkt *pkt, u8 subsys,
-+		       u16 offset, u32 value, u32 mask);
- /**
-  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
-  *                          packet and call back at the end of done packet
--- 
-2.18.0
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch=
+/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+index 7e7cb10e3d96..e9428ad4266e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+@@ -81,6 +81,7 @@
+ };
+=20
+ &r_ir {
++	linux,rc-map-name =3D "rc-tanix-tx5max";
+ 	status =3D "okay";
+ };
+=20
+--=20
+2.23.0
 
