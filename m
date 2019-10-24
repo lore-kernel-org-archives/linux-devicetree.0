@@ -4,83 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565D6CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0266CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE7721A4C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CE621BE5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571957179;
-	bh=jbpRYDikH5UaZOqUr7kPVpDziCmf37ZYlFF/kuHHrjc=;
+	s=default; t=1571957198;
+	bh=x3hNnnGJpnisP3BwIy7EFZxeU6ayGCNRwRmqKAuzHwg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jCfa3s5jA02ukl6kDTye6O1jkSoKicRISdwlONjAbR28X9dqSdg8YlIdA3yPySzUR
-	 VsoaOSOYUqm3wEbWG7K4BNpDVake++5MeSAI+UC1x/aItMY89LCtjq4SEPoDW8y0Tv
-	 ouHIIulhVmAP19mj9ptTPacB1cX0lQGyH3W4mEOQ=
+	b=hKVr4J0fIU9Bolzcwc5vc1EvrOlD80n+LGF7OeEJAvy5C8xxSe7eDxsRQAuamuNrr
+	 Zsdh6ujKqMKDeUsElPhab1JXgp2+85HuwZMghMzIG9WRqE24IrEIACnDDSvSEKCs7n
+	 gpJ4RSJ79k7R/JwbeEAPNPbrxzVgHIMnxFLsLaqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731917AbfJXWqS (ORCPT
+        id S1732005AbfJXWqi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:46:18 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34626 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfJXWqS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 18:46:18 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 83so100213oii.1;
-        Thu, 24 Oct 2019 15:46:17 -0700 (PDT)
+        Thu, 24 Oct 2019 18:46:38 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41572 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfJXWqi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 18:46:38 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 94so455212oty.8;
+        Thu, 24 Oct 2019 15:46:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+iYm9hhGYVouEXtUjL2jRjX69VZ0OpuZNE9dMxN82Z0=;
-        b=HBFcjauFHWD3zdedd51jKTRGRHOvBnX8iewu1QPSfrzc7DJgoRkvFiVXeeDDT5xbH/
-         G2tEv4FQ0GwQQSi9sETf3w4bnGTTt+3TS8smzRIcHvHAn9h3VfooveP2SHTtzZbE7t5I
-         gp7ZwZxs2yo58aew4KNupt9WzTmXK9PR2aAR6ghTwHWIwPc6f9NV1F3dYBVrdKCMQ42K
-         sq/FyfpFuGrw4tmj11YdfWwEb+59cBVqPoiuqK76Ya8K+QsQjQA2FtN5mbVJD9phKalE
-         45fy2MbqbUvaro42uoS0ITe4KR21mgolJJz5pXDUXfhCqb85Eqi1nVqLfjVDnfixwM7Y
-         u22g==
-X-Gm-Message-State: APjAAAVjjeDs24OFOd/Ms3t8JZonb9pVPAzpfVEqDrhg/J+nGo1MdKk5
-        /uKz+eXNEHT9+hxzThoGVw==
-X-Google-Smtp-Source: APXvYqzcDd0KbW6kYrDpZgeQ/wDd33vezmU0H1O01I/KLIHLbY1ahwlYjQAXsL8Us3QXUBAfS0x2OA==
-X-Received: by 2002:a05:6808:b21:: with SMTP id t1mr409766oij.16.1571957177299;
-        Thu, 24 Oct 2019 15:46:17 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=eqBWHMeb1uutEsfLf6F7++K0t8cTqP/wqa4Ge5W53RA=;
+        b=NfhdUihU72pZQoCD6CZz4WukHuNn4MZmbCxZr65stzTm+hH3Y5H3NKqcz9oBJYCYiX
+         5m3qJOJHlMJV2Dh+g609h8wL1H8VASmK/ktJJdXbxTLy+Dh1qBNZPXLurddCrLaWoBk0
+         fpmhs8AgfLDKlsyfDWDRo93d5DayZLt/2VtvDqjzpjEWSljXdX//ekgD9TWAp3ov379s
+         yPNLWCUk5DtNUBARUIs2z6Rb2x+j1YsnO9AfZHThZjortIQKywWawt0+J6Z6c8UeiWbd
+         BZ6DigOFcinRQ3q4k/j6mQ2WTYP4QYFHgy115G6p8ni6B3AXVaIVtANQaIBMbdoMTnN0
+         RXSA==
+X-Gm-Message-State: APjAAAUU3OQueCDowAw4Y1HfWTdAIPJ48kz/vZmX2+LO60LJmo3R/W1/
+        8WLMpXXESIzBx3VCEyro8g==
+X-Google-Smtp-Source: APXvYqwclJJ8CjkX2MWKccpUrilAbIrx9hpqpqDYXvlNTA7PEuwxfh3LTcHesecXALFrHtZeCGyFlA==
+X-Received: by 2002:a9d:7f02:: with SMTP id j2mr240954otq.296.1571957196977;
+        Thu, 24 Oct 2019 15:46:36 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u130sm26783oib.56.2019.10.24.15.46.16
+        by smtp.gmail.com with ESMTPSA id n127sm42602oia.0.2019.10.24.15.46.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 15:46:16 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 17:46:15 -0500
+        Thu, 24 Oct 2019 15:46:36 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 17:46:35 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Talel Shenhar <talel@amazon.com>
-Cc:     mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org,
-        james.morse@arm.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com,
-        jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com,
-        barakw@amazon.com
-Subject: Re: [PATCH v5 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-Message-ID: <20191024224615.GA3106@bogus>
-References: <1571911407-29379-1-git-send-email-talel@amazon.com>
- <1571911407-29379-2-git-send-email-talel@amazon.com>
+To:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v3 2/2] dt-bindings: hwmon: Add ltc2947 documentation
+Message-ID: <20191024224635.GA6747@bogus>
+References: <20191021154115.319073-1-nuno.sa@analog.com>
+ <20191021154115.319073-2-nuno.sa@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1571911407-29379-2-git-send-email-talel@amazon.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191021154115.319073-2-nuno.sa@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 01:03:26PM +0300, Talel Shenhar wrote:
-> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+On Mon, 21 Oct 2019 17:41:15 +0200, =?UTF-8?q?Nuno=20S=C3=A1?= wrote:
+> Document the LTC2947 device devicetree bindings.
 > 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 > ---
->  .../bindings/edac/amazon,al-mc-edac.yaml           | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+> Changes in v2:
+>  * Add license identifier;
+>  * Fix the uint32-array properties;
+>  * Set maximum at the same indent as allOf in adi,accumulation-deadband-microamp;
+>  * Set enum at the same indent as allOf in adi,gpio-out-pol;
+>  * Use spi instead of spi0 on the example;
+> 
+> Changes in v3:
+>  * Nothing changed.
+> 
+>  .../bindings/hwmon/adi,ltc2947.yaml           | 104 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/adi,ltc2947.yaml
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
