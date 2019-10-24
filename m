@@ -2,316 +2,116 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74874CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4DFCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 14:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3E220659
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:46:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OrodthEE"
+	by mail.kernel.org (Postfix) with ESMTP id 730392084C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 14:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393780AbfJXNqb (ORCPT
+        id S2409299AbfJXOHf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:46:31 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:52769 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393672AbfJXNqb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 09:46:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1571924791; x=1603460791;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=9shMXuVkQ6HwQupiq3hiv7uWUB3vmGLNiOIYQyaGocc=;
-  b=OrodthEEnxdJ9iHqnnvh+aFZkapq0Ii+yhzr23sDjD17kQZnt821HHqs
-   IqlW6OxuewQqUmhPJedUVhOi6uVpRc5MvpJahBsUcHD0Si/3axWFZXJN+
-   pp9vJu0xzixG5gjFi7TOhG8nvDqmv4Gys/qFOBZFjdSxvtz8F3/LZMTc4
-   4=;
-X-IronPort-AV: E=Sophos;i="5.68,224,1569283200"; 
-   d="scan'208";a="762793042"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 24 Oct 2019 13:46:30 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id B86C3A2B87;
-        Thu, 24 Oct 2019 13:46:26 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 24 Oct 2019 13:46:25 +0000
-Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.161.34) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 24 Oct 2019 13:46:16 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
-        <mchehab@kernel.org>, <james.morse@arm.com>, <talel@amazon.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <nicolas.ferre@microchip.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
-Subject: [PATCH v7 2/2] soc: amazon: al-pos-edac: Introduce Amazon's Annapurna Labs POS EDAC driver
-Date:   Thu, 24 Oct 2019 16:45:46 +0300
-Message-ID: <1571924746-8107-3-git-send-email-talel@amazon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571924746-8107-1-git-send-email-talel@amazon.com>
-References: <1571924746-8107-1-git-send-email-talel@amazon.com>
+        Thu, 24 Oct 2019 10:07:35 -0400
+Received: from salem.gmr.ssr.upm.es ([138.4.36.7]:38928 "EHLO
+        salem.gmr.ssr.upm.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404950AbfJXOHf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 10:07:35 -0400
+Received: by salem.gmr.ssr.upm.es (Postfix, from userid 1000)
+        id 96296AC0078; Thu, 24 Oct 2019 16:07:32 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 16:07:32 +0200
+From:   Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] spi: set bits_per_word based on controller's
+ bits_per_word_mask
+Message-ID: <20191024140731.GA2950@salem.gmr.ssr.upm.es>
+References: <20191024110757.25820-1-alvaro.gamez@hazent.com>
+ <20191024110757.25820-4-alvaro.gamez@hazent.com>
+ <20191024111300.GD5207@sirena.co.uk>
+ <20191024125436.GA8878@salem.gmr.ssr.upm.es>
+ <20191024131129.GE46373@sirena.co.uk>
+ <20191024131856.GA32609@salem.gmr.ssr.upm.es>
+ <20191024134116.GF46373@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.34]
-X-ClientProxiedBy: EX13D21UWA004.ant.amazon.com (10.43.160.252) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024134116.GF46373@sirena.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Amazon's Annapurna Labs SoCs include a Point of Serialization error logging
-unit that reports an error when a write error occurs (e.g. attempt to
-write to a read only register).
-This error shall be reported via the EDAC subsystem as uncorrectable-error.
+On Thu, Oct 24, 2019 at 02:41:16PM +0100, Mark Brown wrote:
+> On Thu, Oct 24, 2019 at 03:18:57PM +0200, Alvaro Gamez Machado wrote:
+> > On Thu, Oct 24, 2019 at 02:11:29PM +0100, Mark Brown wrote:
+> 
+> > > No, that still leaves the slave driver thinking it's sending 8 bits when
+> > > really it's sending something else - the default is just 8 bits, if the
+> > > controller can't do it then the transfer can't happen and there's an
+> > > error.  It's not a good idea to carry on if we're likely to introduce
+> > > data corruption.
+> 
+> > Well, yes. But I don't think that's a software issue but a hardware one.
+> 
+> > If you have a board that has a SPI master that cannot talk to an 8 bits
+> > device and you expect to communicate with anything that accepts 8 bits
+> > you're not going to be able to. Either the kernel raises an error or it
+> > shuts up and tries its best. I understand the first option is better, but I
+> > also think that's not a software issue, that hardware simply cannot work as
+> > is regardless of what we do in software. The hardware devices simply can't
+> > talk to each other.
+> 
+> Sure, but then it's going to be easier to diagnose problems if the
+> software says that it's identified a data format problem than it is to
+> try to figure out the results of data corruption.  There is also the
+> possibility that if the formats the hardware needs to use can be made to
+> align through rewriting software can persuade things to interoperate
+> (eg, if all the transfers are multiples of 32 bits then a device can
+> probably work with a controller that only supports 32 bit words even if
+> the device expects a byte stream) but that requires explicit code rather
+> than just silently accepting the data and hoping for the best.
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
-Reviewed-by: James Morse <james.morse@arm.com>
----
- MAINTAINERS                |   7 ++
- drivers/edac/Kconfig       |   6 ++
- drivers/edac/Makefile      |   1 +
- drivers/edac/al_pos_edac.c | 174 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 188 insertions(+)
- create mode 100644 drivers/edac/al_pos_edac.c
+I guess there could be some workarounds to help in that situation. But I see
+that as an hypothetical occurrence whereas I have with me a physical board
+that needs 32 bits in both master and slave that I want to access using
+spidev and cannot. Lots of I's in that sentence, I know :)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55199ef..30b39bd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -757,6 +757,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
- F:	include/linux/altera_uart.h
- F:	include/linux/altera_jtaguart.h
+Anyhow, if this is not acceptable, the only other alternative I see right
+now is adding a new DT property, as in my emails yesterday.
+
+
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index f9502dbbb5c1..06424b7b0d73 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1792,6 +1792,10 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+ 	}
+ 	spi->max_speed_hz = value;
  
-+AMAZON ANNAPURNA LABS POS EDAC DRIVER
-+M:	Talel Shenhar <talel@amazon.com>
-+M:	Talel Shenhar <talelshenhar@gmail.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
-+F:	drivers/edac/al_pos_edac.c
++	/* Bits per word */
++	if (!of_property_read_u32(nc, "spi-bits-per-word", &value))
++		spi->bits_per_word = value;
 +
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 417dad6..bad1c09 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -100,6 +100,12 @@ config EDAC_AMD64_ERROR_INJECTION
- 	  In addition, there are two control files, inject_read and inject_write,
- 	  which trigger the DRAM ECC Read and Write respectively.
- 
-+config EDAC_AL_POS
-+	tristate "Amazon's Annapurna Labs POS EDAC driver"
-+	depends on (ARCH_ALPINE || COMPILE_TEST)
-+	help
-+	  Include support for the SoC POS EDAC error capability.
-+
- config EDAC_AMD76X
- 	tristate "AMD 76x (760, 762, 768)"
- 	depends on PCI && X86_32
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index d77200c..7f6d958 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
- edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
- 
-+obj-$(CONFIG_EDAC_AL_POS)		+= al_pos_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_pos_edac.c b/drivers/edac/al_pos_edac.c
-new file mode 100644
-index 00000000..8124e05
---- /dev/null
-+++ b/drivers/edac/al_pos_edac.c
-@@ -0,0 +1,174 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/edac.h>
-+#include <linux/of_irq.h>
-+#include "edac_module.h"
-+
-+#define DRV_NAME "al_pos_edac"
-+#define AL_POS_EDAC_MSG_MAX 256
-+
-+/* Registers Offset */
-+#define AL_POS_ERROR_LOG_1	0x0
-+#define AL_POS_ERROR_LOG_0	0x4
-+
-+/* Registers Fields */
-+#define AL_POS_ERROR_LOG_1_VALID	BIT(31)
-+#define AL_POS_ERROR_LOG_1_BRESP	GENMASK(18, 17)
-+#define AL_POS_ERROR_LOG_1_REQUEST_ID	GENMASK(16, 8)
-+#define AL_POS_ERROR_LOG_1_ADDR_HIGH	GENMASK(7, 0)
-+
-+#define AL_POS_ERROR_LOG_0_ADDR_LOW	GENMASK(31, 0)
-+
-+struct al_pos_edac {
-+	struct edac_device_ctl_info *edac_dev;
-+	void __iomem *mmio_base;
-+	int irq;
-+};
-+
-+static int al_pos_handle(struct al_pos_edac *al_pos)
-+{
-+	u32 log0, log1;
-+	u64 addr;
-+	u16 request_id;
-+	u8 bresp;
-+	char msg[AL_POS_EDAC_MSG_MAX];
-+
-+	log1 = readl_relaxed(al_pos->mmio_base + AL_POS_ERROR_LOG_1);
-+	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
-+		return 0;
-+
-+	log0 = readl_relaxed(al_pos->mmio_base + AL_POS_ERROR_LOG_0);
-+	writel_relaxed(0, al_pos->mmio_base + AL_POS_ERROR_LOG_1);
-+
-+	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
-+	addr |= (((u64)FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1)) << 32);
-+	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
-+	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
-+
-+	snprintf(msg, sizeof(msg),
-+		 "addr=0x%llx request_id=0x%x bresp=0x%x\n",
-+		 addr, request_id, bresp);
-+
-+	edac_device_handle_ue(al_pos->edac_dev, 0, 0, msg);
-+
-+	return 1;
-+}
-+
-+static void al_pos_edac_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	struct al_pos_edac *al_pos = edac_dev->pvt_info;
-+
-+	al_pos_handle(al_pos);
-+}
-+
-+static irqreturn_t al_pos_irq_handler(int irq, void *info)
-+{
-+	struct platform_device *pdev = info;
-+	struct al_pos_edac *al_pos = platform_get_drvdata(pdev);
-+
-+	if (al_pos_handle(al_pos))
-+		return IRQ_HANDLED;
-+	return IRQ_NONE;
-+}
-+
-+static void devm_al_pos_edac_free(void *data)
-+{
-+	edac_device_free_ctl_info(data);
-+}
-+
-+static void devm_al_pos_edac_del(void *data)
-+{
-+	edac_device_del_device(data);
-+}
-+
-+static int al_pos_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct al_pos_edac *al_pos;
-+	int ret;
-+
-+	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_pos), DRV_NAME, 1,
-+					      DRV_NAME, 1, 0, NULL, 0,
-+					      edac_device_alloc_index());
-+	if (!edac_dev)
-+		return -ENOMEM;
-+
-+	ret = devm_add_action(&pdev->dev, devm_al_pos_edac_free, edac_dev);
-+	if (ret) {
-+		edac_device_free_ctl_info(edac_dev);
-+		return ret;
-+	}
-+
-+	al_pos = edac_dev->pvt_info;
-+	al_pos->edac_dev = edac_dev;
-+	platform_set_drvdata(pdev, al_pos);
-+
-+	al_pos->mmio_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(al_pos->mmio_base)) {
-+		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
-+			PTR_ERR(al_pos->mmio_base));
-+		return PTR_ERR(al_pos->mmio_base);
-+	}
-+
-+	al_pos->irq = platform_get_irq(pdev, 0);
-+	if (al_pos->irq <= 0)
-+		edac_dev->edac_check = al_pos_edac_check;
-+
-+	edac_dev->dev = &pdev->dev;
-+	edac_dev->mod_name = DRV_NAME;
-+	edac_dev->dev_name = dev_name(&pdev->dev);
-+	edac_dev->ctl_name = "AL_POS";
-+
-+	ret = edac_device_add_device(edac_dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to add edac device\n");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action(&pdev->dev, devm_al_pos_edac_del, edac_dev->dev);
-+	if (ret) {
-+		edac_device_del_device(edac_dev->dev);
-+		return ret;
-+	}
-+
-+	if (al_pos->irq > 0) {
-+		ret = devm_request_irq(&pdev->dev,
-+				       al_pos->irq,
-+				       al_pos_irq_handler,
-+				       0,
-+				       pdev->name,
-+				       pdev);
-+		if (ret != 0) {
-+			dev_err(&pdev->dev,
-+				"failed to register to irq %d (%d)\n",
-+				al_pos->irq, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id al_pos_of_match[] = {
-+	{ .compatible = "amazon,al-pos-edac", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, al_pos_of_match);
-+
-+static struct platform_driver al_pos_driver = {
-+	.probe = al_pos_probe,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = al_pos_of_match,
-+	},
-+};
-+
-+module_platform_driver(al_pos_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Talel Shenhar");
-+MODULE_DESCRIPTION("Amazon's Annapurna Labs POS driver");
+ 	return 0;
+ }
+
+What do you think about this? This requires the user to explicitly select a
+different value rather than the default, so it can't break anything and
+would allow with the diagnostic of such broken hardware.
+
+I still think I like more changing the default to something the master is
+able to do. Otherwise we're going to keep trying to send 8 bits using a
+master that simply cannot do that, but this solution would work fine as
+well.
+
+Regards,
+
 -- 
-2.7.4
-
+Alvaro G. M.
