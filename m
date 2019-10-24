@@ -2,85 +2,76 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C00CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D49CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D74020663
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FEC21872
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502439AbfJXNOd (ORCPT
+        id S2387811AbfJXNS7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:14:33 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:40446 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502437AbfJXNOc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 09:14:32 -0400
-Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id HREV210015USYZQ01REV1m; Thu, 24 Oct 2019 15:14:31 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNcwe-00068n-UD; Thu, 24 Oct 2019 15:14:28 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNcwe-0004Nk-RD; Thu, 24 Oct 2019 15:14:28 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] media: dt-bindings: rcar_vin: Document RZ/G1 per-board settings
-Date:   Thu, 24 Oct 2019 15:14:23 +0200
-Message-Id: <20191024131423.16799-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Thu, 24 Oct 2019 09:18:59 -0400
+Received: from salem.gmr.ssr.upm.es ([138.4.36.7]:38206 "EHLO
+        salem.gmr.ssr.upm.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730061AbfJXNS7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 09:18:59 -0400
+Received: by salem.gmr.ssr.upm.es (Postfix, from userid 1000)
+        id CD463AC0078; Thu, 24 Oct 2019 15:18:57 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 15:18:57 +0200
+From:   Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] spi: set bits_per_word based on controller's
+ bits_per_word_mask
+Message-ID: <20191024131856.GA32609@salem.gmr.ssr.upm.es>
+References: <20191024110757.25820-1-alvaro.gamez@hazent.com>
+ <20191024110757.25820-4-alvaro.gamez@hazent.com>
+ <20191024111300.GD5207@sirena.co.uk>
+ <20191024125436.GA8878@salem.gmr.ssr.upm.es>
+ <20191024131129.GE46373@sirena.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024131129.GE46373@sirena.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The R-Car Gen2 per-board settings apply to RZ/G1, too.
+On Thu, Oct 24, 2019 at 02:11:29PM +0100, Mark Brown wrote:
+> On Thu, Oct 24, 2019 at 02:54:37PM +0200, Alvaro Gamez Machado wrote:
+> 
+> > I think then the only way this would be feasible is to check if 8 bits is an
+> > acceptable number for the master and, if it isn't, apply the lowest
+> > available data width. I believe this cannot break anything, as it leaves 8
+> > as the default unless the master can't work with that number, in which case
+> > it really doesn't matter what client device wants because the hardware can't
+> > provide it.
+> 
+> No, that still leaves the slave driver thinking it's sending 8 bits when
+> really it's sending something else - the default is just 8 bits, if the
+> controller can't do it then the transfer can't happen and there's an
+> error.  It's not a good idea to carry on if we're likely to introduce
+> data corruption.
 
-Fixes: 1d14a5eaa156b0b3 ("media: dt-bindings: media: rcar_vin: add device tree support for r8a774[35]")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/media/renesas,vin.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Well, yes. But I don't think that's a software issue but a hardware one.
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,vin.txt b/Documentation/devicetree/bindings/media/renesas,vin.txt
-index aa217b0962797712..221fcc416d1ac598 100644
---- a/Documentation/devicetree/bindings/media/renesas,vin.txt
-+++ b/Documentation/devicetree/bindings/media/renesas,vin.txt
-@@ -43,7 +43,7 @@ on Gen3 and RZ/G2 platforms to a CSI-2 receiver.
- Additionally, an alias named vinX will need to be created to specify
- which video input device this is.
- 
--The per-board settings Gen2 platforms:
-+The per-board settings for Gen2 and RZ/G1 platforms:
- 
- - port - sub-node describing a single endpoint connected to the VIN
-   from external SoC pins as described in video-interfaces.txt[1].
-@@ -63,7 +63,7 @@ The per-board settings Gen2 platforms:
-     - data-enable-active: polarity of CLKENB signal, see [1] for
-       description. Default is active high.
- 
--The per-board settings Gen3 and RZ/G2 platforms:
-+The per-board settings for Gen3 and RZ/G2 platforms:
- 
- Gen3 and RZ/G2 platforms can support both a single connected parallel input
- source from external SoC pins (port@0) and/or multiple parallel input sources
+If you have a board that has a SPI master that cannot talk to an 8 bits
+device and you expect to communicate with anything that accepts 8 bits
+you're not going to be able to. Either the kernel raises an error or it
+shuts up and tries its best. I understand the first option is better, but I
+also think that's not a software issue, that hardware simply cannot work as
+is regardless of what we do in software. The hardware devices simply can't
+talk to each other.
+
+
 -- 
-2.17.1
-
+Alvaro G. M.
