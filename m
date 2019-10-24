@@ -2,103 +2,65 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A193FCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC02ACA9EBE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72ADD20856
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571915584;
-	bh=cSU5obqMXG3dooXXAZJBScJEXU+miSgZT9YvgohCXkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JLEft1dVY+pshz3qX4WTIGvL9tSVn3YUU5tngwSt/aT+a9Mo9qG4Y8mn6BWBO8WqQ
-	 fKXFZKAsEJI1ydfNsXiMvFaSIZozxuczSs0u0Tg8fEBSltdBCtz128nHzWgAu0I8sz
-	 bIQiaX6HBf9afye+ptRlIUf6u9CetWWVjXn5pPns=
+	by mail.kernel.org (Postfix) with ESMTP id C7F2D20650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408030AbfJXLND (ORCPT
+        id S2408065AbfJXLRD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:13:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34604 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405717AbfJXLND (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:13:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kxBq9eU5c+pynz4hCMtujUwkOF15d6QuZ5BX1XsZdfc=; b=PB1Zs1NjpAPp1u4Uw9oxpfc+Q
-        vvZOTeMbkchUlC34r6Wa2/Q/Nov/zAlEKPV30ubvgiKmEMp8fwxNi5OjV1MFsZaBAaoNZZmupRVsJ
-        qmoLMCwmELB3UhabdPU4NZY8m6lCQkqW6AutFu2y8XUOMoWYUbc81Kw9s7CbwEoCyruDg=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNb37-0003NI-3z; Thu, 24 Oct 2019 11:13:01 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 47323274293C; Thu, 24 Oct 2019 12:13:00 +0100 (BST)
-Date:   Thu, 24 Oct 2019 12:13:00 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>,
-        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] spi: set bits_per_word based on controller's
- bits_per_word_mask
-Message-ID: <20191024111300.GD5207@sirena.co.uk>
-References: <20191024110757.25820-1-alvaro.gamez@hazent.com>
- <20191024110757.25820-4-alvaro.gamez@hazent.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EP0wieDxd4TSJjHq"
-Content-Disposition: inline
-In-Reply-To: <20191024110757.25820-4-alvaro.gamez@hazent.com>
-X-Cookie: What foods these morsels be!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 24 Oct 2019 07:17:03 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:14863 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405717AbfJXLRD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 07:17:03 -0400
+X-IronPort-AV: E=Sophos;i="5.68,224,1569250800"; 
+   d="scan'208";a="29695324"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 24 Oct 2019 20:17:01 +0900
+Received: from localhost.localdomain (unknown [10.166.17.210])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8B1904209FBE;
+        Thu, 24 Oct 2019 20:17:01 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, geert+renesas@glider.be
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/3] clk: renesas: rcar-usb2-clock-sel: Fix clks/resets handling
+Date:   Thu, 24 Oct 2019 20:16:58 +0900
+Message-Id: <1571915821-1620-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch series is based on the latest renesas-drivers.git /
+clk-renesas-for-v5.5 branch.
+The hardware also needs multiple clocks/resets management like
+renesas_usbhs driver [1], so this patch series fixes it.
 
---EP0wieDxd4TSJjHq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[1]
+3df0e24 usb: renesas_usbhs: Add multiple clocks management
+f181dbb usb: renesas_usbhs: Add reset_control
 
-On Thu, Oct 24, 2019 at 01:07:57PM +0200, Alvaro Gamez Machado wrote:
-> By leaving this value unset, a default value of 8 was being set later on.
->=20
-> If it happens that the SPI master driver doesn't support this value of 8,
-> there will be an initial inconsistency between the SPI master and the dev=
-ice
-> itself. This isn't a problem for most devices because kernel drivers
+Yoshihiro Shimoda (3):
+  dt-bindings: clock: renesas: rcar-usb2-clock-sel: Fix clock[-name]s
+    properties
+  clk: renesas: rcar-usb2-clock-sel: Add multiple clocks management
+  clk: renesas: rcar-usb2-clock-sel: Add reset_control
 
-This will break things, client devices are working on the basis that the
-default transfer width is 8 bits.  As I've repeatedly said if we have
-different parts of the system with different ideas about the word size
-we're going to end up with data corruption.  Please take this feedback
-on board.
+ .../bindings/clock/renesas,rcar-usb2-clock-sel.txt |  8 ++--
+ drivers/clk/renesas/rcar-usb2-clock-sel.c          | 49 +++++++++++++++++++++-
+ 2 files changed, 52 insertions(+), 5 deletions(-)
 
---EP0wieDxd4TSJjHq
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.7.4
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2xhzsACgkQJNaLcl1U
-h9BNewf/SgKCEZWVH1yrKLieF/GMxsUxwqzetiY3EiQutLFXjok2pyjmP03nMA7s
-0a554YBya1i29mV7kV9HI9dGOJztW0tj4pZaZB3eJQw3DQTPixdBt4sfLLBE2wdW
-RjAy4kAb9A/5iro7cIpVUqa0eYc5yH5y6hs8gXQv3aI8OU8WDB3r6spYSAvbl0Ey
-s4ea8XRLT6fk48ul+LESLJdOWShvM/q0SIyUg7IOBk/219pPlcBWnXrA1ttsWrB5
-SYoTdtfcCocwvInv3vECNOPe9786EBAsdyQXA7ucvrdRqdifHA2UCGXaHwj/iwC1
-7mq2rqHGU7ok+mtgLy/ZhpOzjGPPHg==
-=uBZS
------END PGP SIGNATURE-----
-
---EP0wieDxd4TSJjHq--
