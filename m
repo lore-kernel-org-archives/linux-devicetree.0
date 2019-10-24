@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EF4CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32F1CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68FA021872
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DB221D71
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfJXUNr (ORCPT
+        id S1726619AbfJXUNc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:13:47 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:38743 "EHLO
+        Thu, 24 Oct 2019 16:13:32 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:43405 "EHLO
         relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfJXUNc (ORCPT
+        with ESMTP id S1725811AbfJXUNc (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 16:13:32 -0400
 Received: from localhost (unknown [78.193.40.249])
         (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 41AD6240005;
-        Thu, 24 Oct 2019 20:13:30 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7EF92240004;
+        Thu, 24 Oct 2019 20:13:26 +0000 (UTC)
 From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
 To:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -33,10 +33,10 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         linux-arm-kernel@lists.infradead.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH v2 3/5] i2c: at91: implement i2c bus recovery
-Date:   Thu, 24 Oct 2019 22:13:00 +0200
-Message-Id: <20191024201302.23376-4-kamel.bouhara@bootlin.com>
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH v2 1/5] i2c: at91: Send bus clear command if SCL or SDA is down
+Date:   Thu, 24 Oct 2019 22:12:58 +0200
+Message-Id: <20191024201302.23376-2-kamel.bouhara@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191024201302.23376-1-kamel.bouhara@bootlin.com>
 References: <20191024201302.23376-1-kamel.bouhara@bootlin.com>
@@ -47,148 +47,167 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Implement i2c bus recovery when slaves devices might hold SDA low.
-In this case re-assign SCL/SDA to gpios and issue 9 dummy clock pulses
-until the slave release SDA.
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+After a transfer timeout, some faulty I2C slave devices might hold down
+the SCL or the SDA pins. We can generate a bus clear command, hoping that
+the slave might release the pins.
+
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 ---
-Changes in v2:
-==============
-	- Add missing call to i2c_bus_recover() when a i2c transfer
-	  timeout.
+ drivers/i2c/busses/i2c-at91-core.c   |  8 ++++++++
+ drivers/i2c/busses/i2c-at91-master.c | 22 ++++++++++++++++++++++
+ drivers/i2c/busses/i2c-at91.h        |  7 ++++++-
+ 3 files changed, 36 insertions(+), 1 deletion(-)
 
- drivers/i2c/busses/i2c-at91-master.c | 64 ++++++++++++++++++++++++++++
- drivers/i2c/busses/i2c-at91.h        |  8 ++++
- 2 files changed, 72 insertions(+)
-
+diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
+index 435c7d7377a3..cb07489e698f 100644
+--- a/drivers/i2c/busses/i2c-at91-core.c
++++ b/drivers/i2c/busses/i2c-at91-core.c
+@@ -68,6 +68,7 @@ static struct at91_twi_pdata at91rm9200_config = {
+ 	.has_unre_flag = true,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata at91sam9261_config = {
+@@ -76,6 +77,7 @@ static struct at91_twi_pdata at91sam9261_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata at91sam9260_config = {
+@@ -84,6 +86,7 @@ static struct at91_twi_pdata at91sam9260_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata at91sam9g20_config = {
+@@ -92,6 +95,7 @@ static struct at91_twi_pdata at91sam9g20_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata at91sam9g10_config = {
+@@ -100,6 +104,7 @@ static struct at91_twi_pdata at91sam9g10_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static const struct platform_device_id at91_twi_devtypes[] = {
+@@ -130,6 +135,7 @@ static struct at91_twi_pdata at91sam9x5_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata sama5d4_config = {
+@@ -138,6 +144,7 @@ static struct at91_twi_pdata sama5d4_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = true,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata sama5d2_config = {
+@@ -146,6 +153,7 @@ static struct at91_twi_pdata sama5d2_config = {
+ 	.has_unre_flag = true,
+ 	.has_alt_cmd = true,
+ 	.has_hold_field = true,
++	.has_clear_cmd = true,
+ };
+ 
+ static const struct of_device_id atmel_twi_dt_ids[] = {
 diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-index 12d4fa946a82..8116f3cd373b 100644
+index a3fcc35ffd3b..12d4fa946a82 100644
 --- a/drivers/i2c/busses/i2c-at91-master.c
 +++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -18,11 +18,13 @@
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/err.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/dma-atmel.h>
- #include <linux/pm_runtime.h>
-@@ -555,6 +557,7 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
- 	if (time_left == 0) {
- 		dev->transfer_status |= at91_twi_read(dev, AT91_TWI_SR);
- 		dev_err(dev->dev, "controller timed out\n");
-+		i2c_recover_bus(&dev->adapter);
- 		at91_init_twi_bus(dev);
- 		ret = -ETIMEDOUT;
- 		goto error;
-@@ -790,6 +793,63 @@ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
+@@ -440,6 +440,7 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
+ 	unsigned long time_left;
+ 	bool has_unre_flag = dev->pdata->has_unre_flag;
+ 	bool has_alt_cmd = dev->pdata->has_alt_cmd;
++	bool has_clear_cmd = dev->pdata->has_clear_cmd;
+ 
+ 	/*
+ 	 * WARNING: the TXCOMP bit in the Status Register is NOT a clear on
+@@ -599,6 +600,27 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
+ 		at91_twi_write(dev, AT91_TWI_CR,
+ 			       AT91_TWI_THRCLR | AT91_TWI_LOCKCLR);
+ 	}
++
++	/*
++	 * After timeout, some faulty I2C slave devices might hold SCL/SDA down;
++	 * we can send a bus clear command, hoping that the pins will be
++	 * released
++	 */
++	if (has_clear_cmd &&
++	    (!(dev->transfer_status & AT91_TWI_SDA) ||
++	     !(dev->transfer_status & AT91_TWI_SCL))) {
++		dev_dbg(dev->dev,
++			"SDA/SCL are down; sending bus clear command\n");
++		if (dev->use_alt_cmd) {
++			unsigned int acr;
++
++			acr = at91_twi_read(dev, AT91_TWI_ACR);
++			acr &= ~AT91_TWI_ACR_DATAL_MASK;
++			at91_twi_write(dev, AT91_TWI_ACR, acr);
++		}
++		at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
++	}
++
  	return ret;
  }
-
-+static void at91_prepare_twi_recovery(struct i2c_adapter *adap)
-+{
-+	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
-+
-+	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
-+}
-+
-+static void at91_unprepare_twi_recovery(struct i2c_adapter *adap)
-+{
-+	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
-+
-+	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
-+}
-+
-+static int at91_init_twi_recovery_info(struct platform_device *pdev,
-+				       struct at91_twi_dev *dev)
-+{
-+	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
-+
-+	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (!dev->pinctrl || IS_ERR(dev->pinctrl)) {
-+		dev_info(dev->dev, "can't get pinctrl, bus recovery not supported\n");
-+		return PTR_ERR(dev->pinctrl);
-+	}
-+
-+	dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
-+							 PINCTRL_STATE_DEFAULT);
-+	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
-+						      "gpio");
-+	rinfo->sda_gpiod = devm_gpiod_get(&pdev->dev, "sda", GPIOD_IN);
-+	if (PTR_ERR(rinfo->sda_gpiod) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	rinfo->scl_gpiod = devm_gpiod_get(&pdev->dev, "scl",
-+					  GPIOD_OUT_HIGH_OPEN_DRAIN);
-+	if (PTR_ERR(rinfo->scl_gpiod) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	if (IS_ERR(rinfo->sda_gpiod) ||
-+	    IS_ERR(rinfo->scl_gpiod) ||
-+	    IS_ERR(dev->pinctrl_pins_default) ||
-+	    IS_ERR(dev->pinctrl_pins_gpio)) {
-+		dev_info(&pdev->dev, "recovery information incomplete\n");
-+		return -EINVAL;
-+	}
-+
-+	dev_info(&pdev->dev, "using scl%s for recovery\n",
-+		 rinfo->sda_gpiod ? ",sda" : "");
-+
-+	rinfo->prepare_recovery = at91_prepare_twi_recovery;
-+	rinfo->unprepare_recovery = at91_unprepare_twi_recovery;
-+	rinfo->recover_bus = i2c_generic_scl_recovery;
-+	dev->adapter.bus_recovery_info = rinfo;
-+
-+	return 0;
-+}
-+
- int at91_twi_probe_master(struct platform_device *pdev,
- 			  u32 phy_addr, struct at91_twi_dev *dev)
- {
-@@ -817,6 +877,10 @@ int at91_twi_probe_master(struct platform_device *pdev,
-
- 	at91_calc_twi_clock(dev);
-
-+	rc = at91_init_twi_recovery_info(pdev, dev);
-+	if (rc == -EPROBE_DEFER)
-+		return rc;
-+
- 	dev->adapter.algo = &at91_twi_algorithm;
- 	dev->adapter.quirks = &at91_twi_quirks;
-
+ 
 diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-index 0827c28a84db..167be7aa8e67 100644
+index 499b506f6128..0827c28a84db 100644
 --- a/drivers/i2c/busses/i2c-at91.h
 +++ b/drivers/i2c/busses/i2c-at91.h
-@@ -146,6 +146,10 @@ struct at91_twi_dev {
- 	u32 fifo_size;
- 	struct at91_twi_dma dma;
- 	bool slave_detected;
-+	struct i2c_bus_recovery_info rinfo;
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *pinctrl_pins_default;
-+	struct pinctrl_state *pinctrl_pins_gpio;
- #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
- 	unsigned smr;
- 	struct i2c_client *slave;
-@@ -163,6 +167,10 @@ void at91_init_twi_bus_master(struct at91_twi_dev *dev);
- int at91_twi_probe_master(struct platform_device *pdev, u32 phy_addr,
- 			  struct at91_twi_dev *dev);
-
-+void at91_twi_prepare_recovery(struct i2c_adapter *adap);
-+void at91_twi_unprepare_recovery(struct i2c_adapter *adap);
-+void at91_twi_init_recovery_info(struct at91_twi_dev *dev);
-+
- #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
- void at91_init_twi_bus_slave(struct at91_twi_dev *dev);
- int at91_twi_probe_slave(struct platform_device *pdev, u32 phy_addr,
---
+@@ -36,6 +36,7 @@
+ #define	AT91_TWI_SVDIS		BIT(5)	/* Slave Transfer Disable */
+ #define	AT91_TWI_QUICK		BIT(6)	/* SMBus quick command */
+ #define	AT91_TWI_SWRST		BIT(7)	/* Software Reset */
++#define	AT91_TWI_CLEAR		BIT(15) /* Bus clear command */
+ #define	AT91_TWI_ACMEN		BIT(16) /* Alternative Command Mode Enable */
+ #define	AT91_TWI_ACMDIS		BIT(17) /* Alternative Command Mode Disable */
+ #define	AT91_TWI_THRCLR		BIT(24) /* Transmit Holding Register Clear */
+@@ -69,6 +70,8 @@
+ #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
+ #define	AT91_TWI_EOSACC		BIT(11)	/* End Of Slave Access */
+ #define	AT91_TWI_LOCK		BIT(23) /* TWI Lock due to Frame Errors */
++#define	AT91_TWI_SCL		BIT(24) /* TWI SCL status */
++#define	AT91_TWI_SDA		BIT(25) /* TWI SDA status */
+ 
+ #define	AT91_TWI_INT_MASK \
+ 	(AT91_TWI_TXCOMP | AT91_TWI_RXRDY | AT91_TWI_TXRDY | AT91_TWI_NACK \
+@@ -81,7 +84,8 @@
+ #define	AT91_TWI_THR		0x0034	/* Transmit Holding Register */
+ 
+ #define	AT91_TWI_ACR		0x0040	/* Alternative Command Register */
+-#define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
++#define	AT91_TWI_ACR_DATAL_MASK	GENMASK(15, 0)
++#define	AT91_TWI_ACR_DATAL(len)	((len) & AT91_TWI_ACR_DATAL_MASK)
+ #define	AT91_TWI_ACR_DIR	BIT(8)
+ 
+ #define	AT91_TWI_FMR		0x0050	/* FIFO Mode Register */
+@@ -108,6 +112,7 @@ struct at91_twi_pdata {
+ 	bool has_unre_flag;
+ 	bool has_alt_cmd;
+ 	bool has_hold_field;
++	bool has_clear_cmd;
+ 	struct at_dma_slave dma_slave;
+ };
+ 
+-- 
 2.23.0
 
