@@ -2,106 +2,145 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA4DCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B91C47E49
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7950F2166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DB321A4C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 18:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571943588;
+	bh=a+uIvZuoQVHuTrFvBOzthw/TKu6zM/j2cbpgzHnS7NU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zSatSQKXQw74z0s/usMbIaCRaW6eY4TEZtITpp1cOe0bS7P2az8u1lk2xnUCAEk6z
+	 4Klit39UQLaUc0NBgLWc3W0wB7VHvuJYCKBs7eN2KxeugwPCoZ/1yBPU8oxT+eH8in
+	 3u8a2iPIJq9e/8aNcf3Ue3JmN+QZ9/1WkrVqR+g8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408205AbfJXS7C (ORCPT
+        id S2394154AbfJXS7s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:59:02 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:35496 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390034AbfJXS7B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 14:59:01 -0400
-X-Greylist: delayed 1503 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 14:59:01 EDT
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1iNhve-0007jA-Qd; Thu, 24 Oct 2019 13:33:47 -0500
-Message-ID: <ef150e9eb155eff410194ba5362ef404ce117c4a.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Ran Wang <ran.wang_1@nxp.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Date:   Thu, 24 Oct 2019 13:33:45 -0500
-In-Reply-To: <20191021034927.19300-2-ran.wang_1@nxp.com>
-References: <20191021034927.19300-1-ran.wang_1@nxp.com>
-         <20191021034927.19300-2-ran.wang_1@nxp.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: ran.wang_1@nxp.com, rjw@rjwysocki.net, robh+dt@kernel.org, leoyang.li@nxp.com, mark.rutland@arm.com, pavel@ucw.cz, biwen.li@nxp.com, len.brown@intel.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v7 2/3] Documentation: dt: binding: fsl: Add
- 'little-endian' and update Chassis define
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Thu, 24 Oct 2019 14:59:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390034AbfJXS7r (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 14:59:47 -0400
+Received: from localhost (unknown [109.190.253.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E6C42166E;
+        Thu, 24 Oct 2019 18:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571943587;
+        bh=a+uIvZuoQVHuTrFvBOzthw/TKu6zM/j2cbpgzHnS7NU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WcOVK2MoQPmQQSsCISXcIBuI7zyFW7PCPi3sEWyZrvsujyJU9KqXd8Lz9FuUcEycP
+         LovoXS6q0NzSjx0T9bwgKdiO0D2IdOC+9eCmPibS/8rcntyqRQWHweq3RvmcIYOhW0
+         RouTokS1q8E5knnKBp9KdlV/2jWAkeeZMIoYyjos=
+Date:   Thu, 24 Oct 2019 20:24:05 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 2/4] dt-bindings: crypto: Add DT bindings
+ documentation for sun8i-ss Security System
+Message-ID: <20191024182405.a4x5vc4hxwsev2hp@hendrix>
+References: <20191023201016.26195-1-clabbe.montjoie@gmail.com>
+ <20191023201016.26195-3-clabbe.montjoie@gmail.com>
+ <20191024065005.hdypdl2dgqsrry5i@gilmour>
+ <20191024093118.GA15113@Red>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024093118.GA15113@Red>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2019-10-21 at 11:49 +0800, Ran Wang wrote:
-> By default, QorIQ SoC's RCPM register block is Big Endian. But
-> there are some exceptions, such as LS1088A and LS2088A, are
-> Little Endian. So add this optional property to help identify
-> them.
-> 
-> Actually LS2021A and other Layerscapes won't totally follow Chassis
-> 2.1, so separate them from powerpc SoC.
+On Thu, Oct 24, 2019 at 11:31:18AM +0200, Corentin Labbe wrote:
+> On Thu, Oct 24, 2019 at 08:50:05AM +0200, Maxime Ripard wrote:
+> > Hi,
+> >
+> > On Wed, Oct 23, 2019 at 10:10:14PM +0200, Corentin Labbe wrote:
+> > > This patch adds documentation for Device-Tree bindings of the
+> > > Security System cryptographic offloader driver.
+> > >
+> > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > > ---
+> > >  .../bindings/crypto/allwinner,sun8i-ss.yaml   | 64 +++++++++++++++++++
+> > >  1 file changed, 64 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+> > > new file mode 100644
+> > > index 000000000000..99b7736975bc
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+> > > @@ -0,0 +1,64 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/crypto/allwinner,sun8i-ss.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Allwinner Security System v2 driver
+> > > +
+> > > +maintainers:
+> > > +  - Corentin Labbe <corentin.labbe@gmail.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - allwinner,sun8i-a83t-crypto
+> > > +      - allwinner,sun9i-a80-crypto
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    items:
+> > > +      - description: Bus clock
+> > > +      - description: Module clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: bus
+> > > +      - const: mod
+> > > +
+> > > +  resets:
+> > > +    maxItems: 1
+> >
+> > The A83t at least has a reset line, so please make a condition to have
+> > it required.
+> >
+>
+> Hello
+>
+> The A80 have one also, so I need to set minItems: 1
+> But setting both minItems: 1 and maxItems:1 lead to a check failure:
+>
+> properties:resets: {'minItems': 1, 'maxItems': 1} is not valid under
+> any of the given schemas
+>
+> How to do that ?
 
-Did you mean LS1021A and "don't" instead of "won't", given the change to the
-examples?
+IIRC the meta-schema prevent having both because the tooling will
+insert it for you.
 
-> Change in v5:
-> 	- Add 'Reviewed-by: Rob Herring <robh@kernel.org>' to commit message.
-> 	- Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-
-> cells'.
-> 	please see https://lore.kernel.org/patchwork/patch/1101022/
+It doesn't really matter at this level though. maxItems alone will
+make sure that there's a single element, and the schemas in the tools
+will make sure that the type for resets is correct.
 
-I'm not sure why Rob considers this the "correct form" -- there are other
-examples of the current form, such as ibm,#dma-address-cells and ti,#tlb-
-entries, and the current form makes more logical sense (# is part of the
-property name, not the vendor).  Oh well.
-
-> Required properites:
->    - reg : Offset and length of the register set of the RCPM block.
-> -  - fsl,#rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
-> +  - #fsl,rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
->  	fsl,rcpm-wakeup property.
->    - compatible : Must contain a chip-specific RCPM block compatible string
->  	and (if applicable) may contain a chassis-version RCPM compatible
-> @@ -20,6 +20,7 @@ Required properites:
->  	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
->  	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
->  	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
-> +	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
-
-Is there something actually called "2.1+"?  It looks a bit like an attempt to
-claim compatibility with all future versions.  If the former, is it a name
-that comes from the hardware side with an intent for it to describe a stable
-interface, or are we later going to see a patch changing some by-then-existing 
-device trees from "2.1+" to "2.1++" when some new incompatibility is found?
-
-Perhaps it would be better to bind to the specific chip compatibles.
-
--Scott
-
-
+What you'd need here though would be to add resets to the list of
+required properties, otherwise it will only be checked against if the
+property is there.
