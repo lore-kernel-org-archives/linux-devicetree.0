@@ -2,73 +2,62 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A45CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39928C47E49
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C447920856
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF1B21906
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502147AbfJXMui (ORCPT
+        id S1731298AbfJXMzu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 08:50:38 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:46830 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730753AbfJXMui (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 08:50:38 -0400
-Received: from ramsan ([84.195.182.253])
-        by albert.telenet-ops.be with bizsmtp
-        id HQqb2100X5USYZQ06QqcDc; Thu, 24 Oct 2019 14:50:36 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNcZX-00060i-TG; Thu, 24 Oct 2019 14:50:35 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNcZX-0003ow-Qx; Thu, 24 Oct 2019 14:50:35 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>
-Cc:     Barry Song <baohua@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 resend] ARM: dts: atlas7: Fix "debounce-interval" property misspelling
-Date:   Thu, 24 Oct 2019 14:50:33 +0200
-Message-Id: <20191024125033.14643-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Thu, 24 Oct 2019 08:55:50 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:41967 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730113AbfJXMzu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 08:55:50 -0400
+X-Greylist: delayed 367 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 08:55:48 EDT
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Oct 2019 18:19:41 +0530
+IronPort-SDR: cs4iJpwlc6sky9eVZnBcFDzJWeQ6TgZGw07JErkkrvJvk4COKWh1dr1avRLFEgjENaJNozj8GH
+ k6xQ26UZOfYkwHts1329frty+Q6oBzReUXhctFTwnhwaG5zvZM5xuENxftBFxzJ01xVW/PFMzS
+ iyZhv73knmZW+eOWV5yw9d8Y8AMnfqa1Y0BugNQeUKHcml6dHmFuf0lnBX84VfkB2vf+cJ6PXG
+ Sh0kIFgBIRlsUb/jfFThPqyDFYzx2iHo2nvw+3PqVitb2upIlQmn4YQ2gbyW6QtDbZuKHXaUO/
+ lcM+9rd+RDXwPqcCaergzALP
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 24 Oct 2019 18:19:23 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 85A291941; Thu, 24 Oct 2019 18:19:22 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     agross@kernel.org, balbi@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, mgautam@codeaurora.org,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH 0/2] Add USB DWC3 support for SC7180
+Date:   Thu, 24 Oct 2019 18:18:46 +0530
+Message-Id: <1571921328-13898-1-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-"debounce_interval" was never supported.
+Adding compatible for SC7180 in USB DWC3 driver and devicetree bindings
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Barry Song <baohua@kernel.org>
----
-v2:
-  - No changes.
----
- arch/arm/boot/dts/atlas7-evb.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sandeep Maheswaram (2):
+  usb: dwc3: Add support for SC7180 SOC
+  dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
 
-diff --git a/arch/arm/boot/dts/atlas7-evb.dts b/arch/arm/boot/dts/atlas7-evb.dts
-index e0c0291ac9fdbeee..e0515043d1451c39 100644
---- a/arch/arm/boot/dts/atlas7-evb.dts
-+++ b/arch/arm/boot/dts/atlas7-evb.dts
-@@ -119,7 +119,7 @@
- 				label = "rearview key";
- 				linux,code = <KEY_CAMERA>;
- 				gpios = <&gpio_1 3 GPIO_ACTIVE_LOW>;
--				debounce_interval = <100>;
-+				debounce-interval = <100>;
- 			};
- 		};
- 
+ Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 1 +
+ drivers/usb/dwc3/dwc3-qcom.c                        | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
