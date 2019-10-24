@@ -2,122 +2,128 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59DFCA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 01:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A54CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 02:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC8A12086D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 01:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3002A2086D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 02:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="Ffyvbloh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P0sNyB9z";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jXYYdZMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406106AbfJXBrk (ORCPT
+        id S2437054AbfJXCbC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 23 Oct 2019 21:47:40 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37288 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405356AbfJXBrk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 21:47:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so14053678pfo.4
-        for <devicetree@vger.kernel.org>; Wed, 23 Oct 2019 18:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r+v++LJz2UtADy1cS2OkPl2XbtGtt1rFLT7PbQVU178=;
-        b=FfyvblohnumehZApPiCnRaZxuyFEHdqk5OyDTBEOP+BfOTBvUjkFq6SSx4hsS/iPs1
-         omQJinbl9mu6pQnGVTsqhimfp9y+eLEp1dgFM5P58PG5vQz9PKTPuIqnjJtYLtWLFVTZ
-         8tAL70O/gmliWAM0nMpyEBRzzKwHsjQKI+Mso=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r+v++LJz2UtADy1cS2OkPl2XbtGtt1rFLT7PbQVU178=;
-        b=uaWkrrwVN8VzG11rDGKv0jO4fwRUu9xEVEXuNFuls4wmfT7lPGqjBBIBvgpK98Bm+o
-         DNDWFeLXTjO2xIy4iuRo28l/JuCBAKvxnXF4bWqtmt9cWy7t8gWcpa2bKLowCnotX6qz
-         qH0rNIbfgwQVMTH7pkpFswHC4gHPPYmF9bh+7M+kv7r7br8N/+AKK1377cfeKQnt0P6R
-         rQl9Ec2RNyI9s5rFnsKFXWe/3fQKKW/Xo5/hOWmlCyykvIuzt4q10oCflPgtuSVTZtQK
-         pof+Z75YmkcdH5s+JbMGmGEvg6eTZcuFZNE4KYsmNX7DjqDGeR7622pbJLDqkNmJ3S6V
-         cVgQ==
-X-Gm-Message-State: APjAAAUcFbKuE1UwYUbZkGFjEMw1nuGErgpiX+ZHWrHX6NVLXsEqmIAT
-        QzX2+yKobphTcmZRkCZzNOBQn6kU/uPSOw==
-X-Google-Smtp-Source: APXvYqzjuQPwTlwiGWQJArevnuNtf/BUZhD73XiE/Bfu4lxll4NKeL0JCsdquj30nMOYWLPGj/0JHw==
-X-Received: by 2002:aa7:9105:: with SMTP id 5mr11748563pfh.245.1571881658843;
-        Wed, 23 Oct 2019 18:47:38 -0700 (PDT)
-Received: from goma (p1092222-ipngn200709sizuokaden.shizuoka.ocn.ne.jp. [220.106.235.222])
-        by smtp.gmail.com with ESMTPSA id y138sm25464902pfb.174.2019.10.23.18.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 18:47:37 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 10:47:33 +0900
-From:   Daniel Palmer <daniel@0x0f.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: arm: Initial MStar vendor prefixes and
- compatible strings
-Message-ID: <20191024014731.GA3731@goma>
-References: <20191014061617.10296-1-daniel@0x0f.com>
- <20191023200228.GA29675@bogus>
- <20191023224357.GA26445@goma>
- <CAL_JsqKTiieO_7gM4YNGV-BAT67Mi+PX4Gqyyd7nowZsjhnFqQ@mail.gmail.com>
+        Wed, 23 Oct 2019 22:31:02 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41716 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437045AbfJXCbC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 23 Oct 2019 22:31:02 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CEBE561068; Thu, 24 Oct 2019 02:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571884260;
+        bh=9/HyGx8k6OZA11usgkO3f0IPDOmioYN0Pq3Ym6dXEsA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=P0sNyB9znt9SvVsporJy7QUt6imvMg2AyomQnEcEV6znvzIAQ3SdBP/Bxl8LwMRLc
+         lR6UJS4DBlo3Htffb1p3pBqWaGrD296ZNDV8TSdBnfpI+G70cblAtANLFgPkhdIWSK
+         OOfxvU8H2kAiQ8QUU07Pr4Ykn5GHtEFCtpa2u8/w=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0C8660FF9;
+        Thu, 24 Oct 2019 02:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571884259;
+        bh=9/HyGx8k6OZA11usgkO3f0IPDOmioYN0Pq3Ym6dXEsA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jXYYdZMVdiR5wVf0WCY+2dpxl07S0Q1gxKQwuNi3iJMP8ua4C5eZC9OwBG8+FrB5x
+         ps0zlSbu2wCddbnODtiai+33mQl4UkVuGZ2sebiJZIF73DWGBokY8LUuQOf8TblTwH
+         aPjMfpJJZsmVjPVZKL/nSMOgkieEy2oU3P6v4U60=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0C8660FF9
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 05/11] arm64: dts: qcom: sc7180: Add cmd_db reserved
+ area
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Maulik Shah <mkshah@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+References: <20191023090219.15603-1-rnayak@codeaurora.org>
+ <20191023090219.15603-6-rnayak@codeaurora.org>
+ <5bb4acef7f11af9e9c4016743d668f57@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <8d361445-d764-1653-76a3-05df25339c0c@codeaurora.org>
+Date:   Thu, 24 Oct 2019 08:00:54 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKTiieO_7gM4YNGV-BAT67Mi+PX4Gqyyd7nowZsjhnFqQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5bb4acef7f11af9e9c4016743d668f57@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 06:45:29PM -0500, Rob Herring wrote:
-> > I used the sunxi file as a template and thought they had some
-> > reason to do that. I'll change it to just GPL-2.0.
+
+
+On 10/23/2019 5:46 PM, Sibi Sankar wrote:
+> On 2019-10-23 14:32, Rajendra Nayak wrote:
+>> From: Maulik Shah <mkshah@codeaurora.org>
+>>
+>> Command_db provides mapping for resource key and address managed
+>> by remote processor. Add cmd_db reserved memory area.
+>>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index f17684148595..dfa49ef2bce0 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -32,6 +32,18 @@
+>>          };
+>>      };
+>>
+>> +    reserved_memory: reserved-memory {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges;
+>> +
+>> +        cmd_db: reserved-memory@80820000 {
 > 
-> That wasn't a choice, but dual license it please.
+> aop_cmd_db_mem: memory@80820000 {
+> please use ^^ instead
 
-Will do.
+right, I thought I looked up sm8150.dtsi to make sure
+the labeling for various things is consistent, but
+maybe i didn't. Will fix. Thanks.
 
-> Sounds like you want:
 > 
-> items:
->  - const: thingyjp,breadbee
->  - enum:
->      - mstar,infinity
->      - mstar,infinity3
+>> +            reg = <0x0 0x80820000 0x0 0x20000>;
+>> +            compatible = "qcom,cmd-db";
+>> +            no-map;
+>> +        };
+>> +    };
+>> +
+>>      cpus {
+>>          #address-cells = <2>;
+>>          #size-cells = <0>;
 > 
-> If one board can do both chips. Though if the same PCB is populated
-> differently beyond the SoC, then maybe 2 board compatibles makes
-> sense.
 
-You can take one chip off and swap it with the other without any PCB/component
-changes but as I've been working on both chips there are a few differences
-coming up that means you can't use the same DT for both configurations.
-For example the ethernet phy needs to be configured differently, the i1
-SoC has less instances of the DMA controller blocks and so on.
-
-The version of the chip can be detected from a register and I had considered
-patching over the differences based on that but I couldn't find an example
-of doing it within the kernel. So I'm detecting the chip version in u-boot and
-loading the right DT there.
- 
-> Why not use the part numbers (msc313...)?
-
-I had initially done that when I thought i1 was the msc31e and i3 was the
-msc313e. For the i1 the only part I have found so far is the msc313 but
-the i3 is a series of around 4 or 5 different configurations of the same SoC 
-with differing amounts of DDR and pins. This is like the AllWinner V3S and 
-S3/S3L where the same V3 SoC is packaged differently. As there is no source
-of this information that appears on a google search I've started documenting
-it at http://linux-chenxing.org/
-
-I think the only place the actual chip model will need to be used will be a
-compatible string for the pinctrl driver to setup the right pin numbers.
-
-Thanks,
-
-Daniel
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
