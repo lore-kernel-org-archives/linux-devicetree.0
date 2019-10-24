@@ -2,154 +2,164 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A86ACA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69622C47E49
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3EF2166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:43:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dN9+UiU2"
+	by mail.kernel.org (Postfix) with ESMTP id 49F4D2166E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfJXLnO (ORCPT
+        id S1726362AbfJXLoQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:43:14 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45912 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfJXLnO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:43:14 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v8so18288573lfa.12
-        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 04:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=y6qwseFf3sOEzysjfxOCeatUxazVlV6E5726z4gpfTk=;
-        b=dN9+UiU2TiIaFv1ECG8dz2AKCpyynB8QkW7md/WXneHG+ISMq7AOoyaWnBLRx6PmAY
-         wXWWnF3wjJYAdwfg3HzJfX9UwYP9NvatBJyQpbjP/e+Tuc7RJbuqP9ArqxbPjtwGNikj
-         tFn26MVd/P/b7ieBc3YSzBJV8fdanYQ2Zv4qzqR8TctDjFINFboEs6WGkCJa4sS2H0Hq
-         02QOjA6Xds3Gcpjct994FJ8a2Nhqp8byEzloxr+5qdwusSGfrh3Daj52ZfgFAx9cUUBf
-         AXtxTJn2f6upA6wyfmm32/YAowtwNgXf2IJgpqk4DysQdfOWhpHtPts87nW8wC3Rj1+W
-         sMfw==
+        Thu, 24 Oct 2019 07:44:16 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43488 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfJXLoQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:44:16 -0400
+Received: by mail-lj1-f193.google.com with SMTP id n14so24644927ljj.10;
+        Thu, 24 Oct 2019 04:44:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=y6qwseFf3sOEzysjfxOCeatUxazVlV6E5726z4gpfTk=;
-        b=pgZNpnYDfftCQpqI+T/MqBt/b0E8cogBm29CBk2mQKhm0kbK5QG29qD7QB3p56d1Tl
-         46lxnzQptemS8T5Hsmp9DDyLEnNYLbaxuVFgludqd7KHVhlQRAJSLsAHhZxsdfNpJAx2
-         GcZzkipSnDguqRujA5mufQnuxyRWLSy6hJCer/I1o6PpKPBVTh17/R9uWqvTb6Qx+TN5
-         RiaoNsxdrIYKl/PCzvjHUt6V6X3ont2Mc9/P/VRhFU+nR4qpEdk/nF69EwTFe3Py0ZC0
-         pivlRGNHbI0/mrmNR7EfN94WeqSMMAF0YB7Lho2P5QUvL3/Cm9yc/fhKwnN1w6HI8iiT
-         rYrQ==
-X-Gm-Message-State: APjAAAUDaxZSRVPT8PhmQGq00VJ0FPNwUU00W/+FhEbOZQqY1zNnbC4c
-        SoCL7G4uHa3i1qSbsqkbt2qXmg==
-X-Google-Smtp-Source: APXvYqwApy6iTTlUo7LyKjHSge1hqKfP9JTwipM9xBhCzAcimzQLZisjM3ga4wJey8II3bDv8+mD1A==
-X-Received: by 2002:a19:651b:: with SMTP id z27mr24607041lfb.117.1571917392144;
-        Thu, 24 Oct 2019 04:43:12 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id e14sm4001846ljb.75.2019.10.24.04.43.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a1r2oRD4FVn+B+uBS9ZGvqBGEqOoVXr/0y/B/AKwI18=;
+        b=A0iUz/dq3Zys5gTTMiyVNCWgK65Qs2YfujP+5+EpnO1BKj6LVYYiCPUAUUSNg6LkLb
+         CMJ7V+o3MWTCQDp9p2MvwwCZR6iM1pbIx10yp0Gc9Y242mG5cPC4EaGBAdE/XI6ePW9E
+         /B9fO7/kRBtv/34RQfIUQcsIJdcqlluVg4OxdLZ4txMtrjjL1Gf1q8JFP5ZW3p0muDk3
+         BcxIKrlmc+PdAn9Bl7JfhoeSylgdhfz3busIH0DqlETrLUOWNEAYUlx8pAPdo8xWwpnr
+         LPyi6pNE5WA3so4Xt5LTEXZpoga6Yo9OEn/QJ8gK46ogknjJctLm1GBKnl+UMxkbwIRj
+         m6xA==
+X-Gm-Message-State: APjAAAUTTRZQ5rjjtL+m8MS8vWxzxO7qltUIeBwwZ9gmofmE1GRJbz27
+        ufDoWckHnoJM0G/FEfAgt2w=
+X-Google-Smtp-Source: APXvYqyZPgCnm8Pe2t9Mfc25yHuwJPgszDocEXDX8Fi8/IFlpoi8oV/EOirAH7oXQQmLbv++Xj+fZg==
+X-Received: by 2002:a2e:9f4d:: with SMTP id v13mr26446627ljk.226.1571917453620;
+        Thu, 24 Oct 2019 04:44:13 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id x30sm11422070ljd.39.2019.10.24.04.44.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 04:43:11 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 2/3 v4] drm/panel: Add DT bindings for Sony ACX424AKP
-Date:   Thu, 24 Oct 2019 13:43:04 +0200
-Message-Id: <20191024114305.15581-2-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191024114305.15581-1-linus.walleij@linaro.org>
-References: <20191024114305.15581-1-linus.walleij@linaro.org>
+        Thu, 24 Oct 2019 04:44:13 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 14:44:05 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [RFC PATCH v2 04/13] mfd: input: bd71828: Add power-key support
+Message-ID: <e965f34b6cb1b79d5dc7d41e1cbf5fc63f582774.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Sony ACX424AKP panel.
-Let's use YAML.
+Use gpio_keys to send power input-event to user-space when power
+button (short) press is detected.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
-ChangeLog v3->v4:
-- Adjust to adjusted DSI bindings.
-ChangeLog v2->v3:
-- Put the example inside a dsi-controller so we have a complete
-  example that verifies to the DSI panel generic binding.
-ChangeLog v1->v2:
-- Suggest a stand-alone YAML bindings file for DSI panels in
-  a separate patch, and use that to reference the
-  boolean "enforce-video-mode" attribute for DSI panels
----
- .../display/panel/sony,acx424akp.yaml         | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml b/Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
-new file mode 100644
-index 000000000000..a2f49b9a5958
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+No changes since v1
+
+ drivers/mfd/rohm-bd71828.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
+index b7de79e1fcdb..f77ba1ec3e99 100644
+--- a/drivers/mfd/rohm-bd71828.c
++++ b/drivers/mfd/rohm-bd71828.c
+@@ -4,7 +4,9 @@
+ //
+ // ROHM BD71828 PMIC driver
+ 
++#include <linux/gpio_keys.h>
+ #include <linux/i2c.h>
++#include <linux/input.h>
+ #include <linux/interrupt.h>
+ #include <linux/ioport.h>
+ #include <linux/irq.h>
+@@ -15,6 +17,18 @@
+ #include <linux/regmap.h>
+ #include <linux/types.h>
+ 
++static struct gpio_keys_button button = {
++	.code = KEY_POWER,
++	.gpio = -1,
++	.type = EV_KEY,
++};
 +
-+title: Sony ACX424AKP 4" 480x864 AMOLED panel
++static struct gpio_keys_platform_data bd71828_powerkey_data = {
++	.buttons = &button,
++	.nbuttons = 1,
++	.name = "bd71828-pwrkey",
++};
 +
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
+ static const struct resource rtc_irqs[] = {
+ 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
+ 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
+@@ -36,6 +50,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
+ 		.name = "bd70528-rtc",
+ 		.resources = rtc_irqs,
+ 		.num_resources = ARRAY_SIZE(rtc_irqs),
++	}, {
++		.name = "gpio-keys",
++		.platform_data = &bd71828_powerkey_data,
++		.pdata_size = sizeof(bd71828_powerkey_data),
+ 	},
+ };
+ 
+@@ -288,9 +306,19 @@ static int bd71828_i2c_probe(struct i2c_client *i2c,
+ 		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
+ 		return ret;
+ 	}
 +
-+allOf:
-+  - $ref: panel-common.yaml#
-+  - $ref: ../dsi-controller.yaml#
+ 	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
+ 		bd71828_irq_chip.num_irqs);
+ 
++	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
 +
-+properties:
-+  compatible:
-+    const: sony,acx424akp
-+  reg: true
-+  port: true
-+  reset-gpios: true
-+  vddi-supply:
-+     description: regulator that supplies the vddi voltage
-+  enforce-video-mode: true
++	if (ret < 0) {
++		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
++		return ret;
++	}
 +
-+required:
-+  - compatible
-+  - reg
-+  - port
-+  - reset-gpios
-+  - power-supply
++	button.irq = ret;
 +
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dsi-controller@0 {
-+        compatible = "foo";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        panel@0 {
-+            compatible = "sony,acx424akp";
-+            reg = <0>;
-+            vddi-supply = <&foo>;
-+            reset-gpios = <&foo_gpio 0 GPIO_ACTIVE_LOW>;
-+        };
-+    };
-+
-+...
-\ No newline at end of file
+ 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+ 				   bd71828_mfd_cells,
+ 				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
 -- 
 2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
