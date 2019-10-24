@@ -2,165 +2,237 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9487CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 14:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7713FCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 14:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B0C21655
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 14:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A1D21928
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 14:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="EXUIVfo1"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="kRQHeISS";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="kRQHeISS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390503AbfJXOIZ (ORCPT
+        id S1732229AbfJXOYM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:08:25 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:36438 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389658AbfJXOIY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 10:08:24 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: PrxqaikAwrfnnNPSvIKIGexdX3b4TKLvdszW3DfQyFdF2lh0BZ/fl+wiaaD3cXfWMmlJsFcrTD
- VDs91TN7bQ4M9RUq1gjWyTbUwuOPpd2lFS4xYpOjDJdTQyPycbNTLa8mBAIlg1+/iAYSmBJmhW
- I775LRRJvQZHbaM2Ub8O/32/fJEDk+O6DEmmDDu0BwRSyTJuidPbi8Ib9XnfzG+uw0aMhkPK+r
- Prjntvr6lc/BAHpuE20z5zzBFrYhesQE5R2Qc1X/PerdRjLyHaWui3/S7NZma+h2vvNizfMXPX
- n2g=
-X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
-   d="scan'208";a="54255336"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Oct 2019 07:08:23 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 24 Oct 2019 07:08:22 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 24 Oct 2019 07:08:22 -0700
+        Thu, 24 Oct 2019 10:24:12 -0400
+Received: from mail-eopbgr150084.outbound.protection.outlook.com ([40.107.15.84]:9454
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732393AbfJXOYM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 10:24:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1bWSXpHVt5DZLtbWFpEQs17bQXwyKpBC3A5Qfyd13DA=;
+ b=kRQHeISSWSIBgQ9c/0CfMucWfph2LATP5fDruNRSEeOFAqvC2xlFOuJyvdpw9tqAr1S3xZuuuIymDdQBX6bLm9zYYuQ+OVWF+S1QSWDFOYIpSPW7BeNaYIdSs5WDNiYsn+7cSPGECam8sO5WOEJy7z10ALxkBWIhThRwXOClZ+Y=
+Received: from VI1PR0802CA0029.eurprd08.prod.outlook.com
+ (2603:10a6:800:a9::15) by VI1PR0802MB2352.eurprd08.prod.outlook.com
+ (2603:10a6:800:9e::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.23; Thu, 24 Oct
+ 2019 14:22:27 +0000
+Received: from DB5EUR03FT041.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::209) by VI1PR0802CA0029.outlook.office365.com
+ (2603:10a6:800:a9::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.22 via Frontend
+ Transport; Thu, 24 Oct 2019 14:22:27 +0000
+Authentication-Results: spf=fail (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT041.mail.protection.outlook.com (10.152.21.4) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.23 via Frontend Transport; Thu, 24 Oct 2019 14:22:27 +0000
+Received: ("Tessian outbound 3fba803f6da3:v33"); Thu, 24 Oct 2019 14:22:26 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: a46a090b7d5ff0b1
+X-CR-MTA-TID: 64aa7808
+Received: from d3b659b80781.1 (cr-mta-lb-1.cr-mta-net [104.47.10.52])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 0C5D601C-A2E2-4716-BF28-C4B6F1CAE254.1;
+        Thu, 24 Oct 2019 14:22:20 +0000
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com (mail-db5eur03lp2052.outbound.protection.outlook.com [104.47.10.52])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id d3b659b80781.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 24 Oct 2019 14:22:20 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U1MLYGMbCdTYs5C6YbhN7sVbIikFpbu0X7u2oWp8vFXVVQ0fwe5Pe3N/tBctxIZ9ZyfUBj9CEYXnkkA1uXIxOkA/jyDzCvMAH4zfbqiy1G7zzhBwZ+jXEXhryz2pQBlLDDWTa7I4QPLeKyIqQDvOS2J18KXNsTnEdkEJK6BIcub81KCXvVlgv1m5J8+miVzDAvdK0x28XasbIiYiOqKUgau1EG+tT3bLdKtbkhtU+5LHVgb2nCOiY3AdcYB3CX0LUhZd2//EM/CCjWQWKQZDCtnEeJ53KQpbGEhgKO4XB0IMwwTF+XjmlD0ZmQtGuxBvoUedhxfLeDu3AGlhRBUWJQ==
+ b=SoiLPZn7/VUCbLBigVvSxvgs4SYYPzjsJD9wbQZg9iy7yHqv1P88aWdFqA/tGGqiCbqiiFDzOpg6N0cTpLgBtjA/xz/1LkyEOhX0PX7y2w1jIkkn0kypXl4bS1PdVqubcHjvmk1Mq8lJoyE5m0ixhFwJaEqLHgVZHqQq8NwlfBSjzq9MUP8gveBWSyOlhHv4Iq2Whg7zhDuwGve/GCaHep1jU1qa/1JUGNk4nNbUmnwtQrwALUnnpU3Crhf3D/4Qg6OKYrK4D2MIGX45/JeIFvUmN6VuaSvRYVz5rLOMQGHbQGIY3FXYMQhrhTjCKCZ6HYo8PJe199EQfVGc/ePq9Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gyZZVkoRn3UIGafYECyb3X7DeCx6lrkIKsr0LV+OBkc=;
- b=DWL6t9WgfowB7SlnB/PrLMmxpkKRok32GGR7ozbeuMyDJ5Y7LCmTTxjKN+h4H3X6gSEJ4ejgpjcNBy3W80srO6D/INt9ajVIoTgEgsJuFv5K0XGMIccaMgVrFuobAud7VlJWbGi+TNJsySGL431Xn8uPydYNUJ3/GkkZL/yKuXEqOpNJ1bb9U+Py0/14h+exOcY706sfX5jPxx6mhO+KrKZkQQe851FTn42XNb+hHBha1HpxVwKX+h/y8gAkhe1FzCNwL0on2kNFZyuhTHco/XgCR1Vghsn/NvixC7wDde1BG8hjMZbNHaFXy+XZcnQnJMmHnaEOBntv5nrfckuz3g==
+ bh=1bWSXpHVt5DZLtbWFpEQs17bQXwyKpBC3A5Qfyd13DA=;
+ b=llrnglQZ/yWsf6UCJoSotDA1yslRbABgiwHV/AxYscNxPWMToNzt8nrUA23fmcA9SV6zmTgGFFELH8kmO/rrk3ore0cfpnI7Iqja8uj+Gzy+8gZTJ+VId9dSJDh6QarSPEmlzEgF/QyYs28kbIHVOisoYKVdkvCH9U0lpXe/klcTh264LLdcZJjqcyl8QEhjl9UPcn0n9wZhBWLL92qW2APCJCk4Hg9GNbSjLYjYnf6dBkG3gYO0MUXd9iwIyjhxXgOwcRxyDfEWRnBHY9i0BjjT5jC1LMbu+3xxQRPYsjfdyF729o0WFCjSGSVfhOLpuSwlT0GgTuhQYoaeNORccg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gyZZVkoRn3UIGafYECyb3X7DeCx6lrkIKsr0LV+OBkc=;
- b=EXUIVfo1ucO04Iq70OsiyZM/6gZVX57djDIUho1DGX4xMY+9u77tPu8VCX4gWA+D1Z2e26aSEGZ87MaMSApNOolJvTwCxYzIBBL6iKMKv/QPugF1TBDd1Lmd3E5QphUDk6yB70PDqFr+LhPALSEwh5aoFkpmUtS7Mo2yZfbTbfU=
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
- BY5PR11MB3957.namprd11.prod.outlook.com (10.255.72.85) with Microsoft SMTP
+ bh=1bWSXpHVt5DZLtbWFpEQs17bQXwyKpBC3A5Qfyd13DA=;
+ b=kRQHeISSWSIBgQ9c/0CfMucWfph2LATP5fDruNRSEeOFAqvC2xlFOuJyvdpw9tqAr1S3xZuuuIymDdQBX6bLm9zYYuQ+OVWF+S1QSWDFOYIpSPW7BeNaYIdSs5WDNiYsn+7cSPGECam8sO5WOEJy7z10ALxkBWIhThRwXOClZ+Y=
+Received: from AM0PR08MB5345.eurprd08.prod.outlook.com (52.132.215.213) by
+ AM0PR08MB2963.eurprd08.prod.outlook.com (52.134.90.10) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Thu, 24 Oct 2019 14:08:22 +0000
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::5830:772e:99d7:3a3]) by BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::5830:772e:99d7:3a3%3]) with mapi id 15.20.2387.023; Thu, 24 Oct 2019
- 14:08:21 +0000
-From:   <Codrin.Ciubotariu@microchip.com>
-To:     <kamel.bouhara@bootlin.com>, <wsa@the-dreams.de>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <devicetree@vger.kernel.org>,
-        <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-Thread-Topic: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-Thread-Index: AQHVeTBjK0tNmFNyIkuOo6p8CcqP0qdlp6cAgADDS4CAA4uRgA==
-Date:   Thu, 24 Oct 2019 14:08:21 +0000
-Message-ID: <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
- <20191002144658.7718-3-kamel.bouhara@bootlin.com>
- <20191021202044.GB3607@kunai>
- <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
-In-Reply-To: <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
+ 15.20.2387.20; Thu, 24 Oct 2019 14:22:17 +0000
+Received: from AM0PR08MB5345.eurprd08.prod.outlook.com
+ ([fe80::109c:e558:5074:13e4]) by AM0PR08MB5345.eurprd08.prod.outlook.com
+ ([fe80::109c:e558:5074:13e4%6]) with mapi id 15.20.2387.023; Thu, 24 Oct 2019
+ 14:22:17 +0000
+From:   Ayan Halder <Ayan.Halder@arm.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>, nd <nd@arm.com>
+Subject: Question regarding "reserved-memory"
+Thread-Topic: Question regarding "reserved-memory"
+Thread-Index: AQHVinZwwZsw70agmEe040OUqUpTNg==
+Date:   Thu, 24 Oct 2019 14:22:17 +0000
+Message-ID: <20191024142211.GA29467@arm.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR2P264CA0027.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:101:1::15) To BY5PR11MB4497.namprd11.prod.outlook.com
- (2603:10b6:a03:1cc::28)
+x-clientproxiedby: SN4PR0401CA0021.namprd04.prod.outlook.com
+ (2603:10b6:803:21::31) To AM0PR08MB5345.eurprd08.prod.outlook.com
+ (2603:10a6:208:18c::21)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Ayan.Halder@arm.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.156]
+x-originating-ip: [217.140.106.53]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 66a09ab7-170a-45b2-ca99-08d7588ba09a
-x-ms-traffictypediagnostic: BY5PR11MB3957:
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6e0fd860-bd3f-42f6-e305-08d7588d98b9
+X-MS-TrafficTypeDiagnostic: AM0PR08MB2963:|AM0PR08MB2963:|VI1PR0802MB2352:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB3957AB435BDF6DA94E74088AE76A0@BY5PR11MB3957.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+X-Microsoft-Antispam-PRVS: <VI1PR0802MB2352BA3B43D44D9518475D15E46A0@VI1PR0802MB2352.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:6790;OLM:6790;
 x-forefront-prvs: 0200DDA8BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(136003)(346002)(39860400002)(189003)(199004)(36756003)(26005)(8936002)(81166006)(81156014)(8676002)(2501003)(14454004)(53546011)(76176011)(6506007)(386003)(66066001)(25786009)(486006)(186003)(86362001)(52116002)(478600001)(99286004)(31696002)(11346002)(446003)(2616005)(256004)(6116002)(6486002)(5660300002)(6512007)(229853002)(2906002)(476003)(102836004)(4326008)(6246003)(6436002)(66476007)(66946007)(66446008)(64756008)(66556008)(71200400001)(71190400001)(305945005)(110136005)(54906003)(7736002)(31686004)(3846002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB3957;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(396003)(346002)(39860400002)(199004)(189003)(478600001)(64756008)(66556008)(66066001)(66476007)(66946007)(66446008)(6512007)(6116002)(3846002)(52116002)(256004)(36756003)(386003)(25786009)(71190400001)(2906002)(26005)(71200400001)(99286004)(2501003)(110136005)(14454004)(6436002)(102836004)(6486002)(8936002)(86362001)(2201001)(1076003)(316002)(6506007)(8676002)(81166006)(81156014)(5660300002)(476003)(2616005)(4326008)(33656002)(54906003)(44832011)(486006)(305945005)(7736002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB2963;H:AM0PR08MB5345.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CopqhEH6pFc2hAzrE7ViL3UX4fhPba4TV8VtT7goDjXbaI9pckw9/WQJj0Xt5PnvU+FziIeaWYytfGzz1IRzitmxAuzKfS9eyo56+uADwL8gotHgXDgeRVbd5aZuJtPP5RztpHOFTRGSA8/jKscNz7see8fyGQn+H+9lUYjwKVemQtZ9xITaqacEBneB6XupjpgP04O4wlrLoI6cmF5KqHkTfZt6/1Z+g3z9V/TOxxyNCI1czMDwr7EMWS9OMsmLIH7MalNG2Uo13whysuL2WiXlhLVRancJI/QzfrCDuBSwktzfpm0wt987y1oSwrLfRh9IFavsRsjohzT11x73MHhUxdcH9N+s8diKWLJYCJCcqDUqmOYsmYlCGlTbWorUZ0/c+0RBaRcT5898JHsoHDfK+PmnFelbsLicP5+FvcbFDovsOCyQFl4+UiDGV7lG
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E599F74D1D260C4AA9BDA63474521792@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 8dhQVxRaBb/sp5o2cVcz5KlnDwpjzPWTSde+J6miwkedTvku9JuIST5RgEch6ATBYTShICNSdrxI8dJANSnttYF5MzaOiMi3+BhxImApAfc2/kUSoV/1O3XfESoEmlgPZ+oeHiaG0qJ4GI2yeTBdsGMKPBbLWbdTkWMTv/VB7WrLuEi3HUqXwKoRsoDBwei1JQpXAn0mqIxGAEWG+DdPaW7OMnIcuXQrEHwZcnFTWimmP9BJfXPUvZPcc2tgyzCU4WSA/d/28C3IX8WxI1JYsfwdY3NE7jKCzWirElBm653LZNRgFljQzCX9tDzIl7d5CawLI8iJ5mocsKLbiQpA+RFNvAbwz83++aSZzfA5dKksqa/RxCoB0QtZiykCg4ImDXLnxlcbNe06xgUoqBzPl0k23PnZ+7FE6FJCXxhJ+WyiYVnifkrHCgl69o6SlBZu
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3E985F4C5AB3F24080778754F54A2885@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66a09ab7-170a-45b2-ca99-08d7588ba09a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 14:08:21.6800
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB2963
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ayan.Halder@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT041.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(346002)(1110001)(339900001)(199004)(189003)(76130400001)(2201001)(81156014)(81166006)(2501003)(110136005)(102836004)(8936002)(386003)(8746002)(36756003)(97756001)(70206006)(99286004)(70586007)(2906002)(6506007)(26005)(86362001)(186003)(6486002)(6512007)(8676002)(54906003)(47776003)(33656002)(105606002)(22756006)(25786009)(26826003)(316002)(478600001)(23726003)(1076003)(4326008)(6116002)(3846002)(5660300002)(336012)(356004)(2616005)(7736002)(305945005)(486006)(126002)(476003)(46406003)(50466002)(66066001)(14454004)(450100002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0802MB2352;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Fail;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: e555e31c-9c5f-48ff-2af3-08d7588d92f0
+NoDisclaimer: True
+X-Forefront-PRVS: 0200DDA8BE
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0+4nx0fNVZjooN0qPoNmRCKZ2EGklpK+Byndz0ZlLn/kKnUfYbQ5+7Jos/CUQfO4UL/gMLfJCEv444enlCeSohrBqgLk3v+N0U4up0hCHMvFzjs54uK0Z9KxiiRBE/GJh64IOaZ2zLGu23lV0hTyRcqSl12YRz+gwVaR1BxA6zFneW2uHG66MMnuwuTyJSEXEqAsFHuNj2T3H3lygrOkEd7CnX0Ot0bNNCFt/3P6yMPZ7SAaTP6vdy6TRtMunY8J75WYwjVoOUdbEfZqQTNI9gNlJXsOR5bM+HbhOVF1ylgV00Es9TJiMcJBKpdo640OdrDqt0ZbAzTQAolqSAurH6Ltgc2KQblEiXLhl6DRxdrGAG6F0I26/kWzFGvXzBZgVaXpKv1opH6KFxoN70REm3QhT+CNN6Pu/N8PT/Lt1zFfux8kUGB3BjeuzSB/F2ZN
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2019 14:22:27.1446
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: swJ/whvCgLIodD7AcGUGJaxrFL4cEUkHbUnBsZkKxfbNcVlduv8U3CmByM1dmC2hJzLQ03kTBT+4D90Q49zj98U3n26aqrRCipdGCv2XrD0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3957
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e0fd860-bd3f-42f6-e305-08d7588d98b9
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0802MB2352
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMjIuMTAuMjAxOSAxMDo1OSwgS2FtZWwgQm91aGFyYSB3cm90ZToNCj4gT24gMjEvMTAvMjAx
-OSAyMjoyMCwgV29sZnJhbSBTYW5nIHdyb3RlOg0KPj4gT24gV2VkLCBPY3QgMDIsIDIwMTkgYXQg
-MDQ6NDY6NTZQTSArMDIwMCwgS2FtZWwgQm91aGFyYSB3cm90ZToNCj4+PiBJbXBsZW1lbnQgaTJj
-IGJ1cyByZWNvdmVyeSB3aGVuIHNsYXZlcyBkZXZpY2VzIG1pZ2h0IGhvbGQgU0RBIGxvdy4NCj4+
-PiBJbiB0aGlzIGNhc2UgcmUtYXNzaWduIFNDTC9TREEgdG8gZ3Bpb3MgYW5kIGlzc3VlIDkgZHVt
-bXkgY2xvY2sgcHVsc2VzDQo+Pj4gdW50aWwgdGhlIHNsYXZlIHJlbGVhc2UgU0RBLg0KPj4+DQo+
-Pj4gU2lnbmVkLW9mZi1ieTogS2FtZWwgQm91aGFyYSA8a2FtZWwuYm91aGFyYUBib290bGluLmNv
-bT4NCj4+DQo+PiBTZXR0aW5nIHVwIHRoZSBidXNfcmVjb3ZlcnkgbG9va3MgT0suIEhvd2V2ZXIs
-IEkgZG9uJ3Qgc2VlIGFueSBjYWxsIHRvDQo+PiBpMmNfcmVjb3Zlcl9idXMoKSwgc28gdGhlIGJ1
-c19yZWNvdmVyeSBpcyBuZXZlciB1c2VkLiBEaWQgeW91IHRlc3QgdGhpcw0KPj4gYW5kIHNlZSBh
-biBlZmZlY3Q/DQo+Pg0KPiBJbmRlZWQsIEkgZ3Vlc3MgSSBtZXNzIGl0IHVwIHdoaWxlIGRvaW5n
-IHNvbWUgZ2l0IHN0dWZmLCBpdCBzaG91bGQgYmUgDQo+IGNhbGxlZCBmcm9tIGF0OTFfZG9fdHdp
-X3RyYW5zZmVyKCkgd2hlbiB0aGUgdHJhbnNmZXIgdGltZXMgb3V0Li4uDQo+IEkgYWN0dWFsbHkg
-dGVzdGVkIGl0IGFuZCB2ZXJpZmllZCB0aGUgcmVjb3ZlcnkgaXMgdHJpZ2dlcmVkIGJ5IHB1bGxp
-bmcgDQo+IHRoZSBTQ0wgdG8gdGhlIGdyb3VuZCAuLi4NCj4gDQo+PiBBbHNvLCBJIHRoaW5rIHdl
-IHNob3VsZCBtZXJnZSB0aGlzIHBhdGNoICJbUEFUQ0ggdjNdIGkyYzogYXQ5MTogU2VuZCBidXMN
-Cj4+IGNsZWFyIGNvbW1hbmQgaWYgU0NMIG9yIFNEQSBpcyBkb3duIiBpbnRvIHRoaXMgc2VyaWVz
-LiBUaGUgY3J1Y2lhbCB0aGluZw0KPj4gZm9yIGJvdGggaXMgd2hlbiB0byBhcHBseSB0aGUgcmVj
-b3ZlcnkgKGF0IHRoZSBiZWdpbm5pbmcgb2YgYQ0KPj4gdHJhbnNmZXIhKS4gVGhlIHJlc3QgaXMg
-Imp1c3QiIHRoYXQgc29tZSBIVyBuZWVkcyBhIGJ1c19yZWNvdmVyeV9pbmZvDQo+PiBmb3IgcGlu
-Y3RybC9HUElPIGhhbmRsaW5nIChmcm9tIHRoaXMgcGF0Y2gpLCB3aGlsZSBvdGhlciBIVyBuZWVk
-cyBhDQo+PiBidXNfcmVjb3ZlcnlfaW5mbyB3aXRoIGEgY3VzdG9tIHJlY292ZXJfYnVzIGNhbGxi
-YWNrLg0KPj4NCj4+IE9waW5pb25zPw0KPj4NCj4gSSdtIE9LIHRvIG1lcmdlIHRoZSB0d28gc2Vy
-aWVzLg0KDQpTbyBhdCB0aGUgYmVnaW5uaW5nIG9mIGEgbmV3IHRyYW5zZmVyLCB3ZSBzaG91bGQg
-Y2hlY2sgaWYgU0RBIChvciBTQ0w/KSANCmlzIGxvdyBhbmQsIGlmIGl0J3MgdHJ1ZSwgb25seSB0
-aGVuIHdlIHNob3VsZCB0cnkgcmVjb3ZlciB0aGUgYnVzLg0KDQpLYW1lbCwgbGV0IG1lIGtub3cg
-aWYgSSBjYW4gaGVscCB3aXRoIGFueXRoaW5nLg0KDQpCZXN0IHJlZ2FyZHMsDQpDb2RyaW4NCg0K
+
+Hi Folks,
+
+I have a question regarding "reserved-memory". I am using an Arm Juno
+platform which has a chunk of ram in its fpga. I intend to make this
+memory as reserved so that it can be shared between various devices
+for passing framebuffer.
+
+My dts looks like the following:-
+
+/ {
+        .... // some nodes
+
+        tlx@60000000 {
+                compatible =3D "simple-bus";
+                ...
+
+                juno_wrapper {
+
+                        ... /* here we have all the nodes */
+                            /* corresponding to the devices in the fpga */
+
+                        memory@d000000 {
+                               device_type =3D "memory";
+                               reg =3D <0x00 0x60000000 0x00 0x8000000>;
+                        };
+
+                        reserved-memory {
+                               #address-cells =3D <0x01>;
+                               #size-cells =3D <0x01>;
+                               ranges;
+
+                               framebuffer@d000000 {
+                                        compatible =3D "shared-dma-pool";
+                                        linux,cma-default;
+                                        reusable;
+                                        reg =3D <0x00 0x60000000 0x00 0x800=
+0000>;
+                                        phandle =3D <0x44>;
+                                };
+                        };
+                        ...
+                }
+        }
+...
+}
+
+Note that the depth of the "reserved-memory" node is 3.
+
+Refer __fdt_scan_reserved_mem() :-
+
+        if (!found && depth =3D=3D 1 && strcmp(uname, "reserved-memory") =
+=3D=3D 0) {
+
+                if (__reserved_mem_check_root(node) !=3D 0) {
+                        pr_err("Reserved memory: unsupported node
+format, ignoring\n");
+                        /* break scan */
+                        return 1;
+                }
+                found =3D 1;
+
+                /* scan next node */
+                return 0;
+        }
+
+It expects the "reserved-memory" node to be at depth =3D=3D 1 and so it
+does not probe it in our case.
+
+Niether from the
+Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+ nor from commit - e8d9d1f5485b52ec3c4d7af839e6914438f6c285,
+I could understand the reason for such restriction.
+
+So, I seek the community's advice as to whether I should fix up
+__fdt_scan_reserved_mem() so as to do away with the restriction or
+put the "reserved-memory" node outside of 'tlx@60000000' (which looks
+ logically incorrect as the memory is on the fpga platform).
+
+
+Thanks,
+Ayan
+
