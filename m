@@ -2,101 +2,133 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9979BCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2199CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2562166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571918254;
-	bh=nWYMAza39OQVveWzshC5RXON8jcUhAYmn5gavwO5Yv0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MJK2oXJm8iiq2NBpfs5vMHToii3I1XBfwooRc7zBFiyWXYw4mFbxvGofccAPE5Xcs
-	 yH0vvbTI1ybEIAqs0N011gEEzPxbHHHaCxjKyv1P8UCdi3xNkjUpnfL3LH7ALlcMHi
-	 LdqR1ZVxkp+pi9x+ctSWR4tctWWBx7OA7bQwnqGo=
+	by mail.kernel.org (Postfix) with ESMTP id A9CAC21906
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409252AbfJXL5d (ORCPT
+        id S2409255AbfJXL57 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:57:33 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52912 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfJXL5d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:57:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kr/f673Mx2Vmgq5uo7UsU+3VpfM6pi0n/reFDWnN8wE=; b=k/DxNRglph0oPYk/ZLphi1qgQ
-        PM9tTq+iwhUBYYerogIFjXcP/hJk2lHoIx4iMjAoeb+yjpp6/xIzA9ia/CQ/rs1ehJLHMl4QnxVKC
-        q8AJmwSR3gdCU4Fh3BfdHWB+q9lXLd4SnvIrc97TSLdJJV1PZ/rXIfHb055QHiHTOl8lU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNbkB-0003RP-6r; Thu, 24 Oct 2019 11:57:31 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 62930274293C; Thu, 24 Oct 2019 12:57:30 +0100 (BST)
-Date:   Thu, 24 Oct 2019 12:57:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>,
-        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] spi: xilinx: add description of new property
- xlnx,num-transfer-bits
-Message-ID: <20191024115730.GD46373@sirena.co.uk>
-References: <20191024110757.25820-1-alvaro.gamez@hazent.com>
- <20191024110757.25820-2-alvaro.gamez@hazent.com>
+        Thu, 24 Oct 2019 07:57:59 -0400
+Received: from mga11.intel.com ([192.55.52.93]:36153 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbfJXL57 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 07:57:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 04:57:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
+   d="scan'208";a="210141714"
+Received: from jjackiew-mobl1.ger.corp.intel.com (HELO mara.localdomain) ([10.249.148.206])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Oct 2019 04:57:55 -0700
+Received: from sailus by mara.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1iNbli-00013M-EZ; Thu, 24 Oct 2019 14:59:06 +0300
+Date:   Thu, 24 Oct 2019 14:59:05 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
+        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
+        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-media@vger.kernel.org
+Subject: Re: [PATCH v11 11/15] media: tvp5150: add s_power callback
+Message-ID: <20191024115905.GB3966@mara.localdomain>
+References: <20190930093900.16524-1-m.felsch@pengutronix.de>
+ <20190930093900.16524-12-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="P+33d92oIH25kiaB"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191024110757.25820-2-alvaro.gamez@hazent.com>
-X-Cookie: Filmed before a live audience.
+In-Reply-To: <20190930093900.16524-12-m.felsch@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Marco,
 
---P+33d92oIH25kiaB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 30, 2019 at 11:38:56AM +0200, Marco Felsch wrote:
+> Don't en-/disable the interrupts during s_stream because someone can
+> disable the stream but wants to get informed if the stream is locked
+> again. So keep the interrupts enabled the whole time the pipeline is
+> opened.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
+>  1 file changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+> index dda9f0a2995f..4afe2093b950 100644
+> --- a/drivers/media/i2c/tvp5150.c
+> +++ b/drivers/media/i2c/tvp5150.c
+> @@ -1356,11 +1356,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
+>  /****************************************************************************
+>  			I2C Command
+>   ****************************************************************************/
+> +static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
+> +{
+> +	struct tvp5150 *decoder = to_tvp5150(sd);
+> +	unsigned int val = 0;
+> +
+> +	if (on)
+> +		val = TVP5150_INT_A_LOCK;
+> +
+> +	if (decoder->irq)
+> +		/* Enable / Disable lock interrupt */
+> +		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
+> +				   TVP5150_INT_A_LOCK, val);
 
-On Thu, Oct 24, 2019 at 01:07:55PM +0200, Alvaro Gamez Machado wrote:
-> This property is used to set the number of bits per transfer (bits_per_wo=
-rd).
->=20
-> Xilinx' IP core allows either 8, 16 or 32, and is non changeable on runti=
-me,
-> only when instantiating the core.
+Could you use runtime PM to do this instead?
 
-When sending a patch series you should number the patches within the
-series - if you use git format-patch to generate the series it'll do
-that for you.  Instead of [PATCH] it should say [PATCH x/y].
+> +
+> +	return 0;
+> +}
+>  
+>  static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+>  {
+>  	struct tvp5150 *decoder = to_tvp5150(sd);
+> -	unsigned int mask, val = 0, int_val = 0;
+> +	unsigned int mask, val = 0;
+>  
+>  	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
+>  	       TVP5150_MISC_CTL_CLOCK_OE;
+> @@ -1373,15 +1388,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+>  			val = decoder->lock ? decoder->oe : 0;
+>  		else
+>  			val = decoder->oe;
+> -		int_val = TVP5150_INT_A_LOCK;
+>  		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
+>  	}
+>  
+>  	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
+> -	if (decoder->irq)
+> -		/* Enable / Disable lock interrupt */
+> -		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
+> -				   TVP5150_INT_A_LOCK, int_val);
+>  
+>  	return 0;
+>  }
+> @@ -1580,6 +1590,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
+>  	.g_register = tvp5150_g_register,
+>  	.s_register = tvp5150_s_register,
+>  #endif
+> +	.s_power = tvp5150_s_power,
+>  };
+>  
+>  static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
+> -- 
+> 2.20.1
+> 
 
---P+33d92oIH25kiaB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2xkakACgkQJNaLcl1U
-h9C3mwf/X2Y/6MG6Ys70X6/iuqHqjQxiTEWQ4lSNMUySWRanZOh0rsMiVwP6UgvG
-QZ8Bw6SiLxRjSmmUShqLq40H/tU3i3NI+KWk9gTS7FJOSMcyoPIUME3UzH7mmAPT
-bUsmyEjsNxPQPJwqsg9PEzzvuseJ0hmzJNJ4UnaE6//aAif1gf4Fedh2jxRUKv8Z
-f1VxD8XCCDynapU7mh8eiR6xD3ZBoP8WrM4hC1oDVPzqGMax31jPg7sZi2EhDbsj
-KnqpETSlXWxrB/5ndItUC/R4xcPB40B87sZy7apRXcJNPrEZUNoKhT+CuE9JzvO8
-2Fkmo7hULG6kNcK9DQgA82ZXT46ewA==
-=ecyw
------END PGP SIGNATURE-----
-
---P+33d92oIH25kiaB--
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
