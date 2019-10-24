@@ -2,159 +2,104 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85FACA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07028CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A69721929
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWOzSqhD"
+	by mail.kernel.org (Postfix) with ESMTP id C14712166E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571955778;
+	bh=xAvi6zn5BKMpk1Uxe0VD7u2zek1HjHKgP0iUEoNnxK8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=dK1kzEGkIoQt4PIs7d7GiDxIXTX76SZC3QN9dtEZEsDP0UZJ65ysWLLL9UTpHPo+z
+	 GHYqlikTPARAs3cisW1XbrQhWJLNJ6i08JH6mVeQ/376vjVxFK1mqp6ZZzxgCQXPQe
+	 2tS/w0nMGimE7oQMbZZxXL7HiQDqCCKNZSlTGncM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfJXWRl (ORCPT
+        id S1730647AbfJXWW6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:17:41 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41310 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730394AbfJXWRj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 18:17:39 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x4so14117799lfn.8;
-        Thu, 24 Oct 2019 15:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RQVJNNL4da8n9Sk1LwVlO9zFiqg3NWuXdGvnGpoii4k=;
-        b=VWOzSqhDCNBNpiV8E6naLYSmkUYhTUXqPf5M6+X0u/pmVhf+oFx0s5cJwcVnB99axy
-         EDR/omZwgTfrsGWUHiEDvt5KrpHRJCwzu/cKryQWQm89xNhHzHjtEolsZyOvHE3szRRp
-         DBSpufnIff6u33qh5Rw4GcX8dNWNsOIByJPPT+TsfvnXmxoKljCGJxgEF9183HbZPVL+
-         d2XHhytMyAiU2ff1aRbS7uXmGh5ozrDI3APnwyOldZ0eGcpuqjKbI0oCi9wb52M4Fx0Z
-         AnRJmfY/PcNaUJUPCTl3jtz/UtGduEntKuwhsMOSHIEAPW3U442PmNI5PBJVvyfGtf2w
-         VZog==
+        Thu, 24 Oct 2019 18:22:58 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42709 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729789AbfJXWW6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 18:22:58 -0400
+Received: by mail-oi1-f193.google.com with SMTP id i185so24132oif.9;
+        Thu, 24 Oct 2019 15:22:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RQVJNNL4da8n9Sk1LwVlO9zFiqg3NWuXdGvnGpoii4k=;
-        b=ZOmVt3sZ5YfKs73eQCL+bI9DgQCQY450cEd5KchAay0IOXxGTd5sHiK+N7nV3GFCWm
-         z24W4975s0kd8fQT8L/PgmNdAnlQ03/k5CkO+ojRZY1QOt67ux6BgbcJ6FTiKLg6hE3Y
-         m0amOkCTSdxykcXbn2Yy1S8uF+AqLC/YOxk4WXxm5DxVdTcQLaWvD26tAISM5+VcB3al
-         ewu+XuI5xlkVAMyo5ATIUD3nnj1QGE6RHib7aiGyYUiT5mS/wMvhYc3ebfQmlKRRgUei
-         mE4luwFBoYl00TYpBpga7CxlvIaIPnDOhsTYJ0cNqpDx1UsJQNpTHkrJyUCD/hYqebg3
-         hHOQ==
-X-Gm-Message-State: APjAAAUUJqT9It7Y3B3e1XwVhi3Weg4vR71R59whKAswYPtQYzKQrWXJ
-        zrFxOi9lzHYwo2ecPPa1cNI=
-X-Google-Smtp-Source: APXvYqxrY702Ciuq4uM8C1Q7gjzvZXcB0zz9gCPlVN4hNBkVeFIIGwd0FbWi6VvocKPpLOn/alAPYA==
-X-Received: by 2002:a19:1ce:: with SMTP id 197mr322126lfb.16.1571955456954;
-        Thu, 24 Oct 2019 15:17:36 -0700 (PDT)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id i6sm11338765lfo.83.2019.10.24.15.17.35
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=HByluYOBZiU98i5lq8f4TYRGZTWms/btKlO2WGzYdh4=;
+        b=ss70mQKDwEGmsaJUS+9a+zgsjZMDCjK7jXbr61Y1dQWSpzkn6EpGK05JgQUDKFhaKR
+         Aoj5PTpEEMr57TFY6KtR0c+DSFDLLyracahnb534a0hcw2AXQrHDHJ5QOOb1u7I1348s
+         pfbyvbwX+ZvbQfSJQPiIxov2l9KVEMm44Hj3IhcsAl6ZETl+JK6aoHyVMQWZguFjGfcS
+         li7KIJ8W5EC1qz6ndzo7zJaf+0g/Oa6/F+6B6QTxdEL8gCP5h//Su+nFHZjORb30MmHP
+         PC/gzsYMqhtpjUKFz5XO1bl+ikaLhj7gTe3lR+fn+6Ap5QEvsC7IBD6TgyLNQBEIG6DD
+         IU3w==
+X-Gm-Message-State: APjAAAUK+khrE+KJ+1fyQ/2KoAHfmvsWYAn3ePDlf4UUrjY5veGzQgBy
+        TmF18XTVo8sYcuG7nkmdk/EW8Qw=
+X-Google-Smtp-Source: APXvYqx6kkm92ig5g9Ejjz9e1DBH2d9WzlX1XrrwKzBxFN04HxzuNd0JzeMBXYlT+pWzcDelYzUc1Q==
+X-Received: by 2002:aca:4142:: with SMTP id o63mr314301oia.81.1571955777098;
+        Thu, 24 Oct 2019 15:22:57 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c21sm113802otp.15.2019.10.24.15.22.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 15:17:35 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/17] clk: tegra: pll: Add pre/post rate-change hooks
-Date:   Fri, 25 Oct 2019 01:14:01 +0300
-Message-Id: <20191024221416.14197-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191024221416.14197-1-digetx@gmail.com>
-References: <20191024221416.14197-1-digetx@gmail.com>
+        Thu, 24 Oct 2019 15:22:56 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 17:22:55 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: [GIT PULL] Devicetree fixes for v5.4, round 2
+Message-ID: <20191024222255.GA25776@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is a need to temporarily re-parent CCLK away from PLLX if PLLX's
-rate is about to change. The newly introduced PLL pre/post rate-change
-hooks allow to handle such case.
+Hi Linus,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clk/tegra/clk-pll.c | 12 +++++++++++-
- drivers/clk/tegra/clk.h     |  6 ++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+Please pull a couple more DT fixes for 5.4.
 
-diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-index 1583f5fc992f..859340ad3515 100644
---- a/drivers/clk/tegra/clk-pll.c
-+++ b/drivers/clk/tegra/clk-pll.c
-@@ -744,13 +744,19 @@ static int _program_pll(struct clk_hw *hw, struct tegra_clk_pll_freq_table *cfg,
- 
- 	state = clk_pll_is_enabled(hw);
- 
-+	if (state && pll->params->pre_rate_change) {
-+		ret = pll->params->pre_rate_change();
-+		if (WARN_ON(ret))
-+			return ret;
-+	}
-+
- 	_get_pll_mnp(pll, &old_cfg);
- 
- 	if (state && pll->params->defaults_set && pll->params->dyn_ramp &&
- 			(cfg->m == old_cfg.m) && (cfg->p == old_cfg.p)) {
- 		ret = pll->params->dyn_ramp(pll, cfg);
- 		if (!ret)
--			return 0;
-+			goto done;
- 	}
- 
- 	if (state) {
-@@ -772,6 +778,10 @@ static int _program_pll(struct clk_hw *hw, struct tegra_clk_pll_freq_table *cfg,
- 		pll_clk_start_ss(pll);
- 	}
- 
-+done:
-+	if (state && pll->params->post_rate_change)
-+		pll->params->post_rate_change();
-+
- 	return ret;
- }
- 
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 095595a5b8a8..2be38aa2c204 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -211,6 +211,10 @@ struct tegra_clk_pll;
-  *				disabled.
-  * @dyn_ramp:			Callback which can be used to define a custom
-  *				dynamic ramp function for a given PLL.
-+ * @pre_rate_change:		Callback which is invoked just before changing
-+ *				PLL's rate.
-+ * @post_rate_change:		Callback which is invoked right after changing
-+ *				PLL's rate.
-  *
-  * Flags:
-  * TEGRA_PLL_USE_LOCK - This flag indicated to use lock bits for
-@@ -287,6 +291,8 @@ struct tegra_clk_pll_params {
- 	void	(*set_defaults)(struct tegra_clk_pll *pll);
- 	int	(*dyn_ramp)(struct tegra_clk_pll *pll,
- 			struct tegra_clk_pll_freq_table *cfg);
-+	int	(*pre_rate_change)(void);
-+	void	(*post_rate_change)(void);
- };
- 
- #define TEGRA_PLL_USE_LOCK BIT(0)
--- 
-2.23.0
+Rob
 
+
+The following changes since commit f437ade3296bacaddb6d7882ba0515940f01daf4:
+
+  dt-bindings: phy: lantiq: Fix Property Name (2019-10-02 14:14:58 -0500)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.4-2
+
+for you to fetch changes up to 5dba51754b04a941a1064f584e7a7f607df3f9bc:
+
+  of: reserved_mem: add missing of_node_put() for proper ref-counting (2019-10-23 15:15:05 -0500)
+
+----------------------------------------------------------------
+Devicetree fixes for 5.4:
+
+Fix a ref count, memory leak, and Risc-V cpu schema warnings.
+
+----------------------------------------------------------------
+Chris Goldsworthy (1):
+      of: reserved_mem: add missing of_node_put() for proper ref-counting
+
+Navid Emamdoost (1):
+      of: unittest: fix memory leak in unittest_data_add
+
+Rob Herring (1):
+      dt-bindings: riscv: Fix CPU schema errors
+
+ Documentation/devicetree/bindings/riscv/cpus.yaml | 29 ++++++++++-------------
+ drivers/of/of_reserved_mem.c                      |  4 +++-
+ drivers/of/unittest.c                             |  1 +
+ 3 files changed, 17 insertions(+), 17 deletions(-)
