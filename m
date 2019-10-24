@@ -2,123 +2,104 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D78CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DC6CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A2920679
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF02020856
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 11:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tUSjhbiP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Wop/lkRM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FHXYYpjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393306AbfJXKzJ (ORCPT
+        id S2392814AbfJXLAY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:55:09 -0400
-Received: from vps.xff.cz ([195.181.215.36]:33836 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393300AbfJXKzI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:55:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1571914507; bh=iUH9bPvFqxvw8CBPdxNSViiL6MI9YLXFWw42NUKiO4A=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=tUSjhbiPUN6vr27VM5w9/52gNQhoJeZEUejypfDIuIDe04Rgyr+n6o0rMdWrxbW99
-         gplURlDzOb4S3gh6wOfSFpCeKancBBK1a/qYtL+Lek82pY1xkdUdiAen2Wpd0Olmbw
-         AkKgE0rYTMqzY+p4egKakhVY2r/NX3jetO3NP7as=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/4] dt-bindings: Add bindings for USB3 phy on Allwinner H6
-Date:   Thu, 24 Oct 2019 12:54:57 +0200
-Message-Id: <20191024105500.2252707-2-megous@megous.com>
-In-Reply-To: <20191024105500.2252707-1-megous@megous.com>
-References: <20191024105500.2252707-1-megous@megous.com>
+        Thu, 24 Oct 2019 07:00:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58618 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730032AbfJXLAX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 07:00:23 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 10F6860F6F; Thu, 24 Oct 2019 11:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571914823;
+        bh=lF7VPfa990k56WtZ+Go5dWYnjSW2LrwS9wWkHXP4Fz4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Wop/lkRMFXZ5nrTbnlNqKiRR3pM0eIGsKjl5sJfXD6aZfyFUfEkN55fivz7UfYWnD
+         amJ3WW6UZ2zOAYIBDe/GvQ0K2jrmeenXgqBpsx1Ac4dBQaOPqrc3fA82yEciWrNnMY
+         tjNW4MPlE9ScAoKIR4yFYKRZw5OMfTEgbKjQfkWw=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 81C7460F6F;
+        Thu, 24 Oct 2019 11:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571914821;
+        bh=lF7VPfa990k56WtZ+Go5dWYnjSW2LrwS9wWkHXP4Fz4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FHXYYpjVhnwjTXVDWJwmM/6h7UrDLlDN593yCL1ElgRD4TwG+aFUs4i5wweheVcsf
+         8vBYWsbmkZs1K9/ang24XNX2vvMfb2OjC9w3kMAFMsxzhFupf+u48MyYjxyTqNexSk
+         5Gyt3BB89Rqn1j+7hYCDaWpefVTsSF02L0TlJWRE=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 24 Oct 2019 16:30:21 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
+In-Reply-To: <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
+References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
+ <20191021033220.GG4500@tuxbook-pro>
+ <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
+Message-ID: <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-external USB3 pins of the SoC.
+Hi Rob,
 
-Add a device tree binding for the PHY.
+On 2019-10-24 01:19, Rob Herring wrote:
+> On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+>> 
+>> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
+>> 
+>> > LLCC behaviour is controlled by the configuration data set
+>> > in the llcc-qcom driver, add the same for SC7180 SoC.
+>> > Also convert the existing bindings to json-schema and add
+>> > the compatible for SC7180 SoC.
+>> >
+>> 
+>> Thanks for the patches and thanks for the review Stephen. Series 
+>> applied
+> 
+> And they break dt_binding_check. Please fix.
+> 
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Maxime Ripard <mripard@kernel.org>
----
- .../phy/allwinner,sun50i-h6-usb3-phy.yaml     | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
+I did check this and think that the error log from dt_binding_check is 
+not valid because it says cache-level is a required property [1], but 
+there is no such property in LLCC bindings.
 
-diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-new file mode 100644
-index 000000000000..e5922b427342
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Ondrej Jirman <megous@megous.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/allwinner,sun50i-h6-usb3-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Allwinner H6 USB3 PHY
-+
-+maintainers:
-+  - Ondrej Jirman <megous@megous.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun50i-h6-usb3-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+  - "#phy-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun50i-h6-ccu.h>
-+    #include <dt-bindings/reset/sun50i-h6-ccu.h>
-+    phy@5210000 {
-+          compatible = "allwinner,sun50i-h6-usb3-phy";
-+          reg = <0x5210000 0x10000>;
-+          clocks = <&ccu CLK_USB_PHY1>;
-+          resets = <&ccu RST_USB_PHY1>;
-+          #phy-cells = <0>;
-+    };
+[1] - http://patchwork.ozlabs.org/patch/1179800/
+
+-Sai
+
 -- 
-2.23.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
