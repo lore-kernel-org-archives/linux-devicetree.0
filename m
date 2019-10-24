@@ -2,152 +2,121 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C3ECA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB19CA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B302166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4035205F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f8xfaILp"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="EF/m7Ap2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390246AbfJXJcz (ORCPT
+        id S2393152AbfJXKD6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:32:55 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33410 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732686AbfJXJcy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 05:32:54 -0400
-Received: by mail-ed1-f66.google.com with SMTP id c4so18127101edl.0
-        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 02:32:53 -0700 (PDT)
+        Thu, 24 Oct 2019 06:03:58 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:23136 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfJXKD6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 06:03:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HlmghVPRqXMDHcFCrytgGe2/PcZ6/wl0Jdf37zxv8NU=;
-        b=f8xfaILpiaFdUq6D8A3pkLgL5b7uNqoBpjJdiqWLF1jdE22Zfswa373xjwwewCF80q
-         +XXBcmwyQaOZBCH/V6et1zLRiyX9ubQdRERpKzS6sgIQ53tyvC84dT0sYlWp+itahXzq
-         CgmLVfucy11zd3XKhypZOkjILl1CpA4cpMXiE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HlmghVPRqXMDHcFCrytgGe2/PcZ6/wl0Jdf37zxv8NU=;
-        b=e/JqFucrnRGSVEjOR835Ljb/L+uP8maNDGw+I7xgRiMqh4UfyekGjHprEmR+pfmIc3
-         kNnLQFOxhObuNRhQN+czI5rgGLAGWcH0zPMB6BtzMGowOMf8W2yACZ5H+q5AjdMxvCEj
-         ZgD6X2qQa7i0zad9t0UuclJTXxX1v1k239BbN/7cPmiPQHFSh67BkpH/bmeJdyXBJCRp
-         ouFNFedJXxZ4onXYwbKNAAORDmWa1748tr1CTumQoqAO/U/ow5/NUuOVWoWF6gBTPXkB
-         /bD8uel2TLAQ9bvBtuSAbT+XjUm/gMPnWTvwe+lohmyzFzCYK/l9vjDW4z/VGqyprNHW
-         nxOA==
-X-Gm-Message-State: APjAAAVslG4bwLvYl27PEocAxbM7R4tBPnG+MOySSRzj+71i0MisuRGW
-        fzc6EtZIBFVwbc22uS6syv5AP2ZT3F2iGQ==
-X-Google-Smtp-Source: APXvYqx7cgGYytiwBGDalJkeWAo2e67Gy+ujpXivy/5i3I/AlVDs8dotvzJoFYQ2aAUI8eUFRGk54w==
-X-Received: by 2002:a17:906:b347:: with SMTP id cd7mr2018363ejb.105.1571909572779;
-        Thu, 24 Oct 2019 02:32:52 -0700 (PDT)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
-        by smtp.gmail.com with ESMTPSA id s8sm408880edj.6.2019.10.24.02.32.50
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2019 02:32:51 -0700 (PDT)
-Received: by mail-wr1-f41.google.com with SMTP id v9so13972739wrq.5
-        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 02:32:50 -0700 (PDT)
-X-Received: by 2002:adf:e446:: with SMTP id t6mr2857004wrm.7.1571909569678;
- Thu, 24 Oct 2019 02:32:49 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1571911436; x=1603447436;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=KiF6W7KJ3T1oc7lm2yMt2OSSBA6K6fxfRkfGU2xVQqQ=;
+  b=EF/m7Ap2XrsZsYTZL0xwHfEjE3wminFOntrwl9nQW/UGnn+q+BmDGI0P
+   Fhrq0UGchOsih1ilMd2V4qQ3s7m3+UiQy5BUcxWs8ingwdc2wINycIIxf
+   RNwOb/zA8FdMMl/ScASC2mQ4Q3M5NdeFS5I0Nkz+oO/OMWrX0upKxIfeQ
+   k=;
+X-IronPort-AV: E=Sophos;i="5.68,224,1569283200"; 
+   d="scan'208";a="762728866"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 24 Oct 2019 10:03:54 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 7EA50A17D8;
+        Thu, 24 Oct 2019 10:03:51 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 24 Oct 2019 10:03:50 +0000
+Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.162.31) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 24 Oct 2019 10:03:41 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <james.morse@arm.com>, <talel@amazon.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <nicolas.ferre@microchip.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
+Subject: [PATCH v5 0/2] Amazon's Annapurna Labs Memory Controller EDAC
+Date:   Thu, 24 Oct 2019 13:03:25 +0300
+Message-ID: <1571911407-29379-1-git-send-email-talel@amazon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
- <20191018082557.3696-2-bibby.hsieh@mediatek.com> <CAMpxmJW_HQnL8i5FnKcVUs=ZyrnaFe6X+oqG38-v=O05d5vNxw@mail.gmail.com>
- <CAAFQd5CA_53uDo6QdRcvqJ5shUG5K25f+WXCn9OYMHfSgwLMSA@mail.gmail.com> <CAMpxmJWzEER4iBo9-WhmumuH1nmWYvy=xud+=7wzp3op8-P7uw@mail.gmail.com>
-In-Reply-To: <CAMpxmJWzEER4iBo9-WhmumuH1nmWYvy=xud+=7wzp3op8-P7uw@mail.gmail.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Thu, 24 Oct 2019 18:32:38 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5DNdmm4sn1JNPhnuMor50ZP4EJmymtS4hB4WkNHmKOs6w@mail.gmail.com>
-Message-ID: <CAAFQd5DNdmm4sn1JNPhnuMor50ZP4EJmymtS4hB4WkNHmKOs6w@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-binding: eeprom: at24: add supply properties
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.31]
+X-ClientProxiedBy: EX13D17UWB001.ant.amazon.com (10.43.161.252) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 5:40 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
->
-> czw., 24 pa=C5=BA 2019 o 09:02 Tomasz Figa <tfiga@chromium.org> napisa=C5=
-=82(a):
-> >
-> > On Thu, Oct 24, 2019 at 3:22 PM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > >
-> > > pt., 18 pa=C5=BA 2019 o 10:26 Bibby Hsieh <bibby.hsieh@mediatek.com> =
-napisa=C5=82(a):
-> > > >
-> > > > In some platforms, they disable the power-supply of eeprom and i2c =
-due
-> > > > to power consumption reduction.
-> > > >
-> > > > This patch add two supply properties: vcc-supply, i2c-supply.
-> > > >
-> > > > Changes since v1:
-> > > >  - change supply name
-> > > >  - rebase to next
-> > > >
-> > > > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/eeprom/at24.yaml | 8 ++++++++
-> > > >  1 file changed, 8 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/D=
-ocumentation/devicetree/bindings/eeprom/at24.yaml
-> > > > index e8778560d966..578487a5d9b7 100644
-> > > > --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > @@ -167,6 +167,14 @@ properties:
-> > > >      minimum: 1
-> > > >      maximum: 8
-> > > >
-> > > > +  vcc-supply:
-> > > > +    description:
-> > > > +      phandle of the regulator that provides the supply voltage.
-> > > > +
-> > > > +  i2c-sypply:
-> > > > +    description:
-> > > > +      phandle to the regulator that provides power to i2c.
-> > > > +
-> > >
-> > > Something was bothering me about this patch so I came back to take a
-> > > look. Can you explain what i2c actually stands for in this doc? I hop=
-e
-> > > I'm misinterpreting something and it isn't that the driver disables
-> > > the regulator powering the i2c bus controller?
-> >
-> > In our case it's the regulator that the I2C bus is pulled up to.
-> >
->
-> Then it has nothing to do with a generic EEPROM driver IMO. I think
-> you need to add the control for this regulator to your i2c controller
-> driver and create a power domain where the EEPROM would be lower in
-> hierarchy.
+This series introduces support for Amazon's Annapurna Labs Memory
+Controller EDAC driver.
 
-While I agree that the generic EEPROM driver may not be the best place
-to do it, neither is a driver for a specific SoC i2c controller. The
-hardware design is not specific to any particular i2c controller.
+Changes since v4:
+=================
+- fixed dt-binding interrupt to have min of 1
+- updated dt-binding GPL-2.0 to GPL-2.0-only
+- changed writel to relaxed flavor
+- added managed device driver unwind
 
-Perhaps we need the generic i2c core to take into account an
-i2c-supply? Wolfram, any thoughts on this?
+Changes since v3:
+=================
+- removed quotation marks and hyphen from compatible dt-binding
+- added interrupts and interrupt-names description to dt-binding
+- added missing include to dt-binding
 
-Best regards,
-Tomasz
+Changes since v2:
+=================
+- added missing includes
+- aggregated variables to same line
+- removed ranks read
+- added spinlock to mc reporting
+- made irq handler clearer
+- freed irq before freeing device memory
+- changed Kconfig to tristate
+- added COMPILE_TEST to Kconfig
+- converted dt binding to new scheme
+- used devm_platform_ioremap_resource instead of get&ioremap
+
+Changes since v1:
+=================
+- updated dt binding node name and added Rob Reviewed-By
+- removed auto selecting of this driver
+
+
+Talel Shenhar (2):
+  dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs Memory
+    Controller EDAC
+  EDAC: al-mc-edac: Introduce Amazon's Annapurna Labs Memory Controller
+    EDAC
+
+ .../bindings/edac/amazon,al-mc-edac.yaml           |  52 +++
+ MAINTAINERS                                        |   7 +
+ drivers/edac/Kconfig                               |   7 +
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/al_mc_edac.c                          | 355 +++++++++++++++++++++
+ 5 files changed, 422 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+ create mode 100644 drivers/edac/al_mc_edac.c
+
+-- 
+2.7.4
+
