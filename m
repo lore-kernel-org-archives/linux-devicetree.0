@@ -4,42 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670C2CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A532ECA9EBE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D352205C9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9EF21925
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 12:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502218AbfJXMzw (ORCPT
+        id S2502220AbfJXMzx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 08:55:52 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:8043 "EHLO
+        Thu, 24 Oct 2019 08:55:53 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:41967 "EHLO
         alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730413AbfJXMzw (ORCPT
+        by vger.kernel.org with ESMTP id S1730113AbfJXMzw (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
         Thu, 24 Oct 2019 08:55:52 -0400
+X-Greylist: delayed 367 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 08:55:48 EDT
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Oct 2019 18:19:41 +0530
-IronPort-SDR: tpI/Cblpl7aMfDEkeqpjOqB9pXTFd3pi51h/wxyFT4WYjBDVRUfgqiN3hhhb000PSvlXW2hrfY
- Buiht9obEoz5yccv4rhxQqGJ45Lv42G/cCH5zchIIG1ptAr/fu/nxNtQ9w1viTOeBHeuMZ/gyC
- qMpwKoJegvbu+nhJtUzvaAS2M3iMAwIWzK4OzrsVnQ52zYaCkOfs60uHZdRHOPbRgdqHEDKviq
- GqfCqqP0bRIyDFNusRT04nczEWC8U2xlhR0bHfsU8kV18KUIPv0YSRnudoRiIyDrEZIL1u+SIV
- nispmSru0p414/PkNMAU1UCN
+IronPort-SDR: 3IE2j7VUeGIlqshMj7VkSaX6P3G2X98TlbohiGWYkiWmrEpGvohU1e8dUWp26B7b6GdE2qRDq3
+ qO+3SR26dDyw8Fx/PNuAT+89bMR0Hmd0HwGDRxw9lEDkeZ1IV/uYGS7JiOjuYzg7kmWr9DFV5s
+ ZijZ2MzoGZcQKqxNJSnRFAbsXbNA7v5+7EzVqtXfcfutEjL0GxobIghbaF6c9hc10zfHbsqrIT
+ Ni1MExyg4BNb+47q/daYp7YosG0RcIqfF7BvAwWfVNgAlk2ekkoOa+r6lpy0bOdCKbP5jVWdRZ
+ Uk8OQSEzAX3l4JzahsfHroU+
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 24 Oct 2019 18:19:28 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 24 Oct 2019 18:19:26 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 7D8F91945; Thu, 24 Oct 2019 18:19:27 +0530 (IST)
+        id BA7C01941; Thu, 24 Oct 2019 18:19:25 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     agross@kernel.org, balbi@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com
 Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org, mgautam@codeaurora.org,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH 2/2] dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
-Date:   Thu, 24 Oct 2019 18:18:48 +0530
-Message-Id: <1571921328-13898-3-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH 1/2] usb: dwc3: Add support for SC7180 SOC
+Date:   Thu, 24 Oct 2019 18:18:47 +0530
+Message-Id: <1571921328-13898-2-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571921328-13898-1-git-send-email-sanm@codeaurora.org>
 References: <1571921328-13898-1-git-send-email-sanm@codeaurora.org>
@@ -48,25 +49,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add compatible for SC7180 SOC in device tree bindings
+Add compatible for SC7180 SOC in USB DWC3 driver
 
 Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 ---
- Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/dwc3/dwc3-qcom.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-index cb695aa..c27c58d 100644
---- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-@@ -6,6 +6,7 @@ Required properties:
- 			"qcom,msm8996-dwc3" for msm8996 SOC.
- 			"qcom,msm8998-dwc3" for msm8998 SOC.
- 			"qcom,sdm845-dwc3" for sdm845 SOC.
-+			"qcom,sc7180-dwc3" for sc7180 SOC.
- - reg:			Offset and length of register set for QSCRATCH wrapper
- - power-domains:	specifies a phandle to PM domain provider node
- - clocks:		A list of phandle + clock-specifier pairs for the
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 261af9e..841763f 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
++/* Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+  *
+  * Inspired by dwc3-of-simple.c
+  */
+@@ -754,6 +754,7 @@ static const struct of_device_id dwc3_qcom_of_match[] = {
+ 	{ .compatible = "qcom,msm8996-dwc3" },
+ 	{ .compatible = "qcom,msm8998-dwc3" },
+ 	{ .compatible = "qcom,sdm845-dwc3" },
++	{ .compatible = "qcom,sc7180-dwc3" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, dwc3_qcom_of_match);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
