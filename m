@@ -2,108 +2,78 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F9AC47E49
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 07:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC13CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 07:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FABE21906
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 07:07:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="BljIAdCm"
+	by mail.kernel.org (Postfix) with ESMTP id 1B27420856
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 07:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392464AbfJXHHb (ORCPT
+        id S2408625AbfJXHci (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:07:31 -0400
-Received: from onstation.org ([52.200.56.107]:36614 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727635AbfJXHHb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:07:31 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 9DC693E88C;
-        Thu, 24 Oct 2019 07:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1571900850;
-        bh=Dd3LcWl/3IsTamvy8Zm2T8waJpgR0GN+K+t3Gns4Kzw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BljIAdCmSBPQJoMkCdPK9vSnCl/XK2ohuqjyatJrxZfuKtzIGnroppAOkatB8EdHp
-         MXmTBPmWjHgzJWrUFGaQ8AOLWc4/tHMtnCiiNw4dhle3YrpjGysM1ut1pPTiNYlm9z
-         TtvWMxSeW+a6CvejIjQNDcWqlsE8iR9ZfnkaG7kA=
-Date:   Thu, 24 Oct 2019 03:07:30 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/5] ARM: dts: qcom: msm8974: add interconnect nodes
-Message-ID: <20191024070730.GA19974@onstation.org>
-References: <20191013080804.10231-1-masneyb@onstation.org>
- <20191013080804.10231-6-masneyb@onstation.org>
- <d154b0c6-fc39-bebc-d1b5-cc179fb6055d@linaro.org>
- <20191023124753.GA14218@onstation.org>
- <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
+        Thu, 24 Oct 2019 03:32:38 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:20460 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404582AbfJXHci (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 03:32:38 -0400
+X-Greylist: delayed 1106 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 03:32:38 EDT
+Received: from TWHMLLG4.macronix.com (localhost [127.0.0.2] (may be forged))
+        by TWHMLLG4.macronix.com with ESMTP id x9O7EBvD080355
+        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 15:14:11 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG4.macronix.com with ESMTP id x9O7E52u080302;
+        Thu, 24 Oct 2019 15:14:05 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     miquel.raynal@bootlin.com, richard@nod.at, marek.vasut@gmail.com,
+        dwmw2@infradead.org, bbrezillon@kernel.org,
+        computersforpeace@gmail.com, vigneshr@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        masonccyang@mxic.com.tw
+Subject: [PATCH v4 0/2] mtd: rawnand: Add support Macronix NAND randomizer 
+Date:   Thu, 24 Oct 2019 15:40:05 +0800
+Message-Id: <1571902807-10388-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG4.macronix.com x9O7E52u080302
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 04:39:21PM +0300, Georgi Djakov wrote:
-> On 23.10.19 г. 15:47 ч., Brian Masney wrote:
-> > On Wed, Oct 23, 2019 at 02:50:19PM +0300, Georgi Djakov wrote:
-> >> On 13.10.19 г. 11:08 ч., Brian Masney wrote:
-> >>> Add interconnect nodes that's needed to support bus scaling.
-> >>>
-> >>> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> >>> ---
-> >>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
-> >>>  1 file changed, 60 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> >>> @@ -1152,6 +1207,11 @@
-> >>>  				              "core",
-> >>>  				              "vsync";
-> >>>  
-> >>> +				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
-> >>> +				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
-> >>
-> >> Who will be the requesting bandwidth to DDR and ocmem? Is it the display or GPU
-> >> or both? The above seem like GPU-related interconnects, so maybe these
-> >> properties should be in the GPU DT node.
-> > 
-> > The display is what currently requests the interconnect path,
-> > specifically mdp5_setup_interconnect() in
-> > drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c. The Freedreno GPU bindings
-> > currently don't have interconnect support. Maybe this is something that
-> > I should add to that driver as well?
-> 
-> The "mdp0-mem" and "mdp1-mem" paths mentioned in the mdp5_kms.c are the two
-> interconnects between the display and DDR memory.
+Hi,
 
-OK, I see. Most of the interconnect paths in the downstream MSM 3.4
-sources are configured in device tree using the
-qcom,msm-bus,vectors-KBps property, which is what I was only looking at
-before. The interconnect path for the display is configured directly in
-code (drivers/video/msm/mdss/mdss_mdp.c) to setup a path between
-MSM_BUS_MASTER_MDP_PORT0 and MSM_BUS_SLAVE_EBI_CH0.
+changelog
+v4:
+coding patch & add a new DTS for randomizer enabled.
 
-In the upstream kernel, it looks like I'll need to
+v3:
+To enable randomizer by specific DT property in children nodes,
+mxic,enable-randomizer-otp;
 
-  1) add support for an optional second interconnect path for ocmem to
-     drivers/gpu/drm/msm/adreno/adreno_gpu.c.
+v2:
+To enable randomizer by checking chip options NAND_NO_SUBPAGE_WRITE
 
-  2) add implementations of gpu_get_freq and gpu_get_freq to the
-     adreno_gpu_funcs struct in drivers/gpu/drm/msm/adreno/a3xx_gpu.c.
+v1:
+To enable randomizer by sys-fs
 
-Brian
+thanks for your time & review.
+Mason
+
+Mason Yang (2):
+  mtd: rawnand: Add support for Macronix NAND randomizer
+  dt-bindings: mtd: Document Macronix NAND device bindings
+
+ .../devicetree/bindings/mtd/nand-macronix.txt      | 20 +++++++
+ drivers/mtd/nand/raw/nand_macronix.c               | 69 ++++++++++++++++++++++
+ 2 files changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/nand-macronix.txt
+
+-- 
+1.9.1
+
