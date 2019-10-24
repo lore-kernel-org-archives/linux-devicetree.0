@@ -2,496 +2,238 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98929CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FCCCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C412166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698F621872
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Z4AHFa54"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D7DPV6EP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393178AbfJXKER (ORCPT
+        id S2388287AbfJXKJT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:04:17 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:23260 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfJXKEQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 06:04:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1571911453; x=1603447453;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=4KCMMZpS2yWJwSgaBYVhsBq4iT8r+FqZuYshqZbmTH4=;
-  b=Z4AHFa54xy03robqGtdYoImYJMKxL1VPkgq00Ji7RfFmue/4TOwR/mcn
-   8pDKJyt/6RDfwtcPOD5086suSa+tZNPV9WS9zUPvwf6PVhbj2vMW+6mtg
-   rSp/AOumi1bC8dHNWY58X2TQgqGrnh23Qf+gb1Ar1dNhIVzw57UekUs2G
-   M=;
-X-IronPort-AV: E=Sophos;i="5.68,224,1569283200"; 
-   d="scan'208";a="762728989"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 24 Oct 2019 10:04:12 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 1C6B1A33E6;
-        Thu, 24 Oct 2019 10:04:08 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 24 Oct 2019 10:04:08 +0000
-Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.162.31) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 24 Oct 2019 10:03:58 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
-        <mchehab@kernel.org>, <james.morse@arm.com>, <talel@amazon.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <nicolas.ferre@microchip.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
-Subject: [PATCH v5 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna Labs Memory Controller EDAC
-Date:   Thu, 24 Oct 2019 13:03:27 +0300
-Message-ID: <1571911407-29379-3-git-send-email-talel@amazon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571911407-29379-1-git-send-email-talel@amazon.com>
-References: <1571911407-29379-1-git-send-email-talel@amazon.com>
+        Thu, 24 Oct 2019 06:09:19 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55654 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733071AbfJXKJS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 06:09:18 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OA97KM059810;
+        Thu, 24 Oct 2019 05:09:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571911748;
+        bh=t6WlcOLhXqWq9w94jx+NbpY8YVru1q2MfkWp/IkFHss=;
+        h=From:To:CC:Subject:Date;
+        b=D7DPV6EPdvHt+HV8Zl81t213PfdPAzVUqwoPAzxN2MTMnbYFIUpckxmo2AcACGdLM
+         hYXyQndroJoPllO9MaHGjSzKoqzFzkRNU1x3fJAm9ELeCwwb+2AItb4Q8oHIpG/5uW
+         HAMcA2CzOUbt60I9kGrOYtcQrE2uhQP/luT07TQI=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9OA97iE122155
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 24 Oct 2019 05:09:07 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
+ Oct 2019 05:09:07 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 24 Oct 2019 05:08:57 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OA95JN106598;
+        Thu, 24 Oct 2019 05:09:06 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>
+CC:     Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v5 net-next 00/12] net: ethernet: ti: introduce new cpsw switchdev based driver
+Date:   Thu, 24 Oct 2019 13:09:02 +0300
+Message-ID: <20191024100914.16840-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.162.31]
-X-ClientProxiedBy: EX13D17UWB001.ant.amazon.com (10.43.161.252) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Amazon's Annapurna Labs Memory Controller EDAC supports ECC capability
-for error detection and correction (Single bit error correction, Double
-detection). This driver introduces EDAC driver for that capability.
+Hi All,
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
+Huh, I was finally able to return to this work.
+
+The major part of work done in this iteration is rebasing on top of net-next
+with XDP series from Ivan Khoronzhuk [3], and enable XDP support in the new
+CPSW switchdev driver (it was little bit painful ;(). There are mostly no
+functional changes in new CPSW driver, just few fixes, sync with old driver
+and cleanups/optimizations. So, I've kept rest of cover letter unchanged.
+
+And thank you All for review of v4.
+
 ---
- MAINTAINERS               |   7 +
- drivers/edac/Kconfig      |   7 +
- drivers/edac/Makefile     |   1 +
- drivers/edac/al_mc_edac.c | 355 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 370 insertions(+)
- create mode 100644 drivers/edac/al_mc_edac.c
+This series originally based on work [1][2] done by
+Ilias Apalodimas <ilias.apalodimas@linaro.org>.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55199ef..d431e8f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -757,6 +757,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
- F:	include/linux/altera_uart.h
- F:	include/linux/altera_jtaguart.h
- 
-+AMAZON ANNAPURNA LABS MEMORY CONTROLLER EDAC
-+M:	Talel Shenhar <talel@amazon.com>
-+M:	Talel Shenhar <talelshenhar@gmail.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-+F:	drivers/edac/al_mc_edac.c
-+
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 417dad6..8c7fb73 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -100,6 +100,13 @@ config EDAC_AMD64_ERROR_INJECTION
- 	  In addition, there are two control files, inject_read and inject_write,
- 	  which trigger the DRAM ECC Read and Write respectively.
- 
-+config EDAC_AL_MC
-+	tristate "Amazon's Annapurna Lab EDAC Memory Controller"
-+	depends on (ARCH_ALPINE || COMPILE_TEST)
-+	help
-+	  Support for error detection and correction for Amazon's Annapurna
-+	  Labs Alpine chips which allows 1 bit correction and 2 bits detection.
-+
- config EDAC_AMD76X
- 	tristate "AMD 76x (760, 762, 768)"
- 	depends on PCI && X86_32
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index d77200c..5288329 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
- edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
- 
-+obj-$(CONFIG_EDAC_AL_MC)		+= al_mc_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_mc_edac.c b/drivers/edac/al_mc_edac.c
-new file mode 100644
-index 00000000..b9ef7dd
---- /dev/null
-+++ b/drivers/edac/al_mc_edac.c
-@@ -0,0 +1,355 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/edac.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+#include "edac_module.h"
-+
-+/* Registers Offset */
-+#define AL_MC_MSTR		0x00
-+#define AL_MC_ECC_CFG		0x70
-+#define AL_MC_ECC_CLEAR		0x7c
-+#define AL_MC_ECC_ERR_COUNT	0x80
-+#define AL_MC_ECC_CE_ADDR0	0x84
-+#define AL_MC_ECC_CE_ADDR1	0x88
-+#define AL_MC_ECC_UE_ADDR0	0xa4
-+#define AL_MC_ECC_UE_ADDR1	0xa8
-+#define AL_MC_ECC_CE_SYND0	0x8c
-+#define AL_MC_ECC_CE_SYND1	0x90
-+#define AL_MC_ECC_CE_SYND2	0x94
-+#define AL_MC_ECC_UE_SYND0	0xac
-+#define AL_MC_ECC_UE_SYND1	0xb0
-+#define AL_MC_ECC_UE_SYND2	0xb4
-+
-+/* Registers Fields */
-+#define AL_MC_MSTR_DEV_CFG		GENMASK(31, 30)
-+#define AL_MC_MSTR_RANKS		GENMASK(27, 24)
-+#define AL_MC_MSTR_DATA_BUS_WIDTH	GENMASK(13, 12)
-+#define AL_MC_MSTR_DDR4			BIT(4)
-+#define AL_MC_MSTR_DDR3			BIT(0)
-+
-+#define AL_MC_ECC_CFG_SCRUB_DISABLED	BIT(4)
-+#define AL_MC_ECC_CFG_ECC_MODE		GENMASK(2, 0)
-+
-+#define AL_MC_ECC_CLEAR_UE_COUNT	BIT(3)
-+#define AL_MC_ECC_CLEAR_CE_COUNT	BIT(2)
-+#define AL_MC_ECC_CLEAR_UE_ERR		BIT(1)
-+#define AL_MC_ECC_CLEAR_CE_ERR		BIT(0)
-+
-+#define AL_MC_ECC_ERR_COUNT_UE		GENMASK(31, 16)
-+#define AL_MC_ECC_ERR_COUNT_CE		GENMASK(15, 0)
-+
-+#define AL_MC_ECC_CE_ADDR0_RANK		GENMASK(25, 24)
-+#define AL_MC_ECC_CE_ADDR0_ROW		GENMASK(17, 0)
-+
-+#define AL_MC_ECC_CE_ADDR1_BG		GENMASK(25, 24)
-+#define AL_MC_ECC_CE_ADDR1_BANK		GENMASK(18, 16)
-+#define AL_MC_ECC_CE_ADDR1_COLUMN	GENMASK(11, 0)
-+
-+#define AL_MC_ECC_UE_ADDR0_RANK		GENMASK(25, 24)
-+#define AL_MC_ECC_UE_ADDR0_ROW		GENMASK(17, 0)
-+
-+#define AL_MC_ECC_UE_ADDR1_BG		GENMASK(25, 24)
-+#define AL_MC_ECC_UE_ADDR1_BANK		GENMASK(18, 16)
-+#define AL_MC_ECC_UE_ADDR1_COLUMN	GENMASK(11, 0)
-+
-+/* Registers Values */
-+#define AL_MC_MSTR_DEV_CFG_X4	0
-+#define AL_MC_MSTR_DEV_CFG_X8	1
-+#define AL_MC_MSTR_DEV_CFG_X16	2
-+#define AL_MC_MSTR_DEV_CFG_X32	3
-+#define AL_MC_MSTR_RANKS_MAX 4
-+#define AL_MC_MSTR_DATA_BUS_WIDTH_X64	0
-+
-+#define DRV_NAME "al_mc_edac"
-+#define AL_MC_EDAC_MSG_MAX 256
-+#define AL_MC_EDAC_MSG(message, buffer_size, type,			\
-+		       rank, row, bg, bank, column, syn0, syn1, syn2)	\
-+	snprintf(message, buffer_size,					\
-+		 "%s rank=0x%x row=0x%x bg=0x%x bank=0x%x col=0x%x "	\
-+		 "syn0: 0x%x syn1: 0x%x syn2: 0x%x",			\
-+		 type == HW_EVENT_ERR_UNCORRECTED ? "UE" : "CE",	\
-+		 rank, row, bg, bank, column, syn0, syn1, syn2)
-+
-+struct al_mc_edac {
-+	void __iomem *mmio_base;
-+	spinlock_t lock;
-+	int irq_ce;
-+	int irq_ue;
-+};
-+
-+static int al_mc_edac_handle_ce(struct mem_ctl_info *mci)
-+{
-+	struct al_mc_edac *al_mc = mci->pvt_info;
-+	u32 eccerrcnt, ecccaddr0, ecccaddr1, ecccsyn0, ecccsyn1, ecccsyn2, row;
-+	u16 ce_count, column;
-+	u8 rank, bg, bank;
-+	char msg[AL_MC_EDAC_MSG_MAX];
-+	unsigned long flags;
-+
-+	eccerrcnt = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_ERR_COUNT);
-+	ce_count = FIELD_GET(AL_MC_ECC_ERR_COUNT_CE, eccerrcnt);
-+	if (!ce_count)
-+		return 0;
-+
-+	ecccaddr0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_ADDR0);
-+	ecccaddr1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_ADDR1);
-+	ecccsyn0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND0);
-+	ecccsyn1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND1);
-+	ecccsyn2 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND2);
-+
-+	writel_relaxed(AL_MC_ECC_CLEAR_CE_COUNT | AL_MC_ECC_CLEAR_CE_ERR,
-+		       al_mc->mmio_base + AL_MC_ECC_CLEAR);
-+
-+	dev_dbg(mci->pdev, "eccuaddr0=0x%08x eccuaddr1=0x%08x\n",
-+		ecccaddr0, ecccaddr1);
-+
-+	rank = FIELD_GET(AL_MC_ECC_CE_ADDR0_RANK, ecccaddr0);
-+	row = FIELD_GET(AL_MC_ECC_CE_ADDR0_ROW, ecccaddr0);
-+
-+	bg = FIELD_GET(AL_MC_ECC_CE_ADDR1_BG, ecccaddr1);
-+	bank = FIELD_GET(AL_MC_ECC_CE_ADDR1_BANK, ecccaddr1);
-+	column = FIELD_GET(AL_MC_ECC_CE_ADDR1_COLUMN, ecccaddr1);
-+
-+	AL_MC_EDAC_MSG(msg, sizeof(msg), HW_EVENT_ERR_CORRECTED,
-+		       rank, row, bg, bank, column,
-+		       ecccsyn0, ecccsyn1, ecccsyn2);
-+
-+	spin_lock_irqsave(&al_mc->lock, flags);
-+	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
-+			     ce_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
-+	spin_unlock_irqrestore(&al_mc->lock, flags);
-+
-+	return ce_count;
-+}
-+
-+static int al_mc_edac_handle_ue(struct mem_ctl_info *mci)
-+{
-+	struct al_mc_edac *al_mc = mci->pvt_info;
-+	u32 eccerrcnt, eccuaddr0, eccuaddr1, eccusyn0, eccusyn1, eccusyn2, row;
-+	u16 ue_count, column;
-+	u8 rank, bg, bank;
-+	char msg[AL_MC_EDAC_MSG_MAX];
-+	unsigned long flags;
-+
-+	eccerrcnt = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_ERR_COUNT);
-+	ue_count = FIELD_GET(AL_MC_ECC_ERR_COUNT_UE, eccerrcnt);
-+	if (!ue_count)
-+		return 0;
-+
-+	eccuaddr0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR0);
-+	eccuaddr1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR1);
-+	eccusyn0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND0);
-+	eccusyn1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND1);
-+	eccusyn2 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND2);
-+
-+	writel_relaxed(AL_MC_ECC_CLEAR_UE_COUNT | AL_MC_ECC_CLEAR_UE_ERR,
-+		       al_mc->mmio_base + AL_MC_ECC_CLEAR);
-+
-+	dev_dbg(mci->pdev, "eccuaddr0=0x%08x eccuaddr1=0x%08x\n",
-+		eccuaddr0, eccuaddr1);
-+
-+	rank = FIELD_GET(AL_MC_ECC_UE_ADDR0_RANK, eccuaddr0);
-+	row = FIELD_GET(AL_MC_ECC_UE_ADDR0_ROW, eccuaddr0);
-+
-+	bg = FIELD_GET(AL_MC_ECC_UE_ADDR1_BG, eccuaddr1);
-+	bank = FIELD_GET(AL_MC_ECC_UE_ADDR1_BANK, eccuaddr1);
-+	column = FIELD_GET(AL_MC_ECC_UE_ADDR1_COLUMN, eccuaddr1);
-+
-+	AL_MC_EDAC_MSG(msg, sizeof(msg), HW_EVENT_ERR_UNCORRECTED,
-+		       rank, row, bg, bank, column,
-+		       eccusyn0, eccusyn1, eccusyn2);
-+
-+	spin_lock_irqsave(&al_mc->lock, flags);
-+	edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
-+			     ue_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
-+	spin_unlock_irqrestore(&al_mc->lock, flags);
-+
-+	return ue_count;
-+}
-+
-+static void al_mc_edac_check(struct mem_ctl_info *mci)
-+{
-+	struct al_mc_edac *al_mc = mci->pvt_info;
-+
-+	if (al_mc->irq_ue <= 0)
-+		al_mc_edac_handle_ue(mci);
-+
-+	if (al_mc->irq_ce <= 0)
-+		al_mc_edac_handle_ce(mci);
-+}
-+
-+static irqreturn_t al_mc_edac_irq_handler_ue(int irq, void *info)
-+{
-+	struct platform_device *pdev = info;
-+	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-+
-+	if (al_mc_edac_handle_ue(mci))
-+		return IRQ_HANDLED;
-+	return IRQ_NONE;
-+}
-+
-+static irqreturn_t al_mc_edac_irq_handler_ce(int irq, void *info)
-+{
-+	struct platform_device *pdev = info;
-+	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-+
-+	if (al_mc_edac_handle_ce(mci))
-+		return IRQ_HANDLED;
-+	return IRQ_NONE;
-+}
-+
-+static enum scrub_type al_mc_edac_get_scrub_mode(void __iomem *mmio_base)
-+{
-+	u32 ecccfg0;
-+
-+	ecccfg0 = readl(mmio_base + AL_MC_ECC_CFG);
-+
-+	if (FIELD_GET(AL_MC_ECC_CFG_SCRUB_DISABLED, ecccfg0))
-+		return SCRUB_NONE;
-+	else
-+		return SCRUB_HW_SRC;
-+}
-+
-+static void devm_al_mc_edac_del(void *data)
-+{
-+	edac_mc_del_mc(data);
-+}
-+
-+static void devm_al_mc_edac_free(void *data)
-+{
-+	edac_mc_free(data);
-+}
-+
-+static int al_mc_edac_probe(struct platform_device *pdev)
-+{
-+	void __iomem *mmio_base;
-+	struct edac_mc_layer layers[1];
-+	struct mem_ctl_info *mci;
-+	struct al_mc_edac *al_mc;
-+	int ret;
-+
-+	mmio_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(mmio_base)) {
-+		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
-+			PTR_ERR(mmio_base));
-+		return PTR_ERR(mmio_base);
-+	}
-+
-+	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-+	layers[0].size = 1;
-+	layers[0].is_virt_csrow = false;
-+	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
-+			    sizeof(struct al_mc_edac));
-+	if (!mci)
-+		return -ENOMEM;
-+
-+	ret = devm_add_action(&pdev->dev, devm_al_mc_edac_free, mci);
-+	if (ret) {
-+		edac_mc_free(mci);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, mci);
-+	al_mc = mci->pvt_info;
-+
-+	al_mc->mmio_base = mmio_base;
-+
-+	al_mc->irq_ue = of_irq_get_byname(pdev->dev.of_node, "ue");
-+	if (al_mc->irq_ue <= 0)
-+		dev_dbg(&pdev->dev,
-+			"no irq defined for ue - falling back to polling\n");
-+
-+	al_mc->irq_ce = of_irq_get_byname(pdev->dev.of_node, "ce");
-+	if (al_mc->irq_ce <= 0)
-+		dev_dbg(&pdev->dev,
-+			"no irq defined for ce - falling back to polling\n");
-+
-+	if (al_mc->irq_ue <= 0 || al_mc->irq_ce <= 0)
-+		edac_op_state = EDAC_OPSTATE_POLL;
-+	else
-+		edac_op_state = EDAC_OPSTATE_INT;
-+
-+	spin_lock_init(&al_mc->lock);
-+
-+	mci->edac_check = al_mc_edac_check;
-+	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR4;
-+	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
-+	mci->edac_cap = EDAC_FLAG_SECDED;
-+	mci->mod_name = DRV_NAME;
-+	mci->ctl_name = "al_mc";
-+	mci->pdev = &pdev->dev;
-+	mci->scrub_mode = al_mc_edac_get_scrub_mode(mmio_base);
-+
-+	ret = edac_mc_add_mc(mci);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev,
-+			"fail to add memory controller device (%d)\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	ret = devm_add_action(&pdev->dev, devm_al_mc_edac_del, &pdev->dev);
-+	if (ret) {
-+		edac_mc_del_mc(&pdev->dev);
-+		return ret;
-+	}
-+
-+	if (al_mc->irq_ue > 0) {
-+		ret = devm_request_irq(&pdev->dev,
-+				       al_mc->irq_ue,
-+				       al_mc_edac_irq_handler_ue,
-+				       IRQF_SHARED,
-+				       pdev->name,
-+				       pdev);
-+		if (ret != 0) {
-+			dev_err(&pdev->dev,
-+				"failed to request ue irq %d (%d)\n",
-+				al_mc->irq_ue, ret);
-+			return ret;
-+		}
-+	}
-+
-+	if (al_mc->irq_ce > 0) {
-+		ret = devm_request_irq(&pdev->dev,
-+				       al_mc->irq_ce,
-+				       al_mc_edac_irq_handler_ce,
-+				       IRQF_SHARED,
-+				       pdev->name,
-+				       pdev);
-+		if (ret != 0) {
-+			dev_err(&pdev->dev,
-+				"failed to request ce irq %d (%d)\n",
-+				al_mc->irq_ce, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id al_mc_edac_of_match[] = {
-+	{ .compatible = "amazon,al-mc-edac", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, al_mc_edac_of_match);
-+
-+static struct platform_driver al_mc_edac_driver = {
-+	.probe = al_mc_edac_probe,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = al_mc_edac_of_match,
-+	},
-+};
-+
-+module_platform_driver(al_mc_edac_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Talel Shenhar");
-+MODULE_DESCRIPTION("Amazon's Annapurna Lab's Memory Controller EDAC Driver");
+This the RFC v5 which introduces new CPSW switchdev based driver which is 
+operating in dual-emac mode by default, thus working as 2 individual
+network interfaces. The Switch mode can be enabled by configuring devlink driver
+parameter "switch_mode" to 1/true:
+	devlink dev param set platform/48484000.ethernet_switch \
+	name switch_mode value 1 cmode runtime
+This can be done regardless of the state of Port's netdev devices - UP/DOWN, but
+Port's netdev devices have to be in UP before joining the bridge to avoid
+overwriting of bridge configuration as CPSW switch driver completely reloads its
+configuration when first Port changes its state to UP.
+When the both interfaces joined the bridge - CPSW switch driver will start
+marking packets with offload_fwd_mark flag unless "ale_bypass=0".
+All configuration is implemented via switchdev API. 
+
+The previous solution of tracking both Ports joined the bridge
+(from netdevice_notifier) proved to be not correct as changing CPSW switch
+driver mode required cleanup of ALE table and CPSW settings which happens
+while second Port is joined bridge and as result configuration loaded
+by bridge for the first Port became corrupted.
+
+The introduction of the new CPSW switchdev based driver (cpsw_new.c) is split
+on two parts: Part 1 - basic dual-emac driver; Part 2 switchdev support.
+Such approach has simplified code development and testing alot. And, I hope, 
+it will help with better review.
+
+patches #1 - 4: preparation patches which also moves common code to cpsw_priv.c
+patches #5 - 8: Introduce TI CPSW switch driver based on switchdev and new
+ DT bindings
+patch #9: new CPSW switchdev driver documentation
+patch #10: adds DT nodes for new CPSW switchdev driver added for DRA7 SoC
+patch #11: adds DT nodes for new cpsw switchdev driver for am571x-idk board
+patch #12: enables build of TI CPSW driver
+
+Most of the contents of the previous cover-letter have been added in
+new driver documentation, so please refer to that for configuration,
+testing and future work.
+
+These patches can be found at:
+ https://github.com/grygoriyS/linux.git
+ branch: lkml-5.4-switch-tbd-v5
+
+changes in v5:
+ - rebase on top of net-next with XDP series from Ivan Khoronzhuk [3],
+   and enable XDP support in the new CPSW switchdev driver
+   cpsw driver (tested XDP_DROP only)
+ - sync with old cpsw driver
+ - implement comments from  Ivan Khoronzhuk and Rob Herring
+ - fixed "NETDEV WATCHDOG: .." warning after interface after interface UP/DOWN,
+   missed TX wake in cpsw_adjust_link()
+
+v4: https://patchwork.kernel.org/cover/11010523/
+ - finished split of common CPSW code
+ - added devlink support
+ - changed CPSW mode configuration approach: from netdevice_notifier to devlink
+   parameter
+ - refactor and clean up ALE changes which allows to modify VLANs/MDBs entries
+ - added missed support for port QDISC_CBS and QDISC_MQPRIO
+ - the CPSW is split on two parts: basic dual_mac driver and switchdev support
+ - added missed callback .ndo_get_port_parent_id()
+ - reworked ingress frames marking in switch mode (offload_fwd_mark)
+ - applied comments from Andrew Lunn
+
+v3: https://lwn.net/Articles/786677/
+Changes in v3:
+- alot of work done to split properly common code between legacy and switchdev
+  CPSW drivers and clean up code
+- CPSW switchdev interface updated to the current LKML switchdev interface
+- actually new CPSW switchdev based driver introduced
+- optimized dual_mac mode in new driver. Main change is that in promiscuous
+mode P0_UNI_FLOOD (both ports) is enabled in addition to ALLMULTI (current
+port) instead of ALE_BYPASS.  So, port in non promiscuous mode will keep
+possibility of mcast and vlan filtering.
+- changed bridge join sequnce: now switch mode will be enabled only when
+both ports joined the bridge. CPSW will be switched to dual_mac mode if any
+port leave bridge. ALE table is completly cleared and then refiled while
+switching to switch mode - this simplidies code a lot, but introduces some
+limitation to bridge setup sequence:
+ ip link add name br0 type bridge
+ ip link set dev br0 type bridge ageing_time 1000
+ ip link set dev br0 type bridge vlan_filtering 0 <- disable
+ echo 0 > /sys/class/net/br0/bridge/default_vlan
+
+ ip link set dev sw0p1 up <- add ports
+ ip link set dev sw0p2 up
+ ip link set dev sw0p1 master br0
+ ip link set dev sw0p2 master br0
+
+ echo 1 > /sys/class/net/br0/bridge/default_vlan <- enable
+ ip link set dev br0 type bridge vlan_filtering 1
+ bridge vlan add dev br0 vid 1 pvid untagged self
+- STP tested with vlan_filtering 1/0. To make STP work I've had to set
+  NO_SA_UPDATE for all slave ports (see comment in code). It also required to
+  statically register STP mcast address {0x01, 0x80, 0xc2, 0x0, 0x0, 0x0};
+- allowed build both TI_CPSW and TI_CPSW_SWITCHDEV drivers
+- PTP can be enabled on both ports in dual_mac mode
+
+[1] https://patchwork.ozlabs.org/cover/929367/
+[2] https://patches.linaro.org/cover/136709/
+[3] https://patchwork.kernel.org/cover/11035813/
+
+Grygorii Strashko (8):
+  net: ethernet: ti: cpsw: allow untagged traffic on host port
+  net: ethernet: ti: cpsw: resolve build deps of cpsw drivers
+  net: ethernet: ti: cpsw: move set of common functions in cpsw_priv
+  dt-bindings: net: ti: add new cpsw switch driver bindings
+  phy: ti: phy-gmii-sel: dependency from ti cpsw-switchdev driver
+  ARM: dts: dra7: add dt nodes for new cpsw switch dev driver
+  ARM: dts: am571x-idk: enable for new cpsw switch dev driver
+  arm: omap2plus_defconfig: enable new cpsw switchdev driver
+
+Ilias Apalodimas (4):
+  net: ethernet: ti: cpsw: ale: modify vlan/mdb api for switchdev
+  net: ethernet: ti: introduce cpsw  switchdev based driver part 1 -
+    dual-emac
+  net: ethernet: ti: introduce cpsw switchdev based driver part 2 -
+    switch
+  Documentation: networking: add cpsw switchdev based driver
+    documentation
+
+ .../bindings/net/ti,cpsw-switch.txt           |  145 ++
+ .../device_drivers/ti/cpsw_switchdev.txt      |  207 ++
+ arch/arm/boot/dts/am571x-idk.dts              |   27 +
+ arch/arm/boot/dts/am572x-idk.dts              |    5 +
+ arch/arm/boot/dts/am574x-idk.dts              |    5 +
+ arch/arm/boot/dts/am57xx-idk-common.dtsi      |    5 -
+ arch/arm/boot/dts/dra7-l4.dtsi                |   52 +
+ arch/arm/configs/omap2plus_defconfig          |    1 +
+ drivers/net/ethernet/ti/Kconfig               |   19 +-
+ drivers/net/ethernet/ti/Makefile              |    2 +
+ drivers/net/ethernet/ti/cpsw.c                | 1374 +-----------
+ drivers/net/ethernet/ti/cpsw_ale.c            |  146 +-
+ drivers/net/ethernet/ti/cpsw_ale.h            |   11 +
+ drivers/net/ethernet/ti/cpsw_new.c            | 1995 +++++++++++++++++
+ drivers/net/ethernet/ti/cpsw_priv.c           | 1245 +++++++++-
+ drivers/net/ethernet/ti/cpsw_priv.h           |   79 +-
+ drivers/net/ethernet/ti/cpsw_switchdev.c      |  589 +++++
+ drivers/net/ethernet/ti/cpsw_switchdev.h      |   15 +
+ drivers/phy/ti/Kconfig                        |    4 +-
+ 19 files changed, 4586 insertions(+), 1340 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,cpsw-switch.txt
+ create mode 100644 Documentation/networking/device_drivers/ti/cpsw_switchdev.txt
+ create mode 100644 drivers/net/ethernet/ti/cpsw_new.c
+ create mode 100644 drivers/net/ethernet/ti/cpsw_switchdev.c
+ create mode 100644 drivers/net/ethernet/ti/cpsw_switchdev.h
+
 -- 
-2.7.4
+2.17.1
 
