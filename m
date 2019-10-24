@@ -2,139 +2,204 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56DDCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9439CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D72921906
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BABA205F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 09:24:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="fpAp9ltE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LErg4eJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393033AbfJXJWo (ORCPT
+        id S2393062AbfJXJYA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:22:44 -0400
-Received: from mail-eopbgr140080.outbound.protection.outlook.com ([40.107.14.80]:20743
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390366AbfJXJWn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:22:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FgCMlrM6Ecti4Hd9hTdHLzS/83+wmxsfPYThGVe6xHaw0kR0se7lSjccTpL/MDsWA35AHEHykXua1tL1kE1reW07Q1Z3KdiCFl3iFjr+Tvw79YOGvYwQTgjU0flFqbbnuTiRPy5bykl/MAkypdk/qCuyEcsaTes3W8Z+9HJ0gHUWtneY/hqN6d+UC898qjXq8vuzRKFAPs75uf2HKc8VGTzoV4tQxaYc/eewN5sQhAfDpsqa6OKb/5hETUkU40nAQcUfzjhCu2nyfQ49ZoOhPLIjXt97pMHzipuwWpWu4CWHuiNT7UOf3Q7MxcCx9T/YG8GC5KoLAbSp8SmhYMQS/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hp2/tszh1uV2uZFTm/3yFBy1aiyTRNcA5omq7eB7/78=;
- b=HIaSukiw0/+D4J+z2mdviPSrdlR0RZkAvPdRkXTQ2+j+nel0I1/6iL45BYoG2ycvvKgw3ppLAXHRE15pv0Eynbeswwvm8q0Qa280qFwozpDnd7YIUSP6RSBWkPe4LYr25cQjfsIThXXPTXqyKJCwItp6NbtO1amNRKazr6yRMLOkjlVzUrkxQp4BK0rMWAZlcXLWI/NtUvr3lKfoY4FkEOyqoV8J/Bfd0i6LDbWzLjb3q1rEf9cZd4+QI1Cjz7YDOcXidB3WD78f9ZL3Q3JlO4ZZDXXvmq5I3GW2xifd7m4nwOQQcSiJWCP6eebXh7bZuDmp6KJPa+GI1tNrG8hFbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kococonnector.com; dmarc=pass action=none
- header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
+        Thu, 24 Oct 2019 05:24:00 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38008 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390225AbfJXJX7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 05:23:59 -0400
+Received: by mail-ed1-f68.google.com with SMTP id y8so5807586edu.5
+        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 02:23:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hp2/tszh1uV2uZFTm/3yFBy1aiyTRNcA5omq7eB7/78=;
- b=fpAp9ltEqCfX52I7g2nf6FuwVbYzgkfy2QOnaP8qIAB/1Cz4hZgdcarJ1fKOmETua+aimYkzAPetHdPEWtXyntQ+Slr5vxUhAA3ZzILSiMUWYFoCn/CkGJ34/yJTmJO1nycbVqyB0AzhQQOOde/Sw4dQno/8Q9mHzJi4aoyItpM=
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com (10.170.212.23) by
- DB6PR0902MB1797.eurprd09.prod.outlook.com (10.171.76.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Thu, 24 Oct 2019 09:22:38 +0000
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::b1b2:ecb1:9c98:6b74]) by DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::b1b2:ecb1:9c98:6b74%6]) with mapi id 15.20.2367.025; Thu, 24 Oct 2019
- 09:22:38 +0000
-From:   Oliver Graute <oliver.graute@kococonnector.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "oliver.graute@gmail.com" <oliver.graute@gmail.com>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        =?iso-8859-1?Q?S=E9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
- devicetree
-Thread-Topic: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
- devicetree
-Thread-Index: AQHVikyT2KF91MXB10mxyuBdtabWTw==
-Date:   Thu, 24 Oct 2019 09:22:37 +0000
-Message-ID: <20191024092019.4020-1-oliver.graute@kococonnector.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM4PR0101CA0048.eurprd01.prod.exchangelabs.com
- (2603:10a6:200:41::16) To DB6PR0902MB2072.eurprd09.prod.outlook.com
- (2603:10a6:6:8::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oliver.graute@kococonnector.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-patchwork-bot: notify
-x-originating-ip: [193.47.161.132]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e15ed6d-1f7c-4ba2-4f0b-08d75863b601
-x-ms-traffictypediagnostic: DB6PR0902MB1797:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0902MB17970E6E870CE4DE6A2EB5E0EB6A0@DB6PR0902MB1797.eurprd09.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:510;
-x-forefront-prvs: 0200DDA8BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(396003)(39830400003)(136003)(199004)(189003)(26005)(2351001)(508600001)(36756003)(2906002)(6486002)(99286004)(102836004)(8676002)(14454004)(1730700003)(316002)(50226002)(52116002)(6512007)(25786009)(44832011)(6436002)(81166006)(5640700003)(66556008)(64756008)(66446008)(66476007)(386003)(6506007)(8936002)(66946007)(66066001)(4326008)(256004)(4744005)(476003)(5660300002)(1076003)(305945005)(2616005)(7416002)(71190400001)(7736002)(486006)(54906003)(6916009)(86362001)(71200400001)(6116002)(186003)(2501003)(3846002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB1797;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: kococonnector.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q9K0UAVaEfYD4N7AriQr5s4cKZ5MpEaepEB4/2KRt9gr4MpYoFcu7+CayrOnmmmz6y0UWSnm2Dccv7fioRbJlKWGJyN0ljc8IwoQbXc1RjooCza0ElB8ZvobDB5CCmq7Lq+yK6WM1eFnE3p6tn6ndMMmm4BH+322PqwzsbjR6267YEyj8mT3VfIZXnWnJ/z/7zFOFLY6vEoKQavZ4G0TD83m2UNgGyqjDB+ZPIuynLCNqrOU+QzyknBuSQv68bjW4a1fRHDi5rYjlJBCqbgsrB0KCMbrujgHYyrszQ/M6qDoRRpq0+5JofFbHKvIm27zQhhdpqGbROzusf0HfjWzl9cvOraTsIkGmHk7YjWL7lFAP2BfFrKkS6oWt7UH5E/O9iJWBameKvfrsPR8P4Ob6P9fXT7EgVwC3V/WBR6DXc/UOLWP/Pa/n6rvsc1gjQPl
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2Fg4OORdS56GYlEdlxxKyHlR08HjtyPW5mXDJkHAU3c=;
+        b=LErg4eJHixvsMHo3T4UdsdOcjyo5lbO9XudSeZq6rpgNnkVpGr/b0G90t4XOSP66/E
+         yPiEP9VtvxDCkUlH7d1janZhA4XnWhbkjvm/cOE2ToCJXuDoxd+uba3V89MU7eceWGgo
+         3dPD97YPgwTyy5neIrYaAT8SNNB8krsO2ClP8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2Fg4OORdS56GYlEdlxxKyHlR08HjtyPW5mXDJkHAU3c=;
+        b=qt1n/9U6Um5z1CkNaZRDWc7U2SsW5ldA8BRuvLA2av32lCSI+sO2WPUVT+9SE9N8P5
+         Akfmn4Q1lRNyltfwjlaHunyrAAJSEBUaC9okbcwtjqfSM/8ndfiJbVwMPvwtii8FSia9
+         m5XiN9OZGA0DBNZzHm1YW8Z6+eGMj9n72K5yiIInReKh/8yeAR+lHv+vplvgYqNlnJrX
+         9A1EzaTrtReHsrF7XGJq2QpsZ2nNaq7ZslIH9awa7PLFVcqMrAk8PoO7cGt5URGBASbE
+         9u+oXbZ70jLVPqpZ4KZsjPyxrUzWk6oDgae2vn3uchnSAXFKdam2rYWLwNFQB5u9I2WN
+         sOPg==
+X-Gm-Message-State: APjAAAVdkd3Z8c5MMOPzWMq9b94Pc5bpfnacDDN7VfahCTkg8UnQTQkZ
+        y9cLuQvWYDF85JNeFwWf5NfB16rDqOhQNg==
+X-Google-Smtp-Source: APXvYqwrVxTOXBhFsZzGueJ0vGWrsElEzfqDAJ7R2u4cXj0RYY0mI2YJvOdJdTqAE67TBbdGQwlxyg==
+X-Received: by 2002:a05:6402:128c:: with SMTP id w12mr42908034edv.284.1571909037677;
+        Thu, 24 Oct 2019 02:23:57 -0700 (PDT)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
+        by smtp.gmail.com with ESMTPSA id g43sm473645edb.14.2019.10.24.02.23.55
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2019 02:23:56 -0700 (PDT)
+Received: by mail-wr1-f44.google.com with SMTP id z11so1845021wro.11
+        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 02:23:55 -0700 (PDT)
+X-Received: by 2002:a5d:6a42:: with SMTP id t2mr2809593wrw.155.1571909035112;
+ Thu, 24 Oct 2019 02:23:55 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: kococonnector.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e15ed6d-1f7c-4ba2-4f0b-08d75863b601
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 09:22:37.7558
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 59845429-0644-4099-bd7e-17fba65a2f2b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 21/8QaNnwz/woFKN3tPNPQTMaL081MuyCj/c88kkhb9FE2RSgefr+955etu91GIM53Vby0YyRfhR6r539t2WS/B5TtiYKtWwkTQaYTEF4Xk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0902MB1797
+References: <20191017084033.28299-1-xia.jiang@mediatek.com>
+ <20191017084033.28299-6-xia.jiang@mediatek.com> <20191023103945.GA41089@chromium.org>
+ <1571906317.6254.64.camel@mhfsdcap03>
+In-Reply-To: <1571906317.6254.64.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 24 Oct 2019 18:23:43 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
+Message-ID: <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the Variscite i.MX6qdl board devicetree binding
-already supported:
+On Thu, Oct 24, 2019 at 5:38 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
+>
+> On Wed, 2019-10-23 at 19:39 +0900, Tomasz Figa wrote:
+> > Hi Xia,
+> >
+> > On Thu, Oct 17, 2019 at 04:40:38PM +0800, Xia Jiang wrote:
+> > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jp=
+eg
+> > > decode and encode have great similarities with function operation.
+> > >
+> > > Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> > > ---
+> > > v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder=
+,
+> > >     one for decoder.
+> > >     split mtk_jpeg_set_default_params() to two functions, one for
+> > >     encoder, one for decoder.
+> > >     add cropping support for encoder in g/s_selection ioctls.
+> > >     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
+> > >     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 b=
+y
+> > >     specification.
+> > >     move width shifting operation behind aligning operation in
+> > >     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
+> > >     fix user abuseing data_offset issue for DMABUF in
+> > >     mtk_jpeg_set_enc_src().
+> > >     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGH=
+T
+> > >                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH fro=
+m
+> > >                         'int' type to 'unsigned int' type.
+> > >                         fix msleadingly indented of 'else'.
+> > >
+> > > v3: delete Change-Id.
+> > >     only test once handler->error after the last v4l2_ctrl_new_std().
+> > >     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch=
+.
+> > >
+> > > v2: fix compliance test fail, check created buffer size in driver.
+> > > ---
+> > >  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
+> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++-=
+--
+> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
+> > >  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
+> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
+> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
+> > >  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
+> > >  7 files changed, 1004 insertions(+), 146 deletions(-)
+> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
+> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
+> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.=
+h
+> > >
+> >
+> > First of all, thanks for the patch!
+> >
+> > Please check my comments below.
+> >
+> > My general feeling about this code is that the encoder hardware block i=
+s
+> > completely orthogonal from the decoder block and there is very little c=
+ode
+> > reuse from the original decoder driver.
+> >
+> > Moreover, a lot of existing code now needs if (decoder) { ... } else {.=
+.. }
+> > segments, which complicates the code.
+> >
+> > Would it perhaps make sense to instead create a separate mtk-jpeg-enc
+> > driver?
+> >
+> Dear Tomasz,
+>
+> Thanks for your comments.
+>
+> My reasons about the architecture of jpeg enc driver are as follows:
+>
+> The first internal design and realization of jpeg enc driver was a
+> separate driver, but found that mtk_jpeg_core.c and mtk_jpeg_enc_core.c
+> have lots of reuse.Because that  the core.c mainly contains realization
+> of v4L2 ioctl functions and some logic which are high similarity between
+> encoder and decoder.
+>
+> The jpeg encoder and decoder are two independent hardwares exactly, so
+> the code about hardware specification(register setting) are
+> separated(mtk_jpeg_enc_hw.c and mtk_jpeg_dec_hw.c).
+>
+> As for 17 existing code segments contain if(decoder){} else {}, they are
+> not complicated IMHO.The complicated(multilayer nested) functions are
+> separated in V4 version as Hans recommendation.
+>
+> By the way,the upstreamed module s5p-jpeg
+> (https://elixir.bootlin.com/linux/latest/source/drivers/media/platform/s5=
+p-jpeg/jpeg-core.c#L1998) also use encoder and decoder mode in the common c=
+ore.c, but their encoder and decoder are the same hardware.Maybe our jpeg e=
+nc and dec are designed into one hardware in the future.In that case the cu=
+rrent architecture is more compatible.
+>
+> So I prefer the current design.
+>
 
-- variscite,dt6customboard
+Would you be able to give some numbers to show the code reuse to
+justify using the same driver? From my observation, a new driver would
+result in a significantly cleaner code. If there is a further hardware
+architecture change, that would likely require another driver, because
+it wouldn't be compatible with existing programming model anyway.
 
-Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Regardless of that, if we end up with reusing the same driver, I'd
+like you to fix the issues existing in the current base before adding
+the encoder functionality.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation=
-/devicetree/bindings/arm/fsl.yaml
-index 41db01d77c23..f0ddebfcf1a1 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -121,6 +121,7 @@ properties:
-               - fsl,imx6q-sabresd
-               - technologic,imx6q-ts4900
-               - technologic,imx6q-ts7970
-+              - variscite,dt6customboard
-           - const: fsl,imx6q
-=20
-       - description: i.MX6QP based Boards
---=20
-2.17.1
-
+Best regards,
+Tomasz
