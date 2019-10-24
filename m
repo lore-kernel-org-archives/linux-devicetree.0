@@ -2,81 +2,151 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668E3CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AF7CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCA22084C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B434320679
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 10:47:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="XC8/tAz0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F9I02n+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438734AbfJXKb7 (ORCPT
+        id S1733196AbfJXKrZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:31:59 -0400
-Received: from onstation.org ([52.200.56.107]:37234 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392028AbfJXKbq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:31:46 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 000893F258;
-        Thu, 24 Oct 2019 10:31:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1571913105;
-        bh=X+o/+gZJ7tbddpfuCjGXfdjthE9GU4Cf3bwhWFhHdXQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XC8/tAz05HuiLteA9Unahct2cfMt785ocNxvjGPFF1uURmJ7vsU6osnnZhBzfwz5E
-         YUciog6ia9Pou4VUUTrNfBVDQR8lgEyrfsaOArsL9WyuY3UPZiA+ribLbnFWl5jgAl
-         ZwBbec0iNki1uvpJ3KMXPNnHQ0ARGVmObYi5H3X0=
-From:   Brian Masney <masneyb@onstation.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH v2 2/4] ARM: qcom_defconfig: add anx78xx HDMI bridge support
-Date:   Thu, 24 Oct 2019 06:31:38 -0400
-Message-Id: <20191024103140.10077-3-masneyb@onstation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191024103140.10077-1-masneyb@onstation.org>
-References: <20191024103140.10077-1-masneyb@onstation.org>
+        Thu, 24 Oct 2019 06:47:25 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:45406 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732651AbfJXKrZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 06:47:25 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OAlLHa005491;
+        Thu, 24 Oct 2019 05:47:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571914041;
+        bh=+DDrtZysaxPLyifnU1qVZm7pk/NXlX6sB+O3fJqQGJw=;
+        h=From:To:CC:Subject:Date;
+        b=F9I02n+Nwc8puY6dhryjllP809hT/3MW+IUnaoEfVQkiRfb8M0MZLusu/sl/4jIut
+         mmbsI/el3wE8HhS/FVfki1UY5DPbVuaTGr07M+AG6H8nqtbkAz/Y/9iuU7j/QbN1uy
+         BMp4sJrpljwu5mjnOHlwtUwRFsfvKl2rm0fj91Zo=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9OAlLAt048090
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 24 Oct 2019 05:47:21 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
+ Oct 2019 05:47:11 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 24 Oct 2019 05:47:11 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OAlJNe039669;
+        Thu, 24 Oct 2019 05:47:20 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [RFC PATCH] dt-bindings: net: davinci-mdio: convert bindings to json-schema
+Date:   Thu, 24 Oct 2019 13:47:30 +0300
+Message-ID: <20191024104730.17708-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the Analogix anx78xx driver so that the external display over HDMI
-can be used on Nexus 5 phones.
+Now that we have the DT validation in place, let's convert the device tree
+bindings for the TI SoC Davinci/OMAP/Keystone2 MDIO Controllerr over to a
+YAML schemas.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
-Changes since v1:
-- None
+This my first attempt to work with YAML schemas, hence RFC.
 
- arch/arm/configs/qcom_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/net/ti,davinci-mdio.yaml         | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,davinci-mdio.yaml
 
-diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-index cbe4e1d86f9a..201e20bc6189 100644
---- a/arch/arm/configs/qcom_defconfig
-+++ b/arch/arm/configs/qcom_defconfig
-@@ -149,6 +149,7 @@ CONFIG_MEDIA_SUPPORT=y
- CONFIG_DRM=y
- CONFIG_DRM_MSM=m
- CONFIG_DRM_PANEL_SIMPLE=y
-+CONFIG_DRM_ANALOGIX_ANX78XX=m
- CONFIG_FB=y
- CONFIG_FRAMEBUFFER_CONSOLE=y
- # CONFIG_LCD_CLASS_DEVICE is not set
+diff --git a/Documentation/devicetree/bindings/net/ti,davinci-mdio.yaml b/Documentation/devicetree/bindings/net/ti,davinci-mdio.yaml
+new file mode 100644
+index 000000000000..e51054d2e0fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/ti,davinci-mdio.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/ti,davinci-mdio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI SoC Davinci/Keystone2 MDIO Controller
++
++maintainers:
++  - Grygorii Strashko <grygorii.strashko@ti.com>
++
++description:
++  TI SoC Davinci/Keystone2 MDIO Controller Device Tree Bindings
++
++allOf:
++  - $ref: "mdio.yaml#"
++
++properties:
++  compatible:
++    oneOf:
++       - const: ti,davinci_mdio
++       - items:
++         - const: ti,keystone_mdio
++         - const: ti,davinci_mdio
++       - items:
++         - const: ti,cpsw-mdio
++         - const: ti,davinci_mdio
++       - items:
++         - const: ti,am4372-mdio
++         - const: ti,cpsw-mdio
++         - const: ti,davinci_mdio
++
++  reg:
++    maxItems: 1
++
++  bus_freq:
++      maximum: 2500000
++      description:
++        Mdio Bus frequency
++
++  ti,hwmods:
++    description: TI hwmod name
++    deprecated: true
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/string-array
++      - items:
++          const: davinci_mdio
++
++required:
++  - compatible
++  - reg
++  - bus_freq
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    davinci_mdio: mdio@4a101000 {
++         compatible = "ti,davinci_mdio";
++         #address-cells = <1>;
++         #size-cells = <0>;
++         reg = <0x4A101000 0x1000>;
++         bus_freq = <1000000>;
++    };
 -- 
-2.21.0
+2.17.1
 
