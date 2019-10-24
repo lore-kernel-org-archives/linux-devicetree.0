@@ -2,158 +2,85 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3E9CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 14:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332C1CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 15:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11449205F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 14:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571928679;
-	bh=MEaP5IL/IqooQRDNdNUcu8iypLi1gD3g0148DaXxsOA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=L9PQ0Xsat6lkyCRcJr61dSAZWZgfvvPKJS6QUfj294zlinoAz4LaRtTEhVRntbUM3
-	 LlCPqjRslawOHhKno8mph4frAbypk2SgdFqNaKsVR/sM7uQW3AQ+Nj8xUGA9qBv8kV
-	 H2SLcwmggW0yCLe+aB6TMhU7cF+w2cGP4l+J3TVA=
+	by mail.kernel.org (Postfix) with ESMTP id 0986E2070B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 15:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409498AbfJXOvS (ORCPT
+        id S2409575AbfJXPHa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
+        Thu, 24 Oct 2019 11:07:30 -0400
+Received: from sauhun.de ([88.99.104.3]:41692 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409497AbfJXOvS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:51:18 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3597205F4;
-        Thu, 24 Oct 2019 14:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571928676;
-        bh=MEaP5IL/IqooQRDNdNUcu8iypLi1gD3g0148DaXxsOA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AhLTlEblswmwrWUsuXYU6je5kiKbSEAz/M0zJZKKJ0DIQ60EIdRbWyrk5REfexOGm
-         Oe4Ph5iPBlOcnF2uQ0YfG5vcfCeB+jCFaTgmE7IuBNtSLI7D7+S483zv39vG/VvGE/
-         YHxedsM80fsfFCj4chEONOo9lXEDwHlLnhWbiK70=
-Received: by mail-qt1-f181.google.com with SMTP id m15so38352940qtq.2;
-        Thu, 24 Oct 2019 07:51:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAXTuaOrKY8k7tl0wIDwXyQaCMwBhzyLj7F6xornI5ysT4P6BTqe
-        SYH84T/DVBWUE0RR7FdLhR1mcEjHRUP+5tJYLQ==
-X-Google-Smtp-Source: APXvYqyXI1R6tgkLf27Se2dMkBgfCAIms6JME3RgcEqcC6jce5AGFooEv86GX0hr06greCwOgnLCH683ZJIx8hx7MRM=
-X-Received: by 2002:a0c:f792:: with SMTP id s18mr14841198qvn.20.1571928675962;
- Thu, 24 Oct 2019 07:51:15 -0700 (PDT)
+        id S2407327AbfJXPHa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 11:07:30 -0400
+Received: from localhost (x4d0d4399.dyn.telefonica.de [77.13.67.153])
+        by pokefinder.org (Postfix) with ESMTPSA id AB61C2C011D;
+        Thu, 24 Oct 2019 17:07:27 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 17:07:26 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Codrin.Ciubotariu@microchip.com
+Cc:     kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, devicetree@vger.kernel.org,
+        thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
+Message-ID: <20191024150726.GA1120@kunai>
+References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+ <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+ <20191021202044.GB3607@kunai>
+ <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
+ <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
 MIME-Version: 1.0
-References: <20191024142211.GA29467@arm.com>
-In-Reply-To: <20191024142211.GA29467@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 24 Oct 2019 09:51:04 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJSSYdRyy=Hw4H613fWVyXM3ivFj8mgO6iwvXZQOr=9pA@mail.gmail.com>
-Message-ID: <CAL_JsqJSSYdRyy=Hw4H613fWVyXM3ivFj8mgO6iwvXZQOr=9pA@mail.gmail.com>
-Subject: Re: Question regarding "reserved-memory"
-To:     Ayan Halder <Ayan.Halder@arm.com>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Content-Disposition: inline
+In-Reply-To: <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 9:22 AM Ayan Halder <Ayan.Halder@arm.com> wrote:
->
->
-> Hi Folks,
->
-> I have a question regarding "reserved-memory". I am using an Arm Juno
-> platform which has a chunk of ram in its fpga. I intend to make this
-> memory as reserved so that it can be shared between various devices
-> for passing framebuffer.
->
-> My dts looks like the following:-
->
-> / {
->         .... // some nodes
->
->         tlx@60000000 {
->                 compatible = "simple-bus";
->                 ...
->
->                 juno_wrapper {
->
->                         ... /* here we have all the nodes */
->                             /* corresponding to the devices in the fpga */
->
->                         memory@d000000 {
->                                device_type = "memory";
->                                reg = <0x00 0x60000000 0x00 0x8000000>;
->                         };
->
->                         reserved-memory {
->                                #address-cells = <0x01>;
->                                #size-cells = <0x01>;
->                                ranges;
->
->                                framebuffer@d000000 {
->                                         compatible = "shared-dma-pool";
->                                         linux,cma-default;
->                                         reusable;
->                                         reg = <0x00 0x60000000 0x00 0x8000000>;
->                                         phandle = <0x44>;
->                                 };
->                         };
->                         ...
->                 }
->         }
-> ...
-> }
->
-> Note that the depth of the "reserved-memory" node is 3.
->
-> Refer __fdt_scan_reserved_mem() :-
->
->         if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
->
->                 if (__reserved_mem_check_root(node) != 0) {
->                         pr_err("Reserved memory: unsupported node
-> format, ignoring\n");
->                         /* break scan */
->                         return 1;
->                 }
->                 found = 1;
->
->                 /* scan next node */
->                 return 0;
->         }
->
-> It expects the "reserved-memory" node to be at depth == 1 and so it
-> does not probe it in our case.
->
-> Niether from the
-> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
->  nor from commit - e8d9d1f5485b52ec3c4d7af839e6914438f6c285,
-> I could understand the reason for such restriction.
->
-> So, I seek the community's advice as to whether I should fix up
-> __fdt_scan_reserved_mem() so as to do away with the restriction or
-> put the "reserved-memory" node outside of 'tlx@60000000' (which looks
->  logically incorrect as the memory is on the fpga platform).
 
-For now, I'm going to say it must be at the root level. I'd guess the
-memory@d000000 node is also just ignored (wrong unit-address BTW).
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think you're also forgetting the later unflattened parsing of
-/reserved-memory. The other complication IIRC is booting with UEFI
-does it's own reserved memory table which often uses the DT table as
-its source.
 
-Rob
+> So at the beginning of a new transfer, we should check if SDA (or SCL?)=
+=20
+> is low and, if it's true, only then we should try recover the bus.
+
+Yes, this is the proper time to do it. Remember, I2C does not define a
+timeout.
+
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2xvikACgkQFA3kzBSg
+KbY2xw/9FIdBm3lKLqDZpmKjcsD3wcKioeBhtRCD82gnXZgkMqSlbbQQRf8y8ZKe
+KAun1rTcj+rHtvzH20i+alDXQzChwwJAS9ZxORyWPurh0sRTwGDH5z8Bl1Sm8kUp
+6dMDTGNrWwFGV0iQmHzF17n545X7ho/QHlTmpQi23SxS0sOJGPz5D8drDlWS0eBq
+MFrDt9jqeCRV2u68gntAWoMoTHUr5klUizS+p8Jrt3yMIfriH1uPc3VGa5xuuLVI
+al5YrR9bB0zgYZatgoxnZ6Q5KkInb1DkZIZNRmJP+4QoTMo97HHW+ZrsNJUD9mw5
+Uuoh2NTgVGkbuCXRDzVsDOoEEMVM1qmmZxNfeXPtIO6jWbZID8ZaWbsgAfV4SXnQ
+eeeZkH8ZuO19KhSeS6/El283JSMuvl89njtXd7l6/hcY41ndFOkjtjEDs/7Ed7RJ
+SB0dnavo3zYhzyMJ1IjhtIEIc3+cRZRy7HmBxgovyuEYYCF+re6I8HLjvo2/aYuC
++s7J45zgY/9lqcnJRMz6iL7yIAFyoptYVVq5V065QWCyeKDNmVNBg3XP24ETd879
+060Xp1xPeZQU/Pe6D+j7fzfYDyg94Hi9a7P7TT4ZwatTm8LCObi5g7FCCuq5OQPM
+eY9Z7YHvo7yo4rYM1tqbAoYA0ZUxXj9IxGI8uIr0L3lBjLIJAI0=
+=cVZT
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
