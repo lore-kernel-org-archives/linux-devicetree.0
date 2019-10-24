@@ -2,158 +2,187 @@ Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B708CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 19:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16224CA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 19:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169292070B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 19:04:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571943857;
-	bh=BLF6bNI1LMtwSe4KBH8lI9gpwa1CAzLQZtAXBhg/Zeg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hKQi5oK9H74m8cMLpZL/uC/pj2xortbai02mwDCgzHBlAV6r8R1e7JbOos6m3//HQ
-	 axJyPs4XeaGHjrfcCdDZeNKq+P41J8jP43uX3sKD7j22KuBabOu4jFl2t8OFiQzpop
-	 +hPCo1EurZMzwDOcTHgU+6qvvFyl40INFOz2GP5o=
+	by mail.kernel.org (Postfix) with ESMTP id D647520578
+	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 19:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pGCCfSCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390604AbfJXTEN (ORCPT
+        id S2391088AbfJXThD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:04:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392896AbfJXTEN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:04:13 -0400
-Received: from localhost (unknown [109.190.253.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B01A21A4A;
-        Thu, 24 Oct 2019 19:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571943851;
-        bh=BLF6bNI1LMtwSe4KBH8lI9gpwa1CAzLQZtAXBhg/Zeg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MkTv/uGKp2Ko24fnOFRYlxw3fOz+rJ/zpy+ay3PCdOr6dljJzXalGBW/IY3+Sh4hL
-         ZHOWCerCbnV2Qh5nnsg5KeRQFfDkLn9qByozVmo20BVKP/rDjDFq0c/zH514KPQ7NO
-         Cfb6oa5WQR+YTrQMDIs/O1AAzoZU+1E2jnQNot1E=
-Date:   Thu, 24 Oct 2019 20:28:49 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 24 Oct 2019 15:37:03 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35182 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387655AbfJXThC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 15:37:02 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OJaQQx073777;
+        Thu, 24 Oct 2019 14:36:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571945786;
+        bh=symP3nQ06Xja5LwACedkvVAeNJcUuk64vlBk/0LFjbg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pGCCfSCyTyLtfEAX1MsLzI3D0/naW1DqahP/VqAozdsMqZ3SJHRg8CdxTpMPEibb1
+         esAuZTSuslj6sh/GzqneEsaGj09v7RYNxLSH+08j6W0+Fwdo1A8Ufw0DV4hyCrf93X
+         rrQWMZtiMwIe9O2Q/NAeyL3YmeMEOUGihJURqBVY=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OJaQYG067924;
+        Thu, 24 Oct 2019 14:36:26 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
+ Oct 2019 14:36:15 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 24 Oct 2019 14:36:15 -0500
+Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OJaP4P016308;
+        Thu, 24 Oct 2019 14:36:25 -0500
+Subject: Re: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828
+ bindings
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        <mazziesaccount@gmail.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
-Message-ID: <20191024182849.3oifqjl553twxwq4@hendrix>
-References: <20191005141913.22020-1-jagan@amarulasolutions.com>
- <20191005141913.22020-6-jagan@amarulasolutions.com>
- <20191007105708.raxavxk4n7bvxh7x@gilmour>
- <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
- <20191016080306.44pmo3rfmtnkgosq@gilmour>
- <CAMty3ZCTE=W+TNRvdowec-eYB625j97uG8F3fzVMtRFsKsqFFQ@mail.gmail.com>
- <20191017095225.ntx647ivegaldlyf@gilmour>
- <CAMty3ZDYcwJ4XMm45BLjXnvPXeu-rMAiN5v=CDhvuLsAm5tf=Q@mail.gmail.com>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-rtc@vger.kernel.org>
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+ <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ed0b2aa8-8a70-0341-4ecf-8959f37c53bd@ti.com>
+Date:   Thu, 24 Oct 2019 14:35:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZDYcwJ4XMm45BLjXnvPXeu-rMAiN5v=CDhvuLsAm5tf=Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 06:26:36PM +0530, Jagan Teki wrote:
-> On Thu, Oct 17, 2019 at 3:22 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > On Wed, Oct 16, 2019 at 02:19:44PM +0530, Jagan Teki wrote:
-> > > On Wed, Oct 16, 2019 at 1:33 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > >
-> > > > On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
-> > > > > On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > > > >
-> > > > > > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
-> > > > > > > Add MIPI DSI pipeline for Allwinner A64.
-> > > > > > >
-> > > > > > > - dsi node, with A64 compatible since it doesn't support
-> > > > > > >   DSI_SCLK gating unlike A33
-> > > > > > > - dphy node, with A64 compatible with A33 fallback since
-> > > > > > >   DPHY on A64 and A33 is similar
-> > > > > > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
-> > > > > > >
-> > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-> > > > > > > ---
-> > > > > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
-> > > > > > >  1 file changed, 38 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > > > > > index 69128a6dfc46..ad4170b8aee0 100644
-> > > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > > > > > @@ -382,6 +382,12 @@
-> > > > > > >                                       #address-cells = <1>;
-> > > > > > >                                       #size-cells = <0>;
-> > > > > > >                                       reg = <1>;
-> > > > > > > +
-> > > > > > > +                                     tcon0_out_dsi: endpoint@1 {
-> > > > > > > +                                             reg = <1>;
-> > > > > > > +                                             remote-endpoint = <&dsi_in_tcon0>;
-> > > > > > > +                                             allwinner,tcon-channel = <1>;
-> > > > > > > +                                     };
-> > > > > > >                               };
-> > > > > > >                       };
-> > > > > > >               };
-> > > > > > > @@ -1003,6 +1009,38 @@
-> > > > > > >                       status = "disabled";
-> > > > > > >               };
-> > > > > > >
-> > > > > > > +             dsi: dsi@1ca0000 {
-> > > > > > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
-> > > > > > > +                     reg = <0x01ca0000 0x1000>;
-> > > > > > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
-> > > > > > > +                     clock-names = "bus";
-> > > > > >
-> > > > > > This won't validate with the bindings you have either here, since it
-> > > > > > still expects bus and mod.
-> > > > > >
-> > > > > > I guess in that cas, we can just drop clock-names, which will require
-> > > > > > a bit of work on the driver side as well.
-> > > > >
-> > > > > Okay.
-> > > > > mod clock is not required for a64, ie reason we have has_mod_clk quirk
-> > > > > patch. Adjust the clock-names: on dt-bindings would make sense here,
-> > > > > what do you think?
-> > > >
-> > > > I'm confused, what are you suggesting?
-> > >
-> > > Sorry for the confusion.
-> > >
-> > > The mod clock is not required for A64 and we have a patch for handling
-> > > mod clock using has_mod_clk quirk(on the series), indeed the mod clock
-> > > is available in A31 and not needed for A64. So, to satisfy this
-> > > requirement the clock-names on dt-bindings can update to make mod
-> > > clock-name is optional and bus clock is required.
-> >
-> > No, the bus clock name is not needed if there's only one clock.
+Matti
+
+On 10/24/19 6:41 AM, Matti Vaittinen wrote:
+> ROHM BD71828 Power management IC integrates 7 buck converters, 7 LDOs,
+> a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
+> and a 32.768 kHz clock gate.
 >
-> Looks like we need "bus" clock required since the
-> devm_regmap_init_mmio_clk is created only if bus clock-names added in
-> dt.
+> Document the dt bindings drivers are using.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>
+> No changes since v1
+>
+>   .../bindings/mfd/rohm,bd71828-pmic.txt        | 180 ++++++++++++++++++
+>   1 file changed, 180 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
 
-Yeah, hence why I said you'd need "a bit of work on the driver side"
+I will let maintainers weigh in here but if this is new this should 
+probably be in the yaml format to avoid conversion in the future
 
-Replacing the clock name by NULL should work.
 
-Maxime
+> diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
+> new file mode 100644
+> index 000000000000..125efa9f3de0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
+> @@ -0,0 +1,180 @@
+> +* ROHM BD71828 Power Management Integrated Circuit bindings
+> +
+> +BD71828GW is a single-chip power management IC for battery-powered portable
+> +devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA single-cell
+> +linear charger. Also included is a Coulomb counter, a real-time clock (RTC),
+> +and a 32.768 kHz clock gate.
+> +
+> +Required properties:
+> + - compatible			: Should be "rohm,bd71828".
+> + - reg				: I2C slave address.
+> + - interrupt-parent		: Phandle to the parent interrupt controller.
+> + - interrupts			: The interrupt line the device is connected to.
+> + - clocks			: The parent clock connected to PMIC.
+> + - #clock-cells			: Should be 0.
+> + - regulators			: List of child nodes that specify the
+> +				  regulators. Please see
+> +				  ../regulator/rohm,bd71828-regulator.txt
+> + - gpio-controller		: To indicate BD71828 acts as a GPIO controller.
+> + - #gpio-cells			: Should be 2. The first cell is the pin number
+> +				  and the second cell is used to specify flags.
+> +				  See ../gpio/gpio.txt for more information.
+> +
+> +The BD71828 RUN state is divided into 4 configurable run-levels named RUN0,
+> +RUN1, RUN2 and RUN3. Bucks 1, 2, 6 and 7 can be either controlled individually
+> +via I2C, or some/all of them can be bound to run-levels and controlled as a
+> +group. If bucks are controlled individually these run-levels are ignored. See
+> +../regulator/rohm,bd71828-regulator.txt for how to define regulator voltages
+The rohm,bd71828-regulator.txt should be yaml if the maintainers want it 
+that way.
+> +for run-levels. Run-levels can be changed by I2C or GPIO depending on PMIC's OTP
+> +configuration.
+> +
+> +Optional properties:
+> +- clock-output-names		: Should contain name for output clock.
+> +- rohm,dvs-vsel-gpios		: GPIOs used to control PMIC run-levels. Should
+> +				  describe two GPIOs. (See run-level control in
+> +				  data-sheet). If this property is omitted but
+> +				  some bucks are marked to be controlled by
+> +				  run-levels - then OTP option allowing
+> +				  run-level control via I2C is assumed.
+> +- gpio-reserved-ranges		: Usage of GPIO pins can be changed via OTP.
+> +				  This property can be used to mark the pins
+> +				  which should not be configured for GPIO.
+> +				  Please see the ../gpio/gpio.txt for more
+> +				  information.
+> +
+> +Example:
+> +
+
+This example does not look right.
+
+I see that I2C is referenced above so the example could look like this
+
+osc: oscillator {
+                 compatible = "fixed-clock";
+                 #clock-cells = <1>;
+                 clock-frequency  = <32768>;
+                 clock-output-names = "osc";
+         };
+
+This is an external oscillator and is not really part of the pmic 
+itself.  I am not sure you even need to define that since it is not part 
+of the pmic.
+
+i2c {
+
+         pmic@4b {
+
+                 [...]
+
+         };
+
+};
+
+Dan
