@@ -2,136 +2,90 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68DECA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5646CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A33421D7B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:30:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572035438;
-	bh=Bb1ujteTR8xP3fNUIo5zPOH0/+KxNzcMSgBRw/Yby9g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wlCGgJna1NQk9ywV6rhpH0A6OhTb/SKtKurxDvT0gB+oMbUIJ7uT4Bm3VB441c3Y+
-	 Fz7Y+8XFwyGQET5e+b72xP8W+ZWFzomavaSLp0vJqRaezyEMWjoM6uq0E6WyzVf2l/
-	 YSSpceawdTyGg+QJ1txa4IjktbY6rs8UMkrPt0yU=
+	by mail.kernel.org (Postfix) with ESMTP id 9E5C82084C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:43:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TLQjGEsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbfJYUae (ORCPT
+        id S1728696AbfJYUnh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:30:34 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33376 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728273AbfJYUae (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 16:30:34 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a15so2478219oic.0;
-        Fri, 25 Oct 2019 13:30:32 -0700 (PDT)
+        Fri, 25 Oct 2019 16:43:37 -0400
+Received: from mail-pf1-f174.google.com ([209.85.210.174]:38250 "EHLO
+        mail-pf1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfJYUng (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 16:43:36 -0400
+Received: by mail-pf1-f174.google.com with SMTP id c13so2364638pfp.5
+        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 13:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=MhIfWZvUTsT+3cykBQoz7GSXm1KmvPEXFrA8Ke1u0Qg=;
+        b=TLQjGEsJPO1Keyqorjh5aUQsQ3FuYZfiVLuflV+gR5gpHV0EExJedA08st0eyqpjUD
+         EPA3pFgSNIlFWZBZzh2pEu2tlcuYNCY+5HnESb9lwRNw469wCmwYteX4dqhKDCsIMBT2
+         0thseqRHTUq21OjKKfxugwCCiEue2rgrANYL7vvzI0a1cjsgi2ShJtN4AgVZAlCJUrBr
+         4cXGHwTDe2gQb0VRZ/t2tlZ/z/e3dw5kET8q/SyBA/lRQgaswDJBGcu/OagmFWhurqQJ
+         +KgfXoQusFq46y5nzr2z+qsmpTtoKsweVVvDO+KUkbwoiuM5OFHtF1qLAaNww5W28Nt3
+         wovA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DjnUodnaL6w0elyh2CsGwsstDrRTdxNuqmD9G+YqUd4=;
-        b=cEdmt9X0RedGeE58QLRAjUCtEpWlXbZoqwElE2jizOvUrKkArrwEDToYVzdXpzeqGd
-         UaG2X+U0IGq1dj44GLHKcogyV80hGl59HTzT6U+yjk3jQ3qMAGuFNPf5KnpNmpyJYoaT
-         RZABGN8ldGvQ3fINoyxhF3d/Qp2daeCKeYdD7U1Jf1l0aegpObAuGg9AfyWThowB/NEh
-         N1IdGwWZ4+kkLh9r76wqXnXeI5RroruqvM7BiH1jGKX3exKeX1FDpRsq/Gs3kXMWwO45
-         e6SvSTQ5IXZPxjCm52llzZjGh9MQtTTC9wmyWxZE67Kdu09CTlOJ2UKFnGL82I783oQ4
-         RpYg==
-X-Gm-Message-State: APjAAAV7BIFwowKm8CM8Ui03BwKk79+myEPLfg5YuP9vDYsa/3Ist7wI
-        y+x/mlwpUjM2amliLXMM0Q==
-X-Google-Smtp-Source: APXvYqy/fDo5GIME57rCCB5sn8utMkgqqWQkRouqjcMDQCu4olP7uzs9etttYKNKUcq1tCCeLd1KXQ==
-X-Received: by 2002:aca:b256:: with SMTP id b83mr2268898oif.101.1572035431991;
-        Fri, 25 Oct 2019 13:30:31 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l19sm842018oie.22.2019.10.25.13.30.31
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=MhIfWZvUTsT+3cykBQoz7GSXm1KmvPEXFrA8Ke1u0Qg=;
+        b=owu2Hcmqh3mNA/6q1wsNYdIFsR1HLsX2ToyIdSlXEXHFSWTfdB7w0KZYpRDWEF9pfa
+         gtTxu7Kha3tSJWH1qA+z3B6vNXGijQoIwSXS+Z590bpLf+TAQmMA1bqZhph6WmW0+9xK
+         3OGT9o5/blt5q0gmtf3tkuRmcvoSmg6CJtnzIMDB/ZJBLSZFWvvZSWpUPzY+1dn1mDjh
+         wR+UeI22tY6vCHRVNTsyOsr3aVAE75yVrpbVB/xuQnu2GA9BVSdHh4XoXrAp2FU69qoO
+         rczvtltxYPTIz3+zVaevSrzE/5bHHlj8qRrN0tnPqlt6oyUmygaGhHAtr5rsSwWxg4c5
+         F7sA==
+X-Gm-Message-State: APjAAAXb896oIHVE0Ng++dnOvOtKrQSBDZq2e6XCPC/IpFq5u2as8fkZ
+        Kq2peoVD2fnIVhrqsZO56vg=
+X-Google-Smtp-Source: APXvYqzY5c5Q7GuAMNZGrNKlMVdDIM6rOqtdaJgueEfhs/dkRVEoRm5yeovDsOiH/POwNbp8LPJ6MQ==
+X-Received: by 2002:a17:90a:ec10:: with SMTP id l16mr6631978pjy.37.1572036215877;
+        Fri, 25 Oct 2019 13:43:35 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id d7sm3232814pfr.108.2019.10.25.13.43.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 13:30:31 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 15:30:30 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Xingyu Chen <xingyu.chen@amlogic.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>, linux-watchdog@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-Message-ID: <20191025203030.GA28391@bogus>
-References: <1571983984-11771-1-git-send-email-xingyu.chen@amlogic.com>
- <1571983984-11771-3-git-send-email-xingyu.chen@amlogic.com>
+        Fri, 25 Oct 2019 13:43:35 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 13:43:33 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>
+Subject: DT schemas for multi-transport bindings
+Message-ID: <CAKdAkRQNrDGWFOcoVTfjMS25E4JqSFs98yOQ8_1q7V612az_0A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571983984-11771-3-git-send-email-xingyu.chen@amlogic.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 02:13:02PM +0800, Xingyu Chen wrote:
-> The binding targets the Meson-A/C series compatible SoCs, in which the
-> watchdog registers are in secure world.
-> 
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> ---
->  .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
-> new file mode 100644
-> index 00000000..0bbc807
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
-> @@ -0,0 +1,34 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +# Copyright (c) 2019 Amlogic, Inc
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-wdt.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Secure Watchdog Timer
-> +
-> +maintainers:
-> +  - Xingyu Chen <xingyu.chen@amlogic.com>
-> +
-> +description: |+
-> +  Secure Watchdog Timer used in Meson-A/C series Compatible SoCs
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-sec-wdt
+Hi Rob,
 
-If there are no other properties, then you don't need this. Just have 
-the secure firmware driver instantiate the watchdog.
+I am trying to wrap my mind around converting multi-transport bindings
+(let's say TSC2004/5 controller which is pretty much the same part, but
+one is I2C while another is SPI interface). There is a set of common
+properties, and then we can have transport-specific ones (for example,
+spi-max-frequency for SPI case). Is it possible to annotate that some
+properties are only needed for certain compatible, similarly to how
+patternProperties work (but instead of matching node name we'd match on
+compatible)?
 
-> +
-> +  secure-monitor:
-> +    description: phandle to the secure-monitor node
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +required:
-> +  - compatible
-> +  - secure-monitor
-> +
-> +examples:
-> +  - |
-> +    watchdog {
-> +          compatible = "amlogic,meson-sec-wdt";
-> +          secure-monitor = <&sm>;
-> +    };
-> -- 
-> 2.7.4
-> 
+Also, from syntax POV, how do I reference file ooutside of current
+directory? I.e. how do I reference .../spi/spi-controller.yaml from
+.../input/touchscreen/tsc2005.yaml?
+
+Thanks.
+
+-- 
+Dmitry
