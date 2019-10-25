@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5948ECA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EBECA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2354821872
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D858021D82
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QuTmYOTq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t7oj1A8/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbfJYWuS (ORCPT
+        id S1726410AbfJYWu2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 18:50:18 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:32876 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfJYWuS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 18:50:18 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c184so2596100pfb.0
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 15:50:17 -0700 (PDT)
+        Fri, 25 Oct 2019 18:50:28 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34564 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfJYWuV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 18:50:21 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k7so2070412pll.1
+        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 15:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/QsSnbqT/vxBzyqQX0KdepymXuDj6dGQtXlO9dbOSkk=;
-        b=QuTmYOTqrurVmJ/xuipLBhM7GLFY5pGr1iJX3QKVdcKK/H8I/5AdYHQwYMY2NUiqXc
-         AxSegHg7VxQ7X/0azpl7Q8w46j+KDFXLJrEkkWcH6302yTkS51/vcbuJFQHzVwUgBWj6
-         JzKzOF5iC3EH7xZqAoCQULcCl2yXADIIzruVCenqNO7lW51zLg2HmLfFuT1VYsYAmSL3
-         3hnxUHcxN+1kHcPwaaGoAQ+jv/eXxBlLQUSk4/h9aGt3i0AK0wdV7K8dTsU2mZ3h+46J
-         Faj4npHwJnvDE245x+lkyKBoXHWzL1LDqC/pK//cfEiAkdcXSCixwBIguLUCDpUHNjem
-         amjg==
+        bh=osNStqGe/+pixQ+TIIwo4hgOQ0iCE+khF0tMpALPhbA=;
+        b=t7oj1A8/ELwYNKEiPY/Pw18dHmD+od22U+4C5NhOE2wd5jiFHCseOjSRPgNDzrSyKq
+         dPtd5CcVf9iIPtDONddh2eO4eP3j6pOkNRnByhXulltB5XaUZ4VBvTkOfFT3PuuTpbgR
+         fm3I84wjJaEQhBPHt7WSbAUDubIimzLHWBCLSLWX5sMsbyrT3fCHo5F1xVc6KrpAYg6a
+         AgjQBcwoRkdatjyjUVB6aSuWoLUrCrbKujOVSG/5gs8lzDyIeWuQNxGe2iKOkrtKXEpq
+         1wh9xGKkBGFWOlUKiBuDHcJfU/9wkfMXegJLC9PRvNvTK7V02u/r9lQ0YSfzf7FIX6cd
+         JAlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/QsSnbqT/vxBzyqQX0KdepymXuDj6dGQtXlO9dbOSkk=;
-        b=BrQRc+4NmjMufba8cZJ1mqfNySIBSXQRuAhtGyMpTelWc2aOH4TBSA28JflRIiERp8
-         m9+NHB8yK/XI5HbPWUvWCBqEmNQk+SxocObniCI4XdACnOwfqovO6l/knqN5tP1+v4ak
-         0idlgqimR7WJrE0OU+AqUw3ZCp+nDHC5Hkj7RlC1QC+p2j9kHTzsOTEe3gyegyucV/ED
-         xcRCDfXN2MWVDyWnsLiMWCMP8cB6jKGLrSOK6nXdOGmjiDaiYbJOIrQRgR/Prp9TO9NU
-         +QDdBec5UI27jlgoN9H0AZjJI+Z8a2JFFe3l37T60OwQMqO/OTjj12trJA3kbafRpG2y
-         i/mA==
-X-Gm-Message-State: APjAAAWzQfrMtZTc76Yny3Uy0rsez+61IhqToFYOPpbN4ebp18cyn4Fw
-        MnEcKku5tFpiWmc0JX8pogXCTw==
-X-Google-Smtp-Source: APXvYqziC/rX8OG0ZvE60odRUgM4+OMxyzH9YT1VE6orCRtoxz0Nkzr2UbFad4Lx05yIE7lyxETSEw==
-X-Received: by 2002:a63:5c21:: with SMTP id q33mr7104380pgb.78.1572043817153;
-        Fri, 25 Oct 2019 15:50:17 -0700 (PDT)
+        bh=osNStqGe/+pixQ+TIIwo4hgOQ0iCE+khF0tMpALPhbA=;
+        b=FMTLhZfhxF2FRT6y0+Y+2FpkI2v2ygGkH2sNVUHC57JktSMO3D+POLO7w+Rw3YKD1Z
+         50T6SXJxo5aILRAeIIawyRnifOyzf8kTuWVN0i0Jqn7iEhtQr7YldR5W6l+8qO/0quX+
+         OfP28bMMTb3rc/lzPnyomFbaG60G+o4BxTqFLC6lVMXr+/nANnuLNmL2egRQNFOGQP8O
+         Xpxzs6+pui4TCFjbkI297ycsttPye3ZQgacs13htLt3nnSRDjgk/Cs4OE689vMWOOt3U
+         1vsH93vOo0aFHSOUk0O4ZOZZRR74yMVpZNA7XJvO6EKGWNma9/BhLBYzQoPk+CU0VbyM
+         lcdw==
+X-Gm-Message-State: APjAAAUkZ6Oz7EtQiRXNuGqz2O7Cj3gi2BtHLGrgNa4kkDHBu/do+kF5
+        yRknLhYmcAGHbiqOtfWhPnCpuA==
+X-Google-Smtp-Source: APXvYqwEfPgMUzNALdpaZ7hIfRdBK9Sl+x7omJQowf6j1uRY6bjZJnZXHQcn0Yn6ut98Jyy0zAwi0g==
+X-Received: by 2002:a17:902:8a96:: with SMTP id p22mr6280974plo.272.1572043819516;
+        Fri, 25 Oct 2019 15:50:19 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id o15sm2758018pjs.14.2019.10.25.15.50.16
+        by smtp.gmail.com with ESMTPSA id o15sm2758018pjs.14.2019.10.25.15.50.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 15:50:16 -0700 (PDT)
+        Fri, 25 Oct 2019 15:50:19 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     John Stultz <john.stultz@linaro.org>,
@@ -70,9 +70,9 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Sandeep Patil <sspatil@google.com>,
         Hridya Valsaraju <hridya@google.com>,
         devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [RFC][PATCH 1/3] dt-bindings: dma-buf: heaps: Describe CMA regions to be added to dmabuf heaps interface.
-Date:   Fri, 25 Oct 2019 22:50:07 +0000
-Message-Id: <20191025225009.50305-2-john.stultz@linaro.org>
+Subject: [RFC][PATCH 3/3] example: dts: hi3660-hikey960: Add dts entries to test cma heap binding
+Date:   Fri, 25 Oct 2019 22:50:09 +0000
+Message-Id: <20191025225009.50305-4-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191025225009.50305-1-john.stultz@linaro.org>
 References: <20191025225009.50305-1-john.stultz@linaro.org>
@@ -81,8 +81,12 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This binding specifies which CMA regions should be added to the
-dmabuf heaps interface.
+Adds example test entry to create and expose a camera cma region
+via the dmabuf heaps interface
+
+This isn't a patch I'm submitting to merge, but just an example
+of how this functionality can be used, which I've used for
+testing.
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -101,47 +105,38 @@ Cc: devicetree@vger.kernel.org
 Cc: dri-devel@lists.freedesktop.org
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- .../bindings/dma/dmabuf-heap-cma.txt          | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt b/Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt
-new file mode 100644
-index 000000000000..bde7b1f1c269
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt
-@@ -0,0 +1,31 @@
-+* DMA-BUF CMA Heap
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index 190ac29b9e2f..783c5b2abd2d 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -75,12 +75,23 @@
+ 		};
+ 
+ 		/* global autoconfigured region for contiguous allocations */
+-		linux,cma {
++		cma_default: linux,cma {
+ 			compatible = "shared-dma-pool";
+ 			reg = <0x0 0x20C00000 0x0 0x4000000>;
+ 			reusable;
+ 			linux,cma-default;
+ 		};
 +
-+Specifies a CMA region that should be added to the dma-buf heaps
-+interface.
-+
-+Required properties:
-+- compatible: Must be "dmabuf-heap-cma"
-+- memory-region: phandle to a CMA reserved memory node
-+
-+Example:
-+This example has a camera CMA node in reserved memory, which is then
-+referenced by the dmabuf-heap-cma node.
-+
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		...
 +		cma_camera: cma-camera {
 +			compatible = "shared-dma-pool";
 +			reg = <0x0 0x24C00000 0x0 0x4000000>;
 +			reusable;
 +		};
-+		...
 +	};
 +
-+       cma_heap {
-+               compatible = "dmabuf-heap-cma";
-+               memory-region = <&cma_camera>;
-+        };
++	cma_heap {
++		compatible = "dmabuf-heap-cma";
++		memory-region = <&cma_camera>;
+ 	};
+ 
+ 	reboot-mode-syscon@32100000 {
 -- 
 2.17.1
 
