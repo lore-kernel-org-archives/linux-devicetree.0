@@ -2,96 +2,116 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55507CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5F7CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 10:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2715421D7F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aMwI8klD"
+	by mail.kernel.org (Postfix) with ESMTP id AA87A21D7B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 10:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394414AbfJYJuz (ORCPT
+        id S2501943AbfJYKAN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:50:55 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7018 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2394402AbfJYJuz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:50:55 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9P9kDaV017184;
-        Fri, 25 Oct 2019 11:50:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=QLmQ7NG6Rb6GQwzM3It23TN1eLiUzLgrVwcFTuDKfVY=;
- b=aMwI8klDD8OHXRbQDkKmUSJYL1BJAGOs/xEFuqPNo0MHhZVqVd1mu45I1V+MPcaY7Gig
- KJCqbeKu/FLKDH9m6ZImsPIFY/KbfIS+/B75CvqmQXBIUHlcYyG8R4hSPVPzVUDbGCV9
- h89gL+XE38aFBQiBf3gX3vRxGdoTGhpUYBDaDG22R6r1+8aPS61e7PcI7fIpD6FOcV3O
- TCukUg4kLi74WfgFHoVSMAdsiXbPawYEQJS0tpfuGLXeujT2CdeWZWj4pta3xL7QMIAQ
- IpUA+evHHgEjD0dOPCCAUv4aRZHlxb73Tmvkj1upqdxUmH8Q55l5AK8UrP1P2vkLY0k2 Gg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vt9s56xa7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 11:50:45 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7AE4610002A;
-        Fri, 25 Oct 2019 11:50:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 484B52BF6B3;
-        Fri, 25 Oct 2019 11:50:41 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 25 Oct
- 2019 11:50:40 +0200
-Subject: Re: [PATCH 0/2] Add support for DAC on stm32mp157c-ed1
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1570630372-24579-1-git-send-email-fabrice.gasnier@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <28a4fc8c-9dd7-3139-c569-4749a6a47664@st.com>
-Date:   Fri, 25 Oct 2019 11:50:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 06:00:13 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:60329 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2501929AbfJYKAM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 06:00:12 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 47003F62bqz1qql6;
+        Fri, 25 Oct 2019 12:00:09 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 47003F4PlJz1qqkV;
+        Fri, 25 Oct 2019 12:00:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id ovzOP7q8XvP5; Fri, 25 Oct 2019 12:00:08 +0200 (CEST)
+X-Auth-Info: YbElbo8Z68PG9NQbk7OPA01W/n0q3PIO9eLcf6q6MeQ=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Fri, 25 Oct 2019 12:00:08 +0200 (CEST)
+Date:   Fri, 25 Oct 2019 12:00:00 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2] dts: Disable DMA support on the BK4 vf610 device's
+ fsl_lpuart driver
+Message-ID: <20191025120000.5dbb837d@jawa>
+In-Reply-To: <20191025085515.GH3208@dragon>
+References: <20191010090802.16383-1-lukma@denx.de>
+        <20191025085515.GH3208@dragon>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1570630372-24579-1-git-send-email-fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-25_05:2019-10-23,2019-10-25 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/By24V4SN7mPcjm/avn3Dc5F"; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi fabrice
+--Sig_/By24V4SN7mPcjm/avn3Dc5F
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 10/9/19 4:12 PM, Fabrice Gasnier wrote:
-> This series adds support for digital-to-analog converter on
-> stm32mp157c-ed1 board:
-> - define pins that can be used for DAC
-> - configure DAC channels to use these
-> 
-> Fabrice Gasnier (2):
->    ARM: dts: stm32: Add DAC pins used on stm32mp157c-ed1
->    ARM: dts: stm32: Add DAC support to stm32mp157c-ed1
-> 
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 12 ++++++++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts     | 13 +++++++++++++
->   2 files changed, 25 insertions(+)
-> 
+Hi Shawn,
 
-Series applied on stm32-next.
+> On Thu, Oct 10, 2019 at 11:08:02AM +0200, Lukasz Majewski wrote:
+> > This change disables the DMA support (RX/TX) on the NXP's fsl_lpuart
+> > driver - the PIO mode is used instead. This change is necessary for
+> > better robustness of BK4's device use cases with many potentially
+> > interrupted short serial transfers.
+> >=20
+> > Without it the driver hangs when some distortion happens on UART
+> > lines.
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > Suggested-by: Robin Murphy <robin.murphy@arm.com> =20
+>=20
+> Subject prefix should be 'ARM: dts: ...'.  I fixed it up and applied
+> the patch.
+>=20
+> Shawn
 
-Regards
-Alex
+Thanks :-)
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/By24V4SN7mPcjm/avn3Dc5F
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2yx6AACgkQAR8vZIA0
+zr1f0AgA09kZumpnsPlEwl87PkX6natOW7hAKLdpkClGwO/Iwc7eMgFOoVZmRoL9
+U5wQZVVhjwr7CVtiwg16KpE5l5gh1+I1hc8GCb7uKByzMFGFbAKT5IIOcIQYLFpt
+7WMYRGp9T+hAw3SPKoj8zqNYceFS+b/ZJ9F6PENWrQXmY9L5yMB68dEJknGGf0Hu
+ZYi2MIBT2JXSRcgoC+EYZA/8OllXEATMCSZxIcc1aZdcPqWfdS8fE3l2AAafle99
+JcIfbjMf1RAn/aLtS73a7Dggmv8Rk+QPKj2qjrrmXnel680QVgwcMINjd0ihbq+4
+vdq3ph01H/WlHpjHKKcqjHxAEn4P/w==
+=6lWc
+-----END PGP SIGNATURE-----
+
+--Sig_/By24V4SN7mPcjm/avn3Dc5F--
