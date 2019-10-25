@@ -2,255 +2,171 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC5DCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87414CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E445020867
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:29:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QIjqKvIa"
+	by mail.kernel.org (Postfix) with ESMTP id 5BFCF21D71
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408136AbfJYJ3f (ORCPT
+        id S2394327AbfJYJfB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:29:35 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37016 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406381AbfJYJ3f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 05:29:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9P9TO13045068;
-        Fri, 25 Oct 2019 04:29:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571995764;
-        bh=HPgJGVv34kaCbmxMyK0unoXFnunk412hxWQRl6+VdGs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QIjqKvIafKs5pLDpGkeA2AbWniDt0/nKgA983Uct6RXVus3kYfPTP+pTO4u5SQiUb
-         kAZmXEjJ+PFU3ZbNgzdLCD7G8CMRTJ+5IUy1Kx2LviA7CUiDTJoJI1zrvw2DQRiyH4
-         +nHfXR1vjDkIFrKYzYw9Xjhv0u991lLBxYTcXdxg=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9P9TOlD053121
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 25 Oct 2019 04:29:24 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 25
- Oct 2019 04:29:13 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 25 Oct 2019 04:29:23 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P9TKLQ117235;
-        Fri, 25 Oct 2019 04:29:20 -0500
-Subject: Re: [PATCH v3 02/14] soc: ti: k3: add navss ringacc driver
-To:     Lokesh Vutla <lokeshvutla@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
-        <j-keerthy@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-3-peter.ujfalusi@ti.com>
- <86344789-e0f4-5b29-62da-3fb08025177b@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <0a698278-19d8-bb20-34b9-9695d670b3a8@ti.com>
-Date:   Fri, 25 Oct 2019 12:30:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 05:35:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:37826 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394325AbfJYJfA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:35:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C08B428;
+        Fri, 25 Oct 2019 02:34:59 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38B933F71F;
+        Fri, 25 Oct 2019 02:34:59 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 10:34:57 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
+ pcie link
+Message-ID: <20191025093457.GY47056@e119886-lin.cambridge.arm.com>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com>
+ <20191021133849.GQ47056@e119886-lin.cambridge.arm.com>
+ <6a209452-f569-4f6a-8aea-5c9f84167f5a@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <86344789-e0f4-5b29-62da-3fb08025177b@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6a209452-f569-4f6a-8aea-5c9f84167f5a@linux.intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 09/10/2019 16.27, Lokesh Vutla wrote:
->> +struct k3_ringacc {
->> +	struct device *dev;
->> +	struct k3_ringacc_proxy_gcfg_regs __iomem *proxy_gcfg;
->> +	void __iomem *proxy_target_base;
->> +	u32 num_rings; /* number of rings in Ringacc module */
->> +	unsigned long *rings_inuse;
->> +	struct ti_sci_resource *rm_gp_range;
->> +
->> +	bool dma_ring_reset_quirk;
->> +	u32 num_proxies;
->> +	unsigned long *proxy_inuse;
->> +
->> +	struct k3_ring *rings;
->> +	struct list_head list;
->> +	struct mutex req_lock; /* protect rings allocation */
->> +
->> +	const struct ti_sci_handle *tisci;
->> +	const struct ti_sci_rm_ringacc_ops *tisci_ring_ops;
->> +	u32  tisci_dev_id;
+On Tue, Oct 22, 2019 at 05:20:00PM +0800, Dilip Kota wrote:
+> Hi Andrew Murray,
 > 
-> This can be dropped no? pdev->id has it already.
+> On 10/21/2019 9:38 PM, Andrew Murray wrote:
+> > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+> > > PCIe RC driver on Intel Gateway SoCs have a requirement
+> > > of changing link width and speed on the fly.
+> > > So add the sysfs attributes to show and store the link
+> > > properties.
+> > > Add the respective link resize function in pcie DesignWare
+> > > framework so that Intel PCIe driver can use during link
+> > > width configuration on the fly.
+> > > 
+> > > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
 
-pdev->id might have it but it is simpler to keep it here than getting
-the pdev when we need it
-
-...
-
->> +struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
->> +					int id, u32 flags)
->> +{
->> +	int proxy_id = K3_RINGACC_PROXY_NOT_USED;
->> +
->> +	mutex_lock(&ringacc->req_lock);
->> +
->> +	if (id == K3_RINGACC_RING_ID_ANY) {
->> +		/* Request for any general purpose ring */
->> +		struct ti_sci_resource_desc *gp_rings =
->> +						&ringacc->rm_gp_range->desc[0];> +		unsigned long size;
->> +
->> +		size = gp_rings->start + gp_rings->num;
->> +		id = find_next_zero_bit(ringacc->rings_inuse, size,
->> +					gp_rings->start);
+> > > +/*
+> > > + * Link width change on the fly is not always successful.
+> > > + * It also depends on the partner.
+> > > + */
+> > > +static ssize_t pcie_width_store(struct device *dev,
+> > > +				struct device_attribute *attr,
+> > > +				const char *buf, size_t len)
+> > > +{
+> > > +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
+> > > +	unsigned long val;
+> > > +	int ret;
+> > > +
+> > > +	lpp = dev_get_drvdata(dev);
+> > > +
+> > > +	ret = kstrtoul(buf, 10, &val);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	if (val > lpp->max_width)
+> > > +		return -EINVAL;
+> > > +
+> > > +	/* HW auto bandwidth negotiation must be enabled */
+> > > +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
+> > > +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+> > > +	dw_pcie_link_width_resize(&lpp->pci, val);
+> > > +
+> > > +	return len;
+> > > +}
+> > > +static DEVICE_ATTR_WO(pcie_width);
+> > > +
+> > > +static struct attribute *pcie_cfg_attrs[] = {
+> > > +	&dev_attr_pcie_link_status.attr,
+> > > +	&dev_attr_pcie_speed.attr,
+> > > +	&dev_attr_pcie_width.attr,
+> > > +	NULL,
+> > > +};
+> > Is there a reason that these are limited only to the Intel driver and
+> > not the wider set of DWC drivers?
+> > 
+> > Is there anything specific here about the Intel GW driver?
 > 
-> ti_sci_get_free resource can be used no? In case if id is passed, that bit alone
-> can be set.
+> Yes, they need intel_pcie_max_speed_setup() and pcie_link_gen_to_str().
+> Once intel_pcie_max_speed_setup() moved to DesignWare framework (as per
+> Bjorn Helgaas inputs) and use pcie_link_speed[] array instead of
+> pcie_link_gen_to_str() (as per gustavo pimentel inputs) we can move this to
+> PCIe DesignWare framework or to pci sysfs file.
 
-Hrm, kind of yes.
-We have a bitfield for _all_ rings managed locally so I don't see much
-benefit to manage another bitfiled usage, which is redundant.
+I think the key concern here is this: If you introduce sysfs controls that
+represent generic PCI concepts (such as changing the link speed) - the concept
+isn't limited to a particular host controller, it's limited to PCI. Therefore
+the sysfs control should also apply more widely to all PCI controllers. This
+is important as otherwise you may end up getting a slightly different user
+interface to achieve the same consequence depending on the host-controller in
+use.
 
->> +		if (id == size)
->> +			goto error;
->> +	} else if (id < 0) {
->> +		goto error;
->> +	}
->> +
->> +	if (test_bit(id, ringacc->rings_inuse) &&
->> +	    !(ringacc->rings[id].flags & K3_RING_FLAG_SHARED))
->> +		goto error;
->> +	else if (ringacc->rings[id].flags & K3_RING_FLAG_SHARED)
->> +		goto out;
->> +
->> +	if (flags & K3_RINGACC_RING_USE_PROXY) {
->> +		proxy_id = find_next_zero_bit(ringacc->proxy_inuse,
->> +					      ringacc->num_proxies, 0);
-> 
-> May be a dump question, but how do we make sure that these proxies are not used
-> by another Hosts?
+If each controller driver has a different way of doing things, then it lends
+itself to having some set of ops that they can all implement. Or perhaps there
+is a middle-ground solution where this applies just to DWC devices and not all
+devices. 
 
-That's a good question. Grygorii?
+Thanks,
 
-> 
->> +		if (proxy_id == ringacc->num_proxies)
->> +			goto error;
->> +	}
->> +
->> +	if (!try_module_get(ringacc->dev->driver->owner))
->> +		goto error;
->> +
->> +	if (proxy_id != K3_RINGACC_PROXY_NOT_USED) {
->> +		set_bit(proxy_id, ringacc->proxy_inuse);
->> +		ringacc->rings[id].proxy_id = proxy_id;
->> +		dev_dbg(ringacc->dev, "Giving ring#%d proxy#%d\n", id,
->> +			proxy_id);
->> +	} else {
->> +		dev_dbg(ringacc->dev, "Giving ring#%d\n", id);
->> +	}
->> +
->> +	set_bit(id, ringacc->rings_inuse);
->> +out:
->> +	ringacc->rings[id].use_count++;
->> +	mutex_unlock(&ringacc->req_lock);
->> +	return &ringacc->rings[id];
->> +
->> +error:
->> +	mutex_unlock(&ringacc->req_lock);
->> +	return NULL;
->> +}
->> +EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
->> +
-
-...
->> +	pm_runtime_enable(dev);
->> +	ret = pm_runtime_get_sync(dev);
->> +	if (ret < 0) {
->> +		pm_runtime_put_noidle(dev);
->> +		dev_err(dev, "Failed to enable pm %d\n", ret);
->> +		goto err;
->> +	}
-> 
-> Don't you need power-domains property in DT so that pm is actually working? If
-> that is populated, dev-id can be derived from power-domains rather than a
-> separate dt property.
-
-Right, I never felt comfortable to fiddle with something outside of the
-scope of the driver. What happens (unlikely) if the power-domains
-binding got changed for some reason?
-
-Another thing is that the whole NAVSS is always on, it can not power off
-as it would loose all of it's configuration including event mappings,
-DMA channel configurations, interrupt configs, ring configurations,
-mailbox, timers, etc.
-
-It is a catastrophic thing which can only be solved with a hard reboot
-as there is no way to recover from it - system firmware would need to
-rebooted as well.
-
-In current SoCs NAVSS can not be off. Without power-domains in DT the
-pm_runtime is NOP, but if this changes (NAVSS could turn off) we need to
-prevent NAVSS power off and the code is ready for that, we just pop in
-the power-domains to DT.
+Andrew Murray
 
 > 
-> [...snip..]
+> Regards,
+> Dilip
 > 
-> 
->> diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k3-ringacc.h
->> new file mode 100644
->> index 000000000000..526b2e38fcce
->> --- /dev/null
->> +++ b/include/linux/soc/ti/k3-ringacc.h
->> @@ -0,0 +1,245 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * K3 Ring Accelerator (RA) subsystem interface
->> + *
->> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
->> + */
->> +
->> +#ifndef __SOC_TI_K3_RINGACC_API_H_
->> +#define __SOC_TI_K3_RINGACC_API_H_
->> +
->> +#include <linux/types.h>
->> +
->> +struct device_node;
->> +
-> 
-> [...snip..]
-> 
->> +
->> +/**
->> + * k3_ringacc_ring_reset - ring reset
->> + * @ring: pointer on Ring
->> + *
->> + * Resets ring internal state ((hw)occ, (hw)idx).
->> + * TODO_GS: ? Ring can be reused without reconfiguration
-> 
-> TODO_GS?
-> 
-> Thanks and regards,
-> Lokesh
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +ATTRIBUTE_GROUPS(pcie_cfg);
+> > > +
+> > > +static int intel_pcie_sysfs_init(struct intel_pcie_port *lpp)
+> > > +{
+> > > +	return devm_device_add_groups(lpp->pci.dev, pcie_cfg_groups);
+> > > +}
+> > > +
+> > >   static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+> > >   {
+> > >   	intel_pcie_core_irq_disable(lpp);
+> > > @@ -490,8 +591,17 @@ static int intel_pcie_rc_init(struct pcie_port *pp)
+> > >   {
+> > >   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > >   	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
+> > > +	int ret;
+> > > -	return intel_pcie_host_setup(lpp);
+> > > +	ret = intel_pcie_host_setup(lpp);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = intel_pcie_sysfs_init(lpp);
+> > > +	if (ret)
+> > > +		__intel_pcie_remove(lpp);
+> > > +
+> > > +	return ret;
+> > >   }
+> > >   int intel_pcie_msi_init(struct pcie_port *pp)
+> > > -- 
+> > > 2.11.0
+> > > 
