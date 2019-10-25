@@ -2,86 +2,88 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDB8CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66997CA9EBD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CB321872
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311E82084C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572039103;
-	bh=9i8lbhNzUiesSO/hU4cY8m7XjXn5I8+iKcwtXjtBeaI=;
+	s=default; t=1572039181;
+	bh=SZUK9+O0OoECdBmeSIf56mgCIoPc3bu1KThHvH15OVM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dchTP7rug3hNPS6Iok4MQJ6u91dl5Nu06JXiwZ3vxmKFXMfwxUqBPKsSzGk72iOj7
-	 BeRXyAhU+sabuIe2qAmnQXWzUaziiOMfRQOnCX+qBJXgSAHvPpC5pyj8W2hD8WWO8L
-	 DonQBXcTRwreXC45jizJCH3DfDAirGTKwYWkzOAM=
+	b=mqgc9fjVoPhQIMFL1hy2g994NplhO666hbwZ++l3ZN6FS4EYK7YdHzk4jUVE3ePqc
+	 Ab8uvQPugA9GBBh8kK3RheJV6tYVDmBwcDNryzIQ7mBfqz+JZ5nLaali2PQiN+IfGD
+	 d1My3riRxiLwLbS5ITP6uUQbnHLdeAHfvDJoFYJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbfJYVbk (ORCPT
+        id S1726063AbfJYVc5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:31:40 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42771 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfJYVbj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 17:31:39 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i185so2542070oif.9;
-        Fri, 25 Oct 2019 14:31:39 -0700 (PDT)
+        Fri, 25 Oct 2019 17:32:57 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46967 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfJYVc5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 17:32:57 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 89so2994658oth.13;
+        Fri, 25 Oct 2019 14:32:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GkCrIPby4aIl+m+VPmyhAnO6PjCV+Xrq1KJMKAegWqI=;
-        b=psZnkn5w8MHE3c1T1wyyN5peZtEmQUk975lQV8Uek/rhRALHfXA/AACsNxRu6c+ACo
-         qhwGALcO/XzjseZsgaLdKRGXbtSk30VzhMa3utIiRxZGC2IJE+DntImPgiJyKJGMRz+B
-         nDN627zy+0PexW0z2X0cE3Zj1PxDF9GgdUf7gl92sNnyUwqeBSb1sH8ZncN5fTBYydqN
-         RZ10PAbKzDW4VX7C3zOM2Tt/SrWVOCfhABheYWwx/kDUSJ3BvAFav7BrzldMPfE1ZHZU
-         5vgk+SXWd0q95B5y66QsIIFtTEzp24PrllpzmlQi8oEkD+BHKN8rigV31cZb21MGrcsz
-         m6Og==
-X-Gm-Message-State: APjAAAWxymVMjmyszNgoWvxEJAUTc1L5kcvg9vXHOjTLEHsy0Q9/6btl
-        n1o1KHlu1KVpsZZrPaAAjw==
-X-Google-Smtp-Source: APXvYqz/XgD4tQoCZ5nNSQAsYeC3a+Y49GcWQhGf16miNmKKHKk5cagof0/c9/ZiG/MsIyHkEHRODA==
-X-Received: by 2002:aca:5714:: with SMTP id l20mr4645087oib.175.1572039098759;
-        Fri, 25 Oct 2019 14:31:38 -0700 (PDT)
+        bh=z0Dfu2WmLrW82obqVEzdgL4RLEpx99A6YNjCZkr1AdY=;
+        b=tWphUpcA7ok/rG8n8/XWesvW/0xO/Jtrnae3TxShxPqwGsz6nrJE7MMUXRF0YsLLUC
+         U5L4a5LZKsTvWXLG+GNtOTr8cLw/7VfYt5ZkiGQrbAD1NPU6wJCcyUTYXfWH2EGfI7ZI
+         LkzCtGl1K54RMJXgUmBHSlE9MZvZsDgrBl9W1UY2ajiykT36fGnFw1LdBthCFZM02CxU
+         KQD0vESGULJEfmm68DGI0dQ7g2tuCskEFHDzIP5xHO+aZUT4o1NhISnCfveKtU08wahR
+         vcunTQn0yKvj6DJ18GtA4qRhBBpSB2BRlT7xAf023Sp/2fXDY/kPI+gJtYdj2QrN+JZF
+         4dxA==
+X-Gm-Message-State: APjAAAWFiDiihH+NDUScxE+vOOp+LSVOSMb9kOEK8atLSEp5r/IJspAK
+        cH7W6Q7Wk2xcoTg5xvcnIkoao1A=
+X-Google-Smtp-Source: APXvYqz5bA/sDLT9LYdiIgseo6TuDUbb3NL+cEtzFm8N8YSHB9VLO4PAlGBNFEbX6YVVd8nSUc1Qdw==
+X-Received: by 2002:a9d:65cb:: with SMTP id z11mr737532oth.195.1572039176538;
+        Fri, 25 Oct 2019 14:32:56 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w13sm892687oih.54.2019.10.25.14.31.37
+        by smtp.gmail.com with ESMTPSA id e102sm1132401ote.78.2019.10.25.14.32.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:31:37 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 16:31:37 -0500
+        Fri, 25 Oct 2019 14:32:55 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 16:32:55 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v2 12/13] dt-bindings: qcom,pdc: Add compatible for sc7180
-Message-ID: <20191025213137.GA20004@bogus>
-References: <20191021065522.24511-1-rnayak@codeaurora.org>
- <20191021065522.24511-13-rnayak@codeaurora.org>
+To:     Andy Yan <andy.yan@rock-chips.com>
+Cc:     heiko@sntech.de, kever.yang@rock-chips.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add doc about rk3308 General
+ Register Files
+Message-ID: <20191025213255.GA21912@bogus>
+References: <20191021084437.28279-1-andy.yan@rock-chips.com>
+ <20191021084555.28356-1-andy.yan@rock-chips.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021065522.24511-13-rnayak@codeaurora.org>
+In-Reply-To: <20191021084555.28356-1-andy.yan@rock-chips.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 21 Oct 2019 12:25:21 +0530, Rajendra Nayak wrote:
-> Add the compatible string for sc7180 SoC from Qualcomm.
+On Mon, 21 Oct 2019 16:45:55 +0800, Andy Yan wrote:
+> RK3308 GRF is divided into four sections: GRF, SGRF,
+> DETECTGRF, COREGRF. This patch add documentation for
+> it.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
 > ---
-> v2: No change
 > 
->  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt        | 1 +
->  1 file changed, 1 insertion(+)
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/soc/rockchip/grf.txt          | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
