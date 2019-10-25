@@ -2,239 +2,129 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416C5CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 18:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4939CCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 18:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAD8206DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 18:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C5A21D82
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 18:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="im4eTYKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfJYSpt (ORCPT
+        id S1726999AbfJYSve (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:45:49 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39927 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfJYSpt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 14:45:49 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iO4ao-0003S7-Fj; Fri, 25 Oct 2019 20:45:46 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iO4an-0007ex-21; Fri, 25 Oct 2019 20:45:45 +0200
-Date:   Fri, 25 Oct 2019 20:45:45 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Joris Offouga <offougajoris@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Otavio Salvador <otavio@ossystems.com.br>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx7d-pico: Add LCD support
-Message-ID: <20191025184544.7gwwbsrketjtwrwi@pengutronix.de>
-References: <20191025082247.3371-1-offougajoris@gmail.com>
+        Fri, 25 Oct 2019 14:51:34 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50980 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfJYSve (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 14:51:34 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 11so3258641wmk.0;
+        Fri, 25 Oct 2019 11:51:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jvqQFCdyN1pvYkijOxdEJawR4E6xBqBcwTGJlgojr5g=;
+        b=im4eTYKNwnTjGuMqDlkPm3KlXWA2QgSKIB+DHkleGEiwYAAmqYdF7EJZdj8t9vgr94
+         wtiO7VxLajV8qhV7v9t0a3K/YLWXRalXFjhRVPLdvVxl74NNVfh4/72byFQqf9uSOIXN
+         W8ZVqTbBMd/sSWM9zZw1lqjnuYgHea4ipFfhSVvgJvPKrI4TgnhGMhN8F0FdkdVMZVqi
+         U5Ly/6nIl8APyPbmZ73izwKEiD5//P1cIKz/a3nk1yC2CW+Ajx3PLhZN00e+0p0dcW0E
+         +F+TFk/u+y0Z0CpTzEKazN85/G5EmsF+HTU43OSIKd9oks3GleaokGC0JbgFOW/whtTM
+         6uRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jvqQFCdyN1pvYkijOxdEJawR4E6xBqBcwTGJlgojr5g=;
+        b=Uf33/dk08QQwEU1MYEHoHSlWGgqG4RD3sdNCZ7RVESNSyWxdR+5e9Jufy/ejdjht4u
+         +wSFCHEbeRWU2gPITuLnuoKYSFowwBJ03PXHLkiIBenvngnZWnPNPRg7q+w7ZY/SWJLK
+         HTZlGO7d/gYfaWSq1N73GaL113Af4ChRfDRxcWe/cQnnqwKdnu+Jn2m4jahEXT42vqrC
+         eTCyuX6bcW98wD1gPLtuxuzdv5MI99nkl8vZ2pfd+cnaz4QXW5SEFd/liuFq6opMZjvG
+         5OAITIJNPqbrI97AxQdgHPZvQukar3dhKU3jysUNUJRNzb/mQPgAqDHupQw6eIXVzfNv
+         h7zA==
+X-Gm-Message-State: APjAAAWO8udTqa1aFT+9aszxSlnMdLI/3PqwU+74j9zQMmqdqEdynCqY
+        KK+qkBxP3AD/oUFXv8oNR9R6PYPy
+X-Google-Smtp-Source: APXvYqyJDmSMjXoIhZz7YYzF4aHENSS3QLnhmaaCUjWpRIvnUzpNbYBNijclpFIwtDgTNKamg23phw==
+X-Received: by 2002:a1c:e912:: with SMTP id q18mr4908766wmc.29.1572029492174;
+        Fri, 25 Oct 2019 11:51:32 -0700 (PDT)
+Received: from Red.localdomain (lfbn-1-7036-79.w90-116.abo.wanadoo.fr. [90.116.209.79])
+        by smtp.googlemail.com with ESMTPSA id l22sm4821683wrb.45.2019.10.25.11.51.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 11:51:31 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, mripard@kernel.org, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v3 0/4] crypto: add sun8i-ss driver for Allwinner Security System
+Date:   Fri, 25 Oct 2019 20:51:24 +0200
+Message-Id: <20191025185128.24068-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025082247.3371-1-offougajoris@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:38:19 up 160 days, 18:56, 100 users,  load average: 0.17, 0.06,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Joris,
+Hello
 
-On 19-10-25 10:22, Joris Offouga wrote:
-> Add support for the VXT VL050-8048NT-C01 panel connected through
-> the 24 bit parallel LCDIF interface.
-> 
-> Signed-off-by: Joris Offouga <offougajoris@gmail.com>
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
-> ---
->  arch/arm/boot/dts/imx7d-pico.dtsi | 84 +++++++++++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
-> index 6f50ebf31a0a..9042b1e6f1db 100644
-> --- a/arch/arm/boot/dts/imx7d-pico.dtsi
-> +++ b/arch/arm/boot/dts/imx7d-pico.dtsi
-> @@ -69,6 +69,37 @@
->  		clocks = <&clks IMX7D_CLKO2_ROOT_DIV>;
->  		clock-names = "ext_clock";
->  	};
-> +
-> +	backlight: backlight {
-> +		compatible = "pwm-backlight";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_backlight>;
-> +		pwms = <&pwm4 0 50000 0>;
-                                      ^
-     If not inverted please drop the this flag.
-Also you need to add
+This patch serie adds support for the second version of Allwinner Security System.
+The first generation of the Security System is already handled by the sun4i-ss driver.
+Due to major change, the first driver cannot handle the second one.
+This new Security System is present on A80 and A83T SoCs.
 
-&pwm4 {
-	status = "okay";
-};
+For the moment, the driver support only DES3/AES in ECB/CBC mode.
+Patchs for CTR/CTS, RSA and RNGs will came later.
 
-And so you can do the pwm pinctrl within that node, see below.
+This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
+and tested on:
+sun8i-a83t-bananapi-m3
+sun9i-a80-cubieboard4
 
-> +		brightness-levels = <0 36 72 108 144 180 216 255>;
-> +		default-brightness-level = <6>;
-> +		status = "okay";
+This serie is based on top of the "crypto: add sun8i-ce driver for
+Allwinner crypto engine" serie.
 
-status can be dropped too.
+Regards
 
-> +	};
-> +
-> +	reg_lcd_3v3: regulator-lcd-3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "lcd-3v3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+Changes since v2:
+- Made the reset mandatory
+- Removed reset-names
 
-Missing the muxing?
+Changes since v1:
+- fixed uninitialized err in sun8i_ss_allocate_chanlist
+- Added missing commit description on DT Documentation patch
 
-> +		enable-active-high;
-> +	};
-> +
-> +	panel {
-> +		compatible = "vxt,vl050-8048nt-c01";
-> +		backlight = <&backlight>;
-> +		power-supply = <&reg_lcd_3v3>;
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&display_out>;
-> +			};
-> +		};
-> +	};
+Corentin Labbe (4):
+  crypto: Add Allwinner sun8i-ss cryptographic offloader
+  dt-bindings: crypto: Add DT bindings documentation for sun8i-ss
+    Security System
+  ARM: dts: sun8i: a83t: Add Security System node
+  ARM: dts: sun9i: a80: Add Security System node
 
-Please sort the nodes alphabetical.
-
->  };
->  
->  &clks {
-> @@ -230,6 +261,18 @@
->  	};
->  };
->  
-> +&lcdif {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_lcdif>;
-> +	status = "okay";
-> +
-> +	port {
-> +		display_out: endpoint {
-> +			remote-endpoint = <&panel_in>;
-> +		};
-> +	};
-> +};
-> +
->  &sai1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_sai1>;
-> @@ -349,6 +392,13 @@
->  };
->  
->  &iomuxc {
-> +
-> +	pinctrl_backlight: backlight {
-                                    ^
-                        please add 'grp'
-> +		fsl,pins = <
-> +			MX7D_PAD_GPIO1_IO11__PWM4_OUT		0x0
-> +		>;
-> +	};
-
-IMHO the muxing is part of the pwm4 node. So rename it to
-'pinctrl_pwm4: pwm4grp'.
-
-Regards,
-  Marco
-
-> +
->  	pinctrl_ecspi3: ecspi3grp {
->  		fsl,pins = <
->  			MX7D_PAD_I2C1_SCL__ECSPI3_MISO		0x2
-> @@ -413,6 +463,40 @@
->  		>;
->  	};
->  
-> +	pinctrl_lcdif: lcdifgrp {
-> +		fsl,pins = <
-> +			MX7D_PAD_LCD_DATA00__LCD_DATA0		0x79
-> +			MX7D_PAD_LCD_DATA01__LCD_DATA1		0x79
-> +			MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
-> +			MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
-> +			MX7D_PAD_LCD_DATA04__LCD_DATA4		0x79
-> +			MX7D_PAD_LCD_DATA05__LCD_DATA5		0x79
-> +			MX7D_PAD_LCD_DATA06__LCD_DATA6		0x79
-> +			MX7D_PAD_LCD_DATA07__LCD_DATA7		0x79
-> +			MX7D_PAD_LCD_DATA08__LCD_DATA8		0x79
-> +			MX7D_PAD_LCD_DATA09__LCD_DATA9		0x79
-> +			MX7D_PAD_LCD_DATA10__LCD_DATA10		0x79
-> +			MX7D_PAD_LCD_DATA11__LCD_DATA11		0x79
-> +			MX7D_PAD_LCD_DATA12__LCD_DATA12		0x79
-> +			MX7D_PAD_LCD_DATA13__LCD_DATA13		0x79
-> +			MX7D_PAD_LCD_DATA14__LCD_DATA14		0x79
-> +			MX7D_PAD_LCD_DATA15__LCD_DATA15		0x79
-> +			MX7D_PAD_LCD_DATA16__LCD_DATA16		0x79
-> +			MX7D_PAD_LCD_DATA17__LCD_DATA17		0x79
-> +			MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
-> +			MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
-> +			MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
-> +			MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
-> +			MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
-> +			MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
-> +			MX7D_PAD_LCD_CLK__LCD_CLK		0x79
-> +			MX7D_PAD_LCD_ENABLE__LCD_ENABLE		0x78
-> +			MX7D_PAD_LCD_VSYNC__LCD_VSYNC		0x78
-> +			MX7D_PAD_LCD_HSYNC__LCD_HSYNC		0x78
-> +			MX7D_PAD_LCD_RESET__GPIO3_IO4		0x14
-> +		>;
-> +	};
-> +
->  	pinctrl_pwm1: pwm1 {
->  		fsl,pins = <
->  			MX7D_PAD_GPIO1_IO08__PWM1_OUT   0x7f
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+ .../bindings/crypto/allwinner,sun8i-ss.yaml   |  61 ++
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |   9 +
+ arch/arm/boot/dts/sun9i-a80.dtsi              |   9 +
+ drivers/crypto/allwinner/Kconfig              |  28 +
+ drivers/crypto/allwinner/Makefile             |   1 +
+ drivers/crypto/allwinner/sun8i-ss/Makefile    |   2 +
+ .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 438 ++++++++++++
+ .../crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 642 ++++++++++++++++++
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h  | 218 ++++++
+ 9 files changed, 1408 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/Makefile
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.21.0
+
