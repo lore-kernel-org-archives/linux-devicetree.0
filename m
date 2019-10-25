@@ -2,344 +2,305 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFC2CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 03:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513FBCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 03:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708EA21D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 03:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1129420867
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 03:52:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ce+0HrND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391605AbfJYDJI (ORCPT
+        id S2392314AbfJYDw0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 23:09:08 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:7906 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389230AbfJYDJI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 23:09:08 -0400
-X-UUID: 49568c31a3bd4ae7aa666cd7b3e49b89-20191025
-X-UUID: 49568c31a3bd4ae7aa666cd7b3e49b89-20191025
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1986252158; Fri, 25 Oct 2019 09:49:48 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
- (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 25 Oct
- 2019 09:49:45 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 25 Oct 2019 09:49:44 +0800
-Message-ID: <1571968186.18464.3.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 2/2] usb: cdns3: Add TI specific wrapper driver
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Roger Quadros <rogerq@ti.com>
-CC:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>,
-        <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
-        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Date:   Fri, 25 Oct 2019 09:49:46 +0800
-In-Reply-To: <20191024114717.30984-3-rogerq@ti.com>
-References: <20191024114717.30984-1-rogerq@ti.com>
-         <20191024114717.30984-3-rogerq@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 24 Oct 2019 23:52:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41502 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392291AbfJYDw0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 23:52:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q7so632099pfh.8
+        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 20:52:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VuqGlHCmiP7nazFalCZDat6IlaETXhzlf7ym/08sQW8=;
+        b=Ce+0HrNDmFSivub2oBEJVlA0HHWdPOu5+6DmZIJe7npEriRRFg631g4lekMZY0vAiE
+         X3w8JaBKz/xk8MUr8g0dIKO02+oQdsng0Yd15tGlAmwd6MIRY+eKa82ZieljWuM1/TXA
+         lWrkonKegWaVKApjLAbjNz8voQ4f1oncASGEE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VuqGlHCmiP7nazFalCZDat6IlaETXhzlf7ym/08sQW8=;
+        b=qOUA3e2exDxs5J5aQxCYmW/fEhqzoRKixXEIsdUDdgVDlfzO3zAikTg5F0ojyhO/x/
+         TJm5yJCEPQN8q8f9ESfHRnLryQ5efGqQs0pQvbWYEHOJm04u1boMGwTyepXn38ygccLC
+         bjRtIzxmxxyZzZmQi6D9idVGb1Ly1tXHjZBYnZKu49oF2/K8D/Bul7rs7IlAQksKR2u4
+         iPcoDE/SVBK35c2e4rPGNnMBM49Nur/himr63iDOHwrvnGX6pmNEc6NgWHmWCkZ0amfr
+         NypczTPpl2K56HUireF4PBPS5Kyxb/V2Afte+NvWbmzGrAvPbs0cWaPnoTx2Ur85av5c
+         oFOg==
+X-Gm-Message-State: APjAAAVtpCq/4QkkYmgrjOr2SRNu2XUye6N2YO5Qdp8Ei8VTbU1MjTR+
+        CelE5u934UnsCb5yGivojSxLmQ==
+X-Google-Smtp-Source: APXvYqwkwetVcs47sPZxLr5ISxVfMjs558/KCCIrpnAsnIMnYSTi2p/HmtYweJj67U8UZ7Y8mq9qFw==
+X-Received: by 2002:a63:4c1c:: with SMTP id z28mr1507674pga.167.1571975545045;
+        Thu, 24 Oct 2019 20:52:25 -0700 (PDT)
+Received: from chromium.org ([2401:fa00:8f:203:f5fe:2a5e:f953:c0ed])
+        by smtp.gmail.com with ESMTPSA id c16sm571818pja.2.2019.10.24.20.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 20:52:17 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 12:52:11 +0900
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
+Cc:     hans.verkuil@cisco.com,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "lkml@metux.net" <lkml@metux.net>,
+        CK Hu =?utf-8?B?KOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+        "yuzhao@chromium.org" <yuzhao@chromium.org>,
+        "zwisler@chromium.org" <zwisler@chromium.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sean Cheng =?utf-8?B?KOmEreaYh+W8mCk=?= 
+        <Sean.Cheng@mediatek.com>,
+        Sj Huang =?utf-8?B?KOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>,
+        Christie Yu =?utf-8?B?KOa4uOmbheaDoCk=?= 
+        <christie.yu@mediatek.com>,
+        Frederic Chen =?utf-8?B?KOmZs+S/iuWFgyk=?= 
+        <Frederic.Chen@mediatek.com>,
+        Jungo Lin =?utf-8?B?KOael+aYjuS/iik=?= <jungo.lin@mediatek.com>,
+        Po-Yang Huang =?utf-8?B?KOm7g+afj+mZvSk=?= 
+        <po-yang.huang@mediatek.com>,
+        Rynn Wu =?utf-8?B?KOWQs+iCsuaBqSk=?= <Rynn.Wu@mediatek.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH V3 3/3] platform: mtk-isp: Add Mediatek FD driver
+Message-ID: <20191025035211.GA67000@chromium.org>
+References: <20190906101125.3784-1-Jerry-Ch.chen@mediatek.com>
+ <20190906101125.3784-4-Jerry-Ch.chen@mediatek.com>
+ <1571109375.3706.40.camel@mtksdccf07>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 3AC33AF4A9FE5BD081ED7950EDBEB3978C63142DE1505C4174253A93B01C45552000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571109375.3706.40.camel@mtksdccf07>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 2019-10-24 at 14:47 +0300, Roger Quadros wrote:
-> The J721e platform comes with 2 Cadence USB3 controller
-> instances. This driver supports the TI specific wrapper
-> on this platform.
+On Tue, Oct 15, 2019 at 11:16:15AM +0800, Jerry-ch Chen wrote:
+> Hi Tomasz,
 > 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> ---
->  drivers/usb/cdns3/Kconfig    |  10 ++
->  drivers/usb/cdns3/Makefile   |   1 +
->  drivers/usb/cdns3/cdns3-ti.c | 236 +++++++++++++++++++++++++++++++++++
->  3 files changed, 247 insertions(+)
->  create mode 100644 drivers/usb/cdns3/cdns3-ti.c
+> On Fri, 2019-09-06 at 18:11 +0800, Jerry-ch Chen wrote:
+> > From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+> > 
+> > This patch adds the driver of Face Detection (FD) unit in
+> > Mediatek camera system, providing face detection function.
+> > 
+> > The mtk-isp directory will contain drivers for multiple IP
+> > blocks found in Mediatek ISP system. It will include ISP Pass 1
+> > driver (CAM), sensor interface driver, DIP driver and face
+> > detection driver.
+> > 
+> > Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+> > ---
+> >  drivers/media/platform/Kconfig                |    2 +
+> >  drivers/media/platform/Makefile               |    2 +
+> >  drivers/media/platform/mtk-isp/fd/Kconfig     |   19 +
+> >  drivers/media/platform/mtk-isp/fd/Makefile    |    5 +
+> >  drivers/media/platform/mtk-isp/fd/mtk_fd.h    |  148 ++
+> >  drivers/media/platform/mtk-isp/fd/mtk_fd_40.c | 1219 +++++++++++++++++
+> >  include/uapi/linux/mtk-fd-v4l2-controls.h     |   69 +
+> >  include/uapi/linux/v4l2-controls.h            |    4 +
+> >  8 files changed, 1468 insertions(+)
+> >  create mode 100644 drivers/media/platform/mtk-isp/fd/Kconfig
+> >  create mode 100644 drivers/media/platform/mtk-isp/fd/Makefile
+> >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.h
+> >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd_40.c
+> >  create mode 100644 include/uapi/linux/mtk-fd-v4l2-controls.h
+> > 
+
+[snip]
+
+> > +static int mtk_fd_job_abort(struct mtk_fd_dev *fd)
+> > +{
+> > +	u32 ret;
+> > +
+> > +	ret = wait_for_completion_timeout(&fd->fd_irq_done,
+> > +					  msecs_to_jiffies(MTK_FD_HW_TIMEOUT));
+> > +	/* Reset FD HW */
+> > +	if (!ret) {
+> > +		struct ipi_message fd_ipi_msg;
+> > +
+> > +		fd_ipi_msg.cmd_id = MTK_FD_IPI_CMD_RESET;
+> > +		if (scp_ipi_send(fd->scp_pdev, SCP_IPI_FD_CMD, &fd_ipi_msg,
+> > +				 sizeof(fd_ipi_msg), MTK_FD_IPI_SEND_TIMEOUT))
+> > +			dev_err(fd->dev, "FD Reset HW error\n");
+> > +		return -ETIMEDOUT;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
 > 
-> diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
-> index d0331613a355..2a1e89d12ed9 100644
-> --- a/drivers/usb/cdns3/Kconfig
-> +++ b/drivers/usb/cdns3/Kconfig
-> @@ -43,4 +43,14 @@ config USB_CDNS3_PCI_WRAP
->  	  If you choose to build this driver as module it will
->  	  be dynamically linked and module will be called cdns3-pci.ko
->  
-> +config USB_CDNS3_TI
-> +	tristate "Cadence USB3 support on TI platforms"
-> +	depends on ARCH_K3 || COMPILE_TEST
-> +	default USB_CDNS3
-> +	help
-> +	  Say 'Y' or 'M' here if you are building for Texas Instruments
-> +	  platforms that contain Cadence USB3 controller core.
-> +
-> +	  e.g. J721e.
-> +
->  endif
-> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
-> index a703547350bb..948e6b88d1a9 100644
-> --- a/drivers/usb/cdns3/Makefile
-> +++ b/drivers/usb/cdns3/Makefile
-> @@ -14,3 +14,4 @@ endif
->  cdns3-$(CONFIG_USB_CDNS3_HOST)		+= host.o
->  
->  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci-wrap.o
-> +obj-$(CONFIG_USB_CDNS3_TI)		+= cdns3-ti.o
-> diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
-> new file mode 100644
-> index 000000000000..89620e40023f
-> --- /dev/null
-> +++ b/drivers/usb/cdns3/cdns3-ti.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/**
-> + * cdns3-ti.c - TI specific Glue layer for Cadence USB Controller
-> + *
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-> + */
-> +
-> +#include <linux/bits.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/io.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pm_runtime.h>
-> +
-> +/* USB Wrapper register offsets */
-> +#define USBSS_PID		0x0
-> +#define	USBSS_W1		0x4
-> +#define USBSS_STATIC_CONFIG	0x8
-> +#define USBSS_PHY_TEST		0xc
-> +#define	USBSS_DEBUG_CTRL	0x10
-> +#define	USBSS_DEBUG_INFO	0x14
-> +#define	USBSS_DEBUG_LINK_STATE	0x18
-> +#define	USBSS_DEVICE_CTRL	0x1c
-> +
-> +/* Wrapper 1 register bits */
-> +#define USBSS_W1_PWRUP_RST		BIT(0)
-> +#define USBSS_W1_OVERCURRENT_SEL	BIT(8)
-> +#define USBSS_W1_MODESTRAP_SEL		BIT(9)
-> +#define USBSS_W1_OVERCURRENT		BIT(16)
-> +#define USBSS_W1_MODESTRAP_MASK		GENMASK(18, 17)
-> +#define USBSS_W1_MODESTRAP_SHIFT	17
-> +#define USBSS_W1_USB2_ONLY		BIT(19)
-> +
-> +/* Static config register bits */
-> +#define USBSS1_STATIC_PLL_REF_SEL_MASK	GENMASK(8, 5)
-> +#define USBSS1_STATIC_PLL_REF_SEL_SHIFT	5
-> +#define USBSS1_STATIC_LOOPBACK_MODE_MASK	GENMASK(4, 3)
-> +#define USBSS1_STATIC_LOOPBACK_MODE_SHIFT	3
-> +#define USBSS1_STATIC_VBUS_SEL_MASK	GENMASK(2, 1)
-> +#define USBSS1_STATIC_VBUS_SEL_SHIFT	1
-> +#define USBSS1_STATIC_LANE_REVERSE	BIT(0)
-> +
-> +/* Modestrap modes */
-> +enum modestrap_mode { USBSS_MODESTRAP_MODE_NONE,
-> +		      USBSS_MODESTRAP_MODE_HOST,
-> +		      USBSS_MODESTRAP_MODE_PERIPHERAL};
-> +
-> +struct cdns_ti {
-> +	struct device *dev;
-> +	void __iomem *usbss;
-> +	int usb2_only:1;
-> +	int vbus_divider:1;
-> +	struct clk *usb2_refclk;
-> +	struct clk *lpm_clk;
-> +};
-> +
-> +static const int cdns_ti_rate_table[] = {	/* in KHZ */
-> +	9600,
-> +	10000,
-> +	12000,
-> +	19200,
-> +	20000,
-> +	24000,
-> +	25000,
-> +	26000,
-> +	38400,
-> +	40000,
-> +	58000,
-> +	50000,
-> +	52000,
-> +};
-> +
-> +static inline u32 cdns_ti_readl(struct cdns_ti *data, u32 offset)
-> +{
-> +	return readl(data->usbss + offset);
-> +}
-> +
-> +static inline void cdns_ti_writel(struct cdns_ti *data, u32 offset, u32 value)
-> +{
-> +	writel(value, data->usbss + offset);
-> +}
-> +
-> +static int cdns_ti_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct cdns_ti *data;
-> +	struct resource	*res;
-> +	int error;
-> +	u32 reg;
-> +	int rate_code, i;
-> +	unsigned long rate;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	data->dev = dev;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->usbss = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(data->usbss))
-> +		return PTR_ERR(data->usbss);
-use devm_platform_ioremap_resource() ?
+> Continue the discussion about job abort in RFC v2,
+> 
+> I think the job_abort callback in v4l2_m2m_ops() might be useful.
+> 
+> ref:
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/media/v4l2-core/v4l2-mem2mem.c#L398
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/include/media/v4l2-mem2mem.h#L43
+> 
+> in drivers/media/v4l2-core/v4l2-mem2mem.c #398 v4l2_m2m_cancel_job()
+> ...
+> if (m2m_ctx->job_flags & TRANS_RUNNING) {
+> 	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> 	if (m2m_dev->m2m_ops->job_abort)
+> 		m2m_dev->m2m_ops->job_abort(m2m_ctx->priv);
+> 	dprintk("m2m_ctx %p running, will wait to complete\n", m2m_ctx);
+> 	wait_event(m2m_ctx->finished,
+> 			!(m2m_ctx->job_flags & TRANS_RUNNING));
+> } ...
+> 
+> If this operation is set, we might use the v4l2_m2m_cancel_job() when
+> suspend, and it will do mtk_fd_job_abort() here.
+>
 
-> +
-> +	data->usb2_refclk = devm_clk_get(dev, "ref");
-> +	if (IS_ERR(data->usb2_refclk)) {
-> +		dev_err(dev, "can't get usb2_refclk\n");
-> +		return PTR_ERR(data->usb2_refclk);
-> +	}
-> +
-> +	data->lpm_clk = devm_clk_get(dev, "lpm");
-> +	if (IS_ERR(data->lpm_clk)) {
-> +		dev_err(dev, "can't get lpm_clk\n");
-> +		return PTR_ERR(data->lpm_clk);
-> +	}
-> +
-> +	rate = clk_get_rate(data->usb2_refclk);
-> +	rate /= 1000;	/* To KHz */
-> +	for (i = 0; i < ARRAY_SIZE(cdns_ti_rate_table); i++) {
-> +		if (cdns_ti_rate_table[i] == rate)
-> +			break;
-> +	}
-> +
-> +	if (i == ARRAY_SIZE(cdns_ti_rate_table)) {
-> +		dev_err(dev, "unsupported usb2_refclk rate: %lu KHz\n", rate);
-> +		return -EINVAL;
-> +	}
-> +
-> +	rate_code = i;
-> +
-> +	pm_runtime_enable(dev);
-> +	error = pm_runtime_get_sync(dev);
-> +	if (error < 0) {
-> +		dev_err(dev, "pm_runtime_get_sync failed: %d\n", error);
-> +		goto err_get;
-> +	}
-> +
-> +	/* assert RESET */
-> +	reg = cdns_ti_readl(data, USBSS_W1);
-> +	reg &= ~USBSS_W1_PWRUP_RST;
-> +	cdns_ti_writel(data, USBSS_W1, reg);
-> +
-> +	/* set static config */
-> +	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-> +	reg &= ~USBSS1_STATIC_PLL_REF_SEL_MASK;
-> +	reg |= rate_code << USBSS1_STATIC_PLL_REF_SEL_SHIFT;
-> +
-> +	reg &= ~USBSS1_STATIC_VBUS_SEL_MASK;
-> +	data->vbus_divider = device_property_read_bool(dev, "ti,vbus-divider");
-> +	if (data->vbus_divider)
-> +		reg |= 1 << USBSS1_STATIC_VBUS_SEL_SHIFT;
-> +
-> +	cdns_ti_writel(data, USBSS_STATIC_CONFIG, reg);
-> +	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-> +
-> +	/* set USB2_ONLY mode if requested */
-> +	reg = cdns_ti_readl(data, USBSS_W1);
-> +	data->usb2_only = device_property_read_bool(dev, "ti,usb2-only");
-> +	if (data->usb2_only)
-> +		reg |= USBSS_W1_USB2_ONLY;
-> +
-> +	/* set default modestrap */
-> +	reg |= USBSS_W1_MODESTRAP_SEL;
-> +	reg &= ~USBSS_W1_MODESTRAP_MASK;
-> +	reg |= USBSS_MODESTRAP_MODE_NONE << USBSS_W1_MODESTRAP_SHIFT;
-> +	cdns_ti_writel(data, USBSS_W1, reg);
-> +
-> +	/* de-assert RESET */
-> +	reg |= USBSS_W1_PWRUP_RST;
-> +	cdns_ti_writel(data, USBSS_W1, reg);
-> +
-> +	error = of_platform_populate(node, NULL, NULL, dev);
-> +	if (error) {
-> +		dev_err(dev, "failed to create children: %d\n", error);
-> +		goto err;
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	pm_runtime_put_sync(data->dev);
-> +err_get:
-> +	pm_runtime_disable(data->dev);
-> +
-> +	return error;
-> +}
-> +
-> +static int cdns_ti_remove_core(struct device *dev, void *c)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +
-> +	platform_device_unregister(pdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cdns_ti_remove(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +
-> +	device_for_each_child(dev, NULL, cdns_ti_remove_core);
-> +	pm_runtime_put_sync(dev);
-> +	pm_runtime_disable(dev);
-> +
-> +	platform_set_drvdata(pdev, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id cdns_ti_of_match[] = {
-> +	{ .compatible = "ti,j721e-usb", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, cdns_ti_of_match);
-> +
-> +static struct platform_driver cdns_ti_driver = {
-> +	.probe		= cdns_ti_probe,
-> +	.remove		= cdns_ti_remove,
-> +	.driver		= {
-> +		.name	= "cdns3-ti",
-> +		.of_match_table	= cdns_ti_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(cdns_ti_driver);
-> +
-> +MODULE_ALIAS("platform:cdns3-ti");
-> +MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Cadence USB3 TI Glue Layer");
+The expectation for .job_abort() is that signals the hardware to
+instantly abandon the current job. Do we have a way to tell the
+firmware/hardware to do so?
 
+Also, suspend must not abort the current job. Anything that was already
+running is expected to complete successfuly and further jobs should
+continue executing once the system resumes.
+
+[snip]
+
+> > +
+> > +static int mtk_fd_suspend(struct device *dev)
+> > +{
+> > +	struct mtk_fd_dev *fd = dev_get_drvdata(dev);
+> > +
+> > +	if (pm_runtime_suspended(dev))
+> > +		return 0;
+> > +
+> > +	if (fd->fd_stream_count)
+> > +		if (mtk_fd_job_abort(fd))
+> > +			mtk_fd_hw_job_finish(fd, VB2_BUF_STATE_ERROR);
+> > +
+> 
+> To avoid mtk_fd_hw_job_finish() trigger the next job,
+> I suppose that we could use v4l2_m2m_cancel_job instead of job_abort and
+> job_finish here.
+> 
+> /**
+>  * v4l2_m2m_cancel_job() - cancel pending jobs for the context
+>  * @m2m_ctx: m2m context with jobs to be canceled
+>  *
+>  * In case of streamoff or release called on any context,
+>  * 1] If the context is currently running, then abort job will be called
+>  * 2] If the context is queued, then the context will be removed from
+>  *    the job_queue
+>  */
+> 
+> or another way,
+> we may add a flag and implement mtk_fd_job_ready() that reads the flag
+> if we suspend, we set the flag and do job_abort and job_finish, even if
+> it try enqueue, it will still not really queue the job, until we reset
+> the flag in mtk_fd_resume().
+> 
+> how do you think?
+>
+
+As per my comment above, suspend must just pause the execution of the
+jobs. It must not cause any jobs to be skipped.
+
+After analyzing the m2m framework and existing m2m drivers I realized
+that they currently provide no way to correctly handle suspend/resume.
+Pi-Hsun has been looking into fixing this in crrev.com/c/1878112 and
+we'll send it upstream as soon as we get something that should handle
+all the cases correctly.
+
+> > +	/* suspend FD HW */
+> > +	writel(0x0, fd->fd_base + MTK_FD_REG_OFFSET_INT_EN);
+> > +	writel(0x0, fd->fd_base + MTK_FD_REG_OFFSET_HW_ENABLE);
+> > +	clk_disable_unprepare(fd->fd_clk);
+> > +	dev_dbg(dev, "%s:disable clock\n", __func__);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mtk_fd_resume(struct device *dev)
+> > +{
+> > +	struct mtk_fd_dev *fd = dev_get_drvdata(dev);
+> > +	int ret;
+> > +
+> > +	if (pm_runtime_suspended(dev))
+> > +		return 0;
+> > +
+> > +	ret = clk_prepare_enable(fd->fd_clk);
+> > +	if (ret < 0) {
+> > +		dev_dbg(dev, "Failed to open fd clk:%d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* resume FD HW */
+> > +	writel(MTK_FD_SET_HW_ENABLE, fd->fd_base + MTK_FD_REG_OFFSET_HW_ENABLE);
+> > +	writel(0x1, fd->fd_base + MTK_FD_REG_OFFSET_INT_EN);
+> > +	dev_dbg(dev, "%s:enable clock\n", __func__);
+
+By the way, we need to kick the m2m framework here to schedule further
+jobs. Pi-Hsun's patch will also take care of this.
+
+[snip]
+
+> > +/* Set the face angle and directions to be detected */
+> > +#define V4L2_CID_MTK_FD_DETECT_POSE		(V4L2_CID_USER_MTK_FD_BASE + 1)
+> > +
+> > +/* Set image widths for an input image to be scaled down for face detection */
+> > +#define V4L2_CID_MTK_FD_SCALE_DOWN_IMG_WIDTH	(V4L2_CID_USER_MTK_FD_BASE + 2)
+> > +
+> > +/* Set image heights for an input image to be scaled down for face detection */
+> > +#define V4L2_CID_MTK_FD_SCALE_DOWN_IMG_HEIGHT	(V4L2_CID_USER_MTK_FD_BASE + 3)
+> > +
+> > +/* Set the length of scale down size array */
+> > +#define V4L2_CID_MTK_FD_SCALE_IMG_NUM		(V4L2_CID_USER_MTK_FD_BASE + 4)
+> > +
+> > +/* Set the detection speed, usually reducing accuracy. */
+> > +#define V4L2_CID_MTK_FD_DETECT_SPEED		(V4L2_CID_USER_MTK_FD_BASE + 5)
+> > +
+> > +/* Select the detection model or algorithm to be used. */
+> > +#define V4L2_CID_MTK_FD_DETECTION_MODEL		(V4L2_CID_USER_MTK_FD_BASE + 6)
+> > +
+> > +/* We reserve 16 controls for this driver. */
+> > +#define V4L2_CID_MTK_FD_MAX			16
+> > +
+> 
+> For these control IDs, I think the following should be remained as chip
+> specific controls.
+> V4L2_CID_MTK_FD_SCALE_DOWN_IMG_WIDTH,
+> V4L2_CID_MTK_FD_SCALE_DOWN_IMG_HEIGHT and V4L2_CID_MTK_FD_SCALE_IMG_NUM 
+> 
+> Hope there would be standardizing face detection api that cover the rest
+> controls: V4L2_CID_MTK_FD_DETECT_POSE, V4L2_CID_MTK_FD_DETECT_SPEED and
+> V4L2_CID_MTK_FD_DETECTION_MODEL
+> 
+> Would you have any suggestions on how to propose the standard face
+> detection apis?
+> 
+
+Given no follow up feedback from the community, I think we can keep them
+as driver-specific, but should make sure that they have some reasonable
+default values in case an application doesn't recognize them.
+
+Best regards,
+Tomasz
 
