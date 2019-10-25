@@ -2,114 +2,130 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655D1CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFD4CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F50F21D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9FF21655
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572013559;
+	bh=DU7fSFJ7Tbm2ALQlO0YChij89rQy5SaOWUBg7BPLtqY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E9+c6fe2OrGI97DvGB/XWQwrXElPlIUc5/v4gLUuI9iRC9ZQdzn51/osWHUd36oZV
+	 yB4qwiFdJxpags4oWKdXRWJsT0oHaEcCwAfntqx3aQ1cXr4EMzXyXuaZ72tyuqQXhT
+	 Vg0Q1JnFzQbvcc6VSkW1pNYWmGBmcr242EbtJjY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394743AbfJYOZi (ORCPT
+        id S2395359AbfJYOZ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:25:38 -0400
-Received: from smtp3-1.goneo.de ([85.220.129.38]:52047 "EHLO smtp3-1.goneo.de"
+        Fri, 25 Oct 2019 10:25:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393877AbfJYOZi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:25:38 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id 7296923FF75;
-        Fri, 25 Oct 2019 16:25:34 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp3.goneo.de ([127.0.0.1])
-        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id eyTABLuGukdQ; Fri, 25 Oct 2019 16:25:33 +0200 (CEST)
-Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp3.goneo.de (Postfix) with ESMTPA id 0C88123F192;
-        Fri, 25 Oct 2019 16:25:31 +0200 (CEST)
-From:   Lars Poeschel <poeschel@lemonage.de>
-Cc:     Lars Poeschel <poeschel@lemonage.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Steve Winslow <swinslow@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Allison Randal <allison@lohutok.net>,
-        Johan Hovold <johan@kernel.org>,
-        Simon Horman <horms@verge.net.au>
-Subject: [PATCH v10 0/7] nfc: pn533: add uart phy driver
-Date:   Fri, 25 Oct 2019 16:25:14 +0200
-Message-Id: <20191025142521.22695-1-poeschel@lemonage.de>
-X-Mailer: git-send-email 2.23.0
+        id S2395358AbfJYOZy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:25:54 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B21D6222C1;
+        Fri, 25 Oct 2019 14:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572013552;
+        bh=DU7fSFJ7Tbm2ALQlO0YChij89rQy5SaOWUBg7BPLtqY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lls4C6GhAMZkjiMHxUNM8e3MpVtTjHRcp7rtbeWxNU6wPCOgmjE3zkRA3BaLtvaMu
+         Ik1lbhOO5WwIWedKrjVgJYkBqK0RyKpoQxLvxyz5dqKrbrzgU/En4i9HWrJoKn8Xec
+         mU9sGQ/QhVMGbMoSZaRbAqSBj0FGKs5gqZfGPCOg=
+Received: by mail-qt1-f171.google.com with SMTP id r5so3545969qtd.0;
+        Fri, 25 Oct 2019 07:25:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAWv9kXSGcLQHmxNmIBYseNidlOOwCLmGapkoXxClHjEZYBO6900
+        TRXOLZtPVMHe/Oe1LSWC/PhVaxt+5HYrQcBPdQ==
+X-Google-Smtp-Source: APXvYqyHGFuHzLeeCiWmC38AWf47YzHtjUGWCvnVQnR7njmNGQzh6atSkOGaDQVT1lTzgwxR3JWh+i3JbBURQZyByQQ=
+X-Received: by 2002:a05:6214:1552:: with SMTP id t18mr3275282qvw.136.1572013551842;
+ Fri, 25 Oct 2019 07:25:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190705164221.4462-1-robh@kernel.org> <20190705164221.4462-2-robh@kernel.org>
+ <CAMuHMdW86UOVp5vjdFBzjbqsG_wemjZ77LyVnc+oZ6ZDccv_cA@mail.gmail.com>
+In-Reply-To: <CAMuHMdW86UOVp5vjdFBzjbqsG_wemjZ77LyVnc+oZ6ZDccv_cA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 25 Oct 2019 09:25:39 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJA_ZZ5CjoGrB4NofAcwMPXhnC0ddWZqZ9SXSTNAWB3cQ@mail.gmail.com>
+Message-ID: <CAL_JsqJA_ZZ5CjoGrB4NofAcwMPXhnC0ddWZqZ9SXSTNAWB3cQ@mail.gmail.com>
+Subject: Re: [PATCH v3 01/13] dt-bindings: display: Convert common panel
+ bindings to DT schema
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The purpose of this patch series is to add a uart phy driver to the
-pn533 nfc driver.
-It first changes the dt strings and docs. The dt compatible strings
-need to change, because I would add "pn532-uart" to the already
-existing "pn533-i2c" one. These two are now unified into just
-"pn532". Then the neccessary changes to the pn533 core driver are
-made. Then the uart phy is added.
-As the pn532 chip supports a autopoll, I wanted to use this instead
-of the software poll loop in the pn533 core driver. It is added and
-activated by the last to patches.
-The way to add the autopoll later in seperate patches is chosen, to
-show, that the uart phy driver can also work with the software poll
-loop, if someone needs that for some reason.
+On Fri, Oct 25, 2019 at 8:07 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Rob,
+>
+> On Fri, Jul 5, 2019 at 6:46 PM Rob Herring <robh@kernel.org> wrote:
+> > Convert the common panel bindings to DT schema consolidating scattered
+> > definitions to a single schema file.
+> >
+> > The 'simple-panel' binding just a collection of properties and not a
+> > complete binding itself. All of the 'simple-panel' properties are
+> > covered by the panel-common.txt binding with the exception of the
+> > 'no-hpd' property, so add that to the schema.
+> >
+> > As there are lots of references to simple-panel.txt, just keep the file
+> > with a reference to common.yaml for now until all the bindings are
+> > converted.
+> >
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> > Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > Reviewed-by: Thierry Reding <treding@nvidia.com>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> This is now commit 821a1f7171aeea5e ("dt-bindings: display: Convert
+> common panel bindings to DT schema").
+>
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+>
+> > +  backlight:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description:
+> > +      For panels whose backlight is controlled by an external backlight
+> > +      controller, this property contains a phandle that references the
+> > +      controller.
+>
+> This paragraph seems to apply to all nodes named "backlight", causing
+> e.g. (for ARCH=arm mach_shmobile_defconfig) "make dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/panel-common.yaml"
+> to start complaining:
+>
+>     arch/arm/boot/dts/r8a7740-armadillo800eva.dt.yaml: backlight:
+> {'compatible': ['pwm-backlight'], 'pwms': [[40, 2, 33333, 1]],
+> 'brightness-levels': [[0, 1, 2, 4, 8, 16, 32, 64, 128, 255]],
+> 'default-brightness-level': [[9]], 'pinctrl-0': [[41]],
+> 'pinctrl-names': ['default'], 'power-supply': [[42]], 'enable-gpios':
+> [[15, 61, 0]]} is not of type 'array'
+>     arch/arm/boot/dts/r8a7740-armadillo800eva.dt.yaml: backlight:
+> {'groups': ['tpu0_to2_1'], 'function': ['tpu0'], 'phandle': [[41]]} is
+> not of type 'array'
+>
+> Do you know what's wrong?
 
-Cc: Lars Poeschel <poeschel@lemonage.de>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jilayne Lovejoy <opensource@jilayne.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Steve Winslow <swinslow@gmail.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Simon Horman <horms@verge.net.au>
+I'm not seeing that. What does .../bindings/processed-schema.yaml look like?
 
-Lars Poeschel (7):
-  nfc: pn533: i2c: "pn532" as dt compatible string
-  nfc: pn532: Add uart phy docs and rename it
-  nfc: pn533: Add dev_up/dev_down hooks to phy_ops
-  nfc: pn533: Split pn533 init & nfc_register
-  nfc: pn533: add UART phy driver
-  nfc: pn533: Add autopoll capability
-  nfc: pn532_uart: Make use of pn532 autopoll
-
- .../net/nfc/{pn533-i2c.txt => pn532.txt}      |  25 +-
- drivers/nfc/pn533/Kconfig                     |  11 +
- drivers/nfc/pn533/Makefile                    |   2 +
- drivers/nfc/pn533/i2c.c                       |  32 +-
- drivers/nfc/pn533/pn533.c                     | 281 +++++++++++++--
- drivers/nfc/pn533/pn533.h                     |  40 ++-
- drivers/nfc/pn533/uart.c                      | 323 ++++++++++++++++++
- drivers/nfc/pn533/usb.c                       |  16 +-
- 8 files changed, 667 insertions(+), 63 deletions(-)
- rename Documentation/devicetree/bindings/net/nfc/{pn533-i2c.txt => pn532.txt} (42%)
- create mode 100644 drivers/nfc/pn533/uart.c
-
--- 
-2.23.0
-
+Rob
