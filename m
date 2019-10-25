@@ -2,119 +2,78 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF393CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21384CA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC89321D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:31:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VTVnd3DJ"
+	by mail.kernel.org (Postfix) with ESMTP id EDCA621929
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504766AbfJYNbc (ORCPT
+        id S2504782AbfJYNeJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:31:32 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36793 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504752AbfJYNbb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 09:31:31 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 23so1572016pgk.3
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 06:31:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z55UMaWEIEJNVekf1KUtXJqZFUzcCvdu1bfEeskovPo=;
-        b=VTVnd3DJJxvlTLtyPGznBCDcaWFHpqt3B2OWsYufUi5PjNkalSZF7zX2RHBscVJH34
-         NvmlefixU2wv6mbtZk2HQh7csJV0v1aqD+k6gpFFRvJ06om6HBZe7CBPz+9dC/yss4fK
-         lh1QNLMpzK6BbmRsTQuBp3GKYRt0JrHDTgHCA=
+        Fri, 25 Oct 2019 09:34:09 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46078 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504780AbfJYNeI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 09:34:08 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o205so1615842oib.12;
+        Fri, 25 Oct 2019 06:34:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z55UMaWEIEJNVekf1KUtXJqZFUzcCvdu1bfEeskovPo=;
-        b=ZFVsdcek8Pb4g7gYD1ffqbug7GabS9sdS37fPb1AzyAkcAoHSSc7w3A7pKmHf42EhU
-         Ic2V69+wlKII0NQNkm7IVAyL0J2qNsGfBQhydHu0n+pLzLhQU5Q84mn1qaLAQUjtLg+z
-         30mA6f7uhpVNZbHGnloU4YGnKJ88IPvgHpv6BX0qvuZk0j/KodPIsJts/rw0rTKO/ENj
-         +avnA+46klT/I8gbAE+gKHBF9Wv+/blonce6xS7dqUcgggEzkquO24A04+3LGAepdMeq
-         xTEaVwlUqYVN9VlaBMlwE+VS+asb7iib9VmHrl4l/LGlGenVEEnkMsxgptqmZMUTvgy5
-         qe8w==
-X-Gm-Message-State: APjAAAXgRVxp93TwS8WyOLC/oTafz2IgGM4tsaKxGmkJLNPejb9udlV+
-        FL2CyQDi7L048PFcmyJt5fW8dg==
-X-Google-Smtp-Source: APXvYqzEBEK954f+cnTf4ONcLs7stQK9JprT2+giiC3WqbjcH+UZmlt6EYuRfIZ58RAxo7Z4G+ogsw==
-X-Received: by 2002:a17:90a:ff11:: with SMTP id ce17mr4114202pjb.110.1572010290956;
-        Fri, 25 Oct 2019 06:31:30 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:79b4:bd83:e4a5:a720])
-        by smtp.gmail.com with ESMTPSA id z13sm3706421pgz.42.2019.10.25.06.31.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2019 06:31:30 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH v8 6/6] ARM: dts: rockchip: Add HDMI audio support to rk3288-veyron-mickey.dts
-Date:   Fri, 25 Oct 2019 21:30:07 +0800
-Message-Id: <20191025133007.11190-7-cychiang@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-In-Reply-To: <20191025133007.11190-1-cychiang@chromium.org>
-References: <20191025133007.11190-1-cychiang@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iUx4xBejI/bMHyocAzAYVHDj3igErzHqOpH7ANpRK3s=;
+        b=MHscxQ0pZptiDIlX0rN4nU+0hNEgCMXqLecB8o7/JZpJBiYd6s5vNg33EpvbmCn9Zq
+         f/WNi0X2g43s6FsWb6YrbwmLZbipl5KAvLZrXyR6KRN1A3lofv6/iy3MSody8BJ6nRlq
+         ZsGBA5YHXhDm7GIhgku+a2RkOXuvlZMt3miHM81Lsjaq6OnBk0TO9E28GbBHx3bPWw5u
+         MDteMTaN1qBTuUqB5dsYRFu+cHfPWPP47niyzFhAZF7bzO2ea7XVZnVOe/fcrqXWqmfX
+         vU4YlM6SiQ+DXAEQVnRQG+SHj0YIN4WQ54j19DV7W2T0oSfGKWaHf2hYtMeSmsDLpGQR
+         yAkQ==
+X-Gm-Message-State: APjAAAU0EmuiVqvOtv1vWVbkgSlcyLLtB0ODDcod4eQrPa1xfYdlcS+P
+        z84e8A5AwqUcbOR1uRPMXwBUyqg6yd8Gh3jxqmw=
+X-Google-Smtp-Source: APXvYqxAOGdO/wj9UkmiDR4PxV5ipsPdG60be1raRikztn0fXd5AqBMfMeUxpsKU+jxgNsGXUXjpeFI0ChQC09meEhM=
+X-Received: by 2002:aca:fc92:: with SMTP id a140mr2928341oii.153.1572010446895;
+ Fri, 25 Oct 2019 06:34:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190908120528.9392-1-horms+renesas@verge.net.au>
+In-Reply-To: <20190908120528.9392-1-horms+renesas@verge.net.au>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 25 Oct 2019 15:33:55 +0200
+Message-ID: <CAMuHMdWrOn1wmi4YTNB251pLnNO1cXLX-ZszBV-+5cVLDB_QWw@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: arm: renesas: Convert 'renesas, prr' to json-schema
+To:     Simon Horman <horms+renesas@verge.net.au>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Yoshihiro Kaneko <ykaneko0929@gmail.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add HDMI audio support to veyron-mickey. The sound card should expose
-one audio device for HDMI.
+On Mon, Sep 9, 2019 at 12:14 AM Simon Horman <horms+renesas@verge.net.au> wrote:
+> Convert Renesas Product Register bindings documentation to json-schema.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
----
- arch/arm/boot/dts/rk3288-veyron-mickey.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.5.
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-index aa352d40c991..98a2aee240f1 100644
---- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-@@ -28,6 +28,13 @@
- 		regulator-boot-on;
- 		vin-supply = <&vcc33_sys>;
- 	};
-+
-+	sound {
-+		compatible = "rockchip,rockchip-audio-hdmi";
-+		rockchip,model = "VEYRON-HDMI";
-+		rockchip,i2s-controller = <&i2s>;
-+		rockchip,hdmi-codec = <&hdmi>;
-+	};
- };
- 
- &cpu_thermal {
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.24.0.rc0.303.g954a862665-goog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
