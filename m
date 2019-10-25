@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD09CA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2A5CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE93721D81
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22EF21D71
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yCYWZ5Wg"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vCBL+TXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394626AbfJYN1a (ORCPT
+        id S1727148AbfJYN24 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:27:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44034 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfJYN1a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 09:27:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z11so2318634wro.11
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 06:27:27 -0700 (PDT)
+        Fri, 25 Oct 2019 09:28:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39702 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfJYN24 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 09:28:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a11so2348525wra.6
+        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 06:28:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=wqdQnDHAFWYBrYek3ZBFw/xYtoqqpkBX9EDIQCuKN6M=;
-        b=yCYWZ5Wg/QMiX84Aq9Ugy2DuA/rOnJa0SSre2839OfxeToaJPrSWJPJykkYU6D2f5a
-         m77Gme5i7fA9PHHub8rc2juYDu0lU18004P2HRoNwxs4mX31hq4+hHXQtq1//2tJ5fxl
-         GbLyXynhScYcV1r2PafcGPrQwe/IJBg3Ti1Nz/5MK4TjwTxnM7aATzP4aMsbhUEAHacJ
-         C2Ga+6iz0fs5O0YYUAhizCjeXC6m5NO9PeIjE1fMDaqy0yDiBZ63pe8Chfpkw9nZr+39
-         qaSq/XDxqzyemReQ23bZ4KSfuGyfOhidrq9jVsPo//vy0QejYiW8LrhkR9+92sxVVRO/
-         eEww==
+        bh=9frL41InOv8K+U0+sJu6i/z5TY7zbxD/yHaCA3W+1bM=;
+        b=vCBL+TXptQpWMTm9PKAq9RuLrmbTNMu530PqsysZU9ZcpQgeGBNBjVOAoDK4eYMWQ3
+         vG9KUmaWQ//RYG7cJOJgX5UEieBUC6hE4Jzyny37RrdeJvpm/Sek0oq566gCbACMTWFS
+         IfpUvCFx8LZaOz2IX3gEhxurUYyo38QK1Q/lpEgrdkJ/Rd140OljvlzYEcWrZO+bHE0U
+         7riU8natFvcFN2ZfHGnfuCSxp6kUCgrWDPA3DmEZYAe4LammYUl5DvLENRDR+ozRCWST
+         cRe5FvAs6zO8jskVVdThAiYymKwQaZ70joBiVpY2RVU+vNrzzMJyzYDMtUx2CxShZD9X
+         5Fmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=wqdQnDHAFWYBrYek3ZBFw/xYtoqqpkBX9EDIQCuKN6M=;
-        b=Gsky/pq3qZhxzSRKfU06Lo3TN7G3yFY+6J70AFr7Tz/Ac0f4u9E5HOKurKvlQ7pqcW
-         Iq+F0oRRVBu8nMAl4Vk3uU2eNR0zzSk1Yijukr4iCGzrPUb2CQ2Z/5u4aoZT+CQaiVCm
-         5qQhWfHfyrNbLTf0Fkcnc4ocx0nUCVbF/Zb4EIGxGte9JAgG5NU/D3Tr8dP5f5o7R1N3
-         n91SXoine1QZuHPFz4H/KmkJqDg3SrNWOjpT76DTyzRfqP2Us43wC6f1QRICJeVIA5b/
-         lNeffdJp6zb8H591lZm+rmglsnCf0f36I7ru03yzhJJ85idwhhDMCdAX/p5CDvDPm+FL
-         D7xg==
-X-Gm-Message-State: APjAAAV1KD0rGE3REv3sWb5XLJ7zdDMLvx7noRYKaGTybHeDIMYzqT7x
-        xt0H/3ieoJAhAKqiVvhHwo5tX/evBNvs/w==
-X-Google-Smtp-Source: APXvYqx3IrU5oSS/XI6Af6XoIgn76qalcqNao9OBfL2Ozm3+DuNj+dU7/VwAmwz0L2nnGAiEyR0rhg==
-X-Received: by 2002:a5d:62c5:: with SMTP id o5mr3295378wrv.388.1572010046488;
-        Fri, 25 Oct 2019 06:27:26 -0700 (PDT)
+        bh=9frL41InOv8K+U0+sJu6i/z5TY7zbxD/yHaCA3W+1bM=;
+        b=FOE1kFlBQaOweYS6tLeOOzoQM+EXuCvvmxHglxxiMHbv3/rV+HT00oejck4Zh1AV7T
+         KpADh2aC/RPJTplbPmNGslGv0T2zQXYxazdY3081cDrIxpZnzmqE+KIMHDJE3YZjnTpd
+         QkmqWn5pAAG10DO9TUjlgjHa644p+LC4JB1h8J9E0wsdBFiCiWV2hpoNtlCEuVn73SKJ
+         P8BmPqemcgV+P8cyOCcLJmvb+X1mnfR7kn+0VwhwAeHvDhGIcnSz6oPLgCVj1sTMosHd
+         rHb4mWI2pQ1E4PgjZxBsF9AuUFeYcmWk4rzTGAoWZtvni+YWzXrjnI0y00WKRFwK3ivD
+         bJlQ==
+X-Gm-Message-State: APjAAAWthwg/o7kVlXlA7YqDKD4+OPhEAzfSLCHp49mtJ8FgqdiNd/oN
+        cEWsxOW11QaHMWDxu6/UJG52MF4FWY/wGg==
+X-Google-Smtp-Source: APXvYqwyFaKcAh8xGQIU2XGhUK3mJsa+SEMmfPfIMPkBNlal3ej7NJhx3KVDOGS4SfFPUhr0xH8RwA==
+X-Received: by 2002:adf:edcc:: with SMTP id v12mr2962281wro.158.1572010130580;
+        Fri, 25 Oct 2019 06:28:50 -0700 (PDT)
 Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id u10sm2754199wmj.0.2019.10.25.06.27.25
+        by smtp.gmail.com with ESMTPSA id n3sm2619297wrr.50.2019.10.25.06.28.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 06:27:26 -0700 (PDT)
-Subject: Re: [PATCH v3 05/21] drm/bridge: Introduce
- drm_bridge_chain_get_next_bridge()
+        Fri, 25 Oct 2019 06:28:50 -0700 (PDT)
+Subject: Re: [PATCH v3 06/21] drm: Stop accessing encoder->bridge directly
 To:     Boris Brezillon <boris.brezillon@collabora.com>,
         dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -81,7 +80,7 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-6-boris.brezillon@collabora.com>
+ <20191023154512.9762-7-boris.brezillon@collabora.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -134,12 +133,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <e23b5a71-ec0a-7442-0759-6921a4c08a24@baylibre.com>
-Date:   Fri, 25 Oct 2019 15:27:24 +0200
+Message-ID: <7560013f-43dc-5082-19be-bcc3a7982ccd@baylibre.com>
+Date:   Fri, 25 Oct 2019 15:28:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191023154512.9762-6-boris.brezillon@collabora.com>
+In-Reply-To: <20191023154512.9762-7-boris.brezillon@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -149,132 +148,264 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 23/10/2019 17:44, Boris Brezillon wrote:
-> And use it in drivers accessing the bridge->next field directly.
-> This is part of our attempt to make the bridge chain a double-linked list
-> based on the generic list helpers.
+> We are about to replace the single-linked bridge list by a double-linked
+> one based on list.h, leading to the suppression of the encoder->bridge
+> field. But before we can do that we must provide a
+> drm_bridge_chain_get_first_bridge() bridge helper and patch all drivers
+> and core helpers to use it instead of directly accessing encoder->bridge.
 > 
 > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 > ---
-> Changes in v3:
-> * Inline drm_bridge_chain_get_next_bridge() (Suggested by Laurent)
+>  drivers/gpu/drm/drm_atomic_helper.c    | 25 +++++++++++++++++--------
+>  drivers/gpu/drm/drm_encoder.c          |  3 ++-
+>  drivers/gpu/drm/drm_probe_helper.c     |  4 +++-
+>  drivers/gpu/drm/msm/edp/edp_bridge.c   | 10 ++++++++--
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 11 ++++++++---
+>  include/drm/drm_bridge.h               | 15 +++++++++++++++
+>  6 files changed, 53 insertions(+), 15 deletions(-)
 > 
-> Changes in v2:
-> * Kill the last/first helpers (they're not really needed)
-> * Drop the !bridge || !bridge->encoder test
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c |  3 ++-
->  drivers/gpu/drm/mediatek/mtk_hdmi.c     |  6 ++++--
->  drivers/gpu/drm/omapdrm/omap_drv.c      |  4 ++--
->  drivers/gpu/drm/omapdrm/omap_encoder.c  |  3 ++-
->  drivers/gpu/drm/vc4/vc4_dsi.c           |  4 +++-
->  include/drm/drm_bridge.h                | 13 +++++++++++++
->  6 files changed, 26 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> index 3915f50b005e..005c67894b78 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> @@ -1593,9 +1593,10 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
->  				  struct mipi_dsi_device *device)
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index cf678be58fa4..f02ddffd4960 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -419,6 +419,7 @@ mode_fixup(struct drm_atomic_state *state)
+>  	for_each_new_connector_in_state(state, connector, new_conn_state, i) {
+>  		const struct drm_encoder_helper_funcs *funcs;
+>  		struct drm_encoder *encoder;
+> +		struct drm_bridge *bridge;
+>  
+>  		WARN_ON(!!new_conn_state->best_encoder != !!new_conn_state->crtc);
+>  
+> @@ -435,7 +436,8 @@ mode_fixup(struct drm_atomic_state *state)
+>  		encoder = new_conn_state->best_encoder;
+>  		funcs = encoder->helper_private;
+>  
+> -		ret = drm_bridge_chain_mode_fixup(encoder->bridge,
+> +		bridge = drm_bridge_chain_get_first_bridge(encoder);
+> +		ret = drm_bridge_chain_mode_fixup(bridge,
+>  					&new_crtc_state->mode,
+>  					&new_crtc_state->adjusted_mode);
+>  		if (!ret) {
+> @@ -493,6 +495,7 @@ static enum drm_mode_status mode_valid_path(struct drm_connector *connector,
+>  					    struct drm_crtc *crtc,
+>  					    const struct drm_display_mode *mode)
 >  {
->  	struct exynos_dsi *dsi = host_to_dsi(host);
-> -	struct drm_bridge *out_bridge = dsi->bridge.next;
->  	struct drm_device *drm = dsi->encoder.dev;
-> +	struct drm_bridge *out_bridge;
->  
-> +	out_bridge = drm_bridge_chain_get_next_bridge(&dsi->bridge);
->  	if (dsi->panel) {
->  		mutex_lock(&drm->mode_config.mutex);
->  		exynos_dsi_disable(&dsi->bridge);
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> index ea68b5adccbe..cfaa5aab8876 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> @@ -1238,16 +1238,18 @@ static int mtk_hdmi_conn_mode_valid(struct drm_connector *conn,
->  				    struct drm_display_mode *mode)
->  {
->  	struct mtk_hdmi *hdmi = hdmi_ctx_from_conn(conn);
-> +	struct drm_bridge *next_bridge;
->  
->  	dev_dbg(hdmi->dev, "xres=%d, yres=%d, refresh=%d, intl=%d clock=%d\n",
->  		mode->hdisplay, mode->vdisplay, mode->vrefresh,
->  		!!(mode->flags & DRM_MODE_FLAG_INTERLACE), mode->clock * 1000);
->  
-> -	if (hdmi->bridge.next) {
-> +	next_bridge = drm_bridge_chain_get_next_bridge(&hdmi->bridge);
-> +	if (next_bridge) {
->  		struct drm_display_mode adjusted_mode;
->  
->  		drm_mode_copy(&adjusted_mode, mode);
-> -		if (!drm_bridge_chain_mode_fixup(hdmi->bridge.next, mode,
-> +		if (!drm_bridge_chain_mode_fixup(next_bridge, mode,
->  						 &adjusted_mode))
->  			return MODE_BAD;
->  	}
-> diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
-> index b3e22c890c51..865164fe28dc 100644
-> --- a/drivers/gpu/drm/omapdrm/omap_drv.c
-> +++ b/drivers/gpu/drm/omapdrm/omap_drv.c
-> @@ -217,8 +217,8 @@ static int omap_display_id(struct omap_dss_device *output)
->  	} else if (output->bridge) {
->  		struct drm_bridge *bridge = output->bridge;
->  
-> -		while (bridge->next)
-> -			bridge = bridge->next;
-> +		while (drm_bridge_chain_get_next_bridge(bridge))
-> +			bridge = drm_bridge_chain_get_next_bridge(bridge);
->  
->  		node = bridge->of_node;
->  	} else if (output->panel) {
-> diff --git a/drivers/gpu/drm/omapdrm/omap_encoder.c b/drivers/gpu/drm/omapdrm/omap_encoder.c
-> index 24bbe9f2a32e..8ca54081997e 100644
-> --- a/drivers/gpu/drm/omapdrm/omap_encoder.c
-> +++ b/drivers/gpu/drm/omapdrm/omap_encoder.c
-> @@ -126,7 +126,8 @@ static void omap_encoder_mode_set(struct drm_encoder *encoder,
->  	for (dssdev = output; dssdev; dssdev = dssdev->next)
->  		omap_encoder_update_videomode_flags(&vm, dssdev->bus_flags);
->  
-> -	for (bridge = output->bridge; bridge; bridge = bridge->next) {
-> +	for (bridge = output->bridge; bridge;
-> +	     bridge = drm_bridge_chain_get_next_bridge(bridge)) {
->  		if (!bridge->timings)
->  			continue;
->  
-> diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
-> index 49f8a313e759..49c47185aff0 100644
-> --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> @@ -1644,8 +1644,10 @@ static void vc4_dsi_unbind(struct device *dev, struct device *master,
->  	struct drm_device *drm = dev_get_drvdata(master);
->  	struct vc4_dev *vc4 = to_vc4_dev(drm);
->  	struct vc4_dsi *dsi = dev_get_drvdata(dev);
 > +	struct drm_bridge *bridge;
+>  	enum drm_mode_status ret;
 >  
-> -	if (dsi->bridge.next)
-> +	bridge = drm_bridge_chain_get_next_bridge(&dsi->bridge);
-> +	if (bridge)
->  		pm_runtime_disable(dev);
+>  	ret = drm_encoder_mode_valid(encoder, mode);
+> @@ -502,7 +505,8 @@ static enum drm_mode_status mode_valid_path(struct drm_connector *connector,
+>  		return ret;
+>  	}
 >  
->  	vc4_dsi_encoder_destroy(dsi->encoder);
+> -	ret = drm_bridge_chain_mode_valid(encoder->bridge, mode);
+> +	bridge = drm_bridge_chain_get_first_bridge(encoder);
+> +	ret = drm_bridge_chain_mode_valid(bridge, mode);
+>  	if (ret != MODE_OK) {
+>  		DRM_DEBUG_ATOMIC("[BRIDGE] mode_valid() failed\n");
+>  		return ret;
+> @@ -985,6 +989,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
+>  	for_each_oldnew_connector_in_state(old_state, connector, old_conn_state, new_conn_state, i) {
+>  		const struct drm_encoder_helper_funcs *funcs;
+>  		struct drm_encoder *encoder;
+> +		struct drm_bridge *bridge;
+>  
+>  		/* Shut down everything that's in the changeset and currently
+>  		 * still on. So need to check the old, saved state. */
+> @@ -1021,7 +1026,8 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
+>  		 * Each encoder has at most one connector (since we always steal
+>  		 * it away), so we won't call disable hooks twice.
+>  		 */
+> -		drm_atomic_bridge_chain_disable(encoder->bridge, old_state);
+> +		bridge = drm_bridge_chain_get_first_bridge(encoder);
+> +		drm_atomic_bridge_chain_disable(bridge, old_state);
+>  
+>  		/* Right function depends upon target state. */
+>  		if (funcs) {
+> @@ -1035,7 +1041,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
+>  				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
+>  		}
+>  
+> -		drm_atomic_bridge_chain_post_disable(encoder->bridge,
+> +		drm_atomic_bridge_chain_post_disable(bridge,
+>  						     old_state);
+>  	}
+>  
+> @@ -1190,6 +1196,7 @@ crtc_set_mode(struct drm_device *dev, struct drm_atomic_state *old_state)
+>  		const struct drm_encoder_helper_funcs *funcs;
+>  		struct drm_encoder *encoder;
+>  		struct drm_display_mode *mode, *adjusted_mode;
+> +		struct drm_bridge *bridge;
+>  
+>  		if (!new_conn_state->best_encoder)
+>  			continue;
+> @@ -1217,8 +1224,8 @@ crtc_set_mode(struct drm_device *dev, struct drm_atomic_state *old_state)
+>  			funcs->mode_set(encoder, mode, adjusted_mode);
+>  		}
+>  
+> -		drm_bridge_chain_mode_set(encoder->bridge, mode,
+> -					  adjusted_mode);
+> +		bridge = drm_bridge_chain_get_first_bridge(encoder);
+> +		drm_bridge_chain_mode_set(bridge, mode, adjusted_mode);
+>  	}
+>  }
+>  
+> @@ -1317,6 +1324,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+>  	for_each_new_connector_in_state(old_state, connector, new_conn_state, i) {
+>  		const struct drm_encoder_helper_funcs *funcs;
+>  		struct drm_encoder *encoder;
+> +		struct drm_bridge *bridge;
+>  
+>  		if (!new_conn_state->best_encoder)
+>  			continue;
+> @@ -1335,7 +1343,8 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+>  		 * Each encoder has at most one connector (since we always steal
+>  		 * it away), so we won't call enable hooks twice.
+>  		 */
+> -		drm_atomic_bridge_chain_pre_enable(encoder->bridge, old_state);
+> +		bridge = drm_bridge_chain_get_first_bridge(encoder);
+> +		drm_atomic_bridge_chain_pre_enable(bridge, old_state);
+>  
+>  		if (funcs) {
+>  			if (funcs->atomic_enable)
+> @@ -1346,7 +1355,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+>  				funcs->commit(encoder);
+>  		}
+>  
+> -		drm_atomic_bridge_chain_enable(encoder->bridge, old_state);
+> +		drm_atomic_bridge_chain_enable(bridge, old_state);
+>  	}
+>  
+>  	drm_atomic_helper_commit_writebacks(dev, old_state);
+> diff --git a/drivers/gpu/drm/drm_encoder.c b/drivers/gpu/drm/drm_encoder.c
+> index 80d88a55302e..4fe9e723e227 100644
+> --- a/drivers/gpu/drm/drm_encoder.c
+> +++ b/drivers/gpu/drm/drm_encoder.c
+> @@ -167,9 +167,10 @@ void drm_encoder_cleanup(struct drm_encoder *encoder)
+>  	 */
+>  
+>  	if (encoder->bridge) {
+> -		struct drm_bridge *bridge = encoder->bridge;
+> +		struct drm_bridge *bridge;
+>  		struct drm_bridge *next;
+>  
+> +		bridge = drm_bridge_chain_get_first_bridge(encoder);
+>  		while (bridge) {
+>  			next = bridge->next;
+>  			drm_bridge_detach(bridge);
+> diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
+> index c3ea722065c4..576b4b7dcd89 100644
+> --- a/drivers/gpu/drm/drm_probe_helper.c
+> +++ b/drivers/gpu/drm/drm_probe_helper.c
+> @@ -101,6 +101,7 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
+>  
+>  	/* Step 2: Validate against encoders and crtcs */
+>  	drm_connector_for_each_possible_encoder(connector, encoder) {
+> +		struct drm_bridge *bridge;
+>  		struct drm_crtc *crtc;
+>  
+>  		ret = drm_encoder_mode_valid(encoder, mode);
+> @@ -112,7 +113,8 @@ drm_mode_validate_pipeline(struct drm_display_mode *mode,
+>  			continue;
+>  		}
+>  
+> -		ret = drm_bridge_chain_mode_valid(encoder->bridge, mode);
+> +		bridge = drm_bridge_chain_get_first_bridge(encoder);
+> +		ret = drm_bridge_chain_mode_valid(bridge, mode);
+>  		if (ret != MODE_OK) {
+>  			/* There is also no point in continuing for crtc check
+>  			 * here. */
+> diff --git a/drivers/gpu/drm/msm/edp/edp_bridge.c b/drivers/gpu/drm/msm/edp/edp_bridge.c
+> index 2950bba4aca9..b65b5cc2dba2 100644
+> --- a/drivers/gpu/drm/msm/edp/edp_bridge.c
+> +++ b/drivers/gpu/drm/msm/edp/edp_bridge.c
+> @@ -55,8 +55,14 @@ static void edp_bridge_mode_set(struct drm_bridge *bridge,
+>  	DBG("set mode: " DRM_MODE_FMT, DRM_MODE_ARG(mode));
+>  
+>  	list_for_each_entry(connector, &dev->mode_config.connector_list, head) {
+> -		if ((connector->encoder != NULL) &&
+> -			(connector->encoder->bridge == bridge)) {
+> +		struct drm_encoder *encoder = connector->encoder;
+> +		struct drm_bridge *first_bridge;
+> +
+> +		if (!connector->encoder)
+> +			continue;
+> +
+> +		first_bridge = drm_bridge_chain_get_first_bridge(encoder);
+> +		if (bridge == first_bridge) {
+>  			msm_edp_ctrl_timing_cfg(edp->ctrl,
+>  				adjusted_mode, &connector->display_info);
+>  			break;
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 2da46e3dc4ae..7a1f1e5f0326 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -14,6 +14,7 @@
+>  
+>  #include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_bridge.h>
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_device.h>
+>  #include <drm/drm_fb_cma_helper.h>
+> @@ -680,9 +681,10 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>  			rcdu->encoders[RCAR_DU_OUTPUT_LVDS0 + rcrtc->index];
+>  		const struct drm_display_mode *mode =
+>  			&crtc->state->adjusted_mode;
+> +		struct drm_bridge *bridge;
+>  
+> -		rcar_lvds_clk_enable(encoder->base.bridge,
+> -				     mode->clock * 1000);
+> +		bridge = drm_bridge_chain_get_first_bridge(&encoder->base);
+> +		rcar_lvds_clk_enable(bridge, mode->clock * 1000);
+>  	}
+>  
+>  	rcar_du_crtc_start(rcrtc);
+> @@ -702,12 +704,15 @@ static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+>  	    rstate->outputs == BIT(RCAR_DU_OUTPUT_DPAD0)) {
+>  		struct rcar_du_encoder *encoder =
+>  			rcdu->encoders[RCAR_DU_OUTPUT_LVDS0 + rcrtc->index];
+> +		struct drm_bridge *bridge;
+> +
+>  
+>  		/*
+>  		 * Disable the LVDS clock output, see
+>  		 * rcar_du_crtc_atomic_enable().
+>  		 */
+> -		rcar_lvds_clk_disable(encoder->base.bridge);
+> +		bridge = drm_bridge_chain_get_first_bridge(&encoder->base);
+> +		rcar_lvds_clk_disable(bridge);
+>  	}
+>  
+>  	spin_lock_irq(&crtc->dev->event_lock);
 > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index 726435baf4ad..8aeba83fcf31 100644
+> index 8aeba83fcf31..27eef63ce0ff 100644
 > --- a/include/drm/drm_bridge.h
 > +++ b/include/drm/drm_bridge.h
-> @@ -409,6 +409,19 @@ struct drm_bridge *of_drm_find_bridge(struct device_node *np);
->  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->  		      struct drm_bridge *previous);
+> @@ -25,6 +25,7 @@
+>  
+>  #include <linux/list.h>
+>  #include <linux/ctype.h>
+> +#include <drm/drm_encoder.h>
+>  #include <drm/drm_mode_object.h>
+>  #include <drm/drm_modes.h>
+>  
+> @@ -422,6 +423,20 @@ drm_bridge_chain_get_next_bridge(struct drm_bridge *bridge)
+>  	return bridge->next;
+>  }
 >  
 > +/**
-> + * drm_bridge_chain_get_next_bridge() - Get the next bridge in the chain
-> + * @bridge: bridge object
+> + * drm_bridge_chain_get_first_bridge() - Get the first bridge in the chain
+> + * @encoder: encoder object
 > + *
 > + * RETURNS:
-> + * the next bridge in the chain, or NULL if @bridge is the last.
+> + * the first bridge in the chain, or NULL if @encoder has no bridge attached
+> + * to it.
 > + */
 > +static inline struct drm_bridge *
-> +drm_bridge_chain_get_next_bridge(struct drm_bridge *bridge)
+> +drm_bridge_chain_get_first_bridge(struct drm_encoder *encoder)
 > +{
-> +	return bridge->next;
+> +	return encoder->bridge;
 > +}
 > +
 >  bool drm_bridge_chain_mode_fixup(struct drm_bridge *bridge,
