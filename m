@@ -2,107 +2,116 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45851CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36878C47E49
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19E2F20867
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08AE221D7B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572023151;
-	bh=Yy3gGiORtR012JXL2z6WSlhzSde26hmu3ywRa3Pmh0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hm49ggrH4aeZCewAE9PvCJRo+euZMZCF1aVcc54wAnVugU96LHjOx7enXPTN/fMU3
-	 X07MXIOz++cg+YzMVzQQ1IRG7tDw4dKN0Ax+sWIOySSXEwAmqnstbMWBMWny25oHXG
-	 Yrzq0FZW7u2wSl3BJVWduTM9RL2r/M+sugFibWgk=
+	s=default; t=1572023565;
+	bh=Z9kAbxaXKmbqq+OCusdDlzS7M+q9LbO89gcG35ir0CE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OqBuVjPRtRxWppOBx3RsnfOn3wcRuAOgExR+ywz3DmbyCU/4Ony30zofNNgbeHbEA
+	 94vROyBjzimXBsgzhsTgG3FjW4Rp729zujt3oVK1R9DD51IZDWxptl0+m1eE3+OClv
+	 eFU31NlFzoZTGNcPdsyeLxTAqkk3CKhJgXoAuvGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406052AbfJYRFl (ORCPT
+        id S2505862AbfJYRMo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 13:05:41 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44346 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404975AbfJYRFb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 13:05:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n48so2508456ota.11;
-        Fri, 25 Oct 2019 10:05:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1AgdABbWJsmP+A2yUEZpKyjJoywiJ/30OEkpvdzMQXE=;
-        b=fkUYjq/RBT7KX8uWpE/S3Y7Qr7r8rK9o62Sx9hq/weytZ5O5Ph6ANvw8EmYJ9u6J41
-         LESxXBWJGM5Wfvypfi5Z8aEEM0V5ENBYLkFU0HrGGXDwkijc5Uq76WeON985IbuMz6Iw
-         EKDFvU8mLioZPBpFOIkFXM7Bcwx8zOyduwGhwATuK00jKnJdH9QBvlHFsrjBy1JOOKnN
-         BhqY53NaleJeNsqtok2baGbAS1Rp+tUQdRMB6L2dRo9TSZJlKVqAGeSDM3XJdoBju9V/
-         Foi3rzWFw7+dmA/npGSbipAs1IptqCX3Q5itgGwOTvNfzu4xF8GzkOeYLwaok66lGinS
-         0UsA==
-X-Gm-Message-State: APjAAAW3DDHNu4Z/fumYVQ51+iPFu/sWXyGde77jZ6fbhSBjDYxKBXFw
-        /xpo84hN5z1s+VJUdiTTKXP6Mk4=
-X-Google-Smtp-Source: APXvYqzAIN39CFwejymy8N75FlRSEB+gx7AUGQuhXy4lYkgVhNH9amWjIoeuN/NJ45wpnUM65WYw2g==
-X-Received: by 2002:a9d:6f17:: with SMTP id n23mr3512605otq.54.1572023129944;
-        Fri, 25 Oct 2019 10:05:29 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a21sm702920oia.27.2019.10.25.10.05.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 10:05:29 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 12:05:28 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 1/7] dt-bindings: sram: Convert SRAM bindings to
- json-schema
-Message-ID: <20191025170527.GA12121@bogus>
-References: <20191021161351.20789-1-krzk@kernel.org>
+        Fri, 25 Oct 2019 13:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505842AbfJYRMn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 13:12:43 -0400
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06CD21D71;
+        Fri, 25 Oct 2019 17:12:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572023562;
+        bh=Z9kAbxaXKmbqq+OCusdDlzS7M+q9LbO89gcG35ir0CE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LK3DZoETxxt3Vx/AZOSrcG6Svt1lTR1XOwfx4jzOFxa5ghw2U5wmTPAqlPg+/A/MB
+         XuqqbEva2CS6sCg3lPJcyunXWzVhQMKmM0tB+j9+5rMzWzelksgRQX/bbf8EH7ErkV
+         n27ysL5zWgoUkUXAaX9RnB0EXijNmOiVvuhKoRhQ=
+Received: by mail-qt1-f179.google.com with SMTP id m15so4356290qtq.2;
+        Fri, 25 Oct 2019 10:12:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAVt5AuVLM5VVDiMuRrPK96hAC4UotQOzRlLnigp6jk0t/C7fy8d
+        +0oelijbrjrDQ3YrNE5PUr8+8y5mNrlZs+SAIA==
+X-Google-Smtp-Source: APXvYqwyBAHU7XOj/9lEMryFKsyNgzQcpd0Pku9No2ZatJFpJeBh2HE7sqmId/JADfJ+vHbJLB4UWp8J+xFC4MKtpOw=
+X-Received: by 2002:ac8:741a:: with SMTP id p26mr4135876qtq.143.1572023561814;
+ Fri, 25 Oct 2019 10:12:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021161351.20789-1-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191024202703.8017-1-chris.packham@alliedtelesis.co.nz> <20191024202703.8017-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20191024202703.8017-2-chris.packham@alliedtelesis.co.nz>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 25 Oct 2019 12:12:30 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ6a6cSrZsTg6piXmuB6-zuP+EO9vwkRoeH2aS9AVOT1g@mail.gmail.com>
+Message-ID: <CAL_JsqJ6a6cSrZsTg6piXmuB6-zuP+EO9vwkRoeH2aS9AVOT1g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 21 Oct 2019 18:13:45 +0200, Krzysztof Kozlowski wrote:
-> Convert generic mmio-sram bindings to DT schema format using
-> json-schema.  Require the address/size cells to be 1, not equal to root
-> node.  This also fixes the check for clocks property to be in main root
-> node instead of children.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
+On Thu, Oct 24, 2019 at 3:27 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> This GPIO controller is present on a number of Broadcom switch ASICs
+> with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
+> blocks but different enough to require a separate driver.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
-> 
-> Changes since v3:
-> 1. Integrate Samsung SRAM bindings here,
-> 2. Move 'clocks' one level up (error in previous bindings),
-> 3. Add 'additionalProperties: false',
-> 4. Fix names of children in examples,
-> 5. Fix children nodes address pattern,
-> 6. Address other review comments
-> 
-> Changes since v2:
-> 1. Add Rob as maintainer,
-> 2. Use "contains" for compatible,
-> 3. Fix address and size cells to 1,
-> 4. Add maxitems to reg under children,
-> 5. Remove unneeded string type from label.
-> 
-> Changes since v1:
-> 1. Indent example with four spaces (more readable).
-> ---
->  .../devicetree/bindings/sram/sram.txt         |  80 ----------
->  .../devicetree/bindings/sram/sram.yaml        | 137 ++++++++++++++++++
->  2 files changed, 137 insertions(+), 80 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/sram.txt
->  create mode 100644 Documentation/devicetree/bindings/sram/sram.yaml
-> 
+>
+> Notes:
+>     Changes in v4:
+>     - rename brcm,xgs-iproc.yaml -> brcm,xgs-iproc-gpio.yaml as suggested
+>
+>     Changes in v3:
+>     - incorporate review comments from Rob and Bart
+>
+>     Changes in v2:
+>     - Document as DT schema
+>     - Include ngpios, #gpio-cells and gpio-controller properties
+>
+>  .../bindings/gpio/brcm,xgs-iproc-gpio.yaml    | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+> new file mode 100644
+> index 000000000000..ec1fd3a64aa2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
 
-Applied the series, thanks.
+Documentation/devicetree/bindings/gpio/brcm,xgs-iproc-gpio.yaml: $id:
+path/filename 'gpio/brcm,xgs-iproc.yaml' doesn't match actual filename
 
-Rob
+Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
