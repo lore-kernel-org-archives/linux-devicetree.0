@@ -2,93 +2,150 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4219ECA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0992EC47E49
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E62C21872
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E6B21E6F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572036757;
-	bh=ORFhXAsCQweMyIE5fdnoRCbGtyZgtGzZu0oJWpRtLEA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1T3Rh+w9tskUxrYTGN+cmgZFqP2O/v6kGhDNX4Uq7AYsy0JUoHAqfN2nhlmZEsgGG
-	 0zYlWwAjVIkvByGLtMnwz+1ycsSlIldZgW4NMD3Ab4f6AGQsto4qfoQ8f4V8X4lmYl
-	 90N08SHh+fmmizlhUR3YoSiWXNBk5WBaWQcyWunY=
+	s=default; t=1572037224;
+	bh=3cD+rj3NK0qBGua3zsPAgru853/NPZeiBNu0Mlz5kCY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GUl9vyz7V6y4cSHm5wGf9SDxMdOjzp/dfrdtZPxD055GF2qm7u58UHitqjT20NG26
+	 D6ghZu3kFXPfEKmtpcS9oihpUlhzTjGA448okbUZ2OO8PHxwxPldw/twN7x9huoaTz
+	 qF3hzEFZWzkZNmvK4GvNLzjNhfkFGl5PyxMAnDzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfJYUwc (ORCPT
+        id S1725783AbfJYVAY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfJYUwc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:52:32 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FF9F21D7F;
-        Fri, 25 Oct 2019 20:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572036751;
-        bh=ORFhXAsCQweMyIE5fdnoRCbGtyZgtGzZu0oJWpRtLEA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zKhAr6iNnKxRR/OmHBwiVBHmMVqC2w3IDMpMyuLTzBntt41I4IEmwx7XdBVyCmlbC
-         sivlIhCM88ecHVAD6G5rMcOVtNc7FNH/2TJnfGsp8C3xX5semVb8HDNqCKBN4ZPjdO
-         lS+G9ZhgAkXpyHUoAmWJw+8Kb1Uu02GfX64m/JGU=
-Received: by mail-qt1-f169.google.com with SMTP id g50so5317466qtb.4;
-        Fri, 25 Oct 2019 13:52:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAWIIXHYm+nCdcSo2lqXzo4ozIXbNWBp/PZ8CBaM6atae8VCgk1h
-        AIqv5Wt9kBeAy930bg5YjfK8JHHGR7whWXE3sA==
-X-Google-Smtp-Source: APXvYqxsld9ImE31xEIRyd/SNyuF7ml49eI3ypfs2k0j66vMlw4KSS63PN5eOAFHsHZIQ0enGsLdpRKYXUAsMTLF2Do=
-X-Received: by 2002:ac8:741a:: with SMTP id p26mr5205325qtq.143.1572036750395;
- Fri, 25 Oct 2019 13:52:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191020040817.16882-1-afaerber@suse.de> <20191020040817.16882-6-afaerber@suse.de>
-In-Reply-To: <20191020040817.16882-6-afaerber@suse.de>
+        Fri, 25 Oct 2019 17:00:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37971 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfJYVAY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 17:00:24 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e11so2981547otl.5;
+        Fri, 25 Oct 2019 14:00:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PIdw2OR1Wc5vcgtc2S6a52CrxT11Bed11+whBzjKQXQ=;
+        b=JgYIuBOPnehOXLyDB6KNXEAjJojTCaPYY9b94WVqaBg43jx9zR14NZYjXLObHMnEIx
+         mcr7cY/3i/MAEPlCkUQmMpG5tGkV4iB8c0gWr8F9t1K4bnSx/kIl30WvEeXYEgYZ9Xbh
+         nLWdJ50xFuYx5S0FP2UZBDGykcokMUfX+o+9kpudriWU9AHIS4pGboI4EjFsaj0VMowu
+         /hKx3DBHCKp2nGzgiQ8wN5cYmNuCTXR9RJDEcNHQIfClr82RE9xJ9dHikZ0PhEOlGDjt
+         SoRE48N5Owlx/sgF+sODCVeEOjTP8KZTc0/YuR1+80AxYYKkELrmi3ertWhhLRDKplBy
+         zkSQ==
+X-Gm-Message-State: APjAAAUOmFaVNDFycpdcW3v5cDM4u424C9ZwgOM6ytB1ayo3w32pVAes
+        5K1WV5wacQSCdeAmXtpOzg==
+X-Google-Smtp-Source: APXvYqwgx8LVN5ZVNBUTcYENC8p5D3he0cebxVqtC+8b/u08CP9bM4qBdYUNb5YGdUAkXXj3FWf51A==
+X-Received: by 2002:a9d:5e12:: with SMTP id d18mr4451844oti.220.1572037223231;
+        Fri, 25 Oct 2019 14:00:23 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l19sm863516oie.22.2019.10.25.14.00.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 14:00:22 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 16:00:21 -0500
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 25 Oct 2019 15:52:19 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+OhiZZ4Ei3wg4s-1z+WsqQSvvRMNrK37Yq+1XR3-3_uA@mail.gmail.com>
-Message-ID: <CAL_Jsq+OhiZZ4Ei3wg4s-1z+WsqQSvvRMNrK37Yq+1XR3-3_uA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/8] arm64: dts: realtek: Change dual-license from MIT
- to BSD
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add
+ bindings for gpio
+Message-ID: <20191025210021.GA12751@bogus>
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-9-srinivas.kandagatla@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018001849.27205-9-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Oct 19, 2019 at 11:08 PM Andreas F=C3=A4rber <afaerber@suse.de> wro=
-te:
->
-> Move the SPDX-License-Identifier to the top line and update to SPDX 2.0.
-> While at it, switch from GPLv2+/MIT to GPLv2+/BSD2c before adding more.
->
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+On Fri, Oct 18, 2019 at 01:18:46AM +0100, Srinivas Kandagatla wrote:
+> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+> gpio controller to control 5 gpios on the chip. This patch adds
+> required device tree bindings for it.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  v2: New
->
->  arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts | 3 +--
->  arch/arm64/boot/dts/realtek/rtd1295.dtsi          | 3 +--
->  arch/arm64/boot/dts/realtek/rtd129x.dtsi          | 3 +--
->  3 files changed, 3 insertions(+), 6 deletions(-)
+>  .../pinctrl/qcom,wcd934x-pinctrl.yaml         | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..c8a36cbc4935
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,wcd934x-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: WCD9340/WCD9341 GPIO Pin controller
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+> +  gpio controller to control 5 gpios on the chip.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,wcd9340-pinctrl
+> +      - qcom,wcd9341-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - gpio-ranges
+> +  - "#gpio-cells"
 
-Acked-by: Rob Herring <robh@kernel.org>
+additionalProperties: false
 
-It's really only schema files that I'm pushing towards BSD2C. Maybe in
-hindsight we should have done MIT as that's more common in the dts
-files.
+> +
+> +
+> +examples:
+> +  - |
+> +    wcdpinctrl: wcdpinctrl@42 {
 
-Rob
+pinctrl@42
+
+> +        compatible = "qcom,wcd9340-pinctrl";
+> +        reg = <0x042 0x2>;
+> +        gpio-controller;
+> +        gpio-ranges = <&wcdpinctrl 0 0 5>;
+> +        #gpio-cells = <2>;
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
+> 
