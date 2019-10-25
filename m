@@ -2,163 +2,113 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4A1CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 11:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D77CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 11:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE3DB21D7B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 11:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2789420684
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 11:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572004620;
+	bh=x/6eiM9BhqvxQhK00NRhiUmYBu8gULRPzd+UFzEpnsc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q5zL1bSnNqH/nU1Cg7zk6k9yZIMaGtqMabqkBt7DieyV3Pdj6XgZn4fYcXse6IVrK
+	 4q5w9ZhxVGpeBhzSx0ILAZ0UuBbARbX2d2cgS3169h+YRBNqBjSeHBjkjI7JizUtqz
+	 IimnZiPQA5OxrxGMDJ85uTwJd82Mys45x6TST4uE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394487AbfJYLti (ORCPT
+        id S1727283AbfJYL47 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:49:38 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:17053 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393524AbfJYLth (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 07:49:37 -0400
-Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 25 Oct 2019
- 19:49:48 +0800
-From:   Qianggui Song <qianggui.song@amlogic.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Qianggui Song <qianggui.song@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v4 1/4] pinctrl: add compatible for Amlogic Meson A1 pin controller
-Date:   Fri, 25 Oct 2019 19:49:24 +0800
-Message-ID: <1572004167-24150-2-git-send-email-qianggui.song@amlogic.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1572004167-24150-1-git-send-email-qianggui.song@amlogic.com>
-References: <1572004167-24150-1-git-send-email-qianggui.song@amlogic.com>
+        Fri, 25 Oct 2019 07:56:59 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44184 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfJYL47 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 07:56:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x/6eiM9BhqvxQhK00NRhiUmYBu8gULRPzd+UFzEpnsc=; b=lySZxGyzza2R5r11U7yL7TzQy
+        mTnQyAl06jrTNSOWQlx5iXyKBFJGrEo/FAz9vlEZXbECYwIjhsbFA/kWXbS5EWYHaXBJs4g5LC7xj
+        2eCgWHrPMzdm/AQ3Zj/oSZzQG9HP5h54YcRzpw4bU61tHwGDVGDWT5BwcTulr11MOEHVc=;
+Received: from 188.30.141.58.threembb.co.uk ([188.30.141.58] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iNyDA-0006qe-No; Fri, 25 Oct 2019 11:56:56 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id AF78ED020A1; Fri, 25 Oct 2019 12:56:55 +0100 (BST)
+Date:   Fri, 25 Oct 2019 12:56:55 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] spi: set bits_per_word based on controller's
+ bits_per_word_mask
+Message-ID: <20191025115655.GA4568@sirena.org.uk>
+References: <20191024110757.25820-1-alvaro.gamez@hazent.com>
+ <20191024110757.25820-4-alvaro.gamez@hazent.com>
+ <20191024111300.GD5207@sirena.co.uk>
+ <20191024125436.GA8878@salem.gmr.ssr.upm.es>
+ <20191024131129.GE46373@sirena.co.uk>
+ <20191024131856.GA32609@salem.gmr.ssr.upm.es>
+ <20191024134116.GF46373@sirena.co.uk>
+ <20191024140731.GA2950@salem.gmr.ssr.upm.es>
+ <20191024174033.GG46373@sirena.co.uk>
+ <20191025063947.GA19665@salem.gmr.ssr.upm.es>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.19]
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Content-Disposition: inline
+In-Reply-To: <20191025063947.GA19665@salem.gmr.ssr.upm.es>
+X-Cookie: Keep out of the sunlight.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add new compatible name for Amlogic's Meson-A1 pin controller
-add a dt-binding header file which document the detail pin names.
-Note that A1 doesn't need DS bank reg any more, use gpio reg as
-base.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
----
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |  1 +
- include/dt-bindings/gpio/meson-a1-gpio.h           | 73 ++++++++++++++++++++++
- 2 files changed, 74 insertions(+)
- create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index 10dc4f7176ca..0aff1f28495c 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -15,6 +15,7 @@ Required properties for the root node:
- 		      "amlogic,meson-axg-aobus-pinctrl"
- 		      "amlogic,meson-g12a-periphs-pinctrl"
- 		      "amlogic,meson-g12a-aobus-pinctrl"
-+		      "amlogic,meson-a1-periphs-pinctrl"
-  - reg: address and size of registers controlling irq functionality
- 
- === GPIO sub-nodes ===
-diff --git a/include/dt-bindings/gpio/meson-a1-gpio.h b/include/dt-bindings/gpio/meson-a1-gpio.h
-new file mode 100644
-index 000000000000..40e57a5ff1db
---- /dev/null
-+++ b/include/dt-bindings/gpio/meson-a1-gpio.h
-@@ -0,0 +1,73 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ * Author: Qianggui Song <qianggui.song@amlogic.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_MESON_A1_GPIO_H
-+#define _DT_BINDINGS_MESON_A1_GPIO_H
-+
-+#define GPIOP_0		0
-+#define GPIOP_1		1
-+#define GPIOP_2		2
-+#define GPIOP_3		3
-+#define GPIOP_4		4
-+#define GPIOP_5		5
-+#define GPIOP_6		6
-+#define GPIOP_7		7
-+#define GPIOP_8		8
-+#define GPIOP_9		9
-+#define GPIOP_10	10
-+#define GPIOP_11	11
-+#define GPIOP_12	12
-+#define GPIOB_0		13
-+#define GPIOB_1		14
-+#define GPIOB_2		15
-+#define GPIOB_3		16
-+#define GPIOB_4		17
-+#define GPIOB_5		18
-+#define GPIOB_6		19
-+#define GPIOX_0		20
-+#define GPIOX_1		21
-+#define GPIOX_2		22
-+#define GPIOX_3		23
-+#define GPIOX_4		24
-+#define GPIOX_5		25
-+#define GPIOX_6		26
-+#define GPIOX_7		27
-+#define GPIOX_8		28
-+#define GPIOX_9		29
-+#define GPIOX_10	30
-+#define GPIOX_11	31
-+#define GPIOX_12	32
-+#define GPIOX_13	33
-+#define GPIOX_14	34
-+#define GPIOX_15	35
-+#define GPIOX_16	36
-+#define GPIOF_0		37
-+#define GPIOF_1		38
-+#define GPIOF_2		39
-+#define GPIOF_3		40
-+#define GPIOF_4		41
-+#define GPIOF_5		42
-+#define GPIOF_6		43
-+#define GPIOF_7		44
-+#define GPIOF_8		45
-+#define GPIOF_9		46
-+#define GPIOF_10	47
-+#define GPIOF_11	48
-+#define GPIOF_12	49
-+#define GPIOA_0		50
-+#define GPIOA_1		51
-+#define GPIOA_2		52
-+#define GPIOA_3		53
-+#define GPIOA_4		54
-+#define GPIOA_5		55
-+#define GPIOA_6		56
-+#define GPIOA_7		57
-+#define GPIOA_8		58
-+#define GPIOA_9		59
-+#define GPIOA_10	60
-+#define GPIOA_11	61
-+
-+#endif /* _DT_BINDINGS_MESON_A1_GPIO_H */
--- 
-1.9.1
+On Fri, Oct 25, 2019 at 08:39:48AM +0200, Alvaro Gamez Machado wrote:
 
+> to claim the specific SPI slave. It may be spidev as in my use case, or it
+> may really be any other driver. But its probe() function is never going to
+> be called because the error is not raised inside the driver, but immediately
+> after forcibly setting the default value to 8 in spi.c
+
+Then you need to extend the validation the core is doing here to
+skip this parameter when registering the device and only enforce
+it after a driver is bound, we don't have a driver at the time we
+initially register the device so we can't enforce this.
+
+> I can't modify spidev because spidev doesn't even know this is happening.
+
+You are, at some point, going to need to set your spidev to 32
+bits per word (spidev does already support this).
+
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2y4wUACgkQJNaLcl1U
+h9BpgQf/XNJ5nBjhjdIb2Tnl7FFtf6n6D1axZ7AGYAlnL5KAiV+sXtRT4oWE4DGr
++FxtPUOTroHbqtBB7BBqexVPNw1xQYsGFxYbD3gz2Il7USTBzMMDJ/8YVCRtSXzr
+pFZrd7uFHokcKl9r2ca/dPuNWnO5z/7jqnpq4syJ0A+bGJE/DgUmmzdpeBRY42eh
+dAbnJrNF7DWZRcFzXXr6nwYNjFQBWiTwPXAEdCuQp+5G4FrEQMWoAbm4/7xg9IdY
+Cb46HR8VkmtyUCafWgQBeUjVGrMPgsewcFMevjO3WDshe9HOLjFRcgymTgaE0Ds/
+5uFapLE00/Cu2/K8NPYDgmOCaSH6ZQ==
+=9y3V
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
