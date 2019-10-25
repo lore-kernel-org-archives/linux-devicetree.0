@@ -2,115 +2,73 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5E2CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 12:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0700ACA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B1B20663
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 12:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE57C21D7B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="D1BUOeFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439191AbfJYM4u (ORCPT
+        id S2504696AbfJYNBa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 08:56:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39448 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438960AbfJYM4u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 08:56:50 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s22so2006038otr.6;
-        Fri, 25 Oct 2019 05:56:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hj0kvi+vVbyfIJI30UL1Cpmnr3zPIpRpeA9rzCxH54U=;
-        b=i4grp6CEYmePOU1teGRTNDyM9fK1TwP6tYXBDB42ixbJv13HBSaq/HFy009r3uSHwx
-         m0ekoivF8mqUvLu4J3A1sOldaUxEa5ApHVpmLESwt538mP1ukX8mWgRQ4pxunTeqmW/8
-         CoWy2Q6VSgooWr3TfYk+DWpYxP0PcjD1HyKvE4M9XwRlOTS2WpIQG+y41cBPL6B8piMT
-         TxEnaHdPGSX92ijd4f5VC8RMOrkLv1QdUaVl5BXkP1l6QSqhKfeJ7R7cJcy50W93Z8xH
-         kNYfSNrIpBiYnpQXesGynQNBkp44CG2g/2Rw4470hGmwC5gKkxaDfxsgoMjrAOVQ0rDw
-         5sZA==
-X-Gm-Message-State: APjAAAU1Ubs1KWk8brAjVr3bgfyEwrWdR+P753sznOEpLUwZ0rwB/Xuj
-        Lg+VP8lPJPIGu6OEQttEyAUuzgC825SpEPCzNk4=
-X-Google-Smtp-Source: APXvYqyGZIlyFoM/7awbc2SMmvfFJP+ChjfvSdn1k5oIzBGk3fKsfPhFJ49DQVrqFikAaFR6J0W278qfnN/Mt4JoFLk=
-X-Received: by 2002:a9d:422:: with SMTP id 31mr2544652otc.107.1572008208146;
- Fri, 25 Oct 2019 05:56:48 -0700 (PDT)
+        Fri, 25 Oct 2019 09:01:30 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:35350 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504641AbfJYNB3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:01:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=b6iuHPYlCH7nRYcL4N4YCQFM+mnd35/+AX1RxwRV/nc=; b=D1BUOeFQwhoKNkbFkpTGFokgRB
+        WEJcOE37Ujw+t7Ld31pAerTV4DrxS53ceIErvPtiJb5JQisIZal77zd/6I/siw7EXODz9046CPybf
+        VMX2WWG9tgXc3utC1m2hvbYKWgL0SnbndzJsrM88DKV9kkOtP/k2IPWH0HJBkE5gvHAI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iNzDJ-0002q4-2z; Fri, 25 Oct 2019 15:01:09 +0200
+Date:   Fri, 25 Oct 2019 15:01:09 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 net-next 04/12] net: ethernet: ti: cpsw: move set of
+ common functions in cpsw_priv
+Message-ID: <20191025130109.GB10212@lunn.ch>
+References: <20191024100914.16840-1-grygorii.strashko@ti.com>
+ <20191024100914.16840-5-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-References: <20190114172930.7508-1-robh@kernel.org> <20190114172930.7508-2-robh@kernel.org>
-In-Reply-To: <20190114172930.7508-2-robh@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 25 Oct 2019 14:56:36 +0200
-Message-ID: <CAMuHMdVnPREgPmn5TAmiqXSxuAYKv_AkQ6StZiDH79vKMRuBGg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: serial: Move renesas,rzn1-uart into
- the snps-dw-apb-uart binding
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024100914.16840-5-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Oct 24, 2019 at 01:09:06PM +0300, Grygorii Strashko wrote:
+> As a preparatory patch to add support for a switchdev based cpsw driver,
+> move common functions to cpsw-priv.c so that they can be used across both
+> drivers.
 
-On Mon, Jan 14, 2019 at 6:30 PM Rob Herring <robh@kernel.org> wrote:
-> The renesas,rzn1-uart binding only differs in compatible string from the
-> snps-dw-apb-uart binding. Move it there, converting it to json-schema in
-> the process.
->
-> Cc: Phil Edworthy <phil.edworthy@renesas.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-serial@vger.kernel.org
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Hi Grygorii
 
-> --- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-> @@ -15,6 +15,11 @@ allOf:
->  properties:
->    compatible:
->      oneOf:
-> +      - items:
-> +          - enum:
-> +              - renesas,r9a06g032-uart
-> +              - renesas,r9a06g033-uart
-> +          - const: renesas,rzn1-uart
->        - items:
->            - enum:
->                - rockchip,px30-uart
+Bike shedding, but it seems odd to move common code into a private
+file. How common is the current code in cpsw-common.c?
 
-With ARCH=arm and shmobile_defconfig, "make dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml"
-complains:
-
-arch/arm/boot/dts/r9a06g032-rzn1d400-db.dt.yaml: compatible:
-['renesas,r9a06g032-uart', 'renesas,rzn1-uart', 'snps,dw-apb-uart'] is
-not valid under any of the given schemas
-arch/arm/boot/dts/r9a06g032-rzn1d400-db.dt.yaml: compatible:
-['renesas,r9a06g032-uart', 'renesas,rzn1-uart', 'snps,dw-apb-uart'] is
-not valid under any of the given schemas
-arch/arm/boot/dts/r9a06g032-rzn1d400-db.dt.yaml: compatible:
-['renesas,r9a06g032-uart', 'renesas,rzn1-uart', 'snps,dw-apb-uart'] is
-not valid under any of the given schemas
-
-Do you know what's wrong?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+      Andrew
