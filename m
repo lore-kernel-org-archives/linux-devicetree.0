@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A186CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F4BCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525D421D82
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1858921D71
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 13:31:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FkUSFr19"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cgKZg2IA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440406AbfJYNbJ (ORCPT
+        id S2504759AbfJYNbV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:31:09 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33953 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439593AbfJYNbJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 09:31:09 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k20so1583386pgi.1
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 06:31:08 -0700 (PDT)
+        Fri, 25 Oct 2019 09:31:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45948 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504753AbfJYNbU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 09:31:20 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c7so411462pfo.12
+        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 06:31:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nkuQyVXMMyDZQEt3+CjrZIj+e3tZqkaRw9M9fK6dE0A=;
-        b=FkUSFr19U5KiA2qhu5pPmrV/ZY3HrBv7vjJg0Wwe8AaE8M1PUpa9xnHOTXOUZE4xB1
-         HFKCiPCrF+GU4ZFfCgL9nza4rfRQc8wRxfNAKRq7jSnbcsfLqlwk2aohnXe3wMuvrCGz
-         ldWZJPNk0j6Qc0UMX62VQjJeC6YjNt7KNPLbQ=
+        bh=oNSnTAXUPLhOggYZsXmByzoHissc2cQrcW1ijnP3ewc=;
+        b=cgKZg2IA8rLE/Gb1Fea2/UKtImFx1r+3/oLrUJKGJkgq3mqfzGP0fCzY87EqP9S0+0
+         WQXRy0BralqXwRQgIPwF2wZyUs5/mIyBfACB/94kBYzmDeud7Zq9bMrWbAL3xy6flbQs
+         pc4pHa+WCeiKDem2XAefpAmHZf6J9Dozhans0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nkuQyVXMMyDZQEt3+CjrZIj+e3tZqkaRw9M9fK6dE0A=;
-        b=iO2+5OcMra189ZVHqRrQMBhX8L5AAgAPVV9FXF6HwvcbIotuaev3MU25qH7tfdT6+x
-         VeVkqOIWh6k9MoeV5qTXZwvvhRRw2BIx1ju19Ul74DYKkYWNJLPUaIvzaEwor99W4Nm7
-         gUq5PPQMB1motAfBijBCdeSsMRHGxohFraRmkyvQXnUzYfvNtbObSOhjsORZt/SmEPkW
-         vWhHeo0qhy+0vZKxJGj8moiWxiXXU9CKkyLLgUAC1n6XyPgrQ0e+9LHxUp10O9O7Gm0H
-         pL4CRko5GsyocnL4Lfwa+BrhkFuy0hSa7ohnH+i+cukVat/00srKYzgioNvDYkSVAwki
-         l24A==
-X-Gm-Message-State: APjAAAWMAEA2Up86uwbwRXw9wLQfGlFsH374fjOibyNv4qQ+7l6W3272
-        Pw+7TiBmOs1ctCmzFRjDDReZkQ==
-X-Google-Smtp-Source: APXvYqypx1iOOLXyzbMO61gMPyKWIWC+7EwZjaBPtphFD0tkNUyB/PtgGJIIMnLo6epNgm/8d1yPOA==
-X-Received: by 2002:a63:4304:: with SMTP id q4mr4294927pga.218.1572010268293;
-        Fri, 25 Oct 2019 06:31:08 -0700 (PDT)
+        bh=oNSnTAXUPLhOggYZsXmByzoHissc2cQrcW1ijnP3ewc=;
+        b=PG7izHeMVtWQqiiEYgCOwgDXUjX9kYxwoSo8S9XyY8fT2efMcfoCEGXcxkRkHWe2pD
+         M1mYzlT6dEQusAzavTWceSMvZsqTAYV99Od/RB1QQ7tHq+vhesOmbx83vkbKekVXByg5
+         rmftLbslPh/HkljGwty5+jaE35e0+ioMpKDJ2K8EuXqeiwISpvNaV4eGKDBOtD1TZiAL
+         8gOojixCU5o29ZAVxG+ihJCEmWnKH/FCOOlHDF9oFDxXlvm9T3gAqbvMFzcQjEV3greL
+         +8WlePH+uXQUDPGsDKVkHkkcXe0k0w+kzuCPmkCMbABO1yChZcA0CvUC8qPQi8//K3Ic
+         mjeg==
+X-Gm-Message-State: APjAAAX6nTmRJH814Jywm5GMwjXrbRBp8zcoU0RNIwD3N5ta/D85Nqpf
+        q2VD874SM4mV//ajWlzI/+xhdQ==
+X-Google-Smtp-Source: APXvYqzbwsXWBs3ky/vHamL+ysr3yMSuWsGovFl/YV0ZreeaOiOp90nD6ACzcZJAlWwB0QQOpZKsVA==
+X-Received: by 2002:a63:4525:: with SMTP id s37mr4571578pga.148.1572010278731;
+        Fri, 25 Oct 2019 06:31:18 -0700 (PDT)
 Received: from localhost ([2401:fa00:1:10:79b4:bd83:e4a5:a720])
-        by smtp.gmail.com with ESMTPSA id q33sm2430940pgm.50.2019.10.25.06.31.03
+        by smtp.gmail.com with ESMTPSA id y36sm2379120pgk.66.2019.10.25.06.31.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2019 06:31:07 -0700 (PDT)
+        Fri, 25 Oct 2019 06:31:17 -0700 (PDT)
 From:   Cheng-Yi Chiang <cychiang@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
@@ -76,9 +76,9 @@ Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
         Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH v8 4/6] ASoC: rockchip_max98090: Add HDMI jack support
-Date:   Fri, 25 Oct 2019 21:30:05 +0800
-Message-Id: <20191025133007.11190-5-cychiang@chromium.org>
+Subject: [PATCH v8 5/6] ARM: dts: rockchip: Add HDMI support to rk3288-veyron-analog-audio
+Date:   Fri, 25 Oct 2019 21:30:06 +0800
+Message-Id: <20191025133007.11190-6-cychiang@chromium.org>
 X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
 In-Reply-To: <20191025133007.11190-1-cychiang@chromium.org>
 References: <20191025133007.11190-1-cychiang@chromium.org>
@@ -89,76 +89,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In machine driver, create a jack and let hdmi-codec report jack status.
+All boards using rk3288-veyron-analog-audio.dtsi have HDMI audio.
+Specify the support of HDMI audio on machine driver using compatible
+string so machine driver creates HDMI audio device.
 
 Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
 ---
- sound/soc/rockchip/Kconfig             |  3 ++-
- sound/soc/rockchip/rockchip_max98090.c | 21 +++++++++++++++++++++
- 2 files changed, 23 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3288-veyron-analog-audio.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
-index b43657e6e655..d610b553ea3b 100644
---- a/sound/soc/rockchip/Kconfig
-+++ b/sound/soc/rockchip/Kconfig
-@@ -40,9 +40,10 @@ config SND_SOC_ROCKCHIP_MAX98090
- 	select SND_SOC_ROCKCHIP_I2S
- 	select SND_SOC_MAX98090
- 	select SND_SOC_TS3A227E
-+	select SND_SOC_HDMI_CODEC
- 	help
- 	  Say Y or M here if you want to add support for SoC audio on Rockchip
--	  boards using the MAX98090 codec, such as Veyron.
-+	  boards using the MAX98090 codec and HDMI codec, such as Veyron.
+diff --git a/arch/arm/boot/dts/rk3288-veyron-analog-audio.dtsi b/arch/arm/boot/dts/rk3288-veyron-analog-audio.dtsi
+index 445270aa136e..92ea623401e9 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-analog-audio.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron-analog-audio.dtsi
+@@ -8,7 +8,7 @@
  
- config SND_SOC_ROCKCHIP_RT5645
- 	tristate "ASoC support for Rockchip boards using a RT5645/RT5650 codec"
-diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-index 550e57789719..fdd1d9921a4e 100644
---- a/sound/soc/rockchip/rockchip_max98090.c
-+++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -230,6 +230,25 @@ enum {
- 	DAILINK_HDMI,
+ / {
+ 	sound {
+-		compatible = "rockchip,rockchip-audio-max98090";
++		compatible = "rockchip,rockchip-audio-max98090-hdmi";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&mic_det>, <&hp_det>;
+ 		rockchip,model = "VEYRON-I2S";
+@@ -17,6 +17,7 @@
+ 		rockchip,hp-det-gpios = <&gpio6 RK_PA5 GPIO_ACTIVE_HIGH>;
+ 		rockchip,mic-det-gpios = <&gpio6 RK_PB3 GPIO_ACTIVE_LOW>;
+ 		rockchip,headset-codec = <&headsetcodec>;
++		rockchip,hdmi-codec = <&hdmi>;
+ 	};
  };
  
-+static struct snd_soc_jack rk_hdmi_jack;
-+
-+static int rk_hdmi_init(struct snd_soc_pcm_runtime *runtime)
-+{
-+	struct snd_soc_card *card = runtime->card;
-+	struct snd_soc_component *component = runtime->codec_dai->component;
-+	int ret;
-+
-+	/* enable jack detection */
-+	ret = snd_soc_card_jack_new(card, "HDMI Jack", SND_JACK_LINEOUT,
-+				    &rk_hdmi_jack, NULL, 0);
-+	if (ret) {
-+		dev_err(card->dev, "Can't new HDMI Jack %d\n", ret);
-+		return ret;
-+	}
-+
-+	return hdmi_codec_set_jack_detect(component, &rk_hdmi_jack);
-+}
-+
- /* max98090 dai_link */
- static struct snd_soc_dai_link rk_max98090_dailinks[] = {
- 	{
-@@ -249,6 +268,7 @@ static struct snd_soc_dai_link rk_hdmi_dailinks[] = {
- 	{
- 		.name = "HDMI",
- 		.stream_name = "HDMI",
-+		.init = rk_hdmi_init,
- 		.ops = &rk_aif1_ops,
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
- 			SND_SOC_DAIFMT_CBS_CFS,
-@@ -271,6 +291,7 @@ static struct snd_soc_dai_link rk_max98090_hdmi_dailinks[] = {
- 	[DAILINK_HDMI] = {
- 		.name = "HDMI",
- 		.stream_name = "HDMI",
-+		.init = rk_hdmi_init,
- 		.ops = &rk_aif1_ops,
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
- 			SND_SOC_DAIFMT_CBS_CFS,
 -- 
 2.24.0.rc0.303.g954a862665-goog
 
