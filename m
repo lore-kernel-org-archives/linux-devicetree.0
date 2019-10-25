@@ -2,174 +2,157 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65570CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986ADCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3059021D7F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571994864;
-	bh=3r7YuR6KqKAbgF30VcFbrSfSQsVVA9/SMsTQ81rjTeI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BMvZHTDxFmvtVTlVV750K1/BPw8ZO3quf1HlAOWaPa3vasqwLrHjkO2LiADSUUHLp
-	 uVUHtZFydR31xOLPuV30ZSZJ09KeiN7CvhyDEJhCmZA7bOoLZxnYcI3HOloRFflGIb
-	 jJteDJpWoLfodiCP3GatD4szwR7E15aAvFrsqxe0=
+	by mail.kernel.org (Postfix) with ESMTP id 62EBD2070B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="VWz+SmTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407267AbfJYJOX (ORCPT
+        id S1726567AbfJYJQC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:14:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407248AbfJYJOX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:14:23 -0400
-Received: from dragon (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10EE821929;
-        Fri, 25 Oct 2019 09:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571994861;
-        bh=3r7YuR6KqKAbgF30VcFbrSfSQsVVA9/SMsTQ81rjTeI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lqR2fnmleW3Eff1LuRkdblVI98d/gUF6Yur2voSItgmeCtms5xacuNlOikafTWrsD
-         cro6HbvT8PsqkaU74OVrgAJ/wwKKGuxXM8cDHTOWPdbQ79wtFBd36MYVe1QLBwmvcJ
-         sahcvogiCaPkY4p6p9RYCbgkyKnPBsQOfi8+oOAo=
-Date:   Fri, 25 Oct 2019 17:14:04 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>, festevam@gmail.com,
-        Rob Herring <robh@kernel.org>, mark.rutland@arm.com,
-        marex@denx.de, devicetree@vger.kernel.org,
-        andrew.smirnov@gmail.com, s.hauer@pengutronix.de, angus@akkea.ca,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, manivannan.sadhasivam@linaro.org,
-        j.neuschaefer@gmx.net,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 2/3] ARM: dts: add Netronix E60K02 board common file
-Message-ID: <20191025091401.GL3208@dragon>
-References: <20191010192357.27884-1-andreas@kemnade.info>
- <20191010192357.27884-3-andreas@kemnade.info>
- <20191011065609.6irap7elicatmsgg@pengutronix.de>
- <20191011094148.1376430e@aktux>
- <20191011142927.GA11490@bogus>
- <20191011170147.1b3c4b25@kemnade.info>
- <20191011152214.v6lq6itwf5lp6j7q@pengutronix.de>
- <20191011181938.185f2a00@kemnade.info>
- <20191011165633.5ty3yux4ljrcycux@pengutronix.de>
- <20191013175644.4fc264d0@kemnade.info>
+        Fri, 25 Oct 2019 05:16:02 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:53273 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbfJYJQB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 05:16:01 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: sdvAHdq9lJ0R3x/39ndPE3RpPIAigq6Bp0cPyZ4I7lAhO+48tj7TkqpAIV60+h4ceBaCaGIkVI
+ /kv2CM/6KKtaIE5WjlC8YezlV+o+oGVyohZRPclfKiuabrOaOr8wHGWEDfl46r/7ZE9ghGPAuL
+ 6MsfnfV29JGbodqdwUQf7lKt3Lm53qKUTYy9TO435CIctzuoJQCyZL1/cSe4lauwwxih6oBdBN
+ l++yfIrFpnXJL+8QqzOI/NIwqV469A8iR6Ly9DlRkcIN96rzDjZIPiCivxbVjGdEfAyhi4f+Sv
+ Dig=
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="51530411"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2019 02:16:00 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 25 Oct 2019 02:16:00 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 25 Oct 2019 02:16:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xx64MFV6X0TZHnnkcrcqR3lz9PBjBw8tZYt0+sSYboCet9VFpf1W13amKcQfL1k/JJgSxU0+KLyXZJkTdcUT2bTL2FNU4D++Ah2DgJLnwaZg02gVvBG9JP/QG1KUMcvsSCz3gA8GRppt/eaJzcfYI1MuxGjLq4UqWoT41zpqXcyJuGtprXynSCul4W6epTG126SmHnS2oMS1XHQ20Gy18fL0zTKBm8wwlmYpSmv9Ogs4lkCe6VnlxxIdlLoApc/5wp1cV3y7TT/hnfhDv/QEm1fjJrDGrnm5XzT502FFJI8toPn+V1GOt4dBnLn3meE43F9ygKDUIecdZurThD8nzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nqz/idQ6nlL1zH7IUT9L2wfWDmG/jbjSCde9VwuqC2w=;
+ b=HHGAB/RJ6Lfu29CJ/UtILoS2ezDc4nTNH4M/IS8gcPv+lrTYKcQsznxLkG6JSunbojELAkayPaDncvNYTpTqGk45Z/K07RC+vNhsnyehQhv4jyaV+y1z/Xn/J0y6FMJXSy3WlKwkGXNQMDSDX0VMnNtPx0iFF/smukoJWGEudH6ytdNcNCXZcvhsgxMHL+DcttcL+G2MWOl6jbI/miTbpnoS48QCcoT0IrgOsHdIbmyrizm3569olHq2fsfuHdaihhg9/W/9bre0GLlNHNoJR0LZcfx9Af9ROJBVmwDM7H/okU0oieVwgdyNK4qZ7cGzww7T46ee/VsVku8uWVuLHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nqz/idQ6nlL1zH7IUT9L2wfWDmG/jbjSCde9VwuqC2w=;
+ b=VWz+SmTVRigBUtiNI08Hi8PWkcsZrEIY+U5IX5/xNjzDsOLeL5nPksKIk8DYS5Midrzza52uPVaECOOb8pbGDwh2A+OBpEgYzuuxlsP46y/uKb2VJQyktcFCmBL6kMSY9TcT8/534v264e4AHfjIfnI0sLki/ROrPffCZnPXF2Q=
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com (20.176.120.85) by
+ DM6PR11MB3355.namprd11.prod.outlook.com (20.176.122.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Fri, 25 Oct 2019 09:15:59 +0000
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::3874:9f3c:5325:d22]) by DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::3874:9f3c:5325:d22%6]) with mapi id 15.20.2387.023; Fri, 25 Oct 2019
+ 09:15:59 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <Ludovic.Desroches@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>
+CC:     <alexandre.belloni@bootlin.com>, <stable@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: at91: sama5d4: fix pinctrl muxing
+Thread-Topic: [PATCH] ARM: dts: at91: sama5d4: fix pinctrl muxing
+Thread-Index: AQHVixAJLedNeuOqCEuZRlo+W7F7NqdrE3gA
+Date:   Fri, 25 Oct 2019 09:15:59 +0000
+Message-ID: <e2d81b87-408d-b50d-3e4c-b28367e4cb00@microchip.com>
+References: <20191025084210.14726-1-ludovic.desroches@microchip.com>
+In-Reply-To: <20191025084210.14726-1-ludovic.desroches@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MR2P264CA0086.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:500:32::26) To DM6PR11MB3225.namprd11.prod.outlook.com
+ (2603:10b6:5:59::21)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20191025121552227
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9f03b341-4197-433a-9b18-08d7592bf2fc
+x-ms-traffictypediagnostic: DM6PR11MB3355:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB3355E177B5A096057C01F26787650@DM6PR11MB3355.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:321;
+x-forefront-prvs: 02015246A9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(376002)(136003)(396003)(199004)(189003)(6486002)(102836004)(66066001)(14454004)(446003)(186003)(8936002)(76176011)(81166006)(8676002)(81156014)(3846002)(2906002)(31686004)(26005)(52116002)(99286004)(53546011)(25786009)(6506007)(11346002)(386003)(478600001)(305945005)(64756008)(66556008)(7736002)(4326008)(6246003)(66446008)(66946007)(66476007)(6436002)(6512007)(486006)(71190400001)(36756003)(6116002)(2201001)(5660300002)(54906003)(256004)(110136005)(86362001)(71200400001)(316002)(2501003)(229853002)(4744005)(2616005)(476003)(31696002)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB3355;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: z4h0oI8E1IxRxGfqPfrABYNTmgWTJCRDt/fsN7lOGQwxrU+QlhqPnI3KWbpqfnqQATSASdgb/Lq9tesbllpx+a+IBM/IfTBvKeYMOCMoivrQaGsq+VP3w+Kndh2bEeOLz1CtsQ08p3L9zM/9JULhqTg+VVq7nvRc/YR8qRSXpI+sfrU+oG7UPG9uizOKeid8QXYF7Ah0HMy+e6wycs4DKVr7c/nJdiLEYn0dvDJbxrcQz6cV2iW3ThLa0iLJuSFnzwntlUojKXUYP4iXT8G0Kb+TPP5YodTFKIBr94aCGJI/sZZlgkOla9gUKDP4eSZ4UX6F2lGowRs73DDmCQwvD0au1NI6x+STzTUMiEzLeNK9Q5/y3JXgZSOFtrc33oybBF2Og20ECR53mYcfj095ioRPCsaUo+jHOSVtxr7XZduCIch13w0ZQm2LZ8IuS71/
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5DD681549F566C408235A38CB7FF4D0A@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191013175644.4fc264d0@kemnade.info>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f03b341-4197-433a-9b18-08d7592bf2fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 09:15:59.2600
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PfmFKE5OmUmXR8SoVCfYd/g23j1oGsy4FW9uGj2m4XCBNLsuvUniT6HMBxtYIyhd2SJH3+pMzmU7OtyNvZT7by+X+zHM1CgwFxCfqGJh3bE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3355
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Oct 13, 2019 at 05:56:44PM +0200, Andreas Kemnade wrote:
-> On Fri, 11 Oct 2019 18:56:33 +0200
-> Marco Felsch <m.felsch@pengutronix.de> wrote:
-> 
-> > On 19-10-11 18:19, Andreas Kemnade wrote:
-> > > On Fri, 11 Oct 2019 17:22:14 +0200
-> > > Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > >   
-> > > > On 19-10-11 17:05, Andreas Kemnade wrote:  
-> > > > > On Fri, 11 Oct 2019 09:29:27 -0500
-> > > > > Rob Herring <robh@kernel.org> wrote:
-> > > > >     
-> > > > > > On Fri, Oct 11, 2019 at 09:41:48AM +0200, Andreas Kemnade wrote:    
-> > > > > > > On Fri, 11 Oct 2019 08:56:09 +0200
-> > > > > > > Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > > > > > >       
-> > > > > > > > Hi Andreas,
-> > > > > > > > 
-> > > > > > > > On 19-10-10 21:23, Andreas Kemnade wrote:      
-> > > > > > > > > The Netronix board E60K02 can be found some several Ebook-Readers,
-> > > > > > > > > at least the Kobo Clara HD and the Tolino Shine 3. The board
-> > > > > > > > > is equipped with different SoCs requiring different pinmuxes.
-> > > > > > > > > 
-> > > > > > > > > For now the following peripherals are included:
-> > > > > > > > > - LED
-> > > > > > > > > - Power Key
-> > > > > > > > > - Cover (gpio via hall sensor)
-> > > > > > > > > - RC5T619 PMIC (the kernel misses support for rtc and charger
-> > > > > > > > >   subdevices).
-> > > > > > > > > - Backlight via lm3630a
-> > > > > > > > > - Wifi sdio chip detection (mmc-powerseq and stuff)
-> > > > > > > > > 
-> > > > > > > > > It is based on vendor kernel but heavily reworked due to many
-> > > > > > > > > changed bindings.
-> > > > > > > > > 
-> > > > > > > > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > > > > > > > ---
-> > > > > > > > > Changes in v3:
-> > > > > > > > > - better led name
-> > > > > > > > > - correct memory size
-> > > > > > > > > - comments about missing devices
-> > > > > > > > > 
-> > > > > > > > > Changes in v2:
-> > > > > > > > > - reordered, was 1/3
-> > > > > > > > > - moved pinmuxes to their actual users, not the parents
-> > > > > > > > >   of them
-> > > > > > > > > - removed some already-disabled stuff
-> > > > > > > > > - minor cleanups        
-> > > > > > > > 
-> > > > > > > > You won't change the muxing, so a this dtsi can be self contained?
-> > > > > > > >       
-> > > > > > > So you want me to put a big 
-> > > > > > > #if defined(MX6SLL)       
-> > > > > > 
-> > > > > > Not sure what the comment meant, but no, don't do this. C defines in dts 
-> > > > > > files are for symbolic names for numbers and assembling bitfields and 
-> > > > > > that's it.    
-> > > > > 
-> > > > > yes, that is also my opinion. For now, there is only one user
-> > > > > of this .dtsi, but I have another one in preparation. That is the
-> > > > > reason for splitting things between .dts and .dtsi to avoid such ugly
-> > > > > ifdefs    
-> > > > 
-> > > > Then IMHO the pnictrl-* entries shouldn't appear in the dsti.
-> > > >   
-> > > hmm, maybe now I understand your idea:
-> > > You do not want only to have
-> > > 
-> > >   pinctrl_lm3630a_bl_gpio: lm3630a_bl_gpio_grp {
-> > >                         fsl,pins = <
-> > >                                 MX6SLL_PAD_EPDC_PWR_CTRL3__GPIO2_IO10   0x10059 /* HWEN */  
-> > >                         >;  
-> > >                 };
-> > > in dts, but also  do not have these in .dtsi:
-> > > 
-> > >                 pinctrl-names = "default";
-> > >                 pinctrl-0 = <&pinctrl_lm3630a_bl_gpio>;
-> > > 
-> > > and instead have in dts:
-> > > &lm3630a {
-> > >  	pinctrl-names = "default";
-> > >         pinctrl-0 = <&pinctrl_lm3630a_bl_gpio>;
-> > > 	
-> > > };
-> > > 
-> > > 
-> > > just to make sure I get it right before doing the restructuring work. That way of structuring things did not come to my mind, but then the .dtsi is self-contained.  
-> > 
-> > That is what I mean but wait for Shawn's comments. It's just my opinion
-> > that .dtsi and .dts files should be self-contained.
-> 
-> for files like the imx6sll.dtsi, I would clearly agree, here it might
-> hide errors like missing pinmuxes in the dts, so it is not so clear.
-> But if there is is consensus about .dtsi being self-contained I will not
-> refuse to restructurize my work.
-
-Yes, I would appreciate the effort of keep .dtsi being self-contained.
-
-Shawn
+DQoNCk9uIDI1LjEwLjIwMTkgMTE6NDIsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPiBFeHRl
+cm5hbCBFLU1haWwNCj4gDQo+IA0KPiBGaXggcGluY3RybCBtdXhpbmcsIFBEMjgsIFBEMjkgYW5k
+IFBEMzEgY2FuIGJlIG11eGVkIHRvIHBlcmlwaGVyYWwgQS4gSXQNCj4gYWxsb3dzIHRvIHVzZSBT
+Q0swLCBTQ0sxIGFuZCBTUEkwX05QQ1MyIHNpZ25hbHMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBM
+dWRvdmljIERlc3JvY2hlcyA8bHVkb3ZpYy5kZXNyb2NoZXNAbWljcm9jaGlwLmNvbT4NCj4gRml4
+ZXM6IDY3OWY4ZDkyYmIwMSAoIkFSTTogYXQ5MS9kdDogc2FtYTVkNDogYWRkIHBpb0QgcGluIG11
+eCBtYXNrIGFuZCBlbmFibGUgcGlvRCIpDQo+IENjOiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQoN
+ClJldmlld2VkLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNv
+bT4NCg0KPiAtLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDQuZHRzaSB8IDIgKy0NCj4g
+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDQuZHRzaSBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL3NhbWE1ZDQuZHRzaQ0KPiBpbmRleCA2YWIyN2E3YjM4OGQuLmE0Y2VmMDdjMzhjYiAxMDA2
+NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkNC5kdHNpDQo+ICsrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL3NhbWE1ZDQuZHRzaQ0KPiBAQCAtOTE0LDcgKzkxNCw3IEBAIC8qICAgQSAg
+ICAgICAgICBCICAgICAgICAgIEMgICovDQo+ICAJCQkJCTB4ZmZmZmZmZmYgMHgzZmZjZmU3YyAw
+eDFjMDEwMTAxCS8qIHBpb0EgKi8NCj4gIAkJCQkJMHg3ZmZmZmZmZiAweGZmZmNjYzNhIDB4M2Yw
+MGNjM2EJLyogcGlvQiAqLw0KPiAgCQkJCQkweGZmZmZmZmZmIDB4M2ZmODNmZmYgMHhmZjAwZmZm
+ZgkvKiBwaW9DICovDQo+IC0JCQkJCTB4MDAwM2ZmMDAgMHg4MDAyYTgwMCAweDAwMDAwMDAwCS8q
+IHBpb0QgKi8NCj4gKwkJCQkJMHhiMDAzZmYwMCAweDgwMDJhODAwIDB4MDAwMDAwMDAJLyogcGlv
+RCAqLw0KPiAgCQkJCQkweGZmZmZmZmZmIDB4N2ZmZmZmZmYgMHg3NmZmZjFiZgkvKiBwaW9FICov
+DQo+ICAJCQkJCT47DQo+ICANCj4gDQo=
