@@ -2,85 +2,85 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F827CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 02:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC78CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 02:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F1E21D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 02:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994B021D7B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 02:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571970692;
-	bh=wS+ZqOi0AxyDhn3tjgIiQc5vD2xB4fXHjduh81AOn60=;
+	s=default; t=1571971217;
+	bh=VuIkAO3ugvVIrk34pCVzm5VFvJRsMK+QkxTA75X9r+0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sy+PkcxjCpI2yKoB/TqNSmzfeyQwfySNB4R7QqYSuc5j+lT0B4CmxQAsUeMfdb03I
-	 ItXQIqdKJ833jNnk0QYlO2a9DKdpdqQMXHbsXK6x8tZ8ava6AScJtIhnuH1CCSgyZ+
-	 tlA5k0zN7TkHCtKKcs1YhLL4guI7cbB4zGskxTps=
+	b=gG8Ys3hQ8fIwMFI5mR4EDd/Bu5E8BDsbjJdEsFGfGa1zaJavUm+UkLadu6CYfOD7R
+	 yWxAmaHJ8JMIVshodNBxudy5cv4bSuOPku6GclzRlOpoqLrugspOc29NKOPhLxfarw
+	 ri34JWJbx6LeYJt6eAieKyeUmX/8flbdqrFla/AM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389926AbfJYCbb (ORCPT
+        id S2390404AbfJYCkO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 22:31:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59832 "EHLO mail.kernel.org"
+        Thu, 24 Oct 2019 22:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbfJYCbb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 Oct 2019 22:31:31 -0400
+        id S2390205AbfJYCkO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 Oct 2019 22:40:14 -0400
 Received: from dragon (li937-157.members.linode.com [45.56.119.157])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEC7B206DD;
-        Fri, 25 Oct 2019 02:31:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588EA2166E;
+        Fri, 25 Oct 2019 02:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571970690;
-        bh=wS+ZqOi0AxyDhn3tjgIiQc5vD2xB4fXHjduh81AOn60=;
+        s=default; t=1571971213;
+        bh=VuIkAO3ugvVIrk34pCVzm5VFvJRsMK+QkxTA75X9r+0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x/kHHoHqs74Cg37pKPiTkfnrPUKgh6AM+ieR+A4dSF5PHEy8UzPbyiASNrXJ5IleJ
-         QvfPq/e2LqArQ++vhO5SPkcoXil9olRQQ8TkzbKa9vpyo8XXja+HceR/878vs1z0+M
-         bhyMKZD8vHeQzhfxTtLX57QuGtooEj8U1VBgu7l0=
-Date:   Fri, 25 Oct 2019 10:31:12 +0800
+        b=ly9foHepoYGj/bMScIwLR5+FQLcHMIn88pQaij8yEXfm4+MVhQKaK9tMUjKufAEQB
+         qKGc5v3xKBChLV1GxJcePyu+4YnqN0OsQMQ3MRxBUSvYUNqmO/MsDjr9SH5GOXrllj
+         Q9/YERVB/J0pjX6qcEBkoOdn1XCcju4fnXo1cJEM=
+Date:   Fri, 25 Oct 2019 10:39:53 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>, devicetree@vger.kernel.org,
-        baruch@tkos.co.il, abel.vesa@nxp.com, Anson.Huang@nxp.com,
-        ccaione@baylibre.com, andrew.smirnov@gmail.com,
-        s.hauer@pengutronix.de, angus@akkea.ca,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        festevam@gmail.com, shengjiu.wang@nxp.com,
-        linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
-Subject: Re: [PATCH v4] arm64: dts: imx8mq: Init rates and parents configs
- for clocks
-Message-ID: <20191025023110.GA30015@dragon>
-References: <20190728152040.15323-1-daniel.baluta@nxp.com>
- <20191022161919.GA3727@bogon.m.sigxcpu.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v3 06/10] ARM: dts: imx: Rename "iram" node to "sram"
+Message-ID: <20191025023951.GB30015@dragon>
+References: <20191002164316.14905-1-krzk@kernel.org>
+ <20191002164316.14905-6-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191022161919.GA3727@bogon.m.sigxcpu.org>
+In-Reply-To: <20191002164316.14905-6-krzk@kernel.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 06:19:19PM +0200, Guido Günther wrote:
-> Hi,
-> On Sun, Jul 28, 2019 at 06:20:40PM +0300, Daniel Baluta wrote:
-> > From: Abel Vesa <abel.vesa@nxp.com>
-> > 
-> > Add the initial configuration for clocks that need default parent and rate
-> > setting. This is based on the vendor tree clock provider parents and rates
-> > configuration except this is doing the setup in dts rather then using clock
-> > consumer API in a clock provider driver.
-> > 
-> > Note that by adding the initial rate setting for audio_pll1/audio_pll
-> > setting we need to remove it from imx8mq-librem5-devkit.dts
+On Wed, Oct 02, 2019 at 06:43:12PM +0200, Krzysztof Kozlowski wrote:
+> The device node name should reflect generic class of a device so rename
+> the "iram" node to "sram".  This will be also in sync with upcoming DT
+> schema.  No functional change.
 > 
-> It seems this never made it into any tree, any particular reason for
-> that?
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-There is some discussion going on and I haven't seen it reaches an
-explicit agreement.
-
-Shawn
+Applied, thanks.
