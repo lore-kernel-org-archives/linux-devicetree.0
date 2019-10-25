@@ -2,95 +2,101 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BEBCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA12CA9EBD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D98121929
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571992021;
-	bh=30+L12pvXfxaxXDRXM/+Zl1YsohKs9Lg/WjJFQ9wTPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A3lIhhpxxq4nQCJHlSdPRIPOQWzE4hVV5bRABcwHwjDu6wSJz8DQbGszE7tgaYYnu
-	 Y/EMa5jfog/TpdLbaYD1ke1Zbz/vWAKNqoXk3rQ22PKbNs+r2NBRZsYo+zOPAjdAFU
-	 g2uWYfiEsh04aDYbqzTnMg/NIU3UbkwAbGADWRvw=
+	by mail.kernel.org (Postfix) with ESMTP id 8FC7E21929
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390248AbfJYI1B (ORCPT
+        id S2407208AbfJYIlX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389356AbfJYI1B (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:27:01 -0400
-Received: from dragon (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED5920684;
-        Fri, 25 Oct 2019 08:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571992020;
-        bh=30+L12pvXfxaxXDRXM/+Zl1YsohKs9Lg/WjJFQ9wTPw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RxgTSyEweBrXwKuVu3cb9km3FWD3Eg0gKN82K9DdP9tRKNPER60Bq7QtzyUmdki9L
-         UaC2/v69hAr6C0SGDEHsBR0Fl12GxOlOy6psnUMjhTP6obRzIIaHy1dX5qEW2KcbLe
-         u7UNkTs7HlVJqizXcJQhJBspppwZafSSev7QHA8k=
-Date:   Fri, 25 Oct 2019 16:26:44 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Yuantian Tang <andy.tang@nxp.com>
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: ls1028a: fix a compatible issue
-Message-ID: <20191025082642.GG3208@dragon>
-References: <20191010083334.7037-1-andy.tang@nxp.com>
+        Fri, 25 Oct 2019 04:41:23 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:44650 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405057AbfJYIlW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 04:41:22 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: SRZRZ0DKDT47obkNCrvEEvEWA9lxJz/n+4y8g1CvS6lC6iKUhdYJyCIxMDppQvIyWY9fWQLNGd
+ oD63BNCCZr4cM8HSqEuN/OloqWFETGhtnFklHEzNsZPk00D9OmFxm+hZ9G77f6ghUlfsLjYOLy
+ MH6dkXXsHFZzAqUuHB/xmEQgP7bzOZI9gmpny4lOekLsMt02UFWVu6+7vkSB9al1cT84W1Rkdb
+ MWCzTInjefQprVsAkDVEhizo+laZBHe3JXOQieEUQlBT1z2I0nhq7p5Qy9Ej8Xq6ukYM2vbX0m
+ RG0=
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="52901142"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2019 01:41:17 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 25 Oct 2019 01:41:15 -0700
+Received: from M43218.corp.atmel.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 25 Oct 2019 01:41:14 -0700
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>
+CC:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH] ARM: dts: at91: sama5d4: fix pinctrl muxing
+Date:   Fri, 25 Oct 2019 10:42:10 +0200
+Message-ID: <20191025084210.14726-1-ludovic.desroches@microchip.com>
+X-Mailer: git-send-email 2.24.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010083334.7037-1-andy.tang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 04:33:34PM +0800, Yuantian Tang wrote:
-> The I2C multiplexer used on ls1028aqds is PCA9547, not PCA9847.
-> If the wrong compatible was used, this chip will not be able to
-> be probed correctly and hence fail to work.
-> 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+Fix pinctrl muxing, PD28, PD29 and PD31 can be muxed to peripheral A. It
+allows to use SCK0, SCK1 and SPI0_NPCS2 signals.
 
-Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes: 679f8d92bb01 ("ARM: at91/dt: sama5d4: add pioD pin mux mask and enable pioD")
+Cc: stable@vger.kernel.org
+---
+ arch/arm/boot/dts/sama5d4.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I added the tag and applied the patch.  Please take care of adding Fixes
-tag for fixes in the future.
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index 6ab27a7b388d..a4cef07c38cb 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -914,7 +914,7 @@ /*   A          B          C  */
+ 					0xffffffff 0x3ffcfe7c 0x1c010101	/* pioA */
+ 					0x7fffffff 0xfffccc3a 0x3f00cc3a	/* pioB */
+ 					0xffffffff 0x3ff83fff 0xff00ffff	/* pioC */
+-					0x0003ff00 0x8002a800 0x00000000	/* pioD */
++					0xb003ff00 0x8002a800 0x00000000	/* pioD */
+ 					0xffffffff 0x7fffffff 0x76fff1bf	/* pioE */
+ 					>;
+ 
+-- 
+2.24.0.rc0
 
-Shawn
-
-> ---
-> v2:
-> 	- refine the description
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> index 5e14e5a19744..f5da9e8b0d9d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> @@ -107,7 +107,7 @@
->  	status = "okay";
->  
->  	i2c-mux@77 {
-> -		compatible = "nxp,pca9847";
-> +		compatible = "nxp,pca9547";
->  		reg = <0x77>;
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> -- 
-> 2.17.1
-> 
