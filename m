@@ -7,143 +7,146 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3A7CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083EECA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3991321D7B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BB221D7B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572037804;
-	bh=ma5lEWgZsb9cpEZxkWd+ZbEa30xCM1OojMepMAP0oAs=;
+	s=default; t=1572038021;
+	bh=l1yNRnI9t0MZPaPdUHueT4hnKwOc3uigRQXtietqzqU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WfGYezEF5EW0mplaD4u5L1zwLoxzW3Ainp72tOJqWzFXnqQo6n40NDQPXCgCPAlzi
-	 6cQ1ME6u48wVhEgYZi663nyOobYmK+fJ/XJmF4a0Lag1TOCDHwSTNn7vd9PgGoHkzE
-	 F5lYix/HlmNu6SHCiavLjgtqSjd63DNSOYf5NfUo=
+	b=vMRj5yE9xYdhmODZJZxjoaWA1D9d/sHSM315XnLudXEY/a5sZDcBcOy+2HYel9AU8
+	 J6KoucddgOxfgM/MhjrGOMTuo9DqUlP68xrkaD0sTHiEj3wNYID+RAzBj98MDaBLTz
+	 /BXYoQ6vZSpANRTbXqrB73nM2Jj216iUjay/R0B8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbfJYVKD (ORCPT
+        id S1725958AbfJYVNl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:10:03 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34100 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfJYVKD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 17:10:03 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 83so2539115oii.1;
-        Fri, 25 Oct 2019 14:10:02 -0700 (PDT)
+        Fri, 25 Oct 2019 17:13:41 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46861 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfJYVNl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 17:13:41 -0400
+Received: by mail-oi1-f193.google.com with SMTP id c2so2492628oic.13;
+        Fri, 25 Oct 2019 14:13:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=d7m38wEP3cWWPKZavVh4QqPT2NxfQZN9J+ih9n10QDc=;
-        b=Bgj0Hb5kkq7sw5xcNCEvNYyFvw18S7PrMLu3rewoGpPByjM2NazFD0XL6g424LJSML
-         aIgI38S5G94S+DUdAA4Xgd0Pu1ftCB3ZmpHKOS1PdY5PWXUIuOCpRbyRmYA+0PGOcC+f
-         Fhw4l7augwpNJd7XIxsR1e41XbHfZvbQVg508pwkNOx56CHriEO2i+jNFMzdRzkqMgL8
-         wtO05cSTFQkyBpqK3YZAu2RwaYgQhDA1GlgP9+C2B2KZ5mNDjq3Y9UABfgIMrGPXZLsC
-         Q294uao7YxDKVW2RImTsAtutPUDAmCGNprI2Zqx9f+3XIY/K8/eAPjlsgSRKhya6ZG6c
-         zfSg==
-X-Gm-Message-State: APjAAAXlQbZr9Zcoc4G55tHIgumMS4sgaQF6+m52pwTEwST32jIbAcEh
-        f4jRn/IrE688MbKKxT8Te0l8W6g=
-X-Google-Smtp-Source: APXvYqwMdDzj7VpTwlpKBzbm1vx4GRa3h4b/Ol8HbT8QPQu0jiUwRDiRAWIWfNdFfGcGA55gSFCUgQ==
-X-Received: by 2002:aca:7595:: with SMTP id q143mr4820191oic.103.1572037802036;
-        Fri, 25 Oct 2019 14:10:02 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YsHXnqwoM7wQXF0uPaovfdPHuECAxo/T6mEqOx5c+dY=;
+        b=d5n/hl88X3WT/lDSfXeXeT7eh88OeCGJXh8DRG3bf/6br3ocb/wuas+P+uO5Lb3nbw
+         DPjWOGbTZlvh5mTFAO4IO+vImTbmuJ5tNUrRaOg98/5mIIOkNGhaouW8CVGujBOB2jjg
+         VbZRAR5dfuu8UZ27vhgKAqADN7gKY6Dy9B3xPwuP/7+TJUeR8/kVXH6gJ8s01CzUqhN9
+         XqgtCuX8+Jau/J2Th0uMDWgg7HuxN+IruTh4GMaWknCIOzE8QR0itD02xgSCIPsjVm1d
+         Syd86ZMT9UBjAv2+HIiiz1iACDvvaXRpQJ8KdYnLThigdYv8wXuX9rkgJw1Ls42prPLe
+         QRNg==
+X-Gm-Message-State: APjAAAU7tpQIs/Z2bDboLH0G3FwCCcelOfp4pPvbDRYrJxzaVPUbCw7D
+        tfW6+Qfe/pt4cuJ/Re94eg==
+X-Google-Smtp-Source: APXvYqwE4WNyEIPHUmWISUbe3EXRa308MBi5x/EUd8BbYKV1jvLUEmP2vAxDgTjVnSwi+WqgYLFnXA==
+X-Received: by 2002:aca:1e0e:: with SMTP id m14mr4801375oic.72.1572038019693;
+        Fri, 25 Oct 2019 14:13:39 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b12sm1095339otp.72.2019.10.25.14.10.00
+        by smtp.gmail.com with ESMTPSA id n4sm875917oic.2.2019.10.25.14.13.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:10:01 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 16:10:00 -0500
+        Fri, 25 Oct 2019 14:13:38 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 16:13:38 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2] dt-binding: eeprom: at24: add supply properties
-Message-ID: <20191025211000.GA8235@bogus>
-References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
- <20191018082557.3696-2-bibby.hsieh@mediatek.com>
- <CAMpxmJW_HQnL8i5FnKcVUs=ZyrnaFe6X+oqG38-v=O05d5vNxw@mail.gmail.com>
- <CAAFQd5CA_53uDo6QdRcvqJ5shUG5K25f+WXCn9OYMHfSgwLMSA@mail.gmail.com>
- <CAMpxmJWzEER4iBo9-WhmumuH1nmWYvy=xud+=7wzp3op8-P7uw@mail.gmail.com>
- <CAAFQd5DNdmm4sn1JNPhnuMor50ZP4EJmymtS4hB4WkNHmKOs6w@mail.gmail.com>
+        Russell King <linux@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        devicetree@vger.kernel.org, letux-kernel@openphoenux.org,
+        linux-mmc@vger.kernel.org, kernel@pyra-handheld.com,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 01/11] Documentation: dt: wireless: update wl1251 for
+ sdio
+Message-ID: <20191025211338.GA20249@bogus>
+References: <cover.1571510481.git.hns@goldelico.com>
+ <741828f69eca2a9c9a0a7e80973c91f50cc71f9b.1571510481.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAFQd5DNdmm4sn1JNPhnuMor50ZP4EJmymtS4hB4WkNHmKOs6w@mail.gmail.com>
+In-Reply-To: <741828f69eca2a9c9a0a7e80973c91f50cc71f9b.1571510481.git.hns@goldelico.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 06:32:38PM +0900, Tomasz Figa wrote:
-> On Thu, Oct 24, 2019 at 5:40 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> >
-> > czw., 24 paź 2019 o 09:02 Tomasz Figa <tfiga@chromium.org> napisał(a):
-> > >
-> > > On Thu, Oct 24, 2019 at 3:22 PM Bartosz Golaszewski
-> > > <bgolaszewski@baylibre.com> wrote:
-> > > >
-> > > > pt., 18 paź 2019 o 10:26 Bibby Hsieh <bibby.hsieh@mediatek.com> napisał(a):
-> > > > >
-> > > > > In some platforms, they disable the power-supply of eeprom and i2c due
-> > > > > to power consumption reduction.
-> > > > >
-> > > > > This patch add two supply properties: vcc-supply, i2c-supply.
-> > > > >
-> > > > > Changes since v1:
-> > > > >  - change supply name
-> > > > >  - rebase to next
-> > > > >
-> > > > > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/eeprom/at24.yaml | 8 ++++++++
-> > > > >  1 file changed, 8 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > > index e8778560d966..578487a5d9b7 100644
-> > > > > --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > > @@ -167,6 +167,14 @@ properties:
-> > > > >      minimum: 1
-> > > > >      maximum: 8
-> > > > >
-> > > > > +  vcc-supply:
-> > > > > +    description:
-> > > > > +      phandle of the regulator that provides the supply voltage.
-> > > > > +
-> > > > > +  i2c-sypply:
-> > > > > +    description:
-> > > > > +      phandle to the regulator that provides power to i2c.
-> > > > > +
-> > > >
-> > > > Something was bothering me about this patch so I came back to take a
-> > > > look. Can you explain what i2c actually stands for in this doc? I hope
-> > > > I'm misinterpreting something and it isn't that the driver disables
-> > > > the regulator powering the i2c bus controller?
-> > >
-> > > In our case it's the regulator that the I2C bus is pulled up to.
-> > >
-> >
-> > Then it has nothing to do with a generic EEPROM driver IMO. I think
-> > you need to add the control for this regulator to your i2c controller
-> > driver and create a power domain where the EEPROM would be lower in
-> > hierarchy.
+On Sat, Oct 19, 2019 at 08:41:16PM +0200, H. Nikolaus Schaller wrote:
+> The standard method for sdio devices connected to
+> an sdio interface is to define them as a child node
+> like we can see with wlcore.
 > 
-> While I agree that the generic EEPROM driver may not be the best place
-> to do it, neither is a driver for a specific SoC i2c controller. The
-> hardware design is not specific to any particular i2c controller.
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+> ---
+>  .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> Perhaps we need the generic i2c core to take into account an
-> i2c-supply? Wolfram, any thoughts on this?
+> diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+> index bb2fcde6f7ff..88612ff29f2d 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+> @@ -35,3 +35,29 @@ Examples:
+>  		ti,power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
+>  	};
+>  };
+> +
+> +&mmc3 {
+> +	vmmc-supply = <&wlan_en>;
+> +
+> +	bus-width = <4>;
+> +	non-removable;
+> +	ti,non-removable;
+> +	cap-power-off-card;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc3_pins>;
 
-Sounds good to me. Maybe 'bus-supply' instead to indicate it's supposed 
-to be for the bus and not other things. It should reside in the I2C 
-controller's node (or mux ports) though.
+None of the above are really relevant to this binding.
 
-Rob
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	wlan: wl1251@1 {
+
+wifi@1
+
+> +		compatible = "ti,wl1251";
+> +
+> +		reg = <1>;
+> +
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
+> +
+> +		ti,wl1251-has-eeprom;
+> +	};
+> +};
+> -- 
+> 2.19.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
