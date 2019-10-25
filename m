@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D910CA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDC8CA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D164221D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECE821D71
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:34:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YwgGiW6G"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oZOYCpyl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438994AbfJYOdq (ORCPT
+        id S2439714AbfJYOeM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:33:46 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35391 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438752AbfJYOdp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 10:33:45 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v6so2251809wmj.0
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 07:33:43 -0700 (PDT)
+        Fri, 25 Oct 2019 10:34:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45248 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438752AbfJYOeM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 10:34:12 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q13so2573645wrs.12
+        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 07:34:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=1l8uYPJaFizeK4iLDRVUxcJjpD7EAyP2tVHW1Dy+y1I=;
-        b=YwgGiW6GENkFcZcDlzwGUKDPeDN8BgXM61CXs1v3u17KjvM4e/iLOPLHhY6mbKQxD8
-         sPAvUeDbo9A+Pmba8WBJ3rwAVxzedLWoPzaCi6d1dWk3FFPtYnxFkEL6rVHNU9dem2e8
-         sKA6KRH4WZBvNstTQzfGAeLRn5+AOfKJTOtI4GWn+11IbUj3LA0IXf0P9AiZJiu41G2d
-         JSqEGMfc5HBoOBLiZ/mnLu7K+ztu3xn7H3gsJOmTwJ2I7PHDewYgTj3+4BYN4IYJcnw2
-         nk+LyZKWBX6Qj78FVtpLgquZt7sb4p+YRVMIxkjFjAW4ArW4OA4KDb/IuPBsTE0Fko3I
-         QSqQ==
+        bh=PSJcWS8MY8EL3puEKrmMoYVqTBtFXBm5zLBgjZiVVdM=;
+        b=oZOYCpyl/y8RmdCapgfhWm6vZXljkJ2n4Rk4elo97IroVvdJh+h85Dbk1qGHMmAOVz
+         qBbbuCrCeFvVdon5eu4gc9PtnjBHgRoc5uRWZYUBSSOiPyTvTx00T7B19GNebnjyvvuT
+         rYmsagx0lUjDjSC1fwHTfmvcHONjiXd/o0ihoIkkN8CaM1AStRtsvW23PeMxTRYQWvC7
+         pRwfYLMoJusVaQjB1JRUjS4Z7y3b1Didu24FxRWMWkOEg31HdqQDJQTZdsq0fTaFYq4C
+         QcXTHjR5G/Cmc015d92q254cpvGc6W+tScdU8qT7rxxxfFlUOX9qEYeXLPZZqXCCwyrX
+         FLLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=1l8uYPJaFizeK4iLDRVUxcJjpD7EAyP2tVHW1Dy+y1I=;
-        b=lfe64/KP6ldm4w24BtIFr9bh/Pc1tZBC9RI13ooqOOliJshETagBJ0+QvORfUuYFAP
-         WOUVPkyjGTX+RPEMSbEvnOjan1vzOkIvENNmMD0wb0vDlh6CIKdo7l1uCrAK6aJpp+0a
-         SeuRy62HdfAIFc6BvUDUPresthuGEjtsOelqPBISRm3Tcdioj4CYBzrO1D0lI3KIyom1
-         aZgwpegupZVLOIXOQf07MWFGHC3ct2RJN3o0YDBLKUmFuQlC184a85P9TqUcfFZdunv6
-         9YVT5N8xaK1qMuUzOLGmvRoceTshefqKTjnBovF7eLqxKxrmxOdTXkr9DY3/FDCRjjiz
-         hZMw==
-X-Gm-Message-State: APjAAAU8oaexEa6vOT+fjSSAMhJAiaDgHSYxh8xXBLaa9wSvLgTa6+X5
-        QlIzauBf/2je6MVk/WQ4Hp6L3jQabykWKQ==
-X-Google-Smtp-Source: APXvYqxZXjjPETHZLTmzGYG4+Q/Vg589iW86m3gMpuXR74hx0uHMy7TLcf7EtXqgtgdFv4bEFomjeA==
-X-Received: by 2002:a1c:41c1:: with SMTP id o184mr3755946wma.57.1572014021716;
-        Fri, 25 Oct 2019 07:33:41 -0700 (PDT)
+        bh=PSJcWS8MY8EL3puEKrmMoYVqTBtFXBm5zLBgjZiVVdM=;
+        b=VlYUUVUSOhsQzmO9VD09CTL6tuBH5MpO9OCLH2k9LA4lgulZej3xTA8pwTSsQfAj4g
+         yqbiAM9xg4VxogPdtnOpDHTpR1dmJKePBcDJJ+4wxjpr5ofnbJRzpTueZXlPSItptm5w
+         P0J+ZsBqSGJ4bpAdREQu2W7KIlU4s5bmfQL91QrZazoxE5MEZN/r9jCycWS0gta4g0HC
+         eJ3WEV59UaZkfx814a5i/RLPEq5kK98cYXgseZVJFBNZYfxhOEd/azEocxPTquqAwEoL
+         iYzTRxy+VdqgP6cGylKvfrhHFKg9qs+ks8/VlyHAm6vMrqdRq60q9Gjx9lrEYFOvK7p0
+         ZXgw==
+X-Gm-Message-State: APjAAAX/ssHCYclDd5tjlOiLY2IHPDjY25BxY1INsq/RtxjauOPFQScD
+        w9P9zFmnhqkyxXs5DA69CXfOQfRcwB51ZQ==
+X-Google-Smtp-Source: APXvYqwb8ueTYwnm7OD4vphE9tlyWgULIFgnD04KbqNixWbJKW3i1EX1ZL6mxrvFInQubKTQ6u29tw==
+X-Received: by 2002:adf:e34b:: with SMTP id n11mr3234612wrj.250.1572014048530;
+        Fri, 25 Oct 2019 07:34:08 -0700 (PDT)
 Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id a17sm2164659wmb.8.2019.10.25.07.33.39
+        by smtp.gmail.com with ESMTPSA id q11sm2190568wmq.21.2019.10.25.07.34.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 07:33:41 -0700 (PDT)
-Subject: Re: [PATCH v3 10/21] drm/bridge: Clarify the atomic enable/disable
- hooks semantics
+        Fri, 25 Oct 2019 07:34:07 -0700 (PDT)
+Subject: Re: [PATCH v3 13/21] drm/bridge: Add the
+ drm_bridge_chain_get_prev_bridge() helper
 To:     Boris Brezillon <boris.brezillon@collabora.com>,
         dri-devel@lists.freedesktop.org
 Cc:     Lucas Stach <l.stach@pengutronix.de>,
@@ -81,7 +81,7 @@ Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-11-boris.brezillon@collabora.com>
+ <20191023154512.9762-14-boris.brezillon@collabora.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -134,12 +134,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <d5d30330-3809-3f10-9b30-a7b68b60adaf@baylibre.com>
-Date:   Fri, 25 Oct 2019 16:33:38 +0200
+Message-ID: <f1f3f76b-a488-2de2-385d-ab49f2da5cf8@baylibre.com>
+Date:   Fri, 25 Oct 2019 16:34:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191023154512.9762-11-boris.brezillon@collabora.com>
+In-Reply-To: <20191023154512.9762-14-boris.brezillon@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -149,206 +149,49 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 23/10/2019 17:45, Boris Brezillon wrote:
-> The [pre_]enable/[post_]disable hooks are passed the old atomic state.
-> Update the doc and rename the arguments to make it clear.
+> Will be useful for bridge drivers that want to do bus format
+> negotiation with their neighbours.
 > 
 > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 > ---
 > Changes in v3:
-> * New patch
-> ---
->  drivers/gpu/drm/drm_bridge.c | 24 ++++++++++++------------
->  include/drm/drm_bridge.h     | 16 ++++++++++++----
->  2 files changed, 24 insertions(+), 16 deletions(-)
+> * Inline drm_bridge_chain_get_prev_bridge()
+> * Fix the doc
 > 
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index c53966767782..ca74bfe028c9 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -447,7 +447,7 @@ EXPORT_SYMBOL(drm_bridge_chain_enable);
->  /**
->   * drm_atomic_bridge_chain_disable - disables all bridges in the encoder chain
->   * @bridge: bridge control structure
-> - * @state: atomic state being committed
-> + * @old_state: old atomic state
->   *
->   * Calls &drm_bridge_funcs.atomic_disable (falls back on
->   * &drm_bridge_funcs.disable) op for all the bridges in the encoder chain,
-> @@ -457,7 +457,7 @@ EXPORT_SYMBOL(drm_bridge_chain_enable);
->   * Note: the bridge passed should be the one closest to the encoder
->   */
->  void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
-> -				     struct drm_atomic_state *state)
-> +				     struct drm_atomic_state *old_state)
->  {
->  	struct drm_encoder *encoder;
->  	struct drm_bridge *iter;
-> @@ -469,7 +469,7 @@ void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
->  	list_for_each_entry_reverse(iter, &encoder->bridge_chain,
->  				    chain_node) {
->  		if (iter->funcs->atomic_disable)
-> -			iter->funcs->atomic_disable(iter, state);
-> +			iter->funcs->atomic_disable(iter, old_state);
->  		else if (iter->funcs->disable)
->  			iter->funcs->disable(iter);
->  
-> @@ -483,7 +483,7 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_disable);
->   * drm_atomic_bridge_chain_post_disable - cleans up after disabling all bridges
->   *					  in the encoder chain
->   * @bridge: bridge control structure
-> - * @state: atomic state being committed
-> + * @old_state: old atomic state
->   *
->   * Calls &drm_bridge_funcs.atomic_post_disable (falls back on
->   * &drm_bridge_funcs.post_disable) op for all the bridges in the encoder chain,
-> @@ -493,7 +493,7 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_disable);
->   * Note: the bridge passed should be the one closest to the encoder
->   */
->  void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
-> -					  struct drm_atomic_state *state)
-> +					  struct drm_atomic_state *old_state)
->  {
->  	struct drm_encoder *encoder;
->  
-> @@ -504,7 +504,7 @@ void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
->  	list_for_each_entry_from(bridge, &encoder->bridge_chain,
->  				 chain_node) {
->  		if (bridge->funcs->atomic_post_disable)
-> -			bridge->funcs->atomic_post_disable(bridge, state);
-> +			bridge->funcs->atomic_post_disable(bridge, old_state);
->  		else if (bridge->funcs->post_disable)
->  			bridge->funcs->post_disable(bridge);
->  	}
-> @@ -515,7 +515,7 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_post_disable);
->   * drm_atomic_bridge_chain_pre_enable - prepares for enabling all bridges in
->   *					the encoder chain
->   * @bridge: bridge control structure
-> - * @state: atomic state being committed
-> + * @old_state: old atomic state
->   *
->   * Calls &drm_bridge_funcs.atomic_pre_enable (falls back on
->   * &drm_bridge_funcs.pre_enable) op for all the bridges in the encoder chain,
-> @@ -525,7 +525,7 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_post_disable);
->   * Note: the bridge passed should be the one closest to the encoder
->   */
->  void drm_atomic_bridge_chain_pre_enable(struct drm_bridge *bridge,
-> -					struct drm_atomic_state *state)
-> +					struct drm_atomic_state *old_state)
->  {
->  	struct drm_encoder *encoder;
->  	struct drm_bridge *iter;
-> @@ -537,7 +537,7 @@ void drm_atomic_bridge_chain_pre_enable(struct drm_bridge *bridge,
->  	list_for_each_entry_reverse(iter, &bridge->encoder->bridge_chain,
->  				    chain_node) {
->  		if (iter->funcs->atomic_pre_enable)
-> -			iter->funcs->atomic_pre_enable(iter, state);
-> +			iter->funcs->atomic_pre_enable(iter, old_state);
->  		else if (iter->funcs->pre_enable)
->  			iter->funcs->pre_enable(iter);
->  
-> @@ -550,7 +550,7 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_pre_enable);
->  /**
->   * drm_atomic_bridge_chain_enable - enables all bridges in the encoder chain
->   * @bridge: bridge control structure
-> - * @state: atomic state being committed
-> + * @old_state: old atomic state
->   *
->   * Calls &drm_bridge_funcs.atomic_enable (falls back on
->   * &drm_bridge_funcs.enable) op for all the bridges in the encoder chain,
-> @@ -560,7 +560,7 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_pre_enable);
->   * Note: the bridge passed should be the one closest to the encoder
->   */
->  void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
-> -				    struct drm_atomic_state *state)
-> +				    struct drm_atomic_state *old_state)
->  {
->  	struct drm_encoder *encoder;
->  
-> @@ -571,7 +571,7 @@ void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
->  	list_for_each_entry_from(bridge, &bridge->encoder->bridge_chain,
->  				 chain_node) {
->  		if (bridge->funcs->atomic_enable)
-> -			bridge->funcs->atomic_enable(bridge, state);
-> +			bridge->funcs->atomic_enable(bridge, old_state);
->  		else if (bridge->funcs->enable)
->  			bridge->funcs->enable(bridge);
->  	}
+> Changes in v2:
+> * Fix the kerneldoc
+> * Drop the !bridge || !bridge->encoder check
+> ---
+>  include/drm/drm_bridge.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
 > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index a608c47d1de5..e814e6d6e7c2 100644
+> index 2beb1ef9a733..3fb518494640 100644
 > --- a/include/drm/drm_bridge.h
 > +++ b/include/drm/drm_bridge.h
-> @@ -266,6 +266,8 @@ struct drm_bridge_funcs {
->  	 * bridge's @atomic_pre_enable or @pre_enable function. If the preceding
->  	 * element is a &drm_encoder it's called right before the encoder's
->  	 * &drm_encoder_helper_funcs.atomic_enable hook.
-> +	 * This hook is passed the old atomic state (atomic state after new/old
-> +	 * states have been swapped).
->  	 *
->  	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
->  	 * will not yet be running when this callback is called. The bridge must
-> @@ -281,7 +283,7 @@ struct drm_bridge_funcs {
->  	 * The @atomic_pre_enable callback is optional.
->  	 */
->  	void (*atomic_pre_enable)(struct drm_bridge *bridge,
-> -				  struct drm_atomic_state *state);
-> +				  struct drm_atomic_state *old_state);
+> @@ -526,6 +526,22 @@ drm_bridge_chain_get_next_bridge(struct drm_bridge *bridge)
+>  	return list_next_entry(bridge, chain_node);
+>  }
 >  
->  	/**
->  	 * @atomic_enable:
-> @@ -292,6 +294,8 @@ struct drm_bridge_funcs {
->  	 * bridge's @atomic_enable or @enable function. If the preceding element
->  	 * is a &drm_encoder it's called right after the encoder's
->  	 * &drm_encoder_helper_funcs.atomic_enable hook.
-> +	 * This hook is passed the old atomic state (atomic state after new/old
-> +	 * states have been swapped).
->  	 *
->  	 * The bridge can assume that the display pipe (i.e. clocks and timing
->  	 * signals) feeding it is running when this callback is called. This
-> @@ -306,7 +310,7 @@ struct drm_bridge_funcs {
->  	 * The @atomic_enable callback is optional.
->  	 */
->  	void (*atomic_enable)(struct drm_bridge *bridge,
-> -			      struct drm_atomic_state *state);
-> +			      struct drm_atomic_state *old_state);
->  	/**
->  	 * @atomic_disable:
->  	 *
-> @@ -316,6 +320,8 @@ struct drm_bridge_funcs {
->  	 * bridge's @atomic_disable or @disable vfunc. If the preceding element
->  	 * is a &drm_encoder it's called right before the
->  	 * &drm_encoder_helper_funcs.atomic_disable hook.
-> +	 * This hook is passed the old atomic state (atomic state after new/old
-> +	 * states have been swapped).
->  	 *
->  	 * The bridge can assume that the display pipe (i.e. clocks and timing
->  	 * signals) feeding it is still running when this callback is called.
-> @@ -329,7 +335,7 @@ struct drm_bridge_funcs {
->  	 * The @atomic_disable callback is optional.
->  	 */
->  	void (*atomic_disable)(struct drm_bridge *bridge,
-> -			       struct drm_atomic_state *state);
-> +			       struct drm_atomic_state *old_state);
->  
->  	/**
->  	 * @atomic_post_disable:
-> @@ -340,6 +346,8 @@ struct drm_bridge_funcs {
->  	 * @atomic_post_disable or @post_disable function. If the preceding
->  	 * element is a &drm_encoder it's called right after the encoder's
->  	 * &drm_encoder_helper_funcs.atomic_disable hook.
-> +	 * This hook is passed the old atomic state (atomic state after new/old
-> +	 * states have been swapped).
->  	 *
->  	 * The bridge must assume that the display pipe (i.e. clocks and timing
->  	 * signals) feeding it is no longer running when this callback is
-> @@ -355,7 +363,7 @@ struct drm_bridge_funcs {
->  	 * The @atomic_post_disable callback is optional.
->  	 */
->  	void (*atomic_post_disable)(struct drm_bridge *bridge,
-> -				    struct drm_atomic_state *state);
-> +				    struct drm_atomic_state *old_state);
->  
->  	/**
->  	 * @atomic_duplicate_state:
+> +/**
+> + * drm_bridge_chain_get_prev_bridge() - Get the previous bridge in the chain
+> + * @bridge: bridge object
+> + *
+> + * RETURNS:
+> + * the previous bridge in the chain, or NULL if @bridge is the first.
+> + */
+> +static inline struct drm_bridge *
+> +drm_bridge_chain_get_prev_bridge(struct drm_bridge *bridge)
+> +{
+> +	if (list_is_first(&bridge->chain_node, &bridge->encoder->bridge_chain))
+> +		return NULL;
+> +
+> +	return list_prev_entry(bridge, chain_node);
+> +}
+> +
+>  /**
+>   * drm_bridge_chain_get_first_bridge() - Get the first bridge in the chain
+>   * @encoder: encoder object
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
