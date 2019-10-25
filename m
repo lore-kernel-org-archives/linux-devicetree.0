@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A300CA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432ACCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A3E21D7F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09285205F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="gweTI0Ly"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="mhoVW4q3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbfJYR51 (ORCPT
+        id S1730140AbfJYR5D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 13:57:27 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37159 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730718AbfJYR51 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 13:57:27 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p1so2017111pgi.4
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 10:57:26 -0700 (PDT)
+        Fri, 25 Oct 2019 13:57:03 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43318 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730052AbfJYR5C (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 13:57:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l24so1996515pgh.10
+        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 10:57:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mkXpYcbeC0bnNO0q+6BYbbUdKRmj3eZu6k2PkyZZ+20=;
-        b=gweTI0LyTm7cD/yzlGtFTcEQkNduCRGR/hsVSxp3d/3Bz/NOBN5dWTQ+7F8e86XZUu
-         Axq2I9BqIbKsiri/bWKbxYzUJKo/wDj+EinhAbxo3XDQc2Xs8g/CDg1d0UsbHDfU4+z3
-         us9wdEU2FiSvwu6V/ZuM+AEQ4agT3RhBsGZJk=
+        bh=oNviLkxeRT2QWy07lD/cdFtoGXA9IjHjIMTuJSUpyNM=;
+        b=mhoVW4q33RiwIJZxPkQpSc+5S5u3MGRGNk+ubsVCbxtK/9L2z9Kjrm6XL7D8RkfWnZ
+         mdjRij7w+DCDcJbNWE+GEeGtfLqgJX1VfUubOPiLYG3eQTtQJBfYcYjN7OYMlW9cAAa7
+         UdQTps4isMxB/bQNsv4csNvOTwYbNywFN1F5A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mkXpYcbeC0bnNO0q+6BYbbUdKRmj3eZu6k2PkyZZ+20=;
-        b=AZzvb//0eJlYVcyxEq9pcbykDQ4UygBNE1lte2mms5EbblmHLVOT3gi4Qgmm6AS9zv
-         a6u+Qqu6g9WF+1NxxNDXGbYaC+m7kWrouKfiHIpiqpnzXP6o5bPI+wMTA/4EXDR3dSJW
-         91kNJJELYEQsw/HRtVgHPYMX7MTdMC9u9zp70f0X1/mR8giHH3o7DTY405ub/Sx81LFh
-         j98IN8U5X03PiSJ6OWWwsjuBSELCnskfkhB2R2DSsaFfhe+yAS1m5keqzxNGC36xNNnQ
-         vykler09u7f/5fcP3q+zTMT2Moo2LtIikpGrEacvJK/GYL3QUqqtvm5gmML5YxfM6/Wy
-         d2/g==
-X-Gm-Message-State: APjAAAXAt+iio1qDI0sYIMmx1q+zAGmXqbnbpc/JORP57UyoWivB0QpQ
-        AsZOS2Sh/NgqoHFSZgoHJucphg==
-X-Google-Smtp-Source: APXvYqx2uyOKUk+oTvl6DvVjGmAyDd5BEOKB1viyY3Vajn7osDQWzKuwH/NW4wm5BvjAo8gfJW6sbA==
-X-Received: by 2002:a63:9d47:: with SMTP id i68mr5939677pgd.28.1572026245814;
-        Fri, 25 Oct 2019 10:57:25 -0700 (PDT)
+        bh=oNviLkxeRT2QWy07lD/cdFtoGXA9IjHjIMTuJSUpyNM=;
+        b=hmJeZlCHf3NrLgbb88cbH6oom8jY5E5FR2R1TEh1xGqlj5bq102bdspv1x3Hj4lx6g
+         SW0ONpJFSblxeqbwoaYrgd57ahPwLiRYmBsVn+FjkDfjfa7Z1VGmbfDWY+WxiTksKRvU
+         3q9wi8DfPEomSCUl4btmsiJ6Gap0rR5kWV32mgjCFDUT8VD2HieQ0KtoldmICUDUax9F
+         uICEfv8+L5iOAfV7TzvO+qGwVOp6vaXzbv8ZhxT9kmMyW/cC3KpuvaL8c/R2wXigf57L
+         6WWHMPZWh8X7JXMA1kxfSk7mrS6/QH+e8irX9c/DwS3WokrDKt9zqG1rQP86YWn66sCP
+         ymbg==
+X-Gm-Message-State: APjAAAW7CaO29X6OacawlqyzsNjFwGaGCnZ5hmhkDzIMb/zNqsxsM+1B
+        CCcYuylDPi+aqztynbBmhqz/FW6ZtCE=
+X-Google-Smtp-Source: APXvYqwaGOm39dDO06r0fK37XPT3AmTUbjlmUzciZnzOs/e6SAg1dwHKEsQr4c2YRdvsLBZIxsX+4Q==
+X-Received: by 2002:a17:90a:b285:: with SMTP id c5mr5667166pjr.123.1572026221036;
+        Fri, 25 Oct 2019 10:57:01 -0700 (PDT)
 Received: from localhost.localdomain ([115.97.180.31])
-        by smtp.gmail.com with ESMTPSA id n15sm2926580pfq.146.2019.10.25.10.57.20
+        by smtp.gmail.com with ESMTPSA id n15sm2926580pfq.146.2019.10.25.10.56.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 10:57:25 -0700 (PDT)
+        Fri, 25 Oct 2019 10:57:00 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         David Airlie <airlied@linux.ie>,
@@ -64,9 +64,9 @@ Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH v11 7/7] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI panel
-Date:   Fri, 25 Oct 2019 23:26:25 +0530
-Message-Id: <20191025175625.8011-8-jagan@amarulasolutions.com>
+Subject: [PATCH v11 3/7] drm/sun4i: dsi: Add has_mod_clk quirk
+Date:   Fri, 25 Oct 2019 23:26:21 +0530
+Message-Id: <20191025175625.8011-4-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191025175625.8011-1-jagan@amarulasolutions.com>
 References: <20191025175625.8011-1-jagan@amarulasolutions.com>
@@ -77,84 +77,147 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch add support for Bananapi S070WV20-CT16 DSI panel to
-BPI-M64 board.
+As per the user manual, look like mod clock is not mandatory
+for all Allwinner MIPI DSI controllers, it is connected to
+CLK_DSI_SCLK for A31 and not available in A64.
 
-DSI panel connected via board DSI port with,
-- DLDO1 as VCC-DSI supply
-- DCDC1 as VDD supply
-- PD7 gpio for lcd enable pin
-- PD6 gpio for lcd reset pin
-- PD5 gpio for backlight enable pin
+So add has_mod_clk quirk and process the mod clk accordingly.
 
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 38 ++++++++++++++++++--------
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  5 ++++
+ 2 files changed, 32 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 208373efee49..6beaecdd802a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -45,6 +45,7 @@
- #include "sun50i-a64.dtsi"
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index c958ca9bae63..8c4c541224dd 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -11,6 +11,7 @@
+ #include <linux/crc-ccitt.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/phy/phy-mipi-dphy.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+@@ -1093,6 +1094,7 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 	dsi->dev = dev;
+ 	dsi->host.ops = &sun6i_dsi_host_ops;
+ 	dsi->host.dev = dev;
++	dsi->variant = of_device_get_match_data(dev);
  
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	base = devm_ioremap_resource(dev, res);
+@@ -1120,17 +1122,20 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(dsi->reset);
+ 	}
  
- / {
- 	model = "BananaPi-M64";
-@@ -56,6 +57,14 @@
- 		serial1 = &uart1;
- 	};
+-	dsi->mod_clk = devm_clk_get(dev, "mod");
+-	if (IS_ERR(dsi->mod_clk)) {
+-		dev_err(dev, "Couldn't get the DSI mod clock\n");
+-		return PTR_ERR(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk) {
++		dsi->mod_clk = devm_clk_get(dev, "mod");
++		if (IS_ERR(dsi->mod_clk)) {
++			dev_err(dev, "Couldn't get the DSI mod clock\n");
++			return PTR_ERR(dsi->mod_clk);
++		}
+ 	}
  
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 255>;
-+		default-brightness-level = <2>;
-+		enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD5 */
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -116,6 +125,24 @@
- 	status = "okay";
+ 	/*
+ 	 * In order to operate properly, that clock seems to be always
+ 	 * set to 297MHz.
+ 	 */
+-	clk_set_rate_exclusive(dsi->mod_clk, 297000000);
++	if (dsi->variant->has_mod_clk)
++		clk_set_rate_exclusive(dsi->mod_clk, 297000000);
+ 
+ 	dsi->dphy = devm_phy_get(dev, "dphy");
+ 	if (IS_ERR(dsi->dphy)) {
+@@ -1160,7 +1165,8 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ err_pm_disable:
+ 	pm_runtime_disable(dev);
+ err_unprotect_clk:
+-	clk_rate_exclusive_put(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_rate_exclusive_put(dsi->mod_clk);
+ 	return ret;
+ }
+ 
+@@ -1172,7 +1178,8 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+ 	component_del(&pdev->dev, &sun6i_dsi_ops);
+ 	mipi_dsi_host_unregister(&dsi->host);
+ 	pm_runtime_disable(dev);
+-	clk_rate_exclusive_put(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_rate_exclusive_put(dsi->mod_clk);
+ 
+ 	return 0;
+ }
+@@ -1189,7 +1196,8 @@ static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
+ 	}
+ 
+ 	reset_control_deassert(dsi->reset);
+-	clk_prepare_enable(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_prepare_enable(dsi->mod_clk);
+ 
+ 	/*
+ 	 * Enable the DSI block.
+@@ -1217,7 +1225,8 @@ static int __maybe_unused sun6i_dsi_runtime_suspend(struct device *dev)
+ {
+ 	struct sun6i_dsi *dsi = dev_get_drvdata(dev);
+ 
+-	clk_disable_unprepare(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_disable_unprepare(dsi->mod_clk);
+ 	reset_control_assert(dsi->reset);
+ 	regulator_disable(dsi->regulator);
+ 
+@@ -1230,9 +1239,16 @@ static const struct dev_pm_ops sun6i_dsi_pm_ops = {
+ 			   NULL)
  };
  
-+&dphy {
-+	status = "okay";
++static const struct sun6i_dsi_variant sun6i_a31_mipi_dsi = {
++	.has_mod_clk = true,
 +};
 +
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;		/* VCC3V3-DSI */
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "bananapi,s070wv20-ct16-icn6211";
-+		reg = <0>;
-+		enable-gpios = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PD7 */
-+		reset-gpios = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD6 */
-+		vdd-supply = <&reg_dcdc1>;
-+		backlight = <&backlight>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
+ static const struct of_device_id sun6i_dsi_of_table[] = {
+-	{ .compatible = "allwinner,sun6i-a31-mipi-dsi" },
+-	{ }
++	{
++		.compatible = "allwinner,sun6i-a31-mipi-dsi",
++		.data = &sun6i_a31_mipi_dsi,
++	},
++	{ /* sentinel */ }
  };
-@@ -206,6 +233,10 @@
- 	status = "okay";
+ MODULE_DEVICE_TABLE(of, sun6i_dsi_of_table);
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+index 3f4846f581ef..d791c9f6fccf 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+@@ -15,6 +15,10 @@
+ 
+ #define SUN6I_DSI_TCON_DIV	4
+ 
++struct sun6i_dsi_variant {
++	bool			has_mod_clk;
++};
++
+ struct sun6i_dsi {
+ 	struct drm_connector	connector;
+ 	struct drm_encoder	encoder;
+@@ -31,6 +35,7 @@ struct sun6i_dsi {
+ 	struct sun4i_drv	*drv;
+ 	struct mipi_dsi_device	*device;
+ 	struct drm_panel	*panel;
++	const struct sun6i_dsi_variant	*variant;
  };
  
-+&r_pwm {
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
+ static inline struct sun6i_dsi *host_to_sun6i_dsi(struct mipi_dsi_host *host)
 -- 
 2.18.0.321.gffc6fa0e3
 
