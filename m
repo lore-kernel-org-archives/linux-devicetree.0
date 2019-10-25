@@ -7,158 +7,170 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48B8CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 19:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9A6CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 19:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75ECF20679
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 19:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54A12054F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 19:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572031521;
-	bh=kFib9T2PK156kfVp/4TCM1yskmlWYfv8k/VQi57Yy/I=;
+	s=default; t=1572031951;
+	bh=Te9FZpyFy/Wz5Tfmhe54F9bcA0PBB78RSH6dJ6BIUNo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hvuRYPeTT7sEcP2BhWOuzVQL5vOCHbtKD8ALAzkmLFObaltn/OGXhuSPKmJWp9K6Y
-	 4v4tk8U2L9vlXxiGvajTWJWDTZxl5hO5VoU2XZss4qlZfaSgh6iHjZKkOOyoBtEu1S
-	 zds1IDzxg128LMSZEA9yCgzgFeW+30W8eAQjW4UE=
+	b=0abAJNlpC7M7ptYQL7iTxLTYEX+9y3mOO1XwNd2ntxeWfK9rUY/ovwxXFu38PLji6
+	 dBsunL1zaO0ig/pkDEitJ/gCrPgFMlhs4YQq8YsKK5i9zrHrcFTDh93/OCd3VM5t5j
+	 BexdcD/F5SIwPiwj7bbN5bureAz4IaImSb5AgXGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbfJYTZU (ORCPT
+        id S1726124AbfJYTcb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:25:20 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39822 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfJYTZU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 15:25:20 -0400
-Received: by mail-ot1-f68.google.com with SMTP id s22so2810498otr.6
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 12:25:20 -0700 (PDT)
+        Fri, 25 Oct 2019 15:32:31 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33701 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfJYTca (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 15:32:30 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a15so2377864oic.0;
+        Fri, 25 Oct 2019 12:32:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hvp+6pcbAuhWD78ad7Hbl9tESo5LnkRCFZND+kn0p/8=;
-        b=XA9mMVf12G7ScqgtoPLh1RN95hTDCOUIjr+FNRHM42K0iy7GeKfyV5C0xTbE7mxAkY
-         GTVb5UrfSVnmRitd4mYyarf/qaQ7BRG5r/BAzdDlHer6Q0/7IUSOqzdxIPl0eGy5HpeK
-         mR8NmeapiX1xLEyAz6Bz9gTuwNfN8UlNped+3ipov9GPryM5Wbp+nD/ouwbIpitYEGaX
-         x4YbwciGeIehOI0mcVhleeJXDNkP5beFtcwEzWxnoCHrS8pwqN0KRu79KpYa1GrWhN4U
-         cfzjnOMdI22abSpSl2hVbDJJrNvxlep+j04wEKWzPJl3ic6idstcTOWuWMblvmPH4L+g
-         SOKg==
-X-Gm-Message-State: APjAAAWpSwP3fpHW4ny7a8iFa4Fhz6/bGudbvi94q9TQPrpFoRgQy8eB
-        6FV/dA8yiqM/jHuRfBIXbSrA7LE=
-X-Google-Smtp-Source: APXvYqzMIR897eobjV14Fci7YCLpLBY9FpCOUumYwNM3rjseujxVArRe9sgOjUxouSEjyyC+cwGpAA==
-X-Received: by 2002:a05:6830:2055:: with SMTP id f21mr3963388otp.26.1572031519782;
-        Fri, 25 Oct 2019 12:25:19 -0700 (PDT)
+        bh=mXGKxFl6d9Tad1bXOR5KQzZcHvU397AW0AArFi6DfxM=;
+        b=WVEnLj2o706lId/1UETsUawHM2H2f2qjEep5xS/nnW9Y++hm4UBhVxl993EH9EbfF/
+         K7zV14M4qUT8YappXTAE0RR/90F2hVWrv8IHBzb+DjXgLy3Nd3/vcVQjMVWSzixcPQ77
+         pRZQRiVLyPI92lFGlArtThV9DkiG38Jrb1RRRXGpYWmTdJ5AwFsAEtY+SGcyRRppKcai
+         CXCjchzj5pEnbvoAQDw0WWt2O3McJr6kJZVfDSmoVm+Q4YzuHaJoojLTMvV4xZtn36Qd
+         xN9ASpHsyopqsG2c1A5DyOVBsuyhfNTswGPLu6FU4Jljti5gV7X+eCXgailG7N4VYAre
+         4gGA==
+X-Gm-Message-State: APjAAAWv6XCa2hmZSTA3KxPlvsi5b8B0D8bMYkiUw8Z67zgWQ2zcEFz4
+        mIh/XOu3uOsj+0z6G5VP6O/i38s=
+X-Google-Smtp-Source: APXvYqz471H2Ocr7A2/odSeE1SFq90vFIedMYY4Lihx8KArdbgC7Ngmc9bPTrZmbPIh8cFpnZHPH3w==
+X-Received: by 2002:aca:b841:: with SMTP id i62mr4248024oif.123.1572031949663;
+        Fri, 25 Oct 2019 12:32:29 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s3sm1010825otk.64.2019.10.25.12.25.18
+        by smtp.gmail.com with ESMTPSA id t18sm990562otm.8.2019.10.25.12.32.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 12:25:19 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 14:25:18 -0500
+        Fri, 25 Oct 2019 12:32:29 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 14:32:28 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/3 v4] drm/panel: Add DT bindings for Sony ACX424AKP
-Message-ID: <20191025192518.GA19549@bogus>
-References: <20191024114305.15581-1-linus.walleij@linaro.org>
- <20191024114305.15581-2-linus.walleij@linaro.org>
+To:     vincent.cheng.xh@renesas.com
+Cc:     devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch, mark.rutland@arm.com,
+        richardcochran@gmail.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: ptp: Add bindings doc for IDT
+ ClockMatrix based PTP clock
+Message-ID: <20191025193228.GA31398@bogus>
+References: <1571687868-22834-1-git-send-email-vincent.cheng.xh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191024114305.15581-2-linus.walleij@linaro.org>
+In-Reply-To: <1571687868-22834-1-git-send-email-vincent.cheng.xh@renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 01:43:04PM +0200, Linus Walleij wrote:
-> This adds device tree bindings for the Sony ACX424AKP panel.
-> Let's use YAML.
-
-Also broken. Run 'make dt_binding_check'.
-
+On Mon, Oct 21, 2019 at 03:57:47PM -0400, vincent.cheng.xh@renesas.com wrote:
+> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v3->v4:
-> - Adjust to adjusted DSI bindings.
-> ChangeLog v2->v3:
-> - Put the example inside a dsi-controller so we have a complete
->   example that verifies to the DSI panel generic binding.
-> ChangeLog v1->v2:
-> - Suggest a stand-alone YAML bindings file for DSI panels in
->   a separate patch, and use that to reference the
->   boolean "enforce-video-mode" attribute for DSI panels
-> ---
->  .../display/panel/sony,acx424akp.yaml         | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
+> Add device tree binding doc for the IDT ClockMatrix PTP clock.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml b/Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
+> Co-developed-by: Richard Cochran <richardcochran@gmail.com>
+> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
+> ---
+> 
+> Changes since v2:
+>  - As suggested by Rob Herring:
+>    1. Replace with DT schema
+>    2. Remove '-ptp' from compatible string
+>    3. Replace wildcard 'x' with the part numbers.
+> 
+> Changes since v1:
+>  - No changes
+> ---
+>  .../devicetree/bindings/ptp/ptp-idtcm.yaml         | 63 ++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml b/Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
 > new file mode 100644
-> index 000000000000..a2f49b9a5958
+> index 0000000..d3771e0
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
+> +$id: http://devicetree.org/schemas/ptp/ptp-idtcm.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Sony ACX424AKP 4" 480x864 AMOLED panel
+> +title: IDT ClockMatrix (TM) PTP Clock Device Tree Bindings
 > +
 > +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +  - $ref: ../dsi-controller.yaml#
-
-This is wrong now because it applies to the controller node, not the 
-panel node. IOW, DSI controllers need to include it.
-
+> +  - Vincent Cheng <vincent.cheng.xh@renesas.com>
 > +
 > +properties:
 > +  compatible:
-> +    const: sony,acx424akp
-> +  reg: true
-> +  port: true
-> +  reset-gpios: true
-> +  vddi-supply:
-> +     description: regulator that supplies the vddi voltage
-> +  enforce-video-mode: true
+> +    enum:
+> +      # For System Synchronizer
+> +      - idt,8a34000
+> +      - idt,8a34001
+> +      - idt,8a34002
+> +      - idt,8a34003
+> +      - idt,8a34004
+> +      - idt,8a34005
+> +      - idt,8a34006
+> +      - idt,8a34007
+> +      - idt,8a34008
+> +      - idt,8a34009
+> +      # For Port Synchronizer
+> +      - idt,8a34010
+> +      - idt,8a34011
+> +      - idt,8a34012
+> +      - idt,8a34013
+> +      - idt,8a34014
+> +      - idt,8a34015
+> +      - idt,8a34016
+> +      - idt,8a34017
+> +      - idt,8a34018
+> +      - idt,8a34019
+> +      # For Universal Frequency Translator (UFT)
+> +      - idt,8a34040
+> +      - idt,8a34041
+> +      - idt,8a34042
+> +      - idt,8a34043
+> +      - idt,8a34044
+> +      - idt,8a34045
+> +      - idt,8a34046
+> +      - idt,8a34047
+> +      - idt,8a34048
+> +      - idt,8a34049
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +      I2C slave address of the device.
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - port
-> +  - reset-gpios
-> +  - power-supply
-> +
-> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    dsi-controller@0 {
+> +    phc@5b {
 
-unit-address without 'reg'...
+ptp@5b
 
-> +        compatible = "foo";
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        panel@0 {
-> +            compatible = "sony,acx424akp";
-> +            reg = <0>;
-> +            vddi-supply = <&foo>;
-> +            reset-gpios = <&foo_gpio 0 GPIO_ACTIVE_LOW>;
-> +        };
+Examples are built now and this fails:
+
+Documentation/devicetree/bindings/ptp/ptp-idtcm.example.dts:19.15-28: 
+Warning (reg_format): /example-0/phc@5b:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
+
+The problem is i2c devices need to be shown under an i2c bus node.
+
+> +          compatible = "idt,8a34000";
+> +          reg = <0x5b>;
 > +    };
-> +
-> +...
-> \ No newline at end of file
-
-Should fix this...
-
 > -- 
-> 2.21.0
+> 2.7.4
 > 
