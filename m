@@ -2,116 +2,106 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C45CA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1143CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5503021D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EF121929
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438180AbfJYI5s (ORCPT
+        id S2438082AbfJYJB0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:57:48 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35066 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfJYI5s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 04:57:48 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z6so1526366otb.2;
-        Fri, 25 Oct 2019 01:57:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hNHqqS4Uc9aqlwR5IUsahyveCLTdtc01wm1P+k/r7h0=;
-        b=uOH5WMqc0j/GBrfMhauo4B5kZSMX6KMnz0uJSYZZcc0i5RSUN73uGrYC0/Q/F21lyQ
-         bOSBMDYd+OJFR/MMyYCONd+5cnzaYqqVWxXMtX3Smz/morDlG2SzXwTE9I/4sCA4L2ti
-         MH/K8/4ucucscwF4oAx0KGfEZqRgTGg5kZ0G5L9cxjJIWfa1O9CE47/KBclZ7RNNe30D
-         mM1hbIAexEbW6op8EsNBesfpF5+MF1ttj/F87P+9KSJM6pARV/AVnWcawmWnNRVCX3Xi
-         3JJUzHC+Rpiyxg4U2GIKVjOFGkYulR1WpIqRtDE7NNjWGD4BVEH46pNmMC7UPpXpMMeX
-         LN2w==
-X-Gm-Message-State: APjAAAX1puTDH4ezYay+BE+FfBAsU87o3A2q7lCQN1Pa/nNowpDSDbr6
-        uRJiMqmcUb11GVdcTVSreFRNSs8XSIt0sqfvHPw=
-X-Google-Smtp-Source: APXvYqwXZ5hSYo/AaHShqXVhnQPKDDrnniy5ZvaPofKAgeVdRshvXovvQWZivoZJvC/1yJ44x0fPG9nRDYpCtv3h8RQ=
-X-Received: by 2002:a05:6830:1bc3:: with SMTP id v3mr951363ota.145.1571993865998;
- Fri, 25 Oct 2019 01:57:45 -0700 (PDT)
+        Fri, 25 Oct 2019 05:01:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:37212 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407770AbfJYJB0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:01:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B74128;
+        Fri, 25 Oct 2019 02:01:25 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 143DB3F71F;
+        Fri, 25 Oct 2019 02:01:24 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 10:01:23 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+Message-ID: <20191025090122.GW47056@e119886-lin.cambridge.arm.com>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <c46ba3f4187fe53807948b4f10996b89a75c492c.1571638827.git.eswara.kota@linux.intel.com>
+ <CH2PR12MB400751D01BCEE7ABB708280BDA690@CH2PR12MB4007.namprd12.prod.outlook.com>
+ <28b5a21b-b636-f7e4-2d27-23c5d900b0d3@linux.intel.com>
+ <e86116b7-b65f-f31e-abb7-a4533aa6d592@linux.intel.com>
+ <20191022114413.GG32742@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <1571915821-1620-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1571915821-1620-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdU=58w=4A0WcqytFfyV_Q11BgYaDNsMsA8Z15mnm--ang@mail.gmail.com>
- <TYAPR01MB4544D5F2A77FBBA7B0AF7EBDD8650@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <CAMuHMdV7upJi78CymxVYKzDdFWb-qHrnohfnULbNfXjF-QXKRA@mail.gmail.com> <TYAPR01MB4544D173479B25DB73CBFF3CD8650@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB4544D173479B25DB73CBFF3CD8650@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 25 Oct 2019 10:57:34 +0200
-Message-ID: <CAMuHMdWJSjG9h_T75br2OHh6bGeUt2o=MrP1sFdA9f_jm47Hfw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] clk: renesas: rcar-usb2-clock-sel: Add multiple
- clocks management
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191022114413.GG32742@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+On Tue, Oct 22, 2019 at 02:44:13PM +0300, andriy.shevchenko@intel.com wrote:
+> On Tue, Oct 22, 2019 at 06:18:57PM +0800, Dilip Kota wrote:
+> > On 10/21/2019 6:44 PM, Dilip Kota wrote:
+> > > On 10/21/2019 4:29 PM, Gustavo Pimentel wrote:
+> > > > On Mon, Oct 21, 2019 at 7:39:19, Dilip Kota
+> > > > <eswara.kota@linux.intel.com>
+> > > > wrote:
+> 
+> First of all, it's a good behaviour to avoid way long quoting.
+> 
+> > > > > +static void pcie_update_bits(void __iomem *base, u32 mask, u32
+> > > > > val, u32 ofs)
+> > > > > +{
+> > > > > +    u32 orig, tmp;
+> > > > > +
+> > > > > +    orig = readl(base + ofs);
+> > > > > +
+> > > > > +    tmp = (orig & ~mask) | (val & mask);
+> > > > > +
+> > > > > +    if (tmp != orig)
+> > > > > +        writel(tmp, base + ofs);
+> > > > > +}
+> > > > I'd suggest to the a take on FIELD_PREP() and FIELD_GET() and use more
+> > > > intuitive names such as new and old, instead of orig and tmp.
+> > > Sure, i will update it.
+> > I tried using FIELD_PREP and FIELD_GET but it is failing because FIELD_PREP
+> > and FIELD_GET
+> > are expecting mask should be constant macro. u32 or u32 const are not
+> > accepted.
+> 
+> If you look at bitfield.h carefully you may find in particular
+> u32_replace_bits().
 
-On Fri, Oct 25, 2019 at 10:44 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Geert Uytterhoeven, Sent: Friday, October 25, 2019 4:47 PM
-> > On Fri, Oct 25, 2019 at 3:36 AM Yoshihiro Shimoda
-> > <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > > > From: Geert Uytterhoeven, Sent: Thursday, October 24, 2019 8:35 PM
-> > > <snip>
-> > > > > --- a/drivers/clk/renesas/rcar-usb2-clock-sel.c
-> > > > > +++ b/drivers/clk/renesas/rcar-usb2-clock-sel.c
-> >
-> > > > > @@ -131,6 +156,14 @@ static int rcar_usb2_clock_sel_probe(struct platform_device *pdev)
-> > > > >         pm_runtime_enable(dev);
-> > > > >         pm_runtime_get_sync(dev);
-> > > >
-> > > > pm_runtime_get_sync() will have already enabled the first module clock listed in
-> > > > the DT "clocks" property.
-> > > >
-> > > > If you want the driver to manage all clocks itself, perhaps the PM Runtime
-> > > > calls should be dropped?
-> > >
-> > > I'm thinking PM Runtime calls are related to power domain control so that we cannot
-> > > drop it. Or, since the hardware is the Always-on domain, can we drop it anyway?
-> >
-> > That's right: if the hardware block ever ends up in a non-always-on
-> > power domain,
-> > you won't have a choice but to use PM Runtime.
->
-> So, should I keep the PM Runtime calls?
+Thanks Andy - I was looking for something like this when I was reviewing the
+patch but wasn't able to find it.
 
-I think they're good to have.
-Just make sure the PM Runtime status matches the state of the other
-clocks.
+Andrew Murray
 
-> # In such the case, I should add to describe power-domains property into
-> # the dt-binding doc though :)
-
-Indeed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
