@@ -2,130 +2,156 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFD4CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4B0CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9FF21655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572013559;
-	bh=DU7fSFJ7Tbm2ALQlO0YChij89rQy5SaOWUBg7BPLtqY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E9+c6fe2OrGI97DvGB/XWQwrXElPlIUc5/v4gLUuI9iRC9ZQdzn51/osWHUd36oZV
-	 yB4qwiFdJxpags4oWKdXRWJsT0oHaEcCwAfntqx3aQ1cXr4EMzXyXuaZ72tyuqQXhT
-	 Vg0Q1JnFzQbvcc6VSkW1pNYWmGBmcr242EbtJjY8=
+	by mail.kernel.org (Postfix) with ESMTP id 3C00F21655
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395359AbfJYOZ6 (ORCPT
+        id S2395210AbfJYOZt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:25:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40906 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 10:25:49 -0400
+Received: from smtp3-1.goneo.de ([85.220.129.38]:54079 "EHLO smtp3-1.goneo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395358AbfJYOZy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:25:54 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21D6222C1;
-        Fri, 25 Oct 2019 14:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572013552;
-        bh=DU7fSFJ7Tbm2ALQlO0YChij89rQy5SaOWUBg7BPLtqY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lls4C6GhAMZkjiMHxUNM8e3MpVtTjHRcp7rtbeWxNU6wPCOgmjE3zkRA3BaLtvaMu
-         Ik1lbhOO5WwIWedKrjVgJYkBqK0RyKpoQxLvxyz5dqKrbrzgU/En4i9HWrJoKn8Xec
-         mU9sGQ/QhVMGbMoSZaRbAqSBj0FGKs5gqZfGPCOg=
-Received: by mail-qt1-f171.google.com with SMTP id r5so3545969qtd.0;
-        Fri, 25 Oct 2019 07:25:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAWv9kXSGcLQHmxNmIBYseNidlOOwCLmGapkoXxClHjEZYBO6900
-        TRXOLZtPVMHe/Oe1LSWC/PhVaxt+5HYrQcBPdQ==
-X-Google-Smtp-Source: APXvYqyHGFuHzLeeCiWmC38AWf47YzHtjUGWCvnVQnR7njmNGQzh6atSkOGaDQVT1lTzgwxR3JWh+i3JbBURQZyByQQ=
-X-Received: by 2002:a05:6214:1552:: with SMTP id t18mr3275282qvw.136.1572013551842;
- Fri, 25 Oct 2019 07:25:51 -0700 (PDT)
+        id S1725825AbfJYOZs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:25:48 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp3.goneo.de (Postfix) with ESMTP id 88006240028;
+        Fri, 25 Oct 2019 16:25:45 +0200 (CEST)
+X-Virus-Scanned: by goneo
+Received: from smtp3.goneo.de ([127.0.0.1])
+        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 4Ze3M7UwdCJi; Fri, 25 Oct 2019 16:25:44 +0200 (CEST)
+Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
+        by smtp3.goneo.de (Postfix) with ESMTPA id 99DED23EFDE;
+        Fri, 25 Oct 2019 16:25:43 +0200 (CEST)
+From:   Lars Poeschel <poeschel@lemonage.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lars Poeschel <poeschel@lemonage.de>,
+        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Cc:     Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v10 2/7] nfc: pn532: Add uart phy docs and rename it
+Date:   Fri, 25 Oct 2019 16:25:16 +0200
+Message-Id: <20191025142521.22695-3-poeschel@lemonage.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191025142521.22695-1-poeschel@lemonage.de>
+References: <20191025142521.22695-1-poeschel@lemonage.de>
 MIME-Version: 1.0
-References: <20190705164221.4462-1-robh@kernel.org> <20190705164221.4462-2-robh@kernel.org>
- <CAMuHMdW86UOVp5vjdFBzjbqsG_wemjZ77LyVnc+oZ6ZDccv_cA@mail.gmail.com>
-In-Reply-To: <CAMuHMdW86UOVp5vjdFBzjbqsG_wemjZ77LyVnc+oZ6ZDccv_cA@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 25 Oct 2019 09:25:39 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJA_ZZ5CjoGrB4NofAcwMPXhnC0ddWZqZ9SXSTNAWB3cQ@mail.gmail.com>
-Message-ID: <CAL_JsqJA_ZZ5CjoGrB4NofAcwMPXhnC0ddWZqZ9SXSTNAWB3cQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/13] dt-bindings: display: Convert common panel
- bindings to DT schema
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 8:07 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Rob,
->
-> On Fri, Jul 5, 2019 at 6:46 PM Rob Herring <robh@kernel.org> wrote:
-> > Convert the common panel bindings to DT schema consolidating scattered
-> > definitions to a single schema file.
-> >
-> > The 'simple-panel' binding just a collection of properties and not a
-> > complete binding itself. All of the 'simple-panel' properties are
-> > covered by the panel-common.txt binding with the exception of the
-> > 'no-hpd' property, so add that to the schema.
-> >
-> > As there are lots of references to simple-panel.txt, just keep the file
-> > with a reference to common.yaml for now until all the bindings are
-> > converted.
-> >
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> > Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > Reviewed-by: Thierry Reding <treding@nvidia.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
->
-> This is now commit 821a1f7171aeea5e ("dt-bindings: display: Convert
-> common panel bindings to DT schema").
->
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
->
-> > +  backlight:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description:
-> > +      For panels whose backlight is controlled by an external backlight
-> > +      controller, this property contains a phandle that references the
-> > +      controller.
->
-> This paragraph seems to apply to all nodes named "backlight", causing
-> e.g. (for ARCH=arm mach_shmobile_defconfig) "make dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/panel-common.yaml"
-> to start complaining:
->
->     arch/arm/boot/dts/r8a7740-armadillo800eva.dt.yaml: backlight:
-> {'compatible': ['pwm-backlight'], 'pwms': [[40, 2, 33333, 1]],
-> 'brightness-levels': [[0, 1, 2, 4, 8, 16, 32, 64, 128, 255]],
-> 'default-brightness-level': [[9]], 'pinctrl-0': [[41]],
-> 'pinctrl-names': ['default'], 'power-supply': [[42]], 'enable-gpios':
-> [[15, 61, 0]]} is not of type 'array'
->     arch/arm/boot/dts/r8a7740-armadillo800eva.dt.yaml: backlight:
-> {'groups': ['tpu0_to2_1'], 'function': ['tpu0'], 'phandle': [[41]]} is
-> not of type 'array'
->
-> Do you know what's wrong?
+This adds documentation about the uart phy to the pn532 binding doc. As
+the filename "pn533-i2c.txt" is not appropriate any more, rename it to
+the more general "pn532.txt".
+This also documents the deprecation of the compatible strings ending
+with "...-i2c".
 
-I'm not seeing that. What does .../bindings/processed-schema.yaml look like?
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Simon Horman <horms@verge.net.au>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+Changes in v10:
+- Rebased the patch series on net-next 'Commit 503a64635d5e ("Merge
+  branch 'DPAA-Ethernet-changes'")'
 
-Rob
+Changes in v9:
+- Rebased the patch series on v5.4-rc2
+- Produce patch with -M4 to git format-patch to detect the rename
+- Change DT node name from pn532@24 to nfc@24 in example
+
+Changes in v8:
+- Update existing binding doc instead of adding a new one:
+  - Add uart phy example
+  - Add general "pn532" compatible string
+  - Deprecate "...-i2c" compatible strings
+  - Rename file to a more general filename
+- Intentionally drop Rob's Reviewed-By as I guess this rather big change
+  requires a new review
+
+Changes in v7:
+- Accidentally lost Rob's Reviewed-By
+
+Changes in v6:
+- Rebased the patch series on v5.3-rc5
+- Picked up Rob's Reviewed-By
+
+Changes in v4:
+- Add documentation about reg property in case of i2c
+
+Changes in v3:
+- seperate binding doc instead of entry in trivial-devices.txt
+
+ .../net/nfc/{pn533-i2c.txt => pn532.txt}      | 25 ++++++++++++++++---
+ 1 file changed, 21 insertions(+), 4 deletions(-)
+ rename Documentation/devicetree/bindings/net/nfc/{pn533-i2c.txt => pn532.txt} (42%)
+
+diff --git a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+similarity index 42%
+rename from Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
+rename to Documentation/devicetree/bindings/net/nfc/pn532.txt
+index 2efe3886b95b..a5507dc499bc 100644
+--- a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
++++ b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+@@ -1,9 +1,16 @@
+ * NXP Semiconductors PN532 NFC Controller
+ 
+ Required properties:
+-- compatible: Should be "nxp,pn532-i2c" or "nxp,pn533-i2c".
++- compatible: Should be
++    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
++                  where the NFC chip is connected to.
++                  Currently the kernel has phy bindings for uart and i2c.
++    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
++    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
++
++Required properties if connected on i2c:
+ - clock-frequency: I²C work frequency.
+-- reg: address on the bus
++- reg: for the I²C bus address. This is fixed at 0x24 for the PN532.
+ - interrupts: GPIO interrupt to which the chip is connected
+ 
+ Optional SoC Specific Properties:
+@@ -15,9 +22,9 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
+ &i2c2 {
+ 
+ 
+-	pn532: pn532@24 {
++	pn532: nfc@24 {
+ 
+-		compatible = "nxp,pn532-i2c";
++		compatible = "nxp,pn532";
+ 
+ 		reg = <0x24>;
+ 		clock-frequency = <400000>;
+@@ -27,3 +34,13 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
+ 
+ 	};
+ };
++
++Example (for PN532 connected via uart):
++
++uart4: serial@49042000 {
++        compatible = "ti,omap3-uart";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++        };
++};
+-- 
+2.23.0
+
