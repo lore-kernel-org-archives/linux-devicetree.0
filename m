@@ -2,156 +2,211 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4B0CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C56CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C00F21655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C70206DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 14:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alucOV4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395210AbfJYOZt (ORCPT
+        id S2390009AbfJYOdL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:25:49 -0400
-Received: from smtp3-1.goneo.de ([85.220.129.38]:54079 "EHLO smtp3-1.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfJYOZs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:25:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id 88006240028;
-        Fri, 25 Oct 2019 16:25:45 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp3.goneo.de ([127.0.0.1])
-        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4Ze3M7UwdCJi; Fri, 25 Oct 2019 16:25:44 +0200 (CEST)
-Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp3.goneo.de (Postfix) with ESMTPA id 99DED23EFDE;
-        Fri, 25 Oct 2019 16:25:43 +0200 (CEST)
-From:   Lars Poeschel <poeschel@lemonage.de>
-To:     "David S. Miller" <davem@davemloft.net>,
+        Fri, 25 Oct 2019 10:33:11 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43121 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbfJYOdL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 10:33:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so2578566wrr.10;
+        Fri, 25 Oct 2019 07:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KGiMJW/6P3cnUhB4JrbHZgX1QIfc96w6Xat8RH1XNVg=;
+        b=alucOV4vUEvggzS1eI0kxbI5TkYw4knLudcurVGQ8/dRND3z8Tout0msr6rYuE0ceu
+         1xmkWOVyE8QtcW2f/OETC2x3tbjlgY1g1L1xT/HImJdkbu+gIC7c9rRMaCeVKekow55Q
+         4VtCdbCtAmYJTqEiUrOoct1dCxxz3gmZz7Na0pkjzgGdKzaMER57KZNUE5TxZzY/s0XU
+         QqBZlGyLHbnh0mTr81ZNZFq1oRUWGKEmv5nEDg7P3qg3hovrstMDvWDjQDTK8Ly8VDLV
+         F8Fdp5yetecGE+2kPM9x0NM75l/bxD3nk7v8g+8kzX6CKvvGZYgab4ci8pCph/1ZK16B
+         0TMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KGiMJW/6P3cnUhB4JrbHZgX1QIfc96w6Xat8RH1XNVg=;
+        b=uU8uqy3mJ09ZKIBPAIh2GyT9Zj8qMLfc3ASz/t3b5eDRWhjKm0T9lfgK6kg1DKhUKr
+         r3DNZB2bine9X9aeol4KTLOSsEKqqyh2UNdH/AGoSmCKWYZzzhLmsFA4+LHaOyhtQBgK
+         7CpKkB7FRULHlKQeglH8+EPpPesgr96Alig9fii2qAP4Q02AofPvxeGeQwX4h6LXioMV
+         zmlLMoOrENKLMkglrAf0UTZZJSsTW1bhz2jOlIJ+FRMeDKoUJDqcV3gvaKiMtUk/Wahj
+         G2/mjK4fWuVhZiyqOY1RAvbcP0eO/9RAqFx/olGXKFPpdU0rVPk3v/ekQRzVCvqaWRXd
+         1Xcw==
+X-Gm-Message-State: APjAAAXZXMyz6WYdGjVPTGfgnRSMRnT5e4G5OvHju+wPdvFpv1mLdxFK
+        fCU9/kE88Ru38c65grHxIWU=
+X-Google-Smtp-Source: APXvYqwdNmnPoI1aDfrbDo5svOKCrwjtWB42cBkCY42Ea0zNfgJYgtDPiVT+rOg6CHerph2EIfQpbQ==
+X-Received: by 2002:a5d:4f91:: with SMTP id d17mr3423123wru.184.1572013989370;
+        Fri, 25 Oct 2019 07:33:09 -0700 (PDT)
+Received: from furher.auvence.co ([92.103.174.138])
+        by smtp.gmail.com with ESMTPSA id h17sm2079971wmb.33.2019.10.25.07.33.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 07:33:08 -0700 (PDT)
+From:   Joris Offouga <offougajoris@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Otavio Salvador <otavio@ossystems.com.br>,
+        Joris Offouga <offougajoris@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Lars Poeschel <poeschel@lemonage.de>,
-        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Cc:     Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v10 2/7] nfc: pn532: Add uart phy docs and rename it
-Date:   Fri, 25 Oct 2019 16:25:16 +0200
-Message-Id: <20191025142521.22695-3-poeschel@lemonage.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191025142521.22695-1-poeschel@lemonage.de>
-References: <20191025142521.22695-1-poeschel@lemonage.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH V2] ARM: dts: imx7d-pico: Add LCD support
+Date:   Fri, 25 Oct 2019 16:32:58 +0200
+Message-Id: <20191025143258.27757-1-offougajoris@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds documentation about the uart phy to the pn532 binding doc. As
-the filename "pn533-i2c.txt" is not appropriate any more, rename it to
-the more general "pn532.txt".
-This also documents the deprecation of the compatible strings ending
-with "...-i2c".
+From: Fabio Estevam <festevam@gmail.com>
 
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Simon Horman <horms@verge.net.au>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+Add support for the VXT VL050-8048NT-C01 panel connected through
+the 24 bit parallel LCDIF interface.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+Signed-off-by: Joris Offouga <offougajoris@gmail.com>
 ---
-Changes in v10:
-- Rebased the patch series on net-next 'Commit 503a64635d5e ("Merge
-  branch 'DPAA-Ethernet-changes'")'
+ Changes v1 -> v2
+ 	change "From:" Joris Offouga to Fabio Estevam
+	set Joris Offouga signed-off to the last one
 
-Changes in v9:
-- Rebased the patch series on v5.4-rc2
-- Produce patch with -M4 to git format-patch to detect the rename
-- Change DT node name from pn532@24 to nfc@24 in example
+ arch/arm/boot/dts/imx7d-pico.dtsi | 83 +++++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
 
-Changes in v8:
-- Update existing binding doc instead of adding a new one:
-  - Add uart phy example
-  - Add general "pn532" compatible string
-  - Deprecate "...-i2c" compatible strings
-  - Rename file to a more general filename
-- Intentionally drop Rob's Reviewed-By as I guess this rather big change
-  requires a new review
-
-Changes in v7:
-- Accidentally lost Rob's Reviewed-By
-
-Changes in v6:
-- Rebased the patch series on v5.3-rc5
-- Picked up Rob's Reviewed-By
-
-Changes in v4:
-- Add documentation about reg property in case of i2c
-
-Changes in v3:
-- seperate binding doc instead of entry in trivial-devices.txt
-
- .../net/nfc/{pn533-i2c.txt => pn532.txt}      | 25 ++++++++++++++++---
- 1 file changed, 21 insertions(+), 4 deletions(-)
- rename Documentation/devicetree/bindings/net/nfc/{pn533-i2c.txt => pn532.txt} (42%)
-
-diff --git a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt b/Documentation/devicetree/bindings/net/nfc/pn532.txt
-similarity index 42%
-rename from Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
-rename to Documentation/devicetree/bindings/net/nfc/pn532.txt
-index 2efe3886b95b..a5507dc499bc 100644
---- a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/pn532.txt
-@@ -1,9 +1,16 @@
- * NXP Semiconductors PN532 NFC Controller
- 
- Required properties:
--- compatible: Should be "nxp,pn532-i2c" or "nxp,pn533-i2c".
-+- compatible: Should be
-+    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
-+                  where the NFC chip is connected to.
-+                  Currently the kernel has phy bindings for uart and i2c.
-+    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
-+    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
+diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
+index 6f50ebf31a0a..6814d4288e2e 100644
+--- a/arch/arm/boot/dts/imx7d-pico.dtsi
++++ b/arch/arm/boot/dts/imx7d-pico.dtsi
+@@ -69,6 +69,37 @@
+ 		clocks = <&clks IMX7D_CLKO2_ROOT_DIV>;
+ 		clock-names = "ext_clock";
+ 	};
 +
-+Required properties if connected on i2c:
- - clock-frequency: I²C work frequency.
--- reg: address on the bus
-+- reg: for the I²C bus address. This is fixed at 0x24 for the PN532.
- - interrupts: GPIO interrupt to which the chip is connected
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_backlight>;
++		pwms = <&pwm4 0 50000 0>;
++		brightness-levels = <0 36 72 108 144 180 216 255>;
++		default-brightness-level = <6>;
++		status = "okay";
++	};
++
++	reg_lcd_3v3: regulator-lcd-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	panel {
++		compatible = "vxt,vl050-8048nt-c01";
++		backlight = <&backlight>;
++		power-supply = <&reg_lcd_3v3>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&display_out>;
++			};
++		};
++	};
+ };
  
- Optional SoC Specific Properties:
-@@ -15,9 +22,9 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
- &i2c2 {
- 
- 
--	pn532: pn532@24 {
-+	pn532: nfc@24 {
- 
--		compatible = "nxp,pn532-i2c";
-+		compatible = "nxp,pn532";
- 
- 		reg = <0x24>;
- 		clock-frequency = <400000>;
-@@ -27,3 +34,13 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
- 
+ &clks {
+@@ -230,6 +261,18 @@
  	};
  };
+ 
++&lcdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lcdif>;
++	status = "okay";
 +
-+Example (for PN532 connected via uart):
-+
-+uart4: serial@49042000 {
-+        compatible = "ti,omap3-uart";
-+
-+        pn532: nfc {
-+                compatible = "nxp,pn532";
-+        };
++	port {
++		display_out: endpoint {
++			remote-endpoint = <&panel_in>;
++		};
++	};
 +};
++
+ &sai1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_sai1>;
+@@ -349,6 +392,12 @@
+ };
+ 
+ &iomuxc {
++	pinctrl_backlight: backlight {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO11__PWM4_OUT		0x0
++		>;
++	};
++
+ 	pinctrl_ecspi3: ecspi3grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_I2C1_SCL__ECSPI3_MISO		0x2
+@@ -413,6 +462,40 @@
+ 		>;
+ 	};
+ 
++	pinctrl_lcdif: lcdifgrp {
++		fsl,pins = <
++			MX7D_PAD_LCD_DATA00__LCD_DATA0		0x79
++			MX7D_PAD_LCD_DATA01__LCD_DATA1		0x79
++			MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
++			MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
++			MX7D_PAD_LCD_DATA04__LCD_DATA4		0x79
++			MX7D_PAD_LCD_DATA05__LCD_DATA5		0x79
++			MX7D_PAD_LCD_DATA06__LCD_DATA6		0x79
++			MX7D_PAD_LCD_DATA07__LCD_DATA7		0x79
++			MX7D_PAD_LCD_DATA08__LCD_DATA8		0x79
++			MX7D_PAD_LCD_DATA09__LCD_DATA9		0x79
++			MX7D_PAD_LCD_DATA10__LCD_DATA10		0x79
++			MX7D_PAD_LCD_DATA11__LCD_DATA11		0x79
++			MX7D_PAD_LCD_DATA12__LCD_DATA12		0x79
++			MX7D_PAD_LCD_DATA13__LCD_DATA13		0x79
++			MX7D_PAD_LCD_DATA14__LCD_DATA14		0x79
++			MX7D_PAD_LCD_DATA15__LCD_DATA15		0x79
++			MX7D_PAD_LCD_DATA16__LCD_DATA16		0x79
++			MX7D_PAD_LCD_DATA17__LCD_DATA17		0x79
++			MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
++			MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
++			MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
++			MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
++			MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
++			MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
++			MX7D_PAD_LCD_CLK__LCD_CLK		0x79
++			MX7D_PAD_LCD_ENABLE__LCD_ENABLE		0x78
++			MX7D_PAD_LCD_VSYNC__LCD_VSYNC		0x78
++			MX7D_PAD_LCD_HSYNC__LCD_HSYNC		0x78
++			MX7D_PAD_LCD_RESET__GPIO3_IO4		0x14
++		>;
++	};
++
+ 	pinctrl_pwm1: pwm1 {
+ 		fsl,pins = <
+ 			MX7D_PAD_GPIO1_IO08__PWM1_OUT   0x7f
 -- 
-2.23.0
+2.17.1
 
