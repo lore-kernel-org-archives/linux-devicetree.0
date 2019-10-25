@@ -2,117 +2,66 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01D2CA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7B6CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34D1206DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1411E21929
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571991594;
+	bh=mxSD1yFRMTz9TnhEbFhz9Kun4feNsEval2ddjomqsO8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y7AChE5nSr9DTdU12WewtX/XD8mffQFnNayCpjVb3R6Zq7ViR9l2evXjjE4k1XjTs
+	 9LVeP7GEyP55/u9DL5P3QEv+G+AnMXfE5w0FLWTLNIoLeiIhVF0+wDkgdctLG6x+Ap
+	 iZ+g6hiE0TfYcmQ9YD4Wlw8M6kFQijSiBEoRwlA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407506AbfJYIC7 (ORCPT
+        id S2406045AbfJYITx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:02:59 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:50108 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405453AbfJYIC7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 04:02:59 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: Wk5VDaxaa04ZpXepyN7l+LRq4sXtuTcFje32+veLdWTvipsU7orBg/qzpAw5tsHiYqYKnknM47
- 7l628LyAVaxgt7OMBt0qLjo4vAeR1r6cyBsTyiw0Ibfcxuk5gSqoMlLvaPXYX8vqsFB9rMurJ8
- nigqOiPfbg0pUv3a2cjVxsGrl2n0mtaCDVb8JbWAmde4/QomptLuqogolaiZLxj/hkRGEqZ5Ks
- Qn7D2KSC4iL6xT1CFLYSoskg2GXbbuNMaXZYwttycp8iHAolMc5RWF4lAxG3fdW+zXOAfAOwpt
- k0A=
-X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
-   d="scan'208";a="52935735"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2019 01:02:58 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 25 Oct 2019 01:02:49 -0700
-Received: from M43218.corp.atmel.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 25 Oct 2019 01:02:47 -0700
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <nicolas.ferre@microchip.com>,
-        <adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <claudiu.beznea@microchip.com>, <Eugen.Hristev@microchip.com>,
-        <alexandre.belloni@bootlin.com>,
-        "Ludovic Desroches" <ludovic.desroches@microchip.com>
-Subject: [PATCH v3 3/3] ARM: dts: at91: sama5d2: set the sdmmc gclk frequency
-Date:   Fri, 25 Oct 2019 10:03:44 +0200
-Message-ID: <20191025080344.15492-3-ludovic.desroches@microchip.com>
-X-Mailer: git-send-email 2.24.0.rc0
-In-Reply-To: <20191025080344.15492-1-ludovic.desroches@microchip.com>
-References: <20191025080344.15492-1-ludovic.desroches@microchip.com>
+        Fri, 25 Oct 2019 04:19:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405453AbfJYITx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:19:53 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62B1B21872;
+        Fri, 25 Oct 2019 08:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571991592;
+        bh=mxSD1yFRMTz9TnhEbFhz9Kun4feNsEval2ddjomqsO8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lFAqe/2s6ePycLmtuct1pUpPxQ2c0S5G2gRoUZ0dIra5kvDDE7q8tMhhMG9jzgQTa
+         5Mn0Pd3bAlkrx8Nxje85jEpjalyndVooeCuRFBdEF+mGpDkm9f2p39FOh80g6YKZDl
+         TDGaJsgTRpDu5Wfoor3Idl4Szuoo0+JfN8+19ugg=
+Date:   Fri, 25 Oct 2019 16:19:38 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Yuantian Tang <andy.tang@nxp.com>
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: lx2160a: add tmu device node
+Message-ID: <20191025081936.GF3208@dragon>
+References: <20191010083022.6700-1-andy.tang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010083022.6700-1-andy.tang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Set the frequency of the generated clock used by sdmmc devices in order
-to not rely on the configuration done by previous components.
+On Thu, Oct 10, 2019 at 04:30:22PM +0800, Yuantian Tang wrote:
+> Add the TMU (Thermal Monitoring Unit) device node to enable
+> TMU feature.
+> 
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
----
-
-Changes:
-- v3: none
-- v2: none
-
- arch/arm/boot/dts/sama5d2.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index fa3b9c30a63a..f013c3562724 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -300,6 +300,8 @@ sdmmc0: sdio-host@a0000000 {
- 			interrupts = <31 IRQ_TYPE_LEVEL_HIGH 0>;
- 			clocks = <&pmc PMC_TYPE_PERIPHERAL 31>, <&pmc PMC_TYPE_GCK 31>, <&pmc PMC_TYPE_CORE PMC_MAIN>;
- 			clock-names = "hclock", "multclk", "baseclk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 31>;
-+			assigned-clock-rates = <480000000>;
- 			status = "disabled";
- 		};
- 
-@@ -309,6 +311,8 @@ sdmmc1: sdio-host@b0000000 {
- 			interrupts = <32 IRQ_TYPE_LEVEL_HIGH 0>;
- 			clocks = <&pmc PMC_TYPE_PERIPHERAL 32>, <&pmc PMC_TYPE_GCK 32>, <&pmc PMC_TYPE_CORE PMC_MAIN>;
- 			clock-names = "hclock", "multclk", "baseclk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 32>;
-+			assigned-clock-rates = <480000000>;
- 			status = "disabled";
- 		};
- 
--- 
-2.24.0.rc0
-
+Applied, thanks.
