@@ -1,202 +1,72 @@
-Return-Path: <SRS0=F2+Z=YR=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B0BCA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9282ECA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 01:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA8B821929
-	for <linux-devicetree@archiver.kernel.org>; Thu, 24 Oct 2019 22:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571957989;
-	bh=0hiuQZAUFn4VHc/cNvUFNzNRxS6jtcV0TPVqyUSB2Og=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bjc+izu0aKHBm5oixpdhteBxsMIHV60P+BC/8uoxr6p9OFg+4mBgpUZj6ygDCMTCH
-	 GofNj1YcB+WwcLY73BkthXkTfLfxoJHbF4Yj2EAgLma3jjCDITrwueOQj3m0ulvOv/
-	 tmXkwGpP6ULAXH639KGm2/8LK3wnnpQFivOKhC2Q=
+	by mail.kernel.org (Postfix) with ESMTP id 6104321929
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 01:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733188AbfJXW7t (ORCPT
+        id S2388233AbfJYBOQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:59:49 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43146 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733082AbfJXW7t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 18:59:49 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z20so466407otk.10;
-        Thu, 24 Oct 2019 15:59:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d5ia/RcICxC7N5c5fy67LHI4iPE4qUQXFzRMnfVjTUg=;
-        b=bmvFHiHIdp0/p0xigKpHH0hhuVXkmVFX577m/Bm1pZSpNoMyH/U+0R20PgW/PE00Z5
-         sC5OxmHlBvyXVKywqyf1LAKVHFA8e8VmdXQlS30G6Tou12YW+VG8Ts14pICKRt0Ebm3U
-         VzFNeNxZTzUP51JF13tAUh1WDDhZeSydLJVFUx2nIoVUmeRtq/C8kt+KbcwtR+q5RV2p
-         A5SCz1G4ecWWnXF7BpBFKj2O6TF64uCq+1X30iElGF1EWUkuVmzsGDl0WHpYFmsaIIUn
-         fHdH38lhK2C+E9eOwLJUvPdUFirGcLyIfqYyGEXvOqnj8CiEsocl3zT4nS7/XekP4TFb
-         9crA==
-X-Gm-Message-State: APjAAAUXabeWqUEFsWsu69cFwhMeFfExvpu0nkHOL22Pcv3DNHf3nqbp
-        Omccf45AWonVZOv2iyoY6JmVdQM=
-X-Google-Smtp-Source: APXvYqyjwTqyJASuv9HlkgyIg+QbuTTUHc9AGq1e6ShZK2MI1MfBNScBpcyyvMB5zZDdKo5ZIGqAXA==
-X-Received: by 2002:a9d:5605:: with SMTP id e5mr253762oti.150.1571957988235;
-        Thu, 24 Oct 2019 15:59:48 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l4sm37067oia.51.2019.10.24.15.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 15:59:47 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 17:59:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     "Tremblay, Eric" <etremblay@distech-controls.com>
-Cc:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v5 1/2] hwmon: Add driver for Texas Instruments
- TMP512/513 sensor chips
-Message-ID: <20191024225947.GA16810@bogus>
-References: <BL0PR01MB483512FB70F44FE36766981F95680@BL0PR01MB4835.prod.exchangelabs.com>
+        Thu, 24 Oct 2019 21:14:16 -0400
+Received: from anchovy1.45ru.net.au ([203.30.46.145]:53339 "EHLO
+        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388280AbfJYBOQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 21:14:16 -0400
+Received: (qmail 17092 invoked by uid 5089); 25 Oct 2019 01:14:13 -0000
+Received: by simscan 1.2.0 ppid: 16948, pid: 16950, t: 0.0537s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
+  by anchovy1.45ru.net.au with ESMTPA; 25 Oct 2019 01:14:13 -0000
+Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
+To:     Wolfram Sang <wsa@the-dreams.de>, Codrin.Ciubotariu@microchip.com
+Cc:     kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, devicetree@vger.kernel.org,
+        thomas.petazzoni@bootlin.com
+References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+ <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+ <20191021202044.GB3607@kunai>
+ <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
+ <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
+ <20191024150726.GA1120@kunai>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <65d83bb0-9a0c-c6e2-1c58-cb421c69816c@electromag.com.au>
+Date:   Fri, 25 Oct 2019 09:14:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR01MB483512FB70F44FE36766981F95680@BL0PR01MB4835.prod.exchangelabs.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191024150726.GA1120@kunai>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 01:33:19PM +0000, Tremblay, Eric wrote:
-> dt-bindings: hwmon: Add TMP512/513
+On 24/10/2019 23:07, Wolfram Sang wrote:
 > 
-> Add dt-binding for TMP512/513 sensor chips
+>> So at the beginning of a new transfer, we should check if SDA (or SCL?)
+>> is low and, if it's true, only then we should try recover the bus.
 > 
-> Signed-off-by: Eric Tremblay <etremblay@distech-controls.com>
-> ---
->  .../devicetree/bindings/hwmon/ti,tmp513.yaml  | 90 +++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
+> Yes, this is the proper time to do it. Remember, I2C does not define a
+> timeout.
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> new file mode 100644
-> index 000000000000..33d880b2a887
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> @@ -0,0 +1,90 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2018 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +
-> +$id: http://devicetree.org/schemas/hwmon/tmp513.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TMP513/512 system monitor sensor
-> +
-> +maintainers:
-> +  - Eric Tremblay <etremblay@distech-controls.com>
-> +
-> +description: |
-> +  The TMP512 (dual-channel) and TMP513 (triple-channel) are system monitors that include
-> +  remote sensors, a local temperature sensor, and a high-side current shunt monitor.
-> +  These system monitors have the capability of measuring remote temperatures,
-> +  on-chip temperatures, and system voltage/power/current consumption.
-> +
-> +  Datasheets:
-> +  http://www.ti.com/lit/gpn/tmp513
-> +  http://www.ti.com/lit/gpn/tmp512
-> +
-> +
-> +properties:
-> +  compatible:
-> +    - enum:
-> +      - ti,tmp512
-> +      - ti,tmp513
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ti,shunt-resistor-micro-ohms:
 
-We have a standard property for this.
+FYI: Just a single poll at the start of the transfer, for it being low, will cause problems with multi-master buses.
+Bus recovery should be attempted after a timeout when trying to communicate, even thou i2c doesn't define a timeout.
 
-> +    description: |
-> +      The shunt resistor value in uOhm. If 0, the calibration process
-> +      will be skiped and the current and power measurement engine will not work.
-> +      Temperature and voltage measurement will continue to work. The shunt value also
-> +      need to respect : rshunt <= pga-gain * 40 * 1000 * 1000. If not, it's not possible
-> +      to compute a valid calibration value.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
+I'm trying to fix the designware drivers handling of this at the moment.
 
-Not necessary when standard units are used.
+-- 
+Regards
+Phil Reid
 
-> +    default: 1000
-> +
-> +  ti,pga-gain:
-> +    description: |
-> +      The gain value for the PGA function. This is 8, 4, 2 or 1.
-> +      The PGA gain affect the shunt voltage range.
-> +      The range will be equal to: pga-gain * 40mV
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [1, 2, 4, 8]
-> +    default: 8
-
-Should be under the enum (i.e. 4 more spaces).
-
-Or the enum can be at this level.
-
-> +
-> +  ti,bus-voltage-range-volt:
-> +    description: |
-> +      This is the operating range of the bus voltage
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [16, 32]
-
-Is this 16V or 32V?
-
-> +    default: 32
-
-Under the 'enum'...
-
-> +
-> +  ti,nfactor:
-> +    description: |
-> +      Array of three(TMP513) or two(TMP512) n-Factor value for each remote
-> +      temperature channel.
-> +      See datasheet Table 11 for n-Factor range list and value interpretation.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#definitions/uint8-array
-> +      - minItems: 2
-> +        maxItems: 3
-> +        items:
-> +          default: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    &i2c0 {
-> +        tmp513@5c {
-> +            compatible = "ti,tmp513";
-> +            reg = <0x5C>;
-> +            ti,shunt-resistor-micro-ohms = <330000>;
-> +            ti,bus-voltage-range-volts = <32>;
-> +            ti,pga-gain = <8>;
-> +            ti,nfactor = [01 F3 00];
-> +        };
-> +    }
-> -- 
-> 2.17.1
-> 
