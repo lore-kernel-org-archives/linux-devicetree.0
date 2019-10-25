@@ -2,109 +2,135 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE864CA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BC3CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 07:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B212070B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3127321929
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 07:37:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cAifdiSW"
+	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="Mrs06t/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436798AbfJYHaP (ORCPT
+        id S2407042AbfJYHhj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:30:15 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41786 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393149AbfJYHaD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 03:30:03 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9P7U13n083504;
-        Fri, 25 Oct 2019 02:30:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571988601;
-        bh=3qESwgK0U+EAwQQL6PAX7MJ+aaVlzVEC8XOoAoFnNlo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=cAifdiSWMeUuttErMKa1KjLN/dVC0GXLvGV0SibL6sYDkZhMthGoSNTZk8WiXyNNk
-         tUVDT8vDYnmfxXo2cQUxAYUEwWxggineOtpvg0CSQ3sOXUO2yhN43t9LW5kEs4tEMC
-         VVA1pPos/fQ/T2V9kF354Md43jR/RxiB2+7Qpeu0=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P7U0h9070088;
-        Fri, 25 Oct 2019 02:30:00 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 25
- Oct 2019 02:29:49 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 25 Oct 2019 02:29:59 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P7Tr4H103329;
-        Fri, 25 Oct 2019 02:29:58 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH v5 2/3] dt-bindings: dma: ti-edma: Document dma-channel-mask for EDMA
-Date:   Fri, 25 Oct 2019 10:30:55 +0300
-Message-ID: <20191025073056.25450-3-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191025073056.25450-1-peter.ujfalusi@ti.com>
-References: <20191025073056.25450-1-peter.ujfalusi@ti.com>
+        Fri, 25 Oct 2019 03:37:39 -0400
+Received: from mail-eopbgr30080.outbound.protection.outlook.com ([40.107.3.80]:45567
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406055AbfJYHhj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:37:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ibhZjkjxl+uYydazJf99TGBLq5OZOlK1OILzUe0hsVYPOiJ/f5DrtB68TU2btm/3tfjN5luEIf8SDx2HBAZlhOKnVYVRDTFqwfbEZEJGcwCZOYWY5Rwktc4ZtujwhHM4f26v4GPYgeT0OmEIrm09GoSxOr6bGImItG9lHsjQPQMmioVw3jBEzJslfr5pF2lWrluiytSqufMd/aDVvfcKKArC9oF942iV3kTndkfpBe8KBV9RdCeLHt0BCnGvOnds8CwaKmRXdRAhhocOv+P+4KYnNyjTYrssnj6saTeVmfsCJUiGOiCodkAPvK4MJ9eA868dVLA4ivVVod8wYxCYkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2xhRtploACdVvK59DwDIcG/zJcer18FOdsYoDwWoDLY=;
+ b=eEgDUTokJR9BP7TvnscCPsZg62mtenOjQNEymMwpxmB3OWTp4hitcBXvInjCO99WSbjpOvptuEA/ppPIfaAb1ne6Fhv+4hBlWwaBdeX44S/YxPKewBQYufBkJdg2lNKWbr/0e5EyiwL2aWfWfX/D9dIEudILyjMgR68+RWLEiEulOhTCb+wZFDEDr+6FVe6YStPHsVkwA86r1D29yGUL66WDPdc9P+UQA8uKYzSXMRnRZ+M/sJ6t/nvRVoZdF4Wb2k7pWYRxXzjYy0rKmSakOpuXVQwS30AgXyiNm9SZ7Oy9eHXl0bzW23ASah8YveiqJqWyYBzzA9ieKHClbI9xVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kococonnector.com; dmarc=pass action=none
+ header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2xhRtploACdVvK59DwDIcG/zJcer18FOdsYoDwWoDLY=;
+ b=Mrs06t/ZMsTwz4MLK5LSAH/2K+UosBEN9vrh9wavDnKQn8vmDLGC/sNs1gW2Q+wsHgq8UtcEfWECaF8NLoiAvHBBH+nldWSBhmXsyL9ONIgUCZoCrVHSugFYZUoLuYAjJMq3kYqD4TWCFJnaD/jLur+phppfYgbLhzPATWAZFoE=
+Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com (10.170.212.23) by
+ DB6PR0902MB1671.eurprd09.prod.outlook.com (10.171.75.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.18; Fri, 25 Oct 2019 07:37:35 +0000
+Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com
+ ([fe80::b1b2:ecb1:9c98:6b74]) by DB6PR0902MB2072.eurprd09.prod.outlook.com
+ ([fe80::b1b2:ecb1:9c98:6b74%6]) with mapi id 15.20.2367.025; Fri, 25 Oct 2019
+ 07:37:34 +0000
+From:   Oliver Graute <oliver.graute@kococonnector.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "oliver.graute@gmail.com" <oliver.graute@gmail.com>,
+        "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Pramod Kumar <pramod.kumar_1@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
+        Gary Bisson <gary.bisson@boundarydevices.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCHv4 0/1] arm64: dts: add basic DTS for imx8qm-rom7720 board
+Thread-Topic: [PATCHv4 0/1] arm64: dts: add basic DTS for imx8qm-rom7720 board
+Thread-Index: AQHViwcRYochUUs1+UOTEgmf1hQkhQ==
+Date:   Fri, 25 Oct 2019 07:37:34 +0000
+Message-ID: <20191025073657.17593-1-oliver.graute@kococonnector.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MRXP264CA0040.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:500:14::28) To DB6PR0902MB2072.eurprd09.prod.outlook.com
+ (2603:10a6:6:8::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oliver.graute@kococonnector.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [193.47.161.132]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1a5a102d-18d0-4b80-2e6f-08d7591e3397
+x-ms-traffictypediagnostic: DB6PR0902MB1671:
+x-ms-exchange-purlcount: 2
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0902MB1671E2D6FB444CEBA027BE20EB650@DB6PR0902MB1671.eurprd09.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 02015246A9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39830400003)(346002)(376002)(136003)(366004)(189003)(199004)(50226002)(7416002)(2501003)(102836004)(14454004)(316002)(86362001)(54906003)(71190400001)(6116002)(4326008)(6306002)(6512007)(966005)(6916009)(71200400001)(3846002)(52116002)(2616005)(386003)(476003)(5660300002)(5640700003)(6506007)(2906002)(486006)(25786009)(66066001)(508600001)(7736002)(44832011)(6486002)(36756003)(99286004)(305945005)(186003)(256004)(81166006)(8676002)(81156014)(26005)(1730700003)(66946007)(4744005)(1076003)(66476007)(6436002)(66556008)(64756008)(8936002)(66446008)(2351001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB1671;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: kococonnector.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: H4u3SNXeBoKe7CVvpTY+ytyjbQESUJvKTnATRxJqt/uwPBydFEx60ziEMWKaT1ewz8wbtOLn3m2QREp/ih68RuW+Pe4VRSLXUxlIai+ZuFOIqCpNw/fYM7RbecbuJw85bMW3WwJJa/3OowweCBNBeNcNF5DpnWZ1eqa8Q+inzbqwqZ23eSC71qGH53xyr7sa12Ej+wBh5Bs9rL/ZXzfdEbLjIGB9Xq4jgpEN+EuWg0acMigQ76K7PAFmr90JbpRIssI9cfKUCOSO1hNbuejQuSird69SCcLrYGanctckWlMqybBn1+ywkm5GFwDuvnoYsN31mPodqK73pKd8UnyYlEA1L5vEG13pLBlEpMMwBAiA7a7sLUMFfoLhv9Z+CVfKMjC7pEmUtQt/xjywxNse2s/zhbFqw+upziP24w/OzhOn5qaoUxnlWrVxUW8xXB+DOjKdyR8CifcTb5g4u9N1bSs2pbmhAbmO6oIckL5/z80=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: kococonnector.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a5a102d-18d0-4b80-2e6f-08d7591e3397
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 07:37:34.6890
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 59845429-0644-4099-bd7e-17fba65a2f2b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 00mqP4qlgehA/R4Uq2biov4NXfLOBEqdGU/Fs2fdbVXbYgcnOMIa2WVli7wmWdRz4Zqws61WK+9448N2cEqXqLIJQLvI6jNlzAumbU6E4rI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0902MB1671
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Similarly to paRAM slots, channels can be used by other cores.
+This patch is ontop of Aisheng Dongs clock driver and imx8 changes for the
+imx8qm
 
-The common dma-channel-mask property can be used for specifying the
-available channels.
+https://patchwork.kernel.org/patch/11143321/
+https://patchwork.kernel.org/patch/11138099/
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/dma/ti-edma.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This patch is based on next-20190904
 
-diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-index 4bbc94d829c8..0e1398f93aa2 100644
---- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-@@ -42,6 +42,11 @@ Optional properties:
- - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
- 		the driver, they are allocated to be used by for example the
- 		DSP. See example.
-+- dma-channel-mask: Mask of usable channels.
-+		Single uint32 for EDMA with 32 channels, array of two uint32 for
-+		EDMA with 64 channels. See example and
-+		Documentation/devicetree/bindings/dma/dma-common.yaml
-+
- 
- ------------------------------------------------------------------------------
- eDMA3 Transfer Controller
-@@ -91,6 +96,9 @@ edma: edma@49000000 {
- 	ti,edma-memcpy-channels = <20 21>;
- 	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
- 	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
-+	/* The following channels are reserved: 35-44 */
-+	dma-channel-mask = <0xffffffff /* Channel 0-31 */
-+			    0xffffe007>; /* Channel 32-63 */
- };
- 
- edma_tptc0: tptc@49800000 {
--- 
-Peter
+Oliver Graute (1):
+  arm64: dts: add basic DTS for imx8qm-rom7720-a1 board
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8qm-rom7720-a1.dts  | 299 ++++++++++++++++++
+ 2 files changed, 300 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
+
+--=20
+2.17.1
 
