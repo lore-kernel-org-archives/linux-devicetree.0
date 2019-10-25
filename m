@@ -2,102 +2,112 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E6ECA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 06:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC2CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 06:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8407621929
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 06:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D09021D71
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 06:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404297AbfJYG1F (ORCPT
+        id S2393147AbfJYGjv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 02:27:05 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60301 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbfJYG1E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 02:27:04 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iNt3s-0006d2-8f; Fri, 25 Oct 2019 08:27:00 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iNt3r-0007BN-Bg; Fri, 25 Oct 2019 08:26:59 +0200
-Date:   Fri, 25 Oct 2019 08:26:59 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        darshak.patel@einfochips.com, linux-imx@nxp.com,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org, prajose.john@einfochips.com
-Subject: Re: [PATCH 1/3] dt-bindings: arm: Add devicetree binding for Thor96
- Board
-Message-ID: <20191025062659.fyze6zt4jg6uzqxz@pengutronix.de>
-References: <20191024144235.3182-1-manivannan.sadhasivam@linaro.org>
- <20191024144235.3182-2-manivannan.sadhasivam@linaro.org>
+        Fri, 25 Oct 2019 02:39:51 -0400
+Received: from salem.gmr.ssr.upm.es ([138.4.36.7]:42704 "EHLO
+        salem.gmr.ssr.upm.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388287AbfJYGjv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 02:39:51 -0400
+Received: by salem.gmr.ssr.upm.es (Postfix, from userid 1000)
+        id CE7B6AC007D; Fri, 25 Oct 2019 08:39:48 +0200 (CEST)
+Date:   Fri, 25 Oct 2019 08:39:48 +0200
+From:   Alvaro Gamez Machado <alvaro.gamez@hazent.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] spi: set bits_per_word based on controller's
+ bits_per_word_mask
+Message-ID: <20191025063947.GA19665@salem.gmr.ssr.upm.es>
+References: <20191024110757.25820-1-alvaro.gamez@hazent.com>
+ <20191024110757.25820-4-alvaro.gamez@hazent.com>
+ <20191024111300.GD5207@sirena.co.uk>
+ <20191024125436.GA8878@salem.gmr.ssr.upm.es>
+ <20191024131129.GE46373@sirena.co.uk>
+ <20191024131856.GA32609@salem.gmr.ssr.upm.es>
+ <20191024134116.GF46373@sirena.co.uk>
+ <20191024140731.GA2950@salem.gmr.ssr.upm.es>
+ <20191024174033.GG46373@sirena.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191024144235.3182-2-manivannan.sadhasivam@linaro.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:26:32 up 160 days, 12:44, 101 users,  load average: 0.21, 0.08,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20191024174033.GG46373@sirena.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Manivannan,
+On Thu, Oct 24, 2019 at 06:40:33PM +0100, Mark Brown wrote:
+> On Thu, Oct 24, 2019 at 04:07:32PM +0200, Alvaro Gamez Machado wrote:
+> 
+> > I guess there could be some workarounds to help in that situation. But I see
+> > that as an hypothetical occurrence whereas I have with me a physical board
+> > that needs 32 bits in both master and slave that I want to access using
+> > spidev and cannot. Lots of I's in that sentence, I know :)
+> 
+> If you want to access this using spidev then add support for changing
+> the word size to spidev and use that as I think Geert already suggested.
 
-On 19-10-24 20:12, Manivannan Sadhasivam wrote:
-> Add devicetree binding for Thor96 Board from Einfochips. This board is
-> one of the 96Boards Consumer Edition platform powered by NXP i.MX8MQ SoC.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 1b4b4e6573b5..8016174d5e49 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -239,6 +239,7 @@ properties:
->          items:
->            - enum:
->                - boundary,imx8mq-nitrogen8m # i.MX8MQ NITROGEN Board
-> +              - einfochips,imx8mq-thor96  # i.MX8MQ Thor96 Board
+I've been trying to do so for a couple hours and I've reached a conclusion.
 
-Do we need to add a vendor patch too?
+I've been too focused on my personal use case (too many I's indeed) and
+thought that the problem was in fact in spidev as Geert indicated, but now
+I think it isn't, so I must present my excuses for mistakenly drive the
+conversation in that direction. Geert also thought this could be an SPI core
+bug, and he was right on that, I think.
 
-Regards,
-  Marco
+In fact, not a single line of spidev is being executed when the error
+message is printed:
 
->                - fsl,imx8mq-evk            # i.MX8MQ EVK Board
->                - purism,librem5-devkit     # Purism Librem5 devkit
->                - solidrun,hummingboard-pulse # SolidRun Hummingboard Pulse
-> -- 
-> 2.17.1
-> 
-> 
-> 
+xilinx_spi 44a00000.spi: at 0x44A00000 mapped to 0x(ptrval), irq=3
+xilinx_spi 44a10000.spi: can't setup spi1.0, status -22
+spi_master spi1: spi_device register error /amba_pl/spi@44a10000/spidev@0
+spi_master spi1: Failed to create SPI device for /amba_pl/spi@44a10000/spidev@0
+
+This does not come from spidev but directly from spi. What is happening is
+that when SPI slaves are defined via DT, their bits_per_word value is always
+unset (as 0), which turns later on in a default value of 8.
+
+Inside spi_setup function immediately after setting this default value to 8,
+__spi_validate_bits_per_word is called, that checks whether bits_per_word for
+the slave matches the controller available bitwidths:
+
+	if (!spi->bits_per_word)
+		spi->bits_per_word = 8;
+
+	status = __spi_validate_bits_per_word(spi->controller,
+					      spi->bits_per_word);
+
+	if (status)
+		return status;
+
+
+This means that it doesn't really matter which is the driver that is going
+to claim the specific SPI slave. It may be spidev as in my use case, or it
+may really be any other driver. But its probe() function is never going to
+be called because the error is not raised inside the driver, but immediately
+after forcibly setting the default value to 8 in spi.c
+
+I can't modify spidev because spidev doesn't even know this is happening.
+
+I was completely wrong in my blaming of spidev, but now I'm reassured that
+my previous patches were going to core of the issue, regardless of my
+mistaken initial diagnostic.
+
+Thanks,
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Alvaro G. M.
