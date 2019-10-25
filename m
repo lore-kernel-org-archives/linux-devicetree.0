@@ -2,101 +2,144 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF000CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 19:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D21CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D13221D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 19:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244EA20684
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572033506;
-	bh=G5vnpwBRTxufRX4/3szcmNAars2fCOYRGZWsDAE/LsA=;
+	s=default; t=1572033967;
+	bh=8hN8Hv9eLukTkP62r19/zXbufonjh2wzbam9QGvS19w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fm9kaE+hYz6OwkX6Y7/G3g3QIutt8/7+RfBZNAF0As/838oXqCOvMMGX/Ej7//17+
-	 0l6XxxtvFlRWQ5PCHUcCnQ6U9EBd5DueH+rzvndQoqVQT5FCDtsnrMk+HWoZqsA64O
-	 7+Fmny5woZLVlbFMW7Oa0CoR2TKCZKHuyTtxFxf8=
+	b=IeLoNh5yZd3RBID8YA79Y+qbpepvAdIJNcMcDyF51MYQOc5gGhPYFKJ0Oi4xqtNk+
+	 RY7DnAYR1n3yvG6SBpVrinvNi91TM3T/FleINCUQiQ0wHwyD3A+4R6mnF1hpkTTNzU
+	 tbge+13V4IKGtbTsURez/HwfX7kCUkp3x426VlEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfJYT60 (ORCPT
+        id S1727872AbfJYUGG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:58:26 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40710 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfJYT60 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 15:58:26 -0400
-Received: by mail-ot1-f67.google.com with SMTP id d8so2869381otc.7
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 12:58:24 -0700 (PDT)
+        Fri, 25 Oct 2019 16:06:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34308 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727845AbfJYUGG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 16:06:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id 83so2437117oii.1;
+        Fri, 25 Oct 2019 13:06:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d2OsTbKFKCeMTMNwxNy1n33lnkHVDqluXV6Ie7j05xw=;
-        b=ArFLHgK5RDQD/dFmII1kzsS/Rh6J8jGX4ZWh9BZLUYad/E+wkJsJ12/p41fHnuC9yi
-         9U0ZCV5xhsgXUVGPK5Iuqo6mAJPuAqP8wJX9hbTX92uHByHzMtbCePOhAuJmZQbT75xo
-         W1UNUk8Hd2YJXpbpIg5ZvVvhvokB7Al/JjqUQCJhh3uQt+W26Mr1piIKGUG2gGyopIQC
-         Pr48aSN/zsgSnJKzbmvuTK/sDELxF6YVS5dGU2kkn9iLXEuIzBjZXISXrNmY7+kRU76M
-         tGJfuSV94jTuu0x981KhB12+mTdnIE8WioHbuFJDpEUVxHtdlIcNUG57Ws9zsJ19ELcX
-         oO4A==
-X-Gm-Message-State: APjAAAVdOUY4RAPQogiNqPjVLUCbK42NR5bB/bHlQAlFIoOOqK9Lu+cg
-        PnIIv3TaKlbY1sZh39BArA==
-X-Google-Smtp-Source: APXvYqz2/zebuhop1abxkGx0qiGWyLzTDbYNwdobWl7IUSM3Pf+Ke/WEC2wEXubQeqtStaz7uTVjXw==
-X-Received: by 2002:a9d:7d92:: with SMTP id j18mr4348790otn.37.1572033504276;
-        Fri, 25 Oct 2019 12:58:24 -0700 (PDT)
+        bh=jqVq5Lwo+/WODI/QAay9kwe24vPaTOucp+D1u3RaL4g=;
+        b=oYeMQDUvuh/mRfJ69J5Y38zrlJbpFy+USUAeP/OmTtOJKn0B5M6AspQaKOMtV1m61J
+         X2+mUaHbqYcNzLL3CsqKVM+CEOWqHF3anHN2RGNEPYIG1/deLm2A9fVCdNosg7o2oGo0
+         vLIV8ueNpMOUTlwNfh4Zx/c1QWD88W+NQx3/GTz5alQaSuJtXvCYhja1DXQFT3GB+2A5
+         Qc5v8hcegThA8UivP33YkQzNz4Otkoy96v/BC3sf+TZD0aKsSw374Rx7Pf+I+PDged6M
+         9ggQSU3HQ0HfU9C8NSD4zgFMb3DksmBkD0EjQQaM6G0NptwBKms53xpdPFYITtZkQyr9
+         pF1Q==
+X-Gm-Message-State: APjAAAXcZ7MOyIu1WFIB3mkZNYtHUrowX+TIlbG0OuKitKQ0/kSxgBGo
+        Sce0f/KieYE9ortJopP4BQ==
+X-Google-Smtp-Source: APXvYqwzUR2rSINKzejZtbmIDPV5VUjpqLmVrlPP6Hwi7FH42fYZZYbpJxbgZMrvAlX2hTG7MzH0wg==
+X-Received: by 2002:aca:e0d5:: with SMTP id x204mr4728531oig.112.1572033965315;
+        Fri, 25 Oct 2019 13:06:05 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r3sm1024476otk.31.2019.10.25.12.58.23
+        by smtp.gmail.com with ESMTPSA id e5sm1030156otr.81.2019.10.25.13.06.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 12:58:23 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 14:58:22 -0500
+        Fri, 25 Oct 2019 13:06:04 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 15:06:04 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v3 20/21] dt-bindings: display: panel: Add the
- LTA089AC29000 variant
-Message-ID: <20191025195822.GA10635@bogus>
-References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-21-boris.brezillon@collabora.com>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     kishon@ti.com, aniljoy@cadence.com, adouglas@cadence.com,
+        nsekhar@ti.com, jsarha@ti.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: phy: ti,phy-j721e-wiz: Add Type-C
+ dir GPIO
+Message-ID: <20191025200603.GA10839@bogus>
+References: <20191024114042.30237-1-rogerq@ti.com>
+ <20191024114042.30237-3-rogerq@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023154512.9762-21-boris.brezillon@collabora.com>
+In-Reply-To: <20191024114042.30237-3-rogerq@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 23 Oct 2019 17:45:11 +0200, Boris Brezillon wrote:
-> The LTA089AC29000 and LT089AC29000 are not exactly the same. Let's add
-> a new compatible for the LTA variant.
+On Thu, Oct 24, 2019 at 02:40:41PM +0300, Roger Quadros wrote:
+> This is an optional GPIO, if specified will be used to
+> swap lane 0 and lane 1 based on GPIO status. This is required
+> to achieve plug flip support for USB Type-C.
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Type-C companions typically need some time after the cable is
+> plugged before and before they reflect the correct status of
+> Type-C plug orientation on the DIR line.
+> 
+> Type-C Spec specifies CC attachment debounce time (tCCDebounce)
+> of 100 ms (min) to 200 ms (max).
+> 
+> Allow the DT node to specify the time (in ms) that we need
+> to wait before sampling the DIR line.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Cc: Rob Herring <robh@kernel.org>
 > ---
->  .../bindings/display/panel/toshiba,lt089ac29000.txt          | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> index 8a1eccee6c1d..5dab0010bcdf 100644
+> --- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> @@ -53,6 +53,21 @@ properties:
+>    assigned-clock-parents:
+>      maxItems: 2
+>  
+> +  typec-dir-gpios:
 
-Acked-by: Rob Herring <robh@kernel.org>
+TI specific or could be generic?
+
+> +    maxItems: 1
+> +    description:
+> +      GPIO to signal Type-C cable orientation for lane swap.
+> +      If GPIO is active, lane 0 and lane 1 of SERDES will be swapped to
+> +      achieve the funtionality of an exernal type-C plug flip mux.
+
+s/exernal/external/
+
+> +
+> +  typec-dir-debounce:
+
+Needs '-ms' suffix.
+
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+
+then you can drop this because standard units have type already.
+
+> +    description:
+> +      Number of milliseconds to wait before sampling
+> +      typec-dir-gpio. If not specified, the GPIO will be sampled ASAP.
+> +      Type-C spec states minimum CC pin debounce of 100 ms and maximum
+> +      of 200 ms.
+
+Express this as constraints:
+
+minimum: 100
+maximum: 200
+default: ???
+
+If the spec minimum is 100ms, then doesn't sampling ASAP violate the 
+spec?
+
+> +
+>  patternProperties:
+>    "^pll[0|1]_refclk$":
+>      type: object
+> -- 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
