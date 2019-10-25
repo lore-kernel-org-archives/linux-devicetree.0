@@ -2,565 +2,255 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D619CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC5DCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6159E2070B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E445020867
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 09:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QIjqKvIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfJYJZ6 (ORCPT
+        id S2408136AbfJYJ3f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:25:58 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:45983 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438439AbfJYJZ5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 05:25:57 -0400
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 2BE3260002;
-        Fri, 25 Oct 2019 09:25:54 +0000 (UTC)
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        =?UTF-8?q?K=C3=A9vin=20RAYMOND?= <k.raymond@overkiz.com>,
-        Mickael GARDET <m.gardet@overkiz.com>
-Subject: [PATCH v2 2/2] ARM: dts: at91: add smartkiz support and a common kizboxmini dtsi file
-Date:   Fri, 25 Oct 2019 11:25:51 +0200
-Message-Id: <20191025092551.25184-2-kamel.bouhara@bootlin.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191025092551.25184-1-kamel.bouhara@bootlin.com>
-References: <20191025092551.25184-1-kamel.bouhara@bootlin.com>
+        Fri, 25 Oct 2019 05:29:35 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37016 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406381AbfJYJ3f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 05:29:35 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9P9TO13045068;
+        Fri, 25 Oct 2019 04:29:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571995764;
+        bh=HPgJGVv34kaCbmxMyK0unoXFnunk412hxWQRl6+VdGs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QIjqKvIafKs5pLDpGkeA2AbWniDt0/nKgA983Uct6RXVus3kYfPTP+pTO4u5SQiUb
+         kAZmXEjJ+PFU3ZbNgzdLCD7G8CMRTJ+5IUy1Kx2LviA7CUiDTJoJI1zrvw2DQRiyH4
+         +nHfXR1vjDkIFrKYzYw9Xjhv0u991lLBxYTcXdxg=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9P9TOlD053121
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 25 Oct 2019 04:29:24 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 25
+ Oct 2019 04:29:13 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 25 Oct 2019 04:29:23 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P9TKLQ117235;
+        Fri, 25 Oct 2019 04:29:20 -0500
+Subject: Re: [PATCH v3 02/14] soc: ti: k3: add navss ringacc driver
+To:     Lokesh Vutla <lokeshvutla@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
+        <j-keerthy@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <20191001061704.2399-3-peter.ujfalusi@ti.com>
+ <86344789-e0f4-5b29-62da-3fb08025177b@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <0a698278-19d8-bb20-34b9-9695d670b3a8@ti.com>
+Date:   Fri, 25 Oct 2019 12:30:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <86344789-e0f4-5b29-62da-3fb08025177b@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Split the existing Kizbox Mini boards into three board configuration,
-the base board, the mother board and the RailDIN board.
-Add a new dts file for the SmartKiz board support.
 
-Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
----
-Changes in v2
-=============
-	- Renamed kizboxmini to make clear it is a board variant
-	- Merged Smartkiz dts support that actually include the
-	  kizboxmini dtsi.
 
- arch/arm/boot/dts/Makefile                    |   5 +-
- arch/arm/boot/dts/at91-kizboxmini-base.dts    |  24 +++
- ...oxmini.dts => at91-kizboxmini-common.dtsi} | 163 +++++++++---------
- arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  26 +++
- arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  49 ++++++
- arch/arm/boot/dts/at91-smartkiz.dts           | 109 ++++++++++++
- 6 files changed, 293 insertions(+), 83 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-base.dts
- rename arch/arm/boot/dts/{at91-kizboxmini.dts => at91-kizboxmini-common.dtsi} (51%)
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
- create mode 100644 arch/arm/boot/dts/at91-smartkiz.dts
+On 09/10/2019 16.27, Lokesh Vutla wrote:
+>> +struct k3_ringacc {
+>> +	struct device *dev;
+>> +	struct k3_ringacc_proxy_gcfg_regs __iomem *proxy_gcfg;
+>> +	void __iomem *proxy_target_base;
+>> +	u32 num_rings; /* number of rings in Ringacc module */
+>> +	unsigned long *rings_inuse;
+>> +	struct ti_sci_resource *rm_gp_range;
+>> +
+>> +	bool dma_ring_reset_quirk;
+>> +	u32 num_proxies;
+>> +	unsigned long *proxy_inuse;
+>> +
+>> +	struct k3_ring *rings;
+>> +	struct list_head list;
+>> +	struct mutex req_lock; /* protect rings allocation */
+>> +
+>> +	const struct ti_sci_handle *tisci;
+>> +	const struct ti_sci_rm_ringacc_ops *tisci_ring_ops;
+>> +	u32  tisci_dev_id;
+> 
+> This can be dropped no? pdev->id has it already.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index c976b72a4c94..7f34e668ed19 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -37,7 +37,10 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
- 	at91-ariag25.dtb \
- 	at91-ariettag25.dtb \
- 	at91-cosino_mega2560.dtb \
--	at91-kizboxmini.dtb \
-+	at91-kizboxmini-base.dtb \
-+	at91-kizboxmini-mb.dtb \
-+	at91-kizboxmini-rd.dtb \
-+	at91-smartkiz.dtb \
- 	at91-wb45n.dtb \
- 	at91sam9g15ek.dtb \
- 	at91sam9g25ek.dtb \
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-base.dts b/arch/arm/boot/dts/at91-kizboxmini-base.dts
-new file mode 100644
-index 000000000000..81c29ca5cc1b
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-base.dts
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * at91-kizboxmini-base.dts - Device Tree file for Overkiz Kizbox mini
-+ * base board
-+ *
-+ * Copyright (C) 2015 Overkiz SAS
-+ *   Author: Antoine Aubert <a.aubert@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini";
-+	compatible = "overkiz,kizboxmini-base", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+};
-+
-+&pinctrl_usart0 {
-+	atmel,pins =
-+		<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
-+		 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE
-+		 AT91_PIOA 2 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
-+};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini.dts b/arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-similarity index 51%
-rename from arch/arm/boot/dts/at91-kizboxmini.dts
-rename to arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-index cb22f5fb055f..fddf267b2d17 100644
---- a/arch/arm/boot/dts/at91-kizboxmini.dts
-+++ b/arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-@@ -1,17 +1,16 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * at91-kizboxmini.dts - Device Tree file for Overkiz Kizbox mini board
-  *
-- * Copyright (C) 2014 Gaël PORTAY <g.portay@overkiz.com>
-+ * Copyright (C) 2014-2018 Overkiz SAS
-+ *   Author: Antoine Aubert <a.aubert@overkiz.com>
-+ *           Gaël Portay <g.portay@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ *           Dorian Rocipon <d.rocipon@overkiz.com>
-  */
--/dts-v1/;
- #include "at91sam9g25.dtsi"
--#include <dt-bindings/pwm/pwm.h>
+pdev->id might have it but it is simpler to keep it here than getting
+the pdev when we need it
 
- / {
--	model = "Overkiz Kizbox mini";
--	compatible = "overkiz,kizboxmini", "atmel,at91sam9g25", "atmel,at91sam9x5", "atmel,at91sam9";
--
- 	chosen {
- 		bootargs = "ubi.mtd=ubi";
- 		stdout-path = &dbgu;
-@@ -22,24 +21,16 @@
- 	};
+...
 
- 	clocks {
--		slow_xtal {
--			clock-frequency = <32768>;
--		};
--
- 		main_xtal {
- 			clock-frequency = <12000000>;
- 		};
--	};
+>> +struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
+>> +					int id, u32 flags)
+>> +{
+>> +	int proxy_id = K3_RINGACC_PROXY_NOT_USED;
+>> +
+>> +	mutex_lock(&ringacc->req_lock);
+>> +
+>> +	if (id == K3_RINGACC_RING_ID_ANY) {
+>> +		/* Request for any general purpose ring */
+>> +		struct ti_sci_resource_desc *gp_rings =
+>> +						&ringacc->rm_gp_range->desc[0];> +		unsigned long size;
+>> +
+>> +		size = gp_rings->start + gp_rings->num;
+>> +		id = find_next_zero_bit(ringacc->rings_inuse, size,
+>> +					gp_rings->start);
+> 
+> ti_sci_get_free resource can be used no? In case if id is passed, that bit alone
+> can be set.
 
--	ahb {
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;
--			atmel,pmecc-cap = <4>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
--			status = "okay";
-+		slow_xtal {
-+			clock-frequency = <32768>;
-+		};
-+
-+		adc_op_clk {
-+			status = "disabled";
- 		};
- 	};
+Hrm, kind of yes.
+We have a bitfield for _all_ rings managed locally so I don't see much
+benefit to manage another bitfiled usage, which is redundant.
 
-@@ -63,17 +54,25 @@
- 		};
- 	};
+>> +		if (id == size)
+>> +			goto error;
+>> +	} else if (id < 0) {
+>> +		goto error;
+>> +	}
+>> +
+>> +	if (test_bit(id, ringacc->rings_inuse) &&
+>> +	    !(ringacc->rings[id].flags & K3_RING_FLAG_SHARED))
+>> +		goto error;
+>> +	else if (ringacc->rings[id].flags & K3_RING_FLAG_SHARED)
+>> +		goto out;
+>> +
+>> +	if (flags & K3_RINGACC_RING_USE_PROXY) {
+>> +		proxy_id = find_next_zero_bit(ringacc->proxy_inuse,
+>> +					      ringacc->num_proxies, 0);
+> 
+> May be a dump question, but how do we make sure that these proxies are not used
+> by another Hosts?
 
--	pwm_leds {
-+	leds: pwm_leds {
- 		compatible = "pwm-leds";
+That's a good question. Grygorii?
 
--		green {
-+		led_blue: pwm_blue {
-+			label = "pwm:blue:user";
-+			pwms = <&pwm0 2 10000000 0>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "none";
-+			status = "disabled";
-+		};
-+
-+		led_green: pwm_green {
- 			label = "pwm:green:user";
- 			pwms = <&pwm0 0 10000000 0>;
- 			max-brightness = <255>;
- 			linux,default-trigger = "default-on";
- 		};
+> 
+>> +		if (proxy_id == ringacc->num_proxies)
+>> +			goto error;
+>> +	}
+>> +
+>> +	if (!try_module_get(ringacc->dev->driver->owner))
+>> +		goto error;
+>> +
+>> +	if (proxy_id != K3_RINGACC_PROXY_NOT_USED) {
+>> +		set_bit(proxy_id, ringacc->proxy_inuse);
+>> +		ringacc->rings[id].proxy_id = proxy_id;
+>> +		dev_dbg(ringacc->dev, "Giving ring#%d proxy#%d\n", id,
+>> +			proxy_id);
+>> +	} else {
+>> +		dev_dbg(ringacc->dev, "Giving ring#%d\n", id);
+>> +	}
+>> +
+>> +	set_bit(id, ringacc->rings_inuse);
+>> +out:
+>> +	ringacc->rings[id].use_count++;
+>> +	mutex_unlock(&ringacc->req_lock);
+>> +	return &ringacc->rings[id];
+>> +
+>> +error:
+>> +	mutex_unlock(&ringacc->req_lock);
+>> +	return NULL;
+>> +}
+>> +EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
+>> +
 
--		red {
-+		led_red: pwm_red {
- 			label = "pwm:red:user";
- 			pwms = <&pwm0 1 10000000 0>;
- 			max-brightness = <255>;
-@@ -82,53 +81,12 @@
- 	};
- };
+...
+>> +	pm_runtime_enable(dev);
+>> +	ret = pm_runtime_get_sync(dev);
+>> +	if (ret < 0) {
+>> +		pm_runtime_put_noidle(dev);
+>> +		dev_err(dev, "Failed to enable pm %d\n", ret);
+>> +		goto err;
+>> +	}
+> 
+> Don't you need power-domains property in DT so that pm is actually working? If
+> that is populated, dev-id can be derived from power-domains rather than a
+> separate dt property.
 
--&dbgu {
-+&usart0 {
-+	atmel,use-dma-rx;
-+	atmel,use-dma-tx;
- 	status = "okay";
- };
+Right, I never felt comfortable to fiddle with something outside of the
+scope of the driver. What happens (unlikely) if the power-domains
+binding got changed for some reason?
 
--&ebi {
--	pinctrl-0 = <&pinctrl_ebi_addr_nand
--		     &pinctrl_ebi_data_0_7>;
--	pinctrl-names = "default";
--	status = "okay";
--
--	nand-controller {
--		pinctrl-0 = <&pinctrl_nand_oe_we
--			     &pinctrl_nand_cs
--			     &pinctrl_nand_rb>;
--		pinctrl-names = "default";
--		status = "okay";
--
--		nand@3 {
--			reg = <0x3 0x0 0x800000>;
--			rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
--			cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			nand-ecc-strength = <4>;
--			nand-ecc-step-size = <512>;
--			nand-on-flash-bbt;
--			label = "atmel_nand";
--
--			partitions {
--				compatible = "fixed-partitions";
--				#address-cells = <1>;
--				#size-cells = <1>;
--
--				bootstrap@0 {
--					label = "bootstrap";
--					reg = <0x0 0x20000>;
--				};
--
--				ubi@20000 {
--					label = "ubi";
--					reg = <0x20000 0x7fe0000>;
--				};
--			};
--		};
--	};
--};
--
- &macb0 {
- 	phy-mode = "rmii";
- 	status = "okay";
-@@ -137,26 +95,70 @@
- &pwm0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm0_pwm0_1
--		     &pinctrl_pwm0_pwm1_1>;
-+		     &pinctrl_pwm0_pwm1_1
-+		     &pinctrl_pwm0_pwm2_1>;
- 	status = "okay";
- };
+Another thing is that the whole NAVSS is always on, it can not power off
+as it would loose all of it's configuration including event mappings,
+DMA channel configurations, interrupt configs, ring configurations,
+mailbox, timers, etc.
 
--&tcb0 {
--	timer@0 {
--		compatible = "atmel,tcb-timer";
--		reg = <0>;
--	};
-+&dbgu {
-+	status = "okay";
-+};
+It is a catastrophic thing which can only be solved with a hard reboot
+as there is no way to recover from it - system firmware would need to
+rebooted as well.
 
--	timer@1 {
--		compatible = "atmel,tcb-timer";
--		reg = <1>;
--	};
-+&watchdog {
-+	status = "okay";
- };
+In current SoCs NAVSS can not be off. Without power-domains in DT the
+pm_runtime is NOP, but if this changes (NAVSS could turn off) we need to
+prevent NAVSS power off and the code is ready for that, we just pop in
+the power-domains to DT.
 
--&usart0 {
-+&adc0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "disabled";
-+};
-+
-+&ebi {
-+	pinctrl-0 = <&pinctrl_ebi_addr_nand
-+			&pinctrl_ebi_data_0_7>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
+> 
+> [...snip..]
+> 
+> 
+>> diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k3-ringacc.h
+>> new file mode 100644
+>> index 000000000000..526b2e38fcce
+>> --- /dev/null
+>> +++ b/include/linux/soc/ti/k3-ringacc.h
+>> @@ -0,0 +1,245 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * K3 Ring Accelerator (RA) subsystem interface
+>> + *
+>> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
+>> + */
+>> +
+>> +#ifndef __SOC_TI_K3_RINGACC_API_H_
+>> +#define __SOC_TI_K3_RINGACC_API_H_
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +struct device_node;
+>> +
+> 
+> [...snip..]
+> 
+>> +
+>> +/**
+>> + * k3_ringacc_ring_reset - ring reset
+>> + * @ring: pointer on Ring
+>> + *
+>> + * Resets ring internal state ((hw)occ, (hw)idx).
+>> + * TODO_GS: ? Ring can be reused without reconfiguration
+> 
+> TODO_GS?
+> 
+> Thanks and regards,
+> Lokesh
+> 
 
-+&nand_controller {
-+	status = "okay";
-+	pinctrl-0 = <&pinctrl_nand_oe_we
-+		     &pinctrl_nand_cs
-+		     &pinctrl_nand_rb>;
-+	pinctrl-names = "default";
-+
-+	nand@3 {
-+		reg = <0x3 0x0 0x800000>;
-+		rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+		cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+		nand-on-flash-bbt;
-+		label = "atmel_nand";
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			bootstrap@0 {
-+				label = "bootstrap";
-+				reg = <0x0 0x20000>;
-+			};
-+
-+			ubi@20000 {
-+				label = "ubi";
-+				reg = <0x20000 0x7fe0000>;
-+			};
-+		};
-+	};
-+};
-+
- &usb0 {
- 	num-ports = <1>;
- 	status = "okay";
-@@ -166,6 +168,3 @@
- 	status = "okay";
- };
+- Péter
 
--&watchdog {
--	status = "okay";
--};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-new file mode 100644
-index 000000000000..c07d3076a9bc
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2015-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini Mother Board";
-+	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+};
-+
-+&usb0 {
-+	num-ports = <2>;
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&led_blue {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-rd.dts b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-new file mode 100644
-index 000000000000..ab50f4d22387
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2015-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini RailDIN";
-+	compatible = "overkiz,kizboxmini-rd", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	clocks {
-+		adc_op_clk {
-+			status = "okay";
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	adc0 {
-+		pinctrl_adc0_ad5: adc0_ad5-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+	};
-+};
-+
-+&usart0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&led_blue {
-+	status = "okay";
-+};
-+
-+&adc0 {
-+	atmel,adc-vref = <2500>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_ad5>;
-+	atmel,adc-channels-used = <0x0020>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/at91-smartkiz.dts b/arch/arm/boot/dts/at91-smartkiz.dts
-new file mode 100644
-index 000000000000..2354385f9685
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-smartkiz.dts
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ *           Dorian Rocipon <d.rocipon@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini_common.dtsi"
-+
-+/ {
-+	model = "Overkiz SmartKiz";
-+	compatible = "overkiz,smartkiz", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	clocks {
-+		adc_op_clk {
-+			status = "okay";
-+		};
-+	};
-+
-+	aliases {
-+		serial5 = &uart0;
-+	};
-+
-+	pio_keys {
-+		hk_reset {
-+			label = "HK_RESET";
-+			gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		power_rf {
-+			label = "POWER_RF";
-+			gpios = <&pioA 20 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		power_wifi {
-+			label = "POWER_WIFI";
-+			gpios = <&pioA 21 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	i2c1 {
-+		pinctrl_i2c1: i2c1-0 {
-+			atmel,pins =
-+				<AT91_PIOC 0 AT91_PERIPH_C AT91_PINCTRL_PULL_UP
-+				AT91_PIOC 1 AT91_PERIPH_C AT91_PINCTRL_PULL_UP>;
-+		};
-+	};
-+
-+	adc0 {
-+		pinctrl_adc0_ad0: adc0_ad0-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 11 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+		pinctrl_adc0_ad5: adc0_ad5-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+		pinctrl_adc0_ad6: adc0_ad6-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 17 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+		pinctrl_adc0_ad11: adc0_ad11-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 10 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	dmas = <0>, <0>;
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "disabled";
-+};
-+
-+&macb0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&leds {
-+	blue {
-+		status = "okay";
-+	};
-+};
-+
-+&adc0 {
-+	atmel,adc-vref = <2500>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&pinctrl_adc0_ad0
-+		&pinctrl_adc0_ad5
-+		&pinctrl_adc0_ad6
-+		&pinctrl_adc0_ad11
-+	>;
-+	atmel,adc-channels-used = <0x0861>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
---
-2.23.0
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
