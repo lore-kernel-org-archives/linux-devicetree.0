@@ -2,109 +2,88 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7B9CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 11:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B945CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 11:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C9421D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 11:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E88421D71
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 11:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408808AbfJYLNt (ORCPT
+        id S2408721AbfJYLOM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:13:49 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:50480 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408843AbfJYLNr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 07:13:47 -0400
-Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id HnDl2101D5USYZQ01nDl2x; Fri, 25 Oct 2019 13:13:46 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNxSN-0003rD-QR; Fri, 25 Oct 2019 13:08:35 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNvnV-0006E0-TV; Fri, 25 Oct 2019 11:22:17 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3] scripts/dtc: dtx_diff - add color output support
-Date:   Fri, 25 Oct 2019 11:22:15 +0200
-Message-Id: <20191025092215.23887-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Fri, 25 Oct 2019 07:14:12 -0400
+Received: from mx1.unisoc.com ([222.66.158.135]:16749 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726369AbfJYLOM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 07:14:12 -0400
+Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+        by SHSQR01.spreadtrum.com with ESMTPS id x9PBDrCR066405
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 25 Oct 2019 19:13:53 +0800 (CST)
+        (envelope-from Chunyan.Zhang@unisoc.com)
+Received: from localhost (10.0.74.79) by BJMBX01.spreadtrum.com (10.0.64.7)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Fri, 25 Oct 2019 19:13:53
+ +0800
+From:   Chunyan Zhang <chunyan.zhang@unisoc.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH 0/5] Add clocks for Unisoc's SC9863A
+Date:   Fri, 25 Oct 2019 19:13:33 +0800
+Message-ID: <20191025111338.27324-1-chunyan.zhang@unisoc.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.0.74.79]
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL: SHSQR01.spreadtrum.com x9PBDrCR066405
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add new -c/--color options, to enhance the diff output with color, and
-improve the user's experience.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-Tested-by: Frank Rowand <frank.rowand@sony.com>
----
-v3:
-  - Add Reviewed-by, Tested-by,
+Add SC9863A specific clock driver and devicetree bindings for it.
 
-v2:
-  - Document that -c/--color requires a diff command with color support,
-  - Ignore -c/--color if diff command lacks color support.
----
- scripts/dtc/dtx_diff | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Also this patchset added support gate clock for pll which need to
+wait a certain time for stable after being switched on.
 
-diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
-index e9ad7834a22d9459..d3422ee15e300bc7 100755
---- a/scripts/dtc/dtx_diff
-+++ b/scripts/dtc/dtx_diff
-@@ -20,6 +20,8 @@ Usage:
- 
- 
-       --annotate    synonym for -T
-+      --color       synonym for -c (requires diff with --color support)
-+       -c           enable colored output
-        -f           print full dts in diff (--unified=99999)
-        -h           synonym for --help
-        -help        synonym for --help
-@@ -178,6 +180,7 @@ compile_to_dts() {
- annotate=""
- cmd_diff=0
- diff_flags="-u"
-+diff_color=""
- dtx_file_1=""
- dtx_file_2=""
- dtc_sort="-s"
-@@ -189,6 +192,13 @@ while [ $# -gt 0 ] ; do
- 
- 	case $1 in
- 
-+	-c | --color )
-+		if diff --color /dev/null /dev/null 2>/dev/null ; then
-+			diff_color="--color=always"
-+		fi
-+		shift
-+		;;
-+
- 	-f )
- 		diff_flags="--unified=999999"
- 		shift
-@@ -344,7 +354,7 @@ DTC="\
- 
- if (( ${cmd_diff} )) ; then
- 
--	diff ${diff_flags} --label "${dtx_file_1}" --label "${dtx_file_2}" \
-+	diff ${diff_flags} ${diff_color} --label "${dtx_file_1}" --label "${dtx_file_2}" \
- 		<(compile_to_dts "${dtx_file_1}" "${dtx_path_1_dtc_include}") \
- 		<(compile_to_dts "${dtx_file_2}" "${dtx_path_2_dtc_include}")
- 
+Chunyan Zhang (4):
+  dt-bindings: clk: sprd: rename the common file name sprd.txt to SoC
+    specific
+  dt-bindings: clk: sprd: add bindings for sc9863a clock controller
+  clk: sprd: Add dt-bindings include file for SC9863A
+  clk: sprd: add clocks support for SC9863A
+
+Xiaolong Zhang (1):
+  clk: sprd: add gate for pll clocks
+
+ .../clock/{sprd.txt => sprd,sc9860-clk.txt}   |    2 +-
+ .../bindings/clock/sprd,sc9863a-clk.txt       |   59 +
+ drivers/clk/sprd/Kconfig                      |    8 +
+ drivers/clk/sprd/Makefile                     |    1 +
+ drivers/clk/sprd/gate.c                       |   19 +
+ drivers/clk/sprd/gate.h                       |   21 +-
+ drivers/clk/sprd/sc9863a-clk.c                | 1711 +++++++++++++++++
+ include/dt-bindings/clock/sprd,sc9863a-clk.h  |  353 ++++
+ 8 files changed, 2171 insertions(+), 3 deletions(-)
+ rename Documentation/devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} (98%)
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.txt
+ create mode 100644 drivers/clk/sprd/sc9863a-clk.c
+ create mode 100644 include/dt-bindings/clock/sprd,sc9863a-clk.h
+
 -- 
-2.17.1
+2.20.1
+
 
