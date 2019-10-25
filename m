@@ -2,305 +2,339 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513FBCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 03:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7130BCA9EBB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 04:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1129420867
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 03:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4013721D71
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 04:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ce+0HrND"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="FbmvhkPC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392314AbfJYDw0 (ORCPT
+        id S1726889AbfJYEAt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 24 Oct 2019 23:52:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41502 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392291AbfJYDw0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Oct 2019 23:52:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q7so632099pfh.8
-        for <devicetree@vger.kernel.org>; Thu, 24 Oct 2019 20:52:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VuqGlHCmiP7nazFalCZDat6IlaETXhzlf7ym/08sQW8=;
-        b=Ce+0HrNDmFSivub2oBEJVlA0HHWdPOu5+6DmZIJe7npEriRRFg631g4lekMZY0vAiE
-         X3w8JaBKz/xk8MUr8g0dIKO02+oQdsng0Yd15tGlAmwd6MIRY+eKa82ZieljWuM1/TXA
-         lWrkonKegWaVKApjLAbjNz8voQ4f1oncASGEE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VuqGlHCmiP7nazFalCZDat6IlaETXhzlf7ym/08sQW8=;
-        b=qOUA3e2exDxs5J5aQxCYmW/fEhqzoRKixXEIsdUDdgVDlfzO3zAikTg5F0ojyhO/x/
-         TJm5yJCEPQN8q8f9ESfHRnLryQ5efGqQs0pQvbWYEHOJm04u1boMGwTyepXn38ygccLC
-         bjRtIzxmxxyZzZmQi6D9idVGb1Ly1tXHjZBYnZKu49oF2/K8D/Bul7rs7IlAQksKR2u4
-         iPcoDE/SVBK35c2e4rPGNnMBM49Nur/himr63iDOHwrvnGX6pmNEc6NgWHmWCkZ0amfr
-         NypczTPpl2K56HUireF4PBPS5Kyxb/V2Afte+NvWbmzGrAvPbs0cWaPnoTx2Ur85av5c
-         oFOg==
-X-Gm-Message-State: APjAAAVtpCq/4QkkYmgrjOr2SRNu2XUye6N2YO5Qdp8Ei8VTbU1MjTR+
-        CelE5u934UnsCb5yGivojSxLmQ==
-X-Google-Smtp-Source: APXvYqwkwetVcs47sPZxLr5ISxVfMjs558/KCCIrpnAsnIMnYSTi2p/HmtYweJj67U8UZ7Y8mq9qFw==
-X-Received: by 2002:a63:4c1c:: with SMTP id z28mr1507674pga.167.1571975545045;
-        Thu, 24 Oct 2019 20:52:25 -0700 (PDT)
-Received: from chromium.org ([2401:fa00:8f:203:f5fe:2a5e:f953:c0ed])
-        by smtp.gmail.com with ESMTPSA id c16sm571818pja.2.2019.10.24.20.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 20:52:17 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 12:52:11 +0900
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
-Cc:     hans.verkuil@cisco.com,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "lkml@metux.net" <lkml@metux.net>,
-        CK Hu =?utf-8?B?KOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
-        "yuzhao@chromium.org" <yuzhao@chromium.org>,
-        "zwisler@chromium.org" <zwisler@chromium.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Sean Cheng =?utf-8?B?KOmEreaYh+W8mCk=?= 
-        <Sean.Cheng@mediatek.com>,
-        Sj Huang =?utf-8?B?KOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>,
-        Christie Yu =?utf-8?B?KOa4uOmbheaDoCk=?= 
-        <christie.yu@mediatek.com>,
-        Frederic Chen =?utf-8?B?KOmZs+S/iuWFgyk=?= 
-        <Frederic.Chen@mediatek.com>,
-        Jungo Lin =?utf-8?B?KOael+aYjuS/iik=?= <jungo.lin@mediatek.com>,
-        Po-Yang Huang =?utf-8?B?KOm7g+afj+mZvSk=?= 
-        <po-yang.huang@mediatek.com>,
-        Rynn Wu =?utf-8?B?KOWQs+iCsuaBqSk=?= <Rynn.Wu@mediatek.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH V3 3/3] platform: mtk-isp: Add Mediatek FD driver
-Message-ID: <20191025035211.GA67000@chromium.org>
-References: <20190906101125.3784-1-Jerry-Ch.chen@mediatek.com>
- <20190906101125.3784-4-Jerry-Ch.chen@mediatek.com>
- <1571109375.3706.40.camel@mtksdccf07>
+        Fri, 25 Oct 2019 00:00:49 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60960 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfJYEAt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 00:00:49 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C86E7891AA;
+        Fri, 25 Oct 2019 17:00:45 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1571976045;
+        bh=ttAgQ3PNAnUigRM+xn8xkD1O1PenLYfvnjj/K0ca3m0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=FbmvhkPCCr7XpOVHlzehSmjkHtKZ+vUY9GIHvqKxK4R2kEVREG5r/5SUQf0/rzltU
+         9/Iw77v8PlCP9FM+eAnJsjynb/EcStrrnr+shvMXtHEOTsVwWZ2vqR1MpRdVY12kk0
+         hJCzSyKJIY0kpPNFGwMLZ1Q/CRcWE3amXvzYCxHRCJM9czTBr6Cxl8BQwh8VTjKqZs
+         4ZtZFKVCSjO9lqtGTLGKhDU2kjrgC0MDoa92EC93qANH/7p9VNQBWp2yNkmo+FF0dC
+         fj418hPVMYrLK4zMJEuIgOHWzTaDyZxDJYQSXubYvhR1PGK/X4beX8w9LlYLM82pjn
+         PD25VlNZjdmAQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5db2736d0001>; Fri, 25 Oct 2019 17:00:45 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 8CAA613EEEB;
+        Fri, 25 Oct 2019 17:00:49 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id A015828005C; Fri, 25 Oct 2019 17:00:45 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        linus.walleij@linaro.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 1/2] pinctrl: bcm: nsp: use gpiolib infrastructure for interrupts
+Date:   Fri, 25 Oct 2019 17:00:40 +1300
+Message-Id: <20191025040041.6210-2-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191025040041.6210-1-chris.packham@alliedtelesis.co.nz>
+References: <20191025040041.6210-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571109375.3706.40.camel@mtksdccf07>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 11:16:15AM +0800, Jerry-ch Chen wrote:
-> Hi Tomasz,
-> 
-> On Fri, 2019-09-06 at 18:11 +0800, Jerry-ch Chen wrote:
-> > From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-> > 
-> > This patch adds the driver of Face Detection (FD) unit in
-> > Mediatek camera system, providing face detection function.
-> > 
-> > The mtk-isp directory will contain drivers for multiple IP
-> > blocks found in Mediatek ISP system. It will include ISP Pass 1
-> > driver (CAM), sensor interface driver, DIP driver and face
-> > detection driver.
-> > 
-> > Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-> > ---
-> >  drivers/media/platform/Kconfig                |    2 +
-> >  drivers/media/platform/Makefile               |    2 +
-> >  drivers/media/platform/mtk-isp/fd/Kconfig     |   19 +
-> >  drivers/media/platform/mtk-isp/fd/Makefile    |    5 +
-> >  drivers/media/platform/mtk-isp/fd/mtk_fd.h    |  148 ++
-> >  drivers/media/platform/mtk-isp/fd/mtk_fd_40.c | 1219 +++++++++++++++++
-> >  include/uapi/linux/mtk-fd-v4l2-controls.h     |   69 +
-> >  include/uapi/linux/v4l2-controls.h            |    4 +
-> >  8 files changed, 1468 insertions(+)
-> >  create mode 100644 drivers/media/platform/mtk-isp/fd/Kconfig
-> >  create mode 100644 drivers/media/platform/mtk-isp/fd/Makefile
-> >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.h
-> >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd_40.c
-> >  create mode 100644 include/uapi/linux/mtk-fd-v4l2-controls.h
-> > 
+Use more of the gpiolib infrastructure for handling interrupts. The
+root interrupt still needs to be handled manually as it is shared with
+other peripherals on the SoC.
 
-[snip]
+This will allow multiple instances of this driver to be supported and
+will clean up gracefully on failure thanks to the device managed APIs.
 
-> > +static int mtk_fd_job_abort(struct mtk_fd_dev *fd)
-> > +{
-> > +	u32 ret;
-> > +
-> > +	ret = wait_for_completion_timeout(&fd->fd_irq_done,
-> > +					  msecs_to_jiffies(MTK_FD_HW_TIMEOUT));
-> > +	/* Reset FD HW */
-> > +	if (!ret) {
-> > +		struct ipi_message fd_ipi_msg;
-> > +
-> > +		fd_ipi_msg.cmd_id = MTK_FD_IPI_CMD_RESET;
-> > +		if (scp_ipi_send(fd->scp_pdev, SCP_IPI_FD_CMD, &fd_ipi_msg,
-> > +				 sizeof(fd_ipi_msg), MTK_FD_IPI_SEND_TIMEOUT))
-> > +			dev_err(fd->dev, "FD Reset HW error\n");
-> > +		return -ETIMEDOUT;
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> 
-> Continue the discussion about job abort in RFC v2,
-> 
-> I think the job_abort callback in v4l2_m2m_ops() might be useful.
-> 
-> ref:
-> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/media/v4l2-core/v4l2-mem2mem.c#L398
-> https://elixir.bootlin.com/linux/v5.4-rc2/source/include/media/v4l2-mem2mem.h#L43
-> 
-> in drivers/media/v4l2-core/v4l2-mem2mem.c #398 v4l2_m2m_cancel_job()
-> ...
-> if (m2m_ctx->job_flags & TRANS_RUNNING) {
-> 	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
-> 	if (m2m_dev->m2m_ops->job_abort)
-> 		m2m_dev->m2m_ops->job_abort(m2m_ctx->priv);
-> 	dprintk("m2m_ctx %p running, will wait to complete\n", m2m_ctx);
-> 	wait_event(m2m_ctx->finished,
-> 			!(m2m_ctx->job_flags & TRANS_RUNNING));
-> } ...
-> 
-> If this operation is set, we might use the v4l2_m2m_cancel_job() when
-> suspend, and it will do mtk_fd_job_abort() here.
->
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 105 ++++++++++---------------
+ 1 file changed, 42 insertions(+), 63 deletions(-)
 
-The expectation for .job_abort() is that signals the hardware to
-instantly abandon the current job. Do we have a way to tell the
-firmware/hardware to do so?
-
-Also, suspend must not abort the current job. Anything that was already
-running is expected to complete successfuly and further jobs should
-continue executing once the system resumes.
-
-[snip]
-
-> > +
-> > +static int mtk_fd_suspend(struct device *dev)
-> > +{
-> > +	struct mtk_fd_dev *fd = dev_get_drvdata(dev);
-> > +
-> > +	if (pm_runtime_suspended(dev))
-> > +		return 0;
-> > +
-> > +	if (fd->fd_stream_count)
-> > +		if (mtk_fd_job_abort(fd))
-> > +			mtk_fd_hw_job_finish(fd, VB2_BUF_STATE_ERROR);
-> > +
-> 
-> To avoid mtk_fd_hw_job_finish() trigger the next job,
-> I suppose that we could use v4l2_m2m_cancel_job instead of job_abort and
-> job_finish here.
-> 
-> /**
->  * v4l2_m2m_cancel_job() - cancel pending jobs for the context
->  * @m2m_ctx: m2m context with jobs to be canceled
->  *
->  * In case of streamoff or release called on any context,
->  * 1] If the context is currently running, then abort job will be called
->  * 2] If the context is queued, then the context will be removed from
->  *    the job_queue
->  */
-> 
-> or another way,
-> we may add a flag and implement mtk_fd_job_ready() that reads the flag
-> if we suspend, we set the flag and do job_abort and job_finish, even if
-> it try enqueue, it will still not really queue the job, until we reset
-> the flag in mtk_fd_resume().
-> 
-> how do you think?
->
-
-As per my comment above, suspend must just pause the execution of the
-jobs. It must not cause any jobs to be skipped.
-
-After analyzing the m2m framework and existing m2m drivers I realized
-that they currently provide no way to correctly handle suspend/resume.
-Pi-Hsun has been looking into fixing this in crrev.com/c/1878112 and
-we'll send it upstream as soon as we get something that should handle
-all the cases correctly.
-
-> > +	/* suspend FD HW */
-> > +	writel(0x0, fd->fd_base + MTK_FD_REG_OFFSET_INT_EN);
-> > +	writel(0x0, fd->fd_base + MTK_FD_REG_OFFSET_HW_ENABLE);
-> > +	clk_disable_unprepare(fd->fd_clk);
-> > +	dev_dbg(dev, "%s:disable clock\n", __func__);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mtk_fd_resume(struct device *dev)
-> > +{
-> > +	struct mtk_fd_dev *fd = dev_get_drvdata(dev);
-> > +	int ret;
-> > +
-> > +	if (pm_runtime_suspended(dev))
-> > +		return 0;
-> > +
-> > +	ret = clk_prepare_enable(fd->fd_clk);
-> > +	if (ret < 0) {
-> > +		dev_dbg(dev, "Failed to open fd clk:%d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* resume FD HW */
-> > +	writel(MTK_FD_SET_HW_ENABLE, fd->fd_base + MTK_FD_REG_OFFSET_HW_ENABLE);
-> > +	writel(0x1, fd->fd_base + MTK_FD_REG_OFFSET_INT_EN);
-> > +	dev_dbg(dev, "%s:enable clock\n", __func__);
-
-By the way, we need to kick the m2m framework here to schedule further
-jobs. Pi-Hsun's patch will also take care of this.
-
-[snip]
-
-> > +/* Set the face angle and directions to be detected */
-> > +#define V4L2_CID_MTK_FD_DETECT_POSE		(V4L2_CID_USER_MTK_FD_BASE + 1)
-> > +
-> > +/* Set image widths for an input image to be scaled down for face detection */
-> > +#define V4L2_CID_MTK_FD_SCALE_DOWN_IMG_WIDTH	(V4L2_CID_USER_MTK_FD_BASE + 2)
-> > +
-> > +/* Set image heights for an input image to be scaled down for face detection */
-> > +#define V4L2_CID_MTK_FD_SCALE_DOWN_IMG_HEIGHT	(V4L2_CID_USER_MTK_FD_BASE + 3)
-> > +
-> > +/* Set the length of scale down size array */
-> > +#define V4L2_CID_MTK_FD_SCALE_IMG_NUM		(V4L2_CID_USER_MTK_FD_BASE + 4)
-> > +
-> > +/* Set the detection speed, usually reducing accuracy. */
-> > +#define V4L2_CID_MTK_FD_DETECT_SPEED		(V4L2_CID_USER_MTK_FD_BASE + 5)
-> > +
-> > +/* Select the detection model or algorithm to be used. */
-> > +#define V4L2_CID_MTK_FD_DETECTION_MODEL		(V4L2_CID_USER_MTK_FD_BASE + 6)
-> > +
-> > +/* We reserve 16 controls for this driver. */
-> > +#define V4L2_CID_MTK_FD_MAX			16
-> > +
-> 
-> For these control IDs, I think the following should be remained as chip
-> specific controls.
-> V4L2_CID_MTK_FD_SCALE_DOWN_IMG_WIDTH,
-> V4L2_CID_MTK_FD_SCALE_DOWN_IMG_HEIGHT and V4L2_CID_MTK_FD_SCALE_IMG_NUM 
-> 
-> Hope there would be standardizing face detection api that cover the rest
-> controls: V4L2_CID_MTK_FD_DETECT_POSE, V4L2_CID_MTK_FD_DETECT_SPEED and
-> V4L2_CID_MTK_FD_DETECTION_MODEL
-> 
-> Would you have any suggestions on how to propose the standard face
-> detection apis?
-> 
-
-Given no follow up feedback from the community, I think we can keep them
-as driver-specific, but should make sure that they have some reasonable
-default values in case an application doesn't recognize them.
-
-Best regards,
-Tomasz
+diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm=
+/pinctrl-nsp-gpio.c
+index e67ae52023ad..cf77c6fe9f9c 100644
+--- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
++++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
+@@ -64,17 +64,16 @@
+  * @gc: GPIO chip
+  * @pctl: pointer to pinctrl_dev
+  * @pctldesc: pinctrl descriptor
+- * @irq_domain: pointer to irq domain
+  * @lock: lock to protect access to I/O registers
+  */
+ struct nsp_gpio {
+ 	struct device *dev;
+ 	void __iomem *base;
+ 	void __iomem *io_ctrl;
++	struct irq_chip irqchip;
+ 	struct gpio_chip gc;
+ 	struct pinctrl_dev *pctl;
+ 	struct pinctrl_desc pctldesc;
+-	struct irq_domain *irq_domain;
+ 	raw_spinlock_t lock;
+ };
+=20
+@@ -136,8 +135,8 @@ static inline bool nsp_get_bit(struct nsp_gpio *chip,=
+ enum base_type address,
+=20
+ static irqreturn_t nsp_gpio_irq_handler(int irq, void *data)
+ {
+-	struct nsp_gpio *chip =3D (struct nsp_gpio *)data;
+-	struct gpio_chip gc =3D chip->gc;
++	struct gpio_chip *gc =3D (struct gpio_chip *)data;
++	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
+ 	int bit;
+ 	unsigned long int_bits =3D 0;
+ 	u32 int_status;
+@@ -155,14 +154,14 @@ static irqreturn_t nsp_gpio_irq_handler(int irq, vo=
+id *data)
+ 		level &=3D readl(chip->base + NSP_GPIO_INT_MASK);
+ 		int_bits =3D level | event;
+=20
+-		for_each_set_bit(bit, &int_bits, gc.ngpio) {
++		for_each_set_bit(bit, &int_bits, gc->ngpio) {
+ 			/*
+ 			 * Clear the interrupt before invoking the
+ 			 * handler, so we do not leave any window
+ 			 */
+ 			writel(BIT(bit), chip->base + NSP_GPIO_EVENT);
+ 			generic_handle_irq(
+-				irq_linear_revmap(chip->irq_domain, bit));
++				irq_linear_revmap(gc->irq.domain, bit));
+ 		}
+ 	}
+=20
+@@ -171,7 +170,8 @@ static irqreturn_t nsp_gpio_irq_handler(int irq, void=
+ *data)
+=20
+ static void nsp_gpio_irq_ack(struct irq_data *d)
+ {
+-	struct nsp_gpio *chip =3D irq_data_get_irq_chip_data(d);
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
+ 	unsigned gpio =3D d->hwirq;
+ 	u32 val =3D BIT(gpio);
+ 	u32 trigger_type;
+@@ -189,7 +189,8 @@ static void nsp_gpio_irq_ack(struct irq_data *d)
+  */
+ static void nsp_gpio_irq_set_mask(struct irq_data *d, bool unmask)
+ {
+-	struct nsp_gpio *chip =3D irq_data_get_irq_chip_data(d);
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
+ 	unsigned gpio =3D d->hwirq;
+ 	u32 trigger_type;
+=20
+@@ -202,7 +203,8 @@ static void nsp_gpio_irq_set_mask(struct irq_data *d,=
+ bool unmask)
+=20
+ static void nsp_gpio_irq_mask(struct irq_data *d)
+ {
+-	struct nsp_gpio *chip =3D irq_data_get_irq_chip_data(d);
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
+ 	unsigned long flags;
+=20
+ 	raw_spin_lock_irqsave(&chip->lock, flags);
+@@ -212,7 +214,8 @@ static void nsp_gpio_irq_mask(struct irq_data *d)
+=20
+ static void nsp_gpio_irq_unmask(struct irq_data *d)
+ {
+-	struct nsp_gpio *chip =3D irq_data_get_irq_chip_data(d);
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
+ 	unsigned long flags;
+=20
+ 	raw_spin_lock_irqsave(&chip->lock, flags);
+@@ -222,7 +225,8 @@ static void nsp_gpio_irq_unmask(struct irq_data *d)
+=20
+ static int nsp_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ {
+-	struct nsp_gpio *chip =3D irq_data_get_irq_chip_data(d);
++	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
++	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
+ 	unsigned gpio =3D d->hwirq;
+ 	bool level_low;
+ 	bool falling;
+@@ -265,16 +269,6 @@ static int nsp_gpio_irq_set_type(struct irq_data *d,=
+ unsigned int type)
+ 	return 0;
+ }
+=20
+-static struct irq_chip nsp_gpio_irq_chip =3D {
+-	.name =3D "gpio-a",
+-	.irq_enable =3D nsp_gpio_irq_unmask,
+-	.irq_disable =3D nsp_gpio_irq_mask,
+-	.irq_ack =3D nsp_gpio_irq_ack,
+-	.irq_mask =3D nsp_gpio_irq_mask,
+-	.irq_unmask =3D nsp_gpio_irq_unmask,
+-	.irq_set_type =3D nsp_gpio_irq_set_type,
+-};
+-
+ static int nsp_gpio_direction_input(struct gpio_chip *gc, unsigned gpio)
+ {
+ 	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
+@@ -322,13 +316,6 @@ static int nsp_gpio_get(struct gpio_chip *gc, unsign=
+ed gpio)
+ 	return !!(readl(chip->base + NSP_GPIO_DATA_IN) & BIT(gpio));
+ }
+=20
+-static int nsp_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+-{
+-	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
+-
+-	return irq_linear_revmap(chip->irq_domain, offset);
+-}
+-
+ static int nsp_get_groups_count(struct pinctrl_dev *pctldev)
+ {
+ 	return 1;
+@@ -613,10 +600,9 @@ static const struct of_device_id nsp_gpio_of_match[]=
+ =3D {
+ static int nsp_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev =3D &pdev->dev;
+-	struct resource *res;
+ 	struct nsp_gpio *chip;
+ 	struct gpio_chip *gc;
+-	u32 val, count;
++	u32 val;
+ 	int irq, ret;
+=20
+ 	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &val)) {
+@@ -631,15 +617,13 @@ static int nsp_gpio_probe(struct platform_device *p=
+dev)
+ 	chip->dev =3D dev;
+ 	platform_set_drvdata(pdev, chip);
+=20
+-	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	chip->base =3D devm_ioremap_resource(dev, res);
++	chip->base =3D devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(chip->base)) {
+ 		dev_err(dev, "unable to map I/O memory\n");
+ 		return PTR_ERR(chip->base);
+ 	}
+=20
+-	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	chip->io_ctrl =3D devm_ioremap_resource(dev, res);
++	chip->io_ctrl =3D devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(chip->io_ctrl)) {
+ 		dev_err(dev, "unable to map I/O memory\n");
+ 		return PTR_ERR(chip->io_ctrl);
+@@ -659,44 +643,44 @@ static int nsp_gpio_probe(struct platform_device *p=
+dev)
+ 	gc->direction_output =3D nsp_gpio_direction_output;
+ 	gc->set =3D nsp_gpio_set;
+ 	gc->get =3D nsp_gpio_get;
+-	gc->to_irq =3D nsp_gpio_to_irq;
+=20
+ 	/* optional GPIO interrupt support */
+ 	irq =3D platform_get_irq(pdev, 0);
+ 	if (irq > 0) {
+-		/* Create irq domain so that each pin can be assigned an IRQ.*/
+-		chip->irq_domain =3D irq_domain_add_linear(gc->of_node, gc->ngpio,
+-							 &irq_domain_simple_ops,
+-							 chip);
+-		if (!chip->irq_domain) {
+-			dev_err(&pdev->dev, "Couldn't allocate IRQ domain\n");
+-			return -ENXIO;
+-		}
++		struct gpio_irq_chip *girq;
++		struct irq_chip *irqc;
+=20
+-		/* Map each gpio to an IRQ and set the handler for gpiolib. */
+-		for (count =3D 0; count < gc->ngpio; count++) {
+-			int irq =3D irq_create_mapping(chip->irq_domain, count);
++		irqc =3D &chip->irqchip;
++		irqc->name =3D dev_name(dev);
++		irqc->irq_ack =3D nsp_gpio_irq_ack;
++		irqc->irq_mask =3D nsp_gpio_irq_mask;
++		irqc->irq_unmask =3D nsp_gpio_irq_unmask;
++		irqc->irq_set_type =3D nsp_gpio_irq_set_type;
+=20
+-			irq_set_chip_and_handler(irq, &nsp_gpio_irq_chip,
+-						 handle_simple_irq);
+-			irq_set_chip_data(irq, chip);
+-		}
++		val =3D readl(chip->base + NSP_CHIP_A_INT_MASK);
++		val =3D val | NSP_CHIP_A_GPIO_INT_BIT;
++		writel(val, (chip->base + NSP_CHIP_A_INT_MASK));
+=20
+ 		/* Install ISR for this GPIO controller. */
+-		ret =3D devm_request_irq(&pdev->dev, irq, nsp_gpio_irq_handler,
+-				       IRQF_SHARED, "gpio-a", chip);
++		ret =3D devm_request_irq(dev, irq, nsp_gpio_irq_handler,
++				       IRQF_SHARED, "gpio-a", &chip->gc);
+ 		if (ret) {
+ 			dev_err(&pdev->dev, "Unable to request IRQ%d: %d\n",
+ 				irq, ret);
+-			goto err_rm_gpiochip;
++			return ret;
+ 		}
+=20
+-		val =3D readl(chip->base + NSP_CHIP_A_INT_MASK);
+-		val =3D val | NSP_CHIP_A_GPIO_INT_BIT;
+-		writel(val, (chip->base + NSP_CHIP_A_INT_MASK));
++		girq =3D &chip->gc.irq;
++		girq->chip =3D irqc;
++		/* This will let us handle the parent IRQ in the driver */
++		girq->parent_handler =3D NULL;
++		girq->num_parents =3D 0;
++		girq->parents =3D NULL;
++		girq->default_type =3D IRQ_TYPE_NONE;
++		girq->handler =3D handle_simple_irq;
+ 	}
+=20
+-	ret =3D gpiochip_add_data(gc, chip);
++	ret =3D devm_gpiochip_add_data(dev, gc, chip);
+ 	if (ret < 0) {
+ 		dev_err(dev, "unable to add GPIO chip\n");
+ 		return ret;
+@@ -705,15 +689,10 @@ static int nsp_gpio_probe(struct platform_device *p=
+dev)
+ 	ret =3D nsp_gpio_register_pinconf(chip);
+ 	if (ret) {
+ 		dev_err(dev, "unable to register pinconf\n");
+-		goto err_rm_gpiochip;
++		return ret;
+ 	}
+=20
+ 	return 0;
+-
+-err_rm_gpiochip:
+-	gpiochip_remove(gc);
+-
+-	return ret;
+ }
+=20
+ static struct platform_driver nsp_gpio_driver =3D {
+--=20
+2.23.0
 
