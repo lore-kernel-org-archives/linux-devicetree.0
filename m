@@ -2,144 +2,337 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0909CA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 07:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69355CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E2121D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 07:55:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PDyWp4Dp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Auk8BWFr"
+	by mail.kernel.org (Postfix) with ESMTP id 3DC84206DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437344AbfJYHzC (ORCPT
+        id S1730343AbfJYIBL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:55:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58910 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbfJYHzB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 03:55:01 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 66C8E60ECE; Fri, 25 Oct 2019 07:55:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571990100;
-        bh=U54r6LX0ssw+g8qjLKGHh1Yhi6Sj5o6iNs4ZAFLlmsk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PDyWp4DptCJ+c2ap2wzUz4fI0KeRZqy5pI23Xk5JUlPJrP1QjMto/IkhLFCBYatQe
-         w9j1qNCE8sTG1O267wV5k2aanJoSlQU6HvzIQmHDNe9rQ+lH/frXDVib9Vu+vmO2Lj
-         1ouHOhcYxMX8lur/8QIqJ/XkYdMk5DsdOufE5n3g=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 6AE8A60B19;
-        Fri, 25 Oct 2019 07:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571990099;
-        bh=U54r6LX0ssw+g8qjLKGHh1Yhi6Sj5o6iNs4ZAFLlmsk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Auk8BWFrXU39kNQrasYkgigZIAjmQlNoLTm9OhiHh7ON9HRrMXwVZ1zo2+kF7gOH7
-         vmyStNYQg1UbT+vi7H36qwXpW0br4wfITh06/G/y9JqQU8CcKvhLcp0cSQ+TPcZRnr
-         AJc8dDV5IDC7u9vk4EFjf92fgq9TpZOBwHpCyQSo=
+        Fri, 25 Oct 2019 04:01:11 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:54111 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730337AbfJYIBL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:01:11 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id NuWuizm1esBskNuWxiva6T; Fri, 25 Oct 2019 10:01:08 +0200
+Subject: Re: [PATCH v5 09/10] media: hantro: add initial i.MX8MQ support
+To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org,
+        kernel@pengutronix.de
+References: <20190612093915.18973-1-p.zabel@pengutronix.de>
+ <20190612093915.18973-10-p.zabel@pengutronix.de>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <ec9812f1-7592-b5e5-aa9c-8c37c3e8f630@xs4all.nl>
+Date:   Fri, 25 Oct 2019 10:01:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190612093915.18973-10-p.zabel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 25 Oct 2019 13:24:59 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
-In-Reply-To: <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
-References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
- <20191021033220.GG4500@tuxbook-pro>
- <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
- <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
- <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
-Message-ID: <81f57dc623fe8705cea52b5cb2612b32@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-CMAE-Envelope: MS4wfDm9Cq+C/w149r/KLeBVKimXWTdJFLUxFNQTTKR3eTy9dZHTE58/4e7alf3PIHJkXyGr1YSi0kCLF9p34NzlmCPQZUXXDkLmzEFgVrHlu72s6gPrFe+q
+ O6jGpKVxoc8HcORqWP670yb0DS+s/PeGMdxfOarO8HXKmyrnsQ6TTDkdV4+RT/rAakw+uSPtm7yHLg92myhDJdEM4JAoLhX44S7Ik8I/BnhqWzkm9jbpWoL2
+ Z/vyg37McrXpPjGbGwXTNMrCva98vRUDs7yzmulV1/2ky0p9kmaVsAxDnfDitkuHCUkbufVr8EgDX8Kt4aCO9hNWAH536bdfejzkbaIv754K2ssBkacSPncd
+ 3D2VnMvCfuvMywOAzt4x1mTiJOwNDYLjwiXDg5gTQx/A5rSQaF/a5YO8iHyk+8hdRFLrhY6RNqyvZ+C7nUjVX3R2xFl3xQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-25 04:03, Rob Herring wrote:
-> On Thu, Oct 24, 2019 at 6:00 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Hi Rob,
->> 
->> On 2019-10-24 01:19, Rob Herring wrote:
->> > On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
->> > <bjorn.andersson@linaro.org> wrote:
->> >>
->> >> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
->> >>
->> >> > LLCC behaviour is controlled by the configuration data set
->> >> > in the llcc-qcom driver, add the same for SC7180 SoC.
->> >> > Also convert the existing bindings to json-schema and add
->> >> > the compatible for SC7180 SoC.
->> >> >
->> >>
->> >> Thanks for the patches and thanks for the review Stephen. Series
->> >> applied
->> >
->> > And they break dt_binding_check. Please fix.
->> >
->> 
->> I did check this and think that the error log from dt_binding_check is
->> not valid because it says cache-level is a required property [1], but
->> there is no such property in LLCC bindings.
+Hi Philipp,
+
+I'm marking this patch and the next 10/10 patch as 'Changes Requested' in
+patchwork. Please repost once you are ready to add i.MX8 support for this.
+
+To be honest, I can't remember why the i.MX8MQ support hasn't been added yet.
+
+Regards,
+
+	Hans
+
+On 6/12/19 11:39 AM, Philipp Zabel wrote:
+> For now this just enables MPEG-2 decoding on the Hantro G1 on i.MX8MQ.
 > 
-> Then you should point out the issue and not just submit stuff ignoring
-> it. It has to be resolved one way or another.
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> --
+> Changes since v4 [1]:
+>  - Fix duplicated num_irqs initializer
+> 
+> [1] https://patchwork.linuxtv.org/patch/56802/
+> ---
+>  drivers/staging/media/hantro/Kconfig        |  16 +-
+>  drivers/staging/media/hantro/Makefile       |   3 +
+>  drivers/staging/media/hantro/hantro_drv.c   |   3 +
+>  drivers/staging/media/hantro/hantro_hw.h    |   1 +
+>  drivers/staging/media/hantro/imx8m_vpu_hw.c | 171 ++++++++++++++++++++
+>  5 files changed, 190 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/staging/media/hantro/imx8m_vpu_hw.c
+> 
+> diff --git a/drivers/staging/media/hantro/Kconfig b/drivers/staging/media/hantro/Kconfig
+> index be133bbaa68a..e0627ce454fc 100644
+> --- a/drivers/staging/media/hantro/Kconfig
+> +++ b/drivers/staging/media/hantro/Kconfig
+> @@ -1,19 +1,27 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  config VIDEO_HANTRO
+>  	tristate "Hantro VPU driver"
+> -	depends on ARCH_ROCKCHIP || COMPILE_TEST
+> +	depends on ARCH_MXC || ARCH_ROCKCHIP || COMPILE_TEST
+>  	depends on VIDEO_DEV && VIDEO_V4L2 && MEDIA_CONTROLLER
+>  	depends on MEDIA_CONTROLLER_REQUEST_API
+>  	select VIDEOBUF2_DMA_CONTIG
+>  	select VIDEOBUF2_VMALLOC
+>  	select V4L2_MEM2MEM_DEV
+>  	help
+> -	  Support for the Hantro IP based Video Processing Unit present on
+> -	  Rockchip SoC, which accelerates video and image encoding and
+> -	  decoding.
+> +	  Support for the Hantro IP based Video Processing Units present on
+> +	  Rockchip and NXP i.MX8M SoCs, which accelerate video and image
+> +	  encoding and decoding.
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called hantro-vpu.
+>  
+> +config VIDEO_HANTRO_IMX8M
+> +	bool "Hantro VPU i.MX8M support"
+> +	depends on VIDEO_HANTRO
+> +	depends on ARCH_MXC || COMPILE_TEST
+> +	default y
+> +	help
+> +	  Enable support for i.MX8M SoCs.
+> +
+>  config VIDEO_HANTRO_ROCKCHIP
+>  	bool "Hantro VPU Rockchip support"
+>  	depends on VIDEO_HANTRO
+> diff --git a/drivers/staging/media/hantro/Makefile b/drivers/staging/media/hantro/Makefile
+> index 1584acdbf4a3..b63dbccece75 100644
+> --- a/drivers/staging/media/hantro/Makefile
+> +++ b/drivers/staging/media/hantro/Makefile
+> @@ -10,6 +10,9 @@ hantro-vpu-y += \
+>  		hantro_jpeg.o \
+>  		hantro_mpeg2.o
+>  
+> +hantro-vpu-$(CONFIG_VIDEO_HANTRO_IMX8M) += \
+> +		imx8m_vpu_hw.o
+> +
+>  hantro-vpu-$(CONFIG_VIDEO_HANTRO_ROCKCHIP) += \
+>  		rk3288_vpu_hw.o \
+>  		rk3399_vpu_hw.o
+> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+> index 1d3af881d088..8049fd9ce07a 100644
+> --- a/drivers/staging/media/hantro/hantro_drv.c
+> +++ b/drivers/staging/media/hantro/hantro_drv.c
+> @@ -418,6 +418,9 @@ static const struct of_device_id of_hantro_match[] = {
+>  #ifdef CONFIG_VIDEO_HANTRO_ROCKCHIP
+>  	{ .compatible = "rockchip,rk3399-vpu", .data = &rk3399_vpu_variant, },
+>  	{ .compatible = "rockchip,rk3288-vpu", .data = &rk3288_vpu_variant, },
+> +#endif
+> +#ifdef CONFIG_VIDEO_HANTRO_IMX8M
+> +	{ .compatible = "nxp,imx8mq-vpu", .data = &imx8mq_vpu_variant, },
+>  #endif
+>  	{ /* sentinel */ }
+>  };
+> diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
+> index 3c361c2e9b88..fd6ad017a1cf 100644
+> --- a/drivers/staging/media/hantro/hantro_hw.h
+> +++ b/drivers/staging/media/hantro/hantro_hw.h
+> @@ -81,6 +81,7 @@ enum hantro_enc_fmt {
+>  extern const struct hantro_variant rk3399_vpu_variant;
+>  extern const struct hantro_variant rk3328_vpu_variant;
+>  extern const struct hantro_variant rk3288_vpu_variant;
+> +extern const struct hantro_variant imx8mq_vpu_variant;
+>  
+>  void hantro_watchdog(struct work_struct *work);
+>  void hantro_run(struct hantro_ctx *ctx);
+> diff --git a/drivers/staging/media/hantro/imx8m_vpu_hw.c b/drivers/staging/media/hantro/imx8m_vpu_hw.c
+> new file mode 100644
+> index 000000000000..7377e8c7c6eb
+> --- /dev/null
+> +++ b/drivers/staging/media/hantro/imx8m_vpu_hw.c
+> @@ -0,0 +1,171 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Hantro VPU codec driver
+> + *
+> + * Copyright (C) 2019 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +
+> +#include "hantro.h"
+> +#include "hantro_jpeg.h"
+> +#include "hantro_g1_regs.h"
+> +
+> +#define CTRL_SOFT_RESET		0x00
+> +#define RESET_G1		BIT(1)
+> +#define RESET_G2		BIT(0)
+> +
+> +#define CTRL_CLOCK_ENABLE	0x04
+> +#define CLOCK_G1		BIT(1)
+> +#define CLOCK_G2		BIT(0)
+> +
+> +#define CTRL_G1_DEC_FUSE	0x08
+> +#define CTRL_G1_PP_FUSE		0x0c
+> +#define CTRL_G2_DEC_FUSE	0x10
+> +
+> +static void imx8m_soft_reset(struct hantro_dev *vpu, u32 reset_bits)
+> +{
+> +	u32 val;
+> +
+> +	/* Assert */
+> +	val = readl(vpu->ctrl_base + CTRL_SOFT_RESET);
+> +	val &= ~reset_bits;
+> +	writel(val, vpu->ctrl_base + CTRL_SOFT_RESET);
+> +
+> +	udelay(2);
+> +
+> +	/* Release */
+> +	val = readl(vpu->ctrl_base + CTRL_SOFT_RESET);
+> +	val |= reset_bits;
+> +	writel(val, vpu->ctrl_base + CTRL_SOFT_RESET);
+> +}
+> +
+> +static void imx8m_clk_enable(struct hantro_dev *vpu, u32 clock_bits)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(vpu->ctrl_base + CTRL_CLOCK_ENABLE);
+> +	val |= clock_bits;
+> +	writel(val, vpu->ctrl_base + CTRL_CLOCK_ENABLE);
+> +}
+> +
+> +static int imx8mq_runtime_resume(struct hantro_dev *vpu)
+> +{
+> +	int ret;
+> +
+> +	ret = clk_bulk_prepare_enable(vpu->variant->num_clocks, vpu->clocks);
+> +	if (ret) {
+> +		dev_err(vpu->dev, "Failed to enable clocks\n");
+> +		return ret;
+> +	}
+> +
+> +	imx8m_soft_reset(vpu, RESET_G1 | RESET_G2);
+> +	imx8m_clk_enable(vpu, CLOCK_G1 | CLOCK_G2);
+> +
+> +	/* Set values of the fuse registers */
+> +	writel(0xffffffff, vpu->ctrl_base + CTRL_G1_DEC_FUSE);
+> +	writel(0xffffffff, vpu->ctrl_base + CTRL_G1_PP_FUSE);
+> +	writel(0xffffffff, vpu->ctrl_base + CTRL_G2_DEC_FUSE);
+> +
+> +	clk_bulk_disable_unprepare(vpu->variant->num_clocks, vpu->clocks);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Supported formats.
+> + */
+> +
+> +static const struct hantro_fmt imx8m_vpu_dec_fmts[] = {
+> +	{
+> +		.fourcc = V4L2_PIX_FMT_NV12,
+> +		.codec_mode = HANTRO_MODE_NONE,
+> +	},
+> +	{
+> +		.fourcc = V4L2_PIX_FMT_MPEG2_SLICE,
+> +		.codec_mode = HANTRO_MODE_MPEG2_DEC,
+> +		.max_depth = 2,
+> +		.frmsize = {
+> +			.min_width = 48,
+> +			.max_width = 1920,
+> +			.step_width = MPEG2_MB_DIM,
+> +			.min_height = 48,
+> +			.max_height = 1088,
+> +			.step_height = MPEG2_MB_DIM,
+> +		},
+> +	},
+> +};
+> +
+> +static irqreturn_t imx8m_vpu_g1_irq(int irq, void *dev_id)
+> +{
+> +	struct hantro_dev *vpu = dev_id;
+> +	enum vb2_buffer_state state;
+> +	u32 status;
+> +
+> +	status = vdpu_read(vpu, G1_REG_INTERRUPT);
+> +	state = (status & G1_REG_INTERRUPT_DEC_RDY_INT) ?
+> +		 VB2_BUF_STATE_DONE : VB2_BUF_STATE_ERROR;
+> +
+> +	vdpu_write(vpu, 0, G1_REG_INTERRUPT);
+> +	vdpu_write(vpu, G1_REG_CONFIG_DEC_CLK_GATE_E, G1_REG_CONFIG);
+> +
+> +	hantro_irq_done(vpu, 0, state);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int imx8mq_vpu_hw_init(struct hantro_dev *vpu)
+> +{
+> +	vpu->dec_base = vpu->reg_bases[0];
+> +	vpu->ctrl_base = vpu->reg_bases[vpu->variant->num_regs - 1];
+> +
+> +	return 0;
+> +}
+> +
+> +static void imx8m_vpu_g1_reset(struct hantro_ctx *ctx)
+> +{
+> +	struct hantro_dev *vpu = ctx->dev;
+> +
+> +	imx8m_soft_reset(vpu, RESET_G1);
+> +}
+> +
+> +/*
+> + * Supported codec ops.
+> + */
+> +
+> +static const struct hantro_codec_ops imx8mq_vpu_codec_ops[] = {
+> +	[HANTRO_MODE_MPEG2_DEC] = {
+> +		.run = hantro_g1_mpeg2_dec_run,
+> +		.reset = imx8m_vpu_g1_reset,
+> +		.init = hantro_mpeg2_dec_init,
+> +		.exit = hantro_mpeg2_dec_exit,
+> +	},
+> +};
+> +
+> +/*
+> + * VPU variants.
+> + */
+> +
+> +static const struct hantro_irq imx8mq_irqs[] = {
+> +	{ "g1", imx8m_vpu_g1_irq },
+> +	{ "g2", NULL /* TODO: imx8m_vpu_g2_irq */ },
+> +};
+> +
+> +static const char * const imx8mq_clk_names[] = { "g1", "g2", "bus" };
+> +static const char * const imx8mq_reg_names[] = { "g1", "g2", "ctrl" };
+> +
+> +const struct hantro_variant imx8mq_vpu_variant = {
+> +	.dec_fmts = imx8m_vpu_dec_fmts,
+> +	.num_dec_fmts = ARRAY_SIZE(imx8m_vpu_dec_fmts),
+> +	.codec = HANTRO_MPEG2_DECODER,
+> +	.codec_ops = imx8mq_vpu_codec_ops,
+> +	.init = imx8mq_vpu_hw_init,
+> +	.runtime_resume = imx8mq_runtime_resume,
+> +	.irqs = imx8mq_irqs,
+> +	.num_irqs = ARRAY_SIZE(imx8mq_irqs),
+> +	.clk_names = imx8mq_clk_names,
+> +	.num_clocks = ARRAY_SIZE(imx8mq_clk_names),
+> +	.reg_names = imx8mq_reg_names,
+> +	.num_regs = ARRAY_SIZE(imx8mq_reg_names)
+> +};
 > 
 
-I did not ignore it. When I ran the dt-binding check locally, it did not
-error out and just passed on [1] and it was my bad that I did not check
-the entire build logs to see if llcc dt binding check had some warning 
-or
-not. But this is the usual case where most of us don't look at the 
-entire
-build logs to check if there is a warning or not. We notice if there is 
-an
-immediate exit/fail in case of some warning/error. So it would be good 
-if
-we fail the dt-binding check build if there is some warning/error or 
-atleast
-provide some option to strict build to fail on warning, maybe there is 
-already
-a flag to do this?
-
-After submitting the patch, I noticed this build failure on
-patchwork.ozlabs.org and was waiting for your reply.
-
-[1] https://paste.ubuntu.com/p/jNK8yfVkMG/
-
-> If you refer to the DT spec[1], cache-level is required. The schema is
-> just enforcing that now. It's keying off the node name of
-> 'cache-controller'.
-> 
-
-This is not L2 or L3 cache, this is a system cache (last level cache) 
-shared by
-clients other than just CPU. So I don't know how do we specify 
-cache-level for
-this, let me know if you have some pointers.
-
--Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
