@@ -2,90 +2,102 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C6ECA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 06:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E6ECA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 06:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF7A221D81
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 06:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8407621929
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 06:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404603AbfJYGNL (ORCPT
+        id S2404297AbfJYG1F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 02:13:11 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:39195 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404602AbfJYGNK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 02:13:10 -0400
-Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 25 Oct 2019
- 14:13:20 +0800
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 0/4] add meson secure watchdog driver
-Date:   Fri, 25 Oct 2019 14:13:00 +0800
-Message-ID: <1571983984-11771-1-git-send-email-xingyu.chen@amlogic.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 25 Oct 2019 02:27:05 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60301 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfJYG1E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 02:27:04 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iNt3s-0006d2-8f; Fri, 25 Oct 2019 08:27:00 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iNt3r-0007BN-Bg; Fri, 25 Oct 2019 08:26:59 +0200
+Date:   Fri, 25 Oct 2019 08:26:59 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        darshak.patel@einfochips.com, linux-imx@nxp.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org, prajose.john@einfochips.com
+Subject: Re: [PATCH 1/3] dt-bindings: arm: Add devicetree binding for Thor96
+ Board
+Message-ID: <20191025062659.fyze6zt4jg6uzqxz@pengutronix.de>
+References: <20191024144235.3182-1-manivannan.sadhasivam@linaro.org>
+ <20191024144235.3182-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.22]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024144235.3182-2-manivannan.sadhasivam@linaro.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:26:32 up 160 days, 12:44, 101 users,  load average: 0.21, 0.08,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The watchdog controller on the Meson-A/C series SoCs is moved to secure world,
-We have to call SMC instruction to trap the ATF for watchdog operation. These
-operations are different from previous SoCs, so we introduce a new watchdog
-driver to support this kind of SoCs.
+Hi Manivannan,
 
-Changes since v2 at [1]:
-- remove useless dependency in Kconfig
-- return zero when getting left time value fails
+On 19-10-24 20:12, Manivannan Sadhasivam wrote:
+> Add devicetree binding for Thor96 Board from Einfochips. This board is
+> one of the 96Boards Consumer Edition platform powered by NXP i.MX8MQ SoC.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 1b4b4e6573b5..8016174d5e49 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -239,6 +239,7 @@ properties:
+>          items:
+>            - enum:
+>                - boundary,imx8mq-nitrogen8m # i.MX8MQ NITROGEN Board
+> +              - einfochips,imx8mq-thor96  # i.MX8MQ Thor96 Board
 
-Changes since v1 at [0]:
-- add a new dependency in Kconfig
-- simplify/add the return operation
-- remove useless ping operation when setting the timeout
-- fix some return values
-- fix the license statement
+Do we need to add a vendor patch too?
 
-[0]:https://lore.kernel.org/linux-amlogic/1570874721-36077-1-git-send-email-xingyu.chen@amlogic.com
-[1]:https://lore.kernel.org/linux-amlogic/1571387622-35132-1-git-send-email-xingyu.chen@amlogic.com
+Regards,
+  Marco
 
-Xingyu Chen (4):
-  firmware: meson_sm: add new SMC ID support for accessing secure
-    watchdog
-  dt-bindings: watchdog: add new binding for meson secure watchdog
-  watchdog: add meson secure watchdog driver
-  arm64: dts: a1: add secure watchdog controller
-
- .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   |  34 ++++
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |   6 +
- drivers/firmware/meson/meson_sm.c                  |   1 +
- drivers/watchdog/Kconfig                           |  16 ++
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/meson_sec_wdt.c                   | 187 +++++++++++++++++++++
- include/linux/firmware/meson/meson_sm.h            |   1 +
- 7 files changed, 246 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
- create mode 100644 drivers/watchdog/meson_sec_wdt.c
+>                - fsl,imx8mq-evk            # i.MX8MQ EVK Board
+>                - purism,librem5-devkit     # Purism Librem5 devkit
+>                - solidrun,hummingboard-pulse # SolidRun Hummingboard Pulse
+> -- 
+> 2.17.1
+> 
+> 
+> 
 
 -- 
-2.7.4
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
