@@ -2,86 +2,148 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86FACA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3A7CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CC621D7B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3991321D7B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572037292;
-	bh=QSfeufqkLo/VaEYniG5pHdy1+oaNgFGvzxDuBqks1dU=;
+	s=default; t=1572037804;
+	bh=ma5lEWgZsb9cpEZxkWd+ZbEa30xCM1OojMepMAP0oAs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GeMLeFfDxC5X5TGzGpWWCWNOMw/ETxIiO+jmn2s+z3jF7WhT92Lziz9/BrlB+xKso
-	 /KzVadNNQTJKb+f0mhKgKhyYnbsgC3m/hk9lhKauzGE5fJGdIA/bTUYUBLrcgf+4d7
-	 4jDCP5gI/BkXWgrvhzybo2vUCUl5OwquxqPtQwlQ=
+	b=WfGYezEF5EW0mplaD4u5L1zwLoxzW3Ainp72tOJqWzFXnqQo6n40NDQPXCgCPAlzi
+	 6cQ1ME6u48wVhEgYZi663nyOobYmK+fJ/XJmF4a0Lag1TOCDHwSTNn7vd9PgGoHkzE
+	 F5lYix/HlmNu6SHCiavLjgtqSjd63DNSOYf5NfUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbfJYVBc (ORCPT
+        id S1725881AbfJYVKD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:01:32 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39234 "EHLO
+        Fri, 25 Oct 2019 17:10:03 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34100 "EHLO
         mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfJYVBb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 17:01:31 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v138so2508161oif.6;
-        Fri, 25 Oct 2019 14:01:31 -0700 (PDT)
+        with ESMTP id S1725283AbfJYVKD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 17:10:03 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 83so2539115oii.1;
+        Fri, 25 Oct 2019 14:10:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3GZj/07wyh3a92hj1bd5hj3RDEpvatv0XrhY5uaQn7g=;
-        b=P+3qbgMqadNoY6L5YoU8TMyYbuCVQoTmlYY9ObJeO+xwFbOevLnbKg7ydMsKjBYZTl
-         JNaawQN3WfzwJW7N9Vp8jkcQMV09uPokRkbnolQQZrLz0M2VLrrJRGa+1PVGXq2oVumd
-         ysdkw3dqhe1XkdZwSN+7mTKgvweN0aR2Bph5v7nD9KcFkW+UDPWCYO/8Db1euEdI094e
-         Ld922GYLo7/xGRZxWNhrx78Ga0MDxqV1a5OLfkMWoJcrjR1kRR/j+NT/o/FO4KJkhve+
-         gGgpiDTLYp78Q/7261HqnPy92GbHit4UY6UWRpbTfLCP3iPnc524/iCUVI0Odogq44jp
-         DgGw==
-X-Gm-Message-State: APjAAAUk7esV+5AyHWt+gLAJE0bA7L31wpSZZbOf30YyYp31knnp08zJ
-        JjiYB226yCKDmBIXeFPTFg==
-X-Google-Smtp-Source: APXvYqyweattnE1/2tTLytH55gaAaW+EA9Y+8YXDzO7mVMdzeeqlnIriXwq3vJ1VvxxICllZfVpAUQ==
-X-Received: by 2002:aca:e0d5:: with SMTP id x204mr4880654oig.112.1572037290729;
-        Fri, 25 Oct 2019 14:01:30 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=d7m38wEP3cWWPKZavVh4QqPT2NxfQZN9J+ih9n10QDc=;
+        b=Bgj0Hb5kkq7sw5xcNCEvNYyFvw18S7PrMLu3rewoGpPByjM2NazFD0XL6g424LJSML
+         aIgI38S5G94S+DUdAA4Xgd0Pu1ftCB3ZmpHKOS1PdY5PWXUIuOCpRbyRmYA+0PGOcC+f
+         Fhw4l7augwpNJd7XIxsR1e41XbHfZvbQVg508pwkNOx56CHriEO2i+jNFMzdRzkqMgL8
+         wtO05cSTFQkyBpqK3YZAu2RwaYgQhDA1GlgP9+C2B2KZ5mNDjq3Y9UABfgIMrGPXZLsC
+         Q294uao7YxDKVW2RImTsAtutPUDAmCGNprI2Zqx9f+3XIY/K8/eAPjlsgSRKhya6ZG6c
+         zfSg==
+X-Gm-Message-State: APjAAAXlQbZr9Zcoc4G55tHIgumMS4sgaQF6+m52pwTEwST32jIbAcEh
+        f4jRn/IrE688MbKKxT8Te0l8W6g=
+X-Google-Smtp-Source: APXvYqwMdDzj7VpTwlpKBzbm1vx4GRa3h4b/Ol8HbT8QPQu0jiUwRDiRAWIWfNdFfGcGA55gSFCUgQ==
+X-Received: by 2002:aca:7595:: with SMTP id q143mr4820191oic.103.1572037802036;
+        Fri, 25 Oct 2019 14:10:02 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q9sm1077094otc.53.2019.10.25.14.01.29
+        by smtp.gmail.com with ESMTPSA id b12sm1095339otp.72.2019.10.25.14.10.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:01:29 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 16:01:28 -0500
+        Fri, 25 Oct 2019 14:10:01 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 16:10:00 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
-        lee.jones@linaro.org, vinod.koul@linaro.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
-        bgoswami@codeaurora.org, linux-gpio@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 10/11] ASoC: dt-bindings: Add compatible for DB845c
- and Lenovo Yoga
-Message-ID: <20191025210128.GA7212@bogus>
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-11-srinivas.kandagatla@linaro.org>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2] dt-binding: eeprom: at24: add supply properties
+Message-ID: <20191025211000.GA8235@bogus>
+References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
+ <20191018082557.3696-2-bibby.hsieh@mediatek.com>
+ <CAMpxmJW_HQnL8i5FnKcVUs=ZyrnaFe6X+oqG38-v=O05d5vNxw@mail.gmail.com>
+ <CAAFQd5CA_53uDo6QdRcvqJ5shUG5K25f+WXCn9OYMHfSgwLMSA@mail.gmail.com>
+ <CAMpxmJWzEER4iBo9-WhmumuH1nmWYvy=xud+=7wzp3op8-P7uw@mail.gmail.com>
+ <CAAFQd5DNdmm4sn1JNPhnuMor50ZP4EJmymtS4hB4WkNHmKOs6w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191018001849.27205-11-srinivas.kandagatla@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAFQd5DNdmm4sn1JNPhnuMor50ZP4EJmymtS4hB4WkNHmKOs6w@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 18 Oct 2019 01:18:48 +0100, Srinivas Kandagatla wrote:
-> This patch adds compatible strings for DB845c and Lenovo Yoga C630
-> soundcard. Based on this compatible strings common machine driver
-> will be in better position to setup board specific configuration.
+On Thu, Oct 24, 2019 at 06:32:38PM +0900, Tomasz Figa wrote:
+> On Thu, Oct 24, 2019 at 5:40 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> >
+> > czw., 24 paź 2019 o 09:02 Tomasz Figa <tfiga@chromium.org> napisał(a):
+> > >
+> > > On Thu, Oct 24, 2019 at 3:22 PM Bartosz Golaszewski
+> > > <bgolaszewski@baylibre.com> wrote:
+> > > >
+> > > > pt., 18 paź 2019 o 10:26 Bibby Hsieh <bibby.hsieh@mediatek.com> napisał(a):
+> > > > >
+> > > > > In some platforms, they disable the power-supply of eeprom and i2c due
+> > > > > to power consumption reduction.
+> > > > >
+> > > > > This patch add two supply properties: vcc-supply, i2c-supply.
+> > > > >
+> > > > > Changes since v1:
+> > > > >  - change supply name
+> > > > >  - rebase to next
+> > > > >
+> > > > > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/eeprom/at24.yaml | 8 ++++++++
+> > > > >  1 file changed, 8 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> > > > > index e8778560d966..578487a5d9b7 100644
+> > > > > --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> > > > > @@ -167,6 +167,14 @@ properties:
+> > > > >      minimum: 1
+> > > > >      maximum: 8
+> > > > >
+> > > > > +  vcc-supply:
+> > > > > +    description:
+> > > > > +      phandle of the regulator that provides the supply voltage.
+> > > > > +
+> > > > > +  i2c-sypply:
+> > > > > +    description:
+> > > > > +      phandle to the regulator that provides power to i2c.
+> > > > > +
+> > > >
+> > > > Something was bothering me about this patch so I came back to take a
+> > > > look. Can you explain what i2c actually stands for in this doc? I hope
+> > > > I'm misinterpreting something and it isn't that the driver disables
+> > > > the regulator powering the i2c bus controller?
+> > >
+> > > In our case it's the regulator that the I2C bus is pulled up to.
+> > >
+> >
+> > Then it has nothing to do with a generic EEPROM driver IMO. I think
+> > you need to add the control for this regulator to your i2c controller
+> > driver and create a power domain where the EEPROM would be lower in
+> > hierarchy.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  Documentation/devicetree/bindings/sound/qcom,sdm845.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> While I agree that the generic EEPROM driver may not be the best place
+> to do it, neither is a driver for a specific SoC i2c controller. The
+> hardware design is not specific to any particular i2c controller.
 > 
+> Perhaps we need the generic i2c core to take into account an
+> i2c-supply? Wolfram, any thoughts on this?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Sounds good to me. Maybe 'bus-supply' instead to indicate it's supposed 
+to be for the bus and not other things. It should reside in the I2C 
+controller's node (or mux ports) though.
+
+Rob
