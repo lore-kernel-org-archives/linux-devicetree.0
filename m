@@ -2,86 +2,129 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9BECA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF852CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6975221D82
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEDA321D81
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 20:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572034225;
-	bh=6FDizwZ3MQTwoS4h+bYYVMkIgdMsbhU5jZT9IMpj0lU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2DADpeGgK2VaBqDG/Or2H200T2MNG/KO/oqosZnVBRF0NE1w0P72ZIpG2rwkJrBRX
-	 sFq9YTlD/3OHAWDtwiVWOpsdbyRQqcMyJnfsCwY7zfAhEeTqHZhOQ3AsoVmjh4iKZT
-	 b5YS0ywz18u1BS4VyboTcytQHhZqTNmzCRFp0H4g=
+	s=default; t=1572034789;
+	bh=0zDH0Fbrijq1CDlKb/eS9UolHwf/vrJ4mzyY2QBJsBI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Yrwe+xZy3dMv+t1GjHiHsPl1wWEoCmp49ho0TC67LyWjCwZkis7thUxn4bcGn8mNV
+	 m5Sccuw7b+mHOZRDRWa2GUFCXVkYywla8faIVe0d7HP7PKII9fVDbRU5e4R6rP+EZ1
+	 arLFT2dp0KXX2G2CCNXcbLWmjdbehO2EzX8z++M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfJYUKY (ORCPT
+        id S1728022AbfJYUTt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:10:24 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39187 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfJYUKY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 16:10:24 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v138so2424521oif.6;
-        Fri, 25 Oct 2019 13:10:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E0aSqqQFk6FlgluTswnJmfefV24lB3iric22ShoTlBg=;
-        b=og3+YXwYri52qPiyrZclCqtkRW4UZpbMTlXnFUvzpMwn1Ly331SfWq5Eg0RumAIrgs
-         4RiMGHYBcAn0xDrDYVSwHB8YRBs8nbUyJoB7SOH42Oy0URHgjl6TM/4CIs/Mk2BHydkJ
-         tWMMZAbrUCmM1TTToMiRUQhARl0+fJvobt7SLFjRP3FEeKdwIvsoF67Zy4FR2FYhBQoh
-         VnEhpUO6yY6s84Ca1xYYTQQEhrkh2hfI0OXw/hx5zw4iEyAXzp5QXRi2Cs57yI6rQS+w
-         pYHADuUKgw7Sxjj3XTjKBnaoYy4TO0ndE6fgrHIu3ekVJu3XDPnEwvYZIjcjc3LoE7GR
-         R+3A==
-X-Gm-Message-State: APjAAAW71xKelnKt4qG9jKp60PC7alTRjmXLH7f5xUq42cPbXdWZG8k+
-        uALc/DXrfuWOYo8L8puGq/tpmOo=
-X-Google-Smtp-Source: APXvYqy/HeraBjME9wYcyWenGUt9mnz1kGw6zr3COTFo8MFtdYiDJEIygclcgNx9MS4BUfE0lclDBg==
-X-Received: by 2002:aca:5116:: with SMTP id f22mr4629829oib.30.1572034223854;
-        Fri, 25 Oct 2019 13:10:23 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v6sm855896oie.4.2019.10.25.13.10.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 13:10:23 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 15:10:22 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     felipe.balbi@linux.intel.com, gregkh@linuxfoundation.org,
-        pawell@cadence.com, peter.chen@nxp.com, nsekhar@ti.com,
-        kurahul@cadence.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: Add binding for the TI wrapper
- for Cadence USB3 controller
-Message-ID: <20191025201022.GA28229@bogus>
-References: <20191024114717.30984-1-rogerq@ti.com>
- <20191024114717.30984-2-rogerq@ti.com>
+        Fri, 25 Oct 2019 16:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbfJYUTt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Oct 2019 16:19:49 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE3821E6F;
+        Fri, 25 Oct 2019 20:19:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572034787;
+        bh=0zDH0Fbrijq1CDlKb/eS9UolHwf/vrJ4mzyY2QBJsBI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UqeviibTuNZv2SaUyRGiB0nQifeY/W01PGm9s6G/Tvxny0L1/LfoH23izCCNYZcPU
+         N82wKD6IFXMHPN6icjNVj+/HPv5IvXnZjRkL3mPFMBg5rHzQXVlCi3b+e7zr8iW165
+         vpp9AXWeviqIGQAfeFQvRZ278d69OpkhbTEl6dWg=
+Received: by mail-qt1-f182.google.com with SMTP id c21so5112295qtj.12;
+        Fri, 25 Oct 2019 13:19:47 -0700 (PDT)
+X-Gm-Message-State: APjAAAUMHNP+4F0vMMQKYK+CBVCz7wIWoPhTwNvp4YBih4N0z5/9LaHR
+        e7MflwU6HuxzYtGWS1blDElI/9EGEyumbHIHfA==
+X-Google-Smtp-Source: APXvYqzLV0DNiSIgrqSeSFTkfH8awvr/ASCKRP7JD+/ltAUIM+wC1d0zfF+U7OiEUa1J3NlXBL4cFdbcYR0OTsXOWoQ=
+X-Received: by 2002:ad4:518d:: with SMTP id b13mr356862qvp.79.1572034786614;
+ Fri, 25 Oct 2019 13:19:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024114717.30984-2-rogerq@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com>
+ <1570695678-42623-2-git-send-email-jianxin.pan@amlogic.com>
+ <20191014173900.GA6886@bogus> <622c7785-8254-5473-6b35-7287830f3c60@amlogic.com>
+In-Reply-To: <622c7785-8254-5473-6b35-7287830f3c60@amlogic.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 25 Oct 2019 15:19:35 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
+Message-ID: <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 1/4] dt-bindings: power: add Amlogic secure
+ power domains bindings
+To:     Jianxin Pan <jianxin.pan@amlogic.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 24 Oct 2019 14:47:16 +0300, Roger Quadros wrote:
-> TI platforms have a wrapper module around the Cadence USB3
-> controller. Add binding information for that.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Cc: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/usb/ti,j721e-usb.yaml | 86 +++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
-> 
+On Wed, Oct 16, 2019 at 6:26 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote=
+:
+>
+> Hi Rob,
+>
+> On 2019/10/15 1:39, Rob Herring wrote:
+> > On Thu, Oct 10, 2019 at 04:21:15AM -0400, Jianxin Pan wrote:
+> >> Add the bindings for the Amlogic Secure power domains, controlling the
+> >> secure power domains.
+> >>
+> >> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which t=
+he
+> >> power domain registers are in secure world.
+> >>
+> >> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> >> ---
+> >>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 +++++++++++++=
++++++++++
+> >>  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++=
+++++
+> >>  2 files changed, 74 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,me=
+son-sec-pwrc.yaml
+> >> +
+> >> +  secure-monitor:
+> >> +    description: phandle to the secure-monitor node
+> >> +    $ref: /schemas/types.yaml#/definitions/phandle
+> >
+> > Why not just a child node of this node?
+> >
+> Thanks for the review.
+>
+> I followed the style of the previous series of meson=EF=BC=9A
+>
+>   46         efuse: efuse {
+>   47                 compatible =3D "amlogic,meson-gxbb-efuse";
+>   48                 clocks =3D <&clkc CLKID_EFUSE>;
+>   49                 #address-cells =3D <1>;
+>   50                 #size-cells =3D <1>;
+>   51                 read-only;
+>   52                 secure-monitor =3D <&sm>;
+>   53         };
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Looks like that was not reviewed by me and is only in linux-next.
+Please make functions exposed by secure world a child of the secure
+firmware node.
+
+Really for power domains, you only need to add a '#power-domain-cells'
+property to the secure monitor node.
+
+Rob
