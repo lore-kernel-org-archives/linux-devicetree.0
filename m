@@ -2,80 +2,116 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909C3CA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C45CA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F69A21D71
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571993739;
-	bh=5i3d+HY/V9+fI+uU7h1tX+fWD57IhBHMQfmMyo6jW0g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pAWadEvnseWA8YAYvw8w22EEVix+VodYMwZywW73QjPHhNJbso2e3oUQBpV3rXGB8
-	 qahqMFfUiXhzxmApJOT8WvrWUKm1lG7XHEuwipIbsElJef+PAdJabcjURmRm7Ti/5M
-	 nFK4OMhm6k6oqllahqc/j+OM/WTp/i5AWfoN0sU0=
+	by mail.kernel.org (Postfix) with ESMTP id 5503021D71
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 08:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438065AbfJYIzf (ORCPT
+        id S2438180AbfJYI5s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:55:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437607AbfJYIze (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:55:34 -0400
-Received: from dragon (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45D2521D7B;
-        Fri, 25 Oct 2019 08:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571993734;
-        bh=5i3d+HY/V9+fI+uU7h1tX+fWD57IhBHMQfmMyo6jW0g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FIQ/dERdy5OkfSnkwC/QgV1xafO+vBptMDHo96N++fPAbjhSmlkAGTYvw3jNb1VFi
-         S7bP4XDAcKBi1T5YIgLuBu8vztAbKdPBY4ZeZ2/wEoYtZJxRlqFZ3bdlB1F17+zKeE
-         pfirmEbL1hEYAsGqA5dT8DKdV+kpfLy+KRJlkJdo=
-Date:   Fri, 25 Oct 2019 16:55:17 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2] dts: Disable DMA support on the BK4 vf610 device's
- fsl_lpuart driver
-Message-ID: <20191025085515.GH3208@dragon>
-References: <20191010090802.16383-1-lukma@denx.de>
+        Fri, 25 Oct 2019 04:57:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35066 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfJYI5s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 04:57:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z6so1526366otb.2;
+        Fri, 25 Oct 2019 01:57:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hNHqqS4Uc9aqlwR5IUsahyveCLTdtc01wm1P+k/r7h0=;
+        b=uOH5WMqc0j/GBrfMhauo4B5kZSMX6KMnz0uJSYZZcc0i5RSUN73uGrYC0/Q/F21lyQ
+         bOSBMDYd+OJFR/MMyYCONd+5cnzaYqqVWxXMtX3Smz/morDlG2SzXwTE9I/4sCA4L2ti
+         MH/K8/4ucucscwF4oAx0KGfEZqRgTGg5kZ0G5L9cxjJIWfa1O9CE47/KBclZ7RNNe30D
+         mM1hbIAexEbW6op8EsNBesfpF5+MF1ttj/F87P+9KSJM6pARV/AVnWcawmWnNRVCX3Xi
+         3JJUzHC+Rpiyxg4U2GIKVjOFGkYulR1WpIqRtDE7NNjWGD4BVEH46pNmMC7UPpXpMMeX
+         LN2w==
+X-Gm-Message-State: APjAAAX1puTDH4ezYay+BE+FfBAsU87o3A2q7lCQN1Pa/nNowpDSDbr6
+        uRJiMqmcUb11GVdcTVSreFRNSs8XSIt0sqfvHPw=
+X-Google-Smtp-Source: APXvYqwXZ5hSYo/AaHShqXVhnQPKDDrnniy5ZvaPofKAgeVdRshvXovvQWZivoZJvC/1yJ44x0fPG9nRDYpCtv3h8RQ=
+X-Received: by 2002:a05:6830:1bc3:: with SMTP id v3mr951363ota.145.1571993865998;
+ Fri, 25 Oct 2019 01:57:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010090802.16383-1-lukma@denx.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <1571915821-1620-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1571915821-1620-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdU=58w=4A0WcqytFfyV_Q11BgYaDNsMsA8Z15mnm--ang@mail.gmail.com>
+ <TYAPR01MB4544D5F2A77FBBA7B0AF7EBDD8650@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <CAMuHMdV7upJi78CymxVYKzDdFWb-qHrnohfnULbNfXjF-QXKRA@mail.gmail.com> <TYAPR01MB4544D173479B25DB73CBFF3CD8650@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB4544D173479B25DB73CBFF3CD8650@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 25 Oct 2019 10:57:34 +0200
+Message-ID: <CAMuHMdWJSjG9h_T75br2OHh6bGeUt2o=MrP1sFdA9f_jm47Hfw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] clk: renesas: rcar-usb2-clock-sel: Add multiple
+ clocks management
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:08:02AM +0200, Lukasz Majewski wrote:
-> This change disables the DMA support (RX/TX) on the NXP's fsl_lpuart
-> driver - the PIO mode is used instead. This change is necessary for better
-> robustness of BK4's device use cases with many potentially interrupted
-> short serial transfers.
-> 
-> Without it the driver hangs when some distortion happens on UART lines.
-> 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Hi Shimoda-san,
 
-Subject prefix should be 'ARM: dts: ...'.  I fixed it up and applied the
-patch.
+On Fri, Oct 25, 2019 at 10:44 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> > From: Geert Uytterhoeven, Sent: Friday, October 25, 2019 4:47 PM
+> > On Fri, Oct 25, 2019 at 3:36 AM Yoshihiro Shimoda
+> > <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > > > From: Geert Uytterhoeven, Sent: Thursday, October 24, 2019 8:35 PM
+> > > <snip>
+> > > > > --- a/drivers/clk/renesas/rcar-usb2-clock-sel.c
+> > > > > +++ b/drivers/clk/renesas/rcar-usb2-clock-sel.c
+> >
+> > > > > @@ -131,6 +156,14 @@ static int rcar_usb2_clock_sel_probe(struct platform_device *pdev)
+> > > > >         pm_runtime_enable(dev);
+> > > > >         pm_runtime_get_sync(dev);
+> > > >
+> > > > pm_runtime_get_sync() will have already enabled the first module clock listed in
+> > > > the DT "clocks" property.
+> > > >
+> > > > If you want the driver to manage all clocks itself, perhaps the PM Runtime
+> > > > calls should be dropped?
+> > >
+> > > I'm thinking PM Runtime calls are related to power domain control so that we cannot
+> > > drop it. Or, since the hardware is the Always-on domain, can we drop it anyway?
+> >
+> > That's right: if the hardware block ever ends up in a non-always-on
+> > power domain,
+> > you won't have a choice but to use PM Runtime.
+>
+> So, should I keep the PM Runtime calls?
 
-Shawn
+I think they're good to have.
+Just make sure the PM Runtime status matches the state of the other
+clocks.
+
+> # In such the case, I should add to describe power-domains property into
+> # the dt-binding doc though :)
+
+Indeed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
