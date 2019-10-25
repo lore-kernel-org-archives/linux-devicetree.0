@@ -2,177 +2,157 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041E4CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AE6CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 23:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C0121872
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47E221872
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 23:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NMVL0nKx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DO2SmefH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfJYWue (ORCPT
+        id S1725897AbfJYXcn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 18:50:34 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35167 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbfJYWue (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 18:50:34 -0400
-Received: by mail-il1-f196.google.com with SMTP id p8so3218599ilp.2
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 15:50:32 -0700 (PDT)
+        Fri, 25 Oct 2019 19:32:43 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35943 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfJYXcm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 19:32:42 -0400
+Received: by mail-ed1-f68.google.com with SMTP id bm15so3145796edb.3;
+        Fri, 25 Oct 2019 16:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tKLlAY4Xw7xSeIaP4a35tzIajquRX72GBLi2rGXctCA=;
-        b=NMVL0nKxTd83P4SmTdQ4y6M3dnl6xh2afGk90De61SMHV1pSozOqiNjC43vJR7j3Bp
-         UoXkubWBdfT9AhAfBJcTwA2vdWaZqH2mHy9WbJahWI9acAnfjWQU3JTQQoD+Ib7VYXkl
-         rWqfJx9yBDt8jEwMGmsJ9PSt962tlyDtUiXH4=
+        bh=53yH7/uaXqdrwxgYB9Z47HSHpvLxk3mUn6GWgjoDX1k=;
+        b=DO2SmefHOAxn4ZRC/98N4YdzE/zPlygnI3sdZ/lMw8GE1Y0Jn+4ecitQL7PrEYjGNw
+         nQO6urZcflUp3c+zcDVjzayJv+IrElZA2btlmB3VaFWiL3jmKwLwSiQ1OxdhcsXuZI+L
+         g+eV3KjvUpPKvnhtHgLRTuKuPpD0jg+V0ZN5qnxWgTpnXqsP+SDsqu0W0Bzb+stVXhgk
+         RWjG2kHGTXqK0jCfgqtjCSzL8QQ4chhr/EyVRDBCuEXwVFT16w+jM6bUBju/OUqIoJDj
+         KOp0FPD9cjau7zgCUdkP/nQ5aLjrK2hB9iKTIbO5A4dd0tc0wNwqKQoR4ZxZ6SNkIybw
+         gWlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tKLlAY4Xw7xSeIaP4a35tzIajquRX72GBLi2rGXctCA=;
-        b=Qjal3WAO4me0cl1vcgv8/wIQksW9mXF9KIGkhOEcaPX83bz0ev1joAnNkdKSRhpqx2
-         3aTv+JPlngwIDF74cUa7Iz7JIRGoAlBA2ASP8Ckth096SrSTmxy59wwJPfG8nYFpJXwU
-         DmMqsBPdAFpeX8RHQIQCcetOTJRDRQ/IQc28zjzqCq2kebnXY9itXtWX9NlSRW8nsmBn
-         EgeQk6QhU27MgoAGN56PFU4gJdMHTz6wJDDLDN21VdDCUxDKZnn9wF6QhsMSyhMMuGFG
-         LNV/05gF+3vGDtNL1O9Evja9a3lHMY8NEarsnHzHi4Wz3zNf20cauyDu51Ky/c7VvBWT
-         ZvpA==
-X-Gm-Message-State: APjAAAUVzDfJ8x6I2NP06SYWUrzod8FAGeR/4P2W62Dm25tj+MLOmOMt
-        QPSdcY7cSGRUkJJqW75MBMFIWaoBONY=
-X-Google-Smtp-Source: APXvYqxUeHRmGMFC41R+GuC+0WsPA37RhN80rVlchGPo/o97XEct3fuQab1eAkMTxUv7Poi6jeBWFA==
-X-Received: by 2002:a92:8703:: with SMTP id m3mr7417222ild.233.1572043830834;
-        Fri, 25 Oct 2019 15:50:30 -0700 (PDT)
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com. [209.85.166.176])
-        by smtp.gmail.com with ESMTPSA id u85sm529616ili.28.2019.10.25.15.50.29
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2019 15:50:30 -0700 (PDT)
-Received: by mail-il1-f176.google.com with SMTP id a13so3222887ilp.1
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 15:50:29 -0700 (PDT)
-X-Received: by 2002:a05:6e02:792:: with SMTP id q18mr6756233ils.58.1572043829241;
- Fri, 25 Oct 2019 15:50:29 -0700 (PDT)
+        bh=53yH7/uaXqdrwxgYB9Z47HSHpvLxk3mUn6GWgjoDX1k=;
+        b=lVXldsttfRBKfSEcvbvwN09r9mX0suxsDhGdq3SWPPTY82E1fYk+G5A6l2fyC/kWUX
+         HiWITpyGrgbp4ALCmWw9VGdWtgjtVdW+wp8IAtFggLuRZF+XXI/FVOqRGUAicMz+L1f7
+         RwlGT9fJrNXmfGwLfB/5S7bXRs+4SRDK1DdxqiePeTn0xRxlyPo38FDDa2d3sN+n3Ww0
+         U8IIgwRr+FXyWCkC95+9UFgJzsO/X2zJHxCvGOz1Ip637VpqS2+rS5/aTPhgvO9yGLvq
+         EEFUvTykd2XWsec481WZ0DFPe8iCfCGXu4SGfeJh1aj/nOyvoVliKKoxEGV2KZbXnRLu
+         g6+w==
+X-Gm-Message-State: APjAAAUQFGvkXZMgBA1aa5Cy+MBCxy71j9mRpd9CUSDX3MUQP8NTKSpA
+        z3T2ruWyDRLJBiUF5kHtDrniFw/k8iElssbIyYY=
+X-Google-Smtp-Source: APXvYqz769LDdVQAKT6dKxtfm0ChR8hbmqoc0jVwlkWk2TcKLi8TwfsfQMql2BOxt6F8LwNgS6lRRTuNz9I/hd3Zw1M=
+X-Received: by 2002:a17:906:e82:: with SMTP id p2mr5896396ejf.237.1572046361188;
+ Fri, 25 Oct 2019 16:32:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191025215428.31607-1-abhishekpandit@chromium.org> <20191025215428.31607-4-abhishekpandit@chromium.org>
-In-Reply-To: <20191025215428.31607-4-abhishekpandit@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 25 Oct 2019 15:50:17 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vf64F885me=PUpv34Lb6iZpm1ui30nLHww6T3rmRVJXA@mail.gmail.com>
-Message-ID: <CAD=FV=Vf64F885me=PUpv34Lb6iZpm1ui30nLHww6T3rmRVJXA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: rockchip: Add brcm bluetooth module on uart0
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-bluetooth@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+References: <20191025225009.50305-1-john.stultz@linaro.org> <20191025225009.50305-2-john.stultz@linaro.org>
+In-Reply-To: <20191025225009.50305-2-john.stultz@linaro.org>
+From:   Rob Herring <rob.e.herring@gmail.com>
+Date:   Fri, 25 Oct 2019 18:32:29 -0500
+Message-ID: <CAC=3eda3sCMjCQbFX2Y0-6iVt-YRR7P_Y1ksJOsLw9CmJJRxbA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/3] dt-bindings: dma-buf: heaps: Describe CMA
+ regions to be added to dmabuf heaps interface.
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Oct 25, 2019 at 5:51 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> This binding specifies which CMA regions should be added to the
+> dmabuf heaps interface.
 
-On Fri, Oct 25, 2019 at 2:55 PM Abhishek Pandit-Subedi
-<abhishekpandit@chromium.org> wrote:
+Is this an ION DT binding in disguise? I thought I killed that. ;)
+
 >
-> This enables the Broadcom uart bluetooth driver on uart0 and gives it
-> ownership of its gpios. In order to use this, you must enable the
-> following kconfig options:
->   - CONFIG_BT_HCIUART_BCM
->   - CONFIG_SERIAL_DEV
->
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Laura Abbott <labbott@redhat.com>
+> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: Liam Mark <lmark@codeaurora.org>
+> Cc: Pratik Patel <pratikp@codeaurora.org>
+> Cc: Brian Starkey <Brian.Starkey@arm.com>
+> Cc: Andrew F. Davis <afd@ti.com>
+> Cc: Chenbo Feng <fengc@google.com>
+> Cc: Alistair Strachan <astrachan@google.com>
+> Cc: Sandeep Patil <sspatil@google.com>
+> Cc: Hridya Valsaraju <hridya@google.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > ---
+>  .../bindings/dma/dmabuf-heap-cma.txt          | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt
 >
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 31 +++++++---------------------
->  1 file changed, 7 insertions(+), 24 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index 7525e3dd1fc1..8c9f91ba6f57 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-
-You are changing this for _all_ veryon, not just those veyron devices
-using Broadcom.  I don't think you want to change the marvell-based
-boards.
-
-...presumably you'll want to make you change only affect minnie,
-speedy, and mickey.
-
-
-> @@ -23,30 +23,6 @@
->                 reg = <0x0 0x0 0x0 0x80000000>;
->         };
->
-> -       bt_activity: bt-activity {
-> -               compatible = "gpio-keys";
-> -               pinctrl-names = "default";
-> -               pinctrl-0 = <&bt_host_wake>;
-> -
-> -               /*
-> -                * HACK: until we have an LPM driver, we'll use an
-> -                * ugly GPIO key to allow Bluetooth to wake from S3.
-> -                * This is expected to only be used by BT modules that
-> -                * use UART for comms.  For BT modules that talk over
-> -                * SDIO we should use a wakeup mechanism related to SDIO.
-> -                *
-> -                * Use KEY_RESERVED here since that will work as a wakeup but
-> -                * doesn't get reported to higher levels (so doesn't confuse
-> -                * Chrome).
-> -                */
-> -               bt-wake {
-> -                       label = "BT Wakeup";
-> -                       gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
-> -                       linux,code = <KEY_RESERVED>;
-> -                       wakeup-source;
-> -               };
-> -
-> -       };
->
->         power_button: power-button {
->                 compatible = "gpio-keys";
-> @@ -434,6 +410,13 @@
->         /* Pins don't include flow control by default; add that in */
->         pinctrl-names = "default";
->         pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
+> diff --git a/Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt b/Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt
+> new file mode 100644
+> index 000000000000..bde7b1f1c269
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt
+> @@ -0,0 +1,31 @@
+> +* DMA-BUF CMA Heap
 > +
-> +       bluetooth {
-> +               compatible = "brcm,bcm43540-bt";
+> +Specifies a CMA region that should be added to the dma-buf heaps
+> +interface.
+> +
+> +Required properties:
+> +- compatible: Must be "dmabuf-heap-cma"
+> +- memory-region: phandle to a CMA reserved memory node
+> +
+> +Example:
+> +This example has a camera CMA node in reserved memory, which is then
+> +referenced by the dmabuf-heap-cma node.
+> +
+> +
+> +       reserved-memory {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +               ...
+> +               cma_camera: cma-camera {
+> +                       compatible = "shared-dma-pool";
+> +                       reg = <0x0 0x24C00000 0x0 0x4000000>;
+> +                       reusable;
+> +               };
+> +               ...
+> +       };
+> +
+> +       cma_heap {
+> +               compatible = "dmabuf-heap-cma";
+> +               memory-region = <&cma_camera>;
 
-You probably need some pinctrl entries here to make sure that things
-are properly configured, like:
+Why the indirection here? Can't you just add a flag property to
+reserved-memory nodes like we do to flag CMA nodes?
 
-pinctrl-names = "default";
-pinctrl-0 = <&bt_host_wake>, <&bt_dev_wake>, <&bt_enable>;
+As I suspected, it's because in patch 2 you're just abusing DT to
+instantiate platform devices. We already support binding drivers to
+reserved-memory nodes directly.
 
-This would require defining bt_dev_wake and bt_enable and removing the
-hacky output-only versions they have now.
-
-
-> +               host-wakeup-gpios       = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
-> +               shutdown-gpios          = <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;
-
-Right now gpio4 RK_PD5 is controlled by the "sdio_pwrseq".  Should you
-remove it from there?  Looks like it was a no-op for marvell which
-makes it a little easier.
-
-
-> +               device-wakeup-gpios     = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-
-You probably need to stop driving this in the pinctrl hogs for
-Broadcom boards...
-
-
--Doug
+Rob
