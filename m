@@ -2,134 +2,87 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0806CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBF6CA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C6B21872
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D637421D81
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 17:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ei/oKmEG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rn8L72Zt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502887AbfJYR0N (ORCPT
+        id S2505902AbfJYRbp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 13:26:13 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43454 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388862AbfJYR0M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 13:26:12 -0400
-Received: by mail-ed1-f66.google.com with SMTP id q24so2418748edr.10;
-        Fri, 25 Oct 2019 10:26:10 -0700 (PDT)
+        Fri, 25 Oct 2019 13:31:45 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37692 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505882AbfJYRbo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 13:31:44 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p13so1596860pll.4;
+        Fri, 25 Oct 2019 10:31:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o2FfsdyXAEpQ34h4AlmrQ47b+tdGMwtiB6kuBcd6n34=;
-        b=ei/oKmEGN9x8Z0MjO2V0EcNzO1Vn2Ks1//FLoFKhoDv1yf6+m0Gz2/aTwBqj/3MWWB
-         +KPf3V5CKKh2hFqMdb6WxfhkJ+0YLjwbFs+CzXLgjgJVhi5kAb/VzRd0H7nyz9lfdrai
-         439TDYmSaFL+OkbBdZqCvmaxUEKKlFk+dTVD+iIjWuZPVtjDicWGMGO1LONNM4aRFZ4K
-         kEW0dhfKhkofUQqCJk0rbiJad4+1ntn+McTXk787boPjWoIO9gUlBHjeJO2Bf1CCQ9Ov
-         NdR/4okKdPTQJSlzTOMjH/olQ/NgY07jFsZ5yBR0crdzG2w49zZqojhsomeC8xNN6S3Y
-         GFiQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GnT6FwiHwead4VOZNmhBSr7ANR+aaNkYQiIOZPp8rq4=;
+        b=Rn8L72ZtqYgKPeYtAFmvVLHs3nC5fJjz+0PUfwpGaSgE1722NOOl7L91urX0fJ6N6i
+         b+FTMITlHxMnKVcC7rswIYvOf6I1xmTE35htnCpHkERWaKjhzCklnPP7W/TEHuQK8Xct
+         QfnvUU3Mu6lOMav3YgKcS4FTmE0s6kaoYjGowYRB86oO4XTb27XLeFS/O+njazHh+3Jb
+         LImib3Qn/Q9vUk2XZejM9l5gXnTPDT/DGXHEyhvua8D98WZ4JfXAdYnjtdTqwEi5x64h
+         sBJkibu5NZKovxdZKnrMLvUcZquGJZJJoOXK71rwjj9s24OHhg1OfZ6pvh0HfCvXQx0r
+         Akdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=o2FfsdyXAEpQ34h4AlmrQ47b+tdGMwtiB6kuBcd6n34=;
-        b=SK/+b8V5FfVikM7hPbtXl7PrJWAMja/q+Igizug62frEWmWS+VYBWkQEjIXTwIBo6U
-         g4jWSgqtqYb/Afg1aGy47Ipt37cVoZRpt1mktR36J34ql1TA5jmkFiPj51vqzmRT96Wl
-         mq1L7n5xtWsyghI0sMNJ9q8zjuLTL5wDSuwU5TWkciK2uLqnkFHIweBKFdJUfbi4Uya1
-         KH1xuzmFnqAx6YZJuu1NhNqoHc0WDd/A7e7MhfBfHPxJ85EcSXIL1fv52f9z5mO1zuuS
-         0v/pVgpffQahKpLhN8XZNWKWb+rCoxO/+eKbko0JmcMWei2sZMhj2VhTMqzLUqWfVQfx
-         pW3w==
-X-Gm-Message-State: APjAAAXEFgehwu6GMgcNCROA4FRJBYQteYljv4o8fopD9KirKqIApmua
-        A3Q2nT1P2W+Ww5USaViu+dRn13hN
-X-Google-Smtp-Source: APXvYqw0AoehPxizqfXASCU6BffWZ75YDFFMYF5f9fqEj/P6bFhquShOZOKqrM/zGkUdqs7zZZGXDQ==
-X-Received: by 2002:a17:906:f2d4:: with SMTP id gz20mr4574182ejb.215.1572024369490;
-        Fri, 25 Oct 2019 10:26:09 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id k24sm69398edx.46.2019.10.25.10.26.05
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GnT6FwiHwead4VOZNmhBSr7ANR+aaNkYQiIOZPp8rq4=;
+        b=jqDUrN8m2a4nC2kupPEyPiuUvrFXCPzTyZNmlua4o7Ix7hSrUzxWoBhJvvR9eujS79
+         IC/KFzHqE+JT+N/5IKt5t7r1WcuUlq5SJDF6qpQv21+67YqhiB3PWj7rgdkKgOUJakWE
+         VmNLcOgBRv/rGmV/2+gvBDs20JutKvQj83bfK/34LScOM+pzPiLtYmoQGtE5nKDFXhiL
+         +KuWJD6LoXmhJFFKROyJX9gDbRvfQgAWK9/+JjmhY+FonCm9zKHqrDKvpuE0Mp9984yk
+         MYDXp7P8a33szBVV8+foz0b3NzVEkpKEvHqC52/n64Vzz5/5UqfX66qZ0is92dsB1qI3
+         YpJA==
+X-Gm-Message-State: APjAAAVA2J7QruOZC5qVpNm9XWGu5HayshiJH3IONP/BhRj2wRGYZzL/
+        P9Fr34iPqi6ynWT1wjlviUA=
+X-Google-Smtp-Source: APXvYqwydM0+1e5/QHpMzyIncTA89uP4w6jdFp+a8+6qamGM8TW/ebqbIv5KTaTwl0doE7h2/mqbAg==
+X-Received: by 2002:a17:902:b095:: with SMTP id p21mr5031126plr.159.1572024703643;
+        Fri, 25 Oct 2019 10:31:43 -0700 (PDT)
+Received: from [172.16.1.40] ([131.107.147.218])
+        by smtp.gmail.com with ESMTPSA id b14sm2897182pfi.95.2019.10.25.10.31.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 10:26:08 -0700 (PDT)
-Subject: Re: [PATCH 2/2] ARM: dts: NSP: avoid unnecessary probe deferrals
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        linus.walleij@linaro.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191025040041.6210-1-chris.packham@alliedtelesis.co.nz>
- <20191025040041.6210-3-chris.packham@alliedtelesis.co.nz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <5d75b0ba-81c6-3d54-5bef-1127cd1c9998@gmail.com>
-Date:   Fri, 25 Oct 2019 10:26:04 -0700
+        Fri, 25 Oct 2019 10:31:43 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "hangl@microsoft.com" <hangl@microsoft.com>,
+        "lewan@microsoft.com" <lewan@microsoft.com>,
+        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
+        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
+        "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
+        "wangglei@gmail.com" <wangglei@gmail.com>, leiwang_git@outlook.com
+References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
+ <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
+From:   Lei Wang <wangglei@gmail.com>
+Message-ID: <f4b2c4b9-4999-6736-31eb-a63781013664@gmail.com>
+Date:   Fri, 25 Oct 2019 10:31:38 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191025040041.6210-3-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
@@ -137,72 +90,81 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/24/19 9:00 PM, Chris Packham wrote:
-> The pinctrl node is used by the gpioa node. Which may have more
-> descendants at a board level. If the pinctrl node isn't probed first the
-> gpio is deferred and anything that needs a gpio pin on that chip is also
-> deferred.
+Thanks James/Rob/Borislav for pointing out the email list issue. My work 
+email does not work good either for this exercise. Going forward I'll 
+switch to my gmail account.
 
-If what you care is to optimize your boot flow such that no re-probing
-occurs, maybe another solution to look at is to re-order the order in
-which subsystems are initialized or built (_initcall changes or
-drivers/Makefile changes), because changing Device Tree certainly does
-not scale over platforms and I recall Rob indicating that he wanted to
-introduce randomized platform_device creation from
-of_platform_bus_populate() at one point or another.
+And Thanks Rob for reviewing! Please see below.
+
+>> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>> @@ -0,0 +1,26 @@
+>> +* ARM DMC-520 EDAC node
+>> +
+>> +Required properties:
+>> +- compatible           : "brcm,dmc-520", "arm,dmc-520".
+>> +- reg                  : Address range of the DMC-520 registers.
+>> +- interrupts           : DMC-520 interrupt numbers. The example below specifies
+>> +                         two interrupt lines for dram_ecc_errc_int and
+>> +                         dram_ecc_errd_int.
+>> +- interrupt-config     : This is an array of interrupt masks. For each of the
+> 
+> Not a standard property, so would need a vendor prefix...
+
+Would dmc-interrupt-config as the property name work? Thanks!
 
 > 
-> Normally we and nodes in the device tree to be listed in their natural
-> memory mapped address order but putting the pinctrl node first avoids
-> the deferral of numerous devices so make an exception in this case.
-
-That is a workaround more than a real solution, though I understand why
-you would to do that. One downside is that the entries are no longer in
-incrementing register address order and that is visually disturbing and
-who knows, maybe a drive by contributor whose pet project will be to
-order the Device Tree entries by incrementing addresses will change that
-in the future...
-
+>> +                         above interrupt line, add one interrupt mask element to
+>> +                         it. That is, there is a 1:1 mapping from each interrupt
+>> +                         line to an interrupt mask. An interrupt mask can represent
+>> +                         multiple interrupts being enabled. Refer to interrupt_control
+>> +                         register in DMC-520 TRM for interrupt mapping. In the example
+>> +                         below, the interrupt configuration enables dram_ecc_errc_int
+>> +                         and dram_ecc_errd_int. And each interrupt is connected to
+>> +                         a separate interrupt line.
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  arch/arm/boot/dts/bcm-nsp.dtsi | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+> I've gone and read thru the TRM some. This binding doesn't seem to
+> correspond to the TRM at all. There are a bunch of interrupts and a
+> combined interrupt, and then there's the same set for 'overflow'
+> interrupts.
 > 
-> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-> index da6d70f09ef1..dd7a65743c08 100644
-> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
-> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-> @@ -172,6 +172,13 @@
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  
-> +		pinctrl: pinctrl@3f1c0 {
-> +			compatible = "brcm,nsp-pinmux";
-> +			reg = <0x3f1c0 0x04>,
-> +			      <0x30028 0x04>,
-> +			      <0x3f408 0x04>;
-> +		};
-> +
->  		gpioa: gpio@20 {
->  			compatible = "brcm,nsp-gpio-a";
->  			reg = <0x0020 0x70>,
-> @@ -458,13 +465,6 @@
->  					     "sata2";
->  		};
->  
-> -		pinctrl: pinctrl@3f1c0 {
-> -			compatible = "brcm,nsp-pinmux";
-> -			reg = <0x3f1c0 0x04>,
-> -			      <0x30028 0x04>,
-> -			      <0x3f408 0x04>;
-> -		};
-> -
->  		thermal: thermal@3f2c0 {
->  			compatible = "brcm,ns-thermal";
->  			reg = <0x3f2c0 0x10>;
-> 
+> There's only one 'interrupt_control' reg. How do you have more that 1
+> 32-bit value?
 
+There is only one 'interrupt_control' register, for multiple interrupt 
+sources. Then depending on platform hardware design, these interrupt 
+sources can be wired to different physical interrupt lines.
 
--- 
-Florian
+That is, it is possible to mux interrupt sources into  interrupt lines 
+for dmc520 in different ways. For example, in this particular brcm 
+implementation,
+
+Line 841: source dram_ecc_errc_int
+Line 843: source dram_ecc_errd_int
+Line 839: source dram_ecc_errc_int and dram_ecc_errd_int
+
+There are two possibilities for implementing ecc counts for ce/ue. And 
+we chose to use the single source line: as below, two interrupt lines 
+0x349 and 0x34B, with interrupt masks 0x4 and 0x8 respectively.
+
+Also, it's possible to implement using the combined-source line too: 
+that would be one interrupt line 0x347, with interrupt mask 0xC.
+
+This dt binding can support both by modifying the properties, without 
+having to modify driver code.
+
+ >> +
+ >> +Example:
+ >> +
+ >> +dmc0: dmc@200000 {
+ >> +       compatible = "brcm,dmc-520", "arm,dmc-520";
+ >> +       reg = <0x200000 0x80000>;
+ >> +       interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
+ >> +       interrupt-config = <0x4>, <0x8>;
+ >> +};
+ >> --
+ >> 2.17.1
+
+Thanks!
+
+-Lei
+
