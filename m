@@ -2,140 +2,128 @@ Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B243CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9966CCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B889222BD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 21:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698D721872
+	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W91zWNO0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W06oXB6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfJYVz1 (ORCPT
+        id S1726060AbfJYWuR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:55:27 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38976 "EHLO
+        Fri, 25 Oct 2019 18:50:17 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34966 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfJYVz1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 17:55:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id s17so1978467plp.6
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 14:55:26 -0700 (PDT)
+        with ESMTP id S1725881AbfJYWuQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 18:50:16 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c3so2067808plo.2
+        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 15:50:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K331SMUfGTuS8ssrt07hRRxTGZ3R118eP6RXl//v6II=;
-        b=W91zWNO0MDSC1dSM2VGEKxLvXO0mToeYff7TkuRAsvGaadnLdl7Y+QZ16oulP7Phsn
-         8Gm3ofi3Mz9bM551jBJMnJKjqu55+dvZ3oc0ncqhsilhHKnU6rJfmptOwqboZAJ5Xg7e
-         mF+MNIu6oVNi+YuJcPMckBLbLAl2P0oH7vzWU=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=WK3SlUf5Gs26MRGfMYO+sZq/r8if+NvP4msj/EMhnDI=;
+        b=W06oXB6IMpWhM8dtYxX4fJ2EYFzVUD5CG6VL1kdGUPIGPjDdJOvFUBgYM3ETY3MfKK
+         IGw50t96VojqD+FT/EO1EVcSuM2ummWiEQqaHrpkfnQKdLdjWpXhJPCoDfuncYeLu7yR
+         S/dND9LH65leNIe3NixQsxPxXFhbVLUDu7zLJ2/R8HjgnPgQhadWewKuo7gGRIcEY+jq
+         qd+N/q5dVs390J3XqSeJcYZue+xNm061VT5uIFLhDjYYJPS/W6XuVG89a3yHNM8afRuw
+         gVMVCjzQ/OJ6MmZmisewh8Ds3g1fUbpntD6qrNjczAA+0j4/t78L45JkiT3Nk0mLNoe+
+         qcKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K331SMUfGTuS8ssrt07hRRxTGZ3R118eP6RXl//v6II=;
-        b=XNcFYbJaDmpZcl2tMcnzk8SG+ILQKLpgtQVw4sSiKujheXBc1eb5uDH9e07nvG9CIw
-         n9/aQgPbl1NyCZX9BUKDZBooLDdKCBpGjzvO9osTaiFwrsTry4aLlQS7sOjE+TOfWSzD
-         FZD9anzKIiA7cjO9zqN5z/8KInKkaVCg93cEEDAKF7FNJX0db49s005hDiFcckm1jquA
-         nyiipgy9Al2yp0qb4Ur8pxUJwOcBTFkZ/ABEFLKJ8UmGfrjCq8+IU2m5tgjVA/daDB6x
-         /E4YA1pqpx/+xbwT/oERd3vwpOIrEPgtJrAVJQ+KOeREGRwokNxBJMtK/RaDkibjED3k
-         eQdA==
-X-Gm-Message-State: APjAAAWrE6hvoH98gU73pLllzGKz2JheZqDEP+i9xtlTOQ9GVQz0EEN7
-        OE+brRzdYYlAhSB7PGXG7ljqcHTq8GY=
-X-Google-Smtp-Source: APXvYqziGJoT8eB5mWgoF5H55wPj/L28gCK25N9WuVU5NVdJh4xWElDTVc5K92fYMgo4YDhheRExMQ==
-X-Received: by 2002:a17:902:9689:: with SMTP id n9mr6365578plp.222.1572040526517;
-        Fri, 25 Oct 2019 14:55:26 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id y80sm3815110pfc.30.2019.10.25.14.55.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WK3SlUf5Gs26MRGfMYO+sZq/r8if+NvP4msj/EMhnDI=;
+        b=kpCgw8jqOmkMRYE0XBpM3sfLhjHT2x2m4tvqw3w5KtnHcfYaAuKVqnP6jdk4AcVaQW
+         GyorJ7bpKofOJKYIGtd3ubRrY1n4m+6rYEK2RNfimHd0XakrXla2hcVVnHUSdKDXJwGX
+         aA0Dt1PntRI64lZ8xvdE0rfwTvmF70Pou77BS9kRT5IwtEivK4M9JQi9ej/TTSQc5DOv
+         NeAFoWl1VKi4ywjBrcbMr8OJa+WytyDv+itu0BLbMp6N0RhDf7g5juZUtJmv8Xig2qaf
+         mq/NP8fgoHdgJdzWhRA9LNsIqxIfZCOOOydQCYMffCQbUjzjQcIFyZtZXOoGTXLOIWTw
+         A2rw==
+X-Gm-Message-State: APjAAAVRr1Rl8A1UTDQuBRbiIeMNGY5EBzh+PioDXmzPoNLrYnI7DJTk
+        ggzFlv+X4naq+z3RNUwKUstjjA==
+X-Google-Smtp-Source: APXvYqwQLQqa6cIVroIB0jGdxbexLrpc2SfRdat8vKLK45RzjXk9xs4WDP+k4gpJHIg7f7PX43Yojw==
+X-Received: by 2002:a17:902:d913:: with SMTP id c19mr6398645plz.48.1572043816005;
+        Fri, 25 Oct 2019 15:50:16 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id o15sm2758018pjs.14.2019.10.25.15.50.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:55:26 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Cc:     linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Fri, 25 Oct 2019 15:50:15 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] ARM: dts: rockchip: Add brcm bluetooth module on uart0
-Date:   Fri, 25 Oct 2019 14:54:28 -0700
-Message-Id: <20191025215428.31607-4-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-In-Reply-To: <20191025215428.31607-1-abhishekpandit@chromium.org>
-References: <20191025215428.31607-1-abhishekpandit@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [RFC][PATCH 0/3] Support non-default CMA regions to the dmabuf heaps interface
+Date:   Fri, 25 Oct 2019 22:50:06 +0000
+Message-Id: <20191025225009.50305-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This enables the Broadcom uart bluetooth driver on uart0 and gives it
-ownership of its gpios. In order to use this, you must enable the
-following kconfig options:
-  - CONFIG_BT_HCIUART_BCM
-  - CONFIG_SERIAL_DEV
+Now that the dmabuf heaps core code has been queued, I wanted to
+submit for initial review some of the changes I have pending.
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
+In previous versions, the dmabuf CMA heap added all CMA areas to
+the dmabuf heaps interface. However, Andrew noted this may not
+be desirable, so I've come up with a DT binding and code to
+allow specified CMA regions to be added to the dmabuf heaps
+interface.
 
- arch/arm/boot/dts/rk3288-veyron.dtsi | 31 +++++++---------------------
- 1 file changed, 7 insertions(+), 24 deletions(-)
+This allows additional CMA regions for things like cameras, etc
+to be allocated from separately from the default region.
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 7525e3dd1fc1..8c9f91ba6f57 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -23,30 +23,6 @@
- 		reg = <0x0 0x0 0x0 0x80000000>;
- 	};
- 
--	bt_activity: bt-activity {
--		compatible = "gpio-keys";
--		pinctrl-names = "default";
--		pinctrl-0 = <&bt_host_wake>;
--
--		/*
--		 * HACK: until we have an LPM driver, we'll use an
--		 * ugly GPIO key to allow Bluetooth to wake from S3.
--		 * This is expected to only be used by BT modules that
--		 * use UART for comms.  For BT modules that talk over
--		 * SDIO we should use a wakeup mechanism related to SDIO.
--		 *
--		 * Use KEY_RESERVED here since that will work as a wakeup but
--		 * doesn't get reported to higher levels (so doesn't confuse
--		 * Chrome).
--		 */
--		bt-wake {
--			label = "BT Wakeup";
--			gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
--			linux,code = <KEY_RESERVED>;
--			wakeup-source;
--		};
--
--	};
- 
- 	power_button: power-button {
- 		compatible = "gpio-keys";
-@@ -434,6 +410,13 @@
- 	/* Pins don't include flow control by default; add that in */
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43540-bt";
-+		host-wakeup-gpios	= <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios		= <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;
-+		device-wakeup-gpios	= <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-+	};
- };
- 
- &uart1 {
+Review and feedback would be greatly appreciated!
+
+thanks
+-john
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Liam Mark <lmark@codeaurora.org>
+Cc: Pratik Patel <pratikp@codeaurora.org>
+Cc: Brian Starkey <Brian.Starkey@arm.com>
+Cc: Andrew F. Davis <afd@ti.com>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Alistair Strachan <astrachan@google.com>
+Cc: Sandeep Patil <sspatil@google.com>
+Cc: Hridya Valsaraju <hridya@google.com>
+Cc: devicetree@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+
+John Stultz (3):
+  dt-bindings: dma-buf: heaps: Describe CMA regions to be added to
+    dmabuf heaps interface.
+  dma-buf: heaps: Allow adding specified non-default CMA heaps
+  example: dts: hi3660-hikey960: Add dts entries to test cma heap
+    binding
+
+ .../bindings/dma/dmabuf-heap-cma.txt          | 31 +++++++++++++++
+ .../boot/dts/hisilicon/hi3660-hikey960.dts    | 13 ++++++-
+ drivers/dma-buf/heaps/cma_heap.c              | 38 +++++++++++++++++++
+ 3 files changed, 81 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt
+
 -- 
-2.24.0.rc0.303.g954a862665-goog
+2.17.1
 
