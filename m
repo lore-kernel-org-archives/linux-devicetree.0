@@ -2,165 +2,106 @@ Return-Path: <SRS0=rl0j=YT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A25DCA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 12:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A45CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 12:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAEBF20867
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 12:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mb0lFk5G"
+	by mail.kernel.org (Postfix) with ESMTP id 497FE20867
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 12:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572091551;
+	bh=vEeuAbF0jGSLicUYjS282y4gW60r15/l1Ux0W++rJnE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JL0LfSo5QGzoeW71OdJUGa+QcvDHcuFEmvCCW7QNoZSAmZXTt0Yi0yF02Sdcak3I7
+	 kt+9Mrx5WpTibln1JcFdo4W6E/EgHaDyMsf1BNpdeCxSL4JYggGt3WniEcoH3rAU7n
+	 XF278Xn++aNhAbNNVMsELNOok/IJUArQzaovnizM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbfJZMFO (ORCPT
+        id S1726175AbfJZMFu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 08:05:14 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34882 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfJZMFO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 08:05:14 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z6so3865468otb.2
-        for <devicetree@vger.kernel.org>; Sat, 26 Oct 2019 05:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wziPjru27ecL6mZ4dPMfLGt//OSBOTgIklyIX5IY5eQ=;
-        b=mb0lFk5GbEYzaV1slHpJlUJqh2SAli0n5c3YqKLabdLuIIaCmXMqVTMIGfLUyojTXs
-         bI0Nuo8tfdVBmP7Wct/hRcHovPrLPGZrY0V1fsHG9+fkujNiiOEjdXr3CLMY5Wan6CT1
-         nbsGMyaBhbtXue3Np2UAH5qOKhIdVYr8gy2Eg9VqnRNo6jho+mI6f/RuzKR28DwHViGT
-         4YT1ZWB1JkgehArTICssZj3d7aojTAGZ5ILIvxuNYDdGUj4dsAqobsWyaBgJ6mHA/TFH
-         jUvdfriFVC1xCEDPMrcCUN8VtpcwMHWpDeZeVwhCNA+Krwpov7o3nz/efd29IR7/RAno
-         pCtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wziPjru27ecL6mZ4dPMfLGt//OSBOTgIklyIX5IY5eQ=;
-        b=SL5ycUhlQTA7reDTyZDoF+Z+VTC/ej1sdT3I8PlTaQz/3xsmuhbKpmm4oBH7Su5qQ7
-         45EYk2IsV4NzFU0nmhhM43nCnKdtEIgKi959DohL5GVOq1LE2/7sLFWaVToPMnCFbiaK
-         kF8510AX1UR5CU86HRFJ73dvuuZyeOLDTIbUU6WM7cGdTx2L6FfId6FWAwZqWQLvn97f
-         IPmEDuC3+QctEWBwGvCAgnKxvuem/KS0JaN+LEGpxdEQjlROOYBHaagUmtD4nvY1MGWu
-         Tbm1Rl2xlAe1bWCFvhcKYIkK8oTvp/bDMqA6qZf5ShmQ1MUsd3GwRyVDVCHHjcSRJ2uK
-         2JkQ==
-X-Gm-Message-State: APjAAAU916z1uyDEhbhsuG3o2tCdU7nfeN7ufISX2Gu/gUFsdN6cIelL
-        MLyjk+y4PeF3n/5ce6p2cwPxm9frE+OMLG+CHTWA6g==
-X-Google-Smtp-Source: APXvYqw1CBK/GZ4OGs5cVGiCrX5U6xfZaJCv+7JjUnIhmAHa+oK5tXFTkv3DfBtKhkprvzG3Yt7Se6jUWbp5I5X9ZiE=
-X-Received: by 2002:a9d:6c96:: with SMTP id c22mr6546047otr.194.1572091513116;
- Sat, 26 Oct 2019 05:05:13 -0700 (PDT)
+        Sat, 26 Oct 2019 08:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbfJZMFu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 26 Oct 2019 08:05:50 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A1D20863;
+        Sat, 26 Oct 2019 12:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572091550;
+        bh=vEeuAbF0jGSLicUYjS282y4gW60r15/l1Ux0W++rJnE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=umLw596aInWYaJRO3tahHmflItaumE6EkVRvKxXosp1whMOMGE/Lqz4WHoB4+BL8j
+         V7hXopcDzTjYbRw+h6qHi4wsEXMDXszu6dU3HCVeVQGf1BNLdv0+RrwpZD6a/F2oZC
+         GROa7ECNsXgxL9CfQCOjE6WW05BFcW71VFLZUYHM=
+Date:   Sat, 26 Oct 2019 20:05:36 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ul-14x14-evk.dtsi: configure USBOTG1
+ ID pinctrl
+Message-ID: <20191026120534.GK14401@dragon>
+References: <1571214665-26402-1-git-send-email-peter.chen@nxp.com>
 MIME-Version: 1.0
-References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
- <20191018082557.3696-2-bibby.hsieh@mediatek.com> <CAMpxmJW_HQnL8i5FnKcVUs=ZyrnaFe6X+oqG38-v=O05d5vNxw@mail.gmail.com>
- <CAAFQd5CA_53uDo6QdRcvqJ5shUG5K25f+WXCn9OYMHfSgwLMSA@mail.gmail.com>
- <CAMpxmJWzEER4iBo9-WhmumuH1nmWYvy=xud+=7wzp3op8-P7uw@mail.gmail.com>
- <CAAFQd5DNdmm4sn1JNPhnuMor50ZP4EJmymtS4hB4WkNHmKOs6w@mail.gmail.com> <20191025211000.GA8235@bogus>
-In-Reply-To: <20191025211000.GA8235@bogus>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Sat, 26 Oct 2019 14:05:02 +0200
-Message-ID: <CAMpxmJUygTr2b+q-skb8_m9TfOiEvqoOCSjDQEi+sf9iNN0=BQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-binding: eeprom: at24: add supply properties
-To:     Rob Herring <robh@kernel.org>
-Cc:     Tomasz Figa <tfiga@chromium.org>, Wolfram Sang <wsa@the-dreams.de>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571214665-26402-1-git-send-email-peter.chen@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pt., 25 pa=C5=BA 2019 o 23:10 Rob Herring <robh@kernel.org> napisa=C5=82(a)=
-:
->
-> On Thu, Oct 24, 2019 at 06:32:38PM +0900, Tomasz Figa wrote:
-> > On Thu, Oct 24, 2019 at 5:40 PM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > >
-> > > czw., 24 pa=C5=BA 2019 o 09:02 Tomasz Figa <tfiga@chromium.org> napis=
-a=C5=82(a):
-> > > >
-> > > > On Thu, Oct 24, 2019 at 3:22 PM Bartosz Golaszewski
-> > > > <bgolaszewski@baylibre.com> wrote:
-> > > > >
-> > > > > pt., 18 pa=C5=BA 2019 o 10:26 Bibby Hsieh <bibby.hsieh@mediatek.c=
-om> napisa=C5=82(a):
-> > > > > >
-> > > > > > In some platforms, they disable the power-supply of eeprom and =
-i2c due
-> > > > > > to power consumption reduction.
-> > > > > >
-> > > > > > This patch add two supply properties: vcc-supply, i2c-supply.
-> > > > > >
-> > > > > > Changes since v1:
-> > > > > >  - change supply name
-> > > > > >  - rebase to next
-> > > > > >
-> > > > > > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > > > > > ---
-> > > > > >  Documentation/devicetree/bindings/eeprom/at24.yaml | 8 +++++++=
-+
-> > > > > >  1 file changed, 8 insertions(+)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml=
- b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > > > index e8778560d966..578487a5d9b7 100644
-> > > > > > --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > > > +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > > > @@ -167,6 +167,14 @@ properties:
-> > > > > >      minimum: 1
-> > > > > >      maximum: 8
-> > > > > >
-> > > > > > +  vcc-supply:
-> > > > > > +    description:
-> > > > > > +      phandle of the regulator that provides the supply voltag=
-e.
-> > > > > > +
-> > > > > > +  i2c-sypply:
-> > > > > > +    description:
-> > > > > > +      phandle to the regulator that provides power to i2c.
-> > > > > > +
-> > > > >
-> > > > > Something was bothering me about this patch so I came back to tak=
-e a
-> > > > > look. Can you explain what i2c actually stands for in this doc? I=
- hope
-> > > > > I'm misinterpreting something and it isn't that the driver disabl=
-es
-> > > > > the regulator powering the i2c bus controller?
-> > > >
-> > > > In our case it's the regulator that the I2C bus is pulled up to.
-> > > >
-> > >
-> > > Then it has nothing to do with a generic EEPROM driver IMO. I think
-> > > you need to add the control for this regulator to your i2c controller
-> > > driver and create a power domain where the EEPROM would be lower in
-> > > hierarchy.
-> >
-> > While I agree that the generic EEPROM driver may not be the best place
-> > to do it, neither is a driver for a specific SoC i2c controller. The
-> > hardware design is not specific to any particular i2c controller.
-> >
-> > Perhaps we need the generic i2c core to take into account an
-> > i2c-supply? Wolfram, any thoughts on this?
->
-> Sounds good to me. Maybe 'bus-supply' instead to indicate it's supposed
-> to be for the bus and not other things. It should reside in the I2C
-> controller's node (or mux ports) though.
->
-> Rob
+On Wed, Oct 16, 2019 at 04:31:05PM +0800, Peter Chen wrote:
+> Without configuring this pinctrl, the ID value can't be got correctly,
+> then, the dual-role switch can't work well.
+> 
+> Reviewed-by: Jun Li <jun.li@nxp.com>
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
 
-Thanks,
+Reviewed-by should generally go after Signed-off-by, as you create patch
+first and then people review it.
 
-in that case Bibby: please just use a single regulator for vcc-supply in at=
-24.
+I flipped the order and applied the patch.
 
-Thanks,
-Bartosz
+Shawn
+
+> ---
+>  arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+> index c2a9dd57e56a..ed3d993c25f7 100644
+> --- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+> @@ -266,6 +266,8 @@
+>  
+>  &usbotg1 {
+>  	dr_mode = "otg";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usb_otg1>;
+>  	status = "okay";
+>  };
+>  
+> @@ -499,6 +501,12 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_usb_otg1: usbotg1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO00__ANATOP_OTG1_ID	0x17059
+> +		>;
+> +	};
+> +
+>  	pinctrl_usdhc1: usdhc1grp {
+>  		fsl,pins = <
+>  			MX6UL_PAD_SD1_CMD__USDHC1_CMD     	0x17059
+> -- 
+> 2.17.1
+> 
