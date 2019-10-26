@@ -2,111 +2,83 @@ Return-Path: <SRS0=rl0j=YT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51503CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 20:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DB5CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 20:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF13206DD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 20:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DDF20863
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 20:48:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ng6Wb1aF"
+	dkim=pass (2048-bit key) header.d=bonstra.fr.eu.org header.i=@bonstra.fr.eu.org header.b="uEs56XPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfJZU3t (ORCPT
+        id S1726594AbfJZUsj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 16:29:49 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38405 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfJZU3t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 16:29:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v9so5935160wrq.5;
-        Sat, 26 Oct 2019 13:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=4wh2U9sFqBwfDf0nZQjTsklg9xDf789GQammhgh2Mgk=;
-        b=Ng6Wb1aF1JapsK21o9YGhhN0Gq/K5h8CZdHpp03cEYgiP9phvjBE8cMdi4kymm1P8e
-         gu/IHjGcSm0cg07Y4OIR5tGgiZKYeZcTzwBxCXPR/jJk32d+7sMP0EQbFEf2NSVWVEa9
-         WoxCfz9nQ7o+DP1RwLbPQEeujjo80bL5xeMlXtGXiANxF+E60spWqbvcDj2Prrygl6OX
-         Ejinwfdu9/Uhh7j4iPQv+8EqObyvFDJecwt9Mb8RpJCVpGPwGZJBd2f75uXuVrxar97p
-         oll++7fKauBP5UI4WatmoNValG4goyRGDgjarRETIAUAQW//iTCDV8luH/lLFBVrXzKZ
-         CSRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=4wh2U9sFqBwfDf0nZQjTsklg9xDf789GQammhgh2Mgk=;
-        b=apXo+P2ISpmCctIPf0zwkoXrLNW6LNoKtp2ARbHe7Bp2enyivWV7uJYaNtMXxoPfnU
-         6eAWR1t4T4Vy+LWR+Kuvyk7IjDcw5bhAMCZF6K0Y6tAfCh4EKackXEfm6wyUd4Oa6Cxy
-         ESFNYswHJ9t9PsEbS2Skt6ZAF2VKG6bO7+DeWXsQ7XBK65MxbVl0LGQ0UkJxOgRv1Mnz
-         5OFOiKqW+UwSq79r+rZmHe1zRMZRCYxGYflz8U+uqp+qM3bGb1+c7QygopBh/0Fexi+G
-         zVtZUdwtRDFsTwqV07IE4mbQOOOXW0d2DlvrdxebHrayR4MMgYl1KqCUO5xiTYT5rrY9
-         71xw==
-X-Gm-Message-State: APjAAAVZEvIigeC9+gCEH6wsUIH6t4iFu9RhODe8VOyx0Pv2RTxxXjLe
-        bZRb4FYHwYQHtLJ7pzucG7w=
-X-Google-Smtp-Source: APXvYqwsbzOzEv8luTR5JkVcDrsSwIx1FRcxy8PcdF6PXF/pUnvtJ3sO8D6jECnzWTal9dI5ljapLg==
-X-Received: by 2002:a5d:49c9:: with SMTP id t9mr8907763wrs.146.1572121785248;
-        Sat, 26 Oct 2019 13:29:45 -0700 (PDT)
-Received: from ?IPv6:2a01:cb19:16b:9900:c490:d472:7a6:b387? ([2a01:cb19:16b:9900:c490:d472:7a6:b387])
-        by smtp.gmail.com with ESMTPSA id u7sm6776609wre.59.2019.10.26.13.29.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 26 Oct 2019 13:29:44 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dts: imx7d-pico: Add LCD support
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Otavio Salvador <otavio@ossystems.com.br>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
+        Sat, 26 Oct 2019 16:48:39 -0400
+Received: from vault.bonstra.fr.eu.org ([51.158.68.104]:39570 "EHLO
+        vault.bonstra.fr.eu.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbfJZUsj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 16:48:39 -0400
+Received: from val.bonstra.fr.eu.org (unknown [192.168.128.2])
+        by vault.bonstra.fr.eu.org (Postfix) with ESMTP id 191D7BFB41;
+        Sat, 26 Oct 2019 20:41:47 +0000 (UTC)
+Received: from bonstra.fr.eu.org (vlad.gr1 [IPv6:fd7b:45cc:aa3d::3])
+        by val.bonstra.fr.eu.org (Postfix) with ESMTPSA id 3716D6086E;
+        Sat, 26 Oct 2019 22:41:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bonstra.fr.eu.org;
+        s=dkim1; t=1572122506; x=1573332106;
+        bh=gvjqgmyM6VpYYfnUpsZRKeggNshVkGNMAOiusppf46w=;
+        h=From:To:Cc:Subject:Date;
+        b=uEs56XPhlioXD792dC59KX4V1Y0ydsgmshAbLCVJCDWDn4mEoMy+GSVRj9AJivYjl
+         lultWVqd3JyWtVOXsRrw2r5GZUPUgKL2dvGOwT0rIW+r3cYQOPf+jDqDjuBRBxJgpf
+         fIePuQj/E3AKqbPaf5kDoUG6vhj6Mm/xfDYwG5A5m7uzTjgPJYuE1o+e/fEjZYbLLD
+         IuMYHARTwI9P6rSV2K5e1Y9N0BWsycgZ4h8iui99u1kJZvcC2D67yoPSU9ny7WYKHq
+         LhSqF8s74YJ3qxJXbc9dpWYnfpJv4VBW7Zzi9pDc66yQKXgm+stFiTCeb6Vv7BW0A8
+         gViiuwO2mKlFA==
+From:   Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-References: <20191025082247.3371-1-offougajoris@gmail.com>
- <20191025184544.7gwwbsrketjtwrwi@pengutronix.de>
- <5a73d00e-397a-f4ed-2bfa-bb26324685ba@gmail.com>
- <CAOMZO5CPg=mJSKNuNVFF=zGUaZqMpr9Ocv89msS-120Shc0=RA@mail.gmail.com>
-From:   Joris Offouga <offougajoris@gmail.com>
-Message-ID: <3a75c40b-c1bc-1461-08e1-f5ac89d73c80@gmail.com>
-Date:   Sat, 26 Oct 2019 22:29:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH 0/3] Add Bluetooth support to Teres A64 I
+Date:   Sat, 26 Oct 2019 22:41:13 +0200
+Message-Id: <20191026204116.95119-1-bonstra@bonstra.fr.eu.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <CAOMZO5CPg=mJSKNuNVFF=zGUaZqMpr9Ocv89msS-120Shc0=RA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabio,
+The Teres A64 I laptop comes equipped with a serial-attached Realtek
+rtl8723bs Bluetooth controller. This series creates the DT binding for
+the the Realtek vendor extension of the HCI H5 driver, for which ACPI
+bindings already exist, and enable support for the Teres A64 I board.
 
-Le 26/10/2019 à 21:20, Fabio Estevam a écrit :
-> Hi Joris,
->
-> On Fri, Oct 25, 2019 at 6:16 PM Joris Offouga <offougajoris@gmail.com> wrote:
->
->> otherwise Fabio made me notice that I should leave his From however with
->> the changes made I should put mine?
-> It is normal when we submit someone else's patch and we need to change
-> a few things based on review feedback.
->
-> Even so, the original From should be kept.
+The first patch adds the DT binding documentation.
+The second one implements such binding in the HCI H5 driver.
+The last patch adds the appropriate device node to the Teres A64 I dts
+file to enable Bluetooth.
 
-Thanks for your reply, i send v3 with Marco's feedback
+Hugo Grostabussiat (3):
+  dt-bindings: net: bluetooth: add DT binding for rtl8723bs
+  Bluetooth: hci_h5: Add DT support for rtl8723bs
+  arm64: dts: allwinner: a64: Enable Bluetooth on Teres-I
 
-Best regards,
+ .../bindings/net/realtek,rtl8723bs-bt.txt     | 25 ++++++++++++
+ .../boot/dts/allwinner/sun50i-a64-teres-i.dts | 13 ++++++
+ drivers/bluetooth/hci_h5.c                    | 40 ++++++++++++++++---
+ 3 files changed, 73 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.txt
 
-Joris
+-- 
+2.23.0
 
