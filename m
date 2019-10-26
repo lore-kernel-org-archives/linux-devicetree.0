@@ -2,153 +2,104 @@ Return-Path: <SRS0=rl0j=YT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BECCA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 08:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA999C47E49
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 09:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1758C21D7F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 08:24:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="LNqqwElI"
+	by mail.kernel.org (Postfix) with ESMTP id C8343214DA
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 09:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726057AbfJZIYf (ORCPT
+        id S1726114AbfJZJJq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 04:24:35 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:29148 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfJZIYf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 04:24:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572078269;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=i+MQHbSzYrAECD2i9GTqSSZFbktvxXHglJFMdbybaRE=;
-        b=LNqqwElIvEiAjEsa2LSRu+A6IpBmygpF81iPakauQHuZVCUwGfzXQVv2gK5NtqJSDK
-        E7RwKoB7utIOwMOedtguOI/atFZYOdxSxQFhc3pRVQOWgK7Hm1gLj7Op98hR9aWLfmOf
-        atGTu8l6QR9ploMezQoPI9gSeIxahf0coppzuXAWygrSQwic0+IuaWvcSQp2l7hh2Sns
-        8VI6IxVarZP3brRrUz6nrPl8Ow369ykyONCBib2O+sSz7wH1NTsu4VRkt4happKyNBpg
-        SoYhipHE4YXckL2s8aGjmCh0RCtt65jH89uXnLxS79nkyR3lqKx3eD+XkRa1LO8Iv+rs
-        B6iQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCysP/lx4uw33QyGXuNISy7Vq++g6sYlqLxXuQw="
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:2694:9c00:1e1:24c4:3f0e:1772]
-        by smtp.strato.de (RZmta 44.28.1 AUTH)
-        with ESMTPSA id R0b2a8v9Q8Nvkz4
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sat, 26 Oct 2019 10:23:57 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v2 01/11] Documentation: dt: wireless: update wl1251 for sdio
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191025211338.GA20249@bogus>
-Date:   Sat, 26 Oct 2019 10:24:05 +0200
-Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
+        Sat, 26 Oct 2019 05:09:46 -0400
+Received: from mout.perfora.net ([74.208.4.194]:34551 "EHLO mout.perfora.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfJZJJp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 26 Oct 2019 05:09:45 -0400
+X-Greylist: delayed 308 seconds by postgrey-1.27 at vger.kernel.org; Sat, 26 Oct 2019 05:09:45 EDT
+Received: from marcel-nb-toradex-int.cardiotech.int ([81.221.67.182]) by
+ mrelay.perfora.net (mreueus004 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 1MUXAC-1iXByg3mRk-00QUVm; Sat, 26 Oct 2019 11:04:23 +0200
+From:   Marcel Ziswiler <marcel@ziswiler.com>
+To:     devicetree@vger.kernel.org
+Cc:     linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        devicetree@vger.kernel.org, letux-kernel@openphoenux.org,
-        linux-mmc@vger.kernel.org, kernel@pyra-handheld.com,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3A15C879-3A17-4FFC-B41E-0B98B63E8F7C@goldelico.com>
-References: <cover.1571510481.git.hns@goldelico.com> <741828f69eca2a9c9a0a7e80973c91f50cc71f9b.1571510481.git.hns@goldelico.com> <20191025211338.GA20249@bogus>
-To:     Rob Herring <robh@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+        Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH v2 3/5] dt-bindings: input: tochscreen: ad7879: generic node names in example
+Date:   Sat, 26 Oct 2019 11:04:01 +0200
+Message-Id: <20191026090403.3057-3-marcel@ziswiler.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191026090403.3057-1-marcel@ziswiler.com>
+References: <20191026090403.3057-1-marcel@ziswiler.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:AZs6m5j7/5kpHp4N1P9TZUPPmrn+q7afV0uY7Y+OBbvWyaLp11Z
+ 4azYw13OHQkir1m2J0LuVCj1RXGSiu9S7HZFq58rNgb1oV7kzbU6IiKSu18+Wik1skVyroN
+ oAEX9v4N6dLcQEc/to2v9e6QJ4Z4mSz6ZVwXImJ2reT8LiTx7PbAkXR4DwT5/qGMdzNwtNb
+ 6NhXpZYcAIpI8ssCjXacQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2wDFJmfKpKY=:a4fHeKL+d5tPnniShUyqvK
+ SU1aZ7KUjZi7A4BX35z9CMOKiQe7S3M7pUDfG2jBpEpQLrGF3S5eL/Q4zZQhAkjNRAeopMHVH
+ JRJybCDqevRhzjrxAQEANqysq7fLI1Z3LJ9uQQItJkfPFFkF8R6DE8X+dFc8z4spmjHHPqMIw
+ t/Yg0wmqfPbtZOlUi9Pc+T1ZQoviK3gwwNiBBKtWdmj5VZdVQsdPSYk+z+VLxYaivVg9BnSc4
+ eGlbikhS8aGm/bnJjuHn2Kpi4JOaBttJG5JtTXJMb/wc+/nk+nYnA+WWMAzA5zuw7OYdyZbui
+ qhzOGAOUfumz0GFsWkWwB7LTKgvLltZtWnUsFUubfO1tAKD6WycbM2sHS+kjGjdG7Ngzolz2+
+ eFJ2oqums9QR0Hi69nfP1tkk1BMxGrFLOvglCV9E77LoReNNeMap1iLhrtXYcP4xE/rkyYOnO
+ e0h58SVpOxUvCLaNjEuxjzkYdHR2WHEEoIcIiOHRW3CR6bcTyow2nm75hyz6wSimPCm286wmQ
+ EMs9P/Y103EPjPtyb4SXZjVTtXnYf7pYaMpD6/ohPg/+Ns3fnfNWiDUMx1ZMxM1L8E2Uqw9kc
+ 4Qg3n4qACh+65i2RZPHHjLiGi3x1BWdOLdIAHRsoBIR/ZWeaGNgGKIqQR/7LXsP5SPzwLJu4x
+ TUFc8m/nGEnU29DQYh+xpEwns1febIh0Gq08PAaLxR96+/xLQnoB3cNEjpePtcY/S/jXMAJxs
+ LRvtlXKj9W9ieVpl3X4Lp+AMZJmPHk2qSO272RJi7odyVEfZgGYfVTTLZ7XtLvNCjT56d1FRs
+ EDzr6OWGvYXBL06H/54iSZDuikkrNRc4s7pDE7OOt+6RmyxjFKz/SjKxpJatydBz0zwk3t4KE
+ lPuVRv7L6N1ElrKznzzY6Chi/CzlwlhLaa8rahZrE=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-> Am 25.10.2019 um 23:13 schrieb Rob Herring <robh@kernel.org>:
->=20
-> On Sat, Oct 19, 2019 at 08:41:16PM +0200, H. Nikolaus Schaller wrote:
->> The standard method for sdio devices connected to
->> an sdio interface is to define them as a child node
->> like we can see with wlcore.
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> Acked-by: Kalle Valo <kvalo@codeaurora.org>
->> ---
->> .../bindings/net/wireless/ti,wl1251.txt       | 26 =
-+++++++++++++++++++
->> 1 file changed, 26 insertions(+)
->>=20
->> diff --git =
-a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt =
-b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
->> index bb2fcde6f7ff..88612ff29f2d 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
->> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
->> @@ -35,3 +35,29 @@ Examples:
->> 		ti,power-gpio =3D <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
->> 	};
->> };
->> +
->> +&mmc3 {
->> +	vmmc-supply =3D <&wlan_en>;
->> +
->> +	bus-width =3D <4>;
->> +	non-removable;
->> +	ti,non-removable;
->> +	cap-power-off-card;
->> +
->> +	pinctrl-names =3D "default";
->> +	pinctrl-0 =3D <&mmc3_pins>;
->=20
-> None of the above are really relevant to this binding.
+Update example in ad7879 devicetree documentation to use generic touch
+controller node names.
 
-Ok, but how and where do we document that they are needed to make both =
-ends of the interface work together?
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
->=20
->> +
->> +	#address-cells =3D <1>;
->> +	#size-cells =3D <0>;
->> +
->> +	wlan: wl1251@1 {
->=20
-> wifi@1
+---
 
-Ok.
+Changes in v2: New patch.
 
->=20
->> +		compatible =3D "ti,wl1251";
->> +
->> +		reg =3D <1>;
->> +
->> +		interrupt-parent =3D <&gpio1>;
->> +		interrupts =3D <21 IRQ_TYPE_LEVEL_HIGH>;	/* =
-GPIO_21 */
->> +
->> +		ti,wl1251-has-eeprom;
->> +	};
->> +};
->> --=20
->> 2.19.1
->>=20
+ .../devicetree/bindings/input/touchscreen/ad7879.txt          | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-BR and thanks,
-Nikolaus=
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ad7879.txt b/Documentation/devicetree/bindings/input/touchscreen/ad7879.txt
+index cdd743a1f2d5..afa38dc069f0 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ad7879.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/ad7879.txt
+@@ -38,7 +38,7 @@ Optional properties:
+ 
+ Example:
+ 
+-	ad7879@2c {
++	touchscreen0@2c {
+ 		compatible = "adi,ad7879-1";
+ 		reg = <0x2c>;
+ 		interrupt-parent = <&gpio1>;
+@@ -52,7 +52,7 @@ Example:
+ 		adi,conversion-interval = /bits/ 8 <255>;
+ 	};
+ 
+-	ad7879@1 {
++	touchscreen1@1 {
+ 		compatible = "adi,ad7879";
+ 		spi-max-frequency = <5000000>;
+ 		reg = <1>;
+-- 
+2.21.0
+
