@@ -5,102 +5,201 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93DECA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 02:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D87CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 02:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB8D521D81
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 02:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A8221D81
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 02:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfxksKUJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fc2eDB3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbfJZCLc (ORCPT
+        id S1725997AbfJZC7J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 22:11:32 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43326 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfJZCLc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 22:11:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so4298447wrr.10;
-        Fri, 25 Oct 2019 19:11:29 -0700 (PDT)
+        Fri, 25 Oct 2019 22:59:09 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43676 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbfJZC7J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 22:59:09 -0400
+Received: by mail-il1-f193.google.com with SMTP id t5so3487179ilh.10;
+        Fri, 25 Oct 2019 19:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9ALQdhB5h3cKalAoVvOYU2qpe569Ks5R2FX4vQ5KEM0=;
-        b=LfxksKUJvXxznvcTIid8C09TRv1SJkXLT6K706LJCbwK/TUbqfTzijG0vqZ4Bx4Buc
-         qE0kRJT37SvRiWvnx6tw1TafGfA9AZXMHj4u44Hy3XwsRxo/TQuOCrSvbeOsLMutt4vw
-         HIfhktuA02JuxlizIP01M5kIXRNoo3kjbOZ6g3JkEE+WFVWT9179q0LXW8ykKc+u1sXD
-         iaZdHVrqDjqODrJE0m0KY9h0wwx9xy3l/xs8Zn1vMFhgjJ8EnDBNLUOmDb6Ph7cH1YtH
-         MS2Mb/T33eDeRGCGp7mQCALzFLOWPqp4mUm7RVsgQtH3gPCsTXVCFupKyZulzLfHm2WV
-         u9Ag==
+         :cc:content-transfer-encoding;
+        bh=NLfPrr1N/6xjP1uYZrlEDQ2ulSwFNlt1bLFIvB1CPH4=;
+        b=Fc2eDB3DpXsipr5eOSOX2PCmn0xRZfCZmfoMjCqPOw4/V9YDKVSJIt3bdWHmWb1ECZ
+         skpg6LqnglcS2w8HYG1hyzrC99ZyCqrg1Q7z7SBC2de6cOyR2M1147f2G3coWR+WUw5J
+         MD9Y2NQolGB8IfRs5iQcXRcJ18Cfresil91ZYMxEmibWClbiHZG3fHooGUMu9rahNnBy
+         5zWII1Hbmg4SPcXwvWOOOSFPEKpIUPJLlD8PE2zNBCl8TyPGh+8W6gQ02fWH8uAQVX5G
+         dmUJ09VFYQNfG0kYbzt/2gdWrwxPkoQRz3KeIYkui7OlqcaOs3A4p0u17g9HQYGoRh43
+         ipnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9ALQdhB5h3cKalAoVvOYU2qpe569Ks5R2FX4vQ5KEM0=;
-        b=lYvQL49eUhpcKr1F56EsjTcqphBxg021ZezNVHMTaaT3snNu+y66N17XWW5UzjRVBK
-         xql2bB82iiP8/8bs5c03tqtgCksrf1lmWuwNNGvLO1xhPk5OnCVWknFYqtZZ7rSxHhg3
-         7qjaVU/oTOXX67tmNMnAQ8+TMaNGuE6Q2ngEverEwV+JbtjRGCvmv7yH0z5Aj+y4R4gc
-         tgyZwO4+4+Jcs+1065K8DWZL/aaEk6lAQHJWYBw2Yn9G2IChUP8OsmLfJy6DxH/fZDsF
-         iHWH61MPLPS05DyIlvyID5YgpW4ZX2QyOFctB0EzqwE5qbmyoYLbP0TBgvvRbFEI0XcW
-         k2nw==
-X-Gm-Message-State: APjAAAXXYFvDXs8Wtby1fJvtHY/nUvUSqVUU7e0BcmBm10SbCYuUl6OE
-        fpeoDgOFnit3Fn8PEmikyGbs2WlPPqo8xmu6Qujmcw==
-X-Google-Smtp-Source: APXvYqy9WIvJ8mlOEnf1bsTVAEZqNwjann/RSa9Iiqk+fNe+gqyRdq1x/PwGQ7DH0ZwB9Oy00XC30ELcQR3QqRApCzg=
-X-Received: by 2002:adf:e403:: with SMTP id g3mr4931960wrm.128.1572055888508;
- Fri, 25 Oct 2019 19:11:28 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NLfPrr1N/6xjP1uYZrlEDQ2ulSwFNlt1bLFIvB1CPH4=;
+        b=Fx11WWSoCikvxTERW5+v5VSa7c1IgL31yHlVwA+HKYEhaCgDa4NMRCD1XU+VoAQTYT
+         yYbslxVWFZgjKCejZoFXLFsPpZV6TVrPlDendP6I0xgyzw2jD58JtgoedcsjS9fKnmJ3
+         AKMjEWwftnBw9ryYhQW+ISXXElXqBVLaZ5uMpkSRwnjWZSREo2L4kPcGlu5JfwpRpP6U
+         3ki7sxv0XLwvky+jqpzmxfuAyZDw1w97HfhmBccZznvEIIgvD9g/Ky3R6ZqhhbHSFQ/X
+         VIhzPtLtreuPyBZeOwk8L6lfqL7Uf772NieqsoK3trecot6UTEgFHdwO60DlqZg7vGzM
+         /N4A==
+X-Gm-Message-State: APjAAAUQpNWT/iybtPesQO0zlQtcZeRo2LjKNWKdS2rmgm1/NY4TZlFt
+        6trHLaw0FPObTWqS4FudEannnsLZLom8nrEnEVjvew==
+X-Google-Smtp-Source: APXvYqypTUGtydqEUWkA8Br9pAWHGwckpWS8yRATBydZbfz9308CQmPWrWTBPmiN6N3pTgjKT6kUz4wOH+HV/Jth9ko=
+X-Received: by 2002:a92:cb84:: with SMTP id z4mr8574940ilo.78.1572058747541;
+ Fri, 25 Oct 2019 19:59:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191025102915.23677-1-chunyan.zhang@unisoc.com> <20191025102915.23677-2-chunyan.zhang@unisoc.com>
-In-Reply-To: <20191025102915.23677-2-chunyan.zhang@unisoc.com>
-From:   Orson Zhai <orsonzhai@gmail.com>
-Date:   Sat, 26 Oct 2019 10:11:17 +0800
-Message-ID: <CA+H2tpHkYwQLEO7ftLebErsEXBQnRS37gFOoKoG+_jnt5+0r-A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: serial: Add a new compatible string for SC9863A
-To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
+References: <20191023183942.12142-1-tony@atomide.com>
+In-Reply-To: <20191023183942.12142-1-tony@atomide.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 25 Oct 2019 21:58:56 -0500
+Message-ID: <CAHCN7x+nJSMsLN_R+xDm4xOq8AibZgpiWX4UgUfjeB0Lv7Qk8w@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: Configure omap3 rng
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chunyan,
+On Wed, Oct 23, 2019 at 1:39 PM Tony Lindgren <tony@atomide.com> wrote:
+>
+> Looks like omap3 RNG is similar to the omap2 rng, let's get it working
+> by configring the dts node for it.
 
-On Fri, Oct 25, 2019 at 6:30 PM Chunyan Zhang <chunyan.zhang@unisoc.com> wrote:
+Thank you for doing this.  This really helps reduce the startup delays
+while waiting for entropy.
+
 >
+> We must also add rng_ick to core_l4_clkdm as noted by Adam Ford.
 >
-> SC9863A use the same serial device which SC9836 uses.
+> And please note that the RNG is likely disabled on HS devices. At least
+> n900 does not have it accessible, and instead omap3-rom-rng driver must
+> be used. So let's tag RNG as disabled on n900 as noted by Pali Roh=C3=A1r
+> <pali.rohar@gmail.com>.
 >
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> On am3517 at least the clocks need to be configured to get it working
+> as noted by Adam Ford, so let's tag it disabled for now.
+>
+
+Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
+
+> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 > ---
->  Documentation/devicetree/bindings/serial/sprd-uart.txt | 1 +
->  1 file changed, 1 insertion(+)
 >
-> diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> index 9607dc616205..0a9f8a7809e1 100644
-> --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  - compatible: must be one of:
->    * "sprd,sc9836-uart"
->    * "sprd,sc9860-uart", "sprd,sc9836-uart"
-> +  * "sprd,sc9863-uart", "sprd,sc9836-uart"
-
-Duplicated 9836 with above line?
-
--Orson
-
+> Sorry for the delay on getting this posted, please test.
 >
->  - reg: offset and length of the register set for the device
->  - interrupts: exactly one interrupt specifier
+> ---
+>  arch/arm/boot/dts/am3517.dtsi                 |  6 +++++
+>  arch/arm/boot/dts/omap3-n900.dts              |  5 ++++
+>  arch/arm/boot/dts/omap3.dtsi                  | 25 +++++++++++++++++++
+>  .../boot/dts/omap34xx-omap36xx-clocks.dtsi    |  2 +-
+>  4 files changed, 37 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/am3517.dtsi b/arch/arm/boot/dts/am3517.dts=
+i
+> --- a/arch/arm/boot/dts/am3517.dtsi
+> +++ b/arch/arm/boot/dts/am3517.dtsi
+> @@ -115,6 +115,12 @@
+>         };
+>  };
+>
+> +/* Not currently working, probably needs at least different clocks */
+> +&rng_target {
+> +       status =3D "disabled";
+> +       /delete-property/ clocks;
+> +};
+> +
+>  /* Table Table 5-79 of the TRM shows 480ab000 is reserved */
+>  &usb_otg_hs {
+>         status =3D "disabled";
+> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n=
+900.dts
+> --- a/arch/arm/boot/dts/omap3-n900.dts
+> +++ b/arch/arm/boot/dts/omap3-n900.dts
+> @@ -1013,6 +1013,11 @@
+>         };
+>  };
+>
+> +/* RNG not directly accessible on n900, se omap3-rom-rng instead */
+> +&rng_target {
+> +       status =3D "disabled";
+> +};
+> +
+>  &usb_otg_hs {
+>         interface-type =3D <0>;
+>         usb-phy =3D <&usb2_phy>;
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -8,6 +8,7 @@
+>   * kind, whether express or implied.
+>   */
+>
+> +#include <dt-bindings/bus/ti-sysc.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/pinctrl/omap.h>
+> @@ -502,6 +503,30 @@
+>                         status =3D "disabled";
+>                 };
+>
+> +               /* Likely needs to be tagged disabled on HS devices */
+> +               rng_target: target-module@480a0000 {
+> +                       compatible =3D "ti,sysc-omap2", "ti,sysc";
+> +                       reg =3D <0x480a003c 0x4>,
+> +                             <0x480a0040 0x4>,
+> +                             <0x480a0044 0x4>;
+> +                       reg-names =3D "rev", "sysc", "syss";
+> +                       ti,sysc-mask =3D <(SYSC_OMAP2_AUTOIDLE)>;
+> +                       ti,sysc-sidle =3D <SYSC_IDLE_FORCE>,
+> +                                       <SYSC_IDLE_NO>;
+> +                       ti,syss-mask =3D <1>;
+> +                       clocks =3D <&rng_ick>;
+> +                       clock-names =3D "ick";
+> +                       #address-cells =3D <1>;
+> +                       #size-cells =3D <1>;
+> +                       ranges =3D <0 0x480a0000 0x2000>;
+> +
+> +                       rng: rng@0 {
+> +                               compatible =3D "ti,omap2-rng";
+> +                               reg =3D <0x0 0x2000>;
+> +                               interrupts =3D <52>;
+> +                       };
+> +               };
+> +
+>                 mcbsp2: mcbsp@49022000 {
+>                         compatible =3D "ti,omap3-mcbsp";
+>                         reg =3D <0x49022000 0xff>,
+> diff --git a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi b/arch/arm/b=
+oot/dts/omap34xx-omap36xx-clocks.dtsi
+> --- a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
+> @@ -260,6 +260,6 @@
+>                          <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
+>                          <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>, <&ic=
+r_ick>,
+>                          <&des2_ick>, <&mspro_ick>, <&mailboxes_ick>,
+> -                        <&mspro_fck>;
+> +                        <&rng_ick>, <&mspro_fck>;
+>         };
+>  };
 > --
-> 2.20.1
->
->
+> 2.23.0
