@@ -4,86 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985CDCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5B1CA9EBD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCB020679
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351A620679
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572048987;
-	bh=lxiQMQRhiJ7h12cVrS4AdDCd1f4/4PZCwviYciLvcks=;
+	s=default; t=1572049038;
+	bh=7wVhwAfjY4O+5UrVzY16K+OCu/F7C8hJgiP7wDzGwV8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fPWENjGn7ROeNMegVsPFeKY6OGpLmvtfaLzNg9KVToHrOKGCINQ11jVga4CzLX6bx
-	 YAdaeQ5Af9YadOsT49ZvDzCJYe5YEzOGmTyn2+3VUdB+lwt5WiWZOerJAlr9RwWouY
-	 E3knMFHxpy8ICyIEdbLHFxAmgtXfa3tg3R4MW3eg=
+	b=VNeO3g/QNZE7c7xB5x6mJcxV26iTsPL/H9HgHAABp+yeQovYHOQBRT9HpEE8vaxSt
+	 Z90yRRH1gG6qHcAWdWKs1tVKSCwx8M7bpq8ON5EfQ1UHA90D7xpaG2xSCaCalEtJzq
+	 JouYoL/NeakE80FtG6lYlg610k8sa55vgrl5yen8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbfJZAQ0 (ORCPT
+        id S1725919AbfJZARR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 20:16:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44015 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfJZAQ0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 20:16:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id b19so889713otq.10;
-        Fri, 25 Oct 2019 17:16:26 -0700 (PDT)
+        Fri, 25 Oct 2019 20:17:17 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33002 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfJZARR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 20:17:17 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a15so2771025oic.0;
+        Fri, 25 Oct 2019 17:17:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=maK3FFwJzq/lCZMAegdLHsYC4aagUrxvxTswIaSlOUU=;
-        b=obnr67zftsVZ/Z+HWvMs6a7BvQRc8pk2jkyBJoVxrzZxTCMLqGC9WxPkpkaHn7VuuV
-         QI9ZFq0Ljm01qpOTgkA9XmQ3XPJQlW8QKUf5Rc0t2Qx/UpoQC9TsM4HP48ihEFB2AuAc
-         yrS+hwWYwTrACtU0mfvZknABW6Z82a3nQLA1gJPAFeyNPgXAQYgX35ProDric8hdfCoK
-         CxCcascbd/TKZlOC8gJO14N3BY/XzWIdyt7tGKjLt14OerK+4zupNat7iXtWTViDiF5n
-         zEDCDiuT5ux0Z+4XCi4Po6YhWgSQf2P0OcijAlB4OgnETr8HydqR8i8EfGhRBDbXISUB
-         s1Xw==
-X-Gm-Message-State: APjAAAVcAD37mX8+3CMo3Z0IpHr7X54Y5BAEomViDlGZsubsZoRNVjTU
-        eCedt6VoCJzumMMtKxaKRw==
-X-Google-Smtp-Source: APXvYqyTvYVQL2eSr8VqPZVVbg+Et1I+b3zYBzX7DsBds5oAcRAE5Ipdjzk1F5veI5S8s66doEkyeA==
-X-Received: by 2002:a9d:7d09:: with SMTP id v9mr4909005otn.292.1572048985772;
-        Fri, 25 Oct 2019 17:16:25 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hOjPJa1yemSBeswP+tAkd60Q1n8Cz2I13yekyg60bMs=;
+        b=mb+8tRkUsqhexkPkDDIHWwxX17qLe7G1euBsUJi1yZu1CZ/1uu20/DZhfWcS60+Dcb
+         8BtvDwgnj0Yry6+ZCQhuSowSzClUpPHZJlqSX+O8gF6Df3UstphPOnS1k/4PoITHgBay
+         ZTPHsLoIvhzfz/rgcGFyQZsB2PJF0jxNdzogJuXNsN5V2Xje5XAIDr8JbVLBm3oJAxhq
+         7eEIyOJn9nazJtlt6pvM+Z4CLdmcpZI4FG8Df2Ot4yTIglr+G3o8D+f4BHBuE/P5210D
+         hYIcdZ7Zsn92boKK1Cn/zYJlLrgxvFdLaukhPMpUwpYSJiNLwLSG+KShz0T+tvVoWfZz
+         FJyA==
+X-Gm-Message-State: APjAAAVbQlMgybtB7bC63GjRwAurOBk9Hvdur/QiL9mI+2zhFX5vXnIS
+        JuPrDTU6MdMZOdhscHV7oEaV+IQ=
+X-Google-Smtp-Source: APXvYqxd4vKbJn9lsrGOqXR83eEuUycJBvh2/M5MZg+CzayStyy9jDWnKKzdUVTCR1NP6qxJRVlvLQ==
+X-Received: by 2002:aca:448:: with SMTP id 69mr5087878oie.2.1572049036409;
+        Fri, 25 Oct 2019 17:17:16 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o5sm1228079otl.73.2019.10.25.17.16.25
+        by smtp.gmail.com with ESMTPSA id l12sm1002948oii.48.2019.10.25.17.17.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 17:16:25 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 19:16:24 -0500
+        Fri, 25 Oct 2019 17:17:15 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 19:17:15 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 02/11] dt-bindings: reset: Add Realtek RTD1195
-Message-ID: <20191026001624.GA4883@bogus>
-References: <20191023101317.26656-1-afaerber@suse.de>
- <20191023101317.26656-3-afaerber@suse.de>
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v2 1/5] dt-bindings: arm: renesas: Document R-Car M3-W+
+ SoC DT bindings
+Message-ID: <20191026001715.GA6299@bogus>
+References: <20191023122911.12166-1-geert+renesas@glider.be>
+ <20191023122911.12166-2-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191023101317.26656-3-afaerber@suse.de>
+In-Reply-To: <20191023122911.12166-2-geert+renesas@glider.be>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 23 Oct 2019 12:13:08 +0200, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
-> Add a header with symbolic reset indices for Realtek RTD1195 SoC.
-> Naming was derived from BSP register description headers.
+On Wed, 23 Oct 2019 14:29:07 +0200, Geert Uytterhoeven wrote:
+> Add device tree binding documentation for the Renesas R-Car M3-W+
+> (R8A77961) SoC.
 > 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  v2: New
->  
->  include/dt-bindings/reset/realtek,rtd1195.h | 74 +++++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 include/dt-bindings/reset/realtek,rtd1195.h
+> v2:
+>   - Add Reviewed-by.
+> ---
+>  Documentation/devicetree/bindings/arm/renesas.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
