@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49797CA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 11:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6E5CA9EBD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 11:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3352070B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 11:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D9A21655
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 11:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lhhwxzA5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BStLCrRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbfJZLDM (ORCPT
+        id S1726233AbfJZLDU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 07:03:12 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45417 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfJZLDM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 07:03:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y24so2770211plr.12
-        for <devicetree@vger.kernel.org>; Sat, 26 Oct 2019 04:03:11 -0700 (PDT)
+        Sat, 26 Oct 2019 07:03:20 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35177 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726311AbfJZLDU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 07:03:20 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c3so2794569plo.2
+        for <devicetree@vger.kernel.org>; Sat, 26 Oct 2019 04:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aiDt5t52KW99BwDzbhRa8ElOQ9bHTmHQCFgO82CwQAI=;
-        b=lhhwxzA5ON8HMXgKQss/I3lq4Lc9V27b5/H3BBvPFcELrZtb9qy4H3N6UI7eSKeKIX
-         In/UEkuOV3hpfrNWLFyNp1dTCo2a1KLy3NAEh5eET6QONjeWZ6mqK6HtmbjjL8hb7tsZ
-         VZ2asUuZ3WiSVH2bww4e4jeLuRQoTcfm8LQjOuqiVEu5HahWqpBD0dCtcESGAR1VnWc3
-         1cXt1ZkJIub2PohLo4isUuMjqrd/6W9U3+TyOBE1qCdU1RwgDd0hiIMQut+wd5swaukY
-         Wz++RWEtd1yp9IswZYewA75Zk+XMCYBrNIgMkFHqHP+nKFUz105SHBu7/pCYQW9HdFrZ
-         Xcow==
+        bh=LG1a1A4v+UDy0LaHh34rRqStYpMLpkQr762xn5ClOV4=;
+        b=BStLCrRVcfc9W2U7icjoCMX1Gj2iRhLpWeDE7qvJtv6LcI9rhj70IuJbL0jmQZ3NuP
+         Thp+P7E0x4aeamgW204c1aDtCszgv5gf5jDU8zIG+As1R5vO6Pgqvttvz11RxCs5eYiM
+         YSJWVo0gp6EVaeN/5LeNqOF5MpAodMT00ThV4Yx8A2kM4v/FDfk78BfgqU2k5uFk9R7k
+         Nu+1gfqE3TflzF8j3navuOEVe0cgZU95yYeI3V6CaHemVb6LgzUwd5jng+DST/+eK+uf
+         wrhytSbHS4AHuggxdSCgeZc1knDQgChWTwclqOxabp5ZpXH1DZFUkaCKTdIEysWNrMC2
+         fYzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=aiDt5t52KW99BwDzbhRa8ElOQ9bHTmHQCFgO82CwQAI=;
-        b=qBRfRrLl26DNI+OMdbuRd8sukmG67qspaO7Vs9x/gbhNGp8lnYqNGAHAATAy78AhmS
-         +nZvLK/SgTCznlP6uVGw/AswY/p5ptJ17XDi1uch8railR8nl6VSIsofrdJdkvwa3hCS
-         zfFJCneqDT+3xNt5k/1I4oOF7rXdGIQrmW/N2lz+c+PPzXj0k8s4v4YA6CC4jHNlTKlo
-         8gi3KFMGN7nx1FiLRSFIDabSjjUdrRSFZu9NDnE8AlJKQjUIAJblAxYPKBK8JnZbKSaO
-         NBO9WF5Y/4EqKsZq23Xtl4Q3P3bHnJ2PhKzsFeFc64+m7t+Ea1OiRZ4KEW10ZBGTwujO
-         Zjow==
-X-Gm-Message-State: APjAAAXsEYG7pSFEeRd0eQEpf0FvchXI+xHZBIteypY+U3n9s4D1J2KI
-        p8GX3TlxjqWhtaMtxSqK2ORe
-X-Google-Smtp-Source: APXvYqy5lOHxmtjAkzaD//NL3VDOOFhb8OaOdL7tWFq+3BWdvYScN+oCkwKKPDOjYGufCzIb45jAuw==
-X-Received: by 2002:a17:902:9682:: with SMTP id n2mr8848737plp.52.1572087791195;
-        Sat, 26 Oct 2019 04:03:11 -0700 (PDT)
+        bh=LG1a1A4v+UDy0LaHh34rRqStYpMLpkQr762xn5ClOV4=;
+        b=RWd6O5IGZ03shEwnqFw7qv86O2ZWkOKcQVU7SLseoQRD9JmQBhuRNCqbFlvN37RMdX
+         1F3yzuJ+zclF9IKE84X+cUzqnF52/wzx673Hf6zpwqRtZBLJ3TvZTcViqZupRbTIWMib
+         RVDpOkHWokUkS8wI5zoC8BKXLX49UErEYjF+FIXk3UCQsSWA81aZPMNTWg5V3Wcz6Kqh
+         YIMNvE2t4b4czuCUp1KcemFZiFkEGK5V4bCyZ/6gfTtIZXFOuU3ARbpgfU2BAf3o0Uk3
+         4cSDz8NhmxCEbS10QX60KkdqSIxWp1PipkWcd0nk28VRFke6lbjDF8t/xkzbeg/JOXBH
+         /wtA==
+X-Gm-Message-State: APjAAAUmXmOXHCorMzhi6aU7bFoH+SFtPENC/NESw1o55f3o7F0JNBIv
+        5H5pdWczpSd+tYf3zRH2wE94
+X-Google-Smtp-Source: APXvYqz1uqRPaKKF0vNoP/cKXvuFKk9g7nVxs3J+M5W2qBHBPSzRNdJaW7SN2BUOGyi9FoXo7mqZoA==
+X-Received: by 2002:a17:902:700b:: with SMTP id y11mr9348966plk.29.1572087798132;
+        Sat, 26 Oct 2019 04:03:18 -0700 (PDT)
 Received: from localhost.localdomain ([2409:4072:6214:69c4:49ad:ba3c:6f9:2d8a])
-        by smtp.gmail.com with ESMTPSA id x129sm5543379pfx.14.2019.10.26.04.03.05
+        by smtp.gmail.com with ESMTPSA id x129sm5543379pfx.14.2019.10.26.04.03.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Oct 2019 04:03:10 -0700 (PDT)
+        Sat, 26 Oct 2019 04:03:17 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
 Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -61,9 +61,9 @@ Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         haitao.suo@bitmain.com, darren.tsao@bitmain.com,
         fisher.cheng@bitmain.com, alec.lin@bitmain.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v6 1/7] clk: Zero init clk_init_data in helpers
-Date:   Sat, 26 Oct 2019 16:32:47 +0530
-Message-Id: <20191026110253.18426-2-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v6 2/7] clk: Add clk_hw_unregister_composite helper function definition
+Date:   Sat, 26 Oct 2019 16:32:48 +0530
+Message-Id: <20191026110253.18426-3-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191026110253.18426-1-manivannan.sadhasivam@linaro.org>
 References: <20191026110253.18426-1-manivannan.sadhasivam@linaro.org>
@@ -72,84 +72,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The clk_init_data struct needs to be initialized to zero for the new
-parent_map implementation to work correctly. Otherwise, the member which
-is available first will get processed.
+This function has been delcared but not defined anywhere. Hence, this
+commit adds definition for it.
 
+Fixes: 49cb392d3639 ("clk: composite: Add hw based registration APIs")
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/clk/clk-composite.c  | 2 +-
- drivers/clk/clk-divider.c    | 2 +-
- drivers/clk/clk-fixed-rate.c | 2 +-
- drivers/clk/clk-gate.c       | 2 +-
- drivers/clk/clk-mux.c        | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/clk/clk-composite.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/clk/clk-composite.c b/drivers/clk/clk-composite.c
-index 4f13a681ddfc..28aaf4a3b28a 100644
+index 28aaf4a3b28a..3e9c3e608769 100644
 --- a/drivers/clk/clk-composite.c
 +++ b/drivers/clk/clk-composite.c
-@@ -207,7 +207,7 @@ struct clk_hw *clk_hw_register_composite(struct device *dev, const char *name,
- 			unsigned long flags)
- {
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = {};
- 	struct clk_composite *composite;
- 	struct clk_ops *clk_composite_ops;
- 	int ret;
-diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
-index 3f9ff78c4a2a..098b2b01f0af 100644
---- a/drivers/clk/clk-divider.c
-+++ b/drivers/clk/clk-divider.c
-@@ -471,7 +471,7 @@ static struct clk_hw *_register_divider(struct device *dev, const char *name,
- {
- 	struct clk_divider *div;
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = {};
- 	int ret;
- 
- 	if (clk_divider_flags & CLK_DIVIDER_HIWORD_MASK) {
-diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
-index a7e4aef7a376..2c4486c09040 100644
---- a/drivers/clk/clk-fixed-rate.c
-+++ b/drivers/clk/clk-fixed-rate.c
-@@ -58,7 +58,7 @@ struct clk_hw *clk_hw_register_fixed_rate_with_accuracy(struct device *dev,
- {
- 	struct clk_fixed_rate *fixed;
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = {};
- 	int ret;
- 
- 	/* allocate fixed-rate clock */
-diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
-index 1b99fc962745..670053c58c1a 100644
---- a/drivers/clk/clk-gate.c
-+++ b/drivers/clk/clk-gate.c
-@@ -141,7 +141,7 @@ struct clk_hw *clk_hw_register_gate(struct device *dev, const char *name,
- {
- 	struct clk_gate *gate;
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = {};
- 	int ret;
- 
- 	if (clk_gate_flags & CLK_GATE_HIWORD_MASK) {
-diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
-index 66e91f740508..570b6e5b603b 100644
---- a/drivers/clk/clk-mux.c
-+++ b/drivers/clk/clk-mux.c
-@@ -153,7 +153,7 @@ struct clk_hw *clk_hw_register_mux_table(struct device *dev, const char *name,
- {
- 	struct clk_mux *mux;
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = {};
- 	u8 width = 0;
- 	int ret;
- 
+@@ -343,3 +343,14 @@ void clk_unregister_composite(struct clk *clk)
+ 	clk_unregister(clk);
+ 	kfree(composite);
+ }
++
++void clk_hw_unregister_composite(struct clk_hw *hw)
++{
++	struct clk_composite *composite;
++
++	composite = to_clk_composite(hw);
++
++	clk_hw_unregister(hw);
++	kfree(composite);
++}
++EXPORT_SYMBOL_GPL(clk_hw_unregister_composite);
 -- 
 2.17.1
 
