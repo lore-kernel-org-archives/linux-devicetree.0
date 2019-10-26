@@ -7,38 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4835CA9EBF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 20:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC4BCA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 20:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98776214DA
+	by mail.kernel.org (Postfix) with ESMTP id EDEA4214DA
 	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 20:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bonstra.fr.eu.org header.i=@bonstra.fr.eu.org header.b="a69nCh1v"
+	dkim=pass (2048-bit key) header.d=bonstra.fr.eu.org header.i=@bonstra.fr.eu.org header.b="XWt470oI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfJZUsk (ORCPT
+        id S1726566AbfJZUsj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 16:48:40 -0400
-Received: from vault.bonstra.fr.eu.org ([51.158.68.104]:39544 "EHLO
+        Sat, 26 Oct 2019 16:48:39 -0400
+Received: from vault.bonstra.fr.eu.org ([51.158.68.104]:39562 "EHLO
         vault.bonstra.fr.eu.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbfJZUsk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 16:48:40 -0400
-X-Greylist: delayed 410 seconds by postgrey-1.27 at vger.kernel.org; Sat, 26 Oct 2019 16:48:38 EDT
+        with ESMTP id S1726530AbfJZUsj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 16:48:39 -0400
 Received: from val.bonstra.fr.eu.org (unknown [192.168.128.2])
-        by vault.bonstra.fr.eu.org (Postfix) with ESMTP id 05E74BFD2D;
+        by vault.bonstra.fr.eu.org (Postfix) with ESMTP id 1A923BFE83;
         Sat, 26 Oct 2019 20:41:48 +0000 (UTC)
 Received: from bonstra.fr.eu.org (vlad.gr1 [IPv6:fd7b:45cc:aa3d::3])
-        by val.bonstra.fr.eu.org (Postfix) with ESMTPSA id B839060872;
-        Sat, 26 Oct 2019 22:41:46 +0200 (CEST)
+        by val.bonstra.fr.eu.org (Postfix) with ESMTPSA id 2A6AA60873;
+        Sat, 26 Oct 2019 22:41:47 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bonstra.fr.eu.org;
-        s=dkim1; t=1572122506; x=1573332106;
-        bh=FyQmJggoRLmgdI/q2dRsgf7Gx/W0s5so0ktocvI2jZg=;
+        s=dkim1; t=1572122507; x=1573332107;
+        bh=VhKkxkWcTbCjrWeKegoiffMLEInoYHE0UkHYo8HkL10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=a69nCh1vudgKtmmY0lGVIH6/NKWuMS9Sizht2iFRbUvG0xc7nV5Ed+cyYd0En8gDA
-         bJIahxWflCenEMQ67NaswXcR/JZxwaXE5aukNkMIhr2xoWAWWSo+fechRN4uwBZuaQ
-         1GhMVcohCvnLJQ92/aK3cWPIpxdrJlD9jJcJijoSsXiJpVKI4eLfj1iWrR+zFQQpVz
-         bmocZm0T5vJwQ0+28Cc35lAm3yee2xuKviI8yl45HeHznkN+JYZ+9hSuQe2N7QGpsf
-         AFzzOwvao7797RhRyttKeMF1ORLPtUOlayUhxESceILv/xkJnuyeV9RImindMZnq8X
-         aludlEdbdwAzA==
+        b=XWt470oIb0+H5KUndkc4KgevXnc31VGP7RacGTgi4Me6h0cxIdsebstCCEU4tbPRs
+         uirV6/kgxCUItw3V4e2RrOXO3s368QAIlDw+T1TNjM75Fy6h4G82DaByyVunSShyhc
+         w7ljbeEQznjqGZJveqSZiHdfHBv1faGDYFCqLb8vslSUD1i3V7jJDkUtauCc+z4Xcr
+         nwJjiSr7PB9E7T8sn4lgN1ymyfGckhk5gvuzRhK3JIxD9oXZTkdLg47FbexB2xWT2e
+         o0Y6vwNdarMY0jNrcnHVt7Gg90+ZKHqDLPKCVw2i79TzDt4GfktEuHU/Vq829cQp0k
+         FWs67w3PYGdfg==
 From:   Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
 To:     Marcel Holtmann <marcel@holtmann.org>,
         Johan Hedberg <johan.hedberg@gmail.com>,
@@ -49,9 +48,9 @@ To:     Marcel Holtmann <marcel@holtmann.org>,
 Cc:     Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-bluetooth@vger.kernel.org
-Subject: [PATCH 2/3] Bluetooth: hci_h5: Add DT support for rtl8723bs
-Date:   Sat, 26 Oct 2019 22:41:15 +0200
-Message-Id: <20191026204116.95119-3-bonstra@bonstra.fr.eu.org>
+Subject: [PATCH 3/3] arm64: dts: allwinner: a64: Enable Bluetooth on Teres-I
+Date:   Sat, 26 Oct 2019 22:41:16 +0200
+Message-Id: <20191026204116.95119-4-bonstra@bonstra.fr.eu.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191026204116.95119-1-bonstra@bonstra.fr.eu.org>
 References: <20191026204116.95119-1-bonstra@bonstra.fr.eu.org>
@@ -62,100 +61,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The hci_h5 already supports rtl8723bs devices discovered via ACPI. This
-commit adds support for discovering via device tree for ACPI-less
-platforms.
+The UART1 on the Teres-A64-I is connected to a rtl8723bs combo
+WLAN/Bluetooth controller, with three GPIOs used for device reset,
+host wake up and device wake up.
+
+Currently, the host wake up feature is not supported by the HCI H5
+driver.
 
 Signed-off-by: Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
 ---
- drivers/bluetooth/hci_h5.c | 40 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 35 insertions(+), 5 deletions(-)
+ .../arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
-index dacf297baf59..49ac03b1a7e3 100644
---- a/drivers/bluetooth/hci_h5.c
-+++ b/drivers/bluetooth/hci_h5.c
-@@ -11,6 +11,7 @@
- #include <linux/gpio/consumer.h>
- #include <linux/kernel.h>
- #include <linux/mod_devicetable.h>
-+#include <linux/of_device.h>
- #include <linux/serdev.h>
- #include <linux/skbuff.h>
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index 1069e7012c9c..c7db2f1650d4 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -325,6 +325,19 @@
+ 	status = "okay";
+ };
  
-@@ -782,7 +783,9 @@ static const struct hci_uart_proto h5p = {
- 
- static int h5_serdev_probe(struct serdev_device *serdev)
- {
--	const struct acpi_device_id *match;
-+	const struct acpi_device_id *acpi_match;
-+	const struct of_device_id *of_match;
-+	const char *cfgname = NULL;
- 	struct device *dev = &serdev->dev;
- 	struct h5 *h5;
- 
-@@ -797,16 +800,27 @@ static int h5_serdev_probe(struct serdev_device *serdev)
- 	serdev_device_set_drvdata(serdev, h5);
- 
- 	if (has_acpi_companion(dev)) {
--		match = acpi_match_device(dev->driver->acpi_match_table, dev);
--		if (!match)
-+		acpi_match = acpi_match_device(
-+				dev->driver->acpi_match_table, dev);
-+		if (!acpi_match)
- 			return -ENODEV;
- 
--		h5->vnd = (const struct h5_vnd *)match->driver_data;
--		h5->id  = (char *)match->id;
-+		h5->vnd = (const struct h5_vnd *)acpi_match->driver_data;
-+		h5->id  = (char *)acpi_match->id;
- 
- 		if (h5->vnd->acpi_gpio_map)
- 			devm_acpi_dev_add_driver_gpios(dev,
- 						       h5->vnd->acpi_gpio_map);
-+	} else if (dev->of_node) {
-+		of_match = of_match_device(dev->driver->of_match_table, dev);
-+		if (!of_match)
-+			return -ENODEV;
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	status = "okay";
 +
-+		of_property_read_string(dev->of_node,
-+					"realtek,config-name", &cfgname);
-+
-+		h5->vnd = (const struct h5_vnd *)of_match->data;
-+		h5->id = cfgname;
- 	}
- 
- 	h5->enable_gpio = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_LOW);
-@@ -996,6 +1010,19 @@ static const struct acpi_device_id h5_acpi_match[] = {
- MODULE_DEVICE_TABLE(acpi, h5_acpi_match);
- #endif
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id h5_of_match[] = {
-+#ifdef CONFIG_BT_HCIUART_RTL
-+	{
-+		.compatible = "realtek,rtl8723bs-bt",
-+		.data = &rtl_vnd
-+	},
-+#endif
-+	{ },
++	bluetooth {
++		compatible = "realtek,rtl8723bs-bt";
++		enable-gpio = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
++		device-wake-gpio = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
++		realtek,config-name = "teres_a64_i";
++	};
 +};
-+MODULE_DEVICE_TABLE(of, h5_of_match);
-+#endif
 +
- static const struct dev_pm_ops h5_serdev_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(h5_serdev_suspend, h5_serdev_resume)
- };
-@@ -1006,6 +1033,9 @@ static struct serdev_device_driver h5_serdev_driver = {
- 	.driver = {
- 		.name = "hci_uart_h5",
- 		.acpi_match_table = ACPI_PTR(h5_acpi_match),
-+#ifdef CONFIG_OF
-+		.of_match_table = h5_of_match,
-+#endif
- 		.pm = &h5_serdev_pm_ops,
- 	},
- };
+ &usbphy {
+ 	usb1_vbus-supply = <&reg_usb1_vbus>;
+ 	status = "okay";
 -- 
 2.23.0
 
