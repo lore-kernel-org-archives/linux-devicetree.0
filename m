@@ -7,102 +7,83 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25D6CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985CDCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6A620679
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCB020679
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572048897;
-	bh=QOOyFWPjQXLwaN1Tit7zQQ7wBCOPVs0Fsr/AynP69F0=;
+	s=default; t=1572048987;
+	bh=lxiQMQRhiJ7h12cVrS4AdDCd1f4/4PZCwviYciLvcks=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cusu+ZqSbjO9V2buWR/lPhbzpQFpSNJwWRqB8putyrpMgG2MGtSXtfvjEQcD/188H
-	 /vTdVH1w5megor1XcQNJF/PaJ6LwgY1TCGDcZ90rX4uaMGfHZIpjbLC9/Wfu5wo3dF
-	 YMPUbatIS8s9B31c5Ct1vh8xeC8b1JIHgjUKstJw=
+	b=fPWENjGn7ROeNMegVsPFeKY6OGpLmvtfaLzNg9KVToHrOKGCINQ11jVga4CzLX6bx
+	 YAdaeQ5Af9YadOsT49ZvDzCJYe5YEzOGmTyn2+3VUdB+lwt5WiWZOerJAlr9RwWouY
+	 E3knMFHxpy8ICyIEdbLHFxAmgtXfa3tg3R4MW3eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbfJZAO4 (ORCPT
+        id S1725897AbfJZAQ0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 20:14:56 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37374 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfJZAO4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 20:14:56 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 53so3244364otv.4;
-        Fri, 25 Oct 2019 17:14:54 -0700 (PDT)
+        Fri, 25 Oct 2019 20:16:26 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44015 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfJZAQ0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 20:16:26 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b19so889713otq.10;
+        Fri, 25 Oct 2019 17:16:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b/fqKzX/vnTAVXMLKRT3D/CXlKeMTuTH7nGknDqJCHE=;
-        b=CwOqd67V71iNrl5V4cIF+g+AdlF8RlHY2SG/VJwNNedOX/kG1pyhl7oRKKHuH7ID0s
-         hFQB725lMDfiNZK8hfX7cQ6K8QEtoIvA4V7t6h7tmoXCiGj29WZPfBnTSizKqfqr6YjP
-         QUZzT6lxC9izWhqJ9jsOVwQRckP50BgOsjTLJTOTVF6ooF0v/splhQewm1fzPNs19Bv2
-         3zt3TKdRDKRQX7Af+KuHwrXcQcGzXef3Nz03DE+57Z7rOFXOFS1IYzjVY5yzHe0WSMeM
-         kuTF/iNBTHJrClvthZ4IM5YOQGE3JY9Dj5Guq9SOexGVMeYDvlHDUjnB6fKPWRv0A+n9
-         EnLQ==
-X-Gm-Message-State: APjAAAVhCVe38/FBA/hGaXj61XG9V9cTQML3opZjkAP6mMwoiCrkLmoK
-        KrjckWoRaWi0D7LAtZhZQg==
-X-Google-Smtp-Source: APXvYqyK0gWiKJACY34bQRCBt53yRAiREV/XUoMTHmacL7PgkxZyfxgYB+13H3jFjEqEmo1FjWtfIQ==
-X-Received: by 2002:a9d:721c:: with SMTP id u28mr4945875otj.359.1572048894172;
-        Fri, 25 Oct 2019 17:14:54 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=maK3FFwJzq/lCZMAegdLHsYC4aagUrxvxTswIaSlOUU=;
+        b=obnr67zftsVZ/Z+HWvMs6a7BvQRc8pk2jkyBJoVxrzZxTCMLqGC9WxPkpkaHn7VuuV
+         QI9ZFq0Ljm01qpOTgkA9XmQ3XPJQlW8QKUf5Rc0t2Qx/UpoQC9TsM4HP48ihEFB2AuAc
+         yrS+hwWYwTrACtU0mfvZknABW6Z82a3nQLA1gJPAFeyNPgXAQYgX35ProDric8hdfCoK
+         CxCcascbd/TKZlOC8gJO14N3BY/XzWIdyt7tGKjLt14OerK+4zupNat7iXtWTViDiF5n
+         zEDCDiuT5ux0Z+4XCi4Po6YhWgSQf2P0OcijAlB4OgnETr8HydqR8i8EfGhRBDbXISUB
+         s1Xw==
+X-Gm-Message-State: APjAAAVcAD37mX8+3CMo3Z0IpHr7X54Y5BAEomViDlGZsubsZoRNVjTU
+        eCedt6VoCJzumMMtKxaKRw==
+X-Google-Smtp-Source: APXvYqyTvYVQL2eSr8VqPZVVbg+Et1I+b3zYBzX7DsBds5oAcRAE5Ipdjzk1F5veI5S8s66doEkyeA==
+X-Received: by 2002:a9d:7d09:: with SMTP id v9mr4909005otn.292.1572048985772;
+        Fri, 25 Oct 2019 17:16:25 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c21sm1218018otp.15.2019.10.25.17.14.53
+        by smtp.gmail.com with ESMTPSA id o5sm1228079otl.73.2019.10.25.17.16.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 17:14:53 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 19:14:52 -0500
+        Fri, 25 Oct 2019 17:16:25 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 19:16:24 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] dt-bindings: serial: document LiteUART bindings
-Message-ID: <20191026001452.GA2522@bogus>
-References: <20191023114634.13657-0-mholenko@antmicro.com>
- <20191023114634.13657-3-mholenko@antmicro.com>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 02/11] dt-bindings: reset: Add Realtek RTD1195
+Message-ID: <20191026001624.GA4883@bogus>
+References: <20191023101317.26656-1-afaerber@suse.de>
+ <20191023101317.26656-3-afaerber@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191023114634.13657-3-mholenko@antmicro.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191023101317.26656-3-afaerber@suse.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 23 Oct 2019 11:47:14 +0200, Mateusz Holenko wrote:
-> From: Filip Kokosinski <fkokosinski@internships.antmicro.com>
+On Wed, 23 Oct 2019 12:13:08 +0200, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
+> Add a header with symbolic reset indices for Realtek RTD1195 SoC.
+> Naming was derived from BSP register description headers.
 > 
-> Add documentation for LiteUART devicetree bindings.
-> 
-> Signed-off-by: Filip Kokosinski <fkokosinski@internships.antmicro.com>
-> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
-> Changes in v2:
-> - binding description rewritten to a yaml schema file
-> - added interrupt line
-> - fixed unit address
-> - patch number changed from 2 to 3
-> 
->  .../bindings/serial/litex,liteuart.yaml       | 38 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+>  v2: New
+>  
+>  include/dt-bindings/reset/realtek,rtd1195.h | 74 +++++++++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/realtek,rtd1195.h
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
