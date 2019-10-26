@@ -2,74 +2,78 @@ Return-Path: <SRS0=rl0j=YT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607EACA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 13:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB555CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 13:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3541A20867
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 13:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572097467;
-	bh=YCv4URIQy3pkQdHVSuQ+eQWwuJTzbg/MkOdHyTJ36e4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TbmvFeHihSKnQCwsMC8YPMbKbeetNYMazLTv+ZOC9UEVqxTLPJaElUQXMpcVGnDEu
-	 kFxETWb774NsBza9jGWncQPCpbIU/BSw8vW/mzm6VeAnZ71qlibHSGjdmUThpwsIox
-	 uKaHqiQRXbYYLTGILx2BgmfawseMfUgQFjFsQzuA=
+	by mail.kernel.org (Postfix) with ESMTP id BCAFC21871
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 13:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfJZNoX (ORCPT
+        id S1726271AbfJZN5z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:44:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfJZNoW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:44:22 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 162D520867;
-        Sat, 26 Oct 2019 13:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572097462;
-        bh=YCv4URIQy3pkQdHVSuQ+eQWwuJTzbg/MkOdHyTJ36e4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=es/koZ9mMCa27TDLFb9+npeSxQoSzx8tu4azO/Cii5Nxn2vNy8oG4f7jw8mZW95KT
-         SVq2gwXHkPyC8iCZN1BPF1Mi6YGh0TiLE4BDKqjerpn2r41iF/ttJBt+I7ZtAxlMjZ
-         i950RIuSPjFb6t9bhtuQdxo1ycLuXgjx8F9/t0Lk=
-Date:   Sat, 26 Oct 2019 21:44:04 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Cc:     corbet@lwn.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        gregkh@linuxfoundation.org, catalin.marinas@arm.com,
-        will@kernel.org, leoyang.li@nxp.com, jslaby@suse.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v7 0/5] Add initial support for S32V234-EVB
-Message-ID: <20191026134403.GQ14401@dragon>
-References: <1571230107-8493-1-git-send-email-stefan-gabriel.mirea@nxp.com>
+        Sat, 26 Oct 2019 09:57:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55386 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726256AbfJZN5z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:57:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 85577B319;
+        Sat, 26 Oct 2019 13:57:53 +0000 (UTC)
+Subject: Re: [PATCH v2 3/8] dt-bindings: arm: realtek: Tidy up conversion to
+ json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191020040817.16882-1-afaerber@suse.de>
+ <20191020040817.16882-4-afaerber@suse.de> <20191025212127.GA4819@bogus>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <1c4eae6d-d145-72af-85dd-18c8e1fdc848@suse.de>
+Date:   Sat, 26 Oct 2019 15:57:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191025212127.GA4819@bogus>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1571230107-8493-1-git-send-email-stefan-gabriel.mirea@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:48:22PM +0300, Stefan-Gabriel Mirea wrote:
-> Eddy Petrișor (1):
->   dt-bindings: arm: fsl: Add the S32V234-EVB board
+Am 25.10.19 um 23:21 schrieb Rob Herring:
+> On Sun, 20 Oct 2019 06:08:12 +0200, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
+>> Restore the device names for compatible strings as comments.
+>> Prepare for adding more SoCs by inserting oneOf.
+>>
+>> Fixes: 693af5f3eeaa ("dt-bindings: arm: Convert Realtek board/soc bindings to json-schema")
+>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>> ---
+>>  v2: New
+>>  
+>>  Documentation/devicetree/bindings/arm/realtek.yaml | 15 ++++++++-------
+>>  1 file changed, 8 insertions(+), 7 deletions(-)
+>>
 > 
-> Mihaela Martinas (2):
->   arm64: Introduce config for S32
->   arm64: defconfig: Enable configs for S32V234
-...
-> Stoica Cosmin-Stefan (1):
->   arm64: dts: fsl: Add device tree for S32V234-EVB
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Applied these 4, thanks.
+Thanks, applied to linux-realtek.git v5.5/dt64:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-realtek.git/log/?h=v5.5/dt64
+
+Regards,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
