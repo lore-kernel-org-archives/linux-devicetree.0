@@ -2,77 +2,74 @@ Return-Path: <SRS0=rl0j=YT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E76CA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 11:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A25DCA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 12:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3E82070B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 11:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAEBF20867
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 12:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="qCUMmIo0"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mb0lFk5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfJZLyj (ORCPT
+        id S1726198AbfJZMFO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 07:54:39 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35227 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfJZLyj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 07:54:39 -0400
-Received: by mail-io1-f67.google.com with SMTP id h9so5480601ioh.2
-        for <devicetree@vger.kernel.org>; Sat, 26 Oct 2019 04:54:37 -0700 (PDT)
+        Sat, 26 Oct 2019 08:05:14 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34882 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfJZMFO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 08:05:14 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z6so3865468otb.2
+        for <devicetree@vger.kernel.org>; Sat, 26 Oct 2019 05:05:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=95NF6ya59NaDwQCRMTuT7+DIGgKDYS13smU5I7TrWOE=;
-        b=qCUMmIo0BbhCOq9lMzlReiKmqepVYdzM2YHifoI12iUkwr37TnSbvdjsnrTHq6ddmv
-         bcNdWTRhsJCrcu7H+ZCbftfrVYkGrejXQxUsYqr0QnOt1tpYtB5fhjD+VdHrd1I4JVAH
-         6A1H7nzmZSFyJykoe7ZXgjzmD1QlscU7jWstKtx1hQb0yQV1NCvVZmzgvp6XTgkrdojg
-         BUcQh6tjpP7wwpI4YysReDIgQl3n2hB2IrwEpkfFIoVP4NOpQ/5bmGbGDqSwfXcn28+A
-         cYAAqbFjVBQV/Ld6TFnMXKFf1zfkBRNDH5cO8RBSUUt6TuGkDcW+xW9PSAQ/48drX/SD
-         eXKg==
+        bh=wziPjru27ecL6mZ4dPMfLGt//OSBOTgIklyIX5IY5eQ=;
+        b=mb0lFk5GbEYzaV1slHpJlUJqh2SAli0n5c3YqKLabdLuIIaCmXMqVTMIGfLUyojTXs
+         bI0Nuo8tfdVBmP7Wct/hRcHovPrLPGZrY0V1fsHG9+fkujNiiOEjdXr3CLMY5Wan6CT1
+         nbsGMyaBhbtXue3Np2UAH5qOKhIdVYr8gy2Eg9VqnRNo6jho+mI6f/RuzKR28DwHViGT
+         4YT1ZWB1JkgehArTICssZj3d7aojTAGZ5ILIvxuNYDdGUj4dsAqobsWyaBgJ6mHA/TFH
+         jUvdfriFVC1xCEDPMrcCUN8VtpcwMHWpDeZeVwhCNA+Krwpov7o3nz/efd29IR7/RAno
+         pCtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=95NF6ya59NaDwQCRMTuT7+DIGgKDYS13smU5I7TrWOE=;
-        b=afRusUN7pzIUUYTuVvBOrBL0vlpFtEeCBHe0Mm6rYO58GYRA1H2lQSDiumNke6TLF2
-         +3uOoPOGLU6zLKmefQvz2oDU9FDnZJL40C8/Xy9a+OzJoxAtexGmK2cFVwMONU4hMFql
-         jbUl0+uIwteTeIAw2AAuDX1Ugel2pNVoxWFV+hzxA+vjptRbKwU6rd+K41i7jtat1//v
-         03iRs0m5YZ0gpaeDSze4zfIE4aNM3aGgbkks2nOWvGu3vZVP0JUluaZYW+H6FcXLePax
-         sRtctNLfkhG1GxMG3vobyPjXA87LeBwNPW9kzShHMKNrPaGzuB617mnEtpSitGLpd37d
-         b6tQ==
-X-Gm-Message-State: APjAAAWHinNJPUAJOoxA2vYY5gr39e1yVUkPbqcuPikmohJtM3UFhkhz
-        U0ATTnz/D+95Fb5CnT9Kyf8o6oKpRP7biyWgtu2V8A==
-X-Google-Smtp-Source: APXvYqxZwvpfOq9dYpYH92DZtvwRF1oK54mc+XbTMo9ELET5163QFqgxXpr4ovIlOhCTlZMuVH2hrmtKW1p9kGU4FRk=
-X-Received: by 2002:a6b:6b08:: with SMTP id g8mr6377672ioc.189.1572090877362;
- Sat, 26 Oct 2019 04:54:37 -0700 (PDT)
+        bh=wziPjru27ecL6mZ4dPMfLGt//OSBOTgIklyIX5IY5eQ=;
+        b=SL5ycUhlQTA7reDTyZDoF+Z+VTC/ej1sdT3I8PlTaQz/3xsmuhbKpmm4oBH7Su5qQ7
+         45EYk2IsV4NzFU0nmhhM43nCnKdtEIgKi959DohL5GVOq1LE2/7sLFWaVToPMnCFbiaK
+         kF8510AX1UR5CU86HRFJ73dvuuZyeOLDTIbUU6WM7cGdTx2L6FfId6FWAwZqWQLvn97f
+         IPmEDuC3+QctEWBwGvCAgnKxvuem/KS0JaN+LEGpxdEQjlROOYBHaagUmtD4nvY1MGWu
+         Tbm1Rl2xlAe1bWCFvhcKYIkK8oTvp/bDMqA6qZf5ShmQ1MUsd3GwRyVDVCHHjcSRJ2uK
+         2JkQ==
+X-Gm-Message-State: APjAAAU916z1uyDEhbhsuG3o2tCdU7nfeN7ufISX2Gu/gUFsdN6cIelL
+        MLyjk+y4PeF3n/5ce6p2cwPxm9frE+OMLG+CHTWA6g==
+X-Google-Smtp-Source: APXvYqw1CBK/GZ4OGs5cVGiCrX5U6xfZaJCv+7JjUnIhmAHa+oK5tXFTkv3DfBtKhkprvzG3Yt7Se6jUWbp5I5X9ZiE=
+X-Received: by 2002:a9d:6c96:: with SMTP id c22mr6546047otr.194.1572091513116;
+ Sat, 26 Oct 2019 05:05:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191021124428.2541-1-brgl@bgdev.pl>
-In-Reply-To: <20191021124428.2541-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 26 Oct 2019 13:54:26 +0200
-Message-ID: <CAMRc=MeYS+rQMCEc_z1FudnremUhUsXnxdcB2heF6qdtOkH9uQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] dt-bindings: max77650: convert the device-tree
- bindings to yaml
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linux Input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>
+References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
+ <20191018082557.3696-2-bibby.hsieh@mediatek.com> <CAMpxmJW_HQnL8i5FnKcVUs=ZyrnaFe6X+oqG38-v=O05d5vNxw@mail.gmail.com>
+ <CAAFQd5CA_53uDo6QdRcvqJ5shUG5K25f+WXCn9OYMHfSgwLMSA@mail.gmail.com>
+ <CAMpxmJWzEER4iBo9-WhmumuH1nmWYvy=xud+=7wzp3op8-P7uw@mail.gmail.com>
+ <CAAFQd5DNdmm4sn1JNPhnuMor50ZP4EJmymtS4hB4WkNHmKOs6w@mail.gmail.com> <20191025211000.GA8235@bogus>
+In-Reply-To: <20191025211000.GA8235@bogus>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sat, 26 Oct 2019 14:05:02 +0200
+Message-ID: <CAMpxmJUygTr2b+q-skb8_m9TfOiEvqoOCSjDQEi+sf9iNN0=BQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-binding: eeprom: at24: add supply properties
+To:     Rob Herring <robh@kernel.org>
+Cc:     Tomasz Figa <tfiga@chromium.org>, Wolfram Sang <wsa@the-dreams.de>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
@@ -80,79 +77,90 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pon., 21 pa=C5=BA 2019 o 14:44 Bartosz Golaszewski <brgl@bgdev.pl> napisa=
-=C5=82(a):
+pt., 25 pa=C5=BA 2019 o 23:10 Rob Herring <robh@kernel.org> napisa=C5=82(a)=
+:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> On Thu, Oct 24, 2019 at 06:32:38PM +0900, Tomasz Figa wrote:
+> > On Thu, Oct 24, 2019 at 5:40 PM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
+> > >
+> > > czw., 24 pa=C5=BA 2019 o 09:02 Tomasz Figa <tfiga@chromium.org> napis=
+a=C5=82(a):
+> > > >
+> > > > On Thu, Oct 24, 2019 at 3:22 PM Bartosz Golaszewski
+> > > > <bgolaszewski@baylibre.com> wrote:
+> > > > >
+> > > > > pt., 18 pa=C5=BA 2019 o 10:26 Bibby Hsieh <bibby.hsieh@mediatek.c=
+om> napisa=C5=82(a):
+> > > > > >
+> > > > > > In some platforms, they disable the power-supply of eeprom and =
+i2c due
+> > > > > > to power consumption reduction.
+> > > > > >
+> > > > > > This patch add two supply properties: vcc-supply, i2c-supply.
+> > > > > >
+> > > > > > Changes since v1:
+> > > > > >  - change supply name
+> > > > > >  - rebase to next
+> > > > > >
+> > > > > > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > > > > > ---
+> > > > > >  Documentation/devicetree/bindings/eeprom/at24.yaml | 8 +++++++=
++
+> > > > > >  1 file changed, 8 insertions(+)
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml=
+ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> > > > > > index e8778560d966..578487a5d9b7 100644
+> > > > > > --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
+> > > > > > +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> > > > > > @@ -167,6 +167,14 @@ properties:
+> > > > > >      minimum: 1
+> > > > > >      maximum: 8
+> > > > > >
+> > > > > > +  vcc-supply:
+> > > > > > +    description:
+> > > > > > +      phandle of the regulator that provides the supply voltag=
+e.
+> > > > > > +
+> > > > > > +  i2c-sypply:
+> > > > > > +    description:
+> > > > > > +      phandle to the regulator that provides power to i2c.
+> > > > > > +
+> > > > >
+> > > > > Something was bothering me about this patch so I came back to tak=
+e a
+> > > > > look. Can you explain what i2c actually stands for in this doc? I=
+ hope
+> > > > > I'm misinterpreting something and it isn't that the driver disabl=
+es
+> > > > > the regulator powering the i2c bus controller?
+> > > >
+> > > > In our case it's the regulator that the I2C bus is pulled up to.
+> > > >
+> > >
+> > > Then it has nothing to do with a generic EEPROM driver IMO. I think
+> > > you need to add the control for this regulator to your i2c controller
+> > > driver and create a power domain where the EEPROM would be lower in
+> > > hierarchy.
+> >
+> > While I agree that the generic EEPROM driver may not be the best place
+> > to do it, neither is a driver for a specific SoC i2c controller. The
+> > hardware design is not specific to any particular i2c controller.
+> >
+> > Perhaps we need the generic i2c core to take into account an
+> > i2c-supply? Wolfram, any thoughts on this?
 >
-> This series converts all DT binding documents for MAX77650 PMIC to YAML.
+> Sounds good to me. Maybe 'bus-supply' instead to indicate it's supposed
+> to be for the bus and not other things. It should reside in the I2C
+> controller's node (or mux ports) though.
 >
-> v1 -> v2:
-> - use upper case for abbreviations in commit messages
->
-> v2 -> v3:
-> - pull all example fragments into the binding document for the core MFD m=
-odule
-> - fix all dt_binding_check errors
-> - add references to submodules to the main binding document
-> - drop the type for gpio-line-names
-> - drop the description for the interrupts property
-> - completely delete the previous txt files
->
-> v3 -> v4:
-> - remove unnecessary parts of descriptions, added details on the chip
-> - correct file references (.txt -> .yaml)
-> - fix mixing scalar and array constraints
-> - dropped type refs for globally defined properties
->
-> Bartosz Golaszewski (6):
->   dt-bindings: input: max77650: convert the binding document to yaml
->   dt-bindings: regulator: max77650: convert the binding document to yaml
->   dt-bindings: power: max77650: convert the binding document to yaml
->   dt-bindings: leds: max77650: convert the binding document to yaml
->   dt-bindings: mfd: max77650: convert the binding document to yaml
->   MAINTAINERS: update the list of maintained files for max77650
->
->  .../bindings/input/max77650-onkey.txt         |  26 ---
->  .../bindings/input/max77650-onkey.yaml        |  35 ++++
->  .../bindings/leds/leds-max77650.txt           |  57 -------
->  .../bindings/leds/leds-max77650.yaml          |  51 ++++++
->  .../devicetree/bindings/mfd/max77650.txt      |  46 ------
->  .../devicetree/bindings/mfd/max77650.yaml     | 149 ++++++++++++++++++
->  .../power/supply/max77650-charger.txt         |  28 ----
->  .../power/supply/max77650-charger.yaml        |  34 ++++
->  .../bindings/regulator/max77650-regulator.txt |  41 -----
->  .../regulator/max77650-regulator.yaml         |  31 ++++
->  MAINTAINERS                                   |   4 +-
->  11 files changed, 302 insertions(+), 200 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/max77650-onke=
-y.txt
->  create mode 100644 Documentation/devicetree/bindings/input/max77650-onke=
-y.yaml
->  delete mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.=
-txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.=
-yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
->  delete mode 100644 Documentation/devicetree/bindings/power/supply/max776=
-50-charger.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max776=
-50-charger.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/max77650-=
-regulator.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/max77650-=
-regulator.yaml
->
-> --
-> 2.23.0
->
+> Rob
 
-Hi Rob,
+Thanks,
 
-thanks for reviewing the series. Can you please take it through your
-tree for v5.5? I think it'll be easier than bothering all the
-respective maintainers and it only touches on bindings anyway.
+in that case Bibby: please just use a single regulator for vcc-supply in at=
+24.
 
 Thanks,
 Bartosz
