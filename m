@@ -2,78 +2,136 @@ Return-Path: <SRS0=rl0j=YT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56655CA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 05:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A078CCA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 08:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3481A20578
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 05:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE0E21D81
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 08:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572077556;
+	bh=uLrgR5dduFiKpCf2zS/LUfYO4qdcUR5sKFqtU9Ua3Xc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P4oMyR96zmIW4j0/E3X80+vHomD23xjfcVf086d9T1zpAdt8qqnovX6Vs6yF7pccF
+	 oT2d7h0ZdxrgqVFmMGjn54P2YbEsYa4oAavqyRz7BIBHkv0ZkZcDZ6p+iZDHu8ViaG
+	 /Z0jrCReVbqM+s7fug6DTY7K9wHULaDNFdX+t1hU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfJZF1F convert rfc822-to-8bit (ORCPT
+        id S1726010AbfJZIMf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 01:27:05 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:51845 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfJZF1F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 01:27:05 -0400
-Received: from [172.20.19.11] (unknown [213.61.67.157])
-        by mail.holtmann.org (Postfix) with ESMTPSA id CC3E8CED0C;
-        Sat, 26 Oct 2019 07:36:03 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH 0/3] ARM: dts: rockchip: Use hci_bcm driver for bcm43540
- on Veyron devices
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191025215428.31607-1-abhishekpandit@chromium.org>
-Date:   Sat, 26 Oct 2019 07:27:02 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        dianders@chromium.org, devicetree <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <4680AA6A-599F-4D5E-9A96-0655569BAE94@holtmann.org>
-References: <20191025215428.31607-1-abhishekpandit@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3594.4.19)
+        Sat, 26 Oct 2019 04:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbfJZIMf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 26 Oct 2019 04:12:35 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBD6214DA;
+        Sat, 26 Oct 2019 08:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572077555;
+        bh=uLrgR5dduFiKpCf2zS/LUfYO4qdcUR5sKFqtU9Ua3Xc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wRieEcbL9aSAvlkBKLiSjJvhvYjxTr7M/1F5X6n/1gwJb+4tm0rqZjlUNkmpTYBzR
+         FSfVZf99PGNvd9h8CuatnG7fM6hyTPAc7Ab4mtZ1aUCi/aDRCTrxz7Up34ZLFBifko
+         asjSu+zFgko2TZlDVN1OZjhZ57/BCAurusF6BDVs=
+Date:   Sat, 26 Oct 2019 16:12:15 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        marex@denx.de, angus@akkea.ca, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        j.neuschaefer@gmx.net,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v3 3/3] ARM: dts: imx: add devicetree for Kobo Clara HD
+Message-ID: <20191026081214.GB14401@dragon>
+References: <20191010192357.27884-1-andreas@kemnade.info>
+ <20191010192357.27884-4-andreas@kemnade.info>
+ <20191025134621.GN3208@dragon>
+ <20191025200743.48455cc9@aktux>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025200743.48455cc9@aktux>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Abhishek,
-
-> This patch series enables using the Broadcom HCI UART driver with the
-> BCM43540 Wi-Fi + Bluetooth chip. This chip is used on a RK3288 based
-> board (Veyron) and these changes have been tested on the Minnie variant
-> of the board (i.e. rk3288-veyron-minnie.dts).
+On Fri, Oct 25, 2019 at 08:07:43PM +0200, Andreas Kemnade wrote:
+> Hi,
 > 
+> On Fri, 25 Oct 2019 21:46:24 +0800
+> Shawn Guo <shawnguo@kernel.org> wrote:
 > 
+> [...]
+> > > +
+> > > +		pinctrl_wifi_reset: wifi_reset_grp {
+> > > +			fsl,pins = <
+> > > +				MX6SLL_PAD_SD2_DATA7__GPIO5_IO00	0x10059		/* WIFI_RST */
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_wifi_power: wifi_power_grp {  
+> > 
+> > I guess you can have one pinctrl node to include both reset and power
+> > pins?  Also, to be consistent with other pinctrl nodes on naming, the
+> > node name should probably be wifigrp.
+> > 
+> well, the problems they are used in different nodes, so I cannot do
+> that:
 > 
-> Abhishek Pandit-Subedi (3):
->  Bluetooth: hci_bcm: Add compatible string for BCM43540
->  dt-bindings: net: broadcom-bluetooth: Add BCM43540 compatible string
->  ARM: dts: rockchip: Add brcm bluetooth module on uart0
+>        reg_wifi: regulator-wifi {
+>                 compatible = "regulator-fixed";
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&pinctrl_wifi_power>;
+>                 regulator-name = "SD3_SPWR";
+>                 regulator-min-microvolt = <3000000>;
+>                 regulator-max-microvolt = <3000000>;
+>                 gpio = <&gpio4 29 GPIO_ACTIVE_HIGH>;
+>                 enable-active-high;
+>         };
 > 
-> .../bindings/net/broadcom-bluetooth.txt       |  1 +
-> arch/arm/boot/dts/rk3288-veyron.dtsi          | 31 +++++--------------
-> drivers/bluetooth/hci_bcm.c                   |  1 +
-> 3 files changed, 9 insertions(+), 24 deletions(-)
+>         wifi_pwrseq: wifi_pwrseq {
+>                 compatible = "mmc-pwrseq-simple";
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&pinctrl_wifi_reset>;
+>                 post-power-on-delay-ms = <20>;
+>                 reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+>         };
 
-patches 1 and 2 have been applied to bluetooth-next tree. I leave patch 3 to the appropriate ARM maintainer to pick up.
+Ah, yes, it makes more sense.  I missed that.
 
-Regards
+Shawn
 
-Marcel
-
+> 
+> So having them combined breaks the mux where you use it rule.
+> I got in earlier mails:
+> 
+> > > +	wifi_pwrseq: wifi_pwrseq {
+> > > +		compatible = "mmc-pwrseq-simple";
+> > > +		post-power-on-delay-ms = <20>;
+> > > +		reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;  
+> 
+> > Can you add a pinctrl-entry here please? The general rule is to mux
+> > things where you use it
+> [...]
+> > > +			compatible = "regulator-fixed";
+> > > +			regulator-name = "SD3_SPWR";
+> > > +			regulator-min-microvolt = <3000000>;
+> > > +			regulator-max-microvolt = <3000000>;
+> > > +
+> > > +			gpio = <&gpio4 29 GPIO_ACTIVE_HIGH>;  
+> 
+> > Please add a pinctrl here to mux this gpio.
+> 
+> Regards,
+> Andreas
