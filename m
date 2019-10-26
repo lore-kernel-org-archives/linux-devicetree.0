@@ -1,137 +1,202 @@
-Return-Path: <SRS0=V00+=YS=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=rl0j=YT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F9CCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 23:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F457CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A9C206E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 25 Oct 2019 23:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dy6jrNNY"
+	by mail.kernel.org (Postfix) with ESMTP id 0A86820867
+	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 00:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572048229;
+	bh=UK03/4Om6Yc7jJxQYh608XTJEnEeySRuvdKSwVJv+xU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V+xuCAq/puO2235mv7FtVxwsA3FJd7VmxkWKDW5oA76x+Nur4isKsSlRwyCUlohEv
+	 U1BcIWN6ppymGtPBy9rlkCO79cqB7ARPa0m0Srt5+ZFoYXu4bhCjot/m3De2Tno5tQ
+	 A08WcB2BGPje70uYNvkt8ZfzgfsGF5FUGO80Y/RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbfJYXzs (ORCPT
+        id S1725887AbfJZADs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 25 Oct 2019 19:55:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34759 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfJYXzs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 19:55:48 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m19so3246666otp.1
-        for <devicetree@vger.kernel.org>; Fri, 25 Oct 2019 16:55:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bavwoMbGp2ZbOAShRh7tu/QewKhCcWH09wWdF5PAI4Q=;
-        b=dy6jrNNY1ljVcgOEysmnZ19k98bGr6k/qPsdysnwzwj0v4jrIUgmKmS5A/9AXik0Gn
-         BLKBRrjkH/AG/p3Twxee5BF9UI7RQc35moYMrNhHTCkMMf4K8Dq8AYh+bm1wjpRktiM6
-         e5jqk4vh2rqn2QwRDoiHKB75EWhb+XkK49jMZB8Qu+wPLVozmaW/uv2Amk7UT+ZuzU1X
-         Ze2axCzDMbB+jhKur1SPDuG8S6uNcfdLfDlF28l499RRgbPndwJ1lCyO9J57EQEOB22E
-         wa9Nh+ogc6fOXFT2FVAWWLs1s6plIKyItnA0gVgNFjLZPtZXauBJH/K367FvNuwrFW4g
-         +16A==
+        Fri, 25 Oct 2019 20:03:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40124 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfJZADs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Oct 2019 20:03:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d8so3219379otc.7;
+        Fri, 25 Oct 2019 17:03:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bavwoMbGp2ZbOAShRh7tu/QewKhCcWH09wWdF5PAI4Q=;
-        b=oNCLM8v6jEduIETKDVUV6ril41K/Q7ZoJZ1q3w6c4UWibZm1Xq8f3KfXAhmdxApOGd
-         0pDTtbLdXu7JRk6eLSo74UaIT1sDtOrmwfTGTXmBP/ogq3Lhz1Otp/bsX8ydhbd30W3M
-         IvdvbnjguCfgUdtlfvbjaSD2XTakSn0w9WfuBNvxvpRzxq6J8iZawydaPZWmJY/LXvhQ
-         pD/LvnmEIv2acOQceUPtkcZM9TLnirQ/prIYcXCEwjtQ62tlZoqIYSk6wokBB+QZ1liH
-         i0ghEZlUoqkn9NlixPb6VBhWL4zguhoeqt85x4Vt+T8ad9sP+56A8Rfh/DM+F2XjvQTx
-         MyXg==
-X-Gm-Message-State: APjAAAXw9I6SWTHtFZMP/dbAGIKGdbW3UrVVOgCkQ9cigwzc8PI2gnPl
-        /WqwC1tsvNY0T6KXmKSG0d4eclq714PcDFjJUG0BBQ==
-X-Google-Smtp-Source: APXvYqzmWunWZWTVqRSjMMjfEk3yr/qNebANIiJ/fhlGDJs30pR3QtZm9HsSzRsTtyD3E8yDfpqiMxINqquNJ5NEpR8=
-X-Received: by 2002:a9d:630c:: with SMTP id q12mr4918230otk.332.1572047747538;
- Fri, 25 Oct 2019 16:55:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rmR5t0ADsYfno5vVZm/vi2FgzFz346rAEYBMOAdK/VQ=;
+        b=H/sUUkILyLwtjjcXwtqox/t+P55WUFqQc/lUt0+ycZdm20mZ0rAnX6t4IuC1Mrdl23
+         Jt0T9zY2nSHJupYV0cCVACXp+9V4JAuIzWGylxy0AU8LjfaicytXzmUMCUDR0MNG9Y26
+         eoWTBB33szC10QOgehJ9rduFzPnwp5VA2xcO4wJDLDqsalaFWvoMqD89SAVT3hfkoo6g
+         /cYp9B5BOPtUnwiIfijTaPSyYtZatwE1j4JcsFh4sZkth3w54PMU7uZQRqg7X1mLPk1Y
+         Qpw3jj11hz+MUgrvg3BbmNIZQdRG0Q8ZhjMgxDdwYpKzGJbz1AAU1bY6dPwvFpHxpWpM
+         QoWg==
+X-Gm-Message-State: APjAAAVIFVG5nlCKQm7jkjjK6q9k9BN7dtwaTSLxhgRsnTqgT6UsiLPd
+        UGZvqQG1wTdy82VTvYDwXQ==
+X-Google-Smtp-Source: APXvYqw87CDD0bRee7hVsxuQRLDcRAU/0dC/zIYeL8dLYeRlm7GMF3G4Bh9UpWtU5hXei9wl4VP/0Q==
+X-Received: by 2002:a9d:66d:: with SMTP id 100mr4878305otn.302.1572048226729;
+        Fri, 25 Oct 2019 17:03:46 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v6sm1031983oie.4.2019.10.25.17.03.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 17:03:46 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 19:03:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
+Message-ID: <20191026000345.GA10810@bogus>
+References: <20191023114634.13657-0-mholenko@antmicro.com>
+ <20191023114634.13657-2-mholenko@antmicro.com>
 MIME-Version: 1.0
-References: <20191025225009.50305-1-john.stultz@linaro.org>
- <20191025225009.50305-2-john.stultz@linaro.org> <CAC=3eda3sCMjCQbFX2Y0-6iVt-YRR7P_Y1ksJOsLw9CmJJRxbA@mail.gmail.com>
-In-Reply-To: <CAC=3eda3sCMjCQbFX2Y0-6iVt-YRR7P_Y1ksJOsLw9CmJJRxbA@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 25 Oct 2019 16:55:35 -0700
-Message-ID: <CALAqxLXG8LrWAQevEyj7BJ00CiAkodfgFMdCbuMRucO5w5yhKg@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/3] dt-bindings: dma-buf: heaps: Describe CMA
- regions to be added to dmabuf heaps interface.
-To:     Rob Herring <rob.e.herring@gmail.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023114634.13657-2-mholenko@antmicro.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 4:32 PM Rob Herring <rob.e.herring@gmail.com> wrote:
->
-> On Fri, Oct 25, 2019 at 5:51 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > This binding specifies which CMA regions should be added to the
-> > dmabuf heaps interface.
->
-> Is this an ION DT binding in disguise? I thought I killed that. ;)
+On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
+> It provides helper CSR access functions used by all
+> LiteX drivers.
+> 
+> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> ---
+> This commit has been introduced in v2 of the patchset.
+> 
+>  MAINTAINERS           |  6 +++++
+>  include/linux/litex.h | 59 +++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 65 insertions(+)
+>  create mode 100644 include/linux/litex.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 296de2b51c83..eaa51209bfb2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9493,6 +9493,12 @@ F:	Documentation/misc-devices/lis3lv02d.rst
+>  F:	drivers/misc/lis3lv02d/
+>  F:	drivers/platform/x86/hp_accel.c
+>  
+> +LITEX PLATFORM
+> +M:	Karol Gugala <kgugala@antmicro.com>
+> +M:	Mateusz Holenko <mholenko@antmicro.com>
+> +S:	Maintained
+> +F:	include/linux/litex.h
+> +
+>  LIVE PATCHING
+>  M:	Josh Poimboeuf <jpoimboe@redhat.com>
+>  M:	Jiri Kosina <jikos@kernel.org>
+> diff --git a/include/linux/litex.h b/include/linux/litex.h
+> new file mode 100644
+> index 000000000000..e793d2d7c881
+> --- /dev/null
+> +++ b/include/linux/litex.h
+> @@ -0,0 +1,59 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Common LiteX header providing
+> + * helper functions for accessing CSRs.
+> + *
+> + * Copyright (C) 2019 Antmicro <www.antmicro.com>
+> + */
+> +
+> +#ifndef _LINUX_LITEX_H
+> +#define _LINUX_LITEX_H
+> +
+> +#include <linux/io.h>
+> +#include <linux/types.h>
+> +#include <linux/compiler_types.h>
+> +
+> +#define LITEX_REG_SIZE             0x4
+> +#define LITEX_SUBREG_SIZE          0x1
+> +#define LITEX_SUBREG_SIZE_BIT      (LITEX_SUBREG_SIZE * 8)
+> +
+> +#ifdef __LITTLE_ENDIAN
+> +# define LITEX_READ_REG(addr)                  ioread32(addr)
+> +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
+> +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
+> +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + off)
+> +#else
+> +# define LITEX_READ_REG(addr)                  ioread32be(addr)
+> +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
+> +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
+> +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr + off)
 
-Maybe? I may not have been paying attention back then.  :)
+Defining custom accessors makes it harder for others to understand 
+the code. The __raw_readl/writel accessors are native endian, so use 
+those. One difference though is they don't have a memory barrier, but 
+based on the below functions, you may want to do your own barrier 
+anyways. And if DMA is not involved you don't need the barriers either.
 
-> > +Example:
-> > +This example has a camera CMA node in reserved memory, which is then
-> > +referenced by the dmabuf-heap-cma node.
-> > +
-> > +
-> > +       reserved-memory {
-> > +               #address-cells = <2>;
-> > +               #size-cells = <2>;
-> > +               ranges;
-> > +               ...
-> > +               cma_camera: cma-camera {
-> > +                       compatible = "shared-dma-pool";
-> > +                       reg = <0x0 0x24C00000 0x0 0x4000000>;
-> > +                       reusable;
-> > +               };
-> > +               ...
-> > +       };
-> > +
-> > +       cma_heap {
-> > +               compatible = "dmabuf-heap-cma";
-> > +               memory-region = <&cma_camera>;
->
-> Why the indirection here? Can't you just add a flag property to
-> reserved-memory nodes like we do to flag CMA nodes?
+The _OFF variants don't add anything. LITEX_READ_REG(addr + off) is just 
+as easy to read if not easier than LITEX_READ_REG_OFF(addr, off).
 
-Happy to try. Do you mean like with the "reuasable" tag?  Or more like
-the "linux,cma-default" tag?
+> +#endif
+> +
+> +/* Helper functions for manipulating LiteX registers */
+> +
+> +static inline void litex_set_reg(void __iomem *reg, u32 reg_size, u32 val)
+> +{
+> +	u32 shifted_data, shift, i;
+> +
+> +	for (i = 0; i < reg_size; ++i) {
+> +		shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> +		shifted_data = val >> shift;
+> +		LITEX_WRITE_REG(shifted_data, reg + (LITEX_REG_SIZE * i));
+> +	}
+> +}
 
-Do you have a preference for the flag name here?
+The problem with this is it hides whether you need to do any locking. 
+Normally, you would assume a register access is atomic when it's not 
+here. You could add locking in this function, but then you're doing 
+locking even when not needed.
 
-> As I suspected, it's because in patch 2 you're just abusing DT to
-> instantiate platform devices. We already support binding drivers to
-> reserved-memory nodes directly.
+It doesn't look like you actually use this in your series, so maybe 
+remove until you do.
 
-Sorry, one of those "when all you know how to do is hammer, everything
-looks like a nail" issues.
-Is there a specific example for binding drivers to reserved-memory
-nodes I can try to follow?
-
-Appreciate the review and feedback!
-
-thanks
--john
+> +
+> +static inline u32 litex_get_reg(void __iomem *reg, u32 reg_size)
+> +{
+> +	u32 shifted_data, shift, i;
+> +	u32 result = 0;
+> +
+> +	for (i = 0; i < reg_size; ++i) {
+> +		shifted_data = LITEX_READ_REG(reg + (LITEX_REG_SIZE * i));
+> +		shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> +		result |= (shifted_data << shift);
+> +	}
+> +
+> +	return result;
+> +}
+> +
+> +#endif /* _LINUX_LITEX_H */
+> -- 
+> 2.23.0
