@@ -2,100 +2,87 @@ Return-Path: <SRS0=8gXo=YU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426B0CA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 02:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91A6CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 05:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01CDF2070B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 02:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A9121726
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 05:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572152898;
+	bh=7kiXahjaMWcn2HR5dkdQfHTmHcvQn27gE+pu4EYBl58=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K3G7GByrDE4g09i7VoQBElM5n633v0t2P/RA81Z01bNYpwTUVfN6M6Ee6EGlmXZf3
+	 umR+/1XO5NoQYS+zVUeWRKkLcAofXK068kV/CQnMNIlwnFq5nuysTl0x31xThkn83z
+	 QcJI5m5vayhcBk5bkbzE2Hi/Y0l6DWz1PJU4motg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfJ0CEp (ORCPT
+        id S1725776AbfJ0FIS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 22:04:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51512 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726525AbfJ0CEo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 26 Oct 2019 22:04:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 969B5ABA0;
-        Sun, 27 Oct 2019 02:04:42 +0000 (UTC)
-Subject: Re: [PATCH v2 1/8] dt-bindings: watchdog: realtek: Convert RTD119x to
- schema
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-To:     Rob Herring <robh@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-realtek-soc@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20191020040817.16882-1-afaerber@suse.de>
- <20191020040817.16882-2-afaerber@suse.de> <20191025211638.GA28819@bogus>
- <aeb0d0ed-5649-9035-c753-39e8a1511c9d@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <7fff9d25-e24a-c73e-b14f-12c66607fe3a@suse.de>
-Date:   Sun, 27 Oct 2019 03:04:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sun, 27 Oct 2019 01:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbfJ0FIR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 Oct 2019 01:08:17 -0400
+Received: from localhost (mobile-166-176-122-39.mycingular.net [166.176.122.39])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 192172070B;
+        Sun, 27 Oct 2019 05:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572152897;
+        bh=7kiXahjaMWcn2HR5dkdQfHTmHcvQn27gE+pu4EYBl58=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NEWV96RWWO21r9uihlgdxW/0d6Z14uFDcm/1mUUoo0Fy2vTI3Q6utO7Q+8bwSib1R
+         xKj3dck3ORIMsMLOGgzWGPoh8oiSzIekB/N0X7o70lOKK/s9C6wjpG1bIBJUwS8rvR
+         vcPVhKbQqjy6+48GM4yQweW/0LetxOAzem0wMsJg=
+Date:   Sun, 27 Oct 2019 00:08:15 -0500
+From:   Andy Gross <agross@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        masneyb@onstation.org, swboyd@chromium.org, julia.lawall@lip6.fr,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 06/15] arm64: dts: msm8916: thermal: Fixup HW ids for
+ cpu sensors
+Message-ID: <20191027050815.GA5514@hector.lan>
+Mail-Followup-To: Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        masneyb@onstation.org, swboyd@chromium.org, julia.lawall@lip6.fr,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+        devicetree@vger.kernel.org
+References: <cover.1571652874.git.amit.kucheria@linaro.org>
+ <1726fdbf7cf7200ac5dc2a4c811aaee7edc47fd5.1571652874.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <aeb0d0ed-5649-9035-c753-39e8a1511c9d@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1726fdbf7cf7200ac5dc2a4c811aaee7edc47fd5.1571652874.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 25.10.19 um 23:24 schrieb Andreas Färber:
-> Am 25.10.19 um 23:16 schrieb Rob Herring:
->> On Sun, Oct 20, 2019 at 06:08:10AM +0200, Andreas Färber wrote:
->>> +properties:
->>> +  compatible:
->>> +    oneOf:
->>> +      - const: realtek,rtd1295-watchdog
->>
->> You can drop the 'oneOf' here unless you're planning to add another 
->> entry with 2 compatible strings.
+On Mon, Oct 21, 2019 at 04:05:25PM +0530, Amit Kucheria wrote:
+> msm8916 uses sensors 0, 1, 2, 4 and 5. Sensor 3 is NOT used. Fixup the
+> device tree so that the correct sensor ID is used and as a result we can
+> actually check the temperature for the cpu2_3 sensor.
 > 
-> It's a preparation for adding rtd1195-watchdog when needed, to make
-> future diffs smaller. There's also RTD1395 and RTD1619 to be tested.
-> 
->> With that,
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
 
-Self-NAK.
+Applied for 5.5
 
-The example doesn't pass dt_binding_check: It doesn't like the tabs
-retained from the original binding. Replacing them with four spaces
-makes it pass. Will post a v3.
-
-As for the compatibles, currently in the rtd1195.dtsi patch I'm reusing
-"realtek,rtd1295-watchdog", to avoid a dependency on the watchdog tree.
-
-Long-term that's kind of ugly as it uses a later model number.
-That leaves us with two alternatives:
-
-a) "realtek,rtd1195-watchdog", "realtek,rtd1295-watchdog" - this
-requires oneOf. Allows to distinguish between RTD1195 and RTD1295 while
-remaining compatible with the current driver.
-
-b) "realtek,rtd1195-watchdog" - requires the driver change now and
-requires the binding to be merged before I can use it in the DT but
-doesn't need oneOf here.
-
-Guenter, any preference here?
-
-Thanks,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Andy
