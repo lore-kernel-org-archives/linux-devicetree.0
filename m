@@ -2,90 +2,162 @@ Return-Path: <SRS0=8gXo=YU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B15CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 11:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C87CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 13:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7B42067B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 11:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263FC20679
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 13:28:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LXnDmbXb";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KWV/6SWh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfJ0LXV (ORCPT
+        id S1726713AbfJ0N23 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 07:23:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:45067 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726469AbfJ0LXV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 07:23:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:23:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,236,1569308400"; 
-   d="scan'208";a="399196419"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Oct 2019 04:23:18 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iOgdh-0001B1-Po; Sun, 27 Oct 2019 19:23:17 +0800
-Date:   Sun, 27 Oct 2019 19:22:56 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     kbuild-all@lists.01.org, netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v5 net-next 07/12] net: ethernet: ti: introduce cpsw
- switchdev based driver part 2 - switch
-Message-ID: <201910271911.gUJglaTl%lkp@intel.com>
-References: <20191024100914.16840-8-grygorii.strashko@ti.com>
+        Sun, 27 Oct 2019 09:28:29 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49548 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfJ0N23 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 27 Oct 2019 09:28:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0ACB460D52; Sun, 27 Oct 2019 13:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572182908;
+        bh=9ZZre0NuSoDeFDxf4oUJniz9M2r5yh3TTjgFWZaZdtA=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=LXnDmbXbqE5Pn5kUsfYvei2OaHKhD9g7VEIlFyzgpJSakPUjhAHlisivcsyNsUUMp
+         LRBC+AltQKLPlam6d7Ppk5YBTrfeUQ166iiN4+Om/tAcCAKLocNdHjRK+B7Te0+5lg
+         DVxjEb+a8iuDLb+GmErt/FyrqG+jy4IaBsKrHqaI=
+Received: from potku.adurom.net (unknown [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0BFC760BFA;
+        Sun, 27 Oct 2019 13:28:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572182907;
+        bh=9ZZre0NuSoDeFDxf4oUJniz9M2r5yh3TTjgFWZaZdtA=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=KWV/6SWhNivItb8uhSpxeULt5KHH5YM8fcN677+JgVRn1xDrGiB49kWgNnocXNKUr
+         tw0hh5CheuFdBTGr7bRU9WcYO49ttETTT9Szdz7i8AxkIweHHpeAkj7ZirBr7NOGc9
+         Jevhgcba+2cAAsP/MBO+fEmZ1yWhKyMoPkXIMy2k=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0BFC760BFA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath11k@lists.infradead.org
+Subject: Re: [PATCH v2 01/49] dt: bindings: net: add qcom,ath11k.yaml
+References: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
+        <1571565847-10338-2-git-send-email-kvalo@codeaurora.org>
+        <20191025213028.GA5117@bogus>
+Date:   Sun, 27 Oct 2019 15:28:23 +0200
+In-Reply-To: <20191025213028.GA5117@bogus> (Rob Herring's message of "Fri, 25
+        Oct 2019 16:30:28 -0500")
+Message-ID: <874kzu9v2g.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024100914.16840-8-grygorii.strashko@ti.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Grygorii,
+Rob Herring <robh@kernel.org> writes:
 
-I love your patch! Perhaps something to improve:
+> On Sun, Oct 20, 2019 at 01:03:19PM +0300, Kalle Valo wrote:
+>> ath11k is a driver for Qualcomm IEEE 802.11ax devices. Add a
+>> bindings document for the driver, first documenting IPQ8074 which is the
+>> only device ath11k currently supports.
+>> 
+>> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+>> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+>> ---
+>>  .../bindings/net/wireless/qcom,ath11k.yaml         | 277 +++++++++++++++++++++
+>>  1 file changed, 277 insertions(+)
+>> 
+>> diff --git
+>> a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+>> b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+>> new file mode 100644
+>> index 000000000000..5d25542f85f8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+>> @@ -0,0 +1,277 @@
+>> +# SPDX-License-Identifier: BSD-3-Clause-Clear
+>
+> (GPL-2.0-only OR BSD-2-Clause) please.
 
-[auto build test WARNING on net-next/master]
+I chose BSD-3-Clause-Clear because ath11k uses that license and I would
+prefer to use the same license throughout the driver. Also it's
+categorised as a preferred license:
 
-url:    https://github.com/0day-ci/linux/commits/Grygorii-Strashko/net-ethernet-ti-introduce-new-cpsw-switchdev-based-driver/20191027-143414
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git 503a64635d5ef7351657c78ad77f8b5ff658d5fc
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/LICENSES/preferred
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Any specific reason why you want to change the license?
 
+>> +# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+>> +
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/wireless/qcom,ath11k.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Technologies ath11k wireless devices Generic Binding
+>> +
+>> +maintainers:
+>> +  - Kalle Valo <kvalo@codeaurora.org>
+>> +
+>> +description: |
+>> + These are dt entries used on ath11k driver. AHB based ipq8074 uses
+>> most of the properties defined in this doc.
+>
+> Describe the h/w, not what the document is.
+>
+> Wrap your lines.
+>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: "qcom,ipq8074-wifi"
+>
+> Drop quotes.
+>
+>> +
+>> +  reg:
+>> +    description: Address and length of the register set for the device
+>
+> Don't need a description.
+>
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    minItems: 53
+>> +    maxItems: 53
+>
+> Assuming the list below has 53 entries min/maxItems is implied.
 
-sparse warnings: (new ones prefixed by >>)
+Will fix these.
 
->> drivers/net/ethernet/ti/cpsw_new.c:1444:6: sparse: sparse: symbol 'cpsw_port_offload_fwd_mark_update' was not declared. Should it be static?
+>> +examples:
+>> +  - |
+>> +
+>> +    q6v5_wcss: q6v5_wcss@CD00000 {
+>> +    	compatible = "qcom,ipq8074-wcss-pil";
+>> +    	reg = <0xCD00000 0x4040>,
+>> +    	      <0x4AB000 0x20>;
+>> +    	reg-names = "qdsp6",
+>> +    		    "rmb";
+>
+> Mixed tabs and spaces. YAML needs spaces (at least at the beginning), so 
+> just use spaces. More below...
 
-Please review and possibly fold the followup patch.
+Ok, I'll remove all the tabs from the doc. Thanks for the review!
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
