@@ -2,57 +2,103 @@ Return-Path: <SRS0=8gXo=YU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C63CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 18:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9E2CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 20:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F2D20873
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 18:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4D720873
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 20:08:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KosvU5MG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfJ0SSt (ORCPT
+        id S1727692AbfJ0UIR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 14:18:49 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:58130 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbfJ0SSt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 14:18:49 -0400
-Received: from [46.218.74.72] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iOn7j-0008Gg-Pf; Sun, 27 Oct 2019 19:18:43 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Add LED nodes on rk3399-roc-pc
-Date:   Sun, 27 Oct 2019 19:18:37 +0100
-Message-ID: <4966121.jNSStvosxs@phil>
-In-Reply-To: <7d8d85c9-5fde-7943-a6b6-639bca38bdc1@fivetechno.de>
-References: <7d8d85c9-5fde-7943-a6b6-639bca38bdc1@fivetechno.de>
+        Sun, 27 Oct 2019 16:08:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33966 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbfJ0UIQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 27 Oct 2019 16:08:16 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v3so8104178wmh.1;
+        Sun, 27 Oct 2019 13:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uILHnq2ITfdDUPR3qFBlC6hvnz1kzbF3v1izfuQrKFw=;
+        b=KosvU5MG6bLLKxIv6Q1GTSUvZR2Y0/dnt1uUCaeKm23meFQ6ZyXdc5rIx0y4b6mlvr
+         W4G48Tg4nYLf1XzXNokP+Zk16znbBAyuc1shsbomZUzwA95PkYYE3N8qhz41TJOfaQyu
+         Ar5YJOxzgr0RH16u4xoAeNBYiNoEjUouGcqttTEBZD4mc76yvCMGpbKsF+lSwaqS6XL7
+         FF6XFS5X47EjY0XuTf7PgzpnMJnDVM2ZyLBuk8sG3MYf1CGs/TXz1r9A9snvYeow7JV7
+         eZ6M6JHbe/awtIKk1Vyb+PK2N5GeAH98rdpsdh+lyrrgLNU3/K9tw1NR01IpnHHLvs6V
+         1PbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uILHnq2ITfdDUPR3qFBlC6hvnz1kzbF3v1izfuQrKFw=;
+        b=IEiy4uW96cy0OptnSHJ9/d0IjxmvUNvwb/EMPNlL5/8jC3efN6eQk3RpD+D/NRJBkn
+         Ven8PlhlheP4rxwHl+q9BrulpbSjluApT0vv+BJRAYsGvMLeszHMPEWJjXDycbX8DGg6
+         LZ5z05gkuz0HLrA4F60mdoYT0+m8hp1XXGG7G/G+LzldsiU9AmiotsiUyurGpOrqgNj4
+         gdzJdTM76tGVwaz30ObN3A8a86BR7iPPe+d2c6C/SQXHJIX0jIWZ5E2PiZVhgQTdwvZ1
+         JdAhyo5bZpmv8k3HOIZ9SvgsY//j8oPTEYmApMcovkMbtjKYF1VdsoEeerKO8VvMLgi5
+         /GNw==
+X-Gm-Message-State: APjAAAV3oZoGUWIf//fnpU6HnPQXgrIplvlHDhcO3DUBVlKhHsN4LaUA
+        2J6+Se4Q8vQCL5eWFmiVGTwQTdHcOdo=
+X-Google-Smtp-Source: APXvYqwyOASmJjLwg6ZT+C/jtzSWM3AVB0aUtxw+W5AEL7GrQyB/V5+FJN06i2VjrR7nVF3WoGClxg==
+X-Received: by 2002:a1c:2b45:: with SMTP id r66mr11035621wmr.163.1572206894390;
+        Sun, 27 Oct 2019 13:08:14 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id o11sm8539538wmh.28.2019.10.27.13.08.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 13:08:14 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Sean Young <sean@mess.org>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 2/2] arm64: dts: allwinner: beelink-gs1: Add rc-beelink-gs1 keymap
+Date:   Sun, 27 Oct 2019 21:07:38 +0100
+Message-Id: <20191027200738.24802-2-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191027200738.24802-1-peron.clem@gmail.com>
+References: <20191027200738.24802-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Montag, 21. Oktober 2019, 12:24:36 CET schrieb Markus Reichl:
-> rk3399-roc-pc has three gpio LEDs, enable them.
-> 
-> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+Beelink GS1 ships with a NEC remote control.
 
-applied for 5.5
-git am choked a bit on your inline signature though.
+Add the rc keymap to the device-tree.
 
-Thanks
-Heiko
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 1d05d570142f..ce4b0679839d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -252,6 +252,7 @@
+ };
+ 
+ &r_ir {
++	linux,rc-map-name = "rc-beelink-gs1";
+ 	status = "okay";
+ };
+ 
+-- 
+2.20.1
 
