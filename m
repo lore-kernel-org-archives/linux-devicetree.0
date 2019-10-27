@@ -2,289 +2,196 @@ Return-Path: <SRS0=8gXo=YU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E681CA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 16:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56335CA9EBD
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 16:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD83121D7F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 16:24:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="p3DvkN8/"
+	by mail.kernel.org (Postfix) with ESMTP id 2DA5C21726
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 16:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572194324;
+	bh=pTyOkc8lWHKpKQaVDCLi4915Unw3xojiQ98ejWmscTM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=U3FGk1YwxU5FN8bB1WmddBB7IWxChFKxpipNxcnyGWl+JaW5hYluCrFDAbXR5fZlb
+	 IMrr0kGeN92AxbqIVEmo45slwhZxCSJHxiuJrApTeaLAGyM10WTdIzviu+QUTEnle3
+	 HkeadnceFF+EQU7I/EkONnTvR+iZX1bl5Crf9x7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfJ0QXp (ORCPT
+        id S1727012AbfJ0Qin (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 12:23:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52629 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbfJ0QXp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 27 Oct 2019 12:23:45 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p21so6974126wmg.2;
-        Sun, 27 Oct 2019 09:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4cl+dZXejhJavAZN1eT4Wu2Q0Fzk13sYf46Kt3kWw1M=;
-        b=p3DvkN8/1iD2167WDvhYafeKuPYVe8tz5S5epRfeTq7ZkNCsNpq3Uluhz9iWCKLZWL
-         xOuAmlHbPQ9ca6CbhKmNtQQdBB/2cUyockUCxM6wHuIDeliPevzT1GyHSP2wTVlV83/U
-         GdihgLOW9/jaijDXyfEhTzcGnl1z/pdWJRb+lpWkJerRO251V5UImm4ocvKGKxfbSNTQ
-         T/Mch0I4e5xxvXxrpmP3r/T6VaoEkPvSTAB662IW56HnxruXREahzoat83t7vY2CCykr
-         wDuuwdpoep8sjYMG4HPzIM4vNbrxe3LgDYKMHhlufqBePVGu9biyszKlHPo4RgZAeMUi
-         EbVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4cl+dZXejhJavAZN1eT4Wu2Q0Fzk13sYf46Kt3kWw1M=;
-        b=DF8mlaYhx1ubL7EU1yfD7sP13YnhnJVHrxpf9ccc2aQM/Su7PyM/7VgMZOpbl2iVQq
-         z1skuRNBLYInDeoIqo9I0wOwIlbyFmF687w9it79PEYSKQXSCM/Lzu1q6+P98TSI+qlE
-         yg/aF2m3WCaK5ylSGY777oaUJd+DWBemdvqG+Z/xMkkt1HDAc/Wwoh1snJOhf5fXSc6L
-         C38TkPffW98F0zhhpuuwzOGPVWY75zmwtQdMnptYYbl1wGqEAlLyhZ6paagszoC/uWqM
-         nvAfYpDU3M9V8EBMvYic/raJa+dB5T4OdZyntxTM7hwmqnMMBPeAOY7dlINeyKfkxb6z
-         +yuQ==
-X-Gm-Message-State: APjAAAV4o/jQWdF8zBTIVT0SOjj2ybWmGu4L4Ie7+fkAde0vEcRJduUr
-        JxdxjUtBKMXYeopNrkC7GdA=
-X-Google-Smtp-Source: APXvYqzn7vhKxUlQfVQclnPfIeVnHDCiOk+8gFADXx8hFYhf6KlRq5h69nc3R06XV+FQ+vJ0y3LdLA==
-X-Received: by 2002:a7b:cb43:: with SMTP id v3mr2544710wmj.137.1572193422463;
-        Sun, 27 Oct 2019 09:23:42 -0700 (PDT)
-Received: from localhost.localdomain (p200300F133D01300428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33d0:1300:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id 1sm8243299wrr.16.2019.10.27.09.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 09:23:41 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 2/5] clk: meson: add a driver for the Meson8/8b/8m2 DDR clock controller
-Date:   Sun, 27 Oct 2019 17:23:25 +0100
-Message-Id: <20191027162328.1177402-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027162328.1177402-1-martin.blumenstingl@googlemail.com>
-References: <20191027162328.1177402-1-martin.blumenstingl@googlemail.com>
+        Sun, 27 Oct 2019 12:38:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726920AbfJ0Qin (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 Oct 2019 12:38:43 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 318D421726;
+        Sun, 27 Oct 2019 16:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572194322;
+        bh=pTyOkc8lWHKpKQaVDCLi4915Unw3xojiQ98ejWmscTM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=s531xbKhEzDPZgwvriC4YInfpv61zd26hOWs0CBy/0bPLmaJjzVsXTiklz8pnF7WY
+         9XmjIdhSN/aQKgMqQW0xmejd+ZRvAs2BmVsduFgO2VQRNu/ahnRSpwghAmNKD4ETsH
+         wqVhU/7DJFicFQPBc/T5bX6/c5fyl6DTNsT7c+v4=
+Date:   Sun, 27 Oct 2019 16:38:38 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lorenzo Bianconi <lorenzo@kernel.org>
+Cc:     lorenzo.bianconi@redhat.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] iio: imu: st_lsm6dsx: add support to LSM6DSRX
+Message-ID: <20191027163838.3fdc1249@archlinux>
+In-Reply-To: <92cfd5eef9cb794f15853ab83c4ef84482887fc4.1571931470.git.lorenzo@kernel.org>
+References: <cover.1571931470.git.lorenzo@kernel.org>
+        <92cfd5eef9cb794f15853ab83c4ef84482887fc4.1571931470.git.lorenzo@kernel.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Meson8/Meson8b/Meson8m2 SoCs embed a DDR clock controller in the
-MMCBUS registers. There is no public documentation, but the u-boot GPL
-sources from the Amlogic BSP show that the DDR clock controller is
-identical on all three SoCs:
-  #define CFG_DDR_CLK 792
-  #define CFG_PLL_M (((CFG_DDR_CLK/12)*12)/24)
-  #define CFG_PLL_N 1
-  #define CFG_PLL_OD 1
+On Thu, 24 Oct 2019 17:42:33 +0200
+Lorenzo Bianconi <lorenzo@kernel.org> wrote:
 
-  // from set_ddr_clock:
-  t_ddr_pll_cntl= (CFG_PLL_OD << 16)|(CFG_PLL_N<<9)|(CFG_PLL_M<<0)
-  writel(timing_reg->t_ddr_pll_cntl|(1<<29),AM_DDR_PLL_CNTL);
-  writel(readl(AM_DDR_PLL_CNTL) & (~(1<<29)),AM_DDR_PLL_CNTL);
+> Add support to STM LSM6DSRX 6-axis (acc + gyro) Mems sensor
+> https://www.st.com/resource/en/datasheet/lsm6dsrx.pdf
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-  // from hx_ddr_power_down_enter: shut down DDR PLL
-  writel(readl(AM_DDR_PLL_CNTL)|(1<<30),AM_DDR_PLL_CNTL);
+Thanks,
 
-  do { ... } while((readl(AM_DDR_PLL_CNTL)&(1<<31))==0)
+Jonathan
 
-This translates to:
-- AM_DDR_PLL_CNTL[29] is the reset bit
-- AM_DDR_PLL_CNTL[30] is the enable bit
-- AM_DDR_PLL_CNTL[31] is the lock bit
-- AM_DDR_PLL_CNTL[8:0] is the m value (assuming the width is 9 bits
-  based on the start of the n value)
-- AM_DDR_PLL_CNTL[13:9] is the n value (assuming the width is 5 bits
-  based on the start of the od)
-- AM_DDR_PLL_CNTL[17:16] is the od (assuming the width is 2 bits based
-  on other PLLs on this SoC)
-
-Add a driver for this PLL setup because it's used as one of the inputs
-of the audio clocks. There may be more clocks inside that clock
-controller - those can be added in subsequent patches.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/clk/meson/Makefile     |   2 +-
- drivers/clk/meson/meson8-ddr.c | 152 +++++++++++++++++++++++++++++++++
- 2 files changed, 153 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/meson/meson8-ddr.c
-
-diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-index 3939f218587a..6eca2a406ee3 100644
---- a/drivers/clk/meson/Makefile
-+++ b/drivers/clk/meson/Makefile
-@@ -18,4 +18,4 @@ obj-$(CONFIG_COMMON_CLK_AXG) += axg.o axg-aoclk.o
- obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
- obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
- obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
--obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
-+obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o meson8-ddr.o
-diff --git a/drivers/clk/meson/meson8-ddr.c b/drivers/clk/meson/meson8-ddr.c
-new file mode 100644
-index 000000000000..4aefcc5bdaae
---- /dev/null
-+++ b/drivers/clk/meson/meson8-ddr.c
-@@ -0,0 +1,152 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Amlogic Meson8 DDR clock controller
-+ *
-+ * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+#include <dt-bindings/clock/meson8-ddr-clkc.h>
-+
-+#include <linux/platform_device.h>
-+#include <linux/of_device.h>
-+#include <linux/slab.h>
-+
-+#include "clk-regmap.h"
-+#include "clk-pll.h"
-+
-+#define AM_DDR_PLL_CNTL			0x00
-+#define AM_DDR_PLL_CNTL1		0x04
-+#define AM_DDR_PLL_CNTL2		0x08
-+#define AM_DDR_PLL_CNTL3		0x0c
-+#define AM_DDR_PLL_CNTL4		0x10
-+#define AM_DDR_PLL_STS			0x14
-+#define DDR_CLK_CNTL			0x18
-+#define DDR_CLK_STS			0x1c
-+
-+static struct clk_regmap meson8_ddr_pll_dco = {
-+	.data = &(struct meson_clk_pll_data){
-+		.en = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 30,
-+			.width   = 1,
-+		},
-+		.m = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 0,
-+			.width   = 9,
-+		},
-+		.n = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 9,
-+			.width   = 5,
-+		},
-+		.l = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 31,
-+			.width   = 1,
-+		},
-+		.rst = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 29,
-+			.width   = 1,
-+		},
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "ddr_pll_dco",
-+		.ops = &meson_clk_pll_ro_ops,
-+		.parent_data = &(const struct clk_parent_data) {
-+			.fw_name = "xtal",
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap meson8_ddr_pll = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = AM_DDR_PLL_CNTL,
-+		.shift = 16,
-+		.width = 2,
-+		.flags = CLK_DIVIDER_POWER_OF_TWO,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "ddr_pll",
-+		.ops = &clk_regmap_divider_ro_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&meson8_ddr_pll_dco.hw
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_hw_onecell_data meson8_ddr_clk_hw_onecell_data = {
-+	.hws = {
-+		[DDR_CLKID_DDR_PLL_DCO]		= &meson8_ddr_pll_dco.hw,
-+		[DDR_CLKID_DDR_PLL]		= &meson8_ddr_pll.hw,
-+	},
-+	.num = 2,
-+};
-+
-+static struct clk_regmap *const meson8_ddr_clk_regmaps[] = {
-+	&meson8_ddr_pll_dco,
-+	&meson8_ddr_pll,
-+};
-+
-+static const struct regmap_config meson8_ddr_clkc_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = DDR_CLK_STS,
-+};
-+
-+static int meson8_ddr_clkc_probe(struct platform_device *pdev)
-+{
-+	struct regmap *regmap;
-+	struct resource *res;
-+	void __iomem *base;
-+	struct clk_hw *hw;
-+	int ret, i;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	regmap = devm_regmap_init_mmio(&pdev->dev, base,
-+				       &meson8_ddr_clkc_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	/* Populate regmap */
-+	for (i = 0; i < ARRAY_SIZE(meson8_ddr_clk_regmaps); i++)
-+		meson8_ddr_clk_regmaps[i]->map = regmap;
-+
-+	/* Register all clks */
-+	for (i = 0; i < meson8_ddr_clk_hw_onecell_data.num; i++) {
-+		hw = meson8_ddr_clk_hw_onecell_data.hws[i];
-+
-+		ret = devm_clk_hw_register(&pdev->dev, hw);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Clock registration failed\n");
-+			return ret;
-+		}
-+	}
-+
-+	return devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
-+					   &meson8_ddr_clk_hw_onecell_data);
-+}
-+
-+static const struct of_device_id meson8_ddr_clkc_match_table[] = {
-+	{ .compatible = "amlogic,meson8-ddr-clkc" },
-+	{ .compatible = "amlogic,meson8b-ddr-clkc" },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver meson8_ddr_clkc_driver = {
-+	.probe		= meson8_ddr_clkc_probe,
-+	.driver		= {
-+		.name	= "meson8-ddr-clkc",
-+		.of_match_table = meson8_ddr_clkc_match_table,
-+	},
-+};
-+
-+builtin_platform_driver(meson8_ddr_clkc_driver);
--- 
-2.23.0
+> ---
+>  drivers/iio/imu/st_lsm6dsx/Kconfig             | 3 ++-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        | 2 ++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 8 ++++----
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   | 3 +++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c    | 5 +++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c    | 5 +++++
+>  6 files changed, 21 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> index b425a356d99e..28f59d09208a 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
+> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> @@ -12,7 +12,8 @@ config IIO_ST_LSM6DSX
+>  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+>  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+>  	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c,
+> -	  ism330dhcx, lsm6ds0 and the accelerometer/gyroscope of lsm9ds1.
+> +	  ism330dhcx, lsm6dsrx, lsm6ds0 and the accelerometer/gyroscope
+> +	  of lsm9ds1.
+>  
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called st_lsm6dsx.
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> index f660359ccb4d..37e499fe6bcf 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -27,6 +27,7 @@
+>  #define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
+>  #define ST_LSM9DS1_DEV_NAME	"lsm9ds1-imu"
+>  #define ST_LSM6DS0_DEV_NAME	"lsm6ds0"
+> +#define ST_LSM6DSRX_DEV_NAME	"lsm6dsrx"
+>  
+>  enum st_lsm6dsx_hw_id {
+>  	ST_LSM6DS3_ID,
+> @@ -42,6 +43,7 @@ enum st_lsm6dsx_hw_id {
+>  	ST_ISM330DHCX_ID,
+>  	ST_LSM9DS1_ID,
+>  	ST_LSM6DS0_ID,
+> +	ST_LSM6DSRX_ID,
+>  	ST_LSM6DSX_MAX_ID,
+>  };
+>  
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> index ffeb2596b97b..31cd90d2c60e 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> @@ -14,10 +14,10 @@
+>   * (e.g. Gx, Gy, Gz, Ax, Ay, Az), then data are repeated depending on the
+>   * value of the decimation factor and ODR set for each FIFO data set.
+>   *
+> - * LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR/ISM330DHCX: The FIFO buffer can be
+> - * configured to store data from gyroscope and accelerometer. Each sample
+> - * is queued with a tag (1B) indicating data source (gyroscope, accelerometer,
+> - * hw timer).
+> + * LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR/LSM6DSRX/ISM330DHCX:
+> + * The FIFO buffer can be configured to store data from gyroscope and
+> + * accelerometer. Each sample is queued with a tag (1B) indicating data
+> + * source (gyroscope, accelerometer, hw timer).
+>   *
+>   * FIFO supported modes:
+>   *  - BYPASS: FIFO disabled
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index f9c83aa2c9b7..1f28a7733fc0 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -1084,6 +1084,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+>  			}, {
+>  				.hw_id = ST_ISM330DHCX_ID,
+>  				.name = ST_ISM330DHCX_DEV_NAME,
+> +			}, {
+> +				.hw_id = ST_LSM6DSRX_ID,
+> +				.name = ST_LSM6DSRX_DEV_NAME,
+>  			},
+>  		},
+>  		.channels = {
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> index e57744affbd0..cd47ec1fedcb 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> @@ -91,6 +91,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
+>  		.compatible = "st,lsm6ds0",
+>  		.data = (void *)ST_LSM6DS0_ID,
+>  	},
+> +	{
+> +		.compatible = "st,lsm6dsrx",
+> +		.data = (void *)ST_LSM6DSRX_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
+> @@ -109,6 +113,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
+>  	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
+>  	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
+>  	{ ST_LSM6DS0_DEV_NAME, ST_LSM6DS0_ID },
+> +	{ ST_LSM6DSRX_DEV_NAME, ST_LSM6DSRX_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> index 933d4f9f6a4a..67ff36eac247 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> @@ -91,6 +91,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
+>  		.compatible = "st,lsm6ds0",
+>  		.data = (void *)ST_LSM6DS0_ID,
+>  	},
+> +	{
+> +		.compatible = "st,lsm6dsrx",
+> +		.data = (void *)ST_LSM6DSRX_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
+> @@ -109,6 +113,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
+>  	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
+>  	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
+>  	{ ST_LSM6DS0_DEV_NAME, ST_LSM6DS0_ID },
+> +	{ ST_LSM6DSRX_DEV_NAME, ST_LSM6DSRX_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
 
