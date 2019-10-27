@@ -2,105 +2,95 @@ Return-Path: <SRS0=8gXo=YU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E89CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1B2CA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4954420717
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47C8205C9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 21:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211852;
-	bh=meW55MlINg8cCAyxxV1Wps5B+gB7Zc5yAB2yAV0AaPo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WA2R6dueYT6tscKO2EffchzAOZtVAB60yDwElDXoyo4d976rsjNrdRyh8LWV7r4nE
-	 a49KViFuFRaQAnHlxFwDykF/MasLknAlemoB8UWPuUGP/0R/ziRV6m9r6kfs4DnqzT
-	 yTixNbrIjd9hGaBKyvdfFsayB1M9c025KQcg8OwA=
+	s=default; t=1572211877;
+	bh=QJQjbWrbJ0iSp3SY8p9zU8yMWyI0auE/8fRLdxcSq1g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E/UABAiF2Sy6bCNL3q5QXTtnJnv3W3wFYniB0c9v/8l05GTPnhjg9qGw7yTZZLmXf
+	 6S+vfckFSlaccsxSOl6iluxQ+ac+WG5y9vSbLoY7GR6a/BIvM3ASSMCip84n6oQtoN
+	 qEsY1YzP6gN6jbGIu05bnH5NoLh/eknaBx5QEejo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbfJ0VSU (ORCPT
+        id S1731102AbfJ0VRm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:18:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730388AbfJ0VSR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:18:17 -0400
-Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 951B0205C9;
-        Sun, 27 Oct 2019 21:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211097;
-        bh=meW55MlINg8cCAyxxV1Wps5B+gB7Zc5yAB2yAV0AaPo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SnFJncKwxifYAVrXoqks6MK8HGbK/b66joa1P9sQocKwxQjRRvASjYxvCPg5gtqWh
-         UJ+BWMXBXiGnMDvq2kA7QcSOSDvUJijNyWbAM2OzwZVlSC5hh3yNkoxya26nrPgeF3
-         rEk9Y1Df+UZYfkDu1u+EAW4i1bQk0YA1Vb3IN50Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Sun, 27 Oct 2019 17:17:42 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43721 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731093AbfJ0VRj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 27 Oct 2019 17:17:39 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s5so4739397oie.10;
+        Sun, 27 Oct 2019 14:17:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/iAJCHmYnu3MN/tSfMGe/nzIlm9sUPVCioEd8t0MfbY=;
+        b=MbgsLCzQdzZ04vpnJakUlV16vgeyRw+UDCUKcRBeGoobsEBCQa0MnCF8L2nGZ+4xbL
+         MtISKGN3IvNPKTnhak0Tv3iUPt9NGUB6ePldoZvOlB7IzbgVa9F3K4RP1Vff8EoZMQGk
+         Bznwg5DSLi2OigPQOqvbIblLI7DsswyVfqhSxiYN/Vg/bXu8L3g1TrKeWgpNYoQeNlj6
+         FJcZIYcA6vrpd9aX5tzXqCmF29cdRQoppoqiqUjGqCFlP2c3HkTdldgYM4bDuZSKXoGZ
+         AWt0OB7rxEKIDOeC9DjAsZFHXPMAgKZDfl2MaebqhNhci69qkWvjcb+/BycBmB2Lx5ql
+         Ml8Q==
+X-Gm-Message-State: APjAAAWXoi+FwyGL5UTM7ooQhJn0VLgoRKtCVKnGtaT/x8Ot+S2AH+uX
+        jndYDqZHJLiG1FRggm+ITw==
+X-Google-Smtp-Source: APXvYqycENxBcO37SRF80CuuH2sAsSU8zEeqdg41f6o3Mskd1ZymMfnokYbEy29NcBFqqvPqzaY4dQ==
+X-Received: by 2002:a54:4484:: with SMTP id v4mr7404163oiv.49.1572211058758;
+        Sun, 27 Oct 2019 14:17:38 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g3sm2960776otg.56.2019.10.27.14.17.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 14:17:37 -0700 (PDT)
+Date:   Sun, 27 Oct 2019 16:17:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 030/197] MIPS: dts: ar9331: fix interrupt-controller size
-Date:   Sun, 27 Oct 2019 21:59:08 +0100
-Message-Id: <20191027203353.370644790@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
-References: <20191027203351.684916567@linuxfoundation.org>
-User-Agent: quilt/0.66
+        michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v11 2/7] dt-bindings: sun6i-dsi: Add A64 DPHY compatible
+ (w/ A31 fallback)
+Message-ID: <20191027211737.GA30896@bogus>
+References: <20191025175625.8011-1-jagan@amarulasolutions.com>
+ <20191025175625.8011-3-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025175625.8011-3-jagan@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+On Fri, 25 Oct 2019 23:26:20 +0530, Jagan Teki wrote:
+> The MIPI DSI PHY controller on Allwinner A64 is similar
+> on the one on A31.
+> 
+> Add A64 compatible and append A31 compatible as fallback.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  .../bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml         | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
 
-[ Upstream commit 0889d07f3e4b171c453b2aaf2b257f9074cdf624 ]
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-It is two registers each of 4 byte.
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
-index 63a9f33aa43e8..5cfc9d347826a 100644
---- a/arch/mips/boot/dts/qca/ar9331.dtsi
-+++ b/arch/mips/boot/dts/qca/ar9331.dtsi
-@@ -99,7 +99,7 @@
- 
- 			miscintc: interrupt-controller@18060010 {
- 				compatible = "qca,ar7240-misc-intc";
--				reg = <0x18060010 0x4>;
-+				reg = <0x18060010 0x8>;
- 
- 				interrupt-parent = <&cpuintc>;
- 				interrupts = <6>;
--- 
-2.20.1
-
-
-
+If a tag was not added on purpose, please state why and what changed.
