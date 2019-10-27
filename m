@@ -2,325 +2,182 @@ Return-Path: <SRS0=8gXo=YU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F305CA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 14:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E88CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 14:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7512521D7F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 14:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HX0Z0miT"
+	by mail.kernel.org (Postfix) with ESMTP id 2163F21850
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 14:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfJ0OKH (ORCPT
+        id S1726836AbfJ0O1F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 10:10:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46498 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfJ0OKG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 27 Oct 2019 10:10:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q21so3986262plr.13;
-        Sun, 27 Oct 2019 07:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0LJUQCa0XqM3LSeg59c6mc8H83Nn1U3hKP+zHOPkdA4=;
-        b=HX0Z0miTJ0jKmGMleWZkLNMjboGc/zmziD+mKvCQ+XkX2CB7yUSpcwBzCuEMg0D6qd
-         2O5SF98DMQk4wPFvFBVZULNyzLwQjDu7xWmg3vtaFh0m0Wp28QtBhirnjecduhnlH5rt
-         KUeCGsNDjH+ATF46RRSl+m6pG1YIBhNWBT7B/GpAAl1mTFIiiXjUgoj/eZYznUjZ1ZHL
-         th7ruXW131kyb36Q5fD+GQ+/OCh1FPIdwAdvdpP72fD+acoeOkKLXGjTruqvbdAF4gXB
-         d87nBIX9Ux3gagSvAEPSG4q2t+JPskSh0yaICRj79EmtWjPYm88CD1IJvvLPq6/eZzyP
-         PcJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=0LJUQCa0XqM3LSeg59c6mc8H83Nn1U3hKP+zHOPkdA4=;
-        b=g4qqyEYowLRuOBJn667J6HM4lnniVeAp6DrxyVdDQY5gCW4HxmEz9PWI20/QPxgLk+
-         Lb1cpZlt9ZO/ZM0Gp1bOWfQmVL0jJYH6Rs6hXas3mn6S7bZdQZeoIFsUVDY9T8NxK6rl
-         OjtrhxyE87o8Zr079mlC9X9weKyAtRc+E+1Ga8+IQ1ej2+WcrbSZMyBbwFaROPIIehSS
-         4sQMAsVMcKJ/iB/bL5RBkMQ2r+Xfn/So4/bx+L4V0UHkAkreFSP4yu3BtipfaaHAWT7H
-         3bx9US+sxVXTXljTBEC8XFZ6gp7uyDKPVVgQv6wJiSQOisgTJwG4tPtJ2vTVN4NdCjgk
-         imjA==
-X-Gm-Message-State: APjAAAV8I/3QVDNIh7Fl0GTtzBXmCC2LRkih2vtSpoiV7Kv5uy8CU3Ka
-        5hcuuip6UUCKE8ZltgUH33JXqayY
-X-Google-Smtp-Source: APXvYqzalo1cof1vBLrjEDEzyL9S13wqpvQJIP9nP3/93jlYpz1bFS2qugRJwpiVBiRkq8XlQICa9w==
-X-Received: by 2002:a17:902:5985:: with SMTP id p5mr14712160pli.259.1572185405625;
-        Sun, 27 Oct 2019 07:10:05 -0700 (PDT)
-Received: from localhost.localdomain ([240f:34:212d:1:368e:e048:68f1:84e7])
-        by smtp.gmail.com with ESMTPSA id v10sm6514702pfg.11.2019.10.27.07.10.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 27 Oct 2019 07:10:05 -0700 (PDT)
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2 2/2] leds: Add generic LED level meter driver
-Date:   Sun, 27 Oct 2019 23:09:39 +0900
-Message-Id: <1572185379-21537-3-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572185379-21537-1-git-send-email-akinobu.mita@gmail.com>
-References: <1572185379-21537-1-git-send-email-akinobu.mita@gmail.com>
+        Sun, 27 Oct 2019 10:27:05 -0400
+Received: from mout.perfora.net ([74.208.4.194]:34373 "EHLO mout.perfora.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726541AbfJ0O1F (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 Oct 2019 10:27:05 -0400
+Received: from marcel-nb-toradex-int.toradex.int ([31.10.206.124]) by
+ mrelay.perfora.net (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 0LfzPZ-1heeJU0fs3-00pfdc; Sun, 27 Oct 2019 15:26:27 +0100
+From:   Marcel Ziswiler <marcel@ziswiler.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     devicetree@vger.kernel.org, info@logictechno.com,
+        j.bauer@endrich.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v2 2/3] drm/panel: simple: add display timings for logic technologies displays
+Date:   Sun, 27 Oct 2019 15:26:08 +0100
+Message-Id: <20191027142609.12754-2-marcel@ziswiler.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191027142609.12754-1-marcel@ziswiler.com>
+References: <20191027142609.12754-1-marcel@ziswiler.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:3DquW+3hHT9LpViOmCrHnA2GnPQhQ1Qr+998CD0WzszqQ+evuJ6
+ 8N18jw92t9xhoo34PzGX0BmZoviWeITsGgQ+RXCqUtZtB1peCwX97YNdDLlzOrW/bNoIz/o
+ YkLjROo1BdthaURJHNK1J4keiLBfOR5rl9ZZEuLdgN+SNHF4n8HnBivo4FWxMlDyAZAgm6c
+ RimNBiJgr9Fw1olCTIA+g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6vpPbtUJFrc=:XCDyEzNp5FoYZtJZG8B5Bq
+ T5B9vJX4yEfQNCfXNECPQg79lspGRfbQ/XRdFQ46VUsUPneoJ9/6zyrZ7pzhkzgWGe8UvTlyn
+ U9dLgX6ZrY+8W9k8tU7vlbQwpARC12jEFC/NA4vMnrksJxgcx6IvzXJgkQ3fKzkkXoOGnqQEA
+ wx369B8ytI93dmkbC4uzIXjglOSJsBjYoLcOnHTvyKgNtSVc+KnKn1iwauoC1ftJTSSniTJpo
+ 77D/QWXqWEt9XkMF5BrRSFrp6C+IjOOR5AP+avWf9ddtzOCL2fFwdJ4bq3eBR2ujuzot4CUxE
+ q/p2n2OQKA3TwVILXIY3QljtYvXUg6IEQW7riZJi1AusOplD9hgjQ6zQOFZJ9KIe9fB8h2FnL
+ 1jjL0IN7/ML3WKIrMxR8VS2cotG1gP8bUbtljkUY1ZV8SIbME4lC89oQuKJkd6gkZGN3IVE+T
+ wsidPovGZbPkrXLoln1/OxP6K6gXvp+dERX8fPJA1R360gzr6AtKmh+MkAVR5QFrtWwF0MbPH
+ hpGaS/6TDNdIobh0R87c4fMmGOuIvb/OE70YUvaDbkaj/ifkemcsGp4nu+bv45xDcYreMngPS
+ Jba6uKjxQxvgv13DCzcDk6Xt+YcDy5omXl8xuY6m5m4zLeBdq6zeiarZEfSDPY0LnQnJPk/Ie
+ S34I9tnmdJCclSuz9eKmQYbIbbi1a+yifTb88DP6BGZ+s61cwQHwMtfGRlMgwOh6rWS/fCalL
+ J6/Gs9hjAj81t2SxuKSJwSZxYog9HLpns/k2z3cR+2x1DJvi0bU+tjvxGauEf8x9CjlgdyUAy
+ 1d2WzvZNo3jywpflHHg8EPCj99D2ncCJXVpVN0WkBtwSy72fQ985e8u/amVWOrHLr+2prNDQR
+ Tmo5qgPmTDWHcuQR8dHcU1CbeNpMpncY/yxKptrOg=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This introduces a new LED driver that enables us to create a virtual LED
-level meter device that consists of multiple LED devices by different
-drivers.
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-The brightness of the LED level meter is proportional to the number of
-actual LEDs that are turned on.
+Add display timings for the following 3 display panels manufactured by
+Logic Technologies Limited:
 
-For example, the LED level meter with four LEDs can be described by the
-following DT node.
+- LT161010-2NHC e.g. as found in the Toradex Capacitive Touch Display
+  7" Parallel [1]
+- LT161010-2NHR e.g. as found in the Toradex Resistive Touch Display 7"
+  Parallel [2]
+- LT170410-2WHC e.g. as found in the Toradex Capacitive Touch Display
+  10.1" LVDS [3]
 
-    meter-leds {
-        compatible = "meter-leds";
-        leds = <&led0>, <&led1>, <&led2>, <&led3>;
-    };
+Those panels may also be distributed by Endrich Bauelemente Vertriebs
+GmbH [4].
 
-When the brightness of meter-leds is LED_HALF, the brightness of the led0
-and led1 is set to maximum brightness and the brightness of led2 and led3
-is set to zero.
+[1] https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
+[2] https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
+[3] https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
+[4] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
 
-We can optionally control the proportionality within a level meter by
-specifying the contribution ratio for each LED with the brightness-weights
-proporty.
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Philippe Schenker <philippe.schenker@toradex.com>
 
-For example, the following brightness-weights proporty provides an
-exponential relationship between the number of LEDs turned on and the
-brightness of meter-leds.
-
-    meter-leds {
-        compatible = "meter-leds";
-        leds = <&led0>, <&led1>, <&led2>, <&led3>;
-        brightness-weights = <32 32 64 127>;
-    };
-
-- No LEDs are turned on if brightness == 0
-- led0 is turned on if 0 < brightness <= 32
-- led0 and led1 are turned on if 32 < brightness <= 64
-- led0, led1, and led2 are turned on if 64 < brightness <= 128
-- All LEDs are turned on if 128 < brightness <= 255
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- drivers/leds/Kconfig      |  10 +++
- drivers/leds/Makefile     |   1 +
- drivers/leds/leds-meter.c | 151 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 162 insertions(+)
- create mode 100644 drivers/leds/leds-meter.c
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 1988de1..feecd2e 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -823,6 +823,16 @@ config LEDS_LM36274
- 	  Say Y to enable the LM36274 LED driver for TI LMU devices.
- 	  This supports the LED device LM36274.
+Changes in v2:
+- Added Philippe's reviewed-by.
+
+ drivers/gpu/drm/panel/panel-simple.c | 65 ++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5d487686d25c..546770116096 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2047,6 +2047,62 @@ static const struct panel_desc lg_lp129qe = {
+ 	},
+ };
  
-+config LEDS_METER
-+	tristate "LED support for generic level meter driver"
-+	depends on LEDS_CLASS
-+	help
-+	  This option enables support for generic LED level meter that
-+	  consists of multiple LED devices.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called leds-meter.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
- 
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 41fb073..0fe2a28 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
- obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
- obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
- obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
-+obj-$(CONFIG_LEDS_METER)		+= leds-meter.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-diff --git a/drivers/leds/leds-meter.c b/drivers/leds/leds-meter.c
-new file mode 100644
-index 0000000..3d1d616
---- /dev/null
-+++ b/drivers/leds/leds-meter.c
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+struct meter_led_ref {
-+	struct led_classdev *cdev;
-+	unsigned int brightness_weight;
++static const struct display_timing logictechno_lt161010_2nh_timing = {
++	.pixelclock = { 26400000, 33300000, 46800000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 16, 210, 354 },
++	.hback_porch = { 46, 46, 46 },
++	.hsync_len = { 1, 20, 40 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 7, 22, 147 },
++	.vback_porch = { 23, 23, 23 },
++	.vsync_len = { 1, 10, 20 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
++		 DISPLAY_FLAGS_SYNC_POSEDGE,
 +};
 +
-+struct meter_led_data {
-+	struct led_classdev cdev;
-+	int num_leds;
-+	int total_weight;
-+	struct meter_led_ref leds[];
-+};
-+
-+struct leds_fract {
-+	unsigned int numerator;
-+	unsigned int denominator;
-+};
-+
-+/* Compare two leds_fract structs */
-+#define LEDS_FRACT_COMPARE(a, OP, b)			\
-+	((u64)(a).numerator * (b).denominator OP	\
-+	(u64)(b).numerator * (a).denominator)
-+
-+static void meter_led_set(struct led_classdev *led_cdev,
-+			  enum led_brightness value)
-+{
-+	struct meter_led_data *meter_led =
-+		container_of(led_cdev, struct meter_led_data, cdev);
-+	struct leds_fract level = { 0, meter_led->total_weight };
-+	struct leds_fract br = { value, LED_FULL };
-+	int i;
-+
-+	for (i = 0; i < meter_led->num_leds; i++) {
-+		struct meter_led_ref *led = &meter_led->leds[i];
-+
-+		if (LEDS_FRACT_COMPARE(br, <=, level))
-+			break;
-+
-+		level.numerator += led->brightness_weight;
-+
-+		led_set_brightness(led->cdev, led->cdev->max_brightness);
-+	}
-+
-+	for (; i < meter_led->num_leds; i++) {
-+		struct meter_led_ref *led = &meter_led->leds[i];
-+
-+		led_set_brightness(led->cdev, 0);
-+	}
-+}
-+
-+static int meter_led_probe(struct platform_device *pdev)
-+{
-+	int i;
-+	int num_leds;
-+	int num_weights;
-+	struct meter_led_data *meter_led;
-+	const char *state;
-+	struct led_init_data init_data = {};
-+
-+	num_leds = of_count_phandle_with_args(pdev->dev.of_node, "leds", NULL);
-+	if (num_leds < 0)
-+		return num_leds;
-+
-+	if (num_leds < 1) {
-+		dev_err(&pdev->dev, "At least one LED must be specified!\n");
-+		return -EINVAL;
-+	}
-+
-+	num_weights = device_property_count_u32(&pdev->dev,
-+						"brightness-weights");
-+	if (num_weights < 0) {
-+		num_weights = 0;
-+	} else if (num_weights != num_leds) {
-+		dev_err(&pdev->dev,
-+			"The number of brightness-weights must be equal to the number of LEDs\n");
-+		return -EINVAL;
-+	}
-+
-+	meter_led = devm_kzalloc(&pdev->dev,
-+				 struct_size(meter_led, leds, num_leds),
-+				 GFP_KERNEL);
-+	if (!meter_led)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_leds; i++) {
-+		meter_led->leds[i].cdev = devm_of_led_get(&pdev->dev, i);
-+		if (IS_ERR(meter_led->leds[i].cdev))
-+			return PTR_ERR(meter_led->leds[i].cdev);
-+
-+		if (num_weights) {
-+			of_property_read_u32_index(pdev->dev.of_node,
-+					"brightness-weights", i,
-+					&meter_led->leds[i].brightness_weight);
-+		} else {
-+			meter_led->leds[i].brightness_weight = 1;
-+		}
-+
-+		meter_led->total_weight += meter_led->leds[i].brightness_weight;
-+	}
-+
-+	meter_led->num_leds = num_leds;
-+	meter_led->cdev.brightness_set = meter_led_set;
-+	meter_led->cdev.max_brightness = LED_FULL;
-+	meter_led->cdev.brightness = LED_OFF;
-+
-+	device_property_read_string(&pdev->dev, "linux,default-trigger",
-+				    &meter_led->cdev.default_trigger);
-+
-+	if (!device_property_read_string(&pdev->dev, "default-state", &state)) {
-+		if (!strcmp(state, "keep"))
-+			dev_err(&pdev->dev,
-+				"The \"keep\" setting for the default-state property is not supported\n");
-+		else if (!strcmp(state, "on"))
-+			meter_led->cdev.brightness = LED_FULL;
-+	}
-+
-+	meter_led->cdev.brightness_set(&meter_led->cdev,
-+				       meter_led->cdev.brightness);
-+
-+	platform_set_drvdata(pdev, meter_led);
-+	init_data.fwnode = of_fwnode_handle(pdev->dev.of_node);
-+
-+	return devm_led_classdev_register_ext(&pdev->dev, &meter_led->cdev,
-+					      &init_data);
-+}
-+
-+static const struct of_device_id of_meter_leds_match[] = {
-+	{ .compatible = "meter-leds", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_meter_leds_match);
-+
-+static struct platform_driver meter_led_driver = {
-+	.driver = {
-+		.name = "meter-led",
-+		.of_match_table = of_meter_leds_match,
++static const struct panel_desc logictechno_lt161010_2nh = {
++	.timings = &logictechno_lt161010_2nh_timing,
++	.num_timings = 1,
++	.size = {
++		.width = 154,
++		.height = 86,
 +	},
-+	.probe = meter_led_probe,
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
++		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
 +};
-+module_platform_driver(meter_led_driver);
 +
-+MODULE_AUTHOR("Akinobu Mita");
-+MODULE_DESCRIPTION("LED level meter driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:leds-meter");
++static const struct display_timing logictechno_lt170410_2whc_timing = {
++	.pixelclock = { 68900000, 71100000, 7340000 },
++	.hactive = { 1280, 1280, 1280 },
++	.hfront_porch = { 23, 60, 71 },
++	.hback_porch = { 23, 60, 71 },
++	.hsync_len = { 15, 40, 47 },
++	.vactive = { 800, 800, 800 },
++	.vfront_porch = { 5, 7, 10 },
++	.vback_porch = { 5, 7, 10 },
++	.vsync_len = { 6, 9, 12 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
++		 DISPLAY_FLAGS_SYNC_POSEDGE,
++};
++
++static const struct panel_desc logictechno_lt170410_2whc = {
++	.timings = &logictechno_lt170410_2whc_timing,
++	.num_timings = 1,
++	.size = {
++		.width = 217,
++		.height = 136,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
++		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
++};
++
+ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.clock = 30400,
+ 	.hdisplay = 800,
+@@ -3287,6 +3343,15 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
++	}, {
++		.compatible = "logictechno,lt161010-2nhc",
++		.data = &logictechno_lt161010_2nh,
++	}, {
++		.compatible = "logictechno,lt161010-2nhr",
++		.data = &logictechno_lt161010_2nh,
++	}, {
++		.compatible = "logictechno,lt170410-2whc",
++		.data = &logictechno_lt170410_2whc,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
 -- 
-2.7.4
+2.21.0
 
