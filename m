@@ -1,102 +1,101 @@
-Return-Path: <SRS0=rl0j=YT=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=8gXo=YU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC4BCA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 20:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426B0CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 02:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDEA4214DA
-	for <linux-devicetree@archiver.kernel.org>; Sat, 26 Oct 2019 20:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bonstra.fr.eu.org header.i=@bonstra.fr.eu.org header.b="XWt470oI"
+	by mail.kernel.org (Postfix) with ESMTP id 01CDF2070B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 02:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfJZUsj (ORCPT
+        id S1726530AbfJ0CEp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 26 Oct 2019 16:48:39 -0400
-Received: from vault.bonstra.fr.eu.org ([51.158.68.104]:39562 "EHLO
-        vault.bonstra.fr.eu.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfJZUsj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 26 Oct 2019 16:48:39 -0400
-Received: from val.bonstra.fr.eu.org (unknown [192.168.128.2])
-        by vault.bonstra.fr.eu.org (Postfix) with ESMTP id 1A923BFE83;
-        Sat, 26 Oct 2019 20:41:48 +0000 (UTC)
-Received: from bonstra.fr.eu.org (vlad.gr1 [IPv6:fd7b:45cc:aa3d::3])
-        by val.bonstra.fr.eu.org (Postfix) with ESMTPSA id 2A6AA60873;
-        Sat, 26 Oct 2019 22:41:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bonstra.fr.eu.org;
-        s=dkim1; t=1572122507; x=1573332107;
-        bh=VhKkxkWcTbCjrWeKegoiffMLEInoYHE0UkHYo8HkL10=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=XWt470oIb0+H5KUndkc4KgevXnc31VGP7RacGTgi4Me6h0cxIdsebstCCEU4tbPRs
-         uirV6/kgxCUItw3V4e2RrOXO3s368QAIlDw+T1TNjM75Fy6h4G82DaByyVunSShyhc
-         w7ljbeEQznjqGZJveqSZiHdfHBv1faGDYFCqLb8vslSUD1i3V7jJDkUtauCc+z4Xcr
-         nwJjiSr7PB9E7T8sn4lgN1ymyfGckhk5gvuzRhK3JIxD9oXZTkdLg47FbexB2xWT2e
-         o0Y6vwNdarMY0jNrcnHVt7Gg90+ZKHqDLPKCVw2i79TzDt4GfktEuHU/Vq829cQp0k
-         FWs67w3PYGdfg==
-From:   Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH 3/3] arm64: dts: allwinner: a64: Enable Bluetooth on Teres-I
-Date:   Sat, 26 Oct 2019 22:41:16 +0200
-Message-Id: <20191026204116.95119-4-bonstra@bonstra.fr.eu.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191026204116.95119-1-bonstra@bonstra.fr.eu.org>
-References: <20191026204116.95119-1-bonstra@bonstra.fr.eu.org>
+        Sat, 26 Oct 2019 22:04:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51512 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726525AbfJ0CEo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 26 Oct 2019 22:04:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 969B5ABA0;
+        Sun, 27 Oct 2019 02:04:42 +0000 (UTC)
+Subject: Re: [PATCH v2 1/8] dt-bindings: watchdog: realtek: Convert RTD119x to
+ schema
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+To:     Rob Herring <robh@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-realtek-soc@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20191020040817.16882-1-afaerber@suse.de>
+ <20191020040817.16882-2-afaerber@suse.de> <20191025211638.GA28819@bogus>
+ <aeb0d0ed-5649-9035-c753-39e8a1511c9d@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <7fff9d25-e24a-c73e-b14f-12c66607fe3a@suse.de>
+Date:   Sun, 27 Oct 2019 03:04:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <aeb0d0ed-5649-9035-c753-39e8a1511c9d@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The UART1 on the Teres-A64-I is connected to a rtl8723bs combo
-WLAN/Bluetooth controller, with three GPIOs used for device reset,
-host wake up and device wake up.
+Am 25.10.19 um 23:24 schrieb Andreas Färber:
+> Am 25.10.19 um 23:16 schrieb Rob Herring:
+>> On Sun, Oct 20, 2019 at 06:08:10AM +0200, Andreas Färber wrote:
+>>> +properties:
+>>> +  compatible:
+>>> +    oneOf:
+>>> +      - const: realtek,rtd1295-watchdog
+>>
+>> You can drop the 'oneOf' here unless you're planning to add another 
+>> entry with 2 compatible strings.
+> 
+> It's a preparation for adding rtd1195-watchdog when needed, to make
+> future diffs smaller. There's also RTD1395 and RTD1619 to be tested.
+> 
+>> With that,
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Currently, the host wake up feature is not supported by the HCI H5
-driver.
+Self-NAK.
 
-Signed-off-by: Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
----
- .../arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+The example doesn't pass dt_binding_check: It doesn't like the tabs
+retained from the original binding. Replacing them with four spaces
+makes it pass. Will post a v3.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index 1069e7012c9c..c7db2f1650d4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -325,6 +325,19 @@
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "realtek,rtl8723bs-bt";
-+		enable-gpio = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
-+		device-wake-gpio = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+		realtek,config-name = "teres_a64_i";
-+	};
-+};
-+
- &usbphy {
- 	usb1_vbus-supply = <&reg_usb1_vbus>;
- 	status = "okay";
+As for the compatibles, currently in the rtd1195.dtsi patch I'm reusing
+"realtek,rtd1295-watchdog", to avoid a dependency on the watchdog tree.
+
+Long-term that's kind of ugly as it uses a later model number.
+That leaves us with two alternatives:
+
+a) "realtek,rtd1195-watchdog", "realtek,rtd1295-watchdog" - this
+requires oneOf. Allows to distinguish between RTD1195 and RTD1295 while
+remaining compatible with the current driver.
+
+b) "realtek,rtd1195-watchdog" - requires the driver change now and
+requires the binding to be merged before I can use it in the DT but
+doesn't need oneOf here.
+
+Guenter, any preference here?
+
+Thanks,
+Andreas
+
 -- 
-2.23.0
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
