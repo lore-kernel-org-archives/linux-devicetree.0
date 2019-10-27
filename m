@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77B7CA9EBD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 05:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD4ECA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 05:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C0A21928
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 05:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109502070B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 05:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572153146;
-	bh=nQIgYtdmE5iOAHFZmW614Kg+/JtIT+5vGjcXIskojSc=;
+	s=default; t=1572153173;
+	bh=vYFrU6dZlV/OanzMc9v9K4JnaiL02dxrOymsgD/Uv28=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JwqNV+m3CN69UBdYrKszoR/qK9Cun9ydsXf/ECtUytcPQzbbBuiXvUv+NNZoGcnRw
-	 r+fgG9LLcCv3AeD58v2DsIRr00JRQ96Bg9IueMcfOYE88d1YZZeGn1x4Jebtps1+HR
-	 Wx+AfjDFSP39hyx/uXlwSft5xocJW8ZmpUAPhrFs=
+	b=OjoSQkBmF1yeJMXI1Ec/A3se+iVFCaw98FHzdmpFKk1U1zuduW/xIAPgkkxouYud8
+	 Ai31JwSD/wfauvrR7FmgGfwjRR8czxgAhuUfKXxwo2VD/2T4itErS+xWm+r357CLM/
+	 gFxNeDLvYxmHcaWBxNq0T1n2lpCTztM3FAE75ZL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725927AbfJ0FMZ (ORCPT
+        id S1726487AbfJ0FMs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 01:12:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42472 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 01:12:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfJ0FMZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 01:12:25 -0400
+        id S1725440AbfJ0FMr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 Oct 2019 01:12:47 -0400
 Received: from localhost (mobile-166-176-122-39.mycingular.net [166.176.122.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BF222070B;
-        Sun, 27 Oct 2019 05:12:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C720321726;
+        Sun, 27 Oct 2019 05:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572153145;
-        bh=nQIgYtdmE5iOAHFZmW614Kg+/JtIT+5vGjcXIskojSc=;
+        s=default; t=1572153167;
+        bh=vYFrU6dZlV/OanzMc9v9K4JnaiL02dxrOymsgD/Uv28=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h5/XfO93pg2k5bjQb66v0w8ys5w9iHbkD6bdWczGKDT5qWWngAPDRLEr1FB9P6Pov
-         wS0GcaEzpKiKh3jGkQ2fsUGTkEmNrL+PGpzBw+HQKC1OvrEPJm8vdlmfJwXeJVkou+
-         g/NrXb2X8/5F711Ae2WZWE9P2qU4HMnvrCLdPZM0=
-Date:   Sun, 27 Oct 2019 00:12:21 -0500
+        b=uSSHLWvKTZCSIQQXqBM+etqpiy9P8sCw+GWaf+nw/bp+M31F32Ak0vm00qfhNNwTO
+         kCE9QhthOS5ebTc+7XDwvOM0Q7h+AvFfoczCFNifEyLT9m0v2Bij+2cJ61ic43cBbe
+         GbYWbzhQwWxeQQ2ILDVzkhM1Ydrw6OzzEWFxcsvI=
+Date:   Sun, 27 Oct 2019 00:12:45 -0500
 From:   Andy Gross <agross@kernel.org>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 05/15] arm: dts: msm8974: thermal: Add thermal zones
- for each sensor
-Message-ID: <20191027051221.GG5514@hector.lan>
+Subject: Re: [PATCH v6 12/15] arm: dts: msm8974: thermal: Add interrupt
+ support
+Message-ID: <20191027051245.GH5514@hector.lan>
 Mail-Followup-To: Amit Kucheria <amit.kucheria@linaro.org>,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
@@ -63,25 +63,24 @@ Mail-Followup-To: Amit Kucheria <amit.kucheria@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
         devicetree@vger.kernel.org
 References: <cover.1571652874.git.amit.kucheria@linaro.org>
- <72cc755c16888976edea555f1df60a299daa8a1e.1571652874.git.amit.kucheria@linaro.org>
+ <a2a70ff28e72a14b163a9a9b93ef474ab0836398.1571652874.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <72cc755c16888976edea555f1df60a299daa8a1e.1571652874.git.amit.kucheria@linaro.org>
+In-Reply-To: <a2a70ff28e72a14b163a9a9b93ef474ab0836398.1571652874.git.amit.kucheria@linaro.org>
 User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:05:24PM +0530, Amit Kucheria wrote:
-> msm8974 has 11 sensors connected to a single TSENS IP. Define a thermal
-> zone for each of those sensors to expose the temperature of each zone.
+On Mon, Oct 21, 2019 at 04:05:31PM +0530, Amit Kucheria wrote:
+> Register upper-lower interrupt for the tsens controller.
 > 
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > Tested-by: Brian Masney <masneyb@onstation.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
 
-Applied for 5.5
+Applied for 5.5.
 
 Andy
