@@ -2,133 +2,162 @@ Return-Path: <SRS0=8gXo=YU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A28CC47E49
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 09:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4773CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 09:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD98921726
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 09:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E5021726
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 09:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572168381;
+	bh=Y58ozI0M8tS8McZvd1NKw2OArhiULN5FrkAjEUsss1U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bZGYoO/kcz0rTqB8tPMTHMI1RnOgACPGGE1oj/DOzoqe5rHc7gbMIbezOtYnui5u5
+	 Tpz9rpLKPnIBkmlXYgwprf80e2CC6k6OutLnTX+y0Lmp5mF44JR5VUF3CXnFA8OPXX
+	 Fxhzm1xg7PS4yT6F9n8vOKACIWKBEc+BvvyAHj4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfJ0JKB (ORCPT
+        id S1726217AbfJ0J0V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 05:10:01 -0400
-Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:21925 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726079AbfJ0JKB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 05:10:01 -0400
-Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-        by SHSQR01.spreadtrum.com with ESMTPS id x9R99gMa087451
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Sun, 27 Oct 2019 17:09:42 +0800 (CST)
-        (envelope-from Chunyan.Zhang@unisoc.com)
-Received: from localhost (10.0.74.79) by BJMBX01.spreadtrum.com (10.0.64.7)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Sun, 27 Oct 2019 17:09:48
- +0800
-From:   Chunyan Zhang <chunyan.zhang@unisoc.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH 2/2] arm64: dts: Add SC9863A emmc and sd card nodes
-Date:   Sun, 27 Oct 2019 17:09:03 +0800
-Message-ID: <20191027090904.14349-3-chunyan.zhang@unisoc.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191027090904.14349-1-chunyan.zhang@unisoc.com>
-References: <20191027090904.14349-1-chunyan.zhang@unisoc.com>
+        Sun, 27 Oct 2019 05:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726106AbfJ0J0U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 Oct 2019 05:26:20 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2DD420679;
+        Sun, 27 Oct 2019 09:26:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572168379;
+        bh=Y58ozI0M8tS8McZvd1NKw2OArhiULN5FrkAjEUsss1U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QzkIbSgMltyD3VIZoK5YzRHgM5l3ijuj53ofAP7cI6AjHcMGVVVHjzYaumyMUYC2d
+         59M28j6aKTpSv2i0dX0Y4nGp3eAl24CWmZ3Q/ux+n67AMZXjyN68sZ1J9sd7u3zgk3
+         4IMNwxadH5gFLjL7EKx3o2N4Q37hQzxv3UvAzV30=
+Date:   Sun, 27 Oct 2019 09:26:13 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     rishi gupta <gupt21@gmail.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] iio: light: add driver for veml6030 ambient
+ light sensor
+Message-ID: <20191027092613.795b1c7c@archlinux>
+In-Reply-To: <CALUj-guR0XBGLCx2WnTSGiaVPpKbPcSKNVhbb+N8VfS449_NJg@mail.gmail.com>
+References: <1571664496-6392-1-git-send-email-gupt21@gmail.com>
+        <1571716635-22830-1-git-send-email-gupt21@gmail.com>
+        <20191022110000.28b7d2c5@archlinux>
+        <CALUj-guR0XBGLCx2WnTSGiaVPpKbPcSKNVhbb+N8VfS449_NJg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.0.74.79]
-X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL: SHSQR01.spreadtrum.com x9R99gMa087451
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, 22 Oct 2019 18:02:51 +0530
+rishi gupta <gupt21@gmail.com> wrote:
 
-Add emmc and sd card devicetree nodes for SC9863A.
+> Thanks Jonathan, sorry for deep thread, learnt will keep in mind.
+> 
+> All suggested changes done except re-ordering devm_add_action_or_reset.
+> Please see inline and suggest if I missed something.
+> 
+...
+> > > +static int veml6030_probe(struct i2c_client *client,
+> > > +                       const struct i2c_device_id *id)
+> > > +{
+> > > +     int ret;
+> > > +     struct veml6030_data *data;
+> > > +     struct iio_dev *indio_dev;
+> > > +     struct regmap *regmap;
+> > > +
+> > > +     if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+> > > +             dev_err(&client->dev, "i2c adapter doesn't support plain i2c\n");
+> > > +             return -EOPNOTSUPP;
+> > > +     }
+> > > +
+> > > +     regmap = devm_regmap_init_i2c(client, &veml6030_regmap_config);
+> > > +     if (IS_ERR(regmap)) {
+> > > +             dev_err(&client->dev, "can't setup regmap\n");
+> > > +             return PTR_ERR(regmap);
+> > > +     }
+> > > +
+> > > +     indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> > > +     if (!indio_dev)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     data = iio_priv(indio_dev);
+> > > +     i2c_set_clientdata(client, indio_dev);
+> > > +     data->client = client;
+> > > +     data->regmap = regmap;
+> > > +
+> > > +     indio_dev->dev.parent = &client->dev;
+> > > +     indio_dev->name = "veml6030";
+> > > +     indio_dev->channels = veml6030_channels;
+> > > +     indio_dev->num_channels = ARRAY_SIZE(veml6030_channels);
+> > > +     indio_dev->modes = INDIO_DIRECT_MODE;
+> > > +
+> > > +     if (client->irq) {
+> > > +             ret = devm_request_threaded_irq(&client->dev, client->irq,
+> > > +                                             NULL, veml6030_event_handler,
+> > > +                                             IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+> > > +                                             "veml6030", indio_dev);
+> > > +             if (ret < 0) {
+> > > +                     dev_err(&client->dev,
+> > > +                                     "irq %d request failed\n", client->irq);
+> > > +                     return ret;
+> > > +             }
+> > > +             indio_dev->info = &veml6030_info;
+> > > +     } else {
+> > > +             indio_dev->info = &veml6030_info_no_irq;
+> > > +     }
+> > > +
+> > > +     ret = devm_add_action_or_reset(&client->dev,
+> > > +                                     veml6030_als_shut_down_action, data);  
+> >
+> > What is this reversing?  It should be immediately after whatever that is, thus
+> > ensuring we only undo whatever we need to on failure and the ordering is correct
+> > for remove.  I am guessing it should be after hw_init.
+> >  
+> This just disables active measurements (this is the only thing we need
+> to do when failure happens).
+> 
+> Suppose hw initialisation succeeds but call to
+> devm_add_action_or_reset() fails. In this case sensor will be left
+> turned on as veml6030_als_shut_down_action() will never be executed.
+> Therefore I kept it before veml6030_hw_init().
+> Does this sounds correct to you ?
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- arch/arm64/boot/dts/sprd/sc9863a.dtsi     | 31 +++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/sp9863a-1h10.dts | 16 ++++++++++++
- 2 files changed, 47 insertions(+)
+Nope, that's the point of the _or_reset part of that call. Note that we used
+to manually handle the result of devm_add_action, but this little wrapper
+does that for us.
 
-diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-index ceecf551fd01..e3ae64cc214a 100644
---- a/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-+++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-@@ -626,5 +626,36 @@
- 				};
- 			};
- 		};
-+
-+		ap-ahb {
-+			compatible = "simple-bus";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			sdio0: sdio@20300000 {
-+				compatible  = "sprd,sdhci-r11";
-+				reg = <0 0x20300000 0 0x1000>;
-+				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				clock-names = "sdio", "enable";
-+				clocks = <&aon_clk CLK_SDIO0_2X>,
-+					 <&apahb_gate CLK_SDIO0_EB>;
-+				assigned-clocks = <&aon_clk CLK_SDIO0_2X>;
-+				assigned-clock-parents = <&rpll CLK_RPLL_390M>;
-+			};
-+
-+			sdio3: sdio@20600000 {
-+				compatible  = "sprd,sdhci-r11";
-+				reg = <0 0x20600000 0 0x1000>;
-+				interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				clock-names = "sdio", "enable";
-+				clocks = <&aon_clk CLK_EMMC_2X>,
-+					 <&apahb_gate CLK_EMMC_EB>;
-+				assigned-clocks = <&aon_clk CLK_EMMC_2X>;
-+				assigned-clock-parents = <&rpll CLK_RPLL_390M>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-index b6fbb5ca37e1..14673a1e52cb 100644
---- a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-+++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-@@ -38,3 +38,19 @@
- &uart1 {
- 	status = "okay";
- };
-+
-+&sdio0 {
-+	bus-width = <4>;
-+	no-sdio;
-+	no-mmc;
-+	status = "okay";
-+};
-+
-+&sdio3 {
-+	bus-width = <8>;
-+	non-removable;
-+	no-sdio;
-+	no-sd;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
--- 
-2.20.1
+In all failure cases it will run the callback provided to it.
+https://elixir.bootlin.com/linux/v4.8/source/include/linux/device.h#L688
 
+So it should always be called 'after' the thing it is setting up the
+unwinding function for.
 
+Jonathan
+
+> 
+> > > +     if (ret < 0)
+> > > +             return ret;
+> > > +
+> > > +     ret = veml6030_hw_init(indio_dev);
+> > > +     if (ret < 0)
+> > > +             return ret;
+> > > +
+> > > +     return devm_iio_device_register(&client->dev, indio_dev);
+> > > +}
