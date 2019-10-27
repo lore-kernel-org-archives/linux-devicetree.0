@@ -2,113 +2,105 @@ Return-Path: <SRS0=8gXo=YU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE39CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 20:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB2DC47E49
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C41F20B7C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 20:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473DE205C9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572209803;
-	bh=brHu22CgUlAV8oo+Awhnk9cnfWOJvOQW97kCTXit2WU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=K/NQPyfbU/y/k+RIya6nRcks/LT8R4ylComjhhyA0h1seLpwVdbTumCna5v49k+rK
-	 u7we81qVR/Cu+1448MBYl75xXg9ldqsyF4o4tldwei2Mo+hXLYMcdU2kXIeiSZNG/b
-	 HUBPkcMiXfQbgemlC/zJ1kbpJf/pDyDKpxLcdgX0=
+	s=default; t=1572210768;
+	bh=qhJM50bxO+MG7WrkXdo6i8sZ/JZEPykOMKFr88gZ6t8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fEWYV++oym6VX7vYajREJ7gM01jfz+pIfCLHkZNATw02sUZYsyirZnUFZhEyabBy1
+	 cCIr/3ORjCGM0HFKRkMnlljH3DOXaFtrh9xB2tk8XkQ0gFpURQXT7AlxfNJF0Qbmfb
+	 ANuR8gfK15oyYMpF+Frx4ottiEhws2yTrM93NyQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfJ0U4n (ORCPT
+        id S1730096AbfJ0VMr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 16:56:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47276 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbfJ0U4m (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 16:56:42 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728695AbfJ0VMq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:12:46 -0400
+Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE90F2070B;
-        Sun, 27 Oct 2019 20:56:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96339208C0;
+        Sun, 27 Oct 2019 21:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572209802;
-        bh=brHu22CgUlAV8oo+Awhnk9cnfWOJvOQW97kCTXit2WU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Os7jSXBdq+tNAQvsHGTWhUqQJ5w71uHdVTomU37AgfER53r15NwzIcZD8sWwkyYzi
-         3BifG1DGDCiJbgDqnauTpDb2vDODUujJqvUV3cSKuO2oP4WDeJNMgnS+MwcuIeKoGq
-         uAInRHy9HZNPr4AIu1zErZGYp4ZEIehkVHXFabyI=
-Received: by mail-qt1-f175.google.com with SMTP id g50so11713323qtb.4;
-        Sun, 27 Oct 2019 13:56:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAUd7VulgOpSdF4UCZImejxwaIa6sHZ/djIabkGstvqAKf+tZJsZ
-        zVitstGbdiT/wjQjYxsSxEQHs73FJxLKVGR04w==
-X-Google-Smtp-Source: APXvYqxDhNXRbEZ8TgMXoK+AXNhKy2RNanFb613NmTAxbWJ6MlbcBdMf+P31Qz6AiSmpPB5/rmZ/7D4Kvt6H81tju40=
-X-Received: by 2002:a0c:d2b4:: with SMTP id q49mr13714601qvh.135.1572209801059;
- Sun, 27 Oct 2019 13:56:41 -0700 (PDT)
+        s=default; t=1572210766;
+        bh=qhJM50bxO+MG7WrkXdo6i8sZ/JZEPykOMKFr88gZ6t8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rNHzLkFCoifjGz4WHdK0Nqx9FZWTDGK6sil2IbLjyQnyhP3HdczuwO3KhmJika3je
+         g/6q2gKKR6F91RCq/a4xuSySJQaB7oWa9F1JQIXfgjz/ZpS3eykvtLxxqO/lSCDdIj
+         E5W4gxVpXRJWfQS0mlw+MTja3H7R3XC9nvbgR/Og=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 10/93] MIPS: dts: ar9331: fix interrupt-controller size
+Date:   Sun, 27 Oct 2019 22:00:22 +0100
+Message-Id: <20191027203254.069647999@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
+References: <20191027203251.029297948@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
- <1571565847-10338-2-git-send-email-kvalo@codeaurora.org> <20191025213028.GA5117@bogus>
- <874kzu9v2g.fsf@kamboji.qca.qualcomm.com>
-In-Reply-To: <874kzu9v2g.fsf@kamboji.qca.qualcomm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Sun, 27 Oct 2019 15:56:29 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLD5UfSfYtvp62aGJSDC-Cm4ifk_YmNPRNAXQMnJ2CzVA@mail.gmail.com>
-Message-ID: <CAL_JsqLD5UfSfYtvp62aGJSDC-Cm4ifk_YmNPRNAXQMnJ2CzVA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/49] dt: bindings: net: add qcom,ath11k.yaml
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     devicetree@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        ath11k@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 8:28 AM Kalle Valo <kvalo@codeaurora.org> wrote:
->
-> Rob Herring <robh@kernel.org> writes:
->
-> > On Sun, Oct 20, 2019 at 01:03:19PM +0300, Kalle Valo wrote:
-> >> ath11k is a driver for Qualcomm IEEE 802.11ax devices. Add a
-> >> bindings document for the driver, first documenting IPQ8074 which is the
-> >> only device ath11k currently supports.
-> >>
-> >> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-> >> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-> >> ---
-> >>  .../bindings/net/wireless/qcom,ath11k.yaml         | 277 +++++++++++++++++++++
-> >>  1 file changed, 277 insertions(+)
-> >>
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> >> b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> >> new file mode 100644
-> >> index 000000000000..5d25542f85f8
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> >> @@ -0,0 +1,277 @@
-> >> +# SPDX-License-Identifier: BSD-3-Clause-Clear
-> >
-> > (GPL-2.0-only OR BSD-2-Clause) please.
->
-> I chose BSD-3-Clause-Clear because ath11k uses that license and I would
-> prefer to use the same license throughout the driver.
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-The schema is not the driver.
+[ Upstream commit 0889d07f3e4b171c453b2aaf2b257f9074cdf624 ]
 
-> Also it's
-> categorised as a preferred license:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/LICENSES/preferred
+It is two registers each of 4 byte.
 
-So are the 2 I listed. (GPL-2.0 is the deprecated version of GPL-2.0-only).
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Any specific reason why you want to change the license?
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index 2bae201aa3651..1c7bf11f8450b 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -99,7 +99,7 @@
+ 
+ 			miscintc: interrupt-controller@18060010 {
+ 				compatible = "qca,ar7240-misc-intc";
+-				reg = <0x18060010 0x4>;
++				reg = <0x18060010 0x8>;
+ 
+ 				interrupt-parent = <&cpuintc>;
+ 				interrupts = <6>;
+-- 
+2.20.1
 
-So that we have some sort of consistency between schemas. It's been a
-free-for-all for licensing dts files, headers and bindings til now,
-and I'm trying to address some of that as we add schema.
 
-Rob
+
