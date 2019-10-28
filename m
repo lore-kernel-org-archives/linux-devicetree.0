@@ -2,150 +2,146 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F29CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACECEC47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC14208C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E12218AC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ltTYQgdf"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mABeSdYm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390516AbfJ1O5K (ORCPT
+        id S1727743AbfJ1PU7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:57:10 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16617 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390461AbfJ1O5K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 10:57:10 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5db701cd0001>; Mon, 28 Oct 2019 07:57:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 28 Oct 2019 07:57:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 28 Oct 2019 07:57:09 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
- 2019 14:57:08 +0000
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
- DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Mon, 28 Oct 2019 14:57:08 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id C8DA543032; Mon, 28 Oct 2019 16:57:06 +0200 (EET)
-Date:   Mon, 28 Oct 2019 16:57:06 +0200
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        "Nicolas Chauvet" <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 01/17] clk: tegra: Add custom CCLK implementation
-Message-ID: <20191028145706.GF27141@pdeschrijver-desktop.Nvidia.com>
-References: <20191015211618.20758-1-digetx@gmail.com>
- <20191015211618.20758-2-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191015211618.20758-2-digetx@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572274637; bh=a3iQGGwz0Ivg7sfs0KItL4POFuee26IhkUhjou3eb4M=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=ltTYQgdfMjWQKG2jN1sK+ylYqIivDrD90MVQgPlGFVpj2Sp27DCwSzppeJbib+j0j
-         CLEn+3hwOL3Fvb3JPx5nmrIeLBJuGCOGjdGnF196NJippTqXGkyD45hQ3XydK2WOZ5
-         w3afkvcQ2jUpA188B3DIQoik5OX2/feYlEqZdf68hVJ0iu4IbVBq4t+pArmqjBeCxH
-         UctsgV6EGdwyyuaaQJSo4clSL9PAzOHwIW16j96+H21FqJGnv4J8JcSDkmNQO4zH+n
-         toCpLsBLEgVUD3to458/C7zcPfhcz9Xu/xwUfqsIYqWMlPkP1Vsn27NJTdzaVxmVAV
-         Rbi+wn2KM9YWg==
+        Mon, 28 Oct 2019 11:20:59 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54810 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbfJ1PU7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 11:20:59 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191028152058euoutp012361b0a9158c66607d71ab3d817b1dac~R2L6Zc-kd1996419964euoutp010
+        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 15:20:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191028152058euoutp012361b0a9158c66607d71ab3d817b1dac~R2L6Zc-kd1996419964euoutp010
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1572276058;
+        bh=8u5xWoYyD4lV76XSA5qxTTtYppeum6IaxfhGkN5SqO4=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=mABeSdYmgZDqQ10eeUKq2eI853KJ8qfg7sCh4LB1Fi8aVdGEZgCoRbksTPyS1o7vC
+         D8DSGhCOXL56jdxW7FRr7d+bzxbbKrKJDLcG+r6Qhlnxtm236QK1yhwAOXiX9nnzMe
+         3DdRy4X89Vaun7rbMNZjJx0RnEr2msi9jqAACP/s=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191028152057eucas1p2c7813263b58ddb6d236696ad5865d7d9~R2L58WHo31162311623eucas1p2p;
+        Mon, 28 Oct 2019 15:20:57 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B0.A6.04469.95707BD5; Mon, 28
+        Oct 2019 15:20:57 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191028152057eucas1p1d6b4252e9ce3f15c0d81e6941a62d2be~R2L5dF5mK0794107941eucas1p16;
+        Mon, 28 Oct 2019 15:20:57 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191028152057eusmtrp1d8ff536809f9372284701f9d668df060~R2L5cbd7H1762917629eusmtrp1e;
+        Mon, 28 Oct 2019 15:20:57 +0000 (GMT)
+X-AuditID: cbfec7f2-569ff70000001175-56-5db70759c392
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id B6.E7.04117.85707BD5; Mon, 28
+        Oct 2019 15:20:57 +0000 (GMT)
+Received: from AMDC3061.DIGITAL.local (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191028152056eusmtip100260ab716b3016cf82f84f9fa5f1862~R2L5ApcUk2332823328eusmtip1R;
+        Mon, 28 Oct 2019 15:20:56 +0000 (GMT)
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     krzk@kernel.org, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, vireshk@kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com,
+        m.szyprowski@samsung.com,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 1/3] soc: samsung: Drop "syscon" compatible requirement from
+ the chipid driver
+Date:   Mon, 28 Oct 2019 16:20:48 +0100
+Message-Id: <20191028152050.10220-1-s.nawrocki@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsWy7djP87qR7NtjDWb2yVpsnLGe1WL+kXOs
+        FufPb2C32PT4GqvF594jjBYzzu9jslh75C67ReveI+wWh9+0s1psfnCMzYHLY9OqTjaPzUvq
+        Pfq2rGL0+LxJLoAlissmJTUnsyy1SN8ugSvj3cRfbAVLOCs+fP7C2sD4hr2LkZNDQsBE4veS
+        fcxdjFwcQgIrGCXW995ihXC+MEocPtoMlfnMKHH+7EUmmJbrk54xQSSWM0p8PDaBEa5l5/11
+        YIPZBAwleo/2MYLYIgLqEt17prCDFDEL/GGUaN0ygRkkISyQILH+6ixWEJtFQFXi1JWNYHFe
+        AWuJaXN7oS6Ul1i94QAzhP2YTeL9bAEI20Vi4qp7bBC2sMSr41ug6mUkTk/uYQFZJiHQzCjR
+        s/s2O4QzgVHi/vEFjBBV1hKHj18E2swBdJKmxPpd+hBhR4lz29Yxg4QlBPgkbrwVBAkzA5mT
+        tk2HCvNKdLQJQVSrSPxeNR0aKlIS3U/+s0DYHhIft74Fs4UEYiVed69jm8AoNwth1wJGxlWM
+        4qmlxbnpqcWGeanlesWJucWleel6yfm5mxiBCeL0v+OfdjB+vZR0iFGAg1GJh3fC5W2xQqyJ
+        ZcWVuYcYJTiYlUR4L54BCvGmJFZWpRblxxeV5qQWH2KU5mBREuetZngQLSSQnliSmp2aWpBa
+        BJNl4uCUamAM/dy9+u2bptWnWAUYti7ddnPTN/9LWTZPmHMrVatmnNMP2nNv1+ZoL0W+JwvE
+        JMMyfhYtVlQ/N+nBk0Bxi/NT5OUcZ39I11gQUqJr2qy5W8avvo5nvz/Pl2mzXaTvqJ7Z7MiQ
+        2aAfNOvkv4e8imodIp3Gdnt//+Xv21VVc4nnvTzDNJPXm5uVWIozEg21mIuKEwG2wRfeDAMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsVy+t/xu7qR7NtjDe6qW2ycsZ7VYv6Rc6wW
+        589vYLfY9Pgaq8Xn3iOMFjPO72OyWHvkLrtF694j7BaH37SzWmx+cIzNgctj06pONo/NS+o9
+        +rasYvT4vEkugCVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSez
+        LLVI3y5BL+PdxF9sBUs4Kz58/sLawPiGvYuRk0NCwETi+qRnTF2MXBxCAksZJV7/fczcxcgB
+        lJCSmN+iBFEjLPHnWhcbRM0nRom5xycwgiTYBAwleo/2MYLUiwhoSpxbaAYSZhZoYZJYd9QR
+        JCwsECfx5FwFSJhFQFXi1JWNzCA2r4C1xLS5vVAnyEus3nCAeQIjzwJGhlWMIqmlxbnpucVG
+        esWJucWleel6yfm5mxiB4bjt2M8tOxi73gUfYhTgYFTi4X1xdVusEGtiWXFl7iFGCQ5mJRHe
+        i2eAQrwpiZVVqUX58UWlOanFhxhNgZZPZJYSTc4HxkpeSbyhqaG5haWhubG5sZmFkjhvh8DB
+        GCGB9MSS1OzU1ILUIpg+Jg5OqQbGcqZPn0/tXhC8S3n5RcPbmyzZPRd0+E7aeefdk2jBR0t+
+        WgdOc6+K2N6bdK5OTZ7vfWOaxqqDGxR4wp8+Z2veGRiy59jUS3elfIS3nL0QP+/uC377148W
+        KhQUbDm2eBNzWJX0zz9RviXVu/42S09xcLVZw7q8dVeR1/x5ke7vfqjI56RGMBwOVGIpzkg0
+        1GIuKk4EANitH+RdAgAA
+X-CMS-MailID: 20191028152057eucas1p1d6b4252e9ce3f15c0d81e6941a62d2be
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191028152057eucas1p1d6b4252e9ce3f15c0d81e6941a62d2be
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191028152057eucas1p1d6b4252e9ce3f15c0d81e6941a62d2be
+References: <CGME20191028152057eucas1p1d6b4252e9ce3f15c0d81e6941a62d2be@eucas1p1.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 12:16:02AM +0300, Dmitry Osipenko wrote:
-> CCLK stands for "CPU Clock", CPU core is running off CCLK. CCLK supports
-> multiple parents and it has internal clock divider which uses clock
-> skipping technique, meaning that CPU's voltage should correspond to the
-> parent clock rate and not CCLK. PLLX is the main CCLK parent that provides
-> clock rates above 1GHz and it has special property such that the CCLK's
-> internal divider is set into bypass mode when PLLX is set as a parent for
-> CCLK.
-> 
-> This patch forks generic Super Clock into CCLK implementation which takes
-> into account all CCLK specifics. The proper CCLK implementation is needed
-> by the upcoming Tegra20 CPUFreq driver update that will allow to utilize
-> the generic cpufreq-dt driver by moving intermediate clock handling into
-> the clock driver. Note that technically this all could be squashed into
-> clk-super, but result will be messier.
-> 
-> Note that currently all CCLKLP bits are left in the clk-super.c and only
-> CCLKG is supported by clk-tegra-super-cclk. It shouldn't be difficult
-> to move the CCLKLP bits, but CCLKLP is not used by anything in kernel
-> and thus better not to touch it for now.
+As we dropped the requirement of "syscon" compatible in the chipid
+nodes rework code acquiring the regmap to use device_node_to_regmap()
+rather than syscon_node_to_regmap().
 
-..
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ drivers/soc/samsung/exynos-chipid.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-> +	super->reg = reg;
-> +	super->lock = lock;
-> +	super->width = 4;
-> +	super->flags = clk_super_flags;
-> +	super->frac_div.reg = reg + 4;
-> +	super->frac_div.shift = 16;
-> +	super->frac_div.width = 8;
-> +	super->frac_div.frac_width = 1;
-> +	super->frac_div.lock = lock;
-> +	super->frac_div.flags = TEGRA_DIVIDER_SUPER;
-> +	super->div_ops = &tegra_clk_frac_div_ops;
-> +
+diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+index 25562dd0b206..b89c26a71c6e 100644
+--- a/drivers/soc/samsung/exynos-chipid.c
++++ b/drivers/soc/samsung/exynos-chipid.c
+@@ -50,12 +50,20 @@ static int __init exynos_chipid_early_init(void)
+ 	struct soc_device_attribute *soc_dev_attr;
+ 	struct soc_device *soc_dev;
+ 	struct device_node *root;
++	struct device_node *syscon;
+ 	struct regmap *regmap;
+ 	u32 product_id;
+ 	u32 revision;
+ 	int ret;
+ 
+-	regmap = syscon_regmap_lookup_by_compatible("samsung,exynos4210-chipid");
++	syscon = of_find_compatible_node(NULL, NULL,
++					 "samsung,exynos4210-chipid");
++	if (!syscon)
++		return ENODEV;
++
++	regmap = device_node_to_regmap(syscon);
++	of_node_put(syscon);
++
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+-- 
+2.17.1
 
-This is not right. The super clock divider is not a divider, it's a
-pulse skipper.
-
-> +	/* Data in .init is copied by clk_register(), so stack variable OK */
-> +	super->hw.init = &init;
-> +
-> +	clk = clk_register(NULL, &super->hw);
-> +	if (IS_ERR(clk))
-> +		kfree(super);
-> +
-> +	return clk;
-> +}
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index f81c10654aa9..095595a5b8a8 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -699,6 +699,10 @@ struct clk *tegra_clk_register_super_clk(const char *name,
->  		const char * const *parent_names, u8 num_parents,
->  		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
->  		spinlock_t *lock);
-> +struct clk *tegra_clk_register_super_cclk(const char *name,
-> +		const char * const *parent_names, u8 num_parents,
-> +		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
-> +		spinlock_t *lock);
->  
->  /**
->   * struct tegra_sdmmc_mux - switch divider with Low Jitter inputs for SDMMC
-> -- 
-> 2.23.0
-> 
