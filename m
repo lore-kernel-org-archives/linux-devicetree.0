@@ -4,71 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3867CCA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 13:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A471CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 13:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCBA214D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 13:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC15120873
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 13:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572268087;
-	bh=eN/t8vEWe/l66u2wjNSnil60tzYkWczNbhhncntG/Qs=;
+	s=default; t=1572269171;
+	bh=3pE89ZCUoD6XHadsRN7ScSgeFYmrH/IyK9AtjIgnGqg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hJsHF98vXAXWKbXdyfiHZV5LfOv71E8keXwTTk4i6WvD3BPCQfu9tYmGiW24HYHop
-	 xR9wa4azJ6d6AWBbt4zhxt05sXOaf6ufC3XYr/rHQCRKTXZDSVnsBCDVMYA5DW3Ne2
-	 IIMGn3UVA9EEYWXYpdhmc0/5tk0OJD7GizZ+4Z94=
+	b=P6p8TlWvQ0QahX4uzWWDrVSKcpPkrSB0KZqaMltOgdFgD3vl1oQ4v79SW81IwkwqB
+	 pL9xOXVd8jkY4+VLtGJz2v5igIP5M3UaP1KWPYgxVOeyXwrosMbeSamB6rvY3MYQsV
+	 jKIUgWCwrn1qvFmzkXwI5wkkiWhY1NMqhpqiR96I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388790AbfJ1NIG (ORCPT
+        id S1729008AbfJ1N0L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
+        Mon, 28 Oct 2019 09:26:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388578AbfJ1NIG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 09:08:06 -0400
+        id S1726691AbfJ1N0L (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:26:11 -0400
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C3B320717;
-        Mon, 28 Oct 2019 13:07:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18FBA20663;
+        Mon, 28 Oct 2019 13:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572268085;
-        bh=eN/t8vEWe/l66u2wjNSnil60tzYkWczNbhhncntG/Qs=;
+        s=default; t=1572269170;
+        bh=3pE89ZCUoD6XHadsRN7ScSgeFYmrH/IyK9AtjIgnGqg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZfkGtUdc9OP38mduRSaP02AMOobq0kjRV6BLT/zrP1C7FrZmLgeZHvo0m0ie71UHm
-         LWJ8gu0J128Zy0RjjMH5ewZpCMqpsTw1ComTsNYRxfdXotnteA5mSV60+6r4u5RIog
-         pvgl+7uUOKkBe4ZV31SnYN/7z2viBWJcmeuR2JJY=
-Date:   Mon, 28 Oct 2019 21:07:36 +0800
+        b=2fTGg4H7kVVcs3Lsth4IpuAZ9rhGzYgtOfAE2DrCKQ4Hshr8jQrepxZQcDQm+StiX
+         VkO/PljdhiW8zbnGd2u3E+bs10LLutkI9SC9qG3ajwm8prXQFHYf0CB7LR94P8xxfS
+         FNgIZ/RsIqSwB3O+GZEhm7pkbJHD3jFUp/ATkErg=
+Date:   Mon, 28 Oct 2019 21:25:36 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, ping.bai@nxp.com, jun.li@nxp.com,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM64: imx8mn: Change compatible string for sdma
-Message-ID: <20191028130734.GK16985@dragon>
-References: <1571992807-31378-1-git-send-email-shengjiu.wang@nxp.com>
+To:     Oliver Graute <oliver.graute@kococonnector.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
+ devicetree
+Message-ID: <20191028132534.GM16985@dragon>
+References: <20191024092019.4020-1-oliver.graute@kococonnector.com>
+ <20191028113826.GD16985@dragon>
+ <20191028120519.GA4147@optiplex>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571992807-31378-1-git-send-email-shengjiu.wang@nxp.com>
+In-Reply-To: <20191028120519.GA4147@optiplex>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 04:40:07PM +0800, Shengjiu Wang wrote:
-> SDMA in i.MX8MN should use same configuration as i.MX8MQ
-> So need to change compatible string to be "fsl,imx8mq-sdma".
+On Mon, Oct 28, 2019 at 12:07:32PM +0000, Oliver Graute wrote:
+> On 28/10/19, Shawn Guo wrote:
+> > On Thu, Oct 24, 2019 at 09:22:37AM +0000, Oliver Graute wrote:
+> > > Document the Variscite i.MX6qdl board devicetree binding
+> > > already supported:
+> > > 
+> > > - variscite,dt6customboard
+> > > 
+> > > Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
+> > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > Cc: Neil Armstrong <narmstrong@baylibre.com>
+> > 
+> > Please organise it into the patch series, where it's being used.
 > 
-> Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> I think this was just forgotten on this commit:
 
-Updated subject like below, and applied the patch.
-
-  arm64: dts: imx8mn: fix compatible string for sdma
+Ah, sorry, missed the fact.  Applied, thanks.
 
 Shawn
+
+> 
+> commit 26b7784b29e90da926ff3c290107f7e78c807314
+> Author: Neil Armstrong <narmstrong@baylibre.com>
+> Date:   Mon Dec 4 10:21:09 2017 +0100
+> 
+>     ARM: dts: imx6q: Add Variscite DART-MX6 Carrier-board support
+> 
+>     This patch adds support for the i.MX6 Quad variant of the Variscite DART-MX6
+>     SoM Carrier-Board.
