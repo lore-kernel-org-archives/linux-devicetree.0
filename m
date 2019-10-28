@@ -2,118 +2,87 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23761CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2AFCA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022C921721
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0C02086D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfJ1LLC (ORCPT
+        id S2388443AbfJ1L3e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:11:02 -0400
-Received: from mail-sh.amlogic.com ([58.32.228.43]:8678 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ1LLC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 07:11:02 -0400
-Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 28 Oct
- 2019 19:11:13 +0800
-Subject: Re: [PATCH RESEND v2 1/4] dt-bindings: power: add Amlogic secure
- power domains bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Kevin Hilman <khilman@baylibre.com>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com>
- <1570695678-42623-2-git-send-email-jianxin.pan@amlogic.com>
- <20191014173900.GA6886@bogus>
- <622c7785-8254-5473-6b35-7287830f3c60@amlogic.com>
- <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-Message-ID: <730e5611-6dc0-5bf0-0489-4091bda18c9e@amlogic.com>
-Date:   Mon, 28 Oct 2019 19:11:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 28 Oct 2019 07:29:34 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:39425 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731363AbfJ1L3d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 07:29:33 -0400
+X-Originating-IP: 91.217.168.176
+Received: from localhost (unknown [91.217.168.176])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 3E39E1C000C;
+        Mon, 28 Oct 2019 11:29:27 +0000 (UTC)
+Date:   Mon, 28 Oct 2019 12:29:27 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     Rob Herring <robh@kernel.org>,
+        linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] dt-bindings: rtc: realtek: Convert RTD119x to
+ schema
+Message-ID: <20191028112927.GL3125@piout.net>
+References: <20191020040817.16882-1-afaerber@suse.de>
+ <20191020040817.16882-3-afaerber@suse.de>
+ <20191025212015.GA29978@bogus>
+ <5491f3ed-93bf-1c4d-60f8-5d646c3bd2fb@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.18.29.227]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+In-Reply-To: <5491f3ed-93bf-1c4d-60f8-5d646c3bd2fb@suse.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 2019/10/26 4:19, Rob Herring wrote:
-> On Wed, Oct 16, 2019 at 6:26 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
->>
->> Hi Rob,
->>
->> On 2019/10/15 1:39, Rob Herring wrote:
->>> On Thu, Oct 10, 2019 at 04:21:15AM -0400, Jianxin Pan wrote:
->>>> Add the bindings for the Amlogic Secure power domains, controlling the
->>>> secure power domains.
->>>>
->>>> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
->>>> power domain registers are in secure world.
->>>>
->>>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->>>> ---
->>>>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 ++++++++++++++++++++++
->>>>  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++
->>>>  2 files changed, 74 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->>>> +
->>>> +  secure-monitor:
->>>> +    description: phandle to the secure-monitor node
->>>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>>
->>> Why not just a child node of this node?
->>>
->> Thanks for the review.
->>
->> I followed the style of the previous series of mesonï¼š
->>
->>   46         efuse: efuse {
->>   47                 compatible = "amlogic,meson-gxbb-efuse";
->>   48                 clocks = <&clkc CLKID_EFUSE>;
->>   49                 #address-cells = <1>;
->>   50                 #size-cells = <1>;
->>   51                 read-only;
->>   52                 secure-monitor = <&sm>;
->>   53         };
+On 28/10/2019 11:46:48+0100, Andreas Färber wrote:
+> Am 25.10.19 um 23:20 schrieb Rob Herring:
+> > On Sun, Oct 20, 2019 at 06:08:11AM +0200, Andreas Färber wrote:
+> >> Convert the RTD119x binding to a YAML schema.
+> >>
+> >> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> >> ---
+> >>  v2: New
+> >>  
+> >>  .../devicetree/bindings/rtc/realtek,rtd119x.txt    | 16 ---------
+> >>  .../devicetree/bindings/rtc/realtek,rtd119x.yaml   | 38 ++++++++++++++++++++++
+> >>  2 files changed, 38 insertions(+), 16 deletions(-)
+> >>  delete mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+> > 
+> > 
+> >> diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+> >> new file mode 100644
+> >> index 000000000000..71b7396bd469
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
 > 
-> Looks like that was not reviewed by me and is only in linux-next.
-> Please make functions exposed by secure world a child of the secure
-> firmware node.
-> 
-> Really for power domains, you only need to add a '#power-domain-cells'
-> property to the secure monitor node.
-> 
-OK, I will update them in the next version. 
-Thanks for the review.
-> Rob
-> 
-> .
+> While renaming the file to .yaml I would like to also rename it to 1195.
+> It would need to be 1x9x to cover RTD1195 and e.g. RTD1296, and looking
+> forward the wildcard may need to be 1xxx to cover also RTD1619, which
+> quickly becomes unrecognizable.
 > 
 
+I'm fine with removing wildcards as much as possible.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
