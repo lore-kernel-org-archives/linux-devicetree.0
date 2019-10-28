@@ -2,86 +2,126 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C469CA9EC2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 13:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691A3CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 13:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D35B214E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 13:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49ABC21734
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 13:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfJ1NAp (ORCPT
+        id S1729568AbfJ1NFg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 09:00:45 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56195 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbfJ1NAo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 09:00:44 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iP4dN-0003D8-Tx; Mon, 28 Oct 2019 14:00:33 +0100
-Message-ID: <7bbd6c77117d2391f6669a9eb958730717ea295c.camel@pengutronix.de>
-Subject: Re: [PATCH v3 1/4] crypto: Add Allwinner sun8i-ss cryptographic
- offloader
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>, davem@davemloft.net,
-        herbert@gondor.apana.org.au, mark.rutland@arm.com,
-        mripard@kernel.org, robh+dt@kernel.org, wens@csie.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Date:   Mon, 28 Oct 2019 14:00:28 +0100
-In-Reply-To: <20191025185128.24068-2-clabbe.montjoie@gmail.com>
-References: <20191025185128.24068-1-clabbe.montjoie@gmail.com>
-         <20191025185128.24068-2-clabbe.montjoie@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 28 Oct 2019 09:05:36 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5201 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726816AbfJ1NFg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 09:05:36 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 045BF4DEF3DE6ABFDDF8;
+        Mon, 28 Oct 2019 21:05:28 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 28 Oct 2019
+ 21:05:23 +0800
+Date:   Mon, 28 Oct 2019 13:05:15 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     Jakub Ladman <ladmanj@volny.cz>, Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hwmon@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH][RESEND] New driver for TLV493D-A1B6 I2C chip, input and
+ hwmon class device.
+Message-ID: <20191028130515.00003bb0@huawei.com>
+In-Reply-To: <20191018205637.GS35946@dtor-ws>
+References: <966f09b8-0936-6d90-2ec8-bcb1b94c81aa@volny.cz>
+        <20191018205637.GS35946@dtor-ws>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Corentin,
+On Fri, 18 Oct 2019 13:56:37 -0700
+Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 
-On Fri, 2019-10-25 at 20:51 +0200, Corentin Labbe wrote:
-> The Security System is an hardware cryptographic offloader present
-> on Allwinner SoCs A80 and A83T.
-> It is different from the previous sun4i-ss.
+> Hi Jakub,
 > 
-> This driver supports AES cipher in CBC and ECB mode.
+> On Fri, Oct 18, 2019 at 10:10:19PM +0200, Jakub Ladman wrote:
+> > Dear maintainers.
+> > 
+> > As a linux-patch newbie i made some mistakes in my first attempt to send
+> > this patch.
+> > This patch contains a new driver for i2c connected chip, Infineon
+> > TLV493D-A1B6.
+> > The chip is 3D hall-effect sensor with thermometer.
+> > 
+> > This particular driver senses magnetic field rotation in X/Y plane with 1
+> > degree resolution and +/- 1 degree error.
+> > 
+> > Input device is created for the angle sensing part.
+> > Hwmon device is created for the thermometer part.
+> > 
+> > Input device axis must be configured by device-tree. There are also optional
+> > parameters regarding absolute/relative mode switching, minimum step in
+> > relative mode, filtering and thermometer calibration.
+> > 
+> > We are using that device as high reliability rotary encoder.  
 > 
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> ---
-[...]
-> +static int sun8i_ss_probe(struct platform_device *pdev)
-> +{
-> +	struct sun8i_ss_dev *ss;
-> +	int err, irq;
-> +	u32 v;
-> +
-> +	ss = devm_kzalloc(&pdev->dev, sizeof(*ss), GFP_KERNEL);
-> +	if (!ss)
-> +		return -ENOMEM;
-[...]
-> +
-> +	ss->reset = devm_reset_control_get(&pdev->dev, NULL);
+> I wonder if IIO subsystem that support s magnetometers and temperature
+> sensors would not be a better hone for this.
+> 
+> CC-ing Jonathan.
+> 
+Hi Jakub, Dmitry,
 
-It looks like this driver could use devm_reset_control_get_shared() to
-get a (clk-like) refcounted reset control. Otherwise, please use
-devm_reset_control_get_exclusive() instead of devm_reset_control_get().
+Sorry for slow reply, was on vacation.
 
-See the kerneldoc comment for reset_control_get_shared() for details.
+Anyhow, from a quick glance at the datasheet this looks like a fairly standard
+magnetometer, be it one designed for use with an associated magnet, rather than
+intended for use to measure the earths magnetic field (compass type chips).
 
-regards
-Philipp
+These devices only become an 'input device' once the relative positioning relative
+to the magnet is known.  We should probably figure out a way to represent that
+in DT etc for devices where it is known.  Whether we then do a bridge to input
+using that info in kernel or pass it all up to userspace to deal with is a
+separate issue, that position information needs to be described first.  My suspicion
+is that it would be hard to handle the maths in kernel, but I've not tried
+working it out!
+
+So this would fit in IIO, even if the eventual 'use case' is classic input
+(I'm guessing a rotary dial).
+
+We have a driver for a part with similar support undergoing revisions at the
+moment:
+
+https://www.azoteq.com/images/stories/pdf/iqs624_datasheet.pdf
+
+There might be other hall effect devices like this in IIO, I can't recall but
+I certainly have one in my todo pile.
+
++CC linux-iio
+
+Thanks,
+
+Jonathan
+
+
+> Also, your mailer mangled your patch pretty badly, please consider using
+> git send-email next time.
+
+
+> 
+> Thanks.
+> 
+
 
