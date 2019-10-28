@@ -2,58 +2,63 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699B1CA9EC1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39BDCA9EC1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30AC521835
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B393E218AC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HXoSAjS2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WAfl1XmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfJ1WAc (ORCPT
+        id S2390684AbfJ1WAp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:00:32 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:50818 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbfJ1WAc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 18:00:32 -0400
-Received: by mail-pg1-f202.google.com with SMTP id r24so9379634pgj.17
-        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 15:00:31 -0700 (PDT)
+        Mon, 28 Oct 2019 18:00:45 -0400
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:49028 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390646AbfJ1WAo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 18:00:44 -0400
+Received: by mail-ua1-f74.google.com with SMTP id h32so1770716uah.15
+        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 15:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=jIuu6R7JqiUCw2kjSSA8CnIOEEW6a2IyYtMd95CVXac=;
-        b=HXoSAjS2qQZRsUkK8bfldDkvPAGpaTwuwhXT8UKIiEc0nDa5ZoZsQBrrbUy9R+Y5Cv
-         /Qwfkv4k2iNObcXCI437XkMKsCBLBCbFx3bbSKhEXjenXnT8C9SomsIUL1lOcOlkU5D8
-         jTHg/d5xnM/N5JgCUTVsKKT27bLCSsxuDltqLn7Z2vC7ri953etetMvnCEoY+w8e/vXL
-         sgq4GgyqxQNoglbOfh2Fpiv/1NnVGETYWZBpoAq6A3tS9v2axJftzKs87MihS/oy2JnJ
-         AeNM09v3Z2X25ZwKS8ZRNNhgpNcONMJypor98WsPSc0eWotJ3N18ZVWQ5EnTEgVuF1pZ
-         A+pw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=p1q/Pw/wuy9bjo/DrQQAdF+Yb7XQb+VfuKZvKfT16cM=;
+        b=WAfl1XmPbwo+7VE/CZN0905b+HEiYar7/NvUthq601HPXxT94eCGYY2F4WfuKln4W7
+         +SfqttoOOX9bXAFCz8ORqsda1Ic2Uh3Ud+PYGT6xFRU4sjsX8FxhctSmhYGWjuK2/dMW
+         LHMMJUos6oA87dNWQjCZ1EcxcjqfBavBeCcLKRO/W91UmWen/BnwZhnKmCsTTpXml3ho
+         DduqFtcrLux5Npe9TmskCDaZBmz6ho7fI1oGF2ZSxPAddumrBpli4aTCIVo5rDh+5hnZ
+         e/DiPNdXDAbp0iWTPlfNBmMt/jewBkIKimoHqF6EbT/oggxlma0OCQPTQc/K3+BotBRD
+         oXUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=jIuu6R7JqiUCw2kjSSA8CnIOEEW6a2IyYtMd95CVXac=;
-        b=eVcDh7X+KuvkwLOZaLTgnRwakKHXDKttLmNXY5HC8zl5hOl2o7n1xRe87/xNipzbMT
-         2NiyeNQb8vm6U7C3BVtAKx6bol43lBLDnDwN7zIwl09rHKe5/befvGqtEJinxnLfS7Y2
-         cIvEGw+3bT2ijLd0PrepkxhRELDAHbXPO43T9YthsfCRDpxmVJ9e/jhiEGPpN9OfQz6q
-         5gubQ/v/i3X1WexffdADSe2rx+qkjXwxnIOLMVqJRG4hgfRRA1TUjKMA9ezo8GSZom4w
-         rvFernid5afG4W/OMd6qGrPxPLWlZvwsKmuGrvQdMN0O59F5r6N7HZFrXclB1b7vHmuj
-         JGHg==
-X-Gm-Message-State: APjAAAV2XytEj/1tcvMXLC72+afFQ4stn8TiT114UIBUNQBGngUBuvEc
-        tIztNLHPhRTlN/gCu4Edrh8XTxmd3edvI9A=
-X-Google-Smtp-Source: APXvYqzkseXx1MyZvyDQU/LZFs1P9ym7JWcGqHxStdYWFmUWKuUL1GImx0jwD8gYFOVQQEIKE2FlsBZN9DmSy4Q=
-X-Received: by 2002:a65:4189:: with SMTP id a9mr22938579pgq.380.1572300031062;
- Mon, 28 Oct 2019 15:00:31 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 15:00:21 -0700
-Message-Id: <20191028220027.251605-1-saravanak@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=p1q/Pw/wuy9bjo/DrQQAdF+Yb7XQb+VfuKZvKfT16cM=;
+        b=I0QaZJqYaNu1tOKFvDR/mzywNAIeajS78eNmMbDU5d2/gDz6eU80rhJwFf43eLyDJx
+         iQ/ilxsZ0+IzTj+hYI59rmklRXPGr166C4yDiInIMQ9ixPKhHrRApSZnr7uUn+sWee/L
+         xaFcVwaWFAKfUiFWbGYZ+R5CbY6uwIGA2CAp6CSlUmjzaWUE6/iaMvtgyhgvO3cSO/5+
+         DdwumQDz97LQqffQKaYoAkuz1ZLkomSQvl/jdaRCrCccYvmyxwLxqrQXKOQrccqV4sPI
+         GTm22BxywhCshacx7XkReq+viEzxHD6ZHgchKA48mIewRkCuEGxLRPp16c9WwfaqpQjk
+         utuA==
+X-Gm-Message-State: APjAAAWAoB4Gai/B+UZdfvY771Y1Shy72PAKJOLfrbmd8sLrpqdeJg8C
+        91mXBY+JcJdUFGOVCQHsTXdFQUq10O28fPA=
+X-Google-Smtp-Source: APXvYqyedBmeKcCmUfQlI/6WF0HNof2bWz1MwtqdnVskuaQNyPZRJ7ILHAIvQWm0quDgwRzmEACcOOkgvrFUk10=
+X-Received: by 2002:a05:6102:835:: with SMTP id k21mr10123988vsb.11.1572300043709;
+ Mon, 28 Oct 2019 15:00:43 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 15:00:25 -0700
+In-Reply-To: <20191028220027.251605-1-saravanak@google.com>
+Message-Id: <20191028220027.251605-5-saravanak@google.com>
 Mime-Version: 1.0
+References: <20191028220027.251605-1-saravanak@google.com>
 X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH v1 0/5] Improve of_devlink to handle "proxy cycles"
+Subject: [PATCH v1 4/5] of: property: Make sure child dependencies don't block
+ probing of parent
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -69,143 +74,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As described in [1], parent devices needed to create device links to
-suppliers of their child devices to make sure the suppliers of the child
-devices don't get a sync_state() before the child devices are added and
-probed.
+When creating device links to proxy the sync_state() needs of child
+dependencies, create SYNC_STATE_ONLY device links so that children
+dependencies don't block probing of the parent.
 
-In these illustrations, -> denotes DT references and indentation
-represents child status.
+Also, differentiate between missing suppliers of parent device vs
+missing suppliers of child devices so that driver core doesn't block
+parent device probing when only child supplier dependencies are missing.
 
-Example 1:
-==========
-Device node A
-	Device node B -> C
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/of/property.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-Device node C
-
-In this example, everything works as intended.
-1. Device A is added
-   a. Device A is added to wait_for_suppliers list
-2. Device C is added
-   a. Device link is created from A to C
-   b. Device A is removed from wait_for_suppliers list
-3. Device C probes
-4. During late_initcall_sync() Device C doesn't get sync_state() call
-   because Device A hasn't probed yet
-4. Device A's driver is loaded as a module
-5. Device A probes
-   a. Device B is added
-      i. Device link is created from B to C
-6. Device B probes
-7. Device C get sync_state() call since A and B have probed
-
-Example 2:
-==========
-Device node A
-	Device node B -> C
-
-Device node C
-	Device node D -> A
-
-In this example, none of the devices probe:
-1. Device A is added
-   a. Device A is added to wait_for_suppliers list
-2. Device C is added
-   a. Device link is created from A to C
-   b. Device A is removed from wait_for_suppliers list
-   c. Device link is attempted from C to A, but fails since it would
-      create a cycle.
-   d. Device C is added to wait_for_suppliers list
-3. Device C doesn't probe because it's on wait_for_suppliers list
-4. Device A's driver is loaded as a module
-5. Device A doesn't probe because its supplier Device C hasn't probed
-
-Cycles in device links aren't allowed because device links represent
-functional dependency and cause the devices to be reordered in the
-dpm_list to make sure the consumer suspends/goes idle before the
-supplier. If there's a cycle in the supplier/consumer dependencies,
-there's no logical way to sort them in the dpm_list.
-
-This patch series addresses this problem.
-
-Patch 1 adds a SYNC_STATE_ONLY device link flag that states that the
-device link should only affect the sync_state() call behavior and
-nothing else. Since a SYNC_STATE_ONLY device link doesn't affect
-dpm_list or probing, we can allow cycles within SYNC_STATE_ONLY device
-links. What this means is that, all the devices in the SYNC_STATE_ONLY
-device link cycle will get their sync_state() calls only after all of
-them have probed successfully.
-
-Patch 2 improves wait_for_suppliers semantics by allowing a device on
-the list to state (device.links.need_for_probe) if the suppliers it's
-waiting on (to make a device link to) are needed for it to probe or not.
-If the device is not waiting on suppliers that are needed for probing,
-the device is no longer blocked from attempting to probe even if it's on
-the wait_for_suppliers list.
-
-Patch 3 allows fwnode_operations.add_links() return error codes to
-differentiate between being unable to find mandatory suppliers (-ENODEV)
-vs optional suppliers (-EAGAIN). If add_links() is only unable to find
-optional suppliers, then the corresponding device is marked as waiting
-on suppliers that are not needed for probing.
-
-Patch 4 changes device tree fwnode add_links() implementation so that
-all device links created from a device to the suppliers of its child
-devices use the SYNC_STATE_ONLY flag. It is also changed to return
--ENODEV only for errors with the suppliers of the device and return
--EAGAIN when the errors are limited to the suppliers of its child
-devices.
-
-Patch 5 is an unrelated improvement that touches the same bit of code,
-so I'm grouping it with this series to avoid rebases. That commit should
-be self descriptive.
-
-With these changes, Example 2 works as follows:
-1. Device A is added
-   a. Device A is added to wait_for_suppliers list
-   b. Device A is marked as waiting for optional suppliers
-2. Device C is added
-   a. SYNC_STATE_ONLY device link is created from A to C
-   b. Device A is removed from wait_for_suppliers list
-   c. SYNC_STATE_ONLY device link is created from C to A
-3. Device C probes
-   a. Device D is added.
-      i. Device link is created from D to A
-4. During late_initcall_sync() Device C doesn't get sync_state() call
-   because Device A hasn't probed yet
-5. Device A's driver is loaded as a module
-6. Device A probes
-   a. Device B is added
-      i. Device link is created from B to C
-7. Device A doesn't get sync_stat() call because Device D hasn't probed
-8. Device D probes
-9. Device A get sync_state() call since C and D have probed
-10.Device B probes
-11.Device C get sync_state() call since A and B have probed
-
-Thanks,
-Saravana
-
-[1] - commit d4387cd117414ba80230f27a514be5ca4a09cfcc
-      ("of: property: Create device links for all child-supplier depencencies")
-      or https://lore.kernel.org/linux-acpi/20190904211126.47518-7-saravanak@google.com/
-
-Saravana Kannan (5):
-  driver core: Add device link support for SYNC_STATE_ONLY flag
-  driver core: Allow a device to wait on optional suppliers
-  driver core: Allow fwnode_operations.add_links to differentiate errors
-  of: property: Make sure child dependencies don't block probing of
-    parent
-  of: property: Skip adding device links to suppliers that aren't
-    devices
-
- drivers/base/core.c    | 88 +++++++++++++++++++++++++++++++++++-------
- drivers/of/property.c  | 21 +++++++---
- include/linux/device.h |  5 +++
- include/linux/fwnode.h | 13 +++++--
- 4 files changed, 102 insertions(+), 25 deletions(-)
-
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 2808832b2e86..f16f85597ccc 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1032,10 +1032,10 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
+  * - -EINVAL if the supplier link is invalid and should not be created
+  * - -ENODEV if there is no device that corresponds to the supplier phandle
+  */
+-static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
++static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
++			      u32 dl_flags)
+ {
+ 	struct device *sup_dev;
+-	u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+ 	int ret = 0;
+ 	struct device_node *tmp_np = sup_np;
+ 
+@@ -1195,13 +1195,20 @@ static int of_link_property(struct device *dev, struct device_node *con_np,
+ 	unsigned int i = 0;
+ 	bool matched = false;
+ 	int ret = 0;
++	u32 dl_flags;
++
++	if (dev->of_node == con_np)
++		dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
++	else
++		dl_flags = DL_FLAG_SYNC_STATE_ONLY;
+ 
+ 	/* Do not stop at first failed link, link all available suppliers. */
+ 	while (!matched && s->parse_prop) {
+ 		while ((phandle = s->parse_prop(con_np, prop_name, i))) {
+ 			matched = true;
+ 			i++;
+-			if (of_link_to_phandle(dev, phandle) == -EAGAIN)
++			if (of_link_to_phandle(dev, phandle, dl_flags)
++								== -EAGAIN)
+ 				ret = -EAGAIN;
+ 			of_node_put(phandle);
+ 		}
+@@ -1219,10 +1226,10 @@ static int of_link_to_suppliers(struct device *dev,
+ 
+ 	for_each_property_of_node(con_np, p)
+ 		if (of_link_property(dev, con_np, p->name))
+-			ret = -EAGAIN;
++			ret = -ENODEV;
+ 
+ 	for_each_child_of_node(con_np, child)
+-		if (of_link_to_suppliers(dev, child))
++		if (of_link_to_suppliers(dev, child) && !ret)
+ 			ret = -EAGAIN;
+ 
+ 	return ret;
 -- 
 2.24.0.rc0.303.g954a862665-goog
 
