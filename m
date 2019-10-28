@@ -2,228 +2,112 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CDBCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C68CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2388320B7C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBFDF20B7C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572232114;
-	bh=9pHjVHBWzzO8as/GlxtW409f8OPgE/yFlPmLQPZ/F7o=;
+	s=default; t=1572232525;
+	bh=E2rmGEKJWc4SPd5hu34sYqUV9AyvQoUs/7AVX3h7orM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sRwVJN+StW4zxDpjmZmYrmBa7kf0Ja1fb08AcxYzNBMUZGZnfPKjo2t5ZnpmOE2Xh
-	 WxNyb/Mml/q+KPS5xWyV8BjYKXNKqqx4//he4vhL6mNHVrPynyTYsvo6QUPSJ0JflV
-	 m3L904Dq1Zo95Zwl47P4Oz73qk+KPcQI6J3ExXbE=
+	b=2lVndwLmFj7KFgrRc3O6gKl1/lGWO3iEdSt0mpQ53LsRdWBUV5R9lqWg5pQLSn88T
+	 JNiIjTUl3U8M8AqdRikSepO28FcNg5QR+iZO3mzJAVph9Y6cmYrP9kEbX7HOCF2JyS
+	 qs9hjXIuLwIACWckYk6WfmEQdTFHEip6jb3YkkbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfJ1DId (ORCPT
+        id S1726508AbfJ1DPY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 23:08:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46754 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 23:15:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727330AbfJ1DId (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 23:08:33 -0400
+        id S1726495AbfJ1DPY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 Oct 2019 23:15:24 -0400
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDC1D20873;
-        Mon, 28 Oct 2019 03:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDFC020873;
+        Mon, 28 Oct 2019 03:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572232111;
-        bh=9pHjVHBWzzO8as/GlxtW409f8OPgE/yFlPmLQPZ/F7o=;
+        s=default; t=1572232523;
+        bh=E2rmGEKJWc4SPd5hu34sYqUV9AyvQoUs/7AVX3h7orM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hIns11PAGhGhvvwvm97UvqGlArw66VuIrxzIJAikWoo53Yl05QBJA9iaAxz3/w+vg
-         M0NXEsdUxfN1JRX9mK9xZ+YJMnTfk7rd7EpIwOTg+7sRmcJvDtRAf+bwqMos6BqPU1
-         O816SZI5wlfoZsMZPhvKtcOvUBZ0ePvZyY5pqD3k=
-Date:   Mon, 28 Oct 2019 11:08:12 +0800
+        b=CtuHAFfgVqZrLteGy3y/MnjNgN2MyJdRESeyoOcTuXq7Hq1Dq0kYjG+XscuwFG3fx
+         KlGejELfnIMgJkmO7dkceyYV0YGdHPr6p1ubMDpIVYlD66lcdg1TyI+K5rFz5UTjrG
+         4jd4Ue/Nvdn8fRsYqF/IPXKOz+AQGngVsqdzK2ME=
+Date:   Mon, 28 Oct 2019 11:15:00 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Luka Pivk <luka.pivk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>, Jun Li <jun.li@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "angus@akkea.ca" <angus@akkea.ca>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        Troy Kisky <troy.kisky@boundarydevices.com>,
+        Gary Bisson <gary.bisson@boundarydevices.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        Richard Hu <richard.hu@technexion.com>,
+        "andradanciu1997@gmail.com" <andradanciu1997@gmail.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Andy Duan <fugang.duan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] arm: dts: imx*(colibri|apalis): add missing
- recovery modes to i2c
-Message-ID: <20191028030810.GH16985@dragon>
-References: <20191016170332.2013-1-philippe.schenker@toradex.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/5] arm64: dts: imx8qxp: Move usdhc clocks assignment to
+ board DT
+Message-ID: <20191028031459.GI16985@dragon>
+References: <1571192067-19600-1-git-send-email-Anson.Huang@nxp.com>
+ <20191026120902.GL14401@dragon>
+ <DB3PR0402MB3916A2258E1E8B4690CC1B7DF5660@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016170332.2013-1-philippe.schenker@toradex.com>
+In-Reply-To: <DB3PR0402MB3916A2258E1E8B4690CC1B7DF5660@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 05:03:41PM +0000, Philippe Schenker wrote:
-> This patch adds missing i2c recovery modes and corrects wrongly named
-> ones.
+On Mon, Oct 28, 2019 at 01:29:32AM +0000, Anson Huang wrote:
+> Hi, Shawn
 > 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> > On Wed, Oct 16, 2019 at 10:14:23AM +0800, Anson Huang wrote:
+> > > usdhc's clock rate is different according to different devices
+> > > connected, so clock rate assignment should be placed in board DT
+> > > according to different devices connected on each usdhc port.
+> > 
+> > I think it should be fine that we have a reasonable default settings in soc.dtsi,
+> > and boards that need a different setup can overwrite the settings in
+> > board.dts.
+> 
+> Someone was complaining about the usdhc clock assignment in soc.dtsi, because some
+> usdhc nodes are having clock assignments while some are NOT. That is why I did this
+> patch set. I agree that we can have default settings in soc.dtsi, so do you think it makes
+> sense to add default clock assignment to all usdhc nodes? If yes, I will redo the patch
+> set.
 
-As a practise, we use 'ARM: ' to prefix i.MX arch/arm/ patches.
+I had a second thought on this. To ease the maintenance of soc.dtsi,
+let's do clock assignments in board.dts.
 
-I fixed it up and applied both patches.
+Series applied, thanks.
 
 Shawn
-
-> 
-> ---
-> 
-> Changes in v2:
-> - Added scl/sda gpio
-> - Added missing recovery mode to i2c2 on imx6qdl-colibri
-> 
->  arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 30 +++++++++++++++++++++-----
->  arch/arm/boot/dts/imx6qdl-colibri.dtsi | 18 ++++++++++++----
->  2 files changed, 39 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> index 7c4ad541c3f5..86cad6c9f0f9 100644
-> --- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> @@ -205,8 +205,11 @@
->  /* I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier board) */
->  &i2c1 {
->  	clock-frequency = <100000>;
-> -	pinctrl-names = "default";
-> +	pinctrl-names = "default", "gpio";
->  	pinctrl-0 = <&pinctrl_i2c1>;
-> +	pinctrl-1 = <&pinctrl_i2c1_gpio>;
-> +	scl-gpios = <&gpio5 27 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +	sda-gpios = <&gpio5 26 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  	status = "disabled";
->  };
->  
-> @@ -216,8 +219,11 @@
->   */
->  &i2c2 {
->  	clock-frequency = <100000>;
-> -	pinctrl-names = "default";
-> +	pinctrl-names = "default", "gpio";
->  	pinctrl-0 = <&pinctrl_i2c2>;
-> +	pinctrl-1 = <&pinctrl_i2c2_gpio>;
-> +	scl-gpios = <&gpio4 12 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +	sda-gpios = <&gpio4 13 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  	status = "okay";
->  
->  	pmic: pfuze100@8 {
-> @@ -372,9 +378,9 @@
->   */
->  &i2c3 {
->  	clock-frequency = <100000>;
-> -	pinctrl-names = "default", "recovery";
-> +	pinctrl-names = "default", "gpio";
->  	pinctrl-0 = <&pinctrl_i2c3>;
-> -	pinctrl-1 = <&pinctrl_i2c3_recovery>;
-> +	pinctrl-1 = <&pinctrl_i2c3_gpio>;
->  	scl-gpios = <&gpio3 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  	sda-gpios = <&gpio3 18 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  	status = "disabled";
-> @@ -646,6 +652,13 @@
->  		>;
->  	};
->  
-> +	pinctrl_i2c1_gpio: i2c1gpiogrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26 0x4001b8b1
-> +			MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27 0x4001b8b1
-> +		>;
-> +	};
-> +
->  	pinctrl_i2c2: i2c2grp {
->  		fsl,pins = <
->  			MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
-> @@ -653,6 +666,13 @@
->  		>;
->  	};
->  
-> +	pinctrl_i2c2_gpio: i2c2gpiogrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_KEY_COL3__GPIO4_IO12 0x4001b8b1
-> +			MX6QDL_PAD_KEY_ROW3__GPIO4_IO13 0x4001b8b1
-> +		>;
-> +	};
-> +
->  	pinctrl_i2c3: i2c3grp {
->  		fsl,pins = <
->  			MX6QDL_PAD_EIM_D17__I2C3_SCL 0x4001b8b1
-> @@ -660,7 +680,7 @@
->  		>;
->  	};
->  
-> -	pinctrl_i2c3_recovery: i2c3recoverygrp {
-> +	pinctrl_i2c3_gpio: i2c3gpiogrp {
->  		fsl,pins = <
->  			MX6QDL_PAD_EIM_D17__GPIO3_IO17 0x4001b8b1
->  			MX6QDL_PAD_EIM_D18__GPIO3_IO18 0x4001b8b1
-> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> index 019dda6b88ad..8ab9960fc15d 100644
-> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> @@ -166,8 +166,11 @@
->   */
->  &i2c2 {
->  	clock-frequency = <100000>;
-> -	pinctrl-names = "default";
-> +	pinctrl-names = "default", "gpio";
->  	pinctrl-0 = <&pinctrl_i2c2>;
-> +	pinctrl-0 = <&pinctrl_i2c2_gpio>;
-> +	scl-gpios = <&gpio2 30 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +	sda-gpios = <&gpio3 16 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  	status = "okay";
->  
->  	pmic: pfuze100@8 {
-> @@ -312,9 +315,9 @@
->   */
->  &i2c3 {
->  	clock-frequency = <100000>;
-> -	pinctrl-names = "default", "recovery";
-> +	pinctrl-names = "default", "gpio";
->  	pinctrl-0 = <&pinctrl_i2c3>;
-> -	pinctrl-1 = <&pinctrl_i2c3_recovery>;
-> +	pinctrl-1 = <&pinctrl_i2c3_gpio>;
->  	scl-gpios = <&gpio1 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  	sda-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  	status = "disabled";
-> @@ -509,6 +512,13 @@
->  		>;
->  	};
->  
-> +	pinctrl_i2c2_gpio: i2c2grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_EIM_EB2__GPIO2_IO30 0x4001b8b1
-> +			MX6QDL_PAD_EIM_D16__GPIO3_IO16 0x4001b8b1
-> +		>;
-> +	};
-> +
->  	pinctrl_i2c3: i2c3grp {
->  		fsl,pins = <
->  			MX6QDL_PAD_GPIO_3__I2C3_SCL 0x4001b8b1
-> @@ -516,7 +526,7 @@
->  		>;
->  	};
->  
-> -	pinctrl_i2c3_recovery: i2c3recoverygrp {
-> +	pinctrl_i2c3_gpio: i2c3gpiogrp {
->  		fsl,pins = <
->  			MX6QDL_PAD_GPIO_3__GPIO1_IO03 0x4001b8b1
->  			MX6QDL_PAD_GPIO_6__GPIO1_IO06 0x4001b8b1
-> -- 
-> 2.23.0
-> 
