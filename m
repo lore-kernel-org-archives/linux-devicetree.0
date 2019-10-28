@@ -2,120 +2,243 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11D2CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95B7CA9EBE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94ACD222C4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC3621726
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbfJ1GHe (ORCPT
+        id S1731637AbfJ1GHU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:07:34 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:28066 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731716AbfJ1GHd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 02:07:33 -0400
-X-IronPort-AV: E=Sophos;i="5.68,238,1569250800"; 
-   d="scan'208";a="30181609"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 28 Oct 2019 15:07:31 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 11EC44128CD7;
-        Mon, 28 Oct 2019 15:07:31 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, geert+renesas@glider.be
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 3/4] clk: renesas: rcar-usb2-clock-sel: Add multiple clocks management
-Date:   Mon, 28 Oct 2019 15:07:29 +0900
-Message-Id: <1572242850-9073-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Mon, 28 Oct 2019 02:07:20 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53422 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727182AbfJ1GHU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:07:20 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 08E5B200710;
+        Mon, 28 Oct 2019 07:07:18 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1C51E2006FA;
+        Mon, 28 Oct 2019 07:07:04 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 43E2F40309;
+        Mon, 28 Oct 2019 14:06:50 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, leonard.crestez@nxp.com,
+        abel.vesa@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com,
+        jun.li@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
+        mripard@kernel.org, vkoul@kernel.org, jagan@amarulasolutions.com,
+        dinguyen@kernel.org, marcin.juszkiewicz@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM thermal monitoring unit
+Date:   Mon, 28 Oct 2019 14:03:36 +0800
+Message-Id: <1572242618-18806-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572242850-9073-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1572242850-9073-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1572242618-18806-1-git-send-email-Anson.Huang@nxp.com>
+References: <1572242618-18806-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This hardware needs to enable clocks of both host and peripheral.
-So, this patch adds multiple clocks management.
+i.MX8MM has a thermal monitoring unit(TMU) inside, it ONLY has one
+sensor for CPU, add support for reading immediate temperature of
+this sensor.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/clk/renesas/rcar-usb2-clock-sel.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ drivers/thermal/Kconfig          |  10 +++
+ drivers/thermal/Makefile         |   1 +
+ drivers/thermal/imx8mm_thermal.c | 134 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 145 insertions(+)
+ create mode 100644 drivers/thermal/imx8mm_thermal.c
 
-diff --git a/drivers/clk/renesas/rcar-usb2-clock-sel.c b/drivers/clk/renesas/rcar-usb2-clock-sel.c
-index b97f5f9..4096506 100644
---- a/drivers/clk/renesas/rcar-usb2-clock-sel.c
-+++ b/drivers/clk/renesas/rcar-usb2-clock-sel.c
-@@ -26,9 +26,16 @@
- #define CLKSET0_PRIVATE		BIT(0)
- #define CLKSET0_EXTAL_ONLY	(CLKSET0_INTCLK_EN | CLKSET0_PRIVATE)
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 129b9ed..e09ff16 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -233,6 +233,16 @@ config IMX_THERMAL
+ 	  cpufreq is used as the cooling device to throttle CPUs when the
+ 	  passive trip is crossed.
  
-+enum {
-+	CLK_INDEX_EHCI_OHCI,
-+	CLK_INDEX_HS_USB,
-+	CLK_NUM
++config IMX8MM_THERMAL
++	tristate "Temperature sensor driver for Freescale i.MX8MM SoC"
++	depends on ARCH_MXC
++	depends on OF
++	help
++	  Support for Thermal Monitoring Unit (TMU) found on Freescale i.MX8MM SoC.
++	  It supports one critical trip point and one passive trip point. The
++	  cpufreq is used as the cooling device to throttle CPUs when the passive
++	  trip is crossed.
++
+ config MAX77620_THERMAL
+ 	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
+ 	depends on MFD_MAX77620
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index baeb70b..f2608f0 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -41,6 +41,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+= db8500_thermal.o
+ obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
+ obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
+ obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
++obj-$(CONFIG_IMX8MM_THERMAL)	+= imx8mm_thermal.o
+ obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
+ obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
+ obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
+diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
+new file mode 100644
+index 0000000..04f8a8f
+--- /dev/null
++++ b/drivers/thermal/imx8mm_thermal.c
+@@ -0,0 +1,134 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 NXP.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/thermal.h>
++
++#include "thermal_core.h"
++
++#define TER			0x0	/* TMU enable */
++#define TRITSR			0x20	/* TMU immediate temp */
++
++#define TER_EN			BIT(31)
++#define TRITSR_VAL_MASK		0xff
++
++#define TEMP_LOW_LIMIT		10
++
++struct imx8mm_tmu {
++	struct thermal_zone_device *tzd;
++	void __iomem *base;
++	struct clk *clk;
 +};
 +
- struct usb2_clock_sel_priv {
- 	void __iomem *base;
- 	struct clk_hw hw;
-+	struct clk_bulk_data clks[CLK_NUM];
- 	bool extal;
- 	bool xtal;
- };
-@@ -53,14 +60,25 @@ static void usb2_clock_sel_disable_extal_only(struct usb2_clock_sel_priv *priv)
- 
- static int usb2_clock_sel_enable(struct clk_hw *hw)
- {
--	usb2_clock_sel_enable_extal_only(to_priv(hw));
-+	struct usb2_clock_sel_priv *priv = to_priv(hw);
++static int tmu_get_temp(void *data, int *temp)
++{
++	struct imx8mm_tmu *tmu = data;
++	u32 val;
++
++	/* the temp sensor need about 1ms to finish the measurement */
++	usleep_range(1000, 2000);
++
++	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
++	if (val < TEMP_LOW_LIMIT)
++		return -EAGAIN;
++
++	*temp = val * 1000;
++
++	return 0;
++}
++
++static struct thermal_zone_of_device_ops tmu_tz_ops = {
++	.get_temp = tmu_get_temp,
++};
++
++static int imx8mm_tmu_probe(struct platform_device *pdev)
++{
++	struct imx8mm_tmu *tmu;
++	u32 val;
 +	int ret;
 +
-+	ret = clk_bulk_prepare_enable(CLK_NUM, priv->clks);
-+	if (ret)
++	tmu = devm_kzalloc(&pdev->dev, sizeof(struct imx8mm_tmu), GFP_KERNEL);
++	if (!tmu)
++		return -ENOMEM;
++
++	tmu->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(tmu->base))
++		return PTR_ERR(tmu->base);
++
++	tmu->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(tmu->clk)) {
++		ret = PTR_ERR(tmu->clk);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev,
++				"failed to get tmu clock: %d\n", ret);
 +		return ret;
++	}
 +
-+	usb2_clock_sel_enable_extal_only(priv);
- 
- 	return 0;
- }
- 
- static void usb2_clock_sel_disable(struct clk_hw *hw)
- {
--	usb2_clock_sel_disable_extal_only(to_priv(hw));
-+	struct usb2_clock_sel_priv *priv = to_priv(hw);
++	ret = clk_prepare_enable(tmu->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to enable tmu clock: %d\n", ret);
++		return ret;
++	}
 +
-+	usb2_clock_sel_disable_extal_only(priv);
++	tmu->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0,
++							tmu, &tmu_tz_ops);
++	if (IS_ERR(tmu->tzd)) {
++		dev_err(&pdev->dev,
++			"failed to register thermal zone sensor: %d\n", ret);
++		return PTR_ERR(tmu->tzd);
++	}
 +
-+	clk_bulk_disable_unprepare(CLK_NUM, priv->clks);
- }
- 
- /*
-@@ -128,6 +146,14 @@ static int rcar_usb2_clock_sel_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
-+	priv->clks[CLK_INDEX_EHCI_OHCI].clk = devm_clk_get(dev, "ehci_ohci");
-+	if (IS_ERR(priv->clks[CLK_INDEX_EHCI_OHCI].clk))
-+		return PTR_ERR(priv->clks[CLK_INDEX_EHCI_OHCI].clk);
++	platform_set_drvdata(pdev, tmu);
 +
-+	priv->clks[CLK_INDEX_HS_USB].clk = devm_clk_get(dev, "hs-usb-if");
-+	if (IS_ERR(priv->clks[CLK_INDEX_HS_USB].clk))
-+		return PTR_ERR(priv->clks[CLK_INDEX_HS_USB].clk);
++	/* enable the monitor */
++	val = readl_relaxed(tmu->base + TER);
++	val |= TER_EN;
++	writel_relaxed(val, tmu->base + TER);
 +
- 	pm_runtime_enable(dev);
- 	pm_runtime_get_sync(dev);
- 
++	return 0;
++}
++
++static int imx8mm_tmu_remove(struct platform_device *pdev)
++{
++	struct imx8mm_tmu *tmu = platform_get_drvdata(pdev);
++	u32 val;
++
++	/* disable TMU */
++	val = readl_relaxed(tmu->base + TER);
++	val &= ~TER_EN;
++	writel_relaxed(val, tmu->base + TER);
++
++	clk_disable_unprepare(tmu->clk);
++	platform_set_drvdata(pdev, NULL);
++
++	return 0;
++}
++
++static const struct of_device_id imx8mm_tmu_table[] = {
++	{ .compatible = "fsl,imx8mm-tmu", },
++	{ },
++};
++
++static struct platform_driver imx8mm_tmu = {
++	.driver = {
++		.name	= "i.mx8mm_thermal",
++		.of_match_table = imx8mm_tmu_table,
++	},
++	.probe = imx8mm_tmu_probe,
++	.remove = imx8mm_tmu_remove,
++};
++module_platform_driver(imx8mm_tmu);
++
++MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
++MODULE_DESCRIPTION("i.MX8MM Thermal Monitor Unit driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
 
