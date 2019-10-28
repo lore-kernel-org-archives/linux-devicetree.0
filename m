@@ -2,147 +2,298 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7C2CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BA6CA9EC1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 12:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494DA21734
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA14D21835
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 12:43:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IwNJ/hn2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ahGGJEEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389232AbfJ1Mm5 (ORCPT
+        id S2389263AbfJ1MnC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:42:57 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:55391 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389228AbfJ1Mm4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 08:42:56 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191028124255epoutp04912a52f509df1d89c58a623c837d2eec~R0B6qoWzJ2623126231epoutp04g
-        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 12:42:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191028124255epoutp04912a52f509df1d89c58a623c837d2eec~R0B6qoWzJ2623126231epoutp04g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572266575;
-        bh=T5dy0LMdMnOMairr/D+gfFi983RUv2eT1Chz5wu0IN0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IwNJ/hn2iY7ajlaK2raZMh+4/dmCDUFX7/UlFUcTbq7vVsAgXjXDI/HTl1Jtsq0B3
-         SdOFT0cmHA6dbZkF6h6u2naEwJ/0LKNF/nhS3apcLIW0uqTTaomkt5lUehU/drNcd5
-         nHb72K5yRHYvt2aLDm2M8n66gS3sF1ALE4gN+1Vg=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20191028124254epcas5p1317837693f904049b413d736deee5d89~R0B6Q3PtO3227132271epcas5p1L;
-        Mon, 28 Oct 2019 12:42:54 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        43.F1.48302.E42E6BD5; Mon, 28 Oct 2019 21:42:54 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191028124253epcas5p3fd6b58e5ecd45bfd9c51dfdbd1a4ae40~R0B5ZfMyg1784817848epcas5p3q;
-        Mon, 28 Oct 2019 12:42:53 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191028124253epsmtrp1c21784a4638b87bf7ebf356942f20a71~R0B5Ys5YV1231112311epsmtrp14;
-        Mon, 28 Oct 2019 12:42:53 +0000 (GMT)
-X-AuditID: b6c32a4a-327ff7000001bcae-51-5db6e24ebffd
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        71.0A.24756.D42E6BD5; Mon, 28 Oct 2019 21:42:53 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191028124251epsmtip2d93a03035818de7b01b40fc46e6a7453~R0B3s1JF_0999809998epsmtip2o;
-        Mon, 28 Oct 2019 12:42:51 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc:     pankaj.dubey@samsung.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, Anvesh Salveru <anvesh.s@samsung.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-Subject: [PATCH 1/2] PCI: tegra: Remove support for ZRX-DC compliant PHY
- from platform driver
-Date:   Mon, 28 Oct 2019 18:12:19 +0530
-Message-Id: <1572266540-17626-2-git-send-email-anvesh.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572266540-17626-1-git-send-email-anvesh.s@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPIsWRmVeSWpSXmKPExsWy7bCmpq7fo22xBvtuq1g0/9/OanF210JW
-        iyVNGRbzj5xjtWiZtYjF4vKuOWwWZ+cdZ7Po/DKLzeLN7xfsFou2fmG3+LlrHovFte28Djwe
-        a+atYfTYOesuu8eCTaUevc3v2Dz6tqxi9Pi8SS6ALYrLJiU1J7MstUjfLoErY+7TFsaCddwV
-        9z5uZGpg/MzZxcjJISFgInGoaw1jFyMXh5DAbkaJpy8vM0M4nxgltl9cwAbhfGOU6Ow8wwbT
-        0vP8DFTLXkaJZyfPsEM4LUwSrw6dA6tiE9CW+Hl0LzuILSJQJjGr6QpYB7PAdCaJM5M3AhVx
-        cAgLxEt0HpQEqWERUJVoWv4drJdXwEXi3VKQepBtchI3z3Uyg9icAq4S3VsfsYDMkRA4wiax
-        vG8yM0SRi8Snj0uhbGGJV8e3sEPYUhIv+9ug7HyJ3rtLoewaiSl3O6AW2EscuDKHBeQeZgFN
-        ifW79EHCzAJ8Er2/nzCBhCUEeCU62oQgTCWJtpnVEI0SEovn32SGCHtIXP+pDwmFGYwS7ZMO
-        s01glJ2FMHMBI+MqRsnUguLc9NRi0wKjvNRyveLE3OLSvHS95PzcTYzgZKHltYNx2TmfQ4wC
-        HIxKPLwTLm+LFWJNLCuuzD3EKMHBrCTCe/EMUIg3JbGyKrUoP76oNCe1+BCjNAeLkjjvJNar
-        MUIC6YklqdmpqQWpRTBZJg5OqQbGkNrnjU3Hnr60euX3sY1bfu4UL0UhhU9pj85yFWzddKhK
-        vCl6s8QVzliGvOA1u/4xip6OEGJcxX1yYUdKydaS+1ffz9ZYsjxwXv+DpccXKa/Wrvq8jr25
-        ZcflhV6CWyZ4u/Q79Cnu0fQJu6gbWvZc8RTnP1VGgz+f7pvn71O4o/i39KjAF8UtSizFGYmG
-        WsxFxYkAcURQzBIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPLMWRmVeSWpSXmKPExsWy7bCSvK7vo22xBmtPqlo0/9/OanF210JW
-        iyVNGRbzj5xjtWiZtYjF4vKuOWwWZ+cdZ7Po/DKLzeLN7xfsFou2fmG3+LlrHovFte28Djwe
-        a+atYfTYOesuu8eCTaUevc3v2Dz6tqxi9Pi8SS6ALYrLJiU1J7MstUjfLoErY+7TFsaCddwV
-        9z5uZGpg/MzZxcjJISFgItHz/AxjFyMXh5DAbkaJi9c+sUEkJCS+7P0KZQtLrPz3nB2iqIlJ
-        YlHDd1aQBJuAtsTPo3vZQWwRgSqJAx19LCA2s8BcJonna1NAbGGBWIlDHXOZQWwWAVWJpuXf
-        wYbyCrhIvFt6hRFigZzEzXOdYDWcAq4S3Vsfgc0RAqpp+vuKeQIj3wJGhlWMkqkFxbnpucWG
-        BYZ5qeV6xYm5xaV56XrJ+bmbGMHBqqW5g/HykvhDjAIcjEo8vC+ubosVYk0sK67MPcQowcGs
-        JMJ78QxQiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/TvGORQgLpiSWp2ampBalFMFkmDk6pBsbp
-        lzYmP+l3cGO4f6clLXNKLMveY5wbGSV8bpq3K8zNyJ33JmZ3xtx9y07vP2frVXj533nlI09X
-        8Uz5+S9Pb8a5x09cqgV8Y8Q0pl7vqH3881Zv4/Hdn9+rVqauW2n1iW/OzL2/DC5ECF7yV3q3
-        8x3nlC27z28rMnkxa//6nTvzuU9FnX/45sLBs0osxRmJhlrMRcWJAF8447dSAgAA
-X-CMS-MailID: 20191028124253epcas5p3fd6b58e5ecd45bfd9c51dfdbd1a4ae40
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191028124253epcas5p3fd6b58e5ecd45bfd9c51dfdbd1a4ae40
-References: <1572266540-17626-1-git-send-email-anvesh.s@samsung.com>
-        <CGME20191028124253epcas5p3fd6b58e5ecd45bfd9c51dfdbd1a4ae40@epcas5p3.samsung.com>
+        Mon, 28 Oct 2019 08:43:02 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37216 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389230AbfJ1MnA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 08:43:00 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SCgve8033729;
+        Mon, 28 Oct 2019 07:42:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572266577;
+        bh=h8UvdH0jq2ykZeJxZMyA9dhTsaxsmByi2M9+PwbJ+NA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ahGGJEEPd4QYWqpW1+ezBFwO9hp44lnQRmv/SowVwTpEXb8mCSCCga2C1c8X50rN+
+         CftNP+UcVb9vVWntbLO0hx+71B8w+mSxpH2vfZD3w3ISDZYU/oOySHCI3VHaAVOXE1
+         4dQy7yLsEDx9gg1F6ELxfr4tmIx6K10H3/7r42ak=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9SCgvY4039404
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 28 Oct 2019 07:42:57 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
+ Oct 2019 07:42:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 28 Oct 2019 07:42:43 -0500
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SCgogr063574;
+        Mon, 28 Oct 2019 07:42:53 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>, Rob Herring <robh@kernel.org>,
+        <devicetree@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH 01/17] dt-bindings: remoteproc: Add OMAP remoteproc bindings
+Date:   Mon, 28 Oct 2019 14:42:22 +0200
+Message-ID: <20191028124238.19224-2-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191028124238.19224-1-t-kristo@ti.com>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As part of dw_pcie_setup(), PHYs which are compliant to ZRX-DC
-specification are already handled based on "snps,phy-zrxdc-compliant"
-property in controller DT node. So, instead of handling ZRX-DC
-compliant settings in each platform driver, remove this driver
-specific code.
+From: Suman Anna <s-anna@ti.com>
 
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC: Andrew Murray <andrew.murray@arm.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: Vidya Sagar <vidyas@nvidia.com>
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Add the device tree bindings document for the IPU and DSP
+remote processor devices on OMAP4+ SoCs.
+
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
-Depends on the following patch:
-https://patchwork.kernel.org/patch/11215241/
-https://patchwork.kernel.org/patch/11215239/
+ .../remoteproc/ti,omap-remoteproc.txt         | 205 ++++++++++++++++++
+ 1 file changed, 205 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
 
- drivers/pci/controller/dwc/pcie-tegra194.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index f89f5acee72d..f3a6ea89b8a8 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -782,10 +782,6 @@ static void tegra_pcie_prepare_host(struct pcie_port *pp)
- 
- 	init_host_aspm(pcie);
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--	val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
--	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
--
- 	if (pcie->update_fc_fixup) {
- 		val = dw_pcie_readl_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF);
- 		val |= 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT;
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+new file mode 100644
+index 000000000000..e2bcfcab21c1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+@@ -0,0 +1,205 @@
++OMAP4+ Remoteproc Devices
++=========================
++
++The OMAP family of SoCs usually have one or more slave processor sub-systems
++that are used to offload some of the processor-intensive tasks, or to manage
++other hardware accelerators, for achieving various system level goals.
++
++The processor cores in the sub-system are usually behind an IOMMU, and may
++contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
++caches, an Interrupt Controller, a Cache Controller etc.
++
++The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
++sub-system. The DSP processor sub-system can contain any of the TI's C64x,
++C66x or C67x family of DSP cores as the main execution unit. The IPU processor
++sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core Cortex-M4
++processors.
++
++Remote Processor Node:
++======================
++Each remote processor sub-system is represented as a single DT node. Each node
++has a number of required or optional properties that enable the OS running on
++the host processor (MPU) to perform the device management of the remote
++processor and to communicate with the remote processor. The various properties
++can be classified as constant or variable. The constant properties are dictated
++by the SoC and does not change from one board to another having the same SoC.
++Examples of constant properties include 'iommus', 'reg'. The variable properties
++are dictated by the system integration aspects such as memory on the board, or
++configuration used within the corresponding firmware image. Examples of variable
++properties include 'mboxes', 'memory-region', 'timers', 'watchdog-timers' etc.
++
++Required properties:
++--------------------
++The following are the mandatory properties:
++
++- compatible:	Should be one of the following,
++		    "ti,omap4-dsp" for DSPs on OMAP4 SoCs
++		    "ti,omap5-dsp" for DSPs on OMAP5 SoCs
++		    "ti,dra7-dsp" for DSPs on DRA7xx/AM57xx SoCs
++		    "ti,omap4-ipu" for IPUs on OMAP4 SoCs
++		    "ti,omap5-ipu" for IPUs on OMAP5 SoCs
++		    "ti,dra7-ipu" for IPUs on DRA7xx/AM57xx SoCs
++
++- iommus:	phandles to OMAP IOMMU nodes, that need to be programmed
++		for this remote processor to access any external RAM memory or
++		other peripheral device address spaces. This property usually
++		has only a single phandle. Multiple phandles are used only in
++		cases where the sub-system has different ports for different
++		sub-modules within the processor sub-system (eg: DRA7 DSPs),
++		and need the same programming in both the MMUs.
++
++- mboxes:	OMAP Mailbox specifier denoting the sub-mailbox, to be used for
++		communication with the remote processor. The specifier format is
++		as per the bindings,
++		Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
++		This property should match with the sub-mailbox node used in
++		the firmware image.
++
++Optional properties:
++--------------------
++Some of these properties are mandatory on some SoCs, and some are optional
++depending on the configuration of the firmware image to be executed on the
++remote processor. The conditions are mentioned for each property.
++
++The following are the optional properties:
++- reg:			Address space for any remoteproc memories present on
++			the SoC. Should contain an entry for each value in
++			'reg-names'. These are mandatory for all DSP and IPU
++			processors that have them (OMAP4/OMAP5 DSPs do not have
++			any RAMs)
++
++- reg-names:		Required names for each of the address spaces defined in
++			the 'reg' property. Should contain a string from among
++			the following names, each representing the corresponding
++			internal RAM memory region,
++			   "l2ram" for L2 RAM,
++			   "l1pram" for L1 Program RAM Memory/Cache,
++			   "l1dram" for L1 Data RAM Memory/Cache,
++
++			All devices may not have all the above memories.
++
++- syscon-bootreg:	Should be a pair of the phandle to the System Control
++			Configuration region that contains the boot address
++			register, and the register offset of the boot address
++			register within the System Control module. This property
++			is required for all the DSP instances on OMAP4, OMAP5
++			and DRA7xx SoCs.
++
++- memory-region:	phandle to the reserved memory node to be associated
++			with the remoteproc device. The reserved memory node
++			can be a CMA memory node, and should be defined as
++			per the bindings,
++			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++
++- mbox-names:		Optional names for the OMAP mailbox specifiers mentioned
++			in the 'mboxes' property, one per specifier value
++
++- timers:		One or more phandles to OMAP DMTimer nodes, that serve
++			as System/Tick timers for the OS running on the remote
++			processors. This will usually be a single timer if the
++			processor sub-system is running in SMP mode, or one per
++			core in the processor sub-system. This can also be used
++			to reserve specific timers to be dedicated to the
++			remote processors.
++
++			This property is mandatory on remote processors requiring
++			external tick wakeup, and to support Power Management
++			features. The timers to be used should match with the
++			timers used in the firmware image.
++
++- watchdog-timers:	One or more phandles to OMAP DMTimer nodes, used to
++			serve as Watchdog timers for the processor cores. This
++			will usually be one per executing processor core, even
++			if the processor sub-system is running a SMP OS.
++
++			The timers to be used should match with the watchdog
++			timers used in the firmware image.
++
++Example:
++--------
++
++1. OMAP4 DSP
++	/* DSP Reserved Memory node */
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		dsp_memory_region: dsp-memory@98000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x98000000 0x800000>;
++			reusable;
++		};
++	};
++
++	/* DSP node */
++	ocp {
++		dsp: dsp {
++			compatible = "ti,omap4-dsp";
++			syscon-bootreg = <&scm_conf 0x304>;
++			iommus = <&mmu_dsp>;
++			mboxes = <&mailbox &mbox_dsp>;
++			memory-region = <&dsp_memory_region>;
++			timers = <&timer5>;
++			watchdog-timers = <&timer6>;
++		};
++	};
++
++2. OMAP5 IPU
++	/* IPU Reserved Memory node */
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		ipu_memory_region: ipu-memory@95800000 {
++			compatible = "shared-dma-pool";
++			reg = <0 0x95800000 0 0x3800000>;
++			reusable;
++		};
++	};
++
++	/* IPU node */
++	ocp {
++		ipu: ipu@55020000 {
++			compatible = "ti,omap5-ipu";
++			reg = <0x55020000 0x10000>;
++			reg-names = "l2ram";
++			iommus = <&mmu_ipu>;
++			mboxes = <&mailbox &mbox_ipu>;
++			memory-region = <&ipu_memory_region>;
++			timers = <&timer3>, <&timer4>;
++			watchdog-timers = <&timer9>, <&timer11>;
++		};
++	};
++
++3. DRA7xx/AM57xx DSP
++	/* DSP1 Reserved Memory node */
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		dsp1_memory_region: dsp1-memory@99000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x99000000 0x0 0x4000000>;
++			reusable;
++		};
++	};
++
++	/* DSP1 node */
++	ocp {
++		dsp1: dsp@40800000 {
++			compatible = "ti,dra7-dsp";
++			reg = <0x40800000 0x48000>,
++			      <0x40e00000 0x8000>,
++			      <0x40f00000 0x8000>;
++			reg-names = "l2ram", "l1pram", "l1dram";
++			syscon-bootreg = <&scm_conf 0x55c>;
++			iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
++			mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
++			memory-region = <&dsp1_memory_region>;
++			timers = <&timer5>;
++			watchdog-timers = <&timer10>;
++		};
++	};
 -- 
 2.17.1
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
