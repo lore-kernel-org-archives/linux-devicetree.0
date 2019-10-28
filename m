@@ -2,151 +2,118 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F470CA9EBC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 10:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23761CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED2DE20873
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 10:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022C921721
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388290AbfJ1Kqv (ORCPT
+        id S1726332AbfJ1LLC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 06:46:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41562 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730796AbfJ1Kqv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 06:46:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2A7BBB1B0;
-        Mon, 28 Oct 2019 10:46:49 +0000 (UTC)
-Subject: Re: [PATCH v2 2/8] dt-bindings: rtc: realtek: Convert RTD119x to
- schema
+        Mon, 28 Oct 2019 07:11:02 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:8678 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ1LLC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 07:11:02 -0400
+Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 28 Oct
+ 2019 19:11:13 +0800
+Subject: Re: [PATCH RESEND v2 1/4] dt-bindings: power: add Amlogic secure
+ power domains bindings
 To:     Rob Herring <robh@kernel.org>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191020040817.16882-1-afaerber@suse.de>
- <20191020040817.16882-3-afaerber@suse.de> <20191025212015.GA29978@bogus>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <5491f3ed-93bf-1c4d-60f8-5d646c3bd2fb@suse.de>
-Date:   Mon, 28 Oct 2019 11:46:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+CC:     Kevin Hilman <khilman@baylibre.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com>
+ <1570695678-42623-2-git-send-email-jianxin.pan@amlogic.com>
+ <20191014173900.GA6886@bogus>
+ <622c7785-8254-5473-6b35-7287830f3c60@amlogic.com>
+ <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <730e5611-6dc0-5bf0-0489-4091bda18c9e@amlogic.com>
+Date:   Mon, 28 Oct 2019 19:11:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191025212015.GA29978@bogus>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.18.29.227]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 25.10.19 um 23:20 schrieb Rob Herring:
-> On Sun, Oct 20, 2019 at 06:08:11AM +0200, Andreas Färber wrote:
->> Convert the RTD119x binding to a YAML schema.
+Hi Rob,
+
+On 2019/10/26 4:19, Rob Herring wrote:
+> On Wed, Oct 16, 2019 at 6:26 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
 >>
->> Signed-off-by: Andreas Färber <afaerber@suse.de>
->> ---
->>  v2: New
->>  
->>  .../devicetree/bindings/rtc/realtek,rtd119x.txt    | 16 ---------
->>  .../devicetree/bindings/rtc/realtek,rtd119x.yaml   | 38 ++++++++++++++++++++++
->>  2 files changed, 38 insertions(+), 16 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
->>  create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
-> 
-> 
->> diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
->> new file mode 100644
->> index 000000000000..71b7396bd469
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
-
-While renaming the file to .yaml I would like to also rename it to 1195.
-It would need to be 1x9x to cover RTD1195 and e.g. RTD1296, and looking
-forward the wildcard may need to be 1xxx to cover also RTD1619, which
-quickly becomes unrecognizable.
-
->> @@ -0,0 +1,38 @@
->> +# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
-> 
-> Missing ()
-
-Fixed.
-
-> 
-> Though I'm not sure it matters other than consistency.
-> 
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/rtc/realtek,rtd119x.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Realtek RTD129x Real-Time Clock
->> +
->> +allOf:
->> +  - $ref: "rtc.yaml#"
->> +
->> +maintainers:
->> +  - Andreas Färber <afaerber@suse.de>
->> +
->> +properties:
->> +  compatible:
->> +    const: realtek,rtd1295-rtc
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +    description: Specifies the clock gate
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +
->> +examples:
->> +  - |
->> +	rtc@9801b600 {
->> +		compatible = "realtek,rtd1295-clk";
-
-This reveals a bug in the original binding example. Fixed to -rtc.
-
->> +		reg = <0x9801b600 0x100>;
->> +		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
-> 
-> You need the include file here or the example won't build (run 'make 
-> dt_binding_check').
-
-We can't. You acked the clk binding but the driver never got any review,
-so it didn't get merged and cannot be depended on here.
-
-I've changed it to an artificial 42 so that dt_binding_check passes.
-I've also needed to fix the indentation to 4 spaces.
-
-Regards,
-Andreas
-
-> 
->> +	};
->> +...
->> -- 
->> 2.16.4
+>> Hi Rob,
 >>
+>> On 2019/10/15 1:39, Rob Herring wrote:
+>>> On Thu, Oct 10, 2019 at 04:21:15AM -0400, Jianxin Pan wrote:
+>>>> Add the bindings for the Amlogic Secure power domains, controlling the
+>>>> secure power domains.
+>>>>
+>>>> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
+>>>> power domain registers are in secure world.
+>>>>
+>>>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>>>> ---
+>>>>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 ++++++++++++++++++++++
+>>>>  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++
+>>>>  2 files changed, 74 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>>>> +
+>>>> +  secure-monitor:
+>>>> +    description: phandle to the secure-monitor node
+>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>
+>>> Why not just a child node of this node?
+>>>
+>> Thanks for the review.
+>>
+>> I followed the style of the previous series of meson：
+>>
+>>   46         efuse: efuse {
+>>   47                 compatible = "amlogic,meson-gxbb-efuse";
+>>   48                 clocks = <&clkc CLKID_EFUSE>;
+>>   49                 #address-cells = <1>;
+>>   50                 #size-cells = <1>;
+>>   51                 read-only;
+>>   52                 secure-monitor = <&sm>;
+>>   53         };
+> 
+> Looks like that was not reviewed by me and is only in linux-next.
+> Please make functions exposed by secure world a child of the secure
+> firmware node.
+> 
+> Really for power domains, you only need to add a '#power-domain-cells'
+> property to the secure monitor node.
+> 
+OK, I will update them in the next version. 
+Thanks for the review.
+> Rob
+> 
+> .
+> 
 
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
