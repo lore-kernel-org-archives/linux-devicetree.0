@@ -2,165 +2,150 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42584CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F29CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C89E21783
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC14208C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:57:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ltTYQgdf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbfJ1Orh (ORCPT
+        id S2390516AbfJ1O5K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:47:37 -0400
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:46054 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727982AbfJ1Orh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 10:47:37 -0400
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iP6Iu-0001Vm-4x; Mon, 28 Oct 2019 15:47:32 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9SElRRZ013718
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 28 Oct 2019 15:47:28 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Subject: [PATCH] arm64: dts: rockchip: Add PCIe node on rk3399-roc-pc
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <09300c2d-4298-1b01-ac41-d1b2610589d4@fivetechno.de>
-Date:   Mon, 28 Oct 2019 15:47:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 28 Oct 2019 10:57:10 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16617 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390461AbfJ1O5K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 10:57:10 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db701cd0001>; Mon, 28 Oct 2019 07:57:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 28 Oct 2019 07:57:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 28 Oct 2019 07:57:09 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 28 Oct
+ 2019 14:57:08 +0000
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
+ DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Mon, 28 Oct 2019 14:57:08 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id C8DA543032; Mon, 28 Oct 2019 16:57:06 +0200 (EET)
+Date:   Mon, 28 Oct 2019 16:57:06 +0200
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        "Nicolas Chauvet" <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 01/17] clk: tegra: Add custom CCLK implementation
+Message-ID: <20191028145706.GF27141@pdeschrijver-desktop.Nvidia.com>
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191015211618.20758-2-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1572274056;6d2ea08d;
-X-HE-SMSGID: 1iP6Iu-0001Vm-4x
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191015211618.20758-2-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572274637; bh=a3iQGGwz0Ivg7sfs0KItL4POFuee26IhkUhjou3eb4M=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=ltTYQgdfMjWQKG2jN1sK+ylYqIivDrD90MVQgPlGFVpj2Sp27DCwSzppeJbib+j0j
+         CLEn+3hwOL3Fvb3JPx5nmrIeLBJuGCOGjdGnF196NJippTqXGkyD45hQ3XydK2WOZ5
+         w3afkvcQ2jUpA188B3DIQoik5OX2/feYlEqZdf68hVJ0iu4IbVBq4t+pArmqjBeCxH
+         UctsgV6EGdwyyuaaQJSo4clSL9PAzOHwIW16j96+H21FqJGnv4J8JcSDkmNQO4zH+n
+         toCpLsBLEgVUD3to458/C7zcPfhcz9Xu/xwUfqsIYqWMlPkP1Vsn27NJTdzaVxmVAV
+         Rbi+wn2KM9YWg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-rk3399-roc-pc has a PCIe interface. Enable it for use with
-the M.2 NGFF M_KEY slot on roc-rk3399-mezzanine board.
-Tested with Samsung 970 evo plus SSD.
+On Wed, Oct 16, 2019 at 12:16:02AM +0300, Dmitry Osipenko wrote:
+> CCLK stands for "CPU Clock", CPU core is running off CCLK. CCLK supports
+> multiple parents and it has internal clock divider which uses clock
+> skipping technique, meaning that CPU's voltage should correspond to the
+> parent clock rate and not CCLK. PLLX is the main CCLK parent that provides
+> clock rates above 1GHz and it has special property such that the CCLK's
+> internal divider is set into bypass mode when PLLX is set as a parent for
+> CCLK.
+> 
+> This patch forks generic Super Clock into CCLK implementation which takes
+> into account all CCLK specifics. The proper CCLK implementation is needed
+> by the upcoming Tegra20 CPUFreq driver update that will allow to utilize
+> the generic cpufreq-dt driver by moving intermediate clock handling into
+> the clock driver. Note that technically this all could be squashed into
+> clk-super, but result will be messier.
+> 
+> Note that currently all CCLKLP bits are left in the clk-super.c and only
+> CCLKG is supported by clk-tegra-super-cclk. It shouldn't be difficult
+> to move the CCLKLP bits, but CCLKLP is not used by anything in kernel
+> and thus better not to touch it for now.
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
- .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
+..
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-index 9313251765c7..2d637d54994b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-@@ -158,6 +158,21 @@
- 		regulator-max-microvolt = <1400000>;
- 		vin-supply = <&vcc_sys>;
- 	};
-+
-+	/* on roc-rk3399-mezzanine board */
-+	vcc3v3_pcie: vcc3v3-pcie {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3_pcie";
-+		enable-active-high;
-+		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc3v3_pcie_en>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&dc_12v>;
-+	};
- };
- 
- &cpu_l0 {
-@@ -514,6 +529,19 @@
- 	status = "okay";
- };
- 
-+&pcie_phy {
-+	status = "okay";
-+};
-+
-+&pcie0 {
-+	ep-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
-+	num-lanes = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_perst>;
-+	vpcie3v3-supply = <&vcc3v3_pcie>;
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	lcd-panel {
- 		lcd_panel_reset: lcd-panel-reset {
-@@ -535,6 +563,16 @@
- 		};
- 	};
- 
-+	pcie {
-+		vcc3v3_pcie_en: vcc3v3-pcie-en {
-+			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		pcie_perst: pcie-perst {
-+			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pmic {
- 		vsel1_gpio: vsel1-gpio {
- 			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
--- 
-2.20.1
+> +	super->reg = reg;
+> +	super->lock = lock;
+> +	super->width = 4;
+> +	super->flags = clk_super_flags;
+> +	super->frac_div.reg = reg + 4;
+> +	super->frac_div.shift = 16;
+> +	super->frac_div.width = 8;
+> +	super->frac_div.frac_width = 1;
+> +	super->frac_div.lock = lock;
+> +	super->frac_div.flags = TEGRA_DIVIDER_SUPER;
+> +	super->div_ops = &tegra_clk_frac_div_ops;
+> +
 
+This is not right. The super clock divider is not a divider, it's a
+pulse skipper.
+
+> +	/* Data in .init is copied by clk_register(), so stack variable OK */
+> +	super->hw.init = &init;
+> +
+> +	clk = clk_register(NULL, &super->hw);
+> +	if (IS_ERR(clk))
+> +		kfree(super);
+> +
+> +	return clk;
+> +}
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index f81c10654aa9..095595a5b8a8 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -699,6 +699,10 @@ struct clk *tegra_clk_register_super_clk(const char *name,
+>  		const char * const *parent_names, u8 num_parents,
+>  		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
+>  		spinlock_t *lock);
+> +struct clk *tegra_clk_register_super_cclk(const char *name,
+> +		const char * const *parent_names, u8 num_parents,
+> +		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
+> +		spinlock_t *lock);
+>  
+>  /**
+>   * struct tegra_sdmmc_mux - switch divider with Low Jitter inputs for SDMMC
+> -- 
+> 2.23.0
+> 
