@@ -2,112 +2,74 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C68CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79BBCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBFDF20B7C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856F820873
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572232525;
-	bh=E2rmGEKJWc4SPd5hu34sYqUV9AyvQoUs/7AVX3h7orM=;
+	s=default; t=1572234521;
+	bh=+v2nHJWW8uJ0j5XhT13GaUAs7RJX1oty9dbstfaFroY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2lVndwLmFj7KFgrRc3O6gKl1/lGWO3iEdSt0mpQ53LsRdWBUV5R9lqWg5pQLSn88T
-	 JNiIjTUl3U8M8AqdRikSepO28FcNg5QR+iZO3mzJAVph9Y6cmYrP9kEbX7HOCF2JyS
-	 qs9hjXIuLwIACWckYk6WfmEQdTFHEip6jb3YkkbA=
+	b=JMuXxxPf6RVgK9ETp/POBwmX7e/kujgAK2grqWaajhdBhhZ8gej/Uqv/g95rlmJHf
+	 uIUQQ5UkQuKC16I4/gDzbqhV+boX+biw2DwLNUixr1v67uvs6JJ9ofLgIao7ZCrqec
+	 oEhJZYUAp68wQxizNlXoRToOeovdHcYGZG8o7ino=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfJ1DPY (ORCPT
+        id S1729589AbfJ1Dsk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 23:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48066 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 23:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfJ1DPY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 23:15:24 -0400
+        id S1729328AbfJ1Dsk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 Oct 2019 23:48:40 -0400
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDFC020873;
-        Mon, 28 Oct 2019 03:15:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E804D20659;
+        Mon, 28 Oct 2019 03:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572232523;
-        bh=E2rmGEKJWc4SPd5hu34sYqUV9AyvQoUs/7AVX3h7orM=;
+        s=default; t=1572234520;
+        bh=+v2nHJWW8uJ0j5XhT13GaUAs7RJX1oty9dbstfaFroY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CtuHAFfgVqZrLteGy3y/MnjNgN2MyJdRESeyoOcTuXq7Hq1Dq0kYjG+XscuwFG3fx
-         KlGejELfnIMgJkmO7dkceyYV0YGdHPr6p1ubMDpIVYlD66lcdg1TyI+K5rFz5UTjrG
-         4jd4Ue/Nvdn8fRsYqF/IPXKOz+AQGngVsqdzK2ME=
-Date:   Mon, 28 Oct 2019 11:15:00 +0800
+        b=DWNEMqZgdJ6nfhjBNdTsSyu/VD4Zw1lpdgN/lHi9MvTZda6XGDqU5UId2BpVK3Isk
+         CvwL8Q3MILQKgln5TSP3fl1FImUIBAuTb+JSdf6pazOxZTWNEaJBteFaNbEjCEfju7
+         /+hqwlgtO+ckln+BoXYEYMrmX/gRC9vuCKMAvqq0=
+Date:   Mon, 28 Oct 2019 11:48:20 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>, Jun Li <jun.li@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "jon@solid-run.com" <jon@solid-run.com>,
-        "baruch@tkos.co.il" <baruch@tkos.co.il>,
-        "angus@akkea.ca" <angus@akkea.ca>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        Troy Kisky <troy.kisky@boundarydevices.com>,
-        Gary Bisson <gary.bisson@boundarydevices.com>,
-        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
-        Richard Hu <richard.hu@technexion.com>,
-        "andradanciu1997@gmail.com" <andradanciu1997@gmail.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Andy Duan <fugang.duan@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/5] arm64: dts: imx8qxp: Move usdhc clocks assignment to
- board DT
-Message-ID: <20191028031459.GI16985@dragon>
-References: <1571192067-19600-1-git-send-email-Anson.Huang@nxp.com>
- <20191026120902.GL14401@dragon>
- <DB3PR0402MB3916A2258E1E8B4690CC1B7DF5660@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        aisheng.dong@nxp.com, sebastien.szymanski@armadeus.com,
+        leoyang.li@nxp.com, pramod.kumar_1@nxp.com, l.stach@pengutronix.de,
+        ping.bai@nxp.com, bhaskar.upadhaya@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 1/3] arm64: dts: imx8mn: Create EVK dtsi file for common
+ use
+Message-ID: <20191028034819.GJ16985@dragon>
+References: <1571281984-7125-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB3916A2258E1E8B4690CC1B7DF5660@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <1571281984-7125-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 01:29:32AM +0000, Anson Huang wrote:
-> Hi, Shawn
+On Thu, Oct 17, 2019 at 11:13:02AM +0800, Anson Huang wrote:
+> i.MX8MN has different EVK boards to support different DDR types,
+> the ONLY differences are DDR chips and PMIC, so most of the devices
+> can be shared between these EVK boards, create a EVK dtsi file for
+> common use.
 > 
-> > On Wed, Oct 16, 2019 at 10:14:23AM +0800, Anson Huang wrote:
-> > > usdhc's clock rate is different according to different devices
-> > > connected, so clock rate assignment should be placed in board DT
-> > > according to different devices connected on each usdhc port.
-> > 
-> > I think it should be fine that we have a reasonable default settings in soc.dtsi,
-> > and boards that need a different setup can overwrite the settings in
-> > board.dts.
-> 
-> Someone was complaining about the usdhc clock assignment in soc.dtsi, because some
-> usdhc nodes are having clock assignments while some are NOT. That is why I did this
-> patch set. I agree that we can have default settings in soc.dtsi, so do you think it makes
-> sense to add default clock assignment to all usdhc nodes? If yes, I will redo the patch
-> set.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-I had a second thought on this. To ease the maintenance of soc.dtsi,
-let's do clock assignments in board.dts.
-
-Series applied, thanks.
-
-Shawn
+Applied all, thanks.
