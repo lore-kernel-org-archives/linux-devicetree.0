@@ -7,69 +7,78 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79BBCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06316CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856F820873
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7EBA21726
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572234521;
-	bh=+v2nHJWW8uJ0j5XhT13GaUAs7RJX1oty9dbstfaFroY=;
+	s=default; t=1572242668;
+	bh=fUhaJejjhGsyaU4tabIkYSCff9Y7Eg48Ic6zL2MqL2o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JMuXxxPf6RVgK9ETp/POBwmX7e/kujgAK2grqWaajhdBhhZ8gej/Uqv/g95rlmJHf
-	 uIUQQ5UkQuKC16I4/gDzbqhV+boX+biw2DwLNUixr1v67uvs6JJ9ofLgIao7ZCrqec
-	 oEhJZYUAp68wQxizNlXoRToOeovdHcYGZG8o7ino=
+	b=1DHP8OHzvUryJKSBN7/D7FGs+Gzv4BYXiMtI+CGaz20G/AmFZy9Enk60VvKUuzipd
+	 npJQEcemp5dkenCVdvFWS2JwPnO7cbIkPa31mFxJQhlE/zDHHsUkRmu0vk5nQcitkn
+	 P/NqHFpI9cdngD2rXucf5pw5MJXt5bGCYFuZEijs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfJ1Dsk (ORCPT
+        id S1731443AbfJ1GE2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 23:48:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
+        Mon, 28 Oct 2019 02:04:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729328AbfJ1Dsk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 23:48:40 -0400
+        id S1730394AbfJ1GE2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:04:28 -0400
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E804D20659;
-        Mon, 28 Oct 2019 03:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9878E20873;
+        Mon, 28 Oct 2019 06:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572234520;
-        bh=+v2nHJWW8uJ0j5XhT13GaUAs7RJX1oty9dbstfaFroY=;
+        s=default; t=1572242667;
+        bh=fUhaJejjhGsyaU4tabIkYSCff9Y7Eg48Ic6zL2MqL2o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DWNEMqZgdJ6nfhjBNdTsSyu/VD4Zw1lpdgN/lHi9MvTZda6XGDqU5UId2BpVK3Isk
-         CvwL8Q3MILQKgln5TSP3fl1FImUIBAuTb+JSdf6pazOxZTWNEaJBteFaNbEjCEfju7
-         /+hqwlgtO+ckln+BoXYEYMrmX/gRC9vuCKMAvqq0=
-Date:   Mon, 28 Oct 2019 11:48:20 +0800
+        b=SRAACqR1CDXrg2bu4L31b/LHC6IaB4P5kGU3pzDwgvzrgFyc8Pq90ccfRaMrHTpQV
+         +kyBXHZ4+4TYW845p69iqQKyGpAXX9HPAydspS2eRFKAJeCm+vSlLTPkx5u+pZpcWd
+         5TxrLXpY9qSc4oMVGLxq+ixoE8/n7H6OxCVNg5No=
+Date:   Mon, 28 Oct 2019 14:04:07 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        aisheng.dong@nxp.com, sebastien.szymanski@armadeus.com,
-        leoyang.li@nxp.com, pramod.kumar_1@nxp.com, l.stach@pengutronix.de,
-        ping.bai@nxp.com, bhaskar.upadhaya@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 1/3] arm64: dts: imx8mn: Create EVK dtsi file for common
- use
-Message-ID: <20191028034819.GJ16985@dragon>
-References: <1571281984-7125-1-git-send-email-Anson.Huang@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Duan <fugang.duan@nxp.com>
+Subject: Re: [PATCH V2 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for
+ fec1
+Message-ID: <20191028060406.GK16985@dragon>
+References: <1571652977-4754-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571281984-7125-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1571652977-4754-1-git-send-email-peng.fan@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 11:13:02AM +0800, Anson Huang wrote:
-> i.MX8MN has different EVK boards to support different DDR types,
-> the ONLY differences are DDR chips and PMIC, so most of the devices
-> can be shared between these EVK boards, create a EVK dtsi file for
-> common use.
+On Mon, Oct 21, 2019 at 10:19:17AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> We should not rely on bootloader to configure the phy reset.
+> So introduce phy-reset-gpios property to let Linux handle phy reset
+> itself.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Applied all, thanks.
+Applied both, thanks.
