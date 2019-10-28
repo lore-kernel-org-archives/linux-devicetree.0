@@ -2,88 +2,95 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7AFCA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4C0CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E635020873
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD79208C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572245398;
+	bh=hE8YrV90OgDfQQtk53yvsfWOnB4/UfgpeGSzKX0bxoE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B1akf0lqZRA8tclfx+cfaf0IAqLT5MlH+DfPZtyRt0GEp+h3GR5MLZ0lqv7Em2Pdt
+	 aV66cFbzu35m4g02n9/yW5sZBdO++m7N/RaXGoOkW2hK/oymxUBwXiAh0ID07I1zXJ
+	 u2ZHteCT4UOwT9EW3S+NBYGDpi6O7R3c15KqG3+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfJ1GKg (ORCPT
+        id S1731990AbfJ1Gt6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:10:36 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53067 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730541AbfJ1GKf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 02:10:35 -0400
-X-UUID: 07bc868ba5c64a8aad31d838de89632e-20191028
-X-UUID: 07bc868ba5c64a8aad31d838de89632e-20191028
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <dehui.sun@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 539217290; Mon, 28 Oct 2019 14:10:32 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 28 Oct 2019 14:10:29 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 28 Oct 2019 14:10:28 +0800
-From:   Dehui Sun <dehui.sun@mediatek.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Mon, 28 Oct 2019 02:49:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730497AbfJ1Gt5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:49:57 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDA9620873;
+        Mon, 28 Oct 2019 06:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572245397;
+        bh=hE8YrV90OgDfQQtk53yvsfWOnB4/UfgpeGSzKX0bxoE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ITc4HThObbBHQq5pgmMs/87ilJLSD8BO1zEJ/ZyV+nNOdrzQoy7PPFQt0l6gBev9f
+         gW0QHRRGB6zpwoqoVyGkP+Z9OMhFLlsYZMsdYbgZMBL05RBA1hApCDB9sZRXcs4pBI
+         J7S/NyeYnqIPp3CNruTaEiveIBmczV3n8WPe2Who=
+Date:   Mon, 28 Oct 2019 14:49:37 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <erin.lo@mediatek.com>,
-        <weiyi.lu@mediatek.com>, <dehui.sun@mediatek.com>
-Subject: [PATCH v2 2/2] arm64: dts: mt8183: add systimer0 device node
-Date:   Mon, 28 Oct 2019 14:09:44 +0800
-Message-ID: <1572242984-30460-3-git-send-email-dehui.sun@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1572242984-30460-1-git-send-email-dehui.sun@mediatek.com>
-References: <1572242984-30460-1-git-send-email-dehui.sun@mediatek.com>
+        Julien Boibessot <julien.boibessot@armadeus.com>
+Subject: Re: [PATCH 1/9] ARM: dts: imx6qdl-{apf6,apf6dev}: switch boards to
+ SPDX identifier
+Message-ID: <20191028064936.GQ16985@dragon>
+References: <20191022131655.25737-1-sebastien.szymanski@armadeus.com>
+ <20191022131655.25737-2-sebastien.szymanski@armadeus.com>
+ <CAOMZO5Bnb-Jd_XkMxdcMFRkmMzcVVikV_6+Ug=Rz6iDa5QZ_yw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOMZO5Bnb-Jd_XkMxdcMFRkmMzcVVikV_6+Ug=Rz6iDa5QZ_yw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add systimer0 device node for MT8183.
+On Thu, Oct 24, 2019 at 05:38:22PM -0300, Fabio Estevam wrote:
+> Hi Sébastien,
+> 
+> On Tue, Oct 22, 2019 at 10:17 AM Sébastien Szymanski
+> <sebastien.szymanski@armadeus.com> wrote:
+> 
+> > - *  a) This file is free software; you can redistribute it and/or
+> > - *     modify it under the terms of the GNU General Public License as
+> > - *     published by the Free Software Foundation; either version 2 of
+> > - *     the License, or (at your option) any later version.
+> 
+> > - */
+> > +// SPDX-License-Identifier: GPL-2.0 OR MIT
+> 
+> The original license said "either version 2 of the License, or (at
+> your option) any later version."
+> 
+> So you should use:
+> 
+> // SPDX-License-Identifier: GPL-2.0+ OR MIT
 
-Signed-off-by: Dehui Sun <dehui.sun@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I fixed it up and applied the series.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 7e23179..40145dc 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -326,6 +326,15 @@
- 			clock-names = "spi", "wrap";
- 		};
- 
-+		systimer: timer@10017000 {
-+			compatible = "mediatek,mt8183-timer",
-+				     "mediatek,mt6765-timer";
-+			reg = <0 0x10017000 0 0x1000>;
-+			interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&topckgen CLK_TOP_CLK13M>;
-+			clock-names = "clk13m";
-+		};
-+
- 		auxadc: auxadc@11001000 {
- 			compatible = "mediatek,mt8183-auxadc",
- 				     "mediatek,mt8173-auxadc";
--- 
-1.9.1
-
+Shawn
