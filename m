@@ -2,153 +2,228 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B12CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 02:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CDBCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E45220B7C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 02:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2388320B7C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 03:08:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572232114;
+	bh=9pHjVHBWzzO8as/GlxtW409f8OPgE/yFlPmLQPZ/F7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sRwVJN+StW4zxDpjmZmYrmBa7kf0Ja1fb08AcxYzNBMUZGZnfPKjo2t5ZnpmOE2Xh
+	 WxNyb/Mml/q+KPS5xWyV8BjYKXNKqqx4//he4vhL6mNHVrPynyTYsvo6QUPSJ0JflV
+	 m3L904Dq1Zo95Zwl47P4Oz73qk+KPcQI6J3ExXbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbfJ1Cgc (ORCPT
+        id S1728223AbfJ1DId (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 22:36:32 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:8915 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728627AbfJ1Cgc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 27 Oct 2019 22:36:32 -0400
-X-UUID: a24691263f054c6b98e1aa9f0bc40de7-20191028
-X-UUID: a24691263f054c6b98e1aa9f0bc40de7-20191028
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2019778623; Mon, 28 Oct 2019 10:36:21 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 28 Oct 2019 10:36:18 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 28 Oct 2019 10:36:19 +0800
-Message-ID: <1572230179.9186.2.camel@mtksdaap41>
-Subject: Re: [PATCH v2] dt-binding: eeprom: at24: add supply properties
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     Rob Herring <robh@kernel.org>, Tomasz Figa <tfiga@chromium.org>,
-        "Wolfram Sang" <wsa@the-dreams.de>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
+        Sun, 27 Oct 2019 23:08:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727330AbfJ1DId (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 Oct 2019 23:08:33 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDC1D20873;
+        Mon, 28 Oct 2019 03:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572232111;
+        bh=9pHjVHBWzzO8as/GlxtW409f8OPgE/yFlPmLQPZ/F7o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hIns11PAGhGhvvwvm97UvqGlArw66VuIrxzIJAikWoo53Yl05QBJA9iaAxz3/w+vg
+         M0NXEsdUxfN1JRX9mK9xZ+YJMnTfk7rd7EpIwOTg+7sRmcJvDtRAf+bwqMos6BqPU1
+         O816SZI5wlfoZsMZPhvKtcOvUBZ0ePvZyY5pqD3k=
+Date:   Mon, 28 Oct 2019 11:08:12 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Luka Pivk <luka.pivk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Date:   Mon, 28 Oct 2019 10:36:19 +0800
-In-Reply-To: <CAMpxmJUygTr2b+q-skb8_m9TfOiEvqoOCSjDQEi+sf9iNN0=BQ@mail.gmail.com>
-References: <20191018082557.3696-1-bibby.hsieh@mediatek.com>
-         <20191018082557.3696-2-bibby.hsieh@mediatek.com>
-         <CAMpxmJW_HQnL8i5FnKcVUs=ZyrnaFe6X+oqG38-v=O05d5vNxw@mail.gmail.com>
-         <CAAFQd5CA_53uDo6QdRcvqJ5shUG5K25f+WXCn9OYMHfSgwLMSA@mail.gmail.com>
-         <CAMpxmJWzEER4iBo9-WhmumuH1nmWYvy=xud+=7wzp3op8-P7uw@mail.gmail.com>
-         <CAAFQd5DNdmm4sn1JNPhnuMor50ZP4EJmymtS4hB4WkNHmKOs6w@mail.gmail.com>
-         <20191025211000.GA8235@bogus>
-         <CAMpxmJUygTr2b+q-skb8_m9TfOiEvqoOCSjDQEi+sf9iNN0=BQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] arm: dts: imx*(colibri|apalis): add missing
+ recovery modes to i2c
+Message-ID: <20191028030810.GH16985@dragon>
+References: <20191016170332.2013-1-philippe.schenker@toradex.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016170332.2013-1-philippe.schenker@toradex.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 2019-10-26 at 14:05 +0200, Bartosz Golaszewski wrote:
-> pt., 25 paź 2019 o 23:10 Rob Herring <robh@kernel.org> napisał(a):
-> >
-> > On Thu, Oct 24, 2019 at 06:32:38PM +0900, Tomasz Figa wrote:
-> > > On Thu, Oct 24, 2019 at 5:40 PM Bartosz Golaszewski
-> > > <bgolaszewski@baylibre.com> wrote:
-> > > >
-> > > > czw., 24 paź 2019 o 09:02 Tomasz Figa <tfiga@chromium.org> napisał(a):
-> > > > >
-> > > > > On Thu, Oct 24, 2019 at 3:22 PM Bartosz Golaszewski
-> > > > > <bgolaszewski@baylibre.com> wrote:
-> > > > > >
-> > > > > > pt., 18 paź 2019 o 10:26 Bibby Hsieh <bibby.hsieh@mediatek.com> napisał(a):
-> > > > > > >
-> > > > > > > In some platforms, they disable the power-supply of eeprom and i2c due
-> > > > > > > to power consumption reduction.
-> > > > > > >
-> > > > > > > This patch add two supply properties: vcc-supply, i2c-supply.
-> > > > > > >
-> > > > > > > Changes since v1:
-> > > > > > >  - change supply name
-> > > > > > >  - rebase to next
-> > > > > > >
-> > > > > > > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > > > > > > ---
-> > > > > > >  Documentation/devicetree/bindings/eeprom/at24.yaml | 8 ++++++++
-> > > > > > >  1 file changed, 8 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > > > > index e8778560d966..578487a5d9b7 100644
-> > > > > > > --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > > > > +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> > > > > > > @@ -167,6 +167,14 @@ properties:
-> > > > > > >      minimum: 1
-> > > > > > >      maximum: 8
-> > > > > > >
-> > > > > > > +  vcc-supply:
-> > > > > > > +    description:
-> > > > > > > +      phandle of the regulator that provides the supply voltage.
-> > > > > > > +
-> > > > > > > +  i2c-sypply:
-> > > > > > > +    description:
-> > > > > > > +      phandle to the regulator that provides power to i2c.
-> > > > > > > +
-> > > > > >
-> > > > > > Something was bothering me about this patch so I came back to take a
-> > > > > > look. Can you explain what i2c actually stands for in this doc? I hope
-> > > > > > I'm misinterpreting something and it isn't that the driver disables
-> > > > > > the regulator powering the i2c bus controller?
-> > > > >
-> > > > > In our case it's the regulator that the I2C bus is pulled up to.
-> > > > >
-> > > >
-> > > > Then it has nothing to do with a generic EEPROM driver IMO. I think
-> > > > you need to add the control for this regulator to your i2c controller
-> > > > driver and create a power domain where the EEPROM would be lower in
-> > > > hierarchy.
-> > >
-> > > While I agree that the generic EEPROM driver may not be the best place
-> > > to do it, neither is a driver for a specific SoC i2c controller. The
-> > > hardware design is not specific to any particular i2c controller.
-> > >
-> > > Perhaps we need the generic i2c core to take into account an
-> > > i2c-supply? Wolfram, any thoughts on this?
-> >
-> > Sounds good to me. Maybe 'bus-supply' instead to indicate it's supposed
-> > to be for the bus and not other things. It should reside in the I2C
-> > controller's node (or mux ports) though.
-> >
-> > Rob
+On Wed, Oct 16, 2019 at 05:03:41PM +0000, Philippe Schenker wrote:
+> This patch adds missing i2c recovery modes and corrects wrongly named
+> ones.
 > 
-> Thanks,
-> 
-> in that case Bibby: please just use a single regulator for vcc-supply in at24.
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
-To my understanding, there are something I need to do.
-1. remove i2c-supply property from DT.
-2. just control vcc-supply in at24 driver.
-3. add i2c-supply control in i2c and i2c-supply property in DT?
+As a practise, we use 'ARM: ' to prefix i.MX arch/arm/ patches.
 
-Is there any mistakes?
+I fixed it up and applied both patches.
 
-Bibby
+Shawn
 
 > 
-> Thanks,
-> Bartosz
-
-
+> ---
+> 
+> Changes in v2:
+> - Added scl/sda gpio
+> - Added missing recovery mode to i2c2 on imx6qdl-colibri
+> 
+>  arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 30 +++++++++++++++++++++-----
+>  arch/arm/boot/dts/imx6qdl-colibri.dtsi | 18 ++++++++++++----
+>  2 files changed, 39 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> index 7c4ad541c3f5..86cad6c9f0f9 100644
+> --- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> @@ -205,8 +205,11 @@
+>  /* I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier board) */
+>  &i2c1 {
+>  	clock-frequency = <100000>;
+> -	pinctrl-names = "default";
+> +	pinctrl-names = "default", "gpio";
+>  	pinctrl-0 = <&pinctrl_i2c1>;
+> +	pinctrl-1 = <&pinctrl_i2c1_gpio>;
+> +	scl-gpios = <&gpio5 27 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +	sda-gpios = <&gpio5 26 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>  	status = "disabled";
+>  };
+>  
+> @@ -216,8 +219,11 @@
+>   */
+>  &i2c2 {
+>  	clock-frequency = <100000>;
+> -	pinctrl-names = "default";
+> +	pinctrl-names = "default", "gpio";
+>  	pinctrl-0 = <&pinctrl_i2c2>;
+> +	pinctrl-1 = <&pinctrl_i2c2_gpio>;
+> +	scl-gpios = <&gpio4 12 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +	sda-gpios = <&gpio4 13 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>  	status = "okay";
+>  
+>  	pmic: pfuze100@8 {
+> @@ -372,9 +378,9 @@
+>   */
+>  &i2c3 {
+>  	clock-frequency = <100000>;
+> -	pinctrl-names = "default", "recovery";
+> +	pinctrl-names = "default", "gpio";
+>  	pinctrl-0 = <&pinctrl_i2c3>;
+> -	pinctrl-1 = <&pinctrl_i2c3_recovery>;
+> +	pinctrl-1 = <&pinctrl_i2c3_gpio>;
+>  	scl-gpios = <&gpio3 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>  	sda-gpios = <&gpio3 18 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>  	status = "disabled";
+> @@ -646,6 +652,13 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_i2c1_gpio: i2c1gpiogrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26 0x4001b8b1
+> +			MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27 0x4001b8b1
+> +		>;
+> +	};
+> +
+>  	pinctrl_i2c2: i2c2grp {
+>  		fsl,pins = <
+>  			MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
+> @@ -653,6 +666,13 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_i2c2_gpio: i2c2gpiogrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL3__GPIO4_IO12 0x4001b8b1
+> +			MX6QDL_PAD_KEY_ROW3__GPIO4_IO13 0x4001b8b1
+> +		>;
+> +	};
+> +
+>  	pinctrl_i2c3: i2c3grp {
+>  		fsl,pins = <
+>  			MX6QDL_PAD_EIM_D17__I2C3_SCL 0x4001b8b1
+> @@ -660,7 +680,7 @@
+>  		>;
+>  	};
+>  
+> -	pinctrl_i2c3_recovery: i2c3recoverygrp {
+> +	pinctrl_i2c3_gpio: i2c3gpiogrp {
+>  		fsl,pins = <
+>  			MX6QDL_PAD_EIM_D17__GPIO3_IO17 0x4001b8b1
+>  			MX6QDL_PAD_EIM_D18__GPIO3_IO18 0x4001b8b1
+> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> index 019dda6b88ad..8ab9960fc15d 100644
+> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> @@ -166,8 +166,11 @@
+>   */
+>  &i2c2 {
+>  	clock-frequency = <100000>;
+> -	pinctrl-names = "default";
+> +	pinctrl-names = "default", "gpio";
+>  	pinctrl-0 = <&pinctrl_i2c2>;
+> +	pinctrl-0 = <&pinctrl_i2c2_gpio>;
+> +	scl-gpios = <&gpio2 30 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> +	sda-gpios = <&gpio3 16 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>  	status = "okay";
+>  
+>  	pmic: pfuze100@8 {
+> @@ -312,9 +315,9 @@
+>   */
+>  &i2c3 {
+>  	clock-frequency = <100000>;
+> -	pinctrl-names = "default", "recovery";
+> +	pinctrl-names = "default", "gpio";
+>  	pinctrl-0 = <&pinctrl_i2c3>;
+> -	pinctrl-1 = <&pinctrl_i2c3_recovery>;
+> +	pinctrl-1 = <&pinctrl_i2c3_gpio>;
+>  	scl-gpios = <&gpio1 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>  	sda-gpios = <&gpio1 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>  	status = "disabled";
+> @@ -509,6 +512,13 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_i2c2_gpio: i2c2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_EB2__GPIO2_IO30 0x4001b8b1
+> +			MX6QDL_PAD_EIM_D16__GPIO3_IO16 0x4001b8b1
+> +		>;
+> +	};
+> +
+>  	pinctrl_i2c3: i2c3grp {
+>  		fsl,pins = <
+>  			MX6QDL_PAD_GPIO_3__I2C3_SCL 0x4001b8b1
+> @@ -516,7 +526,7 @@
+>  		>;
+>  	};
+>  
+> -	pinctrl_i2c3_recovery: i2c3recoverygrp {
+> +	pinctrl_i2c3_gpio: i2c3gpiogrp {
+>  		fsl,pins = <
+>  			MX6QDL_PAD_GPIO_3__GPIO1_IO03 0x4001b8b1
+>  			MX6QDL_PAD_GPIO_6__GPIO1_IO06 0x4001b8b1
+> -- 
+> 2.23.0
+> 
