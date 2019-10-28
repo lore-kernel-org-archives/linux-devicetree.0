@@ -2,90 +2,114 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12247CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FA4C47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C322021721
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB63421835
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572276997;
-	bh=ymo9rl9CtwjArSQnfFPyty8tp1BY+ffoTl/pqxOlMJ0=;
+	s=default; t=1572277658;
+	bh=VN/VMJbk3T/K50ccDfFzGjkQgMu5y5hAJUi2/hAx5tg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d8E9M8w4tU7DZVKD/LQ1cKt8jtxf8x+B0J8YzJQBYt6sOklsQVj1+Og0QNQbr5zCL
-	 3yZXegK0RLFkJ6hl07/uC/+YCldAPFmVsyZuKWNdI/vWkEgNqMZxCQIC8rnbKKo3yU
-	 L8PJETucJsxMjjcdhfSprSo5BSyOjsiPnkaUOLBE=
+	b=qAlotJOqf2871eUI8QUZ7mIVuN/GennM5SY7T2DDDrKTdWouR4rrY0YiCYcOVF1rz
+	 GQywSBx2LS+y6noZRBI+KBdYcJB7ZFR2ITnp2pagkl1d9lZZiKJ4R/WXng30HfyOWm
+	 2G+0yTrukh2iTtpS/e3S0PLaE1FzCDJtU4wBBQls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbfJ1Pgh (ORCPT
+        id S1726157AbfJ1Prh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfJ1Pgh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:36:37 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CEE1208C0;
-        Mon, 28 Oct 2019 15:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572276996;
-        bh=ymo9rl9CtwjArSQnfFPyty8tp1BY+ffoTl/pqxOlMJ0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dydQ8BCY/oWvaNr7y/rrFiwxqN7tEIACyy3Kx6qUkXvclMnnCBVfk6NzLkhzdBLbE
-         Czf1eVRDF/OtyUbA9RcyKjUILeyDa3mGUdP5tPphPU3Ii8+ltKhyqK6SdE9c5kNXZ8
-         HsQgObTenXdM8WzMQKTZpL7DpsrMfN2PKCHgVCU0=
-Date:   Mon, 28 Oct 2019 16:34:27 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock =?utf-8?Q?ex?=
- =?utf-8?Q?plicitly=C2=A0?=
-Message-ID: <20191028153427.pc3tnoz2d23filhx@hendrix>
-References: <20191025175625.8011-1-jagan@amarulasolutions.com>
- <20191025175625.8011-5-jagan@amarulasolutions.com>
+        Mon, 28 Oct 2019 11:47:37 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42906 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfJ1Prh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 11:47:37 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s20so8230032edq.9;
+        Mon, 28 Oct 2019 08:47:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xeouFKeqxI+jBZsGSFG26F9cl2bzWdfbTz7OAnsdkHs=;
+        b=ly8VR/WjJnSt5FKIMjmSxgeiEyfHjaZBJIPr3KXRDNZP+Rk9KncOG6HNq1ZIQgKPBO
+         t9Vf8p/2kQvKoBFZeqYyLhwFSfUgHaeVUdh7Uhs++CuvpGNrvmmjXWUkiW+etlxTbQ2z
+         wAozUNltofNAjeeEAwJq5Ktncklgu4fokspK6Yek/PtIjzuTA1AcmiseDSSy1RgI3Kqg
+         n9XA6kUh2f/8JAFTif+Oz+wMjKUeo/Hwzhl4DZx13IvFcMz4DGhmw5cKt3P1E8FycJXo
+         i3mfuH3lBtdcDxzQY9CuHsZCa3kti4rt1RksqncnzHhKZB1vdlFOIEB5+CRn3pXj5EbI
+         V9qA==
+X-Gm-Message-State: APjAAAV9FZCl50uHXqOYLEagfMzH/pm14bVpZ1MXTrPqZWcRN8ZshT8B
+        EmSAzw7BtQGY8KfCRMFObrM=
+X-Google-Smtp-Source: APXvYqzb5eJY5x6+xEfLs30NbzaiquwQRVOIdigZyIXD5gUp8DH2McCek9vsaaleRlSYLLP4jx4E1Q==
+X-Received: by 2002:aa7:d0c9:: with SMTP id u9mr19737617edo.217.1572277655066;
+        Mon, 28 Oct 2019 08:47:35 -0700 (PDT)
+Received: from pi3 ([194.230.155.180])
+        by smtp.googlemail.com with ESMTPSA id g43sm567693edb.14.2019.10.28.08.47.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 08:47:34 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 16:47:32 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org, vireshk@kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com,
+        m.szyprowski@samsung.com
+Subject: Re: [PATCH 3/3] dt-bindings: arm: samsung: Drop syscon compatible
+ from CHIPID binding
+Message-ID: <20191028154732.GA3746@pi3>
+References: <20191028152050.10220-1-s.nawrocki@samsung.com>
+ <CGME20191028152100eucas1p2ed6bd2d53670c85f6bf550af0631a55a@eucas1p2.samsung.com>
+ <20191028152050.10220-3-s.nawrocki@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191025175625.8011-5-jagan@amarulasolutions.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191028152050.10220-3-s.nawrocki@samsung.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 11:26:22PM +0530, Jagan Teki wrote:
-> Usage of clocks are varies between different Allwinner
-> DSI controllers. Clocking in A33 would need bus and
-> mod clocks where as A64 would need only bus clock.
->
-> To support this kind of clocking structure variants
-> in the same dsi driver,
+On Mon, Oct 28, 2019 at 04:20:50PM +0100, Sylwester Nawrocki wrote:
+> The "syscon" compatible string was introduced mainly to allow sharing
+> of the CHIPID IO region between multiple drivers. However, such sharing
+> can be also done without an additional compatible so remove "syscon".
 
-There's no variance in the clock structure as far as the bus clock is
-concerned.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> explicit handling of common clock would require since the A64
-> doesn't need to mention the clock-names explicitly in dts since it
-> support only one bus clock.
->
-> Also pass clk_id NULL instead "bus" to regmap clock init function
-> since the single clock variants no need to mention clock-names
-> explicitly.
+Best regards,
+Krzysztof
 
-You don't need explicit clock handling. Passing NULL as the argument
-in regmap_init_mmio_clk will make it use the first clock, which is the
-bus clock.
-
-Maxime
+> 
+> Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  .../devicetree/bindings/arm/samsung/exynos-chipid.yaml         | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
+> index 53c29d567789..afcd70803c12 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
+> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
+> @@ -13,7 +13,6 @@ properties:
+>    compatible:
+>      items:
+>        - const: samsung,exynos4210-chipid
+> -      - const: syscon
+>  
+>    reg:
+>      maxItems: 1
+> @@ -34,7 +33,7 @@ required:
+>  examples:
+>    - |
+>      chipid@10000000 {
+> -        compatible = "samsung,exynos4210-chipid", "syscon";
+> +        compatible = "samsung,exynos4210-chipid";
+>          reg = <0x10000000 0x100>;
+>          samsung,asv-bin = <2>;
+>      };
+> -- 
+> 2.17.1
+> 
