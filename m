@@ -2,133 +2,180 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7488CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604B3C47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B684F21479
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CE021744
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 14:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572273187;
+	bh=uBafmYZtjPMwKogdIRbd9ewyuSPO8qrIg0LiiywuY0M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H04/KWa8wlpdfbJhaJj7YpAUYEf+RjUwspkv9+cN27Yz1ErzSM3ngDIoB8qbihsVy
+	 xkUL7YOIm3EMVYN/Zw1HV5jnj/9PEfJewAUYYJlMomyAbQXG1PODGjUNVx+v/XwkWA
+	 93TE+pSN242SIvJni+EUVJG9r59aKhGQuGMeGHNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfJ1O2x (ORCPT
+        id S1727148AbfJ1OdG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 10:28:53 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49557 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfJ1O2x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 10:28:53 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iP60k-0003zY-2k; Mon, 28 Oct 2019 15:28:46 +0100
-Message-ID: <c98fcd3bbd4e2166b2938fd2f8fa6f1a5a270384.camel@pengutronix.de>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6qdl: add TQMa6{S,Q,QP} SoM
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Markus Niebel <Markus.Niebel@tq-group.com>,
-        Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Date:   Mon, 28 Oct 2019 15:28:45 +0100
-In-Reply-To: <20191026093356.GE14401@dragon>
-References: <20191011143651.6424-1-p.zabel@pengutronix.de>
-         <20191026093356.GE14401@dragon>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 28 Oct 2019 10:33:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390102AbfJ1OdG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 10:33:06 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDAC1208C0;
+        Mon, 28 Oct 2019 14:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572273185;
+        bh=uBafmYZtjPMwKogdIRbd9ewyuSPO8qrIg0LiiywuY0M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2mSCPBEhdDJxFiUBH2CUlBroCVPG2Z4czuTICCq0bxeUgK0eaO9UeJTf8t+YYNfUx
+         WFwGbTJnjWLsSBFR+ywalEVUSYw4YYA80IXDwY+0EVbCMnQFVaJfRwXlMjYFHW8J+x
+         XJ4hKiceXG4z2w9eyzhZtQxWdZSUP/HUz8vffNro=
+Date:   Mon, 28 Oct 2019 22:32:42 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     s.hauer@pengutronix.de, robh+dt@kernel.org, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        darshak.patel@einfochips.com, prajose.john@einfochips.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, pavel@ucw.cz,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH 2/3] arm64: dts: freescale: Add devicetree support for
+ Thor96 board
+Message-ID: <20191028143240.GO16985@dragon>
+References: <20191024144235.3182-1-manivannan.sadhasivam@linaro.org>
+ <20191024144235.3182-3-manivannan.sadhasivam@linaro.org>
+ <20191028115110.GE16985@dragon>
+ <20191028142732.GA29312@Mani-XPS-13-9360>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028142732.GA29312@Mani-XPS-13-9360>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-On Sat, 2019-10-26 at 17:34 +0800, Shawn Guo wrote:
-> On Fri, Oct 11, 2019 at 04:36:49PM +0200, Philipp Zabel wrote:
-> > From: Markus Niebel <Markus.Niebel@tq-group.com>
+On Mon, Oct 28, 2019 at 07:57:32PM +0530, Manivannan Sadhasivam wrote:
+> Hi Shawn,
+> 
+> On Mon, Oct 28, 2019 at 07:51:12PM +0800, Shawn Guo wrote:
+> > On Thu, Oct 24, 2019 at 08:12:34PM +0530, Manivannan Sadhasivam wrote:
+> > > Add devicetree support for Thor96 board from Einfochips. This board is
+> > > one of the 96Boards Consumer Edition platform powered by the NXP
+> > > i.MX8MQ SoC.
+> > > 
+> > > Following are the features supported currently:
+> > > 
+> > > 1. uSD
+> > > 2. WiFi/BT
+> > > 3. Ethernet
+> > > 4. EEPROM (M24256)
+> > > 5. NOR Flash (W25Q256JW)
+> > > 6. 2xUSB3.0 ports and 1xUSB2.0 port at HS expansion
+> > > 
+> > > More information about this board can be found in Arrow website:
+> > > https://www.arrow.com/en/products/i.imx8-thor96/arrow-development-tools
+> > > 
+> > > Link to 96Boards CE Specification: https://linaro.co/ce-specification
+> > > 
+> > > Signed-off-by: Darshak Patel <darshak.patel@einfochips.com>
+> > > [Mani: cleaned up for upstream]
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+> > >  .../boot/dts/freescale/imx8mq-thor96.dts      | 581 ++++++++++++++++++
+> > >  2 files changed, 582 insertions(+)
+> > >  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> > > index 93fce8f0c66d..dec1662019be 100644
+> > > --- a/arch/arm64/boot/dts/freescale/Makefile
+> > > +++ b/arch/arm64/boot/dts/freescale/Makefile
+> > > @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-hummingboard-pulse.dtb
+> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
+> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen.dtb
+> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-pico-pi.dtb
+> > > +dtb-$(CONFIG_ARCH_MXC) += imx8mq-thor96.dtb
+> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
+> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+> > >  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts b/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
+> > > new file mode 100644
+> > > index 000000000000..e1adf24c2602
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
+> > > @@ -0,0 +1,581 @@
+> > > +// SPDX-License-Identifier: GPL-2.0+
+> > > +/*
+> > > + * Copyright 2019 Einfochips
+> > > + * Copyright 2019 Linaro Ltd.
+> > > + */
+> > > +
+> > > +/dts-v1/;
+> > > +
+> > > +#include "imx8mq.dtsi"
+> > > +
+> > > +/ {
+> > > +	model = "Einfochips i.MX8MQ Thor96";
+> > > +	compatible = "einfochips,imx8mq-thor96", "fsl,imx8mq";
+> > > +
+> > > +	chosen {
+> > > +		stdout-path = &uart1;
+> > > +	};
+> > > +
+> > > +	memory@40000000 {
+> > > +		device_type = "memory";
+> > > +		reg = <0x00000000 0x40000000 0 0x80000000>;
+> > > +	};
+> > > +
+> > > +	leds {
+> > > +		compatible = "gpio-leds";
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&pinctrl_leds>;
+> > > +
+> > > +		user-led1 {
+> > > +			label = "green:user1";
+> > > +			gpios = <&gpio4 21 GPIO_ACTIVE_HIGH>;
+> > > +			linux,default-trigger = "heartbeat";
+> > > +		};
+> > > +
+> > > +		user-led2 {
+> > > +			label = "green:user2";
+> > > +			gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
+> > > +			linux,default-trigger = "none";
 > > 
-> > Add device trees for TQMa6S, TQMa6Q, and TQMa6QP embedded modules.
-> > The A and B SoM variants are for hardware revisions that differ in
-> > how the I2C devices are connected. For details, see [1].
+> > I see linux,default-trigger is defined in Documentation/devicetree/bindings/leds/common.txt
+> > with given string values. "none" and the following ones are not there.
+> > I'm not sure how this works.
+> > 
 > 
-> It looks like a perfect case to be handled by DT overlay.
-> Did you consider of using that?
+> The devicetree binding is not updated. I think folks just added triggers
+> to the respective places but didn't bother to update the binding.
 
-I don't think using DT overlays is feasible. The EEPROM that could tell
-us which variant we are running on is on the I2C bus that is different
-between the two variants.
+Can you please bring the bindings up to date?  It will help people like
+me a lot.
 
-[...]
-> > +&ecspi1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_ecspi1>;
-> > +	fsl,spi-num-chipselects = <1>;
-> 
-> Obsolete property.
-> 
-> > +	cs-gpios = <&gpio3 19 0>;
-> 
-> GPIO_ACTIVE_HIGH
-> 
-> > +	status = "okay";
-> > +
-> > +	flash: m25p80@0 {
-> 
-> Node name should be generic, while label can be specific.
-> 
-> > +		status = "okay";
-> 
-> Not really needed.
-> 
-[...]
-> > +&iomuxc {
-> > +	tqma6 {
-> 
-> Drop this container node.
-> 
-[...]
-> > +		pinctrl_i2c1_tqma6: i2c1-tqma6grp {
-> 
-> The '_tqma6' suffix isn't really useful.
-> 
-[...]
-> > +&pmic {
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_pmic>;
-> > +		interrupt-parent = <&gpio6>;
-> > +		interrupts = <10 8>;
-> 
-> IRQ_TYPE_LEVEL_LOW
-> 
-[...]
-> > +	pmic: pf0100@8 {
-> 
-> Node name should be generic, while label can be specific.
-> 
-> > +		compatible = "fsl,pfuze100";
-> > +		reg = <0x08>;
-> > +	};
-> > +
-> > +	sensor0: lm75@48 {
-> 
-> Ditto
-> 
-> > +		compatible = "lm75";
-> > +		reg = <0x48>;
-> > +	};
-> > +
-> > +	eeprom0: m24c64@50 {
-> 
-> Ditto
+Shawn
 
-Thank you, I'll fix these.
-
-regards
-Philipp
-
+> 
+> For instance, mmc* trigger is registered here:
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/mmc/core/host.c#L476
+> 
+> For `none`, it is like removing the trigger. This is the default mode if the
+> trigger property is not present:
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/leds/led-triggers.c#L113
+> 
+> You can see the list of LED triggers by `cat`ing this file:
+> /sys/class/leds/<led>/trigger
+> 
+> Copied Pavel and LED list for reference.
