@@ -2,78 +2,77 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEB1C47E49
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D171C47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1166021850
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525C02184C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfJ1GHW (ORCPT
+        id S1731795AbfJ1GHd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:07:22 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:46388 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731635AbfJ1GHV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 02:07:21 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DE9C31A0264;
-        Mon, 28 Oct 2019 07:07:19 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2F1611A003F;
-        Mon, 28 Oct 2019 07:07:06 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B17964030D;
-        Mon, 28 Oct 2019 14:06:52 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, leonard.crestez@nxp.com,
-        abel.vesa@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com,
-        jun.li@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
-        mripard@kernel.org, vkoul@kernel.org, jagan@amarulasolutions.com,
-        dinguyen@kernel.org, marcin.juszkiewicz@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH RESEND 3/4] arm64: defconfig: Enable CONFIG_IMX8MM_THERMAL as module
-Date:   Mon, 28 Oct 2019 14:03:37 +0800
-Message-Id: <1572242618-18806-3-git-send-email-Anson.Huang@nxp.com>
+        Mon, 28 Oct 2019 02:07:33 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:6759 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731561AbfJ1GHc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:07:32 -0400
+X-IronPort-AV: E=Sophos;i="5.68,238,1569250800"; 
+   d="scan'208";a="30181603"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 28 Oct 2019 15:07:30 +0900
+Received: from localhost.localdomain (unknown [10.166.17.210])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B4A6141715B9;
+        Mon, 28 Oct 2019 15:07:30 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, geert+renesas@glider.be
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 0/4] clk: renesas: rcar-usb2-clock-sel: Fix clks/resets handling
+Date:   Mon, 28 Oct 2019 15:07:26 +0900
+Message-Id: <1572242850-9073-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572242618-18806-1-git-send-email-Anson.Huang@nxp.com>
-References: <1572242618-18806-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable CONFIG_IMX8MM_THERMAL as module to support i.MX8MM
-thermal driver.
+This patch series is based on the latest renesas-drivers.git /
+clk-renesas-for-v5.5 branch.
+The hardware also needs multiple clocks/resets management like
+renesas_usbhs driver [1], so this patch series fixes it.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+[1]
+3df0e24 usb: renesas_usbhs: Add multiple clocks management
+f181dbb usb: renesas_usbhs: Add reset_control
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index f191a4f..cde02aa 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -446,6 +446,7 @@ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
- CONFIG_CPU_THERMAL=y
- CONFIG_THERMAL_EMULATION=y
- CONFIG_QORIQ_THERMAL=m
-+CONFIG_IMX8MM_THERMAL=m
- CONFIG_ROCKCHIP_THERMAL=m
- CONFIG_RCAR_THERMAL=y
- CONFIG_RCAR_GEN3_THERMAL=y
+Changes from v1:
+ - Add Reviewed-by into this series' patch 1/4.
+ - (new) Add resets and power-domains properties into the patch 2/4.
+ - Use clk_bulk_* APIs (except clk_bulk_get() because this driver has
+   4 clocks and used only 2 clocks).
+ - Add "select RESET_CONTROLLER" into Kconfig
+ - Use devm_reset_control_array_get() instead of optional API.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=192869
+
+Yoshihiro Shimoda (4):
+  dt-bindings: clock: renesas: rcar-usb2-clock-sel: Fix clock[-name]s
+    properties
+  dt-bindings: clock: renesas: rcar-usb2-clock-sel: Add power-domains
+    and resets properties
+  clk: renesas: rcar-usb2-clock-sel: Add multiple clocks management
+  clk: renesas: rcar-usb2-clock-sel: Add reset_control
+
+ .../bindings/clock/renesas,rcar-usb2-clock-sel.txt | 13 +++++--
+ drivers/clk/renesas/Kconfig                        |  1 +
+ drivers/clk/renesas/rcar-usb2-clock-sel.c          | 43 +++++++++++++++++++++-
+ 3 files changed, 52 insertions(+), 5 deletions(-)
+
 -- 
 2.7.4
 
