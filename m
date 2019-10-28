@@ -2,169 +2,117 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2D6CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 12:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FA2CA9EC1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19B7214E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 12:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2070220578
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 12:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gzlVwieG"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cIMk0XHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389164AbfJ1Ml7 (ORCPT
+        id S2389202AbfJ1Mmo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 08:41:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39494 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728552AbfJ1Ml7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 08:41:59 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r141so8961800wme.4
-        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 05:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5xksvSoWClSEPqFisZy8fkW7iGrHC1hgE7A27QwV7HQ=;
-        b=gzlVwieGLL+vRKmFH25rxW6uJL3c7ZUDBTuLJonZBtrHudOawmBb5SHfGzviP1gH8t
-         hXNTMOg8xclCA4Od9HvUqPTpcRylA/7YwAB5NbK1tNVot+6H2lJFyZ5wbLwZZQOt0YVz
-         xDnVaSEo0t2c+06VHQHs1nRNkAI5C1pmeyrCOXqrhFGYnXDmgbbUrrD2PNTKXunkRP7y
-         oDc/IoxUdoZHmoIYw1TIkqegXCxMusr/wiFg9SLQxjUgWVw3yhOA0KI7B8xgellvl6sZ
-         94/xu5989N5qnqz+ahT4jSbYLDj3j+bumF1FilJiuCvN85Q6RlCdoTO/AR90E2wvVWrR
-         iB6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5xksvSoWClSEPqFisZy8fkW7iGrHC1hgE7A27QwV7HQ=;
-        b=aklYUzczD52CjuOVuV4mAnVGyGPs7azJOOKhxQbrfif3xErJmSfcDSZkVwR7hWqOTq
-         RTOuMLbx52B8qkNrkmUeKTarPgimGG5Sx7aXWqcl9pjpLfb+XOmWseH8csUCumT0CUx8
-         EjkkUdgKf+IqaPQcmSFW9I9M6T/v2wlIGVvesAjqTX9MSKT1fdHpLowTvYGj3/vonigT
-         TzeKHk1XiluTOPu7EoLEytH22g1IaLTRVIYrXcG0dkkhQ4iONt006doX89mR+/obDHII
-         3c4NzeF9+WdjQiTp+xvjlfSCGoKIZVoqxoMYLVEWK8VbWuNPCpRl99kz89Xp2YgoBqh2
-         6GAw==
-X-Gm-Message-State: APjAAAWDBa/xm/CePwPJhMlwetwlFpsZ0T+TWbMBl0crm5nVjPu/V9BU
-        GK2ZNremBZtU/uY7a7EBuaJIng==
-X-Google-Smtp-Source: APXvYqygo0fnWXSv7nZYL4U1ZXDFCeZaEZJnTPCrkdL1XZ8dj3TrWb5bXsY76ZWjmyYR8KItRj/F5g==
-X-Received: by 2002:a1c:a751:: with SMTP id q78mr16448120wme.129.1572266517809;
-        Mon, 28 Oct 2019 05:41:57 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id u21sm13971582wmu.27.2019.10.28.05.41.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 28 Oct 2019 05:41:56 -0700 (PDT)
-Subject: Re: [PATCH v2 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add bindings
- for gpio
-To:     Rob Herring <robh@kernel.org>
-Cc:     broonie@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org,
-        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-9-srinivas.kandagatla@linaro.org>
- <20191025210021.GA12751@bogus>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <e05ff19a-7c12-da80-4faf-3b152b24517d@linaro.org>
-Date:   Mon, 28 Oct 2019 12:41:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191025210021.GA12751@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 28 Oct 2019 08:42:44 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:25182 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389163AbfJ1Mmo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 08:42:44 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191028124239epoutp020d5c5336498c1e6f19dcce54f1c35626~R0Bryc7Rl1322213222epoutp02R
+        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 12:42:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191028124239epoutp020d5c5336498c1e6f19dcce54f1c35626~R0Bryc7Rl1322213222epoutp02R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1572266559;
+        bh=HiuklP0cYH3jIvujolcAfEAhpwjfw+PqhX1kaOGJoFE=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=cIMk0XHUdzsA9aRaijkUMmrR//RkvQQo8RJQULsJ08zZFkUHkDF7wofFWoNm5nEJy
+         IeZuATC01O7CpnsYY39Us8s4jNyZJwZCt78XEeGqlB+VlO7NCgfhaQ2nRCkNijnhIM
+         ucqp0ZgodgmbLg7U9PnCF6BhES5wZuuog+yKL5bI=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20191028124238epcas5p38ba9fff1728d661c230ec319ca46cc0e~R0BrP_r_r1784817848epcas5p3U;
+        Mon, 28 Oct 2019 12:42:38 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        37.7F.20245.E32E6BD5; Mon, 28 Oct 2019 21:42:38 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574~R0Bq2QFnG0725707257epcas5p4h;
+        Mon, 28 Oct 2019 12:42:38 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191028124238epsmtrp249e1c59749d9de0b4acbd9f8d3bfe704~R0Bq1kGyA2925729257epsmtrp2Z;
+        Mon, 28 Oct 2019 12:42:38 +0000 (GMT)
+X-AuditID: b6c32a4b-fa1ff70000014f15-34-5db6e23eb4b1
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        80.0A.24756.D32E6BD5; Mon, 28 Oct 2019 21:42:37 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191028124236epsmtip2ca97c20a4519b88e7a6b1d9e1a9dc300~R0BpnL7YO0999809998epsmtip2l;
+        Mon, 28 Oct 2019 12:42:36 +0000 (GMT)
+From:   Anvesh Salveru <anvesh.s@samsung.com>
+To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Cc:     pankaj.dubey@samsung.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, Anvesh Salveru <anvesh.s@samsung.com>
+Subject: [PATCH 0/2] Add support for ZRX-DC phy property
+Date:   Mon, 28 Oct 2019 18:12:18 +0530
+Message-Id: <1572266540-17626-1-git-send-email-anvesh.s@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsWy7bCmuq7do22xBk3nZS3O7lrIajH/yDlW
+        i5ZZi1gsLu+aw2Zxdt5xNovOL7PYLBZt/cJu8XPXPBYHDo+ds+6ye/Q2v2Pz6NuyitHj8ya5
+        AJYoLpuU1JzMstQifbsErozTV7ewFvxlqVj2ezJbA2MPSxcjJ4eEgInEg1l3gWwuDiGB3YwS
+        aw/cZIZwPjFKrGpogXK+MUpc67/DCNOyZ95KVojEXkaJHz0HoapamCSOb2sAq2IT0Jb4eXQv
+        O4gtIlAmMavpClicWaBUomv+RDYQW1jAQmL9gnYwm0VAVaKhbRYTiM0r4CKx/t52VohtchI3
+        z3UyQ9h/WSW+zEmCsF0k7l6fBxUXlnh1fAs7hC0l8fndXjYIO1+i9+5SqHiNxJS7HVAf2Esc
+        uDIH6GkOoHs0Jdbv0oc4jU+i9/cTJpCwhACvREebEISpJNE2sxqiUUJi8fybUEs9JO6d3sgG
+        UiIkECtx+A/3BEaZWQgjFzAyrmKUTC0ozk1PLTYtMM5LLdcrTswtLs1L10vOz93ECI5tLe8d
+        jJvO+RxiFOBgVOLhnXB5W6wQa2JZcWXuIUYJDmYlEd6LZ4BCvCmJlVWpRfnxRaU5qcWHGKU5
+        WJTEeSexXo0REkhPLEnNTk0tSC2CyTJxcEo1MFbtyPm4hClrRc1SSWt/q/D7Cs+M895OvyoQ
+        t/PzoolVi59EHpet3dx0sWrarTPdTRs85cI+rdpxMm3lH4tEldzC5sK6E76FBVu/isTF5i3w
+        l2Nvrjnmceh38O8F73tsRK4t5dRMfH1OMzFu5hpPKfbrP2skTq6249HS3uF/2/DAytYTXmf2
+        H1diKc5INNRiLipOBADSj04G6QIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmluLIzCtJLcpLzFFi42LZdlhJXtfu0bZYg0eCFmd3LWS1mH/kHKtF
+        y6xFLBaXd81hszg77zibReeXWWwWi7Z+Ybf4uWseiwOHx85Zd9k9epvfsXn0bVnF6PF5k1wA
+        SxSXTUpqTmZZapG+XQJXxumrW1gL/rJULPs9ma2BsYeli5GTQ0LARGLPvJWsXYxcHEICuxkl
+        1v16zwaRkJD4svcrlC0ssfLfc3aIoiYmiZYf/8ESbALaEj+P7mUHsUUEqiQOdPSBTWUWqJS4
+        3vGQCcQWFrCQWL+gHayeRUBVoqFtFlicV8BFYv297awQC+Qkbp7rZJ7AyLOAkWEVo2RqQXFu
+        em6xYYFhXmq5XnFibnFpXrpecn7uJkZwEGlp7mC8vCT+EKMAB6MSD++Lq9tihVgTy4orcw8x
+        SnAwK4nwXjwDFOJNSaysSi3Kjy8qzUktPsQozcGiJM77NO9YpJBAemJJanZqakFqEUyWiYNT
+        qoFxmpLplm+7PIsUo72a5/Y25DQf1HpV7ZG9uCR90l3j2qWO8QzqWe1bJJeJVJoZRi9kntTl
+        cbb3YEnSWftQ1432mfYOAiu3ePLnsvPkq/0pdU171xrdJLwzu2Ceicj2NVl1TbKXl8zUu/5u
+        5q1TcwLs1PuVeJwad//PaHvs2XJmneraxV8UfiuxFGckGmoxFxUnAgAmgzw/HgIAAA==
+X-CMS-MailID: 20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574
+References: <CGME20191028124238epcas5p451c77e6f4b37e4db69c87f839bd25574@epcas5p4.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thamks for the review Rob,
+DesignWare controller driver provides the support to handle the PHYs which
+are compliant to ZRX-DC specification based on "snps,phy-zrxdc-compliant"
+DT property. So, add "snps,phy-zrxdc-compliant" property in tegra pcie
+controller DT nodes and remove platform specific code from platform driver.
 
+Anvesh Salveru (2):
+  PCI: tegra: Remove support for ZRX-DC compliant PHY from platform
+    driver
+  arm64: tegra: Add support for ZRX-DC phy property
 
-On 25/10/2019 22:00, Rob Herring wrote:
-> On Fri, Oct 18, 2019 at 01:18:46AM +0100, Srinivas Kandagatla wrote:
->> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
->> gpio controller to control 5 gpios on the chip. This patch adds
->> required device tree bindings for it.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../pinctrl/qcom,wcd934x-pinctrl.yaml         | 51 +++++++++++++++++++
->>   1 file changed, 51 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
->> new file mode 100644
->> index 000000000000..c8a36cbc4935
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
->> @@ -0,0 +1,51 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,wcd934x-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: WCD9340/WCD9341 GPIO Pin controller
->> +
->> +maintainers:
->> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> +
->> +description: |
->> +  Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
->> +  gpio controller to control 5 gpios on the chip.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,wcd9340-pinctrl
->> +      - qcom,wcd9341-pinctrl
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  gpio-controller: true
->> +
->> +  gpio-ranges:
->> +    maxItems: 1
->> +
->> +  '#gpio-cells':
->> +    const: 2
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - gpio-controller
->> +  - gpio-ranges
->> +  - "#gpio-cells"
-> 
-> additionalProperties: false
-> 
->> +
->> +
->> +examples:
->> +  - |
->> +    wcdpinctrl: wcdpinctrl@42 {
-> 
-> pinctrl@42
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi   | 6 ++++++
+ drivers/pci/controller/dwc/pcie-tegra194.c | 4 ----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-I will address above two comments in next version!
+-- 
+2.17.1
 
-Thanks,
-srini
-> 
->> +        compatible = "qcom,wcd9340-pinctrl";
->> +        reg = <0x042 0x2>;
->> +        gpio-controller;
->> +        gpio-ranges = <&wcdpinctrl 0 0 5>;
->> +        #gpio-cells = <2>;
->> +    };
->> +
->> +...
->> -- 
->> 2.21.0
->>
