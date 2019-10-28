@@ -2,154 +2,130 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BACBCA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 23:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E5CC47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 23:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95A4208C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 23:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36705218BA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 23:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572305381;
-	bh=7Gaaf6qwiBEYhOFxiCWLOekDtJw6Ox4++B/1fEyh4/k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WWW6D2WtN5KpJbeLx0YWYw4oBUhJ/fj9ad/2RXp4Jp3JQWDoeH5TxJV7E/WhuiEnf
-	 8xtOFb1RY3Pp0TLzcAJl8g2TpCto84p4pvraDeqYdaYQUf7fsXK7Tijgf5+sCO7VbC
-	 0l/iajAQ6ntzaWqzh2ThvX+j6MvASkkiU1sR0kCk=
+	s=default; t=1572305578;
+	bh=A8fQbfzf/xn3KTHLUrgLxT6h14rtw3yrGoE4tKSOE1o=;
+	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
+	b=Y/I7Ie4JzlJ6EcjQ+zvNMBLgugSHSNePhj6voEL+f/RR59oWfDCrfvP5A1lhriSSQ
+	 uSCDwUppwuGFs3QLGJepPOugUWtvY7m58VCXb0GqMwWrdlTy4mwpB2+MRPZOuXB9ix
+	 CGGUOZwtSOTvLJZZWaUVYuakcxAzgxGmUw9WN7bU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfJ1X3l (ORCPT
+        id S1730497AbfJ1Xc5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 19:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41934 "EHLO mail.kernel.org"
+        Mon, 28 Oct 2019 19:32:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfJ1X3l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 19:29:41 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725951AbfJ1Xc5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 19:32:57 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DB83208C0
-        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 23:29:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 798AD21479;
+        Mon, 28 Oct 2019 23:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572305380;
-        bh=7Gaaf6qwiBEYhOFxiCWLOekDtJw6Ox4++B/1fEyh4/k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r6Be/t5h+cVOxrGvrcglVP5hJwDvjL5PLKNDq90oCNRJLp9UcsbiZpQ/MqVTTFM7D
-         MPfnkF5Oh2r9PkgqTr1XvHrvyE9ICsO86YKWf9p2o/vI04SyzrzoOc6wbIkJ/rU7KC
-         iwwFa19gEZ3MuO1igXE9398TuK4RMhNOST+UF9fc=
-Received: by mail-qt1-f180.google.com with SMTP id t8so17344102qtc.6
-        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 16:29:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAVwOYVJtzNSf2imPxRSWS82aKhztm5GfVQbkf2pYDkiolrXJ/MZ
-        5BKhSKAZgDTKeKfxG3CMU5wWwYoHCx2ZXaIc/A==
-X-Google-Smtp-Source: APXvYqw0R7s1hrV6VYjOGPRDkr+OyJrA+Qw1rwyUmS5BM2DLn9OgWHjM15sPoWVzEF/ayMDFYuIjBF4P3C3Nu05OPqg=
-X-Received: by 2002:a0c:ed29:: with SMTP id u9mr4303137qvq.136.1572305379547;
- Mon, 28 Oct 2019 16:29:39 -0700 (PDT)
+        s=default; t=1572305576;
+        bh=A8fQbfzf/xn3KTHLUrgLxT6h14rtw3yrGoE4tKSOE1o=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=njFeY8jNMr17taXW5n7D7B1TbGRLyNZ1WuddS1sYMF3NHzWMDVtqgydnxwj9HK2hN
+         h8D27nclgyaTCLpKiEsFtPOmT9TaRaE7lmEvAUh4Fz3xRavU/zAoVCYfICBqqa/wvF
+         z75fwRjEAFXlQn3DQY9/k5yiROqOKhHaxttIpfFc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191021140816.262401-1-nuno.sa@analog.com> <20191021140816.262401-2-nuno.sa@analog.com>
-In-Reply-To: <20191021140816.262401-2-nuno.sa@analog.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 28 Oct 2019 18:29:28 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL_9pWQMbqyBuKGJQuxaoeUSbPGj4Y22z0yUK-oa1OSAQ@mail.gmail.com>
-Message-ID: <CAL_JsqL_9pWQMbqyBuKGJQuxaoeUSbPGj4Y22z0yUK-oa1OSAQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: asoc: adau7118: Cleanup
-To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
-Cc:     Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5c66ac7d43ae1f57c335b6e565553fe1df703a83.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com> <5c66ac7d43ae1f57c335b6e565553fe1df703a83.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC PATCH v2 05/13] clk: bd718x7: Support ROHM BD71828 clk block
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Mon, 28 Oct 2019 16:32:55 -0700
+Message-Id: <20191028233256.798AD21479@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 9:08 AM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
->
-> This changes are in accordance with the review done to this bindings.
-> This is a follow-up patch to 969d49b2cdc8.
->
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> ---
->  .../bindings/sound/adi,adau7118.yaml          | 25 ++++++++-----------
->  1 file changed, 10 insertions(+), 15 deletions(-)
+Quoting Matti Vaittinen (2019-10-24 04:44:40)
+> diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+> index ae6e5baee330..d17a19e04592 100644
+> --- a/drivers/clk/clk-bd718x7.c
+> +++ b/drivers/clk/clk-bd718x7.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/mfd/rohm-bd718x7.h>
+> +#include <linux/mfd/rohm-bd71828.h>
+>  #include <linux/mfd/rohm-bd70528.h>
 
-Still some issues here...
+It would be really great to not need to include these random header
+files in this driver and just use raw numbers somehow. Looks like maybe
+it can be done by populating a different device name from the mfd driver
+depending on the version of the clk controller desired? Then that can be
+matched in this clk driver and we can just put the register info in this
+file?
 
->
-> diff --git a/Documentation/devicetree/bindings/sound/adi,adau7118.yaml b/=
-Documentation/devicetree/bindings/sound/adi,adau7118.yaml
-> index cfcef602b3d9..c3f10afbdd6f 100644
-> --- a/Documentation/devicetree/bindings/sound/adi,adau7118.yaml
-> +++ b/Documentation/devicetree/bindings/sound/adi,adau7118.yaml
-> @@ -26,13 +26,11 @@ properties:
->    "#sound-dai-cells":
->      const: 0
->
-> -  IOVDD-supply:
-> +  iovdd-supply:
->      description: Digital Input/Output Power Supply.
-> -    $ref: "/schemas/types.yaml#/definitions/phandle"
->
-> -  DVDD-supply:
-> +  dvdd-supply:
->      description: Internal Core Digital Power Supply.
-> -    $ref: "/schemas/types.yaml#/definitions/phandle"
->
->    adi,decimation-ratio:
->      description: |
-> @@ -58,23 +56,21 @@ properties:
->  required:
->    - "#sound-dai-cells"
->    - compatible
-> -  - IOVDD-supply
-> -  - DVDD-supply
-> +  - iovdd-supply
-> +  - dvdd-supply
->
->  examples:
->    - |
-> -    i2c0 {
-> +    i2c {
->          /* example with i2c support */
->          #address-cells =3D <1>;
->          #size-cells =3D <0>;
-> -        status =3D "okay";
-> -        adau7118_codec: adau7118-codec@14 {
-> +        adau7118_codec: audio-codec@14 {
+>  #include <linux/clk-provider.h>
+>  #include <linux/clkdev.h>
+> @@ -21,10 +22,8 @@ struct bd718xx_clk {
+>         struct rohm_regmap_dev *mfd;
+>  };
+> =20
+> -static int bd71837_clk_set(struct clk_hw *hw, int status)
+> +static int bd71837_clk_set(struct bd718xx_clk *c, int status)
 
-Documentation/devicetree/bindings/sound/adi,adau7118.example.dts:21.44-29.1=
-5:
-Warning (i2c_bus_reg): /example-0/i2c/audio-codec@14: I2C bus unit
-address format error, expected "e"
+should it be unsigned int status? Or maybe u32?
 
-Unit-address should be in hex.
+>  {
+> -       struct bd718xx_clk *c =3D container_of(hw, struct bd718xx_clk, hw=
+);
+> -
+>         return regmap_update_bits(c->mfd->regmap, c->reg, c->mask, status=
+);
+>  }
+> =20
+> @@ -33,14 +32,16 @@ static void bd71837_clk_disable(struct clk_hw *hw)
+>         int rv;
+>         struct bd718xx_clk *c =3D container_of(hw, struct bd718xx_clk, hw=
+);
+> =20
+> -       rv =3D bd71837_clk_set(hw, 0);
+> +       rv =3D bd71837_clk_set(c, 0);
+>         if (rv)
+>                 dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n"=
+, rv);
+>  }
+> =20
+>  static int bd71837_clk_enable(struct clk_hw *hw)
+>  {
+> -       return bd71837_clk_set(hw, 1);
+> +       struct bd718xx_clk *c =3D container_of(hw, struct bd718xx_clk, hw=
+);
+> +
+> +       return bd71837_clk_set(c, 0xffffffff);
 
->                  compatible =3D "adi,adau7118";
->                  reg =3D <14>;
->                  #sound-dai-cells =3D <0>;
-> -                status =3D "okay";
-> -                IOVDD-supply =3D <&supply>;
-> -                DVDD-supply =3D <&supply>;
-> +                iovdd-supply =3D <&supply>;
-> +                dvdd-supply =3D <&supply>;
->                  adi,pdm-clk-map =3D <1 1 0 0>;
->                  adi,decimation-ratio =3D <16>;
->          };
-> @@ -84,7 +80,6 @@ examples:
->      adau7118_codec_hw: adau7118-codec-hw {
->              compatible =3D "adi,adau7118";
->              #sound-dai-cells =3D <0>;
-> -            status =3D "okay";
-> -            IOVDD-supply =3D <&supply>;
-> -            DVDD-supply =3D <&supply>;
-> +            iovdd-supply =3D <&supply>;
-> +            dvdd-supply =3D <&supply>;
->      };
-> --
-> 2.23.0
->
+Because now this is passing -1 to unsigned int taking
+regmap_update_bits()?
+
