@@ -2,83 +2,85 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06316CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2CFCA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7EBA21726
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572242668;
-	bh=fUhaJejjhGsyaU4tabIkYSCff9Y7Eg48Ic6zL2MqL2o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1DHP8OHzvUryJKSBN7/D7FGs+Gzv4BYXiMtI+CGaz20G/AmFZy9Enk60VvKUuzipd
-	 npJQEcemp5dkenCVdvFWS2JwPnO7cbIkPa31mFxJQhlE/zDHHsUkRmu0vk5nQcitkn
-	 P/NqHFpI9cdngD2rXucf5pw5MJXt5bGCYFuZEijs=
+	by mail.kernel.org (Postfix) with ESMTP id 6A9CC20873
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 06:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbfJ1GE2 (ORCPT
+        id S1730448AbfJ1GHR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 02:04:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46262 "EHLO mail.kernel.org"
+        Mon, 28 Oct 2019 02:07:17 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53374 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730394AbfJ1GE2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 02:04:28 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9878E20873;
-        Mon, 28 Oct 2019 06:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572242667;
-        bh=fUhaJejjhGsyaU4tabIkYSCff9Y7Eg48Ic6zL2MqL2o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SRAACqR1CDXrg2bu4L31b/LHC6IaB4P5kGU3pzDwgvzrgFyc8Pq90ccfRaMrHTpQV
-         +kyBXHZ4+4TYW845p69iqQKyGpAXX9HPAydspS2eRFKAJeCm+vSlLTPkx5u+pZpcWd
-         5TxrLXpY9qSc4oMVGLxq+ixoE8/n7H6OxCVNg5No=
-Date:   Mon, 28 Oct 2019 14:04:07 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>
-Subject: Re: [PATCH V2 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for
- fec1
-Message-ID: <20191028060406.GK16985@dragon>
-References: <1571652977-4754-1-git-send-email-peng.fan@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571652977-4754-1-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S1727182AbfJ1GHR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 02:07:17 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 59A6A20070D;
+        Mon, 28 Oct 2019 07:07:15 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3EBAA200161;
+        Mon, 28 Oct 2019 07:07:01 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C0A60402F0;
+        Mon, 28 Oct 2019 14:06:47 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, leonard.crestez@nxp.com,
+        abel.vesa@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com,
+        jun.li@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
+        mripard@kernel.org, vkoul@kernel.org, jagan@amarulasolutions.com,
+        dinguyen@kernel.org, marcin.juszkiewicz@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH RESEND 1/4] dt-bindings: thermal: imx8mm-thermal: Add binding doc for i.MX8MM
+Date:   Mon, 28 Oct 2019 14:03:35 +0800
+Message-Id: <1572242618-18806-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 10:19:17AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> We should not rely on bootloader to configure the phy reset.
-> So introduce phy-reset-gpios property to let Linux handle phy reset
-> itself.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+Add thermal binding doc for Freescale's i.MX8MM Thermal Monitoring Unit.
 
-Applied both, thanks.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/thermal/imx8mm-thermal.txt        | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+
+diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+new file mode 100644
+index 0000000..d09ae82
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+@@ -0,0 +1,15 @@
++* Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
++
++Required properties:
++- compatible : Must be "fsl,imx8mm-tmu".
++- reg : Address range of TMU registers.
++- clocks : TMU's clock source.
++- #thermal-sensor-cells : Should be 0. See ./thermal.txt for a description.
++
++Example:
++tmu: tmu@30260000 {
++	compatible = "fsl,imx8mm-tmu";
++	reg = <0x30260000 0x10000>;
++	clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
++	#thermal-sensor-cells = <0>;
++};
+-- 
+2.7.4
+
