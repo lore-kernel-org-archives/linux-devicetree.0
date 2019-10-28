@@ -2,63 +2,65 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E98CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29ECCA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A9B21835
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE625214E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="n4p86Jog"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="SKuPRKpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfJ1WeN (ORCPT
+        id S1729286AbfJ1Whi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:34:13 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46705 "EHLO
+        Mon, 28 Oct 2019 18:37:38 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41454 "EHLO
         mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbfJ1WeN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 18:34:13 -0400
-Received: by mail-il1-f196.google.com with SMTP id m16so9598090iln.13
-        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 15:34:08 -0700 (PDT)
+        with ESMTP id S1728648AbfJ1Whi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 18:37:38 -0400
+Received: by mail-il1-f196.google.com with SMTP id z10so9631802ilo.8
+        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 15:37:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=c2XX2oa9okl2tfpust4RUifahZHp7tb1+MoPm2u47Wc=;
-        b=n4p86JogluIaUwX8lpVfKCl315ggHShPT/3PG9nmdvv6A+WmkcxoXlJ1p500UHclpZ
-         V7orIaazLLn5Miq8ZaNeWiihu1+79cg9oAg+i/LcaIdcqZQ5iG4T4aVCMjo26c+Cdn97
-         r3IOx7w0Y6kNlL3cRfnacuWuUmSw1xh6YKtgE=
+        bh=z3tX+ks7PoiFwrJMh00/G0a0ftQIDY3RWS8pN1PA/BQ=;
+        b=SKuPRKpveC6kpd0ROoNvdHULXUx99U0LlGRXDpWC4BPC2PLCNKrud8USuQ9T6iTjuu
+         yY/RhELZCceNf3/45XZWM6GsNyRX8KOElh1Wg6prkLUzt27uk4jeSXYo/9oCWj7trUCm
+         /4sm/8LdQPwR0vw2Ic0Nb7446p1joXFqG8Khw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=c2XX2oa9okl2tfpust4RUifahZHp7tb1+MoPm2u47Wc=;
-        b=Dxai3oAQ6W9nzgVeYnCzq8rId/xeez8QDmLRGm7V0BaOryyFvZjY1fTkRBMIJbMBwp
-         CNV6X132YMIuqgfiO/RHxy4kz8ic/ZhABpiiOmU1HQaE970MFTdDDxsHreXBR6984pne
-         IisKQrgOiThwLTsKmPFyu6c7UIQl8e3OaHs9g5Wy2gH5Q+7aiEkJUqOj5SIZ7dkFB1Mz
-         9Sa7ZfLvDSin7hisLO4WFKL8fJe8hsxQC0pEdpeuKFpxpiq/AA0zeWU+48Lhl0pESK1L
-         OLiLAzqv/+MjSXPRwbmsKUKDbIblVaD+E0T9Wl45+rl4Y4ndIecTOB6c90lzeZVpLPxO
-         5C5w==
-X-Gm-Message-State: APjAAAWJ9jEXuPLg62lUvErrP5P9k5XKFJfYP0BuggyXpPUEYR3QDqBO
-        bfFMGe4tPKBlAYqx0EwqeNquk0JeLINri1aVhFehdQ==
-X-Google-Smtp-Source: APXvYqyCGJQl+HAm+sa8mYYJp4Wxr/m+y+g/6ntOZCrMubS4XyZUczCAk4EdzfbP8O6fyXYOHmttxwz3zGzyvqk0tc0=
-X-Received: by 2002:a92:99ca:: with SMTP id t71mr8413794ilk.61.1572302047950;
- Mon, 28 Oct 2019 15:34:07 -0700 (PDT)
+        bh=z3tX+ks7PoiFwrJMh00/G0a0ftQIDY3RWS8pN1PA/BQ=;
+        b=VWRvBVGt1SKYZI3qtHbVnNthikX5BRUSYqm9vO977zLwMDVayxsQDEgJcfndQVsaEF
+         34+3vT/zFPebKezfXkyR/tQ8wP5TBGazfTacPHhOvJnvnuzd4VL4yGOLNSGWE7wJ3FkP
+         Ssy3CEUe7KekRuxvEjYnQ5hiiO1Bl1SwImKSfSO+HtzvfoEkmwPHZaAS4DY+QN/nGVeN
+         JdCLu24nG2PlJap7H0/3LyY2HsTSZ2CyCq5IUdGDSQEu+DYo9uXlccRvS+rD/FfGR1xL
+         qUX8YCvc4ATc/Kt7h1zU+QEckHq+ufYg+yqen8s33P4VKi8wjRPgZiwJ+0aCU0/gNACq
+         YvnA==
+X-Gm-Message-State: APjAAAWfW1rWqFVLm8E27vSDq7pL3lLTrphhb3eZ+yadA860eMcxb4qU
+        f7lPVnRgAQZuU8zkg7wjZvh0ZuaKNMWh/NExgai9+g==
+X-Google-Smtp-Source: APXvYqwIZOpM2fC3dmpYbeGTVPOWxOzVO5pYPcw3MFmyjgnC+e3sCBKiQMsTwG3PiO7rE0i53YmxyINxh4//HXXlb2c=
+X-Received: by 2002:a92:91d3:: with SMTP id e80mr24149380ill.77.1572302257323;
+ Mon, 28 Oct 2019 15:37:37 -0700 (PDT)
 MIME-Version: 1.0
 References: <20191025175625.8011-1-jagan@amarulasolutions.com>
- <20191025175625.8011-5-jagan@amarulasolutions.com> <20191028153427.pc3tnoz2d23filhx@hendrix>
-In-Reply-To: <20191028153427.pc3tnoz2d23filhx@hendrix>
+ <20191025175625.8011-3-jagan@amarulasolutions.com> <20191027211737.GA30896@bogus>
+In-Reply-To: <20191027211737.GA30896@bogus>
 From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Tue, 29 Oct 2019 04:03:56 +0530
-Message-ID: <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
-Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly 
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+Date:   Tue, 29 Oct 2019 04:07:26 +0530
+Message-ID: <CAMty3ZD8P1KGS+6AZOCbYyLpV=c7wowUdwoJXYvEMq211xbM1g@mail.gmail.com>
+Subject: Re: [PATCH v11 2/7] dt-bindings: sun6i-dsi: Add A64 DPHY compatible
+ (w/ A31 fallback)
+To:     Rob Herring <robh@kernel.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Michael Trimarchi <michael@amarulasolutions.com>,
         Icenowy Zheng <icenowy@aosc.io>,
@@ -74,33 +76,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Mon, Oct 28, 2019 at 9:06 PM Maxime Ripard <mripard@kernel.org> wrote:
+On Mon, Oct 28, 2019 at 2:47 AM Rob Herring <robh@kernel.org> wrote:
 >
-> On Fri, Oct 25, 2019 at 11:26:22PM +0530, Jagan Teki wrote:
-> > Usage of clocks are varies between different Allwinner
-> > DSI controllers. Clocking in A33 would need bus and
-> > mod clocks where as A64 would need only bus clock.
+> On Fri, 25 Oct 2019 23:26:20 +0530, Jagan Teki wrote:
+> > The MIPI DSI PHY controller on Allwinner A64 is similar
+> > on the one on A31.
 > >
-> > To support this kind of clocking structure variants
-> > in the same dsi driver,
->
-> There's no variance in the clock structure as far as the bus clock is
-> concerned.
->
-> > explicit handling of common clock would require since the A64
-> > doesn't need to mention the clock-names explicitly in dts since it
-> > support only one bus clock.
+> > Add A64 compatible and append A31 compatible as fallback.
 > >
-> > Also pass clk_id NULL instead "bus" to regmap clock init function
-> > since the single clock variants no need to mention clock-names
-> > explicitly.
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  .../bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml         | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
 >
-> You don't need explicit clock handling. Passing NULL as the argument
-> in regmap_init_mmio_clk will make it use the first clock, which is the
-> bus clock.
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>
+> If a tag was not added on purpose, please state why and what changed.
 
-Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
-during regmap_mmio_gen_context code, passing NULL triggering vblank
-timeout.
+I usually collect the tags when I send next version w/o any change.
+but this dt-binding patch has a fixed version compared to previous
+version. I have updated changelog on cover patch and may be will write
+it on respective patch itself.
