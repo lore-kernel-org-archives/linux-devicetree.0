@@ -2,159 +2,243 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65C3CA9EC2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0FCCA9EC2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B9B21835
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604DA21835
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uaUmY97o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rVKnRspy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389971AbfJ1V71 (ORCPT
+        id S2390600AbfJ1WAf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 17:59:27 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45805 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389904AbfJ1V70 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 17:59:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r1so7880015pgj.12
-        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 14:59:26 -0700 (PDT)
+        Mon, 28 Oct 2019 18:00:35 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:56169 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390589AbfJ1WAf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 18:00:35 -0400
+Received: by mail-pf1-f202.google.com with SMTP id u21so9662244pfm.22
+        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 15:00:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+L6QotxBXClg8Fe4NEIvH2M7vhWfz5AENh5gfCd6GV4=;
-        b=uaUmY97oSQxJQiygHKDaQ20ZTGg8dHh2CBe6oCjliV/RN29TrGpIx4ib9OqXas8o3L
-         VGfHqIuml3QwWjby0s2prmA2YMmiKWQVFFb1lAwmvGl498yOYU5Uls0CSQZ34KDFix43
-         G6JAmKHK8ywTaqFjTUQP00S7zXpDubMfH1Tir+VrVpTGeF7pp/x/zIimRziEyXRoQMht
-         x7W2cxF8KEa5n6o6m8KFmj7LejeivOjoMf2XtSHXLftGcJYpn6KXhdcqvG0pZZJ4idlx
-         kQxDcknr/f6WferMNpA/Vd7V+YIZo/bspA5ekOGZIugueMatX0phDtpfNMw5J5ckn8sF
-         6leg==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=4QHSVay5xnRXtHE5UvaRBduaybl+NfL/s405bQv+ZSs=;
+        b=rVKnRspyExHb8e5Iw2iaEe+VaNM0a27FmGCb/j8adH7C/raQq1v7DTY8KgptgoygG1
+         isqPE8RM6IML89xrh6Zs4MapknKuvFF27v8AF7hreUksBIk6flf5/Xju9VhocBIPsFDn
+         SMKLKMAehdFaiYogi8Dxud9Qz+VfGOuWVxuY9xXBBbn1q4bCeo3xDmc3K8jbU5nKzHcq
+         P7qmPea3Mar5vxaDo3sDd7aOZYNptcn+royjFX5Dvkt8vaLcD/3i7RbLwtSFclyuAGYq
+         y4XeOLJ1lLgBma2mpsVwwkRoWu3A1RZ9JQKPSlnXx48J1FKojrQRpyoPIT8Q1U7URlaG
+         jZOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=+L6QotxBXClg8Fe4NEIvH2M7vhWfz5AENh5gfCd6GV4=;
-        b=KbUmRxs2p7KD5geey5/Zk6Cv6PuqRN5KlOGHNAD+OX4COd9azPvbKEaPWIyZUmXRoU
-         2nVRv9MYasHLS2Otzti2rlWWG1TcL8i4T++0zJ5cdFPaT10sMrlEx5V9ZFWL1KF9oxMl
-         P+1qFhDY7gPvPmNjdxVjmNKg9NsMCrvl1dtilOEAyuVY87a8hTuRAxDzK1rzCyw5uaqV
-         LR99DVKGQ8jI9qbtdTb4yNVdGIgCLCHrJme1sZtlFoQovAv7vjw8SeoHFcRD+AX+G0cX
-         Fq19dZ6z9GSV47NjV00bGZ3IpcHs8uuCraB9zAOajCPjcwWFE71j6gqOlydRjUZhYCMs
-         l2Dg==
-X-Gm-Message-State: APjAAAX2jv+ZWpMKawoRnyhFsN3gFvoPqQzTm6tM+YANyBK25qB0NM9L
-        lSufnclROPI9BIPfyu8eK5LklA==
-X-Google-Smtp-Source: APXvYqwoT7ayq2aO4CF8CK+7fEOHyKKj3eXU3Enm6OGIp8+0wievgg8RmOqjN0WXhlj2nCmqsIIU7g==
-X-Received: by 2002:a63:f923:: with SMTP id h35mr23802494pgi.323.1572299965657;
-        Mon, 28 Oct 2019 14:59:25 -0700 (PDT)
-Received: from localhost.localdomain (c-67-170-172-113.hsd1.or.comcast.net. [67.170.172.113])
-        by smtp.gmail.com with ESMTPSA id f12sm10880612pfn.152.2019.10.28.14.59.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 14:59:25 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=4QHSVay5xnRXtHE5UvaRBduaybl+NfL/s405bQv+ZSs=;
+        b=Ia/qvB+myz/aQW0qgQqqlWHCPZNZvv5A6vNvt2uL7DcEwUA4K+cnJDUQdHdaUtwSs/
+         Sd+cWW2pHLD2jro8gnOgQhszrFW+PeDEtxsgpDHY9lAtMnRx2OVxSFH+IMmc/BnqT5Mi
+         cShaBgLWOSn54OW4X33wLNZgwCvdsY/WH7CCk3Ek06ZBoDPTxZ36Aq80O488SF9oY/zL
+         rBl/IQl7czdDWWyYdbdQcNQ+9cfaIbiQgaDvKS/S3x71AdkSktmgMnts5D+i6l4alcbB
+         gZ1WPyDeHb2tqYbWWKt5NIZfiURPHBlguTIjzD4nlkosyxwgfVCwWLDbXDCh8hEZxFSi
+         Pi7A==
+X-Gm-Message-State: APjAAAX3avK5eI3kRKydRc3P+meZMkd+b7mXVScGFX8rDbaSpOe2SfK9
+        0apMtuEKNReBVM5pgzu+iP4/AHpa0OBozYw=
+X-Google-Smtp-Source: APXvYqxZs30NeDK+okF5Jb1rc311OynuujO07PZjWck7W6HzxalCldSjpZuRXpcks4sFZn8Chv2mPhsrw07fKR8=
+X-Received: by 2002:a63:cd47:: with SMTP id a7mr22303385pgj.29.1572300034183;
+ Mon, 28 Oct 2019 15:00:34 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 15:00:22 -0700
+In-Reply-To: <20191028220027.251605-1-saravanak@google.com>
+Message-Id: <20191028220027.251605-2-saravanak@google.com>
+Mime-Version: 1.0
+References: <20191028220027.251605-1-saravanak@google.com>
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: [PATCH v1 1/5] driver core: Add device link support for
+ SYNC_STATE_ONLY flag
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v4 2/9] usb: dwc3: Execute GCTL Core Soft Reset while switch modes
-Date:   Mon, 28 Oct 2019 21:59:12 +0000
-Message-Id: <20191028215919.83697-3-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191028215919.83697-1-john.stultz@linaro.org>
-References: <20191028215919.83697-1-john.stultz@linaro.org>
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
+Parent devices might need to create "proxy" device links from themselves
+to supplier devices to make sure the supplier devices don't get a
+sync_state() before the child consumer devices get a chance to add
+device links to the supplier devices.
 
-On the HiKey960, we need to do a GCTL soft reset when
-switching modes.
+However, the parent device has no real dependency on the supplier device
+and probing, suspend/resume or runtime PM don't need to be affected by
+the supplier device.  To capture these cases, create a SYNC_STATE_ONLY
+device link flag that only affects sync_state() behavior and doesn't
+affect probing, suspend/resume or runtime PM.
 
-Jack Pham also noted that in the Synopsys databook it
-mentions performing a GCTL CoreSoftReset when changing the
-PrtCapDir between device & host modes.
-
-So this patch always does a GCTL Core Soft Reset when
-changing the mode.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-CC: ShuFan Lee <shufan_lee@richtek.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: linux-usb@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
-v3: Remove quirk conditional, as Jack Pham noted the
-    Synopsis databook states this should be done generally.
-    Also, at Jacks' suggestion, make the reset call before
-    changing the prtcap direction.
----
- drivers/usb/dwc3/core.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/base/core.c    | 50 ++++++++++++++++++++++++++++++++++--------
+ include/linux/device.h |  2 ++
+ 2 files changed, 43 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 999ce5e84d3c..a039e35ec7ad 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -112,6 +112,19 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- 	dwc->current_dr_role = mode;
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 7ea665a97da2..17ed054c4132 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -131,6 +131,9 @@ static int device_is_dependent(struct device *dev, void *target)
+ 		return ret;
+ 
+ 	list_for_each_entry(link, &dev->links.consumers, s_node) {
++		if (link->flags == (DL_FLAG_SYNC_STATE_ONLY | DL_FLAG_MANAGED))
++			continue;
++
+ 		if (link->consumer == target)
+ 			return 1;
+ 
+@@ -200,8 +203,11 @@ static int device_reorder_to_tail(struct device *dev, void *not_used)
+ 		device_pm_move_last(dev);
+ 
+ 	device_for_each_child(dev, NULL, device_reorder_to_tail);
+-	list_for_each_entry(link, &dev->links.consumers, s_node)
++	list_for_each_entry(link, &dev->links.consumers, s_node) {
++		if (link->flags == (DL_FLAG_SYNC_STATE_ONLY | DL_FLAG_MANAGED))
++			continue;
+ 		device_reorder_to_tail(link->consumer, NULL);
++	}
+ 
+ 	return 0;
  }
+@@ -228,7 +234,8 @@ void device_pm_move_to_tail(struct device *dev)
  
-+static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
-+{
-+	u32 reg;
-+
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg |= DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-+
-+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+	reg &= ~DWC3_GCTL_CORESOFTRESET;
-+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
-+}
-+
- static void __dwc3_set_mode(struct work_struct *work)
- {
- 	struct dwc3 *dwc = work_to_dwc(work);
-@@ -154,6 +167,9 @@ static void __dwc3_set_mode(struct work_struct *work)
+ #define DL_MANAGED_LINK_FLAGS (DL_FLAG_AUTOREMOVE_CONSUMER | \
+ 			       DL_FLAG_AUTOREMOVE_SUPPLIER | \
+-			       DL_FLAG_AUTOPROBE_CONSUMER)
++			       DL_FLAG_AUTOPROBE_CONSUMER  | \
++			       DL_FLAG_SYNC_STATE_ONLY)
  
- 	spin_lock_irqsave(&dwc->lock, flags);
+ #define DL_ADD_VALID_FLAGS (DL_MANAGED_LINK_FLAGS | DL_FLAG_STATELESS | \
+ 			    DL_FLAG_PM_RUNTIME | DL_FLAG_RPM_ACTIVE)
+@@ -296,6 +303,8 @@ struct device_link *device_link_add(struct device *consumer,
  
-+	/* Execute a GCTL Core Soft Reset when switch mode */
-+	dwc3_gctl_core_soft_reset(dwc);
+ 	if (!consumer || !supplier || flags & ~DL_ADD_VALID_FLAGS ||
+ 	    (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) ||
++	    (flags & DL_FLAG_SYNC_STATE_ONLY &&
++	     flags != DL_FLAG_SYNC_STATE_ONLY) ||
+ 	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
+ 	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+ 		      DL_FLAG_AUTOREMOVE_SUPPLIER)))
+@@ -316,11 +325,14 @@ struct device_link *device_link_add(struct device *consumer,
+ 
+ 	/*
+ 	 * If the supplier has not been fully registered yet or there is a
+-	 * reverse dependency between the consumer and the supplier already in
+-	 * the graph, return NULL.
++	 * reverse (non-SYNC_STATE_ONLY) dependency between the consumer and
++	 * the supplier already in the graph, return NULL. If the link is a
++	 * SYNC_STATE_ONLY link, we don't check for reverse dependencies
++	 * because it only affects sync_state() callbacks.
+ 	 */
+ 	if (!device_pm_initialized(supplier)
+-	    || device_is_dependent(consumer, supplier)) {
++	    || (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
++		  device_is_dependent(consumer, supplier))) {
+ 		link = NULL;
+ 		goto out;
+ 	}
+@@ -347,9 +359,14 @@ struct device_link *device_link_add(struct device *consumer,
+ 		}
+ 
+ 		if (flags & DL_FLAG_STATELESS) {
+-			link->flags |= DL_FLAG_STATELESS;
+ 			kref_get(&link->kref);
+-			goto out;
++			if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
++			    !(link->flags & DL_FLAG_STATELESS)) {
++				link->flags |= DL_FLAG_STATELESS;
++				goto reorder;
++			} else {
++				goto out;
++			}
+ 		}
+ 
+ 		/*
+@@ -371,6 +388,12 @@ struct device_link *device_link_add(struct device *consumer,
+ 			link->flags |= DL_FLAG_MANAGED;
+ 			device_link_init_status(link, consumer, supplier);
+ 		}
++		if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
++		    !(flags & DL_FLAG_SYNC_STATE_ONLY)) {
++			link->flags &= ~DL_FLAG_SYNC_STATE_ONLY;
++			goto reorder;
++		}
 +
- 	dwc3_set_prtcap(dwc, dwc->desired_dr_role);
+ 		goto out;
+ 	}
  
- 	spin_unlock_irqrestore(&dwc->lock, flags);
+@@ -410,6 +433,13 @@ struct device_link *device_link_add(struct device *consumer,
+ 	    flags & DL_FLAG_PM_RUNTIME)
+ 		pm_runtime_resume(supplier);
+ 
++	if (flags & DL_FLAG_SYNC_STATE_ONLY) {
++		dev_dbg(consumer,
++			"Linked as a sync state only consumer to %s\n",
++			dev_name(supplier));
++		goto out;
++	}
++reorder:
+ 	/*
+ 	 * Move the consumer and all of the devices depending on it to the end
+ 	 * of dpm_list and the devices_kset list.
+@@ -635,7 +665,8 @@ int device_links_check_suppliers(struct device *dev)
+ 	device_links_write_lock();
+ 
+ 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+-		if (!(link->flags & DL_FLAG_MANAGED))
++		if (!(link->flags & DL_FLAG_MANAGED) ||
++		    link->flags & DL_FLAG_SYNC_STATE_ONLY)
+ 			continue;
+ 
+ 		if (link->status != DL_STATE_AVAILABLE) {
+@@ -949,7 +980,8 @@ void device_links_unbind_consumers(struct device *dev)
+ 	list_for_each_entry(link, &dev->links.consumers, s_node) {
+ 		enum device_link_state status;
+ 
+-		if (!(link->flags & DL_FLAG_MANAGED))
++		if (!(link->flags & DL_FLAG_MANAGED) ||
++		    link->flags & DL_FLAG_SYNC_STATE_ONLY)
+ 			continue;
+ 
+ 		status = link->status;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 9f2f2e169f95..f1f2aa0b19da 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1097,6 +1097,7 @@ enum device_link_state {
+  * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
+  * AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
+  * MANAGED: The core tracks presence of supplier/consumer drivers (internal).
++ * SYNC_STATE_ONLY: Link only affects sync_state() behavior.
+  */
+ #define DL_FLAG_STATELESS		BIT(0)
+ #define DL_FLAG_AUTOREMOVE_CONSUMER	BIT(1)
+@@ -1105,6 +1106,7 @@ enum device_link_state {
+ #define DL_FLAG_AUTOREMOVE_SUPPLIER	BIT(4)
+ #define DL_FLAG_AUTOPROBE_CONSUMER	BIT(5)
+ #define DL_FLAG_MANAGED			BIT(6)
++#define DL_FLAG_SYNC_STATE_ONLY		BIT(7)
+ 
+ /**
+  * struct device_link - Device link representation.
 -- 
-2.17.1
+2.24.0.rc0.303.g954a862665-goog
 
