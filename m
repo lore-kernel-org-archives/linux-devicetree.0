@@ -2,83 +2,177 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7134CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 02:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEF5CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 02:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D13208C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 02:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572229159;
-	bh=Ooys5L+8V//Sns55VinsxJARaA6m2QRYb6IyFJTCdtU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bKGrw+7TQOJe9P/IuciouQDZdTPbkGACP7cHYY4HGysupZQTn1pss4xx6oNT842Ij
-	 IQtw22pJo3ZeI+kjoDA6071xS1mEQwBg0cvxyh5KMsoaW4/wO+5WfVUOrDcH2oK7ch
-	 OKnIErj/R+5fN/6emlDibohuZC+nZyrcD5QGBrmo=
+	by mail.kernel.org (Postfix) with ESMTP id 6A78420B7C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 02:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfJ1CTT (ORCPT
+        id S1729302AbfJ1C0H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 27 Oct 2019 22:19:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727775AbfJ1CTT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 Oct 2019 22:19:19 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 789E72070B;
-        Mon, 28 Oct 2019 02:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572229158;
-        bh=Ooys5L+8V//Sns55VinsxJARaA6m2QRYb6IyFJTCdtU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gQhwRQ/3nHp908TPJ7774bqZ+4AEL3R/14X8ZNES9se557S/0mCQ4vgqRJY9s1+qn
-         GrmOiL3ABss+CsCqocabdwqyH03xkBBn53P6WRu4m87lVWpEHPkjSznSdmxIE7RB0K
-         etl4cZfFKHP48RL8OYm4mdSzBCOAWyY7TBVJY9sY=
-Date:   Mon, 28 Oct 2019 10:18:59 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, adam.ford@logicpd.com,
-        stable <stable@vger.kernel.org>,
+        Sun, 27 Oct 2019 22:26:07 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:3977 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726940AbfJ1C0H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 27 Oct 2019 22:26:07 -0400
+X-UUID: 985bdf8ceb1f4401b9b4289eca2bc7f3-20191028
+X-UUID: 985bdf8ceb1f4401b9b4289eca2bc7f3-20191028
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1443399686; Mon, 28 Oct 2019 10:26:01 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 28 Oct 2019 10:25:58 +0800
+Received: from [10.17.3.153] (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 28 Oct 2019 10:25:58 +0800
+Message-ID: <1572229558.27439.6.camel@mhfsdcap03>
+Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: imx6-logicpd: Re-enable SNVS power key
-Message-ID: <20191028021858.GE16985@dragon>
-References: <20191016144005.9863-1-aford173@gmail.com>
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg 
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Date:   Mon, 28 Oct 2019 10:25:58 +0800
+In-Reply-To: <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
+References: <20191017084033.28299-1-xia.jiang@mediatek.com>
+         <20191017084033.28299-6-xia.jiang@mediatek.com>
+         <20191023103945.GA41089@chromium.org> <1571906317.6254.64.camel@mhfsdcap03>
+         <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016144005.9863-1-aford173@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 09:40:05AM -0500, Adam Ford wrote:
-> The baseboard of the Logic PD i.MX6 development kit has a power
-> button routed which can both power down and power up the board.
-> It can also wake the board from sleep.  This functionality was
-> marked as disabled by default in imx6qdl.dtsi, so it needs to
-> be explicitly enabled for each board.
+On Thu, 2019-10-24 at 18:23 +0900, Tomasz Figa wrote:
+> On Thu, Oct 24, 2019 at 5:38 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
+> >
+> > On Wed, 2019-10-23 at 19:39 +0900, Tomasz Figa wrote:
+> > > Hi Xia,
+> > >
+> > > On Thu, Oct 17, 2019 at 04:40:38PM +0800, Xia Jiang wrote:
+> > > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
+> > > > decode and encode have great similarities with function operation.
+> > > >
+> > > > Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> > > > ---
+> > > > v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder,
+> > > >     one for decoder.
+> > > >     split mtk_jpeg_set_default_params() to two functions, one for
+> > > >     encoder, one for decoder.
+> > > >     add cropping support for encoder in g/s_selection ioctls.
+> > > >     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
+> > > >     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 by
+> > > >     specification.
+> > > >     move width shifting operation behind aligning operation in
+> > > >     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
+> > > >     fix user abuseing data_offset issue for DMABUF in
+> > > >     mtk_jpeg_set_enc_src().
+> > > >     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGHT
+> > > >                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH from
+> > > >                         'int' type to 'unsigned int' type.
+> > > >                         fix msleadingly indented of 'else'.
+> > > >
+> > > > v3: delete Change-Id.
+> > > >     only test once handler->error after the last v4l2_ctrl_new_std().
+> > > >     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch.
+> > > >
+> > > > v2: fix compliance test fail, check created buffer size in driver.
+> > > > ---
+> > > >  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++---
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
+> > > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
+> > > >  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
+> > > >  7 files changed, 1004 insertions(+), 146 deletions(-)
+> > > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
+> > > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
+> > > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.h
+> > > >
+> > >
+> > > First of all, thanks for the patch!
+> > >
+> > > Please check my comments below.
+> > >
+> > > My general feeling about this code is that the encoder hardware block is
+> > > completely orthogonal from the decoder block and there is very little code
+> > > reuse from the original decoder driver.
+> > >
+> > > Moreover, a lot of existing code now needs if (decoder) { ... } else {... }
+> > > segments, which complicates the code.
+> > >
+> > > Would it perhaps make sense to instead create a separate mtk-jpeg-enc
+> > > driver?
+> > >
+> > Dear Tomasz,
+> >
+> > Thanks for your comments.
+> >
+> > My reasons about the architecture of jpeg enc driver are as follows:
+> >
+> > The first internal design and realization of jpeg enc driver was a
+> > separate driver, but found that mtk_jpeg_core.c and mtk_jpeg_enc_core.c
+> > have lots of reuse.Because that  the core.c mainly contains realization
+> > of v4L2 ioctl functions and some logic which are high similarity between
+> > encoder and decoder.
+> >
+> > The jpeg encoder and decoder are two independent hardwares exactly, so
+> > the code about hardware specification(register setting) are
+> > separated(mtk_jpeg_enc_hw.c and mtk_jpeg_dec_hw.c).
+> >
+> > As for 17 existing code segments contain if(decoder){} else {}, they are
+> > not complicated IMHO.The complicated(multilayer nested) functions are
+> > separated in V4 version as Hans recommendation.
+> >
+> > By the way,the upstreamed module s5p-jpeg
+> > (https://elixir.bootlin.com/linux/latest/source/drivers/media/platform/s5p-jpeg/jpeg-core.c#L1998) also use encoder and decoder mode in the common core.c, but their encoder and decoder are the same hardware.Maybe our jpeg enc and dec are designed into one hardware in the future.In that case the current architecture is more compatible.
+> >
+> > So I prefer the current design.
+> >
 > 
-> This patch enables the snvs power key again.
-> Fixes: 770856f0da5d ("ARM: dts: imx6qdl: Enable SNVS power key according to board design")
-
-So this is fixing powerkey, while the previous fix on som was actually
-about poweroff.  I was confused.
-
+> Would you be able to give some numbers to show the code reuse to
+> justify using the same driver? From my observation, a new driver would
+> result in a significantly cleaner code. If there is a further hardware
+> architecture change, that would likely require another driver, because
+> it wouldn't be compatible with existing programming model anyway.
 > 
-> Cc: stable <stable@vger.kernel.org> #5.3+
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Regardless of that, if we end up with reusing the same driver, I'd
+> like you to fix the issues existing in the current base before adding
+> the encoder functionality.
+Dear Tomasz,
+I've counted about 1000 lines of code that can be reused.The reused code
+is 75 percent of the original code.
 
-Applied, thanks.
+If you agree to reuse the same driver,I will fix the issues existing in
+the current driver.
+
+Best Regards,
+Xia Jiang
+> 
+> Best regards,
+> Tomasz
+
+
