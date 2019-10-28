@@ -2,98 +2,157 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6829CA9EC1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3939C47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 16:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A574A20717
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B990721721
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 16:12:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eipmSO+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390315AbfJ1Pyz (ORCPT
+        id S1730787AbfJ1QM0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:54:55 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:43560 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390213AbfJ1Pyz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 11:54:55 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x9SFs4Qe001373;
-        Mon, 28 Oct 2019 17:54:05 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id D081560275; Mon, 28 Oct 2019 17:54:04 +0200 (IST)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        yuenn@google.com, venture@google.com, benjaminfair@google.com,
-        avifishman70@gmail.com, joel@jms.id.au
-Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v2 1/3] dt-binding: reset: add NPCM reset controller documentation
-Date:   Mon, 28 Oct 2019 17:54:01 +0200
-Message-Id: <20191028155403.134126-2-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191028155403.134126-1-tmaimon77@gmail.com>
-References: <20191028155403.134126-1-tmaimon77@gmail.com>
+        Mon, 28 Oct 2019 12:12:26 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:44731 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730436AbfJ1QMZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 12:12:25 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9SFu2aq023368;
+        Mon, 28 Oct 2019 17:11:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=CM9gDRKKxbqasjyuOfTE0X/UG/yfSLvoQfkO2xJSMkU=;
+ b=eipmSO+CXc1j0cU38m0HAn+OGIpV1ILX9Fy2IvNLSEBTrYS/gV0WHkrWkm/LIFr1fG1Z
+ M8bU2jkArGGi4gcvN97WQyirUUmS90WM2lHtAU62eRCzZxajl0JKf3CBXGUe9mkaaLQi
+ 1bb9ZREKkAcY0ptcyuj8vGAVvY7WlvjbUz0AQmK2jvrD1UiIE7KTrPVSdl6GUJd299Vj
+ sCQ87vZ+YjvZYV+j6JG4vexoM+Ys4TC8nwgTIUF4kR8iQNzfa3RhB89axWhgXvY0U53S
+ GS0Z4k1A1XsN/KTsSUK6UAjzaAaqfLevykid0cJaRATAoH4//DIF9AmFyXUg2GDUN7xP 8g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vvbww33yj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Oct 2019 17:11:57 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1F3D3100034;
+        Mon, 28 Oct 2019 17:11:57 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0EE9F2B1E73;
+        Mon, 28 Oct 2019 17:11:57 +0100 (CET)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct
+ 2019 17:11:56 +0100
+Received: from localhost (10.48.0.192) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 28 Oct 2019 17:11:56 +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <jic23@kernel.org>, <robh+dt@kernel.org>
+CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/2] iio: adc: stm32: allow to tune analog clock
+Date:   Mon, 28 Oct 2019 17:11:48 +0100
+Message-ID: <1572279108-25916-3-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
+References: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.192]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-28_06:2019-10-28,2019-10-28 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Added device tree binding documentation for Nuvoton BMC
-NPCM reset controller.
+Add new optional dt property to tune analog clock prescaler.
+Driver looks for optional "st,max-clk-rate-hz", then computes
+best approximation below that rate, using ADC internal prescaler.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- .../bindings/reset/nuvoton,npcm-reset.txt     | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
+ drivers/iio/adc/stm32-adc-core.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt b/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
-new file mode 100644
-index 000000000000..94793285a2ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
-@@ -0,0 +1,35 @@
-+Nuvoton NPCM Reset controller
+diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+index 20c626c..6537f4f 100644
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -79,6 +79,7 @@ struct stm32_adc_priv_cfg {
+  * @domain:		irq domain reference
+  * @aclk:		clock reference for the analog circuitry
+  * @bclk:		bus clock common for all ADCs, depends on part used
++ * @max_clk_rate:	desired maximum clock rate
+  * @booster:		booster supply reference
+  * @vdd:		vdd supply reference
+  * @vdda:		vdda analog supply reference
+@@ -95,6 +96,7 @@ struct stm32_adc_priv {
+ 	struct irq_domain		*domain;
+ 	struct clk			*aclk;
+ 	struct clk			*bclk;
++	u32				max_clk_rate;
+ 	struct regulator		*booster;
+ 	struct regulator		*vdd;
+ 	struct regulator		*vdda;
+@@ -141,7 +143,7 @@ static int stm32f4_adc_clk_sel(struct platform_device *pdev,
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(stm32f4_pclk_div); i++) {
+-		if ((rate / stm32f4_pclk_div[i]) <= priv->cfg->max_clk_rate_hz)
++		if ((rate / stm32f4_pclk_div[i]) <= priv->max_clk_rate)
+ 			break;
+ 	}
+ 	if (i >= ARRAY_SIZE(stm32f4_pclk_div)) {
+@@ -230,7 +232,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+ 			if (ckmode)
+ 				continue;
+ 
+-			if ((rate / div) <= priv->cfg->max_clk_rate_hz)
++			if ((rate / div) <= priv->max_clk_rate)
+ 				goto out;
+ 		}
+ 	}
+@@ -250,7 +252,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+ 		if (!ckmode)
+ 			continue;
+ 
+-		if ((rate / div) <= priv->cfg->max_clk_rate_hz)
++		if ((rate / div) <= priv->max_clk_rate)
+ 			goto out;
+ 	}
+ 
+@@ -655,6 +657,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct resource *res;
++	u32 max_rate;
+ 	int ret;
+ 
+ 	if (!pdev->dev.of_node)
+@@ -731,6 +734,13 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	priv->common.vref_mv = ret / 1000;
+ 	dev_dbg(&pdev->dev, "vref+=%dmV\n", priv->common.vref_mv);
+ 
++	ret = of_property_read_u32(pdev->dev.of_node, "st,max-clk-rate-hz",
++				   &max_rate);
++	if (!ret)
++		priv->max_clk_rate = min(max_rate, priv->cfg->max_clk_rate_hz);
++	else
++		priv->max_clk_rate = priv->cfg->max_clk_rate_hz;
 +
-+In the NPCM Reset controller boot the USB PHY, USB host
-+and USB device initialize.
-+
-+Required properties:
-+- compatible : "nuvoton,npcm750-reset" for NPCM7XX BMC
-+- reg : specifies physical base address and size of the register.
-+- #reset-cells: must be set to 1
-+
-+Optional property:
-+- nuvoton,sw-reset-number - Contains the software reset number to restart the SoC.
-+  NPCM7xx contain four software reset that represent numbers 1 to 4.
-+
-+  If 'nuvoton,sw-reset-number' is not specfied software reset is disabled.
-+
-+Example:
-+	rstc: rstc@f0801000 {
-+		compatible = "nuvoton,npcm750-reset";
-+		reg = <0xf0801000 0x70>;
-+		#reset-cells = <1>;
-+		nuvoton,sw-reset-number = <2>;
-+	};
-+
-+Specifying reset lines connected to IP NPCM7XX modules
-+======================================================
-+example:
-+
-+        spi0: spi@..... {
-+                ...
-+                resets = <&rstc NPCM7XX_RESET_PSPI1>;
-+                ...
-+        };
-+
-+The index could be found in <dt-bindings/reset/nuvoton,npcm7xx-reset.h>.
+ 	ret = priv->cfg->clk_sel(pdev, priv);
+ 	if (ret < 0)
+ 		goto err_hw_stop;
 -- 
-2.22.0
+2.7.4
 
