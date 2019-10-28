@@ -2,224 +2,151 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A74CA9EBE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 10:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F470CA9EBC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 10:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A88208C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 10:22:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HROEeN5z"
+	by mail.kernel.org (Postfix) with ESMTP id ED2DE20873
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 10:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732186AbfJ1KWM (ORCPT
+        id S2388290AbfJ1Kqv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 06:22:12 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55940 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388216AbfJ1KWL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 06:22:11 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SAM9DP127083;
-        Mon, 28 Oct 2019 05:22:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572258129;
-        bh=hspTmxb/Z7Zi7bGjZTxb1VQeAEWSEMXGVp9KGXefdaU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HROEeN5zJakai0o/5rEKEw8fGEKdqWjSmVOaOgv6W1jIj9VDwhl7GcrcezH34PDbI
-         BOThxlmBxReRxFwvheRRfOthJXn3PufeQKBLGgKe/vppXob7sYu4S9YXdCWndnCH2F
-         reL31O5X2xXd6gWS/824NuZ1s5LXtViCrHY3M+z0=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9SAM9bL077510
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 28 Oct 2019 05:22:09 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
- Oct 2019 05:21:56 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 28 Oct 2019 05:21:57 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SALwqI024783;
-        Mon, 28 Oct 2019 05:22:06 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <kishon@ti.com>
-CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
-        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v4 3/3] phy: ti: j721e-wiz: Manage typec-gpio-dir
-Date:   Mon, 28 Oct 2019 12:21:53 +0200
-Message-ID: <20191028102153.24866-4-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191028102153.24866-1-rogerq@ti.com>
-References: <20191028102153.24866-1-rogerq@ti.com>
+        Mon, 28 Oct 2019 06:46:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41562 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730796AbfJ1Kqv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 06:46:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2A7BBB1B0;
+        Mon, 28 Oct 2019 10:46:49 +0000 (UTC)
+Subject: Re: [PATCH v2 2/8] dt-bindings: rtc: realtek: Convert RTD119x to
+ schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191020040817.16882-1-afaerber@suse.de>
+ <20191020040817.16882-3-afaerber@suse.de> <20191025212015.GA29978@bogus>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <5491f3ed-93bf-1c4d-60f8-5d646c3bd2fb@suse.de>
+Date:   Mon, 28 Oct 2019 11:46:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191025212015.GA29978@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Based on this GPIO state we need to configure LN10
-bit to swap lane0 and lane1 if required (flipped connector).
+Am 25.10.19 um 23:20 schrieb Rob Herring:
+> On Sun, Oct 20, 2019 at 06:08:11AM +0200, Andreas Färber wrote:
+>> Convert the RTD119x binding to a YAML schema.
+>>
+>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>> ---
+>>  v2: New
+>>  
+>>  .../devicetree/bindings/rtc/realtek,rtd119x.txt    | 16 ---------
+>>  .../devicetree/bindings/rtc/realtek,rtd119x.yaml   | 38 ++++++++++++++++++++++
+>>  2 files changed, 38 insertions(+), 16 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+>>  create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+> 
+> 
+>> diff --git a/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
+>> new file mode 100644
+>> index 000000000000..71b7396bd469
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rtc/realtek,rtd119x.yaml
 
-Type-C companions typically need some time after the cable is
-plugged before and before they reflect the correct status of
-Type-C plug orientation on the DIR line.
+While renaming the file to .yaml I would like to also rename it to 1195.
+It would need to be 1x9x to cover RTD1195 and e.g. RTD1296, and looking
+forward the wildcard may need to be 1xxx to cover also RTD1619, which
+quickly becomes unrecognizable.
 
-Type-C Spec specifies CC attachment debounce time (tCCDebounce)
-of 100 ms (min) to 200 ms (max).
+>> @@ -0,0 +1,38 @@
+>> +# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
+> 
+> Missing ()
 
-Use the DT property to figure out if we need to add delay
-or not before sampling the Type-C DIR line.
+Fixed.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
----
- drivers/phy/ti/phy-j721e-wiz.c | 61 ++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+> 
+> Though I'm not sure it matters other than consistency.
+> 
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/rtc/realtek,rtd119x.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Realtek RTD129x Real-Time Clock
+>> +
+>> +allOf:
+>> +  - $ref: "rtc.yaml#"
+>> +
+>> +maintainers:
+>> +  - Andreas Färber <afaerber@suse.de>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: realtek,rtd1295-rtc
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +    description: Specifies the clock gate
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +
+>> +examples:
+>> +  - |
+>> +	rtc@9801b600 {
+>> +		compatible = "realtek,rtd1295-clk";
 
-diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-index 2a95da843e9f..9ab35c894f05 100644
---- a/drivers/phy/ti/phy-j721e-wiz.c
-+++ b/drivers/phy/ti/phy-j721e-wiz.c
-@@ -9,6 +9,8 @@
- #include <dt-bindings/phy/phy.h>
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/mux/consumer.h>
-@@ -22,6 +24,7 @@
- #define WIZ_SERDES_CTRL		0x404
- #define WIZ_SERDES_TOP_CTRL	0x408
- #define WIZ_SERDES_RST		0x40c
-+#define WIZ_SERDES_TYPEC	0x410
- #define WIZ_LANECTL(n)		(0x480 + (0x40 * (n)))
- 
- #define WIZ_MAX_LANES		4
-@@ -29,6 +32,8 @@
- #define WIZ_DIV_NUM_CLOCKS_16G	2
- #define WIZ_DIV_NUM_CLOCKS_10G	1
- 
-+#define WIZ_SERDES_TYPEC_LN10_SWAP	BIT(30)
-+
- enum wiz_lane_standard_mode {
- 	LANE_MODE_GEN1,
- 	LANE_MODE_GEN2,
-@@ -94,6 +99,9 @@ static const struct reg_field p_standard_mode[WIZ_MAX_LANES] = {
- 	REG_FIELD(WIZ_LANECTL(3), 24, 25),
- };
- 
-+static const struct reg_field typec_ln10_swap =
-+					REG_FIELD(WIZ_SERDES_TYPEC, 30, 30);
-+
- struct wiz_clk_mux {
- 	struct clk_hw		hw;
- 	struct regmap_field	*field;
-@@ -185,6 +193,9 @@ enum wiz_type {
- 	J721E_WIZ_10G,
- };
- 
-+#define WIZ_TYPEC_DIR_DEBOUNCE_MIN	100	/* ms */
-+#define WIZ_TYPEC_DIR_DEBOUNCE_MAX	1000
-+
- struct wiz {
- 	struct regmap		*regmap;
- 	enum wiz_type		type;
-@@ -201,11 +212,14 @@ struct wiz {
- 	struct regmap_field	*pma_cmn_refclk_mode;
- 	struct regmap_field	*pma_cmn_refclk_dig_div;
- 	struct regmap_field	*pma_cmn_refclk1_dig_div;
-+	struct regmap_field	*typec_ln10_swap;
- 
- 	struct device		*dev;
- 	u32			num_lanes;
- 	struct platform_device	*serdes_pdev;
- 	struct reset_controller_dev wiz_phy_reset_dev;
-+	struct gpio_desc	*gpio_typec_dir;
-+	int			typec_dir_delay;
- };
- 
- static int wiz_reset(struct wiz *wiz)
-@@ -404,6 +418,13 @@ static int wiz_regfield_init(struct wiz *wiz)
- 		}
- 	}
- 
-+	wiz->typec_ln10_swap = devm_regmap_field_alloc(dev, regmap,
-+						       typec_ln10_swap);
-+	if (IS_ERR(wiz->typec_ln10_swap)) {
-+		dev_err(dev, "LN10_SWAP reg field init failed\n");
-+		return PTR_ERR(wiz->typec_ln10_swap);
-+	}
-+
- 	return 0;
- }
- 
-@@ -703,6 +724,17 @@ static int wiz_phy_reset_deassert(struct reset_controller_dev *rcdev,
- 	struct wiz *wiz = dev_get_drvdata(dev);
- 	int ret;
- 
-+	/* if typec-dir gpio was specified, set LN10 SWAP bit based on that */
-+	if (id == 0 && wiz->gpio_typec_dir) {
-+		if (wiz->typec_dir_delay)
-+			msleep_interruptible(wiz->typec_dir_delay);
-+
-+		if (gpiod_get_value_cansleep(wiz->gpio_typec_dir))
-+			regmap_field_write(wiz->typec_ln10_swap, 1);
-+		else
-+			regmap_field_write(wiz->typec_ln10_swap, 0);
-+	}
-+
- 	if (id == 0) {
- 		ret = regmap_field_write(wiz->phy_reset_n, true);
- 		return ret;
-@@ -789,6 +821,35 @@ static int wiz_probe(struct platform_device *pdev)
- 		goto err_addr_to_resource;
- 	}
- 
-+	wiz->gpio_typec_dir = devm_gpiod_get_optional(dev, "typec-dir",
-+						      GPIOD_IN);
-+	if (IS_ERR(wiz->gpio_typec_dir)) {
-+		ret = PTR_ERR(wiz->gpio_typec_dir);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to request typec-dir gpio: %d\n",
-+				ret);
-+		goto err_addr_to_resource;
-+	}
-+
-+	if (wiz->gpio_typec_dir) {
-+		ret = of_property_read_u32(node, "typec-dir-debounce-ms",
-+					   &wiz->typec_dir_delay);
-+		if (ret && ret != -EINVAL) {
-+			dev_err(dev, "Invalid typec-dir-debounce property\n");
-+			goto err_addr_to_resource;
-+		}
-+
-+		/* use min. debounce from Type-C spec if not provided in DT  */
-+		if (ret == -EINVAL)
-+			wiz->typec_dir_delay = WIZ_TYPEC_DIR_DEBOUNCE_MIN;
-+
-+		if (wiz->typec_dir_delay < WIZ_TYPEC_DIR_DEBOUNCE_MIN ||
-+		    wiz->typec_dir_delay > WIZ_TYPEC_DIR_DEBOUNCE_MAX) {
-+			dev_err(dev, "Invalid typec-dir-debounce property\n");
-+			goto err_addr_to_resource;
-+		}
-+	}
-+
- 	wiz->dev = dev;
- 	wiz->regmap = regmap;
- 	wiz->num_lanes = num_lanes;
+This reveals a bug in the original binding example. Fixed to -rtc.
+
+>> +		reg = <0x9801b600 0x100>;
+>> +		clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
+> 
+> You need the include file here or the example won't build (run 'make 
+> dt_binding_check').
+
+We can't. You acked the clk binding but the driver never got any review,
+so it didn't get merged and cannot be depended on here.
+
+I've changed it to an artificial 42 so that dt_binding_check passes.
+I've also needed to fix the indentation to 4 spaces.
+
+Regards,
+Andreas
+
+> 
+>> +	};
+>> +...
+>> -- 
+>> 2.16.4
+>>
+
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
