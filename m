@@ -2,101 +2,126 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E2BCA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641A1CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD56021721
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:38:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572262730;
-	bh=Hqz4uOmBIFtpJSTeQy8WTtrFrjLsh09wtHM25ONUe+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gAqYBEXn3TTQXtCCubIsqxC8rbJ8NKTcXghXvHeANdwAfRttHdS2Ao54ycXFyWnVA
-	 mWUmlpvI1+90xnqFeT4t66hPKigwW27b51jt/J5hPD5gFewWNfEUsYVlguElhauWnL
-	 mzsodSqU1ioYTOxyJ+LgnTKfhRT9CVas/b7n8sjc=
+	by mail.kernel.org (Postfix) with ESMTP id 36567208C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 11:51:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ve07LNiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388534AbfJ1Liu (ORCPT
+        id S1728092AbfJ1Lv1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 07:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388533AbfJ1Liu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 07:38:50 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C8FE20873;
-        Mon, 28 Oct 2019 11:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572262729;
-        bh=Hqz4uOmBIFtpJSTeQy8WTtrFrjLsh09wtHM25ONUe+g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JwLWo5fe4kUMcYg+Ta/IsuIKstxfMaQZYYcR53MbQJT1nXSKCU1mPotJ6hJkj2Wc5
-         Cf3kpBh+845CUXBwApN4cVhNU5W9dSycuXd+tbJW9yxQbaHLjBUankjoNBdHfWCfYq
-         6sY3LIKmV01P7yF3R+jQ5pGeYbLCdmGpDK9Eki1w=
-Date:   Mon, 28 Oct 2019 19:38:27 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oliver Graute <oliver.graute@kococonnector.com>
-Cc:     "oliver.graute@gmail.com" <oliver.graute@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
-        <sebastien.szymanski@armadeus.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
- devicetree
-Message-ID: <20191028113826.GD16985@dragon>
-References: <20191024092019.4020-1-oliver.graute@kococonnector.com>
+        Mon, 28 Oct 2019 07:51:27 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38182 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbfJ1Lv1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 07:51:27 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9SBojvA027216;
+        Mon, 28 Oct 2019 06:50:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572263446;
+        bh=jv9WgwLJhbx+vhz2gcFuPdEfy6XQxWXyLONyfY3NIXY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Ve07LNiFspaL3s+gTrd4zsTOxb66vwnfZx5Ty2fbs4hPgORrXKtIC4cnEjy0Acxzk
+         4HpvmBEU71ym4M3jrzjk8hED3gKLo8Hi8wZ8eXYrx6IDgxm5oLOLUwdRyGowVg0fvT
+         R1u4LUJ2vArieaYpmcCYLcGZS5BiOp1YtBNJ/slQ=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SBojji126595;
+        Mon, 28 Oct 2019 06:50:45 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 28
+ Oct 2019 06:50:33 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 28 Oct 2019 06:50:45 -0500
+Received: from [10.250.147.141] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9SBofoR119917;
+        Mon, 28 Oct 2019 06:50:42 -0500
+Subject: Re: [PATCH 3/3] mtd: spi-nor: Add support for w25q256jw
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
+        <robh+dt@kernel.org>
+CC:     <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
+        <darshak.patel@einfochips.com>, <prajose.john@einfochips.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>
+References: <20191024144235.3182-1-manivannan.sadhasivam@linaro.org>
+ <20191024144235.3182-4-manivannan.sadhasivam@linaro.org>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <bf435b43-f118-f3cb-73ed-5fa67905c4aa@ti.com>
+Date:   Mon, 28 Oct 2019 17:20:40 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024092019.4020-1-oliver.graute@kococonnector.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191024144235.3182-4-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 09:22:37AM +0000, Oliver Graute wrote:
-> Document the Variscite i.MX6qdl board devicetree binding
-> already supported:
-> 
-> - variscite,dt6customboard
-> 
-> Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
+Hi,
 
-Please organise it into the patch series, where it's being used.
+On 24/10/19 8:12 PM, Manivannan Sadhasivam wrote:
+> Add MTD support for w25q256jw SPI NOR chip from Winbond. This chip
+> supports dual/quad I/O mode with 512 blocks of memory organized in
+> 4KB sectors. 
 
-Shawn
+512 blocks of memory organized into 64KB sector, right? In additional
+flash also supports 4KB small sector.
 
+Regards
+Vignesh
+
+> The device has been validated using Thor96 board.
+
+
+> Cc: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: linux-mtd@lists.infradead.org
+> Signed-off-by: Darshak Patel <darshak.patel@einfochips.com>
+> [Mani: cleaned up for upstream]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/mtd/spi-nor/spi-nor.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 41db01d77c23..f0ddebfcf1a1 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -121,6 +121,7 @@ properties:
->                - fsl,imx6q-sabresd
->                - technologic,imx6q-ts4900
->                - technologic,imx6q-ts7970
-> +              - variscite,dt6customboard
->            - const: fsl,imx6q
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 1d8621d43160..2c25b371d9f0 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -2482,6 +2482,8 @@ static const struct flash_info spi_nor_ids[] = {
+>  	{ "w25q256", INFO(0xef4019, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "w25q256jvm", INFO(0xef7019, 0, 64 * 1024, 512,
+>  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> +	{ "w25q256jw", INFO(0xef6019, 0, 64 * 1024, 512,
+> +			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
+>  			SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
 >  
->        - description: i.MX6QP based Boards
-> -- 
-> 2.17.1
 > 
