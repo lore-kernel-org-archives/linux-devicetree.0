@@ -6,65 +6,70 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC964CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 08:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210E3CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 08:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBFB21783
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 08:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0375214AF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 08:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572251903;
-	bh=iDlj1N5pY/4IkC0huCZ6VrSYnvV4S5FkKFE256YWrNQ=;
+	s=default; t=1572252130;
+	bh=VHBaBmrmobgxunBw4GiqPhty21KBWr0wMzEozp9PbLg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MDF5EcW0IXpDf2yCA7q5Do5bxH6hXiI+AOP6y3n88FeE5N11aj1lgSq+S6S0oppDe
-	 HJQ0uMP62MBft4GQXiDi8R9uhQfLobjHtyOJpWpyg+7hox7C4skHvVYsyYPAGv9zE4
-	 +2r/wfbMVM7ixDCv+lhTnL/pNsU4OOm6UKLSUWN4=
+	b=BLzlMchmi5vVc5R61Hp3ulVCDkE0TAGrlwZ4ad+WG/6PhLttkBHT7OhUfTyJm0A2v
+	 /ghvYdWDe/VBjJtZ1EQIVcI0/ZVeR25tcd7BzqbuPcAgjaXXD+mjzv9BkSajODkoIx
+	 hq0kQ8KGoRsllIh0lsNxoBRemZE/FcsIJT2ZP61E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbfJ1IiX (ORCPT
+        id S1731859AbfJ1ImJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 04:38:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
+        Mon, 28 Oct 2019 04:42:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbfJ1IiW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 04:38:22 -0400
+        id S1731611AbfJ1ImJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 04:42:09 -0400
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B45820717;
-        Mon, 28 Oct 2019 08:38:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70BE720717;
+        Mon, 28 Oct 2019 08:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572251902;
-        bh=iDlj1N5pY/4IkC0huCZ6VrSYnvV4S5FkKFE256YWrNQ=;
+        s=default; t=1572252128;
+        bh=VHBaBmrmobgxunBw4GiqPhty21KBWr0wMzEozp9PbLg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BlaVlCOyd0ITuRjB0ReA+dQeZ4XPjTXCWZTqVydm8ymaGERKl9XppneYJq0X/aLFs
-         Td/UhPUtZaCLxo9mxkNpa+G8PUbFhg1f+VKCm3XZiMVLDRsTajrkRmVXvlA5aRBL41
-         UR/E/lXOBdMoyobWdRiiRHXTSR9+a853oWEkFP+0=
-Date:   Mon, 28 Oct 2019 16:38:01 +0800
+        b=B8pD3SNNE/tr0/anqxjmHrDa/yx+yeEP0+TGvePIHlpCUOHXTrOTqPT98JJeaVEEW
+         uKN1ACoMTZ+OnG8fF9caSOiV/MeF6jPZuwENWRQ0r6f85agS65ajyKJRKrdzq+gq4G
+         B8KvRY8wKAK9z6INjEmdy6tvHY1BVGQtOmFSakK0=
+Date:   Mon, 28 Oct 2019 16:41:49 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        daniel.lezcano@linaro.org, ping.bai@nxp.com, daniel.baluta@nxp.com,
-        jun.li@nxp.com, abel.vesa@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm: Remove duplicated machine
- compatible
-Message-ID: <20191028083759.GU16985@dragon>
-References: <1571812481-28308-1-git-send-email-Anson.Huang@nxp.com>
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 1/3] ARM: dts: imx6q: Add missing cooling device
+ properties for CPUs
+Message-ID: <20191028084148.GV16985@dragon>
+References: <1571884465-19720-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571812481-28308-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1571884465-19720-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 02:34:40PM +0800, Anson Huang wrote:
-> Machine compatible string normally is located in board DT, remove
-> the duplicated one from SoC dtsi.
+On Thu, Oct 24, 2019 at 10:34:23AM +0800, Anson Huang wrote:
+> The cooling device properties "#cooling-cells" should either be present
+> for all the CPUs of a cluster or none. If these are present only for a
+> subset of CPUs of a cluster then things will start falling apart as soon
+> as the CPUs are brought online in a different order. For example, this
+> will happen because the operating system looks for such properties in the
+> CPU node it is trying to bring up, so that it can register a cooling
+> device.
+> 
+> Add such missing properties.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Applied both, thanks.
+Applied all, thanks.
