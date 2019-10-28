@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C207CA9EC1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA13CA9EC1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDCB218AC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B981D21924
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 22:00:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bb0GM5MS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yk6qAWI2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfJ1WAu (ORCPT
+        id S1733276AbfJ1WAy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 18:00:50 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:49071 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390632AbfJ1WAr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 18:00:47 -0400
-Received: by mail-pf1-f202.google.com with SMTP id g186so6208321pfb.15
-        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 15:00:47 -0700 (PDT)
+        Mon, 28 Oct 2019 18:00:54 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:53229 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390629AbfJ1WAl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 18:00:41 -0400
+Received: by mail-pg1-f202.google.com with SMTP id e15so9376684pgh.19
+        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 15:00:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ukpi3nf6Ccj0NPps1DEia34Fh1Y1K6ULN6sRoVS7jm8=;
-        b=bb0GM5MSoyGi8NIAFn3/DHCH0XRkiFMVmCUChuT7/6zrAVzgyDGF1auYVOJfhs7H/u
-         S3HfpZziQ/hoFGtHmgHyvXzazBa9Cc5N56+oTe5Lscdb0DLcHLMFCCiaePTsB+44MMB6
-         v6zrjCnxUzbwrqUWvmF2m+N7pAFfATDmAzkkU4lqZLEg+cQTgkkKC4fel6CXRZxiEbz3
-         KssYpg4ZtqO2QAYwMeSPe4WIjHIBaUJXkGfrxA78Ij4kOUAYeVvue/tWc8UKceu+u4S+
-         +TKgVT9pbpEA+kPuvaDXktiGBu2cLNAKUXwS+RCQt8TWnlJw2hA9OLRDI5H1h///ekhR
-         cgwQ==
+        bh=1WpJs4rqFlazEgG1ALqWM9ztjxvHbXQZYC6yFmWs2yk=;
+        b=Yk6qAWI2BvbfBU05Wsff0PGaMNDhMIm5Rg86/K6xfu7Ma5L7ToyW6RNRjxoM4Zg0TZ
+         G7EswA38UEa/5hWjOs9Rj9+aAM2uTwa/DxQemqAUpjIyuZ01xRkLERXg1ZB4q4hp2Bmb
+         /lK0wtpMAUCxYWy4n40EF5mTihZrzbqmuJuNUzYwBkHijNaSOWbWatRM5osGKG8e5G40
+         g7xTXzNsFUFuPKgTLNK+cAxfUNPX66DJKbpl6ZuVMygFxzMPMNLx2pczWyj4jM7jF8oQ
+         atYJOzCIhoGGv1hCrpbhZGpW+SA9MrnblLyteW4ZN5WRcvlKTrZXt4paFNSBfkYgtf8S
+         RdHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ukpi3nf6Ccj0NPps1DEia34Fh1Y1K6ULN6sRoVS7jm8=;
-        b=kb9twWkPCHNGuJ6agTafRmhEQgnRBOJMNsI31sN2CwPuu/DJZj2uW33QQYQ+nfR2IV
-         /dhmV2pY8rug2dq96IDbS/vCP6vmUCaZIwTV1dcI8GOaTyOD6jlrFYZaQ1CcNSIf6cS4
-         qeQVVC+M9BrxgJSPtrziuxkGrASpcO/BdZcO2wP/932+444NQel+6jZ+xhZBtQpzrUmM
-         SuHZ99MBlBkAx7CSME8q+SRhPAwgUbstF8M7WyOmgOM0Gc4APWm+jZKAD/zl6i90Xufy
-         kZ0LxyL/pkZu3Js8jmtFiQzaCW4+6+f2RLCJZKa4r34qGk43qCgnqgGS7IcwXVE64zzL
-         UqTA==
-X-Gm-Message-State: APjAAAUVxaTdVCOEiMSafJd5uGpIzxZEpkH1ahBxyt7+VWcmAhH9cAbt
-        TpZ6oOV7+hm0nnOTYrE4s2JwPXfZCQvuia0=
-X-Google-Smtp-Source: APXvYqwSzFW+0pdVmCL1Iwg9wofXL1u2TvqvPQ2942w6raECJ/0R34lyrQI5HBJOGEpOyS+HE2reeybrz/Jjv1k=
-X-Received: by 2002:a65:6092:: with SMTP id t18mr23294242pgu.418.1572300046743;
- Mon, 28 Oct 2019 15:00:46 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 15:00:26 -0700
+        bh=1WpJs4rqFlazEgG1ALqWM9ztjxvHbXQZYC6yFmWs2yk=;
+        b=c/xWllM0cm+4JZRKDKLpaYARDpHfMI/9LLLE+fE3BkCYZMJTueHGCj6pyEujsA0cna
+         I2Sf5886wrhNs/Ti0a00ZTAN1X0N7lbKSagliI4TptONSRTVdAU8XOkW/zNir1i27l7H
+         U8QrMlnFRk6nrgr79s1jnG/Pkvb+oHrKs5+dFrqfbZMUXwjj+55IsE4Rknx+KEWej/jB
+         Y6aVZqVvdq3ttWva3a1CvryXE58xTSYFVx/sKxA/EZ6Viqmvw+iSIyZjJx4WEN6EwSOv
+         AJm+uv2hAGyn6uTLnvPzcC45CyBzRvScoylHh2UW+TsxwTGw/KOgX2/VjcFnkRhJH1sU
+         Rm1Q==
+X-Gm-Message-State: APjAAAW0gqUycIDM579gIIxz0vITW7oN+FkBGrFrlSPksiKMd0aUvkgS
+        x8/ZdSP2LtfdDwEEIRBdfGDNrs9R+W1DM2E=
+X-Google-Smtp-Source: APXvYqy9nquaj1y+oeAHBa2FvIbJ3pRLRVkY7Q7QAx/FpyzTrOehqtDTnU4RgtT4SEkxlu/hY0FIOMFzyx2ixSk=
+X-Received: by 2002:a65:554e:: with SMTP id t14mr21065330pgr.370.1572300040549;
+ Mon, 28 Oct 2019 15:00:40 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 15:00:24 -0700
 In-Reply-To: <20191028220027.251605-1-saravanak@google.com>
-Message-Id: <20191028220027.251605-6-saravanak@google.com>
+Message-Id: <20191028220027.251605-4-saravanak@google.com>
 Mime-Version: 1.0
 References: <20191028220027.251605-1-saravanak@google.com>
 X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH v1 5/5] of: property: Skip adding device links to suppliers
- that aren't devices
+Subject: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
+ differentiate errors
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -74,42 +74,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some devices need to be initialized really early and can't wait for
-driver core or drivers to be functional.  These devices are typically
-initialized without creating a struct device for their device nodes.
-
-If a supplier ends up being one of these devices, skip trying to add
-device links to them.
+When add_links() still has suppliers that it needs to link to in the
+future, this patch allows it to differentiate between suppliers that are
+needed for probing vs suppliers that are needed for sync_state()
+correctness.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/property.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/base/core.c    | 12 ++++++++----
+ include/linux/fwnode.h | 13 +++++++++----
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index f16f85597ccc..21c9d251318a 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1038,6 +1038,7 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
- 	struct device *sup_dev;
- 	int ret = 0;
- 	struct device_node *tmp_np = sup_np;
-+	int is_populated;
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 48cd43a91ce6..e6d3e6d485da 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
+ 	struct device *parent;
+ 	struct kobject *kobj;
+ 	struct class_interface *class_intf;
+-	int error = -EINVAL;
++	int error = -EINVAL, fw_ret;
+ 	struct kobject *glue_dir = NULL;
  
- 	of_node_get(sup_np);
- 	/*
-@@ -1062,9 +1063,10 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
- 		return -EINVAL;
- 	}
- 	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
-+	is_populated = of_node_check_flag(sup_np, OF_POPULATED);
- 	of_node_put(sup_np);
- 	if (!sup_dev)
--		return -EAGAIN;
-+		return is_populated ? 0 : -EAGAIN;
- 	if (!device_link_add(dev, sup_dev, dl_flags))
- 		ret = -EAGAIN;
- 	put_device(sup_dev);
+ 	dev = get_device(dev);
+@@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
+ 	 */
+ 	device_link_add_missing_supplier_links();
+ 
+-	if (fwnode_has_op(dev->fwnode, add_links)
+-	    && fwnode_call_int_op(dev->fwnode, add_links, dev))
+-		device_link_wait_for_mandatory_supplier(dev, true);
++	if (fwnode_has_op(dev->fwnode, add_links)) {
++		fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
++		if (fw_ret == -ENODEV)
++			device_link_wait_for_mandatory_supplier(dev);
++		else if (fw_ret)
++			device_link_wait_for_optional_supplier(dev);
++	}
+ 
+ 	bus_probe_device(dev);
+ 	if (parent)
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index 25bb81f8ded8..a19134eae5a5 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -96,10 +96,15 @@ struct fwnode_reference_args {
+  *		available suppliers.
+  *
+  *		Return 0 if device links have been successfully created to all
+- *		the suppliers of this device or if the supplier information is
+- *		not known. Return an error if and only if the supplier
+- *		information is known but some of the suppliers are not yet
+- *		available to create device links to.
++ *		the suppliers this device needs to create device links to or if
++ *		the supplier information is not known.
++ *
++ *		Return -ENODEV if and only if the suppliers needed for probing
++ *		the device are not yet available to create device links to.
++ *
++ *		Return -EAGAIN if there are suppliers that need to be linked to
++ *		that are not yet available but none of those suppliers are
++ *		necessary for probing this device.
+  */
+ struct fwnode_operations {
+ 	struct fwnode_handle *(*get)(struct fwnode_handle *fwnode);
 -- 
 2.24.0.rc0.303.g954a862665-goog
 
