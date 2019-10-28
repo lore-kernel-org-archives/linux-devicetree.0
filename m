@@ -2,114 +2,146 @@ Return-Path: <SRS0=uucL=YV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FA4C47E49
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AFBCA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB63421835
-	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572277658;
-	bh=VN/VMJbk3T/K50ccDfFzGjkQgMu5y5hAJUi2/hAx5tg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qAlotJOqf2871eUI8QUZ7mIVuN/GennM5SY7T2DDDrKTdWouR4rrY0YiCYcOVF1rz
-	 GQywSBx2LS+y6noZRBI+KBdYcJB7ZFR2ITnp2pagkl1d9lZZiKJ4R/WXng30HfyOWm
-	 2G+0yTrukh2iTtpS/e3S0PLaE1FzCDJtU4wBBQls=
+	by mail.kernel.org (Postfix) with ESMTP id E318720717
+	for <linux-devicetree@archiver.kernel.org>; Mon, 28 Oct 2019 15:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbfJ1Prh (ORCPT
+        id S2390252AbfJ1Pyz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 11:47:37 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42906 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfJ1Prh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 11:47:37 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s20so8230032edq.9;
-        Mon, 28 Oct 2019 08:47:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xeouFKeqxI+jBZsGSFG26F9cl2bzWdfbTz7OAnsdkHs=;
-        b=ly8VR/WjJnSt5FKIMjmSxgeiEyfHjaZBJIPr3KXRDNZP+Rk9KncOG6HNq1ZIQgKPBO
-         t9Vf8p/2kQvKoBFZeqYyLhwFSfUgHaeVUdh7Uhs++CuvpGNrvmmjXWUkiW+etlxTbQ2z
-         wAozUNltofNAjeeEAwJq5Ktncklgu4fokspK6Yek/PtIjzuTA1AcmiseDSSy1RgI3Kqg
-         n9XA6kUh2f/8JAFTif+Oz+wMjKUeo/Hwzhl4DZx13IvFcMz4DGhmw5cKt3P1E8FycJXo
-         i3mfuH3lBtdcDxzQY9CuHsZCa3kti4rt1RksqncnzHhKZB1vdlFOIEB5+CRn3pXj5EbI
-         V9qA==
-X-Gm-Message-State: APjAAAV9FZCl50uHXqOYLEagfMzH/pm14bVpZ1MXTrPqZWcRN8ZshT8B
-        EmSAzw7BtQGY8KfCRMFObrM=
-X-Google-Smtp-Source: APXvYqzb5eJY5x6+xEfLs30NbzaiquwQRVOIdigZyIXD5gUp8DH2McCek9vsaaleRlSYLLP4jx4E1Q==
-X-Received: by 2002:aa7:d0c9:: with SMTP id u9mr19737617edo.217.1572277655066;
-        Mon, 28 Oct 2019 08:47:35 -0700 (PDT)
-Received: from pi3 ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id g43sm567693edb.14.2019.10.28.08.47.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 08:47:34 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 16:47:32 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org, vireshk@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com
-Subject: Re: [PATCH 3/3] dt-bindings: arm: samsung: Drop syscon compatible
- from CHIPID binding
-Message-ID: <20191028154732.GA3746@pi3>
-References: <20191028152050.10220-1-s.nawrocki@samsung.com>
- <CGME20191028152100eucas1p2ed6bd2d53670c85f6bf550af0631a55a@eucas1p2.samsung.com>
- <20191028152050.10220-3-s.nawrocki@samsung.com>
+        Mon, 28 Oct 2019 11:54:55 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:43561 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726387AbfJ1Pyz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 11:54:55 -0400
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x9SFs5EE001374;
+        Mon, 28 Oct 2019 17:54:05 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id 3A38960327; Mon, 28 Oct 2019 17:54:05 +0200 (IST)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        yuenn@google.com, venture@google.com, benjaminfair@google.com,
+        avifishman70@gmail.com, joel@jms.id.au
+Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v2 2/3] dt-bindings: reset: Add binding constants for NPCM7xx reset controller
+Date:   Mon, 28 Oct 2019 17:54:02 +0200
+Message-Id: <20191028155403.134126-3-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191028155403.134126-1-tmaimon77@gmail.com>
+References: <20191028155403.134126-1-tmaimon77@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191028152050.10220-3-s.nawrocki@samsung.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 04:20:50PM +0100, Sylwester Nawrocki wrote:
-> The "syscon" compatible string was introduced mainly to allow sharing
-> of the CHIPID IO region between multiple drivers. However, such sharing
-> can be also done without an additional compatible so remove "syscon".
+Add device tree binding constants for Nuvoton BMC NPCM7xx
+reset controller.
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../dt-bindings/reset/nuvoton,npcm7xx-reset.h | 82 +++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100644 include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
 
-Best regards,
-Krzysztof
+diff --git a/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
+new file mode 100644
+index 000000000000..7b7e870eac35
+--- /dev/null
++++ b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
+@@ -0,0 +1,82 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (c) 2019 Nuvoton Technology corporation.
++
++#ifndef _DT_BINDINGS_NPCM7XX_RESET_H
++#define _DT_BINDINGS_NPCM7XX_RESET_H
++
++#define NPCM7XX_RESET_FIU3		1
++#define NPCM7XX_RESET_UDC1		5
++#define NPCM7XX_RESET_EMC1		6
++#define NPCM7XX_RESET_UART_2_3		7
++#define NPCM7XX_RESET_UDC2		8
++#define NPCM7XX_RESET_PECI		9
++#define NPCM7XX_RESET_AES		10
++#define NPCM7XX_RESET_UART_0_1		11
++#define NPCM7XX_RESET_MC		12
++#define NPCM7XX_RESET_SMB2		13
++#define NPCM7XX_RESET_SMB3		14
++#define NPCM7XX_RESET_SMB4		15
++#define NPCM7XX_RESET_SMB5		16
++#define NPCM7XX_RESET_PWM_M0		18
++#define NPCM7XX_RESET_TIMER_0_4		19
++#define NPCM7XX_RESET_TIMER_5_9		20
++#define NPCM7XX_RESET_EMC2		21
++#define NPCM7XX_RESET_UDC4		22
++#define NPCM7XX_RESET_UDC5		23
++#define NPCM7XX_RESET_UDC6		24
++#define NPCM7XX_RESET_UDC3		25
++#define NPCM7XX_RESET_ADC		27
++#define NPCM7XX_RESET_SMB6		28
++#define NPCM7XX_RESET_SMB7		29
++#define NPCM7XX_RESET_SMB0		30
++#define NPCM7XX_RESET_SMB1		31
++#define NPCM7XX_RESET_MFT0		32
++#define NPCM7XX_RESET_MFT1		33
++#define NPCM7XX_RESET_MFT2		34
++#define NPCM7XX_RESET_MFT3		35
++#define NPCM7XX_RESET_MFT4		36
++#define NPCM7XX_RESET_MFT5		37
++#define NPCM7XX_RESET_MFT6		38
++#define NPCM7XX_RESET_MFT7		39
++#define NPCM7XX_RESET_MMC		40
++#define NPCM7XX_RESET_SDHC		41
++#define NPCM7XX_RESET_GFX_SYS		42
++#define NPCM7XX_RESET_AHB_PCIBRG	43
++#define NPCM7XX_RESET_VDMA		44
++#define NPCM7XX_RESET_ECE		45
++#define NPCM7XX_RESET_VCD		46
++#define NPCM7XX_RESET_OTP		48
++#define NPCM7XX_RESET_SIOX1		50
++#define NPCM7XX_RESET_SIOX2		51
++#define NPCM7XX_RESET_3DES		53
++#define NPCM7XX_RESET_PSPI1		54
++#define NPCM7XX_RESET_PSPI2		55
++#define NPCM7XX_RESET_GMAC2		57
++#define NPCM7XX_RESET_USB_HOST		58
++#define NPCM7XX_RESET_GMAC1		60
++#define NPCM7XX_RESET_CP		63
++#define NPCM7XX_RESET_PWM_M1		160
++#define NPCM7XX_RESET_SMB12		161
++#define NPCM7XX_RESET_SPIX		162
++#define NPCM7XX_RESET_SMB13		163
++#define NPCM7XX_RESET_UDC0		164
++#define NPCM7XX_RESET_UDC7		165
++#define NPCM7XX_RESET_UDC8		166
++#define NPCM7XX_RESET_UDC9		167
++#define NPCM7XX_RESET_PCI_MAILBOX	169
++#define NPCM7XX_RESET_SMB14		172
++#define NPCM7XX_RESET_SHA		173
++#define NPCM7XX_RESET_SEC_ECC		174
++#define NPCM7XX_RESET_PCIE_RC		175
++#define NPCM7XX_RESET_TIMER_10_14	176
++#define NPCM7XX_RESET_RNG		177
++#define NPCM7XX_RESET_SMB15		178
++#define NPCM7XX_RESET_SMB8		179
++#define NPCM7XX_RESET_SMB9		180
++#define NPCM7XX_RESET_SMB10		181
++#define NPCM7XX_RESET_SMB11		182
++#define NPCM7XX_RESET_ESPI		183
++#define NPCM7XX_RESET_USB_PHY_1		184
++#define NPCM7XX_RESET_USB_PHY_2		185
++
++#endif
+-- 
+2.22.0
 
-> 
-> Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  .../devicetree/bindings/arm/samsung/exynos-chipid.yaml         | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
-> index 53c29d567789..afcd70803c12 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.yaml
-> @@ -13,7 +13,6 @@ properties:
->    compatible:
->      items:
->        - const: samsung,exynos4210-chipid
-> -      - const: syscon
->  
->    reg:
->      maxItems: 1
-> @@ -34,7 +33,7 @@ required:
->  examples:
->    - |
->      chipid@10000000 {
-> -        compatible = "samsung,exynos4210-chipid", "syscon";
-> +        compatible = "samsung,exynos4210-chipid";
->          reg = <0x10000000 0x100>;
->          samsung,asv-bin = <2>;
->      };
-> -- 
-> 2.17.1
-> 
