@@ -2,515 +2,141 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED2ACA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D97CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90BA208E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572353860;
-	bh=/A/IykStI6SJ5QJMe87nweQh/Dvgw95vsOTLTwcpYhc=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=RJAX/WDvIpDNSLe3ls5wtkHVO6DRU0Ust/i4BBqF7TvHeTmF7NMCj/2yXN6gFoKlQ
-	 rPnYlcEfhTH7qBCDtFpCmVwHnrODMgu3KtYxXADDKcpcN3nzs+t/svcXfjN7iJ+nvD
-	 NpAhRcNBQX8Oo+UU6CdB001GwNmCjufhG/2oxnOs=
+	by mail.kernel.org (Postfix) with ESMTP id 94A6720874
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n9ChqQ+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388075AbfJ2M5X (ORCPT
+        id S2388118AbfJ2NC2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:57:23 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56898 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387901AbfJ2M5W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 08:57:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=CBQLq/65CvGse5vZ5IhccpSwngNnItVee/+ILoQUur0=; b=NEe6XtxYcThn
-        bTmvcMIN1MnRHLAE6mcDNDsazPISqwuyVYdrzzrgGR+HvCwcXVZV2vxjLKF4FSZ0mFTHoV+xfLv4s
-        c/BOBFzrvWrbQvplTiRlCb4rfhIHMdrFXPtMS9+zJkSmWGuM3vVUGcGMw7kyuoEqZK35b97YdL9qC
-        upl4c=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iPR3T-0002DG-Pu; Tue, 29 Oct 2019 12:56:59 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5564627428D8; Tue, 29 Oct 2019 12:56:59 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     alsa-devel@alsa-project.org, Andrzej Hajda <a.hajda@samsung.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
-        dgreid@chromium.org, dianders@chromium.org,
-        dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Takashi Iwai <tiwai@suse.com>, tzungbi@chromium.org
-Subject: Applied "ASoC: rockchip_max98090: Optionally support HDMI use case" to the asoc tree
-In-Reply-To: <20191028071930.145899-4-cychiang@chromium.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20191029125659.5564627428D8@ypsilon.sirena.org.uk>
-Date:   Tue, 29 Oct 2019 12:56:59 +0000 (GMT)
+        Tue, 29 Oct 2019 09:02:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50206 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfJ2NC2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 09:02:28 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 11so2508394wmk.0;
+        Tue, 29 Oct 2019 06:02:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LSZ29qPy9/FInL47JLj2nFrRE+ZbLKgI3ciLkri+AgU=;
+        b=n9ChqQ+peMYMIs1zHPamOQMIEEGUE2OYBnNREJKqLmJbBwpVVt74QagiVoQEf+LhT4
+         yEx5epph6xu/DntWAI7QxyfiRlmv2uehBxKdYvXbres5RuX+pAEP77jJt0qCu1XvYZ/a
+         OJPUcYCEBib4Ayc7MTgGQWs/89F4OSdD8+UoU05dNz8YDzd3TLfppfLVSxinfukOgnot
+         0x4F6Wvwj9TF5mrJ2G9YGjcdiG3wHl5XYGrZtBGBHwtXcrl0dOPosMD/wCETdCB+4M07
+         +oQgRG19V52o41pbm9spoUJKzThvSvWIBsjPnN13cmHCl9UnlGXkY/9nu1FH5dY6lyXG
+         oDUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LSZ29qPy9/FInL47JLj2nFrRE+ZbLKgI3ciLkri+AgU=;
+        b=TtckWOUI72ob0IvV6HdBAz4p9T329vcUuugc1etLmCd5Gq9MTsBJm7PDmecH0gm9GQ
+         wkmS4FyP1sXfByvbl5q0sGWoULZUfTZ+zAYszxf2R2rPAoCvR0klowWBjX9xVicqBwWN
+         FppZV6s6vlO2dZ9y0mHzac8hzhX/PIqaRo+Q06EWfBT1023tbu9ULlhR8+5A4YXU7Kfu
+         WjyNGKzG+vvEe6An+oOKL3L1AeS2CupPBhxzJ9YhYuvAjbkdMMwvGea23ZvJm7baQkpD
+         MyP46L5IP9OqfH+FeNgnJhSHR8hzC34EX7w6wfx4BWMG/zRgCjAOGTt1Am/BIWltutYm
+         Mz2g==
+X-Gm-Message-State: APjAAAU/MmQu3lZ2mnhoeB856DFTWjIx+fqUAyRhb5/e5v9/wuI8ecyP
+        u1WnIyHDoN+jbDQVZkl7hyAQNMh7
+X-Google-Smtp-Source: APXvYqy8XyQuID1iVThumXHAcfcDfb8IpLnVVC4oC9y9sgQjSAOLWr4VFYd+cQY1Ox/Cda8CTWcgSQ==
+X-Received: by 2002:a7b:cc06:: with SMTP id f6mr3940805wmh.158.1572354145536;
+        Tue, 29 Oct 2019 06:02:25 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id u1sm20356221wru.90.2019.10.29.06.02.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 06:02:24 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:02:22 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Support regulators coupling on NVIDIA Tegra20/30
+Message-ID: <20191029130222.GA508460@ulmo>
+References: <20190725151832.9802-1-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
+In-Reply-To: <20190725151832.9802-1-digetx@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: rockchip_max98090: Optionally support HDMI use case
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the asoc tree at
+On Thu, Jul 25, 2019 at 06:18:29PM +0300, Dmitry Osipenko wrote:
+> Hello,
+>=20
+> The voltage regulators need to be coupled on NVIDIA Tegra20 and Tegra30
+> SoCs in order to provide voltage scaling functionality in a generic way.
+> All necessary regulator-core patches that added support for the regulators
+> coupling are already have been merge into mainline kernel. This series
+> adds customized voltage couplers for Tegra20/30 SoCs, paving the way for
+> a refined CPUFreq driver that will utilize voltage scaling and other neat
+> features. This is a resend of a leftover patches from a previous series
+> [1] that was partially applied by Mark Brown. Please review, thanks in
+> advance!
+>=20
+> [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=3D115626
+>=20
+> Changelog:
+>=20
+> v2: - Some days ago OPP framework got a change that makes CPU regulator
+>       to be enabled at the time of CPUFreq's driver initializing OPPs.
+>       In a result the CPU's voltage is dropped to a minimum value on
+>       CPUFreq's setting up because there are no consumers at the time
+>       of regulator's enabling, thus CPU is getting into a big trouble.
+>       This problem is now resolved in the couplers code by assuming
+>       that min_uV=3Dcurrent_uV for CPU's regulator if it doesn't have
+>       any active consumers.
+>=20
+> Dmitry Osipenko (3):
+>   dt-bindings: regulator: Document regulators coupling of NVIDIA
+>     Tegra20/30 SoCs
+>   soc/tegra: regulators: Add regulators coupler for Tegra20
+>   soc/tegra: regulators: Add regulators coupler for Tegra30
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+All three patches applied, thanks.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Thierry
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+-----BEGIN PGP SIGNATURE-----
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl24OFwACgkQ3SOs138+
+s6EL6hAAmsRFT55RAhQ6AhkSpGk/FCoDTu+zuHf3m3lS91LuGmYCkvxyKiCgkTBf
+ZzEgbaqOlM7FdaW++Au+vGooywMUwgsDyBw6rzSPTiz54Vt3YxEcs1HukLf9almB
+IvmO9AoRf6ifH6wZLNbYLrzsdpOxjgKJMxmOn2XZh6hyPS03Olp/T+m3DhXNUAz6
+B7LUK2DheI14aQ1OPs9RP6SnN+g/tXdO9k5tGuqqI/OXkUdTqNN1l/uIWcKhYoYK
+0Wi3wdp50qsuAOxAWuqX7miWV/eewLO2XM+uB7Xe0ooqspCbK5iiQC+pp+EF08u0
+7IuF5kb7arW5yeAbnMfvCiOWFY5bqk5VrRgeUWjOGfkh6ZcqzOT3PLaC/jlCMCvB
+u47/l/XN2YQFjHooZT8GngezSDwBkTHBSbJr2xz8gxGnMWnIaKo2sVR+Xps0TT1W
+UXFQLorJd608gPu4+5unZDJKf9EhgSDr4umndO6YgNQd2WH5A+I+OQPHdDbpYdML
+baZC33pLnN/rjm9alKzOird/NUlLJ6boFc4p2nscQs4barX9geQqOol2i02PfETv
+NxQvf+simgk5WazA7aogM9oKFckaYlXIQ8VRS2a7YyL0lW7bdAZEbD4Bdz982gDb
+nGtTq+SYRfsFhZFxN504UGy8lbYcU+szGcys81vBHXpDYgDcYf8=
+=F8yu
+-----END PGP SIGNATURE-----
 
-Thanks,
-Mark
-
-From 05b754f5f41c1ea5366c37c8f0ee04c4b4899ff9 Mon Sep 17 00:00:00 2001
-From: Cheng-Yi Chiang <cychiang@chromium.org>
-Date: Mon, 28 Oct 2019 15:19:27 +0800
-Subject: [PATCH] ASoC: rockchip_max98090: Optionally support HDMI use case
-
-Support three different use cases with rockchip_max98090 driver.
-
-The three use cases:
-- max98090 only: Current usage, where HDMI link is missing.
-- HDMI only: Needed use case for veyron_mickey board.
-- max98090 + HDMI: Ideal use case for veyron_jerry, veyron_minnie..etc.
-
-The presence of max98090 is determined by the presence of
-rockchip,audio-codec device property.
-
-The presence of HDMI is determined by the presence of
-rockchip,hdmi-codec device property.
-
-Create different sound card based on the configuration.
-Note that we keep max98090 only usage for backward compatibility.
-
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Link: https://lore.kernel.org/r/20191028071930.145899-4-cychiang@chromium.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/rockchip/rockchip_max98090.c | 291 +++++++++++++++++++------
- 1 file changed, 226 insertions(+), 65 deletions(-)
-
-diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-index 0097df1fae66..50ef9b8e7ce4 100644
---- a/sound/soc/rockchip/rockchip_max98090.c
-+++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/gpio.h>
-@@ -36,28 +37,73 @@ static struct snd_soc_jack_pin headset_jack_pins[] = {
- 
- };
- 
--static const struct snd_soc_dapm_widget rk_dapm_widgets[] = {
--	SND_SOC_DAPM_HP("Headphone", NULL),
--	SND_SOC_DAPM_MIC("Headset Mic", NULL),
--	SND_SOC_DAPM_MIC("Int Mic", NULL),
--	SND_SOC_DAPM_SPK("Speaker", NULL),
-+#define RK_MAX98090_WIDGETS \
-+	SND_SOC_DAPM_HP("Headphone", NULL), \
-+	SND_SOC_DAPM_MIC("Headset Mic", NULL), \
-+	SND_SOC_DAPM_MIC("Int Mic", NULL), \
-+	SND_SOC_DAPM_SPK("Speaker", NULL)
-+
-+#define RK_HDMI_WIDGETS \
-+	SND_SOC_DAPM_LINE("HDMI", NULL)
-+
-+static const struct snd_soc_dapm_widget rk_max98090_dapm_widgets[] = {
-+	RK_MAX98090_WIDGETS,
-+};
-+
-+static const struct snd_soc_dapm_widget rk_hdmi_dapm_widgets[] = {
-+	RK_HDMI_WIDGETS,
-+};
-+
-+static const struct snd_soc_dapm_widget rk_max98090_hdmi_dapm_widgets[] = {
-+	RK_MAX98090_WIDGETS,
-+	RK_HDMI_WIDGETS,
-+};
-+
-+#define RK_MAX98090_AUDIO_MAP \
-+	{"IN34", NULL, "Headset Mic"}, \
-+	{"Headset Mic", NULL, "MICBIAS"}, \
-+	{"DMICL", NULL, "Int Mic"}, \
-+	{"Headphone", NULL, "HPL"}, \
-+	{"Headphone", NULL, "HPR"}, \
-+	{"Speaker", NULL, "SPKL"}, \
-+	{"Speaker", NULL, "SPKR"}
-+
-+#define RK_HDMI_AUDIO_MAP \
-+	{"HDMI", NULL, "TX"}
-+
-+static const struct snd_soc_dapm_route rk_max98090_audio_map[] = {
-+	RK_MAX98090_AUDIO_MAP,
-+};
-+
-+static const struct snd_soc_dapm_route rk_hdmi_audio_map[] = {
-+	RK_HDMI_AUDIO_MAP,
- };
- 
--static const struct snd_soc_dapm_route rk_audio_map[] = {
--	{"IN34", NULL, "Headset Mic"},
--	{"Headset Mic", NULL, "MICBIAS"},
--	{"DMICL", NULL, "Int Mic"},
--	{"Headphone", NULL, "HPL"},
--	{"Headphone", NULL, "HPR"},
--	{"Speaker", NULL, "SPKL"},
--	{"Speaker", NULL, "SPKR"},
-+static const struct snd_soc_dapm_route rk_max98090_hdmi_audio_map[] = {
-+	RK_MAX98090_AUDIO_MAP,
-+	RK_HDMI_AUDIO_MAP,
-+};
-+
-+#define RK_MAX98090_CONTROLS \
-+	SOC_DAPM_PIN_SWITCH("Headphone"), \
-+	SOC_DAPM_PIN_SWITCH("Headset Mic"), \
-+	SOC_DAPM_PIN_SWITCH("Int Mic"), \
-+	SOC_DAPM_PIN_SWITCH("Speaker")
-+
-+#define RK_HDMI_CONTROLS \
-+	SOC_DAPM_PIN_SWITCH("HDMI")
-+
-+static const struct snd_kcontrol_new rk_max98090_controls[] = {
-+	RK_MAX98090_CONTROLS,
- };
- 
--static const struct snd_kcontrol_new rk_mc_controls[] = {
--	SOC_DAPM_PIN_SWITCH("Headphone"),
--	SOC_DAPM_PIN_SWITCH("Headset Mic"),
--	SOC_DAPM_PIN_SWITCH("Int Mic"),
--	SOC_DAPM_PIN_SWITCH("Speaker"),
-+static const struct snd_kcontrol_new rk_hdmi_controls[] = {
-+	RK_HDMI_CONTROLS,
-+};
-+
-+static const struct snd_kcontrol_new rk_max98090_hdmi_controls[] = {
-+	RK_MAX98090_CONTROLS,
-+	RK_HDMI_CONTROLS,
- };
- 
- static int rk_jack_event(struct notifier_block *nb, unsigned long event,
-@@ -122,15 +168,20 @@ static int rk_aif1_hw_params(struct snd_pcm_substream *substream,
- 
- 	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
- 				     SND_SOC_CLOCK_OUT);
--	if (ret < 0) {
--		dev_err(codec_dai->dev, "Can't set codec clock %d\n", ret);
-+	if (ret) {
-+		dev_err(cpu_dai->dev, "Can't set cpu dai clock %d\n", ret);
- 		return ret;
- 	}
- 
- 	ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
- 				     SND_SOC_CLOCK_IN);
--	if (ret < 0) {
--		dev_err(codec_dai->dev, "Can't set codec clock %d\n", ret);
-+
-+	/* HDMI codec dai does not need to set sysclk. */
-+	if (!strcmp(rtd->dai_link->name, "HDMI"))
-+		return 0;
-+
-+	if (ret) {
-+		dev_err(codec_dai->dev, "Can't set codec dai clock %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -152,20 +203,67 @@ static const struct snd_soc_ops rk_aif1_ops = {
- 	.startup = rk_aif1_startup,
- };
- 
--SND_SOC_DAILINK_DEFS(hifi,
--	DAILINK_COMP_ARRAY(COMP_EMPTY()),
--	DAILINK_COMP_ARRAY(COMP_CODEC(NULL, "HiFi")),
--	DAILINK_COMP_ARRAY(COMP_EMPTY()));
--
--static struct snd_soc_dai_link rk_dailink = {
--	.name = "max98090",
--	.stream_name = "Audio",
--	.init = rk_init,
--	.ops = &rk_aif1_ops,
--	/* set max98090 as slave */
--	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
--		SND_SOC_DAIFMT_CBS_CFS,
--	SND_SOC_DAILINK_REG(hifi),
-+SND_SOC_DAILINK_DEFS(analog,
-+		     DAILINK_COMP_ARRAY(COMP_EMPTY()),
-+		     DAILINK_COMP_ARRAY(COMP_CODEC(NULL, "HiFi")),
-+		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
-+
-+SND_SOC_DAILINK_DEFS(hdmi,
-+		     DAILINK_COMP_ARRAY(COMP_EMPTY()),
-+		     DAILINK_COMP_ARRAY(COMP_CODEC(NULL, "i2s-hifi")),
-+		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
-+
-+enum {
-+	DAILINK_MAX98090,
-+	DAILINK_HDMI,
-+};
-+
-+/* max98090 dai_link */
-+static struct snd_soc_dai_link rk_max98090_dailinks[] = {
-+	{
-+		.name = "max98090",
-+		.stream_name = "Analog",
-+		.init = rk_init,
-+		.ops = &rk_aif1_ops,
-+		/* set max98090 as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+		SND_SOC_DAILINK_REG(analog),
-+	},
-+};
-+
-+/* HDMI codec dai_link */
-+static struct snd_soc_dai_link rk_hdmi_dailinks[] = {
-+	{
-+		.name = "HDMI",
-+		.stream_name = "HDMI",
-+		.ops = &rk_aif1_ops,
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+		SND_SOC_DAILINK_REG(hdmi),
-+	}
-+};
-+
-+/* max98090 and HDMI codec dai_link */
-+static struct snd_soc_dai_link rk_max98090_hdmi_dailinks[] = {
-+	[DAILINK_MAX98090] = {
-+		.name = "max98090",
-+		.stream_name = "Analog",
-+		.init = rk_init,
-+		.ops = &rk_aif1_ops,
-+		/* set max98090 as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+		SND_SOC_DAILINK_REG(analog),
-+	},
-+	[DAILINK_HDMI] = {
-+		.name = "HDMI",
-+		.stream_name = "HDMI",
-+		.ops = &rk_aif1_ops,
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+		SND_SOC_DAILINK_REG(hdmi),
-+	}
- };
- 
- static int rk_98090_headset_init(struct snd_soc_component *component);
-@@ -175,19 +273,47 @@ static struct snd_soc_aux_dev rk_98090_headset_dev = {
- 	.init = rk_98090_headset_init,
- };
- 
--static struct snd_soc_card snd_soc_card_rk = {
-+static struct snd_soc_card rockchip_max98090_card = {
- 	.name = "ROCKCHIP-I2S",
- 	.owner = THIS_MODULE,
--	.dai_link = &rk_dailink,
--	.num_links = 1,
-+	.dai_link = rk_max98090_dailinks,
-+	.num_links = ARRAY_SIZE(rk_max98090_dailinks),
- 	.aux_dev = &rk_98090_headset_dev,
- 	.num_aux_devs = 1,
--	.dapm_widgets = rk_dapm_widgets,
--	.num_dapm_widgets = ARRAY_SIZE(rk_dapm_widgets),
--	.dapm_routes = rk_audio_map,
--	.num_dapm_routes = ARRAY_SIZE(rk_audio_map),
--	.controls = rk_mc_controls,
--	.num_controls = ARRAY_SIZE(rk_mc_controls),
-+	.dapm_widgets = rk_max98090_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(rk_max98090_dapm_widgets),
-+	.dapm_routes = rk_max98090_audio_map,
-+	.num_dapm_routes = ARRAY_SIZE(rk_max98090_audio_map),
-+	.controls = rk_max98090_controls,
-+	.num_controls = ARRAY_SIZE(rk_max98090_controls),
-+};
-+
-+static struct snd_soc_card rockchip_hdmi_card = {
-+	.name = "ROCKCHIP-HDMI",
-+	.owner = THIS_MODULE,
-+	.dai_link = rk_hdmi_dailinks,
-+	.num_links = ARRAY_SIZE(rk_hdmi_dailinks),
-+	.dapm_widgets = rk_hdmi_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(rk_hdmi_dapm_widgets),
-+	.dapm_routes = rk_hdmi_audio_map,
-+	.num_dapm_routes = ARRAY_SIZE(rk_hdmi_audio_map),
-+	.controls = rk_hdmi_controls,
-+	.num_controls = ARRAY_SIZE(rk_hdmi_controls),
-+};
-+
-+static struct snd_soc_card rockchip_max98090_hdmi_card = {
-+	.name = "ROCKCHIP-MAX98090-HDMI",
-+	.owner = THIS_MODULE,
-+	.dai_link = rk_max98090_hdmi_dailinks,
-+	.num_links = ARRAY_SIZE(rk_max98090_hdmi_dailinks),
-+	.aux_dev = &rk_98090_headset_dev,
-+	.num_aux_devs = 1,
-+	.dapm_widgets = rk_max98090_hdmi_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(rk_max98090_hdmi_dapm_widgets),
-+	.dapm_routes = rk_max98090_hdmi_audio_map,
-+	.num_dapm_routes = ARRAY_SIZE(rk_max98090_hdmi_audio_map),
-+	.controls = rk_max98090_hdmi_controls,
-+	.num_controls = ARRAY_SIZE(rk_max98090_hdmi_controls),
- };
- 
- static int rk_98090_headset_init(struct snd_soc_component *component)
-@@ -195,7 +321,7 @@ static int rk_98090_headset_init(struct snd_soc_component *component)
- 	int ret;
- 
- 	/* Enable Headset and 4 Buttons Jack detection */
--	ret = snd_soc_card_jack_new(&snd_soc_card_rk, "Headset Jack",
-+	ret = snd_soc_card_jack_new(component->card, "Headset Jack",
- 				    SND_JACK_HEADSET |
- 				    SND_JACK_BTN_0 | SND_JACK_BTN_1 |
- 				    SND_JACK_BTN_2 | SND_JACK_BTN_3,
-@@ -210,41 +336,75 @@ static int rk_98090_headset_init(struct snd_soc_component *component)
- 	return ret;
- }
- 
-+static int rk_parse_headset_from_of(struct device *dev, struct device_node *np)
-+{
-+	rk_98090_headset_dev.dlc.of_node = of_parse_phandle(
-+			np, "rockchip,headset-codec", 0);
-+	if (!rk_98090_headset_dev.dlc.of_node) {
-+		dev_err(dev,
-+			"Property 'rockchip,headset-codec' missing/invalid\n");
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
- static int snd_rk_mc_probe(struct platform_device *pdev)
- {
- 	int ret = 0;
--	struct snd_soc_card *card = &snd_soc_card_rk;
-+	struct snd_soc_card *card;
-+	struct device *dev = &pdev->dev;
- 	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *np_cpu;
-+	struct device_node *np_audio, *np_hdmi;
- 
--	/* register the soc card */
--	card->dev = &pdev->dev;
-+	/* Parse DTS for I2S controller. */
-+	np_cpu = of_parse_phandle(np, "rockchip,i2s-controller", 0);
- 
--	rk_dailink.codecs->of_node = of_parse_phandle(np,
--			"rockchip,audio-codec", 0);
--	if (!rk_dailink.codecs->of_node) {
-+	if (!np_cpu) {
- 		dev_err(&pdev->dev,
--			"Property 'rockchip,audio-codec' missing or invalid\n");
-+			"Property 'rockchip,i2s-controller missing or invalid\n");
- 		return -EINVAL;
- 	}
- 
--	rk_dailink.cpus->of_node = of_parse_phandle(np,
--			"rockchip,i2s-controller", 0);
--	if (!rk_dailink.cpus->of_node) {
--		dev_err(&pdev->dev,
--			"Property 'rockchip,i2s-controller' missing or invalid\n");
-+	/*
-+	 * Find the card to use based on the presences of audio codec
-+	 * and hdmi codec in device property. Set their of_node accordingly.
-+	 */
-+	np_audio = of_parse_phandle(np, "rockchip,audio-codec", 0);
-+	np_hdmi = of_parse_phandle(np, "rockchip,hdmi-codec", 0);
-+	if (np_audio && np_hdmi) {
-+		card = &rockchip_max98090_hdmi_card;
-+		card->dai_link[DAILINK_MAX98090].codecs->of_node = np_audio;
-+		card->dai_link[DAILINK_HDMI].codecs->of_node = np_hdmi;
-+		card->dai_link[DAILINK_MAX98090].cpus->of_node = np_cpu;
-+		card->dai_link[DAILINK_MAX98090].platforms->of_node = np_cpu;
-+		card->dai_link[DAILINK_HDMI].cpus->of_node = np_cpu;
-+		card->dai_link[DAILINK_HDMI].platforms->of_node = np_cpu;
-+	} else if (np_audio) {
-+		card = &rockchip_max98090_card;
-+		card->dai_link[0].codecs->of_node = np_audio;
-+		card->dai_link[0].cpus->of_node = np_cpu;
-+		card->dai_link[0].platforms->of_node = np_cpu;
-+	} else if (np_hdmi) {
-+		card = &rockchip_hdmi_card;
-+		card->dai_link[0].codecs->of_node = np_hdmi;
-+		card->dai_link[0].cpus->of_node = np_cpu;
-+		card->dai_link[0].platforms->of_node = np_cpu;
-+	} else {
-+		dev_err(dev, "At least one of codecs should be specified\n");
- 		return -EINVAL;
- 	}
- 
--	rk_dailink.platforms->of_node = rk_dailink.cpus->of_node;
-+	card->dev = dev;
- 
--	rk_98090_headset_dev.dlc.of_node = of_parse_phandle(np,
--			"rockchip,headset-codec", 0);
--	if (!rk_98090_headset_dev.dlc.of_node) {
--		dev_err(&pdev->dev,
--			"Property 'rockchip,headset-codec' missing/invalid\n");
--		return -EINVAL;
-+	/* Parse headset detection codec. */
-+	if (np_audio) {
-+		ret = rk_parse_headset_from_of(dev, np);
-+		if (ret)
-+			return ret;
- 	}
- 
-+	/* Parse card name. */
- 	ret = snd_soc_of_parse_card_name(card, "rockchip,model");
- 	if (ret) {
- 		dev_err(&pdev->dev,
-@@ -252,6 +412,7 @@ static int snd_rk_mc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/* register the soc card */
- 	ret = devm_snd_soc_register_card(&pdev->dev, card);
- 	if (ret) {
- 		dev_err(&pdev->dev,
--- 
-2.20.1
-
+--1yeeQ81UyVL57Vl7--
