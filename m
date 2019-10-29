@@ -2,219 +2,113 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B1EC47E49
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E04C47E49
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 18:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7907B2086A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DD521479
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 18:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gwt98Ew4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x2EU7r5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbfJ2R7q (ORCPT
+        id S1726225AbfJ2SGM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:59:46 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46162 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727299AbfJ2R7p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 13:59:45 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f19so10067507pgn.13
-        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 10:59:45 -0700 (PDT)
+        Tue, 29 Oct 2019 14:06:12 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41378 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfJ2SGM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 14:06:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 94so10554749oty.8
+        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 11:06:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AsoiGZKW+OqSEUM2BahaMp4C8ROBZZo7pbBqc7c5IoY=;
-        b=gwt98Ew45lXCW2YV2/I3bWQ4zvrHu0m+IZ7O0JEwsd9HVb1kAdSGa+x5T7K1JYImBj
-         QsMUpABd4v2TcLRFRF2K7J+DLPvjigzE+Kd1r8BgkwR9X9lFlQasXgm1UFjd4+UtbYev
-         nClhV0y6tVY3X3ye12q/ST2pm5gTtrn3c3zCk=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0ZM8b8P5vjBRG5CkLodYhOC8TCweRQM0qzTpoxN9u0U=;
+        b=x2EU7r5Br0MF1JCHsI77zCy2zedlNT+l4iJofUX5n+L01xGEzh4m8fmznuqOmO56+q
+         rOrscGIMjfMhlnBraN0m7qu2PgepmKG/8I9RxnAKdbYGXjCS/AbWNv6O7x8oiopG2r2Q
+         AhQ/jUTnwPV/LDGubLHR5dkyVKKi96839QjCdjhTJqxzQNRQo+JknZLE875VW2N2sYoR
+         Sgp4Wu+5W+ROonmbAlirQrvylF4DvQxB/K86kdH+tGZEKyZIdaheV6zT3GjCx6oXY+pm
+         d41vB4X+cAGwMmduJZvfVwYFaTMokyDWOA9OBSA+g+DI9IGA7jc05FG5hHnsJRAMhWwZ
+         7N1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AsoiGZKW+OqSEUM2BahaMp4C8ROBZZo7pbBqc7c5IoY=;
-        b=bKWLrnxVqGYHyFO7eePHj9CUPEhKbbCGUp4NqxF9z4Yj/RiZoGaIk3QyC5t2Adc7pX
-         gV+apgUgu0T22VAhV4d/xwptc5TT9i2BS5rgFeKKmn+ysv3ZHxjoFTOVmylS+B5ey/6p
-         oPAxh1MUgWwjRkEWptaCxrRFzxAqcqz9ge/RNnShuqFpQs0QIaZDY3JYsHx0OUmDQRtN
-         gn1Kd2gBbPwZP/pUBLWwhjiXhQ9Oqc2/mSywVKH0Vmk34I4Flko52fUH+PZRdEvYTD15
-         j8nX4S5IjYO+opepce11uenKQ8id1+TWBBqL1XEatUHFQFZlPByI1kAmYdOBW6i9P8mJ
-         6KOQ==
-X-Gm-Message-State: APjAAAXhH248psU125hyl59vYIl3m/cw+AO6juDdHrR1ZKGgHYcIGv/s
-        EIUcGKRQAvVKjcocKNFtGAqJnA==
-X-Google-Smtp-Source: APXvYqyhd6lfJcwRB3IVS+q7cVKEl2P/kuaUowk2m+KybBeCZJsxB5Kxqnys7De0gpcM+C0S4Qy8Qg==
-X-Received: by 2002:a63:1f09:: with SMTP id f9mr17384729pgf.89.1572371984790;
-        Tue, 29 Oct 2019 10:59:44 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id h25sm2097696pfn.47.2019.10.29.10.59.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Oct 2019 10:59:43 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 10:59:41 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?utf-8?B?wqA=?= <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Message-ID: <20191029175941.GA27773@google.com>
-References: <20191014102308.27441-1-tdas@codeaurora.org>
- <20191014102308.27441-6-tdas@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0ZM8b8P5vjBRG5CkLodYhOC8TCweRQM0qzTpoxN9u0U=;
+        b=mhtkkqK6vH4XuW+bmzE7t2w/1g1cPGBA9/12QjUes2IH0KvRN8m9bayy4AWgFGOX7f
+         /xDnuVmOZUvFxWA/QnVZM31nSMmgoo4CFZ9w+vlNmjJUPMJbphH45MjmLn/zWLhPX4+f
+         jXW5m3nV4n6b5OtyEUKHIWP7k4X5DAdYIO6CCLCNnLlU+8qgP7g1hlwt9peo4PHUb8Eu
+         3Co1zS9U6u+GTG+YdESCW3I/L5A3045rhZc7lzz8FvtozmKjAfL4O/uKeUn8rc1vLQ9v
+         qA1m7PbzgCshUu3dhU6yRHbBhisntRTmCz/+upoYSmaiB6pRfrJntanXX8XUaZAegIeO
+         iONg==
+X-Gm-Message-State: APjAAAWRDOqzwtJVCy7EUrMmTMv97u4gmKQ93y5PJ5zZZGAuTB8eZhLS
+        uNhsgOCL5nA/Kinmxmu/OEWJFWHFuTU1uDcaGbeXyw==
+X-Google-Smtp-Source: APXvYqyCbgeKJ2gPPdono1faBX2ScPsARbeE44f3H+kcetlHhwurbl3SHIfKcAZHqerS7OznYb8roY5f9wjnw+RQpLU=
+X-Received: by 2002:a9d:6ad0:: with SMTP id m16mr1327974otq.352.1572372370800;
+ Tue, 29 Oct 2019 11:06:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191014102308.27441-6-tdas@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-7-john.stultz@linaro.org> <87h83rj4ha.fsf@gmail.com>
+In-Reply-To: <87h83rj4ha.fsf@gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 29 Oct 2019 11:05:59 -0700
+Message-ID: <CALAqxLX47uELsGbdociUKdC6KgDba-1SBVALmgjD3=jxh=fd8g@mail.gmail.com>
+Subject: Re: [PATCH v4 6/9] usb: dwc3: Rework resets initialization to be more flexible
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Taniya,
-
-On Mon, Oct 14, 2019 at 03:53:08PM +0530, Taniya Das wrote:
-> Add support for the global clock controller found on SC7180
-> based devices. This should allow most non-multimedia device
-> drivers to probe and control their clocks.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  drivers/clk/qcom/Kconfig      |    9 +
->  drivers/clk/qcom/Makefile     |    1 +
->  drivers/clk/qcom/gcc-sc7180.c | 2450 +++++++++++++++++++++++++++++++++
->  3 files changed, 2460 insertions(+)
->  create mode 100644 drivers/clk/qcom/gcc-sc7180.c
-> 
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 32dbb4f09492..91706d88eeeb 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -227,6 +227,15 @@ config QCS_GCC_404
->  	  Say Y if you want to use multimedia devices or peripheral
->  	  devices such as UART, SPI, I2C, USB, SD/eMMC, PCIe etc.
-> 
-> +config SC_GCC_7180
-> +	tristate "SC7180 Global Clock Controller"
-> +	select QCOM_GDSC
-> +	depends on COMMON_CLK_QCOM
-> +	help
-> +	  Support for the global clock controller on SC7180 devices.
-> +	  Say Y if you want to use peripheral devices such as UART, SPI,
-> +	  I2C, USB, UFS, SDCC, etc.
-> +
->  config SDM_CAMCC_845
->  	tristate "SDM845 Camera Clock Controller"
->  	select SDM_GCC_845
-> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-> index 4a813b4055d0..6fb356a0bbf5 100644
-> --- a/drivers/clk/qcom/Makefile
-> +++ b/drivers/clk/qcom/Makefile
-> @@ -43,6 +43,7 @@ obj-$(CONFIG_QCOM_CLK_RPMH) += clk-rpmh.o
->  obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
->  obj-$(CONFIG_QCS_GCC_404) += gcc-qcs404.o
->  obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
-> +obj-$(CONFIG_SC_GCC_7180) += gcc-sc7180.o
->  obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
->  obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
->  obj-$(CONFIG_SDM_GCC_660) += gcc-sdm660.o
-> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-> new file mode 100644
-> index 000000000000..38424e63bcae
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gcc-sc7180.c
+On Tue, Oct 29, 2019 at 2:17 AM Felipe Balbi <balbi@kernel.org> wrote:
+> John Stultz <john.stultz@linaro.org> writes:
+> > The dwc3 core binding specifies one reset.
+> >
+> > However some variants of the hardware my not have more.
+>                                         ^^
+>                                         may
 >
-> +static struct clk_hw *gcc_sc7180_hws[] = {
-> +	[GCC_GPLL0_MAIN_DIV_CDIV] = &gcc_pll0_main_div_cdiv.hw,
-> +};
-> +
-> +static struct clk_regmap *gcc_sc7180_clocks[] = {
-> +	[GCC_AGGRE_UFS_PHY_AXI_CLK] = &gcc_aggre_ufs_phy_axi_clk.clkr,
-> +	[GCC_AGGRE_USB3_PRIM_AXI_CLK] = &gcc_aggre_usb3_prim_axi_clk.clkr,
-> +	[GCC_BOOT_ROM_AHB_CLK] = &gcc_boot_rom_ahb_clk.clkr,
-> +	[GCC_CAMERA_AHB_CLK] = &gcc_camera_ahb_clk.clkr,
-> +	[GCC_CAMERA_HF_AXI_CLK] = &gcc_camera_hf_axi_clk.clkr,
-> +	[GCC_CAMERA_THROTTLE_HF_AXI_CLK] = &gcc_camera_throttle_hf_axi_clk.clkr,
-> +	[GCC_CAMERA_XO_CLK] = &gcc_camera_xo_clk.clkr,
-> +	[GCC_CE1_AHB_CLK] = &gcc_ce1_ahb_clk.clkr,
-> +	[GCC_CE1_AXI_CLK] = &gcc_ce1_axi_clk.clkr,
-> +	[GCC_CE1_CLK] = &gcc_ce1_clk.clkr,
-> +	[GCC_CFG_NOC_USB3_PRIM_AXI_CLK] = &gcc_cfg_noc_usb3_prim_axi_clk.clkr,
-> +	[GCC_CPUSS_AHB_CLK] = &gcc_cpuss_ahb_clk.clkr,
-> +	[GCC_CPUSS_AHB_CLK_SRC] = &gcc_cpuss_ahb_clk_src.clkr,
-> +	[GCC_CPUSS_RBCPR_CLK] = &gcc_cpuss_rbcpr_clk.clkr,
-> +	[GCC_DDRSS_GPU_AXI_CLK] = &gcc_ddrss_gpu_axi_clk.clkr,
+> According to synopsys databook, there's a single *input* reset signal on
+> this IP. What is this extra reset you have?
+>
+> Is this, perhaps, specific to your glue layer around the synopsys ip?
 
-v3 also had
+Likely (again, I unfortunately don't have a ton of detail on the hardware).
 
-+	[GCC_DISP_AHB_CLK] = &gcc_disp_ahb_clk.clkr,
+> Should, perhaps, your extra reset be managed by the glue layer?
 
-Removing it makes the dpu_mdss driver unhappy:
+So yes the dwc3-of-simple does much of this already (it handles
+multiple resets, and variable clocks), but unfortunately we seem to
+need new bindings for each device added?  I think the suggestion from
+Rob was due to the sprawl of bindings for the glue code, and the extra
+complexity of the parent node.  So I believe Rob just thought it made
+sense to collapse this down into the core?
 
-[    2.999855] dpu_mdss_enable+0x2c/0x58->msm_dss_enable_clk: 'iface' is not available
+I'm not really passionate about either approach, and am happy to
+rework (as long as there is eventual progress :).
+Just let me know what you'd prefer.
 
-because:
-
-        mdss: mdss@ae00000 {
-    	        ...
-
- =>             clocks = <&gcc GCC_DISP_AHB_CLK>,
-                         <&gcc GCC_DISP_HF_AXI_CLK>,
-                         <&dispcc DISP_CC_MDSS_MDP_CLK>;
-                clock-names = "iface", "gcc_bus", "core";
-	};
-
-More clocks were removed in v4:
-
--       [GCC_CPUSS_GNOC_CLK] = &gcc_cpuss_gnoc_clk.clkr,
--       [GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
--       [GCC_VIDEO_AHB_CLK] = &gcc_video_ahb_clk.clkr,
-
-I guess this part of "remove registering the CRITICAL clocks to clock provider
-and leave them always ON from the GCC probe." (change log entry), but are you
-sure nobody is going to reference these clocks?
-
-> +static int gcc_sc7180_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap *regmap;
-> +	int ret;
-> +
-> +	regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	/*
-> +	 * Disable the GPLL0 active input to MM blocks, NPU
-> +	 * and GPU via MISC registers.
-> +	 */
-> +	regmap_update_bits(regmap, 0x09ffc, 0x3, 0x3);
-> +	regmap_update_bits(regmap, 0x4d110, 0x3, 0x3);
-> +	regmap_update_bits(regmap, 0x71028, 0x3, 0x3);
-
-In v3 this was:
-
-	regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
-	regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
-	regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
-
-IMO register names seem preferable, why switch to literal addresses
-instead?
-
-> +
-> +	/*
-> +	 * Keep the clocks always-ON
-> +	 * GCC_CPUSS_GNOC_CLK, GCC_VIDEO_AHB_CLK, GCC_DISP_AHB_CLK
-> +	 * GCC_GPU_CFG_AHB_CLK
-> +	 */
-> +	regmap_update_bits(regmap, 0x48004, BIT(0), BIT(0));
-> +	regmap_update_bits(regmap, 0x0b004, BIT(0), BIT(0));
-> +	regmap_update_bits(regmap, 0x0b00c, BIT(0), BIT(0));
-> +	regmap_update_bits(regmap, 0x71004, BIT(0), BIT(0));
-
-ditto, register names seem preferable.
+thanks
+-john
