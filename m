@@ -4,128 +4,215 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6536CCA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D856CA9EC2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 01:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3313A218AC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 01:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03404218AC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 01:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572313792;
-	bh=3lZc7nhSifx1Fqn9vDT6E/43lgXpCcDFpvwekOjoBxg=;
+	s=default; t=1572314233;
+	bh=u7tso9Lay1r/O6r8sBLFCn+GkG1iT2e4+Pw0gfPZHTs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eHUxrQwRxTBR6WuddRxNwdpSf+PSMNlRDd0onrVliULY7fJikv643dYfLnAqhy8vo
-	 wGi0xXUbrmAfzQWxciL7HcduFF7RZHnm4qZXkxj7RrIDbxNtYd5ydmTn/1MnHp/bGV
-	 uBzZMlqMn2jcj1phUsoGCT6IfjMolssGl68m3qmI=
+	b=eVuB5h8fs47ycTue1s7ZiKTYvsmgrE+JqbOsWqsKU6gkTuNDr/C4t+71hoU+KUAYp
+	 KZIpQphZ5IeDB3zfUqbta4G5tPeEbmif+FY6pWH5q+Q7T+Fehc/wHLwEfKUNSv8Mt9
+	 Lpp+3QsMrUBKmlY4cNGlZ57/S8nml0UL7VwdtnwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfJ2Btv (ORCPT
+        id S1730279AbfJ2B5M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 21:49:51 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44594 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfJ2Btv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 21:49:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n48so8393208ota.11;
-        Mon, 28 Oct 2019 18:49:50 -0700 (PDT)
+        Mon, 28 Oct 2019 21:57:12 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45398 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727263AbfJ2B5M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 21:57:12 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k2so2543582oij.12;
+        Mon, 28 Oct 2019 18:57:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OwO97DxpTpJcLYlkzMeOuj/rD0CUwDcPUCTNwf6RveY=;
-        b=Q2/i+7IGJ52a7bcTXmokmxqaVqsYTgZ0X+xh6ZVrAdyM6EGiboOBB1Vpw2fMRQPSw1
-         dju7wjM+2oUV+JugYTzWVtL3BPIih0CD6rzaoT5jLeGeFL47kqok6bXHVUalsL7Nij2V
-         6TwLchfiuXZ9WmJQplnpsBp249/7M7sErkZxVg+ExCXDSWENqjbRe8NO6Yk83kzV4avt
-         gOMCkMji9059bwPb8oDazkqnt9w4Et9YBTkThpDmi4GgSrRhKvx6cDul5N3B+w/svGgk
-         NvZYXpXJCuAjuOv6DDZ846TIjGUSgnx1jLe4OfXqkev6yYvku1gfsvAHJT4TkS5P+r3c
-         U+ow==
-X-Gm-Message-State: APjAAAXagRsdLzb2Fj0bXXuWzQ5ZnUDUCd+Z8YPben0DccwEvfycWchv
-        O6N0ZnyDVSCsRDNkiF4E5IxDIWo=
-X-Google-Smtp-Source: APXvYqxb+Q+XI/gBXpbL/OnoFUprupV1+asYGZRYItetzH0XJsjrBhjrnc7oNJmispxysnmUIHX34g==
-X-Received: by 2002:a9d:4c04:: with SMTP id l4mr8138995otf.303.1572313790495;
-        Mon, 28 Oct 2019 18:49:50 -0700 (PDT)
+        bh=UUvsimCWepZAnu4Afn/bbCgm53OKcJoilG//7RIuHsg=;
+        b=iRuK7P4JlwgjNx2UilTnYZC8yt72wuwI0f7o3uBvYYvW+k6B60ac4ekq25iZsxJMzI
+         Bb9Q+qJhgHAVqEhWfEuaw7iLy7RO95xd5MxMnp7nYL9zgpzQ6O00MXbVxS2I8IisqksZ
+         mSSRWIgX35wtaMHxO3jT8KUvTlUBkxEG8rxvSQe4gdA0LjAEWRJZhYl4NI3/aDynDApu
+         +lWq7QID2gfr0u2caERXCQ0Ay49jwByUHXIxm4hNblr1YRXzNv+X4lQonDPnlXnUCyku
+         W64LkYiZWRx/2AjeXOHfJmOcxzRAJOyWU2TGJhGNYNi8TgwSyhox+q7soubwv4sFeWP9
+         M/MQ==
+X-Gm-Message-State: APjAAAUYchHzgw3IZvafEYwExHAikY7Tc41OrqSkdjKXTbx6M8JF/pCd
+        XciF5nk1UMYVnTZwPu7y3A==
+X-Google-Smtp-Source: APXvYqxkbrUEED6jWLHlJsz7uKLNRWrYdrAjFf7ywC8zRjX5a6SE2q7TJluJR4FujLl9xIx8TCkqYw==
+X-Received: by 2002:a05:6808:341:: with SMTP id j1mr1814643oie.106.1572314230268;
+        Mon, 28 Oct 2019 18:57:10 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m3sm2051438otr.5.2019.10.28.18.49.49
+        by smtp.gmail.com with ESMTPSA id s66sm4217236otb.65.2019.10.28.18.57.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 18:49:49 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 20:49:49 -0500
+        Mon, 28 Oct 2019 18:57:09 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 20:57:08 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: arm: at91: Document Kizbox2 boards
- binding
-Message-ID: <20191029014949.GA22009@bogus>
-References: <20191017085405.12599-1-kamel.bouhara@bootlin.com>
- <20191017085405.12599-2-kamel.bouhara@bootlin.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     kishon@ti.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: phy: renesas: usb2-phy: convert bindings to
+ json-schema
+Message-ID: <20191029015708.GA29561@bogus>
+References: <1571387933-23397-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191017085405.12599-2-kamel.bouhara@bootlin.com>
+In-Reply-To: <1571387933-23397-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:54:04AM +0200, Kamel Bouhara wrote:
-> Document devicetree's bindings for the SAMA5D31 Kizbox2 boards of
-> Overkiz SAS.
+On Fri, Oct 18, 2019 at 05:38:53PM +0900, Yoshihiro Shimoda wrote:
+> Convert Renesas R-Car generation 3 USB 2.0 PHY bindings documentation
+> to json-schema.
 > 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  .../devicetree/bindings/arm/atmel-at91.yaml   | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 --------------
+>  .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 106 +++++++++++++++++++++
+>  2 files changed, 106 insertions(+), 70 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+
+
+> diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> new file mode 100644
+> index 00000000..0f109c2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> @@ -0,0 +1,106 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/renesas,usb2-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas R-Car generation 3 USB 2.0 PHY
+> +
+> +maintainers:
+> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+
+This:
+
+> +      - items:
+> +          - enum:
+> +              - renesas,usb2-phy-r8a77470 # RZ/G1C
+
+You can simplify to just:
+
+         - const: renesas,usb2-phy-r8a77470 # RZ/G1C
+
+> +      - items:
+> +          - enum:
+> +              - renesas,usb2-phy-r7s9210  # RZ/A2
+> +              - renesas,usb2-phy-r8a774a1 # RZ/G2M
+> +              - renesas,usb2-phy-r8a774b1 # RZ/G2N
+> +              - renesas,usb2-phy-r8a774c0 # RZ/G2E
+> +              - renesas,usb2-phy-r8a7795  # R-Car H3
+> +              - renesas,usb2-phy-r8a7796  # R-Car M3-W
+> +              - renesas,usb2-phy-r8a77965 # R-Car M3-N
+> +              - renesas,usb2-phy-r8a77990 # R-Car E3
+> +              - renesas,usb2-phy-r8a77995 # R-Car D3
+> +          - const: renesas,rcar-gen3-usb2-phy
+> +
+> +  reg:
+> +    # base address and length of the registers block for the PHY.
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    # clock phandle and specifier pair(s).
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    # for RZ/A2
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: fck
+> +      - const: usb_x1
+> +
+> +  '#phy-cells':
+> +    # see phy-bindings.txt in the same directory
+
+Drop this so we don't have to fix later.
+
+> +    enum: [0, 1]  # and 0 is deprecated.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 2
+
+Needs 'items' to define each entry.
+
+> +
+> +  vbus-supply:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+
+Can drop this, *-supply already has a type.
+
+> +    description: |
+> +      Phandle to a regulator that provides power to the VBUS. This regulator
+> +      will be managed during the PHY power on/off sequence.
+> +
+> +  renesas,no-otg-pins:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: |
+> +      specify when a board does not provide proper otg pins.
+> +
+> +  dr_mode:
+> +    $ref: /schemas/types.yaml#/definitions/string
+
+I think we already have a common definition, so just 'true' is enough.
+
+> +    description: |
+> +      indicates the working mode for the PHY. Can be "host", "peripheral", or
+> +      "otg". Should be set if otg controller is not used.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - '#phy-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/r8a7795-sysc.h>
+> +
+> +    usb-phy@ee080200 {
+> +        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
+> +        reg = <0 0xee080200 0 0x700>;
+> +        interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&cpg CPG_MOD 703>;
+> +        #phy-cells = <1>;
+> +    };
+> +
+> +    usb-phy@ee0a0200 {
+> +        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
+> +        reg = <0 0xee0a0200 0 0x700>;
+> +        clocks = <&cpg CPG_MOD 702>;
+> +        #phy-cells = <1>;
+> +    };
+> -- 
+> 2.7.4
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> index c0869cb860f3..7636bf7c2382 100644
-> --- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> @@ -80,6 +80,41 @@ properties:
->            - const: atmel,sama5d3
->            - const: atmel,sama5
->  
-> +      - description: Overkiz kizbox2 board without antenna
-> +        items:
-> +          - const: overkiz,kizbox2-0
-> +          - const: atmel,sama5d31
-> +          - const: atmel,sama5d3
-> +          - const: atmel,sama5
-> +
-> +      - description: Overkiz kizbox2 board with one head
-> +        items:
-> +          - const: overkiz,kizbox2-1
-> +          - const: atmel,sama5d31
-> +          - const: atmel,sama5d3
-> +          - const: atmel,sama5
-> +
-> +      - description: Overkiz kizbox2 board with two heads
-> +        items:
-> +          - const: overkiz,kizbox2-2
-> +          - const: atmel,sama5d31
-> +          - const: atmel,sama5d3
-> +          - const: atmel,sama5
-> +
-> +      - description: Overkiz kizbox2 board with three heads
-> +        items:
-> +          - const: overkiz,kizbox2-3
-> +          - const: atmel,sama5d31
-> +          - const: atmel,sama5d3
-> +          - const: atmel,sama5
-> +
-> +      - description: Overkiz kizbox2 board Rev2 with two heads
-> +        items:
-> +          - const: overkiz,kizbox2-rev2
-> +          - const: atmel,sama5d31
-> +          - const: atmel,sama5d3
-> +          - const: atmel,sama5
-
-These can all be made a single items list with the 1st entry being an 
-enum of all the boards. The board description can be a comment.
-
-Rob
