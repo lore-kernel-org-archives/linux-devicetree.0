@@ -2,183 +2,98 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C98CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133B3CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B250B20717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572341154;
-	bh=QAXUs3VR9lZQY99NGtAiluxQ6rvIvoP288KOOJtt+/Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=aXA0uvyOkaaCypQl6vxe7nEvo6UlLhZ8cC9SX+U9XWg4pcJQn+aJw4gr2XgpiYyts
-	 QkQaoQLE6b6AtDVq5oOkNypK0UAk31Ugwe7Va2YVsjTd+WA3XEQuhUtXUftAPQNrnZ
-	 IAy1y2p+yVgbKg1oTz0YpDexua51C8vOxwW5yFk0=
+	by mail.kernel.org (Postfix) with ESMTP id E5B382087E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731810AbfJ2JZy (ORCPT
+        id S1732077AbfJ2Jb3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:25:54 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30668 "EHLO mga04.intel.com"
+        Tue, 29 Oct 2019 05:31:29 -0400
+Received: from mga01.intel.com ([192.55.52.88]:24077 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730793AbfJ2JZy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:25:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726025AbfJ2Jb3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:31:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:25:53 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:31:28 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="asc'?scan'208";a="202786714"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 02:25:47 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 9/9] usb: dwc3: Add host-mode as default support
-In-Reply-To: <20191028215919.83697-10-john.stultz@linaro.org>
-References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-10-john.stultz@linaro.org>
-Date:   Tue, 29 Oct 2019 11:25:43 +0200
-Message-ID: <878sp3j42w.fsf@gmail.com>
+   d="scan'208";a="202787906"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 02:31:27 -0700
+Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id A1C6A5802C4;
+        Tue, 29 Oct 2019 02:31:19 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
+ link
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+References: <20191022125950.GA133170@google.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <c1aadeea-7904-1455-5393-c4998fbd8037@linux.intel.com>
+Date:   Tue, 29 Oct 2019 17:31:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <20191022125950.GA133170@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
-
-Hi,
-
-John Stultz <john.stultz@linaro.org> writes:
-> Support configuring the default role the controller assumes as
-> host mode when the usb role is USB_ROLE_NONE
+On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
+> [+cc Rafael, linux-pm, beginning of discussion at
+> https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
 >
-> This patch was split out from a larger patch originally by
-> Yu Chen <chenyu56@huawei.com>
+> On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
+>> On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+>>> On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+>>>> On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+>>>>> PCIe RC driver on Intel Gateway SoCs have a requirement
+>>>>> of changing link width and speed on the fly.
+>>> Please add more details about why this is needed.  Since you're adding
+>>> sysfs files, it sounds like it's not actually the *driver* that needs
+>>> this; it's something in userspace?
+>> We have use cases to change the link speed and width on the fly.
+>> One is EMI check and other is power saving.  Some battery backed
+>> applications have to switch PCIe link from higher GEN to GEN1 and
+>> width to x1. During the cases like external power supply got
+>> disconnected or broken. Once external power supply is connected then
+>> switch PCIe link to higher GEN and width.
+> That sounds plausible, but of course nothing there is specific to the
+> Intel Gateway, so we should implement this generically so it would
+> work on all hardware.
+Agree.
 >
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> CC: ShuFan Lee <shufan_lee@richtek.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Jun Li <lijun.kernel@gmail.com>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Jack Pham <jackp@codeaurora.org>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v3: Split this patch out from addition of usb-role-switch
->     handling
-> ---
->  drivers/usb/dwc3/core.h |  3 +++
->  drivers/usb/dwc3/drd.c  | 20 ++++++++++++++++----
->  2 files changed, 19 insertions(+), 4 deletions(-)
+> I'm not sure what the interface should look like -- should it be a
+> low-level interface as you propose where userspace would have to
+> identify each link of interest, or is there some system-wide
+> power/performance knob that could tune all links?  Cc'd Rafael and
+> linux-pm in case they have ideas.
+
+To my knowledge sysfs is the appropriate way to go.
+If there are any other best possible knobs, will be helpful.
+
+Regards,
+Dilip
+
 >
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index 6f19e9891767..3c879c9ab1aa 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -953,6 +953,8 @@ struct dwc3_scratchpad_array {
->   *		- USBPHY_INTERFACE_MODE_UTMI
->   *		- USBPHY_INTERFACE_MODE_UTMIW
->   * @role_sw: usb_role_switch handle
-> + * @role_switch_default_mode: default operation mode of controller while
-> + *			usb role is USB_ROLE_NONE.
->   * @usb2_phy: pointer to USB2 PHY
->   * @usb3_phy: pointer to USB3 PHY
->   * @usb2_generic_phy: pointer to USB2 PHY
-> @@ -1087,6 +1089,7 @@ struct dwc3 {
->  	struct notifier_block	edev_nb;
->  	enum usb_phy_interface	hsphy_mode;
->  	struct usb_role_switch	*role_sw;
-> +	enum usb_dr_mode	role_switch_default_mode;
->=20=20
->  	u32			fladj;
->  	u32			irq_gadget;
-> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-> index 61d4fd8aead4..0e3466fe5ac4 100644
-> --- a/drivers/usb/dwc3/drd.c
-> +++ b/drivers/usb/dwc3/drd.c
-> @@ -489,7 +489,10 @@ static int dwc3_usb_role_switch_set(struct device *d=
-ev, enum usb_role role)
->  		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
->  		break;
->  	default:
-> -		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
-> +		if (dwc->role_switch_default_mode =3D=3D USB_DR_MODE_HOST)
-> +			mode =3D DWC3_GCTL_PRTCAP_HOST;
-> +		else
-> +			mode =3D DWC3_GCTL_PRTCAP_DEVICE;
->  		break;
->  	}
->=20=20
-> @@ -515,7 +518,10 @@ static enum usb_role dwc3_usb_role_switch_get(struct=
- device *dev)
->  		role =3D dwc->current_otg_role;
->  		break;
->  	default:
-> -		role =3D USB_ROLE_DEVICE;
-> +		if (dwc->role_switch_default_mode =3D=3D USB_DR_MODE_HOST)
-> +			role =3D USB_ROLE_HOST;
-
-look at this, we now have 3 different encodings for role which DWC3
-needs to understand. One is its own PRTCAP_DIR, then there USB_DR_MODE_*
-and now USB_ROLE_*, can we make it so that we only have one private
-encoding and one generic encoding?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl24BZcACgkQzL64meEa
-mQYHkw//VOw1jqK4AnBJDOHCIzWSFS8jyfQBZHVKuUB7cq6u6e+FFwxkIdlOR1YN
-cIg7lL/gk3bR+eHiuqrTE2A9gp7ocGge/aJvZfsE5d+zVIau8OlKIrnz8X25xTRf
-uG9M7+GiyU2HHoC7EiOalqnP0576os4lyHmEFfomuHiax71frZiyl7DN+phJijgK
-IHmEkMtd1sEA/pGi8G8b/lwGKH5nkGAR4YcvP4kx588301buiT+/kn0RZnOMPoeu
-y1VMO2xP90WiVfVvqW1S5SzbaXSWxqFu7XWQGlBr9XJ678npgxk89GmPMNX3hGXh
-jDlyVp5ctWedJU8fufBMAS7TMLDASZIMPtarWPWwXO+8UomuUOkOj2rUiVkDpIVQ
-FCq5ldfW9Aei4f2+5mtgpQTvqYA5/uJxFxijUAFEncfQqC1h5uIf9gDgUV8p2D/8
-poS2nJwimP5VYox0PV72C5gV8ZGm5WM5HdOEX67JraqrPIXWTS5omXBd86XZzDIo
-gQx5LdiBgxR13WAGLFesbSC3L+Kd0/1fJYFXSMCJjIdkx0bDEgHCxG3FImokDgoK
-qGlFoyxqLHnOSFYMhroMqE7AX1rHZcnQbHZhsI91a+b89plbDagvlWYbrJ7PH/MT
-OOIyQZejlu6BJsmnNPfRUYS5dmDKGVkZCTdwAV42pNA84DA/+bc=
-=HE73
------END PGP SIGNATURE-----
---=-=-=--
+> Bjorn
