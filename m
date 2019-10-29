@@ -2,229 +2,274 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893F4CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 19:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1584ECA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 19:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E5720830
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 19:00:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IK4qb1TT"
+	by mail.kernel.org (Postfix) with ESMTP id D0AC720679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 19:08:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572376099;
+	bh=sUs+OEpTAXMqmlLi5UAN/vwKlJhl5KNTIOdZHnRPRlM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0wyl3P9i+VAPUd+lM2sDiSnmuf6f8rvUCuRIdRERcVah6kTsSLL6c+3S684lgJt+g
+	 rH5iDmDqGyKcSB5PkM+KlEwwHOfNssp+x/JAYJG7z0QHcvkkIRc4Nd8b0nBlxOLCsf
+	 3spVggOPkMPYZ5w2z/skN6Esf4kGBhBUNHligQkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbfJ2TAU (ORCPT
+        id S1732245AbfJ2TIT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:00:20 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58626 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfJ2TAU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 15:00:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TIrnje021732;
-        Tue, 29 Oct 2019 18:59:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=tGwA6mxDu+wj8nb3JlA1NbM4cZ+dWsihJQgOglQIpp4=;
- b=IK4qb1TTWYgAwqKIUn5wT1oiV2FhATXzu9eBp0FY6faNA8GalkJHnx270OUPN1EO2Yc9
- 9h5hoSbn47hgNTw1kWYZZkX7c/tcNk9Fo6JDS+VpBlw8Sk14MpDUi6sQh2l8nFpb2hjD
- REzYpxMjAlCBw2Q6G03i3Kxw07clHkN9bAqeZUDfvdf2Ao8XwI/uBSPLiL3xrLNbHgj1
- 5MNnbUnJTxTiaXKdDQxbY+L0nhohoiCpMeLppVj96QfhQT5+bJthda/msACHvnPzrhJW
- Qjrfe3IaoCifk+hOrgx4REQ/XNMf4hdqCWHzg6a2sbcf6/kiFBTlt58oXCpww0KEOrAn mw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vvdjubg65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:59:48 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9TIrwmH178549;
-        Tue, 29 Oct 2019 18:59:48 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vxj8gs6fb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 18:59:47 +0000
-Received: from abhmp0021.oracle.com (abhmp0021.oracle.com [141.146.116.27])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9TIxe3G031111;
-        Tue, 29 Oct 2019 18:59:40 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Oct 2019 11:59:40 -0700
-Date:   Tue, 29 Oct 2019 21:59:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     jic23@kernel.org, devel@driverdev.osuosl.org, mark.rutland@arm.com,
-        lars@metafoo.de, biabeniamin@outlook.com,
-        Michael.Hennerich@analog.com, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, gregkh@linuxfoundation.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        nicolas.ferre@microchip.com, robh+dt@kernel.org, pmeerw@pmeerw.net,
-        knaack.h@gmx.de, mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
-        Paul Cercueil <paul.cercueil@analog.com>
-Subject: Re: [PATCH v2 1/4] iio: adc: Add support for AD7091R5 ADC
-Message-ID: <20191029185930.GB1705@kadam>
-References: <20191029162928.9720-1-beniamin.bia@analog.com>
+        Tue, 29 Oct 2019 15:08:19 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34710 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728522AbfJ2TIT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 15:08:19 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m19so10787239otp.1;
+        Tue, 29 Oct 2019 12:08:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8pA+n21L8La8ITpfrFB0GyWgtr689YFUdyFAidrybGE=;
+        b=VT3PwsA++4v225xZwJfOdX5Ydz5rthjjCFkzuGmDc5+SnNco/3/p6j7R1qdN3Yx30n
+         fZNJAl6bSXoOkV5jjhF4ilnGQhcRKRNqegn/RpGZc6xNn8pPMatum2j7Uq5WH2hWPegC
+         rNQ5h1Idg7y1pHJfVjfNBq7eyD4B5/Ixuh4pVkdsrY+tuoiaCZ6mwzhHJZaTjMLKF/Xs
+         KNQb6N4Wg+QqqpYq8G2CBK920mTsj2/2DA69lLwIZJATObQmqRHwx59XUgjp+O4Ai4yX
+         UsN/VPgnqiMD9LR0/OP8HM4RbQLHeiM/0wp0abcE434+Ro8d6aQaZkV+jGPCfQ61vBO/
+         p5ag==
+X-Gm-Message-State: APjAAAX6kpDRg3nqYGW6+v2NM+tprd58jkVZvOYY4VXhMfZ3TH9JqpwM
+        QzNme765pmb/SAt2f36inlvyqtE=
+X-Google-Smtp-Source: APXvYqxxTnPOwibOvH3qJUKAPtA8dILf5/7X7qHntEuTo8cH50apeG2dzvwvzc2tbmt6rJgcVlkUrw==
+X-Received: by 2002:a9d:6c96:: with SMTP id c22mr20012395otr.170.1572376097923;
+        Tue, 29 Oct 2019 12:08:17 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p7sm3653220oth.50.2019.10.29.12.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 12:08:17 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:08:16 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>,
+        Anil Varughese <aniljoy@cadence.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 13/14] dt-bindings: phy: Document WIZ (SERDES wrapper)
+ bindings
+Message-ID: <20191029190816.GA27884@bogus>
+References: <20191023125735.4713-1-kishon@ti.com>
+ <20191023125735.4713-14-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029162928.9720-1-beniamin.bia@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910290163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910290163
+In-Reply-To: <20191023125735.4713-14-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It looks like you're going to have to respin the patchset so I'm adding
-my nits even though it's a bit late.
+On Wed, Oct 23, 2019 at 06:27:34PM +0530, Kishon Vijay Abraham I wrote:
+> Add DT binding documentation for WIZ (SERDES wrapper). WIZ is *NOT* a
+> PHY but a wrapper used to configure some of the input signals to the
+> SERDES. It is used with both Sierra(16G) and Torrent(10G) serdes.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> [jsarha@ti.com: Add separate compatible for Sierra(16G) and Torrent(10G)
+>  SERDES]
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  .../bindings/phy/ti,phy-j721e-wiz.yaml        | 159 ++++++++++++++++++
+>  1 file changed, 159 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> new file mode 100644
+> index 000000000000..8a1eccee6c1d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> @@ -0,0 +1,159 @@
+> +# SPDX-License-Identifier: (GPL-2.0)
 
+(GPL-2.0-only OR BSD-2-Clause) for new bindings please.
 
-> +static int ad7091r_set_mode(struct ad7091r_state *st, enum ad7091r_mode mode)
-> +{
-> +	int ret;
+> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +	switch (mode) {
-> +	case AD7091R_MODE_SAMPLE:
-> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-> +					 AD7091R_REG_CONF_MODE_MASK, 0);
-> +		break;
-> +	case AD7091R_MODE_COMMAND:
-> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-> +					 AD7091R_REG_CONF_MODE_MASK,
-> +					 AD7091R_REG_CONF_CMD);
-> +		break;
-> +	case AD7091R_MODE_AUTOCYCLE:
-> +		ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-> +					 AD7091R_REG_CONF_MODE_MASK,
-> +					 AD7091R_REG_CONF_AUTO);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-
-This would look even better as:
-
-	switch (mode) {
-	case AD7091R_MODE_SAMPLE:
-		conf = 0;
-		break;
-	case AD7091R_MODE_COMMAND:
-		conf = AD7091R_REG_CONF_CMD;
-		break;
-	case AD7091R_MODE_AUTOCYCLE:
-		conf = AD7091R_REG_CONF_AUTO;
-		break;
-	default:
-		return -EINVAL;
-	}
-
-	ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-				 AD7091R_REG_CONF_MODE_MASK, conf);
-	if (ret)
-		return ret;
-
-	st->mode = mode;
-
-	return 0;
-
-> +int ad7091r_probe(struct device *dev, const char *name,
-> +		const struct ad7091r_chip_info *chip_info,
-> +		struct regmap *map, int irq)
-> +{
-> +	struct iio_dev *iio_dev;
-> +	struct ad7091r_state *st;
-> +	int ret;
+> +title: TI J721E WIZ (SERDES Wrapper)
 > +
-> +	iio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!iio_dev)
-> +		return -ENOMEM;
+> +maintainers:
+> +  - Kishon Vijay Abraham I <kishon@ti.com>
 > +
-> +	st = iio_priv(iio_dev);
-> +	st->dev = dev;
-> +	st->chip_info = chip_info;
-> +	st->map = map;
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - ti,j721e-wiz-16g
+> +              - ti,j721e-wiz-10g
+
+You can drop oneOf and items.
+
 > +
-> +	iio_dev->dev.parent = dev;
-> +	iio_dev->name = name;
-> +	iio_dev->info = &ad7091r_info;
-> +	iio_dev->modes = INDIO_DIRECT_MODE;
+> +  power-domains:
+> +    maxItems: 1
 > +
-> +	iio_dev->num_channels = chip_info->num_channels;
-> +	iio_dev->channels = chip_info->channels;
+> +  clocks:
+> +    maxItems: 3
+> +    description: clock-specifier to represent input to the WIZ
 > +
-> +	if (irq) {
-> +		ret = devm_request_threaded_irq(dev, irq, NULL,
-> +				ad7091r_event_handler,
-> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT, name, st);
-> +		if (ret)
-> +			return ret;
-> +	}
+> +  clock-names:
+> +    items:
+> +      - const: fck
+> +      - const: core_ref_clk
+> +      - const: ext_ref_clk
 > +
-> +	/* Use command mode by default to convert only desired channels*/
-> +	ret = ad7091r_set_mode(st, AD7091R_MODE_COMMAND);
-> +	if (ret < 0)
+> +  num-lanes:
+> +    maxItems: 1
+> +    minimum: 1
+> +    maximum: 4
 
-if (ret) {
+You've mixed array and scalar schema keywords. Drop maxItems.
 
-> +		return ret;
+Update dtschema and run 'make dt_binding_check'. We should catch that 
+now.
+
 > +
-> +	return iio_device_register(iio_dev);
-> +}
-> +EXPORT_SYMBOL_GPL(ad7091r_probe);
-
-[ snip ]
-
-> +#include <linux/i2c.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
+> +  "#address-cells":
+> +    const: 2
 > +
-> +#include "ad7091r-base.h"
+> +  "#size-cells":
+> +    const: 2
 > +
-> +static const struct iio_event_spec ad7091r5_events[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +			BIT(IIO_EV_INFO_ENABLE),
-
-This would be more clear if it were aligned like so:
-
-		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-				 BIT(IIO_EV_INFO_ENABLE),
-
-
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +			BIT(IIO_EV_INFO_ENABLE),
-
-		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-				 BIT(IIO_EV_INFO_ENABLE),
-
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_EITHER,
-> +		.mask_separate = BIT(IIO_EV_INFO_HYSTERESIS),
-> +	},
-> +};
+> +  "#reset-cells":
+> +    const: 1
 > +
+> +  ranges: true
+> +
+> +  assigned-clocks:
+> +    maxItems: 2
+> +
+> +  assigned-clock-parents:
+> +    maxItems: 2
+> +
+> +patternProperties:
+> +  "^pll[0|1]_refclk$":
+> +    type: object
+> +    description: |
+> +      WIZ node should have subnodes for each of the PLLs present in
+> +      the SERDES.
+> +
+> +  "^cmn_refclk1?$":
+> +    type: object
+> +    description: |
+> +      WIZ node should have subnodes for each of the PMA common refclock
+> +      provided by the SERDES.
+> +
+> +  "^refclk_dig$":
+> +    type: object
+> +    description: |
+> +      WIZ node should have subnode for refclk_dig to select the reference
+> +      clock source for the reference clock used in the PHY and PMA digital
+> +      logic.
+> +
+> +  "^serdes@[0-9a-f]+$":
+> +    type: object
+> +    description: |
+> +      WIZ node should have '1' subnode for the SERDES. It could be either
+> +      Sierra SERDES or Torrent SERDES. Sierra SERDES should follow the
+> +      bindings specified in
+> +      Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
+> +      Torrent SERDES should follow the bindings specified in
+> +      Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+> +
+> +required:
+> +  - compatible
+> +  - power-domains
+> +  - clocks
+> +  - clock-names
+> +  - num-lanes
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - "#reset-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +    wiz@5000000 {
+> +           compatible = "ti,j721e-wiz-16g";
+> +           #address-cells = <2>;
+> +           #size-cells = <2>;
 
-regards,
-dan carpenter
+Really need 64-bits of address space for the child nodes?
 
+> +           power-domains = <&k3_pds 292 TI_SCI_PD_EXCLUSIVE>;
+> +           clocks = <&k3_clks 292 5>, <&k3_clks 292 11>, <&dummy_cmn_refclk>;
+> +           clock-names = "fck", "core_ref_clk", "ext_ref_clk";
+> +           assigned-clocks = <&k3_clks 292 11>, <&k3_clks 292 0>;
+> +           assigned-clock-parents = <&k3_clks 292 15>, <&k3_clks 292 4>;
+> +           num-lanes = <2>;
+> +           #reset-cells = <1>;
+
+Unless you have additional registers, I'm not a fan of wrapper nodes.
+
+> +
+> +           pll0_refclk {
+> +                  clocks = <&k3_clks 293 13>, <&dummy_cmn_refclk>;
+> +                  clock-output-names = "wiz1_pll0_refclk";
+> +                  #clock-cells = <0>;
+> +                  assigned-clocks = <&wiz1_pll0_refclk>;
+> +                  assigned-clock-parents = <&k3_clks 293 13>;
+> +           };
+> +
+> +           pll1_refclk {
+> +                  clocks = <&k3_clks 293 0>, <&dummy_cmn_refclk1>;
+> +                  clock-output-names = "wiz1_pll1_refclk";
+> +                  #clock-cells = <0>;
+> +                  assigned-clocks = <&wiz1_pll1_refclk>;
+> +                  assigned-clock-parents = <&k3_clks 293 0>;
+> +           };
+> +
+> +           cmn_refclk {
+> +                  clocks = <&wiz1_refclk_dig>;
+> +                  clock-output-names = "wiz1_cmn_refclk";
+> +                  #clock-cells = <0>;
+> +           };
+> +
+> +           cmn_refclk1 {
+> +                  clocks = <&wiz1_pll1_refclk>;
+> +                  clock-output-names = "wiz1_cmn_refclk1";
+> +                  #clock-cells = <0>;
+> +           };
+> +
+> +           refclk_dig {
+> +                  clocks = <&k3_clks 292 11>, <&k3_clks 292 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
+> +                  clock-output-names = "wiz0_refclk_dig";
+> +                  #clock-cells = <0>;
+> +                  assigned-clocks = <&wiz0_refclk_dig>;
+> +                  assigned-clock-parents = <&k3_clks 292 11>;
+> +           };
+
+How are all these clocks programmed?
+
+> +
+> +           serdes@5000000 {
+> +                  compatible = "cdns,ti,sierra-phy-t0";
+> +                  reg-names = "serdes";
+> +                  reg = <0x00 0x5000000 0x00 0x10000>;
+> +                  #address-cells = <1>;
+> +                  #size-cells = <0>;
+> +                  resets = <&serdes_wiz0 0>;
+> +                  reset-names = "sierra_reset";
+> +                  clocks = <&wiz0_cmn_refclk>, <&wiz0_cmn_refclk1>;
+> +                  clock-names = "cmn_refclk", "cmn_refclk1";
+> +           };
+> +    };
+> -- 
+> 2.17.1
+> 
