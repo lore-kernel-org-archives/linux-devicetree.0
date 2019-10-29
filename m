@@ -2,87 +2,204 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFD9CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 15:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653E6CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 15:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF63208E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 15:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572364419;
-	bh=9/iXSfgXeSaVaCBpePOyBU51wnJnxqOb2lalgjoiT6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ghK7oV6O8XawWSy27Zj1sgW9/ZwAYwEx/wgABfSO21xD3WC6uMYK1Yj7KvHju4TIa
-	 GrvfIONYEO7n8w07lnrmk4b4xeuGpSHvspkNvn+DINcnGkKAXEcz0k4U1uHuOP7hQQ
-	 32dWiY7oNQz70GodzRYDPXzbeocXZjvz7Kts9hf0=
+	by mail.kernel.org (Postfix) with ESMTP id 3499A20856
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 15:58:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REsfzx49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390173AbfJ2Pxj (ORCPT
+        id S2390197AbfJ2P6x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:53:39 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41977 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390070AbfJ2Pxi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 11:53:38 -0400
-Received: by mail-oi1-f196.google.com with SMTP id g81so9328034oib.8;
-        Tue, 29 Oct 2019 08:53:38 -0700 (PDT)
+        Tue, 29 Oct 2019 11:58:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36955 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390192AbfJ2P6x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 11:58:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q130so2988800wme.2;
+        Tue, 29 Oct 2019 08:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=i0TUmJ18ZcyUKsXykls8PPcjqgJJsmsjfFdpRETWj3g=;
+        b=REsfzx49IQKDe7LLT85vOXOTGHzt4JVWjq10YOQiyqqNLe9f1YEbVJWsx6JpnYmLIG
+         mijUoxvAe4KCF6WNy1zGVD5IV+HKaQAKTlqoXFxqT/tCI3q7QBzGkchngGzzqMH6mwhV
+         44g2wTN2J6cOVWe/dEvyVt5Jq4zl/iM/a56mlOCWAqOhvD6s8AlJXLoj/5SNBVvjh3iK
+         9Y8Y4LJBA6rjWrvhCALVk5KUOLQPzU2a9G7ms3eD+WXOqfdabIy6lr/r4L+0bAYC/GYZ
+         VOFtHTQMurlnROgtFGXhfHEpL2zBzBoFccIGFAIGxfkprNkqt7h54vtUFZljIFZi92MU
+         C/uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ee/ZfDHCgHXLdYgZabX3kaZDRAeev7SjMlCPaZQOUW0=;
-        b=fTCeytEUPBuiOQh6phlXV8HcZFICK3yb6EIu2x7rp3PuVEbx4eK6q4l6gSbVVnT8Uy
-         L0fDXKHiVtOlltiBPC9wuKiukQUcODhGMppUuZsPt+izHRB0RrvkrXZpp2oNpD5eGimk
-         7qJQxbsay2P56QEygRXRP3pbkBJ70wYIvAl35MG2thq7xhHtxPVL7poshMEjDUJvySH3
-         zNLHIDFy/aJxaPhf1d9NP0Z8Z2U+4err/9A+NG/X0agk9i2ap3OyN251fzgxI9Q1JoH8
-         Ow0xznlSeUaa5nZriqIbV2aXTxZFUEY/TTBUAKX5oiufcjC1R+yv1KbedtzEKefyPXoG
-         bKhg==
-X-Gm-Message-State: APjAAAW0H+gaDR6qkxPd3rFRy+RWh+peIMedNJcVrHP94b+/QFtjbyJQ
-        G2VMnDt/LqL/TJmeJZZbLg==
-X-Google-Smtp-Source: APXvYqwX+atP99G6b+JeOlg/oDHgD3pIcU9XIkNskn3WlavIpip9mE2fAaNTZzDMv+xbES1LXkjkEQ==
-X-Received: by 2002:a54:4187:: with SMTP id 7mr4731658oiy.158.1572364417951;
-        Tue, 29 Oct 2019 08:53:37 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n127sm4164519oia.0.2019.10.29.08.53.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 08:53:37 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 10:53:36 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     robh+dt@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] media: dt-bindings: media: add new rc map names
-Message-ID: <20191029155336.GA22429@bogus>
-References: <20191021121249.25143-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i0TUmJ18ZcyUKsXykls8PPcjqgJJsmsjfFdpRETWj3g=;
+        b=EiyyYNilLC5eU7q8f2zSPtZ4p8W0GZPvAGjH37IXG1CAQkXqTth9lSteDO990sUzTx
+         6bWkF+pfMSra6W6EvV3bFBWS67adgRzUkd15CKCHLMKgem0ll4VYy2/54Tp/br9acD7a
+         t8RXCC6xLXxgx5rtuZGK+hZ2lV3lLRhPxgG1FeT+jMn3aK6e8f/nv5k5nGbUr1BR8a8X
+         HQ0hvJs/JKksaZjban8uCZLD1ZrRQ7Qtjnu2SXDchHroYtbSpEDw5/FVOBZsasXkP8ix
+         f95Kaii1KNy8KxssNBVxkW+gUsBuMtg49y9mjKLdQ19A5kKGVq3wc2PzADs6gqn2p/D6
+         F6kQ==
+X-Gm-Message-State: APjAAAVN8N/lVJbXniyQvggxQVInPNg2VovHUhTRzUW4r3ZzS+h4znLA
+        6DQSh8+eeU4GJCRHwbrfL7Q=
+X-Google-Smtp-Source: APXvYqwyZRhqa7Xzvm9LHS7ZHK+2KPi1arRJ8di0YaQGwNLNa7NPaxQrJ/SariJDIgjOWjG2f1Dlkw==
+X-Received: by 2002:a7b:c0ca:: with SMTP id s10mr4696016wmh.166.1572364729523;
+        Tue, 29 Oct 2019 08:58:49 -0700 (PDT)
+Received: from [172.20.38.115] ([91.217.168.176])
+        by smtp.gmail.com with ESMTPSA id m3sm3155307wrb.67.2019.10.29.08.58.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 08:58:49 -0700 (PDT)
+Subject: Re: [PATCH v2] kbuild: support byacc as alternative YACC to bison
+To:     Ethan Sommer <e5ten.arch@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
+ <20191029150119.19823-1-e5ten.arch@gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <760b5b4f-caa6-67e1-aa7f-ddd694a84b4a@gmail.com>
+Date:   Tue, 29 Oct 2019 10:58:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021121249.25143-1-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191029150119.19823-1-e5ten.arch@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 21 Oct 2019 14:12:49 +0200, Neil Armstrong wrote:
-> Add new entries for linux,rc-map-name:
-> - rc-khadas
-> - rc-odroid
-> - rc-tanix-tx3mini
-> - rc-wetek-hub
-> - rc-wetek-play2
-> - rc-x96max
+Hi Ethan,
+
+On 10/29/19 10:01 AM, Ethan Sommer wrote:
+> Switches to a more portable set of flags for generating the same file
+> names instead of the bison-specific --defines, uses the more portable -V
+> instead of --version, and explicitly defines YYSTYPE in lex.l, which
+> bison implicitly defines if not present but byacc does not.
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Add %locations to dtc-parser.y to explicitly enable location tracking
+> for byacc, and define YYERROR_CALL explicitly to prevent the locations
+> directive from causing it to be defined to a 2-parameter call to
+> yyerror, which dtc-parser.y defines to accept one parameter.
+> 
+> Requires byacc to be built with --enable-btyacc.
+> 
+> Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
 > ---
->  Documentation/devicetree/bindings/media/rc.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  scripts/Makefile.host     | 2 +-
+>  scripts/dtc/dtc-parser.y  | 4 ++++
+>  scripts/genksyms/Makefile | 2 +-
+>  scripts/genksyms/lex.l    | 2 ++
+>  4 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+> index 4c51c95d40f4..64e98e1d4825 100644
+> --- a/scripts/Makefile.host
+> +++ b/scripts/Makefile.host
+> @@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
+>  # YACC
+>  # ---------------------------------------------------------------------------
+>  quiet_cmd_bison = YACC    $(basename $@).[ch]
+> -      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
+> +      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
+>  
+>  $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
+>  	$(call if_changed,bison)
+> diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
+> index 2ed4dc1f07fd..40dcf4f149da 100644
+> --- a/scripts/dtc/dtc-parser.y
+> +++ b/scripts/dtc/dtc-parser.y
+
+For file scripts/dtc/dtc-parser.y:
+
+This file is maintained in the upstream dtc project.  We pull changes
+from that project into the Linux kernel source tree.
+
+The file is located at the root level of the upstream project.
+
+Info on submitting patches is in the upstream file "Documentation/manual.txt":
+
+   1) Sources
+
+   Source code for the Device Tree Compiler can be found at git.kernel.org.
+
+   The upstream repository is here:
+
+       git://git.kernel.org/pub/scm/utils/dtc/dtc.git
+       https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+
+   The gitweb interface for the upstream respository is:
+
+       https://git.kernel.org/cgit/utils/dtc/dtc.git/
+
+   1.1) Submitting Patches
+
+   Patches should be sent to the maintainers:
+           David Gibson <david@gibson.dropbear.id.au>
+           Jon Loeliger <jdl@jdl.com>
+   and CCed to <devicetree-compiler@vger.kernel.org>.
+
+-Frank
+
+
+> @@ -2,6 +2,8 @@
+>  /*
+>   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
+>   */
+> +%locations
+> +
+>  %{
+>  #include <stdio.h>
+>  #include <inttypes.h>
+> @@ -17,6 +19,8 @@ extern void yyerror(char const *s);
+>  		treesource_error = true; \
+>  	} while (0)
+>  
+> +#define YYERROR_CALL(msg) yyerror(msg)
+> +
+>  extern struct dt_info *parser_output;
+>  extern bool treesource_error;
+>  %}
+> diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
+> index 78629f515e78..397c2dc8182b 100644
+> --- a/scripts/genksyms/Makefile
+> +++ b/scripts/genksyms/Makefile
+> @@ -15,7 +15,7 @@ genksyms-objs	:= genksyms.o parse.tab.o lex.lex.o
+>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+>  
+>  quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
+> -      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
+> +      cmd_bison_no_warn = $(YACC) -V >/dev/null; \
+>  			  $(cmd_bison) 2>/dev/null
+>  
+>  $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
+> diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
+> index e265c5d96861..0580c088527f 100644
+> --- a/scripts/genksyms/lex.l
+> +++ b/scripts/genksyms/lex.l
+> @@ -19,6 +19,8 @@
+>  #include "genksyms.h"
+>  #include "parse.tab.h"
+>  
+> +extern YYSTYPE yylval;
+> +
+>  /* We've got a two-level lexer here.  We let flex do basic tokenization
+>     and then we categorize those basic tokens in the second stage.  */
+>  #define YY_DECL		static int yylex1(void)
 > 
 
-Applied, thanks.
-
-Rob
