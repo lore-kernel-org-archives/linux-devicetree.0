@@ -2,54 +2,54 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519D1CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 21:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42739C47E49
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 22:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DB821721
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 21:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170102173E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 22:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572385616;
-	bh=gL4NEtXW6OnPlvHTWbM/6H8yMDB9+iEQYh+1Cy64Pkw=;
+	s=default; t=1572386503;
+	bh=3fc7Ts5HHom8d34FAVmiMY7ndX39+/H9gZugDWD7gs8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HgjdmVp627O59nl2p09mysxocXkKdqijaBnMvM12F0pHPCStqiDHXXepeM9s3UGsT
-	 0mZwHIVX9vwd4AqXWh23H+cjou7tl9VTCcOYXzveowFV+RDbtcFsA/Suvp6/MciKVY
-	 WkF3Teurpe0cIHa/RNZfl184svkiSP6ynAJ468a0=
+	b=A/E2QYaCDWTps4zRfMxbh0HejYlVRvyN1+R2/mfAK9Wkb8WhejWiK9POqwD+COZp2
+	 6qAsCw2bPLePzqVOeJ4jOhcSIi1Nt8cLecUDzaG0+YW+Dta6gBWjShuK8N1l0rCT6M
+	 m2h32ZF6ExSATWA/LRTv4n0vscDCtXFnmqbil/hI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfJ2Vqz (ORCPT
+        id S1727125AbfJ2WBm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 17:46:55 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46392 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfJ2Vqz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 17:46:55 -0400
-Received: by mail-oi1-f194.google.com with SMTP id c2so152845oic.13;
-        Tue, 29 Oct 2019 14:46:53 -0700 (PDT)
+        Tue, 29 Oct 2019 18:01:42 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35389 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfJ2WBm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 18:01:42 -0400
+Received: by mail-oi1-f196.google.com with SMTP id n16so237785oig.2;
+        Tue, 29 Oct 2019 15:01:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ALIui8Hqesjcnb55YwwhQynmeSYlJfu7htCUAfgtTpE=;
-        b=cLC4K6k3GvFxOT9/Ib+ZU1v+EvvKCGjsLI086h3e6sa2ih2YSw5XLflMCiu8i80+jV
-         zZ6aAcgIq0hh4SMhlsGPcWUOcL7lbhbLmUHulnPbdx3jlFgsxd5GEjuCrbPIFyjB8sUB
-         kBMUiavyJb5mmP5ToP34qrEadN8gDYDL9bokNwEC9cp9+eoelr8QYzMqgCM/vZqp30Hh
-         gnp8rFj4JLbN7+1aAbqCpLlgP/7Wohf5JGYzlReqD9SLNjUNPSzYsCB/fuV9p69mF2bA
-         fH8pThZnSi5UaityPz+hDlY44zWhLfqt8C/UwTJ31igd1YqveXu5BjmIXmExJW/y69jT
-         9BfQ==
-X-Gm-Message-State: APjAAAUgHtktq5FJrbaaWHdRZJ3wEnVRnkQaUH6To0WA4ESxlcyAgtty
-        CozGFn36dvBLvbeHkBARoA==
-X-Google-Smtp-Source: APXvYqzc/YNEjvH6prxzTLekXclhqdSh0nu5g1IFxo9X/gD0M/yx5Elmq/qLutCsqQeE6OHCqyHlyA==
-X-Received: by 2002:aca:281a:: with SMTP id 26mr5820203oix.130.1572385612773;
-        Tue, 29 Oct 2019 14:46:52 -0700 (PDT)
+        bh=Qg4Gf6moqefeeqI07wtw6l7UkCvJIw6VyE8bqTKlLAc=;
+        b=iVriIAyDX9iR7k4l7rhANxZePMZrDljZPOx3VH61qQVkLzq09PZfUpdXnCOWOBKu0U
+         xSGTDeP1joLFWrPX6VC0Fz0S3l2FVBqscQ/lw7gs8EKIMABm6Pz9jcC227DeT4zD+bqt
+         nVY+DHcePmu7Gx5RZqfGiQrgMR7yeqDxrgM/Q1vlqhweqxg2S5iACdKZKCQAh0UVBh3q
+         /LJPmbJrXv0dZPGmR25HWjEsYFZaoZhbPfNMKhJnWwF5z5P35wdXyaGP+/GBPTarD3Tm
+         Ha9hslh4+06BOXWSM9BwT791BJJgksNnjbG2DaKPLywl/XIk11Rv45zT7oB9vBc1NPow
+         eD1w==
+X-Gm-Message-State: APjAAAUOt8EEnwWBxDOnae2eS83PJu7+XQDSfGS4B1eFbz3mtl2tJZ0s
+        tvQ496SxR0LP8KN+8u8sZw==
+X-Google-Smtp-Source: APXvYqwsHmT4CxNx7HGQ2Pj7np4YP84sY8W19SV2rKvXRYl4qc9Cffx9exEaYAtWsBx+dK7CagS+5w==
+X-Received: by 2002:aca:281a:: with SMTP id 26mr5884115oix.82.1572386501064;
+        Tue, 29 Oct 2019 15:01:41 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c23sm12158oiy.20.2019.10.29.14.46.51
+        by smtp.gmail.com with ESMTPSA id k18sm13904oik.58.2019.10.29.15.01.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 14:46:52 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 16:46:51 -0500
+        Tue, 29 Oct 2019 15:01:40 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 17:01:39 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
 Cc:     Stephen Boyd <sboyd@kernel.org>,
@@ -58,33 +58,106 @@ Cc:     Stephen Boyd <sboyd@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Orson Zhai <orsonzhai@gmail.com>,
         Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: Re: [PATCH 2/5] dt-bindings: clk: sprd: rename the common file name
- sprd.txt to SoC specific
-Message-ID: <20191029214651.GA24044@bogus>
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH 3/5] dt-bindings: clk: sprd: add bindings for sc9863a
+ clock controller
+Message-ID: <20191029220139.GA24212@bogus>
 References: <20191025111338.27324-1-chunyan.zhang@unisoc.com>
- <20191025111338.27324-3-chunyan.zhang@unisoc.com>
+ <20191025111338.27324-4-chunyan.zhang@unisoc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191025111338.27324-3-chunyan.zhang@unisoc.com>
+In-Reply-To: <20191025111338.27324-4-chunyan.zhang@unisoc.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 25 Oct 2019 19:13:35 +0800, Chunyan Zhang wrote:
+On Fri, Oct 25, 2019 at 07:13:36PM +0800, Chunyan Zhang wrote:
 > 
-> Only SC9860 clocks were described in sprd.txt, rename it with a SoC
-> specific name, so that we can add more SoC support.
+> add a new bindings to describe sc9863a clock compatible string.
 > 
 > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  .../devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} (98%)
-> 
+>  .../bindings/clock/sprd,sc9863a-clk.txt       | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Please make this a DT schema.
+
+> diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.txt b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.txt
+> new file mode 100644
+> index 000000000000..a73ae5574c82
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.txt
+> @@ -0,0 +1,59 @@
+> +Unisoc SC9863A Clock Binding
+> +------------------------
+> +
+> +Required properties:
+> +- compatible: should contain the following compatible strings:
+> +	- "sprd,sc9863a-ap-clk"
+> +	- "sprd,sc9863a-pmu-gate"
+> +	- "sprd,sc9863a-pll"
+> +	- "sprd,sc9863a-mpll"
+> +	- "sprd,sc9863a-rpll"
+> +	- "sprd,sc9863a-dpll"
+> +	- "sprd,sc9863a-aon-clk"
+> +	- "sprd,sc9863a-apahb-gate"
+> +	- "sprd,sc9863a-aonapb-gate"
+> +	- "sprd,sc9863a-mm-gate"
+> +	- "sprd,sc9863a-mm-clk"
+> +	- "sprd,sc9863a-vspahb-gate"
+> +	- "sprd,sc9863a-apapb-gate"
+> +
+> +- #clock-cells: must be 1
+> +
+> +- clocks : Should be the input parent clock(s) phandle for the clock, this
+> +	   property here just simply shows which clock group the clocks'
+> +	   parents are in, since each clk node would represent many clocks
+> +	   which are defined in the driver.  The detailed dependency
+> +	   relationship (i.e. how many parents and which are the parents)
+> +	   are implemented in driver code.
+
+You need to define how many clocks for each block.
+
+> +
+> +Optional properties:
+> +
+> +- reg:	Contain the registers base address and length. It must be configured
+> +	only if no 'sprd,syscon' under the node.
+> +
+> +- sprd,syscon: phandle to the syscon which is in the same address area with
+> +	       the clock, and so we can get regmap for the clocks from the
+> +	       syscon device.
+
+Can't these be child nodes of the syscon instead?
+
+> +
+> +Example:
+> +	ap_clk: clock-controller@21500000 {
+> +		compatible = "sprd,sc9863a-ap-clk";
+> +		reg = <0 0x21500000 0 0x1000>;
+> +		clocks = <&ext_32k>, <&ext_26m>,
+> +			 <&pll 0>, <&rpll 0>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	pmu_gate: pmu-gate {
+> +		compatible = "sprd,sc9863a-pmu-gate";
+> +		sprd,syscon = <&pmu_regs>; /* 0x402b0000 */
+> +		clocks = <&ext_26m>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	pll: pll {
+> +		compatible = "sprd,sc9863a-pll";
+> +		sprd,syscon = <&anlg_phy_g2_regs>; /* 0x40353000 */
+> +		clocks = <&pmu_gate 0>;
+> +		#clock-cells = <1>;
+> +	};
+> -- 
+> 2.20.1
+> 
+> 
