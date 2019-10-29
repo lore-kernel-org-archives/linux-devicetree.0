@@ -2,97 +2,162 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6C4CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FD5CA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D16382086A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572338424;
-	bh=mgWIhjckqxqZSyRbf9Ero4ZNiEz9TMOyb3Twc/C42Qw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aBtZPmXTckyJtAeOSVvx2SWCR4+iVP7xg1uqGUccY0GI0kMQziNzPGV6j5cJJ8uSk
-	 jLyAkTZp+fgJiLcQM1NmYI0O6qlATK27qHhwE+j1AZGpGilXoFGQos9a0tASnWV0RU
-	 1wIdjP9dO6ovw6FE5RMMKBJGxYJb+V0NKgDX4pNA=
+	by mail.kernel.org (Postfix) with ESMTP id D383620663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:53:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ryNYsmDL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfJ2IkY (ORCPT
+        id S1727967AbfJ2Ixg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbfJ2IkY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:40:24 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 292D52067D;
-        Tue, 29 Oct 2019 08:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572338423;
-        bh=mgWIhjckqxqZSyRbf9Ero4ZNiEz9TMOyb3Twc/C42Qw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VX+bTrWJaxeA2GZo6IMS5PC8kXNJvpeD5Q4wP4xSZ7Dr2B5qn68G1qj1p3C1WtNj9
-         tgZPaKROjJoIbCD9PNoQMMTZg1tQrDhBnNx/3TihzsuYA5c+v07maBq+iDHzyr44sg
-         RebUP5pDHloE7kPCl3rCVrWGqXWjBrgT+dUVSSzY=
-Date:   Tue, 29 Oct 2019 09:30:12 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] arm: dts: sun8i: a83t: a711: Add touchscreen node
-Message-ID: <20191029083012.62wgvonpxkgmznpn@hendrix>
-References: <20191029005806.3577376-1-megous@megous.com>
- <20191029005806.3577376-4-megous@megous.com>
+        Tue, 29 Oct 2019 04:53:36 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59186 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfJ2Ixf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 04:53:35 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9T8rMdP075590;
+        Tue, 29 Oct 2019 03:53:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572339202;
+        bh=GENQOkaFvVatZv1GMFR3zbGCbH5x94AbSDwlQyYRy4k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ryNYsmDLJEX96Q+mU0OivEDViSqNSb3nMrcJpZ1CwikrLprdf3c1ZFwFLFEGyr7Z4
+         bjY4DGY2VwoPy0uOWRd4JCMwAgwubYxlHYWPTXUntK8Ky3GoXdkre/Nmar9eZ/SrHJ
+         sZVM/v/z2jsQ1peboThHmeA9SGFCGu6tzGoGz8ds=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9T8rMG2086926
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 29 Oct 2019 03:53:22 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 29
+ Oct 2019 03:53:10 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 29 Oct 2019 03:53:10 -0500
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9T8rIvA090581;
+        Tue, 29 Oct 2019 03:53:18 -0500
+Subject: Re: [PATCH v3 02/14] soc: ti: k3: add navss ringacc driver
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
+        <j-keerthy@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <20191001061704.2399-3-peter.ujfalusi@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <b5f47303-b6d2-190b-d38c-d3557a93b111@ti.com>
+Date:   Tue, 29 Oct 2019 14:22:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vjc7bik6lfh4bmzh"
-Content-Disposition: inline
-In-Reply-To: <20191029005806.3577376-4-megous@megous.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191001061704.2399-3-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Grygorii,
 
---vjc7bik6lfh4bmzh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...snip..]
 
-On Tue, Oct 29, 2019 at 01:58:06AM +0100, Ondrej Jirman wrote:
-> From: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
->
-> Enable a FocalTech EDT-FT5x06 Polytouch touchscreen.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+> +
+> +static int k3_ringacc_ring_access_io(struct k3_ring *ring, void *elem,
+> +				     enum k3_ringacc_access_mode access_mode)
+> +{
+> +	void __iomem *ptr;
+> +
+> +	switch (access_mode) {
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
+> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+> +		ptr = (void __iomem *)&ring->fifos->head_data;
+> +		break;
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
+> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+> +		ptr = (void __iomem *)&ring->fifos->tail_data;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	ptr += k3_ringacc_ring_get_fifo_pos(ring);
+> +
+> +	switch (access_mode) {
+> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+> +		dev_dbg(ring->parent->dev,
+> +			"memcpy_fromio(x): --> ptr(%p), mode:%d\n", ptr,
+> +			access_mode);
+> +		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
 
-Applied, thanks
+Does this work for any elem_size < 64 or any element size not aligned with 64?
 
---vjc7bik6lfh4bmzh
-Content-Type: application/pgp-signature; name="signature.asc"
+IIUC, in message mode, ring element should be inserted in a single burst write
+and there is no doorbell facility. If the above conditions are not met, we are
+supposed to use proxy.
 
------BEGIN PGP SIGNATURE-----
+In this driver, I don't see any restrictions on the ring element size for
+message mode and directly written to io. Am I missing something?
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbf4lAAKCRDj7w1vZxhR
-xVbSAQDT1XY746DPYfIud8pyJ8oPJujpzqL4+l8r1CyT6njIYQD/UIVWkNxtxcoq
-K3j4wdKkaXwfIZ5fyFVqDB6uE9PToAc=
-=wvMX
------END PGP SIGNATURE-----
+Thanks and regards,
+Lokesh
 
---vjc7bik6lfh4bmzh--
+> +		ring->occ--;
+> +		break;
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
+> +		dev_dbg(ring->parent->dev,
+> +			"memcpy_toio(x): --> ptr(%p), mode:%d\n", ptr,
+> +			access_mode);
+> +		memcpy_toio(ptr, elem, (4 << ring->elm_size));
+> +		ring->free--;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_dbg(ring->parent->dev, "free%d index%d occ%d index%d\n", ring->free,
+> +		ring->windex, ring->occ, ring->rindex);
+> +	return 0;
+> +}
+> +
+> +static int k3_ringacc_ring_push_head_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_PUSH_HEAD);
+> +}
+> +
+> +static int k3_ringacc_ring_push_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_PUSH_TAIL);
+> +}
+> +
+> +static int k3_ringacc_ring_pop_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_POP_HEAD);
+> +}
+> +
+> +static int k3_ringacc_ring_pop_tail_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_POP_HEAD);
+> +}
+> +
