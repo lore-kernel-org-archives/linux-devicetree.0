@@ -2,31 +2,32 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156A2CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA73DCA9EC3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AADCE2054F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7948D2054F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Dj0yQWOT"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Lk+T64XG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfJ2URq (ORCPT
+        id S1727468AbfJ2URs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:17:46 -0400
-Received: from vps.xff.cz ([195.181.215.36]:37728 "EHLO vps.xff.cz"
+        Tue, 29 Oct 2019 16:17:48 -0400
+Received: from vps.xff.cz ([195.181.215.36]:37820 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbfJ2URp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:17:45 -0400
+        id S1726244AbfJ2URr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:17:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572380264; bh=wW5JFIsIsJu0qPYpAaTlE7obxGziUNClJYFMYvv4v04=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Dj0yQWOTPdD26/mFn0ZEgxk2VXGGM6MomYqE+KAtPCZjp2/fHu+uNncetcslpRtrj
-         +06T0cawiwc4SOgkF32JWGQOE4Q5KV0T2QLSPJqy4j3qmbwSy6GauIIdPBqsaP52HE
-         GdIxDfnxZqnmv74Jw8xQVxF4znG7RaGAPPwCc1wI=
+        t=1572380265; bh=j/1alFyxyzlOGBpWi0xhgdx7rziKKHf8ouc9JNJCGXA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Lk+T64XGUS9IbyJw2nR9YzQZgwRrJ5jCPMTwlLSoIqOxoZkDAW2OPIwzsk1qYzoYz
+         P+7TWoKq9VcCQ7wE7cfSTpCWRMJeoZKg7hLJ8d4Yd+8s9WeqOardv75+dJEXki2h9K
+         SK/waAuJhXBiIdpwq67a3gTXt91Qv2JQqjy2qTBA=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -41,9 +42,11 @@ Cc:     Ondrej Jirman <megous@megous.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 0/4] Add USB 3 support for H6 and Orange Pi 3
-Date:   Tue, 29 Oct 2019 21:17:37 +0100
-Message-Id: <20191029201741.3820913-1-megous@megous.com>
+Subject: [PATCH v3 4/4] arm64: dts: allwinner: orange-pi-3: Enable USB 3.0 host support
+Date:   Tue, 29 Oct 2019 21:17:41 +0100
+Message-Id: <20191029201741.3820913-5-megous@megous.com>
+In-Reply-To: <20191029201741.3820913-1-megous@megous.com>
+References: <20191029201741.3820913-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -51,60 +54,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series implements USB 3 support for Xunlong Orange Pi 3 board.
+Enable Allwinner's USB 3.0 phy and the host controller. Orange Pi 3
+board has GL3510 USB 3.0 4-port hub connected to the SoC's USB 3.0
+port. All four ports are exposed via USB3-A connectors. VBUS is
+always on, since it's powered directly from DCIN (VCC-5V) and
+not switchable.
 
-This is a re-hash of the Icenowy's earlier USB3 work[1] without code
-that caused controversy previously. Orange Pi 3 board doesn't need vbus
-supply to be dynamically enabled, so that code is not needed to support
-USB3 on this board.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Most of patches are already reviewed. I've converted dt-bindings to yaml
-format, and added the Orange Pi 3 board modifications.
-
-Hopefully with this series we can get USB3 support into mainline for
-Orange Pi 3, and build on it later to support more boards, where
-supporting them is more complicated.
-
-Please take a look.
-
-thank you and regards,
-  Ondrej Jirman
-
-[1] https://lore.kernel.org/patchwork/patch/1058919/
-
-Changes in v3:
-- Added DT reviewed-by tag
-- more sun50i / H6 name clarifications (Kconfig, ...)
-- dropped USB_COMMON and linux/usb/of.h
-
-Changes in v2:
-- Added Maxime's Acked-By's
-- Fixed title of DT bindings file
-
-Changes since Icenowy v5 series:
-- use earlier patches that did not include VBUS regulator/connector
-  code
-- converted dt bindings to yaml
-- added patch to enable usb3 on Orange Pi 3
-
-Icenowy Zheng (2):
-  phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC
-  arm64: dts: allwinner: h6: add USB3 device nodes
-
-Ondrej Jirman (2):
-  dt-bindings: Add bindings for USB3 phy on Allwinner H6
-  arm64: dts: allwinner: orange-pi-3: Enable USB 3.0 host support
-
- .../phy/allwinner,sun50i-h6-usb3-phy.yaml     |  47 +++++
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    |   8 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  32 +++
- drivers/phy/allwinner/Kconfig                 |  11 +
- drivers/phy/allwinner/Makefile                |   1 +
- drivers/phy/allwinner/phy-sun50i-usb3.c       | 190 ++++++++++++++++++
- 6 files changed, 289 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
- create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 2557cc6c8d50..32800204c22a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -95,6 +95,10 @@
+ 	status = "okay";
+ };
+ 
++&dwc3 {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -304,3 +308,7 @@
+ 	usb3_vbus-supply = <&reg_vcc5v>;
+ 	status = "okay";
+ };
++
++&usb3phy {
++	status = "okay";
++};
 -- 
 2.23.0
 
