@@ -7,711 +7,233 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177E4CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE27CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A22208E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9E32067D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572368794;
-	bh=v2VjfARJU6gfbG4lSODwILMSQMSBLJ6RyoajucNjk/I=;
+	s=default; t=1572369036;
+	bh=ewiJLrKEwwS6CUtAliUE7kzO3oMqbwX8sgAZkuVxq2c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M+O+arLAM8LuS55Zd7hzsRlnT9JlTH+NerpjTCfhlbdk/tMnDbkuXjg9lo1TaK5Y1
-	 7o5GdGy6ij19f9wBTC7rfKNeeOuaKMIo5YsSdwzPs5fUbaNYO5nAmeXw3Dm2nlOslW
-	 6oBXowI4dyBLue95/W/XsnnL3FsWAHKgp3NVle8E=
+	b=dzfmGr9QFeUUsaniEZwdWBoTMvxmhDwUVfwpW7Roa4cZXda6oHAslvVDAjYlV6ZVr
+	 4FVBR0/mZaYYIyLRLVYqJwQc22eY/moJevDOjczUhIz/WroRbIr8vD2bGYAXVAxs1l
+	 gkX/A820w7dYN4lDsyxOFGdVzU22sZlyDOd/GsGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390367AbfJ2RGe (ORCPT
+        id S2390672AbfJ2RKg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:06:34 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38330 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbfJ2RGe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 13:06:34 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r14so5637954otn.5
-        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 10:06:32 -0700 (PDT)
+        Tue, 29 Oct 2019 13:10:36 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41313 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390639AbfJ2RKg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 13:10:36 -0400
+Received: by mail-oi1-f193.google.com with SMTP id g81so9567888oib.8;
+        Tue, 29 Oct 2019 10:10:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GC14i0a6vNTrt70DU58VN8zmHmdhRfAj/+MPmYGUtXE=;
-        b=jbY+ePYKcrFA6M2yn+YBASmenjm6DSwLPI5ce2EDJZoE+73jWBNbPcYnm4brjUvd1j
-         VwEgcDxQf/3EbJm3VgQ1Mgvso45kaFtQB30hu2nWz4tcC5X0FVw3IIsJZsvq82HeLYj+
-         LAa1fs2JgRn4uM9L4irHz3dcIMdAJwCFk7BVVKAC9mm23UyEv+cJU7SlM6SsoxWFXPgD
-         67Y0J/DqrbQTSAA4ZnWY0YVU8j2Ks6RurhMoT0HabCIZtIR0/bMHSFGxMagMzmMqILKy
-         yJXHaUD5alAipu3Q9BYCv7p3mZ1JMYJ7qyWx9EKjpt3enb/x/hOouvlNyVuMDxsH+255
-         vt6Q==
-X-Gm-Message-State: APjAAAWoHwxH3VIv2vxTEgLktd8w2WKG8MXk9RNWC4laqrtOQkPa3Od8
-        T2jM8EQPtEwXq8JgjksRFHAvCt4=
-X-Google-Smtp-Source: APXvYqwxuc1qq0Pe/NQx2tQToKOzPAe2SqdStbORUFAU/t3w6hFmNCek/Ptj3HmFxeR6nGnCCMMOsw==
-X-Received: by 2002:a05:6830:2105:: with SMTP id i5mr5918445otc.334.1572368791887;
-        Tue, 29 Oct 2019 10:06:31 -0700 (PDT)
+        bh=xTORcAVGGotokS03E5KBBwWhY7+0pNKbT792zrXJzuE=;
+        b=pEgXzaRYcx8FHMv+aZTpDuUzHDIQkIvmOQiDcIemVmOLSpUwth6GklvMdEkV2RaD7V
+         6AXldgPk/QV2vP4fTI/Lg+tDA9371QJBmSxVvI6jvnHCV0qerfBQRaFmSoZd4SfAcL+j
+         XtF2jRPVGvQl+3t+lyt/1ixD6sz43AldAUsScitlfTqrC0vZJTEM/hJtYmf1iSSsInO4
+         T5mkJ1YYwHY/hNoHIYLYvD0ch6XRIl56WfkGgwBYXgAoSJWjHcgtXIQo+m6oAEPaats7
+         /PJIlNW6pUI/eibgCukNGprVeZTif0ZixpbcJctVcpVgph71NnNwmrO09b3mrSYvewo0
+         EVAQ==
+X-Gm-Message-State: APjAAAUKgnCaBDElEqbHh71sqkkVrgrNioTO4yrAPiKAw5BPQIBRUhhp
+        v/f3BYKg8/i/BrlYBscMfky157k=
+X-Google-Smtp-Source: APXvYqwhf9erp+knV+GYq4o8z2jRx3QPFwBGjz6heFMEd1H0LxUvvtsWOZlDhpjmAZfu2wttiHcfvA==
+X-Received: by 2002:a05:6808:317:: with SMTP id i23mr5049536oie.17.1572369034538;
+        Tue, 29 Oct 2019 10:10:34 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i10sm793631oii.2.2019.10.29.10.06.30
+        by smtp.gmail.com with ESMTPSA id y4sm4084204oie.42.2019.10.29.10.10.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 10:06:31 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 12:06:30 -0500
+        Tue, 29 Oct 2019 10:10:32 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 12:10:32 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Maxime Ripard <mripard@kernel.org>
-Cc:     kishon@ti.com, Mark Rutland <mark.rutland@arm.com>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Frank Rowand <frowand.list@gmail.com>,
         devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: usb: Convert Allwinner USB PHY controller
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: usb: Convert Allwinner A10 mUSB controller
  to a schema
-Message-ID: <20191029170630.GA14239@bogus>
-References: <20191022161810.43451-1-mripard@kernel.org>
+Message-ID: <20191029171032.GA23536@bogus>
+References: <20191022161951.43567-1-mripard@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191022161810.43451-1-mripard@kernel.org>
+In-Reply-To: <20191022161951.43567-1-mripard@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 06:18:10PM +0200, Maxime Ripard wrote:
-> The Allwinner SoCs have a USB PHY controller that is supported in Linux,
-> with a matching Device Tree binding.
+On Tue, Oct 22, 2019 at 06:19:51PM +0200, Maxime Ripard wrote:
+> The Allwinner SoCs have an mUSB controller that is supported in Linux, with
+> a matching Device Tree binding.
 > 
 > Now that we have the DT validation in place, let's convert the device tree
 > bindings for that controller over to a YAML schemas.
 > 
 > Signed-off-by: Maxime Ripard <mripard@kernel.org>
 > ---
->  .../phy/allwinner,sun4i-a10-usb-phy.yaml      | 541 ++++++++++++++++++
->  .../devicetree/bindings/phy/sun4i-usb-phy.txt |  68 ---
->  2 files changed, 541 insertions(+), 68 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-
-Perhaps this one should be split into multiple files. The oneOf's and 
-if/then's are a bit much IMO.
-
-You could always extract what's common and then $ref the common file.
-
+>  .../bindings/usb/allwinner,sun4i-a10-musb.txt |  28 -----
+>  .../usb/allwinner,sun4i-a10-musb.yaml         | 101 ++++++++++++++++++
+>  2 files changed, 101 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
+>  create mode 100644 Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
+> diff --git a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
+> deleted file mode 100644
+> index 50abb20fe319..000000000000
+> --- a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.txt
+> +++ /dev/null
+> @@ -1,28 +0,0 @@
+> -Allwinner sun4i A10 musb DRC/OTG controller
+> --------------------------------------------
+> -
+> -Required properties:
+> - - compatible      : "allwinner,sun4i-a10-musb", "allwinner,sun6i-a31-musb",
+> -                     "allwinner,sun8i-a33-musb" or "allwinner,sun8i-h3-musb"
+> - - reg             : mmio address range of the musb controller
+> - - clocks          : clock specifier for the musb controller ahb gate clock
+> - - reset           : reset specifier for the ahb reset (A31 and newer only)
+> - - interrupts      : interrupt to which the musb controller is connected
+> - - interrupt-names : must be "mc"
+> - - phys            : phy specifier for the otg phy
+> - - phy-names       : must be "usb"
+> - - dr_mode         : Dual-Role mode must be "host" or "otg"
+> - - extcon          : extcon specifier for the otg phy
+> -
+> -Example:
+> -
+> -	usb_otg: usb@1c13000 {
+> -		compatible = "allwinner,sun4i-a10-musb";
+> -		reg = <0x01c13000 0x0400>;
+> -		clocks = <&ahb_gates 0>;
+> -		interrupts = <38>;
+> -		interrupt-names = "mc";
+> -		phys = <&usbphy 0>;
+> -		phy-names = "usb";
+> -		extcon = <&usbphy 0>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml
 > new file mode 100644
-> index 000000000000..de63a5eb1e2a
+> index 000000000000..81d0189ed5c8
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
-> @@ -0,0 +1,541 @@
+> +++ b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml
+> @@ -0,0 +1,101 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/phy/allwinner,sun4i-a10-usb-phy.yaml#
+> +$id: http://devicetree.org/schemas/usb/allwinner,sun4i-a10-musb.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Allwinner A10 USB PHY Device Tree Bindings
+> +title: Allwinner A10 mUSB OTG Controller Device Tree Bindings
 > +
 > +maintainers:
 > +  - Chen-Yu Tsai <wens@csie.org>
 > +  - Maxime Ripard <maxime.ripard@bootlin.com>
 > +
 > +properties:
-> +  "#phy-cells":
-> +    const: 1
-> +
 > +  compatible:
-> +    enum:
-> +      - allwinner,sun4i-a10-usb-phy
-> +      - allwinner,sun5i-a13-usb-phy
-> +      - allwinner,sun6i-a31-usb-phy
-> +      - allwinner,sun7i-a20-usb-phy
-> +      - allwinner,sun8i-a23-usb-phy
-> +      - allwinner,sun8i-a33-usb-phy
-> +      - allwinner,sun8i-a83t-usb-phy
-> +      - allwinner,sun8i-h3-usb-phy
-> +      - allwinner,sun8i-r40-usb-phy
-> +      - allwinner,sun8i-v3s-usb-phy
-> +      - allwinner,sun50i-a64-usb-phy
-> +      - allwinner,sun50i-h6-usb-phy
+> +    oneOf:
+> +      - const: allwinner,sun4i-a10-musb
+> +      - const: allwinner,sun6i-a31-musb
+> +      - const: allwinner,sun8i-a33-musb
+> +      - items:
+> +          - const: allwinner,sun8i-a83t-musb
+> +          - const: allwinner,sun8i-a33-musb
+> +      - const: allwinner,sun8i-h3-musb
+> +      - items:
+> +          - const: allwinner,sun50i-h6-musb
+> +          - const: allwinner,sun8i-a33-musb
+
+This could be 2 oneOf entries instead. Or just combine the 2 2 items 
+entries.
+
 > +
 > +  reg:
-> +    anyOf:
-> +      - minItems: 2
-> +        maxItems: 3
-> +        items:
-> +          - description: PHY Control registers
-> +          - description: PHY PMU1 registers
-> +          - description: PHY PMU2 registers
+> +    maxItems: 1
 > +
-> +      - minItems: 2
-> +        maxItems: 5
-> +        items:
-> +          - description: PHY Control registers
-> +          - description: PHY PMU0 registers
-> +          - description: PHY PMU1 registers
-> +          - description: PHY PMU2 registers
-> +          - description: PHY PMU3 registers
+> +  interrupts:
+> +    maxItems: 1
 > +
-> +      - items:
-> +          - description: PHY Control registers
-> +          - description: PHY PMU0 registers
-> +          - description: PHY PMU3 registers
-> +
-> +  reg-names:
-> +    oneOf:
-> +      - minItems: 2
-> +        maxItems: 3
-> +        items:
-> +          - const: phy_ctrl
-> +          - const: pmu1
-> +          - const: pmu2
-> +
-> +      - minItems: 2
-> +        maxItems: 5
-> +        items:
-> +          - const: phy_ctrl
-> +          - const: pmu0
-> +          - const: pmu1
-> +          - const: pmu2
-> +          - const: pmu3
-> +
-> +      - items:
-> +          - const: phy_ctrl
-> +          - const: pmu0
-> +          - const: pmu3
+> +  interrupt-names:
+> +    const: mc
 > +
 > +  clocks:
-> +    anyOf:
-> +      - description: USB PHY bus clock
-> +
-> +      - minItems: 1
-> +        maxItems: 4
-> +        items:
-> +          - description: USB OTG PHY bus clock
-> +          - description: USB Host 0 PHY bus clock
-> +          - description: USB Host 1 PHY bus clock
-> +          - description: USB Host 2 PHY bus clock
-> +
-> +      - items:
-> +          - description: USB OTG PHY bus clock
-> +          - description: USB Host 0 PHY bus clock
-> +          - description: USB Host 1 PHY bus clock
-> +          - description: USB HSIC 12MHz clock
-> +
-> +      - items:
-> +          - description: USB OTG PHY bus clock
-> +          - description: USB Host PHY bus clock
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - const: usb_phy
-> +
-> +      - minItems: 1
-> +        maxItems: 4
-> +        items:
-> +          - const: usb0_phy
-> +          - const: usb1_phy
-> +          - const: usb2_phy
-> +          - const: usb3_phy
-> +
-> +      - items:
-> +          - const: usb0_phy
-> +          - const: usb1_phy
-> +          - const: usb2_phy
-> +          - const: usb2_hsic_12M
-> +
-> +      - items:
-> +          - const: usb0_phy
-> +          - const: usb3_phy
+> +    maxItems: 1
 > +
 > +  resets:
-> +    anyOf:
-> +      - minItems: 1
-> +        maxItems: 4
-> +        items:
-> +          - description: USB OTG reset
-> +          - description: USB Host 1 Controller reset
-> +          - description: USB Host 2 Controller reset
-> +          - description: USB Host 3 Controller reset
+> +    maxItems: 1
 > +
-> +      - items:
-> +          - description: USB OTG reset
-> +          - description: USB Host Controller reset
+> +  phys:
+> +    description: PHY specifier for the OTG PHY
 > +
-> +  reset-names:
-> +    oneOf:
-> +      - minItems: 1
-> +        maxItems: 4
-> +        items:
-> +          - const: usb0_reset
-> +          - const: usb1_reset
-> +          - const: usb2_reset
-> +          - const: usb3_reset
+> +  phy-names:
+> +    const: usb
 > +
-> +      - items:
-> +          - const: usb0_reset
-> +          - const: usb3_reset
+> +  extcon:
+> +    description: Extcon specifier for the OTG PHY
 > +
-> +  usb0_id_det-gpios:
-> +    description: GPIO to the USB OTG ID pin
+> +  dr_mode:
+> +    enum:
+> +      - host
+> +      - otg
+> +      - peripheral
+
+3rd definition I've seen in the past day...
+
 > +
-> +  usb0_vbus_det-gpios:
-> +    description: GPIO to the USB OTG VBUS detect pin
-> +
-> +  usb0_vbus_power-supply:
-> +    description: Power supply to detect the USB OTG VBUS
-> +
-> +  usb0_vbus-supply:
-> +    description: Regulator controlling USB OTG VBUS
-> +
-> +  usb1_vbus-supply:
-> +    description: Regulator controlling USB1 Host controller
-> +
-> +  usb2_vbus-supply:
-> +    description: Regulator controlling USB2 Host controller
-> +
-> +  usb3_vbus-supply:
-> +    description: Regulator controlling USB3 Host controller
+> +  allwinner,sram:
+> +    description: Phandle to the device SRAM
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
 > +
 > +required:
-> +  - "#phy-cells"
 > +  - compatible
-> +  - clocks
-> +  - clock-names
 > +  - reg
-> +  - reg-names
-> +  - resets
-> +  - reset-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - clocks
+> +  - phys
+> +  - phy-names
+> +  - dr_mode
+> +  - extcon
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - allwinner,sun6i-a31-musb
+> +          - allwinner,sun8i-a33-musb
+> +          - allwinner,sun8i-h3-musb
+> +
+> +then:
+> +  required:
+> +    - resets
 > +
 > +additionalProperties: false
 > +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - allwinner,sun4i-a10-usb-phy
-> +              - allwinner,sun7i-a20-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 3
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu1
-> +            - const: pmu2
-> +
-> +        clocks:
-> +          maxItems: 1
-> +
-> +        clock-names:
-> +          const: usb_phy
-> +
-> +        resets:
-> +          maxItems: 3
-> +
-> +        reset-names:
-> +          items:
-> +            - const: usb0_reset
-> +            - const: usb1_reset
-> +            - const: usb2_reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - allwinner,sun5i-a13-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 2
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu1
-> +
-> +        clocks:
-> +          maxItems: 1
-> +
-> +        clock-names:
-> +          const: usb_phy
-> +
-> +        resets:
-> +          maxItems: 2
-> +
-> +        reset-names:
-> +          items:
-> +            - const: usb0_reset
-> +            - const: usb1_reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun6i-a31-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 3
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu1
-> +            - const: pmu2
-> +
-> +        clocks:
-> +          maxItems: 3
-> +
-> +        clock-names:
-> +          items:
-> +            - const: usb0_phy
-> +            - const: usb1_phy
-> +            - const: usb2_phy
-> +
-> +        resets:
-> +          maxItems: 3
-> +
-> +        reset-names:
-> +          items:
-> +            - const: usb0_reset
-> +            - const: usb1_reset
-> +            - const: usb2_reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - allwinner,sun8i-a23-usb-phy
-> +              - allwinner,sun8i-a33-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 2
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu1
-> +
-> +        clocks:
-> +          maxItems: 2
-> +
-> +        clock-names:
-> +          items:
-> +            - const: usb0_phy
-> +            - const: usb1_phy
-> +
-> +        resets:
-> +          maxItems: 2
-> +
-> +        reset-names:
-> +          items:
-> +            - const: usb0_reset
-> +            - const: usb1_reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun8i-a83t-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 3
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu1
-> +            - const: pmu2
-> +
-> +        clocks:
-> +          maxItems: 4
-> +
-> +        clock-names:
-> +          items:
-> +            - const: usb0_phy
-> +            - const: usb1_phy
-> +            - const: usb2_phy
-> +            - const: usb2_hsic_12M
-> +
-> +        resets:
-> +          maxItems: 3
-> +
-> +        reset-names:
-> +          items:
-> +            - const: usb0_reset
-> +            - const: usb1_reset
-> +            - const: usb2_reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun8i-h3-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 5
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu0
-> +            - const: pmu1
-> +            - const: pmu2
-> +            - const: pmu3
-> +
-> +        clocks:
-> +          maxItems: 4
-> +
-> +        clock-names:
-> +          items:
-> +            - const: usb0_phy
-> +            - const: usb1_phy
-> +            - const: usb2_phy
-> +            - const: usb3_phy
-> +
-> +        resets:
-> +          maxItems: 4
-> +
-> +        reset-names:
-> +          items:
-> +            - const: usb0_reset
-> +            - const: usb1_reset
-> +            - const: usb2_reset
-> +            - const: usb3_reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun8i-r40-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 4
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu0
-> +            - const: pmu1
-> +            - const: pmu2
-> +
-> +        clocks:
-> +          maxItems: 3
-> +
-> +        clock-names:
-> +          items:
-> +            - const: usb0_phy
-> +            - const: usb1_phy
-> +            - const: usb2_phy
-> +
-> +        resets:
-> +          maxItems: 3
-> +
-> +        reset-names:
-> +          items:
-> +            - const: usb0_reset
-> +            - const: usb1_reset
-> +            - const: usb2_reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun8i-v3s-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 2
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu0
-> +
-> +        clocks:
-> +          maxItems: 1
-> +
-> +        clock-names:
-> +          const: usb0_phy
-> +
-> +        resets:
-> +          maxItems: 1
-> +
-> +        reset-names:
-> +          const: usb0_reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun50i-a64-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 3
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu0
-> +            - const: pmu1
-> +
-> +        clocks:
-> +          maxItems: 2
-> +
-> +        clock-names:
-> +          items:
-> +            - const: usb0_phy
-> +            - const: usb1_phy
-> +
-> +        resets:
-> +          maxItems: 2
-> +
-> +        reset-names:
-> +          items:
-> +            - const: usb0_reset
-> +            - const: usb1_reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun50i-h6-usb-phy
-> +
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 3
-> +
-> +        reg-names:
-> +          items:
-> +            - const: phy_ctrl
-> +            - const: pmu0
-> +            - const: pmu3
-> +
-> +        clocks:
-> +          maxItems: 2
-> +
-> +        clock-names:
-> +          items:
-> +            - const: usb0_phy
-> +            - const: usb3_phy
-> +
-> +        resets:
-> +          maxItems: 2
-> +
-> +        reset-names:
-> +          items:
-> +            - const: usb0_reset
-> +            - const: usb3_reset
-> +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    usbphy: phy@01c13400 {
-> +        compatible = "allwinner,sun4i-a10-usb-phy";
-> +        reg = <0x01c13400 0x10>, <0x01c14800 0x4>, <0x01c1c800 0x4>;
-> +        reg-names = "phy_ctrl", "pmu1", "pmu2";
-> +        clocks = <&usb_clk 8>;
-> +        clock-names = "usb_phy";
-> +        resets = <&usb_clk 0>, <&usb_clk 1>, <&usb_clk 2>;
-> +        reset-names = "usb0_reset", "usb1_reset", "usb2_reset";
-> +        usb0_id_det-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
-> +        usb0_vbus_det-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>;
-> +        usb0_vbus-supply = <&reg_usb0_vbus>;
-> +        usb1_vbus-supply = <&reg_usb1_vbus>;
-> +        usb2_vbus-supply = <&reg_usb2_vbus>;
-> +        #phy-cells = <1>;
+> +    usb_otg: usb@1c13000 {
+> +      compatible = "allwinner,sun4i-a10-musb";
+> +      reg = <0x01c13000 0x0400>;
+> +      clocks = <&ahb_gates 0>;
+> +      interrupts = <38>;
+> +      interrupt-names = "mc";
+> +      phys = <&usbphy 0>;
+> +      phy-names = "usb";
+> +      extcon = <&usbphy 0>;
+> +      dr_mode = "peripheral";
 > +    };
-> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> deleted file mode 100644
-> index f2e120af17f0..000000000000
-> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> +++ /dev/null
-> @@ -1,68 +0,0 @@
-> -Allwinner sun4i USB PHY
-> ------------------------
-> -
-> -Required properties:
-> -- compatible : should be one of
-> -  * allwinner,sun4i-a10-usb-phy
-> -  * allwinner,sun5i-a13-usb-phy
-> -  * allwinner,sun6i-a31-usb-phy
-> -  * allwinner,sun7i-a20-usb-phy
-> -  * allwinner,sun8i-a23-usb-phy
-> -  * allwinner,sun8i-a33-usb-phy
-> -  * allwinner,sun8i-a83t-usb-phy
-> -  * allwinner,sun8i-h3-usb-phy
-> -  * allwinner,sun8i-r40-usb-phy
-> -  * allwinner,sun8i-v3s-usb-phy
-> -  * allwinner,sun50i-a64-usb-phy
-> -  * allwinner,sun50i-h6-usb-phy
-> -- reg : a list of offset + length pairs
-> -- reg-names :
-> -  * "phy_ctrl"
-> -  * "pmu0" for H3, V3s, A64 or H6
-> -  * "pmu1"
-> -  * "pmu2" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
-> -  * "pmu3" for sun8i-h3 or sun50i-h6
-> -- #phy-cells : from the generic phy bindings, must be 1
-> -- clocks : phandle + clock specifier for the phy clocks
-> -- clock-names :
-> -  * "usb_phy" for sun4i, sun5i or sun7i
-> -  * "usb0_phy", "usb1_phy" and "usb2_phy" for sun6i
-> -  * "usb0_phy", "usb1_phy" for sun8i
-> -  * "usb0_phy", "usb1_phy", "usb2_phy" and "usb2_hsic_12M" for sun8i-a83t
-> -  * "usb0_phy", "usb1_phy", "usb2_phy" and "usb3_phy" for sun8i-h3
-> -  * "usb0_phy" and "usb3_phy" for sun50i-h6
-> -- resets : a list of phandle + reset specifier pairs
-> -- reset-names :
-> -  * "usb0_reset"
-> -  * "usb1_reset"
-> -  * "usb2_reset" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
-> -  * "usb3_reset" for sun8i-h3 and sun50i-h6
-> -
-> -Optional properties:
-> -- usb0_id_det-gpios : gpio phandle for reading the otg id pin value
-> -- usb0_vbus_det-gpios : gpio phandle for detecting the presence of usb0 vbus
-> -- usb0_vbus_power-supply: power-supply phandle for usb0 vbus presence detect
-> -- usb0_vbus-supply : regulator phandle for controller usb0 vbus
-> -- usb1_vbus-supply : regulator phandle for controller usb1 vbus
-> -- usb2_vbus-supply : regulator phandle for controller usb2 vbus
-> -- usb3_vbus-supply : regulator phandle for controller usb3 vbus
-> -
-> -Example:
-> -	usbphy: phy@01c13400 {
-> -		#phy-cells = <1>;
-> -		compatible = "allwinner,sun4i-a10-usb-phy";
-> -		/* phy base regs, phy1 pmu reg, phy2 pmu reg */
-> -		reg = <0x01c13400 0x10 0x01c14800 0x4 0x01c1c800 0x4>;
-> -		reg-names = "phy_ctrl", "pmu1", "pmu2";
-> -		clocks = <&usb_clk 8>;
-> -		clock-names = "usb_phy";
-> -		resets = <&usb_clk 0>, <&usb_clk 1>, <&usb_clk 2>;
-> -		reset-names = "usb0_reset", "usb1_reset", "usb2_reset";
-> -		pinctrl-names = "default";
-> -		pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-> -		usb0_id_det-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>; /* PH19 */
-> -		usb0_vbus_det-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
-> -		usb0_vbus-supply = <&reg_usb0_vbus>;
-> -		usb1_vbus-supply = <&reg_usb1_vbus>;
-> -		usb2_vbus-supply = <&reg_usb2_vbus>;
-> -	};
+> +
+> +...
 > -- 
 > 2.23.0
 > 
