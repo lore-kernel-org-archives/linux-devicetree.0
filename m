@@ -2,54 +2,55 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356F3CA9EC2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB72CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0156E20862
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD44E2054F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfJ2Hxc (ORCPT
+        id S1729255AbfJ2IeK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:53:32 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23959 "EHLO mga04.intel.com"
+        Tue, 29 Oct 2019 04:34:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:35656 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfJ2Hxc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:53:32 -0400
+        id S1728892AbfJ2IeK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 04:34:10 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 00:53:31 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 01:34:10 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="350904323"
+   d="scan'208";a="202775353"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 29 Oct 2019 00:53:29 -0700
+  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 01:34:09 -0700
 Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 372E8580372;
-        Tue, 29 Oct 2019 00:53:24 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id 4518A58049B;
+        Tue, 29 Oct 2019 01:34:04 -0700 (PDT)
 Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
  PCIe RC controller
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     Rob Herring <robh@kernel.org>
 Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
 References: <cover.1571638827.git.eswara.kota@linux.intel.com>
  <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
- <CAFBinCCSX_kVB=W3O-WXDMD2_2_Rnv+kiehf37xDkjL8+QoyHQ@mail.gmail.com>
+ <20191025165352.GA30602@bogus>
 From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <42016b72-da39-7234-c3d3-f007636ff573@linux.intel.com>
-Date:   Tue, 29 Oct 2019 15:53:22 +0800
+Message-ID: <72d46086-0918-a5af-d798-7488b55a8e07@linux.intel.com>
+Date:   Tue, 29 Oct 2019 16:34:03 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCCSX_kVB=W3O-WXDMD2_2_Rnv+kiehf37xDkjL8+QoyHQ@mail.gmail.com>
+In-Reply-To: <20191025165352.GA30602@bogus>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -58,34 +59,227 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Martin,
 
-On 10/25/2019 4:31 AM, Martin Blumenstingl wrote:
-> Hi Dilip,
+On 10/26/2019 12:53 AM, Rob Herring wrote:
+> On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
+>> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
+>> which is Synopsys DesignWare based PCIe core.
+>>
+>> changes on v4:
+>> 	Add "snps,dw-pcie" compatible.
+>> 	Rename phy-names property value to pcie.
+>> 	And maximum and minimum values to num-lanes.
+>> 	Add ref for reset-assert-ms entry and update the
+>> 	 description for easy understanding.
+>> 	Remove pcie core interrupt entry.
+>>
+>> changes on v3:
+>>          Add the appropriate License-Identifier
+>>          Rename intel,rst-interval to 'reset-assert-us'
+>>          Add additionalProperties: false
+>>          Rename phy-names to 'pciephy'
+>>          Remove the dtsi node split of SoC and board in the example
+>>          Add #interrupt-cells = <1>; or else interrupt parsing will fail
+>>          Name yaml file with compatible name
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
+>>   1 file changed, 135 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> Fails to validate:
 >
-> thank you for the update
-> two nit-picks below, apart from those it looks good to me
-Thanks for reviewing it.
+> Error: Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dts:38.27-28 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:321: recipe for target 'Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml' failed
 >
-> On Mon, Oct 21, 2019 at 8:39 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-> [...]
+> Please run 'make -k dt_binding_check' (-k because there are some
+> unrelated failures).
+>
+>> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..49dd87ec1e3d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>> @@ -0,0 +1,135 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: PCIe RC controller on Intel Gateway SoCs
+>> +
+>> +maintainers:
+>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - const: intel,lgm-pcie
+>> +      - const: snps,dw-pcie
+>> +
+>> +  device_type:
+>> +    const: pci
+>> +
+>> +  "#address-cells":
+>> +    const: 3
+>> +
+>> +  "#size-cells":
+>> +    const: 2
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: Controller control and status registers.
+>> +      - description: PCIe configuration registers.
+>> +      - description: Controller application registers.
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: dbi
+>> +      - const: config
+>> +      - const: app
+>> +
+>> +  ranges:
+>> +    description: Ranges for the PCI memory and I/O regions.
+> How many entries do you expect? Add a 'maxItems' to define.
+Agree will add it.
+>
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    description: PCIe registers interface clock.
+> How many clocks?
+One. I will mention maxItems: 1
+>
+>> +
+>> +  phys:
+>> +    maxItems: 1
+>> +
+>> +  phy-names:
+>> +    const: pcie
+>> +
+>> +  reset-gpios:
+>> +    maxItems: 1
+>> +
+>> +  num-lanes:
+>> +    minimum: 1
+>> +    maximum: 2
+>> +    description: Number of lanes to use for this port.
+>> +
+>> +  linux,pci-domain:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: PCI domain ID.
+> Just a value of 'true' is fine here.
+Ok.
+>
+>> +
+>> +  '#interrupt-cells':
+>> +    const: 1
+>> +
+>> +  interrupt-map-mask:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  interrupt-map:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  max-link-speed:
+>> +    description: Specify PCI Gen for link capability.
+> Allowed values? Default?
+Sure, will add it.
+>
+>> +
+>> +  bus-range:
+>> +    description: Range of bus numbers associated with this controller.
+>> +
+>> +  reset-assert-ms:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> Don't need a type for standard units.
+Ok.
+>
+>> +    description: |
+>> +      Delay after asserting reset to the PCIe device.
+>> +      Some devices need an interval upto 500ms. By default it is 100ms.
+> Express as a schema:
+>
+> maximum: 500
+> default: 100
+Sure i will update it.
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - device_type
+>> +  - reg
+>> +  - reg-names
+>> +  - ranges
+>> +  - resets
+>> +  - clocks
+>> +  - phys
+>> +  - phy-names
+>> +  - reset-gpios
+>> +  - num-lanes
+> Shouldn't be required. It should have a default.
+Agree, will fix it.
+>
+>> +  - linux,pci-domain
+> Is this really required? AIUI, domains are optional and only used if
+> you have more than one host.
+Yes, not required. I will update,
+>
+>> +  - interrupt-map
+>> +  - interrupt-map-mask
+>> +
+>> +additionalProperties: false
+>> +
 >> +examples:
 >> +  - |
 >> +    pcie10:pcie@d0e00000 {
-> why no space between pcie10 and pcie@d0e00000?
-Agree, will fix it in the next patch version.
+> space         ^
+Agree, i will fix it.
 >
-> [...]
+>> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
+>> +      device_type = "pci";
+>> +      #address-cells = <3>;
+>> +      #size-cells = <2>;
+>> +      reg = <0xd0e00000 0x1000>,
+>> +            <0xd2000000 0x800000>,
+>> +            <0xd0a41000 0x1000>;
+>> +      reg-names = "dbi", "config", "app";
+>> +      linux,pci-domain = <0>;
+>> +      max-link-speed = <4>;
+>> +      bus-range = <0x00 0x08>;
+>> +      interrupt-parent = <&ioapic1>;
+>> +      #interrupt-cells = <1>;
+>> +      interrupt-map-mask = <0 0 0 0x7>;
+>> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+>> +                      <0 0 0 2 &ioapic1 28 1>,
+>> +                      <0 0 0 3 &ioapic1 29 1>,
+>> +                      <0 0 0 4 &ioapic1 30 1>;
+>> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+>> +      resets = <&rcu0 0x50 0>;
+>> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+> You need to include any defines you use. That's why the example fails to
+> build.
+Yes, i will add it.
+>
+>> +      phys = <&cb0phy0>;
+>> +      phy-names = "pcie";
 >> +      status = "okay";
-> examples should not use the status property, see commit 4da722ca19f30f
-> ("dt-bindings: Remove "status" from examples")
+> Don't show status in examples.
+OK, will fix it.
 
-Agree, will fix it in the next patch version.
-(sorry for the late reply, i am back today from sick leave).
+Thanks for reviewing it.
 
 Regards,
 Dilip
-
 >
->
-> Martin
+>> +      reset-assert-ms = <500>;
+>> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+>> +      num-lanes = <2>;
+>> +    };
+>> -- 
+>> 2.11.0
+>>
