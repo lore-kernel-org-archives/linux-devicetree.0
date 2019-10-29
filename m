@@ -4,84 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA242CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC09CCA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE9420717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B166B20717
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572366393;
-	bh=bQTPGi+spwJ93xIHDoEUIV35ct4dviYn9xqTbRAtrZw=;
+	s=default; t=1572366417;
+	bh=PLlx7MHmT1TOlNVUl2jtbMRfAPct/ltp+XlI2VrncQI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kf3SBmBanDDTPXMIgRiKY8KreTeo+S4jcvuBEqsaN9VTXpYOevRjTw/RS8bBZgRis
-	 Ml6z20pQXSU1E/JvcFDkqyLJUWmevn3sbElc87JkNWvpGBkhFpep8LJRwQaL5r/33j
-	 pNDfraNFEnfqSdMBGRrbSwcLyBuRSncSqdEf3zBw=
+	b=PMZClf69F/OvxHHpCp82s+++wGA6NBJOMOLeGb28rtc965rS8FWEV63rZLaMyOI82
+	 HKCN5WaL3BUOUWsV7HRJAOFh532EUyBKM4WLxlzY9vP5zPAf1HDCJK+EQ+P0PIsJs8
+	 6X2uVBa8XnsPRJ44ffM+DtwD5Ja+Q58mbXWikoCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389940AbfJ2Q03 (ORCPT
+        id S2390347AbfJ2Q05 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:26:29 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46731 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728902AbfJ2Q03 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 12:26:29 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 89so10235591oth.13;
-        Tue, 29 Oct 2019 09:26:28 -0700 (PDT)
+        Tue, 29 Oct 2019 12:26:57 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34872 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728902AbfJ2Q04 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 12:26:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id n16so7178405oig.2;
+        Tue, 29 Oct 2019 09:26:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jrYKN+h6Z3GleTEUBK92hvb5i3b1naeQCWbIcyAY6B0=;
-        b=B+cqKUbabmrIEJxT7OujOfHIV6mxSjq7lXS7DZh147y5Bh/2Is1MKvNFpP6WyuJAxa
-         P1XEfWEiATSqb+VFy7GAnambOwEVbcdj9uLEzwv3fS/W2CEFk1Goba9n+m2OMF8rOwmE
-         8sQbUO0U3kXYciHJEiXw1pwbE3OeE9cmgFuH3Y02nDUzv2VJsORqY5y2a+yPNL+KxUtN
-         UV/IxPKoBGWXNicUiehC+zrT3JcuAgLK6nwQfr+n7iO9r0l0nK4an/GWAN0/65JtygsD
-         vJjmhqrlxfdzuns1WClalFeIdZNEUD8G4yUKuQFAg/32ORF5AlIcjHv4bW/sYmaBZdf1
-         8RSg==
-X-Gm-Message-State: APjAAAV//hPaEOSg5CfoRm13yEYsKVtrmKkQDPPUOODiTbIN1nDRlD/F
-        kgCl0I0Q4803QzUmEWXSkQ==
-X-Google-Smtp-Source: APXvYqwQTFB5Bg3vscJfKb3aCnMfFE1g7KjqQZhR4gt+OVU1yKKpL1jg/S6GMNBR5n2q/cPa3xoaMw==
-X-Received: by 2002:a9d:721c:: with SMTP id u28mr18904247otj.359.1572366387883;
-        Tue, 29 Oct 2019 09:26:27 -0700 (PDT)
+        bh=EBrS3MfVSTC+NWeWcKLokfVo46JF7z5WKYX8AZ96bEs=;
+        b=ZRpBIHgeUsV0KUoauN3Js4yaM5QSNjQocOjOSmZGgAFiykW/Qj/FwXdyIc0mszcmQN
+         BCpFma9S6n07zjYFJdH0VAzsbz2+3eg0lpbp/EbARDCNN+AUpUx4CWV89edeBozIaPQ9
+         nD1hhMDFBkqdti+QSWGwwxpdXnHoV0yA1YZWD0Ac9Eg/eR3einElDCeWYPU2KmJju5JK
+         u/a+2DFYQgS+6yvNEWB78h0VRkDzOlEAMaAXDHOANjtoOOtiyyGaY/K12KZqqgZbbv9n
+         jiCgpcUOHor5qZ/SXIWuVTbtpM/y6B1FNS25jDtRJ6zkee3lBRCcTKKXNt9vMTF3DeSt
+         MpkA==
+X-Gm-Message-State: APjAAAUoC9T1LZ8mEY85VQ1paW0bVGo7+znKbRxnp730348KiACJ9Clz
+        1VMWed1vKtgdbe7dD3O+o5aRHG4=
+X-Google-Smtp-Source: APXvYqxEa1wFIy5eI8c76naEf1um9AkqRDCmhD7e8H7V0IT8l4+SP7VWsyKgYPUmFCvjNWr1elf5ag==
+X-Received: by 2002:a54:4f83:: with SMTP id g3mr5071578oiy.24.1572366415703;
+        Tue, 29 Oct 2019 09:26:55 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d27sm2347954ote.11.2019.10.29.09.26.25
+        by smtp.gmail.com with ESMTPSA id w9sm186161oiw.48.2019.10.29.09.26.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 09:26:25 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 11:26:24 -0500
+        Tue, 29 Oct 2019 09:26:54 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 11:26:53 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Beniamino Galvani <b.galvani@gmail.com>
-Subject: Re: [PATCH] dt-bindings: i2c: meson: convert to yaml
-Message-ID: <20191029162624.GA1057@bogus>
-References: <20191021140053.9525-1-narmstrong@baylibre.com>
+Cc:     robh+dt@kernel.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org, mjourdan@baylibre.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] dt-bindings: soc: amlogic: canvas: convert to yaml
+Message-ID: <20191029162653.GB1057@bogus>
+References: <20191021133950.30490-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021140053.9525-1-narmstrong@baylibre.com>
+In-Reply-To: <20191021133950.30490-1-narmstrong@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 21 Oct 2019 16:00:53 +0200, Neil Armstrong wrote:
+On Mon, 21 Oct 2019 15:39:50 +0200, Neil Armstrong wrote:
 > Now that we have the DT validation in place, let's convert the device tree
-> bindings for the Amlogic I2C Controller over to YAML schemas.
+> bindings for the Amlogic Canvas over to a YAML schemas.
 > 
-> Cc: Beniamino Galvani <b.galvani@gmail.com>
+> Cc: Maxime Jourdan <mjourdan@baylibre.com>
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../bindings/i2c/amlogic,meson6-i2c.yaml      | 53 +++++++++++++++++++
->  .../devicetree/bindings/i2c/i2c-meson.txt     | 30 -----------
->  2 files changed, 53 insertions(+), 30 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-meson.txt
+>  .../bindings/soc/amlogic/amlogic,canvas.txt   | 33 -------------
+>  .../bindings/soc/amlogic/amlogic,canvas.yaml  | 49 +++++++++++++++++++
+>  2 files changed, 49 insertions(+), 33 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.yaml
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Updated 'title' and applied, thanks.
+
+Rob
