@@ -2,163 +2,307 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD60CA9EC3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048A9C47E49
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC9020862
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE6C214B2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hyfI2Bbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388875AbfJ2Nuv (ORCPT
+        id S2388696AbfJ2NwC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:50:51 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39625 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388773AbfJ2Nuv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 09:50:51 -0400
-X-Originating-IP: 92.184.102.232
-Received: from localhost (unknown [92.184.102.232])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 734B0FF811;
-        Tue, 29 Oct 2019 13:50:32 +0000 (UTC)
-Date:   Tue, 29 Oct 2019 14:50:21 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH 09/13] mfd: rtc: support RTC on ROHM BD71828 with
- BD70528 driver
-Message-ID: <20191029135021.GC11234@piout.net>
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <9ccc83f3dfd0fd0dc8178adf41b52115f960c45a.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <20191017101225.GB3125@piout.net>
- <a1aa91f74b41033fed4a7106247f48f9b9f78bd9.camel@fi.rohmeurope.com>
- <20191017104859.GC3125@piout.net>
- <bf7a8ce661277aca3c4dede5fb17ef4163a56027.camel@fi.rohmeurope.com>
+        Tue, 29 Oct 2019 09:52:02 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55123 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388453AbfJ2NwC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 09:52:02 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g7so2654126wmk.4;
+        Tue, 29 Oct 2019 06:51:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DZGYQwf14hKZet/V1q9ny5mdIhjZ2BWooRO8zX5IoAs=;
+        b=hyfI2BbhCltIGCnc3C05WqwgQbthE0YNyda/cizpRg3IC4zO8xcHM3pQFop6RtlhUC
+         r5JzxnVoq4XEdf65KfxoTnOkPIsIWvbvjWUDpPmy+cYGRQiwKve2oKvuMHtIHnyYAhd7
+         HLhGQURzkQYt/4eUU5SgSYp7g5sAFY0UKVx+mT8hslb5YdHeqWJBHPoW0l/Yd7gtSVwT
+         gmnunxZIoEZ4muf5QI8kaycNU4UEy6LAHXItxErbUN3Q8eu0TBucVw9Q7S5Wa+fdwEJq
+         ZpK2EaYqaZZ4tfZR4IMGQwjDDP9mNLkLFdDFaWtv7XyBpCoGcLYiY1x8jJSe9fi3wkZo
+         L9lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DZGYQwf14hKZet/V1q9ny5mdIhjZ2BWooRO8zX5IoAs=;
+        b=c7xeHyqf8v17AHe/Q9zGzQsIjSKz0uFq/silvIb1IcZzTL167EyUE1i9yhY+BsMjEs
+         i9gOVUqyroaSwVtRGCpQXj9EhH268GZvMLFGzniVoKTiw+fQ7bzwW5P+RwVZnsysbIBz
+         xZnVSfSesE3JR3+sPljfINciBiLwpC4oj5iO0LbK7bg2pRkWCNU96+hIeH3er44ZV6lT
+         rt/vtJGYFlovmprf3f49ahpCDY5C6HoR2rZA8kDrux0D/gAV7/5rfWdL9lpM/WJwLUtj
+         vDX8fIAiIsjWQNhZ6N8+a4t+oDXc4QdrNkwjJyTnrrg9p24osyE8vvwFeSmA9rc2fHM5
+         yf6w==
+X-Gm-Message-State: APjAAAUHEGE2UVzOD4GlY6ukvzuTFIRbaD3j6RMDtwc9ZnRIgqYiT1K4
+        rFoyXUT42ORL+9T6LGr7W1o=
+X-Google-Smtp-Source: APXvYqwwqob0oWcxcAV1a0Vd0fsoT8ZMQdgJlXVrrU+CJ35YiKg7XpAUbXeHfBKeszvuKk0Y7T+kHA==
+X-Received: by 2002:a1c:650b:: with SMTP id z11mr4184746wmb.149.1572357115633;
+        Tue, 29 Oct 2019 06:51:55 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id k3sm14278833wro.77.2019.10.29.06.51.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 06:51:53 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:51:52 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 00/15] memory: tegra: Introduce Tegra30 EMC driver
+Message-ID: <20191029135152.GJ508460@ulmo>
+References: <20190811210043.20122-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="8tZVdKiiYitVG083"
 Content-Disposition: inline
-In-Reply-To: <bf7a8ce661277aca3c4dede5fb17ef4163a56027.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190811210043.20122-1-digetx@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23/10/2019 10:27:43+0000, Vaittinen, Matti wrote:
-> Hello again Alexandre,
-> 
-> On Thu, 2019-10-17 at 12:48 +0200, Alexandre Belloni wrote:
-> > On 17/10/2019 10:36:44+0000, Vaittinen, Matti wrote:
-> > > Hello Alexandre,
-> > > 
-> > > Thanks for quick check! I'll be off for the rest of the week but I
-> > > will
-> > > re-work this patch at next week :) I agree with you regarding most
-> > > of
-> > > the comments.
-> > > 
-> > > > > +
-> > > > > +
-> > > > > +/*
-> > > > > + * RTC definitions shared between
-> > > > > + *
-> > > > > + * BD70528
-> > > > > + * and BD71828
-> > > > > + */
-> > > > > +
-> > > > > +#define ROHM_BD1_MASK_RTC_SEC		0x7f
-> > > > > +#define ROHM_BD1_MASK_RTC_MINUTE	0x7f
-> > > > > +#define ROHM_BD1_MASK_RTC_HOUR_24H	0x80
-> > > > > +#define ROHM_BD1_MASK_RTC_HOUR_PM	0x20
-> > > > > +#define ROHM_BD1_MASK_RTC_HOUR		0x3f
-> > > > > +#define ROHM_BD1_MASK_RTC_DAY		0x3f
-> > > > > +#define ROHM_BD1_MASK_RTC_WEEK		0x07
-> > > > > +#define ROHM_BD1_MASK_RTC_MONTH		0x1f
-> > > > > +#define ROHM_BD1_MASK_RTC_YEAR		0xff
-> > > > > +#define ROHM_BD1_MASK_ALM_EN		0x7
-> > > > > +
-> > > > 
-> > > > All that renaming is distracting and useless. Please resubmit
-> > > > without
-> > > > renaming defines, structs and functions to make it easier to
-> > > > review.
-> > > 
-> > > I would prefer renaming because it makes it clearly visible which
-> > > defines/structs/functions are common for both PMICs and which are
-> > > PMIC
-> > > specific. But I really understand the problem of spotting real
-> > > changes.
-> > > Would it be Ok if I did renaming in separate patch which does not
-> > > bring
-> > > in any other changes - and then the functional changes in separate
-> > > patch?
-> > > 
-> > 
-> > No, unless you can guarantee that all future PMICs from rohm matching
-> > the wildcard will use this driver.
-> > 
-> I started re-working this patch and remembered my original idea
-> regarding the naming :) I should have commented it as I had already
-> forgotten it. You are correct what comes to the difficulty of using
-> correct wild-cards. And I agree with you what comes to function and
-> struct names like bd7xx28 - those are somewhat fragile as next PMIC
-> which we want to support with this driver may be BD12345 - yielding our
-> wild-card useless.
-> 
-> But if we take a look of common definitions in header rohm-shared.h
-> which I added - those are prefixed as ROHM_BD1. My idea was introducing
-> this common RTC define group 1 - which would be common define group for
-> all devices which belong to BD1 group. Currently that would be BD71828
-> and BD70528. What was missing is the comment explaining this (and lack
-> of comment made this useless as even I forgot it already).
-> 
-> I already reverted this naming change and all BD70528 specific and
-> common defines/functions/enums are prefixed with the good old BD70528.
-> Only new definitions which I added for BD71828 are prefixed with
-> BD71828. But how do you see the grouping the common defines to format
-> ROHM_BD<group number>_FOO_BAR in the rohm-shared.h - with comment that
-> group BD1 consists of definitions which are common for BD70528 and
-> BD71828?
-> 
-> My only fear when using prefix BD70528 for common defines is that
-> someone changes some defines to match the BD70528 data-sheet without
-> evaluating if this impacts to other PMICs. It may be useless paranoia
-> though - hence I am asking for your opinion at this phase. I can do
-> this grouping in own patch - or just leave it as it is now in my local
-> repo - with the old BD70528 being common prefix.
-> 
 
-I don't think those masks will ever change, all the BCD RTCs are using
-the same.
+--8tZVdKiiYitVG083
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Note that ROHM_BD1_MASK_RTC_HOUR_24H, ROHM_BD1_MASK_RTC_HOUR_PM and
-ROHM_BD1_MASK_ALM_EN are bits and should use BIT() to make that clear.
-Those may change later but I don't see how someone looking at the
-BD70528 datasheet would get those wrong.
+On Mon, Aug 12, 2019 at 12:00:28AM +0300, Dmitry Osipenko wrote:
+> Hello,
+>=20
+> This series introduces driver for the External Memory Controller (EMC)
+> found on Tegra30 chips, it controls the external DRAM on the board. The
+> purpose of this driver is to program memory timing for external memory on
+> the EMC clock rate change. The driver was tested using the ACTMON devfreq
+> driver that performs memory frequency scaling based on memory-usage load.
+>=20
+> Changelog:
+>=20
+> v10: - Addressed review comments that were made by Rob Herring to v9 by
+>        dropping unnecessary reg descriptions, specifying valid ranges and
+>        using boolean type where appropriate in the device-tree patches.
+>=20
+> v9: - Fixed memory corruption bug that was uncovered after introducing
+>       some extra optimizations to the devfreq driver that allows CPU
+>       to stay longer in the LP2 cpuidle state. The corruption is caused by
+>       a very late AUTO-REFRESH re-enabling due to a possible schedule on
+>       waiting for clk-change completion, the re-enabling is now a part of
+>       "EMC exec-after-clkchange" hardware sequence.
+>=20
+>     - Added "type: object" to T124 MC YAML, that was missed in v8 by acci=
+dent.
+>=20
+> v8: - Added two new patches:
+>=20
+>         memory: tegra20-emc: Increase handshake timeout
+>         memory: tegra20-emc: wait_for_completion_timeout() doesn't return=
+ error
+>=20
+>       Turned out that memory-clk handshake may take much more time under
+>       some circumstances. The second patch is a minor cleanup. The same
+>       changes are also applied to the Terga30 EMC driver addition-patch.
+>=20
+>       The pattern-properties of YAML bindings gained "type: object", for
+>       consistency.
+>=20
+> v7: - Addressed review comments that were made by Rob Herring to v6 by
+>       removing old Terga30 Memory Controller binding once it's converted
+>       to YAML, by using explicit patterns for the sub-nodes and specifying
+>       min/max clock rates in the YAML.
+>=20
+>     - Two patches that were added in v6 are removed from the series:
+>=20
+>         clk: tegra20: emc: Add tegra20_clk_emc_on_pllp()
+>         ARM: tegra30: cpuidle: Don't enter LP2 on CPU0 when EMC runs off =
+PLLP
+>=20
+>       Because the problem with the PLLP is resolved now, turned out it was
+>       a bug in the CPU-suspend code.
+>=20
+>     - The "Introduce Tegra30 EMC driver" patch got a fix for the "Same Fr=
+eq"
+>       bit typo, it's a bit 27 and not 16.
+>=20
+> v6: - Tegra124 Memory Controller binding factored out into standalone
+>       binding because it requires to specify MC_EMEM_ARB_MISC1 for EMEM
+>       programming, which is not required for Tegra30. This makes the
+>       upstream MC registers specification to match downstream exactly,
+>       easing porting of boards memory timings configuration to upstream.
+>=20
+>     - Tegra30/124 Memory Controller binding converted to YAML.
+>=20
+>     - Tegra30 External Memory Controller binding now is in YAML format.
+>=20
+>     - Added workaround for hanging during LP2 when EMC runs off PLLP on
+>       Tegra30 in this new patches:
+>=20
+>         clk: tegra20: emc: Add tegra20_clk_emc_on_pllp()
+>         ARM: tegra30: cpuidle: Don't enter LP2 on CPU0 when EMC runs off =
+PLLP
+>=20
+>     - Added info message to the Tegra20/30 EMC drivers, telling about
+>       RAM code and a number of available timings:
+>=20
+>         memory: tegra20-emc: Print a brief info message about the timings
+>=20
+> v5: - Addressed review comments that were made by Thierry Reding to v4 by
+>       adding appropriate copyrights to the source code headers and making
+>       Tegra30 EMC driver to use common Tegra20 CLK API directly instead
+>       of having a dummy-proxy functions specifically for Tegra30.
+>=20
+>     - Addressed review comments that were made by Stephen Boyd to v4 by
+>       rewording commit message of the "Add custom EMC clock implementatio=
+n"
+>       patch and adding clarifying comment (to that patch as well) which
+>       tells why EMC is a critical clock.
+>=20
+>     - Added suspend-resume to Tegra30 EMC driver to error out if EMC driv=
+er
+>       is in a "bad state" as it will likely cause a hang on entering susp=
+end.
+>=20
+>     - Dropped patch "tegra20-emc: Replace clk_get_sys with devm_clk_get"
+>       because the replaced clocks are actually should be removed altogeth=
+er
+>       in the "Drop setting EMC rate to max on probe" patch and that was
+>       missed by an accident.
+>=20
+>     - Added "tegra20-emc: Pre-configure debug register" patch which ensur=
+es
+>       that inappropriate HW debug features are disabled at a probe time.
+>       The same change is also made in the "Introduce Tegra30 EMC driver"
+>       patch.
+>=20
+>     - Added ACKs to the patches from Peter De Schrijver that he gave to v4
+>       since all of the v5 changes are actually very minor.
+>=20
+> v4: - Addressed review comments that were made by Peter De Schrijver to v3
+>       by adding fence_udelay() after writes in the "Add custom EMC clock
+>       implementation" patch.
+>=20
+>     - Added two new minor patches:
+>=20
+>         memory: tegra: Ensure timing control debug features are disabled
+>         memory: tegra: Consolidate registers definition into one place
+>=20
+>       The first one is needed to ensure that EMC driver will work
+>       properly regardless of hardware configuration left after boot.
+>       The second patch is just a minor code cleanup.
+>=20
+>     - The "Introduce Tegra30 EMC driver" got also few very minor changes.
+>       Now every possible error case is handled, nothing is ignored.
+>       The EMC_DBG register is explicitly initialized during probe to be
+>       on the safe side.
+>=20
+> v3: - Addressed review comments that were made by Stephen Boyd to v2 by
+>       adding explicit typing for the callback variable, by including
+>       "clk-provider.h" directly in the code and by dropping __clk_lookup
+>       usage where possible.
+>=20
+>     - Added more patches into this series:
+>=20
+>         memory: tegra20-emc: Drop setting EMC rate to max on probe
+>         memory: tegra20-emc: Adapt for clock driver changes
+>         memory: tegra20-emc: Include io.h instead of iopoll.h
+>         memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
+>=20
+>       Initially I was going to include these patches into other patchset,
+>       but changed my mind after rearranging things a tad. The "Adapt for
+>       clock driver changes" patch is directly related to the clock changes
+>       done in the first patch of this series, the rest are minor cleanups
+>       that are fine to include here as well.
+>=20
+>     - Added some more words to the commit message of "Add binding for NVI=
+DIA
+>       Tegra30 External Memory Controller" patch, clarifying why common DDR
+>       timing device-tree form isn't suitable for Tegra30.
+>=20
+>     - The Tegra30 EMC driver now explicitly selects the registers access
+>       mode (EMC_DBG mux), not relying on the setting left from bootloader.
+>=20
+> v2: - Added support for changing MC clock diver configuration based on
+>       Memory Controller (MC) configuration which is part of the memory
+>       timing.
+>=20
+>     - Merged the "Add custom EMC clock implementation" patch into this
+>       series because the "Introduce Tegra30 EMC driver" patch directly
+>       depends on it. Please note that Tegra20 EMC driver will need to be
+>       adapted for the clock changes as well, I'll send out the Tegra20
+>       patches after this series will be applied because of some other
+>       dependencies (devfreq) and because the temporary breakage won't
+>       be critical (driver will just error out on probe).
+>=20
+>     - EMC driver now performs MC configuration validation by checking
+>       that the number of MC / EMC timings matches and that the timings
+>       rate is the same.
+>=20
+>     - EMC driver now supports timings that want to change the MC clock
+>       configuration.
+>=20
+>     - Other minor prettifying changes of the code.
+>=20
+> Dmitry Osipenko (15):
+>   clk: tegra20/30: Add custom EMC clock implementation
+>   memory: tegra20-emc: Drop setting EMC rate to max on probe
+>   memory: tegra20-emc: Adapt for clock driver changes
+>   memory: tegra20-emc: Include io.h instead of iopoll.h
+>   memory: tegra20-emc: Pre-configure debug register
+>   memory: tegra20-emc: Print a brief info message about the timings
+>   memory: tegra20-emc: Increase handshake timeout
+>   memory: tegra20-emc: wait_for_completion_timeout() doesn't return
+>     error
+>   dt-bindings: memory: tegra30: Convert to Tegra124 YAML
+>   dt-bindings: memory: Add binding for NVIDIA Tegra30 Memory Controller
+>   dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory
+>     Controller
+>   memory: tegra: Introduce Tegra30 EMC driver
+>   memory: tegra: Ensure timing control debug features are disabled
+>   memory: tegra: Consolidate registers definition into common header
+>   ARM: dts: tegra30: Add External Memory Controller node
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Applied these to for-5.5/clk, for-5.5/dt-bindings, for-5.5/memory and
+for-5.5/arm/dt, thanks.
+
+Thierry
+
+--8tZVdKiiYitVG083
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl24Q/YACgkQ3SOs138+
+s6FSng/9GvNX2ESlUyo+ZW9xuN96/Lggg7Wh/rONstjJj8PeURp4Wyg9R+m01i9S
+OKJaGKFDEcOOFC/cChD/plozuId2HBEXoVnwjExRF0MWabOWfNmFc2qp87Gq8Ucu
+KGZOhHcXluq+bffxPAlKlHb0DbuPEPLDf6KXhRa77FC+8N3SwCZ/KMMtkLVqLW4F
+X6t86MyVU35CoidXfzx+Y9tPbenuOJBEREFkFE/0AsveLJUd1Q1j287zR/wGdupZ
+WKzH2PScDnjHSS+XRv+25mij0RN4nbHjT+1oUW6XAyf2L/PzaatT5qibcFpm1KAn
+hZDQbBwt5b+wwuy7O1nSBxkAH2yv6kkq4Ll0K+potQeI7GqBtXD2wmNoXTMiklzM
+SsxJpDS9orJmdH5BZDwX+g1DUHhm3WWunYR0bafrRCvxPRjGuOQ8T9SzH9rL6vuR
+7Dty/TzBURBktNoVxdIzVWqmiIj9QVSH9Aze9ghGrHMaPVI3+P5jVRjSPJPlSHpX
+cXEqLla2Xh+BhXjc+yNVYmpQvOTv1U0XcBUSWmEZycV1v4PYj6UAPqCYAw2xAKCz
+UPeHl6MVG+cAVtWuDkPpHYccyGx99fR83okiqOGhlGkCjW4xX0YoOVMal4DqYrxx
+wMKew82EmDMHh/7J1wJ81SojwUCYB0OC941Y3FlBCsIsTCGQoV8=
+=zmek
+-----END PGP SIGNATURE-----
+
+--8tZVdKiiYitVG083--
