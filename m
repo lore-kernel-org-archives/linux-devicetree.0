@@ -7,194 +7,166 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDD3CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 19:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA55CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C685F2086A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 19:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C3F2086A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572379130;
-	bh=WAdeg+B9VRaoa2GUGbY801lVq9HtWmhjZYVHysrysc4=;
+	s=default; t=1572380186;
+	bh=mzrl9420Ovx3lQJ1vhZxCQsXwonFelXckxIqNI5fnYU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Sf5lggwPnuC8NGEUzvgULQznImNUUZ2mScm+IQtO0lh+ENbJxtlt4iJCUd6MpmU6v
-	 TbnibNZTGcFuPqyN63jhwNgkKQL2fWprFhDBxEAu27sA8P86xddbm9SHOR5aq7Sxze
-	 L6Xxxwh96kpWLz/t10fz86nerec+o9NEHevXdTHI=
+	b=cSa59ID7VUgvz4fIejC4RSJuZyf4BHJL146mj25nzpnkZ1vNl3Xf65qJB66WB+YiE
+	 ZDkjcH66mdw2Sz2Nf4r83C424I+eb4fGZEhrRaTg1Oug+xhgKZHIi/QBKFuzUje4uc
+	 9Jb6HPSOqvtVVzd3SAWc443786hymOJd9AwgiPUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfJ2T6u (ORCPT
+        id S1725959AbfJ2UQZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 15:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56438 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 16:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfJ2T6u (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 15:58:50 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        id S1725840AbfJ2UQZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:16:25 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863B7217F9;
-        Tue, 29 Oct 2019 19:58:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF96C21721;
+        Tue, 29 Oct 2019 20:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572379128;
-        bh=WAdeg+B9VRaoa2GUGbY801lVq9HtWmhjZYVHysrysc4=;
+        s=default; t=1572380183;
+        bh=mzrl9420Ovx3lQJ1vhZxCQsXwonFelXckxIqNI5fnYU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NWcGI6t4d1C6w5YAcjerwQGwR40yf9qK1MLh8rjyF/petI083MZCWoDGvmAGjUNT+
-         osJVzDa0YEBwPO7Aa83PkbOI33Q1gE7pAw7jcVi8uWmcZglhBgxr0bcxGIyj55LVjE
-         ZoNK5yzBU/vrK/+f+MwxjVdJElZhbsS1weXQZGvA=
-Received: by mail-qt1-f178.google.com with SMTP id t26so12065009qtr.5;
-        Tue, 29 Oct 2019 12:58:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAWZd5iDblHh3dzs6lYXpuUIOZWwl3viiUKOtN3jkcnqgOUkGYDM
-        QcvxvTqRpFCYjkaw/KFP2b+mR7a6C02y2Gu2ZQ==
-X-Google-Smtp-Source: APXvYqzRmnIY3wGUVkxDxaAMji2JuEUN2V6Oi2AOYbmEqJQcYn6zDifp/TQUReouyPTdjsRGjIdcrF3l7Z6nybIbzJE=
-X-Received: by 2002:ac8:48c5:: with SMTP id l5mr469360qtr.110.1572379127527;
- Tue, 29 Oct 2019 12:58:47 -0700 (PDT)
+        b=Bzs0JsLJXxLNGTSfA3dRdgUWooXO3sHsJpKlHKkRlMTj+DU4za3swy8FwTd63nH1z
+         jsd9x+mUuzHXUv1o3wCebCtqHdnF3TdZ/fDF0CM+U5Rs1eaAApmFcCRl7K5eZgUl+y
+         rQpDDkwkkAcchWbuljHc9iSYc4QMzr13Adf6Vj7s=
+Received: by mail-qt1-f169.google.com with SMTP id x21so4981511qto.12;
+        Tue, 29 Oct 2019 13:16:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAXciRC8z1znzvw+ESjsoiFgvNJl81T3c2+OS07yuqiJh2vasOvg
+        QpcknAZj4aVAyAb6tun/T8Jhd98lN+PiJGpRWA==
+X-Google-Smtp-Source: APXvYqw2bPo/mXUkmXIpei4kFmXMxOacUC63F3raNseUkPz2342X9y6B6fHT0p2dhZ4pVJPYLGheLckku0HHO05Qz90=
+X-Received: by 2002:ac8:741a:: with SMTP id p26mr1062486qtq.143.1572380182705;
+ Tue, 29 Oct 2019 13:16:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191016010544.14561-1-slongerbeam@gmail.com> <20191016010544.14561-3-slongerbeam@gmail.com>
- <20191027212121.GA3049@bogus> <2daa37a6-83a7-ec08-b89c-a07268b3ea4a@gmail.com>
-In-Reply-To: <2daa37a6-83a7-ec08-b89c-a07268b3ea4a@gmail.com>
+References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
+ <1571254641-13626-7-git-send-email-thara.gopinath@linaro.org>
+ <CAPDyKFqcKfmnNJ7j4Jb+JH739FBcHg5NBD6aR4H_N=zWGwm1ww@mail.gmail.com>
+ <5DA88892.5000408@linaro.org> <CAPDyKFpYG7YADb6Xmm=8ug5=5X3d1y+JdkRvrnvtroeV3Yj62Q@mail.gmail.com>
+ <5DA89267.30806@linaro.org> <20191029013648.GB27045@bogus> <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Oct 2019 14:58:36 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJK5CzQDpCWGZWKgp_8dPG7x0W1HLe+B3zHRP-Te9SToA@mail.gmail.com>
-Message-ID: <CAL_JsqJK5CzQDpCWGZWKgp_8dPG7x0W1HLe+B3zHRP-Te9SToA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: timer: imx: gpt: Add pin group bindings
- for input capture
-To:     Steve Longerbeam <slongerbeam@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Date:   Tue, 29 Oct 2019 15:16:11 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
+Message-ID: <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] dt-bindings: soc: qcom: Extend RPMh power
+ controller binding to describe thermal warming device
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:CLOCKSOURCE, CLOCKEVENT DRIVERS" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 6:59 PM Steve Longerbeam <slongerbeam@gmail.com> wrote:
+On Tue, Oct 29, 2019 at 5:07 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
 >
-> Hi Rob,
->
-> Thanks for reviewing.
->
-> On 10/27/19 2:21 PM, Rob Herring wrote:
-> > On Tue, Oct 15, 2019 at 06:05:44PM -0700, Steve Longerbeam wrote:
-> >> Add pin group bindings to support input capture function of the i.MX
-> >> GPT.
-> >>
-> >> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-> >> ---
-> >>   .../devicetree/bindings/timer/fsl,imxgpt.txt  | 28 +++++++++++++++++++
-> >>   1 file changed, 28 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
-> >> index 5d8fd5b52598..32797b7b0d02 100644
-> >> --- a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
-> >> +++ b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
-> >> @@ -33,6 +33,13 @@ Required properties:
-> >>              an entry for each entry in clock-names.
-> >>   - clock-names : must include "ipg" entry first, then "per" entry.
-> >>
-> >> +Optional properties:
-> >> +
-> >> +- pinctrl-0: For the i.MX GPT to support the Input Capture function,
-> >> +         the input capture channel pin groups must be listed here.
-> >> +- pinctrl-names: must be "default".
-> >> +
-> >> +
-> >>   Example:
-> >>
-> >>   gpt1: timer@10003000 {
-> >> @@ -43,3 +50,24 @@ gpt1: timer@10003000 {
-> >>               <&clks IMX27_CLK_PER1_GATE>;
-> >>      clock-names = "ipg", "per";
-> >>   };
-> >> +
-> >> +
-> >> +Example with input capture channel 0 support:
-> >> +
-> >> +pinctrl_gpt_input_capture0: gptinputcapture0grp {
-> >> +    fsl,pins = <
-> >> +            MX6QDL_PAD_SD1_DAT0__GPT_CAPTURE1 0x1b0b0
-> >> +    >;
-> >> +};
-> >> +
-> >> +gpt: gpt@2098000 {
-> > timer@...
->
-> Ok.
->
+> On Tue, 29 Oct 2019 at 02:36, Rob Herring <robh@kernel.org> wrote:
 > >
-> > I don't really think this merits another example though.
+> > On Thu, Oct 17, 2019 at 12:10:15PM -0400, Thara Gopinath wrote:
+> > > On 10/17/2019 11:43 AM, Ulf Hansson wrote:
+> > > > On Thu, 17 Oct 2019 at 17:28, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+> > > >>
+> > > >> Hello Ulf,
+> > > >> Thanks for the review!
+> > > >>
+> > > >> On 10/17/2019 05:04 AM, Ulf Hansson wrote:
+> > > >>> On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+> > > >>>>
+> > > >>>> RPMh power controller hosts mx domain that can be used as thermal
+> > > >>>> warming device. Add a sub-node to specify this.
+> > > >>>>
+> > > >>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> > > >>>> ---
+> > > >>>>  Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 10 ++++++++++
+> > > >>>>  1 file changed, 10 insertions(+)
+> > > >>>>
+> > > >>>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> > > >>>> index eb35b22..fff695d 100644
+> > > >>>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> > > >>>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> > > >>>> @@ -18,6 +18,16 @@ Required Properties:
+> > > >>>>  Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
+> > > >>>>  various OPPs for different platforms as well as Power domain indexes
+> > > >>>>
+> > > >>>> += SUBNODES
+> > > >>>> +RPMh alsp hosts power domains that can behave as thermal warming device.
+> > > >>>> +These are expressed as subnodes of the RPMh. The name of the node is used
+> > > >>>> +to identify the power domain and must therefor be "mx".
+> > > >>>> +
+> > > >>>> +- #cooling-cells:
+> > > >>>> +       Usage: optional
+> > > >>>> +       Value type: <u32>
+> > > >>>> +       Definition: must be 2
+> > > >>>> +
+> > > >>>
+> > > >>> Just wanted to express a minor thought about this. In general we use
+> > > >>> subnodes of PM domain providers to represent the topology of PM
+> > > >>> domains (subdomains), this is something different, which I guess is
+> > > >>> fine.
+> > > >>>
+> > > >>> I assume the #cooling-cells is here tells us this is not a PM domain
+> > > >>> provider, but a "cooling device provider"?
+> > > >> Yep.
+> > > >>>
+> > > >>> Also, I wonder if it would be fine to specify "power-domains" here,
+> > > >>> rather than using "name" as I think that is kind of awkward!?
+> > > >> Do you mean "power-domain-names" ? I am using this to match against the
+> > > >> genpd names defined in the provider driver.
+> > > >
+> > > > No. If you are using "power-domains" it means that you allow to
+> > > > describe the specifier for the provider.
+> > > Yep. But won't this look funny in DT ? The provider node will have a sub
+> > > node with a power domain referencing to itself Like below: Is this ok ?
+> > >
+> > > rpmhpd: power-controller {
+> > >                                 compatible = "qcom,sdm845-rpmhpd";
+> > >                                 #power-domain-cells = <1>;
+> > >
+> > >                       ...
+> > >                       ...
+> > >                               mx_cdev: mx {
+> > >                                         #cooling-cells = <2>;
+> > >                                         power-domains = <&rpmhpd      SDM845_MX>;
+> > >                                 };
+> > >
+> >
+> > The whole concept here seems all wrong to me. Isn't it what's in the
+> > power domain that's the cooling device. A CPU power domain is not a
+> > cooling device, the CPU is. Or we wouldn't make a clock a cooling
+> > device, but what the clock drives.
 >
-> Ok.
+> Well, I don't think that's entirely correct description either.
 >
-> But for version 2 of this patch-set I'd like to run some ideas by you.
->
-> Because in this version I did not make any attempt to create a generic
-> timer capture framework. I just exported a couple imx-specific functions
-> to request and free a timer input capture channel in the imx-gpt driver.
->
-> So for version 2 I am thinking about a simple framework that other SoC
-> timers with timer input capture support can make use of.
->
-> To begin with I don't see that timer input capture warrants the
-> definition of a new device. At least for imx, timer input capture is
-> just one function of the imx GPT, where the other is Output Compare
-> which is used for the system timer. I think that is likely the case for
-> most all SoC timers, that is, input capture and output compare are
-> tightly interwoven functions of general purpose timers.
->
-> So I'm thinking there needs to be an additional #input-capture-cells
-> property that defines how many input capture channels the timer
-> contains, where a channel refers to a single input signal edge that can
-> capture the timer counter. The imx GPT has two input capture channels (2
-> separate input signals).
+> As I see it, it's really the actual PM domain (that manages voltages
+> for a power island), that needs to stay in full power state and
+> increase its voltage level, as to warm up some of the silicon. It's
+> not a regular device, but more a characteristics of how the PM domain
+> can be used.
 
-#foo-cells is not how many of something, but how many u32 parameters a
-'foos' consumer property has. But seems like that's what you meant
-based on the example.
+First I've heard of Si needing warming...
 
->
-> For example, on imx:
->
-> gpt: timer@2098000 {
->         compatible = "fsl,imx6q-gpt", "fsl,imx31-gpt";
->         /* ... */
->         #input-capture-cells = <1>;
->         pinctrl-names = "default", "icap1";
->         pinctrl-0 = <&pinctrl_gpt_input_capture0>;
->         pinctrl-1 = <&pinctrl_gpt_input_capture1>;
-> };
->
->
-> A device that is a listener/consumer of an timer capture event would then refer to a timer capture channel:
->
-> some-device {
->         /* ... */
->         timer-input-capture = <&gpt 0>;
-> };
-
-We'd want to be more consistent in the naming, but seems reasonable.
-One of the challenges with timers is selecting which timer is used for
-what function. This helps as you can know if a timer is used for input
-capture or not. One issue will be is having '#input-capture-cells'
-enough to decide that, or does one have to walk the DT and find all
-the 'timer-input-capture' properties (shouldn't be a lot)? You could
-also want to use input capture, but not describe the connection in DT.
-
-Another thought is should it be just 'timers' to cover both input
-capture and output compare with those being selected with flags (like
-GPIO).
-
-My other question is just what are some real examples of devices
-needing to describe this connection. Timers have had input capture
-forever, but I've rarely seen it used. Output compare even less so.
+I think I'd just expect the power domain provider to know which
+domains to power on then.
 
 Rob
