@@ -2,96 +2,138 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4951BCA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98DFCA9EC3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F92021721
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:39:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HUuX5n8d"
+	by mail.kernel.org (Postfix) with ESMTP id C795421721
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732198AbfJ2MjH (ORCPT
+        id S1728235AbfJ2Mqb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:39:07 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40206 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727039AbfJ2MjH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:39:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=N+ehmygc9BxX7lvA6aGJbMWaouzap7HiKg9Ic+o14PY=; b=HUuX5n8dhPbVxklcvlDuEpP910
-        2rrsNVRDtRIw8JqhZZIZtKDKW3KskJktVniS2bR6T4YczrftrnaBNVRyuIcjmxQRcvtK3FmnHGg+V
-        +4Z8fxRY43XE3ox5a/XAlk7bYEsFboxxfF7KmzZqs+8P3hQUmkmNawSUeeX+B1/0i+z0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iPQly-0004C1-Jz; Tue, 29 Oct 2019 13:38:54 +0100
-Date:   Tue, 29 Oct 2019 13:38:54 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Paul Burton <paul.burton@mips.com>,
+        Tue, 29 Oct 2019 08:46:31 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37023 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfJ2Mqb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 08:46:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v2so855045lji.4;
+        Tue, 29 Oct 2019 05:46:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=SmXBqMQnjI4Fb5pWVH79fOjCH7aXT9QQnr1eIyZGvcI=;
+        b=kPxmtU27XbTFQ7uutYG2u2XGr3StpvZt+PuJr1Dybqisjhs8IhRuoJrDGX9OpRJ1Ih
+         Zh0s0mw+8J5zVuc7yQN/1+mddx+SNjmP0Bs0Qc/hnuU47FHqnzpMbDd1TAkGxOl7IYpt
+         KyXAV4BrCYO2bi3JBGOPMoDqQkbUJYISuusZFtzBr2mD+wR5Ie2Il1E1so/NmSJKIqPC
+         tvxL9wpYv8Qmt1vzvp8A38BavkrlByksRy2QAxCkPjKnL7hYvRjZVP/Bqd2xv1uQH7/t
+         FhnADoccjucxEMt4dhZbKijUPi8l40shVSloIeQYh52YpN/Q8xRI42xv0DGtpBtzUF/I
+         guog==
+X-Gm-Message-State: APjAAAVAVv/DI9qYkGiAk6DKIDZUcBwZ1zcSR1ULBFuSFJ8evLbHzB2e
+        5iyLwuz2h19JNW3LC0O0GyA=
+X-Google-Smtp-Source: APXvYqxkVCm41zzITF3FOQIAQ/XackjtVW6az/7Nr0u8MJdACHufwvUnYj0VlJFrRh9QckkFGTGyZA==
+X-Received: by 2002:a05:651c:1023:: with SMTP id w3mr2506858ljm.79.1572353188859;
+        Tue, 29 Oct 2019 05:46:28 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id z26sm2237139lfg.94.2019.10.29.05.46.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 05:46:28 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:46:20 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-        linux-mips@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Subject: Re: [PATCH v4 5/5] net: dsa: add support for Atheros AR9331 build-in
- switch
-Message-ID: <20191029123854.GN15259@lunn.ch>
-References: <20191022055743.6832-1-o.rempel@pengutronix.de>
- <20191022055743.6832-6-o.rempel@pengutronix.de>
- <20191023005850.GG5707@lunn.ch>
- <20191029071404.pl34q4rmadusc2u5@pengutronix.de>
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
+Message-ID: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029071404.pl34q4rmadusc2u5@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Oleksij
+RFC series improving common LED binding parsing support
 
-> > > +static void ar9331_sw_port_disable(struct dsa_switch *ds, int port)
-> > > +{
-> > > +	struct ar9331_sw_priv *priv = (struct ar9331_sw_priv *)ds->priv;
-> > > +	struct regmap *regmap = priv->regmap;
-> > > +	int ret;
-> > > +
-> > > +	ret = regmap_write(regmap, AR9331_SW_REG_PORT_STATUS(port), 0);
-> > > +	if (ret)
-> > > +		dev_err_ratelimited(priv->dev, "%s: %i\n", __func__, ret);
-> > > +}
-> > 
-> > I've asked this before, but i don't remember the answer. Why are
-> > port_enable and port_disable the same?
-> 
-> I have only MAC TX/RX enable bit. This bit is set by phylink_mac_link_up and
-> removed by phylink_mac_link_down.
-> The port enable I use only to set predictable state of the port
-> register: all bits cleared. May be i should just drop port enable
-> function? What do you think? 
+Qucik grep for 'for_each' or 'linux,default-trigger' says it all.
 
-At minimum, it needs a comment about why enable and disable are the
-same. If i keep asking, others will as well.
+Multiple LED controller drivers implement the very similar looping
+through the child DT nodes in order to locate the LED nodes and read
+and support the common LED dt bindings. Implementing this same
+stuff for all LED controllers gets old pretty fast.
 
-If there is nothing useful to do, then drop it.
+This RFC contains 3 suggestions:
 
-   Andrew
+Simplest is adding support for parsing the linux,default-trigger,
+and default-state DT properties in led-core.
 
+More interesting part is adding correct LED DT node lookup in
+LED core. This RFC uses LED DT node names as a 'key' in a same
+way regulator framework does for regulators. The thing is that
+this approach requires the LED controller binding to dictate allowed
+LED node names - which may or may not be doable. I need your help to
+evaluate this and suggest better options :) If we still look at the
+regulators, the regulator core did originally use "regulator-core"
+property to do driver data/DT node pairing - but has since then
+changed the approach to using the DT node names.
+
+Last and least clear point is isolating the led_classdev to be owned
+by the LED core. Controller drivers should pretty much never touch
+it after the initialization. So one approach would be that drivers
+only provided initialization data and operations to the core.
+
+The patch series contains the led-core and led-class changes which
+introduce (yet another) APIs for registering led class device to
+core. Adding new interface is probably not the best option - one
+might consider changing the (devm_)led_classdev_register_ext to do
+what this new RFC API is doing.
+
+In addition to core changes this series converted two (randomly
+selected) existing drivers to use the new API. This can give an
+overview how offloading the DT parsing to core could simplify many
+of the LED controlled drivers.
+
+Patches HAVE NOT BEEN TESTED other than for compiling. They are
+only intended to be a starting point for discussion - and if the
+ideas are seen worthy - then the patches should be further worked
+and properly tested before being applied.
+
+Matti Vaittinen (5):
+  leds: Add common LED binding parsing support to LED class/core
+  dt-bindings: an30259a: example for using fixed LED node names.
+  leds: an30259a: Offload DT node locating and parsing to core
+  dt-bindings: lm3692x: example for using fixed LED node names.
+  leds: lm3692x: Offload DT node locating and parsing to core
+
+ .../bindings/leds/leds-an30259a.txt           |   9 +-
+ .../devicetree/bindings/leds/leds-lm3692x.txt |   4 +-
+ drivers/leds/led-class.c                      | 247 +++++++++++++++++-
+ drivers/leds/led-core.c                       | 111 +++++---
+ drivers/leds/leds-an30259a.c                  | 181 ++++++-------
+ drivers/leds/leds-lm3692x.c                   |  75 +++---
+ include/linux/leds.h                          | 144 +++++++++-
+ 7 files changed, 586 insertions(+), 185 deletions(-)
+
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
