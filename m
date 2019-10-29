@@ -2,106 +2,90 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A52CA9EC2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356F3CA9EC2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D6A20873
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572335412;
-	bh=AkPGUGUQ7O22I++5egFOxpSLRIAUQwOIcbOTmbPzHKY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UzdCNU7eBKtPWykyB4BdmIzxzt44foy5h5m5qgWtVXM5vRmdkPpmhscBUcVvO3lK7
-	 l7bMGkQp/CvhWyr/uYnppbncgObQWHHUQY8oakL9lecrGaE48QTyu8ru9qIjiIymzX
-	 i6Q1eeOJPHFY0wnE/UAGP38jiblRDNqQTGf2J9yA=
+	by mail.kernel.org (Postfix) with ESMTP id 0156E20862
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfJ2HuL (ORCPT
+        id S1726481AbfJ2Hxc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:50:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48936 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 03:53:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:23959 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfJ2HuL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 03:50:11 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FB9420862;
-        Tue, 29 Oct 2019 07:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572335410;
-        bh=AkPGUGUQ7O22I++5egFOxpSLRIAUQwOIcbOTmbPzHKY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sRKSF5K/AlN5GrAdeqvLE9SchQtrj4GYEsnLBDPbHIQSQguy+fQXaGLqUjlvzL9lf
-         JgbRpztgCCHo/DRg11StqXpDwmhSuslAj7iGSiPsWGsNomMgtMkB47UrFYm8+DaBOD
-         qp6ceIoXULz1mumBJkSp4AJ80UsxaoB7myQIDrQ8=
-Date:   Tue, 29 Oct 2019 08:44:49 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: sun8i-a83t-tbs-a711: Fix WiFi resume from
- suspend
-Message-ID: <20191029074449.jx2acknfds2idyjt@hendrix>
-References: <20191028215859.3467317-1-megous@megous.com>
+        id S1726233AbfJ2Hxc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 03:53:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 00:53:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="350904323"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 29 Oct 2019 00:53:29 -0700
+Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id 372E8580372;
+        Tue, 29 Oct 2019 00:53:24 -0700 (PDT)
+Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
+ <CAFBinCCSX_kVB=W3O-WXDMD2_2_Rnv+kiehf37xDkjL8+QoyHQ@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <42016b72-da39-7234-c3d3-f007636ff573@linux.intel.com>
+Date:   Tue, 29 Oct 2019 15:53:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="52ug3nnncgfccqfd"
-Content-Disposition: inline
-In-Reply-To: <20191028215859.3467317-1-megous@megous.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAFBinCCSX_kVB=W3O-WXDMD2_2_Rnv+kiehf37xDkjL8+QoyHQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Martin,
 
---52ug3nnncgfccqfd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Oct 28, 2019 at 10:58:58PM +0100, Ondrej Jirman wrote:
-> Without enabling keep-power-in-suspend, we can't wake the device
-> up using WOL packet, and the log is flooded with these messages
-> on resume:
+On 10/25/2019 4:31 AM, Martin Blumenstingl wrote:
+> Hi Dilip,
 >
-> sunxi-mmc 1c10000.mmc: send stop command failed
-> sunxi-mmc 1c10000.mmc: data error, sending stop command
-> sunxi-mmc 1c10000.mmc: send stop command failed
-> sunxi-mmc 1c10000.mmc: data error, sending stop command
+> thank you for the update
+> two nit-picks below, apart from those it looks good to me
+Thanks for reviewing it.
 >
-> So to make the WiFi really a wakeup-source, we need to keep it powered
-> during suspend.
+> On Mon, Oct 21, 2019 at 8:39 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+> [...]
+>> +examples:
+>> +  - |
+>> +    pcie10:pcie@d0e00000 {
+> why no space between pcie10 and pcie@d0e00000?
+Agree, will fix it in the next patch version.
 >
-> Fixes: 0e23372080def7 ("arm: dts: sun8i: Add the TBS A711 tablet devicetree")
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> [...]
+>> +      status = "okay";
+> examples should not use the status property, see commit 4da722ca19f30f
+> ("dt-bindings: Remove "status" from examples")
 
-Applied, thanks!
+Agree, will fix it in the next patch version.
+(sorry for the late reply, i am back today from sick leave).
 
-(I don't have my ssh key with me, so it might take a while before it's
-pushed...)
+Regards,
+Dilip
 
-Maxime
-
---52ug3nnncgfccqfd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbft8QAKCRDj7w1vZxhR
-xYcyAP0WvrLuHa2aHuAm4rNH4xTo173mvgoO36v3gZZf8d3BUAD/YggPtA5vvV6x
-KMIL0fCiPgWcqxx9dW2Qa+7cXZeLsgk=
-=Ctt+
------END PGP SIGNATURE-----
-
---52ug3nnncgfccqfd--
+>
+>
+> Martin
