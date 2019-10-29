@@ -2,223 +2,150 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D85CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30BBCA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 622EB21479
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A5A20862
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fJVzoelD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VLQKO+JO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbfJ2CXW (ORCPT
+        id S1730782AbfJ2ClZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:23:22 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39518 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbfJ2CXW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 22:23:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=weWtSFC8Dm8rRDFq7Ws7YUnkyjq/k0sSGCP9VGBKkyw=; b=fJVzoelD4VQgmU1U+f7c/xTlQ5
-        sNvBmfgwFgZ1JPMBhPUlhZdvJCN3484WQZFbgDu/hxD5WOBoL1rKBHhHw7VXRoCgqM0cln5ylX5WF
-        lnCX5riYaxwMGB21OgC97MCdQTdzWPkaGQ9c9zui7QlgA7bM7TgZ3MiOfStUM5RKTEvM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iPHA1-0001NW-4d; Tue, 29 Oct 2019 03:23:05 +0100
-Date:   Tue, 29 Oct 2019 03:23:05 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 net-next 05/12] dt-bindings: net: ti: add new cpsw
- switch driver bindings
-Message-ID: <20191029022305.GK15259@lunn.ch>
-References: <20191024100914.16840-1-grygorii.strashko@ti.com>
- <20191024100914.16840-6-grygorii.strashko@ti.com>
+        Mon, 28 Oct 2019 22:41:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34925 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729320AbfJ2ClZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 22:41:25 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l10so11953198wrb.2
+        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 19:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZeDXYfJYer9ewRjx0PKDp7gkl9UyDafoP/CtcLx8QMs=;
+        b=VLQKO+JOvP8uz/jmVZM9OjdCfHDXyDMWpkMpTUHQHfjmA84+CUWD7XxXQNaduG/DhK
+         WpLIlhGmDUXteBLSWlDLv3lLQKGl9plS/P7jNHsE1n2OgqkcjY1MB0T3Q0WBTvNA1F40
+         PLq6JygSU3JQITuvsF6azO0JElsbcTQp8BtSk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZeDXYfJYer9ewRjx0PKDp7gkl9UyDafoP/CtcLx8QMs=;
+        b=eVWEIpFax+1IhVXpo91uhpxCQVMnQt8FQuiASoG4LbsgmqlIx+JmnViVcE1u2oJTKQ
+         ZBUc+VdfwkGvRekDoqhABiT8Jp8aUDodtjw9zr+8YxqHWiOMsn0UVLUhYGjSxM400fMB
+         w6iO+Zk5H6UMQCg1BwSBQB7j1OtFxB3DslJuXzBRCo+b2ybJ3hA/HvDrS8Ven1Xv63BY
+         QFdhmBwXoEakXduGtTVedbpJBgDjOM8K1sUq+mlWFmdrgT82LTrAmiySbfWPlqT4MiE/
+         vF3otGptDvwRtpRkE5hKBDwEpjsfgC274WnjEZ8uzUbbt9IXgGQkQAP54EuOl/brqY59
+         94Rg==
+X-Gm-Message-State: APjAAAUPg+bDDBIbclPMUmYZ601eJ2MjdHwz6Fx4IwbjDFGwriLJmZzs
+        ZcB7dlgUWuu7nbLNTpbwYP5hnPPYfSeUgUOTH8Esrw==
+X-Google-Smtp-Source: APXvYqyc+JXXHY09WmrhUa6gx/7O5d2iKpnoJiK3FXpiuNcBFCoy0/gMtIdx+mtcV6BqjcvdZ3c6ru0/7R8MCJ1fJrA=
+X-Received: by 2002:adf:e806:: with SMTP id o6mr15942278wrm.139.1572316882248;
+ Mon, 28 Oct 2019 19:41:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024100914.16840-6-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191025133007.11190-4-cychiang@chromium.org> <201910290345.w2EEW5S3%lkp@intel.com>
+In-Reply-To: <201910290345.w2EEW5S3%lkp@intel.com>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Tue, 29 Oct 2019 10:40:55 +0800
+Message-ID: <CAFv8NwJYrpT=hCFwWfbdRvC971X-XGS-mjEBJrggQTJ02nhv7g@mail.gmail.com>
+Subject: Re: [PATCH v8 3/6] ASoC: rockchip_max98090: Optionally support HDMI
+ use case
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> +TI SoC Ethernet Switch Controller Device Tree Bindings (new)
-> +------------------------------------------------------
-> +
-> +The 3-port switch gigabit ethernet subsystem provides ethernet packet
-> +communication and can be configured as an ethernet switch.
+On Tue, Oct 29, 2019 at 3:10 AM kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi Cheng-Yi,
+>
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on rockchip/for-next]
+> [also build test ERROR on v5.4-rc5 next-20191028]
+> [if your patch is applied to the wrong git tree, please drop us a note to=
+ help
+> improve the system. BTW, we also suggest to use '--base' option to specif=
+y the
+> base tree in git format-patch, please see https://stackoverflow.com/a/374=
+06982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Cheng-Yi-Chiang/Add-HDMI=
+-jack-support-on-RK3288/20191028-212502
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
+hip.git for-next
+> config: i386-allmodconfig (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=3Di386
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    sound/soc/rockchip/snd-soc-rockchip-max98090: struct of_device_id is 1=
+96 bytes.  The last of 3 is:
+>    0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x72 0x6f 0x63 0x6b 0x63 0x68 0x69 0x70 0x2c 0x72 =
+0x6f 0x63 0x6b 0x63 0x68 0x69 0x70 0x2d 0x61 0x75 0x64 0x69 0x6f 0x2d 0x6d =
+0x61 0x78 0x39 0x38 0x30 0x39 0x30 0x2d 0x68 0x64 0x6d 0x69 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x10 0x00 =
+0x00 0x00
+> >> FATAL: sound/soc/rockchip/snd-soc-rockchip-max98090: struct of_device_=
+id is not terminated with a NULL entry!
 
-Hi Grygorii
+Please ignore this error for v8 patch series because the change in
+rockchip_max98090.c of of_device_id is removed in v9 patch series.
+Thanks!
 
-Maybe referring it to a 3-port switch will cause confusion, since in
-this use case, it only has 2 ports, and you only list two ports in the
-device tree.
-
-> It provides the
-> +gigabit media independent interface (GMII),reduced gigabit media
-> +independent interface (RGMII), reduced media independent interface (RMII),
-> +the management data input output (MDIO) for physical layer device (PHY)
-> +management.
-> +
-> +Required properties:
-> +- compatible : be one of the below:
-> +	  "ti,cpsw-switch" for backward compatible
-> +	  "ti,am335x-cpsw-switch" for AM335x controllers
-> +	  "ti,am4372-cpsw-switch" for AM437x controllers
-> +	  "ti,dra7-cpsw-switch" for DRA7x controllers
-> +- reg : physical base address and size of the CPSW module IO range
-> +- ranges : shall contain the CPSW module IO range available for child devices
-> +- clocks : should contain the CPSW functional clock
-> +- clock-names : should be "fck"
-> +	See bindings/clock/clock-bindings.txt
-> +- interrupts : should contain CPSW RX_THRESH, RX, TX, MISC interrupts
-> +- interrupt-names : should contain "rx_thresh", "rx", "tx", "misc"
-> +	See bindings/interrupt-controller/interrupts.txt
-> +
-> +Optional properties:
-> +- syscon : phandle to the system control device node which provides access to
-> +	efuse IO range with MAC addresses
-> +
-> +Required Sub-nodes:
-> +- ethernet-ports : contains CPSW external ports descriptions
-> +	Required properties:
-> +	- #address-cells : Must be 1
-> +	- #size-cells : Must be 0
-> +	- reg : CPSW port number. Should be 1 or 2
-> +	- phys : phandle on phy-gmii-sel PHY (see phy/ti-phy-gmii-sel.txt)
-> +	- phy-mode : See [1]
-> +	- phy-handle : See [1]
-> +
-> +	Optional properties:
-> +	- label : Describes the label associated with this port
-> +	- ti,dual-emac-pvid : Specifies default PORT VID to be used to segregate
-> +		ports. Default value - CPSW port number.
-> +	- mac-address : See [1]
-> +	- local-mac-address : See [1]
-> +
-> +- mdio : CPSW MDIO bus block description
-> +	- bus_freq : MDIO Bus frequency
-> +	See bindings/net/mdio.txt and davinci-mdio.txt
-> +
-> +- cpts : The Common Platform Time Sync (CPTS) module description
-> +	- clocks : should contain the CPTS reference clock
-> +	- clock-names : should be "cpts"
-> +	See bindings/clock/clock-bindings.txt
-> +
-> +	Optional properties - all ports:
-> +	- cpts_clock_mult : Numerator to convert input clock ticks into ns
-> +	- cpts_clock_shift : Denominator to convert input clock ticks into ns
-> +			  Mult and shift will be calculated basing on CPTS
-> +			  rftclk frequency if both cpts_clock_shift and
-> +			  cpts_clock_mult properties are not provided.
-> +
-> +[1] See Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +
-> +Examples:
-> +
-> +mac_sw: switch@0 {
-> +	compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
-> +	reg = <0x0 0x4000>;
-> +	ranges = <0 0 0x4000>;
-> +	clocks = <&gmac_main_clk>;
-> +	clock-names = "fck";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	syscon = <&scm_conf>;
-> +	status = "disabled";
-> +
-> +	interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "rx_thresh", "rx", "tx", "misc"
-> +
-> +	ethernet-ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpsw_port1: port@1 {
-> +			reg = <1>;
-> +			label = "port1";
-> +			/* Filled in by U-Boot */
-> +			mac-address = [ 00 00 00 00 00 00 ];
-> +			phys = <&phy_gmii_sel 1>;
-> +		};
-> +
-> +		cpsw_port2: port@2 {
-> +			reg = <2>;
-> +			label = "wan";
-> +			/* Filled in by U-Boot */
-> +			mac-address = [ 00 00 00 00 00 00 ];
-> +			phys = <&phy_gmii_sel 2>;
-> +		};
-> +	};
-> +
-> +	davinci_mdio_sw: mdio@1000 {
-> +		compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		ti,hwmods = "davinci_mdio";
-> +		bus_freq = <1000000>;
-> +		reg = <0x1000 0x100>;
-> +	};
-> +
-> +	cpts {
-> +		clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 25>;
-> +		clock-names = "cpts";
-> +	};
-> +};
-> +
-> +&mac_sw {
-> +	pinctrl-names = "default", "sleep";
-> +	status = "okay";
-> +};
-> +
-> +&cpsw_port1 {
-> +	phy-handle = <&ethphy0_sw>;
-> +	phy-mode = "rgmii";
-> +	ti,dual_emac_pvid = <1>;
-> +};
-> +
-> +&cpsw_port2 {
-> +	phy-handle = <&ethphy1_sw>;
-> +	phy-mode = "rgmii";
-> +	ti,dual_emac_pvid = <2>;
-> +};
-> +
-> +&davinci_mdio_sw {
-> +	ethphy0_sw: ethernet-phy@0 {
-> +		reg = <0>;
-> +	};
-> +
-> +	ethphy1_sw: ethernet-phy@1 {
-> +		reg = <1>;
-> +	};
-> +};
-
-In an example, it is unusual to split things up like this. I
-understand that parts of this will be in the dtsi file, and parts in
-the .dts file, but examples generally keep it all as one. And when you
-re-write this in YAML so it can be used to validated real DTs, you
-will have to combine it.
-
-     Andrew
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Ce=
+nter
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corpora=
+tion
