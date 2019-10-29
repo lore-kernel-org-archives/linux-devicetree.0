@@ -2,115 +2,138 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC32CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 10:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CBFCA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A1F21479
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 10:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572345785;
-	bh=ip6EK3DNIh/PbYHqQOqjYKyBD0BDFRXxuD/21er3J9g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yHFF3IVZRt1OKiAPpk7kfCvth2sPTSPhv3m/0td/oZ19R0RvZ+nteJiB5eM4Yl/nK
-	 YpCCnW0YjDTGIQF/cH1GMmx5Tq4Ne5CqJx2kWJtnlqVSnYp5FEzuU98tbm9yEMVopn
-	 nIuJAb3kDwXqDx8f19PR/sVc90RNsZf+3POCW2AA=
+	by mail.kernel.org (Postfix) with ESMTP id 271EC21734
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RYCBY6vN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfJ2KnF (ORCPT
+        id S1731913AbfJ2LNn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 06:43:05 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39711 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfJ2KnF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 06:43:05 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v138so8507207oif.6;
-        Tue, 29 Oct 2019 03:43:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WSjPNv90mxoa4Qm6nfEtDVRJH8OLwkZxWcgMkuqr8yo=;
-        b=bGxNvv0I7soLyaU5RO3amJ8UY4P89c8UoLbIQFC8q965tXolSK1ftj4zirr/CGRlA1
-         5MS6HF+1hByzBdb/Y3u99ivirCq+WerZVFPSbV7YX0YFzXVbAyGIhUbTuJvzX8vD2pJn
-         Q68h8y6hLKU2TLp9tDbc++GyNOS9xbtxsjqSswA/bKYLjm1HNgPvZqHJbqD0ye1fRV45
-         MWViArvUau9meYlU+AUAWlbHQeVT8xLGvE3D7FuMLDXpCmIpotcta3l0Vm3u0ZWi00k3
-         ihq3gc0uys5yl+gckypOnvF26QKTuqL6rnYWqroJNNKkBL88jXtqwa25nexyecyGuq3W
-         Kgbg==
-X-Gm-Message-State: APjAAAVBV/xCMJ738VF2TNJ75iauPibhbPUHLJ5/0zqI4VezmGHJJoMt
-        fsSiMfmsiZ1wR/rvhLbcw674JhKZdtAdC1f9DDg=
-X-Google-Smtp-Source: APXvYqzEI7Zev2Tj6Q3I2HWITMkXefnJLlyQjGXMoQC961y0B0n88iefi/CLfKVtZiYMOV/Mt2ZrHOzKRLY7NZFaPAw=
-X-Received: by 2002:aca:d4c6:: with SMTP id l189mr3312579oig.68.1572345784471;
- Tue, 29 Oct 2019 03:43:04 -0700 (PDT)
+        Tue, 29 Oct 2019 07:13:43 -0400
+Received: from vps.xff.cz ([195.181.215.36]:59982 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731826AbfJ2LNn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:13:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1572347620; bh=Obh7tvfkovm1tGf8wM3sGTB+Ja4afeHSPQtadzplAcc=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=RYCBY6vNV4YeeENeH3RNTeWeZG3kO3f0QWxALt4GLNgqTCg0brQtQhmuBq9x/Y49n
+         fpvK97qY0FSViYwMAY/jfp39tdfeEsIEd14Mo5FallMrTTMm9iLTviBLEwaIE+1V4r
+         n582CF6f19v/OQIz5a+UGsXA3vIgefQhMA2yzP9s=
+Date:   Tue, 29 Oct 2019 12:13:39 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     linux-sunxi@googlegroups.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] arm: dts: sun8i: a83t: a711: Add touchscreen node
+Message-ID: <20191029111339.7okiyig3tbehn5kj@core.my.home>
+Mail-Followup-To: Marco Felsch <m.felsch@pengutronix.de>,
+        linux-sunxi@googlegroups.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20191029005806.3577376-1-megous@megous.com>
+ <20191029005806.3577376-4-megous@megous.com>
+ <20191029090801.zls2qns7rxcvmxor@pengutronix.de>
 MIME-Version: 1.0
-References: <187a1a7d-80bd-a0e9-a0d9-7fc53bff8907@linux.intel.com> <20191022125950.GA133170@google.com>
-In-Reply-To: <20191022125950.GA133170@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 29 Oct 2019 11:42:53 +0100
-Message-ID: <CAJZ5v0jdxR4roEUC_Hs3puCzGY4ThdLsi_XcxfBUUxqruP4z7A@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie link
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        martin.blumenstingl@googlemail.com,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029090801.zls2qns7rxcvmxor@pengutronix.de>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 2:59 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Rafael, linux-pm, beginning of discussion at
-> https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
->
-> On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
-> > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
-> > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
-> > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
-> > > > > of changing link width and speed on the fly.
-> > > Please add more details about why this is needed.  Since you're adding
-> > > sysfs files, it sounds like it's not actually the *driver* that needs
-> > > this; it's something in userspace?
->
-> > We have use cases to change the link speed and width on the fly.
-> > One is EMI check and other is power saving.  Some battery backed
-> > applications have to switch PCIe link from higher GEN to GEN1 and
-> > width to x1. During the cases like external power supply got
-> > disconnected or broken. Once external power supply is connected then
-> > switch PCIe link to higher GEN and width.
->
-> That sounds plausible, but of course nothing there is specific to the
-> Intel Gateway, so we should implement this generically so it would
-> work on all hardware.
->
-> I'm not sure what the interface should look like -- should it be a
-> low-level interface as you propose where userspace would have to
-> identify each link of interest, or is there some system-wide
-> power/performance knob that could tune all links?  Cc'd Rafael and
-> linux-pm in case they have ideas.
+Hello Marco,
 
-Frankly, I need some time to think about this and, in case you are
-wondering about whether or not it has been discussed with me already,
-it hasn't.
+On Tue, Oct 29, 2019 at 10:08:01AM +0100, Marco Felsch wrote:
+> Hi,
+> 
+> On 19-10-29 01:58, Ondrej Jirman wrote:
+> > From: Mylène Josserand <mylene.josserand@bootlin.com>
+> > 
+> > Enable a FocalTech EDT-FT5x06 Polytouch touchscreen.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> > ---
+> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > index 568b90ece342..19f520252dc5 100644
+> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > @@ -164,6 +164,22 @@
+> >  	status = "okay";
+> >  };
+> >  
+> > +&i2c0 {
+> > +	clock-frequency = <400000>;
+> > +	status = "okay";
+> > +
+> > +	touchscreen@38 {
+> > +		compatible = "edt,edt-ft5x06";
+> > +		reg = <0x38>;
+> > +		interrupt-parent = <&r_pio>;
+> > +		interrupts = <0 7 IRQ_TYPE_EDGE_FALLING>; /* PL7 */
+> > +		reset-gpios = <&pio 3 5 GPIO_ACTIVE_LOW>; /* PD5 */
+> > +		vcc-supply = <&reg_ldo_io0>;
+> > +		touchscreen-size-x = <1024>;
+> > +		touchscreen-size-y = <600>;
+> 
+> Do you want this touchscreen as wakeup-src? If so please add the
+> property here. I've send patches converting the driver from the default
+> behaviour: https://patchwork.kernel.org/cover/11149039/ and all agreed
+> to break backward compatibility.
 
-At this point I can only say that since we have an ASPM interface,
-which IMO is not fantastic, it may be good to come up with a common
-link management interface.
+Not at this moment, thank you.
 
-Cheers!
+regards,
+	o.
+
+> Regards,
+>   Marco
+> 
+> > +	};
+> > +};
+> > +
+> >  &i2c1 {
+> >  	clock-frequency = <400000>;
+> >  	status = "okay";
+> > -- 
+> > 2.23.0
+> > 
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
