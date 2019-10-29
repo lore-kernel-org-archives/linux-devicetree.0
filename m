@@ -2,92 +2,82 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC029CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02926C47E49
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3090204FD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572369282;
-	bh=zyUM74BqoXmifI759zmg/LfA9v0sM6BBkUVxy+4VCf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B+M2FMOjq6MTanx5nptXYPqpxiPMdFBxphBBNRLdyQU3UfGPozJCDxRDLqoID7IVB
-	 tDTTKB4OH/W2BG2mm1p/MCFEyHjUvLH6fvo+yj6PHquivRC2NihBWNsLyiLl9FUA4R
-	 Fo90ceFPUi12iImimkh24RZZA+UmUhuAljWi5rrU=
+	by mail.kernel.org (Postfix) with ESMTP id CC78B21721
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390632AbfJ2ROj (ORCPT
+        id S2390793AbfJ2RPr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:14:39 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34022 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727692AbfJ2ROj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 13:14:39 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l202so1597814oig.1;
-        Tue, 29 Oct 2019 10:14:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7JUjuo8MKJ48oDKK5LQl0/BNKkMnIjG176UmZKTITU4=;
-        b=D1aGMnn8uwAKMWQ4ek6gD5GsR328gnWmakOfXugM6nDc4QOSrzskWON5TnQkWkVceq
-         GPQsFvqMuOx/KmAv8jXK56Hz0nRlPXJD9jK/v/9j/Ko1+qga/q3XTZ1CGkDDSQv+Jxwu
-         PwkfDDcQoawXnwiqRtpFuqfFDa5D2wDDvtkdcEquW4Gu/ORA1gzMzylCnCdG59sl25tM
-         PGSyQFS+KqXledh95YPt2HANcd9eqn+00ldqL4KIVI63wapF9k8lmd6ulmlywmVeUZA4
-         5TJLwrvBDPRoNXE0DbIcRaEXPYsC4kNE95o009X/cJALgEEL3vOnTXoJ5/o47HgoBuII
-         u2GQ==
-X-Gm-Message-State: APjAAAW/ODKkDcSgyim126szd7/pDtR1G6gy0J9cw3h4EwSDh3J0DhQc
-        KPifmUUAxrU8bEG/HRguLA==
-X-Google-Smtp-Source: APXvYqyTyoSyehPOMTSVm7bg+g9+/Xdo3u7RCq/ZLt+3NQ0dc4Rd03BcbXmARRlX/bknzPz1daJ00w==
-X-Received: by 2002:a54:460f:: with SMTP id p15mr4665498oip.160.1572369277979;
-        Tue, 29 Oct 2019 10:14:37 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f5sm1408688otf.23.2019.10.29.10.14.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 10:14:36 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 12:14:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        dan.j.williams@intel.com, michal.simek@xilinx.com,
-        anirudha.sarangi@xilinx.com, nick.graumann@gmail.com,
-        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
-        mcgrof@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: Re: [PATCH -next 3/6] dt-bindings: dmaengine: xilinx_dma: Add
- binding for Xilinx MCDMA IP
-Message-ID: <20191029171435.GA1797@bogus>
-References: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
- <1571763622-29281-4-git-send-email-radhey.shyam.pandey@xilinx.com>
+        Tue, 29 Oct 2019 13:15:47 -0400
+Received: from smtprelay0126.hostedemail.com ([216.40.44.126]:39463 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727692AbfJ2RPq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 13:15:46 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id D0DAC18224D66;
+        Tue, 29 Oct 2019 17:15:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sheet91_31cdff6a4690a
+X-Filterd-Recvd-Size: 2120
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 29 Oct 2019 17:15:42 +0000 (UTC)
+Message-ID: <f668de19e156bd7a1bf599d9ce1f9d4f4fca4095.camel@perches.com>
+Subject: Re: [PATCH 2/4] thermal: stm32: fix IRQ flood on low threshold
+From:   Joe Perches <joe@perches.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Pascal Paillet <p.paillet@st.com>, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        rui.zhang@intel.com, edubezval@gmail.com,
+        amit.kucheria@verdurent.com, david.hernandezsanchez@st.com,
+        wsa+renesas@sang-engineering.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Andy Whitcroft <apw@canonical.com>
+Date:   Tue, 29 Oct 2019 10:15:35 -0700
+In-Reply-To: <8952e975-3bad-4b7d-49ff-b74af942008c@linaro.org>
+References: <20191029164537.1561-1-p.paillet@st.com>
+         <20191029164537.1561-3-p.paillet@st.com>
+         <8952e975-3bad-4b7d-49ff-b74af942008c@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571763622-29281-4-git-send-email-radhey.shyam.pandey@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 22 Oct 2019 22:30:19 +0530, Radhey Shyam Pandey wrote:
-> Add devicetree binding for Xilinx AXI Multichannel Direct Memory Access
-> (AXI MCDMA) IP. The AXI MCDMA provides high-bandwidth direct memory
-> access between memory and AXI4-Stream target peripherals. The AXI MCDMA
-> core provides a scatter-gather interface with multiple channel support
-> with independent configuration.
+On Tue, 2019-10-29 at 18:11 +0100, Daniel Lezcano wrote:
+> On 29/10/2019 17:45, Pascal Paillet wrote:
+> > Fix IRQ flood on low threshold by too ways:
 > 
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> ---
-> Keep compatible string one per line. Suggested by Rob.
-> Reuse the existing xlnx,axi-dma-* channel names. Suggested by Rob.
-> ---
->  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt         | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
+> Can you state the issue first ?
 > 
+> > - improve temperature reading resolution,
+> > - add an hysteresis to the low threshold: on low threshold interrupt,
+> > it is not possible to get the temperature value that has fired the
+> > interrupt. The time to acquire a new value is enough for the CPU to
+> > become hotter than the current low threshold.
+[]
+> > Signed-off-by: Pascal Paillet <p.paillet@st.com>
+> > Change-Id: I3b63b8aab38fd651a165c4e69a2d090b3c6f5db3
+> 
+> Please remove the Change-Id tag.
+> 
+> Joe, Andy? checkpatch does not see the Change-Id, is it the expected
+> behavior?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes.  It's after a sign-off so checkpatch doesn't care.
+
+
+
