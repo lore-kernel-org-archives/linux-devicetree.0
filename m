@@ -2,133 +2,127 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA77CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007EFCA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD98B20717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3082196F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="snicYa4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfJ2JvJ (ORCPT
+        id S1731817AbfJ2Jxr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:51:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:32413 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbfJ2JvI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:51:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:51:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="scan'208";a="202791380"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 02:51:07 -0700
-Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id CF3A6580472;
-        Tue, 29 Oct 2019 02:51:04 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
- link
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com>
- <20191021133849.GQ47056@e119886-lin.cambridge.arm.com>
- <6a209452-f569-4f6a-8aea-5c9f84167f5a@linux.intel.com>
- <20191025093457.GY47056@e119886-lin.cambridge.arm.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <0c680994-6d29-28a7-45de-7f76d79256d8@linux.intel.com>
-Date:   Tue, 29 Oct 2019 17:51:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 29 Oct 2019 05:53:47 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37287 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387463AbfJ2Jxq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 05:53:46 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e12so10133563edr.4
+        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 02:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:subject:to:cc:references:openpgp:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=HGDKIfiK4WqAtiXxg2PaSaV3tKJwX+/+66kephvgEMc=;
+        b=snicYa4xa75qBwamypvTLqSPyFkZPl5dVyOqrJzmSnFo9ZWuJnc5ulCdFp8WlWQHOl
+         0AuO/24CzCPv7qVgEFhoukv2GFOuJ1bWq1gG2vGzILd3Sn50nx7Fi9m6nayEaiWTNeWY
+         ZCadVMAYdVU8FMtX8KFyDOyJIcHoqkuUGtzHURxZSnjPpu6p02UHO+TMXf7o5/0gNxYn
+         X+HUMTxEw5ceA3gawdZXe2RtYoL4PpaXATQWnklS4ADEMVGaVtRb2ZGtSlttNdf8qviH
+         SrQ8FWJCTqwBRF+wvNq/NxQJiignNV7jT9hOeVxyd31CXmFMEC2a4MK+EqJ4CMbagW3M
+         Jqgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:openpgp:message-id
+         :date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HGDKIfiK4WqAtiXxg2PaSaV3tKJwX+/+66kephvgEMc=;
+        b=d22KnV/pAwJhwjYeMc0fClgsB2AZfY9xiWP1aPU7kzYzSngsvZhO3knXNnpgjNfINH
+         RYo2jVqA9GfQor893Ff1PRceXbN92/xhTHlVXJro0t5VdoHbAWG6dzjvAZTo59Lkbtfc
+         zUrPu/ypD1xUnDv3PpshlkQtJbf4mqPfXuBw4MVDsPSE2CO3x0Pckz/bhslVQMIZHzF9
+         xkB8HFn+oPYVOKeTOexTi2+I2GVNbjdC/Vxl5OTvfwTgc0SwtvvIE1rIixeYbDYp8vSx
+         Sk4v5GClQGRvtFhLWpfv6Y4iR0r5F/A9kLmcAvvbNmSppfo+3wgvI2kE2i0gItR/jWMK
+         aQHA==
+X-Gm-Message-State: APjAAAUeZFPYTHfzXyyN536++7nSdqummCKQ0ISrRLDmk7iITPY00vLQ
+        WFaCgd7wArP4Gncr//sVFi6CtQ==
+X-Google-Smtp-Source: APXvYqyFyb/NYxsK1RWq4WxvayVYls/goH6XAAk9FVVYjH3wL1Zb5+8jNZclhKtCmGdk5NT+7BUT2g==
+X-Received: by 2002:a50:eb92:: with SMTP id y18mr23242997edr.244.1572342824719;
+        Tue, 29 Oct 2019 02:53:44 -0700 (PDT)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id x6sm664005edc.50.2019.10.29.02.53.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 02:53:44 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [RFC PATCH 4/4] interconnect: qcom: sdm845: Split qnodes into
+ their respective NoCs
+To:     David Dai <daidavid1@codeaurora.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org
+Cc:     evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
+        seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+References: <1571278852-8023-1-git-send-email-daidavid1@codeaurora.org>
+ <1571278852-8023-5-git-send-email-daidavid1@codeaurora.org>
+Openpgp: preference=signencrypt
+Message-ID: <9f879f99-527d-50bc-d5ef-5a72d4a65c4d@linaro.org>
+Date:   Tue, 29 Oct 2019 11:53:42 +0200
 MIME-Version: 1.0
-In-Reply-To: <20191025093457.GY47056@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1571278852-8023-5-git-send-email-daidavid1@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi David,
 
-On 10/25/2019 5:34 PM, Andrew Murray wrote:
+On 17.10.19 г. 5:20 ч., David Dai wrote:
+> In order to better represent the hardware and its different Network-On-Chip
+> devices, split the sdm845 provider driver into NoC specific providers.
+> Remove duplicate functionality already provided by the icc rpmh and
+> bcm voter drivers to calculate and commit bandwidth requests to hardware.
+> 
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> ---
+>  drivers/interconnect/qcom/sdm845.c | 727 +++++++++++--------------------------
+>  1 file changed, 206 insertions(+), 521 deletions(-)
+> 
+> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+> index 502a6c2..a731f4d 100644
+> --- a/drivers/interconnect/qcom/sdm845.c
+> +++ b/drivers/interconnect/qcom/sdm845.c
+[..]
+>  static int qnoc_probe(struct platform_device *pdev)
+>  {
+> @@ -808,6 +480,12 @@ static int qnoc_probe(struct platform_device *pdev)
+>  	qp->bcms = desc->bcms;
+>  	qp->num_bcms = desc->num_bcms;
+>  
+> +	qp->voter = of_bcm_voter_get(qp->dev, NULL);
 
->>>> +/*
->>>> + * Link width change on the fly is not always successful.
->>>> + * It also depends on the partner.
->>>> + */
->>>> +static ssize_t pcie_width_store(struct device *dev,
->>>> +				struct device_attribute *attr,
->>>> +				const char *buf, size_t len)
->>>> +{
->>>> +	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
->>>> +	unsigned long val;
->>>> +	int ret;
->>>> +
->>>> +	lpp = dev_get_drvdata(dev);
->>>> +
->>>> +	ret = kstrtoul(buf, 10, &val);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>> +	if (val > lpp->max_width)
->>>> +		return -EINVAL;
->>>> +
->>>> +	/* HW auto bandwidth negotiation must be enabled */
->>>> +	pcie_rc_cfg_wr_mask(lpp, PCI_EXP_LNKCTL_HAWD, 0,
->>>> +			    PCIE_CAP_OFST + PCI_EXP_LNKCTL);
->>>> +	dw_pcie_link_width_resize(&lpp->pci, val);
->>>> +
->>>> +	return len;
->>>> +}
->>>> +static DEVICE_ATTR_WO(pcie_width);
->>>> +
->>>> +static struct attribute *pcie_cfg_attrs[] = {
->>>> +	&dev_attr_pcie_link_status.attr,
->>>> +	&dev_attr_pcie_speed.attr,
->>>> +	&dev_attr_pcie_width.attr,
->>>> +	NULL,
->>>> +};
->>> Is there a reason that these are limited only to the Intel driver and
->>> not the wider set of DWC drivers?
->>>
->>> Is there anything specific here about the Intel GW driver?
->> Yes, they need intel_pcie_max_speed_setup() and pcie_link_gen_to_str().
->> Once intel_pcie_max_speed_setup() moved to DesignWare framework (as per
->> Bjorn Helgaas inputs) and use pcie_link_speed[] array instead of
->> pcie_link_gen_to_str() (as per gustavo pimentel inputs) we can move this to
->> PCIe DesignWare framework or to pci sysfs file.
-> I think the key concern here is this: If you introduce sysfs controls that
-> represent generic PCI concepts (such as changing the link speed) - the concept
-> isn't limited to a particular host controller, it's limited to PCI. Therefore
-> the sysfs control should also apply more widely to all PCI controllers. This
-> is important as otherwise you may end up getting a slightly different user
-> interface to achieve the same consequence depending on the host-controller in
-> use.
->
-> If each controller driver has a different way of doing things, then it lends
-> itself to having some set of ops that they can all implement. Or perhaps there
-> is a middle-ground solution where this applies just to DWC devices and not all
-> devices.
-I see the better way is to move the implementation to PCIe DesignWare 
-framework because of
-the registers programming.
+I assume that we could have a second optional bcm-voter? The
+"qcom,bcm-voter-names" DT property is not used anywhere, is it needed? Maybe
+give an example in patch 1.
 
-Regards,
-Dilip
-> Thanks,
->
-> Andrew Murray
->
->>
+> +	if (IS_ERR(qp->voter)) {
+> +		dev_err(&pdev->dev, "bcm_voter err:%d\n", PTR_ERR(qp->voter));
+
+Should be %ld
+
+> +		return PTR_ERR(qp->voter);
+> +	}
+> +
+>  	ret = icc_provider_add(provider);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "error adding interconnect provider\n");
+
+Nit: I would also put patch 2/4 at the end of the series.
+
+Thanks,
+Georgi
