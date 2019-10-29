@@ -4,131 +4,187 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630E0CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3747FCA9EC2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346B0217D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C966217D6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572314489;
-	bh=u3OORNaoycoorqSFbe3Gbn/CXhUmwJcjqYkH4Fo2Ryk=;
+	s=default; t=1572314694;
+	bh=onBnYDmt5g+9g0jvlINksSIW6mBJLA+lQUcUju1Jnsw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x82gKJRy3p59fCKUPE2RzXgEs4AyGWMWUs2BEo7zr7RBLb1NtTaaNgIowj/KfFUaT
-	 df7ZbW4SMMvG5zOQMEvg31pZHABuYf4Updr2vqpSsMVRVm9yCLazv6fOn0NCJeeOBp
-	 6LWiSK6R/K8wjBvemzh6xx99viPs2SqKzy40ir+A=
+	b=lMiZ/Ir2isLlan+sPR1NF8LyA6VLGhfvzzECQZGE1ZrMe6Qvc5dn8svipdqyutzSy
+	 TljL/JiNm6FkUcfByw0BHBhHdQP+dhXsI6mqqxkMevyNPQvYtFp8yThI8m1xT7ac0P
+	 nNHv/8Xn3THl7pc1d7gp58TIPdXUqocbbTCZnLF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfJ2CB2 (ORCPT
+        id S1728183AbfJ2CEx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:01:28 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33447 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbfJ2CB2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 22:01:28 -0400
-Received: by mail-ot1-f66.google.com with SMTP id u13so8470280ote.0;
-        Mon, 28 Oct 2019 19:01:27 -0700 (PDT)
+        Mon, 28 Oct 2019 22:04:53 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44398 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfJ2CEx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 22:04:53 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n48so8416741ota.11;
+        Mon, 28 Oct 2019 19:04:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9BL3Z1A/tEWwa5UAepvAQv367j/DZhoKZ8WMU7Awauw=;
-        b=FMo/udJcoTk0koZYwYsmVgGNItWh8z0WloKRvpMwU5KFk4L4iPkw3Qc0HNe9lpJaSu
-         BMjvVmJftHpWpRJfB5j5LG5sqqaVZmsFTQBIiHULUvnHQYPMFMM4KxsqXV2lWrxePXYz
-         fX2kmpJNUqiBjr/+k0FfEyQhR5tiejdter/ZORVWZDjanxVwqFENknL1mynh4YoZ7K/c
-         l49KSl/WqrrIKWbmaItuykfg0gD0P6iL26Kn6q8JCFA6Jip3bPA74v64LufYJ46BrRCa
-         09c2MuzaUcGqs0jiMhJ5rlx0MvvYTYSW4Ck1s0ix4GCRSTaaAflZosIsiZpGc1euLgXb
-         TMPw==
-X-Gm-Message-State: APjAAAUZLtYBtTmd9WQB9qwSR9VYGUxhKu2va6g+Rzx5eGIInGbyB09n
-        0+Da3203XYbcI0gFZVBeHQ==
-X-Google-Smtp-Source: APXvYqxTMdckI8FQ4OvetDPaspVzeYA6kfan5ggpGK9XdwPtUCWnW0VVdmXnlKq6EvrM8Js1EYCC2Q==
-X-Received: by 2002:a9d:538d:: with SMTP id w13mr15641639otg.184.1572314486742;
-        Mon, 28 Oct 2019 19:01:26 -0700 (PDT)
+        bh=HFyv8biFiEa7dI7+8/hKQK/SKrkibEovMGYz51a6e3Q=;
+        b=PMiab0SYWy7QtcAdn43dh73BY3tnpVkIcwbDaOwCh7kPydf1wRsJuUpQlAIakxRqiX
+         kn3tOrIsY2FcXuC6/h+Rq4tgNsJFibYnsBhEFUqih2CEBzpilllXvVvjFVp4vHEvgAH2
+         RNX1kRdmMGJtUYHNHxsaqsSkkAL+3KzA3gwWYmxpNfOi+z81Uxv7NA4fbMU/w4siHZYU
+         jcqI4ofCAolAGpC4gZ/L50YMpfCFkLmSxFwoUj3ircqPd7Pe1n4RLhX7lZJ2AAWRSZSk
+         z3hTSxjFM9FzQkc7Ive5dkOpBoLjDhKXSAU5qLuZAa5NnqNaeoUwNM1+AX67K/q7zQkt
+         Lijw==
+X-Gm-Message-State: APjAAAWX9D/mIfsckQJH2rFXpc05JwoC4y1i3whItrvq8q2MNZKvY9HB
+        JWu+WJby3v1kGsJ8WBwfZQ==
+X-Google-Smtp-Source: APXvYqz/PKQhwGT0k8RL1Zb/NY7UEotlPlxCE0kRl2Ne5SNWKtblnq+z4dve81EPfyp+V4p8my/E/A==
+X-Received: by 2002:a9d:469d:: with SMTP id z29mr16109164ote.309.1572314692113;
+        Mon, 28 Oct 2019 19:04:52 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h17sm2203144otr.53.2019.10.28.19.01.25
+        by smtp.gmail.com with ESMTPSA id n1sm154935oij.13.2019.10.28.19.04.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 19:01:26 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 21:01:25 -0500
+        Mon, 28 Oct 2019 19:04:51 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 21:04:50 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: power: add Amlogic secure power
- domains bindings
-Message-ID: <20191029020125.GA11182@bogus>
-References: <1571391167-79679-1-git-send-email-jianxin.pan@amlogic.com>
- <1571391167-79679-2-git-send-email-jianxin.pan@amlogic.com>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ RPMHCC clock bindings
+Message-ID: <20191029020450.GA16322@bogus>
+References: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
+ <1571393364-32697-2-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571391167-79679-2-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <1571393364-32697-2-git-send-email-tdas@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 05:32:44PM +0800, Jianxin Pan wrote:
-> Add the bindings for the Amlogic Secure power domains, controlling the
-> secure power domains.
+On Fri, Oct 18, 2019 at 03:39:22PM +0530, Taniya Das wrote:
+> The RPMHCC clock provider have a bunch of generic properties that
+> are needed in a device tree. Add a YAML schemas for those.
 > 
-> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-> power domain registers are in secure world.
-> 
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
->  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 ++++++++++++++++++++++
->  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++
->  2 files changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->  create mode 100644 include/dt-bindings/power/meson-a1-power.h
+>  .../devicetree/bindings/clock/qcom,rpmh-clk.txt    | 27 ------------
+>  .../devicetree/bindings/clock/qcom,rpmhcc.yaml     | 49 ++++++++++++++++++++++
+>  2 files changed, 49 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> deleted file mode 100644
+> index 365bbde..0000000
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -Qualcomm Technologies, Inc. RPMh Clocks
+> --------------------------------------------------------
+> -
+> -Resource Power Manager Hardened (RPMh) manages shared resources on
+> -some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
+> -other hardware subsystems via RSC to control clocks.
+> -
+> -Required properties :
+> -- compatible : must be one of:
+> -	       "qcom,sdm845-rpmh-clk"
+> -	       "qcom,sm8150-rpmh-clk"
+> -
+> -- #clock-cells : must contain 1
+> -- clocks: a list of phandles and clock-specifier pairs,
+> -	  one for each entry in clock-names.
+> -- clock-names: Parent board clock: "xo".
+> -
+> -Example :
+> -
+> -#include <dt-bindings/clock/qcom,rpmh.h>
+> -
+> -	&apps_rsc {
+> -		rpmhcc: clock-controller {
+> -			compatible = "qcom,sdm845-rpmh-clk";
+> -			#clock-cells = <1>;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
 > new file mode 100644
-> index 00000000..88d8261
+> index 0000000..326bfd7
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +# Copyright (c) 2019 Amlogic, Inc
-> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,rpmhcc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Amlogic Meson Secure Power Domains
+> +title: Qualcomm Technologies, Inc. RPMh Clocks Bindings
 > +
 > +maintainers:
-> +  - Jianxin Pan <jianxin.pan@amlogic.com>
+> +  - Taniya Das <tdas@codeaurora.org>
 > +
-> +description: |+
-> +  Meson Secure Power Domains used in A1/C1 SoCs.
+> +description: |
+> +  Resource Power Manager Hardened (RPMh) manages shared resources on
+> +  some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
+> +  other hardware subsystems via RSC to control clocks.
 > +
 > +properties:
-> +  compatible:
+> +  compatible :
+
+drop space     ^
+
 > +    enum:
-> +      - amlogic,meson-a1-pwrc
-> +
-> +  "#power-domain-cells":
-> +    const: 1
-> +
-> +  secure-monitor:
-> +    description: phandle to the secure-monitor node
-> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +       - qcom,sdm845-rpmh-clk
+> +       - qcom,sm8150-rpmh-clk
 
-Like the watchdog, make this a child or the secure firmware node. Or 
-just add '#power-domain-cells' to it. You don't really need a child node 
-here if there's not other resources in DT for this.
+Wrong indent (1 char too many).
 
-Rob
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    maxItems: 1
+
+Can drop this. Implied by items list.
+
+> +    items:
+> +      - const: xo
+> +
+> +  '#clock-cells':
+> +      const: 1
+> +
+> +required:
+> +  - compatible
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  # Example for GCC for SDM845: The below node should be defined inside
+> +  # &apps_rsc node.
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    rpmhcc: clock-controller {
+> +      compatible = "qcom,sdm845-rpmh-clk";
+> +      clocks = <&xo_board>;
+> +      clock-names = "xo";
+> +      #clock-cells = <1>;
+> +    };
+> +...
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
