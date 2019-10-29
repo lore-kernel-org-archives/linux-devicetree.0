@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CA6CA9EC3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 14:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4718ECA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 14:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260CB20874
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 14:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07DEC20874
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 14:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hwng/1iR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oaXpskJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389452AbfJ2OwB (ORCPT
+        id S2389802AbfJ2O6a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:52:01 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:40742 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbfJ2OwB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 10:52:01 -0400
-Received: by mail-vs1-f67.google.com with SMTP id v10so8914079vsc.7
-        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 07:51:59 -0700 (PDT)
+        Tue, 29 Oct 2019 10:58:30 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41801 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389801AbfJ2O6a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 10:58:30 -0400
+Received: by mail-vs1-f68.google.com with SMTP id i22so2724759vsl.8
+        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 07:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AghPO3C3rEgGBPotZ+vICco1DWQsd2uHdndQrS4Mhmg=;
-        b=Hwng/1iREMu58SnENh22U3wjGobxllv5Tqdl4SLxKt2rJHJMiSBnFDHk0tk8PRXMfc
-         Mlmj3c4mAJ+7d58g5EbhSontzBbJAUktNUENdEfVlLgpoFhjxBt+oRDVCNMZLh78ImpF
-         5/1Mu84pLONjy3utBV6gpZ1tNFmoUgr4QV6/NshuMd+VqPjHdERr52EmJwCzO9lVP9DD
-         XV7l8eSunjesHvuWBwX9Xyk00bdIjSaD1mP7kdDLOqE/0Ffk01zex7aFEn8amOJZTYD3
-         Pl85KuEPuIhkiasQ1yQuSw8WFIVc8uI3/QnKLBZk/hZRhXOrRGAnwcJfaBTrb+3IDB07
-         JWUg==
+        bh=xjB+ZpmO3twByAPR+4L+mHm+DrtDlohe88jo1dKnnjc=;
+        b=oaXpskJCNt4XXGtwMjTYcVHqnsYcgfy+b60L4FecmVgfx2bvqI3yhshilu7EhsJGED
+         HVdSB0Mv5TcTKihKo/g4eEfeVwotJc2pI/ADqKHZEUoEExQ8N64ZUrSpvrgw7sbAwcUo
+         G8C1XTdibyo5hC2gTMCccdjPP6Z7mxoeFR5bZbqRMZsoVWGGmDx8HQchm2K6hW0QYpRv
+         HRjGUXBFVueW3Q+RJJFP0NnoifQLM3IFNuHcGmbETxhTmNvuBTS6uCiEZGdBLtOEo9uU
+         6qxbkxwqypztHkWqNz0CPNUGK4ythXELpQL7YDWxZ7XSIYBgmIgmz8a8hl717594vq9q
+         f0Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AghPO3C3rEgGBPotZ+vICco1DWQsd2uHdndQrS4Mhmg=;
-        b=nBXi14xBU2UexaReBYPWEvV6FhlfrUbBXgdWGS0ZeousgR19CUNtURbgAUKb+SNo9I
-         ltwyxu9MVuAd2KpahZD9UepaPH5ucqsYUO9PBvtA8QJoqiB0CnBREbGgw1G6PeLPK6BC
-         X5GVCT1pMeFSm/wtbOP9Z1i4IfUrEIgFkfC5h4ZOQLxQ0iYL8h4zekcQjK6h5Y3fLC6m
-         wgQ5RP5bwco1b2VC56tRDYsyKvBcPIXZWv1Z/L70SZjA6Io2KefIM6R+z67WXAfFjvSS
-         I2Cqx6jqlmZQLHQp7hHlmOwTTgcw02gVGanYF1E4EkBxV4MtLVlZdaKAcy/IopjUrLZK
-         mfpQ==
-X-Gm-Message-State: APjAAAVGX5y+BnXWECFtcknrjc2B+y5xtlCKYh2cQiOzPvSrHZSBCFjo
-        yLQUKd3l7PP/VkeXKk/75mF/QGOoxwDM2ILeItQJQQ==
-X-Google-Smtp-Source: APXvYqxy+qA6VE5Nq1a9sMm7sQY0Vmiq6oTH38qQ4sCv5Md8fk8HW1K0XuZUl3bbruZa1JoQJbbOkNNLqDYASp6pmRE=
-X-Received: by 2002:a05:6102:2436:: with SMTP id l22mr1897257vsi.93.1572360718925;
- Tue, 29 Oct 2019 07:51:58 -0700 (PDT)
+        bh=xjB+ZpmO3twByAPR+4L+mHm+DrtDlohe88jo1dKnnjc=;
+        b=oo4w+mfkXSW2IUaPnBXHOt/ZuodgermuT1+bQqPw+XHFWpLeUr9Iw0jRYBOrQjlO1C
+         HwmmmKa5j43rnhMRp+oKr9jqOulLPr5uhH7f0EFPRZ8Go5UBpNsaoE3Cj9SFgwvT57NZ
+         p8LcadVxDrjjDYkpjIsXTewlaKUxy/wI0I5A32lg/nvo9Km3V69fyGtO8CJHFLgOYu8r
+         Da/945J4w6MYlYZlJsOd6NHpej+cW/7EiAVsXqrZzphneV/s1UxoAS8j+oY+223r1F3s
+         H100y6Ix+NNKIt4lWkAP1NORTZO6aDR4mQcoRfQ8qlBZ9yMrbivCMzA3ou8VQ0jVzkag
+         HMPw==
+X-Gm-Message-State: APjAAAWJaaILOA+Vz2bxIwkm3hDPHbR3aaHUAK0EeMFVX1fuK/G43eiZ
+        N0sh2TQrZwsPFNcvvy63bkiZHdiutfyfL2p2O3c6OQ==
+X-Google-Smtp-Source: APXvYqzaI791KOXBIBsCJiL8FxnvMrHuQCjh4l15hmm8Lf0ZRw6g5PMTkXCt8PXFzSZIcrNtpyFpJt2Gtasg9XBc6NE=
+X-Received: by 2002:a67:7944:: with SMTP id u65mr2109606vsc.10.1572361109404;
+ Tue, 29 Oct 2019 07:58:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191028200555.27524-1-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20191028200555.27524-1-chris.packham@alliedtelesis.co.nz>
+References: <20191024202703.8017-1-chris.packham@alliedtelesis.co.nz> <20191024202703.8017-3-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20191024202703.8017-3-chris.packham@alliedtelesis.co.nz>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 29 Oct 2019 15:51:47 +0100
-Message-ID: <CACRpkdbJhXxAXTBnTUxj7AkOBv1wBphCD6bJ5Vta4FT78x=--w@mail.gmail.com>
-Subject: Re: [PATCH v5] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
+Date:   Tue, 29 Oct 2019 15:58:17 +0100
+Message-ID: <CACRpkdaD=VMvUuWfwn+aa=G9rKC+=eiRVk85ghhDWXWshKQRaw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] gpio: Add xgs-iproc driver
 To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -69,31 +69,36 @@ Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 9:06 PM Chris Packham
+On Thu, Oct 24, 2019 at 10:27 PM Chris Packham
 <chris.packham@alliedtelesis.co.nz> wrote:
 
-> This GPIO controller is present on a number of Broadcom switch ASICs
-> with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-> blocks but different enough to require a separate driver.
+> This driver supports the Chip Common A GPIO controller present on a
+> number of Broadcom switch ASICs with integrated SoCs. The controller is
+> similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
+> different enough that a separate driver is required.
+>
+> This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
+> support (pinctrl-iproc-gpio covers CCB).
 >
 > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
 >
 > Notes:
->     Changes in v5:
->     - correct $id line following rename
->     - add reviewed-by from Rob
+>     Changes in v4:
+>     - rename the config option to GPIO_BCM_XGS_IPROC and place alphabetically
+>     - sort #includes alphabetically
 
-Patch applied.
+Patch applied, great work on this patch, it's very lean and clean now!
+
+Got a minor thing I wanna look at, will send a patch on top if I find it
+useful.
 
 Yours,
 Linus Walleij
