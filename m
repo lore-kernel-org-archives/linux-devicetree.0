@@ -2,32 +2,31 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAA4CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 00:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D61CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 00:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C7421479
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 00:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD8F218AC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 00:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="TNSWyl2Z"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="j2jzhrSz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfJ2A6Q (ORCPT
+        id S1727593AbfJ2A62 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 20:58:16 -0400
-Received: from vps.xff.cz ([195.181.215.36]:51638 "EHLO vps.xff.cz"
+        Mon, 28 Oct 2019 20:58:28 -0400
+Received: from vps.xff.cz ([195.181.215.36]:51592 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727228AbfJ2A6P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 28 Oct 2019 20:58:15 -0400
+        id S1727336AbfJ2A6Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 20:58:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572310693; bh=uU9Ed1alXCTlnQaio2JNHFayvG2JjVGihZ0Bc7pg244=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=TNSWyl2Ze999zgh7h9TR1ACGGQ+600wsxoAwo6/ah57BQv45WGNuo6SRGE63DXY8V
-         nSNzXQ3IhZjgWgihIcrcbH+nBnLGRGmS/mpobvX0Wm/3PY5Bhi8rpDKTJfoUT7mRjl
-         2z6VKA1md2oeqQvdJkkb5YkUlQMqrdPyqXMl2i78=
+        t=1572310692; bh=LdBB96lc5mOW3OGGRyo4GacYhMj29ptosU6PsgU7yus=;
+        h=From:To:Cc:Subject:Date:From;
+        b=j2jzhrSzyU+pwMB0jX47G/MPKaOl6Voi3i8XBUHZ7Q+R1QbwaF+De5qjyixRYigTg
+         eNbcUvP0sO2piUoEHf7ijARp8d+GDmgGieTHRoZAUV9lAwc80qfdQ0OUaTe7GVJX8r
+         cO4r00n5JGL7YMXtvqnhtkClmvFUs7Z9sw1/DBBI=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
@@ -41,40 +40,51 @@ To:     linux-sunxi@googlegroups.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
 Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/3] dt-bindings: input: edt-ft5x06: Add regulator support
-Date:   Tue, 29 Oct 2019 01:58:05 +0100
-Message-Id: <20191029005806.3577376-3-megous@megous.com>
-In-Reply-To: <20191029005806.3577376-1-megous@megous.com>
-References: <20191029005806.3577376-1-megous@megous.com>
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/3] Add touchscreen support for TBS A711 Tablet
+Date:   Tue, 29 Oct 2019 01:58:03 +0100
+Message-Id: <20191029005806.3577376-1-megous@megous.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Touch controller may have an optional regulator.
+This is a resurrection of https://lkml.org/lkml/2018/7/25/143
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- .../devicetree/bindings/input/touchscreen/edt-ft5x06.txt         | 1 +
- 1 file changed, 1 insertion(+)
+Compared to v4 of Mylène's series I've dropped all attempts to
+power off the chip during suspend. This patch just enables the
+regulator during probe and disables it on driver rmmod.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-index 870b8c5cce9b..0f6950073d6f 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-@@ -30,6 +30,7 @@ Required properties:
- Optional properties:
-  - reset-gpios: GPIO specification for the RESET input
-  - wake-gpios:  GPIO specification for the WAKE input
-+ - vcc-supply:  Regulator that supplies the touchscreen
- 
-  - pinctrl-names: should be "default"
-  - pinctrl-0:   a phandle pointing to the pin settings for the
+I've tested the driver with suspend/resume and touching the
+panel resumes my soc.
+
+Please take a look.
+
+thank you and regards,
+  Ondrej Jirman
+
+
+Changes since v4 of Mylène's series:
+- slight whitespace improvements
+- drop all modifications of suspend/resume hooks
+- drop useless header include
+- split the dt-bindings into a separate patch
+
+Mylène Josserand (2):
+  input: edt-ft5x06: Add support for regulator
+  arm: dts: sun8i: a83t: a711: Add touchscreen node
+
+Ondrej Jirman (1):
+  dt-bindings: input: edt-ft5x06: Add regulator support
+
+ .../bindings/input/touchscreen/edt-ft5x06.txt |  1 +
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     | 16 ++++++++++
+ drivers/input/touchscreen/edt-ft5x06.c        | 30 +++++++++++++++++++
+ 3 files changed, 47 insertions(+)
+
 -- 
 2.23.0
 
