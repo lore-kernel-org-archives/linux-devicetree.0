@@ -2,114 +2,106 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE85CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55E8CA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F280F20856
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF24208E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZjxpuAg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFGkqYc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388138AbfJ2NPb (ORCPT
+        id S2388280AbfJ2NQF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:15:31 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44586 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732534AbfJ2NPb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 09:15:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id c4so15200769lja.11;
-        Tue, 29 Oct 2019 06:15:29 -0700 (PDT)
+        Tue, 29 Oct 2019 09:16:05 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34737 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732534AbfJ2NQE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 09:16:04 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b128so9584953pfa.1;
+        Tue, 29 Oct 2019 06:16:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rQbCwQn4OcCXCHFwwmFatk+l/n8S/B77Id3xHHz9OsQ=;
-        b=hZjxpuAgz7brG/rgG0uL289gCvd0Rg+88SXtx9mT7soxurM5WbTxvC1hQ/lW/drlyR
-         wXm8QSuoxTtFS380W5cBhc+CWa6zdNldQWI5Z7iYoXnhFcTkJJoSWA/mUpPSTN9nILM2
-         o0hdPoyUu2RlEnrDpVfatezm1YRMLbsCb2kQZx1vd6xmo/sjU9ffvr+4tGMLGX1iBbgN
-         HjA33qGO4LaEfelPQxH0Qtm8nbxY2owSG3UliwWk9PLtpSyTCg70RiaotxwE5P/tTNNL
-         4/+BJck94WL0BsUuYjAzgaFG74yvXqKueQivrG3a/z+li8SYPnjsU+XJBvnrsz7rCPPp
-         xfZA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rDAR1qdS022RvDkmF/JnXqxkZXLKSYyvZ7xcekyeQEQ=;
+        b=eFGkqYc9CHYLgbmA3fBDUR1b/S/CZSuonfyOXIMsqiMhbvkZHuIooxlXyn0gs9U7VL
+         R+F0FX1Onv2Lp04JJ+tfAH4Oe1iwhW2HIyHFzIQTjhfK+Ual3E5OKVEwDpIN4ZllRZT4
+         valJ+V1d+e3oYEm+Le38OCeDKuPzD5w3j01+dfPvRltNESEOodVpZz9GJ/ouQjOEzrJ7
+         fqzkKjZgN6849koIqlr5cODaGYOa2NUipVjGP1B6mx2i64HP9bjAx63zUTjDTsaFlFWb
+         p637UTy1OKl9fFRCOvHOYrB/x9N23wr/ZMNH42opv72gVaBXqwlYpfYBVeyVIyE5+1dY
+         8GRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rQbCwQn4OcCXCHFwwmFatk+l/n8S/B77Id3xHHz9OsQ=;
-        b=te4TVB5WNIjt1p5mD9DUQAIapDQueXDRZeVO0wmwFIRSoX4cOCCkLXNbe6fhlfULiW
-         FBDqUFFQSidDmxT3DjI6zyxmiVrgLTr1Wp1L0Fi/s6uTumjcc476mXAdF0i7TFO8iX6e
-         +kXeds1CU2XJ8CdiYWnRB5W9Gp1W4cxpub2UoWqCAuCY4uJzxWsW65fPzuCTnVVcxbjt
-         hvJxDbSmTlxjF+/4HaQVI5FKtwIyva5yMP9XyBYcEJCgmGkubx3l6gsIRu+srmpgTLrQ
-         rp4PIjwYJWNCD3pGDEbkofcs/73J/RzabYn74/HWwLzGgRJlcebWe7jU3LrPj/pxsTTs
-         4cIw==
-X-Gm-Message-State: APjAAAUQzQ1ouEfbMs02TXOwdnd3zUfnQrct9VZSV+Otmez35kE5slQr
-        itbPTBSvMDbstwyZLGWOjUR4sV2LItN1mymI6EA=
-X-Google-Smtp-Source: APXvYqyAwsBC9wzuv9VJycNb0BcgLvYOqtu9D89Ede9Rm7uVYGbmJDn/HV4nb+IlolpfBAIr7w5KPoyDEC0kHOBnxgk=
-X-Received: by 2002:a2e:819a:: with SMTP id e26mr2713781ljg.26.1572354929138;
- Tue, 29 Oct 2019 06:15:29 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rDAR1qdS022RvDkmF/JnXqxkZXLKSYyvZ7xcekyeQEQ=;
+        b=BSWAuYofDcGW5ittNNrVmjS3uldIou/25RNswg1t5Yr62cK6W1qQxhL5bXzvRrWBg4
+         Eoo2qOgpy3jkv3+oiDMmmI6YDY0VV/bzANfBIoPmkFyOUT+w0TJbUQz3Qg2rjogmhFQd
+         KE41DKjpqTfz5SuxSV6AONwLyTt1+L3ZYehohZdJZlV2A/ErxTMDkckziGHYRyR4Tfe6
+         wgVAPutFO/vErDiymRmNAD4fU/jm+mHNIeZdNsNwvlqMca1Ux7Nv42ta2c9OJWY+b+nU
+         lqBwFuFtDtdAYg5boERpn2r/dBWeGHGtEYMmlfX1bXAGdg0n6nayJbLqwx2P5Z0ptVgB
+         dGEA==
+X-Gm-Message-State: APjAAAUcCQMx87le8uZfefbyF+8BKIaql0Ja590HLR1NPB9pdD4POkMR
+        qkzZzjnuJNdzycIuJyekxruv+WqU
+X-Google-Smtp-Source: APXvYqwk+TvBib/ARH05rzylFT0CcwN0b5rW/UeVrjgST/fD4Hn45Ia/UxXDOz4CLpn9Rqlnwb2VZA==
+X-Received: by 2002:a63:234c:: with SMTP id u12mr10783800pgm.384.1572354964074;
+        Tue, 29 Oct 2019 06:16:04 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 16sm10728832pfc.21.2019.10.29.06.16.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 06:16:03 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 06:16:02 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eugen.Hristev@microchip.com
+Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: sama5d4_wdt: add
+ microchip,sam9x60-wdt compatible
+Message-ID: <20191029131602.GA8372@roeck-us.net>
+References: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-References: <1572343372-6303-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1572343372-6303-1-git-send-email-Anson.Huang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 29 Oct 2019 10:15:31 -0300
-Message-ID: <CAOMZO5CnBCbM2uhDpgUgRVXkVsPTDw27CxZUp3+FMZi+7DH1XQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx7ulp-evk: Use APLL_PFD1 as usdhc's clock source
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anson,
+On Mon, Oct 21, 2019 at 09:14:05AM +0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> The Atmel sama5d4_wdt needs to be compatible with microchip,sam9x60-wdt
+> The sama5d4_wdt driver is updated to work with both hardware blocks
+> (sama5d4/sama5d2 and sam9x60 based blocks)
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-On Tue, Oct 29, 2019 at 7:06 AM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> i.MX7ULP does NOT support runtime switching clock source for PCC,
-> APLL_PFD1 by default is usdhc's clock source, so just use it
-> in kernel to avoid below kernel dump during kernel boot up and
-> make sure kernel can boot up with SD root file-system.
->
-> [    3.035892] Loading compiled-in X.509 certificates
-> [    3.136301] sdhci-esdhc-imx 40370000.mmc: Got CD GPIO
-> [    3.242886] mmc0: Reset 0x1 never completed.
-> [    3.247190] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [    3.253751] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
-> [    3.260218] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000001
-> [    3.266775] mmc0: sdhci: Argument:  0x00009a64 | Trn mode: 0x00000000
-> [    3.273333] mmc0: sdhci: Present:   0x00088088 | Host ctl: 0x00000002
-> [    3.279794] mmc0: sdhci: Power:     0x00000000 | Blk gap:  0x00000080
-> [    3.286350] mmc0: sdhci: Wake-up:   0x00000008 | Clock:    0x0000007f
-> [    3.292901] mmc0: sdhci: Timeout:   0x0000008c | Int stat: 0x00000000
-> [    3.299364] mmc0: sdhci: Int enab:  0x007f010b | Sig enab: 0x00000000
-> [    3.305918] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00008402
-> [    3.312471] mmc0: sdhci: Caps:      0x07eb0000 | Caps_1:   0x0000b400
-> [    3.318934] mmc0: sdhci: Cmd:       0x0000113a | Max curr: 0x00ffffff
-> [    3.325488] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0039b37f
-> [    3.332040] mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
-> [    3.338501] mmc0: sdhci: Host ctl2: 0x00000000
-> [    3.343051] mmc0: sdhci: ============================================
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Thanks, with this patch applied I can get SD card rootfs to get mounted:
-
-Tested-by: Fabio Estevam <festevam@gmail.com>
-
-I think this fix deserves a Fixes tag so that it can be backported to
-older kernels.
+> ---
+>  Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+> index 4fec1e3..44727fc 100644
+> --- a/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+> @@ -1,7 +1,7 @@
+>  * Atmel SAMA5D4 Watchdog Timer (WDT) Controller
+>  
+>  Required properties:
+> -- compatible: "atmel,sama5d4-wdt"
+> +- compatible: "atmel,sama5d4-wdt" or "microchip,sam9x60-wdt"
+>  - reg: base physical address and length of memory mapped region.
+>  
+>  Optional properties:
