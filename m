@@ -2,123 +2,114 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196EFCA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE85CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D603120856
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F280F20856
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 13:15:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqGegw9t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZjxpuAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388138AbfJ2NNP (ORCPT
+        id S2388138AbfJ2NPb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 09:13:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42538 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfJ2NNP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 09:13:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a15so1313814wrf.9;
-        Tue, 29 Oct 2019 06:13:12 -0700 (PDT)
+        Tue, 29 Oct 2019 09:15:31 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44586 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732534AbfJ2NPb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 09:15:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id c4so15200769lja.11;
+        Tue, 29 Oct 2019 06:15:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W8PkCFVnCorrtSWGdVFof9XL+RN29yxwr92wnMWMfsg=;
-        b=hqGegw9tshvWHtIQow/p3XWzfwDpwhTwKtAo2Rb6OCl2QBqJbIL0+RMefu+L25Iwei
-         5COpMsatmSas6msShGrgSd6fpGg88UIxtJsXZiaUZ/7ie8V1ULHV9vfbtE4vBK6mvOUZ
-         PEyIyyEFqVODpZfbqPpBY5WCHZ1uiayo9KypO1Kpi/GxsIqy7WTFYC+CawqmN0ILhFJ7
-         kY7opCE36nNS/lae6b0xb8PGXJWo0ouUYyaoCV+2+dUoa3312RePliskFLh+8KZS1l1X
-         DPMN030Rrt4fIw6TmYUkmrjvnF7gFQFI+lniAP03n6qz544kZF74GQwg00fTwqdI9nrW
-         sxLg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rQbCwQn4OcCXCHFwwmFatk+l/n8S/B77Id3xHHz9OsQ=;
+        b=hZjxpuAgz7brG/rgG0uL289gCvd0Rg+88SXtx9mT7soxurM5WbTxvC1hQ/lW/drlyR
+         wXm8QSuoxTtFS380W5cBhc+CWa6zdNldQWI5Z7iYoXnhFcTkJJoSWA/mUpPSTN9nILM2
+         o0hdPoyUu2RlEnrDpVfatezm1YRMLbsCb2kQZx1vd6xmo/sjU9ffvr+4tGMLGX1iBbgN
+         HjA33qGO4LaEfelPQxH0Qtm8nbxY2owSG3UliwWk9PLtpSyTCg70RiaotxwE5P/tTNNL
+         4/+BJck94WL0BsUuYjAzgaFG74yvXqKueQivrG3a/z+li8SYPnjsU+XJBvnrsz7rCPPp
+         xfZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W8PkCFVnCorrtSWGdVFof9XL+RN29yxwr92wnMWMfsg=;
-        b=Z+cylLJWEvO+xVfhTHLsV5R51A+JCH2JnQekCMbNRTwMiqyWjRPHSymi9RKFpexBuW
-         /7aNhLtzG/gAqFOa67FRJVzSalPXl5ZEJio28hG9xlgEj3w/d4DrLeJ7m3b/r4JeoUYE
-         TlKFS+hTv9pZlzP11zUq3ozjLPwCMxunfXUBePEW4CNVEDYLVWHKU8nTcbu5JNBezQab
-         G3knvFcdn8J+f8g3k9KRonPbiRMiYLx9ExZlA7A9Cj5BtDR3hg3cGP0MQRi5xZObiQKZ
-         gLtTf3reMqV9PPl08+ZxSou29+jjwHlFX3tUhJQD1hMkGmpQBtz6BKS3E5oRz6uxplMB
-         WYew==
-X-Gm-Message-State: APjAAAW7LmBpdmH+A5fYvw5H3N6FrT/N3pDSQ+PyZaHUCmuwZ8XA0ipS
-        W5gWrZgBB4YuPyCrAEPcjAE=
-X-Google-Smtp-Source: APXvYqwTYDiXBly9gOa7PpLH0awe6adhtTX0gOKn67cC5MFmVPVqN4qC0h11nJmzD8pzD22UlVkv4A==
-X-Received: by 2002:a5d:69c8:: with SMTP id s8mr19946146wrw.167.1572354792114;
-        Tue, 29 Oct 2019 06:13:12 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id d20sm1153173wra.4.2019.10.29.06.13.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 06:13:10 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 14:13:09 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ARM: dts: tegra30: Connect SMMU with Video Decoder
- Engine
-Message-ID: <20191029131309.GC508460@ulmo>
-References: <20190623170730.5095-1-digetx@gmail.com>
- <20190623170730.5095-2-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rQbCwQn4OcCXCHFwwmFatk+l/n8S/B77Id3xHHz9OsQ=;
+        b=te4TVB5WNIjt1p5mD9DUQAIapDQueXDRZeVO0wmwFIRSoX4cOCCkLXNbe6fhlfULiW
+         FBDqUFFQSidDmxT3DjI6zyxmiVrgLTr1Wp1L0Fi/s6uTumjcc476mXAdF0i7TFO8iX6e
+         +kXeds1CU2XJ8CdiYWnRB5W9Gp1W4cxpub2UoWqCAuCY4uJzxWsW65fPzuCTnVVcxbjt
+         hvJxDbSmTlxjF+/4HaQVI5FKtwIyva5yMP9XyBYcEJCgmGkubx3l6gsIRu+srmpgTLrQ
+         rp4PIjwYJWNCD3pGDEbkofcs/73J/RzabYn74/HWwLzGgRJlcebWe7jU3LrPj/pxsTTs
+         4cIw==
+X-Gm-Message-State: APjAAAUQzQ1ouEfbMs02TXOwdnd3zUfnQrct9VZSV+Otmez35kE5slQr
+        itbPTBSvMDbstwyZLGWOjUR4sV2LItN1mymI6EA=
+X-Google-Smtp-Source: APXvYqyAwsBC9wzuv9VJycNb0BcgLvYOqtu9D89Ede9Rm7uVYGbmJDn/HV4nb+IlolpfBAIr7w5KPoyDEC0kHOBnxgk=
+X-Received: by 2002:a2e:819a:: with SMTP id e26mr2713781ljg.26.1572354929138;
+ Tue, 29 Oct 2019 06:15:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
-Content-Disposition: inline
-In-Reply-To: <20190623170730.5095-2-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <1572343372-6303-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1572343372-6303-1-git-send-email-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 29 Oct 2019 10:15:31 -0300
+Message-ID: <CAOMZO5CnBCbM2uhDpgUgRVXkVsPTDw27CxZUp3+FMZi+7DH1XQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7ulp-evk: Use APLL_PFD1 as usdhc's clock source
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Anson,
 
---DSayHWYpDlRfCAAQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 29, 2019 at 7:06 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> i.MX7ULP does NOT support runtime switching clock source for PCC,
+> APLL_PFD1 by default is usdhc's clock source, so just use it
+> in kernel to avoid below kernel dump during kernel boot up and
+> make sure kernel can boot up with SD root file-system.
+>
+> [    3.035892] Loading compiled-in X.509 certificates
+> [    3.136301] sdhci-esdhc-imx 40370000.mmc: Got CD GPIO
+> [    3.242886] mmc0: Reset 0x1 never completed.
+> [    3.247190] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> [    3.253751] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
+> [    3.260218] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000001
+> [    3.266775] mmc0: sdhci: Argument:  0x00009a64 | Trn mode: 0x00000000
+> [    3.273333] mmc0: sdhci: Present:   0x00088088 | Host ctl: 0x00000002
+> [    3.279794] mmc0: sdhci: Power:     0x00000000 | Blk gap:  0x00000080
+> [    3.286350] mmc0: sdhci: Wake-up:   0x00000008 | Clock:    0x0000007f
+> [    3.292901] mmc0: sdhci: Timeout:   0x0000008c | Int stat: 0x00000000
+> [    3.299364] mmc0: sdhci: Int enab:  0x007f010b | Sig enab: 0x00000000
+> [    3.305918] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00008402
+> [    3.312471] mmc0: sdhci: Caps:      0x07eb0000 | Caps_1:   0x0000b400
+> [    3.318934] mmc0: sdhci: Cmd:       0x0000113a | Max curr: 0x00ffffff
+> [    3.325488] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0039b37f
+> [    3.332040] mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
+> [    3.338501] mmc0: sdhci: Host ctl2: 0x00000000
+> [    3.343051] mmc0: sdhci: ============================================
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-On Sun, Jun 23, 2019 at 08:07:24PM +0300, Dmitry Osipenko wrote:
-> Enable IOMMU support for the video decoder.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->=20
-> No changes since v1.
->=20
->  arch/arm/boot/dts/tegra30.dtsi | 1 +
->  1 file changed, 1 insertion(+)
+Thanks, with this patch applied I can get SD card rootfs to get mounted:
 
-Applied to for-5.5/arm/dt, thanks.
+Tested-by: Fabio Estevam <festevam@gmail.com>
 
-Thierry
-
---DSayHWYpDlRfCAAQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl24OuUACgkQ3SOs138+
-s6FG0xAAgMsJHddh5VUJbI4i15//MpJSJLnwPjTUM0SfXsxqqMQwzkgqGe+AydBq
-IoFAAUvBVOxqMjXw0B5/Thy4tMSqd1VM7gdoY6yMWLD5GUnTH+7Ce5IUGl+5bHif
-G0Zl9ehYm2LkDEDTKEeYJ81O60iZtHR7IFdCnpwSD52dmxwnKk072UbpBB4XDW+A
-K7yseW78aKMPQ6YmuR1q/iA9a6pPoqDifZl+QCPDxP21wq9OHC3K1OJqJCT+B67f
-5B4fCugTTNCTsrHplkty95KBJfwDsrZd/nYA7FZJldeYgRTyIKIHQU6fv9dwDn5C
-cYRlp6RPITn0NGSrVanvfPAwk3rorQSfXPbw/At8CRttqkOzp2VOWB2PP3cOvtok
-1+SudogUvehLHoiPNKCKR1proc5WYYDaRgZyHmMDxzw6PxF62K9/qM0WhgeVvFoG
-TW3aaGq8783udERsm8KeKZDKeFk6MHC0Jam+5nCG/aB5cwqLyEivAx09VpddfsrY
-/znhxLFRQZGnbrnqD8+rKk0QMTN0XV3TQ1YP3SeQv6hFt67elWqWEzTcQyqW6Tno
-Voa3YOX6NdOVefo/JbaskkUMyWUvhQsV311+u2gfkq7Ba+K1ATjFVzGpYz+mywQc
-uxwNWBVJJO6BFaGcraonpnQCMx7Sq8dBqncQXAPfL4JAY1HvJhs=
-=Qfvc
------END PGP SIGNATURE-----
-
---DSayHWYpDlRfCAAQ--
+I think this fix deserves a Fixes tag so that it can be backported to
+older kernels.
