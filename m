@@ -2,171 +2,109 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA55CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156A2CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C3F2086A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572380186;
-	bh=mzrl9420Ovx3lQJ1vhZxCQsXwonFelXckxIqNI5fnYU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cSa59ID7VUgvz4fIejC4RSJuZyf4BHJL146mj25nzpnkZ1vNl3Xf65qJB66WB+YiE
-	 ZDkjcH66mdw2Sz2Nf4r83C424I+eb4fGZEhrRaTg1Oug+xhgKZHIi/QBKFuzUje4uc
-	 9Jb6HPSOqvtVVzd3SAWc443786hymOJd9AwgiPUY=
+	by mail.kernel.org (Postfix) with ESMTP id AADCE2054F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Dj0yQWOT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbfJ2UQZ (ORCPT
+        id S1726994AbfJ2URq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:16:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 16:17:46 -0400
+Received: from vps.xff.cz ([195.181.215.36]:37728 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbfJ2UQZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:16:25 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF96C21721;
-        Tue, 29 Oct 2019 20:16:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572380183;
-        bh=mzrl9420Ovx3lQJ1vhZxCQsXwonFelXckxIqNI5fnYU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Bzs0JsLJXxLNGTSfA3dRdgUWooXO3sHsJpKlHKkRlMTj+DU4za3swy8FwTd63nH1z
-         jsd9x+mUuzHXUv1o3wCebCtqHdnF3TdZ/fDF0CM+U5Rs1eaAApmFcCRl7K5eZgUl+y
-         rQpDDkwkkAcchWbuljHc9iSYc4QMzr13Adf6Vj7s=
-Received: by mail-qt1-f169.google.com with SMTP id x21so4981511qto.12;
-        Tue, 29 Oct 2019 13:16:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAXciRC8z1znzvw+ESjsoiFgvNJl81T3c2+OS07yuqiJh2vasOvg
-        QpcknAZj4aVAyAb6tun/T8Jhd98lN+PiJGpRWA==
-X-Google-Smtp-Source: APXvYqw2bPo/mXUkmXIpei4kFmXMxOacUC63F3raNseUkPz2342X9y6B6fHT0p2dhZ4pVJPYLGheLckku0HHO05Qz90=
-X-Received: by 2002:ac8:741a:: with SMTP id p26mr1062486qtq.143.1572380182705;
- Tue, 29 Oct 2019 13:16:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
- <1571254641-13626-7-git-send-email-thara.gopinath@linaro.org>
- <CAPDyKFqcKfmnNJ7j4Jb+JH739FBcHg5NBD6aR4H_N=zWGwm1ww@mail.gmail.com>
- <5DA88892.5000408@linaro.org> <CAPDyKFpYG7YADb6Xmm=8ug5=5X3d1y+JdkRvrnvtroeV3Yj62Q@mail.gmail.com>
- <5DA89267.30806@linaro.org> <20191029013648.GB27045@bogus> <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Oct 2019 15:16:11 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
-Message-ID: <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] dt-bindings: soc: qcom: Extend RPMh power
- controller binding to describe thermal warming device
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
+        id S1726244AbfJ2URp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:17:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1572380264; bh=wW5JFIsIsJu0qPYpAaTlE7obxGziUNClJYFMYvv4v04=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Dj0yQWOTPdD26/mFn0ZEgxk2VXGGM6MomYqE+KAtPCZjp2/fHu+uNncetcslpRtrj
+         +06T0cawiwc4SOgkF32JWGQOE4Q5KV0T2QLSPJqy4j3qmbwSy6GauIIdPBqsaP52HE
+         GdIxDfnxZqnmv74Jw8xQVxF4znG7RaGAPPwCc1wI=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 0/4] Add USB 3 support for H6 and Orange Pi 3
+Date:   Tue, 29 Oct 2019 21:17:37 +0100
+Message-Id: <20191029201741.3820913-1-megous@megous.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 5:07 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Tue, 29 Oct 2019 at 02:36, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Oct 17, 2019 at 12:10:15PM -0400, Thara Gopinath wrote:
-> > > On 10/17/2019 11:43 AM, Ulf Hansson wrote:
-> > > > On Thu, 17 Oct 2019 at 17:28, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> > > >>
-> > > >> Hello Ulf,
-> > > >> Thanks for the review!
-> > > >>
-> > > >> On 10/17/2019 05:04 AM, Ulf Hansson wrote:
-> > > >>> On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> > > >>>>
-> > > >>>> RPMh power controller hosts mx domain that can be used as thermal
-> > > >>>> warming device. Add a sub-node to specify this.
-> > > >>>>
-> > > >>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> > > >>>> ---
-> > > >>>>  Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 10 ++++++++++
-> > > >>>>  1 file changed, 10 insertions(+)
-> > > >>>>
-> > > >>>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > > >>>> index eb35b22..fff695d 100644
-> > > >>>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > > >>>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > > >>>> @@ -18,6 +18,16 @@ Required Properties:
-> > > >>>>  Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
-> > > >>>>  various OPPs for different platforms as well as Power domain indexes
-> > > >>>>
-> > > >>>> += SUBNODES
-> > > >>>> +RPMh alsp hosts power domains that can behave as thermal warming device.
-> > > >>>> +These are expressed as subnodes of the RPMh. The name of the node is used
-> > > >>>> +to identify the power domain and must therefor be "mx".
-> > > >>>> +
-> > > >>>> +- #cooling-cells:
-> > > >>>> +       Usage: optional
-> > > >>>> +       Value type: <u32>
-> > > >>>> +       Definition: must be 2
-> > > >>>> +
-> > > >>>
-> > > >>> Just wanted to express a minor thought about this. In general we use
-> > > >>> subnodes of PM domain providers to represent the topology of PM
-> > > >>> domains (subdomains), this is something different, which I guess is
-> > > >>> fine.
-> > > >>>
-> > > >>> I assume the #cooling-cells is here tells us this is not a PM domain
-> > > >>> provider, but a "cooling device provider"?
-> > > >> Yep.
-> > > >>>
-> > > >>> Also, I wonder if it would be fine to specify "power-domains" here,
-> > > >>> rather than using "name" as I think that is kind of awkward!?
-> > > >> Do you mean "power-domain-names" ? I am using this to match against the
-> > > >> genpd names defined in the provider driver.
-> > > >
-> > > > No. If you are using "power-domains" it means that you allow to
-> > > > describe the specifier for the provider.
-> > > Yep. But won't this look funny in DT ? The provider node will have a sub
-> > > node with a power domain referencing to itself Like below: Is this ok ?
-> > >
-> > > rpmhpd: power-controller {
-> > >                                 compatible = "qcom,sdm845-rpmhpd";
-> > >                                 #power-domain-cells = <1>;
-> > >
-> > >                       ...
-> > >                       ...
-> > >                               mx_cdev: mx {
-> > >                                         #cooling-cells = <2>;
-> > >                                         power-domains = <&rpmhpd      SDM845_MX>;
-> > >                                 };
-> > >
-> >
-> > The whole concept here seems all wrong to me. Isn't it what's in the
-> > power domain that's the cooling device. A CPU power domain is not a
-> > cooling device, the CPU is. Or we wouldn't make a clock a cooling
-> > device, but what the clock drives.
->
-> Well, I don't think that's entirely correct description either.
->
-> As I see it, it's really the actual PM domain (that manages voltages
-> for a power island), that needs to stay in full power state and
-> increase its voltage level, as to warm up some of the silicon. It's
-> not a regular device, but more a characteristics of how the PM domain
-> can be used.
+This series implements USB 3 support for Xunlong Orange Pi 3 board.
 
-First I've heard of Si needing warming...
+This is a re-hash of the Icenowy's earlier USB3 work[1] without code
+that caused controversy previously. Orange Pi 3 board doesn't need vbus
+supply to be dynamically enabled, so that code is not needed to support
+USB3 on this board.
 
-I think I'd just expect the power domain provider to know which
-domains to power on then.
+Most of patches are already reviewed. I've converted dt-bindings to yaml
+format, and added the Orange Pi 3 board modifications.
 
-Rob
+Hopefully with this series we can get USB3 support into mainline for
+Orange Pi 3, and build on it later to support more boards, where
+supporting them is more complicated.
+
+Please take a look.
+
+thank you and regards,
+  Ondrej Jirman
+
+[1] https://lore.kernel.org/patchwork/patch/1058919/
+
+Changes in v3:
+- Added DT reviewed-by tag
+- more sun50i / H6 name clarifications (Kconfig, ...)
+- dropped USB_COMMON and linux/usb/of.h
+
+Changes in v2:
+- Added Maxime's Acked-By's
+- Fixed title of DT bindings file
+
+Changes since Icenowy v5 series:
+- use earlier patches that did not include VBUS regulator/connector
+  code
+- converted dt bindings to yaml
+- added patch to enable usb3 on Orange Pi 3
+
+Icenowy Zheng (2):
+  phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC
+  arm64: dts: allwinner: h6: add USB3 device nodes
+
+Ondrej Jirman (2):
+  dt-bindings: Add bindings for USB3 phy on Allwinner H6
+  arm64: dts: allwinner: orange-pi-3: Enable USB 3.0 host support
+
+ .../phy/allwinner,sun50i-h6-usb3-phy.yaml     |  47 +++++
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    |   8 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  32 +++
+ drivers/phy/allwinner/Kconfig                 |  11 +
+ drivers/phy/allwinner/Makefile                |   1 +
+ drivers/phy/allwinner/phy-sun50i-usb3.c       | 190 ++++++++++++++++++
+ 6 files changed, 289 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
+ create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
+
+-- 
+2.23.0
+
