@@ -2,41 +2,40 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CC6CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4355CA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B4720717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9991020717
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572340448;
-	bh=f+5tvZ1y+zrkiae4p/cZqKEGrbBnTAF/LeUAQY1AP+E=;
+	s=default; t=1572340635;
+	bh=M+eSYBC+zwUkFsv1ibb5Q4TaOPrWD1GW4zjVaR3lDxI=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=ayy5ixSz3ecYZseCHHU7/6TArgt1BCN8niUfr0LCUrNfqRnaDa7qUsnVBzSiSwWeZ
-	 LOMpVdXx2ugETsmfDorAmhROzMDINmftmigKFJec7BnbX/ucRJ3NQZe/nfzOElbL9S
-	 GJW0eTnkIx+2Hw5E2MYyWgH3BVFAVlJ1fZYFkwEo=
+	b=jVu1LaggE+KmiwohY33kv+E1gT5vMu6OOO8nCEUl/h08gvyR+jP0G+3ozliAJA4is
+	 EoO8FZBcJ+cmmmZYUrGMxekdB7slbs+vPiYkEaDIHHWbOTsWp1pxGHLCgtkWNFAjNW
+	 gUxhIJzzclKGTtSoXvmw30BgpJKXjErTkgeMk8vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731280AbfJ2JOE (ORCPT
+        id S1731769AbfJ2JRP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:14:04 -0400
-Received: from mga12.intel.com ([192.55.52.136]:21896 "EHLO mga12.intel.com"
+        Tue, 29 Oct 2019 05:17:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3237 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729876AbfJ2JOE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:14:04 -0400
+        id S1731694AbfJ2JRO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:17:14 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:14:04 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:17:14 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="asc'?scan'208";a="198869249"
+   d="asc'?scan'208";a="374490234"
 Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Oct 2019 02:14:00 -0700
+  by orsmga005.jf.intel.com with ESMTP; 29 Oct 2019 02:17:09 -0700
 From:   Felipe Balbi <balbi@kernel.org>
 To:     John Stultz <john.stultz@linaro.org>,
         lkml <linux-kernel@vger.kernel.org>
@@ -55,11 +54,11 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 5/9] usb: dwc3: Rework clock initialization to be more flexible
-In-Reply-To: <20191028215919.83697-6-john.stultz@linaro.org>
-References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-6-john.stultz@linaro.org>
-Date:   Tue, 29 Oct 2019 11:13:56 +0200
-Message-ID: <87k18nj4mj.fsf@gmail.com>
+Subject: Re: [PATCH v4 6/9] usb: dwc3: Rework resets initialization to be more flexible
+In-Reply-To: <20191028215919.83697-7-john.stultz@linaro.org>
+References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-7-john.stultz@linaro.org>
+Date:   Tue, 29 Oct 2019 11:17:05 +0200
+Message-ID: <87h83rj4ha.fsf@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -76,71 +75,17 @@ Content-Transfer-Encoding: quoted-printable
 Hi,
 
 John Stultz <john.stultz@linaro.org> writes:
-
-> The dwc3 core binding specifies three clocks:
->   ref, bus_early, and suspend
+> The dwc3 core binding specifies one reset.
 >
-> which are all controlled in the driver together.
->
-> However some variants of the hardware my not have all three clks
+> However some variants of the hardware my not have more.
                                         ^^
                                         may
 
-In fact *all* platforms have all three clocks. It's just that in some
-cases clock pins are shorted together (or take input from same clock).
+According to synopsys databook, there's a single *input* reset signal on
+this IP. What is this extra reset you have?
 
-> So this patch reworks the reading of the clks from the dts to
-> use devm_clk_bulk_get_all() will will fetch all the clocks
-                              ^^^^
-                              which?
-
-> specified in the dts together.
->
-> This patch was reccomended by Rob Herring <robh@kernel.org>
-> as an alternative to creating multiple bindings for each variant
-> of hardware when the only unique bits were clocks and resets.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> CC: ShuFan Lee <shufan_lee@richtek.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Jun Li <lijun.kernel@gmail.com>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Jack Pham <jackp@codeaurora.org>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v3: Rework dwc3 core rather then adding another dwc-of-simple
->     binding.
-> ---
->  drivers/usb/dwc3/core.c | 20 +++++---------------
->  1 file changed, 5 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index a039e35ec7ad..4d4f1836b62c 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -305,12 +305,6 @@ static int dwc3_core_soft_reset(struct dwc3 *dwc)
->  	return 0;
->  }
->=20=20
-> -static const struct clk_bulk_data dwc3_core_clks[] =3D {
-> -	{ .id =3D "ref" },
-> -	{ .id =3D "bus_early" },
-> -	{ .id =3D "suspend" },
-> -};
-
-another option would be to pass three clocks with the same phandle. That
-would even make sure that clock usage counts are correct, no?
+Is this, perhaps, specific to your glue layer around the synopsys ip?
+Should, perhaps, your extra reset be managed by the glue layer?
 
 =2D-=20
 balbi
@@ -150,18 +95,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl24AtQACgkQzL64meEa
-mQYMmw//YiNtxgf2s0jGPGMK9XPPyt3B+0Hjw0tE4vsbyoykxXWmn49yB/JXmfnM
-YaRY+9jYTLxlxC1wJJgxIew5Kf5parnlIpuD2XY8uB1L4AsI+ZrSuts1CF3tUiP6
-V1CEgyJ4bPPJmi0sYDSI6MOdUcKmAb0KtBisgtMFS2Pe5RyFNAEOt1sXKrqUAj7d
-Exl9UbtV4FqLWrTRVbwZJ4Un7+8g4dqXw6dAd1h9ETLwtY3e6es5MLASUu5oL6V0
-bW2Vst+cT36Xodv9fxk5ndEk1sJk9of/oMazawBPlYhP7rBsd4rmcWzIKfK/nAYE
-4YZVBvW/goLL7PCtp5FGp3WLs4j8MN/4ftMQhLFa8JcYhgBNrCHWlmvXEC3WELDn
-yhh/2L/7AxPTcI+GbtjRs9dF0Hxe4NlPOtX7qxfHJevorYidcVRD3yYC/KQZxYWK
-LTuGvW8HGb0wr5TIj1F+2iPl//H5Bh/pAqkik0StNOqOFX8ADSym6NW4wL7zfHLI
-113wta5hk1VX2w3cpGWB4phNqD7RfouUTCj5aVX9DxhjtVqUk3X4gUVs5ixTxE7e
-b88sYwz8sbEgHNtt9lCRRxmi2NjzVY0KjpRTacf9AodWokwwbhetgkboSo8gmunc
-lV3vlfoWKWhR9Th5AWthrKJ/c7pKkqlOVhz7apzxa1k848RNmi0=
-=Uxbt
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl24A5EACgkQzL64meEa
+mQajVg/8C0zUku0Benos6tXfx/tAJJh/qhYsHfs0w1BvYtNy8KYfgq7yyUxX4zh5
+2dbXhYsQ9fHdJgKPYrybO10XU6rPoWUrK+DOCAUjLx7Rj0P0SzkUI1UGXiCLNzvd
+UEpOc14h8+KApJ239yKNWypZUdn+raYjMB2ZTtgjj7Smid8KvU5NBMVBuoOKKEm6
+tIBw+Vsyzosjidd/fXIUkmJ/05dxh8BVUZcn76pfTMbdWPVyf6h0sGmkWCIPkHJ/
+ac0Zow2zWML4LI2ZHDinWaqGS3lYf0r49UeiuNk6P+jnF0+OlhhUzY+XurlLEcI6
+/ey9VqPG6j3/Hyx3EdBUlFDh3BzyQ12Pj41lCadzvPsjEQm/woUxzySByCaFGnp9
+jXaJ3RerRbHcxoIfRuErdw2txreTr+HTWTpsBMPLv2immknoaI38qBBFWsTReDgi
+2WgrJwr5O9ZLF/T2DpBM81WcZLCJQo6pzjetjb49XgJhCFDu0zSLV3A+72dWMR4R
+2XTC73Ha5qwBWiHOSGZIWaEV3I4aBS9jENod8RuzstZwl+IJ+0ITy+DTN5C4LcVi
+s05enHsr6vnk3LJkcA4v53yowDQbOimxWRM2/2a8Wrd4hTWPD/ohSzCr6S6uWY/E
++Uq6f1uiNzcx9AgTLaIInuloK27pv160JEs7Odw+ooaLDOwGObU=
+=HQbL
 -----END PGP SIGNATURE-----
 --=-=-=--
