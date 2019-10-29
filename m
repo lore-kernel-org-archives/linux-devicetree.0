@@ -2,124 +2,140 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D1DCA9EC4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240D7CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C182087F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:17:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="sSiBPKoF"
+	by mail.kernel.org (Postfix) with ESMTP id DFF372054F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572380405;
+	bh=Clnomsacv7T6a/ubml3afB3fbMamN9cVGn6ssr4l9qY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uso2vAqAKJNudqq0knmgX7omd3R+FxgB3fnBLQRkokfppwv7i+OetazGUrXQkhfiV
+	 vv/E2juU8OHS68eFFiU9BBv5O9m5yjlMzw1n0zfQu2LfL0PFMyC72vvAdbzYo+VrZH
+	 1iy+1mcg8acA5v3J2yeO5iQOMyRXWz3wGyu3JX3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfJ2URq (ORCPT
+        id S1726243AbfJ2UUF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:17:46 -0400
-Received: from vps.xff.cz ([195.181.215.36]:37752 "EHLO vps.xff.cz"
+        Tue, 29 Oct 2019 16:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726316AbfJ2URq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:17:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572380264; bh=ePhtkR66Peq9g6X0BIyrwjG1W5lySqs7mnK5Z77PYyY=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=sSiBPKoFw5BENHQLV0BAG/s0URjlaeWmLcJAbXbyTat2oTup/rxoUcQ3JOEiKYEMI
-         yz/5IGmxjYGWBJjOfpfjpU5lvALjkX4Z+V6qeYv/Mt0toP2OZXM6BVvC2R66gfcfur
-         WcyK9TX/J95dg//2CFs6joi+TfBBoGrbv7pvvBH4=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 1/4] dt-bindings: Add bindings for USB3 phy on Allwinner H6
-Date:   Tue, 29 Oct 2019 21:17:38 +0100
-Message-Id: <20191029201741.3820913-2-megous@megous.com>
-In-Reply-To: <20191029201741.3820913-1-megous@megous.com>
-References: <20191029201741.3820913-1-megous@megous.com>
+        id S1725951AbfJ2UUF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:20:05 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E3DF2086A;
+        Tue, 29 Oct 2019 20:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572380404;
+        bh=Clnomsacv7T6a/ubml3afB3fbMamN9cVGn6ssr4l9qY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=S/8rYQezY07m5/GuMp+eUDHBLwmHpdOZheShfDHSS0hS/0TCprkl6ldKq5gKVDIyW
+         P1t9wBcIP2MPDRDtsHKYMWNwZe8Nblj6cSyyGnQpVgsTCSR/+lYKFuFbfcjLqXdhMP
+         lCrKFEYbyLKtfKqPEYsSY+I+THwku5JITalxHVS4=
+Received: by mail-qt1-f174.google.com with SMTP id l3so896qtp.2;
+        Tue, 29 Oct 2019 13:20:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAXaYPfVSYvJiP4EUh8kgUy5mjz288IKjy8VleAyYt/qLUnmZvs/
+        bTKdSfsfAWCoLTvy4xnW+5w1pGtLYBrTE1xWKA==
+X-Google-Smtp-Source: APXvYqxabGX/POiNRA0N56A14M3a7t/UWULx2rYZa74WIi4+N6DZNC2UX/jDPYkIQG5TuAM8HOsEpCdBSi3MN/Svr1k=
+X-Received: by 2002:ac8:70c4:: with SMTP id g4mr1134179qtp.136.1572380403327;
+ Tue, 29 Oct 2019 13:20:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1571387933-23397-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20191029015708.GA29561@bogus> <TYAPR01MB4544FD4F09FAA09F7AF79EF0D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB4544FD4F09FAA09F7AF79EF0D8610@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 29 Oct 2019 15:19:52 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+H-4V=v0GTUgTXAiwOtn_BoMtcMpinb1v51V_Jy9mBXA@mail.gmail.com>
+Message-ID: <CAL_Jsq+H-4V=v0GTUgTXAiwOtn_BoMtcMpinb1v51V_Jy9mBXA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: phy: renesas: usb2-phy: convert bindings to json-schema
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     "kishon@ti.com" <kishon@ti.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-external USB3 pins of the SoC.
+On Mon, Oct 28, 2019 at 11:14 PM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>
+> Hi Rob,
+>
+> Thank you for your review!
+>
+> > From: Rob Herring, Sent: Tuesday, October 29, 2019 10:57 AM
+> >
+> > On Fri, Oct 18, 2019 at 05:38:53PM +0900, Yoshihiro Shimoda wrote:
+> > > Convert Renesas R-Car generation 3 USB 2.0 PHY bindings documentation
+> > > to json-schema.
+> > >
+> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > ---
+> > >  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 --------------
+> > >  .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 106 +++++++++++++++++++++
+> > >  2 files changed, 106 insertions(+), 70 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> >
+> >
+> > > diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> > b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> > > new file mode 100644
+> > > index 00000000..0f109c2
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> > > @@ -0,0 +1,106 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/phy/renesas,usb2-phy.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Renesas R-Car generation 3 USB 2.0 PHY
+> > > +
+> > > +maintainers:
+> > > +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> >
+> > This:
+>
+> What does the "This:" mean?
 
-Add a device tree binding for the PHY.
+I was referring to the 3 lines below. I was trying to be clear which
+lines to replace with just 'const'.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../phy/allwinner,sun50i-h6-usb3-phy.yaml     | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-
-diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-new file mode 100644
-index 000000000000..e5922b427342
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/allwinner,sun50i-h6-usb3-phy.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Ondrej Jirman <megous@megous.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/allwinner,sun50i-h6-usb3-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Allwinner H6 USB3 PHY
-+
-+maintainers:
-+  - Ondrej Jirman <megous@megous.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun50i-h6-usb3-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+  - "#phy-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun50i-h6-ccu.h>
-+    #include <dt-bindings/reset/sun50i-h6-ccu.h>
-+    phy@5210000 {
-+          compatible = "allwinner,sun50i-h6-usb3-phy";
-+          reg = <0x5210000 0x10000>;
-+          clocks = <&ccu CLK_USB_PHY1>;
-+          resets = <&ccu RST_USB_PHY1>;
-+          #phy-cells = <0>;
-+    };
--- 
-2.23.0
-
+> If I replaced the "oneOf:" with "This:",
+> the following error happens when "make dt_binding_check":
+>
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+> warning: no schema found in file: Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+> [snip]/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml: ignoring, error in schema 'compatible'
+> Documentation/devicetree/bindings/Makefile:33: recipe for target 'Documentation/devicetree/bindings/processed-schema.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/processed-schema.yaml] Error 255
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> > > +      - items:
+> > > +          - enum:
+> > > +              - renesas,usb2-phy-r8a77470 # RZ/G1C
+> >
+> > You can simplify to just:
+> >
+> >          - const: renesas,usb2-phy-r8a77470 # RZ/G1C
+>
+> I'll fix it.
