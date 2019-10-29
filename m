@@ -2,100 +2,182 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE228CA9EC4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A8FCA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD8EF20830
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF3A21479
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="McBukDJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfJ2LcY (ORCPT
+        id S1729039AbfJ2MGt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:32:24 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:51404 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfJ2LcY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 07:32:24 -0400
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 703DF7CDEAF;
-        Tue, 29 Oct 2019 12:32:17 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 29 Oct
- 2019 12:32:17 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Tue, 29 Oct 2019 12:32:17 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
+        Tue, 29 Oct 2019 08:06:49 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57694 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfJ2MGt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 08:06:49 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9TC6eYu020583;
+        Tue, 29 Oct 2019 07:06:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572350800;
+        bh=Fw11anpRUupPfhHjF+s4H1gOWFTddrb7DScu6ObM2GA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=McBukDJKQCzF1yD3lBPMZ6pVFL2Eh6D/EoPThHqMs/i3C7haAYASVqNcYDWe6cExx
+         qfi45WtstVl4qNVPBhJ3yTze/4OsjNwOrVH6ZpGZmJ5HM+eCkbvBeRf0Z8/zrJ2Klx
+         2nKBLklDLz915L83xuyvyFE6om0XuCvYZkFucxIU=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9TC6eSL059159
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 29 Oct 2019 07:06:40 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 29
+ Oct 2019 07:06:28 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 29 Oct 2019 07:06:28 -0500
+Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9TC6eFg090144;
+        Tue, 29 Oct 2019 07:06:40 -0500
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add leds-meter binding
+To:     Akinobu Mita <akinobu.mita@gmail.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 11/11] ARM: dts: imx6ul-kontron-n6310-s-43: Add missing
- includes for GPIOs and IRQs
-Thread-Topic: [PATCH v2 11/11] ARM: dts: imx6ul-kontron-n6310-s-43: Add
- missing includes for GPIOs and IRQs
-Thread-Index: AQHVjkv1caDmIh8k/USvzgDB9794sqdxa6wA
-Date:   Tue, 29 Oct 2019 11:32:16 +0000
-Message-ID: <baa2fd65-bd8b-cf76-9e9e-d01daf6b57a4@kontron.de>
-References: <20191029112655.15058-1-frieder.schrempf@kontron.de>
- <20191029112655.15058-12-frieder.schrempf@kontron.de>
-In-Reply-To: <20191029112655.15058-12-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7CFBE93490D5BE4CA54C80D868C04CD1@snt-world.com>
-Content-Transfer-Encoding: base64
+        Bjorn Andersson <bjorn@kryo.se>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+References: <1572185379-21537-1-git-send-email-akinobu.mita@gmail.com>
+ <1572185379-21537-2-git-send-email-akinobu.mita@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <20078e40-7e58-a6b7-5b23-7c4201057506@ti.com>
+Date:   Tue, 29 Oct 2019 07:05:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 703DF7CDEAF.A4761
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+In-Reply-To: <1572185379-21537-2-git-send-email-akinobu.mita@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMjkuMTAuMTkgMTI6MjgsIFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6DQo+IEZyb206IEZyaWVk
-ZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCg0KU29ycnksIHRoZSBj
-b21taXQgbWVzc2FnZSBoZXJlIGdvdCBsb3N0Og0KDQpUaGUgSVJRIGFuZCBHUElPIG1hY3JvcyBh
-cmUgdXNlZCBpbiB0aGlzIGZpbGUuIFRoZXJlZm9yZSB3ZSBhZGQgdGhlIA0KbWlzc2luZyBoZWFk
-ZXIgaW5jbHVkZXMuDQoNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEZyaWVkZXIgU2NocmVtcGYgPGZy
-aWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4gRml4ZXM6IDFlYTRiNzZjZGZkZSAoIkFSTTog
-ZHRzOiBpbXg2dWwta29udHJvbi1uNjMxMDogQWRkIEtvbnRyb24gaS5NWDZVTCBONjMxMCBTb00g
-YW5kIGJvYXJkcyIpDQo+IC0tLQ0KPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1rb250cm9u
-LW42MzEwLXMtNDMuZHRzIHwgMyArKysNCj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25z
-KCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLWtvbnRyb24t
-bjYzMTAtcy00My5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwta29udHJvbi1uNjMxMC1z
-LTQzLmR0cw0KPiBpbmRleCA1YmFkMjk2ODNjYzMuLjI5NWJjMzEzOGZlYSAxMDA2NDQNCj4gLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLWtvbnRyb24tbjYzMTAtcy00My5kdHMNCj4gKysr
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLWtvbnRyb24tbjYzMTAtcy00My5kdHMNCj4gQEAg
-LTcsNiArNyw5IEBADQo+ICAgDQo+ICAgI2luY2x1ZGUgImlteDZ1bC1rb250cm9uLW42MzEwLXMu
-ZHRzIg0KPiAgIA0KPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVy
-L2lycS5oPg0KPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPg0KPiArDQo+ICAg
-LyB7DQo+ICAgCW1vZGVsID0gIktvbnRyb24gTjYzMTAgUyA0MyI7DQo+ICAgCWNvbXBhdGlibGUg
-PSAia29udHJvbixpbXg2dWwtbjYzMTAtcy00MyIsICJrb250cm9uLGlteDZ1bC1uNjMxMC1zIiwN
-Cj4g
+Akinobu
+
+On 10/27/19 9:09 AM, Akinobu Mita wrote:
+> Add DT binding for generic LED level meter which consists of multiple LED
+> devices by different drivers.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Bjorn Andersson <bjorn@kryo.se>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+>   .../devicetree/bindings/leds/leds-meter.yaml       | 67 ++++++++++++++++++++++
+>   1 file changed, 67 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/Documentation/devicetree/bindings/leds/leds-meter.yaml
+> new file mode 100644
+> index 0000000..b5fcd98
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
+> @@ -0,0 +1,67 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic LED level meter
+> +
+> +maintainers:
+> +  - Akinobu Mita <akinobu.mita@gmail.com>
+> +
+> +description:
+> +  Generic LED level meter consists of multiple LED devices by different drivers.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^meter-leds(@.*)?"
+> +
+> +  compatible:
+> +    const: meter-leds
+> +
+> +  leds:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: List of phandles to LED node that are members of a level meter.
+> +
+> +  brightness-weights:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: |
+> +      By default, the brightness of the LED level meter is proportional to the
+> +      number of actual LEDs that are turned on.  We can optionally specify
+> +      the contribution ratio for each LED within a level meter by this
+> +      property.  The example below shows how to setup an exponential
+> +      relationship between the number of LEDs turned on and the brightness of
+> +      meter-leds.
+> +
+> +required:
+> + - compatible
+> + - leds
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    // Example 1: LED level meter with four LEDs
+> +    meter-leds {
+> +        compatible = "meter-leds";
+> +        leds = <&led0>, <&led1>, <&led2>, <&led3>;
+> +    };
+> +
+> +    // Example 2: Exponential relationship between the number of LEDs turned on
+> +    // and the brightness of meter-leds
+> +    //
+> +    // When the maximum brightness is 255
+> +    // - No LEDs are turned on if brightness == 0
+> +    // - led0 is turned on if 0 < brightness <= 32
+> +    // - led0 and led1 are turned on if 32 < brightness <= 64
+> +    // - led0, led1, and led2 are turned on if 64 < brightness <= 128
+> +    // - All LEDs are turned on if 128 < brightness <= 255
+> +    meter-leds {
+> +        compatible = "meter-leds";
+> +        leds = <&led0>, <&led1>, <&led2>, <&led3>;
+> +        brightness-weights = <32 32 64 127>;
+> +    };
+> +
+> +...
+
+Fails binding check
+
+Documentation/devicetree/bindings/leds/leds-meter.example.dts:32.20-36.11: 
+ERROR (duplicate_node_names): /example-0/meter-leds: Duplicate node name
+ERROR: Input tree has errors, aborting (use -f to force output)
+scripts/Makefile.lib:314: recipe for target 
+'Documentation/devicetree/bindings/leds/leds-meter.example.dt.yaml' failed
+make[1]: *** 
+[Documentation/devicetree/bindings/leds/leds-meter.example.dt.yaml] Error 2
+Makefile:1284: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
