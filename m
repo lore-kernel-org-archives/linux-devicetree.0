@@ -2,245 +2,101 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CC5CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17307CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3295208E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1AED2067D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572381632;
-	bh=+ErzTvkm89mf/Yo1sKBo6GnZ+47nBen0ZswGPxY1Rsc=;
+	s=default; t=1572382082;
+	bh=Ygn4EvFTkQPU9gL2XGi0tJULzGH0l8RhkL1ooAj5JHg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wPfPxBEwjBDB50wawDSGVElYr9Zmphx9oVYbxPcomJdxCuekM79KMJ3zJ221UPxkI
-	 PwFKyFEg1YA6WdNUTlBRQnDQvmhp6LNkMmq6b5xU6gaSGtCm5bsL/n7pgV4berzhPp
-	 gSsGxN1NdfMMcnHyeQTLNVrFKEI/O2ArE9S1BqWg=
+	b=qq4tYyivjbMP5PqHsg+F5/NKI95jjRqHD97QOlqK4sNaCItlBv5kPj4KeSgl0c6mj
+	 MxsnGwhxpge9pp7UvkM6c2G9PyGunFFtWTbJc+UGIcggNn+JUSmD3s5Ngs5Eh1fBM7
+	 gUc+MpJC4MeL9BpugpUzNNwwR8nwoUqLAhuDBj1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfJ2Ukb (ORCPT
+        id S1727567AbfJ2UsC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:40:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34322 "EHLO mail.kernel.org"
+        Tue, 29 Oct 2019 16:48:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbfJ2Ukb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 16:40:31 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        id S1727518AbfJ2UsC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 16:48:02 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC20A208E3;
-        Tue, 29 Oct 2019 20:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 772812173E;
+        Tue, 29 Oct 2019 20:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572381630;
-        bh=+ErzTvkm89mf/Yo1sKBo6GnZ+47nBen0ZswGPxY1Rsc=;
+        s=default; t=1572382081;
+        bh=Ygn4EvFTkQPU9gL2XGi0tJULzGH0l8RhkL1ooAj5JHg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uy+Xf+IqaUTwAbgRHSBRNXrCnp68ZxhUaVEeBdva8YPx8Notmy/Z0/NvpKnRgRifT
-         k4YifzN9W3JY4PQADxbYxAMkAlbFs7bofoZo1O0LcwlsLzcg3pvVIrzBg2rez+ikG6
-         cH3v0tyvYZ4nSCc+/EhZUE8AZJJqOJYntBdf0T9I=
-Received: by mail-qt1-f181.google.com with SMTP id e14so97456qto.1;
-        Tue, 29 Oct 2019 13:40:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAUOnYSoux58r8PV6NMfqGhAZ5Ga9gmSIObmgJWuqeC+eYcdHSfF
-        drBBj7hwujE5et5ThuYV5yeRCxYPxkL/cExy1w==
-X-Google-Smtp-Source: APXvYqzKsg6BCPZBJRd4aHnInc5va9mSx60VPljcfauLF6SwALX1RSm+GHMmxEHZY2HZFAeZj60MjIXsq/m86CpLA3w=
-X-Received: by 2002:ac8:741a:: with SMTP id p26mr1190108qtq.143.1572381628943;
- Tue, 29 Oct 2019 13:40:28 -0700 (PDT)
+        b=XqxK6ael7sn32QGY8CaCGOGjbhuxgUjpBmpIdAEvJUv89tiObkUkSILVBHDCE7LJZ
+         rV6D+ERGDqoFwIA6Yrqsskn8zciws9s0b8B8ub38xm14dNkk3ymYfSej13WrhlzPkz
+         8JcdPJuAT2cGzKwPOcO8vsbcNpIKxV9thnpvNQvY=
+Received: by mail-qt1-f174.google.com with SMTP id g50so104396qtb.4;
+        Tue, 29 Oct 2019 13:48:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAVvzDXClW/hFyBwBHRpE6DsPW7dKh3B2o4s9m0kJPPXowuVe+Ws
+        1d3py5I7vK+rA8Y68rr1ivBI6Wi0PmD54kxrww==
+X-Google-Smtp-Source: APXvYqxRQv2XrvJIQ3TVSDV3CE8sreLm7dFshwfw+gLwCiGofNx5kLIVQs/5+QRDKOiPEJXkqbqx8OxZBZCu1r+/L10=
+X-Received: by 2002:ac8:70c4:: with SMTP id g4mr1279199qtp.136.1572382080593;
+ Tue, 29 Oct 2019 13:48:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191021021035.7032-1-afaerber@suse.de> <20191021021035.7032-4-afaerber@suse.de>
- <20191029154129.GA24908@bogus> <6e6087af-6a62-f0ff-07af-48e4836c38e6@suse.de>
-In-Reply-To: <6e6087af-6a62-f0ff-07af-48e4836c38e6@suse.de>
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-2-srinivas.kandagatla@linaro.org> <20191025204338.GA25892@bogus>
+ <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org> <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
+In-Reply-To: <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 29 Oct 2019 15:40:17 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+QgAyR7vUJRBRrO56uKJXi4=meW2qnPpZUCAqBBP7PMA@mail.gmail.com>
-Message-ID: <CAL_Jsq+QgAyR7vUJRBRrO56uKJXi4=meW2qnPpZUCAqBBP7PMA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+Date:   Tue, 29 Oct 2019 15:47:49 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
+Message-ID: <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
         devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 10:52 AM Andreas F=C3=A4rber <afaerber@suse.de> wro=
-te:
+On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
 >
-> Am 29.10.19 um 16:41 schrieb Rob Herring:
-> > On Mon, Oct 21, 2019 at 04:10:35AM +0200, Andreas F=C3=A4rber wrote:
-> >> Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
-> >>
-> >> Reuse the existing RTD1295 watchdog compatible for now.
-> >>
-> >> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> >> ---
-> >>  arch/arm/boot/dts/Makefile               |   2 +
-> >>  arch/arm/boot/dts/rtd1195-mele-x1000.dts |  30 ++++++++
-> >>  arch/arm/boot/dts/rtd1195.dtsi           | 128 ++++++++++++++++++++++=
-+++++++++
-> >>  3 files changed, 160 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
-> >>  create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
-> >>
-> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> >> index 73d33611c372..89a951485da8 100644
-> >> --- a/arch/arm/boot/dts/Makefile
-> >> +++ b/arch/arm/boot/dts/Makefile
-> >> @@ -858,6 +858,8 @@ dtb-$(CONFIG_ARCH_QCOM) +=3D \
-> >>  dtb-$(CONFIG_ARCH_RDA) +=3D \
-> >>      rda8810pl-orangepi-2g-iot.dtb \
-> >>      rda8810pl-orangepi-i96.dtb
-> >> +dtb-$(CONFIG_ARCH_REALTEK) +=3D \
-> >> +    rtd1195-mele-x1000.dtb
-> >>  dtb-$(CONFIG_ARCH_REALVIEW) +=3D \
-> >>      arm-realview-pb1176.dtb \
-> >>      arm-realview-pb11mp.dtb \
-> >> diff --git a/arch/arm/boot/dts/rtd1195-mele-x1000.dts b/arch/arm/boot/=
-dts/rtd1195-mele-x1000.dts
-> >> new file mode 100644
-> >> index 000000000000..ce9a255950d3
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
-> >> @@ -0,0 +1,30 @@
-> >> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> >> +/*
-> >> + * Copyright (c) 2017 Andreas F=C3=A4rber
+>
+>
+> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
+> > Its Phandle.
 > >
-> > 2019?
->
-> Nope, I am flushing out old queues, and updating SPDX line does not
-> really warrant a copyright bump IMO. The changes below would though.
->
-> >> + */
-> >> +
-> >> +/dts-v1/;
-> >> +
-> >> +#include "rtd1195.dtsi"
-> >> +
-> >> +/ {
-> >> +    compatible =3D "mele,x1000", "realtek,rtd1195";
-> >> +    model =3D "MeLE X1000";
-> >> +
-> >> +    aliases {
-> >> +            serial0 =3D &uart0;
-> >> +    };
-> >> +
-> >> +    chosen {
-> >> +            stdout-path =3D "serial0:115200n8";
-> >> +    };
-> >> +
-> >> +    memory {
+> > something like this is okay?
 > >
-> > memory@0
+> > slim-ifc-dev:
+> >    $ref: '/schemas/types.yaml#/definitions/phandle-array'
 >
-> Will test.
+> Sorry this should not be an array, so something like this:
 >
-> >
-> >> +            device_type =3D "memory";
-> >> +            reg =3D <0x0 0x40000000>;
-> >> +    };
-> >> +};
-> >> +
-> >> +&uart0 {
-> >> +    status =3D "okay";
-> >> +};
-> >> diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd119=
-5.dtsi
-> >> new file mode 100644
-> >> index 000000000000..475740c67d26
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/rtd1195.dtsi
-> >> @@ -0,0 +1,128 @@
-> >> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> >> +/*
-> >> + * Copyright (c) 2017 Andreas F=C3=A4rber
-> >> + */
-> >> +
-> >> +/memreserve/ 0x00000000 0x0000c000; /* boot code */
-> >> +/memreserve/ 0x0000c000 0x000f4000;
-> >> +/memreserve/ 0x01b00000 0x00400000; /* audio */
-> >> +/memreserve/ 0x01ffe000 0x00004000; /* rpc ringbuf */
-> >> +/memreserve/ 0x10000000 0x00100000; /* secure */
-> >> +/memreserve/ 0x17fff000 0x00001000;
-> >> +/memreserve/ 0x18000000 0x00100000; /* rbus */
-> >> +/memreserve/ 0x18100000 0x01000000; /* nor */
-> >
-> > You shouldn't have the same entries here and in /reserved-memory. There
-> > was a time before /reserved-memory was fully supported, but we should b=
-e
-> > well past that now.
->
-> I am dealing with a v2012.07 based downstream U-Boot that I do not have
-> sources for, so I wouldn't be so sure there... It will only respect
-> memreserve I think, whereas reserved-memory below is for the kernel, no?
+>    slim-ifc-dev:
+>      description: SLIMBus Interface device phandle
 
-Sigh... Well, that may be too old. :(
+You're just spelling out the abbreviated name. I can do that much.
+What is 'SLIMBus Interface device'?
 
-I could be wrong too and no one ever added /reserved-memory support
-for u-boot. The intent was never that one was for u-boot and the other
-for the kernel. The kernel handles both. reserved-memory was to
-overcome the limitations of memreserve.
+Is it a standard SLIMBus property? If so, document it in the right
+place. If not, then needs a vendor prefix.
 
-> >> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> >> +
-> >> +/ {
-> >> +    compatible =3D "realtek,rtd1195";
-> >> +    interrupt-parent =3D <&gic>;
-> >> +    #address-cells =3D <1>;
-> >> +    #size-cells =3D <1>;
-> >> +
-> >> +    cpus {
-> >> +            #address-cells =3D <1>;
-> >> +            #size-cells =3D <0>;
-> >> +
-> >> +            cpu0: cpu@0 {
-> >> +                    device_type =3D "cpu";
-> >> +                    compatible =3D "arm,cortex-a7";
-> >> +                    reg =3D <0x0>;
-> >> +                    clock-frequency =3D <1000000000>;
-> >> +            };
-> >> +
-> >> +            cpu1: cpu@1 {
-> >> +                    device_type =3D "cpu";
-> >> +                    compatible =3D "arm,cortex-a7";
-> >> +                    reg =3D <0x1>;
-> >> +                    clock-frequency =3D <1000000000>;
-> >> +            };
-> >> +    };
-> >> +
-> >> +    reserved-memory {
-> >> +            #address-cells =3D <1>;
-> >> +            #size-cells =3D <1>;
-> >> +            ranges;
-> >> +
-> >> +            secure@10000000 {
-> >> +                    reg =3D <0x10000000 0x100000>;
-> >> +                    no-map;
-> >> +            };
-> >> +
-> >> +            rbus@18000000 {
-> >> +                    reg =3D <0x18000000 0x100000>;
-> >> +                    no-map;
-> >
-> > This doesn't look right as it overlaps the register space.
+>      $ref: '/schemas/types.yaml#/definitions/phandle'
 >
-> Will try dropping it. James?
 >
-> >> +            };
-> >> +
-> >> +            nor@18100000 {
-> >> +                    reg =3D <0x18100000 0x1000000>;
-> >> +                    no-map;
-> >> +            };
->
-> Same issue here, I guess?
-
-Yes.
-
-Rob
+> >    description: SLIMBus Interface device phandle
