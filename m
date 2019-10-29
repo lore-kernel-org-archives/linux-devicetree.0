@@ -2,127 +2,91 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007EFCA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9B8CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 10:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3082196F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="snicYa4x"
+	by mail.kernel.org (Postfix) with ESMTP id A7B1221479
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 10:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731817AbfJ2Jxr (ORCPT
+        id S1727987AbfJ2KGU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:53:47 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37287 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387463AbfJ2Jxq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 05:53:46 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e12so10133563edr.4
-        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 02:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:subject:to:cc:references:openpgp:message-id:date:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=HGDKIfiK4WqAtiXxg2PaSaV3tKJwX+/+66kephvgEMc=;
-        b=snicYa4xa75qBwamypvTLqSPyFkZPl5dVyOqrJzmSnFo9ZWuJnc5ulCdFp8WlWQHOl
-         0AuO/24CzCPv7qVgEFhoukv2GFOuJ1bWq1gG2vGzILd3Sn50nx7Fi9m6nayEaiWTNeWY
-         ZCadVMAYdVU8FMtX8KFyDOyJIcHoqkuUGtzHURxZSnjPpu6p02UHO+TMXf7o5/0gNxYn
-         X+HUMTxEw5ceA3gawdZXe2RtYoL4PpaXATQWnklS4ADEMVGaVtRb2ZGtSlttNdf8qviH
-         SrQ8FWJCTqwBRF+wvNq/NxQJiignNV7jT9hOeVxyd31CXmFMEC2a4MK+EqJ4CMbagW3M
-         Jqgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:openpgp:message-id
-         :date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HGDKIfiK4WqAtiXxg2PaSaV3tKJwX+/+66kephvgEMc=;
-        b=d22KnV/pAwJhwjYeMc0fClgsB2AZfY9xiWP1aPU7kzYzSngsvZhO3knXNnpgjNfINH
-         RYo2jVqA9GfQor893Ff1PRceXbN92/xhTHlVXJro0t5VdoHbAWG6dzjvAZTo59Lkbtfc
-         zUrPu/ypD1xUnDv3PpshlkQtJbf4mqPfXuBw4MVDsPSE2CO3x0Pckz/bhslVQMIZHzF9
-         xkB8HFn+oPYVOKeTOexTi2+I2GVNbjdC/Vxl5OTvfwTgc0SwtvvIE1rIixeYbDYp8vSx
-         Sk4v5GClQGRvtFhLWpfv6Y4iR0r5F/A9kLmcAvvbNmSppfo+3wgvI2kE2i0gItR/jWMK
-         aQHA==
-X-Gm-Message-State: APjAAAUeZFPYTHfzXyyN536++7nSdqummCKQ0ISrRLDmk7iITPY00vLQ
-        WFaCgd7wArP4Gncr//sVFi6CtQ==
-X-Google-Smtp-Source: APXvYqyFyb/NYxsK1RWq4WxvayVYls/goH6XAAk9FVVYjH3wL1Zb5+8jNZclhKtCmGdk5NT+7BUT2g==
-X-Received: by 2002:a50:eb92:: with SMTP id y18mr23242997edr.244.1572342824719;
-        Tue, 29 Oct 2019 02:53:44 -0700 (PDT)
-Received: from [192.168.27.135] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id x6sm664005edc.50.2019.10.29.02.53.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 02:53:44 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RFC PATCH 4/4] interconnect: qcom: sdm845: Split qnodes into
- their respective NoCs
-To:     David Dai <daidavid1@codeaurora.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org
-Cc:     evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
-        seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-References: <1571278852-8023-1-git-send-email-daidavid1@codeaurora.org>
- <1571278852-8023-5-git-send-email-daidavid1@codeaurora.org>
-Openpgp: preference=signencrypt
-Message-ID: <9f879f99-527d-50bc-d5ef-5a72d4a65c4d@linaro.org>
-Date:   Tue, 29 Oct 2019 11:53:42 +0200
-MIME-Version: 1.0
-In-Reply-To: <1571278852-8023-5-git-send-email-daidavid1@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 29 Oct 2019 06:06:20 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39132 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727968AbfJ2KGU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 06:06:20 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DAF571A09BE;
+        Tue, 29 Oct 2019 11:06:17 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A2F41A09CC;
+        Tue, 29 Oct 2019 11:06:13 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8253840307;
+        Tue, 29 Oct 2019 18:06:07 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] ARM: dts: imx7ulp-evk: Use APLL_PFD1 as usdhc's clock source
+Date:   Tue, 29 Oct 2019 18:02:52 +0800
+Message-Id: <1572343372-6303-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi David,
+i.MX7ULP does NOT support runtime switching clock source for PCC,
+APLL_PFD1 by default is usdhc's clock source, so just use it
+in kernel to avoid below kernel dump during kernel boot up and
+make sure kernel can boot up with SD root file-system.
 
-On 17.10.19 г. 5:20 ч., David Dai wrote:
-> In order to better represent the hardware and its different Network-On-Chip
-> devices, split the sdm845 provider driver into NoC specific providers.
-> Remove duplicate functionality already provided by the icc rpmh and
-> bcm voter drivers to calculate and commit bandwidth requests to hardware.
-> 
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> ---
->  drivers/interconnect/qcom/sdm845.c | 727 +++++++++++--------------------------
->  1 file changed, 206 insertions(+), 521 deletions(-)
-> 
-> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-> index 502a6c2..a731f4d 100644
-> --- a/drivers/interconnect/qcom/sdm845.c
-> +++ b/drivers/interconnect/qcom/sdm845.c
-[..]
->  static int qnoc_probe(struct platform_device *pdev)
->  {
-> @@ -808,6 +480,12 @@ static int qnoc_probe(struct platform_device *pdev)
->  	qp->bcms = desc->bcms;
->  	qp->num_bcms = desc->num_bcms;
->  
-> +	qp->voter = of_bcm_voter_get(qp->dev, NULL);
+[    3.035892] Loading compiled-in X.509 certificates
+[    3.136301] sdhci-esdhc-imx 40370000.mmc: Got CD GPIO
+[    3.242886] mmc0: Reset 0x1 never completed.
+[    3.247190] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+[    3.253751] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
+[    3.260218] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000001
+[    3.266775] mmc0: sdhci: Argument:  0x00009a64 | Trn mode: 0x00000000
+[    3.273333] mmc0: sdhci: Present:   0x00088088 | Host ctl: 0x00000002
+[    3.279794] mmc0: sdhci: Power:     0x00000000 | Blk gap:  0x00000080
+[    3.286350] mmc0: sdhci: Wake-up:   0x00000008 | Clock:    0x0000007f
+[    3.292901] mmc0: sdhci: Timeout:   0x0000008c | Int stat: 0x00000000
+[    3.299364] mmc0: sdhci: Int enab:  0x007f010b | Sig enab: 0x00000000
+[    3.305918] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00008402
+[    3.312471] mmc0: sdhci: Caps:      0x07eb0000 | Caps_1:   0x0000b400
+[    3.318934] mmc0: sdhci: Cmd:       0x0000113a | Max curr: 0x00ffffff
+[    3.325488] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0039b37f
+[    3.332040] mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
+[    3.338501] mmc0: sdhci: Host ctl2: 0x00000000
+[    3.343051] mmc0: sdhci: ============================================
 
-I assume that we could have a second optional bcm-voter? The
-"qcom,bcm-voter-names" DT property is not used anywhere, is it needed? Maybe
-give an example in patch 1.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx7ulp-evk.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	if (IS_ERR(qp->voter)) {
-> +		dev_err(&pdev->dev, "bcm_voter err:%d\n", PTR_ERR(qp->voter));
+diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-evk.dts
+index f1093d2..a863a2b 100644
+--- a/arch/arm/boot/dts/imx7ulp-evk.dts
++++ b/arch/arm/boot/dts/imx7ulp-evk.dts
+@@ -78,7 +78,7 @@
+ 
+ &usdhc0 {
+ 	assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC0>;
+-	assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
++	assigned-clock-parents = <&scg1 IMX7ULP_CLK_APLL_PFD1>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc0>;
+ 	cd-gpios = <&gpio_ptc 10 GPIO_ACTIVE_LOW>;
+-- 
+2.7.4
 
-Should be %ld
-
-> +		return PTR_ERR(qp->voter);
-> +	}
-> +
->  	ret = icc_provider_add(provider);
->  	if (ret) {
->  		dev_err(&pdev->dev, "error adding interconnect provider\n");
-
-Nit: I would also put patch 2/4 at the end of the series.
-
-Thanks,
-Georgi
