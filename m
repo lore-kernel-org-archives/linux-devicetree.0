@@ -2,386 +2,215 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1FACA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0BFCA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D962086D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FE32083E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572340919;
+	bh=Q/GVmUqtA+ZyrS1TnX8i1GwC/kcocJgrlO53nm3yVzc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=kTIDlr6rLzh3/VLrDg3eqXwUo8MVv3rH1fdkYDxdUrDguHLmWeQ/Ed18sea9WJ2ai
+	 W3C+vBsvcgUzCvJMa7cnq7NjxIIY+fdGqHLc5Iwzgnq7BsdkzhbTFOcEgtOKx6gePZ
+	 DbtzcKoNtj4itNJhBV2qOBxBCyN+wpASKl0AbSZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbfJ2JUv (ORCPT
+        id S1731367AbfJ2JV6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:20:51 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:47200 "EHLO inva021.nxp.com"
+        Tue, 29 Oct 2019 05:21:58 -0400
+Received: from mga01.intel.com ([192.55.52.88]:23405 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730377AbfJ2JUu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:20:50 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7BEDD200851;
-        Tue, 29 Oct 2019 10:20:48 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F1D60200847;
-        Tue, 29 Oct 2019 10:20:41 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4D476402C4;
-        Tue, 29 Oct 2019 17:20:34 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ASoC: fsl_asrc: Add support for imx8qm
-Date:   Tue, 29 Oct 2019 17:17:09 +0800
-Message-Id: <1572340629-20702-2-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572340629-20702-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1572340629-20702-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727257AbfJ2JV6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:21:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:21:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="asc'?scan'208";a="229993798"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga002.fm.intel.com with ESMTP; 29 Oct 2019 02:21:53 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v4 7/9] usb: dwc3: Registering a role switch in the DRD code.
+In-Reply-To: <20191028215919.83697-8-john.stultz@linaro.org>
+References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-8-john.stultz@linaro.org>
+Date:   Tue, 29 Oct 2019 11:21:49 +0200
+Message-ID: <87eeyvj49e.fsf@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are two asrc module in imx8qm, each module has different
-clock configuration, and the DMA type is EDMA.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-So in this patch, we define the new clocks, refine the clock map,
-and include struct fsl_asrc_soc_data for different soc usage.
 
-The EDMA channel is fixed with each dma request, one dma request
-corresponding to one dma channel. So we need to request dma
-channel with dma request of asrc module.
+Hi,
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_asrc.c     | 91 +++++++++++++++++++++++++++++-------
- sound/soc/fsl/fsl_asrc.h     | 65 +++++++++++++++++++++++++-
- sound/soc/fsl/fsl_asrc_dma.c | 39 ++++++++++++----
- 3 files changed, 167 insertions(+), 28 deletions(-)
+John Stultz <john.stultz@linaro.org> writes:
+> From: Yu Chen <chenyu56@huawei.com>
+>
+> The Type-C drivers use USB role switch API to inform the
+> system about the negotiated data role, so registering a role
+> switch in the DRD code in order to support platforms with
+> USB Type-C connectors.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> CC: ShuFan Lee <shufan_lee@richtek.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Jun Li <lijun.kernel@gmail.com>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v2: Fix role_sw and role_switch_default_mode descriptions as
+>     reported by kbuild test robot <lkp@intel.com>
+>
+> v3: Split out the role-switch-default-host logic into its own
+>     patch
+> ---
+>  drivers/usb/dwc3/Kconfig |  1 +
+>  drivers/usb/dwc3/core.h  |  3 ++
+>  drivers/usb/dwc3/drd.c   | 66 +++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 69 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 89abc6078703..1104745c41a9 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -44,6 +44,7 @@ config USB_DWC3_DUAL_ROLE
+>  	bool "Dual Role mode"
+>  	depends on ((USB=3Dy || USB=3DUSB_DWC3) && (USB_GADGET=3Dy || USB_GADGE=
+T=3DUSB_DWC3))
+>  	depends on (EXTCON=3Dy || EXTCON=3DUSB_DWC3)
+> +	select USB_ROLE_SWITCH
 
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index a3cfceea7d2f..9dc5b5a93fb0 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -43,24 +43,55 @@ static struct snd_pcm_hw_constraint_list fsl_asrc_rate_constraints = {
-  */
- static unsigned char input_clk_map_imx35[] = {
- 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
- };
- 
- static unsigned char output_clk_map_imx35[] = {
- 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
- };
- 
- /* i.MX53 uses the same map for input and output */
- static unsigned char input_clk_map_imx53[] = {
- /*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
- 	0x0, 0x1, 0x2, 0x7, 0x4, 0x5, 0x6, 0x3, 0x8, 0x9, 0xa, 0xb, 0xc, 0xf, 0xe, 0xd,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
- };
- 
- static unsigned char output_clk_map_imx53[] = {
- /*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
- 	0x8, 0x9, 0xa, 0x7, 0xc, 0x5, 0x6, 0xb, 0x0, 0x1, 0x2, 0x3, 0x4, 0xf, 0xe, 0xd,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
- };
- 
--static unsigned char *clk_map[2];
-+/* i.MX8QM uses the same map for input and output */
-+static unsigned char input_clk_map_imx8_0[] = {
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+};
-+
-+static unsigned char output_clk_map_imx8_0[] = {
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+};
-+
-+static unsigned char input_clk_map_imx8_1[] = {
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0x7, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0xb, 0xc, 0xf, 0xf, 0xd, 0xe, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	0x4, 0x5, 0x6, 0xf, 0x8, 0x9, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+};
-+
-+static unsigned char output_clk_map_imx8_1[] = {
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0x7, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0xb, 0xc, 0xf, 0xf, 0xd, 0xe, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	0x4, 0x5, 0x6, 0xf, 0x8, 0x9, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+};
- 
- /**
-  * Select the pre-processing and post-processing options
-@@ -353,8 +384,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- 	}
- 
- 	/* Validate input and output clock sources */
--	clk_index[IN] = clk_map[IN][config->inclk];
--	clk_index[OUT] = clk_map[OUT][config->outclk];
-+	clk_index[IN] = asrc_priv->soc->inclk_map[config->inclk];
-+	clk_index[OUT] = asrc_priv->soc->outclk_map[config->outclk];
- 
- 	/* We only have output clock for ideal ratio mode */
- 	clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
-@@ -398,13 +429,13 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- 	/* Set the channel number */
- 	channels = config->channel_num;
- 
--	if (asrc_priv->channel_bits < 4)
-+	if (asrc_priv->soc->channel_bits < 4)
- 		channels /= 2;
- 
- 	/* Update channels for current pair */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRCNCR,
--			   ASRCNCR_ANCi_MASK(index, asrc_priv->channel_bits),
--			   ASRCNCR_ANCi(index, channels, asrc_priv->channel_bits));
-+			   ASRCNCR_ANCi_MASK(index, asrc_priv->soc->channel_bits),
-+			   ASRCNCR_ANCi(index, channels, asrc_priv->soc->channel_bits));
- 
- 	/* Default setting: Automatic selection for processing mode */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-@@ -531,7 +562,7 @@ static int fsl_asrc_dai_startup(struct snd_pcm_substream *substream,
- 	struct fsl_asrc *asrc_priv = snd_soc_dai_get_drvdata(dai);
- 
- 	/* Odd channel number is not valid for older ASRC (channel_bits==3) */
--	if (asrc_priv->channel_bits == 3)
-+	if (asrc_priv->soc->channel_bits == 3)
- 		snd_pcm_hw_constraint_step(substream->runtime, 0,
- 					   SNDRV_PCM_HW_PARAM_CHANNELS, 2);
- 
-@@ -964,14 +995,10 @@ static int fsl_asrc_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	if (of_device_is_compatible(np, "fsl,imx35-asrc")) {
--		asrc_priv->channel_bits = 3;
--		clk_map[IN] = input_clk_map_imx35;
--		clk_map[OUT] = output_clk_map_imx35;
--	} else {
--		asrc_priv->channel_bits = 4;
--		clk_map[IN] = input_clk_map_imx53;
--		clk_map[OUT] = output_clk_map_imx53;
-+	asrc_priv->soc = of_device_get_match_data(&pdev->dev);
-+	if (!asrc_priv->soc) {
-+		dev_err(&pdev->dev, "failed to get soc data\n");
-+		return -ENODEV;
- 	}
- 
- 	ret = fsl_asrc_init(asrc_priv);
-@@ -1113,9 +1140,39 @@ static const struct dev_pm_ops fsl_asrc_pm = {
- 	SET_SYSTEM_SLEEP_PM_OPS(fsl_asrc_suspend, fsl_asrc_resume)
- };
- 
-+static const struct fsl_asrc_soc_data fsl_asrc_imx35_data = {
-+	.use_edma = false,
-+	.channel_bits = 3,
-+	.inclk_map = input_clk_map_imx35,
-+	.outclk_map = output_clk_map_imx35,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx53_data = {
-+	.use_edma = false,
-+	.channel_bits = 4,
-+	.inclk_map = input_clk_map_imx53,
-+	.outclk_map = output_clk_map_imx53,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx8qm_0_data = {
-+	.use_edma = true,
-+	.channel_bits = 4,
-+	.inclk_map = input_clk_map_imx8_0,
-+	.outclk_map = output_clk_map_imx8_0,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx8qm_1_data = {
-+	.use_edma = true,
-+	.channel_bits = 4,
-+	.inclk_map = input_clk_map_imx8_1,
-+	.outclk_map = output_clk_map_imx8_1,
-+};
-+
- static const struct of_device_id fsl_asrc_ids[] = {
--	{ .compatible = "fsl,imx35-asrc", },
--	{ .compatible = "fsl,imx53-asrc", },
-+	{ .compatible = "fsl,imx35-asrc", .data = &fsl_asrc_imx35_data },
-+	{ .compatible = "fsl,imx53-asrc", .data = &fsl_asrc_imx53_data },
-+	{ .compatible = "fsl,imx8qm-asrc0", .data = &fsl_asrc_imx8qm_0_data },
-+	{ .compatible = "fsl,imx8qm-asrc1", .data = &fsl_asrc_imx8qm_1_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_asrc_ids);
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-index 2b57e8c53728..8decbe670c3e 100644
---- a/sound/soc/fsl/fsl_asrc.h
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -308,6 +308,29 @@ enum asrc_inclk {
- 	INCLK_SSI3_TX = 0x0b,
- 	INCLK_SPDIF_TX = 0x0c,
- 	INCLK_ASRCK1_CLK = 0x0f,
-+
-+	/* clocks for imx8 */
-+	INCLK_AUD_PLL_DIV_CLK0 = 0x10,
-+	INCLK_AUD_PLL_DIV_CLK1 = 0x11,
-+	INCLK_AUD_CLK0         = 0x12,
-+	INCLK_AUD_CLK1         = 0x13,
-+	INCLK_ESAI0_RX_CLK     = 0x14,
-+	INCLK_ESAI0_TX_CLK     = 0x15,
-+	INCLK_SPDIF0_RX        = 0x16,
-+	INCLK_SPDIF1_RX        = 0x17,
-+	INCLK_SAI0_RX_BCLK     = 0x18,
-+	INCLK_SAI0_TX_BCLK     = 0x19,
-+	INCLK_SAI1_RX_BCLK     = 0x1a,
-+	INCLK_SAI1_TX_BCLK     = 0x1b,
-+	INCLK_SAI2_RX_BCLK     = 0x1c,
-+	INCLK_SAI3_RX_BCLK     = 0x1d,
-+	INCLK_ASRC0_MUX_CLK    = 0x1e,
-+
-+	INCLK_ESAI1_RX_CLK     = 0x20,
-+	INCLK_ESAI1_TX_CLK     = 0x21,
-+	INCLK_SAI6_TX_BCLK     = 0x22,
-+	INCLK_HDMI_RX_SAI0_RX_BCLK     = 0x24,
-+	INCLK_HDMI_TX_SAI0_TX_BCLK     = 0x25,
- };
- 
- enum asrc_outclk {
-@@ -325,6 +348,29 @@ enum asrc_outclk {
- 	OUTCLK_SSI3_RX = 0x0b,
- 	OUTCLK_SPDIF_RX = 0x0c,
- 	OUTCLK_ASRCK1_CLK = 0x0f,
-+
-+	/* clocks for imx8 */
-+	OUTCLK_AUD_PLL_DIV_CLK0 = 0x10,
-+	OUTCLK_AUD_PLL_DIV_CLK1 = 0x11,
-+	OUTCLK_AUD_CLK0         = 0x12,
-+	OUTCLK_AUD_CLK1         = 0x13,
-+	OUTCLK_ESAI0_RX_CLK     = 0x14,
-+	OUTCLK_ESAI0_TX_CLK     = 0x15,
-+	OUTCLK_SPDIF0_RX        = 0x16,
-+	OUTCLK_SPDIF1_RX        = 0x17,
-+	OUTCLK_SAI0_RX_BCLK     = 0x18,
-+	OUTCLK_SAI0_TX_BCLK     = 0x19,
-+	OUTCLK_SAI1_RX_BCLK     = 0x1a,
-+	OUTCLK_SAI1_TX_BCLK     = 0x1b,
-+	OUTCLK_SAI2_RX_BCLK     = 0x1c,
-+	OUTCLK_SAI3_RX_BCLK     = 0x1d,
-+	OUTCLK_ASRCO_MUX_CLK    = 0x1e,
-+
-+	OUTCLK_ESAI1_RX_CLK     = 0x20,
-+	OUTCLK_ESAI1_TX_CLK     = 0x21,
-+	OUTCLK_SAI6_TX_BCLK     = 0x22,
-+	OUTCLK_HDMI_RX_SAI0_RX_BCLK     = 0x24,
-+	OUTCLK_HDMI_TX_SAI0_TX_BCLK     = 0x25,
- };
- 
- #define ASRC_CLK_MAX_NUM	16
-@@ -387,6 +433,21 @@ struct dma_block {
- 	unsigned int length;
- };
- 
-+/**
-+ * fsl_asrc_soc_data: soc specific data
-+ *
-+ * @use_edma: using edma as dma device or not
-+ * @channel_bits: width of ASRCNCR register for each pair
-+ * @inclk_map: clock map for input clock
-+ * @outclk_map: clock map for output clock
-+ */
-+struct fsl_asrc_soc_data {
-+	bool use_edma;
-+	unsigned int channel_bits;
-+	unsigned char *inclk_map;
-+	unsigned char *outclk_map;
-+};
-+
- /**
-  * fsl_asrc_pair: ASRC Pair private data
-  *
-@@ -431,7 +492,7 @@ struct fsl_asrc_pair {
-  * @asrck_clk: clock sources to driver ASRC internal logic
-  * @lock: spin lock for resource protection
-  * @pair: pair pointers
-- * @channel_bits: width of ASRCNCR register for each pair
-+ * @soc: soc specific data
-  * @channel_avail: non-occupied channel numbers
-  * @asrc_rate: default sample rate for ASoC Back-Ends
-  * @asrc_width: default sample width for ASoC Back-Ends
-@@ -450,7 +511,7 @@ struct fsl_asrc {
- 	spinlock_t lock;
- 
- 	struct fsl_asrc_pair *pair[ASRC_PAIR_MAX_NUM];
--	unsigned int channel_bits;
-+	const struct fsl_asrc_soc_data *soc;
- 	unsigned int channel_avail;
- 
- 	int asrc_rate;
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index d6146de9acd2..dbb07a486504 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -199,19 +199,40 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 
- 	/* Get DMA request of Back-End */
- 	tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
--	tmp_data = tmp_chan->private;
--	pair->dma_data.dma_request = tmp_data->dma_request;
--	dma_release_channel(tmp_chan);
-+	/* tmp_chan may be NULL for it is already allocated by Back-End */
-+	if (tmp_chan) {
-+		tmp_data = tmp_chan->private;
-+		if (tmp_data)
-+			pair->dma_data.dma_request = tmp_data->dma_request;
-+		dma_release_channel(tmp_chan);
-+	}
- 
- 	/* Get DMA request of Front-End */
- 	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
--	tmp_data = tmp_chan->private;
--	pair->dma_data.dma_request2 = tmp_data->dma_request;
--	pair->dma_data.peripheral_type = tmp_data->peripheral_type;
--	pair->dma_data.priority = tmp_data->priority;
--	dma_release_channel(tmp_chan);
-+	if (tmp_chan) {
-+		tmp_data = tmp_chan->private;
-+		if (tmp_data) {
-+			pair->dma_data.dma_request2 = tmp_data->dma_request;
-+			pair->dma_data.peripheral_type =
-+				 tmp_data->peripheral_type;
-+			pair->dma_data.priority = tmp_data->priority;
-+		}
-+		dma_release_channel(tmp_chan);
-+	}
- 
--	pair->dma_chan[dir] = dma_request_channel(mask, filter, &pair->dma_data);
-+	/*
-+	 * For SDMA DEV_TO_DEV channel, we need to configure two dma requests,
-+	 * one is from Front-End, another is from Back-End.
-+	 * But for EDMA DEV_TO_DEV channel, only one dma request is needed.
-+	 * The EDMA channel of Back-End is already allocated, we can only
-+	 * get EDMA channel from Front-End.
-+	 */
-+	if (asrc_priv->soc->use_edma)
-+		pair->dma_chan[dir] =
-+			fsl_asrc_get_dma_channel(pair, dir);
-+	else
-+		pair->dma_chan[dir] =
-+			dma_request_channel(mask, filter, &pair->dma_data);
- 	if (!pair->dma_chan[dir]) {
- 		dev_err(dev, "failed to request DMA channel for Back-End\n");
- 		return -EINVAL;
--- 
-2.21.0
+so even those using DWC3 as a peripheral-only or host-only driver will
+need role switch?
 
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 1c8b349379af..6f19e9891767 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/usb/ch9.h>
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/role.h>
+>  #include <linux/ulpi/interface.h>
+>=20=20
+>  #include <linux/phy/phy.h>
+> @@ -951,6 +952,7 @@ struct dwc3_scratchpad_array {
+>   * @hsphy_mode: UTMI phy mode, one of following:
+>   *		- USBPHY_INTERFACE_MODE_UTMI
+>   *		- USBPHY_INTERFACE_MODE_UTMIW
+> + * @role_sw: usb_role_switch handle
+>   * @usb2_phy: pointer to USB2 PHY
+>   * @usb3_phy: pointer to USB3 PHY
+>   * @usb2_generic_phy: pointer to USB2 PHY
+> @@ -1084,6 +1086,7 @@ struct dwc3 {
+>  	struct extcon_dev	*edev;
+>  	struct notifier_block	edev_nb;
+>  	enum usb_phy_interface	hsphy_mode;
+> +	struct usb_role_switch	*role_sw;
+>=20=20
+>  	u32			fladj;
+>  	u32			irq_gadget;
+> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> index c946d64142ad..61d4fd8aead4 100644
+> --- a/drivers/usb/dwc3/drd.c
+> +++ b/drivers/usb/dwc3/drd.c
+> @@ -476,6 +476,52 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc=
+3 *dwc)
+>  	return edev;
+>  }
+>=20=20
+> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role ro=
+le)
+> +{
+> +	struct dwc3 *dwc =3D dev_get_drvdata(dev);
+> +	u32 mode;
+> +
+> +	switch (role) {
+> +	case USB_ROLE_HOST:
+> +		mode =3D DWC3_GCTL_PRTCAP_HOST;
+> +		break;
+> +	case USB_ROLE_DEVICE:
+> +		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
+> +		break;
+> +	default:
+> +		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
+> +		break;
+> +	}
+> +
+> +	dwc3_set_mode(dwc, mode);
+> +	return 0;
+> +}
+
+role switching is starting to get way too complicated in DWC3. We now
+have a function that queues a work on the system_freezable_wq that will
+configure PHY and change PRTCAP. Is there a way we can simplify some of
+this a little?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl24BK0ACgkQzL64meEa
+mQY9/w/8Dif+Ozfqt8XOrrwyG/De+CLq3qGVGmgTDMdjdKzDVTMi3jd2IMxrVpW5
+oniCtQG26Hqn5+a+UdvAnSsxvaKpMtFrM5mWHkpbNOWRD/VQBO2c4NhjrhgJdk+G
+v+8sMCAp99sGSuoxmHds7MDWRF0TXZB+r8wCDeegsbcoKq5KHsWmYjlT/Svgosbc
++8C1GGsRM9ryFJohV90Mq8IlWRzyY+OdRhiEavPZIuoMDCZg2vv5fVkqPrKOw3e7
+vjtRwmupFK0mKAvJfeHR4ToQuJxCqsltHIe6WrLuxXPB3tCRE1gKowX50ngWrVbs
+LorqGk48ZOawe+8c5WmlzILqWuo5Kaa08cQTIJiewP2ZKnMt6YhpZvnrq3WD9vb1
+ULQNuhqdWn6fVozm7LMKjssnwZhCkJ5uYrXuX+3aKZ9IBvNLw7HH/WlLOdLhjrIp
+b1jHyTZ6jg74ONTEJX+sTdPx0lIq68OP58aC75fF4j8ehVCvK2HN0JTyt1Lu7I0z
+zOv1F0bWhg9YK2YKryWToeVZzVrpIPBvxe1crEnaXPyEAthb8b8g3/h9ARO92s9y
+OA00DY7JLuJ6Gb54ojyaNHICeq6ARTBhEXoJwAF6l/z67RmJSu6MOqaLPjHTyOds
+4xytyZRTp2GKsjzXBCH4JzanI7TASvCmWZ8+xz35WlJOC/YkMxs=
+=ReFr
+-----END PGP SIGNATURE-----
+--=-=-=--
