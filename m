@@ -2,118 +2,171 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615C8CA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E23ECA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 04:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35AB720717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3683217D6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 04:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYXgJtgo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnSsf3KE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730884AbfJ2Cs0 (ORCPT
+        id S1728390AbfJ2EMh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:48:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43364 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbfJ2Cs0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 22:48:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n1so4492901wra.10;
-        Mon, 28 Oct 2019 19:48:25 -0700 (PDT)
+        Tue, 29 Oct 2019 00:12:37 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35349 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfJ2EMh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 00:12:37 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c8so8583093pgb.2;
+        Mon, 28 Oct 2019 21:12:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gteraG87XCdj5xSgInB/PvpzdZKgoT7TtTZ9+9ieQnY=;
-        b=KYXgJtgop4xEAbJ5U1sDVAAOoFj+g+2/3RxYykRDsFMlUNtjtSnnULpJApifFpS1F/
-         nRmou4871/MmQQ9ysAKm5FqNeQGG8kX1/mzKsX21kaeZw9C89wrnk8wx5XG3GsbIe3em
-         So/+8DdijXhe5gsZcmF2xO7NFlcTVLj7mdV1FgGXSkI+FEk37Ce8NzQyXdnp99ofWgj1
-         X054yld+7l2G57BpTVXp6ikjfZyJ1Q5+/8Yj/mXLXuAydorFc4jr+aXoAGthRP2GGESh
-         ri8fDPLvfL5WJLkWEjBVVAkZhgWvNUTt11IUyGRnsHFsQrssOkFksFEOYG79rrGoZ11w
-         ojlQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=fotQTCwFbUkGmWq3Vfv6xZ57FAEae+iQDNEiUNGXyFA=;
+        b=rnSsf3KEcCyiauJP+dBU6It92AJHO4FKeAHf4yULj5px2zirNuwEj6WeFeUVS/BfN4
+         yG2fgpEZKrbwiCY9/HlGRBKEg4Odvucywf3sn2BcSZhUTkWujkhrFw5A6aHHeXmL9lQK
+         xf0wIqjNH1sYqBeKxN5OHbrR52ZgyZBAklVxVXsG5xzc/Exxft+TivBLBvQqIIBB7mtt
+         sYJXojKde/nKs2PFakGZiwCdHeOJM6E0XKOyxiWq3rAXeeqGBGWGmHRH9LbXIuR+WcDu
+         GHCb6AjItnZphJuyW+CPvn9qgQIISr0RX6Vm83xfRBMn34d5BKEt+CbRvYz+UEQNHNmj
+         6hqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gteraG87XCdj5xSgInB/PvpzdZKgoT7TtTZ9+9ieQnY=;
-        b=LD5EQ7zjKSLXjYBMSjVWK9u60yjti6LQLXlVS5S939va0MVyWGSaFhLSyIlk4njyiC
-         AHzr37EQLl9e0Lhmn2O5P4pNJUnSBaM5605lO17nl3UN0+ynP7CYp62Fv7il6HglM3N6
-         BkVxGn7D9kyMDR4R/AkmrSIUpUewYrd3PzWlX/lmhPQqqh56Av/TaR9zdbpzR9UTyLdu
-         shTW2hVLwKwkR208U9Ij8/kM/SuYncUB0wVWeEYLNMPJxTKyezbTEJ8Vq6YApega5Eqv
-         l0jLJebKaJ8YRWZuu5VIsVuMU1ZFyDs/Oia/mTRsQbjavptZ30bxA6AnMs8q/hFnnZLC
-         E9WA==
-X-Gm-Message-State: APjAAAVhQ1tt2FO/HkYXFXyoNeAOA7z6BJvNhe//CzEAGU23Xfo748tQ
-        4Bt0tVP2o7jHPmuBvBw5HJOdVORp0toC2ryE8JU=
-X-Google-Smtp-Source: APXvYqyCnGBv7rgt4wt2fvjFkhPMhg3/hSA/t9Nk3hOEOwreIo3dDyDVdayfbU1xUEfSkz5mRqAK9ayZBItouzgdpyk=
-X-Received: by 2002:a5d:6281:: with SMTP id k1mr17999142wru.69.1572317304467;
- Mon, 28 Oct 2019 19:48:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191025102915.23677-1-chunyan.zhang@unisoc.com>
- <20191025102915.23677-2-chunyan.zhang@unisoc.com> <CA+H2tpHkYwQLEO7ftLebErsEXBQnRS37gFOoKoG+_jnt5+0r-A@mail.gmail.com>
-In-Reply-To: <CA+H2tpHkYwQLEO7ftLebErsEXBQnRS37gFOoKoG+_jnt5+0r-A@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Tue, 29 Oct 2019 10:47:48 +0800
-Message-ID: <CAAfSe-uz396tvOSa6g-BJpwzARDi2uaPrCsP01f3A-Jww_c7BA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: serial: Add a new compatible string for SC9863A
-To:     Orson Zhai <orsonzhai@gmail.com>
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fotQTCwFbUkGmWq3Vfv6xZ57FAEae+iQDNEiUNGXyFA=;
+        b=g140WkzCzUh1PLS0HJRRuWAjCXmLvdv3HhfPTM/LvKuJESMRoWNLyFvdPGsVSWuI2w
+         Ka3FiG9cdZ5CCJ3DnxQzfKqv0KVLZEvCzhNMCmlXk+NTpZtMxhIHkWYLGr/a6OUupvkt
+         BCgNJLlBUYMUvti2BZdTdoK+vXZ2hzst/EqpbmTuP7+Jeu6aEhDwo0P5PLsmJtOS2cUe
+         1R1a2IEJrVZVwP0ZwQ9MdQJPf5HlcSNNnzXMhEuU8UZSd0MCnctCJoAWdLTbFz9B3bzC
+         Ki1+jIRLpye8ivyPqr/WLaAnlSv48iwHYs8XBD0j+NMHDOLWn2nfusN7xtV2fg8HZ0hA
+         5Huw==
+X-Gm-Message-State: APjAAAWYEdwz3TnHIPgEIlcNROnNwl7dIbqEseoP7E3RlGYsfDwLAWkz
+        FoU1pLfrhmU9Sr366LccPEM=
+X-Google-Smtp-Source: APXvYqzhn7DFilMbyw5b9cTxX4wjvnl0wGuIeOA2ub7dz46QVLXJbdGYxKU0J0WYmxtsidT/2aaW9Q==
+X-Received: by 2002:a63:1e59:: with SMTP id p25mr24365509pgm.361.1572322356001;
+        Mon, 28 Oct 2019 21:12:36 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id t13sm11663745pfh.12.2019.10.28.21.12.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 21:12:35 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 21:12:33 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        DTML <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baolin Wang <baolin.wang7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@bootlin.com>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] input: edt-ft5x06: Add support for regulator
+Message-ID: <20191029041233.GD57214@dtor-ws>
+References: <20191029005806.3577376-1-megous@megous.com>
+ <20191029005806.3577376-2-megous@megous.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029005806.3577376-2-megous@megous.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 26 Oct 2019 at 10:11, Orson Zhai <orsonzhai@gmail.com> wrote:
->
-> Hi Chunyan,
->
-> On Fri, Oct 25, 2019 at 6:30 PM Chunyan Zhang <chunyan.zhang@unisoc.com> wrote:
-> >
-> >
-> > SC9863A use the same serial device which SC9836 uses.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  Documentation/devicetree/bindings/serial/sprd-uart.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> > index 9607dc616205..0a9f8a7809e1 100644
-> > --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> > +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> > @@ -4,6 +4,7 @@ Required properties:
-> >  - compatible: must be one of:
-> >    * "sprd,sc9836-uart"
-> >    * "sprd,sc9860-uart", "sprd,sc9836-uart"
-> > +  * "sprd,sc9863-uart", "sprd,sc9836-uart"
->
-> Duplicated 9836 with above line?
+On Tue, Oct 29, 2019 at 01:58:04AM +0100, Ondrej Jirman wrote:
+> From: Mylène Josserand <mylene.josserand@bootlin.com>
+> 
+> Add the support for enabling optional regulator that may be used as VCC
+> source.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
 
-We can just use "sprd,sc9836-uart" for SC9860 and SC9863 SoCs though,
-added a new compatible string in case we'll have some difference for
-serial on SC9863A in the furture.
+Applied, thank you.
 
-Thanks,
-Chunyan
+> ---
+>  drivers/input/touchscreen/edt-ft5x06.c | 30 ++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> index 5525f1fb1526..d61731c0037d 100644
+> --- a/drivers/input/touchscreen/edt-ft5x06.c
+> +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/input/mt.h>
+>  #include <linux/input/touchscreen.h>
+>  #include <asm/unaligned.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #define WORK_REGISTER_THRESHOLD		0x00
+>  #define WORK_REGISTER_REPORT_RATE	0x08
+> @@ -88,6 +89,7 @@ struct edt_ft5x06_ts_data {
+>  	struct touchscreen_properties prop;
+>  	u16 num_x;
+>  	u16 num_y;
+> +	struct regulator *vcc;
+>  
+>  	struct gpio_desc *reset_gpio;
+>  	struct gpio_desc *wake_gpio;
+> @@ -1036,6 +1038,13 @@ edt_ft5x06_ts_set_regs(struct edt_ft5x06_ts_data *tsdata)
+>  	}
+>  }
+>  
+> +static void edt_ft5x06_disable_regulator(void *arg)
+> +{
+> +	struct edt_ft5x06_ts_data *data = arg;
+> +
+> +	regulator_disable(data->vcc);
+> +}
+> +
+>  static int edt_ft5x06_ts_probe(struct i2c_client *client,
+>  					 const struct i2c_device_id *id)
+>  {
+> @@ -1064,6 +1073,27 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+>  
+>  	tsdata->max_support_points = chip_data->max_support_points;
+>  
+> +	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
+> +	if (IS_ERR(tsdata->vcc)) {
+> +		error = PTR_ERR(tsdata->vcc);
+> +		if (error != -EPROBE_DEFER)
+> +			dev_err(&client->dev,
+> +				"failed to request regulator: %d\n", error);
+> +		return error;
+> +	}
+> +
+> +	error = regulator_enable(tsdata->vcc);
+> +	if (error < 0) {
+> +		dev_err(&client->dev, "failed to enable vcc: %d\n", error);
+> +		return error;
+> +	}
+> +
+> +	error = devm_add_action_or_reset(&client->dev,
+> +					 edt_ft5x06_disable_regulator,
+> +					 tsdata);
+> +	if (error)
+> +		return error;
+> +
+>  	tsdata->reset_gpio = devm_gpiod_get_optional(&client->dev,
+>  						     "reset", GPIOD_OUT_HIGH);
+>  	if (IS_ERR(tsdata->reset_gpio)) {
+> -- 
+> 2.23.0
+> 
 
->
-> -Orson
->
-> >
-> >  - reg: offset and length of the register set for the device
-> >  - interrupts: exactly one interrupt specifier
-> > --
-> > 2.20.1
-> >
-> >
+-- 
+Dmitry
