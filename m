@@ -2,157 +2,85 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1E2CA9EC3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 15:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC499CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 15:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E66E20856
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 15:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3522087F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 15:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572362893;
+	bh=5861sn5IwTbjJ499+Fmxn6CIGQZ77hkKzCyZk2RCsy0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Iri9fK4vWvwTnIUY1pCOHCSrvyyXr5XTNY9IIcv9GgzA3xB4zx1qrFkvdBG4kdH08
+	 lN5AHDo3GlrTYfNGXBdZs5/HaEjsOUmtE3HfI++E8WRxdVIgFVcCgoE1MgiZOe9K+g
+	 ZXj7g3fuqSzrQEyKfeLqwyDVBbK1QmNUbXGXyej4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389174AbfJ2PPU (ORCPT
+        id S2390033AbfJ2P2N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 11:15:20 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37113 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389055AbfJ2PPT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 11:15:19 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iPTDA-0008Nf-Fe; Tue, 29 Oct 2019 16:15:08 +0100
-Message-ID: <60b17249f57313f1dd6acdf43dbcca5640641ca1.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/3] dt-bindings: reset: Add binding constants for
- NPCM7xx reset controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Tomer Maimon <tmaimon77@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, yuenn@google.com, venture@google.com,
-        benjaminfair@google.com, avifishman70@gmail.com, joel@jms.id.au
-Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Date:   Tue, 29 Oct 2019 16:15:08 +0100
-In-Reply-To: <20191028155403.134126-3-tmaimon77@gmail.com>
-References: <20191028155403.134126-1-tmaimon77@gmail.com>
-         <20191028155403.134126-3-tmaimon77@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 29 Oct 2019 11:28:13 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35216 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390027AbfJ2P2M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 11:28:12 -0400
+Received: by mail-oi1-f194.google.com with SMTP id n16so6997764oig.2;
+        Tue, 29 Oct 2019 08:28:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7+lSX9rGuethOBMhP54PVdLPKRXbrDChQjUhpYAoRrk=;
+        b=L0EGE7gwIjOpYoxNx/Aj3yfOZ0CmJTg3gyV3iuIZyyn+7YoshioniyygeNg4abvINs
+         +bGnzU9NjCRamn7LagnmNOn2HdQiHfbX+zq5uMmdGPoCR9W7i4j8ooKoeZ5+MWfkJud2
+         Kbwu/sr8nO9rc2wOJ312SGYGB3kHds/drs0ao+/hrt8zGxEbxHdBIsLIB693GZqt/5gI
+         sje7LpcNBcA+42BB148MWVBIyKnNOJMPraO30gGPSBJ0WOSGk79bWrqLKxJolh4x6tMk
+         oJUXsjwxobTv618QjoCbsaG8aQ1pfvJt/D7gECBmLdkj0K6UWIDvrqv/SIGBp+Yq8+Hd
+         UJ6g==
+X-Gm-Message-State: APjAAAX04k5CWkxmquvkk4ZYkrGymeeXmTsWFn5Eq9gfGY/iyj58hfIY
+        nPjgOtMsR8J3iVRmBJ3l2w==
+X-Google-Smtp-Source: APXvYqz4gVrjCheiBZWYt4V73gfeXWOkVCTqZRS9xkcWi5yng+jnjQx6eiARsy0dT3T32JZ//wuxgg==
+X-Received: by 2002:aca:4f4f:: with SMTP id d76mr4638649oib.167.1572362891837;
+        Tue, 29 Oct 2019 08:28:11 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z1sm3037006oih.14.2019.10.29.08.28.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 08:28:10 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 10:28:09 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     kholk11@gmail.com
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        ccross@android.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, marijns95@gmail.com,
+        kholk11@gmail.com
+Subject: Re: [PATCH 1/5] dt-bindings: iio: spmi-vadc: Add definitions for USB
+ DP/DM VADCs
+Message-ID: <20191029152809.GA17307@bogus>
+References: <20191020150746.64114-1-kholk11@gmail.com>
+ <20191020150746.64114-2-kholk11@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191020150746.64114-2-kholk11@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2019-10-28 at 17:54 +0200, Tomer Maimon wrote:
-> Add device tree binding constants for Nuvoton BMC NPCM7xx
-> reset controller.
+On Sun, 20 Oct 2019 17:07:42 +0200, kholk11@gmail.com wrote:
+> From: AngeloGioacchino Del Regno <kholk11@gmail.com>
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Some PMICs, like PMI8950, feature two ADCs, at 0x43 and 0x44,
+> respectively used for USB D+ and USB D- (DP/DM): add the definition
+> for them as VADC_USB_DP and VADC_USB_DM.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
 > ---
->  .../dt-bindings/reset/nuvoton,npcm7xx-reset.h | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
+>  include/dt-bindings/iio/qcom,spmi-vadc.h | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
-> new file mode 100644
-> index 000000000000..7b7e870eac35
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
-> @@ -0,0 +1,82 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +// Copyright (c) 2019 Nuvoton Technology corporation.
-> +
-> +#ifndef _DT_BINDINGS_NPCM7XX_RESET_H
-> +#define _DT_BINDINGS_NPCM7XX_RESET_H
-> +
-> +#define NPCM7XX_RESET_FIU3		1
-> +#define NPCM7XX_RESET_UDC1		5
-> +#define NPCM7XX_RESET_EMC1		6
-> +#define NPCM7XX_RESET_UART_2_3		7
-> +#define NPCM7XX_RESET_UDC2		8
-> +#define NPCM7XX_RESET_PECI		9
-> +#define NPCM7XX_RESET_AES		10
-> +#define NPCM7XX_RESET_UART_0_1		11
-> +#define NPCM7XX_RESET_MC		12
-> +#define NPCM7XX_RESET_SMB2		13
-> +#define NPCM7XX_RESET_SMB3		14
-> +#define NPCM7XX_RESET_SMB4		15
-> +#define NPCM7XX_RESET_SMB5		16
-> +#define NPCM7XX_RESET_PWM_M0		18
-> +#define NPCM7XX_RESET_TIMER_0_4		19
-> +#define NPCM7XX_RESET_TIMER_5_9		20
-> +#define NPCM7XX_RESET_EMC2		21
-> +#define NPCM7XX_RESET_UDC4		22
-> +#define NPCM7XX_RESET_UDC5		23
-> +#define NPCM7XX_RESET_UDC6		24
-> +#define NPCM7XX_RESET_UDC3		25
-> +#define NPCM7XX_RESET_ADC		27
-> +#define NPCM7XX_RESET_SMB6		28
-> +#define NPCM7XX_RESET_SMB7		29
-> +#define NPCM7XX_RESET_SMB0		30
-> +#define NPCM7XX_RESET_SMB1		31
-> +#define NPCM7XX_RESET_MFT0		32
-> +#define NPCM7XX_RESET_MFT1		33
-> +#define NPCM7XX_RESET_MFT2		34
-> +#define NPCM7XX_RESET_MFT3		35
-> +#define NPCM7XX_RESET_MFT4		36
-> +#define NPCM7XX_RESET_MFT5		37
-> +#define NPCM7XX_RESET_MFT6		38
-> +#define NPCM7XX_RESET_MFT7		39
-> +#define NPCM7XX_RESET_MMC		40
-> +#define NPCM7XX_RESET_SDHC		41
-> +#define NPCM7XX_RESET_GFX_SYS		42
-> +#define NPCM7XX_RESET_AHB_PCIBRG	43
-> +#define NPCM7XX_RESET_VDMA		44
-> +#define NPCM7XX_RESET_ECE		45
-> +#define NPCM7XX_RESET_VCD		46
-> +#define NPCM7XX_RESET_OTP		48
-> +#define NPCM7XX_RESET_SIOX1		50
-> +#define NPCM7XX_RESET_SIOX2		51
-> +#define NPCM7XX_RESET_3DES		53
-> +#define NPCM7XX_RESET_PSPI1		54
-> +#define NPCM7XX_RESET_PSPI2		55
-> +#define NPCM7XX_RESET_GMAC2		57
-> +#define NPCM7XX_RESET_USB_HOST		58
-> +#define NPCM7XX_RESET_GMAC1		60
-> +#define NPCM7XX_RESET_CP		63
 
-What's in the gap between IPSRST2 and IPSRST3? Are you sure you don't
-want the following IPSRST3 resets to just start at 64? That could be
-achieved with a custom of_xlate callback in the driver.
-
-> +#define NPCM7XX_RESET_PWM_M1		160
-> +#define NPCM7XX_RESET_SMB12		161
-> +#define NPCM7XX_RESET_SPIX		162
-> +#define NPCM7XX_RESET_SMB13		163
-> +#define NPCM7XX_RESET_UDC0		164
-> +#define NPCM7XX_RESET_UDC7		165
-> +#define NPCM7XX_RESET_UDC8		166
-> +#define NPCM7XX_RESET_UDC9		167
-> +#define NPCM7XX_RESET_PCI_MAILBOX	169
-> +#define NPCM7XX_RESET_SMB14		172
-> +#define NPCM7XX_RESET_SHA		173
-> +#define NPCM7XX_RESET_SEC_ECC		174
-> +#define NPCM7XX_RESET_PCIE_RC		175
-> +#define NPCM7XX_RESET_TIMER_10_14	176
-> +#define NPCM7XX_RESET_RNG		177
-> +#define NPCM7XX_RESET_SMB15		178
-> +#define NPCM7XX_RESET_SMB8		179
-> +#define NPCM7XX_RESET_SMB9		180
-> +#define NPCM7XX_RESET_SMB10		181
-> +#define NPCM7XX_RESET_SMB11		182
-> +#define NPCM7XX_RESET_ESPI		183
-> +#define NPCM7XX_RESET_USB_PHY_1		184
-> +#define NPCM7XX_RESET_USB_PHY_2		185
-> +
-> +#endif
-
-regards
-Philipp
-
+Acked-by: Rob Herring <robh@kernel.org>
