@@ -2,62 +2,63 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD1CA9EC4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7292BCA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC272173E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C36B20679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 17:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a2LUVbdY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vuwYwZIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfJ2ReZ (ORCPT
+        id S1727847AbfJ2Rgd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 13:34:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35837 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728094AbfJ2ReW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 13:34:22 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x5so3330576wmi.0
-        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 10:34:20 -0700 (PDT)
+        Tue, 29 Oct 2019 13:36:33 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33016 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbfJ2Rgd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 13:36:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s1so14633955wro.0
+        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 10:36:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=GX1gOKzKV+EnrAFpaJFs5ZBMdSDwazW4wnKz52ri1Hc=;
-        b=a2LUVbdYPHdwR9i68R2xV9KK+bE+EO6PaojUC7PDpapvANJuOWlBHDGx6czpiNh7fK
-         fx3sHksQhTVBKzhee0/XKldV4xJjvQmY+AoVC3K4vFaHk81m5YF1vrgvhgKcYCnoOWtI
-         oXDzX+EiWUKKUlwes4UTQQ34T21sqC7NaRtwsay7AtApqwYutlEiDBbmcFqHSUTeXir2
-         M0lfUg3oG5k1AmuLndyB4mOwAqIAPWhuSlmFNeq62A00J8e8qpVv3zGsc+6UCS6Pi8uO
-         zlHGt9NwVswB/kWBDMw8uCP25L+MSHCV2aWZA6QHtqY506fQsB8p4Zjah6y/69BXLRWu
-         x+OA==
+        bh=Nni/liqzdhkVu64Xrr57xeVzvsQgWp9LNCb4tgbLMKc=;
+        b=vuwYwZIn1L7kvgkpckncO5Fj5cKcM7xG9WcDDS97ux4CeoMOzxVQWQpJmVTyWzXCzG
+         DOGEKEDDfcn+EKIpp2kOdNAeFI3OunxkbeEjgN2VCbMk45GH9rO9vFqo5oijIVBQ6WIq
+         886pan8LKMC3WpAaXGMJ3jvlUOrxf6j21p9usPCV4UVwxNj8vsYokkfMwfwKwfjjFBQE
+         fr6RHeUB2l+qjoQWn2vDggtb1mrXTL1hBDCjtSso9aCgraArwopX2qd2lUqh+c3JpTEM
+         UG6J8U+nyB9vhOvRakqjoAxdhiR+fL9mvtNn9ekJ4ZiJtZQwvCN4xMPhiGpLKTQU1YfA
+         TswQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=GX1gOKzKV+EnrAFpaJFs5ZBMdSDwazW4wnKz52ri1Hc=;
-        b=TKF8j2dKEI6PBwi1rG8DG5hw7Tyk0vxE0cGsesSRqBe5yOATJhw0JCXzY4fG3WEN79
-         Nw6Yl3T9Rgc9v0xSqvPJIkb2qjgzlEr1yA8hEvdLVtS2pQZ2aWrLbv2AKGK1nbTUHbrH
-         KgVPxunmx+X5D22FhITAWmZhdZQAj95MLIkoYQnoP0tiLWCFgziRj2S63bgJIVw7EFb7
-         g7nLVROlG42/ONcFBykcxIJT5Si6B7N4itxyjeOScwQxIkhEAqNNVjxVP+GhIrvdfUTc
-         nomIvdbyKX5zE3FOemctkoKLd7Gf2B2o/wV4xoweerj/Qd1JAG44JTnRR/RxaihTjT1c
-         505Q==
-X-Gm-Message-State: APjAAAV8XB/GGMDoFuw+n/IeeYBehxHwUPS7IrlvTpcQwAPVbh7iyS5d
-        s+v8uJ3TEFsmCTQ3yN58832U0w==
-X-Google-Smtp-Source: APXvYqyau6el3ecqUtNnw+Ju+EM5hxWdbFWLBOzOnMu2T7sDKFazP1lzEtB2pcwonEVlxiWChMcUnA==
-X-Received: by 2002:a1c:38c3:: with SMTP id f186mr5338801wma.58.1572370459385;
-        Tue, 29 Oct 2019 10:34:19 -0700 (PDT)
+        bh=Nni/liqzdhkVu64Xrr57xeVzvsQgWp9LNCb4tgbLMKc=;
+        b=rO3NBdhw0Do1Wu6NuVZTqRjkOQoYapQmCGPwNcAqYNdmkNh1daxfE5eSmpaOsD4sDB
+         iLx+qZY8cI/YDeu90jIjquRPswyBWTUa6HTRcUTKgZI+Duta1wm7cywbTmT/lwDQQn3O
+         MqhIvrc0vM+PerpdyLep3199G5fheeQhyV6H0XsA5q2BaaV3Rf01uAaDckfYsqrhjNLU
+         rrSOleLulS5iNHkn/THQ1M7q4A6wmL1v5iGCPk5Pc0BYZXhnYiXccWFdBp/I5mS0SKMz
+         LAFhx0sIszEKjdQ74rQfwwTWPBENWMxuxepIi1z6JsibY0G+nwufH+PiCqo6zUZKDe9u
+         hjNA==
+X-Gm-Message-State: APjAAAU8t+OCRUHHcUaASLljnIsANPcRuw5CqWeU9wjm3XcUBb7aeDyG
+        3i/MF44P9t1uRmOne4m2P2dY9g==
+X-Google-Smtp-Source: APXvYqzkHaMKmClLbsQXI1rFV5iv4EsMZvg9up3Y4GP7WbK7GcZ2h2CqwsGeY0jfD61MpkQHCENYHw==
+X-Received: by 2002:adf:f0cc:: with SMTP id x12mr10457126wro.326.1572370590048;
+        Tue, 29 Oct 2019 10:36:30 -0700 (PDT)
 Received: from ?IPv6:2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a? ([2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a])
-        by smtp.googlemail.com with ESMTPSA id e24sm4270948wme.26.2019.10.29.10.34.17
+        by smtp.googlemail.com with ESMTPSA id b196sm4433204wmd.24.2019.10.29.10.36.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 10:34:18 -0700 (PDT)
-Subject: Re: [PATCH 1/4] thermal: stm32: implement set_trips callback
+        Tue, 29 Oct 2019 10:36:29 -0700 (PDT)
+Subject: Re: [PATCH 4/4] ARM: dts: stm32: remove thermal passive trip point on
+ stm32mp157c
 To:     Pascal Paillet <p.paillet@st.com>, mcoquelin.stm32@gmail.com,
         alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
         rui.zhang@intel.com, edubezval@gmail.com,
@@ -67,7 +68,7 @@ To:     Pascal Paillet <p.paillet@st.com>, mcoquelin.stm32@gmail.com,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 References: <20191029164537.1561-1-p.paillet@st.com>
- <20191029164537.1561-2-p.paillet@st.com>
+ <20191029164537.1561-5-p.paillet@st.com>
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 Openpgp: preference=signencrypt
 Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
@@ -158,12 +159,12 @@ Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  y0s5uI05ZSXhqFs9iLlh3zNU1i6J1cdzA8BReoa3cKz4UiGKEffT857iMvT/ZmgSdYY57EgV
  UWm57SN2ok2Ii8AXlanH5SJPkbwJZhiB7kO0cjebmoA/1SA+5yTc3zEKKFuxcpfiXxt0d/OJ
  om6jCJ5/uKB5Cz9bJj0WdlvS2Xb11Jrs90MoVa74H5me4jOw7m9Yyg3qExOFOXUPFL6N
-Message-ID: <36759c01-7f1b-ef50-621d-7e239f7554b0@linaro.org>
-Date:   Tue, 29 Oct 2019 18:34:17 +0100
+Message-ID: <a690f5a6-b9ba-a190-598e-0f05e54c8511@linaro.org>
+Date:   Tue, 29 Oct 2019 18:36:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191029164537.1561-2-p.paillet@st.com>
+In-Reply-To: <20191029164537.1561-5-p.paillet@st.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -173,19 +174,37 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 29/10/2019 17:45, Pascal Paillet wrote:
-> Implement set_trips() so that the trip points are managed by the thermal
-> framework. The user is free to define any trip points he needs.
-> Simplify interrupt handling.
+> Remove thermal passive trip point.
 
-The patch is touching too many things at the same time and the change
-description does not help to understand the changes.
+Why?
 
 > Signed-off-by: Pascal Paillet <p.paillet@st.com>
-> Change-Id: I2929d4fa5b4c5dca45cec7cb3b93fffc277394d2
+> Change-Id: I494313cf467eea491236e73bd2fbe1803345586f
 
 Remove Change-Id
 
-[ ... ]
+> ---
+>  arch/arm/boot/dts/stm32mp157c.dtsi | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index 9b11654a0a39..799b2aedd2c9 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+> @@ -91,12 +91,6 @@
+>  			thermal-sensors = <&dts>;
+>  
+>  			trips {
+> -				cpu_alert1: cpu-alert1 {
+> -					temperature = <85000>;
+> -					hysteresis = <0>;
+> -					type = "passive";
+> -				};
+> -
+>  				cpu-crit {
+>  					temperature = <120000>;
+>  					hysteresis = <0>;
+> 
 
 
 -- 
