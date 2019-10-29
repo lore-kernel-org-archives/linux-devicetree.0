@@ -2,180 +2,300 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3566BC47E49
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 14:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63D5CA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 14:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA0C2087E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 14:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TZZTGzkv"
+	by mail.kernel.org (Postfix) with ESMTP id 990DA20659
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 14:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572358983;
+	bh=bokPmMxpyIGfLHNDWT3dGqAsyyj1tWHlDcaDppaARN8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AZ9p3fQRlihLlIyNAgp+43mIJeDW10WJyJdU3qjDGDob7Zmg+FpZm7RxrKO/pLFrA
+	 k5HWKrbFuilIpjvl2NyRbljK7uxqOts4GMFr1BwPZs+rxR1OgBesZHIsQtS3VyzsJq
+	 +4BDAx6ppkKLYClooX1xl/UgwYVxQZOUF3Hu6neU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388633AbfJ2OKG (ORCPT
+        id S2389286AbfJ2OW7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 10:10:06 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41295 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ2OKG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 10:10:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p4so13804643wrm.8;
-        Tue, 29 Oct 2019 07:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SmCyE8sNNoKAxjoglIX8bGz2cCWdSKY9l9d5LeaS9sw=;
-        b=TZZTGzkvbXCmog6JKL6QqP+8yi8fLVN1ZL8OWBDyrlZJ1FUQhyDYTrUe01uZi0XZek
-         Twgu6cLqS7uHM4nIsPemLw5xsHnNE4ZKk10JKMAE/9wCo+AdmIbKX1GiJFyIxbrT3XXB
-         pWZrEbrmMCPkg8xjrYFcLoBq3vlRDJ+JiSMQYIpnBewoMH94JsQctouB5AIKGiXy3C/a
-         XhXNdQaCLRvy0hHLmgbStuvWzSjujzHqrVZfGGpYKXBhce3mHw8B4KaP5Iq5jIzIaROF
-         qhMa/tePkiq0O8ZgYVVmRl92AR/iImWPdDmHT6OZMsqguy9tgYSwd+m/akKtD1wC30kr
-         CGPw==
+        Tue, 29 Oct 2019 10:22:59 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38990 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389221AbfJ2OW7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 10:22:59 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t8so3773574otl.6;
+        Tue, 29 Oct 2019 07:22:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SmCyE8sNNoKAxjoglIX8bGz2cCWdSKY9l9d5LeaS9sw=;
-        b=ZCYIKA0HUfNRfqLg+v6PrKy2CBesOoQpfqgOiEDcjWuAGrgd7ohbDZ9irOThVLZs/4
-         9d3Li8M6Fl1o7o9zEyZS2vYxjGwvFrZjhRH9uoqqR7N0W/h9RjlMoa/AePFkXVSfD9/U
-         GUHh8EuTEtXAZgjVM5GX+2WhROqOl6dAaonwPNGUYsAdcFM0a6FI6BvAaHOWsyobmxWn
-         RR3OKG1NnUQbVxlqfxHs3TbSI2uhBGorRZNVbd0dHDPRmkJmLXlbE+xlbj+QOSMk1Gz8
-         I5Qoi3anuHcZbJwx4a2nRE2G9DlVVd/IOZPe8jm5lSDS7uIXopmvxcCfzdxt2vWnxEDh
-         wQyw==
-X-Gm-Message-State: APjAAAUD1v8eMbJ5bk0wr0nVFX4vInkrij2oB3GsZhcp51Xzdl64RP3P
-        mN74JfHwNPGjeXk+dZVayvs=
-X-Google-Smtp-Source: APXvYqwuH48B788OjQha8MfS439x6fI09BBkg9/rS2I5hnMM9taXp0Y1YKrv3PXO+nqgCTktNZnLfA==
-X-Received: by 2002:adf:f482:: with SMTP id l2mr21246834wro.256.1572358202513;
-        Tue, 29 Oct 2019 07:10:02 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id x7sm30176462wrg.63.2019.10.29.07.10.00
+        bh=wOvUmxaKvya7RciyrImZgOUHP7nhtqsdJJNqD2oUue8=;
+        b=ERhlw34/FocgjHb1Nv/HajfzaAUrqBC6Z51yC/7V1rQL4QRvZ4+kfEKlKLuWu8LIFd
+         Y84nbMxM9MRUXK0KFfeK8tKbWqU+KJqftDVRRvkIO0bz9YxagfayVxIEySAwu6tmNhls
+         mRGfw/Suk0C4GPviDBoMpsNLWimpqDQGBFM+xU1newKj/f2Pqc9DSUGezSp8Tipg9q/3
+         Ax0FKuKVrTZTvxqd0xLmaZwatRry4Ct8baLuMQ4NhXm0/zYp+QqI+jtX8cYNVHW8nk86
+         mZDmq4r0k4W479OIBU2cRxXKoH4RhdQOZqCD66AluBLUCSDsHVQKSj8ULyWNoSMAsWnA
+         xRtw==
+X-Gm-Message-State: APjAAAVel5ICJZFHn5FH4esXwyRg2DoHzURbAQ6uKH0OhVPCbF5LLx93
+        XzA9BpbL5pPT58JsbgMDow==
+X-Google-Smtp-Source: APXvYqzDCEcMgpQ6CPgRpHiHvSWzt3COcNrpd0Jy+QHeuHgwYDwU4yeRMhf2fepKpJY/ElaurALcKw==
+X-Received: by 2002:a9d:2dc1:: with SMTP id g59mr17448521otb.59.1572358976496;
+        Tue, 29 Oct 2019 07:22:56 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m205sm883891oif.10.2019.10.29.07.22.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 07:10:00 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 15:09:59 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/17] NVIDIA Tegra20 CPUFreq driver major update
-Message-ID: <20191029140959.GL508460@ulmo>
-References: <20191024221416.14197-1-digetx@gmail.com>
+        Tue, 29 Oct 2019 07:22:54 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 09:22:53 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch 19/19] dt-bindings: media: cal: convert binding to yaml
+Message-ID: <20191029142253.GA7612@bogus>
+References: <20191018153437.20614-1-bparrot@ti.com>
+ <20191018153437.20614-20-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4oF+6Ged69J0+4/e"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191024221416.14197-1-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191018153437.20614-20-bparrot@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Oct 18, 2019 at 10:34:37AM -0500, Benoit Parrot wrote:
+> Convert ti-cal.txt to ti,cal.yaml.
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  .../devicetree/bindings/media/ti,cal.yaml     | 186 ++++++++++++++++++
+>  .../devicetree/bindings/media/ti-cal.txt      |  82 --------
+>  2 files changed, 186 insertions(+), 82 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/ti,cal.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/ti,cal.yaml b/Documentation/devicetree/bindings/media/ti,cal.yaml
+> new file mode 100644
+> index 000000000000..c3fbb22b4571
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/ti,cal.yaml
+> @@ -0,0 +1,186 @@
+> +# SPDX-License-Identifier: (GPL-2.0)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/ti,cal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL) Device Tree Bindings
+> +
+> +maintainers:
+> +  - Benoit Parrot <bparrot@ti.com>
+> +
+> +description: |-
+> +  The Camera Adaptation Layer (CAL) is a key component for image capture
+> +  applications. The capture module provides the system interface and the
+> +  processing capability to connect CSI2 image-sensor modules to the
+> +  DRA72x device.
+> +
+> +  CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
+> +  should contain a 'port' child node with child 'endpoint' node. Please
+> +  refer to the bindings defined in
+> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +  compatible should be
+> +     "ti,dra72-cal", for DRA72 controllers
+> +     "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
+> +     "ti,dra76-cal", for DRA76 controllers
+> +     "ti,am654-cal", for AM654 controllers
 
---4oF+6Ged69J0+4/e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Drop these or add as comments to the schema below.
 
-On Fri, Oct 25, 2019 at 01:13:59AM +0300, Dmitry Osipenko wrote:
-> Hello,
->=20
-> This series moves intermediate-clk handling from tegra20-cpufreq into
-> tegra-clk driver, this allows us to switch to generic cpufreq-dt driver
-> which brings voltage scaling, per-hardware OPPs and Tegra30 support out
-> of the box. All boards need to adopt CPU OPPs in their device-trees in
-> order to get cpufreq support. This series adds OPPs only to selective
-> boards because there is assumption in a current device-trees that CPU
-> voltage is set for 1GHz freq and this won't work for those CPUs that
-> can go over 1GHz and thus require voltage regulators to be set up for
-> voltage scaling support (CC'ed Marcel for Toradex boards). We could
-> probably add delete-node for OPPs over 1GHz if there are not actively
-> maintained boards.
->=20
-> NOTE(!): the voltage scaling functionality depends on a reviewed and yet
-> unapplied series [0], thus [0] needs to be applied first.
->=20
-> [0] https://lkml.org/lkml/2019/7/25/892
->=20
-> Changelog:
->=20
-> v2: - Kept modularity of the tegra20-cpufreq as was requested by Viresh K=
-umar
->       in a review comment to v1.
->=20
->     - Added acks from Viresh Kumar.
->=20
->     - Added tested-by from Nicolas Chauvet to the "trimslice" patch.
->       Nicolas told me on IRC that it works fine.
->=20
->     - Fixed compilation of the "Add custom CCLK implementation" patch. The
->       error happened because v1 was based on top of yet unreviewed/unappl=
-ied
->       patch "clk: tegra: divider: Support enable-bit for Super clocks". T=
-hanks
->       to Peter Geis for reporting the problem.
->=20
->     - Replaced Tegra30 "beaver" board with "cardhu-a04" because turned out
->       that's what NVIDIA uses in the testing farm.
->=20
-> Dmitry Osipenko (17):
->   clk: tegra: Add custom CCLK implementation
->   clk: tegra: pll: Add pre/post rate-change hooks
->   clk: tegra: cclk: Add helpers for handling PLLX rate changes
->   clk: tegra20: Support custom CCLK implementation
->   clk: tegra30: Support custom CCLK implementation
->   dt-bindings: cpufreq: Add binding for NVIDIA Tegra20/30
->   cpufreq: tegra20: Use generic cpufreq-dt driver (Tegra30 supported
->     now)
->   ARM: tegra: Create tegra20-cpufreq platform device on Tegra30
->   ARM: dts: tegra20: Add CPU clock
->   ARM: dts: tegra30: Add CPU clock
->   ARM: dts: tegra20: Add CPU Operating Performance Points
->   ARM: dts: tegra30: Add CPU Operating Performance Points
->   ARM: dts: tegra20: paz00: Set up voltage regulators for DVFS
->   ARM: dts: tegra20: paz00: Add CPU Operating Performance Points
->   ARM: dts: tegra20: trimslice: Add CPU Operating Performance Points
->   ARM: dts: tegra30: cardhu-a04: Set up voltage regulators for DVFS
->   ARM: dts: tegra30: cardhu-a04: Add CPU Operating Performance Points
+> +
+> +properties:
+> +  compatible:
+> +      items:
 
-I've applied patches 9-17 (the DT bits) to for-5.5/arm/dt. I'll hold
-back on applying the others until Peter is happy with them.
+You can drop 'items' here since there is only 1.
 
-Thierry
+> +        - enum:
+> +            - ti,dra72-cal
+> +            - ti,dra72-pre-es2-cal
+> +            - ti,dra76-cal
+> +            - ti,am654-cal
+> +
+> +  reg:
+> +    minItems: 2
+> +    items:
+> +      - description: The CAL main register region
+> +      - description: The RX Core0 (DPHY0) register region
+> +      - description: The RX Core1 (DPHY1) register region
+> +
+> +  reg-names:
+> +    minItems: 2
+> +    items:
+> +      - const: cal_top
+> +      - const: cal_rx_core0
+> +      - const: cal_rx_core1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  syscon-camerrx:
 
---4oF+6Ged69J0+4/e
-Content-Type: application/pgp-signature; name="signature.asc"
+Needs a type definition.
 
------BEGIN PGP SIGNATURE-----
+> +    maxItems: 1
+> +    items:
+> +      - description:
+> +           phandle to the device control module and offset to the
+> +           control_camerarx_core register
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: functional clock
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl24SDcACgkQ3SOs138+
-s6H+1A//UuJp7rwtuS1TqAWqlcqxEWSFbHc23R+XqzupTAHwYqwc0WRPn2TLUaAt
-TYy/iNWpi1tXao9ELGrHaYec9OHReAUq/hBQeMXbRD3Tv1AgJgr1q9/XdFgC+4Ac
-0vt4gW5/cnA3yfxeCIcJVa/f5BL693/oXO5hc+xdNbju58k/2DHCDRGfIW6s7l9y
-EZACxRMzoUD1sOwshnogtbGE1XqEMi6y/pxJsbpO5ggIjMBN1BdSBU01EIJs8/OT
-gBpWHdqkqvFUK97KQFdIIV2Aof0Ye1BT15DmBVQLV+DTWrmUYQ/eEG5jp6EVrDn8
-iwbKPwT/9o866AXFGJX80acjZjmEig6dJtKQ6O5EqseYyigGfEyE8zfu7l6gjHwZ
-+KIhWCEW/ZXAQitosWkARoAftEd6EapByhEaQHlvzPjvUz+em3oHC7aHPiClIuIp
-uSJM58BdBmm8s/lAynLWozmLQ1dUk9PLcScA1wxKcPPFaLiZrqrIDvfl799PmAtl
-5BP0HWS1slmtFKdkyv9PU/rHDfdDP31HzsT9HqbK6btXqxx/epan36xSeBbUMGrX
-4qDRIpcDrSrETJPTNHa+B3IVOh8+RT0rXb+OQ8M8a0MHZwX/vx5kGCdCcoXhLxHJ
-/Idb1VVXr2CNnIeThDM/C5G0tgacDotwWQDBXOjSVze9kJ/JutI=
-=kK1J
------END PGP SIGNATURE-----
+You can drop the description.
 
---4oF+6Ged69J0+4/e--
+> +
+> +  clock-names:
+> +    items:
+
+Drop items.
+
+> +      - const: fck
+> +
+> +  power-domains:
+> +    description:
+> +      List of phandle and PM domain specifier as documented in
+> +      Documentation/devicetree/bindings/power/power_domain.txt
+> +    maxItems: 1
+> +
+> +  # See ./video-interfaces.txt for details
+> +  ports:
+> +    maxItems: 1
+
+But ports is not an array...
+
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +    patternProperties:
+> +      '^port@[0-9a-fA-F]+$':
+
+In a device binding, you need to specify 'port@0' and 'port@1' (assuming 
+0 and 1) and say what they are.
+
+> +        minItems: 1
+> +        maxItems: 2
+
+Not valid for an object (aka node).
+
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        properties:
+> +          reg:
+> +            minItems: 1
+> +            items:
+> +              - description: The port id
+> +
+> +        patternProperties:
+> +          '^endpoint@[0-9a-fA-F]+$':
+
+Just 'endpoint' is valid too.
+
+> +            minItems: 1
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              clock-lanes:
+> +                maxItems: 1
+> +
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +
+> +              remote-endpoint: true
+> +
+> +            required:
+> +              - remote-endpoint
+> +
+> +        required:
+> +          - reg
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - syscon-camerrx
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    cal: cal@4845b000 {
+> +        compatible = "ti,dra72-cal";
+> +        reg = <0x4845B000 0x400>,
+> +              <0x4845B800 0x40>,
+> +              <0x4845B900 0x40>;
+> +        reg-names = "cal_top",
+> +                    "cal_rx_core0",
+> +                    "cal_rx_core1";
+> +        interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+> +        syscon-camerrx = <&scm_conf 0xE94>;
+> +
+> +        ports {
+> +              #address-cells = <1>;
+> +              #size-cells = <0>;
+> +
+> +              csi2_0: port@0 {
+> +                    reg = <0>;
+> +                    csi2_phy0: endpoint@0 {
+> +                           remote-endpoint = <&csi2_cam0>;
+> +                           clock-lanes = <0>;
+> +                           data-lanes = <1 2>;
+> +                    };
+> +              };
+> +        };
+> +    };
+> +
+> +    i2c5: i2c@4807c000 {
+> +        status = "okay";
+> +        clock-frequency = <400000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ov5640@3c {
+> +               compatible = "ovti,ov5640";
+> +               reg = <0x3c>;
+> +
+> +               clocks = <&clk_ov5640_fixed>;
+> +               clock-names = "xclk";
+> +
+> +               port {
+> +                    csi2_cam0: endpoint@0 {
+> +                            remote-endpoint = <&csi2_phy0>;
+> +                            clock-lanes = <0>;
+> +                            data-lanes = <1 2>;
+> +                    };
+> +               };
+> +        };
+> +    };
+> +
+> +...
