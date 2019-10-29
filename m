@@ -2,154 +2,111 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60995CA9EC2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFAECA9EC2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3600120717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C5420862
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725839AbfJ2He3 (ORCPT
+        id S1727039AbfJ2HqD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:34:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58337 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfJ2He3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 03:34:29 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iPM1G-0001xy-Aa; Tue, 29 Oct 2019 08:34:22 +0100
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iPM1D-00040d-Ib; Tue, 29 Oct 2019 08:34:19 +0100
-Date:   Tue, 29 Oct 2019 08:34:19 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-        linux-mips@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Subject: Re: [PATCH v4 2/5] dt-bindings: net: dsa: qca,ar9331 switch
- documentation
-Message-ID: <20191029073419.gjr4y7qsxx2javuf@pengutronix.de>
-References: <20191022055743.6832-1-o.rempel@pengutronix.de>
- <20191022055743.6832-3-o.rempel@pengutronix.de>
- <20191023003543.GE5707@lunn.ch>
+        Tue, 29 Oct 2019 03:46:03 -0400
+Received: from mga14.intel.com ([192.55.52.115]:37689 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbfJ2HqD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 03:46:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 00:46:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
+   d="scan'208";a="198851286"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Oct 2019 00:46:02 -0700
+Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id C0779580372;
+        Tue, 29 Oct 2019 00:45:58 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <20191022130905.GA133961@google.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <f74cdada-c58b-7238-9be1-8b001ca1fb84@linux.intel.com>
+Date:   Tue, 29 Oct 2019 15:45:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="u2f62fix5h57o5vr"
-Content-Disposition: inline
-In-Reply-To: <20191023003543.GE5707@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:14:36 up 164 days, 13:32, 99 users,  load average: 0.00, 0.02,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20191022130905.GA133961@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---u2f62fix5h57o5vr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/22/2019 9:09 PM, Bjorn Helgaas wrote:
+> On Tue, Oct 22, 2019 at 05:07:47PM +0800, Dilip Kota wrote:
+>> On 10/22/2019 1:17 AM, Bjorn Helgaas wrote:
+>>> On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
+>>>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>>>> PCIe controller is based of Synopsys DesignWare pci core.
+>>>>
+>>>> Intel PCIe driver requires Upconfig support, fast training
+>>>> sequence configuration and link speed change. So adding the
+>>>> respective helper functions in the pcie DesignWare framework.
+>>>> It also programs hardware autonomous speed during speed
+>>>> configuration so defining it in pci_regs.h.
+>>>>
+>>>> +static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
+>>>> +{
+>>>> +	u32 val;
+>>>> +
+>>>> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCAP);
+>>>> +	lpp->max_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+>>>> +	lpp->max_width = FIELD_GET(PCI_EXP_LNKCAP_MLW, val);
+>>>> +
+>>>> +	val = pcie_rc_cfg_rd(lpp, PCIE_CAP_OFST + PCI_EXP_LNKCTL);
+>>>> +
+>>>> +	val &= ~(PCI_EXP_LNKCTL_LD | PCI_EXP_LNKCTL_ASPMC);
+>>>> +	val |= (PCI_EXP_LNKSTA_SLC << 16) | PCI_EXP_LNKCTL_CCC |
+>>>> +	       PCI_EXP_LNKCTL_RCB;
+>>> PCI_EXP_LNKCTL_CCC is RW.  But doesn't it depend on the components on
+>>> both ends of the link?  Do you know what device is at the other end?
+>>> I would have assumed that you'd have to start with CCC==0, which
+>>> should be most conservative, then set CCC=1 only if you know both ends
+>>> have a common clock.
+>> PCIe RC and endpoint device are having the common clock so set the CCC=1.
+> How do you know what the endpoint device is?  Is this driver only for
+> a specific embedded configuration where the endpoint is always
+> soldered down?  There's no possibility of this RC being used with a
+> connector?
+>
+> Shouldn't this be either discoverable or configurable via DT or
+> something?  pcie_aspm_configure_common_clock() seems to do something
+> similar, but I can't really vouch for its correctness.
 
-On Wed, Oct 23, 2019 at 02:35:43AM +0200, Andrew Lunn wrote:
-> On Tue, Oct 22, 2019 at 07:57:40AM +0200, Oleksij Rempel wrote:
-> > Atheros AR9331 has built-in 5 port switch. The switch can be configured
-> > to use all 5 or 4 ports. One of built-in PHYs can be used by first buil=
-t-in
-> > ethernet controller or to be used directly by the switch over second et=
-hernet
-> > controller.
-> >=20
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->=20
-> Hi Oleksij
->=20
-> What we never really discussed is how this MUXing of the PHY works.
->=20
-> What i'm worried about is that when we do understand how it works, we
-> cannot properly support it using this binding.
+(sorry for the late reply, i am back today from sick leave)
 
-good point. i would prefer to make it properly.
+I see pcie_aspm_configure_common_clock() is getting called during pcie 
+root bus bridge scanning and programming the CCC.
 
-> Please could you try to find information about this.
-
-Documentation says:
-The PHY interfaces (PHY0, PHY1, PHY2, PHY3 and PHY4) can connect to the swi=
-tch
-in bridge mode. In this case GE0 must be under reset. All five LAN ports are
-switched together and connect to the CPU through the GMII interface (MAC0),
-which is controlled by the ETH_CFG register bit SW_ONLY_MODE. If GE0 connec=
-ts
-separately to PHY, then MAC5 should be under reset.
-
-There is no SW_ONLY_MODE bit in the documentation.
-I found:
-CFG_SW_PHY_SWAP - Used to switch the wires connection of PHY port 0 with th=
-at of
-port 4 in the Ethernet switch. MAC1 and PHY4 are paired while MAC5 and PHY0=
- are
-paired.
-
-CFG_SW_PHY_ADDR_SWAP - Exchanges the address of PHY port 0 with that of
-PHY port 4 in the Ethernet switch.
-
-It feels like this are the right bits. I'll try to test it after ELC-E
-conference (If you are here, please ping me).
-If this are the right bits, should it be registered as separate driver? This
-register is on MMIO and not part of the switches MDIO.
+So, CCC configuration can be removed here in intel_pcie_link_setup().
 
 Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Dilip
 
---u2f62fix5h57o5vr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl2363oACgkQ4omh9DUa
-UbMsrhAAyX9oqX95zGk5geXaRVZUQDgHyGWtzPV48YtCkqD1boETt+0rQAgMoNLg
-wVYewuMycs6BANMrjYq8wQJW0CrFkaOPW91yxMiUqITqEdYI8v+NS89Vd6/HDaZv
-GhNB7LNU7GPCZWsLG1Cu1TvLCiQncFIFadj+oLGm+SzmsfsRKcR2awp4P7O3YfU1
-qheNR9bNxD64YVQZB3n4+fXyZFjXST+w5cve5T4C4pttuVKQKVkW+ICgdv0AWj/3
-KMA9CF5vSpgDPYeDw3JoAGl7yEMYVlkEG1fP03X1fCdcc1ZQvmI8RL3GaYfuuy1c
-JNCQfARZu1BdKd2VYiVJx+qYW18fuKt5ywQo9HRITOS1l+8WBgDaN0dd/e1DK99H
-47SNlevcspoo2aj1ibt9Q0ZdO+rW+Oqtx9JjHpQC+zaqAMdHFtsB5GXgHaZx0iXr
-lqZs4Tc9PvwfuVDGRDUTNF1y8g+5PrgjdBPOHJ8J/0drrrt4gEPLyUvEZeHMm3K/
-x99GEN5gxAYKQmYyNydjmTqZmv0NwjniZoPIswAUrETZIMEoAh088eDQ3zLXUGgx
-GxGzl9Px7Omc7cJC5hQAimCIhjITGZMR+wF40rsoRrWcre1ZyPnDd1MGB0qik1Mz
-HyFe2nVfXrnSKD2UZc7y3nne0UCGJGmxl+jfELNAbJ7PBdtNOH0=
-=BzWE
------END PGP SIGNATURE-----
-
---u2f62fix5h57o5vr--
+>
+> Bjorn
