@@ -2,88 +2,137 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF6CCA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD088CA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0772173E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:47:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UvDQ0UxL"
+	by mail.kernel.org (Postfix) with ESMTP id 8E28A208E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387904AbfJ2MrN (ORCPT
+        id S2387498AbfJ2Mrh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:47:13 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:42920 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726048AbfJ2MrM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 08:47:12 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9TCg9Eu004076;
-        Tue, 29 Oct 2019 13:46:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=PCCjXX8CusN1LvKZ5WG/65Gg+OP0fFkvR4ovWeCP35E=;
- b=UvDQ0UxL7RFjoFqGtof5EcYaJ8mKZySVehljZXxjvRLUaeUd1gfDYvuRpUzWJg2pH2yV
- V1OrBGltg2bWpfWI+PyNYLj2HgHxioZnDASNXkeEQBa3/18oBVYDCm7qqvlUTuvy+stj
- inlGzmHsWZ5iefxsHbcErp2bYqzd03uHxmzEpFx8JxZI5tgEAuLCp8gYFxLXs+8cwJ9K
- AI/WeY3hOaVqAbxqEt8WXbsE5piPuL8c33tT6zSPCxSbT3LSHUgGsVEmuv6nLXhm883K
- ipXM7m/7mtXPnAl/WRRlwWAFx31ZqIis8I7yLTe1McgPCVfvW4DtESJbej54reLfnECV Fg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vvd1gqd8x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Oct 2019 13:46:59 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 50C8010002A;
-        Tue, 29 Oct 2019 13:46:59 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 236FD2BE234;
-        Tue, 29 Oct 2019 13:46:59 +0100 (CET)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.44) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 29 Oct
- 2019 13:46:59 +0100
-Received: from localhost (10.201.22.141) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 29 Oct 2019 13:46:57
- +0100
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+        Tue, 29 Oct 2019 08:47:37 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35202 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733206AbfJ2Mrh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 08:47:37 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m7so15127129lji.2;
+        Tue, 29 Oct 2019 05:47:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OywAa/Wh8Fm343vqCkC5f2sTAIa0gIrZIUYIplehcos=;
+        b=AZPWfXJfAu5lhRyeq31OLXpw56fx8ThtkH1kOrt9gX5B5l4DkRZBrUil9COzLBXOr5
+         lqUoIxIl/4c34WNwRM0cFObHhHyBHXcV0wCjUEM5m0jvSfx6tMDebi5AOkyVwIEoUyzE
+         XmORAI3dInXxj7mFSjFb4Locd4VmilLFwQ6wg01FI84GA+mmyFliKz8QuszvLb/qNViR
+         jvwY9W9BpijcfUNvmq6yFSFkK0fXwp020YMBHWQYJu1axUaaPRBnOARZcpqkExcP1vlE
+         Z1euINfOUgwEN7mfD6lKSnVQhXBNuXzhqOX3B3gCFsEpe72CKXDOphd2wJv9VmOBic0l
+         iuwA==
+X-Gm-Message-State: APjAAAWPgE5MhY+pYLBREG6i2601OjvtjDcloaVG56cs/wzF7H65vH9J
+        2uZfvbHuyFWmbwJS2f0K9h8=
+X-Google-Smtp-Source: APXvYqz3KOrNCPv19g707lVMFVblbBiUMnyAwQ7zp6WrerCE97y+DEoSLjJp5M6MwVtGyvxf0zDC9w==
+X-Received: by 2002:a2e:420a:: with SMTP id p10mr2662653lja.16.1572353254415;
+        Tue, 29 Oct 2019 05:47:34 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id i128sm8918346lfd.6.2019.10.29.05.47.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 05:47:33 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 14:47:26 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 0/2] STMFX pinctrl definition updates
-Date:   Tue, 29 Oct 2019 13:46:49 +0100
-Message-ID: <20191029124651.12625-1-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 2/5] dt-bindings: an30259a: example for using fixed LED
+ node names.
+Message-ID: <5b9f9e7cd3dc959962fc43d27e471245e63f5f29.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.22.141]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-29_04:2019-10-28,2019-10-29 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since a502b343eb ("pinctrl: stmfx: update pinconf settings"), pin
-confuguration has been fixed in STMFX pinctrl driver. Moreover, gpiolib now
-fully handles "push-pull" configuration.
-This series cleans up stm32mp157c-ev1 stmfx pins use.
+Use predefined LED node name to match the LED node in driver.
 
-Amelie Delaunay (2):
-  ARM: dts: stm32: remove OV5640 pinctrl definition on stm32mp157c-ev1
-  ARM: dts: stm32: change joystick pinctrl definition on stm32mp157c-ev1
+It would be nice to offload common LED property parsing to
+LED core driver. One of the key things to allow this is somehow
+'pair' the LED DT node with LED driver initialization data.
 
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+This patch uses LED node name as a 'key' in a same fashion
+as regulators do. The an30259a was selected as demonstration
+example and this change may not be really feasible for an30259a
+as I have no idea whether the existing DTs for devices out there
+have specific node names (or can be changed). This servers just
+as an example to initiate discussion as to how we could pair the
+driver data and DT node.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ Documentation/devicetree/bindings/leds/leds-an30259a.txt | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-an30259a.txt b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+index cbd833906b2b..bd1a2d11a0ad 100644
+--- a/Documentation/devicetree/bindings/leds/leds-an30259a.txt
++++ b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+@@ -9,7 +9,8 @@ Required properties:
+ 	- #address-cells: Must be 1.
+ 	- #size-cells: Must be 0.
+ 
+-Each LED is represented as a sub-node of the panasonic,an30259a node.
++Each LED is represented as a sub-node of the panasonic,an30259a node. LED nodes
++must be named as led1 led2 and led3.
+ 
+ Required sub-node properties:
+ 	- reg: Pin that the LED is connected to. Must be 1, 2, or 3.
+@@ -34,20 +35,20 @@ led-controller@30 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 
+-	led@1 {
++	led1 {
+ 		reg = <1>;
+ 		linux,default-trigger = "heartbeat";
+ 		function = LED_FUNCTION_INDICATOR;
+ 		color = <LED_COLOR_ID_RED>;
+ 	};
+ 
+-	led@2 {
++	led2 {
+ 		reg = <2>;
+ 		function = LED_FUNCTION_INDICATOR;
+ 		color = <LED_COLOR_ID_GREEN>;
+ 	};
+ 
+-	led@3 {
++	led3 {
+ 		reg = <3>;
+ 		function = LED_FUNCTION_INDICATOR;
+ 		color = <LED_COLOR_ID_BLUE>;
+-- 
+2.21.0
+
 
 -- 
-2.17.1
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
