@@ -2,109 +2,90 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904A3CA9EC4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 18:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587A4CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 18:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675AA20874
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 18:26:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lKvQS0hH"
+	by mail.kernel.org (Postfix) with ESMTP id 25419208E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 18:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572374425;
+	bh=m4HQJu+UK0nOWAdGK5auazksuVTW6KUMKDGaIoTEGVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UJiK+h1Ul2fu8hlXJbAQFsWIBpJh+yv+XVTh/sxOsseNN+Ahmn1+MjcE5xept4QYn
+	 GPRqf4IOlleL0JMz1AsQ9+rbGxs45eIj76SrXIWrvlGZCRYMQKPDZGKp0ELzTSNFbS
+	 FlPylISPPB8Vl9Jk2EK9Uv/55ru9LHq+Q678T9JY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731377AbfJ2S0O (ORCPT
+        id S1729845AbfJ2SkR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 14:26:14 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43283 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730249AbfJ2S0O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 14:26:14 -0400
-Received: by mail-ot1-f65.google.com with SMTP id b19so8284949otq.10
-        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 11:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F0/jbrX4IDouWf5n0Ojei70Kw+dN6xE0YN1q94WIUzA=;
-        b=lKvQS0hHD4pj59HlV6oR0/djUnPuGpWekyavljQi7ntMzsbNBbY5kRUKP+N9n4IUtd
-         maRk/snxO5ptQrmheK+AFhcB0qusQUQU9uqxU+S4Dp7WHJe3cw9tF8YosUx3hoRuYI9r
-         nVedD3689ILaB3NAEDt95fwjMDA4JMq+1bEgKiaTqmc7r9enukmH6wTRiyL/ijQEmkDp
-         0sJWD7FDkSoJ6OaZxsmOw678g00dsavQbZN+uy+jhW6kx0F+GAXZRW8+pIWB/7adGLKJ
-         5GSo+Xo7uAoDCvHllODyrCQKxRPr0HLhXP4igjRfuz9Xb5Z+Q3BpsxOxg+izWGYDwufy
-         SoAw==
+        Tue, 29 Oct 2019 14:40:17 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41747 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727746AbfJ2SkR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 14:40:17 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 94so10654333oty.8;
+        Tue, 29 Oct 2019 11:40:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F0/jbrX4IDouWf5n0Ojei70Kw+dN6xE0YN1q94WIUzA=;
-        b=hgS3hbMHEytoEQEVHRrslO7aVP/zkCBC/nt0E8oabYUkYXOJSx4O2RRm5cobfeLEX6
-         xxOTPoa5t1Sm6c5k9m5Z5uklWyXEHQPoVKFY7KfolEM5AuvWjuIRR2MI0BrTIOwsQ9mg
-         PFmf+6cKzGE4OHqm8eIlsxzeRe6tNStD6a+ptsIosCvu4l7lPOwFx9b+cvG5ogG3Dnea
-         KO/Y6MLTFsAqRlV9x9EH8vPKMVrDL1SjofXZEYiGWnP+ljzvSsLjjVDwD6Tb3VbDWzpS
-         P5o2+fO3Bg7aTs4n8NSorzQm/z7+GnFFtXLa5qpniwGf+lYtK7AL95Ax87Krjs9E2v/M
-         9cgQ==
-X-Gm-Message-State: APjAAAVg2IoUOPAGB1fkLhDX/4HMfpTr3+RQKgTTld3CUs6iAbgVV2UE
-        VNDFHHHlicEkk9tSKgRwZo4iNQPJBaHOGQVGhw4PCg==
-X-Google-Smtp-Source: APXvYqxMuKgV9hIGV28BZLBjcSzYuevoUIQsOkCa/3osxr8otj1CMRnSYhoMgINxrs/ynaGGsktybzxiSTkQJHs2gQk=
-X-Received: by 2002:a05:6830:ca:: with SMTP id x10mr18348228oto.221.1572373573201;
- Tue, 29 Oct 2019 11:26:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iDxdZruyiKYu6zF9b1JiWGiLIkNbAfqYufuqttmPvyM=;
+        b=hg3YAV2dqSRfF+V1UOq2d7OPrNIUkgcjcjAfhF8p0l32iL9bvjUq3yvBEXX3djVE3E
+         sl6vthF/BiNtxC/e0WspOGjLBJQIodQgQ4oIVvm+IEeCbytbx6cPuXJ2RM8zhVDJs6Ud
+         G6/BeWoQ8vu1OFzRSC7LKMMLwBpch9rc5aevWutz+JQEWwukNuwiCbFDECUB3PLJlror
+         MqLO0bX+/xD/+Ms/Leak9F2m7AmrSIY7LEZGTyfcyntrBEUILbmbEOKXUDRxeNqcVdnZ
+         f49Q6xK6LnI1anoy11w/d2nihoDagfEDlAzDNfv4ma6ISvs7y5A6Z505wiq1nXNKCWsW
+         xMXg==
+X-Gm-Message-State: APjAAAWK4bnx+SizqAnoidOhn5+ZfJ51/4K2eRAqO4est80TNnhaQvl9
+        UapqyvAGX1mP52Z2EFeTSQ==
+X-Google-Smtp-Source: APXvYqxGDWSxCV3m1MjSffGqN3eqpsL9XchgtHMl706xJRcvchuAFMgZoqmBkf0ja7eF7gUpCpJdCQ==
+X-Received: by 2002:a9d:ef0:: with SMTP id 103mr18967111otj.2.1572374416544;
+        Tue, 29 Oct 2019 11:40:16 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z1sm3178864oih.14.2019.10.29.11.40.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 11:40:15 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 13:40:14 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Manish Narani <manish.narani@xilinx.com>
+Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, michal.simek@xilinx.com,
+        jolly.shah@xilinx.com, nava.manne@xilinx.com,
+        rajan.vaja@xilinx.com, manish.narani@xilinx.com,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        git@xilinx.com
+Subject: Re: [PATCH v4 2/8] dt-bindings: mmc: arasan: Update Documentation
+ for the input clock
+Message-ID: <20191029184014.GA837@bogus>
+References: <1572345042-101207-1-git-send-email-manish.narani@xilinx.com>
+ <1572345042-101207-2-git-send-email-manish.narani@xilinx.com>
 MIME-Version: 1.0
-References: <20191028215919.83697-1-john.stultz@linaro.org>
- <20191028215919.83697-9-john.stultz@linaro.org> <87bltzj47a.fsf@gmail.com>
-In-Reply-To: <87bltzj47a.fsf@gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 29 Oct 2019 11:26:01 -0700
-Message-ID: <CALAqxLUcvJ6K-ysOLJj0ddiGyoHGkaJBBiw6RShmWRD8h+wWrQ@mail.gmail.com>
-Subject: Re: [PATCH v4 8/9] dt-bindings: usb: generic: Add role-switch-default-host
- binding
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572345042-101207-2-git-send-email-manish.narani@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 2:23 AM Felipe Balbi <balbi@kernel.org> wrote:
-> John Stultz <john.stultz@linaro.org> writes:
->
-> > Add binding to configure the default role the controller
-> > assumes is host mode when the usb role is USB_ROLE_NONE.
-> >
-...
-> > + - role-switch-default-host: boolean, indicating if usb-role-switch is enabled
-> > +                     the device default operation mode of controller while
-> > +                     usb role is USB_ROLE_NONE is host mode. If this is not
-> > +                     set or false, it will be assumed the default is device
-> > +                     mode.
->
-> Do we also need a role-switch-default-peripheral? Would it be better to
-> have a single role-switch-default property which accepts "host" or
-> "peripheral" arguments?
+On Tue, 29 Oct 2019 16:00:36 +0530, Manish Narani wrote:
+> Add documentation for an optional input clock which is essentially used
+> in sampling the input data coming from the card.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
 
-I guess the standard default is peripheral, so this differentiated
-from that, but I agree it might be more forward thinking to let it
-specify a type argument in case there is another option in the future.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-I'll rework this.
-
-Thanks again for the review and feedback!
--john
+If a tag was not added on purpose, please state why and what changed.
