@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E48CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D055ACA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76E320663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B099920663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731339AbfJ2L2R convert rfc822-to-8bit (ORCPT
+        id S1730888AbfJ2L2M convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:28:17 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:45738 "EHLO
+        Tue, 29 Oct 2019 07:28:12 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:45694 "EHLO
         skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731221AbfJ2L2Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 07:28:16 -0400
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        with ESMTP id S1730794AbfJ2L2L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 07:28:11 -0400
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 32CBA60CF62;
-        Tue, 29 Oct 2019 12:28:14 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 77A1F60CF62;
+        Tue, 29 Oct 2019 12:28:04 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 29 Oct
- 2019 12:28:13 +0100
+ 2019 12:28:04 +0100
 Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
  sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Tue, 29 Oct 2019 12:28:13 +0100
+ 15.01.1713.004; Tue, 29 Oct 2019 12:28:04 +0100
 From:   Schrempf Frieder <frieder.schrempf@kontron.de>
 To:     Krzysztof Kozlowski <krzk@kernel.org>,
         Fabio Estevam <festevam@gmail.com>,
@@ -46,13 +46,13 @@ CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 10/11] MAINTAINERS: Add an entry for Kontron Electronics
- ARM board support
-Thread-Topic: [PATCH v2 10/11] MAINTAINERS: Add an entry for Kontron
- Electronics ARM board support
-Thread-Index: AQHVjkvzp/N7dg+mjkCwTQSNv+vrJQ==
-Date:   Tue, 29 Oct 2019 11:28:13 +0000
-Message-ID: <20191029112655.15058-11-frieder.schrempf@kontron.de>
+Subject: [PATCH v2 07/11] ARM: dts: imx6ul-kontron-n6x1x-s: Add vbus-supply
+ and overcurrent polarity to usb nodes
+Thread-Topic: [PATCH v2 07/11] ARM: dts: imx6ul-kontron-n6x1x-s: Add
+ vbus-supply and overcurrent polarity to usb nodes
+Thread-Index: AQHVjkvtzuEd7ia9eEiSRBR9LAU6oA==
+Date:   Tue, 29 Oct 2019 11:28:04 +0000
+Message-ID: <20191029112655.15058-8-frieder.schrempf@kontron.de>
 References: <20191029112655.15058-1-frieder.schrempf@kontron.de>
 In-Reply-To: <20191029112655.15058-1-frieder.schrempf@kontron.de>
 Accept-Language: de-DE, en-US
@@ -66,7 +66,7 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 32CBA60CF62.AF66E
+X-SnT-MailScanner-ID: 77A1F60CF62.A0BE3
 X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 X-SnT-MailScanner-SpamCheck: 
 X-SnT-MailScanner-From: frieder.schrempf@kontron.de
@@ -82,32 +82,48 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Kontron Electronics GmbH produces several ARM boards, that are
-planned to be upstreamed eventually. For now we have some
-i.MX6UL/ULL based SoMs and boards, that are already available
-in the kernel.
+To silence the warnings shown by the driver at boot time, we add a
+fixed regulator for the 5V supply of usbotg2 and specify the polarity
+of the overcurrent signal for usbotg1.
 
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 296de2b51c83..a461d31ee98d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9103,6 +9103,12 @@ F:	include/linux/kmod.h
- F:	lib/test_kmod.c
- F:	tools/testing/selftests/kmod/
+diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+index 2299cad900af..d3eb21aa9014 100644
+--- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
++++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+@@ -45,6 +45,13 @@
+ 		regulator-max-microvolt = <3300000>;
+ 	};
  
-+KONTRON ELECTRONICS ARM BOARDS SUPPORT
-+M:	Frieder Schrempf <frieder.schrempf@kontron.de>
-+S:	Maintained
-+F:	arch/arm/boot/dts/imx6ul-kontron-*
-+F:	arch/arm/boot/dts/imx6ull-kontron-*
++	reg_5v: regulator-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
 +
- KPROBES
- M:	Naveen N. Rao <naveen.n.rao@linux.ibm.com>
- M:	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+ 	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "usb_otg1_vbus";
+@@ -191,6 +198,7 @@
+ 	srp-disable;
+ 	hnp-disable;
+ 	adp-disable;
++	over-current-active-low;
+ 	vbus-supply = <&reg_usb_otg1_vbus>;
+ 	status = "okay";
+ };
+@@ -198,6 +206,7 @@
+ &usbotg2 {
+ 	dr_mode = "host";
+ 	disable-over-current;
++	vbus-supply = <&reg_5v>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.17.1
