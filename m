@@ -2,188 +2,224 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75176CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B6ECA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 21:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D0A21479
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 20:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71CB21734
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 21:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saVdvDEi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M72u9xP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbfJ2U7N (ORCPT
+        id S1728237AbfJ2VJN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 16:59:13 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46654 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbfJ2U7N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 16:59:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z22so7593957edr.13;
-        Tue, 29 Oct 2019 13:59:09 -0700 (PDT)
+        Tue, 29 Oct 2019 17:09:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53019 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfJ2VJN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 17:09:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p21so4142363wmg.2;
+        Tue, 29 Oct 2019 14:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=CjYSqe0NVHv7PBpKzZgujNqWXOTQ3EeJ6Ic+T4FxfJc=;
-        b=saVdvDEiiNLvD7aTOsNw9iGbWLFMyQr2XnMdQEk/CKnERA3bYRYYJMDhfo9s7f84rR
-         IYfl94E0OLzR1MnA81gWde9+vp5sviFozxoV3G0Id2LHsUymKcg1nupt3GOttgxkjynf
-         IOinaAKgXTM1ITqNCP66LGTvFN7TegzBwLGTi1iSUlQU6xZUoiSQYt2mT9uXFbn5qkpq
-         uaYET9A1mYQ9BBprxvF9e8Ph1lFe3BDrHj1GuHKrjXHM7+O+gRtyh/59+vBdjNWAkNHD
-         5YOOHTMMGWmxZ/0FrGonK+v416+okaZBE876ZvCPhII/Nj8+Lxrce1d+923CTIKyZF4V
-         k5iA==
+        bh=BUoGJwSxJZnzTzRzbKG9r3Bd5xV9RD8EdFVeCglJJKM=;
+        b=M72u9xP651IDrqyAP1W9+3ztPWQmKEmEDM6woo81AXjKia2Qeazt06FsrzzkgmGm4t
+         ZjYlC7K2KRKXNaIx2Aip93P/AaSajOo79uPHvO8icn3/XNQ7sQA4JYKctwD4xiyFEs36
+         524KpAo5On1fiqLfg9tQRxWUGhOdfjkAQ2hdifcslaxWO7oLEcpjtGJc07SeETnRhTqh
+         ra+L2/GP5WuXClQPc0KxoUnaAyb3tcEm/HKdkhGpksj/h2y7uWQjfwqsRYVnbN18G+oy
+         463WQKbcLd60Q2vdyzKBLKStzIoafRICFiZnIhrXML/XoVQCx/Ea1dmbXGlBpx/tInim
+         D/tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=CjYSqe0NVHv7PBpKzZgujNqWXOTQ3EeJ6Ic+T4FxfJc=;
-        b=K6ihzJoezm5sw4VpJZrhO/0v12QeX+76GEjJzQNNUYU4AUmInZpmRdJaCcuPonGf9y
-         ycG686O+QYDMR1a01jHneS+uTMPK+oErms++Wio4SVNdrqZjJ+M3nAMDOCQ9u/01CMrH
-         CGbBTLH8I4u4lXNgoAxxH0gBNgmx2b1JfxoshoTzEMXXTocaeB+lCRjriQDLQYjspEdK
-         d9deAAwo+OyhcUTbeNz1Q1EW4lbYqWLfsS5MhGQScJcFZZJi2vrSXc0d7dB/uZ8+9HOh
-         LI10n6shoz26CsJ+EgsIHNxwvudDY4SiIM7Hl+Eym0w/qMsz/Shy01uF49tKdTPQGhtt
-         hhoA==
-X-Gm-Message-State: APjAAAUM9mCFdCdJoK3xPrIPQbgzDhosIAw72Qd6FM70DWBvMh4qT9QA
-        f/EBTOdT+UXHUPLQ4dKYpp0=
-X-Google-Smtp-Source: APXvYqwEVdyt82IAftK6qhuzMhSmKVkdVaK7Wiqe8LHdMahMC6kx1TfFwhmOwDTxu6Fxbae7h/ZUyg==
-X-Received: by 2002:a17:906:4ec9:: with SMTP id i9mr5435592ejv.8.1572382748939;
-        Tue, 29 Oct 2019 13:59:08 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id d12sm689932edt.57.2019.10.29.13.59.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 13:59:08 -0700 (PDT)
-Subject: Re: [PATCH 0/3] net: phy: initialize PHYs via device tree properties
-To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BUoGJwSxJZnzTzRzbKG9r3Bd5xV9RD8EdFVeCglJJKM=;
+        b=dWPmvclxipkppZko5hhn8/M+2IhqJeIZTsQw+0zpiYsye/8U9KV6+mpnHQwkjQ82Cb
+         raFJP9B4d4S8t2tzNn4ysRvWndfQfi6Qx8s+b2qEg9LZQd4Zq9fN7Nj9VNK2TsMdd5Av
+         hWDD77Y9QH0F+g5ZcWTgFQZMc3ZNpptDeqc4FiAUDSTG3wNdyB22NUklIGRyyD6+X3Lm
+         e1CTxcGzCxWzmrcITyTtWjyUshF2u9C2j3W/sYSg7FhFP+SpYHsk82Z1UM5hl/k95qGl
+         CHJKvFGBrA8TxPA+cC+CVocIB9ZPs501muc6bDgbMnyY/AYrTDa6AQ2voLYjW5h0pNu5
+         MVEA==
+X-Gm-Message-State: APjAAAU5VcpFeuOxUsH70vXgNvWS2EcNmNww1/wgwxMIAN/C0fPUnooV
+        EEeRqglMS4g4cWHSq4F5CVOBozMcX8HK73Yx
+X-Google-Smtp-Source: APXvYqyfwDMQTLJ/uCGRK0UbAbP0pNbA3toLQOfF3euQOdDemoymiSE2k0pNHSW1SSAt/JngL1jh7w==
+X-Received: by 2002:a05:600c:22d9:: with SMTP id 25mr6047627wmg.166.1572383349612;
+        Tue, 29 Oct 2019 14:09:09 -0700 (PDT)
+Received: from localhost.localdomain ([46.218.74.72])
+        by smtp.gmail.com with ESMTPSA id f8sm4044206wmb.37.2019.10.29.14.09.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 14:09:08 -0700 (PDT)
+From:   Marcus Folkesson <marcus.folkesson@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20191029174819.3502-1-michael@walle.cc>
- <519d52d2-cd83-b544-591b-ca9d9bb16dfa@gmail.com>
- <4B4A80A7-05C8-441A-B224-7CC01E3D8C30@walle.cc>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <c9447284-1c20-6dc7-8629-e62c61a7b4a8@gmail.com>
-Date:   Tue, 29 Oct 2019 13:59:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mark Rutland <mark.rutland@arm.com>,
+        Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Kent Gustavsson <kent@minoris.se>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: iio: adc: Migrate MCP3911 documentation to yaml
+Date:   Tue, 29 Oct 2019 22:11:42 +0100
+Message-Id: <20191029211142.14650-1-marcus.folkesson@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <4B4A80A7-05C8-441A-B224-7CC01E3D8C30@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/29/19 1:54 PM, Michael Walle wrote:
-> Am 29. Oktober 2019 18:59:07 MEZ schrieb Florian Fainelli <f.fainelli@gmail.com>:
->> On 10/29/19 10:48 AM, Michael Walle wrote:
->>> I was trying to configure the Atheros PHY for my board. There are
->> fixups
->>> all over the place, for example to enable the 125MHz clock output in
->> almost
->>> any i.MX architecture. Instead of adding another fixup in
->> architecture
->>> specific code, try to provide a generic way to init the PHY
->> registers.
->>>
->>> This patch series tries to pick up the "broadcom,reg-init" and
->>> "marvell,reg-init" device tree properties idea and make it a more
->> generic
->>> "reg-init" which is handled by phy_device instead of a particular phy
->>> driver.
->>
->> These two examples are actually quite bad and were symptomatic of a few
->> things at the time:
->>
->> - rush to get a specific feature/device supported without thinking
->> about
->> the big picture
->> - lack of appropriate review on the Device Tree bindings
->>
->> Fortunately, the last item is now not happening anymore.
->>
->> The problem with letting that approach go through is that the Device
->> Tree can now hold a configuration policy which is passed through as-is
->>from DT to the PHY device, this is bad on so many different levels,
->> starting with abstraction.
-> 
-> I see.
-> 
->> If all you need is to enable a particular clock, introduce device
->> specific properties that describe the hardware, and make the necessary
->> change to the local driver that needs to act on those. You can always
->> define a more generic scope property if you see a recurring pattern.
-> 
-> Could you have a quick look at the following patch I made for u-boot, which adds a binding for the Atheros PHY. If that is the right direction. Yeah, I should have made it first to Linux to get some feedback on the binding :p
-> 
-> https://patchwork.ozlabs.org/patch/1184516/
-> 
-> I'd then prepare another patch for Linux based on your suggestions. 
+Rewrite bindings to use json-schema vocabulary.
 
-This looks like the right direction IMHO.
+Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+---
+ .../devicetree/bindings/iio/adc/mcp3911.txt   | 30 --------
+ .../bindings/iio/adc/microchip,mcp3911.yaml   | 72 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 73 insertions(+), 31 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+deleted file mode 100644
+index 3071f48fb30b..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-* Microchip MCP3911 Dual channel analog front end (ADC)
+-
+-Required properties:
+- - compatible: Should be "microchip,mcp3911"
+- - reg: SPI chip select number for the device
+-
+-Recommended properties:
+- - spi-max-frequency: Definition as per
+-	 Documentation/devicetree/bindings/spi/spi-bus.txt.
+-	 Max frequency for this chip is 20MHz.
+-
+-Optional properties:
+- - clocks: Phandle and clock identifier for sampling clock
+- - interrupt-parent: Phandle to the parent interrupt controller
+- - interrupts: IRQ line for the ADC
+- - microchip,device-addr: Device address when multiple MCP3911 chips are present on the
+-	same SPI bus. Valid values are 0-3. Defaults to 0.
+- - vref-supply: Phandle to the external reference voltage supply.
+-
+-Example:
+-adc@0 {
+-	compatible = "microchip,mcp3911";
+-	reg = <0>;
+-	interrupt-parent = <&gpio5>;
+-	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+-	spi-max-frequency = <20000000>;
+-	microchip,device-addr = <0>;
+-	vref-supply = <&vref_reg>;
+-	clocks = <&xtal>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+new file mode 100644
+index 000000000000..bfcf6a5fb44e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright 2019 Marcus Folkesson <marcus.folkesson@gmail.com>
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/bindings/iio/adc/microchip,mcp3911.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Microchip MCP3911 Dual channel analog front end (ADC)
++
++maintainers:
++  - Marcus Folkesson <marcus.folkesson@gmail.com>
++  - Kent Gustavsson <nedo80@gmail.com>
++
++description: |
++  Bindings for the Microchip MCP3911 Dual channel ADC device. Datasheet can be
++  found here: https://ww1.microchip.com/downloads/en/DeviceDoc/20002286C.pdf
++
++properties:
++  compatible:
++    enum:
++      - microchip,mcp3911
++
++  reg:
++    description: SPI chip select number for the device
++    maxItems: 1
++
++  spi-max-frequency:
++    description: |
++      Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt.
++    maximum: 20000000
++    maxItems: 1
++
++  clocks:
++    description: Phandle and clock identifier for sampling clock
++    maxItems: 1
++
++  interrupts:
++    description: IRQ line of the ADC
++    maxItems: 1
++
++  microchip,device-addr:
++    description: Device address when multiple MCP3911 chips are present on the same SPI bus.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [0, 1, 2, 3]
++      - default: 0
++
++  vref-supply:
++    description: Phandle to the external reference voltage supply.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      adc@0 {
++        compatible = "microchip,mcp3911";
++        reg = <0>;
++        interrupt-parent = <&gpio5>;
++        interrupts = <15 2>;
++        spi-max-frequency = <20000000>;
++        microchip,device-addr = <0>;
++        vref-supply = <&vref_reg>;
++        clocks = <&xtal>;
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e51a68bf8ca8..fbccc9d450ff 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10723,7 +10723,7 @@ M:	Kent Gustavsson <kent@minoris.se>
+ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ F:	drivers/iio/adc/mcp3911.c
+-F:	Documentation/devicetree/bindings/iio/adc/mcp3911.txt
++F:	Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+ 
+ MICROCHIP NAND DRIVER
+ M:	Tudor Ambarus <tudor.ambarus@microchip.com>
 -- 
-Florian
+2.23.0
+
