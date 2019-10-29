@@ -2,150 +2,154 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F11CA9EC4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60995CA9EC2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683B32086A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eMchEOvQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3600120717
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbfJ2HXH (ORCPT
+        id S1725839AbfJ2He3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:23:07 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:39815 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387671AbfJ2HXF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 03:23:05 -0400
-Received: by mail-ua1-f65.google.com with SMTP id o25so3502239uap.6
-        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 00:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0SUH6/NtBC3ilVCpdONozL4mS3Prp0pIL3y1hHCcxAk=;
-        b=eMchEOvQ/jKSqC7IlUVOrUOu2sRq3JlNHSwrSwCVZV7hyYX+NwsA3oadySVIS2GMhv
-         Fvs0xOAQNNajFRHYthK70jYXsoHFLR0MqpOCX4UruR1XUSVhwPotDPQQJvLDpR6Qs35N
-         fO+lH1wwkAdlVyFMk0fkQlRl+r7cTgEooYDbw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0SUH6/NtBC3ilVCpdONozL4mS3Prp0pIL3y1hHCcxAk=;
-        b=NWrXAw2fvXWIYkrru7Hkcn0HGr5+OYYZ/5PTW1p7IBhGV6cZnY+yMpJGysHr4QIeUQ
-         RChif7Oo7ZQOfsp+YTWzIv3MilF95MP9wk/Erg/9aYqoBc4k+CLHQ+lnqQqE3F3g5bbv
-         nYmSsid302D8NziGKgQo18qFyJTdBkg5Pfri1mGRUzZeCqkpFlt/+w2QGC5J0S8IqFbG
-         qzVkQM6WzKTZG7rxkbNVM6uaSQyhBmDhsX+7uSTDpSqWLJDwr60+Lju0UvHqBCkSjdoO
-         /t8WRTX8z4J9KtEHWvn81PfyfSLzJrhffioyOmEjQa5vSPvGzETFNhrsRk0lD3ZsP2SA
-         oo5A==
-X-Gm-Message-State: APjAAAXQ62+vyS9DRyGOQLd89CUfciTXRvLV7cnmeIvyzdvuKV6wT4ao
-        nvwqapZJCJIrzdBFa/3YOgj3NhZtbOQl4LQm3qzYtw==
-X-Google-Smtp-Source: APXvYqwu6KYbConXB0iKr6Mov1RGaa3I/esweFtuANMt32BxSyqi5DbWOfQ88/Vd4VamORlLwO9ez57AWW6x/2gTwcw=
-X-Received: by 2002:ab0:6503:: with SMTP id w3mr7651016uam.17.1572333783797;
- Tue, 29 Oct 2019 00:23:03 -0700 (PDT)
+        Tue, 29 Oct 2019 03:34:29 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58337 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfJ2He3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 03:34:29 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iPM1G-0001xy-Aa; Tue, 29 Oct 2019 08:34:22 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iPM1D-00040d-Ib; Tue, 29 Oct 2019 08:34:19 +0100
+Date:   Tue, 29 Oct 2019 08:34:19 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        James Hogan <jhogan@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+        linux-mips@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Subject: Re: [PATCH v4 2/5] dt-bindings: net: dsa: qca,ar9331 switch
+ documentation
+Message-ID: <20191029073419.gjr4y7qsxx2javuf@pengutronix.de>
+References: <20191022055743.6832-1-o.rempel@pengutronix.de>
+ <20191022055743.6832-3-o.rempel@pengutronix.de>
+ <20191023003543.GE5707@lunn.ch>
 MIME-Version: 1.0
-References: <20191023024348.225969-1-ikjn@chromium.org> <20191025194101.GA4734@bogus>
-In-Reply-To: <20191025194101.GA4734@bogus>
-From:   Ikjoon Jang <ikjn@chromium.org>
-Date:   Tue, 29 Oct 2019 15:22:52 +0800
-Message-ID: <CAATdQgDxC_1EH4cBqf7deEqRjtRU1s4o=L8vOztvVZ7NS_q9Mw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: input: Add DT bindings for Whiskers switch
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Nicolas Boitchat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u2f62fix5h57o5vr"
+Content-Disposition: inline
+In-Reply-To: <20191023003543.GE5707@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:14:36 up 164 days, 13:32, 99 users,  load average: 0.00, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 3:41 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Oct 23, 2019 at 10:43:48AM +0800, Ikjoon Jang wrote:
-> > Add the DT binding document for Hammer's TABLET_MODE switch.
->
-> This doesn't have any properties. Why does it need to be in DT? Just
-> have the EC driver instantiate it.
->
-> >
-> > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> > ---
-> >  .../devicetree/bindings/input/cros-cbas.yaml  | 22 +++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/cros-cbas.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/cros-cbas.yaml b/Documentation/devicetree/bindings/input/cros-cbas.yaml
-> > new file mode 100644
-> > index 000000000000..3bc989c6a295
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/cros-cbas.yaml
-> > @@ -0,0 +1,22 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->
-> (GPL-2.0-only OR BSD-2-Clause) for new bindings please.
 
-This will be GPL-2.0-only in next patch.
+--u2f62fix5h57o5vr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/cros-cbas.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ChromeOS Hammer's Base Attached Switch
-> > +
-> > +maintainers:
-> > +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > +
-> > +description:
-> > +  This device is used to signal when a detachable base is attached to a
-> > +  Chrome OS tablet. The node for this device must be under a cros-ec node
-> > +  like google,cros-ec-spi or google,cros-ec-i2c.
->
-> This should probably just be part of an EC schema where it can be
-> enforced that this is a child node. It could be either embedded into it
-> or referenced. I'd lean toward the former given this is only a
-> compatible string...
+On Wed, Oct 23, 2019 at 02:35:43AM +0200, Andrew Lunn wrote:
+> On Tue, Oct 22, 2019 at 07:57:40AM +0200, Oleksij Rempel wrote:
+> > Atheros AR9331 has built-in 5 port switch. The switch can be configured
+> > to use all 5 or 4 ports. One of built-in PHYs can be used by first buil=
+t-in
+> > ethernet controller or to be used directly by the switch over second et=
+hernet
+> > controller.
+> >=20
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+>=20
+> Hi Oleksij
+>=20
+> What we never really discussed is how this MUXing of the PHY works.
+>=20
+> What i'm worried about is that when we do understand how it works, we
+> cannot properly support it using this binding.
 
-Sorry for basic questions here but I'm a bit confused,
-"embedding" means that cros-ec.txt should be converted
-into json schema first and embed this child bindings into there?
+good point. i would prefer to make it properly.
 
-Many Chrome OS tablets have a switch exposed by 'cros-ec-keyb' device
-which is directly controlled by EC. But this 'cros_cbas' switch device is for
-other types of tablets which need additional logics on EC and HID.
+> Please could you try to find information about this.
 
-Currently it doesn't need to have other properties, but maybe it could require
-additional properties or device links in the future, plus this device
-is not just
-a EC subdevice, so I'd prefer this to be a separate binding.
+Documentation says:
+The PHY interfaces (PHY0, PHY1, PHY2, PHY3 and PHY4) can connect to the swi=
+tch
+in bridge mode. In this case GE0 must be under reset. All five LAN ports are
+switched together and connect to the CPU through the GMII interface (MAC0),
+which is controlled by the ETH_CFG register bit SW_ONLY_MODE. If GE0 connec=
+ts
+separately to PHY, then MAC5 should be under reset.
 
->
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: google,cros-cbas
-> > +
-> > +required:
-> > +  - compatible
->
-> Add here:
->
-> additionalProperties: false.
+There is no SW_ONLY_MODE bit in the documentation.
+I found:
+CFG_SW_PHY_SWAP - Used to switch the wires connection of PHY port 0 with th=
+at of
+port 4 in the Ethernet switch. MAC1 and PHY4 are paired while MAC5 and PHY0=
+ are
+paired.
 
-Okay, I will add this in a new patch set , thank you!
+CFG_SW_PHY_ADDR_SWAP - Exchanges the address of PHY port 0 with that of
+PHY port 4 in the Ethernet switch.
 
->
-> > --
-> > 2.23.0.866.gb869b98d4c-goog
-> >
+It feels like this are the right bits. I'll try to test it after ELC-E
+conference (If you are here, please ping me).
+If this are the right bits, should it be registered as separate driver? This
+register is on MMIO and not part of the switches MDIO.
+
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--u2f62fix5h57o5vr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl2363oACgkQ4omh9DUa
+UbMsrhAAyX9oqX95zGk5geXaRVZUQDgHyGWtzPV48YtCkqD1boETt+0rQAgMoNLg
+wVYewuMycs6BANMrjYq8wQJW0CrFkaOPW91yxMiUqITqEdYI8v+NS89Vd6/HDaZv
+GhNB7LNU7GPCZWsLG1Cu1TvLCiQncFIFadj+oLGm+SzmsfsRKcR2awp4P7O3YfU1
+qheNR9bNxD64YVQZB3n4+fXyZFjXST+w5cve5T4C4pttuVKQKVkW+ICgdv0AWj/3
+KMA9CF5vSpgDPYeDw3JoAGl7yEMYVlkEG1fP03X1fCdcc1ZQvmI8RL3GaYfuuy1c
+JNCQfARZu1BdKd2VYiVJx+qYW18fuKt5ywQo9HRITOS1l+8WBgDaN0dd/e1DK99H
+47SNlevcspoo2aj1ibt9Q0ZdO+rW+Oqtx9JjHpQC+zaqAMdHFtsB5GXgHaZx0iXr
+lqZs4Tc9PvwfuVDGRDUTNF1y8g+5PrgjdBPOHJ8J/0drrrt4gEPLyUvEZeHMm3K/
+x99GEN5gxAYKQmYyNydjmTqZmv0NwjniZoPIswAUrETZIMEoAh088eDQ3zLXUGgx
+GxGzl9Px7Omc7cJC5hQAimCIhjITGZMR+wF40rsoRrWcre1ZyPnDd1MGB0qik1Mz
+HyFe2nVfXrnSKD2UZc7y3nne0UCGJGmxl+jfELNAbJ7PBdtNOH0=
+=BzWE
+-----END PGP SIGNATURE-----
+
+--u2f62fix5h57o5vr--
