@@ -2,110 +2,169 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2CACA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BADCA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4039020874
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:54:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572339262;
-	bh=mkkA0nt6hx3V0z0UwVIpSj9LslS/iQ3ZT+43Z9OvzN0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KbAJocx7+a1Nm+AZkV7/QeWgq1LxDpCip1j86Y/SXoK8dLfEJsxsmpNWbYF/TueBn
-	 oeZMStWF6qfO8cGvX8n2mQpEIlyhWKMf9KOv/s9eFubTM+5e+bs3NDsSYa8Xko2LpO
-	 7I9DzfwKgI9ZJ4WisEFGwk4PziySqz+KgSweEE14=
+	by mail.kernel.org (Postfix) with ESMTP id A93732086A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 08:55:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfJ2IyV (ORCPT
+        id S1729986AbfJ2Iz7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 04:54:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbfJ2IyV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 04:54:21 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C04E20663;
-        Tue, 29 Oct 2019 08:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572339260;
-        bh=mkkA0nt6hx3V0z0UwVIpSj9LslS/iQ3ZT+43Z9OvzN0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rvOQbaioo47qLALm3l14AHXxcxc5IYfpvJjlT7KDT/WEkmyjOQKlnSyb7eRV3WHdu
-         fT9PRURUDToD06zrggmqZ8s9PCAusIcDS7FYlIzzysiQ+pR5BD6oYTZIy5palfhN14
-         W5T1c8taWx9dN6yvQ24GVdJ6SbVbEiiXmQ0VWT9s=
-Date:   Tue, 29 Oct 2019 09:54:01 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Tue, 29 Oct 2019 04:55:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51353 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbfJ2Iz7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 04:55:59 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPNI4-0000wX-1e; Tue, 29 Oct 2019 09:55:48 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iPNI1-0006qC-Cj; Tue, 29 Oct 2019 09:55:45 +0100
+Date:   Tue, 29 Oct 2019 09:55:45 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Ondrej Jirman <megous@megous.com>, linux-sunxi@googlegroups.com,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
-Message-ID: <20191029085401.gvqpwmmpyml75vis@hendrix>
-References: <20191025175625.8011-1-jagan@amarulasolutions.com>
- <20191025175625.8011-5-jagan@amarulasolutions.com>
- <20191028153427.pc3tnoz2d23filhx@hendrix>
- <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@bootlin.com>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] input: edt-ft5x06: Add support for regulator
+Message-ID: <20191029085545.cw5c24gi76gbfdhy@pengutronix.de>
+References: <20191029005806.3577376-1-megous@megous.com>
+ <20191029005806.3577376-2-megous@megous.com>
+ <20191029041233.GD57214@dtor-ws>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="unkpttpyvqhvobfg"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029041233.GD57214@dtor-ws>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:53:29 up 164 days, 15:11, 100 users,  load average: 0.00, 0.01,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Dmitry,
 
---unkpttpyvqhvobfg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 19-10-28 21:12, Dmitry Torokhov wrote:
+> On Tue, Oct 29, 2019 at 01:58:04AM +0100, Ondrej Jirman wrote:
+> > From: Mylène Josserand <mylene.josserand@bootlin.com>
+> > 
+> > Add the support for enabling optional regulator that may be used as VCC
+> > source.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> 
+> Applied, thank you.
 
-On Tue, Oct 29, 2019 at 04:03:56AM +0530, Jagan Teki wrote:
-> > > explicit handling of common clock would require since the A64
-> > > doesn't need to mention the clock-names explicitly in dts since it
-> > > support only one bus clock.
-> > >
-> > > Also pass clk_id NULL instead "bus" to regmap clock init function
-> > > since the single clock variants no need to mention clock-names
-> > > explicitly.
-> >
-> > You don't need explicit clock handling. Passing NULL as the argument
-> > in regmap_init_mmio_clk will make it use the first clock, which is the
-> > bus clock.
->
-> Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
-> during regmap_mmio_gen_context code, passing NULL triggering vblank
-> timeout.
+What happens with my vdd patches?
 
-There's a bunch of users of NULL in tree, so finding out why NULL
-doesn't work is the way forward.
+Regards,
+  Marco
 
-Maxime
+> 
+> > ---
+> >  drivers/input/touchscreen/edt-ft5x06.c | 30 ++++++++++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> > 
+> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> > index 5525f1fb1526..d61731c0037d 100644
+> > --- a/drivers/input/touchscreen/edt-ft5x06.c
+> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> > @@ -28,6 +28,7 @@
+> >  #include <linux/input/mt.h>
+> >  #include <linux/input/touchscreen.h>
+> >  #include <asm/unaligned.h>
+> > +#include <linux/regulator/consumer.h>
+> >  
+> >  #define WORK_REGISTER_THRESHOLD		0x00
+> >  #define WORK_REGISTER_REPORT_RATE	0x08
+> > @@ -88,6 +89,7 @@ struct edt_ft5x06_ts_data {
+> >  	struct touchscreen_properties prop;
+> >  	u16 num_x;
+> >  	u16 num_y;
+> > +	struct regulator *vcc;
+> >  
+> >  	struct gpio_desc *reset_gpio;
+> >  	struct gpio_desc *wake_gpio;
+> > @@ -1036,6 +1038,13 @@ edt_ft5x06_ts_set_regs(struct edt_ft5x06_ts_data *tsdata)
+> >  	}
+> >  }
+> >  
+> > +static void edt_ft5x06_disable_regulator(void *arg)
+> > +{
+> > +	struct edt_ft5x06_ts_data *data = arg;
+> > +
+> > +	regulator_disable(data->vcc);
+> > +}
+> > +
+> >  static int edt_ft5x06_ts_probe(struct i2c_client *client,
+> >  					 const struct i2c_device_id *id)
+> >  {
+> > @@ -1064,6 +1073,27 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+> >  
+> >  	tsdata->max_support_points = chip_data->max_support_points;
+> >  
+> > +	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
+> > +	if (IS_ERR(tsdata->vcc)) {
+> > +		error = PTR_ERR(tsdata->vcc);
+> > +		if (error != -EPROBE_DEFER)
+> > +			dev_err(&client->dev,
+> > +				"failed to request regulator: %d\n", error);
+> > +		return error;
+> > +	}
+> > +
+> > +	error = regulator_enable(tsdata->vcc);
+> > +	if (error < 0) {
+> > +		dev_err(&client->dev, "failed to enable vcc: %d\n", error);
+> > +		return error;
+> > +	}
+> > +
+> > +	error = devm_add_action_or_reset(&client->dev,
+> > +					 edt_ft5x06_disable_regulator,
+> > +					 tsdata);
+> > +	if (error)
+> > +		return error;
+> > +
+> >  	tsdata->reset_gpio = devm_gpiod_get_optional(&client->dev,
+> >  						     "reset", GPIOD_OUT_HIGH);
+> >  	if (IS_ERR(tsdata->reset_gpio)) {
+> > -- 
+> > 2.23.0
+> > 
+> 
+> -- 
+> Dmitry
+> 
 
---unkpttpyvqhvobfg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbf+KQAKCRDj7w1vZxhR
-xQUaAQCp7d+DSgK2CMprYRTRP+TGzpbEjN4u+W/Tt1seOujvoQEA9cGaIr4yjPsP
-iK0Vn3o2jO7HYtqHE03IewfUWRW4OgM=
-=D4qQ
------END PGP SIGNATURE-----
-
---unkpttpyvqhvobfg--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
