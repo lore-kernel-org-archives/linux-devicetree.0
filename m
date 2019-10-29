@@ -2,273 +2,150 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40447CA9EC2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F11CA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11EBE20830
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683B32086A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 07:23:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eMchEOvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfJ2HOQ (ORCPT
+        id S1729352AbfJ2HXH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 03:14:16 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44705 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbfJ2HOQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 03:14:16 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iPLhg-0008Ec-SG; Tue, 29 Oct 2019 08:14:08 +0100
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iPLhd-0003Um-14; Tue, 29 Oct 2019 08:14:05 +0100
-Date:   Tue, 29 Oct 2019 08:14:05 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-        linux-mips@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Subject: Re: [PATCH v4 5/5] net: dsa: add support for Atheros AR9331 build-in
- switch
-Message-ID: <20191029071404.pl34q4rmadusc2u5@pengutronix.de>
-References: <20191022055743.6832-1-o.rempel@pengutronix.de>
- <20191022055743.6832-6-o.rempel@pengutronix.de>
- <20191023005850.GG5707@lunn.ch>
+        Tue, 29 Oct 2019 03:23:07 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:39815 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387671AbfJ2HXF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 03:23:05 -0400
+Received: by mail-ua1-f65.google.com with SMTP id o25so3502239uap.6
+        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 00:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0SUH6/NtBC3ilVCpdONozL4mS3Prp0pIL3y1hHCcxAk=;
+        b=eMchEOvQ/jKSqC7IlUVOrUOu2sRq3JlNHSwrSwCVZV7hyYX+NwsA3oadySVIS2GMhv
+         Fvs0xOAQNNajFRHYthK70jYXsoHFLR0MqpOCX4UruR1XUSVhwPotDPQQJvLDpR6Qs35N
+         fO+lH1wwkAdlVyFMk0fkQlRl+r7cTgEooYDbw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0SUH6/NtBC3ilVCpdONozL4mS3Prp0pIL3y1hHCcxAk=;
+        b=NWrXAw2fvXWIYkrru7Hkcn0HGr5+OYYZ/5PTW1p7IBhGV6cZnY+yMpJGysHr4QIeUQ
+         RChif7Oo7ZQOfsp+YTWzIv3MilF95MP9wk/Erg/9aYqoBc4k+CLHQ+lnqQqE3F3g5bbv
+         nYmSsid302D8NziGKgQo18qFyJTdBkg5Pfri1mGRUzZeCqkpFlt/+w2QGC5J0S8IqFbG
+         qzVkQM6WzKTZG7rxkbNVM6uaSQyhBmDhsX+7uSTDpSqWLJDwr60+Lju0UvHqBCkSjdoO
+         /t8WRTX8z4J9KtEHWvn81PfyfSLzJrhffioyOmEjQa5vSPvGzETFNhrsRk0lD3ZsP2SA
+         oo5A==
+X-Gm-Message-State: APjAAAXQ62+vyS9DRyGOQLd89CUfciTXRvLV7cnmeIvyzdvuKV6wT4ao
+        nvwqapZJCJIrzdBFa/3YOgj3NhZtbOQl4LQm3qzYtw==
+X-Google-Smtp-Source: APXvYqwu6KYbConXB0iKr6Mov1RGaa3I/esweFtuANMt32BxSyqi5DbWOfQ88/Vd4VamORlLwO9ez57AWW6x/2gTwcw=
+X-Received: by 2002:ab0:6503:: with SMTP id w3mr7651016uam.17.1572333783797;
+ Tue, 29 Oct 2019 00:23:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ukndbh5m6jokcfed"
-Content-Disposition: inline
-In-Reply-To: <20191023005850.GG5707@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 16:32:43 up 161 days, 20:50, 100 users,  load average: 0.01, 0.04,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20191023024348.225969-1-ikjn@chromium.org> <20191025194101.GA4734@bogus>
+In-Reply-To: <20191025194101.GA4734@bogus>
+From:   Ikjoon Jang <ikjn@chromium.org>
+Date:   Tue, 29 Oct 2019 15:22:52 +0800
+Message-ID: <CAATdQgDxC_1EH4cBqf7deEqRjtRU1s4o=L8vOztvVZ7NS_q9Mw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: input: Add DT bindings for Whiskers switch
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Nicolas Boitchat <drinkcat@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---ukndbh5m6jokcfed
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Oct 23, 2019 at 02:58:50AM +0200, Andrew Lunn wrote:
-> > --- a/drivers/net/dsa/Kconfig
-> > +++ b/drivers/net/dsa/Kconfig
-> > @@ -52,6 +52,8 @@ source "drivers/net/dsa/microchip/Kconfig"
-> > =20
-> >  source "drivers/net/dsa/mv88e6xxx/Kconfig"
-> > =20
-> > +source "drivers/net/dsa/qca/Kconfig"
-> > +
-> >  source "drivers/net/dsa/sja1105/Kconfig"
-> > =20
-> >  config NET_DSA_QCA8K
->=20
-> > diff --git a/drivers/net/dsa/qca/Kconfig b/drivers/net/dsa/qca/Kconfig
+On Sat, Oct 26, 2019 at 3:41 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Oct 23, 2019 at 10:43:48AM +0800, Ikjoon Jang wrote:
+> > Add the DT binding document for Hammer's TABLET_MODE switch.
+>
+> This doesn't have any properties. Why does it need to be in DT? Just
+> have the EC driver instantiate it.
+>
+> >
+> > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> > ---
+> >  .../devicetree/bindings/input/cros-cbas.yaml  | 22 +++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/cros-cbas.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/cros-cbas.yaml b/Documentation/devicetree/bindings/input/cros-cbas.yaml
 > > new file mode 100644
-> > index 000000000000..7e4978f46642
+> > index 000000000000..3bc989c6a295
 > > --- /dev/null
-> > +++ b/drivers/net/dsa/qca/Kconfig
-> > @@ -0,0 +1,11 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +config NET_DSA_AR9331
-> > +	tristate "Atheros AR9331 Ethernet switch support"
->=20
-> This is where things are a little bit unobvious. If you do
-> make menu
->=20
-> and go into the DSA menu, you will find the drivers are all sorted
-> into Alphabetic order, based on the tristate text. But you have
-> inserted your "Atheros AR9331", after "NXP SJA1105".
->=20
-> It would probably be best if you make the tristate "Qualcomm Atheros
-> AR9331 ...". The order would be correct then,
+> > +++ b/Documentation/devicetree/bindings/input/cros-cbas.yaml
+> > @@ -0,0 +1,22 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+>
+> (GPL-2.0-only OR BSD-2-Clause) for new bindings please.
 
-done
+This will be GPL-2.0-only in next patch.
 
-> > +static int ar9331_sw_port_enable(struct dsa_switch *ds, int port,
-> > +				 struct phy_device *phy)
-> > +{
-> > +	struct ar9331_sw_priv *priv =3D (struct ar9331_sw_priv *)ds->priv;
-> > +	struct regmap *regmap =3D priv->regmap;
-> > +	int ret;
+>
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/input/cros-cbas.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +	/* nothing to enable. Just set link to initial state */
-> > +	ret =3D regmap_write(regmap, AR9331_SW_REG_PORT_STATUS(port), 0);
-> > +	if (ret)
-> > +		dev_err_ratelimited(priv->dev, "%s: %i\n", __func__, ret);
+> > +title: ChromeOS Hammer's Base Attached Switch
 > > +
-> > +	return ret;
-> > +}
+> > +maintainers:
+> > +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > > +
-> > +static void ar9331_sw_port_disable(struct dsa_switch *ds, int port)
-> > +{
-> > +	struct ar9331_sw_priv *priv =3D (struct ar9331_sw_priv *)ds->priv;
-> > +	struct regmap *regmap =3D priv->regmap;
-> > +	int ret;
-> > +
-> > +	ret =3D regmap_write(regmap, AR9331_SW_REG_PORT_STATUS(port), 0);
-> > +	if (ret)
-> > +		dev_err_ratelimited(priv->dev, "%s: %i\n", __func__, ret);
-> > +}
->=20
-> I've asked this before, but i don't remember the answer. Why are
-> port_enable and port_disable the same?
+> > +description:
+> > +  This device is used to signal when a detachable base is attached to a
+> > +  Chrome OS tablet. The node for this device must be under a cros-ec node
+> > +  like google,cros-ec-spi or google,cros-ec-i2c.
+>
+> This should probably just be part of an EC schema where it can be
+> enforced that this is a child node. It could be either embedded into it
+> or referenced. I'd lean toward the former given this is only a
+> compatible string...
 
-I have only MAC TX/RX enable bit. This bit is set by phylink_mac_link_up and
-removed by phylink_mac_link_down.
-The port enable I use only to set predictable state of the port
-register: all bits cleared. May be i should just drop port enable
-function? What do you think?=20
+Sorry for basic questions here but I'm a bit confused,
+"embedding" means that cros-ec.txt should be converted
+into json schema first and embed this child bindings into there?
 
-> > +static int ar9331_sw_irq_init(struct ar9331_sw_priv *priv)
-> > +{
-> > +	struct device_node *np =3D priv->dev->of_node;
-> > +	struct device *dev =3D priv->dev;
-> > +	int ret, irq;
-> > +
-> > +	irq =3D of_irq_get(np, 0);
-> > +	if (irq <=3D 0) {
-> > +		dev_err(dev, "failed to get parent IRQ\n");
-> > +		return irq ? irq : -EINVAL;
-> > +	}
-> > +
-> > +	ret =3D devm_request_threaded_irq(dev, irq, NULL, ar9331_sw_irq,
-> > +					IRQF_ONESHOT, AR9331_SW_NAME, priv);
-> > +	if (ret) {
-> > +		dev_err(dev, "unable to request irq: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	priv->irqdomain =3D irq_domain_add_linear(np, 1, &ar9331_sw_irqdomain=
-_ops,
-> > +						priv);
-> > +	if (!priv->irqdomain) {
-> > +		dev_err(dev, "failed to create IRQ domain\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	irq_set_parent(irq_create_mapping(priv->irqdomain, 0), irq);
-> > +
-> > +	return 0;
-> > +}
->=20
->=20
-> > +static int ar9331_sw_probe(struct mdio_device *mdiodev)
-> > +{
-> > +	struct ar9331_sw_priv *priv;
-> > +	int ret;
-> > +
-> > +	priv =3D devm_kzalloc(&mdiodev->dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->regmap =3D devm_regmap_init(&mdiodev->dev, &ar9331_sw_bus, priv,
-> > +					&ar9331_mdio_regmap_config);
-> > +	if (IS_ERR(priv->regmap)) {
-> > +		ret =3D PTR_ERR(priv->regmap);
-> > +		dev_err(&mdiodev->dev, "regmap init failed: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	priv->sw_reset =3D devm_reset_control_get(&mdiodev->dev, "switch");
-> > +	if (IS_ERR(priv->sw_reset)) {
-> > +		dev_err(&mdiodev->dev, "missing switch reset\n");
-> > +		return PTR_ERR(priv->sw_reset);
-> > +	}
-> > +
-> > +	priv->sbus =3D mdiodev->bus;
-> > +	priv->dev =3D &mdiodev->dev;
-> > +
-> > +	ret =3D ar9331_sw_irq_init(priv);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	priv->ds =3D dsa_switch_alloc(&mdiodev->dev, AR9331_SW_PORTS);
-> > +	if (!priv->ds)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->ds->priv =3D priv;
-> > +	priv->ops =3D ar9331_sw_ops;
-> > +	priv->ds->ops =3D &priv->ops;
-> > +	dev_set_drvdata(&mdiodev->dev, priv);
-> > +
-> > +	return dsa_register_switch(priv->ds);
->=20
-> If there is an error here, you need to undo the IRQ code, etc.
+Many Chrome OS tablets have a switch exposed by 'cros-ec-keyb' device
+which is directly controlled by EC. But this 'cros_cbas' switch device is for
+other types of tablets which need additional logics on EC and HID.
 
-done
+Currently it doesn't need to have other properties, but maybe it could require
+additional properties or device links in the future, plus this device
+is not just
+a EC subdevice, so I'd prefer this to be a separate binding.
 
-> > +}
+>
 > > +
-> > +static void ar9331_sw_remove(struct mdio_device *mdiodev)
-> > +{
-> > +	struct ar9331_sw_priv *priv =3D dev_get_drvdata(&mdiodev->dev);
+> > +properties:
+> > +  compatible:
+> > +    const: google,cros-cbas
 > > +
-> > +	mdiobus_unregister(priv->mbus);
-> > +	dsa_unregister_switch(priv->ds);
-> > +
-> > +	reset_control_assert(priv->sw_reset);
->=20
-> You also need to clean up the IRQ code here.
+> > +required:
+> > +  - compatible
+>
+> Add here:
+>
+> additionalProperties: false.
 
-ok, thx!
+Okay, I will add this in a new patch set , thank you!
 
-Regards,
-Oleksij
-
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---ukndbh5m6jokcfed
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl235rwACgkQ4omh9DUa
-UbOi/g/9GhCsf6/3MQ5EKn1oCn0cUwNKlM/isGsBqi8iLgClz7+QazmiapaK0jlw
-57RSmTpeYLc3TGOCwVsWYv3iZf0v9/jCI35Y8IVjAnenf4VIjXN7ITjLlEERX5bf
-CRZKkLxiRTPzkXOdb3qmKyD/PYHy4VhZuU3Mn6lbTUTW8wTrCmODrJZIavql+PQw
-JGlB71peAurPA7t5POg+Q/Fn38xv/yM7lWui+WjxIEFMLx0pMV7QFJt5Q1+AhFy9
-JmXTnAUiOZ8EOFq5ZJgd4SWCNP6yyC4LZViVPOPpfggmxj3YpG2hhoe04qtTs3Da
-+AuUyUeRk1llB7UShpSsBM3zyGp0uxLS4+DZkz4ebXYmd2uERq/ooMb8RFLCfGEY
-YhWnri6cgj7d2Y014RxsKB9GWiwGncm/rHctexfGv1zhi1rpWvzgYZss1kooO7KE
-RvBGnj38gDh689GgE2y5bGt7Zxx2S6BMStaMuBSANTNXQsXXWWfpDxhF5/IVbNlQ
-FdG++c5OJVoEimqdD1JLVt6USXBzoCArNb8FiZuozJYrk8SxvZCo91Q1EpzC9EFW
-JfXx9j+GCJp2OeS69mOyz83OgtAdNojRNmTI1w2bK5lKjSW52jz+uoubC4i+uGRA
-lHd1z3gV/i0BzazoBuR0B1hZWgn3X0eh+/my7LUrFZRvuqfxYw4=
-=s3/2
------END PGP SIGNATURE-----
-
---ukndbh5m6jokcfed--
+>
+> > --
+> > 2.23.0.866.gb869b98d4c-goog
+> >
