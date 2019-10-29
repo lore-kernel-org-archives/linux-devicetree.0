@@ -2,106 +2,77 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56B9CA9EC2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 04:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94BFCA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 04:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA02208E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 04:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isEoAFkA"
+	by mail.kernel.org (Postfix) with ESMTP id A506020862
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 04:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfJ2EPV (ORCPT
+        id S1727856AbfJ2Eb3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 00:15:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41129 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729100AbfJ2EPV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 00:15:21 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p26so4428111pfq.8;
-        Mon, 28 Oct 2019 21:15:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qIDdA9X0WLHYmvMMfU04BjScbjP58X4CNbduUQFyWDU=;
-        b=isEoAFkAFr9mNWbL9TkpQ26vA2bO0gAwBibIllTAzPH1HFa9W1mDsosBtMIP36RQt4
-         vwmXAyd3Ub8rgW6Gp7a4TQkFfbYxLi2v3eatycdlWwC7nj/yFWvieRsr8KMJxHB34UfV
-         ifNWKjuVp5vijWTjO1kxnt7D9uOtbrXZnUf/yKPxeewaDk7Tfzg/XJuAjD9w9X3YlllO
-         xXRV5gC7AW0Y8/UYA+j29EpfHrosEGiDz5S6Lb5tIsMpD2iR1qCII+EPZfJOTivhhPm2
-         vBvBnPnOn0j16RoVTlXWiulPePLYGiN/fOtyw7MIsGMrsVBx4pThJBDjKmuR81ypeQOA
-         F8Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qIDdA9X0WLHYmvMMfU04BjScbjP58X4CNbduUQFyWDU=;
-        b=Xxq8SKsSWeRPr+MQ66nVG3FixUZlMyGAHXkHkuQv/d23d+pjkq1AYKnyxxgPxKvEj6
-         +tuNabNXD2OnMyUYTCtHWpozuRMACSXmum2LwXyXL7SAwEDJ31ngB3gOcjk2Y/pJoi5n
-         uBVYWLEI1GT8gOfleA+ED12RFFUDScFWiT0LNIUaNw3a3L3pHVulfoMOqYfo1iW5QmCn
-         FY3ek6dELK7mXv36TO6vTF2GthLcFz5vXsnTtRC+fAjEmONsm9CDUpxHLayaYQ0676YK
-         kJQqTOOUsaMZ4P5EzZ/Suu1P2WLdbj0ukN3nLq5LN+h2UMsSxHqoQg5BQvxEU1Qyyz/P
-         5X8w==
-X-Gm-Message-State: APjAAAUheILT5AyehwJpWITX2PN45mby0fwHWjhIwMLUIFnQTD1hluMw
-        uzgUQQieKLIu8ATRC23448M=
-X-Google-Smtp-Source: APXvYqxu2Nxxme/n4W6QvLay3PR21FaAPSpZh659xTZIxYXiTzJfPOc+2YGd4GH7Jjc+GuHAsiz4cA==
-X-Received: by 2002:a17:90a:a891:: with SMTP id h17mr3674995pjq.32.1572322519869;
-        Mon, 28 Oct 2019 21:15:19 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id bb15sm954517pjb.22.2019.10.28.21.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 21:15:19 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 21:15:16 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@bootlin.com>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tue, 29 Oct 2019 00:31:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41530 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726109AbfJ2Eb3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 00:31:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 71ED6AD14;
+        Tue, 29 Oct 2019 04:31:27 +0000 (UTC)
+Subject: Re: [PATCH v2 4/8] dt-bindings: arm: realtek: Document RTD1293 and
+ Synology DS418j
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, info@synology.com,
+        Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/3] Add touchscreen support for TBS A711 Tablet
-Message-ID: <20191029041516.GE57214@dtor-ws>
-References: <20191029005806.3577376-1-megous@megous.com>
+References: <20191020040817.16882-1-afaerber@suse.de>
+ <20191020040817.16882-5-afaerber@suse.de>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <b403dbda-c462-f0d2-42bb-e6e13854fa16@suse.de>
+Date:   Tue, 29 Oct 2019 05:31:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20191020040817.16882-5-afaerber@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029005806.3577376-1-megous@megous.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 01:58:03AM +0100, Ondrej Jirman wrote:
-> This is a resurrection of https://lkml.org/lkml/2018/7/25/143
+Am 20.10.19 um 06:08 schrieb Andreas Färber:
+> Define compatible strings for Realtek RTD1293 SoC and Synology
+> DiskStation DS418j NAS.
 > 
-> Compared to v4 of Myl�ne's series I've dropped all attempts to
-> power off the chip during suspend. This patch just enables the
-> regulator during probe and disables it on driver rmmod.
-> 
-> I've tested the driver with suspend/resume and touching the
-> panel resumes my soc.
+> Cc: info@synology.com
+> Acked-by: Rob Herring <robh@kernel.org>
+> [AF: Converted to json-schema]
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> ---
+>  v1 -> v2:
+>  * Converted to YAML schema
+>  
+>  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-OK, I guess we can revisit when someone really needs power savings in
-suspend...
+Applied to linux-realtek.git v5.5/dt64:
 
-I folded bindings into the driver change and applied, dts changes should
-go through respective tree.
+https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-realtek.git/log/?h=v5.5/dt64
 
-Thanks.
+Regards,
+Andreas
 
 -- 
-Dmitry
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
