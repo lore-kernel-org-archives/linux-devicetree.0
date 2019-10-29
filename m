@@ -2,95 +2,130 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A27CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8F2CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12ACA20717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:29:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NJIIrX2V"
+	by mail.kernel.org (Postfix) with ESMTP id 2D57A2083E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:37:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572367023;
+	bh=KJdlbLHm1VGH37tK+hk1pZHeuH/PEPFUuHuXC5yaXOw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zVRk+TI6r9wT2w+7Wg7DxfE7R5epDCY/I7zX4AOjcLnGeyCa/yi2FbVIheZtF6M0g
+	 zi+HiD/pMt4LPNKmmvUU0XA7nZRLdc19JWCMj70D6rA7QqOFoB0zdXXIR8QGNo6/Z/
+	 T3ClgO1bYRcMfo+ZgolKkjvr6gOsgn97HIzscWW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390194AbfJ2Q3d (ORCPT
+        id S2390192AbfJ2QhC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:29:33 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34287 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390053AbfJ2Q3d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 12:29:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e4so5649631pgs.1
-        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 09:29:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:subject:to:cc:user-agent:date;
-        bh=4+t5n913OXHitBtsyBvsQKQao+y+MGjMu+bJHGLBjZU=;
-        b=NJIIrX2VGTd8KVyiMbh9FNyJT+PRYeqwiWnBzN/7KtEovz+rbt74souj4Yl3475+X2
-         y1ZBT0rue+H6T3c2laYKlpuGiJxSAjHkOuBK/7i679q+Q/ETKY+Qk9ipT5wYsi8yAilN
-         sxvqvtqdW70L9hwfgffwO/8icsamxdqfNVnHs=
+        Tue, 29 Oct 2019 12:37:02 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43626 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389940AbfJ2QhC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 12:37:02 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s5so9452065oie.10;
+        Tue, 29 Oct 2019 09:37:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
-         :user-agent:date;
-        bh=4+t5n913OXHitBtsyBvsQKQao+y+MGjMu+bJHGLBjZU=;
-        b=Eg3i5uxFpJzKAwH5ivxZPlazM5HubFe+C/0Eioi9RJgzVW5PRJD/IhK9zRJbdpSZhB
-         kdJbIGyEO98x24nQZD4Y6tm9Qj5Y6RiHoJPsDl1/JCQGoLUTybLNjvAQJ9sg4JoFrDQG
-         INS2nSu2RMmoJYND0onodDf0/NszMQeLEOXqVO99KTrK7YwbhY972+sg/skIUf7dQ5uA
-         MjJ42lmjrhQmYmORHSR5Ab9M1Q+JxwjordgyXyYmlDJJM2fzwbA9Ohwf+JQaJqpmlp/T
-         vcP8lz+rK2Eu4ghVg68HUxkzFuuazsZ967VYIwwmhaEhg7HhedCEuKsGWq90MqPayM2e
-         XnFA==
-X-Gm-Message-State: APjAAAWWlYPw9K8kGRop9TSz5/imgeqhRejCgedpTFQSb8316YU1kOqg
-        lbzNvPWGsPM4SKeKcOa+R7TsfA==
-X-Google-Smtp-Source: APXvYqzHUIlTleuShH2sJpzD9w7h5lKq1L7bggbEXdXYd12/vBBs466jaOTyncdUSDYatWHo/eEOwg==
-X-Received: by 2002:a17:90a:ab0e:: with SMTP id m14mr7766178pjq.78.1572366572897;
-        Tue, 29 Oct 2019 09:29:32 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id v25sm13929998pfn.78.2019.10.29.09.29.31
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ePXMg5ijhyeC6jaORiV5zX4zFPOwmuSgfYr43macyAw=;
+        b=cyRIbZ9KAkBYAKnY7JCGCG9w7TsBaDQgePm8vtvKUl2egaHOfYJyYwceY5DukWuQoO
+         pWrN8tZ+pFB+Xdj+/Cr38MI+tvr/GPP5lKrMEq1+VKL8KkBDwCo90N/eWOHpOLEL4mGl
+         +PV/QNMBb7ba2aW/ks5BL2I1M2wXL711QJeNFcM6I8WS9zwhj5ppnbByNRbnuLwFEa+c
+         1peIS+F6D4cXhrlyq8WYlxNsjPfXJJrA8PmsW3jwc8koKeKDyAoxPCbZxsAd2fi/5eIu
+         01kv4btzq7m1/y+El2OwExQr67hrn9cCAVRyRfBW6VTIcF026cmvkyW9WUb+E2vAm3Ux
+         Jcyg==
+X-Gm-Message-State: APjAAAXWp8rg8FOsSJxxJJUYXE60/TYX4lqo2lc142x0ZLgLjXftB2a/
+        izPqjkiGUIL6kR1U43udkg==
+X-Google-Smtp-Source: APXvYqyIx7CEhxMdJ8BhGIcJhGTHsyz5urxfcj4tU+2dwb1TwtDB3ui2/e/cbYv2juZO3UHWGioOIA==
+X-Received: by 2002:aca:1a0a:: with SMTP id a10mr4968969oia.109.1572367021283;
+        Tue, 29 Oct 2019 09:37:01 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 79sm4770880otv.59.2019.10.29.09.37.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 09:29:31 -0700 (PDT)
-Message-ID: <5db868eb.1c69fb81.f60d0.d87b@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 29 Oct 2019 09:37:00 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 11:36:59 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ram Prakash Gupta <rampraka@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, vbadigan@codeaurora.org,
+        cang@codeaurora.org, ppvk@codeaurora.org, adrian.hunter@intel.com,
+        ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC 6/6] dt-bindings: mmc: sdhci-msm: Add clk scaling dt
+ parameters
+Message-ID: <20191029163659.GC1057@bogus>
+References: <1571668177-3766-1-git-send-email-rampraka@codeaurora.org>
+ <1571668177-3766-7-git-send-email-rampraka@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1571921328-13898-3-git-send-email-sanm@codeaurora.org>
-References: <1571921328-13898-1-git-send-email-sanm@codeaurora.org> <1571921328-13898-3-git-send-email-sanm@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 2/2] dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
-To:     Sandeep Maheswaram <sanm@codeaurora.org>, agross@kernel.org,
-        balbi@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, mgautam@codeaurora.org,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 29 Oct 2019 09:29:30 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571668177-3766-7-git-send-email-rampraka@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2019-10-24 05:48:48)
-> Add compatible for SC7180 SOC in device tree bindings
->=20
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+On Mon, Oct 21, 2019 at 07:59:37PM +0530, Ram Prakash Gupta wrote:
+> Adding clk scaling dt parameters.
+> 
+> Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Docume=
-ntation/devicetree/bindings/usb/qcom,dwc3.txt
-> index cb695aa..c27c58d 100644
-> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> @@ -6,6 +6,7 @@ Required properties:
->                         "qcom,msm8996-dwc3" for msm8996 SOC.
->                         "qcom,msm8998-dwc3" for msm8998 SOC.
->                         "qcom,sdm845-dwc3" for sdm845 SOC.
-> +                       "qcom,sc7180-dwc3" for sc7180 SOC.
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index da4edb1..afaf88d 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -39,6 +39,21 @@ Required properties:
+>  	"cal"	- reference clock for RCLK delay calibration (optional)
+>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>  
+> +Optional properties:
+> +- devfreq,freq-table - specifies supported frequencies for clock scaling.
+> +	Clock scaling logic shall toggle between these frequencies based
+> +	on card load. In case the defined frequencies are over or below
+> +	the supported card frequencies, they will be overridden
+> +	during card init. In case this entry is not supplied,
+> +	the driver will construct one based on the card
+> +	supported max and min frequencies.
+> +	The frequencies must be ordered from lowest to highest.
 
-Can this be sorted? And can this binding be converted to yaml?
+This should be common. Surely we already have something?
 
+> +
+> +- scaling-lower-bus-speed-mode - Few hosts can support DDR52 mode at the
+> +	same lower system voltage corner as high-speed mode. In such
+> +	cases, it is always better to put it in DDR  mode which will
+> +	improve the performance without any power impact.
+
+The description sounds like a boolean. Why the string? What are possible 
+values?
+
+Also needs a 'qcom' vendor prefix.
+
+> +
+>  Example:
+>  
+>  	sdhc_1: sdhci@f9824900 {
+> @@ -56,6 +71,10 @@ Example:
+>  
+>  		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+>  		clock-names = "core", "iface";
+> +
+> +		devfreq,freq-table = <50000000 200000000>;
+> +		scaling-lower-bus-speed-mode = "DDR52"
+> +
+>  	};
+>  
+>  	sdhc_2: sdhci@f98a4900 {
+> -- 
+> 1.9.1
+> 
