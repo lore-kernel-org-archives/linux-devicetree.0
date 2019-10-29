@@ -2,114 +2,114 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A326ACA9EC4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9ACCA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F1A214B2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVW/ianL"
+	by mail.kernel.org (Postfix) with ESMTP id 7E5A920874
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572352178;
+	bh=tWUUDvXhSWV62uXqBnzTlajQ8EngQxV5u4Ue/ygBYPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UvczFn6FEW0Vj6aAMFni0iugBM1f9E/Z+flQmWR1xVbUfiuX8ET5MrxklLHcaBDvE
+	 wIK0IBnAPxUGELix0ZhBp5DQftLea5iSbSAbLii8WsYJesBJAHPS30W4aqeOTD0pVN
+	 ObfAFPjDdeS+OXPF2n9yeZVpA43r+3Xy7Pvh+O5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbfJ2M2C (ORCPT
+        id S1727868AbfJ2M3i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:28:02 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34301 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729317AbfJ2M2B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 08:28:01 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k7so7543244pll.1;
-        Tue, 29 Oct 2019 05:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bRqsU0FAlQQqAiPlj1ZBRRbHzHEqFM5qE9H5nBbrVNI=;
-        b=SVW/ianL7vH+K2MEz6Mm4Tn6i83kscScAxlhcrc/YLLGBMSlTrfYpWMYHP3cymQH2s
-         zcU3F9b1HacpJiE/3hVDnebLN2+RofLZmYRmeJDA1N02o7uBIREurZabXPIP3ldfIn4P
-         7hP5ixgPiNa3QQ0j96VLrQ2J1gvUwPW+4EEr/qbXhUnlYJJXhwSOUaoXuY1v0HsMZhgu
-         L+OiBda0dHNUwrUK+MPSq9tX0RVUPjeIcSM+QDoJci80fxpPNWN1U500C8Ms68aqNTOH
-         l/2PiipgFlHQ14mycEFDItAowt4nqPZinKztTFccfDri9Sckp1UWQyzlJv8hQovxC9v8
-         WOaw==
+        Tue, 29 Oct 2019 08:29:38 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43648 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfJ2M3h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 08:29:37 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s5so8716285oie.10;
+        Tue, 29 Oct 2019 05:29:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=bRqsU0FAlQQqAiPlj1ZBRRbHzHEqFM5qE9H5nBbrVNI=;
-        b=s0lTPIF8txk3McxPuJSiu/T5D5yXjV69sC0YPPly0hTXldFWZ2PjVHnvBLN3kdeInO
-         e/+VkuiNLV9XOuScMg2OTltMRml16zjVDQMna2lnsvp6s/AHCvKAIK2oDHpyF6Bvh8aw
-         p87xPUtD1feeZqDXtvJrIvGHao0CW1aJIdjlFV3r+RdWmor/hXprwLvhritbITwFkgHY
-         dhfe6u8Yi+mmOArhFGc6T2Y/J0Btv2EGIKHemS77b41P53mugkkOMrD1hXztssOvWdv0
-         nB7c9FKwJtc4mkNVuT1NYBDJ/aYA7ooUGDTKUOvK+LvLEDK1ibaiwbftwWKud0R9lXsR
-         r7hA==
-X-Gm-Message-State: APjAAAVg7yqdJcm+FLlny5Ii/ieH3TQU9pXpljrPPm8soRS1jMKxnLWR
-        QFceCsgsPrG+1dKXj8vYR8c=
-X-Google-Smtp-Source: APXvYqye3oFYJMHHWRiHNhLbw5/kavIwFul1a6w6zWfvDAoFk/il60K1UQfqQhxI73o/f6q1BQiBqg==
-X-Received: by 2002:a17:902:bd84:: with SMTP id q4mr3912657pls.333.1572352081065;
-        Tue, 29 Oct 2019 05:28:01 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id dw19sm2306891pjb.27.2019.10.29.05.28.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 29 Oct 2019 05:28:00 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 05:27:59 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
-Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v3 1/2] hwmon: Add support for ltc2947
-Message-ID: <20191029122759.GA19337@roeck-us.net>
-References: <20191021154115.319073-1-nuno.sa@analog.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=okLPsosnjsIdAglbOpT+46TAv0woYLu5g4KKw1XBUMA=;
+        b=lM6VWrT9du2QY1TbvJlMHZnGLobKPcF0GBn/06Edvjns67NhXPGISiqeOwl2ETwdrY
+         INXVaQHFjA1L/4WVeluNbRdooUk3HM2vgDvjPfPA9lCQv0pqVEhwEQjPtNnFP/ZKiQzM
+         4LM9i48qE0MpSwjC4GESNTcSY7cHIwcbttPYUwWo4QMeH0zZoql8yMhhQQ9RMaf9LBeF
+         MelIXESTwTIGurwE2q/V9ppC0b0WaJ3F5+TgTU++Srwc5nB7P8Se0FGV+tY8lCznHzfu
+         7+b2Z+AIu9w4jvcOwvr5vFurwWybYGdh6JCDBLIO3TzfGz55q64NFPzJQe6Ig1vTFvn6
+         fqNg==
+X-Gm-Message-State: APjAAAUknjtybA0IwoxlJ1rOKgGS4FL985J6ues4fGxDkmPiNf9yxwvm
+        O+bqd5M9b59sJmsj6KNmNA==
+X-Google-Smtp-Source: APXvYqyO8DH2IEhStv2gSlye9+VbvTmQX6+T9WxWt66DaOIg31GxlTrzat5+Bsvuee/7K8GJyRccXw==
+X-Received: by 2002:aca:4896:: with SMTP id v144mr3970672oia.16.1572352176888;
+        Tue, 29 Oct 2019 05:29:36 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m4sm4653250otm.14.2019.10.29.05.29.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 05:29:36 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 07:29:35 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: at91: Document Kizboxmini boards
+ binding
+Message-ID: <20191029122935.GA8412@bogus>
+References: <20191018140304.31547-1-kamel.bouhara@bootlin.com>
+ <20191018140304.31547-2-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191021154115.319073-1-nuno.sa@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191018140304.31547-2-kamel.bouhara@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 05:41:14PM +0200, Nuno Sá wrote:
-> The ltc2947 is a high precision power and energy monitor with an
-> internal sense resistor supporting up to +/- 30A. Three internal no
-> Latency ADCs ensure accurate measurement of voltage and current, while
-> high-bandwidth analog multiplication of voltage and current provides
-> accurate power measurement in a wide range of applications. Internal or
-> external clocking options enable precise charge and energy measurements.
+On Fri, Oct 18, 2019 at 04:03:03PM +0200, Kamel Bouhara wrote:
+> Document devicetree's bindings for the SAM9G25 Kizbox Mini boards of
+> Overkiz SAS.
 > 
-> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> ---
+>  .../devicetree/bindings/arm/atmel-at91.yaml        | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> index 1e72e3e6e025..666462988179 100644
+> --- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> @@ -35,6 +35,20 @@ properties:
+>                - atmel,at91sam9x60
+>            - const: atmel,at91sam9
+>  
+> +      - description: Overkiz kizbox Mini Mother Board
+> +        items:
+> +          - const: overkiz,kizboxmini-mb
+> +          - const: atmel,at91sam9g25
+> +          - const: atmel,at91sam9x5
+> +          - const: atmel,at91sam9
+> +
+> +      - description: Overkiz kizbox Mini RailDIN
+> +        items:
+> +          - const: overkiz,kizboxmini-rd
+> +          - const: atmel,at91sam9g25
+> +          - const: atmel,at91sam9x5
+> +          - const: atmel,at91sam9
 
-[ ... ]
+These 2 can also be combined into 1 entry.
 
 > +
-> +static ssize_t ltc2947_show_value(struct device *dev,
-> +				  struct device_attribute *da, char *buf)
-> +{
-> +	struct ltc2947_data *st = dev_get_drvdata(dev);
-> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-> +	int ret;
-> +	s64 val = 0;
-> +
-> +	switch (attr->index) {
-> +	case LTC2947_REG_ENERGY1:
-> +	case LTC2947_REG_ENERGY2:
-> +		ret = ltc2947_val_read(st, attr->index, PAGE0, 6, &val);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-
-This complexity is also unnecessary: index is either LTC2947_REG_ENERGY1 or
-LTC2947_REG_ENERGY2. I removed the case statement when applying.
-
-Guenter
+>        - items:
+>            - enum:
+>                - atmel,at91sam9g15
+> -- 
+> 2.23.0
+> 
