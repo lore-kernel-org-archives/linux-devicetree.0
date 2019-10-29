@@ -2,72 +2,112 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2DFCA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 05:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97BCCA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 06:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B2F20830
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 05:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19C820830
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 06:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731954AbfJ2F3Z (ORCPT
+        id S1732347AbfJ2GOh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 01:29:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53594 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729034AbfJ2F3Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 01:29:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 69968AD09;
-        Tue, 29 Oct 2019 05:29:23 +0000 (UTC)
-Subject: Re: [PATCH v2 10/11] arm64: dts: realtek: Adopt RTD129x reset
- constants
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20191023101317.26656-1-afaerber@suse.de>
- <20191023101317.26656-11-afaerber@suse.de>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <88aa786d-6578-7492-9a01-9a6415d7d867@suse.de>
-Date:   Tue, 29 Oct 2019 06:29:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 29 Oct 2019 02:14:37 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8598 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727462AbfJ2GOh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 02:14:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Oct 2019 23:14:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,242,1569308400"; 
+   d="scan'208";a="211040815"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Oct 2019 23:14:35 -0700
+Received: from [10.226.39.46] (ekotax-MOBL.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id 1A5BF580372;
+        Mon, 28 Oct 2019 23:14:29 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <c46ba3f4187fe53807948b4f10996b89a75c492c.1571638827.git.eswara.kota@linux.intel.com>
+ <CH2PR12MB400751D01BCEE7ABB708280BDA690@CH2PR12MB4007.namprd12.prod.outlook.com>
+ <28b5a21b-b636-f7e4-2d27-23c5d900b0d3@linux.intel.com>
+ <e86116b7-b65f-f31e-abb7-a4533aa6d592@linux.intel.com>
+ <20191022114413.GG32742@smile.fi.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <1ac70f92-c148-ca88-a2c1-ec90741ac123@linux.intel.com>
+Date:   Tue, 29 Oct 2019 14:14:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191023101317.26656-11-afaerber@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20191022114413.GG32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 23.10.19 um 12:13 schrieb Andreas Färber:
-> Replace reset controller indices with constants.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  v1 -> v2: Unchanged
->  
->  arch/arm64/boot/dts/realtek/rtd129x.dtsi | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
 
-Squashed into preceding arm64 patch and applied to linux-realtek.git
-v5.5/dt64:
+On 10/22/2019 7:44 PM, andriy.shevchenko@intel.com wrote:
+> On Tue, Oct 22, 2019 at 06:18:57PM +0800, Dilip Kota wrote:
+>> On 10/21/2019 6:44 PM, Dilip Kota wrote:
+>>> On 10/21/2019 4:29 PM, Gustavo Pimentel wrote:
+>>>> On Mon, Oct 21, 2019 at 7:39:19, Dilip Kota
+>>>> <eswara.kota@linux.intel.com>
+>>>> wrote:
+> First of all, it's a good behaviour to avoid way long quoting.
+(Sorry for the late reply, I am back today from sick leave.)
+Noted. Will take care of it.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-realtek.git/log/?h=v5.5/dt64
+>
+>>>>> +static void pcie_update_bits(void __iomem *base, u32 mask, u32
+>>>>> val, u32 ofs)
+>>>>> +{
+>>>>> +    u32 orig, tmp;
+>>>>> +
+>>>>> +    orig = readl(base + ofs);
+>>>>> +
+>>>>> +    tmp = (orig & ~mask) | (val & mask);
+>>>>> +
+>>>>> +    if (tmp != orig)
+>>>>> +        writel(tmp, base + ofs);
+>>>>> +}
+>>>> I'd suggest to the a take on FIELD_PREP() and FIELD_GET() and use more
+>>>> intuitive names such as new and old, instead of orig and tmp.
+>>> Sure, i will update it.
+>> I tried using FIELD_PREP and FIELD_GET but it is failing because FIELD_PREP
+>> and FIELD_GET
+>> are expecting mask should be constant macro. u32 or u32 const are not
+>> accepted.
+> If you look at bitfield.h carefully you may find in particular
+> u32_replace_bits().
 
-Thanks,
-Andreas
+Thanks for pointing it.
+But, I found bitfields are not contiguous during few function calls, so 
+cannot use them here.
 
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Regards,
+Dilip
+
+>
