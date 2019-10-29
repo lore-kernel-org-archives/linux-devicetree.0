@@ -2,189 +2,223 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3747FCA9EC2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D85CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C966217D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572314694;
-	bh=onBnYDmt5g+9g0jvlINksSIW6mBJLA+lQUcUju1Jnsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lMiZ/Ir2isLlan+sPR1NF8LyA6VLGhfvzzECQZGE1ZrMe6Qvc5dn8svipdqyutzSy
-	 TljL/JiNm6FkUcfByw0BHBhHdQP+dhXsI6mqqxkMevyNPQvYtFp8yThI8m1xT7ac0P
-	 nNHv/8Xn3THl7pc1d7gp58TIPdXUqocbbTCZnLF0=
+	by mail.kernel.org (Postfix) with ESMTP id 622EB21479
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:23:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fJVzoelD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbfJ2CEx (ORCPT
+        id S1728861AbfJ2CXW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:04:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44398 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfJ2CEx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 22:04:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n48so8416741ota.11;
-        Mon, 28 Oct 2019 19:04:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HFyv8biFiEa7dI7+8/hKQK/SKrkibEovMGYz51a6e3Q=;
-        b=PMiab0SYWy7QtcAdn43dh73BY3tnpVkIcwbDaOwCh7kPydf1wRsJuUpQlAIakxRqiX
-         kn3tOrIsY2FcXuC6/h+Rq4tgNsJFibYnsBhEFUqih2CEBzpilllXvVvjFVp4vHEvgAH2
-         RNX1kRdmMGJtUYHNHxsaqsSkkAL+3KzA3gwWYmxpNfOi+z81Uxv7NA4fbMU/w4siHZYU
-         jcqI4ofCAolAGpC4gZ/L50YMpfCFkLmSxFwoUj3ircqPd7Pe1n4RLhX7lZJ2AAWRSZSk
-         z3hTSxjFM9FzQkc7Ive5dkOpBoLjDhKXSAU5qLuZAa5NnqNaeoUwNM1+AX67K/q7zQkt
-         Lijw==
-X-Gm-Message-State: APjAAAWX9D/mIfsckQJH2rFXpc05JwoC4y1i3whItrvq8q2MNZKvY9HB
-        JWu+WJby3v1kGsJ8WBwfZQ==
-X-Google-Smtp-Source: APXvYqz/PKQhwGT0k8RL1Zb/NY7UEotlPlxCE0kRl2Ne5SNWKtblnq+z4dve81EPfyp+V4p8my/E/A==
-X-Received: by 2002:a9d:469d:: with SMTP id z29mr16109164ote.309.1572314692113;
-        Mon, 28 Oct 2019 19:04:52 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n1sm154935oij.13.2019.10.28.19.04.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 19:04:51 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 21:04:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- RPMHCC clock bindings
-Message-ID: <20191029020450.GA16322@bogus>
-References: <1571393364-32697-1-git-send-email-tdas@codeaurora.org>
- <1571393364-32697-2-git-send-email-tdas@codeaurora.org>
+        Mon, 28 Oct 2019 22:23:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39518 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727987AbfJ2CXW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 28 Oct 2019 22:23:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=weWtSFC8Dm8rRDFq7Ws7YUnkyjq/k0sSGCP9VGBKkyw=; b=fJVzoelD4VQgmU1U+f7c/xTlQ5
+        sNvBmfgwFgZ1JPMBhPUlhZdvJCN3484WQZFbgDu/hxD5WOBoL1rKBHhHw7VXRoCgqM0cln5ylX5WF
+        lnCX5riYaxwMGB21OgC97MCdQTdzWPkaGQ9c9zui7QlgA7bM7TgZ3MiOfStUM5RKTEvM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iPHA1-0001NW-4d; Tue, 29 Oct 2019 03:23:05 +0100
+Date:   Tue, 29 Oct 2019 03:23:05 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 net-next 05/12] dt-bindings: net: ti: add new cpsw
+ switch driver bindings
+Message-ID: <20191029022305.GK15259@lunn.ch>
+References: <20191024100914.16840-1-grygorii.strashko@ti.com>
+ <20191024100914.16840-6-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571393364-32697-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <20191024100914.16840-6-grygorii.strashko@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 03:39:22PM +0530, Taniya Das wrote:
-> The RPMHCC clock provider have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,rpmh-clk.txt    | 27 ------------
->  .../devicetree/bindings/clock/qcom,rpmhcc.yaml     | 49 ++++++++++++++++++++++
->  2 files changed, 49 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-> deleted file mode 100644
-> index 365bbde..0000000
-> --- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
-> +++ /dev/null
-> @@ -1,27 +0,0 @@
-> -Qualcomm Technologies, Inc. RPMh Clocks
-> --------------------------------------------------------
-> -
-> -Resource Power Manager Hardened (RPMh) manages shared resources on
-> -some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
-> -other hardware subsystems via RSC to control clocks.
-> -
-> -Required properties :
-> -- compatible : must be one of:
-> -	       "qcom,sdm845-rpmh-clk"
-> -	       "qcom,sm8150-rpmh-clk"
-> -
-> -- #clock-cells : must contain 1
-> -- clocks: a list of phandles and clock-specifier pairs,
-> -	  one for each entry in clock-names.
-> -- clock-names: Parent board clock: "xo".
-> -
-> -Example :
-> -
-> -#include <dt-bindings/clock/qcom,rpmh.h>
-> -
-> -	&apps_rsc {
-> -		rpmhcc: clock-controller {
-> -			compatible = "qcom,sdm845-rpmh-clk";
-> -			#clock-cells = <1>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> new file mode 100644
-> index 0000000..326bfd7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,rpmhcc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +TI SoC Ethernet Switch Controller Device Tree Bindings (new)
+> +------------------------------------------------------
 > +
-> +title: Qualcomm Technologies, Inc. RPMh Clocks Bindings
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Resource Power Manager Hardened (RPMh) manages shared resources on
-> +  some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
-> +  other hardware subsystems via RSC to control clocks.
-> +
-> +properties:
-> +  compatible :
+> +The 3-port switch gigabit ethernet subsystem provides ethernet packet
+> +communication and can be configured as an ethernet switch.
 
-drop space     ^
+Hi Grygorii
 
-> +    enum:
-> +       - qcom,sdm845-rpmh-clk
-> +       - qcom,sm8150-rpmh-clk
+Maybe referring it to a 3-port switch will cause confusion, since in
+this use case, it only has 2 ports, and you only list two ports in the
+device tree.
 
-Wrong indent (1 char too many).
+> It provides the
+> +gigabit media independent interface (GMII),reduced gigabit media
+> +independent interface (RGMII), reduced media independent interface (RMII),
+> +the management data input output (MDIO) for physical layer device (PHY)
+> +management.
+> +
+> +Required properties:
+> +- compatible : be one of the below:
+> +	  "ti,cpsw-switch" for backward compatible
+> +	  "ti,am335x-cpsw-switch" for AM335x controllers
+> +	  "ti,am4372-cpsw-switch" for AM437x controllers
+> +	  "ti,dra7-cpsw-switch" for DRA7x controllers
+> +- reg : physical base address and size of the CPSW module IO range
+> +- ranges : shall contain the CPSW module IO range available for child devices
+> +- clocks : should contain the CPSW functional clock
+> +- clock-names : should be "fck"
+> +	See bindings/clock/clock-bindings.txt
+> +- interrupts : should contain CPSW RX_THRESH, RX, TX, MISC interrupts
+> +- interrupt-names : should contain "rx_thresh", "rx", "tx", "misc"
+> +	See bindings/interrupt-controller/interrupts.txt
+> +
+> +Optional properties:
+> +- syscon : phandle to the system control device node which provides access to
+> +	efuse IO range with MAC addresses
+> +
+> +Required Sub-nodes:
+> +- ethernet-ports : contains CPSW external ports descriptions
+> +	Required properties:
+> +	- #address-cells : Must be 1
+> +	- #size-cells : Must be 0
+> +	- reg : CPSW port number. Should be 1 or 2
+> +	- phys : phandle on phy-gmii-sel PHY (see phy/ti-phy-gmii-sel.txt)
+> +	- phy-mode : See [1]
+> +	- phy-handle : See [1]
+> +
+> +	Optional properties:
+> +	- label : Describes the label associated with this port
+> +	- ti,dual-emac-pvid : Specifies default PORT VID to be used to segregate
+> +		ports. Default value - CPSW port number.
+> +	- mac-address : See [1]
+> +	- local-mac-address : See [1]
+> +
+> +- mdio : CPSW MDIO bus block description
+> +	- bus_freq : MDIO Bus frequency
+> +	See bindings/net/mdio.txt and davinci-mdio.txt
+> +
+> +- cpts : The Common Platform Time Sync (CPTS) module description
+> +	- clocks : should contain the CPTS reference clock
+> +	- clock-names : should be "cpts"
+> +	See bindings/clock/clock-bindings.txt
+> +
+> +	Optional properties - all ports:
+> +	- cpts_clock_mult : Numerator to convert input clock ticks into ns
+> +	- cpts_clock_shift : Denominator to convert input clock ticks into ns
+> +			  Mult and shift will be calculated basing on CPTS
+> +			  rftclk frequency if both cpts_clock_shift and
+> +			  cpts_clock_mult properties are not provided.
+> +
+> +[1] See Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +
+> +Examples:
+> +
+> +mac_sw: switch@0 {
+> +	compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
+> +	reg = <0x0 0x4000>;
+> +	ranges = <0 0 0x4000>;
+> +	clocks = <&gmac_main_clk>;
+> +	clock-names = "fck";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	syscon = <&scm_conf>;
+> +	status = "disabled";
+> +
+> +	interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "rx_thresh", "rx", "tx", "misc"
+> +
+> +	ethernet-ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpsw_port1: port@1 {
+> +			reg = <1>;
+> +			label = "port1";
+> +			/* Filled in by U-Boot */
+> +			mac-address = [ 00 00 00 00 00 00 ];
+> +			phys = <&phy_gmii_sel 1>;
+> +		};
+> +
+> +		cpsw_port2: port@2 {
+> +			reg = <2>;
+> +			label = "wan";
+> +			/* Filled in by U-Boot */
+> +			mac-address = [ 00 00 00 00 00 00 ];
+> +			phys = <&phy_gmii_sel 2>;
+> +		};
+> +	};
+> +
+> +	davinci_mdio_sw: mdio@1000 {
+> +		compatible = "ti,cpsw-mdio","ti,davinci_mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		ti,hwmods = "davinci_mdio";
+> +		bus_freq = <1000000>;
+> +		reg = <0x1000 0x100>;
+> +	};
+> +
+> +	cpts {
+> +		clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 25>;
+> +		clock-names = "cpts";
+> +	};
+> +};
+> +
+> +&mac_sw {
+> +	pinctrl-names = "default", "sleep";
+> +	status = "okay";
+> +};
+> +
+> +&cpsw_port1 {
+> +	phy-handle = <&ethphy0_sw>;
+> +	phy-mode = "rgmii";
+> +	ti,dual_emac_pvid = <1>;
+> +};
+> +
+> +&cpsw_port2 {
+> +	phy-handle = <&ethphy1_sw>;
+> +	phy-mode = "rgmii";
+> +	ti,dual_emac_pvid = <2>;
+> +};
+> +
+> +&davinci_mdio_sw {
+> +	ethphy0_sw: ethernet-phy@0 {
+> +		reg = <0>;
+> +	};
+> +
+> +	ethphy1_sw: ethernet-phy@1 {
+> +		reg = <1>;
+> +	};
+> +};
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    maxItems: 1
+In an example, it is unusual to split things up like this. I
+understand that parts of this will be in the dtsi file, and parts in
+the .dts file, but examples generally keep it all as one. And when you
+re-write this in YAML so it can be used to validated real DTs, you
+will have to combine it.
 
-Can drop this. Implied by items list.
-
-> +    items:
-> +      - const: xo
-> +
-> +  '#clock-cells':
-> +      const: 1
-> +
-> +required:
-> +  - compatible
-> +  - '#clock-cells'
-> +
-> +examples:
-> +  # Example for GCC for SDM845: The below node should be defined inside
-> +  # &apps_rsc node.
-> +  - |
-> +    #include <dt-bindings/clock/qcom,rpmh.h>
-> +    rpmhcc: clock-controller {
-> +      compatible = "qcom,sdm845-rpmh-clk";
-> +      clocks = <&xo_board>;
-> +      clock-names = "xo";
-> +      #clock-cells = <1>;
-> +    };
-> +...
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
-> 
+     Andrew
