@@ -7,40 +7,38 @@ X-Spam-Status: No, score=-10.2 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DFBCA9EB9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 04:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA575CA9EB9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 05:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6975B20874
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 04:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF34E20663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 05:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731648AbfJ2ElC (ORCPT
+        id S1729489AbfJ2FWt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 00:41:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43470 "EHLO mx1.suse.de"
+        Tue, 29 Oct 2019 01:22:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51472 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728453AbfJ2ElC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 00:41:02 -0400
+        id S1726091AbfJ2FWs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 01:22:48 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2E11CAD14;
-        Tue, 29 Oct 2019 04:41:01 +0000 (UTC)
-Subject: Re: [PATCH v2 8/8] arm64: dts: realtek: Add RTD1296 and Synology
- DS418
+        by mx1.suse.de (Postfix) with ESMTP id 40256B41C;
+        Tue, 29 Oct 2019 05:22:47 +0000 (UTC)
+Subject: Re: [PATCH v3 1/2] arm64: dts: realtek: Add oscillator for RTD129x
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, info@synology.com,
-        Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-References: <20191020040817.16882-1-afaerber@suse.de>
- <20191020040817.16882-9-afaerber@suse.de>
+References: <20191020153612.29889-1-afaerber@suse.de>
+ <20191020153612.29889-2-afaerber@suse.de>
 From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
 Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <8e666996-7e6f-dd25-92c7-18218106658c@suse.de>
-Date:   Tue, 29 Oct 2019 05:41:00 +0100
+Message-ID: <3222d376-1e35-3bde-d5d6-674edcbc8e3d@suse.de>
+Date:   Tue, 29 Oct 2019 06:22:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191020040817.16882-9-afaerber@suse.de>
+In-Reply-To: <20191020153612.29889-2-afaerber@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -49,25 +47,15 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 20.10.19 um 06:08 schrieb Andreas Färber:
-> Add Device Trees for RTD1296 SoC and Synology DiskStation DS418.
+Am 20.10.19 um 17:36 schrieb Andreas Färber:
+> Add 27 MHz oscillator clock node.
 > 
-> Cc: info@synology.com
 > Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
->  v1 -> v2:
->  * Moved SPDX-License-Identifier to top
->  * Dropped "arm,armv8" (Rob)
->  * Changed from MIT to BSD-2-Clause (Rob)
->  * Dropped accidental enable-method and cpu-release-addr
->  * Fixed DS418 to use rtd1296.dtsi
+>  v3: New (from previously blocking clk patch series)
 >  
->  arch/arm64/boot/dts/realtek/Makefile          |  2 +
->  arch/arm64/boot/dts/realtek/rtd1296-ds418.dts | 30 +++++++++++++
->  arch/arm64/boot/dts/realtek/rtd1296.dtsi      | 65 +++++++++++++++++++++++++++
->  3 files changed, 97 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd1296-ds418.dts
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd1296.dtsi
+>  arch/arm64/boot/dts/realtek/rtd129x.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
 Applied to linux-realtek.git v5.5/dt64:
 
