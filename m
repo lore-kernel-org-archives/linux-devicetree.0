@@ -2,150 +2,118 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30BBCA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615C8CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A5A20862
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35AB720717
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 02:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VLQKO+JO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYXgJtgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbfJ2ClZ (ORCPT
+        id S1730884AbfJ2Cs0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 28 Oct 2019 22:41:25 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34925 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729320AbfJ2ClZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 22:41:25 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l10so11953198wrb.2
-        for <devicetree@vger.kernel.org>; Mon, 28 Oct 2019 19:41:23 -0700 (PDT)
+        Mon, 28 Oct 2019 22:48:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43364 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbfJ2Cs0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Oct 2019 22:48:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n1so4492901wra.10;
+        Mon, 28 Oct 2019 19:48:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZeDXYfJYer9ewRjx0PKDp7gkl9UyDafoP/CtcLx8QMs=;
-        b=VLQKO+JOvP8uz/jmVZM9OjdCfHDXyDMWpkMpTUHQHfjmA84+CUWD7XxXQNaduG/DhK
-         WpLIlhGmDUXteBLSWlDLv3lLQKGl9plS/P7jNHsE1n2OgqkcjY1MB0T3Q0WBTvNA1F40
-         PLq6JygSU3JQITuvsF6azO0JElsbcTQp8BtSk=
+         :cc;
+        bh=gteraG87XCdj5xSgInB/PvpzdZKgoT7TtTZ9+9ieQnY=;
+        b=KYXgJtgop4xEAbJ5U1sDVAAOoFj+g+2/3RxYykRDsFMlUNtjtSnnULpJApifFpS1F/
+         nRmou4871/MmQQ9ysAKm5FqNeQGG8kX1/mzKsX21kaeZw9C89wrnk8wx5XG3GsbIe3em
+         So/+8DdijXhe5gsZcmF2xO7NFlcTVLj7mdV1FgGXSkI+FEk37Ce8NzQyXdnp99ofWgj1
+         X054yld+7l2G57BpTVXp6ikjfZyJ1Q5+/8Yj/mXLXuAydorFc4jr+aXoAGthRP2GGESh
+         ri8fDPLvfL5WJLkWEjBVVAkZhgWvNUTt11IUyGRnsHFsQrssOkFksFEOYG79rrGoZ11w
+         ojlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZeDXYfJYer9ewRjx0PKDp7gkl9UyDafoP/CtcLx8QMs=;
-        b=eVWEIpFax+1IhVXpo91uhpxCQVMnQt8FQuiASoG4LbsgmqlIx+JmnViVcE1u2oJTKQ
-         ZBUc+VdfwkGvRekDoqhABiT8Jp8aUDodtjw9zr+8YxqHWiOMsn0UVLUhYGjSxM400fMB
-         w6iO+Zk5H6UMQCg1BwSBQB7j1OtFxB3DslJuXzBRCo+b2ybJ3hA/HvDrS8Ven1Xv63BY
-         QFdhmBwXoEakXduGtTVedbpJBgDjOM8K1sUq+mlWFmdrgT82LTrAmiySbfWPlqT4MiE/
-         vF3otGptDvwRtpRkE5hKBDwEpjsfgC274WnjEZ8uzUbbt9IXgGQkQAP54EuOl/brqY59
-         94Rg==
-X-Gm-Message-State: APjAAAUPg+bDDBIbclPMUmYZ601eJ2MjdHwz6Fx4IwbjDFGwriLJmZzs
-        ZcB7dlgUWuu7nbLNTpbwYP5hnPPYfSeUgUOTH8Esrw==
-X-Google-Smtp-Source: APXvYqyc+JXXHY09WmrhUa6gx/7O5d2iKpnoJiK3FXpiuNcBFCoy0/gMtIdx+mtcV6BqjcvdZ3c6ru0/7R8MCJ1fJrA=
-X-Received: by 2002:adf:e806:: with SMTP id o6mr15942278wrm.139.1572316882248;
- Mon, 28 Oct 2019 19:41:22 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=gteraG87XCdj5xSgInB/PvpzdZKgoT7TtTZ9+9ieQnY=;
+        b=LD5EQ7zjKSLXjYBMSjVWK9u60yjti6LQLXlVS5S939va0MVyWGSaFhLSyIlk4njyiC
+         AHzr37EQLl9e0Lhmn2O5P4pNJUnSBaM5605lO17nl3UN0+ynP7CYp62Fv7il6HglM3N6
+         BkVxGn7D9kyMDR4R/AkmrSIUpUewYrd3PzWlX/lmhPQqqh56Av/TaR9zdbpzR9UTyLdu
+         shTW2hVLwKwkR208U9Ij8/kM/SuYncUB0wVWeEYLNMPJxTKyezbTEJ8Vq6YApega5Eqv
+         l0jLJebKaJ8YRWZuu5VIsVuMU1ZFyDs/Oia/mTRsQbjavptZ30bxA6AnMs8q/hFnnZLC
+         E9WA==
+X-Gm-Message-State: APjAAAVhQ1tt2FO/HkYXFXyoNeAOA7z6BJvNhe//CzEAGU23Xfo748tQ
+        4Bt0tVP2o7jHPmuBvBw5HJOdVORp0toC2ryE8JU=
+X-Google-Smtp-Source: APXvYqyCnGBv7rgt4wt2fvjFkhPMhg3/hSA/t9Nk3hOEOwreIo3dDyDVdayfbU1xUEfSkz5mRqAK9ayZBItouzgdpyk=
+X-Received: by 2002:a5d:6281:: with SMTP id k1mr17999142wru.69.1572317304467;
+ Mon, 28 Oct 2019 19:48:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191025133007.11190-4-cychiang@chromium.org> <201910290345.w2EEW5S3%lkp@intel.com>
-In-Reply-To: <201910290345.w2EEW5S3%lkp@intel.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Tue, 29 Oct 2019 10:40:55 +0800
-Message-ID: <CAFv8NwJYrpT=hCFwWfbdRvC971X-XGS-mjEBJrggQTJ02nhv7g@mail.gmail.com>
-Subject: Re: [PATCH v8 3/6] ASoC: rockchip_max98090: Optionally support HDMI
- use case
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>,
+References: <20191025102915.23677-1-chunyan.zhang@unisoc.com>
+ <20191025102915.23677-2-chunyan.zhang@unisoc.com> <CA+H2tpHkYwQLEO7ftLebErsEXBQnRS37gFOoKoG+_jnt5+0r-A@mail.gmail.com>
+In-Reply-To: <CA+H2tpHkYwQLEO7ftLebErsEXBQnRS37gFOoKoG+_jnt5+0r-A@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Tue, 29 Oct 2019 10:47:48 +0800
+Message-ID: <CAAfSe-uz396tvOSa6g-BJpwzARDi2uaPrCsP01f3A-Jww_c7BA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: serial: Add a new compatible string for SC9863A
+To:     Orson Zhai <orsonzhai@gmail.com>
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        DTML <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Baolin Wang <baolin.wang7@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 3:10 AM kbuild test robot <lkp@intel.com> wrote:
+On Sat, 26 Oct 2019 at 10:11, Orson Zhai <orsonzhai@gmail.com> wrote:
 >
-> Hi Cheng-Yi,
+> Hi Chunyan,
 >
-> I love your patch! Yet something to improve:
+> On Fri, Oct 25, 2019 at 6:30 PM Chunyan Zhang <chunyan.zhang@unisoc.com> wrote:
+> >
+> >
+> > SC9863A use the same serial device which SC9836 uses.
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > ---
+> >  Documentation/devicetree/bindings/serial/sprd-uart.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> > index 9607dc616205..0a9f8a7809e1 100644
+> > --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> > +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> > @@ -4,6 +4,7 @@ Required properties:
+> >  - compatible: must be one of:
+> >    * "sprd,sc9836-uart"
+> >    * "sprd,sc9860-uart", "sprd,sc9836-uart"
+> > +  * "sprd,sc9863-uart", "sprd,sc9836-uart"
 >
-> [auto build test ERROR on rockchip/for-next]
-> [also build test ERROR on v5.4-rc5 next-20191028]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help
-> improve the system. BTW, we also suggest to use '--base' option to specif=
-y the
-> base tree in git format-patch, please see https://stackoverflow.com/a/374=
-06982]
->
-> url:    https://github.com/0day-ci/linux/commits/Cheng-Yi-Chiang/Add-HDMI=
--jack-support-on-RK3288/20191028-212502
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
-hip.git for-next
-> config: i386-allmodconfig (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=3Di386
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->    sound/soc/rockchip/snd-soc-rockchip-max98090: struct of_device_id is 1=
-96 bytes.  The last of 3 is:
->    0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x72 0x6f 0x63 0x6b 0x63 0x68 0x69 0x70 0x2c 0x72 =
-0x6f 0x63 0x6b 0x63 0x68 0x69 0x70 0x2d 0x61 0x75 0x64 0x69 0x6f 0x2d 0x6d =
-0x61 0x78 0x39 0x38 0x30 0x39 0x30 0x2d 0x68 0x64 0x6d 0x69 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x10 0x00 =
-0x00 0x00
-> >> FATAL: sound/soc/rockchip/snd-soc-rockchip-max98090: struct of_device_=
-id is not terminated with a NULL entry!
+> Duplicated 9836 with above line?
 
-Please ignore this error for v8 patch series because the change in
-rockchip_max98090.c of of_device_id is removed in v9 patch series.
-Thanks!
+We can just use "sprd,sc9836-uart" for SC9860 and SC9863 SoCs though,
+added a new compatible string in case we'll have some difference for
+serial on SC9863A in the furture.
+
+Thanks,
+Chunyan
 
 >
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Ce=
-nter
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corpora=
-tion
+> -Orson
+>
+> >
+> >  - reg: offset and length of the register set for the device
+> >  - interrupts: exactly one interrupt specifier
+> > --
+> > 2.20.1
+> >
+> >
