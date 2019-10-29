@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F961CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C98CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A25920830
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B250B20717
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 09:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572341000;
-	bh=HM4jNHntNNmS8A3IlWFNghrsap9TQnB0h5EUFIf4pBY=;
+	s=default; t=1572341154;
+	bh=QAXUs3VR9lZQY99NGtAiluxQ6rvIvoP288KOOJtt+/Q=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=XKpeFosWJQy91XNvMuG7LAgj2asyxZcnYRAOkkK2fVg4vW3NIK9kC6fEJadzfxYf8
-	 gh97ovlB6XsdDCPB0LcwviRBvEiVY+QWJgoalasRT75rFqEjgIXpMiOOHfXbfxhGwf
-	 +MvPSR//JDKKwzLQXtCvr9gmdB0K0P9M2pFdRDaQ=
+	b=aXA0uvyOkaaCypQl6vxe7nEvo6UlLhZ8cC9SX+U9XWg4pcJQn+aJw4gr2XgpiYyts
+	 QkQaoQLE6b6AtDVq5oOkNypK0UAk31Ugwe7Va2YVsjTd+WA3XEQuhUtXUftAPQNrnZ
+	 IAy1y2p+yVgbKg1oTz0YpDexua51C8vOxwW5yFk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfJ2JXT (ORCPT
+        id S1731810AbfJ2JZy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 05:23:19 -0400
-Received: from mga01.intel.com ([192.55.52.88]:23494 "EHLO mga01.intel.com"
+        Tue, 29 Oct 2019 05:25:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:30668 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727258AbfJ2JXT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 05:23:19 -0400
+        id S1730793AbfJ2JZy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 05:25:54 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:23:18 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 02:25:53 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,243,1569308400"; 
-   d="asc'?scan'208";a="374491389"
+   d="asc'?scan'208";a="202786714"
 Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga005.jf.intel.com with ESMTP; 29 Oct 2019 02:23:09 -0700
+  by orsmga003.jf.intel.com with ESMTP; 29 Oct 2019 02:25:47 -0700
 From:   Felipe Balbi <balbi@kernel.org>
 To:     John Stultz <john.stultz@linaro.org>,
         lkml <linux-kernel@vger.kernel.org>
@@ -55,11 +55,11 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 8/9] dt-bindings: usb: generic: Add role-switch-default-host binding
-In-Reply-To: <20191028215919.83697-9-john.stultz@linaro.org>
-References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-9-john.stultz@linaro.org>
-Date:   Tue, 29 Oct 2019 11:23:05 +0200
-Message-ID: <87bltzj47a.fsf@gmail.com>
+Subject: Re: [PATCH v4 9/9] usb: dwc3: Add host-mode as default support
+In-Reply-To: <20191028215919.83697-10-john.stultz@linaro.org>
+References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-10-john.stultz@linaro.org>
+Date:   Tue, 29 Oct 2019 11:25:43 +0200
+Message-ID: <878sp3j42w.fsf@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -76,9 +76,11 @@ Content-Transfer-Encoding: quoted-printable
 Hi,
 
 John Stultz <john.stultz@linaro.org> writes:
-
-> Add binding to configure the default role the controller
-> assumes is host mode when the usb role is USB_ROLE_NONE.
+> Support configuring the default role the controller assumes as
+> host mode when the usb role is USB_ROLE_NONE
+>
+> This patch was split out from a larger patch originally by
+> Yu Chen <chenyu56@huawei.com>
 >
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Cc: Rob Herring <robh+dt@kernel.org>
@@ -96,31 +98,66 @@ John Stultz <john.stultz@linaro.org> writes:
 > Cc: Jack Pham <jackp@codeaurora.org>
 > Cc: linux-usb@vger.kernel.org
 > Cc: devicetree@vger.kernel.org
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: John Stultz <john.stultz@linaro.org>
 > ---
->  Documentation/devicetree/bindings/usb/generic.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> v3: Split this patch out from addition of usb-role-switch
+>     handling
+> ---
+>  drivers/usb/dwc3/core.h |  3 +++
+>  drivers/usb/dwc3/drd.c  | 20 ++++++++++++++++----
+>  2 files changed, 19 insertions(+), 4 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Document=
-ation/devicetree/bindings/usb/generic.txt
-> index cf5a1ad456e6..013782fde293 100644
-> --- a/Documentation/devicetree/bindings/usb/generic.txt
-> +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> @@ -34,6 +34,11 @@ Optional properties:
->  			the USB data role (USB host or USB device) for a given
->  			USB connector, such as Type-C, Type-B(micro).
->  			see connector/usb-connector.txt.
-> + - role-switch-default-host: boolean, indicating if usb-role-switch is e=
-nabled
-> +			the device default operation mode of controller while
-> +			usb role is USB_ROLE_NONE is host mode. If this is not
-> +			set or false, it will be assumed the default is device
-> +			mode.
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 6f19e9891767..3c879c9ab1aa 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -953,6 +953,8 @@ struct dwc3_scratchpad_array {
+>   *		- USBPHY_INTERFACE_MODE_UTMI
+>   *		- USBPHY_INTERFACE_MODE_UTMIW
+>   * @role_sw: usb_role_switch handle
+> + * @role_switch_default_mode: default operation mode of controller while
+> + *			usb role is USB_ROLE_NONE.
+>   * @usb2_phy: pointer to USB2 PHY
+>   * @usb3_phy: pointer to USB3 PHY
+>   * @usb2_generic_phy: pointer to USB2 PHY
+> @@ -1087,6 +1089,7 @@ struct dwc3 {
+>  	struct notifier_block	edev_nb;
+>  	enum usb_phy_interface	hsphy_mode;
+>  	struct usb_role_switch	*role_sw;
+> +	enum usb_dr_mode	role_switch_default_mode;
+>=20=20
+>  	u32			fladj;
+>  	u32			irq_gadget;
+> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> index 61d4fd8aead4..0e3466fe5ac4 100644
+> --- a/drivers/usb/dwc3/drd.c
+> +++ b/drivers/usb/dwc3/drd.c
+> @@ -489,7 +489,10 @@ static int dwc3_usb_role_switch_set(struct device *d=
+ev, enum usb_role role)
+>  		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
+>  		break;
+>  	default:
+> -		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
+> +		if (dwc->role_switch_default_mode =3D=3D USB_DR_MODE_HOST)
+> +			mode =3D DWC3_GCTL_PRTCAP_HOST;
+> +		else
+> +			mode =3D DWC3_GCTL_PRTCAP_DEVICE;
+>  		break;
+>  	}
+>=20=20
+> @@ -515,7 +518,10 @@ static enum usb_role dwc3_usb_role_switch_get(struct=
+ device *dev)
+>  		role =3D dwc->current_otg_role;
+>  		break;
+>  	default:
+> -		role =3D USB_ROLE_DEVICE;
+> +		if (dwc->role_switch_default_mode =3D=3D USB_DR_MODE_HOST)
+> +			role =3D USB_ROLE_HOST;
 
-Do we also need a role-switch-default-peripheral? Would it be better to
-have a single role-switch-default property which accepts "host" or
-"peripheral" arguments?
+look at this, we now have 3 different encodings for role which DWC3
+needs to understand. One is its own PRTCAP_DIR, then there USB_DR_MODE_*
+and now USB_ROLE_*, can we make it so that we only have one private
+encoding and one generic encoding?
 
 =2D-=20
 balbi
@@ -130,18 +167,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl24BPkACgkQzL64meEa
-mQak5hAAtqbNYucc2pTH08oz9rTV4WYIfklt98huh9YuE00EQJ+Evm9c3omsUVQH
-m7w+nsp638nKWPp+o7VY8rjYy3FljWW451JHB+fl4UqodgcqJAgqby264Lg5QPs3
-x1l77KmxC1sFYb3lE3sG5k73dEB7WtCGsyPCIHmzX3JlgdhjJH0EPfYSmmug2mI8
-2/6hEuF32BOZtwpnB0bDhfUuNb0OkwcRuJA4j+azR5F0DDmUODtiFneWRWN//Dc4
-J5VBlSo+KvhOMETbyPOz25gElPaPPVm+X+TyzL1EA/eySvhUaWWiwUA2i4gGKmkz
-Dbm5L6jRiYFEhVIvVo+yMtsYEu1zQ98cBnf4o0eg1BctxetEO/SVNfbe1ufKaTd/
-ZM2lrVWyg7c+AlpgKuMz/jwi5cRZIS9NFvqf8w5JnuSl+ig06wLj+cm2JOvZbEeA
-LtJteyVN5AF2RecNRmP+kOP052lrPRA+8aKE1j6WrXp9LC4N0wEzhxEXNxxsoMx0
-zPNSz2G4Yf2K1u0nK7nMzy+Dx/+yYGPWYehbr3N4ZQvIxvsepad/HvMq6eGuCzZP
-5ZcM7O/7Oklpy/wnPXDC0y2zb+e/9mJDpl5svtQR5xDrq3VNg9QAnmU6G+DElYco
-cczjLDTbJAN7+sBOqdSKS6tvh8LNv3IFU1Lq1JbFoLMyAULF/C0=
-=ln50
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl24BZcACgkQzL64meEa
+mQYHkw//VOw1jqK4AnBJDOHCIzWSFS8jyfQBZHVKuUB7cq6u6e+FFwxkIdlOR1YN
+cIg7lL/gk3bR+eHiuqrTE2A9gp7ocGge/aJvZfsE5d+zVIau8OlKIrnz8X25xTRf
+uG9M7+GiyU2HHoC7EiOalqnP0576os4lyHmEFfomuHiax71frZiyl7DN+phJijgK
+IHmEkMtd1sEA/pGi8G8b/lwGKH5nkGAR4YcvP4kx588301buiT+/kn0RZnOMPoeu
+y1VMO2xP90WiVfVvqW1S5SzbaXSWxqFu7XWQGlBr9XJ678npgxk89GmPMNX3hGXh
+jDlyVp5ctWedJU8fufBMAS7TMLDASZIMPtarWPWwXO+8UomuUOkOj2rUiVkDpIVQ
+FCq5ldfW9Aei4f2+5mtgpQTvqYA5/uJxFxijUAFEncfQqC1h5uIf9gDgUV8p2D/8
+poS2nJwimP5VYox0PV72C5gV8ZGm5WM5HdOEX67JraqrPIXWTS5omXBd86XZzDIo
+gQx5LdiBgxR13WAGLFesbSC3L+Kd0/1fJYFXSMCJjIdkx0bDEgHCxG3FImokDgoK
+qGlFoyxqLHnOSFYMhroMqE7AX1rHZcnQbHZhsI91a+b89plbDagvlWYbrJ7PH/MT
+OOIyQZejlu6BJsmnNPfRUYS5dmDKGVkZCTdwAV42pNA84DA/+bc=
+=HE73
 -----END PGP SIGNATURE-----
 --=-=-=--
