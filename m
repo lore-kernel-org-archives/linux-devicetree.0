@@ -2,328 +2,111 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D9ECA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54D3CA9EC3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7C721479
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572364843;
-	bh=i+SzkfIVTCACRFr5/XsN9sbwvg7+vhB817BGoXY+yHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ioDyCbc8J2j9GYB2IequWFqZJ0htpbgq7hsf35VMuBC2UWQsNl0DCRbunEuP0OGGn
-	 tFYgeUpYeq7gzF3b2Vk2sBx+Y9NqnxuwEG93z2EZ31dQrhFzPIw8sNgGiyl2PU96B2
-	 ypWcSH6Ry64xTxj2nlx8JFGUpZWoeitsehmwAD+E=
+	by mail.kernel.org (Postfix) with ESMTP id 9B89B2173E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:09:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ru11L2IB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390188AbfJ2QAm (ORCPT
+        id S2390334AbfJ2QJG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:00:42 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32882 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389902AbfJ2QAm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 12:00:42 -0400
-Received: by mail-ot1-f66.google.com with SMTP id u13so10223402ote.0;
-        Tue, 29 Oct 2019 09:00:41 -0700 (PDT)
+        Tue, 29 Oct 2019 12:09:06 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41462 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390333AbfJ2QJG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 12:09:06 -0400
+Received: by mail-oi1-f196.google.com with SMTP id g81so9377570oib.8
+        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 09:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y/GoSbHE+NLH7W2Mu8zFFQ7lEbuLzZk7XwxfHja+Yzg=;
+        b=Ru11L2IBkDIJZsYDjB85uuW3Hg6Ogmc7cMCeDS0TOGdpcjHv6AH0W1gpfdo3vWCyL/
+         OjExvMLYmUEHKRBLIVMuGNq/SdG8vAKBGNeKvaDY20WOV/aywssoBIVexPeIloKvk5Ls
+         Jj07IgPDrnplLyVcXn2HsuhY9ZVjD1C8Q0dNWikuxqoUeHG5E8n4OVE8gF6fFHXSQxP9
+         QAIGKqUxMCg6te++WPC0c4rNq8iRuOLIppaYeuzuavb1RLPTFjZ8GwMMTfbhi8sRSGY+
+         FT3RxuiLlo1mIG3sp9xz+zc1DI7rl+bYyUUUFcydf2U9uDwVBF08uQg7PNTX3HFh3xvc
+         edQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R//ybbMO3XH827fdF6Ly2Nl4C2iYjhABLiSuwPKBh2c=;
-        b=fXYmbrK0fA1O8JxsKWz2i5t0Y00XmACKCEFpuoTFjdw+kcdfLAIdfyUtCbbrjx2jt4
-         gOlnq+dFaovdxhUNuAv+U5Lw3KnD56J/7a7JPIFccXS8W1LZfKZ0qTzdAscKjpzPgVkW
-         ymKE6jRnlPdVTJ9EiIFyAasgQHRATilJvP1qfyRl6QHSh1bBYJD6KD56i6Zs1/SBRZmO
-         9iRBOcJnu86d5tn0s2F0iogz5LH0YotdR7p9mIZHDrRqHgrRWY93DOqUzqrS/SiSFTOG
-         XvcU5DjIDkTux75ncbEOemU7Cfu13o6xwBj4gydIbXFlErjbr93aF0kSoE008BU+V3Qc
-         Ys3g==
-X-Gm-Message-State: APjAAAVS93VwU95zxKQ+0E2jHKQxypC7Ekr8cY0oPbcMIUqtMfD+k8Qn
-        BB9g/oIQDdsMpZP0Mqd0Lg==
-X-Google-Smtp-Source: APXvYqzlpNP/dgXzM+zC+lYUoBJviYrZV9XUAHPzWT5OtZXvoNRGsS9jmwJi02xfJpb+wb1XerDqmg==
-X-Received: by 2002:a9d:620c:: with SMTP id g12mr9098638otj.11.1572364840953;
-        Tue, 29 Oct 2019 09:00:40 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 100sm4753202otl.48.2019.10.29.09.00.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 09:00:39 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 11:00:38 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: usb: dwc3: Move Amlogic G12A DWC3 Glue
- Bindings to YAML schemas
-Message-ID: <20191029160038.GA22675@bogus>
-References: <20191021132322.25256-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y/GoSbHE+NLH7W2Mu8zFFQ7lEbuLzZk7XwxfHja+Yzg=;
+        b=I5s6ZNQThIXf8ooebv8i9ISjVq3/WZ9/t5stIbi6Ec+Sfs0NdX6f4cd0EUtaIq8tXF
+         t61eX2/imRnzfWVkLt0ZYseL+/TS4h0McPesSBUevBrqL3WM5HmrZcneTFnCL5B2/RIu
+         ZOA4n2h5eS12e/WdEl2/uy/pQmL4aJaMqscH1yQVjUbe00nPwOKa7iK2jbPObGul/xHI
+         FkzdmxlFzU34/k8v1Elydwjg/RbtnpEjj1ZW1S3FP6R4kWcyt1GMjQGcqggrkYBTWWe0
+         2hTcAJ2ZnFTzXYkBjX/e9hrsK0zNSh3J2fpqGAi8MijxU4EqizPDbq4KSo7VXfoLOwge
+         OAfg==
+X-Gm-Message-State: APjAAAVQwf+rhLv2RsS56L5Gg17kAlE2aSr884OzmwOx0lHYKm5Nu5GV
+        zvAQNqrI2E8qHhPw3KnJ+OnBxzfQhByTD5NTl7+YyA==
+X-Google-Smtp-Source: APXvYqyUdt6hrcGTDjR4iRzpaqwjYQyaEgSSfsTCCUv2cn8n1UmI7xc7BHLfG91xsZCfZGzbryCeEpK0xU9nqnkZcgM=
+X-Received: by 2002:aca:c3cf:: with SMTP id t198mr4927418oif.10.1572365343764;
+ Tue, 29 Oct 2019 09:09:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021132322.25256-1-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-6-john.stultz@linaro.org> <87k18nj4mj.fsf@gmail.com>
+In-Reply-To: <87k18nj4mj.fsf@gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 29 Oct 2019 09:08:53 -0700
+Message-ID: <CALAqxLXcD8V1o01yMrHpeoqU2MfJ=8d3dbzC8T-+aoovDUd8kA@mail.gmail.com>
+Subject: Re: [PATCH v4 5/9] usb: dwc3: Rework clock initialization to be more flexible
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 03:23:22PM +0200, Neil Armstrong wrote:
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the Amlogic G12A DWC3 Glue Bindings over to a YAML schemas,
-> the AXG and GXL glue bindings will be converted later.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../devicetree/bindings/usb/amlogic,dwc3.txt  |  88 ------------
->  .../usb/amlogic,meson-g12a-usb-ctrl.yaml      | 132 ++++++++++++++++++
->  2 files changed, 132 insertions(+), 88 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-> index b9f04e617eb7..9a8b631904fd 100644
-> --- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-> @@ -40,91 +40,3 @@ Example device nodes:
->  				phy-names = "usb2-phy", "usb3-phy";
->  			};
->  		};
-> -
-> -Amlogic Meson G12A DWC3 USB SoC Controller Glue
-> -
-> -The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
-> -in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
-> -only.
-> -
-> -A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
-> -
-> -One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
-> -
-> -The DWC3 Glue controls the PHY routing and power, an interrupt line is
-> -connected to the Glue to serve as OTG ID change detection.
-> -
-> -Required properties:
-> -- compatible:	Should be "amlogic,meson-g12a-usb-ctrl"
-> -- clocks:	a handle for the "USB" clock
-> -- resets:	a handle for the shared "USB" reset line
-> -- reg:		The base address and length of the registers
-> -- interrupts:	the interrupt specifier for the OTG detection
-> -- phys: 	handle to used PHYs on the system
-> -	- a <0> phandle can be used if a PHY is not used
-> -- phy-names:	names of the used PHYs on the system :
-> -	- "usb2-phy0" for USB2 PHY0 if USBHOST_A port is used
-> -	- "usb2-phy1" for USB2 PHY1 if USBOTG_B port is used
-> -	- "usb3-phy0" for USB3 PHY if USB3_0 is used
-> -- dr_mode:	should be "host", "peripheral", or "otg" depending on
-> -	the usage and configuration of the OTG Capable port.
-> -	- "host" and "peripheral" means a fixed Host or Device only connection
-> -	- "otg" means the port can be used as both Host or Device and
-> -	  be switched automatically using the OTG ID pin.
-> -
-> -Optional properties:
-> -- vbus-supply:	should be a phandle to the regulator controlling the VBUS
-> -		power supply when used in OTG switchable mode
-> -
-> -Required child nodes:
-> -
-> -A child node must exist to represent the core DWC3 IP block. The name of
-> -the node is not important. The content of the node is defined in dwc3.txt.
-> -
-> -A child node must exist to represent the core DWC2 IP block. The name of
-> -the node is not important. The content of the node is defined in dwc2.txt.
-> -
-> -PHY documentation is provided in the following places:
-> -- Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
-> -- Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-> -
-> -Example device nodes:
-> -	usb: usb@ffe09000 {
-> -			compatible = "amlogic,meson-g12a-usb-ctrl";
-> -			reg = <0x0 0xffe09000 0x0 0xa0>;
-> -			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> -			#address-cells = <2>;
-> -			#size-cells = <2>;
-> -			ranges;
-> -
-> -			clocks = <&clkc CLKID_USB>;
-> -			resets = <&reset RESET_USB>;
-> -
-> -			dr_mode = "otg";
-> -
-> -			phys = <&usb2_phy0>, <&usb2_phy1>,
-> -			       <&usb3_pcie_phy PHY_TYPE_USB3>;
-> -			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
-> -
-> -			dwc2: usb@ff400000 {
-> -				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
-> -				reg = <0x0 0xff400000 0x0 0x40000>;
-> -				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
-> -				clock-names = "ddr";
-> -				phys = <&usb2_phy1>;
-> -				dr_mode = "peripheral";
-> -				g-rx-fifo-size = <192>;
-> -				g-np-tx-fifo-size = <128>;
-> -				g-tx-fifo-size = <128 128 16 16 16>;
-> -			};
-> -
-> -			dwc3: usb@ff500000 {
-> -				compatible = "snps,dwc3";
-> -				reg = <0x0 0xff500000 0x0 0x100000>;
-> -				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> -				dr_mode = "host";
-> -				snps,dis_u2_susphy_quirk;
-> -				snps,quirk-frame-length-adjustment;
-> -			};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-> new file mode 100644
-> index 000000000000..45bcc98ee9a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-> @@ -0,0 +1,132 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/usb/amlogic,meson-g12a-usb-ctrl.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson G12A DWC3 USB SoC Controller Glue
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +description: |
-> +  The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
-> +  in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
-> +  only.
-> +
-> +  A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
-> +
-> +  One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
-> +
-> +  The DWC3 Glue controls the PHY routing and power, an interrupt line is
-> +  connected to the Glue to serve as OTG ID change detection.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-g12a-usb-ctrl
-> +
-> +  ranges: true
-> +
-> +  "#address-cells":
-> +    enum: [ 1, 2 ]
-> +
-> +  "#size-cells":
-> +    enum: [ 1, 2 ]
-> +
-> +  clocks:
-> +    minItems: 1
-> +
-> +  resets:
-> +    minItems: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    items:
-> +      - const: usb2-phy0 # USB2 PHY0 if USBHOST_A port is used
-> +      - const: usb2-phy1 # USB2 PHY1 if USBOTG_B port is used
-> +      - const: usb3-phy0 # USB3 PHY if USB3_0 is used
-> +
-> +  phys:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  dr_mode:
-> +    enum:
-> +      - host # fixed Host connection
-> +      - peripheral # fixed Device connection
-> +      - otg # Host or Device and switched automatically using the OTG ID pin
+On Tue, Oct 29, 2019 at 2:14 AM Felipe Balbi <balbi@kernel.org> wrote:
+> John Stultz <john.stultz@linaro.org> writes:
+>
+> > The dwc3 core binding specifies three clocks:
+> >   ref, bus_early, and suspend
+> >
+> > which are all controlled in the driver together.
+> >
+> > However some variants of the hardware my not have all three clks
+>                                         ^^
+>                                         may
+>
+> In fact *all* platforms have all three clocks. It's just that in some
+> cases clock pins are shorted together (or take input from same clock).
+>
+...
+> another option would be to pass three clocks with the same phandle. That
+> would even make sure that clock usage counts are correct, no?
 
-This should have a common definition. You can assume it does, so you 
-just need 'true'.
+Hey Felipe!
 
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  vbus-supply:
-> +    description: VBUS power supply when used in OTG switchable mode
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  "^usb@[0-9a-f]+$":
-> +    type: object
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
-> +  - clocks
-> +  - resets
-> +  - reg
-> +  - interrupts
-> +  - phy-names
-> +  - phys
-> +  - dr_mode
-> +
-> +examples:
-> +  - |
-> +    usb: usb@ffe09000 {
-> +          compatible = "amlogic,meson-g12a-usb-ctrl";
-> +          reg = <0x0 0xffe09000 0x0 0xa0>;
-> +          interrupts = <16>;
-> +          #address-cells = <1>;
-> +          #size-cells = <1>;
-> +          ranges;
-> +
-> +          clocks = <&clkc_usb>;
-> +          resets = <&reset_usb>;
-> +
-> +          dr_mode = "otg";
-> +
-> +          phys = <&usb2_phy0>, <&usb2_phy1>, <&usb3_phy0>;
-> +          phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
-> +
-> +          dwc2: usb@ff400000 {
-> +              compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
-> +              reg = <0xff400000 0x40000>;
-> +              interrupts = <31>;
-> +              clocks = <&clkc_usb1>;
-> +              clock-names = "ddr";
-> +              phys = <&usb2_phy1>;
-> +              dr_mode = "peripheral";
+So I actually had done that initially (and it seemed to work), but Rob
+suggested this way instead.
+I'm fine with either, as long as having multiple references to the
+same clk in the enable/disable paths doesn't cause trouble.
 
-However, it seems folks just put 'dr_mode' where ever they please. I saw 
-one in usb phy yesterday. Just a comment, not really anything for you to 
-change here...
-
-> +              g-rx-fifo-size = <192>;
-> +              g-np-tx-fifo-size = <128>;
-> +              g-tx-fifo-size = <128 128 16 16 16>;
-> +          };
-> +
-> +          dwc3: usb@ff500000 {
-> +              compatible = "snps,dwc3";
-> +              reg = <0xff500000 0x100000>;
-> +              interrupts = <30>;
-> +              dr_mode = "host";
-> +              snps,dis_u2_susphy_quirk;
-> +              snps,quirk-frame-length-adjustment;
-> +          };
-> +    };
-> +
-> -- 
-> 2.22.0
-> 
+Thanks so much for the review here!
+-john
