@@ -2,138 +2,98 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CBFCA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93937CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271EC21734
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6941921721
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:18:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RYCBY6vN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dRF2HbKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbfJ2LNn (ORCPT
+        id S2387735AbfJ2LSk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:13:43 -0400
-Received: from vps.xff.cz ([195.181.215.36]:59982 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731826AbfJ2LNn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:13:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572347620; bh=Obh7tvfkovm1tGf8wM3sGTB+Ja4afeHSPQtadzplAcc=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=RYCBY6vNV4YeeENeH3RNTeWeZG3kO3f0QWxALt4GLNgqTCg0brQtQhmuBq9x/Y49n
-         fpvK97qY0FSViYwMAY/jfp39tdfeEsIEd14Mo5FallMrTTMm9iLTviBLEwaIE+1V4r
-         n582CF6f19v/OQIz5a+UGsXA3vIgefQhMA2yzP9s=
-Date:   Tue, 29 Oct 2019 12:13:39 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Tue, 29 Oct 2019 07:18:40 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40602 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387725AbfJ2LSj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 07:18:39 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p59so10406936edp.7
+        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 04:18:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=J1TIX7KBOhkEDUvUlXCGfzo0ftBx/02dSVP1EsfH5Yg=;
+        b=dRF2HbKHVHZixPbPX+wgFMrl+ava9svy0g4H+AkjUAcPK0/X9wQNgWR7E4xc9rGnJJ
+         Q8w1LWl7IpS143XNVa/X9gi74DroRujwtmaXM3cFuH5xJpUZCw1qvZsSKD7tAQjMToSd
+         CrRqpsnKgB5FGnz+0yeyPaKDMjuXJaiEKX/aR01gm3uVzlZC1/KLX3TXuFM48rvPwYXb
+         QO9rf1WaTR7vBt/wtpuAge1A+VnktpxZ+YwZRiOY89NLKIcam0zRgxniYjThF0njXyuT
+         6FkIPf7LBst1dRg9OY75eSlSy0Cg05guoNJNXlnu6GCVvzD1xWZ6gztSL6b0W6e68lN5
+         vPPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J1TIX7KBOhkEDUvUlXCGfzo0ftBx/02dSVP1EsfH5Yg=;
+        b=lIAeLzbz14tAZtYju2/2xW+sJLCYntf8IhCqZVvgfHMe4TfKBogkLKEZ8UcG4mlsRs
+         d9Fkahf/fP1BUBVvVI5+cCi6eppi7I71OlvL+mPVhq9MkSaUK6HNCaU+boqRDfuBZkNN
+         NmIUJl/p6J+dFGBDynXucMW2jAxybjBQferQlUB86i2OOYDec4SpjHqhKqyOWhujSfRF
+         PTi5g9UHUAMhQX0cLjGp8rqkRDD7aq3Gd1+hPOQFg7P2X2nCZl7b9tWKe/DVU0RM8G40
+         SUaHzPjtaC639IjSykkXEFkZtAymsQjVoRvAHvWGE8c+xysXc5kbykDAhNDLJdWUFcCj
+         ryMQ==
+X-Gm-Message-State: APjAAAXKTjiClEL/B7C+EEcFOmMY1ODuCZWJbozIU9fUgWZwbhcMj7BQ
+        epKvEjngGBWoUaTsP6/4Dx37Ow==
+X-Google-Smtp-Source: APXvYqxd0UnsWHkLoXCSeSyxR75r+FTK/wmY+wYx0WxrkEu7pYPLkgW0m0xq0i3miyTwErZqOzkjWw==
+X-Received: by 2002:a50:9930:: with SMTP id k45mr25056228edb.134.1572347917211;
+        Tue, 29 Oct 2019 04:18:37 -0700 (PDT)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id g9sm420189edv.86.2019.10.29.04.18.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 04:18:36 -0700 (PDT)
+Subject: Re: [PATCH v2 0/4] ARM: qcom: add defconfig items and dts nodes
+To:     Brian Masney <masneyb@onstation.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] arm: dts: sun8i: a83t: a711: Add touchscreen node
-Message-ID: <20191029111339.7okiyig3tbehn5kj@core.my.home>
-Mail-Followup-To: Marco Felsch <m.felsch@pengutronix.de>,
-        linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20191029005806.3577376-1-megous@megous.com>
- <20191029005806.3577376-4-megous@megous.com>
- <20191029090801.zls2qns7rxcvmxor@pengutronix.de>
+References: <20191024103140.10077-1-masneyb@onstation.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Message-ID: <49006809-0dde-ba24-4e91-0b210fe45599@linaro.org>
+Date:   Tue, 29 Oct 2019 13:18:35 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20191024103140.10077-1-masneyb@onstation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029090801.zls2qns7rxcvmxor@pengutronix.de>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Marco,
-
-On Tue, Oct 29, 2019 at 10:08:01AM +0100, Marco Felsch wrote:
-> Hi,
+On 24.10.19 Ð³. 13:31 Ñ‡., Brian Masney wrote:
+> Here's a small patch series that adds some additional functionality
+> to qcom_defconfig and to qcom-msm8974.dtsi: interconnect, ocmem,
+> and HDMI bridge (defconfig only).
 > 
-> On 19-10-29 01:58, Ondrej Jirman wrote:
-> > From: Mylène Josserand <mylene.josserand@bootlin.com>
-> > 
-> > Enable a FocalTech EDT-FT5x06 Polytouch touchscreen.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> > ---
-> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > index 568b90ece342..19f520252dc5 100644
-> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > @@ -164,6 +164,22 @@
-> >  	status = "okay";
-> >  };
-> >  
-> > +&i2c0 {
-> > +	clock-frequency = <400000>;
-> > +	status = "okay";
-> > +
-> > +	touchscreen@38 {
-> > +		compatible = "edt,edt-ft5x06";
-> > +		reg = <0x38>;
-> > +		interrupt-parent = <&r_pio>;
-> > +		interrupts = <0 7 IRQ_TYPE_EDGE_FALLING>; /* PL7 */
-> > +		reset-gpios = <&pio 3 5 GPIO_ACTIVE_LOW>; /* PD5 */
-> > +		vcc-supply = <&reg_ldo_io0>;
-> > +		touchscreen-size-x = <1024>;
-> > +		touchscreen-size-y = <600>;
+> Some high-level changes since v1:
+> - Updated interconnect support. See patch #4 in this series for details.
+> - Dropped ocmem defconfig since that got merged.
 > 
-> Do you want this touchscreen as wakeup-src? If so please add the
-> property here. I've send patches converting the driver from the default
-> behaviour: https://patchwork.kernel.org/cover/11149039/ and all agreed
-> to break backward compatibility.
-
-Not at this moment, thank you.
-
-regards,
-	o.
-
-> Regards,
->   Marco
+> Brian Masney (4):
+>   ARM: qcom_defconfig: add msm8974 interconnect support
+>   ARM: qcom_defconfig: add anx78xx HDMI bridge support
+>   ARM: dts: qcom: msm8974: add ocmem node
+>   ARM: dts: qcom: msm8974: add interconnect nodes
 > 
-> > +	};
-> > +};
-> > +
-> >  &i2c1 {
-> >  	clock-frequency = <400000>;
-> >  	status = "okay";
-> > -- 
-> > 2.23.0
-> > 
-> > 
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>  arch/arm/boot/dts/qcom-msm8974.dtsi | 77 +++++++++++++++++++++++++++++
+>  arch/arm/configs/qcom_defconfig     |  4 ++
+>  2 files changed, 81 insertions(+)
+
+For the series:
+Reviewed-by: Georgi Djakov <georgi.djakov@linaro.org>
