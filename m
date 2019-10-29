@@ -2,128 +2,154 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D055ACA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972E1CA9EC3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B099920663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621B821721
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 11:28:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hgqZKdfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbfJ2L2M convert rfc822-to-8bit (ORCPT
+        id S1731789AbfJ2L2x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 07:28:12 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:45694 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730794AbfJ2L2L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 07:28:11 -0400
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 77A1F60CF62;
-        Tue, 29 Oct 2019 12:28:04 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 29 Oct
- 2019 12:28:04 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Tue, 29 Oct 2019 12:28:04 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Sascha Hauer" <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 07/11] ARM: dts: imx6ul-kontron-n6x1x-s: Add vbus-supply
- and overcurrent polarity to usb nodes
-Thread-Topic: [PATCH v2 07/11] ARM: dts: imx6ul-kontron-n6x1x-s: Add
- vbus-supply and overcurrent polarity to usb nodes
-Thread-Index: AQHVjkvtzuEd7ia9eEiSRBR9LAU6oA==
-Date:   Tue, 29 Oct 2019 11:28:04 +0000
-Message-ID: <20191029112655.15058-8-frieder.schrempf@kontron.de>
-References: <20191029112655.15058-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20191029112655.15058-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Tue, 29 Oct 2019 07:28:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38011 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729070AbfJ2L2x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 07:28:53 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v9so13221389wrq.5
+        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 04:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8IfX0jQOtqDn2pCZaOvwF7GcoFk09fED5oporBC3z5U=;
+        b=hgqZKdfCfJnFj64xw3rXV3VPEK6d30/74W69Yz65m7g+kcAqJDHvB87K3T3uaOzxdG
+         gDZMXPaHvF023TiCfdStdHxb59TDTlRirgQZCPVLF7e4Sq24i/aoB6trORieuPmale8m
+         4H5agAOoNs10bZaFM+1LWvTScfQOQdVGEeHSKlbz1XFHUB42UXM10+8WtH1MCpJ4zajW
+         z14D1/7i8aPEvwd8jvt6XlVu9U14gCyk/J8s0iS6GmyyTFJX96AQ5reclNp10Ie3hrsb
+         g6sje56OCtVCgIX1MfM/wLcb/p9eZincHg4Nxes1s2mDThkK8LhqjuM2aoG+QAuaS/C3
+         CrLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8IfX0jQOtqDn2pCZaOvwF7GcoFk09fED5oporBC3z5U=;
+        b=U8G/at0g19oEke1XnamcGNE7l0o5jiGaHKO913C1kVyMXDzpLlu8ZJkTrpXPvpPYSQ
+         hMyoKjqlLbTMBPmR/1syybqBXJ1FhLW5pA2LSnBlLD3BlXVIP8BZ2/LAdxw+ELjQa6Ry
+         XOSE7Q2oWVQiZRPyaqfHVnlK7JXaQKdEhFiLaPRG9A7mwDlSNJDHHNBccmhHNepHqdTr
+         H/KlyGapgANpbir/hvCNDQtbi5P71+tl1qIN3ZUAuFNs9mWApr/ewcb/DXLMYWjxoj8l
+         W1Kfh1RbzEVyEqwoe2OqylT1koQcwf2C9nvLEz5hsSnAQgOmJy4q6EvAUWq2FxcZeVJw
+         Vj7Q==
+X-Gm-Message-State: APjAAAUo7Gr+UkJvXi/IamLbCJyVCO3EdrsVNAh9vAYSfUTem5wZItwz
+        //Zn8e6IFc7L8JmpqNs5KjGKbw==
+X-Google-Smtp-Source: APXvYqxX7UvGklw4BukJiiU81RExjsPkGX9S1gah8yPCTcdMvKCN/bvu59A8jbhXzGu0JHLxw6LDnQ==
+X-Received: by 2002:adf:ea50:: with SMTP id j16mr18810399wrn.295.1572348530671;
+        Tue, 29 Oct 2019 04:28:50 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id f20sm2373247wmb.6.2019.10.29.04.28.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 04:28:49 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
+        linus.walleij@linaro.org
+Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 00/11] ASoC: Add support to WCD9340/WCD9341 codec
+Date:   Tue, 29 Oct 2019 11:26:49 +0000
+Message-Id: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 77A1F60CF62.A0BE3
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+This patchset adds support to Qualcomm WCD9340/WCD9341 Codec which
+is a standalone Hi-Fi audio codec IC.
+This codec supports both I2S/I2C and SLIMbus audio interfaces.
+On slimbus interface it supports two data lanes; 16 Tx ports
+and 8 Rx ports. It has Five DACs and seven dedicated interpolators,
+Multibutton headset control (MBHC), Active noise cancellation,
+Sidetone paths, MAD (mic activity detection) and codec processing engine.
+It supports Class-H differential earpiece out and stereo single
+ended headphones out.
 
-To silence the warnings shown by the driver at boot time, we add a
-fixed regulator for the 5V supply of usbotg2 and specify the polarity
-of the overcurrent signal for usbotg1.
+This codec also has integrated SoundWire controller.
+Patchset for this is already sent for review at
+https://patchwork.kernel.org/cover/11185769/
+    
+This patchset has been tested on SDM845 based DragonBoard DB845c and
+Lenovo Yoga C630 laptop with WSA881x smart speaker amplifiers via
+soundwire and 4 DMICs.
 
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Pin Controller patch does not have any link dependency, it can go by its own.
 
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-index 2299cad900af..d3eb21aa9014 100644
---- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-@@ -45,6 +45,13 @@
- 		regulator-max-microvolt = <3300000>;
- 	};
- 
-+	reg_5v: regulator-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
- 	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb_otg1_vbus";
-@@ -191,6 +198,7 @@
- 	srp-disable;
- 	hnp-disable;
- 	adp-disable;
-+	over-current-active-low;
- 	vbus-supply = <&reg_usb_otg1_vbus>;
- 	status = "okay";
- };
-@@ -198,6 +206,7 @@
- &usbotg2 {
- 	dr_mode = "host";
- 	disable-over-current;
-+	vbus-supply = <&reg_5v>;
- 	status = "okay";
- };
- 
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
+
+If anyone is interested to try, here are working set of patches on top of rc3.
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/log/?h=audio/v5.4-rc5-YOGA-C630
+alsa ucm files:
+https://git.linaro.org/people/srinivas.kandagatla/alsa-lib.git/log/?h=DB845c
+
+Thanks,
+srini
+
+Changes since v2:
+- Updated mfd driver as suggested by Lee.
+- Updated bindings as suggested by Rob.
+- Addressed various comments by Cezary Rojewski
+- Cleaned up code a bit.
+
+Srinivas Kandagatla (10):
+  ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
+  mfd: wcd934x: add support to wcd9340/wcd9341 codec
+  ASoC: wcd934x: add support to wcd9340/wcd9341 codec
+  ASoC: wcd934x: add basic controls
+  ASoC: wcd934x: add playback dapm widgets
+  ASoC: wcd934x: add capture dapm widgets
+  ASoC: wcd934x: add audio routings
+  dt-bindings: pinctrl: qcom-wcd934x: Add bindings for gpio
+  ASoC: qcom: dt-bindings: Add compatible for DB845c and Lenovo Yoga
+  ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
+
+Yeleswarapu Nagaradhesh (1):
+  pinctrl: qcom-wcd934x: Add support to wcd934x pinctrl driver.
+
+ .../pinctrl/qcom,wcd934x-pinctrl.yaml         |   52 +
+ .../devicetree/bindings/sound/qcom,sdm845.txt |    5 +-
+ .../bindings/sound/qcom,wcd934x.yaml          |  162 +
+ drivers/mfd/Kconfig                           |   12 +
+ drivers/mfd/Makefile                          |    1 +
+ drivers/mfd/wcd934x.c                         |  306 +
+ drivers/pinctrl/qcom/Kconfig                  |    7 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c   |  365 ++
+ include/linux/mfd/wcd934x/registers.h         |  529 ++
+ include/linux/mfd/wcd934x/wcd934x.h           |   31 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wcd934x.c                    | 5084 +++++++++++++++++
+ sound/soc/qcom/sdm845.c                       |   86 +-
+ 15 files changed, 6651 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,wcd934x-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+ create mode 100644 drivers/mfd/wcd934x.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+ create mode 100644 include/linux/mfd/wcd934x/registers.h
+ create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
+ create mode 100644 sound/soc/codecs/wcd934x.c
+
 -- 
-2.17.1
+2.21.0
+
