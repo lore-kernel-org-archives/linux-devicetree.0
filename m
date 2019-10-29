@@ -2,90 +2,83 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DE0CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FB5CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0F7720830
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:50:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PNrtOie1"
+	by mail.kernel.org (Postfix) with ESMTP id E5496208E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 16:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572368267;
+	bh=+TdORCn8ep1ILzaPgn+L3xqoIlegoGSRaOmPEWcuZPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eTSokIz5ZI4NHLCCw8qQVQttg/9FfNkS0T3WirXERw6LdulC8TodrERTXIgw8Z6jb
+	 16FUsS4sxgQRGTnaf/ZbUlfwmgRZBqBUbXtEE6MRu+AzCoNwn2d1ijU6YvCJP4sPei
+	 KMGNvLJlA2RC4gJgonHAKvqBT3+4MP6BzkFAep/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390534AbfJ2Qum (ORCPT
+        id S1728686AbfJ2Q5q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 12:50:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43122 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390365AbfJ2Qum (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 12:50:42 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l24so9960932pgh.10
-        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 09:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:subject:to:cc:user-agent:date;
-        bh=1EcVhtgmI0wFYEgWlYfQnU4+/BM9ln0YQj1/qNn/9r8=;
-        b=PNrtOie1EYtyDxfR1GgH1g/+4BjjbSeoTj7w6ok05O/9iLbYcCMl4x+Ikl0ciFmGWk
-         FaHhnx8/qn1KfpX4wLCK2HWFLsJuWNZxqgoVINug1Ov1UgXgCGAX1yNNsTPAd+88zTyq
-         yOb1VIHhfTVl79VXR8mcZPjz0+ZrJ5Yh1z1iU=
+        Tue, 29 Oct 2019 12:57:46 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43729 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728672AbfJ2Q5q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 12:57:46 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b19so8022800otq.10
+        for <devicetree@vger.kernel.org>; Tue, 29 Oct 2019 09:57:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
-         :user-agent:date;
-        bh=1EcVhtgmI0wFYEgWlYfQnU4+/BM9ln0YQj1/qNn/9r8=;
-        b=kQkvMzShT3Feo69+LPCEUTY87zdMs+Xtl4NSDarHU2zlP3X574FHuc5qqQ2WJVcDzk
-         UG8UVc95V3H1nqy0Ph/JjhNXAXk/2A8S+LNl0f+KODkMYgzDYhLcmfWl1sZL9oonqAsK
-         n+DO6U+N6MCGRoGA0Cf3rpUrvS5t5YsE8wfl6MikjKSD4k8c7r1Rcgs13iY7hANJUu2O
-         i5jM442f0xEM35nFVHdvlDU+MKysvPVswuiu6WcZzt27/f6cSFlZrJFFiUSdY1V5rA8q
-         8gseHMNqAYbdam/VR4SRnxb5M1zioM/0BbhNB5/CsBlQO/0ybI/+JZka22PsfPoPEQ40
-         S+QA==
-X-Gm-Message-State: APjAAAVAStEUSrwJrBsteJ+f4wh/yF1E5uTaU1XSuNlHJcoUa5NmOA2I
-        Px8VLJ6RBvKB20hCQDILQE45Uw==
-X-Google-Smtp-Source: APXvYqzuJp5yJFfn3l5GHPNYKExU7ekP3dRen8od3Km9IrisWb1nMSBoOt0RzryHGcRAF2KPFrFjIA==
-X-Received: by 2002:aa7:838f:: with SMTP id u15mr28280727pfm.74.1572367841595;
-        Tue, 29 Oct 2019 09:50:41 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id l23sm329226pjy.12.2019.10.29.09.50.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AzR50uFmoDCtnAJJfiGxTvyuBUS+uKVO9Sccr9LgN3A=;
+        b=tqGEoGLqOXNI/wQwgwHAIJIDgshNhRS6MtlOh5NyIt2jdl3CXoHdZ9qvHq7iBeRgbN
+         DH9syBoxQNqk5nWAvNItPVqFyhmvg3vIrEzI530ss1ypM99leH8ozYkVkC4sjTM6Y/5v
+         9YC8uYl45ukvUvOzmvMfci9fSFyZ5r4hdLfMpnbdkvdZJ0nJKGKd0/SRkRy9f9hgqInv
+         BkfYUETZb9ZRXWw51kEmwfY/3OFBlR2alTIrCuYFb2BOIb7gv6F0Y6c/Lp6HA8v5qac9
+         4rbxuhgUovQTWU15YZ45z/ZJO2CWBepN8FEdLK5ISEFm7RoM/U9qhhtwNRI0Uzm0ok5H
+         4UQg==
+X-Gm-Message-State: APjAAAVbkC5gb4E94suknWa0Uj7Rwr/cKnbJVvB/exweEVbMEKTBlT2f
+        0lSjEahoiDPM+OkJQys/Sw==
+X-Google-Smtp-Source: APXvYqyA4q27jgqbyYHzCXs5l/JuoLIkpIFSmc+fTrrf3tbcL04DsgIowaA8Q0ofDaNVgZxnpP/5Jg==
+X-Received: by 2002:a05:6830:1256:: with SMTP id s22mr19536485otp.308.1572368265215;
+        Tue, 29 Oct 2019 09:57:45 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u1sm2055522oie.37.2019.10.29.09.57.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 09:50:40 -0700 (PDT)
-Message-ID: <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 29 Oct 2019 09:57:43 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 11:57:43 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, narmstrong@baylibre.com,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net,
+        dri-devel@lists.freedesktop.org, allen.chen@ite.com.tw,
+        cychiang@google.com, dgreid@google.com, tzungbi@google.com
+Subject: Re: [PATCH 3/6] ASoC: dt-bindings: mt8183: add a property
+ "mediatek,hdmi-codec"
+Message-ID: <20191029165743.GA11562@bogus>
+References: <20191022114505.196852-1-tzungbi@google.com>
+ <20191022193301.3.I37696eb1321a21846f9e5a9eb14dfac7dbe10663@changeid>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191023090219.15603-12-rnayak@codeaurora.org>
-References: <20191023090219.15603-1-rnayak@codeaurora.org> <20191023090219.15603-12-rnayak@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt controller
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 29 Oct 2019 09:50:40 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022193301.3.I37696eb1321a21846f9e5a9eb14dfac7dbe10663@changeid>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-10-23 02:02:19)
-> From: Maulik Shah <mkshah@codeaurora.org>
->=20
-> Add pdc interrupt controller for sc7180
->=20
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+On Tue, 22 Oct 2019 19:45:02 +0800, Tzung-Bi Shih wrote:
+> Add an optional property "mediatek,hdmi-codec".
+> 
+> Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
 > ---
-> v3:
-> Used the qcom,sdm845-pdc compatible for pdc node
+>  .../bindings/sound/mt8183-mt6358-ts3a227-max98357.txt           | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Everything else isn't doing the weird old compatible thing. Why not just
-add the new compatible and update the driver? I guess I'll have to go
-read the history.
-
+Acked-by: Rob Herring <robh@kernel.org>
