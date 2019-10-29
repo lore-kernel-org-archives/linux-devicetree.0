@@ -2,215 +2,192 @@ Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED026CA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66F6CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C78D6208E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7540C208E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 12:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572353841;
+	bh=5kuzo0+a2XqeYDtx+LBipdb5kLIv4T7LKCfgfqyk7nc=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=eoS72Kxpa7Ag+EMJbeY4PXOirQmy1SqVfHVW+OQZiWqBMpQORnV+EORr+b1w0qgbG
+	 XGPoqbIb9abGUdMElfMgw/RLlyT95YHzVC+jZOWgcaAd8EucNJVtyr/LXe8Qg87YFF
+	 KWuuhirLqhCswEe2yI4ufoWqCI2izL3FNNQmMrgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388021AbfJ2Msw (ORCPT
+        id S2387925AbfJ2M5U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 08:48:52 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42816 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729126AbfJ2Msv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 08:48:51 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a21so15105804ljh.9;
-        Tue, 29 Oct 2019 05:48:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xBVZsEwVtK814JHViicc5SAg5rQLuwblDReqpeiyxfs=;
-        b=B2PmQggIVtkAFdYjftHoHQdw9coBaA6wdTtStdaa7pS56m6mdMptPHBk7QtlX0rnR9
-         Bdrm0CGr8J5uRJjR1kw57vxQ9fLAc4kvd69gIudgYdhF7cR9YuB6GLs6bIxazJx2GfTy
-         TKiSIDV0Tjw9NzYGa3o5hfvREdozR6+asaOn6f7aFnWdmjEbJmALx37uiFryM6I2Papo
-         imFH51lutcrs24Ud5aKIVE7yS54E7K6OExM+Hhd/7ZbNwoVu9KWOUmqLtH2BH6Epg38W
-         dDcMqytDX3vandhC7eJnJFLO71nFTTd3Eiiv0q1FMHyqfI/QjClvusFzur8je5pppOWN
-         mkmQ==
-X-Gm-Message-State: APjAAAXWOapjk5Tx8FZiC7Swow/v7hsHRO2UWIiT90xeBysjv1DG19HA
-        aN2E1fF0ulMOuiCJul89/FU=
-X-Google-Smtp-Source: APXvYqxChfIwjj7Wc/TmT1HL5bfeXc+1lnmhRvhgbjX2jyrjgKWXLOryfSfpaWPWWzgrUD7+wtYY9Q==
-X-Received: by 2002:a2e:91c7:: with SMTP id u7mr2504548ljg.178.1572353328687;
-        Tue, 29 Oct 2019 05:48:48 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 12sm11264224lje.92.2019.10.29.05.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 05:48:48 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 14:48:36 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 29 Oct 2019 08:57:20 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56868 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbfJ2M5U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 08:57:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=gocwTVPyr9YGkRj8qgx6LZT7QM+fVAHw/mMPk9/2Rwc=; b=Y96UaNxA2UCU
+        9sO6W8Ov9V4FnBx+/WSu3KJDQQRGOfbGW7nOkiL0MFX35wrDiR+W0JMclAu6Sp6IkUP2WIF2v5Ldu
+        fULf5zb3/tfdR3y9YRGwvmNOovJG/vx9KTD5axFXjzOsN+XjkcxhURE+RfI4sBESxtzVtzT42Gi0F
+        oOIM8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iPR3T-0002DH-QF; Tue, 29 Oct 2019 12:56:59 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 1BD202742157; Tue, 29 Oct 2019 12:56:59 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     alsa-devel@alsa-project.org, Andrzej Hajda <a.hajda@samsung.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        dgreid@chromium.org, dianders@chromium.org,
+        dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 5/5] leds: lm3692x: Offload DT node locating and parsing
- to core
-Message-ID: <f6420ede481afc4e0a360d937049555400f4417e.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Takashi Iwai <tiwai@suse.com>, tzungbi@chromium.org
+Subject: Applied "ASoC: rockchip_max98090: Add HDMI jack support" to the asoc tree
+In-Reply-To: <20191028071930.145899-5-cychiang@chromium.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20191029125659.1BD202742157@ypsilon.sirena.org.uk>
+Date:   Tue, 29 Oct 2019 12:56:59 +0000 (GMT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This comment serves as an example how led controller drivers
-could be simplified if led-class/led-core would handle DT node
-locating and parsing. leds-lm3692x was randomly selected from
-drivers using 'devm_led_classdev_register_ext' API. No further
-study was done :)
+The patch
 
-This commit HAS NOT BEEN TESTED at all. Only compile tested.
-This is only RFC - Eg, request for comments. If people see some
-of the ideas as useful then properly tested patch should be
-provided.
+   ASoC: rockchip_max98090: Add HDMI jack support
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From bf2f64ea6594066081b0d30b128fa4947e83e737 Mon Sep 17 00:00:00 2001
+From: Cheng-Yi Chiang <cychiang@chromium.org>
+Date: Mon, 28 Oct 2019 15:19:28 +0800
+Subject: [PATCH] ASoC: rockchip_max98090: Add HDMI jack support
+
+In machine driver, create a jack and let hdmi-codec report jack status.
+
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Link: https://lore.kernel.org/r/20191028071930.145899-5-cychiang@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/leds/leds-lm3692x.c | 75 ++++++++++++++++++++-----------------
- 1 file changed, 41 insertions(+), 34 deletions(-)
+ sound/soc/rockchip/Kconfig             |  3 ++-
+ sound/soc/rockchip/rockchip_max98090.c | 22 ++++++++++++++++++++++
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-index 3d381f2f73d0..abe2b1113049 100644
---- a/drivers/leds/leds-lm3692x.c
-+++ b/drivers/leds/leds-lm3692x.c
-@@ -108,7 +108,7 @@
- struct lm3692x_led {
- 	struct mutex lock;
- 	struct i2c_client *client;
--	struct led_classdev led_dev;
-+	struct led_init_data init_data;
- 	struct regmap *regmap;
- 	struct gpio_desc *enable_gpio;
- 	struct regulator *regulator;
-@@ -166,7 +166,8 @@ static int lm3692x_brightness_set(struct led_classdev *led_cdev,
- 				enum led_brightness brt_val)
- {
- 	struct lm3692x_led *led =
--			container_of(led_cdev, struct lm3692x_led, led_dev);
-+			container_of(led_cdev->init_data, struct lm3692x_led,
-+				     init_data);
- 	int ret;
- 	int led_brightness_lsb = (brt_val >> 5);
+diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
+index b43657e6e655..d610b553ea3b 100644
+--- a/sound/soc/rockchip/Kconfig
++++ b/sound/soc/rockchip/Kconfig
+@@ -40,9 +40,10 @@ config SND_SOC_ROCKCHIP_MAX98090
+ 	select SND_SOC_ROCKCHIP_I2S
+ 	select SND_SOC_MAX98090
+ 	select SND_SOC_TS3A227E
++	select SND_SOC_HDMI_CODEC
+ 	help
+ 	  Say Y or M here if you want to add support for SoC audio on Rockchip
+-	  boards using the MAX98090 codec, such as Veyron.
++	  boards using the MAX98090 codec and HDMI codec, such as Veyron.
  
-@@ -319,49 +320,56 @@ static int lm3692x_init(struct lm3692x_led *led)
+ config SND_SOC_ROCKCHIP_RT5645
+ 	tristate "ASoC support for Rockchip boards using a RT5645/RT5650 codec"
+diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
+index 50ef9b8e7ce4..5c2504a465f4 100644
+--- a/sound/soc/rockchip/rockchip_max98090.c
++++ b/sound/soc/rockchip/rockchip_max98090.c
+@@ -12,6 +12,7 @@
+ #include <linux/gpio.h>
+ #include <linux/of_gpio.h>
+ #include <sound/core.h>
++#include <sound/hdmi-codec.h>
+ #include <sound/jack.h>
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+@@ -218,6 +219,25 @@ enum {
+ 	DAILINK_HDMI,
+ };
  
- 	return ret;
- }
--static int lm3692x_probe_dt(struct lm3692x_led *led)
++static struct snd_soc_jack rk_hdmi_jack;
 +
-+static int lm3692x_of_parse_cb(struct led_classdev *ld, struct fwnode_handle *fw,
-+			       struct led_properties *props)
- {
--	struct fwnode_handle *child = NULL;
--	struct led_init_data init_data = {};
- 	int ret;
-+	struct lm3692x_led *led = container_of(ld->init_data,
-+					       struct lm3692x_led, init_data);
++static int rk_hdmi_init(struct snd_soc_pcm_runtime *runtime)
++{
++	struct snd_soc_card *card = runtime->card;
++	struct snd_soc_component *component = runtime->codec_dai->component;
++	int ret;
 +
-+	ret = fwnode_property_read_u32(fw, "reg", &led->led_enable);
-+	if (ret)
-+		dev_err(&led->client->dev, "reg DT property missing\n");
++	/* enable jack detection */
++	ret = snd_soc_card_jack_new(card, "HDMI Jack", SND_JACK_LINEOUT,
++				    &rk_hdmi_jack, NULL, 0);
++	if (ret) {
++		dev_err(card->dev, "Can't new HDMI Jack %d\n", ret);
++		return ret;
++	}
 +
-+	return ret;
++	return hdmi_codec_set_jack_detect(component, &rk_hdmi_jack);
 +}
 +
-+static const struct led_ops lm3692x_ops = {
-+	.brightness_set_blocking = lm3692x_brightness_set,
-+};
-+
-+static int lm3692x_probe_dt(struct lm3692x_led *led)
-+{
-+	void *ret;
- 
- 	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
- 						   "enable", GPIOD_OUT_LOW);
- 	if (IS_ERR(led->enable_gpio)) {
--		ret = PTR_ERR(led->enable_gpio);
--		dev_err(&led->client->dev, "Failed to get enable gpio: %d\n",
--			ret);
--		return ret;
-+		dev_err(&led->client->dev, "Failed to get enable gpio: %ld\n",
-+			PTR_ERR(led->enable_gpio));
-+		return PTR_ERR(led->enable_gpio);
- 	}
- 
- 	led->regulator = devm_regulator_get(&led->client->dev, "vled");
- 	if (IS_ERR(led->regulator))
- 		led->regulator = NULL;
- 
--	child = device_get_next_child_node(&led->client->dev, child);
--	if (!child) {
--		dev_err(&led->client->dev, "No LED Child node\n");
--		return -ENODEV;
--	}
--
--	fwnode_property_read_string(child, "linux,default-trigger",
--				    &led->led_dev.default_trigger);
--
--	ret = fwnode_property_read_u32(child, "reg", &led->led_enable);
--	if (ret) {
--		dev_err(&led->client->dev, "reg DT property missing\n");
--		return ret;
--	}
--
--	init_data.fwnode = child;
--	init_data.devicename = led->client->name;
--	init_data.default_label = ":";
--
--	ret = devm_led_classdev_register_ext(&led->client->dev, &led->led_dev,
--					     &init_data);
--	if (ret) {
--		dev_err(&led->client->dev, "led register err: %d\n", ret);
--		return ret;
-+	/*
-+	 * RFC_NOTE: Do we have fixed node name here or do we need another way to
-+	 * do 'match'?
-+	 */
-+	led->init_data.of_match = of_match_ptr("led_node_name_here");
-+	led->init_data.of_parse_cb = lm3692x_of_parse_cb;
-+	led->init_data.devicename = led->client->name;
-+	led->init_data.default_label = ":";
-+
-+	ret = devm_led_classdev_register_dt(&led->client->dev, &lm3692x_ops,
-+					    &led->init_data);
-+	if (IS_ERR(ret)) {
-+		dev_err(&led->client->dev, "led register err: %ld\n",
-+			PTR_ERR(ret));
-+		return PTR_ERR(ret);
- 	}
- 
- 	return 0;
-@@ -379,7 +387,6 @@ static int lm3692x_probe(struct i2c_client *client,
- 
- 	mutex_init(&led->lock);
- 	led->client = client;
--	led->led_dev.brightness_set_blocking = lm3692x_brightness_set;
- 	led->model_id = id->driver_data;
- 	i2c_set_clientdata(client, led);
- 
+ /* max98090 dai_link */
+ static struct snd_soc_dai_link rk_max98090_dailinks[] = {
+ 	{
+@@ -237,6 +257,7 @@ static struct snd_soc_dai_link rk_hdmi_dailinks[] = {
+ 	{
+ 		.name = "HDMI",
+ 		.stream_name = "HDMI",
++		.init = rk_hdmi_init,
+ 		.ops = &rk_aif1_ops,
+ 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+ 			SND_SOC_DAIFMT_CBS_CFS,
+@@ -259,6 +280,7 @@ static struct snd_soc_dai_link rk_max98090_hdmi_dailinks[] = {
+ 	[DAILINK_HDMI] = {
+ 		.name = "HDMI",
+ 		.stream_name = "HDMI",
++		.init = rk_hdmi_init,
+ 		.ops = &rk_aif1_ops,
+ 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+ 			SND_SOC_DAIFMT_CBS_CFS,
 -- 
-2.21.0
+2.20.1
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
