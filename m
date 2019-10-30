@@ -2,154 +2,132 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D2DCA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D25ECA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CEF20656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16966208E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:09:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V5lkrTTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfJ3NE6 (ORCPT
+        id S1726175AbfJ3NJ4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:04:58 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:3291 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726137AbfJ3NE5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:04:57 -0400
-X-UUID: 33b8555d6c9740a6bd5a33764c0e7d02-20191030
-X-UUID: 33b8555d6c9740a6bd5a33764c0e7d02-20191030
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 598822592; Wed, 30 Oct 2019 21:04:12 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 30 Oct
- 2019 21:04:10 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 30 Oct 2019 21:04:10 +0800
-Message-ID: <1572440653.21623.272.camel@mhfsdcap03>
-Subject: Re: [V2, 2/2] media: i2c: Add more sensor modes for ov8856 camera
- sensor
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     <mchehab@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
-        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
-        <bingbu.cao@intel.com>, <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
-Date:   Wed, 30 Oct 2019 21:04:13 +0800
-In-Reply-To: <20190910174450.GJ2680@smile.fi.intel.com>
-References: <20190910130446.26413-1-dongchun.zhu@mediatek.com>
-         <20190910130446.26413-3-dongchun.zhu@mediatek.com>
-         <20190910174450.GJ2680@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 30 Oct 2019 09:09:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52684 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfJ3NJ4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:09:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UD9hoY093115;
+        Wed, 30 Oct 2019 08:09:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572440983;
+        bh=M5l3IXLPZ7PbLcGaD/x5qSLUDpxoQyE8oFPSKxV0M6M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=V5lkrTTSDHh0l+SiR9NbcKYF4Ssaol8yXGCPibS7s4RTE0cDwNKtEG18APtxtqZGq
+         2uM4ETLP0V3C6c/DuT/EpHRVSbWe59T17HFe9pfSAQnuWKN5ROk9txWhrS4tvS2V6S
+         opxO1af7+PkGymOiMkSUpF9JVwCn8ESbgvAJHfPM=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UD9hQN087336
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 08:09:43 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 08:09:30 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 08:09:43 -0500
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UD9eLx111494;
+        Wed, 30 Oct 2019 08:09:40 -0500
+Subject: Re: [PATCH v3 02/14] soc: ti: k3: add navss ringacc driver
+To:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <20191001061704.2399-3-peter.ujfalusi@ti.com>
+ <b5f47303-b6d2-190b-d38c-d3557a93b111@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <5e65db22-1436-5f2d-6355-9ba3aa5a9d88@ti.com>
+Date:   Wed, 30 Oct 2019 15:10:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <b5f47303-b6d2-190b-d38c-d3557a93b111@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 08B9E0922440633DA2F8946554680B04AE3552E803565E0B3BD94F55769995D82000:8
-X-MTK:  N
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
-
-On Tue, 2019-09-10 at 20:44 +0300, Andy Shevchenko wrote:
-> On Tue, Sep 10, 2019 at 09:04:46PM +0800, dongchun.zhu@mediatek.com wrote:
-> > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > 
-> > This patch mainly adds two more sensor modes for OV8856 CMOS image sensor.
-> > That is, the resolution of 1632*1224 and 3264*2448, corresponding to the bayer order of BGGR.
-> > The sensor revision also differs in some OTP register.
-> 
-> > +static int __ov8856_power_on(struct ov8856 *ov8856)
-> > +{
-> > +	struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> > +	int ret;
-> > +
-> > +	ret = clk_prepare_enable(ov8856->xvclk);
-> > +	if (ret < 0) {
-> > +		dev_err(&client->dev, "failed to enable xvclk\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> > +
-> > +	ret = regulator_bulk_enable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> > +	if (ret < 0) {
-> > +		dev_err(&client->dev, "failed to enable regulators\n");
-> > +		goto disable_clk;
-> > +	}
-> > +
-> > +	gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
-> > +
-> 
-> > +	usleep_range(1400, 1500);
-> 
-> This should be commented why this is needed and from where the requirement
-> comes from. Also, not, that 100us, which is only ~7%, is small margin.
-> Recommended one is ~20%.
-> 
-
-Thanks for reminder.
-This would be refined in next release.
-
-> > +
-> > +	return 0;
-> > +
-> > +disable_clk:
-> > +	clk_disable_unprepare(ov8856->xvclk);
-> > +
-> > +	return ret;
-> > +}
-> 
-> > +	ov8856->is_1B_revision = (val == OV8856_1B_MODULE) ? 1 : 0;
-> 
-> !! will give same result without using ternary operator.
-> 
-
-Fixed in next release.
-
-> > +	ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
-> > +	if (IS_ERR(ov8856->xvclk)) {
-> > +		dev_err(&client->dev, "failed to get xvclk\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> Previously it was optional.
-> How did it work before and why it's not optional?
-> 
-
-Previous vision for this driver is for ACPI, not ARM.
-
-> > +	ov8856->n_shutdn_gpio = devm_gpiod_get(&client->dev, "reset",
-> > +					       GPIOD_OUT_LOW);
-> > +	if (IS_ERR(ov8856->n_shutdn_gpio)) {
-> > +		dev_err(&client->dev, "failed to get reset-gpios\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> Ditto.
-> 
-> > +static const struct of_device_id ov8856_of_match[] = {
-> > +	{ .compatible = "ovti,ov8856" },
-> 
-> > +	{},
-> 
-> No comma needed for terminator line.
-> 
-
-Fixed in next release.
-
-> > +};
-> 
 
 
+On 29/10/2019 10:52, Lokesh Vutla wrote:
+> Hi Grygorii,
+> 
+> [...snip..]
+> 
+>> +
+>> +static int k3_ringacc_ring_access_io(struct k3_ring *ring, void *elem,
+>> +				     enum k3_ringacc_access_mode access_mode)
+>> +{
+>> +	void __iomem *ptr;
+>> +
+>> +	switch (access_mode) {
+>> +	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
+>> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+>> +		ptr = (void __iomem *)&ring->fifos->head_data;
+>> +		break;
+>> +	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
+>> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+>> +		ptr = (void __iomem *)&ring->fifos->tail_data;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	ptr += k3_ringacc_ring_get_fifo_pos(ring);
+>> +
+>> +	switch (access_mode) {
+>> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+>> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+>> +		dev_dbg(ring->parent->dev,
+>> +			"memcpy_fromio(x): --> ptr(%p), mode:%d\n", ptr,
+>> +			access_mode);
+>> +		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
+> 
+> Does this work for any elem_size < 64 or any element size not aligned with 64?
+
+Max value of elem_size is 6 as per TRM.
+
+> 
+> IIUC, in message mode, ring element should be inserted in a single burst write
+> and there is no doorbell facility. If the above conditions are not met, we are
+> supposed to use proxy.
+> 
+> In this driver, I don't see any restrictions on the ring element size for
+> message mode and directly written to io. Am I missing something?
+> 
+
+You are right and corresponding check can be added at k3_ringacc_ring_cfg() for the case
+K3_RINGACC_RING_MODE_MESSAGE and no proxy
+
+[..]
+
+-- 
+Best regards,
+grygorii
