@@ -2,153 +2,89 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73329CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E113CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 20:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C892080F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HQvx/LCU"
+	by mail.kernel.org (Postfix) with ESMTP id D9FC220656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 20:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572467822;
+	bh=n7Ze7BhEelOv8ugr9r7umjLdJR7IBqczK+65iIUvgJ8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=QEZcTWfq4L4YpIOCHYHWWGFMlVwbbGoHh+kGyAWp9HxuIo/V+rvUa/TEhRh5t3wUJ
+	 kwHl6Sfa6/sr2fHjubPG+3dQjf4w5d8fSCqRSZK+gnJt6mpPQLrcNkpg9TK247PLmu
+	 KgnPno74ttdNC8nThSqV6tSHWF3SPmnXlSzF4+0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfJ3T76 (ORCPT
+        id S1726808AbfJ3Ug7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:59:58 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37320 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfJ3T76 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 15:59:58 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UJxsEL128265;
-        Wed, 30 Oct 2019 14:59:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572465594;
-        bh=U2QtP3Ed+psrBFJ2n1R0lkpg2XmvpXzoG4kPn/+wXN0=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=HQvx/LCUDrAIZeTEGeSrWBm5GcXxYKNF7HXjbqypjC5OpMJ5bBja6S0FLWFtwU6yt
-         G3yZDWBVqKso8tR+4m7lpaPjWB/f2oKfpPXGbDJyaL5/ppxHol8Gt8zn2j+X0U1HIN
-         PTRmAKAwfGCgQ2ZyLunGlj3rVr+T6cetbkGjgyqA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UJxsng031763
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 14:59:54 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 14:59:41 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 14:59:41 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x9UJxrdp060905;
-        Wed, 30 Oct 2019 14:59:53 -0500
-Date:   Wed, 30 Oct 2019 14:59:47 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 1/3] ARM: dts: am43xx: add support for clkout1 clock
-Message-ID: <20191030195946.ouexmis632nb7lqj@ti.com>
-References: <20191016184954.14048-1-bparrot@ti.com>
- <20191016184954.14048-2-bparrot@ti.com>
- <20191022154816.GO5610@atomide.com>
- <20191022162134.fpawonjdjvd5kxza@ti.com>
- <586dcabb-0400-50d6-5488-16bddc059286@ti.com>
- <20191022165516.GE5610@atomide.com>
- <20191023155657.GL5610@atomide.com>
+        Wed, 30 Oct 2019 16:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbfJ3Ug7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 16:36:59 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4155120656;
+        Wed, 30 Oct 2019 20:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572467818;
+        bh=n7Ze7BhEelOv8ugr9r7umjLdJR7IBqczK+65iIUvgJ8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KzAaoh6ewPvi/yE6NDchWzkojwjbdY2LSG9Jx+fw2yg6w3z0CsSQ9byQ375jd8Y9v
+         U0/ZtrGHiWqt+JxkrcuDfKvjiC3fYDem9/1r18vTCbvzsMHNhhmLf8M1vedxCQFBIB
+         5snoxIVw7hvHkHkB6kgjGA2gwTiTd1ZakvDC+PRg=
+Date:   Wed, 30 Oct 2019 15:36:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/5] net: stmmac: pci: Add Loongson GMAC
+Message-ID: <20191030203657.GA247440@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023155657.GL5610@atomide.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191030135347.3636-4-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tony Lindgren <tony@atomide.com> wrote on Wed [2019-Oct-23 08:56:57 -0700]:
-> * Tony Lindgren <tony@atomide.com> [191022 16:56]:
-> > * Tero Kristo <t-kristo@ti.com> [191022 16:48]:
-> > > On 22/10/2019 19:21, Benoit Parrot wrote:
-> > > > Tony Lindgren <tony@atomide.com> wrote on Tue [2019-Oct-22 08:48:16 -0700]:
-> > > > > * Benoit Parrot <bparrot@ti.com> [191016 18:47]:
-> > > > > > --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-> > > > > > +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> > > > > > @@ -704,6 +704,60 @@
-> > > > > >   		ti,bit-shift = <8>;
-> > > > > >   		reg = <0x2a48>;
-> > > > > >   	};
-> > > > > > +
-> > > > > > +	clkout1_osc_div_ck: clkout1_osc_div_ck {
-> > > > > > +		#clock-cells = <0>;
-> > > > > > +		compatible = "ti,divider-clock";
-> > > > > > +		clocks = <&sys_clkin_ck>;
-> > > > > > +		ti,bit-shift = <20>;
-> > > > > > +		ti,max-div = <4>;
-> > > > > > +		reg = <0x4100>;
-> > > > > > +	};
-> > > > > 
-> > > > > Here too please describe why the clock names are not generic.
-> > > > 
-> > > > Tero originally had this patch in the kernel so this is somewhat of a
-> > > > revert. Since these "clock" were removed. If the name syntax is no longer
-> > > > valid for some reason, then I will need a little more informations to
-> > > > proceed.
-> > > > 
-> > > > Tero, can you assist here?
-> > > 
-> > > This one is just following the naming convention of the rest of the clocks
-> > > atm.
-> > > 
-> > > If we need to fix all the underscore name clocks, that requires pretty much
-> > > complete revamp of both the dts data + clock data under the clock driver,
-> > > and it is not backwards compatible either. How should we tackle that one?
-> > > 
-> > > We could maybe add support code in kernel to do s/-/_/g for the "new" clocks
-> > > so that their parent-child relationships would be retained, and then convert
-> > > the clocks in phases.
-> > 
-> > Well some of them can be fixed by configuring things based
-> > on the compatible value and then the node name can be just
-> > clock like it should be.
-> > 
-> > Here too one option would be to add custom compatibles like:
-> > 
-> > compatible = "ti,clkout1-osc-div", "ti,divider-clock";
-> > 
-> > And then have match data configure the rest.
-> > 
-> > The other option would be to have lookup tables in the clock
-> > driver based on the SoC and reg address.
-> > 
-> > This is a hidden mine though.. We've hit it already several times,
-> > and any dts clean-up effort has a chance of breaking things.
+On Wed, Oct 30, 2019 at 09:53:45PM +0800, Jiaxun Yang wrote:
+> This device will be setup by parsing DeviceTree node
+> of pci device.
 > 
-> Hmm maybe in this case just doing this is enough:
-> 
-> clkout1_osc_div_ck: clock@4100 {
-> 	... 
-> }
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-But then we would end up with 6 clock node with the same name "clock@4100",
-doesn't pose a problem somewhere?
+> +static int loongson_pci_of_setup(struct pci_dev *pdev,
+> +			struct plat_stmmacenet_data *plat)
+> +{
+> +	struct device_node  *np;
+> +	np = pci_device_to_OF_node(pdev);
+> +
+> +	if(!np) {
 
-Tero?
+Please pay attention to the existing coding style in the file and
+follow it.  In this and other cases below, add a space in "if (".
 
-Benoit
+> +	if(!of_device_is_compatible(np, "loongson,pci-gmac")) {
 
-> 
-> Or do all the TI clocks we have have a dependency to the
-> node naming?
-> 
-> Regards,
-> 
-> Tony
-> 
+> +	return  stmmac_parse_config_dt(np, plat);
+
+Remove the double space here.
+
+> +	if(info->of_irq) {
+
+> +	STMMAC_DEVICE(LOONGSON,  PCI_DEVICE_ID_LOONGSON_GMAC, loongson_of_pci_info),
+
+And here.
