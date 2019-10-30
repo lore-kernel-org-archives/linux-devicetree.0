@@ -2,143 +2,273 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCC5CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 22:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF9CCA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F9920862
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 22:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572473681;
-	bh=jZI/FXKfbqv9Ga9+lgH+eslmJ6dwwmvbb60jHX9+xF0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=wjs6X/T/8TwVt2GmwMx2PsWtynjJwCMqSIL2HN11/ppSPx/JNaa3wA9AgMVediGQ0
-	 MhTSiRzm5lU/NwESN5UtDfEFoZqkE9ch01+A56MiWz1jsiElKv/UCCXUm4n6ifD5e1
-	 5agUApgQrR20hr1UABjqAi0HLND2pVwSu7Bdoxf4=
+	by mail.kernel.org (Postfix) with ESMTP id 4498921929
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="WQYCiXIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfJ3WOl (ORCPT
+        id S1727064AbfJ3WnN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfJ3WOk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:14:40 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 30 Oct 2019 18:43:13 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:34885 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727106AbfJ3WnH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 18:43:07 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F5822083E;
-        Wed, 30 Oct 2019 22:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572473679;
-        bh=jZI/FXKfbqv9Ga9+lgH+eslmJ6dwwmvbb60jHX9+xF0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kUIVedaXNCpW7h6o6+TG8ZlyRVFBUfFWi5EMxFY0ByFPcZNjyKmUAO4lYJss7uy06
-         o40AOBGZ9ruMLMzUbuKp5XXiFOhs39cyESitVnc0VxiSmjRYGraANRBREo47HdtQIL
-         ah+bEH8XGGTVy7LPClfV5OUPIvpcL6HqUNiG+yx0=
-Date:   Wed, 30 Oct 2019 17:14:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Rajat Jain <rajatja@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
- pcie link
-Message-ID: <20191030221436.GA261632@google.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id BFD4822EE9;
+        Wed, 30 Oct 2019 23:43:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1572475383;
+        bh=XFnpLVTbRIOcv1JIzgMCiJ0o/IuB8jUGvt9WomlOMmk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WQYCiXIqi++5FhEhgAeuFiPqNbek6Rkmh9YO82+pNsUhBv27AZv9oygpNLusWhej5
+         CYvnyfdZbU5uRmcIM6BZ2hDA/4lxIjqYgQkXA4CHYiJtVKY+UJ5Jt/kUeIslQuUZN3
+         I/BqZIfXqXkn3Pvvz4lLncWIMC17wX6JMU+C6slg=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Michael Walle <michael@walle.cc>
+Subject: [RFC PATCH 3/3] net: phy: at803x: add device tree binding
+Date:   Wed, 30 Oct 2019 23:42:51 +0100
+Message-Id: <20191030224251.21578-4-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191030224251.21578-1-michael@walle.cc>
+References: <20191030224251.21578-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1aadeea-7904-1455-5393-c4998fbd8037@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[+cc Heiner, Rajat]
+Add support for configuring the CLK_25M pin as well as the RGMII I/O
+voltage by the device tree.
 
-On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
-> On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
-> > [+cc Rafael, linux-pm, beginning of discussion at
-> > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
-> > 
-> > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
-> > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
-> > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
-> > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
-> > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
-> > > > > > of changing link width and speed on the fly.
-> > > > Please add more details about why this is needed.  Since you're adding
-> > > > sysfs files, it sounds like it's not actually the *driver* that needs
-> > > > this; it's something in userspace?
-> > > We have use cases to change the link speed and width on the fly.
-> > > One is EMI check and other is power saving.  Some battery backed
-> > > applications have to switch PCIe link from higher GEN to GEN1 and
-> > > width to x1. During the cases like external power supply got
-> > > disconnected or broken. Once external power supply is connected then
-> > > switch PCIe link to higher GEN and width.
-> > That sounds plausible, but of course nothing there is specific to the
-> > Intel Gateway, so we should implement this generically so it would
-> > work on all hardware.
-> Agree.
-> > 
-> > I'm not sure what the interface should look like -- should it be a
-> > low-level interface as you propose where userspace would have to
-> > identify each link of interest, or is there some system-wide
-> > power/performance knob that could tune all links?  Cc'd Rafael and
-> > linux-pm in case they have ideas.
-> 
-> To my knowledge sysfs is the appropriate way to go.
-> If there are any other best possible knobs, will be helpful.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/net/phy/at803x.c | 156 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 154 insertions(+), 2 deletions(-)
 
-I agree sysfs is the right place for it; my question was whether we
-should have files like:
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index 1eb5d4fb8925..32be4c72cf4b 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -13,7 +13,9 @@
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+ #include <linux/of_gpio.h>
++#include <linux/bitfield.h>
+ #include <linux/gpio/consumer.h>
++#include <dt-bindings/net/atheros-at803x.h>
+ 
+ #define AT803X_SPECIFIC_STATUS			0x11
+ #define AT803X_SS_SPEED_MASK			(3 << 14)
+@@ -62,6 +64,37 @@
+ #define AT803X_DEBUG_REG_5			0x05
+ #define AT803X_DEBUG_TX_CLK_DLY_EN		BIT(8)
+ 
++#define AT803X_DEBUG_REG_1F			0x1F
++#define AT803X_DEBUG_PLL_ON			BIT(2)
++#define AT803X_DEBUG_RGMII_1V8			BIT(3)
++
++/* AT803x supports either the XTAL input pad, an internal PLL or the
++ * DSP as clock reference for the clock output pad. The XTAL reference
++ * is only used for 25 MHz output, all other frequencies need the PLL.
++ * The DSP as a clock reference is used in synchronous ethernet
++ * applications.
++ *
++ * By default the PLL is only enabled if there is a link. Otherwise
++ * the PHY will go into low power state and disabled the PLL. You can
++ * set the PLL_ON bit (see debug register 0x1f) to keep the PLL always
++ * enabled.
++ */
++#define AT803X_MMD7_CLK25M			0x8016
++#define AT803X_CLK_OUT_MASK			GENMASK(4, 2)
++#define AT803X_CLK_OUT_25MHZ_XTAL		0
++#define AT803X_CLK_OUT_25MHZ_DSP		1
++#define AT803X_CLK_OUT_50MHZ_PLL		2
++#define AT803X_CLK_OUT_50MHZ_DSP		3
++#define AT803X_CLK_OUT_62_5MHZ_PLL		4
++#define AT803X_CLK_OUT_62_5MHZ_DSP		5
++#define AT803X_CLK_OUT_125MHZ_PLL		6
++#define AT803X_CLK_OUT_125MHZ_DSP		7
++
++#define AT803X_CLK_OUT_STRENGTH_MASK		GENMASK(8, 7)
++#define AT803X_CLK_OUT_STRENGTH_FULL		0
++#define AT803X_CLK_OUT_STRENGTH_HALF		1
++#define AT803X_CLK_OUT_STRENGTH_QUARTER		2
++
+ #define ATH8030_PHY_ID 0x004dd076
+ #define ATH8031_PHY_ID 0x004dd074
+ #define ATH8035_PHY_ID 0x004dd072
+@@ -73,6 +106,11 @@ MODULE_LICENSE("GPL");
+ 
+ struct at803x_priv {
+ 	bool phy_reset:1;
++	int flags;
++#define AT803X_KEEP_PLL_ENABLED	BIT(0)	/* don't turn off internal PLL */
++#define AT803X_RGMII_1V8	BIT(1)	/* use 1.8V RGMII voltage */
++	u16 clk_25m_reg;
++	u16 clk_25m_mask;
+ };
+ 
+ struct at803x_context {
+@@ -240,6 +278,74 @@ static int at803x_resume(struct phy_device *phydev)
+ 	return phy_modify(phydev, MII_BMCR, BMCR_PDOWN | BMCR_ISOLATE, 0);
+ }
+ 
++static int at803x_parse_dt(struct phy_device *phydev)
++{
++	struct device_node *node = phydev->mdio.dev.of_node;
++	struct at803x_priv *priv = phydev->priv;
++	u32 freq, strength;
++	unsigned int sel;
++	int ret;
++
++	if (!IS_ENABLED(CONFIG_OF_MDIO))
++		return 0;
++
++	if (!node)
++		return 0;
++
++	if (of_property_read_bool(node, "atheros,keep-pll-enabled"))
++		priv->flags |= AT803X_KEEP_PLL_ENABLED;
++
++	if (of_property_read_bool(node, "atheros,rgmii-io-1v8"))
++		priv->flags |= AT803X_RGMII_1V8;
++
++	ret = of_property_read_u32(node, "atheros,clk-out-frequency", &freq);
++	if (!ret) {
++		switch (freq) {
++		case 25000000:
++			sel = AT803X_CLK_OUT_25MHZ_XTAL;
++			break;
++		case 50000000:
++			sel = AT803X_CLK_OUT_50MHZ_PLL;
++			break;
++		case 62500000:
++			sel = AT803X_CLK_OUT_62_5MHZ_PLL;
++			break;
++		case 125000000:
++			sel = AT803X_CLK_OUT_125MHZ_PLL;
++			break;
++		default:
++			phydev_err(phydev,
++				   "invalid atheros,clk-out-frequency\n");
++			return -EINVAL;
++		}
++
++		priv->clk_25m_reg |= FIELD_PREP(AT803X_CLK_OUT_MASK, sel);
++		priv->clk_25m_mask |= AT803X_CLK_OUT_MASK;
++	}
++
++	ret = of_property_read_u32(node, "atheros,clk-out-strength", &strength);
++	if (!ret) {
++		priv->clk_25m_mask |= AT803X_CLK_OUT_STRENGTH_MASK;
++		switch (strength) {
++		case AT803X_STRENGTH_FULL:
++			priv->clk_25m_reg |= AT803X_CLK_OUT_STRENGTH_FULL;
++			break;
++		case AT803X_STRENGTH_HALF:
++			priv->clk_25m_reg |= AT803X_CLK_OUT_STRENGTH_HALF;
++			break;
++		case AT803X_STRENGTH_QUARTER:
++			priv->clk_25m_reg |= AT803X_CLK_OUT_STRENGTH_QUARTER;
++			break;
++		default:
++			phydev_err(phydev,
++				   "invalid atheros,clk-out-strength\n");
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
+ static int at803x_probe(struct phy_device *phydev)
+ {
+ 	struct device *dev = &phydev->mdio.dev;
+@@ -251,11 +357,31 @@ static int at803x_probe(struct phy_device *phydev)
+ 
+ 	phydev->priv = priv;
+ 
+-	return 0;
++	return at803x_parse_dt(phydev);
++}
++
++static int at803x_clk_out_config(struct phy_device *phydev)
++{
++	struct at803x_priv *priv = phydev->priv;
++	int val;
++
++	if (!priv->clk_25m_mask)
++		return 0;
++
++	val = phy_read_mmd(phydev, MDIO_MMD_AN, AT803X_MMD7_CLK25M);
++	if (val < 0)
++		return val;
++
++	val &= ~priv->clk_25m_mask;
++	val |= priv->clk_25m_reg;
++
++	return phy_write_mmd(phydev, MDIO_MMD_AN, AT803X_MMD7_CLK25M, val);
+ }
+ 
+ static int at803x_config_init(struct phy_device *phydev)
+ {
++	struct at803x_priv *priv = phydev->priv;
++	u16 set = 0, clear = 0;
+ 	int ret;
+ 
+ 	/* The RX and TX delay default is:
+@@ -276,8 +402,34 @@ static int at803x_config_init(struct phy_device *phydev)
+ 		ret = at803x_enable_tx_delay(phydev);
+ 	else
+ 		ret = at803x_disable_tx_delay(phydev);
++	if (ret < 0)
++		return ret;
+ 
+-	return ret;
++	ret = at803x_clk_out_config(phydev);
++	if (ret < 0)
++		return ret;
++
++	/* The default after hardware reset is:
++	 *   1.5V RGMII I/O voltage
++	 *   PLL OFF (which means it is off if there is no link)
++	 *
++	 * After a soft reset, the values are retained.
++	 */
++	if (priv->flags & AT803X_KEEP_PLL_ENABLED)
++		set |= AT803X_DEBUG_PLL_ON;
++	else
++		clear |= AT803X_DEBUG_PLL_ON;
++
++	if (priv->flags & AT803X_RGMII_1V8)
++		set |= AT803X_DEBUG_RGMII_1V8;
++	else
++		clear |= AT803X_DEBUG_RGMII_1V8;
++
++	ret = at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F, clear, set);
++	if (ret < 0)
++		return ret;
++
++	return 0;
+ }
+ 
+ static int at803x_ack_interrupt(struct phy_device *phydev)
+-- 
+2.20.1
 
-  /sys/.../0000:00:1f.3/pcie_speed
-  /sys/.../0000:00:1f.3/pcie_width
-
-as I think this patch would add (BTW, please include sample paths like
-the above in the commit log), or whether there should be a more global
-thing that would affect all the links in the system.
-
-I think the low-level files like you propose would be better because
-one might want to tune link performance differently for different
-types of devices and workloads.
-
-We also have to decide if these files should be associated with the
-device at the upstream or downstream end of the link.  For ASPM, the
-current proposal [1] has the files at the downstream end on the theory
-that the GPU, NIC, NVMe device, etc is the user-recognizable one.
-Also, neither ASPM nor link speed/width make any sense unless there
-*is* a device at the downstream end, so putting them there
-automatically makes them visible only when they're useful.
-
-Rafael had some concerns about the proposed ASPM interface [2], but I
-don't know what they are yet.
-
-For ASPM we added a "link_pm" directory, and maybe that's too
-specific.  Maybe it should be a generic "link_mgt" or even "pcie"
-directory that could contain both the ASPM and width/speed files.
-
-There's also a change coming to put AER stats in something like this:
-
-  /sys/.../0000:00:1f.3/aer_stats/correctable_rx_err
-  /sys/.../0000:00:1f.3/aer_stats/correctable_timeout
-  /sys/.../0000:00:1f.3/aer_stats/fatal_TLP
-  ...
-
-It would certainly be good to have some organizational scheme or we'll
-end up with a real hodge-podge.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/aspm&id=ad46fe1c733656611788e2cd59793e891ed7ded7
-[2] https://lore.kernel.org/r/CAJZ5v0jdxR4roEUC_Hs3puCzGY4ThdLsi_XcxfBUUxqruP4z7A@mail.gmail.com
