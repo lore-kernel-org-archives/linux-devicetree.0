@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA539CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2340CA9EC9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3002190F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B679E21924
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451052;
-	bh=0guIy7a25neGWxvY8eDOVnp6P7zOlDJLv5fR2gY7DC0=;
+	s=default; t=1572451070;
+	bh=D4v9sx3RRX0dU7Q3sH3IEQS/k618r0wxMght8d1CSyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T0L42yXMrEbDX7XrUZstWaIT6ZH/zQeGXNM8qO26Mlnzt01CvxNhU8Q+95bUtXFBz
-	 04dVQlgJ7U6xeOem0dFcMbaT0j1dd5sD+6EmyqcthxYRT5c3LXJYfoNUaK6VVCGkx1
-	 GJLBdzNsFc7ltz4vl83WBO1GLAi/Oc2lZbl9aIqE=
+	b=c7fKKkGSF61twmconBS0RSqQrAE8SaA3X6yAyvTGb8r208qiJKCduuNVueEVRtbC4
+	 5hppMA4f/A8604K0AqorVE+qPr44+5sL1OVUOKIAMNwWTMMvkK2Qiv12CtCyioleqN
+	 ivGPJlC+w+oo37ns5MFAewtH0P0r7R+ieLxLPqok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfJ3P5a (ORCPT
+        id S1729149AbfJ3P5t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:57:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729067AbfJ3P5a (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:57:30 -0400
+        id S1728346AbfJ3P5l (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:57:41 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D42921734;
-        Wed, 30 Oct 2019 15:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C489A2067D;
+        Wed, 30 Oct 2019 15:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451049;
-        bh=0guIy7a25neGWxvY8eDOVnp6P7zOlDJLv5fR2gY7DC0=;
+        s=default; t=1572451061;
+        bh=D4v9sx3RRX0dU7Q3sH3IEQS/k618r0wxMght8d1CSyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yj86R2lKxjv18uxwOUX/D95GnfNLDbxPgXJDXMjTp+P18i9wO5b8m3TVhuS5dJ6vU
-         JlN2jBTMgo7uXE86qncKi1kLpWh+2zR99hwoxQMuhDaYYG6Mxe/hkLdc00jOPkHMOr
-         JnipyBiJE/rZ6qPV9gzJpasSiO7FAp6hlzzswWuA=
+        b=caTG0sC9/JU1v7dds63E7em7CgT0zqNApwRnkB2aul6ZjrDIuBc8osovv/AEuUeDn
+         IVBIo0u7DGypvSCv+dsucjv/hJMwDwqi7TA+seyOi2mBadnkVrSGmC2u+hJ0HgD6XT
+         e0a1Znl5Z7V7e9FJSlFfEN79F8WryMP2KEu5YPaI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/18] ARM: dts: imx7s: Correct GPT's ipg clock source
-Date:   Wed, 30 Oct 2019 11:56:53 -0400
-Message-Id: <20191030155700.10748-11-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 16/18] of: unittest: fix memory leak in unittest_data_add
+Date:   Wed, 30 Oct 2019 11:56:58 -0400
+Message-Id: <20191030155700.10748-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155700.10748-1-sashal@kernel.org>
 References: <20191030155700.10748-1-sashal@kernel.org>
@@ -58,62 +60,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 252b9e21bcf46b0d16f733f2e42b21fdc60addee ]
+[ Upstream commit e13de8fe0d6a51341671bbe384826d527afe8d44 ]
 
-i.MX7S/D's GPT ipg clock should be from GPT clock root and
-controlled by CCM's GPT CCGR, using correct clock source for
-GPT ipg clock instead of IMX7D_CLK_DUMMY.
+In unittest_data_add, a copy buffer is created via kmemdup. This buffer
+is leaked if of_fdt_unflatten_tree fails. The release for the
+unittest_data buffer is added.
 
-Fixes: 3ef79ca6bd1d ("ARM: dts: imx7d: use imx7s.dtsi as base device tree")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: b951f9dc7f25 ("Enabling OF selftest to run without machine's devicetree")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/of/unittest.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index edc5ddeb851a7..0a7ea1a765f99 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -437,7 +437,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302d0000 0x10000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT1_ROOT_CLK>,
- 					 <&clks IMX7D_GPT1_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 			};
-@@ -446,7 +446,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302e0000 0x10000>;
- 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT2_ROOT_CLK>,
- 					 <&clks IMX7D_GPT2_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
-@@ -456,7 +456,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x302f0000 0x10000>;
- 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT3_ROOT_CLK>,
- 					 <&clks IMX7D_GPT3_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
-@@ -466,7 +466,7 @@
- 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
- 				reg = <0x30300000 0x10000>;
- 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_CLK_DUMMY>,
-+				clocks = <&clks IMX7D_GPT4_ROOT_CLK>,
- 					 <&clks IMX7D_GPT4_ROOT_CLK>;
- 				clock-names = "ipg", "per";
- 				status = "disabled";
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 0a1ebbbd3f163..92530525e3556 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -933,6 +933,7 @@ static int __init unittest_data_add(void)
+ 	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+ 	if (!unittest_data_node) {
+ 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
++		kfree(unittest_data);
+ 		return -ENODATA;
+ 	}
+ 	of_node_set_flag(unittest_data_node, OF_DETACHED);
 -- 
 2.20.1
 
