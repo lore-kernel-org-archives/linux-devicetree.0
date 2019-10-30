@@ -2,113 +2,82 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E18CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD05CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6F52054F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451351;
-	bh=j0dq07s5gcJmAjlTqbRFwDv0S35OH9GkUrQKdW+7wE0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zRxgpyx/Sofb7aarhmmj6znda+OJ9Xyj2TLAgSz5G1YmkvFRl2jqTa5hWmy7tU3E8
-	 crE2AjZpj0Z0sPjmqiX67Yq8/ocQ3j5dfCmzIkpsWsazfhWHKfNcBg+1KYOhF7uWJd
-	 JVbe5a+7thJyv0+4MUNmf1UClTrLKNqv04OnYxfs=
+	by mail.kernel.org (Postfix) with ESMTP id 34EC3205C9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfJ3PvX (ORCPT
+        id S1726626AbfJ3QQJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:51:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 12:16:09 -0400
+Received: from muru.com ([72.249.23.125]:40252 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbfJ3PvW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:22 -0400
-Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EABA1208E3;
-        Wed, 30 Oct 2019 15:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450681;
-        bh=j0dq07s5gcJmAjlTqbRFwDv0S35OH9GkUrQKdW+7wE0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTvuGCLd5CaTAxK3/sPmdL461wXtFo2GqwAwBjK4cqrdgPoQNpB+X+aRJWNGRMGyS
-         DhBXQngevvRpJrM+GuY4sLIKRnuboNWetptSGKi21MZwRq7NOfuRDUlqp2mM9Qujcd
-         bUqCIfq9tVZ8eIU3tsmFEwmERyjUmT1xxRJu8DsE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hugh Cole-Baker <sigmaris@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 23/81] arm64: dts: rockchip: fix Rockpro64 RK808 interrupt line
-Date:   Wed, 30 Oct 2019 11:48:29 -0400
-Message-Id: <20191030154928.9432-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
-References: <20191030154928.9432-1-sashal@kernel.org>
+        id S1726589AbfJ3QQJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:16:09 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 3A61C8027;
+        Wed, 30 Oct 2019 16:16:43 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 09:16:04 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+Message-ID: <20191030161604.GA5610@atomide.com>
+References: <cover.1571424390.git.hns@goldelico.com>
+ <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Hugh Cole-Baker <sigmaris@gmail.com>
+* H. Nikolaus Schaller <hns@goldelico.com> [191018 18:47]:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
+> @@ -0,0 +1,76 @@
+> +Imagination PVR/SGX GPU
+> +
+> +Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by this binding.
+> +
+> +Required properties:
+> +- compatible:	Should be one of
+> +		"img,sgx530-121", "img,sgx530", "ti,omap-omap3-sgx530-121";
+> +		  - BeagleBoard ABC, OpenPandora 600MHz
+> +		"img,sgx530-125", "img,sgx530", "ti,omap-omap3-sgx530-125";
+> +		  - BeagleBoard XM, GTA04, OpenPandora 1GHz
+> +		"img,sgx530-125", "img,sgx530", "ti,omap-am3517-sgx530-125";
+> +		"img,sgx530-125", "img,sgx530", "ti,omap-am335x-sgx530-125";
+> +		  - BeagleBone Black
+> +		"img,sgx540-120", "img,sgx540", "ti,omap-omap4-sgx540-120";
+> +		  - Pandaboard (ES)
+> +		"img,sgx544-112", "img,sgx544", "ti,omap-omap4-sgx544-112";
+> +		"img,sgx544-116", "img,sgx544", "ti,omap-omap5-sgx544-116";
+> +		  - OMAP5 UEVM, Pyra Handheld
+> +		"img,sgx544-116", "img,sgx544", "ti,omap-dra7-sgx544-116";
 
-[ Upstream commit deea9f5fc32040fd6f6132f2260ba410fb5cf98c ]
+FYI, the compatible names above have unnecessary omap in them:
 
-Fix the pinctrl and interrupt specifier for RK808 to use GPIO3_B2. On the
-Rockpro64 schematic [1] page 16, it shows GPIO3_B2 used for the interrupt
-line PMIC_INT_L from the RK808, and there's a note which translates as:
-"PMU termination GPIO1_C5 changed to this".
+"ti,omap-omap3-sgx530-121" should be "ti,omap3-sgx530-121"
+"ti,omap-am335x-sgx530-125" should be "ti,am335x-sgx530-125";
+"ti,omap-dra7-sgx544-116" should be "ti,dra7-sgx544-116"
 
-Tested by setting an RTC wakealarm and checking /proc/interrupts counters.
-Without this patch, neither the rockchip_gpio_irq counter for the RK808,
-nor the RTC alarm counter increment when the alarm time is reached.
-With this patch, both interrupt counters increment by 1 as expected.
+And so on.
 
-[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
+Regards,
 
-Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
-Signed-off-by: Hugh Cole-Baker <sigmaris@gmail.com>
-Link: https://lore.kernel.org/r/20190921131457.36258-1-sigmaris@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index eb55940620060..5818b85255123 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -240,8 +240,8 @@
- 	rk808: pmic@1b {
- 		compatible = "rockchip,rk808";
- 		reg = <0x1b>;
--		interrupt-parent = <&gpio1>;
--		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
- 		#clock-cells = <1>;
- 		clock-output-names = "xin32k", "rk808-clkout2";
- 		pinctrl-names = "default";
-@@ -567,7 +567,7 @@
- 
- 	pmic {
- 		pmic_int_l: pmic-int-l {
--			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-+			rockchip,pins = <3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
- 		};
- 
- 		vsel1_gpio: vsel1-gpio {
--- 
-2.20.1
-
+Tony
