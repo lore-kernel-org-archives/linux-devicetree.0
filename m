@@ -2,174 +2,181 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4B9CA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6297CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884BF2087E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80EB420862
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dwwFFn4m"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="czXZNueu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfJ3MBR (ORCPT
+        id S1726102AbfJ3MDn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:01:17 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36512 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfJ3MBR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 08:01:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id j22so1358374pgh.3
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 05:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Pn2SBbNltYyaVGymDbdAPJdCwQZFHAgjh2Z52q+dj1A=;
-        b=dwwFFn4mrIwtWIN6ANiIwElOwApzWsI7v1i7rx0h2QZ+LjebgtOSslaOAb91tjz2W8
-         pW0K/CNndOdBdaBssesEraMc8rUJYFv03ToPABpl5WVro25hduRcjipHBqXNGX4dVFB5
-         6OJD1IirtOdZ0wTeDIZdYrJE3V/tVC3xhJuGbMKwuBNtj22daYgkS/mUxtS8CXIHlTaL
-         hR2QEzC4MJ4Ri0K/5yWJwe8j0kGK7ly9qbdAkY1GOyykhTuwLu002sLFVWSCDusWuJzi
-         109l6LAYkFoxd5FDekLBmo5RpGpFLfPUxlMfkT0Dje7ryXziyzpZa08Y4nrRqquV8S99
-         Duhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pn2SBbNltYyaVGymDbdAPJdCwQZFHAgjh2Z52q+dj1A=;
-        b=jkpO1hirVZBDhLJEI10seMHlQvcVU+krLGCpQFTZG5NILSpjCtG0hKgI/T2VgXGgJK
-         7p7DTkhttkwScamSEjIY3woLZEdy/1mnSvlv57v+oX9QkunSB2DAjHYwCffCXclT4VpP
-         b1x4iilAk2IlWJ+r6sK0MBZbQcpPfwExAgttNbjwKmihHwspHm5aQuwgiTJxwjIrcQxz
-         uQrdfHKy2UvXjfsJxfx69ecvVa9cuSdjpOpjqqylRu/ScGOT5sc1jb/gXuHJW9AWKDqW
-         Kf120A4q/m1iitOByoQj8CgsKXGZbM3DbkYnNyhN5muptXclPijRhbwD/u1ynZnvjcWb
-         jm7g==
-X-Gm-Message-State: APjAAAU9BazlOfnQw9vWtHoYPVKEsXnvmW9REJe7e/4/r8v1CVXN+ji4
-        S2cAwng3CN5hGDsUkg45YPJS
-X-Google-Smtp-Source: APXvYqzZ4kqchrmVDuSmUbMpCOHr9OhgeLDhCral1RgOulvxlW5oUWV1FdBYh1NOIHktZhDyzxsfNw==
-X-Received: by 2002:a17:90b:282:: with SMTP id az2mr13396510pjb.23.1572436874465;
-        Wed, 30 Oct 2019 05:01:14 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:618e:77d9:c9fa:423a:3851:8df4])
-        by smtp.gmail.com with ESMTPSA id q185sm4328613pfc.153.2019.10.30.05.01.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 30 Oct 2019 05:01:13 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 17:31:05 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191030120105.GA11432@Mani-XPS-13-9360>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
- <20191030115328.GA6253@valkosipuli.retiisi.org.uk>
+        Wed, 30 Oct 2019 08:03:43 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47074 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfJ3MDn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 08:03:43 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UC3ZI9081995;
+        Wed, 30 Oct 2019 07:03:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572437015;
+        bh=nlVr6Zj9+j0vCKO0OY9fSOQFWnGg/l/NYJihfhV2J2g=;
+        h=From:To:CC:Subject:Date;
+        b=czXZNueuXz0hu+ukJJ3s59Y6nziIkMwbytxCB0/mbK5Qg2hg6/WdNSkD1UkLUNzIt
+         MvQzdqEy2Oc5HwwbhfM6Od6d8RftPVQY/khzDumHlaNouMMrktPz+31Soe+0V662DA
+         3cyfL4SA4NxQueXjqzSdIomQCfIHkZE9+bQXsvKI=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UC3Z9e106564
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 07:03:35 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 07:03:35 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 07:03:22 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UC3WRH040060;
+        Wed, 30 Oct 2019 07:03:32 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
+        <t-kristo@ti.com>, <mripard@kernel.org>, <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+Subject: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+Date:   Wed, 30 Oct 2019 14:04:38 +0200
+Message-ID: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030115328.GA6253@valkosipuli.retiisi.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi,
 
-On Wed, Oct 30, 2019 at 01:53:28PM +0200, Sakari Ailus wrote:
-> Hi Nabuvannan,
-> 
-> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
-> > Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
-> > add MAINTAINERS entry for the binding and driver.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
-> >  MAINTAINERS                                   |  8 ++
-> >  2 files changed, 102 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > new file mode 100644
-> > index 000000000000..c04ec2203268
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > @@ -0,0 +1,94 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> > +
-> > +maintainers:
-> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > +
-> > +description: |-
-> > +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> > +  sensor with square pixel array and 1.58 M effective pixels. This chip
-> > +  features a global shutter with variable charge-integration time. It is
-> > +  programmable through I2C and 4-wire interfaces. The sensor output is
-> > +  available via CSI-2 serial data output (1 Lane).
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: sony,imx296
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    description:
-> > +      Input clock for the sensor.
-> > +    items:
-> > +      - const: mclk
-> > +
-> > +  clock-frequency:
-> > +    description:
-> > +      Frequency of the mclk clock in Hertz.
-> > +
-> > +  vddo-supply:
-> > +    description:
-> > +      Definition of the regulator used as interface power supply.
-> > +
-> > +  vdda-supply:
-> > +    description:
-> > +      Definition of the regulator used as analog power supply.
-> > +
-> > +  vddd-supply:
-> > +    description:
-> > +      Definition of the regulator used as digital power supply.
-> > +
-> > +  reset-gpios:
-> > +    description:
-> > +      The phandle and specifier for the GPIO that controls sensor reset.
-> > +    maxItems: 1
-> > +
-> > +  port: true
-> 
-> You're missing "type: object" under port.
-> 
+The shared GPIO line for external components tends to be a common issue and
+there is no 'clean' way of handling it.
 
-I did that intentionally, since there are other places where I can see the
-"type" field not specified. So, I was not sure about that. Most of the
-display bindings don't specify "type" and they are most available ones.
-I don't think the "port" property differs between cameras and displays.
-So I went with that.
+I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
+a driver tries to request a GPIO which is already in use.
+However the driver must know that the component is going to be used in such a
+way, which can be said to any external components with GPIO line, so in theory
+all drivers must set this flag when requesting the GPIO...
 
-Thanks,
-Mani
+But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
+GPIO line. For example any device using the same GPIO as reset/enable line can
+reset/enable other devices, which is not something the other device might like
+or can handle.
+For example a device needs to be configured after it is enabled, but some other
+driver would reset it while handling the same GPIO -> the device is not
+operational anymmore as it lost it's configuration.
 
-> -- 
-> Regards,
-> 
-> Sakari Ailus
+With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+the role of making sure that the GPIO line only changes state when it will not
+disturb any of the clients sharing the same GPIO line.
+
+The 'sticky' state of the line depends on the board design, which can be
+communicated with the hold-active-state property:
+
+GPIO_ACTIVE_HIGH: the line must be high as long as any of the clients want it to
+be high
+GPIO_ACTIVE_LOW: the line must be low as long as any of the clients want it to
+be low
+
+In board DTS files it is just adding the node to descibe the shared GPIO line
+and point the users of this line to the shared-gpio node instead of the real
+GPIO.
+
+Something like this:
+
+codec_reset: gpio-shared0 {
+	compatible = "gpio-shared";
+	gpio-controller;
+	#gpio-cells = <2>;
+
+	root-gpios = <&audio_exp 0 GPIO_ACTIVE_HIGH>;
+
+	branch-count = <2>;
+	hold-active-state = <GPIO_ACTIVE_HIGH>;
+};
+
+&main_i2c3 {
+	audio_exp: gpio@21 {
+		compatible = "ti,tca6416";
+		reg = <0x21>;
+		gpio-controller;
+		#gpio-cells = <2>;
+	};
+
+	pcm3168a_a: audio-codec@47 {
+		compatible = "ti,pcm3168a";
+		reg = <0x47>;
+
+		#sound-dai-cells = <1>;
+
+		rst-gpios = <&codec_reset 0 GPIO_ACTIVE_HIGH>;
+		...
+	};
+
+	pcm3168a_b: audio-codec@46 {
+		compatible = "ti,pcm3168a";
+		reg = <0x46>;
+
+		#sound-dai-cells = <1>;
+
+		rst-gpios = <&codec_reset 1 GPIO_ACTIVE_HIGH>;
+		...
+	};
+};
+
+If any of the codec requests the GPIO to be high, the line will go up and will
+only going to be low when both of them set's their shared line to low.
+
+Note: other option would be to have something similar to gpio-hog (gpio-shared)
+support in the core itself, but then all of the logic and state handling for the
+users of the shared line needs to be moved there.
+Simply counting the low and high requests would not work as the GPIO framework
+by design does not refcounts the state, iow gpio_set(0) three times and
+gpio_set(1) would set the line high.
+
+I have also looked at the reset framework, but again it can not be applied in a
+generic way for GPIOs shared for other purposes and all existing drivers must
+be converted to use the reset framework (and adding a linux only warpper on top
+of reset GPIOs).
+
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dt-bindings: gpio: Add binding document for shared GPIO
+  gpio: Add new driver for handling 'shared' gpio lines on boards
+
+ .../devicetree/bindings/gpio/gpio-shared.yaml | 100 ++++++++
+ drivers/gpio/Kconfig                          |   6 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-shared.c                    | 229 ++++++++++++++++++
+ 4 files changed, 336 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-shared.yaml
+ create mode 100644 drivers/gpio/gpio-shared.c
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
