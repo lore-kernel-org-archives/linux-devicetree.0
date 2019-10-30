@@ -7,87 +7,86 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D67FCA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B610CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5E820874
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA3E20856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572444303;
-	bh=1wJeIZRTGBvYQK67ll1QuK+8QXEEfDG/Z64iY5sRAb4=;
+	s=default; t=1572444331;
+	bh=ZuUiTDgUv5S2fTS68p6zB02Iv12+tMIYIvgBkhw5i+s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=alETgZIQFXCQ0Su5Klf/HW6VsRaKMYfaxZUwX+b+YxkAOvYW4mxR+Mt96XsojG3+E
-	 MiWNlvTxzmDPeYEvF+orU9lb0Oncbg4kpQzkwfj7x/N1w6tMUvgoOk6fWWOBvRIY6i
-	 2YA6bwjuetzEPUjvdK2U8+NWe8EXbC5EMxx03dvQ=
+	b=Xjtf1RqtLVd+qjzfLw3lo7FkA9AbyKMquKSD95m+ZXGBmCRWbbC3GOdxIofkleCl1
+	 RofjdKvhzhQu52niNUgRjZ3U9L9WaKuACPmgIh2S8eaCPhcX8jSFtoQw3hjVYsMfTV
+	 km6/mBuOJszQNkyW8ce908euWBcSngz1quwIxVqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfJ3OFD (ORCPT
+        id S1726602AbfJ3OFa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:05:03 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43468 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfJ3OFC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:05:02 -0400
-Received: by mail-oi1-f196.google.com with SMTP id s5so2033493oie.10;
-        Wed, 30 Oct 2019 07:05:02 -0700 (PDT)
+        Wed, 30 Oct 2019 10:05:30 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45184 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfJ3OFa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:05:30 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 41so2157889oti.12;
+        Wed, 30 Oct 2019 07:05:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VjUbeXseZNfZ1pV6P1oZr6TvD5+K3+0WHvnHgaOVfyc=;
-        b=kQuUH+S6Fmh6UCsKAzyP9jg1N2QniL1UreLbqAQnyAMdedXbSbkaS3TxNdHzV2uloL
-         8xjYRjqIFa0AtW2q7h6qolAgTniAHFQfFZgwSYqBveeqwW/lj0WKMogIDkHXW6nEDvtl
-         rn6JXZztgnbo2szYMUV3ULE8DyqpsFFbFkk9c0h4E38QUJ2kLELMdyCpOqU+XdMoPNk8
-         ptXLd29LEO4TfbNUwJpTuCSzgG3leMYB0pH60GXt5xSO1rYTQkauG+34ObjJSzBst8wy
-         x7X0YjpKDCoM4U2JfmUlE/PvbkKzFuGRhBouWBoUvdLjgcUXGNwRlgryh10pOLhdDo99
-         /KMQ==
-X-Gm-Message-State: APjAAAVhJrpFYXvr0x1LBeyFFxZVrIdPjsSiC1KONflkSoCZU4jUsmTM
-        tsgsqvki1p7aBPx71yZucQ==
-X-Google-Smtp-Source: APXvYqxh7UaJbqXooxPymSVpV2Dkk9RFHomlOl61v/922QK11EtyGIdV7wMcJTOi1B5ho34SClF9Fw==
-X-Received: by 2002:aca:5d8a:: with SMTP id r132mr8536367oib.119.1572444301779;
-        Wed, 30 Oct 2019 07:05:01 -0700 (PDT)
+        bh=ChHUj/J4C6CXN9f7IReGKz0UHWgPVSTJxbHYeBoXnqk=;
+        b=EmPmClZLFx1THgnfPeTYYNT72uEoayQVNsGYXCqBFDD0pLEVVthUg1YUjWMHz6WIev
+         0IAY49AHUW7I8WHKIjSYySGYZ3n/1i+djlW2DwLscQqPYXTTFqfDt/AKFYjDsfJMSKIa
+         7eViJ1CIgpxesflv3nyG0McDcj/q4ZxwhwvReUD0Dq2aX8mxFCh25y9Qi7dQCmL6KDQY
+         shzXblLF0Co2bbI3paWAZi3ryq6wFEZXbVnAURA7K7J5uKYQx7Oqb7axSt34qcMLzvTE
+         R08GNL+jJAVIJqZh07c7h/lvsfvzUjusQ8kEcomNyPzGpSbHkgZn7MPMOtn8yil3AzYX
+         Fz7g==
+X-Gm-Message-State: APjAAAWdXZOkxYI93m5viGQh0hCIB1LGH5GSho73VoymIvBiqnngye/x
+        5ybGLrQv9tNVptSPJNbyrQ==
+X-Google-Smtp-Source: APXvYqw0JFuV9/nja98wwg1bHqjpHHz7+RxqG8NqaK/yVTDxQRIuqFRJQW343FA0qpCng7ta3UI/5A==
+X-Received: by 2002:a9d:5e12:: with SMTP id d18mr54420oti.220.1572444329580;
+        Wed, 30 Oct 2019 07:05:29 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t12sm55049otl.71.2019.10.30.07.04.56
+        by smtp.gmail.com with ESMTPSA id 88sm57224otb.63.2019.10.30.07.05.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 07:04:56 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 09:04:55 -0500
+        Wed, 30 Oct 2019 07:05:27 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 09:05:27 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Marcel Ziswiler <marcel@ziswiler.com>
 Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
         Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         linux-kernel@vger.kernel.org,
         Philippe Schenker <philippe.schenker@toradex.com>,
-        linux-imx@nxp.com, linux-input@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/5] dt-bindings: input: tochscreen: ad7879: generic
- node names in example
-Message-ID: <20191030140455.GA4544@bogus>
+Subject: Re: [PATCH v2 5/5] dt-bindings: arm: fsl: add nxp based toradex
+  colibri-imx8x binding docu
+Message-ID: <20191030140527.GA6180@bogus>
 References: <20191026090403.3057-1-marcel@ziswiler.com>
- <20191026090403.3057-3-marcel@ziswiler.com>
+ <20191026090403.3057-5-marcel@ziswiler.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191026090403.3057-3-marcel@ziswiler.com>
+In-Reply-To: <20191026090403.3057-5-marcel@ziswiler.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 11:04:01AM +0200, Marcel Ziswiler wrote:
+On Sat, 26 Oct 2019 11:04:03 +0200, Marcel Ziswiler wrote:
 > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
-There's a typo in the subject.
-
 > 
-> Update example in ad7879 devicetree documentation to use generic touch
-> controller node names.
+> Document the NXP SoC based Toradex Colibri iMX8X module and carrier
+> board devicetree bindings previously added.
 > 
 > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 > 
 > ---
 > 
-> Changes in v2: New patch.
+> Changes in v2:
+> - Document board compatibles in a separate patch as suggested by Shawn.
 > 
->  .../devicetree/bindings/input/touchscreen/ad7879.txt          | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
