@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0B5CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C19ECA9EC6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C84F208E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7832054F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451349;
-	bh=FRfSfBQVULDXdAO520uMvwwd2i4lO+PEwK/kcFWv+wc=;
+	s=default; t=1572451350;
+	bh=W68DAPNp1vRgxz+1QFI/fsILWMKLg51K4wrukCLvz2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRqD0NCPguGDc8M5mbCVAPqoejr6Cl/GLlfPe/13+MNxVpWS47qxPRTPVqkepklVK
-	 CdD8s8iEoC8x/9BUA9QYs9sShuZwMhciGgnjgYvCissu7DnMc9dLWiLKXyH8qQ4cxn
-	 LMvYFT2Ga1GSAcGl0b5qhOzQ/06zIP5XfQNNp9oY=
+	b=BEFXdO/x83Sn2DbYuf09mPFLtFt/IufXcaolVm7EypBNxns4MQAU37v326UPX9o0y
+	 K+UeR7iNWyd4DndB48DbeDb3yUVZr4LI0xEbL9p7UItq8J9CbiUSZ92L4paNkAqe9/
+	 hTs+wdPANqMloxeUwtLpOV8zCtn8/VD/UXYAZ/0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfJ3Pvu (ORCPT
+        id S1727761AbfJ3PvZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52662 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:51:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbfJ3Pvu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:50 -0400
+        id S1727725AbfJ3PvY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:24 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 281732087E;
-        Wed, 30 Oct 2019 15:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16EB021734;
+        Wed, 30 Oct 2019 15:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450709;
-        bh=FRfSfBQVULDXdAO520uMvwwd2i4lO+PEwK/kcFWv+wc=;
+        s=default; t=1572450683;
+        bh=W68DAPNp1vRgxz+1QFI/fsILWMKLg51K4wrukCLvz2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=igYx6m1ZQIwgqvcfQ9Qs08RHRrJgWVx0FnJR0UlBAtlOO5esViczuXZpNcc089zRK
-         oJJFXF2/3l+u2pihhlRFh7V5RxRXvC2+utkwpAacIzndTOxfe1m/3wZEUyDxrMCi8p
-         FlsB1n0zSjdsoVmt8CytrhTYVLWohzyrQqTAU4dY=
+        b=q0t3OuT8Km8hsginj3mvgaJHF0Kcxr1++301u0MnbZe+pIzkF+JrTdJvmOAHi9kOc
+         +5zb2nhrbeJxT/J5Pz5PMWXqBa9yGjlFJldCy7H6Lw6L8aby30Qauxqtl0S8YOsgV8
+         KH0Ra6y5caGd8vqzjo2EMuRlpNWR5lnvKPCfsBMc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 30/81] ARM: dts: am3874-iceboard: Fix 'i2c-mux-idle-disconnect' usage
-Date:   Wed, 30 Oct 2019 11:48:36 -0400
-Message-Id: <20191030154928.9432-30-sashal@kernel.org>
+Cc:     Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 24/81] ARM: dts: logicpd-torpedo-som: Remove twl_keypad
+Date:   Wed, 30 Oct 2019 11:48:30 -0400
+Message-Id: <20191030154928.9432-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,104 +58,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit 647c8977e111c0a62c93a489ebc4b045c833fdb4 ]
+[ Upstream commit 6b512b0ee091edcb8e46218894e4c917d919d3dc ]
 
-According to
-Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt,
-i2c-mux-idle-disconnect is a property of a parent node since it
-pertains to the mux/switch as a whole, so move it there and drop all
-of the concurrences in child nodes.
+The TWL4030 used on the Logit PD Torpedo SOM does not have the
+keypad pins routed.  This patch disables the twl_keypad driver
+to remove some splat during boot:
 
-Fixes: d031773169df ("ARM: dts: Adds device tree file for McGill's IceBoard, based on TI AM3874")
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Benoît Cousson <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
-Cc: linux-omap@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Tested-by: Graeme Smecher <gsmecher@threespeedlogic.com>
+twl4030_keypad 48070000.i2c:twl@48:keypad: missing or malformed property linux,keymap: -22
+twl4030_keypad 48070000.i2c:twl@48:keypad: Failed to build keymap
+twl4030_keypad: probe of 48070000.i2c:twl@48:keypad failed with error -22
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+[tony@atomide.com: removed error time stamps]
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am3874-iceboard.dts | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ arch/arm/boot/dts/logicpd-torpedo-som.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am3874-iceboard.dts b/arch/arm/boot/dts/am3874-iceboard.dts
-index 883fb85135d46..1b4b2b0500e4c 100644
---- a/arch/arm/boot/dts/am3874-iceboard.dts
-+++ b/arch/arm/boot/dts/am3874-iceboard.dts
-@@ -111,13 +111,13 @@
- 		reg = <0x70>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;
- 
- 		i2c@0 {
- 			/* FMC A */
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@1 {
-@@ -125,7 +125,6 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <1>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@2 {
-@@ -133,7 +132,6 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <2>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@3 {
-@@ -141,7 +139,6 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <3>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@4 {
-@@ -149,14 +146,12 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <4>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@5 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <5>;
--			i2c-mux-idle-disconnect;
- 
- 			ina230@40 { compatible = "ti,ina230"; reg = <0x40>; shunt-resistor = <5000>; };
- 			ina230@41 { compatible = "ti,ina230"; reg = <0x41>; shunt-resistor = <5000>; };
-@@ -182,14 +177,12 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <6>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@7 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <7>;
--			i2c-mux-idle-disconnect;
- 
- 			u41: pca9575@20 {
- 				compatible = "nxp,pca9575";
+diff --git a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
+index 3fdd0a72f87f7..506b118e511a6 100644
+--- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
++++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
+@@ -192,3 +192,7 @@
+ &twl_gpio {
+ 	ti,use-leds;
+ };
++
++&twl_keypad {
++	status = "disabled";
++};
 -- 
 2.20.1
 
