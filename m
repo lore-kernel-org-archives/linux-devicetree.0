@@ -2,106 +2,101 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEAFCA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C6DCA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F320420717
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572464769;
-	bh=3kozLOVSWQ+1SPUKhRlrVz+bPrn3URxGxEGCG6N7IfM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2VtjbkYYux4S0hvsO1KN6VhbcoFug1+Hclv4ezhm8vueKoj+i3Fhn+5e3sTvFoe3Y
-	 Ppt9S+Z/32KY/idxnR5ySW5ighPrHVGql7aeCCywN21W5iysujRV3OP3gxw48yZWiV
-	 lr/1EXSYDyMDufnodVd6gbdh1yT2tsYzadSJ2MtY=
+	by mail.kernel.org (Postfix) with ESMTP id 04F612080F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WpD0szc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfJ3TqI (ORCPT
+        id S1726555AbfJ3TuY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfJ3TqI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:46:08 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55ECB20873
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 19:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572464767;
-        bh=3kozLOVSWQ+1SPUKhRlrVz+bPrn3URxGxEGCG6N7IfM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KsCuU4zLIVzVKKQWpUMTDNZc3PSGy271S734Mvz7p67jOCBtuMOk4RosBSXUmv2Uc
-         Wajsk4y231FcmTgm862vCkskRnUZkBLGJzhbmCvnFNkd3cAHthsWI+8l2ALwDfm3oD
-         i2HHufHViOP/QmPmleOHYOEQ/3cdwlyCziU/7Ywg=
-Received: by mail-qt1-f169.google.com with SMTP id t26so4944931qtr.5
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 12:46:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAUCPxqy+Q2MWPOw9PY5yN+DgYGGXqGdwDkwb1bx+Ldc3RwCUlXG
-        iGFI4tr5JficVcp0c3o65kwDlF3uO1ijx6XAMw==
-X-Google-Smtp-Source: APXvYqxic3f001Nha/RhMfCOtzFI8fDko70ylSwSl6gpvXdK9mqHIinODFfyG01oXuvIZaa/AXaU/LnqPIuMaMy2mj0=
-X-Received: by 2002:ac8:4791:: with SMTP id k17mr1942600qtq.136.1572464766470;
- Wed, 30 Oct 2019 12:46:06 -0700 (PDT)
+        Wed, 30 Oct 2019 15:50:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45026 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfJ3TuY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 15:50:24 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q26so2314502pfn.11
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 12:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HQ9FlWq+UvdDEfKTzeyzDf/xB7q4VOki0EmDu2rneyI=;
+        b=WpD0szc9Md9tY2/n0MEWZBMJUxjxDAsnN5nv6bFIaLE3Mfco+mnhKg/9Q3231acaPu
+         JgrrSy8x2aEqZsWMcbT7a63vu8s7c+meiHWRXHNjjoCoeEJOMmjvXKC0U/rfoleoDLxv
+         4ZSTicknUi/kduQca2gQQHhpq9n3Fz0KNstO8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HQ9FlWq+UvdDEfKTzeyzDf/xB7q4VOki0EmDu2rneyI=;
+        b=GiTxFHcFjm1uEw5QL1ImhplAHdM5KkDyueZi6ggUhUwLL46PwsfZkMVZ5Q8xEP8KE0
+         HLNngebbwRQxxrNtbew16XIh4neTZtrZcXe0WaHowk/LkEiRHhoBN7+rxgQFIpqGAKIL
+         aythFClxrGtFSfyGUWkwIgq1hN/ZaW50uFGjgwPX98C8pMcMUTr+u46+5vW8oIga81bk
+         b3SsqD0zPcpn2kxZ0Hptb5imBpw2+xJ1VJubeRYasNK1fBVvud07dwyCrYr9iKXFXPTp
+         esOqAE/tseDDLkYKkuTNZPChTX7vGYl7+Ec6HIToCgSUCos0Fg2YHvT6daptNGU/aOLp
+         Ytvw==
+X-Gm-Message-State: APjAAAVYm4OD/dD97OQV0ik9FhOKnVCXuGaT+8zbo3PoAzZ5yXEADxx4
+        yLrQV+xY79ZqAHsnZzDab0NCGw==
+X-Google-Smtp-Source: APXvYqz/QWsyM/lJiIGheJ/+yIlYmhs+n/d7akVsIpvcixXB40xL1Dd1YxIGf/82aICZka66QdEzTQ==
+X-Received: by 2002:a17:90a:77c6:: with SMTP id e6mr1213558pjs.93.1572465023464;
+        Wed, 30 Oct 2019 12:50:23 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id k32sm2965175pje.10.2019.10.30.12.50.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2019 12:50:22 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 12:50:21 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
+ controller
+Message-ID: <20191030195021.GC27773@google.com>
+References: <20191023090219.15603-1-rnayak@codeaurora.org>
+ <20191023090219.15603-12-rnayak@codeaurora.org>
+ <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
 MIME-Version: 1.0
-References: <20191024114305.15581-1-linus.walleij@linaro.org>
- <20191025192054.GA7415@bogus> <CACRpkdZ67mC9m6inJSfbS0NqeThfJ0tUJQTP5stX3Kzw+zhEyQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZ67mC9m6inJSfbS0NqeThfJ0tUJQTP5stX3Kzw+zhEyQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 30 Oct 2019 14:45:54 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+_CWkJ74ztwVgiTj5X53428bo+fNF0SGZskxy+y8mnKw@mail.gmail.com>
-Message-ID: <CAL_Jsq+_CWkJ74ztwVgiTj5X53428bo+fNF0SGZskxy+y8mnKw@mail.gmail.com>
-Subject: Re: [PATCH 1/3 v4] drm/panel: Add generic DSI panel YAML bindings
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 8:50 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Fri, Oct 25, 2019 at 9:20 PM Rob Herring <robh@kernel.org> wrote:
->
-> > [Me]
-> > > +    dsi-controller@55aa55aa {
-> > > +      compatible = "acme,foo";
-> >
-> > Eventually, I want to start reporting if compatible strings aren't
-> > documented (i.e. matched to a schema). This will break then...
->
-> OK I drop this.
->
-> > > +      reg = <0x55aa55aa>;
-> >
-> > This will fail because a size cell is expected.
->
-> Do you mean it will fail the day we actually check reg properties to
-> be properly formed under the circumstances?
->
-> Because:
->   HOSTLD  scripts/dtc/dtc
->   CHKDT   Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
->   CHKDT   Documentation/devicetree/bindings/display/dsi-controller.yaml
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-> (...)
->
-> It passes just fine.
+On Tue, Oct 29, 2019 at 09:50:40AM -0700, Stephen Boyd wrote:
+> Quoting Rajendra Nayak (2019-10-23 02:02:19)
+> > From: Maulik Shah <mkshah@codeaurora.org>
+> > 
+> > Add pdc interrupt controller for sc7180
+> > 
+> > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > ---
+> > v3:
+> > Used the qcom,sdm845-pdc compatible for pdc node
+> 
+> Everything else isn't doing the weird old compatible thing. Why not just
+> add the new compatible and update the driver? I guess I'll have to go
+> read the history.
 
-Yes, but the examples are built and validated after this. With the
-other errors currently, you're erroring out before this happens.
+Marc Zyngier complained  on v2 about the churn from adding compatible
+strings for identical components, and I kinda see his point.
 
-> I get a bit nervous since the schema is all about being strict about
-> stuff so I get the feeling that "should have failed".
+I agree that using the 'sdm845' compatible string for sc7180 is odd too.
+Maybe we should introduce SoC independent compatible strings for IP blocks
+that are shared across multiple SoCs? If differentiation is needed SoC
+specific strings can be added.
 
-It's actually dtc that will complain here because it's aware of
-#*-cells values. Can't do that with schema.
 
-Rob
