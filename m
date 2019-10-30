@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2825CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA66CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C9C2087E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0232173E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450851;
-	bh=E3vOxg8kySeuRFePBSSnqG+X2RodkIAx0DqkS8qfbuM=;
+	s=default; t=1572450860;
+	bh=Pkh8O6u6Xi3YkNZ+kgSiq60tEkoy6kaOzhQaxlLsPqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KsQbYoxYZzMNXUUxTFZgrORxy5NJ1tfyqRy4hgzysMIRdTZdXqFlYzeJw/d31WNaU
-	 eCAe1SE6fXVTmgT1z4EuDVJVf4Wr9HjVFE83dUbXYQXHjHS0TnpDup/auTk+ErXOrD
-	 aZsgNnqHgqYtW+dvlclYH7uEtRpH78NZKhAAarnY=
+	b=pNHHXRw3lSw8tdTCb9lZpZdY7G7nxrsBhsylEqP/12hFu0NSRSGVG5yah1d3XuiuH
+	 2DY3OsSk9NfRjezbRCzjh6ZavExNtOX694uoDLLaVWqkji4OztxDjjKksx528hjzI4
+	 OSm9kboRAvuFQyvFGgbBixqhXYvU2bQrugWmMZsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfJ3Px6 (ORCPT
+        id S1728321AbfJ3PyT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:53:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55314 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728255AbfJ3Px5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:53:57 -0400
+        id S1727813AbfJ3PyT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:54:19 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B472208C0;
-        Wed, 30 Oct 2019 15:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D79521734;
+        Wed, 30 Oct 2019 15:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450837;
-        bh=E3vOxg8kySeuRFePBSSnqG+X2RodkIAx0DqkS8qfbuM=;
+        s=default; t=1572450858;
+        bh=Pkh8O6u6Xi3YkNZ+kgSiq60tEkoy6kaOzhQaxlLsPqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mZiQP7R5gt4XxMdspHK+JSyzSn5gjSZYkkzATZboeLo/ODwmV3joCUBULKca0hZ6D
-         W1G9kMSKuHEkTcka2wKBStQdmdHQDHzj4tcl7HSi4WO4i7LnkxbDjpGsS6+OCY3W8h
-         UXmyjgrbggBASrus/FFCvaafDZqsb7tFGBdV3w18=
+        b=13HjwxueiSx+RBCJKaoKMIdjQGzaZ1Ss1amqlGss+lGaNZeREkI1HqRsZa22pKKio
+         o2OGXZAkpEjFyuX2tMbLq0HJT4Uk6UjXkAVWKQlxDNu/0VY9Jm+LyFEPNArvB1SfIF
+         avB1AtHqhHAdEW0g+56rRLXWTRMsMvSrBQfDf9zc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <wahrenst@gmx.net>,
-        Fredrik Yhlen <fredrik.yhlen@endian.se>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <mripard@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 62/81] ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
-Date:   Wed, 30 Oct 2019 11:49:08 -0400
-Message-Id: <20191030154928.9432-62-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/38] arm64: dts: allwinner: a64: sopine-baseboard: Add PHY regulator delay
+Date:   Wed, 30 Oct 2019 11:53:32 -0400
+Message-Id: <20191030155406.10109-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
-References: <20191030154928.9432-1-sashal@kernel.org>
+In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
+References: <20191030155406.10109-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,52 +59,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 626c45d223e22090511acbfb481e0ece1de1356d ]
+[ Upstream commit ccdf3aaa27ded6db9a93eed3ca7468bb2353b8fe ]
 
-bcm2835-rpi.dtsi defines the behavior of the ACT LED, which is available
-on all Raspberry Pi boards. But there is no driver for this particual
-GPIO on CM3 in mainline yet, so this node was left incomplete without
-the actual GPIO definition. Since commit 025bf37725f1 ("gpio: Fix return
-value mismatch of function gpiod_get_from_of_node()") this causing probe
-issues of the leds-gpio driver for users of the CM3 dtsi file.
+It turns out that sopine-baseboard needs same fix as pine64-plus
+for ethernet PHY. Here too Realtek ethernet PHY chip needs additional
+power on delay to properly initialize. Datasheet mentions that chip
+needs 30 ms to be properly powered on and that it needs some more time
+to be initialized.
 
-  leds-gpio: probe of leds failed with error -2
+Fix that by adding 100ms ramp delay to regulator responsible for
+powering PHY.
 
-Until we have the necessary GPIO driver hide the ACT node for CM3
-to avoid this.
+Note that issue was found out and fix tested on pine64-lts, but it's
+basically the same as sopine-baseboard, only layout and connectors
+differ.
 
-Reported-by: Fredrik Yhlen <fredrik.yhlen@endian.se>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and IO board")
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: bdfe4cebea11 ("arm64: allwinner: a64: add Ethernet PHY regulator for several boards")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts      | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi b/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
-index 81399b2c5af9e..d4f0e455612d4 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
-+++ b/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
-@@ -8,6 +8,14 @@
- 		reg = <0 0x40000000>;
- 	};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+index c21f2331add60..285cb7143b96c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+@@ -113,6 +113,12 @@
+ };
  
-+	leds {
-+		/*
-+		 * Since there is no upstream GPIO driver yet,
-+		 * remove the incomplete node.
-+		 */
-+		/delete-node/ act;
-+	};
-+
- 	reg_3v3: fixed-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3V3";
+ &reg_dc1sw {
++	/*
++	 * Ethernet PHY needs 30ms to properly power up and some more
++	 * to initialize. 100ms should be plenty of time to finish
++	 * whole process.
++	 */
++	regulator-enable-ramp-delay = <100000>;
+ 	regulator-name = "vcc-phy";
+ };
+ 
 -- 
 2.20.1
 
