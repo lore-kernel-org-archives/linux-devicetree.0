@@ -2,170 +2,276 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCC8CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254B1CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D009208C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB89D2087E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bei8itfY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tfk6xCdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfJ3P17 (ORCPT
+        id S1727206AbfJ3Pb6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:27:59 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42184 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfJ3P17 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 11:27:59 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c16so1134004plz.9;
-        Wed, 30 Oct 2019 08:27:58 -0700 (PDT)
+        Wed, 30 Oct 2019 11:31:58 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54681 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727036AbfJ3Pb5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 11:31:57 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g7so2567320wmk.4
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 08:31:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=t/9ltqPrGMOrlhxr07284zt7KpdDNbgtyM/pqI5YH2A=;
-        b=Bei8itfYqKCzUuf0RZVeWaCqrSfSLOsLT9kVTZaEWWxrWbfyUPmuw0TdyTDkWT3aty
-         6KOPt+fxGJ6i488NHVPjrud0ftzs5ULt0SoHQud1nPEtlbDqlTrte/X2zb+mOgylLMxF
-         2qUfAO3PqYzWlOyYsHYxo1kbgl8N9ur3cS2JqX6/YKXX6wh//4JMe54zIc2yda7C0WWv
-         kam4/tylQhd3H82PoiZbxN/3MJ5O2HiNo60Wr3hHLmt5giPKoOiw1dE6c0hxgNIZVPT4
-         cA4vkaDFeFh6G+R4o0hDrQwEDOg2JrWDLHv+9aBvw+g5WwTW/TFAqTccADSVgCT29Jh6
-         fuDQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yEcXAg/eBx99MOhVXS0VS0FuBBl4qtw5QHmFpVPcox4=;
+        b=Tfk6xCdyxctH526OGxFc7sHM3ABLiZQfJU7KJXkTCsFK0RSPDEserF5W7UtlU4GI2s
+         ksIIYB+t/jRtdS7o2VzkeQBiPyPcEPu28ojwqJkB+u6t8g6gI58twJCMx1yq4xOcylWy
+         D9zy+saVH09J/pqDrQ3nTTPvNSDirwy1uju32Cy/XCQPfpUwzX8LuNWG+3Q4Qj4hEWS5
+         radTzrrU/UohE2MrvUfmU1g9DJjCAFkfy0EYk08Dgq7s2UDMt0wscwkSN5+gw3lQdwy/
+         afjXx3uJpRED31istM335kWirpcPR+1hUG37A+m5HFDTo5dzIbj5QjHUjL+vyNL5XWaa
+         /bFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=t/9ltqPrGMOrlhxr07284zt7KpdDNbgtyM/pqI5YH2A=;
-        b=LjI5uCpAu0iihG+5SNhkLAIR6t2aW0LvO7qQZzsR8fGlYZ77gbfvWjP6osFFBrsFQP
-         ZhA6f88bTxEV5Wvg6CVhrM9mKmB01Xhz+1OJV/bVFgMTKlom56A34vPsePGZkx3BSEj7
-         eKrGiOXKY+/8+aVryXVmJZURy6Ic/J3BJpvdBObgvXOTUyIwVWO+0PzheNUjHFaxaI9W
-         3zG1RbmZxP/tulX6BPzGJdcNyPFuLiST5ulc4GY8LYWRevUWU2l9xbHG8myvbodEzJ6B
-         ahZipdZGbAZ03I+HvzdowlRSdOeitjunysgNKb9h1O3KgAo+e+5C6yoXle6YafDbjNCT
-         cYgA==
-X-Gm-Message-State: APjAAAUKjyCx3b4b6Hhj7gVQUC/ZMJ/D8wsGmJ4U4reWGTlSp0jlbBxA
-        UWgu3AxD9Fb8RLN43R9WX27Lw9IqkNg0NLckXb0=
-X-Google-Smtp-Source: APXvYqyyaimEb/VV2kY7rBsoY4DewEqMwsSyJyKPIDvVeNkyWewLX1wxGHvplkMWWM5ol/jvZoSOIMSnVdTUIMcwvjw=
-X-Received: by 2002:a17:902:44d:: with SMTP id 71mr577750ple.274.1572449278092;
- Wed, 30 Oct 2019 08:27:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yEcXAg/eBx99MOhVXS0VS0FuBBl4qtw5QHmFpVPcox4=;
+        b=m5cvXW3UY+INOUg0ur1ysWWrL/HrdEzfYbAWEps6qczpBqytu+zatLauIClG5uA1KD
+         QY3oeYtr00KQU5SXJK97bl8k1/0JrNNsUSZ6t43YfcoOgi9cKVRr4gzzlUoOuWVlehiJ
+         0+GYH7H629B0LcZ/CdJkvIbZ/zNyuRPzzsoIbMdch8ok3JtDIGiEkE1oSjMeqnA68iUE
+         GF6WggttDQtxe32ppslBnH9OZU6iwAFY233J2Xmt7tnjsDtdh8Te7eMpidxHFRdpijBH
+         wl/DgylHIorABj1ER7GAai5XeNI+NxPU7vpsZHlsTSeyaBAgx6hPpaTtJRX7RRD8n5C5
+         AWrg==
+X-Gm-Message-State: APjAAAXt7c0lEDNLPZZLK6efXi3RKOHocUpNO6W9nA/qKE+oNnqMx3S/
+        giU+ePCy6TDEyB2zpLrJh71jUQ==
+X-Google-Smtp-Source: APXvYqwA52fMPETGCV/5rSTe7mTTegOMwE4pKX/SR9n5jA8RzT74H/2Jp2SPcFM7YMiRtUq0pbCVhQ==
+X-Received: by 2002:a05:600c:2551:: with SMTP id e17mr34010wma.51.1572449514794;
+        Wed, 30 Oct 2019 08:31:54 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id u21sm417329wmu.27.2019.10.30.08.31.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 08:31:54 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     robh@kernel.org, vkoul@kernel.org
+Cc:     broonie@kernel.org, bgoswami@codeaurora.org,
+        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v4 1/2] dt-bindings: soundwire: add bindings for Qcom controller
+Date:   Wed, 30 Oct 2019 15:31:49 +0000
+Message-Id: <20191030153150.18303-2-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191030153150.18303-1-srinivas.kandagatla@linaro.org>
+References: <20191030153150.18303-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-References: <1572185379-21537-1-git-send-email-akinobu.mita@gmail.com>
- <1572185379-21537-2-git-send-email-akinobu.mita@gmail.com> <20191030142417.GA8919@bogus>
-In-Reply-To: <20191030142417.GA8919@bogus>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Thu, 31 Oct 2019 00:27:47 +0900
-Message-ID: <CAC5umyhZ+w9b7M=gWGDynoMerZ7FiP3+U_RXyQ2P_p7cuLVRgA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add leds-meter binding
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 23:24 Rob Herring <robh@kern=
-el.org>:
->
-> On Sun, Oct 27, 2019 at 11:09:38PM +0900, Akinobu Mita wrote:
-> > Add DT binding for generic LED level meter which consists of multiple L=
-ED
-> > devices by different drivers.
->
-> Do you have some pointers to actual h/w?
+This patch adds bindings for Qualcomm soundwire controller.
 
-This doesn't require a specific hardware.
-If there are more than two LEDs that can be described by devicetree,
-it can be an LED level meter by bundling them up with this binding.
+Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+either integrated as part of WCD audio codecs via slimbus or
+as part of SOC I/O.
 
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Bjorn Andersson <bjorn@kryo.se>
-> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Dan Murphy <dmurphy@ti.com>
-> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> > ---
-> >  .../devicetree/bindings/leds/leds-meter.yaml       | 67 ++++++++++++++=
-++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.y=
-aml
-> >
-> > diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/D=
-ocumentation/devicetree/bindings/leds/leds-meter.yaml
-> > new file mode 100644
-> > index 0000000..b5fcd98
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-> > @@ -0,0 +1,67 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Generic LED level meter
-> > +
-> > +maintainers:
-> > +  - Akinobu Mita <akinobu.mita@gmail.com>
-> > +
-> > +description:
-> > +  Generic LED level meter consists of multiple LED devices by differen=
-t drivers.
->
-> Googling this, the only thing I see is audio level meters though those
-> are all just a voltage level input, so it could be any source I guess.
->
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "^meter-leds(@.*)?"
-> > +
-> > +  compatible:
-> > +    const: meter-leds
-> > +
-> > +  leds:
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +    description: List of phandles to LED node that are members of a le=
-vel meter.
-> > +
-> > +  brightness-weights:
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +    description: |
-> > +      By default, the brightness of the LED level meter is proportiona=
-l to the
-> > +      number of actual LEDs that are turned on.  We can optionally spe=
-cify
-> > +      the contribution ratio for each LED within a level meter by this
-> > +      property.  The example below shows how to setup an exponential
-> > +      relationship between the number of LEDs turned on and the bright=
-ness of
-> > +      meter-leds.
->
-> This seems oddly named if this is a bar graph. Yes, more LEDs on is
-> brighter, but it's really a piecewise linear graph you want.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ .../bindings/soundwire/qcom,sdw.txt           | 179 ++++++++++++++++++
+ 1 file changed, 179 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
 
-OK.  I'll rewrite the description.
+diff --git a/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+new file mode 100644
+index 000000000000..4f58de490f0a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+@@ -0,0 +1,179 @@
++Qualcomm SoundWire Controller Bindings
++
++
++This binding describes the Qualcomm SoundWire Controller along with its
++board specific bus parameters.
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition:  Should be "qcom,soundwire-v1.3.0"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of SoundWire controller
++		    address space.
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the SoundWire Controller IRQ.
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: should be "iface" for SoundWire Controller interface clock.
++
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the SoundWire Controller interface clock.
++
++- #sound-dai-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1 for digital audio interfaces on the controller.
++
++- qcom,dout-ports:
++	Usage: required
++	Value type: <u32>
++	Definition: must be count of data out ports, count of both in and
++		    out ports together should not exceed 15.
++
++- qcom,din-ports:
++	Usage: required
++	Value type: <u32>
++	Definition: must be count of data in ports, count of both in and
++		    out ports together should not exceed 15.
++
++- qcom,ports-offset1:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify payload transport window offset1 of each
++		    data port. Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-offset2:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify payload transport window offset2 of each
++		    data port. Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-sinterval-low:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should be sample interval low of each data port.
++		    Out ports followed by In ports. Used for Sample Interval
++		    calculation.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-word-length:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be size of payload channel sample.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-block-pack-mode:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be 0 or 1 to indicate the block packing mode.
++		    0 to indicate Blocks are per Channel
++		    1 to indicate Blocks are per Port.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-block-group-count:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be in range 1 to 4 to indicate how many sample
++		    intervals are combined into a payload.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-lane-control:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be in range 0 to 7 to identify which	data lane
++		    the data port uses.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-hstart:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be number identifying lowerst numbered coloum in
++		    SoundWire Frame, i.e. left edge of the Transport sub-frame
++		    for each port. Values between 0 and 15 are valid.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-hstop:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be number identifying highest numbered coloum in
++		    SoundWire Frame, i.e. the right edge of the Transport
++		    sub-frame for each port. Values between 0 and 15 are valid.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,dports-type:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be one of the following types
++		    0 for reduced port
++		    1 for simple port
++		    2 for full port
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- #address-cells:
++	Usage: Required
++	Value type: <u32>
++	Definition: Should be 2 refer to soundwire-controller.yaml
++
++- #size-cells:
++	Usage: Required
++	Value type: <u32>
++	Definition: Should be 0 refer to soundwire-controller.yaml
++
++Note:
++	More Information on detail of encoding of these fields can be
++found in MIPI Alliance SoundWire 1.0 Specifications.
++
++= SoundWire devices
++Each subnode of the bus represents SoundWire device attached to it.
++Refer to soundwire/soundwire-controller.yaml for details of required bindings.
++Each sub node can have its device specific bindings that are not documented
++here.
++
++= EXAMPLE
++The following example represents a SoundWire controller on DB845c board
++which has controller integrated inside WCD934x codec on SDM845 SoC.
++
++soundwire: soundwire@c85 {
++	compatible = "qcom,soundwire-v1.3.0";
++	reg = <0xc85 0x20>;
++	interrupts = <20 IRQ_TYPE_EDGE_RISING>;
++	clocks = <&wcc>;
++	clock-names = "iface";
++	#sound-dai-cells = <1>;
++	qcom,dports-type = <0>;
++	qcom,dout-ports	= <6>;
++	qcom,din-ports	= <2>;
++	qcom,ports-sinterval-low = /bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
++	qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
++	qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
++	#address-cells = <2>;
++	#size-cells = <0>;
++	/* Left Speaker */
++	left {
++		....
++	};
++
++	/* Right Speaker */
++	right {
++		....
++	};
++};
+-- 
+2.21.0
 
-> Each LED could have variable brightness, so you could also ramp the
-> brightness for an individual LED.
-
-For now, each LED is set to 0 or max brightness.  Maybe we should
-set middle brightness value for an LED on the border line.
