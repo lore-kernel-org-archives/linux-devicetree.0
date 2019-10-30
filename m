@@ -2,186 +2,125 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DB4CA9EC4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F86CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD132208C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A26F20717
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:34:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q4vfihaI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q5NAYgao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbfJ3J2A (ORCPT
+        id S1726028AbfJ3JeC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:28:00 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:34170 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfJ3J2A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 05:28:00 -0400
-Received: by mail-vk1-f196.google.com with SMTP id d126so321017vkb.1
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 02:27:59 -0700 (PDT)
+        Wed, 30 Oct 2019 05:34:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34884 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfJ3JeB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 05:34:01 -0400
+Received: by mail-pl1-f194.google.com with SMTP id x6so742368pln.2
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 02:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MN5/XA2iWTn3JwsaVPfUNETYKLVHfkkM5TGKnq2qWow=;
-        b=q4vfihaI5SgnZO1mREK0EE92a2TcRqe5YARf2JUxGWe8b3RCSilUTop4ZV/z3M/1Ia
-         weN9ltfEM6u2b4/2t7/tw+Nxzk9cRD14JW13Kz1VeE42C+IfgQ/qD2/hYVUPK3BAQwqG
-         tlqjEzGFBCSsTNQ14MgdrT4ebi23gasDFuGezAvuHNHJVgg3LEBNiT6EXtL0homvbZhl
-         mio1vgHviIVlTCyvDstI8u54o+OZPUxbYIwR8RMJpDrxPfE5AB+uNioto7r5yR/eGy3p
-         WyJYHYunxFfhqU8bWoLWNd6oujzPiq2P6zitBof1M66HTaRyvjAV9LM2oWjqPhZdzTpp
-         LUnw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dHt8xmgIY1Zu8o3Odq810rQJYiQ3EDnuokPmILyCi40=;
+        b=Q5NAYgao/jXfBsZ4i0cijFUPxE6TMxG8N+DDCvw3S0ypSp9Uhkclrt0C7ZyXQJkxMF
+         B5Azo0yVgzK1Lm/HtVC1+P+8NLO3GeiOUYhY9n0iA19RIL9bEjRDd++5Y74jA/jFlBL6
+         HJ6YOEtkuNRg/kvrxZrbYVXL1Qz4ifJYEhAEeeMnrMTbeGaWlVHQMuhXFGCJcHSavPwO
+         0F0bO0uCvFr2GAJ+DFYT2fkQo6GlTX0kZ4qzg6ig6DH7KVJDNVYCkmxnWONGu/Zk1duS
+         w3xqZ7lk0A633sBiDEluslRqG9O0RHKN+1Tdq+/wJGvD3Wz/Uqt75MFGjYNc+Au3jlI0
+         hDTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MN5/XA2iWTn3JwsaVPfUNETYKLVHfkkM5TGKnq2qWow=;
-        b=iNakuY1l6xTTUaHLPvimqBUKMo4ZWB9gok509kC8uykCBhICpD9LQpaN7fE8eiRPDC
-         jN9hw2nilyAGuXr80XLV+SRlw/OeynPXlc8t1GcAmOUiZJsiRUegu/jREq0hffbDYTv0
-         tGkJ6A24lJokZuoif/rvlnYl6K/7E8QxUUQlkJuN/SsTHaGa/QgiLhTyhxQd8vCsK9Ec
-         oZIlpkJVaArPzN4OdUXFmDI4m3lJ0QQHtOTw0sxD5I3XAkrhQ3VgWbmUn37F2WBncyu8
-         VdTC/InqI82MZtAdXxizj5Za/Gem8izdmEw3sf3nYuHXy5XJkCEYfxbEog0sn9q3VBaT
-         YUOQ==
-X-Gm-Message-State: APjAAAWvLwOTxvnMeWIPbYqK+yFwGAd9vA6I/8jOJykVBAyveEZZO8Vu
-        1Fjnl4O0M2b+UkzcCQMmik0DlHhKN/mWJKHifxJrSQ==
-X-Google-Smtp-Source: APXvYqzSHup2gFA5wBykiES6RNVVoT6htSpGRNx96Dg7POOVg6LTuWNWzkXHYGZc5adR+GHSe5AntmF9j9UEzqu7mqI=
-X-Received: by 2002:a1f:b202:: with SMTP id b2mr14227092vkf.59.1572427678476;
- Wed, 30 Oct 2019 02:27:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dHt8xmgIY1Zu8o3Odq810rQJYiQ3EDnuokPmILyCi40=;
+        b=rISZSVXSuLeSmFdeAgUhNKyIeKNyGXMFRfNL+h9ipjQVexJEBCEMVDW5Iv1FESld4i
+         iQdoMZ/6XNcSqisAuKbM9jcBMFxrt38uI0hAhcr6TlD7smEzB8uDCFgLfJnncen1f++C
+         VQxWX9aZnvg3yWwgFy1BeLejm/sluhuB1BmNZ7SVCAQ1e1dJcap40yUbGQW1JYXJp4Ub
+         An/UWKXpcsKIbHLuco2d5wEg8lO0PPRLwp/qdEwgKiJ+bh83VfeojyU56qc5njI+Refc
+         dClRZSlEPYDAppMrjzFabc1b6kXe4bGAeJxsqgEBmrMcdnpWAmOyAY/Km46/Fcjr90oT
+         BNlQ==
+X-Gm-Message-State: APjAAAUMFCr/+TM0EAr88HLPlIzHLU/C3I7HeHE/nSBiemZWhQySXSBo
+        unc4TqkpOZ/WeDKEdJceUUScG8ZW1g==
+X-Google-Smtp-Source: APXvYqyB79vuui3L771+FWwAqgE5eWr71fvsNfKt24AA2PmRgygcBC0iGb+2exeZLjcTPu46alJzGw==
+X-Received: by 2002:a17:902:a584:: with SMTP id az4mr3507150plb.74.1572428040369;
+        Wed, 30 Oct 2019 02:34:00 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:618e:77d9:c9fa:423a:3851:8df4])
+        by smtp.gmail.com with ESMTPSA id i126sm2090862pfc.29.2019.10.30.02.33.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 30 Oct 2019 02:33:59 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 15:03:51 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v3 2/2] media: i2c: Add IMX296 CMOS image sensor driver
+Message-ID: <20191030093351.GC11637@Mani-XPS-13-9360>
+References: <20191025175908.14260-1-manivannan.sadhasivam@linaro.org>
+ <20191025175908.14260-3-manivannan.sadhasivam@linaro.org>
+ <20191029121320.GA5017@valkosipuli.retiisi.org.uk>
+ <20191030062634.GA11637@Mani-XPS-13-9360>
+ <20191030083544.GG5017@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
- <1571254641-13626-7-git-send-email-thara.gopinath@linaro.org>
- <CAPDyKFqcKfmnNJ7j4Jb+JH739FBcHg5NBD6aR4H_N=zWGwm1ww@mail.gmail.com>
- <5DA88892.5000408@linaro.org> <CAPDyKFpYG7YADb6Xmm=8ug5=5X3d1y+JdkRvrnvtroeV3Yj62Q@mail.gmail.com>
- <5DA89267.30806@linaro.org> <20191029013648.GB27045@bogus>
- <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com> <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 30 Oct 2019 10:27:21 +0100
-Message-ID: <CAPDyKFrZ9uFt8zqncYTQ-SB6s6LqSRHbwo+Eh_zu57kxj_2eMw@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] dt-bindings: soc: qcom: Extend RPMh power
- controller binding to describe thermal warming device
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030083544.GG5017@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 29 Oct 2019 at 21:16, Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Oct 29, 2019 at 5:07 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > On Tue, 29 Oct 2019 at 02:36, Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Thu, Oct 17, 2019 at 12:10:15PM -0400, Thara Gopinath wrote:
-> > > > On 10/17/2019 11:43 AM, Ulf Hansson wrote:
-> > > > > On Thu, 17 Oct 2019 at 17:28, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> > > > >>
-> > > > >> Hello Ulf,
-> > > > >> Thanks for the review!
-> > > > >>
-> > > > >> On 10/17/2019 05:04 AM, Ulf Hansson wrote:
-> > > > >>> On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> > > > >>>>
-> > > > >>>> RPMh power controller hosts mx domain that can be used as thermal
-> > > > >>>> warming device. Add a sub-node to specify this.
-> > > > >>>>
-> > > > >>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> > > > >>>> ---
-> > > > >>>>  Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 10 ++++++++++
-> > > > >>>>  1 file changed, 10 insertions(+)
-> > > > >>>>
-> > > > >>>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > > > >>>> index eb35b22..fff695d 100644
-> > > > >>>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > > > >>>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > > > >>>> @@ -18,6 +18,16 @@ Required Properties:
-> > > > >>>>  Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
-> > > > >>>>  various OPPs for different platforms as well as Power domain indexes
-> > > > >>>>
-> > > > >>>> += SUBNODES
-> > > > >>>> +RPMh alsp hosts power domains that can behave as thermal warming device.
-> > > > >>>> +These are expressed as subnodes of the RPMh. The name of the node is used
-> > > > >>>> +to identify the power domain and must therefor be "mx".
-> > > > >>>> +
-> > > > >>>> +- #cooling-cells:
-> > > > >>>> +       Usage: optional
-> > > > >>>> +       Value type: <u32>
-> > > > >>>> +       Definition: must be 2
-> > > > >>>> +
-> > > > >>>
-> > > > >>> Just wanted to express a minor thought about this. In general we use
-> > > > >>> subnodes of PM domain providers to represent the topology of PM
-> > > > >>> domains (subdomains), this is something different, which I guess is
-> > > > >>> fine.
-> > > > >>>
-> > > > >>> I assume the #cooling-cells is here tells us this is not a PM domain
-> > > > >>> provider, but a "cooling device provider"?
-> > > > >> Yep.
-> > > > >>>
-> > > > >>> Also, I wonder if it would be fine to specify "power-domains" here,
-> > > > >>> rather than using "name" as I think that is kind of awkward!?
-> > > > >> Do you mean "power-domain-names" ? I am using this to match against the
-> > > > >> genpd names defined in the provider driver.
-> > > > >
-> > > > > No. If you are using "power-domains" it means that you allow to
-> > > > > describe the specifier for the provider.
-> > > > Yep. But won't this look funny in DT ? The provider node will have a sub
-> > > > node with a power domain referencing to itself Like below: Is this ok ?
-> > > >
-> > > > rpmhpd: power-controller {
-> > > >                                 compatible = "qcom,sdm845-rpmhpd";
-> > > >                                 #power-domain-cells = <1>;
-> > > >
-> > > >                       ...
-> > > >                       ...
-> > > >                               mx_cdev: mx {
-> > > >                                         #cooling-cells = <2>;
-> > > >                                         power-domains = <&rpmhpd      SDM845_MX>;
-> > > >                                 };
-> > > >
-> > >
-> > > The whole concept here seems all wrong to me. Isn't it what's in the
-> > > power domain that's the cooling device. A CPU power domain is not a
-> > > cooling device, the CPU is. Or we wouldn't make a clock a cooling
-> > > device, but what the clock drives.
-> >
-> > Well, I don't think that's entirely correct description either.
-> >
-> > As I see it, it's really the actual PM domain (that manages voltages
-> > for a power island), that needs to stay in full power state and
-> > increase its voltage level, as to warm up some of the silicon. It's
-> > not a regular device, but more a characteristics of how the PM domain
-> > can be used.
->
-> First I've heard of Si needing warming...
+Hi Sakari,
 
-I guess people go to cooler places with their devices. :-)
+On Wed, Oct 30, 2019 at 10:35:44AM +0200, Sakari Ailus wrote:
+> On Wed, Oct 30, 2019 at 11:56:34AM +0530, Manivannan Sadhasivam wrote:
+> > Hi Sakari,
+> > 
+> > Thanks for the review!
+> 
+> You're welcome!
+> 
+> > 
+> > On Tue, Oct 29, 2019 at 02:13:20PM +0200, Sakari Ailus wrote:
+> > > Hi Manivannan,
+> > > 
+> > > On Fri, Oct 25, 2019 at 11:29:08PM +0530, Manivannan Sadhasivam wrote:
+> 
+> ...
+> 
+> > > > +static struct i2c_driver imx296_i2c_driver = {
+> > > > +	.probe_new  = imx296_probe,
+> > > > +	.remove = imx296_remove,
+> > > > +	.driver = {
+> > > > +		.name  = "imx296",
+> > > > +		.pm = &imx296_pm_ops,
+> > > > +		.of_match_table = of_match_ptr(imx296_of_match),
+> > > 
+> > > No need for of_match_ptr here.
+> > > 
+> > 
+> > AFAIK, of_match_ptr is needed for !OF case. Else we need to manually add
+> > #ifdef clut to make it NULL. Does the situation changed now?
+> 
+> ACPI based systems can also make use of the compatible string for matching
+> drivers with devices through of_match_table. This may sometimes be the most
+> practical approach. I.e. you don't need ifdefs either.
+> 
 
->
-> I think I'd just expect the power domain provider to know which
-> domains to power on then.
+Oh okay, I'm not aware of this. Will remove of_match_ptr then.
 
-Yeah, I agree. This seems reasonable.
+Thanks,
+Mani
 
-Thanks!
-
-Kind regards
-Uffe
+> -- 
+> Regards,
+> 
+> Sakari Ailus
