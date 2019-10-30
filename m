@@ -2,126 +2,125 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F00CA9EC6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4411ECA9EC6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535792087E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JeM5H6a2"
+	by mail.kernel.org (Postfix) with ESMTP id 282732087E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:59:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfJ3MYg (ORCPT
+        id S1726137AbfJ3M7U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:24:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43126 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfJ3MYf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 08:24:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n1so2054619wra.10
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 05:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MKCua1iUyxONn+bsOWnRZuMnXqiDfqvw9FIMx0dZRF8=;
-        b=JeM5H6a2s+6CWd9XEIxYAUqb70ZFjnB/1nhiQCi/ckl5nLth712zbo3IvCI/EbsOLT
-         MNm9i6RSPi8qZuw3Fx29Wrvnw6dItVeND28wsGa6nVBFppFShvdau60mMt27hcRSsxx3
-         TPPUuFWN2fsM0QwdasBVpdXmw28Jt72mUY7pjeMqijG7P6S4mwnhR6wApD8+UnNQERPd
-         19uy3WIVQJEKLb/e4h5d7/kZ5z/PBDN507ElNHDwBVdO5DvGT5hVFVtxlgObftxX2ZTW
-         s9gUsc334wSJF47aiFdPg/Hj0ezaiJ4SlPjA4Yi4CM5YLW+8DZSOe3BV4itybE7pp0Nk
-         Kb7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=MKCua1iUyxONn+bsOWnRZuMnXqiDfqvw9FIMx0dZRF8=;
-        b=O/VYE3XiiOph5DyDMlu1pKMneOoulky+ew0QmMfnBjvb4TYt/WQRsGsHif4EwnV7U9
-         qYVLj+85rbiC4zdP2B9xPHsTZqdLCGdNLTz1ruriHS9TDWYYFr7BlxZz9J3Cf3e4caiB
-         WQYSB6VAQL0kZBGFyC2hvTQ+wLS9LTAxVPS2fxDie+JYdRX/Orc6cfWMh852lrYdLTNp
-         eXm1HIi0WCvkXAJ84OUrTWZ+zeBkUP/RfRB9IFcEd/hxWzqaV6RXx7QJoSJ9zlcCrnm4
-         eI9VCzYqjQwskgyK0DnUGtduc7aiEUq0YBV2Zh9+TBLMxaDM2zzkYQIDHAEQyVMDJdDM
-         eKbg==
-X-Gm-Message-State: APjAAAVOjZcqLnW9zTAjM/20QQm5wUw6AAo62LBNnYv86uVkwEvdCLUN
-        cHvND5aOfj9+z4kM8/IJcfyqag==
-X-Google-Smtp-Source: APXvYqzeJed9goyylmqlOBs3LxL7op1lRQ9/rFSPpVdMhG8ysk+IWFKHtQYfDtxb9UaVHLJiJm/kFQ==
-X-Received: by 2002:adf:fe81:: with SMTP id l1mr2930329wrr.165.1572438273075;
-        Wed, 30 Oct 2019 05:24:33 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id p13sm2075919wma.41.2019.10.30.05.24.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 30 Oct 2019 05:24:32 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org, jernej.skrabec@siol.net
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v3 1/3] ARM64: dts: sun50i-h6-pine-h64: state that the DT supports the modelB
-Date:   Wed, 30 Oct 2019 12:24:13 +0000
-Message-Id: <1572438255-26107-2-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572438255-26107-1-git-send-email-clabbe@baylibre.com>
-References: <1572438255-26107-1-git-send-email-clabbe@baylibre.com>
+        Wed, 30 Oct 2019 08:59:20 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:48349 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3M7U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 08:59:20 -0400
+Received: from [10.28.19.135] (10.28.19.135) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 30 Oct
+ 2019 20:59:28 +0800
+Subject: Re: [PATCH v3 2/4] dt-bindings: watchdog: add new binding for meson
+ secure watchdog
+To:     Rob Herring <robh@kernel.org>
+CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1571983984-11771-1-git-send-email-xingyu.chen@amlogic.com>
+ <1571983984-11771-3-git-send-email-xingyu.chen@amlogic.com>
+ <20191025203030.GA28391@bogus>
+ <1914e315-3cb7-9251-f871-0024e0e4f68b@amlogic.com>
+ <CAL_JsqLr-Cgu4yZFGTfO=qpFPLBZ1gb-1+DZ35eQX3dUsadm4g@mail.gmail.com>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <2808a8c9-a835-2706-f300-0deb924d3686@amlogic.com>
+Date:   Wed, 30 Oct 2019 20:59:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqLr-Cgu4yZFGTfO=qpFPLBZ1gb-1+DZ35eQX3dUsadm4g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.19.135]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The current sun50i-h6-pine-h64 DT does not specify which model (A or B)
-it supports.
-When this file was created, only modelA was existing, but now both model
-exists and with the time, this DT drifted to support the model B since it is
-the most common one.
-Furtheremore, some part of the model A does not work with it like ethernet and
-HDMI connector (as confirmed by Jernej on IRC).
+Hi,Rob
 
-So it is time to settle the issue, and the easiest way is to state that
-this DT is for model B.
-Easiest since only a small name changes is required.
-Doing the opposite (stating this file is for model A) will add changes (for
-ethernet and HDMI) and so, will break too many setup.
-
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- Documentation/devicetree/bindings/arm/sunxi.yaml     | 4 ++--
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index 972b1e9ee804..9a1e4992b9e9 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -594,9 +594,9 @@ properties:
-           - const: pine64,pine64-plus
-           - const: allwinner,sun50i-a64
- 
--      - description: Pine64 PineH64
-+      - description: Pine64 PineH64 model B
-         items:
--          - const: pine64,pine-h64
-+          - const: pine64,pine-h64-modelB
-           - const: allwinner,sun50i-h6
- 
-       - description: Pine64 LTS
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 30102daf83cc..f9070d9e6c43 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -10,8 +10,8 @@
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
--	model = "Pine H64";
--	compatible = "pine64,pine-h64", "allwinner,sun50i-h6";
-+	model = "Pine H64 model B";
-+	compatible = "pine64,pine-h64-modelB", "allwinner,sun50i-h6";
- 
- 	aliases {
- 		ethernet0 = &emac;
--- 
-2.23.0
-
+On 2019/10/30 4:51, Rob Herring wrote:
+> On Mon, Oct 28, 2019 at 3:35 AM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
+>>
+>> Hi, Rob
+>>
+>> On 2019/10/26 4:30, Rob Herring wrote:
+>>> On Fri, Oct 25, 2019 at 02:13:02PM +0800, Xingyu Chen wrote:
+>>>> The binding targets the Meson-A/C series compatible SoCs, in which the
+>>>> watchdog registers are in secure world.
+>>>>
+>>>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+>>>> ---
+>>>>    .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   | 34 ++++++++++++++++++++++
+>>>>    1 file changed, 34 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
+>>>> new file mode 100644
+>>>> index 00000000..0bbc807
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
+>>>> @@ -0,0 +1,34 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>>>> +# Copyright (c) 2019 Amlogic, Inc
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-wdt.yaml#"
+>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>>> +
+>>>> +title: Amlogic Meson Secure Watchdog Timer
+>>>> +
+>>>> +maintainers:
+>>>> +  - Xingyu Chen <xingyu.chen@amlogic.com>
+>>>> +
+>>>> +description: |+
+>>>> +  Secure Watchdog Timer used in Meson-A/C series Compatible SoCs
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    enum:
+>>>> +      - amlogic,meson-sec-wdt
+>>>
+>>> If there are no other properties, then you don't need this. Just have
+>>> the secure firmware driver instantiate the watchdog.
+>> I'am very sorry i don't understand how to initialize the watchdog driver
+>> if the compatible property is removed, Could you give me more
+>> suggestions or examples ？ Thank you very much.
+> 
+> platform_device_register_simple() from the secure firmware driver.
+Thanks for your help. The device node of wdt looks useless if I use this 
+function to register device. if so, how should I get the pointer to 
+secure-monitor in wdt driver ? or should I use directly arm_smccc to 
+access the secfw ?
+> 
+> Rob
+> 
+> .
+> 
