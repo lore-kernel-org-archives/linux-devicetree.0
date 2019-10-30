@@ -2,97 +2,107 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D32ECA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 20:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763D8CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 21:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC21A2083E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 20:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572468059;
-	bh=uDzTuuW0eeNiIMtkt7NpH65MPpTxQGR0fvDGgA3VMI4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=cPiw4A+GAPqvrNbwIMs8bUMkq5hH5LCe5TqLNIA7bQCid312UoknzuGkiB3pUfMDF
-	 8DGvRWt44ry4UElRXrAl4t12awzc1Dt4vlNRKZ4jlzF6lI1vaNWqQd5MGQVYDwBuRE
-	 0Y8TB+bZ1XKljAsBGjMGw5SpVCNO8PgG25sXQ5PY=
+	by mail.kernel.org (Postfix) with ESMTP id 488C420856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 21:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kptuIiTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfJ3Uk4 (ORCPT
+        id S1727102AbfJ3VFc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 16:40:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbfJ3Uk4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 16:40:56 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C21A2080F;
-        Wed, 30 Oct 2019 20:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572468055;
-        bh=uDzTuuW0eeNiIMtkt7NpH65MPpTxQGR0fvDGgA3VMI4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UqNGd+ZTUpJFhDMfv4SJi/+Ag6YQuDIuqGDEH2hEJ1sXl1QquoHjHNRJcjOJgXZe5
-         cODQTCGliDN5izuvmxmqSeQlF77MS6TQqon4dFGAVw+hm+hNfjQ5yWp4VLP03VwqtJ
-         0mBFRh1OclJ7C8JEuD5pTRYODL2gC/iQGKnT5HhE=
-Date:   Wed, 30 Oct 2019 15:40:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/5] PCI: pci_ids: Add Loongson IDs
-Message-ID: <20191030204054.GA247856@google.com>
+        Wed, 30 Oct 2019 17:05:32 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34869 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfJ3VFc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 17:05:32 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y6so2717914lfj.2;
+        Wed, 30 Oct 2019 14:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nkaIP1ijgOYFqnsYglfYHdRc24DvX3SU4ZQ7OZUvKUM=;
+        b=kptuIiTdPy3kXqZuC8a1zJUJ8GiyvG8oF0rvc9IU9wDZw+29au1yUPtmzXszddcYzd
+         M4F3NNfYrb3Asgkjh7UomGi+SEIpSoqBaRfQ5yP1UzeG0KidA3l7IwfTlzX21uhnjMuk
+         rn2eO06u9iGMQTcyN6DOFsqGoiLb0QM5pXCYH+xYfKhGRaAeuuXRyhFFcnAYFOVnPvGj
+         yDdNlH4ya81pCSv8Rhd9Hnd8oGqeL9ayv/K+HRsVhhlEmkbjqt2E/OkFOWnbRBT8GRw5
+         QTxDFDzg0H2a8ZUAYzSawhbOxYCmuDT9YIwgcaIYUxKdIAEadcjyz/jMjo507aDdN7bR
+         ZUKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nkaIP1ijgOYFqnsYglfYHdRc24DvX3SU4ZQ7OZUvKUM=;
+        b=r6uoaekrmWNUaavEBQaBJYsQuKcM+iaAfgY/JZxPkcm33bkgIi3sx2+n5YLcYS5i+p
+         M+al8BIZ00LziQHOCNkUANuLPheDGS5japZFVl2fbqcnms3G7HUiTtnQffzVwjwf9hVz
+         cuFiXhOWOY295Xla8xLAcKkkTLWTszg7f6jaBH9eR/G/QaM7AZufKj4lqVdfwp80yGg+
+         V8+g9sxG3ICT2UBUy6LBJq1B2Ag0RWy7mKW3rZhmToizGUGJj2rFmb8grLYThgbfKnKU
+         Yq1Al293Dal6UIx8uswNISv5CanRs1gydS7MB29ZwIl3YmHjaHlyvYWybw5ma3ElItRE
+         Od1Q==
+X-Gm-Message-State: APjAAAXYLCWv6HTqP61+JRzO6dDAssaRQ1e2f17ulYdTYGiYPheRcbyu
+        cLFY1SkNx2jlDHCtvEY2PoaEHW1N
+X-Google-Smtp-Source: APXvYqxrX4VoN4tXIb0m+jXClOMlA0A0NLHPTNUipKvKg8IRFWXzcRaxKR2RmNx78kgjKghJZ0AFVQ==
+X-Received: by 2002:a19:5e53:: with SMTP id z19mr146580lfi.111.1572469529984;
+        Wed, 30 Oct 2019 14:05:29 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id q15sm481394lfb.84.2019.10.30.14.05.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Oct 2019 14:05:29 -0700 (PDT)
+Subject: Re: [PATCH v2 06/17] dt-bindings: cpufreq: Add binding for NVIDIA
+ Tegra20/30
+To:     Rob Herring <robh@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191024221416.14197-1-digetx@gmail.com>
+ <20191024221416.14197-7-digetx@gmail.com> <20191029214258.GA18586@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b81fbaac-3566-1153-3c5c-c6b3ba2db522@gmail.com>
+Date:   Thu, 31 Oct 2019 00:05:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030135347.3636-2-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191029214258.GA18586@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Please pay attention to the "git log --oneline
-include/linux/pci_ids.h" output and make yours match, e.g.,
-
-  PCI: Add Loongson Vendor and Device IDs
-
-On Wed, Oct 30, 2019 at 09:53:43PM +0800, Jiaxun Yang wrote:
-> Add Loongson device IDs that will be used by drivers later.
+30.10.2019 00:42, Rob Herring пишет:
+> On Fri, 25 Oct 2019 01:14:05 +0300, Dmitry Osipenko wrote:
+>> Add device-tree binding that describes CPU frequency-scaling hardware
+>> found on NVIDIA Tegra20/30 SoCs.
+>>
+>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 56 +++++++++++++++++++
+>>  1 file changed, 56 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>>
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-
-With that change,
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  include/linux/pci_ids.h | 4 ++++
->  1 file changed, 4 insertions(+)
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 21a572469a4e..75f3336116eb 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -148,6 +148,10 @@
->  
->  /* Vendors and devices.  Sort key: vendor first, device next. */
->  
-> +#define PCI_VENDOR_ID_LOONGSON		0x0014
-> +#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
-> +#define PCI_DEVICE_ID_LOONGSON_AHCI	0x7a08
-> +
->  #define PCI_VENDOR_ID_TTTECH		0x0357
->  #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
->  
-> -- 
-> 2.23.0
-> 
+
+Thanks!
