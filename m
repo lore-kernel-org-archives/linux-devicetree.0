@@ -2,146 +2,97 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2C5CA9EC4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 08:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E6CCA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA47B20578
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 08:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C803C2083E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbfJ3IxP (ORCPT
+        id S1726046AbfJ3JAe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:53:15 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:7319 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfJ3IxP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 04:53:15 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: cI+a4Vq/q5z7vdc74fDOKro/iJQP/AVCXSmzsTcb1alrbT5d75PBB5UIyhnOScb+Fs1uPHNX6e
- 8aGqe9kmE4x20O+5eBwGsnAfT8zIx7lVKQ5/3/2YhdSBGdG5Akc+HSnovvC+YzuUnnYc3wMnDQ
- Fnvbfk4QT5wK0wZRAqTV3eBtwuv4pfAZLqc92ENP5e1mV2kB9uwo/j15g/ijk05lrHzf8ZrWQ4
- lNbuHZ1ItAFaHG036TBKt9O2T/oFH3ve36HXnVZS4531+IxBu55o5oNon1b3pnvJwoQh8Oeacy
- mQU=
-X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
-   d="scan'208";a="52107702"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Oct 2019 01:53:14 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 30 Oct 2019 01:53:06 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Wed, 30 Oct 2019 01:53:06 -0700
-Date:   Wed, 30 Oct 2019 09:53:05 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+        Wed, 30 Oct 2019 05:00:34 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:24213 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726028AbfJ3JAe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 05:00:34 -0400
+X-UUID: bc5682e452c14115802eac09a742e131-20191030
+X-UUID: bc5682e452c14115802eac09a742e131-20191030
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1767353363; Wed, 30 Oct 2019 17:00:24 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 30 Oct
+ 2019 17:00:22 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 30 Oct 2019 17:00:21 +0800
+Message-ID: <1572426023.21623.257.camel@mhfsdcap03>
+Subject: Re: [V2, 1/2] media: dt-bindings: media: i2c: Add bindings for
+ ov8856
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
 To:     Rob Herring <robh@kernel.org>
-CC:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linus.walleij@linaro.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
-Message-ID: <20191030085305.uwrt5g3mmbwthwms@M43218.corp.atmel.com>
-Mail-Followup-To: Rob Herring <robh@kernel.org>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com
-References: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
- <20191029213757.GA8829@bogus>
+CC:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <mchehab@kernel.org>, <mark.rutland@arm.com>,
+        <drinkcat@chromium.org>, <tfiga@chromium.org>,
+        <matthias.bgg@gmail.com>, <bingbu.cao@intel.com>,
+        <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
+Date:   Wed, 30 Oct 2019 17:00:23 +0800
+In-Reply-To: <20190917144412.GA23952@bogus>
+References: <20190910130446.26413-1-dongchun.zhu@mediatek.com>
+         <20190910130446.26413-2-dongchun.zhu@mediatek.com>
+         <20190910173743.GI2680@smile.fi.intel.com>
+         <20190917120205.GO5781@paasikivi.fi.intel.com>
+         <20190917144412.GA23952@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191029213757.GA8829@bogus>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: EBDC59C3BCA94102C3AB13CA12A967D7417CB8D1D0988A04DF1CB39C3D08FD852000:8
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 04:37:57PM -0500, Rob Herring wrote:
-> On Thu, Oct 24, 2019 at 08:22:34PM +0300, Codrin Ciubotariu wrote:
-> > On SAM9X60, slewrate should be enabled on pins with a switching frequency
-> > below 50Mhz. Since most of our pins do not exceed this value, we enable
-> > slewrate by default. Pins with a switching value that exceeds 50Mhz will
-> > have to explicitly disable slewrate.
+Hi Rob,
+
+On Tue, 2019-09-17 at 09:44 -0500, Rob Herring wrote:
+> On Tue, Sep 17, 2019 at 03:02:06PM +0300, Sakari Ailus wrote:
+> > On Tue, Sep 10, 2019 at 08:37:43PM +0300, Andy Shevchenko wrote:
+> > > On Tue, Sep 10, 2019 at 09:04:45PM +0800, dongchun.zhu@mediatek.com wrote:
+> > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > 
+> > > > This patch adds device tree bindings documentation for the ov8856 CMOS
+> > > > image sensor.
+> > > 
+> > > New bindings in YAML, please.
 > > 
-> > Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> > ---
-> >  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
-> >  include/dt-bindings/pinctrl/at91.h | 4 ++--
-> >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> > index 117075b5798f..c135149e84e9 100644
-> > --- a/drivers/pinctrl/pinctrl-at91.c
-> > +++ b/drivers/pinctrl/pinctrl-at91.c
-> > @@ -85,8 +85,8 @@ enum drive_strength_bit {
-> >  					 DRIVE_STRENGTH_SHIFT)
-> >  
-> >  enum slewrate_bit {
-> > -	SLEWRATE_BIT_DIS,
-> >  	SLEWRATE_BIT_ENA,
-> > +	SLEWRATE_BIT_DIS,
-> >  };
-> >  
-> >  #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
-> > @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
-> >  {
-> >  	unsigned int tmp;
-> >  
-> > -	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
-> > +	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
-> >  		return;
-> >  
-> >  	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
-> > diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
-> > index 3831f91fb3ba..e8e117306b1b 100644
-> > --- a/include/dt-bindings/pinctrl/at91.h
-> > +++ b/include/dt-bindings/pinctrl/at91.h
-> > @@ -27,8 +27,8 @@
-> >  #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
-> >  #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
-> >  
-> > -#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
-> > -#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
-> > +#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
-> > +#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
+> > My understanding is text documents are still fine.
 > 
-> This is an ABI. You can't just change the definition.
+> Schema are preferred, but still up to the subsystem for now.
+>  
 
-There is no DT using these definitions. They have been introduced for our new
-SoC but its DT is not submitted yet. I assume it's not too late to do this
-change as nothing will be broken.
+It seems that there are no bindings in YAML under the path:
+Documentation/devicetree/bindings/media/i2c.
+So we would keep the text documents for OV8856.
 
-Regards
-
-Ludovic
-
+> > We don't have things like graph.txt or video-interfaces.txt in YAML yet
+> > either.
+> 
+> That doesn't really matter too much. You can assume common properties 
+> will have a common schema and just define what's device specific. The 
+> device specific bindings have to define 'port' or 'port@N' nodes.
 > 
 > Rob
+
+
