@@ -2,144 +2,147 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2494ACA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00FFCA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0ED320856
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572442176;
-	bh=igiX650YpjR8H3mGZ/ALPmIk+Lrkf/kUdT1CdvytKdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XZ2OUALjJeV0LsQkNux8nLpGy8lzAdLg4QkVU9x8H+ZTIBo+/d/YKm0fSZVvTM3BP
-	 an8agFxTTpIeq/DqygacHIQLw3Vfw3niRn0w8FspKgSauor7l06NxMsaLctFl77wLu
-	 1nF6VEnyWpEhQsFmEtPr1IiDjdjLQvhW00TolZDo=
+	by mail.kernel.org (Postfix) with ESMTP id B69C620856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TYqPsN7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfJ3N3f (ORCPT
+        id S1726222AbfJ3NbO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:29:35 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44702 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfJ3N3e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:29:34 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n48so2055016ota.11;
-        Wed, 30 Oct 2019 06:29:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2PIp3nuujjbVDTCQlERuQPPmNS4hMz6vAUUQvwn05Tc=;
-        b=HCru8Ej2p19n/vaYXq0Vuji5lWKCNrkqKpiBpfQ+0eQJ+UNkYiN0kCMRhYPXBsOV44
-         LF/HfHmdCwHFLkHSf7OOPvHN/VX4g4IZZiYiMF2uzcFGq5nP3uXWjiI+YGfZ6NvFWtp1
-         guA8AYHYihnaXhbuMKuXiaPl+8z3Ow9GIvBEYedo/sW4wvId3dtqiOIFh7fvZBz0pdMm
-         isdPwWD/Llz39wfX9KKX/mtomWoNi9jTyjJEZOcYVn3E9c4pG2lMsbxzuI+6yjosh5+r
-         lFis5fL7IGMSKLgNQD23g/gYx3nfIBz17JkvCA+hed/FDO6Tz4a8qowpwswTS9Q7goay
-         ZEWQ==
-X-Gm-Message-State: APjAAAXe2PLU20K+ZKZ1dJm9uCZVqUrr+Zp57UAxBnKPHnXWlaD2ionr
-        BpO2iz0YQLnW7q3x/tAJ6g==
-X-Google-Smtp-Source: APXvYqxZ/cduY/57uFpVQbDA+dzUHNgNL7l4CUKcqiu/GlyrSfqJ4CfvFx7pOS+ityjeM2CS6IH5vA==
-X-Received: by 2002:a05:6830:1e65:: with SMTP id m5mr13647806otr.41.1572442173786;
-        Wed, 30 Oct 2019 06:29:33 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u1sm9804oie.37.2019.10.30.06.29.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 06:29:33 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 08:29:32 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Rob Herring <rob.e.herring@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [RFC][PATCH 1/3] dt-bindings: dma-buf: heaps: Describe CMA
- regions to be added to dmabuf heaps interface.
-Message-ID: <20191030132932.GA7292@bogus>
-References: <20191025225009.50305-1-john.stultz@linaro.org>
- <20191025225009.50305-2-john.stultz@linaro.org>
- <CAC=3eda3sCMjCQbFX2Y0-6iVt-YRR7P_Y1ksJOsLw9CmJJRxbA@mail.gmail.com>
- <CALAqxLXG8LrWAQevEyj7BJ00CiAkodfgFMdCbuMRucO5w5yhKg@mail.gmail.com>
+        Wed, 30 Oct 2019 09:31:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56058 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3NbN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:31:13 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV5vB101659;
+        Wed, 30 Oct 2019 08:31:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572442265;
+        bh=STjwO10Amw2PZ9XYXEda6DiaqThl/EwMnKhScqY6AdQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TYqPsN7NUV/OLsDdttH86+fZ8BHWyOi4WuAyZ+QF4jEKxX4ZuYyo+0SD6RSz4B8U8
+         RpH805j8GTmIQS8kbR+fnlsQZNv7QZkBlK5Kbd+BL6GDgeGFDxxhDrBBOAto4WMPQ+
+         G5k3JfpVxKkQbnkwrKfzFSsCtkd4laKkTxcqGMXM=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UDV4l4062652
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 08:31:05 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 08:30:51 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 08:30:51 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV1M8022289;
+        Wed, 30 Oct 2019 08:31:02 -0500
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+Date:   Wed, 30 Oct 2019 15:32:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLXG8LrWAQevEyj7BJ00CiAkodfgFMdCbuMRucO5w5yhKg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 04:55:35PM -0700, John Stultz wrote:
-> On Fri, Oct 25, 2019 at 4:32 PM Rob Herring <rob.e.herring@gmail.com> wrote:
-> >
-> > On Fri, Oct 25, 2019 at 5:51 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > This binding specifies which CMA regions should be added to the
-> > > dmabuf heaps interface.
-> >
-> > Is this an ION DT binding in disguise? I thought I killed that. ;)
+
+
+On 30/10/2019 15.12, Rob Herring wrote:
+> On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>
+>> Hi,
+>>
+>> The shared GPIO line for external components tends to be a common issue and
+>> there is no 'clean' way of handling it.
+>>
+>> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
+>> a driver tries to request a GPIO which is already in use.
+>> However the driver must know that the component is going to be used in such a
+>> way, which can be said to any external components with GPIO line, so in theory
+>> all drivers must set this flag when requesting the GPIO...
+>>
+>> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
+>> GPIO line. For example any device using the same GPIO as reset/enable line can
+>> reset/enable other devices, which is not something the other device might like
+>> or can handle.
+>> For example a device needs to be configured after it is enabled, but some other
+>> driver would reset it while handling the same GPIO -> the device is not
+>> operational anymmore as it lost it's configuration.
+>>
+>> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+>> the role of making sure that the GPIO line only changes state when it will not
+>> disturb any of the clients sharing the same GPIO line.
 > 
-> Maybe? I may not have been paying attention back then.  :)
-> 
-> > > +Example:
-> > > +This example has a camera CMA node in reserved memory, which is then
-> > > +referenced by the dmabuf-heap-cma node.
-> > > +
-> > > +
-> > > +       reserved-memory {
-> > > +               #address-cells = <2>;
-> > > +               #size-cells = <2>;
-> > > +               ranges;
-> > > +               ...
-> > > +               cma_camera: cma-camera {
-> > > +                       compatible = "shared-dma-pool";
-> > > +                       reg = <0x0 0x24C00000 0x0 0x4000000>;
-> > > +                       reusable;
-> > > +               };
-> > > +               ...
-> > > +       };
-> > > +
-> > > +       cma_heap {
-> > > +               compatible = "dmabuf-heap-cma";
-> > > +               memory-region = <&cma_camera>;
-> >
-> > Why the indirection here? Can't you just add a flag property to
-> > reserved-memory nodes like we do to flag CMA nodes?
-> 
-> Happy to try. Do you mean like with the "reuasable" tag?  Or more like
-> the "linux,cma-default" tag?
+> Why can't we just add a shared flag like we have for interrupts?
+> Effectively, we have that for resets too, it's just hardcoded in the
+> the drivers.
 
-Probably like "linux,cma-default" as it is a hint for who to manage it 
-rather than a characteristic of the region.
- 
-> Do you have a preference for the flag name here?
+This would be kind of the same thing what the
+GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
+fixed-regulators afaik.
 
-Not really.
+But let's say that a board design will pick two components (C1 and C2)
+and use the same GPIO line to enable them. We already have the drivers
+for them and they are used in boards already.
 
+Both needs the GPIO line to be high for normal operation.
+One or both of them needs register writes after they are enabled.
 
-> > As I suspected, it's because in patch 2 you're just abusing DT to
-> > instantiate platform devices. We already support binding drivers to
-> > reserved-memory nodes directly.
-> 
-> Sorry, one of those "when all you know how to do is hammer, everything
-> looks like a nail" issues.
-> Is there a specific example for binding drivers to reserved-memory
-> nodes I can try to follow?
+During boot both requests the GPIO (OUTPUT_LOW) and sets it high, then
+run the register setup.
 
-ramoops and I think there's a QCom driver.
+C1 request GPIO (LOW)
+C1 gpio_set(1)
+C1 register writes
+C2 requests GPIO (LOW)
+ C1 placed to reset and looses the configuration
+C2 gpio_set(1)
+ C1 also enabled
+C2 register writes
 
-Rob
+At this point C2 is operational, C1 is not.
+
+In shared GPIO case the GPIO should be handled like a regulator with a
+twist that the 'sticky' state of the GPIO might be low or high depending
+on the needs of the components it is connected to.
+
+The shared GPIO line is a board design quirk and basically any device
+which have reset/enable GPIO must be able to work in a situation when
+they are sharing that line with other components and the driver should
+not know much about this small detail.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
