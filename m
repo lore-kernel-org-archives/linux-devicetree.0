@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC62CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA539CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20663218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3002190F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451036;
-	bh=eh+r0jQVLaPFfkmVGlO/vREfE61KcjAS/0XfFkgqjE4=;
+	s=default; t=1572451052;
+	bh=0guIy7a25neGWxvY8eDOVnp6P7zOlDJLv5fR2gY7DC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VB1IAPL//0iykEmicdrW094QNWriijKU7Z7KgENOMdy3j2WNXsdSsWd4SI7y/8Wcx
-	 BXnnBS5PHiceNXP7mZ+Oj3rXZNoRrfCVJnUmFWnDuUk+bZHX5Iip5IV8nnpjWyZ+Dq
-	 czJ2OUTN3A7TbMrlRO0hXhtB0isD/31327a67b4Q=
+	b=T0L42yXMrEbDX7XrUZstWaIT6ZH/zQeGXNM8qO26Mlnzt01CvxNhU8Q+95bUtXFBz
+	 04dVQlgJ7U6xeOem0dFcMbaT0j1dd5sD+6EmyqcthxYRT5c3LXJYfoNUaK6VVCGkx1
+	 GJLBdzNsFc7ltz4vl83WBO1GLAi/Oc2lZbl9aIqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbfJ3P5P (ORCPT
+        id S1729079AbfJ3P5a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:57:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58876 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:57:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbfJ3P5O (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:57:14 -0400
+        id S1729067AbfJ3P5a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:57:30 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68F8721882;
-        Wed, 30 Oct 2019 15:57:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D42921734;
+        Wed, 30 Oct 2019 15:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451033;
-        bh=eh+r0jQVLaPFfkmVGlO/vREfE61KcjAS/0XfFkgqjE4=;
+        s=default; t=1572451049;
+        bh=0guIy7a25neGWxvY8eDOVnp6P7zOlDJLv5fR2gY7DC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HOxzAMAEVROia8DrxO91W2/TSr0VXhy+RzWyQDlDIxaHUWrJu+lXEhsPOhMgIRm3p
-         vxsIHfi0H7dEadnjRSpcR+BXlZLU0IeyyiIet0uXKWDL7SNzHbZ8uDsR+Z5c+aF/U8
-         XyrHE0dFBZx8yVSJt4pU5cBE2xOv+k45wDt3Sta0=
+        b=yj86R2lKxjv18uxwOUX/D95GnfNLDbxPgXJDXMjTp+P18i9wO5b8m3TVhuS5dJ6vU
+         JlN2jBTMgo7uXE86qncKi1kLpWh+2zR99hwoxQMuhDaYYG6Mxe/hkLdc00jOPkHMOr
+         JnipyBiJE/rZ6qPV9gzJpasSiO7FAp6hlzzswWuA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>,
+Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/18] ARM: dts: logicpd-torpedo-som: Remove twl_keypad
-Date:   Wed, 30 Oct 2019 11:56:47 -0400
-Message-Id: <20191030155700.10748-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 11/18] ARM: dts: imx7s: Correct GPT's ipg clock source
+Date:   Wed, 30 Oct 2019 11:56:53 -0400
+Message-Id: <20191030155700.10748-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155700.10748-1-sashal@kernel.org>
 References: <20191030155700.10748-1-sashal@kernel.org>
@@ -58,38 +58,62 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 6b512b0ee091edcb8e46218894e4c917d919d3dc ]
+[ Upstream commit 252b9e21bcf46b0d16f733f2e42b21fdc60addee ]
 
-The TWL4030 used on the Logit PD Torpedo SOM does not have the
-keypad pins routed.  This patch disables the twl_keypad driver
-to remove some splat during boot:
+i.MX7S/D's GPT ipg clock should be from GPT clock root and
+controlled by CCM's GPT CCGR, using correct clock source for
+GPT ipg clock instead of IMX7D_CLK_DUMMY.
 
-twl4030_keypad 48070000.i2c:twl@48:keypad: missing or malformed property linux,keymap: -22
-twl4030_keypad 48070000.i2c:twl@48:keypad: Failed to build keymap
-twl4030_keypad: probe of 48070000.i2c:twl@48:keypad failed with error -22
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-[tony@atomide.com: removed error time stamps]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 3ef79ca6bd1d ("ARM: dts: imx7d: use imx7s.dtsi as base device tree")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/logicpd-torpedo-som.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-index ceb49d15d243c..20ee7ca8c6534 100644
---- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-+++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-@@ -266,3 +266,7 @@
- &twl_gpio {
- 	ti,use-leds;
- };
-+
-+&twl_keypad {
-+	status = "disabled";
-+};
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index edc5ddeb851a7..0a7ea1a765f99 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -437,7 +437,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302d0000 0x10000>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT1_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT1_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 			};
+@@ -446,7 +446,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302e0000 0x10000>;
+ 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT2_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT2_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+@@ -456,7 +456,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x302f0000 0x10000>;
+ 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT3_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT3_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
+@@ -466,7 +466,7 @@
+ 				compatible = "fsl,imx7d-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x30300000 0x10000>;
+ 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX7D_CLK_DUMMY>,
++				clocks = <&clks IMX7D_GPT4_ROOT_CLK>,
+ 					 <&clks IMX7D_GPT4_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
+ 				status = "disabled";
 -- 
 2.20.1
 
