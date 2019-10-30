@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D85ECA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B8BCA9EC6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0093C20874
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3539820874
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450782;
-	bh=NiLmu7S3WOmZnESuvykKVnjTskYiKGz3RvrEO3masJE=;
+	s=default; t=1572450783;
+	bh=3Yhs3WqnnkrvAAFYoJ4Y+AVbVYIMGkIaxwp46Lt48+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ckI5Vc8xcb5aigkwkRkt8NBkS4PHy4oDCBrhDgP+trBOZGgGSLnR2iDzNIRkx51lo
-	 xlQ+8G2zxCpXRpXuIJE3Dosb1P/7P4hRTGNiJedJKcdYd/RJ52lZgpPLL2LUkzL7a/
-	 cT+gJLNJjdnpm7QZzHhf8leiZbOgw2vLWZfoj/aA=
+	b=i2E/j8Cou9I8Y3+4IkSMgpuNbXEYRuP4zk/PKOgPV5egUWr92FRktNMNpD7yx1vNC
+	 IlAgWA0nKM5rOzs9S+Xf5pHVhEFZC1mQBdtxyzp5uSeKxa/3zqiUGqRknHFed3omQ4
+	 irTtC0R+PWulNYMtzzD7k42+6/1+dS1BTcnL+Cfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfJ3Pwn (ORCPT
+        id S1728037AbfJ3Pwk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53770 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:52:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728047AbfJ3Pwl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:52:41 -0400
+        id S1728030AbfJ3Pwk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:52:40 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0C7320656;
-        Wed, 30 Oct 2019 15:52:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0AA020856;
+        Wed, 30 Oct 2019 15:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450761;
-        bh=NiLmu7S3WOmZnESuvykKVnjTskYiKGz3RvrEO3masJE=;
+        s=default; t=1572450759;
+        bh=3Yhs3WqnnkrvAAFYoJ4Y+AVbVYIMGkIaxwp46Lt48+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUsVIPkyaJl4YP5JCVLCAR3I6S3jY6YV1EMNiz7OZn0VdK3AlibiHu2R6nzl+hGer
-         t+4ORdk1TlFGi2J9rxlUHK5NUh21susKgEHIHp12+gaKtu5oae9i1SyqmIs8cfLXJ5
-         aI7FDjkKbYc6mGBVgQSqxEqKwbqKPs99Zx8tuw3I=
+        b=YrYaqn6FJ2rQ5uOfW31w2RhkvvZgvBf0pk/eAMAPwBn6IsK/hZtGL6tD8zXsjxBPM
+         ws3tdK+nBBjzk/UpvQJeWC01TTqoEv6WgjxR9a+JC18jKRrQR8V9uMIhDz/3Ml5AGd
+         bfFrkbtJg3HsWPyGBHg8xyVopRZi7ajlTmAyOs7A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+Cc:     Ran Wang <ran.wang_1@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 44/81] ARM: dts: imx6q-logicpd: Re-Enable SNVS power key
-Date:   Wed, 30 Oct 2019 11:48:50 -0400
-Message-Id: <20191030154928.9432-44-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 43/81] arm64: dts: lx2160a: Correct CPU core idle state name
+Date:   Wed, 30 Oct 2019 11:48:49 -0400
+Message-Id: <20191030154928.9432-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -58,37 +59,181 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Ran Wang <ran.wang_1@nxp.com>
 
-[ Upstream commit 52f4d4043d1edc4e9e66ec79cae3e32cfe0e44d6 ]
+[ Upstream commit 07159f67c77134dfdfdbdf3d8f657f5890de5b7f ]
 
-A previous patch disabled the SNVS power key by default which
-breaks the ability for the imx6q-logicpd board to wake from sleep.
-This patch re-enables this feature for this board.
+lx2160a support PW15 but not PW20, correct name to avoid confusing.
 
-Fixes: 770856f0da5d ("ARM: dts: imx6qdl: Enable SNVS power key according to board design")
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Fixes: 00c5ce8ac023 ("arm64: dts: lx2160a: add cpu idle support")
+Acked-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6-logicpd-som.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 36 +++++++++----------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6-logicpd-som.dtsi b/arch/arm/boot/dts/imx6-logicpd-som.dtsi
-index 7ceae35732486..547fb141ec0c9 100644
---- a/arch/arm/boot/dts/imx6-logicpd-som.dtsi
-+++ b/arch/arm/boot/dts/imx6-logicpd-som.dtsi
-@@ -207,6 +207,10 @@
- 	vin-supply = <&sw1c_reg>;
- };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index e6fdba39453c3..228ab83037d0e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -33,7 +33,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster0_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
  
-+&snvs_poweroff {
-+	status = "okay";
-+};
-+
- &iomuxc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hog>;
+ 		cpu@1 {
+@@ -49,7 +49,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster0_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@100 {
+@@ -65,7 +65,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster1_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@101 {
+@@ -81,7 +81,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster1_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@200 {
+@@ -97,7 +97,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster2_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@201 {
+@@ -113,7 +113,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster2_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@300 {
+@@ -129,7 +129,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster3_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@301 {
+@@ -145,7 +145,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster3_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@400 {
+@@ -161,7 +161,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster4_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@401 {
+@@ -177,7 +177,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster4_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@500 {
+@@ -193,7 +193,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster5_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@501 {
+@@ -209,7 +209,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster5_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@600 {
+@@ -225,7 +225,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster6_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@601 {
+@@ -241,7 +241,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster6_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@700 {
+@@ -257,7 +257,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster7_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cpu@701 {
+@@ -273,7 +273,7 @@
+ 			i-cache-line-size = <64>;
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster7_l2>;
+-			cpu-idle-states = <&cpu_pw20>;
++			cpu-idle-states = <&cpu_pw15>;
+ 		};
+ 
+ 		cluster0_l2: l2-cache0 {
+@@ -340,9 +340,9 @@
+ 			cache-level = <2>;
+ 		};
+ 
+-		cpu_pw20: cpu-pw20 {
++		cpu_pw15: cpu-pw15 {
+ 			compatible = "arm,idle-state";
+-			idle-state-name = "PW20";
++			idle-state-name = "PW15";
+ 			arm,psci-suspend-param = <0x0>;
+ 			entry-latency-us = <2000>;
+ 			exit-latency-us = <2000>;
 -- 
 2.20.1
 
