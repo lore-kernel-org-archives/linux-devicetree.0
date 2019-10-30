@@ -2,165 +2,169 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6322CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A36CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F2C20874
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4415320856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="dYPNLQ+J"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="red73tWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfJ3OBp (ORCPT
+        id S1726384AbfJ3OCP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:01:45 -0400
-Received: from forward103j.mail.yandex.net ([5.45.198.246]:54056 "EHLO
-        forward103j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726607AbfJ3OBp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:01:45 -0400
-Received: from mxback7o.mail.yandex.net (mxback7o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::21])
-        by forward103j.mail.yandex.net (Yandex) with ESMTP id E32C96741E8E;
-        Wed, 30 Oct 2019 16:54:36 +0300 (MSK)
-Received: from iva8-e1a842234f87.qloud-c.yandex.net (iva8-e1a842234f87.qloud-c.yandex.net [2a02:6b8:c0c:77a0:0:640:e1a8:4223])
-        by mxback7o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 48FFXf50Ah-sZN0FjPD;
-        Wed, 30 Oct 2019 16:54:36 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1572443676;
-        bh=j0qExup+mjN9/866l9U9/4+EErx2RZW+CoBkOGAlloM=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=dYPNLQ+JtpRNu+87bHmlt3SOg/VR93n/nw51idJw3BG9Xny4NRxHUQEHSIIYPtddE
-         FwGOs9eALbIioCxlSgTBSVFvrOY1zCk6WQvy5alkktNQvqBrWamjW2FoY4uQ4AaGh3
-         PeGd6tCV1HUjQNF/otycaUVpZoVvQtbThU0ORzb8=
-Authentication-Results: mxback7o.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by iva8-e1a842234f87.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id iQ85YfuBaZ-sOUuwUUB;
-        Wed, 30 Oct 2019 16:54:34 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        axboe@kernel.dk, peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, bhelgaas@google.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-pci@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 3/5] net: stmmac: pci: Add Loongson GMAC
-Date:   Wed, 30 Oct 2019 21:53:45 +0800
-Message-Id: <20191030135347.3636-4-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
-References: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
+        Wed, 30 Oct 2019 10:02:15 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35332 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfJ3OCP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:02:15 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UE26ls128492;
+        Wed, 30 Oct 2019 09:02:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572444126;
+        bh=ZAfLJiz4WoYUnlJxPbz6SDvn9hIgdianQtlpxsjHwxc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=red73tWIL4GTeuoVo/CG6nuKF9zwdDXG/Rljmd+kdDtcHNzg278aIdb4hb7DPnHjU
+         n0vl8UHu64Qfw93GVXqDxiP/byms/2geIm7aJ5L461kcumHug5224/oUGs74icVUsH
+         gx4awloqKRJVSICvafnMgVZuFk0uEGy0jk3GkZzc=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UE26wP028066
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 09:02:06 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 09:01:52 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 09:01:52 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UE21n8124938;
+        Wed, 30 Oct 2019 09:02:02 -0500
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+ <116e2d1eb1333c322450f20a5f591b7038586865.camel@pengutronix.de>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <9e862d4d-6661-e7ec-24ba-4e621155e145@ti.com>
+Date:   Wed, 30 Oct 2019 16:03:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <116e2d1eb1333c322450f20a5f591b7038586865.camel@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This device will be setup by parsing DeviceTree node
-of pci device.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../net/ethernet/stmicro/stmmac/stmmac_pci.c  | 52 ++++++++++++++++++-
- 1 file changed, 50 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 292045f4581f..640a2a5b8d41 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -12,8 +12,11 @@
- #include <linux/clk-provider.h>
- #include <linux/pci.h>
- #include <linux/dmi.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
- 
- #include "stmmac.h"
-+#include "stmmac_platform.h"
- 
- /*
-  * This struct is used to associate PCI Function of MAC controller on a board,
-@@ -33,6 +36,7 @@ struct stmmac_pci_dmi_data {
- 
- struct stmmac_pci_info {
- 	int (*setup)(struct pci_dev *pdev, struct plat_stmmacenet_data *plat);
-+	bool of_irq;
- };
- 
- static int stmmac_pci_find_phy_addr(struct pci_dev *pdev,
-@@ -444,6 +448,30 @@ static const struct stmmac_pci_info snps_gmac5_pci_info = {
- 	.setup = snps_gmac5_default_data,
- };
- 
-+static int loongson_pci_of_setup(struct pci_dev *pdev,
-+			struct plat_stmmacenet_data *plat)
-+{
-+	struct device_node  *np;
-+	np = pci_device_to_OF_node(pdev);
-+
-+	if(!np) {
-+		dev_err(&pdev->dev, "Unable to get OF node\n");
-+		return -ENODEV;
-+	}
-+
-+	if(!of_device_is_compatible(np, "loongson,pci-gmac")) {
-+		dev_err(&pdev->dev, "Device compatible mismatch\n");
-+		return -ENODEV;
-+	}
-+
-+	return  stmmac_parse_config_dt(np, plat);
-+}
-+
-+static const struct stmmac_pci_info loongson_of_pci_info = {
-+	.setup = loongson_pci_of_setup,
-+	.of_irq = true,
-+};
-+
- /**
-  * stmmac_pci_probe
-  *
-@@ -508,8 +536,27 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- 
- 	memset(&res, 0, sizeof(res));
- 	res.addr = pcim_iomap_table(pdev)[i];
--	res.wol_irq = pdev->irq;
--	res.irq = pdev->irq;
-+
-+	if(info->of_irq) {
-+		struct device_node  *np;	
-+		np = pci_device_to_OF_node(pdev);
-+
-+		res.irq = of_irq_get_byname(np, "macirq");
-+		if (res.irq < 0)
-+			return res.irq;
-+		res.wol_irq = of_irq_get_byname(np, "eth_wake_irq");
-+		if (res.wol_irq < 0) {
-+		if (res.wol_irq == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		res.wol_irq = res.irq;
-+		}
-+		res.lpi_irq = of_irq_get_byname(np, "eth_lpi");
-+		if (res.lpi_irq == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+	} else {
-+		res.wol_irq = pdev->irq;
-+		res.irq = pdev->irq;
-+	}
- 
- 	return stmmac_dvr_probe(&pdev->dev, plat, &res);
- }
-@@ -602,6 +649,7 @@ static const struct pci_device_id stmmac_id_table[] = {
- 	STMMAC_DEVICE(INTEL, STMMAC_EHL_SGMII1G_ID, ehl_sgmii1g_pci_info),
- 	STMMAC_DEVICE(INTEL, STMMAC_TGL_SGMII1G_ID, tgl_sgmii1g_pci_info),
- 	STMMAC_DEVICE(SYNOPSYS, STMMAC_GMAC5_ID, snps_gmac5_pci_info),
-+	STMMAC_DEVICE(LOONGSON,  PCI_DEVICE_ID_LOONGSON_GMAC, loongson_of_pci_info),
- 	{}
- };
- 
--- 
-2.23.0
+On 30/10/2019 15.51, Philipp Zabel wrote:
+> On Wed, 2019-10-30 at 15:32 +0200, Peter Ujfalusi wrote:
+>>
+>> On 30/10/2019 15.12, Rob Herring wrote:
+>>> On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>>> Hi,
+>>>>
+>>>> The shared GPIO line for external components tends to be a common issue and
+>>>> there is no 'clean' way of handling it.
+>>>>
+>>>> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
+>>>> a driver tries to request a GPIO which is already in use.
+>>>> However the driver must know that the component is going to be used in such a
+>>>> way, which can be said to any external components with GPIO line, so in theory
+>>>> all drivers must set this flag when requesting the GPIO...
+>>>>
+>>>> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
+>>>> GPIO line. For example any device using the same GPIO as reset/enable line can
+>>>> reset/enable other devices, which is not something the other device might like
+>>>> or can handle.
+>>>> For example a device needs to be configured after it is enabled, but some other
+>>>> driver would reset it while handling the same GPIO -> the device is not
+>>>> operational anymmore as it lost it's configuration.
+>>>>
+>>>> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+>>>> the role of making sure that the GPIO line only changes state when it will not
+>>>> disturb any of the clients sharing the same GPIO line.
+>>>
+>>> Why can't we just add a shared flag like we have for interrupts?
+>>> Effectively, we have that for resets too, it's just hardcoded in the
+>>> the drivers.
+>>
+>> This would be kind of the same thing what the
+>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
+>> fixed-regulators afaik.
+>>
+>> But let's say that a board design will pick two components (C1 and C2)
+>> and use the same GPIO line to enable them. We already have the drivers
+>> for them and they are used in boards already.
+>>
+>> Both needs the GPIO line to be high for normal operation.
+>> One or both of them needs register writes after they are enabled.
+>>
+>> During boot both requests the GPIO (OUTPUT_LOW) and sets it high, then
+>> run the register setup.
+>>
+>> C1 request GPIO (LOW)
+>> C1 gpio_set(1)
+>> C1 register writes
+>> C2 requests GPIO (LOW)
+>>  C1 placed to reset and looses the configuration
+>> C2 gpio_set(1)
+>>  C1 also enabled
+>> C2 register writes
+>>
+>> At this point C2 is operational, C1 is not.
+>>
+>> In shared GPIO case the GPIO should be handled like a regulator with a
+>> twist that the 'sticky' state of the GPIO might be low or high depending
+>> on the needs of the components it is connected to.
+>>
+>> The shared GPIO line is a board design quirk and basically any device
+>> which have reset/enable GPIO must be able to work in a situation when
+>> they are sharing that line with other components and the driver should
+>> not know much about this small detail.
+> 
+> What about components that require a register write right after being
+> enabled, for example to put the device into a low power state, to
+> silence it on a bus, or to mask some initially enabled interrupts?
 
+You are right, if a device needs driver to silence it when enabled (we
+might not have the driver compiled) then this can be a problem.
+
+But the same thing applies to components without enable/reset GPIO and
+only needing power, no?
+
+I would trust (I know...) on the board designers to not bundle
+components of such kinds.
+
+> 
+> regards
+> Philipp
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
