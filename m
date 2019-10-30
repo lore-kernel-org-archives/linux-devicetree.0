@@ -2,74 +2,92 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48390C47E49
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FC5CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271782087E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4843A20874
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:57:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="j7zBi87r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfJ3N4E (ORCPT
+        id S1726328AbfJ3N5V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:56:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29612 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbfJ3N4E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:56:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 06:56:03 -0700
-X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
-   d="scan'208";a="193975489"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 06:55:58 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id BEC0E208A0; Wed, 30 Oct 2019 15:55:27 +0200 (EET)
-Date:   Wed, 30 Oct 2019 15:55:27 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        drinkcat@chromium.org, tfiga@chromium.org, matthias.bgg@gmail.com,
-        bingbu.cao@intel.com, srv_heupstream@mediatek.com,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V2, 2/2] media: i2c: Add more sensor modes for ov8856 camera
- sensor
-Message-ID: <20191030135527.GH10211@paasikivi.fi.intel.com>
-References: <20190910130446.26413-1-dongchun.zhu@mediatek.com>
- <20190910130446.26413-3-dongchun.zhu@mediatek.com>
- <20190910174450.GJ2680@smile.fi.intel.com>
- <1572440653.21623.272.camel@mhfsdcap03>
+        Wed, 30 Oct 2019 09:57:21 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9616 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726171AbfJ3N5V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:57:21 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9UDqLfC032051;
+        Wed, 30 Oct 2019 14:57:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=eH7mwtf1v4gBy1/YWM1SPqmdubzRlFaFMR+UtH0lgC8=;
+ b=j7zBi87rylKqaJglCnoq5i6DN3YP+/mR6z07XXagMi0XDRM44KxJ5+Sb83qZHC+5yYZx
+ iRd45/jsISq6IJy3j5ZKm38/7/LOMY+CRDQ5kdjSJ9KCPHqvVD3pGjVKQ/yrSpCg3YwU
+ +s5aL9MpRVZ92mO4hVMSiYfZwDbQnZAX/21SxyqMYqCJBsjwddLUOyBNAIZsNISKvAC5
+ 6ETNFNPIiGfywFpLppHCsNUg8j7EDf7IHUcsgLlT2q7Fe3xMBevtG0fKbwJ+rpJdq19X
+ Qtf7Agr6IUOHsVe++qHwjefrRRJbtxju65BDdqV+txXiKHzjg+YNVTMAYo2mx8/BOVem RQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vxwf442u1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Oct 2019 14:57:06 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8775910002A;
+        Wed, 30 Oct 2019 14:57:05 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 592C72C07FB;
+        Wed, 30 Oct 2019 14:57:05 +0100 (CET)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
+ 2019 14:57:05 +0100
+Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct 2019 14:57:04
+ +0100
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH v2 0/2] mailbox: stm32-ipcc: rework wakeup
+Date:   Wed, 30 Oct 2019 14:56:59 +0100
+Message-ID: <1572443821-28112-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572440653.21623.272.camel@mhfsdcap03>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.25]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-30_06:2019-10-30,2019-10-30 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 09:04:13PM +0800, Dongchun Zhu wrote:
-> > > +	ov8856->is_1B_revision = (val == OV8856_1B_MODULE) ? 1 : 0;
-> > 
-> > !! will give same result without using ternary operator.
-> > 
-> 
-> Fixed in next release.
+Remove the dedicated wakeup IRQ as wakeup can be handled by the RX IRQ.
 
-But casting to bool will have the same effect. Integers are also not
-needed. I.e. this can be written as:
+Changes since v1:
+- typo fix
+- add Rob's Acked-by for bindings
 
-	ov8856->is_1B_revision = val == OV8856_1B_MODULE;
+Fabien Dessenne (2):
+  dt-bindings: mailbox: stm32-ipcc: Updates for wakeup management
+  mailbox: stm32-ipcc: Update wakeup management
+
+ .../devicetree/bindings/mailbox/stm32-ipcc.txt     |  4 +--
+ drivers/mailbox/stm32-ipcc.c                       | 36 +++++-----------------
+ 2 files changed, 9 insertions(+), 31 deletions(-)
 
 -- 
-Sakari Ailus
+2.7.4
+
