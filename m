@@ -2,382 +2,96 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2E8CA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C06CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0718420862
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB5A2083E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 12:24:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="apGkzk8x"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wC+E7pnd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfJ3MDv (ORCPT
+        id S1726846AbfJ3MYg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:03:51 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56422 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfJ3MDv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 08:03:51 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UC3gSk083112;
-        Wed, 30 Oct 2019 07:03:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572437022;
-        bh=rYSSM4QQvBNxXedZf/JT8Z1wpuviL0uJpGCJLxKXklw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=apGkzk8xIxe9zz0JYp0ExqVLiRyVm6l8dRkuWEZJBRH9LyIa1aWE3A7VAsy62Qj7W
-         JNg2e1e4RG9AJPUWH95d6e1NI4RKLE1VpmfReZ7UlRf2qd8WNZItazGhiH0vVxO4Ne
-         VhofPOYONcy9M8VnoTQMWs16GDPwqb1JYrF40Zxc=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UC3gaD116374
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 07:03:42 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 07:03:41 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 07:03:29 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UC3WRJ040060;
-        Wed, 30 Oct 2019 07:03:39 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <robh+dt@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
-        <t-kristo@ti.com>, <mripard@kernel.org>, <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-Subject: [RFC v2 2/2] gpio: Add new driver for handling 'shared' gpio lines on boards
-Date:   Wed, 30 Oct 2019 14:04:40 +0200
-Message-ID: <20191030120440.3699-3-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191030120440.3699-1-peter.ujfalusi@ti.com>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 30 Oct 2019 08:24:36 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37276 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfJ3MYg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 08:24:36 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e11so2080659wrv.4
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 05:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bHjRV+yplRefJlnocFGPLm9WDOa+jJqsx2Sr2LtJ1vY=;
+        b=wC+E7pndDd0Nu4Djtb8R4PV7qUVnvwzShce4FxVWXcyhub4y8UOBGEIaIYZUoGDfTp
+         3HtWrIbS2bh+ywtcbeiFJ1clDBXQVmTO2tCkOUDp34PnjyvMp8IKSxQO8wvPyJaaUGT+
+         X83hE1GgIwSnuKLMxwwlPS3wyg3R4faPTiI8PzsAdY2UzsgjmeHmiL8W+3IWAMQ6oVpQ
+         ozAo7ni/foW14HXTUgqep6j4qO3SuorOTch/cY1NwfwAxB4fPrhXXJemHPAAWkuMNfma
+         ldEob//Ldv1X0tODn5lAyQV75vwYKjaTu8wzUAzEgKdhYgyx+GV2xX0OSr4BY9crHC+k
+         +aRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bHjRV+yplRefJlnocFGPLm9WDOa+jJqsx2Sr2LtJ1vY=;
+        b=HUQCms4754wiIHUrW+HWFs1DYJQYn9FFd5E56jyr9UYnFJw8+43iAh1tzG7MtmiK/P
+         RqwPiP4b3geWbI/bMjfIhfkzi/gf7K1Lz3MQb8axsSPDWP6bNOBcN3BcaHU2hkWrgoyn
+         rXJrOwMA9lHIgqjUabKunmeAJ3/NQvbXgP+g9CggPVRM8Qvgji++x6R5T/xawgZqxQzy
+         p23TJGw2rV1hr6TELETR6Ox8knfiII6ZYBA25HjFemT/sCQMTi1qavWSMwdIj4H1kLJk
+         B5PNfwfjyzsUQ4Pp0GZnsgN8X9dJ2k6lUkgQfuxSVP6KxsXXKq3IQA7+dDusPw64HRc5
+         2Ubg==
+X-Gm-Message-State: APjAAAW7JmIf7e10yiQ04K9EYr8FDfOrRtbtL6gYJVZFlTxgkNdZko/7
+        p4ljGuvBSZLqhOUDk6M/Raeo4Q==
+X-Google-Smtp-Source: APXvYqwnK2n5AsuwOMfvbkBWHzsINKxEYn88SMq95kpBPr5ZaZT7aBWqOr49OuFqhi8NohL7D07+BA==
+X-Received: by 2002:a05:6000:4c:: with SMTP id k12mr26069063wrx.100.1572438273908;
+        Wed, 30 Oct 2019 05:24:33 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id p13sm2075919wma.41.2019.10.30.05.24.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 30 Oct 2019 05:24:33 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, jernej.skrabec@siol.net
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v3 2/3] ARM64: dts: sun50i-h6-pine-h64: add the hdmi_connector label
+Date:   Wed, 30 Oct 2019 12:24:14 +0000
+Message-Id: <1572438255-26107-3-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572438255-26107-1-git-send-email-clabbe@baylibre.com>
+References: <1572438255-26107-1-git-send-email-clabbe@baylibre.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some board design opts to use the same GPIO line routed to different
-onboard components.
+For sun50i-h6-pine-h64 model A we will need to modify the connector
+node, so let's add a label on it.
 
-The GPIO in question might be a reset line, enable line or mode selection
-line, etc.
-The drivers for the components do not know if in some board they have
-dedicated GPIO on other boards they might share a GPIO line with other
-entities, not necessary from the same class:
-
-Two codec sharing the same enable line
-One codec and one amplifier sharing the same line
-Regulators sharing the same line
-Display panels, backlights and touchscreen controllers
-
-And any variation of these.
-
-There is one thing usually the board designers make sure that the level
-needed for the GPIO is matching for the components.
-
-This driver adds a gpiochip to handle the board level split of a single
-GPIO line and based on the active users of the line it will handle the
-real GPIO to a level it should be:
-
-We have two cases to take care:
-1. GPIO line should be LOW to enable any of the components
-if any of the shared line is requested to be LOW, set the GPIO line low
-
-2. GPIO line should be HIGH to enable any of the components
-if any of the shared line is requested to be HIGH, set the GPIO line high
-
-At the end it is:
-1. logical AND for the shared lines
-2. logical OR for the shared lines
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- drivers/gpio/Kconfig       |   6 +
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-shared.c | 229 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 236 insertions(+)
- create mode 100644 drivers/gpio/gpio-shared.c
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 088a8a0f8add..29585a13670e 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -69,6 +69,12 @@ config GPIO_SYSFS
- 	  ioctl() operations instead. The character device is always
- 	  available.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index f9070d9e6c43..448ccbecf82b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -22,7 +22,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
-+config GPIO_SHARED
-+	tristate "Driver for handling shared GPIO lines"
-+	depends on OF_GPIO
-+	help
-+	  When a single GPIO line is connected to different peripherals.
-+
- config GPIO_GENERIC
- 	depends on HAS_IOMEM # Only for IOMEM drivers
- 	tristate
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index e4599f90f702..f368268cbd3a 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -123,6 +123,7 @@ obj-$(CONFIG_GPIO_SAMA5D2_PIOBU)	+= gpio-sama5d2-piobu.o
- obj-$(CONFIG_GPIO_SCH311X)		+= gpio-sch311x.o
- obj-$(CONFIG_GPIO_SCH)			+= gpio-sch.o
- obj-$(CONFIG_GPIO_SIOX)			+= gpio-siox.o
-+obj-$(CONFIG_GPIO_SHARED)		+= gpio-shared.o
- obj-$(CONFIG_GPIO_SODAVILLE)		+= gpio-sodaville.o
- obj-$(CONFIG_GPIO_SPEAR_SPICS)		+= gpio-spear-spics.o
- obj-$(CONFIG_GPIO_SPRD)			+= gpio-sprd.o
-diff --git a/drivers/gpio/gpio-shared.c b/drivers/gpio/gpio-shared.c
-new file mode 100644
-index 000000000000..37affc40cdf8
---- /dev/null
-+++ b/drivers/gpio/gpio-shared.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com
-+ *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_platform.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
-+enum gpio_shared_mode {
-+	GPIO_SHARED_AND = 0,
-+	GPIO_SHARED_OR,
-+};
-+
-+struct gpio_client {
-+	unsigned requested:1;
-+	int value;
-+};
-+
-+struct gpio_shared_priv {
-+	struct device *dev;
-+	struct gpio_desc *root_gpio;
-+
-+	struct gpio_chip gpio_chip;
-+	enum gpio_shared_mode share_mode;
-+	int root_value;
-+
-+	struct mutex mutex; /* protecting the counters */
-+	int high_count;
-+	int low_count;
-+
-+	/* root gpio calbacks */
-+	int (*root_get)(const struct gpio_desc *desc);
-+	void (*root_set)(struct gpio_desc *desc, int value);
-+
-+	struct gpio_client *clients;
-+};
-+
-+static int gpio_shared_aggregate_root_value(struct gpio_shared_priv *priv)
-+{
-+	int value = 0;
-+	int i;
-+
-+	for (i = 0; i < priv->gpio_chip.ngpio; i++) {
-+		if (priv->clients[i].requested) {
-+			if (priv->share_mode == GPIO_SHARED_AND)
-+				value &= priv->clients[i].value;
-+			else
-+				value |= priv->clients[i].value;
-+		}
-+	}
-+
-+	return value;
-+}
-+
-+static int gpio_shared_gpio_request(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpio_shared_priv *priv = gpiochip_get_data(chip);
-+	int ret = 0;
-+
-+	if (priv->clients[offset].requested) {
-+		ret = -EBUSY;
-+		goto out;
-+	}
-+
-+	mutex_lock(&priv->mutex);
-+	priv->clients[offset].requested = 1;
-+	priv->clients[offset].value = priv->root_value;
-+
-+out:
-+	mutex_unlock(&priv->mutex);
-+	return ret;
-+}
-+
-+static void gpio_shared_gpio_free(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpio_shared_priv *priv = gpiochip_get_data(chip);
-+
-+	priv->clients[offset].requested = 0;
-+}
-+
-+static void gpio_shared_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+				 int value)
-+{
-+	struct gpio_shared_priv *priv = gpiochip_get_data(chip);
-+	int root_value;
-+
-+	mutex_lock(&priv->mutex);
-+	priv->clients[offset].value = value;
-+
-+	root_value = gpio_shared_aggregate_root_value(priv);
-+	if (priv->root_value != root_value) {
-+		priv->root_set(priv->root_gpio, root_value);
-+
-+		/* Update the root's and client's value for the change */
-+		priv->root_value = root_value;
-+	}
-+	mutex_unlock(&priv->mutex);
-+}
-+
-+static int gpio_shared_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpio_shared_priv *priv = gpiochip_get_data(chip);
-+	int value;
-+
-+	mutex_lock(&priv->mutex);
-+	value = priv->clients[offset].value;
-+	mutex_unlock(&priv->mutex);
-+
-+	return value;
-+}
-+
-+static int gpio_shared_gpio_direction_out(struct gpio_chip *chip,
-+					  unsigned int offset, int value)
-+{
-+	gpio_shared_gpio_set(chip, offset, value);
-+
-+	return 0;
-+}
-+
-+static const struct gpio_chip gpio_shared_template_chip = {
-+	.owner			= THIS_MODULE,
-+	.request		= gpio_shared_gpio_request,
-+	.free			= gpio_shared_gpio_free,
-+	.set			= gpio_shared_gpio_set,
-+	.get			= gpio_shared_gpio_get,
-+	.direction_output	= gpio_shared_gpio_direction_out,
-+	.base			= -1,
-+};
-+
-+static const struct of_device_id gpio_shared_of_match[] = {
-+	{ .compatible = "gpio-shared", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, gpio_shared_of_match);
-+
-+static int gpio_shared_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct gpio_shared_priv *priv;
-+	u32 val;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	priv->gpio_chip = gpio_shared_template_chip;
-+	priv->gpio_chip.label = dev_name(dev);
-+	priv->gpio_chip.parent = dev;
-+	priv->gpio_chip.of_node = dev->of_node;
-+
-+	ret = of_property_read_u32(dev->of_node, "branch-count", &val);
-+	if (ret) {
-+		dev_err(dev, "branch-count is not provided\n");
-+		return ret;
-+	}
-+
-+	priv->gpio_chip.ngpio = val;
-+
-+	priv->clients = devm_kcalloc(dev, priv->gpio_chip.ngpio,
-+				     sizeof(*priv->clients), GFP_KERNEL);
-+	if (!priv->clients)
-+		return -ENOMEM;
-+
-+	priv->root_gpio = devm_gpiod_get(dev, "root", GPIOD_ASIS);
-+	if (IS_ERR(priv->root_gpio)) {
-+		ret = PTR_ERR(priv->root_gpio);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get root GPIO\n");
-+
-+		return ret;
-+	}
-+
-+	/* If the root GPIO is input, change it to output */
-+	if (gpiod_get_direction(priv->root_gpio))
-+		gpiod_direction_output(priv->root_gpio, 0);
-+
-+	priv->gpio_chip.can_sleep = gpiod_cansleep(priv->root_gpio);
-+	if (priv->gpio_chip.can_sleep) {
-+		priv->root_get = gpiod_get_value_cansleep;
-+		priv->root_set = gpiod_set_value_cansleep;
-+	} else {
-+		priv->root_get = gpiod_get_value;
-+		priv->root_set = gpiod_set_value;
-+	}
-+
-+	priv->root_value = priv->root_get(priv->root_gpio);
-+
-+	ret = of_property_read_u32(dev->of_node, "hold-active-state", &val);
-+	if (ret)
-+		val = GPIO_ACTIVE_LOW;
-+
-+	if (val == GPIO_ACTIVE_HIGH)
-+		priv->share_mode = GPIO_SHARED_OR;
-+
-+	dev_set_drvdata(dev, priv);
-+	mutex_init(&priv->mutex);
-+
-+	return devm_gpiochip_add_data(dev, &priv->gpio_chip, priv);
-+}
-+
-+static int gpio_shared_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static struct platform_driver gpio_shared_driver = {
-+	.driver = {
-+		.name	= "gpio-shared",
-+		.of_match_table = gpio_shared_of_match,
-+	},
-+	.probe		= gpio_shared_probe,
-+	.remove		= gpio_shared_remove,
-+};
-+
-+module_platform_driver(gpio_shared_driver);
-+
-+MODULE_ALIAS("platform:gpio-shared");
-+MODULE_DESCRIPTION("Generic shared GPIO driver");
-+MODULE_AUTHOR("Peter Ujfalusi <peter.ujfalusi@ti.com>");
-+MODULE_LICENSE("GPL v2");
+-	connector {
++	hdmi_connector: connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+ 
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.23.0
 
