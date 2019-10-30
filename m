@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF40ECA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D23CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B77F820856
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913F221734
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450585;
-	bh=SnSrBVejywLMeyE9C0F/6AVkXlcUCkdN+mdYWqUZVu8=;
+	s=default; t=1572450590;
+	bh=Zi2pA8zM32y+SK/W1EncEJTDCZ+rY6LFsZ8hoPnHxuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ou7kinB+kmpMDIcBn0U8PGktSEvPulMNHUF2NZ97wVMz/4Ermx4hLsOJtbYiU4n5B
-	 FzJOP+yK07urhwcWAzrabbLHs4ZeZWUzSujNOJ856jJ02LS5wJSlSi6EQPKPYdj/2Q
-	 lgb/7NtqbLBVfB0pN8Eh9+tbJiT1OGvlimX447pg=
+	b=KWBuB64eTwIUdZdcmAD5LcOieOHoJVrSKcjvhbPFwCX9qzY57mQnHPkylWlWhcoJH
+	 QSIwvotNGSMVAEyU36foKi6BB/ITbVZtbmqZjD3kx8PuW0dsYHsJBAZ3MmGBL7YNcM
+	 rxcjjXpHc+lhlBhIZKi6Hn6N/rGw+Y2GkVV14cSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfJ3Ptp (ORCPT
+        id S1727495AbfJ3Ptt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:49:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50230 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727432AbfJ3Pto (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:49:44 -0400
+        id S1727485AbfJ3Pts (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:49:48 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC5D208E3;
-        Wed, 30 Oct 2019 15:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CECE20874;
+        Wed, 30 Oct 2019 15:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450584;
-        bh=SnSrBVejywLMeyE9C0F/6AVkXlcUCkdN+mdYWqUZVu8=;
+        s=default; t=1572450587;
+        bh=Zi2pA8zM32y+SK/W1EncEJTDCZ+rY6LFsZ8hoPnHxuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ImMheSFmhxGJQYn2H8AgpAa2SKSOstLKTbROfHDQeusZE5XO5Dapqkp+bvp4jnlZf
-         TOyhq9xdiOylVAACeE1Uav8HxklFs7U3ON1g0IXg5/TLV9b1J54yo1HOKv63CPrajY
-         yzQDzRk5B+6SxKdE0aAfee4Qs6LJf95/3VTrIaOE=
+        b=pQFUHp8cA1E9LijHuuuVrn3AG0+mtoPNuf6VaAT39g5OCzW7WrzQQABhQ1Hv41tyT
+         0xwUesGgX/XdfIvZ/mNvEYoy3aGdCe7m8B7ywJG7L7ut/IuRWz/tWcPDiVl+xE+zO5
+         OvYiQB5JXBq6BB6eQej8kg7KBEMEIdeXx6nIeB4Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        "Jared D . McNeill" <jmcneill@NetBSD.org>,
-        Emmanuel Vadot <manu@FreeBSD.org>,
-        Maxime Ripard <mripard@kernel.org>,
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 07/81] arm64: dts: allwinner: a64: Drop PMU node
-Date:   Wed, 30 Oct 2019 11:48:13 -0400
-Message-Id: <20191030154928.9432-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 09/81] arm64: dts: Fix gpio to pinmux mapping
+Date:   Wed, 30 Oct 2019 11:48:15 -0400
+Message-Id: <20191030154928.9432-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -62,46 +60,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vasily Khoruzhick <anarsoul@gmail.com>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit ed3e9406bcbc32f84dc4aa4cb4767852e5ab086c ]
+[ Upstream commit 965f6603e3335a953f4f876792074cb36bf65f7f ]
 
-Looks like PMU in A64 is broken, it generates no interrupts at all and
-as result 'perf top' shows no events.
+There are total of 151 non-secure gpio (0-150) and four
+pins of pinmux (91, 92, 93 and 94) are not mapped to any
+gpio pin, hence update same in DT.
 
-Tested on Pine64-LTS.
-
-Fixes: 34a97fcc71c2 ("arm64: dts: allwinner: a64: Add PMU node")
-Cc: Harald Geyer <harald@ccbib.org>
-Cc: Jared D. McNeill <jmcneill@NetBSD.org>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Reviewed-by: Emmanuel Vadot <manu@FreeBSD.org>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Fixes: 8aa428cc1e2e ("arm64: dts: Add pinctrl DT nodes for Stingray SOC")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 ---------
- 1 file changed, 9 deletions(-)
+ arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi | 5 +++--
+ arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi         | 3 +--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 9cc9bdde81ac2..cd92f546c4838 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -142,15 +142,6 @@
- 		clock-output-names = "ext-osc32k";
- 	};
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+index 8a3a770e8f2ce..56789ccf94545 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+@@ -42,13 +42,14 @@
  
--	pmu {
--		compatible = "arm,cortex-a53-pmu";
--		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
--	};
--
- 	psci {
- 		compatible = "arm,psci-0.2";
- 		method = "smc";
+ 		pinmux: pinmux@14029c {
+ 			compatible = "pinctrl-single";
+-			reg = <0x0014029c 0x250>;
++			reg = <0x0014029c 0x26c>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			pinctrl-single,register-width = <32>;
+ 			pinctrl-single,function-mask = <0xf>;
+ 			pinctrl-single,gpio-range = <
+-				&range 0 154 MODE_GPIO
++				&range 0  91 MODE_GPIO
++				&range 95 60 MODE_GPIO
+ 				>;
+ 			range: gpio-range {
+ 				#pinctrl-single,gpio-range-cells = <3>;
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index 71e2e34400d40..0098dfdef96c0 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -464,8 +464,7 @@
+ 					<&pinmux 108 16 27>,
+ 					<&pinmux 135 77 6>,
+ 					<&pinmux 141 67 4>,
+-					<&pinmux 145 149 6>,
+-					<&pinmux 151 91 4>;
++					<&pinmux 145 149 6>;
+ 		};
+ 
+ 		i2c1: i2c@e0000 {
 -- 
 2.20.1
 
