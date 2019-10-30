@@ -1,86 +1,145 @@
-Return-Path: <SRS0=TSDT=YW=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763EFCA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 22:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BE3CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 00:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B222208E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 29 Oct 2019 22:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572387190;
-	bh=lu1nxI8+9N623VkJ26kGaLD7N1mRE47ps/nLy05o3Ec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eT6yjgDQudcu0YNHd/83hY1lLcFQRZqYX+BZ6XpXq3yxxFhuweAxbvA8tduw+X39+
-	 +Lu1QUpmuYtvKZz20C1KzHHBuTrwQvNVH/6sFUSUgml3eKSjin2RMkM4aez6D/8Wbi
-	 aixzl2prIEtbrscWnPe6soG2WWJONoMSYBfPTig4=
+	by mail.kernel.org (Postfix) with ESMTP id 3BF1D20856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 00:18:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6VYehVq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbfJ2WNJ (ORCPT
+        id S1726091AbfJ3ASP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 18:13:09 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42804 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfJ2WNJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 18:13:09 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i185so225707oif.9;
-        Tue, 29 Oct 2019 15:13:08 -0700 (PDT)
+        Tue, 29 Oct 2019 20:18:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37860 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfJ3ASP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 20:18:15 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u9so269038pfn.4;
+        Tue, 29 Oct 2019 17:18:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eL9nLhkFV+3fjZqHJucvMS1Z4avpEDieJP4rKaoqZys=;
+        b=d6VYehVqNaBLztOnm+3wC0Y2Cp3OWS7oUyfmQU3cWBQlsNiwJyE0ktWOkED3EIadm3
+         uheShic0KwVuxyjDgjUuT2kQhhyF5HVGhPA/jqlAJfycoSdfQ8kFbVKWhSCjJSsJoph2
+         K4chyo/pgU81+3tgfMlrYy7ZvrwpHGoVJ+Ms8PNRRql6AYczh86QzTYwS4VhzG6IiZKe
+         kxjc5ME/pSjJD3+PxHtJk5S/chLaPUZV1MFHhiSTheuPHK+cV/JDhaG4BNUrzgPEqv+o
+         VlglM3QqZPomBtVA2mhSoUEdiECMpGQ3hrVRfB7Dk1IWHkZ9xfEnCIr7/jGWAxjXN90p
+         GFoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oKV+VkD2DdLQv5MCcveFFga4dSybCX7/fU89+oYDxR8=;
-        b=IGcOudBvHHrP5/HSXt8iSZon27UasckUYtXYfv7jg3uckgwNFpZDDbKMOVoGCdz1Jx
-         9/eD+aggHPTRRi8CBYdG0XbipjEeeby94LaR+RgXjDL88Lo15G6XQKFxoudHLjzRgtWV
-         y/9uvgY2glH5anLayEaFnZwKxHuXGxGAGpimmyTonZyGBU3lUPAfPcR+2AlpA8J/FdJq
-         8QNfkw8MIy6itE6ImiTnaGn62UrwB/1n8DnJ+6SzkWP9Nk2O6qKxcPKoMyi7oTErFWvn
-         vn0zUw10baT1vZiq91rLlcVh+8LxJVgq1Bi5sr+gDnhAga1yIyFFgTFzJjwdT5YPYaGd
-         EV+A==
-X-Gm-Message-State: APjAAAVJSsAV6jzTcpyXZXJOXOpoPu7dvqlbdm2z9xyuGll32cgUdFIJ
-        I1L2AvfOmzjvHS7oXyqIrQ==
-X-Google-Smtp-Source: APXvYqxsN+GBu3MaKoONq+C2yXPVIcU2r2yLhUUeyvn7t7rGsRioCNtBVsty+HQhQ1Qf7BrTURpZhA==
-X-Received: by 2002:a05:6808:8e:: with SMTP id s14mr6236745oic.57.1572387187587;
-        Tue, 29 Oct 2019 15:13:07 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o23sm91770otp.79.2019.10.29.15.13.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2019 15:13:06 -0700 (PDT)
-Date:   Tue, 29 Oct 2019 17:13:06 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, mripard@kernel.org, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: crypto: Add DT bindings
- documentation for sun8i-ss Security System
-Message-ID: <20191029221306.GA26741@bogus>
-References: <20191025185128.24068-1-clabbe.montjoie@gmail.com>
- <20191025185128.24068-3-clabbe.montjoie@gmail.com>
+        bh=eL9nLhkFV+3fjZqHJucvMS1Z4avpEDieJP4rKaoqZys=;
+        b=A0ZFZ4NWt/6/Iw9TUCnnT2D8zZrWWiy4qkslFyulDEX5dvqIhgJNIsCyw9Kq4t1nmn
+         lxoXtExdgV48NQpNSRARS6ec0vaNv+k5JSVtBWMxYHanFoQ8NPVSGiyOasaG78Ot6lfg
+         9FR2QzqugVPHUY5JhkLsPVu/PKIVotrkky4bpRFP/bS5oOvaByrLn+JSjkxSOizT+7PR
+         YAhbdvAf3MR5dOBHYyPwqZ3D3FBKt9igU+VBs0YxHr1QGee1U3MGKLSV6xFVVfRhVgAI
+         XtARmBe4ISoifHicQJwsZaAesuiyRL1E3r9WsucV6DE21muKtlGoBQCnwf1zYcqXOwcC
+         Cymg==
+X-Gm-Message-State: APjAAAWRm7/J7TdWCm+GQ+E2RYWHYrXUUur1E+JayC1Ocdpy5c53A+uS
+        97yP34DIlT9+2pWOVnxqkbE=
+X-Google-Smtp-Source: APXvYqw0eHqTFbOpxspUUagZHSV8qs2zbtP3YZq4SWaoOEZYjhzimcKl2o0Wtc6rf4wFJf7fMv8AMQ==
+X-Received: by 2002:a63:b144:: with SMTP id g4mr12268618pgp.87.1572394694419;
+        Tue, 29 Oct 2019 17:18:14 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id g17sm334431pgn.37.2019.10.29.17.18.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 29 Oct 2019 17:18:14 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 17:17:56 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] ASoC: fsl_asrc: Add support for imx8qm
+Message-ID: <20191030001756.GA19352@Asurada-Nvidia.nvidia.com>
+References: <1572340629-20702-1-git-send-email-shengjiu.wang@nxp.com>
+ <1572340629-20702-2-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191025185128.24068-3-clabbe.montjoie@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1572340629-20702-2-git-send-email-shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 25 Oct 2019 20:51:26 +0200, Corentin Labbe wrote:
-> This patch adds documentation for Device-Tree bindings of the
-> Security System cryptographic offloader driver.
+On Tue, Oct 29, 2019 at 05:17:09PM +0800, Shengjiu Wang wrote:
+> There are two asrc module in imx8qm, each module has different
+> clock configuration, and the DMA type is EDMA.
 > 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> So in this patch, we define the new clocks, refine the clock map,
+> and include struct fsl_asrc_soc_data for different soc usage.
+> 
+> The EDMA channel is fixed with each dma request, one dma request
+> corresponding to one dma channel. So we need to request dma
+> channel with dma request of asrc module.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 > ---
->  .../bindings/crypto/allwinner,sun8i-ss.yaml   | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
-> 
+>  sound/soc/fsl/fsl_asrc.c     | 91 +++++++++++++++++++++++++++++-------
+>  sound/soc/fsl/fsl_asrc.h     | 65 +++++++++++++++++++++++++-
+>  sound/soc/fsl/fsl_asrc_dma.c | 39 ++++++++++++----
+>  3 files changed, 167 insertions(+), 28 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+> index d6146de9acd2..dbb07a486504 100644
+> --- a/sound/soc/fsl/fsl_asrc_dma.c
+> +++ b/sound/soc/fsl/fsl_asrc_dma.c
+> @@ -199,19 +199,40 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+>  
+>  	/* Get DMA request of Back-End */
+>  	tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
+> -	tmp_data = tmp_chan->private;
+> -	pair->dma_data.dma_request = tmp_data->dma_request;
+> -	dma_release_channel(tmp_chan);
+> +	/* tmp_chan may be NULL for it is already allocated by Back-End */
+> +	if (tmp_chan) {
+> +		tmp_data = tmp_chan->private;
+> +		if (tmp_data)
+> +			pair->dma_data.dma_request = tmp_data->dma_request;
+
+If this patch is supposed to add a !tmp_chan case for EDMA, we
+probably shouldn't mute the !tmp_data case because dma_request
+will be NULL, although the code previously didn't have a check
+either. I mean we might need to error-out for !tmp_chan. Or...
+is this intentional?
+
+> +		dma_release_channel(tmp_chan);
+> +	}
+>  
+>  	/* Get DMA request of Front-End */
+>  	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
+> -	tmp_data = tmp_chan->private;
+> -	pair->dma_data.dma_request2 = tmp_data->dma_request;
+> -	pair->dma_data.peripheral_type = tmp_data->peripheral_type;
+> -	pair->dma_data.priority = tmp_data->priority;
+> -	dma_release_channel(tmp_chan);
+> +	if (tmp_chan) {
+> +		tmp_data = tmp_chan->private;
+> +		if (tmp_data) {
+
+Same question here.
+
+> +			pair->dma_data.dma_request2 = tmp_data->dma_request;
+> +			pair->dma_data.peripheral_type =
+> +				 tmp_data->peripheral_type;
+> +			pair->dma_data.priority = tmp_data->priority;
+> +		}
+> +		dma_release_channel(tmp_chan);
+> +	}
