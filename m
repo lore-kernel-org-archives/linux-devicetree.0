@@ -2,132 +2,100 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D25ECA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DE7C47E49
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16966208E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:09:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V5lkrTTS"
+	by mail.kernel.org (Postfix) with ESMTP id D3B602087F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572441187;
+	bh=TYzyLtP+D7kB/qnfgS6x7BUXNu6ybul91VI0CYY7u8M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lnNXTZ7y21rDm3r+lyQ9Kid8JzyBfGORygk8REfbpwiOpMJxJND4XWKj0k0Y7KjKm
+	 0AyZ1Bu9AUyOleIJn26vIh68JmPz5vdXcwZyIlg0aOL32q9FQO5vdozmWjJdRT5QLt
+	 7a5N4lnKMNtKLXiVzOZRVZxkrs4xvrc02BsZ0sV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfJ3NJ4 (ORCPT
+        id S1726184AbfJ3NNH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:09:56 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52684 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfJ3NJ4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:09:56 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UD9hoY093115;
-        Wed, 30 Oct 2019 08:09:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572440983;
-        bh=M5l3IXLPZ7PbLcGaD/x5qSLUDpxoQyE8oFPSKxV0M6M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=V5lkrTTSDHh0l+SiR9NbcKYF4Ssaol8yXGCPibS7s4RTE0cDwNKtEG18APtxtqZGq
-         2uM4ETLP0V3C6c/DuT/EpHRVSbWe59T17HFe9pfSAQnuWKN5ROk9txWhrS4tvS2V6S
-         opxO1af7+PkGymOiMkSUpF9JVwCn8ESbgvAJHfPM=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UD9hQN087336
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 08:09:43 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 08:09:30 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 08:09:43 -0500
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UD9eLx111494;
-        Wed, 30 Oct 2019 08:09:40 -0500
-Subject: Re: [PATCH v3 02/14] soc: ti: k3: add navss ringacc driver
-To:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-3-peter.ujfalusi@ti.com>
- <b5f47303-b6d2-190b-d38c-d3557a93b111@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <5e65db22-1436-5f2d-6355-9ba3aa5a9d88@ti.com>
-Date:   Wed, 30 Oct 2019 15:10:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 09:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbfJ3NNH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:13:07 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37FE3208E3;
+        Wed, 30 Oct 2019 13:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572441186;
+        bh=TYzyLtP+D7kB/qnfgS6x7BUXNu6ybul91VI0CYY7u8M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bSpRV8bJ94Yt1H4/pwx0XzesfPodlXVb29S+DU1VXYKifjAa+HKPLuvcQ6CI2uAka
+         GlRm3JpSuqUn6FAxTRna1ZsYcSY9ZzjUWlh0sDaSxPDF1+L2j1Ld2/lto6jMU/HmkW
+         JsJv7rS/aqpAvRuMD0rq8Hu/SIcQonDL9etPfobk=
+Received: by mail-qt1-f174.google.com with SMTP id g50so3132401qtb.4;
+        Wed, 30 Oct 2019 06:13:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAX0wpuUaQq5+JXhDIZFeCKGgrE9td+aEv4ooi1r9EET2cwxyWkd
+        ixRnJcItNRZukLJ9W8UkflzSYSF2Le1KWjIaHg==
+X-Google-Smtp-Source: APXvYqzpbAR616454Q99vvOIazcNBXYazAW21qXlBdc1UMHRA5TCBXDrgT6hbzNXT2P9BQZAhzCr31sSccUE5YWDInk=
+X-Received: by 2002:ac8:65d5:: with SMTP id t21mr4861712qto.300.1572441185291;
+ Wed, 30 Oct 2019 06:13:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b5f47303-b6d2-190b-d38c-d3557a93b111@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 30 Oct 2019 08:12:53 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+Message-ID: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+> Hi,
+>
+> The shared GPIO line for external components tends to be a common issue and
+> there is no 'clean' way of handling it.
+>
+> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
+> a driver tries to request a GPIO which is already in use.
+> However the driver must know that the component is going to be used in such a
+> way, which can be said to any external components with GPIO line, so in theory
+> all drivers must set this flag when requesting the GPIO...
+>
+> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
+> GPIO line. For example any device using the same GPIO as reset/enable line can
+> reset/enable other devices, which is not something the other device might like
+> or can handle.
+> For example a device needs to be configured after it is enabled, but some other
+> driver would reset it while handling the same GPIO -> the device is not
+> operational anymmore as it lost it's configuration.
+>
+> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+> the role of making sure that the GPIO line only changes state when it will not
+> disturb any of the clients sharing the same GPIO line.
 
+Why can't we just add a shared flag like we have for interrupts?
+Effectively, we have that for resets too, it's just hardcoded in the
+the drivers.
 
-On 29/10/2019 10:52, Lokesh Vutla wrote:
-> Hi Grygorii,
-> 
-> [...snip..]
-> 
->> +
->> +static int k3_ringacc_ring_access_io(struct k3_ring *ring, void *elem,
->> +				     enum k3_ringacc_access_mode access_mode)
->> +{
->> +	void __iomem *ptr;
->> +
->> +	switch (access_mode) {
->> +	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
->> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
->> +		ptr = (void __iomem *)&ring->fifos->head_data;
->> +		break;
->> +	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
->> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
->> +		ptr = (void __iomem *)&ring->fifos->tail_data;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	ptr += k3_ringacc_ring_get_fifo_pos(ring);
->> +
->> +	switch (access_mode) {
->> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
->> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
->> +		dev_dbg(ring->parent->dev,
->> +			"memcpy_fromio(x): --> ptr(%p), mode:%d\n", ptr,
->> +			access_mode);
->> +		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
-> 
-> Does this work for any elem_size < 64 or any element size not aligned with 64?
-
-Max value of elem_size is 6 as per TRM.
-
-> 
-> IIUC, in message mode, ring element should be inserted in a single burst write
-> and there is no doorbell facility. If the above conditions are not met, we are
-> supposed to use proxy.
-> 
-> In this driver, I don't see any restrictions on the ring element size for
-> message mode and directly written to io. Am I missing something?
-> 
-
-You are right and corresponding check can be added at k3_ringacc_ring_cfg() for the case
-K3_RINGACC_RING_MODE_MESSAGE and no proxy
-
-[..]
-
--- 
-Best regards,
-grygorii
+Rob
