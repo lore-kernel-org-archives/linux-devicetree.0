@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA799CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2825CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD65620874
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C9C2087E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450783;
-	bh=ZtU+Fu4bBsLK2P2Vw8HoSiIAGUI7g1RNPpnXnmF3TkM=;
+	s=default; t=1572450851;
+	bh=E3vOxg8kySeuRFePBSSnqG+X2RodkIAx0DqkS8qfbuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1ni+u0tzFz2rtEpvp6sCXSldO7qbJ7HE8CNLB1zNCz4Ggh5LZTgOGHVsZsK6aSXW
-	 amCj9ymBYBIgu9vyfgNM9tf/XBvOgs2eeFwAXUsfzeFerMvBmsyuh52UUw9l7DpL+q
-	 Nr2HfgyIuz2qgBEaS3ONTRGysk6OQpjUgMnOLJ8E=
+	b=KsQbYoxYZzMNXUUxTFZgrORxy5NJ1tfyqRy4hgzysMIRdTZdXqFlYzeJw/d31WNaU
+	 eCAe1SE6fXVTmgT1z4EuDVJVf4Wr9HjVFE83dUbXYQXHjHS0TnpDup/auTk+ErXOrD
+	 aZsgNnqHgqYtW+dvlclYH7uEtRpH78NZKhAAarnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfJ3PxC (ORCPT
+        id S1727709AbfJ3Px6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:53:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54192 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbfJ3PxB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:53:01 -0400
+        id S1728255AbfJ3Px5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:53:57 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CA1120656;
-        Wed, 30 Oct 2019 15:52:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B472208C0;
+        Wed, 30 Oct 2019 15:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450780;
-        bh=ZtU+Fu4bBsLK2P2Vw8HoSiIAGUI7g1RNPpnXnmF3TkM=;
+        s=default; t=1572450837;
+        bh=E3vOxg8kySeuRFePBSSnqG+X2RodkIAx0DqkS8qfbuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fPwVj36/Mg19A1xzk7dUVt5UkVUNrALOrb3QtUSJOMi9HC8D8Pt14PPWiAZ2pbP2G
-         wiXcaZH3EUzA54zUp7xhM1Em3zYycxafrnyOXAxCKhL2+FcBfuNXJ+Oh8HzA2zW8A8
-         eS/y/fJ8HSJurnjImR1YJ6CqNoChW0RBeiD6Bk84=
+        b=mZiQP7R5gt4XxMdspHK+JSyzSn5gjSZYkkzATZboeLo/ODwmV3joCUBULKca0hZ6D
+         W1G9kMSKuHEkTcka2wKBStQdmdHQDHzj4tcl7HSi4WO4i7LnkxbDjpGsS6+OCY3W8h
+         UXmyjgrbggBASrus/FFCvaafDZqsb7tFGBdV3w18=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+Cc:     Stefan Wahren <wahrenst@gmx.net>,
+        Fredrik Yhlen <fredrik.yhlen@endian.se>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 48/81] arm64: dts: imx8mm: Use correct clock for usdhc's ipg clk
-Date:   Wed, 30 Oct 2019 11:48:54 -0400
-Message-Id: <20191030154928.9432-48-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 62/81] ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
+Date:   Wed, 30 Oct 2019 11:49:08 -0400
+Message-Id: <20191030154928.9432-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -58,52 +62,52 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Stefan Wahren <wahrenst@gmx.net>
 
-[ Upstream commit a6a40d5688f2264afd40574ee1c92e5f824b34ba ]
+[ Upstream commit 626c45d223e22090511acbfb481e0ece1de1356d ]
 
-On i.MX8MM, usdhc's ipg clock is from IMX8MM_CLK_IPG_ROOT,
-assign it explicitly instead of using IMX8MM_CLK_DUMMY.
+bcm2835-rpi.dtsi defines the behavior of the ACT LED, which is available
+on all Raspberry Pi boards. But there is no driver for this particual
+GPIO on CM3 in mainline yet, so this node was left incomplete without
+the actual GPIO definition. Since commit 025bf37725f1 ("gpio: Fix return
+value mismatch of function gpiod_get_from_of_node()") this causing probe
+issues of the leds-gpio driver for users of the CM3 dtsi file.
 
-Fixes: a05ea40eb384 ("arm64: dts: imx: Add i.mx8mm dtsi support")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+  leds-gpio: probe of leds failed with error -2
+
+Until we have the necessary GPIO driver hide the ACT node for CM3
+to avoid this.
+
+Reported-by: Fredrik Yhlen <fredrik.yhlen@endian.se>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and IO board")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 232a7412755a9..0d0a6543e5db2 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -650,7 +650,7 @@
- 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
- 				reg = <0x30b40000 0x10000>;
- 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MM_CLK_DUMMY>,
-+				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
- 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MM_CLK_USDHC1_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
-@@ -666,7 +666,7 @@
- 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
- 				reg = <0x30b50000 0x10000>;
- 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MM_CLK_DUMMY>,
-+				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
- 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MM_CLK_USDHC2_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
-@@ -680,7 +680,7 @@
- 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
- 				reg = <0x30b60000 0x10000>;
- 				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MM_CLK_DUMMY>,
-+				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
- 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MM_CLK_USDHC3_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi b/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
+index 81399b2c5af9e..d4f0e455612d4 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
++++ b/arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
+@@ -8,6 +8,14 @@
+ 		reg = <0 0x40000000>;
+ 	};
+ 
++	leds {
++		/*
++		 * Since there is no upstream GPIO driver yet,
++		 * remove the incomplete node.
++		 */
++		/delete-node/ act;
++	};
++
+ 	reg_3v3: fixed-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "3V3";
 -- 
 2.20.1
 
