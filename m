@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B8BCA9EC6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA799CA9EC5
 	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3539820874
+	by mail.kernel.org (Postfix) with ESMTP id AD65620874
 	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1572450783;
-	bh=3Yhs3WqnnkrvAAFYoJ4Y+AVbVYIMGkIaxwp46Lt48+Y=;
+	bh=ZtU+Fu4bBsLK2P2Vw8HoSiIAGUI7g1RNPpnXnmF3TkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i2E/j8Cou9I8Y3+4IkSMgpuNbXEYRuP4zk/PKOgPV5egUWr92FRktNMNpD7yx1vNC
-	 IlAgWA0nKM5rOzs9S+Xf5pHVhEFZC1mQBdtxyzp5uSeKxa/3zqiUGqRknHFed3omQ4
-	 irTtC0R+PWulNYMtzzD7k42+6/1+dS1BTcnL+Cfg=
+	b=v1ni+u0tzFz2rtEpvp6sCXSldO7qbJ7HE8CNLB1zNCz4Ggh5LZTgOGHVsZsK6aSXW
+	 amCj9ymBYBIgu9vyfgNM9tf/XBvOgs2eeFwAXUsfzeFerMvBmsyuh52UUw9l7DpL+q
+	 Nr2HfgyIuz2qgBEaS3ONTRGysk6OQpjUgMnOLJ8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfJ3Pwk (ORCPT
+        id S1726487AbfJ3PxC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfJ3Pwk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:52:40 -0400
+        id S1727377AbfJ3PxB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:53:01 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0AA020856;
-        Wed, 30 Oct 2019 15:52:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CA1120656;
+        Wed, 30 Oct 2019 15:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450759;
-        bh=3Yhs3WqnnkrvAAFYoJ4Y+AVbVYIMGkIaxwp46Lt48+Y=;
+        s=default; t=1572450780;
+        bh=ZtU+Fu4bBsLK2P2Vw8HoSiIAGUI7g1RNPpnXnmF3TkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YrYaqn6FJ2rQ5uOfW31w2RhkvvZgvBf0pk/eAMAPwBn6IsK/hZtGL6tD8zXsjxBPM
-         ws3tdK+nBBjzk/UpvQJeWC01TTqoEv6WgjxR9a+JC18jKRrQR8V9uMIhDz/3Ml5AGd
-         bfFrkbtJg3HsWPyGBHg8xyVopRZi7ajlTmAyOs7A=
+        b=fPwVj36/Mg19A1xzk7dUVt5UkVUNrALOrb3QtUSJOMi9HC8D8Pt14PPWiAZ2pbP2G
+         wiXcaZH3EUzA54zUp7xhM1Em3zYycxafrnyOXAxCKhL2+FcBfuNXJ+Oh8HzA2zW8A8
+         eS/y/fJ8HSJurnjImR1YJ6CqNoChW0RBeiD6Bk84=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ran Wang <ran.wang_1@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 43/81] arm64: dts: lx2160a: Correct CPU core idle state name
-Date:   Wed, 30 Oct 2019 11:48:49 -0400
-Message-Id: <20191030154928.9432-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 48/81] arm64: dts: imx8mm: Use correct clock for usdhc's ipg clk
+Date:   Wed, 30 Oct 2019 11:48:54 -0400
+Message-Id: <20191030154928.9432-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -59,181 +58,52 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ran Wang <ran.wang_1@nxp.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 07159f67c77134dfdfdbdf3d8f657f5890de5b7f ]
+[ Upstream commit a6a40d5688f2264afd40574ee1c92e5f824b34ba ]
 
-lx2160a support PW15 but not PW20, correct name to avoid confusing.
+On i.MX8MM, usdhc's ipg clock is from IMX8MM_CLK_IPG_ROOT,
+assign it explicitly instead of using IMX8MM_CLK_DUMMY.
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Fixes: 00c5ce8ac023 ("arm64: dts: lx2160a: add cpu idle support")
-Acked-by: Li Yang <leoyang.li@nxp.com>
+Fixes: a05ea40eb384 ("arm64: dts: imx: Add i.mx8mm dtsi support")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 36 +++++++++----------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index e6fdba39453c3..228ab83037d0e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -33,7 +33,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster0_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@1 {
-@@ -49,7 +49,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster0_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@100 {
-@@ -65,7 +65,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster1_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@101 {
-@@ -81,7 +81,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster1_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@200 {
-@@ -97,7 +97,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster2_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@201 {
-@@ -113,7 +113,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster2_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@300 {
-@@ -129,7 +129,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster3_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@301 {
-@@ -145,7 +145,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster3_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@400 {
-@@ -161,7 +161,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster4_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@401 {
-@@ -177,7 +177,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster4_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@500 {
-@@ -193,7 +193,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster5_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@501 {
-@@ -209,7 +209,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster5_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@600 {
-@@ -225,7 +225,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster6_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@601 {
-@@ -241,7 +241,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster6_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@700 {
-@@ -257,7 +257,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster7_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@701 {
-@@ -273,7 +273,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster7_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cluster0_l2: l2-cache0 {
-@@ -340,9 +340,9 @@
- 			cache-level = <2>;
- 		};
- 
--		cpu_pw20: cpu-pw20 {
-+		cpu_pw15: cpu-pw15 {
- 			compatible = "arm,idle-state";
--			idle-state-name = "PW20";
-+			idle-state-name = "PW15";
- 			arm,psci-suspend-param = <0x0>;
- 			entry-latency-us = <2000>;
- 			exit-latency-us = <2000>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 232a7412755a9..0d0a6543e5db2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -650,7 +650,7 @@
+ 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
+ 				reg = <0x30b40000 0x10000>;
+ 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk IMX8MM_CLK_DUMMY>,
++				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
+ 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
+ 					 <&clk IMX8MM_CLK_USDHC1_ROOT>;
+ 				clock-names = "ipg", "ahb", "per";
+@@ -666,7 +666,7 @@
+ 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
+ 				reg = <0x30b50000 0x10000>;
+ 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk IMX8MM_CLK_DUMMY>,
++				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
+ 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
+ 					 <&clk IMX8MM_CLK_USDHC2_ROOT>;
+ 				clock-names = "ipg", "ahb", "per";
+@@ -680,7 +680,7 @@
+ 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
+ 				reg = <0x30b60000 0x10000>;
+ 				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk IMX8MM_CLK_DUMMY>,
++				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
+ 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
+ 					 <&clk IMX8MM_CLK_USDHC3_ROOT>;
+ 				clock-names = "ipg", "ahb", "per";
 -- 
 2.20.1
 
