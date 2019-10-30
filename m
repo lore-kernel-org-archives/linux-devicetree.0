@@ -2,153 +2,86 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF994CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB559CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B957C20578
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572442903;
-	bh=gtW9lBCHYSFLzLt+Y4vmNjY6RQBl1PYhNCIRW411fKc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nGcYAPrPEmoSkc/wUqYqh8SfnTL7zEpDayPkLge1tPbXYe4pTieyTaBY7gXKhIeeB
-	 jHRwwjCOpi0aN+KHKqjM70a93mThbzSF384dMG1CeP91ODykZe1tCBTsY0A+uj78/W
-	 t52afmacxJnW/U3cPcIVuKQ/R+VQ/lLPbkCfF1cQ=
+	by mail.kernel.org (Postfix) with ESMTP id 806FA208E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfJ3Nlk (ORCPT
+        id S1726239AbfJ3Nnn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726455AbfJ3Nlk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:41:40 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB06621835;
-        Wed, 30 Oct 2019 13:41:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572442898;
-        bh=gtW9lBCHYSFLzLt+Y4vmNjY6RQBl1PYhNCIRW411fKc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qCzNF72OeP2yuN1QKyh6EUkCPtUFmV81uFCIM7opTvJ32zih6iZmaGaUNtB/Y/Uud
-         WjtXNnKa1N4TR7U3GasW9G0wvuSWnYkB5Z8ne+R1sX1ofja5IEEaPigV4fQEQ5nHGo
-         p+2o3pZYQRi/+siGUEPmVKcIL7jZMxxSCuGOj2tc=
-Received: by mail-qt1-f176.google.com with SMTP id o3so3230243qtj.8;
-        Wed, 30 Oct 2019 06:41:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAVeEnD19xkYHlGLMz5HrTVhyXAok7PR+TWXqv2eu2kubuQrgCQJ
-        1ezrBgFUN6YzqaQUkZzAI5MwSlHKEUmITOB9gw==
-X-Google-Smtp-Source: APXvYqyJeRtrj4NZxrAmhQbZidXzHwq5bToWSyEa3h/U5Q+Iht3Q5hsqUkNeSn9TlIsy2IbzfHVQdj+AQkyb4d9plRc=
-X-Received: by 2002:ac8:4791:: with SMTP id k17mr80313qtq.136.1572442897886;
- Wed, 30 Oct 2019 06:41:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <1571983984-11771-1-git-send-email-xingyu.chen@amlogic.com>
- <1571983984-11771-3-git-send-email-xingyu.chen@amlogic.com>
- <20191025203030.GA28391@bogus> <1914e315-3cb7-9251-f871-0024e0e4f68b@amlogic.com>
- <CAL_JsqLr-Cgu4yZFGTfO=qpFPLBZ1gb-1+DZ35eQX3dUsadm4g@mail.gmail.com> <2808a8c9-a835-2706-f300-0deb924d3686@amlogic.com>
-In-Reply-To: <2808a8c9-a835-2706-f300-0deb924d3686@amlogic.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 30 Oct 2019 08:41:26 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKwmF1Ygbjiteq42t5xaG75vG-=hZYq=S-8e=s0m2FiWA@mail.gmail.com>
-Message-ID: <CAL_JsqKwmF1Ygbjiteq42t5xaG75vG-=hZYq=S-8e=s0m2FiWA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-To:     Xingyu Chen <xingyu.chen@amlogic.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 30 Oct 2019 09:43:43 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:36129 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726222AbfJ3Nnm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:43:42 -0400
+X-IronPort-AV: E=Sophos;i="5.68,247,1569250800"; 
+   d="scan'208";a="30421349"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 30 Oct 2019 22:43:41 +0900
+Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 17A84400CA10;
+        Wed, 30 Oct 2019 22:43:36 +0900 (JST)
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 0/4] Add LCD panel support to iwg20d
+Date:   Wed, 30 Oct 2019 13:43:30 +0000
+Message-Id: <1572443014-17335-1-git-send-email-fabrizio.castro@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 7:59 AM Xingyu Chen <xingyu.chen@amlogic.com> wrote=
-:
->
-> Hi,Rob
->
-> On 2019/10/30 4:51, Rob Herring wrote:
-> > On Mon, Oct 28, 2019 at 3:35 AM Xingyu Chen <xingyu.chen@amlogic.com> w=
-rote:
-> >>
-> >> Hi, Rob
-> >>
-> >> On 2019/10/26 4:30, Rob Herring wrote:
-> >>> On Fri, Oct 25, 2019 at 02:13:02PM +0800, Xingyu Chen wrote:
-> >>>> The binding targets the Meson-A/C series compatible SoCs, in which t=
-he
-> >>>> watchdog registers are in secure world.
-> >>>>
-> >>>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> >>>> ---
-> >>>>    .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   | 34 +++++++++=
-+++++++++++++
-> >>>>    1 file changed, 34 insertions(+)
-> >>>>    create mode 100644 Documentation/devicetree/bindings/watchdog/aml=
-ogic,meson-sec-wdt.yaml
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/watchdog/amlogic,meso=
-n-sec-wdt.yaml b/Documentation/devicetree/bindings/watchdog/amlogic,meson-s=
-ec-wdt.yaml
-> >>>> new file mode 100644
-> >>>> index 00000000..0bbc807
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-w=
-dt.yaml
-> >>>> @@ -0,0 +1,34 @@
-> >>>> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >>>> +# Copyright (c) 2019 Amlogic, Inc
-> >>>> +%YAML 1.2
-> >>>> +---
-> >>>> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-wdt.yam=
-l#"
-> >>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> >>>> +
-> >>>> +title: Amlogic Meson Secure Watchdog Timer
-> >>>> +
-> >>>> +maintainers:
-> >>>> +  - Xingyu Chen <xingyu.chen@amlogic.com>
-> >>>> +
-> >>>> +description: |+
-> >>>> +  Secure Watchdog Timer used in Meson-A/C series Compatible SoCs
-> >>>> +
-> >>>> +properties:
-> >>>> +  compatible:
-> >>>> +    enum:
-> >>>> +      - amlogic,meson-sec-wdt
-> >>>
-> >>> If there are no other properties, then you don't need this. Just have
-> >>> the secure firmware driver instantiate the watchdog.
-> >> I'am very sorry i don't understand how to initialize the watchdog driv=
-er
-> >> if the compatible property is removed, Could you give me more
-> >> suggestions or examples =EF=BC=9F Thank you very much.
-> >
-> > platform_device_register_simple() from the secure firmware driver.
-> Thanks for your help. The device node of wdt looks useless if I use this
-> function to register device. if so, how should I get the pointer to
-> secure-monitor in wdt driver ? or should I use directly arm_smccc to
-> access the secfw ?
+The iW-RainboW-G20D-Qseven RZ/G1M,G1N Qseven Development Platform
+comes with a 7" capacitive display kit from Emerging Display
+Technologies Corporation (EDT). This series adds all that's
+necessary for supporting it.
 
-You can use of_find_compatible_node(). There should only be one firmware no=
-de.
+Thanks,
+Fab
 
-Rob
+Fabrizio Castro (4):
+  drm/bridge: Repurpose lvds-encoder.c
+  dt-bindings: display: bridge: Repurpose lvds-encoder
+  ARM: dts: iwg20d-q7-common: Add LCD support
+  ARM: shmobile_defconfig: Enable support for panels from EDT
+
+ .../bindings/display/bridge/lvds-codec.txt         | 100 ++++++++++++
+ .../bindings/display/bridge/lvds-transmitter.txt   |  66 --------
+ arch/arm/boot/dts/iwg20d-q7-common.dtsi            |  85 +++++++++++
+ arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi           |   1 -
+ arch/arm/configs/shmobile_defconfig                |   3 +
+ drivers/gpu/drm/bridge/Kconfig                     |   8 +-
+ drivers/gpu/drm/bridge/Makefile                    |   2 +-
+ drivers/gpu/drm/bridge/lvds-codec.c                | 169 +++++++++++++++++++++
+ drivers/gpu/drm/bridge/lvds-encoder.c              | 155 -------------------
+ 9 files changed, 362 insertions(+), 227 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-codec.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+ create mode 100644 drivers/gpu/drm/bridge/lvds-codec.c
+ delete mode 100644 drivers/gpu/drm/bridge/lvds-encoder.c
+
+-- 
+2.7.4
+
