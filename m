@@ -2,135 +2,105 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8DDC47E49
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057AFCA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 642FE208E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE0820663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572441336;
-	bh=ZQ8wXuUMbmLF+7iLilvz7470uxzp4fCYgdwJ46q8UDw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sfUSlOZnyXN5Dli+wBOcXL0g+v65dUo9DCLoPDmN3S26gyaPX6etHD3QH9lSeCMeP
-	 KIW9vHQ/f57I2fGsHB2SHq6vpw7xFCmM34A0dzSRqirwIW3eirDbBgJv6e0jWgwue0
-	 jdk6CZySynjP4/LanA4pfg5kW++ajYw/bP4neovQ=
+	s=default; t=1572441578;
+	bh=ra6moXYzy0hIbE0AHUgGHDt0UskEi5om0CXsfEWjvuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VjL+KVtR7j3OP7ebDcxLWrlQT30N+Y3tXQTQgaebuqyyqWEe/b3kkXYnCQ0VoV3/e
+	 h1C3RBQg6JTFaIq8dIXY5taBa7Yo9cQVEECKiCafc/cXqEOC0V4B2Wk48VkmjGQ1wL
+	 xFF9awms4c/J9Xzb6MpV7fBvwvD+SNFc/sfryr4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfJ3NPf (ORCPT
+        id S1726137AbfJ3NTi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfJ3NPf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:15:35 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70214208C0;
-        Wed, 30 Oct 2019 13:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572441334;
-        bh=ZQ8wXuUMbmLF+7iLilvz7470uxzp4fCYgdwJ46q8UDw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CjVGGXICTSUHgFntIBYl9dCBlQYAW+MolJ+bc1cEfg4Qk0KN9at+PlKX7SqdVumfF
-         k6zoOIVFcoxtZDQlEjFYfxgQ7E/uHptP/kZPhdNoHmjchsJyUkLWmdV0o06LoHfmfi
-         O6nYN/6WmOpqvJL9mz+aHTeYX2sAX0D96pdDA894=
-Received: by mail-qk1-f177.google.com with SMTP id e66so2580432qkf.13;
-        Wed, 30 Oct 2019 06:15:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAVW3tIx6CBaIP0xy506WTxDFB9MjoPwBz5CNLLoDv/wYA2TfMcR
-        lhaCrvVseao7a4Q4NWnEr541gYoQdALSzXz0xA==
-X-Google-Smtp-Source: APXvYqzQvkLpQpCNPJ6YqCXaJT5G04cRDIA6M11aMboAC3ocOQCkAOlN1aYPsgHKxhNaEZf9dV/Q6BaiEbwVRcswYl0=
-X-Received: by 2002:a05:620a:226:: with SMTP id u6mr21719746qkm.393.1572441333508;
- Wed, 30 Oct 2019 06:15:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
- <20191029213757.GA8829@bogus> <20191030085305.uwrt5g3mmbwthwms@M43218.corp.atmel.com>
-In-Reply-To: <20191030085305.uwrt5g3mmbwthwms@M43218.corp.atmel.com>
+        Wed, 30 Oct 2019 09:19:38 -0400
+Received: from mail-oi1-f178.google.com ([209.85.167.178]:38144 "EHLO
+        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3NTi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:19:38 -0400
+Received: by mail-oi1-f178.google.com with SMTP id v186so1913111oie.5
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 06:19:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4uZvf2SLPbgSvND5suWyk4sKJhzdV6KvlHdl+dAYBkk=;
+        b=EIW7htKEy49hi2y/zQrhyRyBa2rWgRY8WMfhGgZfwh9w+uK1xeTaQsHXyH7L3nkAIl
+         b2gvOsQL466kntWK+NcU5S+kk7x7DGEHSI8I3EI0hZzVvzWajer5qDpdbHxBbVaBDpYx
+         CHRJZGnlLNzmC5W4OtQ15DbfiNc075uZ9f2RPceE24CRSdOuK89tJZEgtspFo1zgjxj2
+         zxJ7PPDWJEENp4Dlq+G03Zuj+l0Gay+1tqA5sl9k1F2pZ8fbXbFSIinhqRXKLsY536E+
+         R0R12N6/rXQxfHokgZ0rCSL09R7cXzvYNRI6soMgXRDt39+1UvyKSeYxVwyzR8/X4lkl
+         DSWA==
+X-Gm-Message-State: APjAAAVRI0yP3tgHrCB7le7ng3eX7x9wn7PClddWfqhBFcyxt+GxnU7Z
+        33pWkCCMobiR9UlfbzCPwg==
+X-Google-Smtp-Source: APXvYqzah+931Ecw5URXBxJeZ05no8oezkxJvtKBsBAP5qh1b39S9YctxqXpOZJ1qDVRIGAeGMZ20Q==
+X-Received: by 2002:aca:cdc2:: with SMTP id d185mr8819443oig.35.1572441577484;
+        Wed, 30 Oct 2019 06:19:37 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b12sm1309oie.52.2019.10.30.06.19.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 06:19:36 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 08:19:36 -0500
 From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 30 Oct 2019 08:15:22 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLuPb357uaiyR3N0QOBkcfXOAm57VbWbhaC=90aFmUVkg@mail.gmail.com>
-Message-ID: <CAL_JsqLuPb357uaiyR3N0QOBkcfXOAm57VbWbhaC=90aFmUVkg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     DTML <devicetree@vger.kernel.org>
+Subject: Re: DT schemas for multi-transport bindings
+Message-ID: <20191030131936.GA26946@bogus>
+References: <CAKdAkRQNrDGWFOcoVTfjMS25E4JqSFs98yOQ8_1q7V612az_0A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKdAkRQNrDGWFOcoVTfjMS25E4JqSFs98yOQ8_1q7V612az_0A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 3:53 AM Ludovic Desroches
-<ludovic.desroches@microchip.com> wrote:
->
-> On Tue, Oct 29, 2019 at 04:37:57PM -0500, Rob Herring wrote:
-> > On Thu, Oct 24, 2019 at 08:22:34PM +0300, Codrin Ciubotariu wrote:
-> > > On SAM9X60, slewrate should be enabled on pins with a switching frequency
-> > > below 50Mhz. Since most of our pins do not exceed this value, we enable
-> > > slewrate by default. Pins with a switching value that exceeds 50Mhz will
-> > > have to explicitly disable slewrate.
-> > >
-> > > Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > > Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> > > ---
-> > >  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
-> > >  include/dt-bindings/pinctrl/at91.h | 4 ++--
-> > >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> > > index 117075b5798f..c135149e84e9 100644
-> > > --- a/drivers/pinctrl/pinctrl-at91.c
-> > > +++ b/drivers/pinctrl/pinctrl-at91.c
-> > > @@ -85,8 +85,8 @@ enum drive_strength_bit {
-> > >                                      DRIVE_STRENGTH_SHIFT)
-> > >
-> > >  enum slewrate_bit {
-> > > -   SLEWRATE_BIT_DIS,
-> > >     SLEWRATE_BIT_ENA,
-> > > +   SLEWRATE_BIT_DIS,
-> > >  };
-> > >
-> > >  #define SLEWRATE_BIT_MSK(name)             (SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
-> > > @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
-> > >  {
-> > >     unsigned int tmp;
-> > >
-> > > -   if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
-> > > +   if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
-> > >             return;
-> > >
-> > >     tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
-> > > diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
-> > > index 3831f91fb3ba..e8e117306b1b 100644
-> > > --- a/include/dt-bindings/pinctrl/at91.h
-> > > +++ b/include/dt-bindings/pinctrl/at91.h
-> > > @@ -27,8 +27,8 @@
-> > >  #define AT91_PINCTRL_DRIVE_STRENGTH_MED                    (0x2 << 5)
-> > >  #define AT91_PINCTRL_DRIVE_STRENGTH_HI                     (0x3 << 5)
-> > >
-> > > -#define AT91_PINCTRL_SLEWRATE_DIS  (0x0 << 9)
-> > > -#define AT91_PINCTRL_SLEWRATE_ENA  (0x1 << 9)
-> > > +#define AT91_PINCTRL_SLEWRATE_ENA  (0x0 << 9)
-> > > +#define AT91_PINCTRL_SLEWRATE_DIS  (0x1 << 9)
-> >
-> > This is an ABI. You can't just change the definition.
->
-> There is no DT using these definitions. They have been introduced for our new
-> SoC but its DT is not submitted yet. I assume it's not too late to do this
-> change as nothing will be broken.
+On Fri, Oct 25, 2019 at 01:43:33PM -0700, Dmitry Torokhov wrote:
+> Hi Rob,
+> 
+> I am trying to wrap my mind around converting multi-transport bindings
+> (let's say TSC2004/5 controller which is pretty much the same part, but
+> one is I2C while another is SPI interface). There is a set of common
+> properties, and then we can have transport-specific ones (for example,
+> spi-max-frequency for SPI case). 
 
-Okay, then state this in the commit message.
+I'm pretty sure we already have some examples of this.
+
+You could have 3 files with common props, i2c props, and spi props, but 
+that's probably an overkill. I'd just list all the possible properties 
+in one file and then they can be made conditional as needed.
+
+For bus properties you really only need to list them if required or you 
+have additional constraints.
+
+> Is it possible to annotate that some
+> properties are only needed for certain compatible, similarly to how
+> patternProperties work (but instead of matching node name we'd match on
+> compatible)?
+
+Yes, with if/then schema. There's numerous examples of this. It's a 
+little more verbose than I'd like, but that's because generally each 
+property schema is independent.
+
+
+> Also, from syntax POV, how do I reference file ooutside of current
+> directory? I.e. how do I reference .../spi/spi-controller.yaml from
+> .../input/touchscreen/tsc2005.yaml?
+
+You don't. TSC2005 is not a SPI controller/master. Every SPI controller 
+should reference spi-controller.yaml and that defines the bus structure 
+and allowed SPI bus properties in child nodes.
+
+If you did though, it would be '../spi/spi-controller.yaml'
 
 Rob
