@@ -2,162 +2,170 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCDBCA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCC8CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23F52087E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D009208C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:27:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bei8itfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfJ3PSh (ORCPT
+        id S1727192AbfJ3P17 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:18:37 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3811 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbfJ3PSh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:18:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 08:18:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
-   d="scan'208";a="374918242"
-Received: from kmbarley-mobl.amr.corp.intel.com (HELO [10.252.135.193]) ([10.252.135.193])
-  by orsmga005.jf.intel.com with ESMTP; 30 Oct 2019 08:18:35 -0700
-Subject: Re: [alsa-devel] [PATCH v3 2/2] soundwire: qcom: add support for
- SoundWire controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
-        lgirdwood@gmail.com, broonie@kernel.org
-References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
- <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
- <20191021044405.GB2654@vkoul-mobl>
- <17cb6d3f-2317-9667-8642-566a8a88bd4c@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <e9b63796-4af2-452c-53de-aab2e7c85866@linux.intel.com>
-Date:   Wed, 30 Oct 2019 10:18:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 30 Oct 2019 11:27:59 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42184 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfJ3P17 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 11:27:59 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c16so1134004plz.9;
+        Wed, 30 Oct 2019 08:27:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=t/9ltqPrGMOrlhxr07284zt7KpdDNbgtyM/pqI5YH2A=;
+        b=Bei8itfYqKCzUuf0RZVeWaCqrSfSLOsLT9kVTZaEWWxrWbfyUPmuw0TdyTDkWT3aty
+         6KOPt+fxGJ6i488NHVPjrud0ftzs5ULt0SoHQud1nPEtlbDqlTrte/X2zb+mOgylLMxF
+         2qUfAO3PqYzWlOyYsHYxo1kbgl8N9ur3cS2JqX6/YKXX6wh//4JMe54zIc2yda7C0WWv
+         kam4/tylQhd3H82PoiZbxN/3MJ5O2HiNo60Wr3hHLmt5giPKoOiw1dE6c0hxgNIZVPT4
+         cA4vkaDFeFh6G+R4o0hDrQwEDOg2JrWDLHv+9aBvw+g5WwTW/TFAqTccADSVgCT29Jh6
+         fuDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=t/9ltqPrGMOrlhxr07284zt7KpdDNbgtyM/pqI5YH2A=;
+        b=LjI5uCpAu0iihG+5SNhkLAIR6t2aW0LvO7qQZzsR8fGlYZ77gbfvWjP6osFFBrsFQP
+         ZhA6f88bTxEV5Wvg6CVhrM9mKmB01Xhz+1OJV/bVFgMTKlom56A34vPsePGZkx3BSEj7
+         eKrGiOXKY+/8+aVryXVmJZURy6Ic/J3BJpvdBObgvXOTUyIwVWO+0PzheNUjHFaxaI9W
+         3zG1RbmZxP/tulX6BPzGJdcNyPFuLiST5ulc4GY8LYWRevUWU2l9xbHG8myvbodEzJ6B
+         ahZipdZGbAZ03I+HvzdowlRSdOeitjunysgNKb9h1O3KgAo+e+5C6yoXle6YafDbjNCT
+         cYgA==
+X-Gm-Message-State: APjAAAUKjyCx3b4b6Hhj7gVQUC/ZMJ/D8wsGmJ4U4reWGTlSp0jlbBxA
+        UWgu3AxD9Fb8RLN43R9WX27Lw9IqkNg0NLckXb0=
+X-Google-Smtp-Source: APXvYqyyaimEb/VV2kY7rBsoY4DewEqMwsSyJyKPIDvVeNkyWewLX1wxGHvplkMWWM5ol/jvZoSOIMSnVdTUIMcwvjw=
+X-Received: by 2002:a17:902:44d:: with SMTP id 71mr577750ple.274.1572449278092;
+ Wed, 30 Oct 2019 08:27:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <17cb6d3f-2317-9667-8642-566a8a88bd4c@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1572185379-21537-1-git-send-email-akinobu.mita@gmail.com>
+ <1572185379-21537-2-git-send-email-akinobu.mita@gmail.com> <20191030142417.GA8919@bogus>
+In-Reply-To: <20191030142417.GA8919@bogus>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Thu, 31 Oct 2019 00:27:47 +0900
+Message-ID: <CAC5umyhZ+w9b7M=gWGDynoMerZ7FiP3+U_RXyQ2P_p7cuLVRgA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add leds-meter binding
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn@kryo.se>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 23:24 Rob Herring <robh@kern=
+el.org>:
+>
+> On Sun, Oct 27, 2019 at 11:09:38PM +0900, Akinobu Mita wrote:
+> > Add DT binding for generic LED level meter which consists of multiple L=
+ED
+> > devices by different drivers.
+>
+> Do you have some pointers to actual h/w?
 
+This doesn't require a specific hardware.
+If there are more than two LEDs that can be described by devicetree,
+it can be an LED level meter by bundling them up with this binding.
 
-On 10/30/19 9:56 AM, Srinivas Kandagatla wrote:
-> 
-> 
-> On 21/10/2019 05:44, Vinod Koul wrote:
->> On 11-10-19, 16:44, Srinivas Kandagatla wrote:
->>
->>> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
->>> +{
->>> +    struct qcom_swrm_ctrl *ctrl = dev_id;
->>> +    u32 sts, value;
->>> +    unsigned long flags;
->>> +
->>> +    ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
->>> +
->>> +    if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
->>> +        ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
->>> +        dev_err_ratelimited(ctrl->dev,
->>> +                    "CMD error, fifo status 0x%x\n",
->>> +                     value);
->>> +        ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
->>> +    }
->>> +
->>> +    if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
->>> +        sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
->>> +        schedule_work(&ctrl->slave_work);
->>
->> we are in irq thread, so why not do the work here rather than schedule
->> it?
-> 
-> The reason is that, sdw_handle_slave_status() we will read device id 
-> registers, which are fifo based in this controller and triggers an 
-> interrupt for each read.
-> So all the such reads will timeout waiting for interrupt if we do not do 
-> it in a separate thread.
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Bjorn Andersson <bjorn@kryo.se>
+> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Dan Murphy <dmurphy@ti.com>
+> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > ---
+> >  .../devicetree/bindings/leds/leds-meter.yaml       | 67 ++++++++++++++=
+++++++++
+> >  1 file changed, 67 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.y=
+aml
+> >
+> > diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/D=
+ocumentation/devicetree/bindings/leds/leds-meter.yaml
+> > new file mode 100644
+> > index 0000000..b5fcd98
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
+> > @@ -0,0 +1,67 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Generic LED level meter
+> > +
+> > +maintainers:
+> > +  - Akinobu Mita <akinobu.mita@gmail.com>
+> > +
+> > +description:
+> > +  Generic LED level meter consists of multiple LED devices by differen=
+t drivers.
+>
+> Googling this, the only thing I see is audio level meters though those
+> are all just a voltage level input, so it could be any source I guess.
+>
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^meter-leds(@.*)?"
+> > +
+> > +  compatible:
+> > +    const: meter-leds
+> > +
+> > +  leds:
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +    description: List of phandles to LED node that are members of a le=
+vel meter.
+> > +
+> > +  brightness-weights:
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +    description: |
+> > +      By default, the brightness of the LED level meter is proportiona=
+l to the
+> > +      number of actual LEDs that are turned on.  We can optionally spe=
+cify
+> > +      the contribution ratio for each LED within a level meter by this
+> > +      property.  The example below shows how to setup an exponential
+> > +      relationship between the number of LEDs turned on and the bright=
+ness of
+> > +      meter-leds.
+>
+> This seems oddly named if this is a bar graph. Yes, more LEDs on is
+> brighter, but it's really a piecewise linear graph you want.
 
-Yes, it's similar for Intel. we don't read device ID in the handler or 
-reads would time out. And in the latest patches we also use a work queue 
-for the slave status handling (due to MSI handling issues).
-Even if this timeout problem did not exists, updates to the slave status 
-will typically result in additional read/writes, which are going to be 
-throttled by the command bandwidth (frame rate), so this status update 
-should really not be done in a handler. This has to be done in a thread 
-or work queue.
+OK.  I'll rewrite the description.
 
-> 
-> 
-> 
->>
->>> +static int qcom_swrm_compute_params(struct sdw_bus *bus)
->>> +{
->>> +    struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
->>> +    struct sdw_master_runtime *m_rt;
->>> +    struct sdw_slave_runtime *s_rt;
->>> +    struct sdw_port_runtime *p_rt;
->>> +    struct qcom_swrm_port_config *pcfg;
->>> +    int i = 0;
->>> +
->>> +    list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
->>> +        list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
->>> +            pcfg = &ctrl->pconfig[p_rt->num - 1];
->>> +            p_rt->transport_params.port_num = p_rt->num;
->>> +            p_rt->transport_params.sample_interval = pcfg->si + 1;
->>> +            p_rt->transport_params.offset1 = pcfg->off1;
->>> +            p_rt->transport_params.offset2 = pcfg->off2;
->>> +        }
->>> +
->>> +        list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
->>> +            list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
->>> +                pcfg = &ctrl->pconfig[i];
->>> +                p_rt->transport_params.port_num = p_rt->num;
->>> +                p_rt->transport_params.sample_interval =
->>> +                    pcfg->si + 1;
->>> +                p_rt->transport_params.offset1 = pcfg->off1;
->>> +                p_rt->transport_params.offset2 = pcfg->off2;
->>> +                i++;
->>> +            }
->>
->> Can you explain this one, am not sure I understood this. This fn is
->> supposed to compute and fill up the params, all I can see is filling up!
->>
-> Bandwidth parameters are currently coming from board specific Device 
-> Tree, which are programmed here.
+> Each LED could have variable brightness, so you could also ramp the
+> brightness for an individual LED.
 
-'compute' does not mean 'dynamic on-demand bandwidth allocation', it's 
-perfectly legal to use fixed tables as done here.
-
-> 
->>> +static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
->>> +    .hw_params = qcom_swrm_hw_params,
->>> +    .prepare = qcom_swrm_prepare,
->>> +    .hw_free = qcom_swrm_hw_free,
->>> +    .startup = qcom_swrm_startup,
->>> +    .shutdown = qcom_swrm_shutdown,
->>> +        .set_sdw_stream = qcom_swrm_set_sdw_stream,
->>
->> why does indent look off to me!
->>
-> Yep, Fixed in next version.
-> 
-> --srini
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+For now, each LED is set to 0 or max brightness.  Maybe we should
+set middle brightness value for an LED on the border line.
