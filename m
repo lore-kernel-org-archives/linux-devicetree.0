@@ -2,192 +2,92 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A784ECA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 07:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A37DCA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 07:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6272083E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 07:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E590220874
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 07:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QiswbVqK";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O9DoraHj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PhpZDYkG";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oceSxv5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfJ3HGH (ORCPT
+        id S1726551AbfJ3HHX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 03:06:07 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43322 "EHLO
+        Wed, 30 Oct 2019 03:07:23 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43926 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfJ3HGH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 03:06:07 -0400
+        with ESMTP id S1726070AbfJ3HHX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 03:07:23 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 774D760E74; Wed, 30 Oct 2019 07:06:06 +0000 (UTC)
+        id 25FA660BE6; Wed, 30 Oct 2019 07:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572419166;
-        bh=9KAH28mxpXxwlYVSI9nECpGh12FdMNX6sxmv/u7P3Hs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QiswbVqKvT0Y/Q4GR1ZTH/HYvQWq4pwg1CZ5tpivNihlYFtjwbI8QWkmXwe6wGplI
-         TgcYHPgKHxNBaXnd3ME3dHwVzEK3lN9PN46k3QdgcHrNux4IKrXwi2o4Cth/aSxtGn
-         /r2p8CbONJdrhSY5ySw4XkC8Ghrp2lfKKwqCVpp8=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id A9FDE6081E;
-        Wed, 30 Oct 2019 07:06:05 +0000 (UTC)
+        s=default; t=1572419242;
+        bh=PWRjE6RA4CMfH450ZAFjtGOqrhjym1PHjOFH8oC6DQg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PhpZDYkG+8qO+iK+2i+DV9TE+rW2MN6UbXI6OvhZneMpHxv/SsflZNOHyq+UfknFK
+         FxNo2Pseytgm82ZmBEcABec6pwIFBw0q3+zABlUSBnoeEcCXWV4t5rQk60NICc1yF+
+         Bl57Zw/1tXQq7bWAv8b86q+vwTVYMRRjVvvmymRA=
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 603D360F7E;
+        Wed, 30 Oct 2019 07:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572419165;
-        bh=9KAH28mxpXxwlYVSI9nECpGh12FdMNX6sxmv/u7P3Hs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O9DoraHj2OyqJrzq4sZPjbs9Tatw2lfbQ+t3ooR1lmOkIZYIOucttfSQqexbv4vqV
-         rlZT5ZWc7LmAYvl5FRyhlOGrIhJPXW03BCSceFTM9hZKDhdc1cO+cubsJrlHpjuDGL
-         o4vsoA0tpf4U/CLUdX5AnDrd5q0YQHgODIcFpVWs=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 30 Oct 2019 12:36:05 +0530
-From:   kgunda@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-Subject: Re: [PATCH v3 08/11] arm64: dts: qcom: pm6150: Add PM6150/PM6150L
- PMIC peripherals
-In-Reply-To: <5db86b1b.1c69fb81.be45f.0bb2@mx.google.com>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-9-rnayak@codeaurora.org>
- <5db86b1b.1c69fb81.be45f.0bb2@mx.google.com>
-Message-ID: <87ec773e0d92571c4bbed44eeb65cff5@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        s=default; t=1572419241;
+        bh=PWRjE6RA4CMfH450ZAFjtGOqrhjym1PHjOFH8oC6DQg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oceSxv5T/D6sd2Fwmh2qJvYKqlA1RKBsQx/UH/7iHufWtkNRk9NP0x8MvIMVELwYt
+         TdVZdbvpZle3ovEq/6DD4ALLFoExxohCAEEkZqoLH8MXKJwvoC1z0+/C00ivEpdyHc
+         Zp6Jl09R0UZ8lvtih7b2fH98q0LihczEk1zxUhz4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 603D360F7E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org, mka@chromium.org,
+        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
+        Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
+Subject: [PATCH 2/2] arm64: dts: qcom: sc7180: Add wakeup parent for TLMM
+Date:   Wed, 30 Oct 2019 12:36:18 +0530
+Message-Id: <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org>
+References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-29 22:08, Stephen Boyd wrote:
-> Quoting Rajendra Nayak (2019-10-23 02:02:16)
->> diff --git a/arch/arm64/boot/dts/qcom/pm6150.dtsi 
->> b/arch/arm64/boot/dts/qcom/pm6150.dtsi
->> new file mode 100644
->> index 000000000000..20eb928e5ce3
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/pm6150.dtsi
->> @@ -0,0 +1,85 @@
->> +// SPDX-License-Identifier: BSD-3-Clause
->> +// Copyright (c) 2019, The Linux Foundation. All rights reserved.
->> +
->> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
->> +#include <dt-bindings/input/linux-event-codes.h>
->> +#include <dt-bindings/interrupt-controller/irq.h>
->> +#include <dt-bindings/spmi/spmi.h>
->> +#include <dt-bindings/thermal/thermal.h>
->> +
->> +&spmi_bus {
->> +       pm6150_lsid0: pmic@0 {
->> +               compatible = "qcom,pm6150", "qcom,spmi-pmic";
->> +               reg = <0x0 SPMI_USID>;
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               pm6150_pon: pon@800 {
->> +                       compatible = "qcom,pm8998-pon";
->> +                       reg = <0x800>;
->> +                       mode-bootloader = <0x2>;
->> +                       mode-recovery = <0x1>;
-> 
-> Can this have status = "disabled"? Or is the idea that if the pmic 
-> power
-> button isn't used it should be disabled in the board dts file?
-> 
-Yes. The idea is to go with latter option. Disable it in the board dts 
-file if the
-pmic power button is not used.
->> +
->> +                       pwrkey {
->> +                               compatible = "qcom,pm8941-pwrkey";
->> +                               interrupts = <0x0 0x8 0 
->> IRQ_TYPE_EDGE_BOTH>;
->> +                               debounce = <15625>;
->> +                               bias-pull-up;
->> +                               linux,code = <KEY_POWER>;
->> +                       };
->> +               };
->> +
->> +               pm6150_temp: temp-alarm@2400 {
->> +                       compatible = "qcom,spmi-temp-alarm";
->> +                       reg = <0x2400>;
->> +                       interrupts = <0x0 0x24 0x0 
->> IRQ_TYPE_EDGE_RISING>;
->> +                       io-channels = <&pm6150_adc ADC5_DIE_TEMP>;
->> +                       io-channel-names = "thermal";
->> +                       #thermal-sensor-cells = <0>;
->> +               };
->> +
->> +               pm6150_adc: adc@3100 {
->> +                       compatible = "qcom,spmi-adc5";
->> +                       reg = <0x3100>;
->> +                       interrupts = <0x0 0x31 0x0 
->> IRQ_TYPE_EDGE_RISING>;
->> +                       #address-cells = <1>;
->> +                       #size-cells = <0>;
->> +                       #io-channel-cells = <1>;
->> +
->> +                       adc-chan@ADC5_DIE_TEMP {
->> +                               reg = <ADC5_DIE_TEMP>;
->> +                               label = "die_temp";
->> +                       };
->> +               };
->> +
->> +               pm6150_gpio: gpios@c000 {
->> +                       compatible = "qcom,pm6150-gpio", 
->> "qcom,spmi-gpio";
->> +                       reg = <0xc000 0xa00>;
-> 
-> Drop the size?
-> 
-Will drop it in next series.
->> +                       gpio-controller;
->> +                       #gpio-cells = <2>;
->> +                       interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
->> +                                    <0 0xc1 0 IRQ_TYPE_NONE>,
->> +                                    <0 0xc2 0 IRQ_TYPE_NONE>,
->> +                                    <0 0xc3 0 IRQ_TYPE_NONE>,
->> +                                    <0 0xc4 0 IRQ_TYPE_NONE>,
->> +                                    <0 0xc5 0 IRQ_TYPE_NONE>,
->> +                                    <0 0xc6 0 IRQ_TYPE_NONE>,
->> +                                    <0 0xc7 0 IRQ_TYPE_NONE>,
->> +                                    <0 0xc8 0 IRQ_TYPE_NONE>,
->> +                                    <0 0xc9 0 IRQ_TYPE_NONE>;
-> 
-> Isn't this supposed to go away?
-> 
-Yes. We can remove them if we want to go with the way done for pm8998.
->> +
->> +                       interrupt-names = "pm6150_gpio1", 
->> "pm6150_gpio2",
->> +                                       "pm6150_gpio3", 
->> "pm6150_gpio4",
->> +                                       "pm6150_gpio5", 
->> "pm6150_gpio6",
->> +                                       "pm6150_gpio7", 
->> "pm6150_gpio8",
->> +                                       "pm6150_gpio9", 
->> "pm6150_gpio10";
-> 
-> And this? And have gpio-ranges and use the irqdomain work. Basically,
-> should look like pm8998.
-Ok.. We can go ahead with the pm8998 way as well. We will address it in 
-next series.
-> 
->> +               };
->> +       };
->> +
->> +       pm6150_lsid1: pmic@1 {
->> +               compatible = "qcom,pm6150", "qcom,spmi-pmic";
->> +               reg = <0x1 SPMI_USID>;
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +       };
->> +};
+Specify wakeup parent irqchip for sc7180 TLMM.
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 69d5e2c..9040eee 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -321,6 +321,7 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 			gpio-ranges = <&tlmm 0 0 120>;
++			wakeup-parent = <&pdc>;
+ 
+ 			qup_uart2_default: qup-uart2-default {
+ 				pinmux {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
