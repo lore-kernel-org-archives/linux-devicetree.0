@@ -2,104 +2,91 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E22CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26136CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8012083E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572426176;
-	bh=raH+iI0aQiORbOrO2yDf8CX82VI9Uy4H5AJIucXb10M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=ZNFU/rVTHrLf7rYemiq2BeOLGuIaZkWg20X4jRGvZTKYZ+9yVjfGPjX0TH02c0S9+
-	 G9MjhAAWR2jsfb/FvIQSmDF975DvsqpnGUyT9S/FJX1yu1EY57uwhD6OCe73/SEPns
-	 G54eHw7CNEsS47VPr1HZ1jYhXZ3QBg8jdDLAXJV4=
+	by mail.kernel.org (Postfix) with ESMTP id F03BF2083E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfJ3JC4 (ORCPT
+        id S1726332AbfJ3JIu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:02:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:7949 "EHLO mga17.intel.com"
+        Wed, 30 Oct 2019 05:08:50 -0400
+Received: from mga04.intel.com ([192.55.52.120]:26261 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbfJ3JC4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:02:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726331AbfJ3JIu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:08:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 02:02:55 -0700
-X-ExtLoop1: 1
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 02:08:49 -0700
 X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
-   d="scan'208";a="225264093"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Oct 2019 02:02:51 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 5/9] usb: dwc3: Rework clock initialization to be more flexible
-In-Reply-To: <CALAqxLXcD8V1o01yMrHpeoqU2MfJ=8d3dbzC8T-+aoovDUd8kA@mail.gmail.com>
-References: <20191028215919.83697-1-john.stultz@linaro.org> <20191028215919.83697-6-john.stultz@linaro.org> <87k18nj4mj.fsf@gmail.com> <CALAqxLXcD8V1o01yMrHpeoqU2MfJ=8d3dbzC8T-+aoovDUd8kA@mail.gmail.com>
-Date:   Wed, 30 Oct 2019 11:02:51 +0200
-Message-ID: <87h83qhah0.fsf@gmail.com>
+   d="scan'208";a="401441344"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 02:08:45 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 97D7A208A0; Wed, 30 Oct 2019 11:08:43 +0200 (EET)
+Date:   Wed, 30 Oct 2019 11:08:43 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        mchehab@kernel.org, mark.rutland@arm.com, drinkcat@chromium.org,
+        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [V2, 1/2] media: dt-bindings: media: i2c: Add bindings for ov8856
+Message-ID: <20191030090843.GG10211@paasikivi.fi.intel.com>
+References: <20190910130446.26413-1-dongchun.zhu@mediatek.com>
+ <20190910130446.26413-2-dongchun.zhu@mediatek.com>
+ <20190910173743.GI2680@smile.fi.intel.com>
+ <20190917120205.GO5781@paasikivi.fi.intel.com>
+ <20190917144412.GA23952@bogus>
+ <1572426023.21623.257.camel@mhfsdcap03>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572426023.21623.257.camel@mhfsdcap03>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Dongchun,
 
-Hi,
+On Wed, Oct 30, 2019 at 05:00:23PM +0800, Dongchun Zhu wrote:
+> Hi Rob,
+> 
+> On Tue, 2019-09-17 at 09:44 -0500, Rob Herring wrote:
+> > On Tue, Sep 17, 2019 at 03:02:06PM +0300, Sakari Ailus wrote:
+> > > On Tue, Sep 10, 2019 at 08:37:43PM +0300, Andy Shevchenko wrote:
+> > > > On Tue, Sep 10, 2019 at 09:04:45PM +0800, dongchun.zhu@mediatek.com wrote:
+> > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > 
+> > > > > This patch adds device tree bindings documentation for the ov8856 CMOS
+> > > > > image sensor.
+> > > > 
+> > > > New bindings in YAML, please.
+> > > 
+> > > My understanding is text documents are still fine.
+> > 
+> > Schema are preferred, but still up to the subsystem for now.
+> >  
+> 
+> It seems that there are no bindings in YAML under the path:
+> Documentation/devicetree/bindings/media/i2c.
+> So we would keep the text documents for OV8856.
 
-John Stultz <john.stultz@linaro.org> writes:
-> On Tue, Oct 29, 2019 at 2:14 AM Felipe Balbi <balbi@kernel.org> wrote:
->> John Stultz <john.stultz@linaro.org> writes:
->>
->> > The dwc3 core binding specifies three clocks:
->> >   ref, bus_early, and suspend
->> >
->> > which are all controlled in the driver together.
->> >
->> > However some variants of the hardware my not have all three clks
->>                                         ^^
->>                                         may
->>
->> In fact *all* platforms have all three clocks. It's just that in some
->> cases clock pins are shorted together (or take input from same clock).
->>
-> ...
->> another option would be to pass three clocks with the same phandle. That
->> would even make sure that clock usage counts are correct, no?
->
-> Hey Felipe!
->
-> So I actually had done that initially (and it seemed to work), but Rob
-> suggested this way instead.
-> I'm fine with either, as long as having multiple references to the
-> same clk in the enable/disable paths doesn't cause trouble.
->
-> Thanks so much for the review here!
+That is going to change very soon with the addition of IMX296 bindings:
 
-same as the other patch, if we're supposed to describe the HW, then we
-should describe what's actually happening.
+<URL:https://lore.kernel.org/linux-media/20191029220928.GA17996@bogus/T/#mdd27731659215b1e35049892ef82bb6b62e80b61>
 
 -- 
-balbi
+Sakari Ailus
