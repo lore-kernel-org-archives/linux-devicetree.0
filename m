@@ -4,114 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DEBCA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2EECA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77AEA20856
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D83920856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572444224;
-	bh=A04nh4aYz+/r7x4zYtrJJM+MuinQXq+nJ9ET4ejFiiw=;
+	s=default; t=1572444260;
+	bh=pdUv8yrZcsKnvqdHoqOu01NHvCBwYF40ufRwyBiaA9Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T6oIfV2ODZMgxzuyB98rncbEwRirDjZyANfvpRWytfSN5s9JiC9S8/mH8XzIklxrG
-	 uIbVn72b5+v9yNKprX9kzvDUNkgqVM7O5Q/O0RClroq0kSz5GmOr57CLoDbQ94DHlB
-	 qLQi7yoCnxHVzZX0CYmkm9Yw0tFM27UoZ4zdQTro=
+	b=w8FK21vOrNizUh2DQH2xN8zMKmar6zKN03n5EnNrZpwtLNhYO0bnhSU9NZOGuh63G
+	 43nmCrMPd1GcpKWwq56LEUiMUr4i3CiVJcjCe4VXSKbaFZAQ1b2yVhS0lvz/gXG7Aw
+	 V56d48465K1J8o+Omj/3wMPKxJt5zKhoY8vY1yJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfJ3ODo (ORCPT
+        id S1726506AbfJ3OEQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:03:44 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44420 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfJ3ODn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:03:43 -0400
-Received: by mail-oi1-f194.google.com with SMTP id s71so2021735oih.11;
-        Wed, 30 Oct 2019 07:03:43 -0700 (PDT)
+        Wed, 30 Oct 2019 10:04:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37578 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfJ3OEP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:04:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y194so2055716oie.4;
+        Wed, 30 Oct 2019 07:04:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AN38U5I1SnZ6V3pOgMZBIelT58p7AWURa3xEDYsxfVA=;
-        b=KcrMKnjNB5UmkaQ3T+NrCOoziWg2PtX9p5AFPhD8EnwZl/r8AN36/vjb+EX7NvysDP
-         YaKHNW4wSFnNrj6ZfWTTxiBmnmPkFgzJeHaJICPsjb6CezVonNVTv2C87rcUSZ2pMOmM
-         cPrtEuMxNm8SOnBmM6+F6ENhXNJvgyZLSVOoA66TjBjhNcnP6Vml1otelkYDit7r/sXf
-         vn1I4fMLkZRL1eMsEbz100ehPMov/H9BIg4bZUHoXTc9ZmuqsExxv/RPtpkEYeoQljqJ
-         uh5bv7RlgYRKD6i/r+b1uxRitcJEGGzrZ+OQbbtVQiOpdUump9t3QjRAzL3nyNUQGkap
-         fMUQ==
-X-Gm-Message-State: APjAAAXUThnqzUb5tYbErBVpse1hJBQZVN74mn4iwGi1i4Q7YDlhVhaG
-        /kHxwBMRXMgRofSKklDLmA==
-X-Google-Smtp-Source: APXvYqzs4gCzKu5UGALSc99D70kO0H/Pi31X2AVwN/sFMphkC6DpupG1IrIm13xoTHG9lPhj3tKQMQ==
-X-Received: by 2002:a54:4601:: with SMTP id p1mr9082779oip.113.1572444222698;
-        Wed, 30 Oct 2019 07:03:42 -0700 (PDT)
+        bh=LZENjOjFmyezYiGxEO/wBimrkyphD0pCUUhpP3wSbYA=;
+        b=VAoRCHTLClvdtFYVjWZK0wxZjI0m9F5RpkbM9dSZNH0zTlCdXwGOHBEr3o8BKcxrLj
+         pXQgFzWvMx1lbVPZ9VyM8xF3RWKlcOOHTY6wnf98Lkm4vpHAlCE7HZZol3QuzXVGEBRa
+         SDD32imVNcZjj8frQMvIjrUdT795CQ2hiTv7RwAggIc0hXTMoUVWtId09pbiQnZmiZzW
+         dTT1xMEhVwf2xDgEGtdXipIebyMqM/0AviSmM0PiwWH9ejJr3UTwCobc7pwoZFW4og9P
+         373P5mTnBY7o5XIpmswv+qhf/0R0+L0RTQNzTj36HG0wpORetu4RGtqchSbXSzYJzCRN
+         TF4Q==
+X-Gm-Message-State: APjAAAUF2DTRQp/rLV6Kc41flBzomqF9DlddfWcZbsFQZH9nn457mEIZ
+        xfxg8eDFNFRIUODQG91M56Od92DMxw==
+X-Google-Smtp-Source: APXvYqy9QfgVpVNGitqDKbBjh8KZJ0eJt7caUcK4cnWlU27Z+TsCw/YG99rFknF3PL95JPfG2/G3Aw==
+X-Received: by 2002:aca:4c8c:: with SMTP id z134mr8550002oia.15.1572444253766;
+        Wed, 30 Oct 2019 07:04:13 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o22sm55953otk.47.2019.10.30.07.03.41
+        by smtp.gmail.com with ESMTPSA id j129sm20974oib.22.2019.10.30.07.04.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 07:03:41 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 09:03:40 -0500
+        Wed, 30 Oct 2019 07:04:12 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 09:04:11 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Marcel Ziswiler <marcel@ziswiler.com>
-Cc:     devicetree@vger.kernel.org, Aisheng Dong <aisheng.dong@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
         Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         linux-kernel@vger.kernel.org,
         Philippe Schenker <philippe.schenker@toradex.com>,
+        linux-imx@nxp.com, linux-input@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/5] dt-bindings: arm: fsl: add nxp based toradex
-  apalis/colibri binding docu
-Message-ID: <20191030140340.GA3368@bogus>
+Subject: Re: [PATCH v2 3/5] dt-bindings: input: tochscreen: ad7879: generic
+ node  names in example
+Message-ID: <20191030140411.GA4262@bogus>
 References: <20191026090403.3057-1-marcel@ziswiler.com>
- <20191026090403.3057-2-marcel@ziswiler.com>
+ <20191026090403.3057-3-marcel@ziswiler.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191026090403.3057-2-marcel@ziswiler.com>
+In-Reply-To: <20191026090403.3057-3-marcel@ziswiler.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 26 Oct 2019 11:04:00 +0200, Marcel Ziswiler wrote:
+On Sat, 26 Oct 2019 11:04:01 +0200, Marcel Ziswiler wrote:
 > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 > 
-> Document the following NXP SoC based Toradex Apalis and Colibri module
-> and carrier board devicetree bindings already supported:
-> - toradex,apalis_imx6q            # Apalis iMX6 Module
-> - toradex,apalis_imx6q-eval       # Apalis iMX6 Module on Apalisi
-> 				    Evaluation Board
-> - toradex,apalis_imx6q-ixora      # Apalis iMX6 Module on Ixora
-> - toradex,apalis_imx6q-ixora-v1.1 # Apalis iMX6 Module on Ixora V1.1
-> 
-> - toradex,colibri_imx6dl          # Colibri iMX6 Module
-> - toradex,colibri_imx6dl-eval-v3  # Colibri iMX6 Module on Colibri
-> 				    Evaluation Board V3
-> 
-> - toradex,colibri-imx6ull-eval            # Colibri iMX6ULL Module on
-> 					    Colibri Evaluation Board
-> - toradex,colibri-imx6ull-wifi-eval       # Colibri iMX6ULL Wi-Fi /
-> 					    Bluetooth Module on Colibri
-> 					    Evaluation Board
-> 
-> - toradex,colibri-imx7s           # Colibri iMX7 Solo Module
-> - toradex,colibri-imx7s-eval-v3   # Colibri iMX7 Solo Module on
-> 				    Colibri Evaluation Board V3
-> 
-> - toradex,colibri-imx7d                   # Colibri iMX7 Dual Module
-> - toradex,colibri-imx7d-emmc              # Colibri iMX7 Dual 1GB (eMMC)
-> 					    Module
-> - toradex,colibri-imx7d-emmc-eval-v3      # Colibri iMX7 Dual 1GB (eMMC)
->                                             Module on Colibri Evaluation
-> 					    Board V3
-> - toradex,colibri-imx7d-eval-v3           # Colibri iMX7 Dual Module on
-> 					    Colibri Evaluation Board V3
-> - toradex,vf500-colibri_vf50              # Colibri VF50 Module
-> - toradex,vf500-colibri_vf50-on-eval      # Colibri VF50 Module on
-> 					    Colibri Evaluation Board
-> - toradex,vf610-colibri_vf61              # Colibri VF61 Module
-> - toradex,vf610-colibri_vf61-on-eval      # Colibri VF61 Module on
-> 					    Colibri Evaluation Board
+> Update example in ad7879 devicetree documentation to use generic touch
+> controller node names.
 > 
 > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 > 
@@ -119,8 +86,8 @@ On Sat, 26 Oct 2019 11:04:00 +0200, Marcel Ziswiler wrote:
 > 
 > Changes in v2: New patch.
 > 
->  Documentation/devicetree/bindings/arm/fsl.yaml | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  .../devicetree/bindings/input/touchscreen/ad7879.txt          | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
