@@ -2,180 +2,175 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FFDCA9EAE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 03:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8E6CA9EAE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 03:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EF120874
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 03:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2567A20856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 03:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OxfsEQxg"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oA7XHMkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfJ3DJc (ORCPT
+        id S1726752AbfJ3DUl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 23:09:32 -0400
-Received: from condef-02.nifty.com ([202.248.20.67]:32708 "EHLO
-        condef-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfJ3DJc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Oct 2019 23:09:32 -0400
-X-Greylist: delayed 307 seconds by postgrey-1.27 at vger.kernel.org; Tue, 29 Oct 2019 23:09:29 EDT
-Received: from conssluserg-01.nifty.com ([10.126.8.80])by condef-02.nifty.com with ESMTP id x9U2xjVd018528
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 11:59:45 +0900
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x9U2xZt1025589;
-        Wed, 30 Oct 2019 11:59:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x9U2xZt1025589
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572404376;
-        bh=zQxDpruBzRyBKppwP5ufPnzpMr/EBdaseHOs9UiGMV8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OxfsEQxgLNHEqymRgTqaLPInL64onTfT/jX7yOp8c2pSL1h5cnBoLl39FYdgY8MXA
-         yyG0PeMARKzREXlhJAgOhpZDJW1c6s8gwrv3UqVxyfxd+/TYM5hkrZTE8JPzpdB6ns
-         +lxc/N+/0YDobhp8hCs8+JwleD5eZGozzBKxjf6zQ3l/0Ye9p5xxNzkLE8MfEH6PG0
-         FzCOj4bMSD+fOAITzfAWBTWI6j6w8VfZKvr385MRgVTebnVdodd9vaOgxrn8zjUNy0
-         e56WlrWlD/lPSpQj5ErYNrm1XvipAtzaeOUlmtoCcawHMNEyxpCxqoYc0x4VTOJOyd
-         jZTKyEfq5GtUw==
-X-Nifty-SrcIP: [209.85.221.182]
-Received: by mail-vk1-f182.google.com with SMTP id d126so147609vkb.1;
-        Tue, 29 Oct 2019 19:59:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAXAkBYDm71cA3Fy3pnXsuX0sL1Vo0YvMSIF6P9b/PMi/Z7SRRzw
-        Fntm7W95YnpDcy0D6SQ943gu7hDukxJzkLsP/sY=
-X-Google-Smtp-Source: APXvYqyx4HWyZkPpQ4DmBVc4L5u+YULsarpybloXOc9/eX/T4/sYK5FeUYOgK1GaKScUCfxLZMXJrhqF6cCjNcJ1yPA=
-X-Received: by 2002:a1f:4b05:: with SMTP id y5mr13116072vka.12.1572404375169;
- Tue, 29 Oct 2019 19:59:35 -0700 (PDT)
+        Tue, 29 Oct 2019 23:20:41 -0400
+Received: from mail-eopbgr150073.outbound.protection.outlook.com ([40.107.15.73]:34126
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726714AbfJ3DUl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 29 Oct 2019 23:20:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PJsjcYu0Jg9nFaDd2BEbu4hvCNRpynhiCUb7if0B4GqdJmw6V2nrImZCJikC2vxrLVYylnAN0UJMZHaZ5gLS3fb4z5OBWFwSwu6U9CxpeES9jYcv/LXLcrTThryPbjvl1BmKZiX5pSvrPYDFDOvAiHZ+e4OqPp1mgvwIUQvpc//DRLoBzg2BR8wTLukAuFTYHXo3rH3T6CrBR80KxGm5wojofrUiXc6FDNMP5AtbR9qbvgVFSggbA2ZZIEsDF7/1nUlURGcOPmlUfZtWdyNM1AMrV5O3GG5vLhNY036t3mlxUEcb/H6tZXZMm0Z9Q6p8d4fTFq6qV8T9q8vfJDsXBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zLNSISLapK4Z2YP3UBIQrnOMNr128jRtjyOSl7lUNaI=;
+ b=DkUBOITUFz6VxD2Rthr/nKOAB1baOxGZ0ze0QhY5tKdhIFTtuElPOauE62cvhqkp4zK1zErdb1W0IXfwJmMNzsyPnEAXoZllsIjN32yitsdmMOQkZ3ooI0ko6rzv5MayriNeIyN9MtJ4gef4vU5cR/ef8JdKUB8ezLSZ1ZJn7cqb9QNQEIUf+1TRXUmCTF7tXzk2MMZI7/dmSw8navRyn3jdtbmGXtFhkNdlhROPdKHGwc1oFZ4JFEYK6Ie1GQa0E5X0hmZm9KLo27uzMRo4c7d84PIDnA3CrqPRKCc7tu7MElANfCVrWJuXGje4QF9ilkT8WTfyM4sHxUhN6weQ+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zLNSISLapK4Z2YP3UBIQrnOMNr128jRtjyOSl7lUNaI=;
+ b=oA7XHMkn4VvW+ocI0cv0bRbITYmucILWsHIsE+FcH61zhJnoq4epfe9jj6+eCUmP8xFdDDKERiQaik1YTbE5Pl2B4mo+czo3dy3kHNei1pCm6hXZMZw/lMkruTjjhH5jGWJO4OB5Bqbt+WBZkPpgfofEtjCMdfNo6trFRivoRdc=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.232.225) by
+ VE1PR04MB6493.eurprd04.prod.outlook.com (20.179.233.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Wed, 30 Oct 2019 03:20:36 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::e052:9278:76a3:27c]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::e052:9278:76a3:27c%6]) with mapi id 15.20.2387.025; Wed, 30 Oct 2019
+ 03:20:36 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: fsl_asrc: Add support for imx8qm
+Thread-Topic: [PATCH 2/2] ASoC: fsl_asrc: Add support for imx8qm
+Thread-Index: AdWO0NDdBvdDnhxySQ6SCTWiiQjucg==
+Date:   Wed, 30 Oct 2019 03:20:35 +0000
+Message-ID: <VE1PR04MB64795758EBC0C898FBFFB3A5E3600@VE1PR04MB6479.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b6f04f17-b62b-4b2e-ccfa-08d75ce821a8
+x-ms-traffictypediagnostic: VE1PR04MB6493:
+x-microsoft-antispam-prvs: <VE1PR04MB6493EB7A5287BC8F9B0F2A0CE3600@VE1PR04MB6493.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 02065A9E77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(396003)(136003)(366004)(189003)(199004)(4326008)(186003)(14454004)(6246003)(102836004)(6506007)(6916009)(26005)(7696005)(81166006)(7736002)(25786009)(7416002)(305945005)(74316002)(33656002)(8676002)(3846002)(99286004)(2906002)(478600001)(9686003)(55016002)(6116002)(486006)(81156014)(476003)(54906003)(66946007)(66446008)(76116006)(229853002)(1411001)(71190400001)(66556008)(6436002)(5660300002)(64756008)(316002)(66066001)(71200400001)(256004)(66476007)(14444005)(86362001)(8936002)(52536014)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6493;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: K5Nr/IcHptbGJkbZh0SiL9H0DjEfXMpYaQ5G7bn19/F4Qlj66aarfUV9Pjqo65IHfV7cyLBZOBLv2a9tdBP3BF+KKXvckQZaNkPI05/dqJx29A2k2LVyN+N20ZO9xw960Fn60TbbmYHixqa3T3u4x5XYPIdDg512y+B6hMFrS/IKnbBGs5Y0FZL7chpzu4w1G3XysepQu0QX33aaf2U3s+4YWBhHOy+8U7tqx1rizn5N8NhzSLzEN6O+a9glFtE+aPrDkM/a3D9KoycHGZ/X6Amr3XwYrveyt5zTOzVkPBXJZeQPQbPsMUubLDalMySYZmdFXZICMqyc+GVCIOEGOPsJIm0+T6esYZr8GHk8zGssA1JfbVv/DhSEtl7B/nHX0r8Cdgo31RRLNsXbDpuDjVbBjId11O31rmrXNVgUH8UqnRt6MojBX5wqxs1efo4+
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAK7LNASG4GzaU6SR=ThfJpjrqmC53xmcSMAWqppciWbx3jMgdw@mail.gmail.com>
- <20191029150119.19823-1-e5ten.arch@gmail.com>
-In-Reply-To: <20191029150119.19823-1-e5ten.arch@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 30 Oct 2019 11:58:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT0HdWrHaubdjNuVSEdQWvqj6SkXNybs5LvEd2i9Ku1cA@mail.gmail.com>
-Message-ID: <CAK7LNAT0HdWrHaubdjNuVSEdQWvqj6SkXNybs5LvEd2i9Ku1cA@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: support byacc as alternative YACC to bison
-To:     Ethan Sommer <e5ten.arch@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6f04f17-b62b-4b2e-ccfa-08d75ce821a8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 03:20:35.8965
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yZUwQQ7tZOe4eZ8YIDA/7FOdBpwyMF191F0HCRuJc1KCIf4eF9JrVa1nS7NOejTRrXsreo0TOYuj74m/8h0zhg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6493
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 12:02 AM Ethan Sommer <e5ten.arch@gmail.com> wrote:
->
-> Switches to a more portable set of flags for generating the same file
-> names instead of the bison-specific --defines, uses the more portable -V
-> instead of --version, and explicitly defines YYSTYPE in lex.l, which
-> bison implicitly defines if not present but byacc does not.
->
-> Add %locations to dtc-parser.y to explicitly enable location tracking
-> for byacc, and define YYERROR_CALL explicitly to prevent the locations
-> directive from causing it to be defined to a 2-parameter call to
-> yyerror, which dtc-parser.y defines to accept one parameter.
->
-> Requires byacc to be built with --enable-btyacc.
->
-> Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
-> ---
->  scripts/Makefile.host     | 2 +-
->  scripts/dtc/dtc-parser.y  | 4 ++++
->  scripts/genksyms/Makefile | 2 +-
->  scripts/genksyms/lex.l    | 2 ++
->  4 files changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-> index 4c51c95d40f4..64e98e1d4825 100644
-> --- a/scripts/Makefile.host
-> +++ b/scripts/Makefile.host
-> @@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
->  # YACC
->  # ---------------------------------------------------------------------------
->  quiet_cmd_bison = YACC    $(basename $@).[ch]
-> -      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
-> +      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
+Hi
 
+>=20
+> On Tue, Oct 29, 2019 at 05:17:09PM +0800, Shengjiu Wang wrote:
+> > There are two asrc module in imx8qm, each module has different clock
+> > configuration, and the DMA type is EDMA.
+> >
+> > So in this patch, we define the new clocks, refine the clock map, and
+> > include struct fsl_asrc_soc_data for different soc usage.
+> >
+> > The EDMA channel is fixed with each dma request, one dma request
+> > corresponding to one dma channel. So we need to request dma channel
+> > with dma request of asrc module.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  sound/soc/fsl/fsl_asrc.c     | 91 +++++++++++++++++++++++++++++-------
+> >  sound/soc/fsl/fsl_asrc.h     | 65 +++++++++++++++++++++++++-
+> >  sound/soc/fsl/fsl_asrc_dma.c | 39 ++++++++++++----
+> >  3 files changed, 167 insertions(+), 28 deletions(-)
+>=20
+> > diff --git a/sound/soc/fsl/fsl_asrc_dma.c
+> > b/sound/soc/fsl/fsl_asrc_dma.c index d6146de9acd2..dbb07a486504
+> 100644
+> > --- a/sound/soc/fsl/fsl_asrc_dma.c
+> > +++ b/sound/soc/fsl/fsl_asrc_dma.c
+> > @@ -199,19 +199,40 @@ static int fsl_asrc_dma_hw_params(struct
+> > snd_soc_component *component,
+> >
+> >       /* Get DMA request of Back-End */
+> >       tmp_chan =3D dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
+> > -     tmp_data =3D tmp_chan->private;
+> > -     pair->dma_data.dma_request =3D tmp_data->dma_request;
+> > -     dma_release_channel(tmp_chan);
+> > +     /* tmp_chan may be NULL for it is already allocated by Back-End *=
+/
+> > +     if (tmp_chan) {
+> > +             tmp_data =3D tmp_chan->private;
+> > +             if (tmp_data)
+> > +                     pair->dma_data.dma_request =3D
+> > + tmp_data->dma_request;
+>=20
+> If this patch is supposed to add a !tmp_chan case for EDMA, we probably
+> shouldn't mute the !tmp_data case because dma_request will be NULL,
+> although the code previously didn't have a check either. I mean we might
+> need to error-out for !tmp_chan. Or...
+> is this intentional?
+>=20
 
-Hmm, this is unfortunate since there is no common way to
-specify the header path directly.
+Yes, intentional. May be we can change to=20
 
-I am not sure how much effort we should invent
-to support non-GNU implementation
-since we already rely on various GNU tools.
+        if (!asrc_priv->soc->use_edma) {
+                /* Get DMA request of Back-End */
+                tmp_chan =3D dma_request_slave_channel(dev_be, tx ? "tx" : =
+"rx");
+                tmp_data =3D tmp_chan->private;
+                pair->dma_data.dma_request =3D tmp_data->dma_request;
+                dma_release_channel(tmp_chan);
 
-If we decide to support byacc,
-we must carry the restriction
-that bans GNU-extension.
+                /* Get DMA request of Front-End */
+                tmp_chan =3D fsl_asrc_get_dma_channel(pair, dir);
+                tmp_data =3D tmp_chan->private;
+                pair->dma_data.dma_request2 =3D tmp_data->dma_request;
+                pair->dma_data.peripheral_type =3D tmp_data->peripheral_typ=
+e;
+                pair->dma_data.priority =3D tmp_data->priority;
+                dma_release_channel(tmp_chan);
+        }
 
-
-
-
-
-
->  $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
->         $(call if_changed,bison)
-> diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
-> index 2ed4dc1f07fd..40dcf4f149da 100644
-> --- a/scripts/dtc/dtc-parser.y
-> +++ b/scripts/dtc/dtc-parser.y
-> @@ -2,6 +2,8 @@
->  /*
->   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
->   */
-> +%locations
-> +
->  %{
->  #include <stdio.h>
->  #include <inttypes.h>
-> @@ -17,6 +19,8 @@ extern void yyerror(char const *s);
->                 treesource_error = true; \
->         } while (0)
->
-> +#define YYERROR_CALL(msg) yyerror(msg)
-> +
->  extern struct dt_info *parser_output;
->  extern bool treesource_error;
->  %}
-> diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
-> index 78629f515e78..397c2dc8182b 100644
-> --- a/scripts/genksyms/Makefile
-> +++ b/scripts/genksyms/Makefile
-> @@ -15,7 +15,7 @@ genksyms-objs := genksyms.o parse.tab.o lex.lex.o
->  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
->
->  quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
-> -      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
-> +      cmd_bison_no_warn = $(YACC) -V >/dev/null; \
->                           $(cmd_bison) 2>/dev/null
->
->  $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
-> diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
-> index e265c5d96861..0580c088527f 100644
-> --- a/scripts/genksyms/lex.l
-> +++ b/scripts/genksyms/lex.l
-> @@ -19,6 +19,8 @@
->  #include "genksyms.h"
->  #include "parse.tab.h"
->
-> +extern YYSTYPE yylval;
-> +
->  /* We've got a two-level lexer here.  We let flex do basic tokenization
->     and then we categorize those basic tokens in the second stage.  */
->  #define YY_DECL                static int yylex1(void)
-> --
-> 2.23.0
->
-
-
---
-Best Regards
-Masahiro Yamada
+Best regards
+Wang shengjiu
