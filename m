@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C19ECA9EC6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E18CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7832054F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6F52054F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451350;
-	bh=W68DAPNp1vRgxz+1QFI/fsILWMKLg51K4wrukCLvz2w=;
+	s=default; t=1572451351;
+	bh=j0dq07s5gcJmAjlTqbRFwDv0S35OH9GkUrQKdW+7wE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BEFXdO/x83Sn2DbYuf09mPFLtFt/IufXcaolVm7EypBNxns4MQAU37v326UPX9o0y
-	 K+UeR7iNWyd4DndB48DbeDb3yUVZr4LI0xEbL9p7UItq8J9CbiUSZ92L4paNkAqe9/
-	 hTs+wdPANqMloxeUwtLpOV8zCtn8/VD/UXYAZ/0k=
+	b=zRxgpyx/Sofb7aarhmmj6znda+OJ9Xyj2TLAgSz5G1YmkvFRl2jqTa5hWmy7tU3E8
+	 crE2AjZpj0Z0sPjmqiX67Yq8/ocQ3j5dfCmzIkpsWsazfhWHKfNcBg+1KYOhF7uWJd
+	 JVbe5a+7thJyv0+4MUNmf1UClTrLKNqv04OnYxfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfJ3PvZ (ORCPT
+        id S1727740AbfJ3PvX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52132 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:51:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbfJ3PvY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:24 -0400
+        id S1727725AbfJ3PvW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:22 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16EB021734;
-        Wed, 30 Oct 2019 15:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EABA1208E3;
+        Wed, 30 Oct 2019 15:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450683;
-        bh=W68DAPNp1vRgxz+1QFI/fsILWMKLg51K4wrukCLvz2w=;
+        s=default; t=1572450681;
+        bh=j0dq07s5gcJmAjlTqbRFwDv0S35OH9GkUrQKdW+7wE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0t3OuT8Km8hsginj3mvgaJHF0Kcxr1++301u0MnbZe+pIzkF+JrTdJvmOAHi9kOc
-         +5zb2nhrbeJxT/J5Pz5PMWXqBa9yGjlFJldCy7H6Lw6L8aby30Qauxqtl0S8YOsgV8
-         KH0Ra6y5caGd8vqzjo2EMuRlpNWR5lnvKPCfsBMc=
+        b=MTvuGCLd5CaTAxK3/sPmdL461wXtFo2GqwAwBjK4cqrdgPoQNpB+X+aRJWNGRMGyS
+         DhBXQngevvRpJrM+GuY4sLIKRnuboNWetptSGKi21MZwRq7NOfuRDUlqp2mM9Qujcd
+         bUqCIfq9tVZ8eIU3tsmFEwmERyjUmT1xxRJu8DsE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 24/81] ARM: dts: logicpd-torpedo-som: Remove twl_keypad
-Date:   Wed, 30 Oct 2019 11:48:30 -0400
-Message-Id: <20191030154928.9432-24-sashal@kernel.org>
+Cc:     Hugh Cole-Baker <sigmaris@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 23/81] arm64: dts: rockchip: fix Rockpro64 RK808 interrupt line
+Date:   Wed, 30 Oct 2019 11:48:29 -0400
+Message-Id: <20191030154928.9432-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -58,38 +60,55 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Hugh Cole-Baker <sigmaris@gmail.com>
 
-[ Upstream commit 6b512b0ee091edcb8e46218894e4c917d919d3dc ]
+[ Upstream commit deea9f5fc32040fd6f6132f2260ba410fb5cf98c ]
 
-The TWL4030 used on the Logit PD Torpedo SOM does not have the
-keypad pins routed.  This patch disables the twl_keypad driver
-to remove some splat during boot:
+Fix the pinctrl and interrupt specifier for RK808 to use GPIO3_B2. On the
+Rockpro64 schematic [1] page 16, it shows GPIO3_B2 used for the interrupt
+line PMIC_INT_L from the RK808, and there's a note which translates as:
+"PMU termination GPIO1_C5 changed to this".
 
-twl4030_keypad 48070000.i2c:twl@48:keypad: missing or malformed property linux,keymap: -22
-twl4030_keypad 48070000.i2c:twl@48:keypad: Failed to build keymap
-twl4030_keypad: probe of 48070000.i2c:twl@48:keypad failed with error -22
+Tested by setting an RTC wakealarm and checking /proc/interrupts counters.
+Without this patch, neither the rockchip_gpio_irq counter for the RK808,
+nor the RTC alarm counter increment when the alarm time is reached.
+With this patch, both interrupt counters increment by 1 as expected.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-[tony@atomide.com: removed error time stamps]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
+
+Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
+Signed-off-by: Hugh Cole-Baker <sigmaris@gmail.com>
+Link: https://lore.kernel.org/r/20190921131457.36258-1-sigmaris@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/logicpd-torpedo-som.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-index 3fdd0a72f87f7..506b118e511a6 100644
---- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-+++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
-@@ -192,3 +192,7 @@
- &twl_gpio {
- 	ti,use-leds;
- };
-+
-+&twl_keypad {
-+	status = "disabled";
-+};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+index eb55940620060..5818b85255123 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -240,8 +240,8 @@
+ 	rk808: pmic@1b {
+ 		compatible = "rockchip,rk808";
+ 		reg = <0x1b>;
+-		interrupt-parent = <&gpio1>;
+-		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
+ 		#clock-cells = <1>;
+ 		clock-output-names = "xin32k", "rk808-clkout2";
+ 		pinctrl-names = "default";
+@@ -567,7 +567,7 @@
+ 
+ 	pmic {
+ 		pmic_int_l: pmic-int-l {
+-			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 
+ 		vsel1_gpio: vsel1-gpio {
 -- 
 2.20.1
 
