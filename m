@@ -2,148 +2,199 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9251ACA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EB1CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BEC2087E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572445461;
-	bh=Sj83s2Kl/HDJG4OZ+hSaRqgTEErrF3OgJZkm5LEV90M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FyCenBdnZmiAHoLTchflNLHaQKLqFhI1y2Hus6YymvkbiVPQaDMn4lmKgD01lLt3a
-	 99BsnSW0QAopyKb7kYI+m1vy4I01bgUAWygKr+FhSf0TSbgaYwKCtRZYGyt5ziPmVm
-	 V72Tv5UteJyCqKi//uGb/cwwcaDZ7e5WapkcRxRI=
+	by mail.kernel.org (Postfix) with ESMTP id 8039A20656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:27:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JPfoLkqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfJ3OYV (ORCPT
+        id S1726465AbfJ3O1r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:24:21 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41915 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfJ3OYU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:24:20 -0400
-Received: by mail-oi1-f196.google.com with SMTP id g81so2096720oib.8;
-        Wed, 30 Oct 2019 07:24:20 -0700 (PDT)
+        Wed, 30 Oct 2019 10:27:47 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42477 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfJ3O1q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:27:46 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m4so2894184qke.9
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 07:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=0Vz1KDYCDT2nsHaipdZBgphD7z8UkOtZoGz67YhDtMM=;
+        b=JPfoLkqBMtflePcsG2m0PMHTXAiStkOEa8LPn1smF+pru4l/wbDQztqjA/77KBu5b8
+         +4+TM8gotpTQHMlqQgNgVarr6Ksgg2u76AA+c/CPubiyByGEFkoBr5/J+fDLdtW5Xc98
+         x9EB/fmVJdZnaEdGdCSCY8Mp0JtRoMcMRDAofwL/xaDRcV18nSTVhzE0kDrQiLVPuMl8
+         Kyv4XqSMWKENZC3EVFmg9K+7/953SfZyjKmawXRQBMCmgdT/+2UGixJM2HCgx5PBD2PN
+         JB+8SsoBrgiZ8e3NJe7G5Qv6gti7JjjIby6foHIcDiQtgmEUZKDe4iVyT6S4d4l4naPe
+         QkCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+hSPHUSIwWmvXSSjJKJB0kSKFNi9HZxvhkDhQSbnnn8=;
-        b=PKYwV5eaqJLZVu3U+QaUm1EyU+fvxpYiUkaS66/bw4a7pImU4nWhLE/C/UVy9ZB06e
-         imI6T8PteJRvDowFjmSKYuRKNarBD5Zh9ohwSd0A4bgMjDrlgVe6V7RznKN6Ec7Z8+eL
-         p7ZleBk25E4bS+aJcHAEZFvcBKU6VUkGWb5puHsDhpB+DphvePJT3Iibbjvp4yzb2ZiG
-         bKTEag8lYztCwOWrTkzTYvJO59gOB2fsjoDq5UAdbSTZ+bXdJy+863r4ULxiiN4rOWpv
-         x7ly/pzTrCVUhbnWDbcPYpJetG77KSB8P3wAwlbllba/kRO0hWhbU1F/omhQZMDDIIWm
-         HloQ==
-X-Gm-Message-State: APjAAAVonSl9rxsfHRwUAxEC2xcQMTbumhdwO6XxJrynJP3WQ0aoTGET
-        uVE7rL6OtyPDE7g8Fkqfuw==
-X-Google-Smtp-Source: APXvYqzpHFH7IUJY/qo3GgcQxa/sjrrwWjFNgOWTNWWQu/F50UbWA/UfcMdwCrIKAUKFOsWfdnjICg==
-X-Received: by 2002:aca:e104:: with SMTP id y4mr9349900oig.117.1572445459811;
-        Wed, 30 Oct 2019 07:24:19 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t9sm45396oij.41.2019.10.30.07.24.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 07:24:18 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 09:24:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=0Vz1KDYCDT2nsHaipdZBgphD7z8UkOtZoGz67YhDtMM=;
+        b=OYeH8NTaIcPg+zYM4fZGiSkhgstq54DXuVHB3qtVI+3FhMi7WQidEFWTyJRL5zCwMa
+         ZiYPEBSOAq7XVHutacH00uowpbkYEaeFu0DZb0KfZ/9p6I1KiyRD8LYTLavsXKm3wyts
+         NK8UjrE9AAN4zVxkawnFBNBv3DQSrvvRqzVnD1s+WeY8SUpYyIxMzi5dkzuo518RYwwC
+         KnKKav5zCSvDxLLlbeVZTO2h7ViZII090AvxgIPkdoIgvyU6woZtEzVXJacXV33N78X+
+         OOeBdHXO9m00d79KelttnwxRTjgZPBnu9xuxLYMgxtBd7AHvRvMSIpowupmlIk4yCgOx
+         LcMQ==
+X-Gm-Message-State: APjAAAVekLUAYxjY3oEvjeXRRNjZVOXwdWfycBOkwPIa7ltulmfad3eD
+        ctVbncAyg4SCuw6LZ80NAWoGEQ==
+X-Google-Smtp-Source: APXvYqy8cFexzqoRmYs3AGz0CkYOjQU34dt4clEvGmzbKsx0WtTc2MzW3Kg6ruCf0gqi2mYNZ7Ht2w==
+X-Received: by 2002:a37:7943:: with SMTP id u64mr104655qkc.295.1572445665090;
+        Wed, 30 Oct 2019 07:27:45 -0700 (PDT)
+Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id y33sm300083qta.18.2019.10.30.07.27.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 07:27:44 -0700 (PDT)
+Subject: Re: [PATCH v3 6/7] dt-bindings: soc: qcom: Extend RPMh power
+ controller binding to describe thermal warming device
+To:     Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
+References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
+ <1571254641-13626-7-git-send-email-thara.gopinath@linaro.org>
+ <CAPDyKFqcKfmnNJ7j4Jb+JH739FBcHg5NBD6aR4H_N=zWGwm1ww@mail.gmail.com>
+ <5DA88892.5000408@linaro.org>
+ <CAPDyKFpYG7YADb6Xmm=8ug5=5X3d1y+JdkRvrnvtroeV3Yj62Q@mail.gmail.com>
+ <5DA89267.30806@linaro.org> <20191029013648.GB27045@bogus>
+ <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com>
+ <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
+Cc:     Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add leds-meter binding
-Message-ID: <20191030142417.GA8919@bogus>
-References: <1572185379-21537-1-git-send-email-akinobu.mita@gmail.com>
- <1572185379-21537-2-git-send-email-akinobu.mita@gmail.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5DB99DDE.3090308@linaro.org>
+Date:   Wed, 30 Oct 2019 10:27:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572185379-21537-2-git-send-email-akinobu.mita@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 11:09:38PM +0900, Akinobu Mita wrote:
-> Add DT binding for generic LED level meter which consists of multiple LED
-> devices by different drivers.
+Hi Rob,
 
-Do you have some pointers to actual h/w?
- 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Bjorn Andersson <bjorn@kryo.se>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
->  .../devicetree/bindings/leds/leds-meter.yaml       | 67 ++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-meter.yaml
+Thanks for the review.
+
+On 10/29/2019 04:16 PM, Rob Herring wrote:
+> On Tue, Oct 29, 2019 at 5:07 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>
+>> On Tue, 29 Oct 2019 at 02:36, Rob Herring <robh@kernel.org> wrote:
+>>>
+>>> On Thu, Oct 17, 2019 at 12:10:15PM -0400, Thara Gopinath wrote:
+>>>> On 10/17/2019 11:43 AM, Ulf Hansson wrote:
+>>>>> On Thu, 17 Oct 2019 at 17:28, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>>>>>>
+>>>>>> Hello Ulf,
+>>>>>> Thanks for the review!
+>>>>>>
+>>>>>> On 10/17/2019 05:04 AM, Ulf Hansson wrote:
+>>>>>>> On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>>>>>>>>
+>>>>>>>> RPMh power controller hosts mx domain that can be used as thermal
+>>>>>>>> warming device. Add a sub-node to specify this.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>>>>>>>> ---
+>>>>>>>>  Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 10 ++++++++++
+>>>>>>>>  1 file changed, 10 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>>>>>>>> index eb35b22..fff695d 100644
+>>>>>>>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>>>>>>>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>>>>>>>> @@ -18,6 +18,16 @@ Required Properties:
+>>>>>>>>  Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
+>>>>>>>>  various OPPs for different platforms as well as Power domain indexes
+>>>>>>>>
+>>>>>>>> += SUBNODES
+>>>>>>>> +RPMh alsp hosts power domains that can behave as thermal warming device.
+>>>>>>>> +These are expressed as subnodes of the RPMh. The name of the node is used
+>>>>>>>> +to identify the power domain and must therefor be "mx".
+>>>>>>>> +
+>>>>>>>> +- #cooling-cells:
+>>>>>>>> +       Usage: optional
+>>>>>>>> +       Value type: <u32>
+>>>>>>>> +       Definition: must be 2
+>>>>>>>> +
+>>>>>>>
+>>>>>>> Just wanted to express a minor thought about this. In general we use
+>>>>>>> subnodes of PM domain providers to represent the topology of PM
+>>>>>>> domains (subdomains), this is something different, which I guess is
+>>>>>>> fine.
+>>>>>>>
+>>>>>>> I assume the #cooling-cells is here tells us this is not a PM domain
+>>>>>>> provider, but a "cooling device provider"?
+>>>>>> Yep.
+>>>>>>>
+>>>>>>> Also, I wonder if it would be fine to specify "power-domains" here,
+>>>>>>> rather than using "name" as I think that is kind of awkward!?
+>>>>>> Do you mean "power-domain-names" ? I am using this to match against the
+>>>>>> genpd names defined in the provider driver.
+>>>>>
+>>>>> No. If you are using "power-domains" it means that you allow to
+>>>>> describe the specifier for the provider.
+>>>> Yep. But won't this look funny in DT ? The provider node will have a sub
+>>>> node with a power domain referencing to itself Like below: Is this ok ?
+>>>>
+>>>> rpmhpd: power-controller {
+>>>>                                 compatible = "qcom,sdm845-rpmhpd";
+>>>>                                 #power-domain-cells = <1>;
+>>>>
+>>>>                       ...
+>>>>                       ...
+>>>>                               mx_cdev: mx {
+>>>>                                         #cooling-cells = <2>;
+>>>>                                         power-domains = <&rpmhpd      SDM845_MX>;
+>>>>                                 };
+>>>>
+>>>
+>>> The whole concept here seems all wrong to me. Isn't it what's in the
+>>> power domain that's the cooling device. A CPU power domain is not a
+>>> cooling device, the CPU is. Or we wouldn't make a clock a cooling
+>>> device, but what the clock drives.
+>>
+>> Well, I don't think that's entirely correct description either.
+>>
+>> As I see it, it's really the actual PM domain (that manages voltages
+>> for a power island), that needs to stay in full power state and
+>> increase its voltage level, as to warm up some of the silicon. It's
+>> not a regular device, but more a characteristics of how the PM domain
+>> can be used.
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-meter.yaml b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-> new file mode 100644
-> index 0000000..b5fcd98
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-meter.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-meter.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic LED level meter
-> +
-> +maintainers:
-> +  - Akinobu Mita <akinobu.mita@gmail.com>
-> +
-> +description:
-> +  Generic LED level meter consists of multiple LED devices by different drivers.
+> First I've heard of Si needing warming...
+Cold regions and non-closing of circuits is what I am told.
+> 
+> I think I'd just expect the power domain provider to know which
+> domains to power on then.
+I will just retain #cooling-cells in the power domain provider and let
+the driver identify the actual power domains.
 
-Googling this, the only thing I see is audio level meters though those 
-are all just a voltage level input, so it could be any source I guess.
+> 
+> Rob
+> 
 
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^meter-leds(@.*)?"
-> +
-> +  compatible:
-> +    const: meter-leds
-> +
-> +  leds:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: List of phandles to LED node that are members of a level meter.
-> +
-> +  brightness-weights:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-> +      By default, the brightness of the LED level meter is proportional to the
-> +      number of actual LEDs that are turned on.  We can optionally specify
-> +      the contribution ratio for each LED within a level meter by this
-> +      property.  The example below shows how to setup an exponential
-> +      relationship between the number of LEDs turned on and the brightness of
-> +      meter-leds.
 
-This seems oddly named if this is a bar graph. Yes, more LEDs on is 
-brighter, but it's really a piecewise linear graph you want. 
-
-Each LED could have variable brightness, so you could also ramp the 
-brightness for an individual LED.
-
-Rob
+-- 
+Warm Regards
+Thara
