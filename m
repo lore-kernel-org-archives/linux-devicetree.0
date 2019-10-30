@@ -2,126 +2,329 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A01ECA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF70CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7858C20717
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2911520874
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:54:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qqwMFUHw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfJ3Nvs (ORCPT
+        id S1726322AbfJ3Nyf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:51:48 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38577 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfJ3Nvr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:51:47 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iPoNs-00020h-Nw; Wed, 30 Oct 2019 14:51:36 +0100
-Message-ID: <116e2d1eb1333c322450f20a5f591b7038586865.camel@pengutronix.de>
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org
-Date:   Wed, 30 Oct 2019 14:51:35 +0100
-In-Reply-To: <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
-         <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
-         <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 30 Oct 2019 09:54:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58994 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfJ3Nyf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:54:35 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UDsXKi110222;
+        Wed, 30 Oct 2019 08:54:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572443673;
+        bh=8ykTgyJX9j+6OmR41gVi2ndS+WzwXLAbtw0EOg4AupA=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=qqwMFUHwFIG+QXcF3k6AQxuwRnf65GrzV+n+ozoWzZs7cIRe933bWMlB5tw7XyNML
+         bv8y+me1PpLeDx/p1hgFmb39jRMC75UXaa8j4ftditXYLqoz1VGQn3L3yJhTQj7U9U
+         ji5vDhRQNcLMDcukufCffatnH7uOR9gvIhEdUOlo=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UDsXqx028268
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 08:54:33 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 08:54:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 08:54:20 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x9UDsWoa094969;
+        Wed, 30 Oct 2019 08:54:32 -0500
+Date:   Wed, 30 Oct 2019 08:54:32 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 19/19] dt-bindings: media: cal: convert binding to yaml
+Message-ID: <20191030135432.6dd6e7hnj77krj67@ti.com>
+References: <20191018153437.20614-1-bparrot@ti.com>
+ <20191018153437.20614-20-bparrot@ti.com>
+ <20191029142253.GA7612@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191029142253.GA7612@bogus>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2019-10-30 at 15:32 +0200, Peter Ujfalusi wrote:
-> 
-> On 30/10/2019 15.12, Rob Herring wrote:
-> > On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> > > Hi,
-> > > 
-> > > The shared GPIO line for external components tends to be a common issue and
-> > > there is no 'clean' way of handling it.
-> > > 
-> > > I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
-> > > a driver tries to request a GPIO which is already in use.
-> > > However the driver must know that the component is going to be used in such a
-> > > way, which can be said to any external components with GPIO line, so in theory
-> > > all drivers must set this flag when requesting the GPIO...
-> > > 
-> > > But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
-> > > GPIO line. For example any device using the same GPIO as reset/enable line can
-> > > reset/enable other devices, which is not something the other device might like
-> > > or can handle.
-> > > For example a device needs to be configured after it is enabled, but some other
-> > > driver would reset it while handling the same GPIO -> the device is not
-> > > operational anymmore as it lost it's configuration.
-> > > 
-> > > With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
-> > > the role of making sure that the GPIO line only changes state when it will not
-> > > disturb any of the clients sharing the same GPIO line.
+Rob Herring <robh@kernel.org> wrote on Tue [2019-Oct-29 09:22:53 -0500]:
+> On Fri, Oct 18, 2019 at 10:34:37AM -0500, Benoit Parrot wrote:
+> > Convert ti-cal.txt to ti,cal.yaml.
 > > 
-> > Why can't we just add a shared flag like we have for interrupts?
-> > Effectively, we have that for resets too, it's just hardcoded in the
-> > the drivers.
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  .../devicetree/bindings/media/ti,cal.yaml     | 186 ++++++++++++++++++
+> >  .../devicetree/bindings/media/ti-cal.txt      |  82 --------
+> >  2 files changed, 186 insertions(+), 82 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/media/ti,cal.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/ti,cal.yaml b/Documentation/devicetree/bindings/media/ti,cal.yaml
+> > new file mode 100644
+> > index 000000000000..c3fbb22b4571
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/ti,cal.yaml
+> > @@ -0,0 +1,186 @@
+> > +# SPDX-License-Identifier: (GPL-2.0)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/ti,cal.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL) Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Benoit Parrot <bparrot@ti.com>
+> > +
+> > +description: |-
+> > +  The Camera Adaptation Layer (CAL) is a key component for image capture
+> > +  applications. The capture module provides the system interface and the
+> > +  processing capability to connect CSI2 image-sensor modules to the
+> > +  DRA72x device.
+> > +
+> > +  CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
+> > +  should contain a 'port' child node with child 'endpoint' node. Please
+> > +  refer to the bindings defined in
+> > +  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +
+> > +  compatible should be
+> > +     "ti,dra72-cal", for DRA72 controllers
+> > +     "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
+> > +     "ti,dra76-cal", for DRA76 controllers
+> > +     "ti,am654-cal", for AM654 controllers
 > 
-> This would be kind of the same thing what the
-> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
-> fixed-regulators afaik.
-> 
-> But let's say that a board design will pick two components (C1 and C2)
-> and use the same GPIO line to enable them. We already have the drivers
-> for them and they are used in boards already.
-> 
-> Both needs the GPIO line to be high for normal operation.
-> One or both of them needs register writes after they are enabled.
-> 
-> During boot both requests the GPIO (OUTPUT_LOW) and sets it high, then
-> run the register setup.
-> 
-> C1 request GPIO (LOW)
-> C1 gpio_set(1)
-> C1 register writes
-> C2 requests GPIO (LOW)
->  C1 placed to reset and looses the configuration
-> C2 gpio_set(1)
->  C1 also enabled
-> C2 register writes
-> 
-> At this point C2 is operational, C1 is not.
-> 
-> In shared GPIO case the GPIO should be handled like a regulator with a
-> twist that the 'sticky' state of the GPIO might be low or high depending
-> on the needs of the components it is connected to.
-> 
-> The shared GPIO line is a board design quirk and basically any device
-> which have reset/enable GPIO must be able to work in a situation when
-> they are sharing that line with other components and the driver should
-> not know much about this small detail.
+> Drop these or add as comments to the schema below.
 
-What about components that require a register write right after being
-enabled, for example to put the device into a low power state, to
-silence it on a bus, or to mask some initially enabled interrupts?
+Ok.
 
-regards
-Philipp
+> 
+> > +
+> > +properties:
+> > +  compatible:
+> > +      items:
+> 
+> You can drop 'items' here since there is only 1.
 
+Ok so just enum then?
+
+> 
+> > +        - enum:
+> > +            - ti,dra72-cal
+> > +            - ti,dra72-pre-es2-cal
+> > +            - ti,dra76-cal
+> > +            - ti,am654-cal
+> > +
+> > +  reg:
+> > +    minItems: 2
+> > +    items:
+> > +      - description: The CAL main register region
+> > +      - description: The RX Core0 (DPHY0) register region
+> > +      - description: The RX Core1 (DPHY1) register region
+> > +
+> > +  reg-names:
+> > +    minItems: 2
+> > +    items:
+> > +      - const: cal_top
+> > +      - const: cal_rx_core0
+> > +      - const: cal_rx_core1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  syscon-camerrx:
+> 
+> Needs a type definition.
+
+Hmm, is there a phandle generic type?
+
+> 
+> > +    maxItems: 1
+> > +    items:
+> > +      - description:
+> > +           phandle to the device control module and offset to the
+> > +           control_camerarx_core register
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +    description: functional clock
+> 
+> You can drop the description.
+
+Ok.
+
+> 
+> > +
+> > +  clock-names:
+> > +    items:
+> 
+> Drop items.
+
+Ok.
+
+> 
+> > +      - const: fck
+> > +
+> > +  power-domains:
+> > +    description:
+> > +      List of phandle and PM domain specifier as documented in
+> > +      Documentation/devicetree/bindings/power/power_domain.txt
+> > +    maxItems: 1
+> > +
+> > +  # See ./video-interfaces.txt for details
+> > +  ports:
+> > +    maxItems: 1
+> 
+> But ports is not an array...
+
+So remove maxItems? Not sure what you mean here?
+
+> 
+> > +    type: object
+> > +    additionalProperties: false
+> > +
+> > +    properties:
+> > +      "#address-cells":
+> > +        const: 1
+> > +
+> > +      "#size-cells":
+> > +        const: 0
+> > +
+> > +    patternProperties:
+> > +      '^port@[0-9a-fA-F]+$':
+> 
+> In a device binding, you need to specify 'port@0' and 'port@1' (assuming 
+> 0 and 1) and say what they are.
+
+Well depending on the 'variant' the device might have 1 or 2 physical csi2
+ports so how would you represent that then?
+
+> 
+> > +        minItems: 1
+> > +        maxItems: 2
+> 
+> Not valid for an object (aka node).
+
+Again not sure how else to represent this.
+
+> 
+> > +        type: object
+> > +        additionalProperties: false
+> > +
+> > +        properties:
+> > +          reg:
+> > +            minItems: 1
+> > +            items:
+> > +              - description: The port id
+> > +
+> > +        patternProperties:
+> > +          '^endpoint@[0-9a-fA-F]+$':
+> 
+> Just 'endpoint' is valid too.
+
+Ok I'll change that.
+
+> 
+> > +            minItems: 1
+> > +            type: object
+> > +            additionalProperties: false
+> > +
+> > +            properties:
+> > +              clock-lanes:
+> > +                maxItems: 1
+> > +
+> > +              data-lanes:
+> > +                minItems: 1
+> > +                maxItems: 4
+> > +
+> > +              remote-endpoint: true
+> > +
+> > +            required:
+> > +              - remote-endpoint
+> > +
+> > +        required:
+> > +          - reg
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - reg-names
+> > +  - interrupts
+> > +  - syscon-camerrx
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    cal: cal@4845b000 {
+> > +        compatible = "ti,dra72-cal";
+> > +        reg = <0x4845B000 0x400>,
+> > +              <0x4845B800 0x40>,
+> > +              <0x4845B900 0x40>;
+> > +        reg-names = "cal_top",
+> > +                    "cal_rx_core0",
+> > +                    "cal_rx_core1";
+> > +        interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+> > +        syscon-camerrx = <&scm_conf 0xE94>;
+> > +
+> > +        ports {
+> > +              #address-cells = <1>;
+> > +              #size-cells = <0>;
+> > +
+> > +              csi2_0: port@0 {
+> > +                    reg = <0>;
+> > +                    csi2_phy0: endpoint@0 {
+> > +                           remote-endpoint = <&csi2_cam0>;
+> > +                           clock-lanes = <0>;
+> > +                           data-lanes = <1 2>;
+> > +                    };
+> > +              };
+> > +        };
+> > +    };
+> > +
+> > +    i2c5: i2c@4807c000 {
+> > +        status = "okay";
+> > +        clock-frequency = <400000>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        ov5640@3c {
+> > +               compatible = "ovti,ov5640";
+> > +               reg = <0x3c>;
+> > +
+> > +               clocks = <&clk_ov5640_fixed>;
+> > +               clock-names = "xclk";
+> > +
+> > +               port {
+> > +                    csi2_cam0: endpoint@0 {
+> > +                            remote-endpoint = <&csi2_phy0>;
+> > +                            clock-lanes = <0>;
+> > +                            data-lanes = <1 2>;
+> > +                    };
+> > +               };
+> > +        };
+> > +    };
+> > +
+> > +...
