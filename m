@@ -2,101 +2,153 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C6DCA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73329CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F612080F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C892080F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 19:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WpD0szc9"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HQvx/LCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfJ3TuY (ORCPT
+        id S1726475AbfJ3T76 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:50:24 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45026 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfJ3TuY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 15:50:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q26so2314502pfn.11
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 12:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HQ9FlWq+UvdDEfKTzeyzDf/xB7q4VOki0EmDu2rneyI=;
-        b=WpD0szc9Md9tY2/n0MEWZBMJUxjxDAsnN5nv6bFIaLE3Mfco+mnhKg/9Q3231acaPu
-         JgrrSy8x2aEqZsWMcbT7a63vu8s7c+meiHWRXHNjjoCoeEJOMmjvXKC0U/rfoleoDLxv
-         4ZSTicknUi/kduQca2gQQHhpq9n3Fz0KNstO8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HQ9FlWq+UvdDEfKTzeyzDf/xB7q4VOki0EmDu2rneyI=;
-        b=GiTxFHcFjm1uEw5QL1ImhplAHdM5KkDyueZi6ggUhUwLL46PwsfZkMVZ5Q8xEP8KE0
-         HLNngebbwRQxxrNtbew16XIh4neTZtrZcXe0WaHowk/LkEiRHhoBN7+rxgQFIpqGAKIL
-         aythFClxrGtFSfyGUWkwIgq1hN/ZaW50uFGjgwPX98C8pMcMUTr+u46+5vW8oIga81bk
-         b3SsqD0zPcpn2kxZ0Hptb5imBpw2+xJ1VJubeRYasNK1fBVvud07dwyCrYr9iKXFXPTp
-         esOqAE/tseDDLkYKkuTNZPChTX7vGYl7+Ec6HIToCgSUCos0Fg2YHvT6daptNGU/aOLp
-         Ytvw==
-X-Gm-Message-State: APjAAAVYm4OD/dD97OQV0ik9FhOKnVCXuGaT+8zbo3PoAzZ5yXEADxx4
-        yLrQV+xY79ZqAHsnZzDab0NCGw==
-X-Google-Smtp-Source: APXvYqz/QWsyM/lJiIGheJ/+yIlYmhs+n/d7akVsIpvcixXB40xL1Dd1YxIGf/82aICZka66QdEzTQ==
-X-Received: by 2002:a17:90a:77c6:: with SMTP id e6mr1213558pjs.93.1572465023464;
-        Wed, 30 Oct 2019 12:50:23 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id k32sm2965175pje.10.2019.10.30.12.50.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Oct 2019 12:50:22 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 12:50:21 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
- controller
-Message-ID: <20191030195021.GC27773@google.com>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-12-rnayak@codeaurora.org>
- <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
+        Wed, 30 Oct 2019 15:59:58 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37320 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfJ3T76 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 15:59:58 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UJxsEL128265;
+        Wed, 30 Oct 2019 14:59:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572465594;
+        bh=U2QtP3Ed+psrBFJ2n1R0lkpg2XmvpXzoG4kPn/+wXN0=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=HQvx/LCUDrAIZeTEGeSrWBm5GcXxYKNF7HXjbqypjC5OpMJ5bBja6S0FLWFtwU6yt
+         G3yZDWBVqKso8tR+4m7lpaPjWB/f2oKfpPXGbDJyaL5/ppxHol8Gt8zn2j+X0U1HIN
+         PTRmAKAwfGCgQ2ZyLunGlj3rVr+T6cetbkGjgyqA=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UJxsng031763
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 14:59:54 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 14:59:41 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 14:59:41 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x9UJxrdp060905;
+        Wed, 30 Oct 2019 14:59:53 -0500
+Date:   Wed, 30 Oct 2019 14:59:47 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 1/3] ARM: dts: am43xx: add support for clkout1 clock
+Message-ID: <20191030195946.ouexmis632nb7lqj@ti.com>
+References: <20191016184954.14048-1-bparrot@ti.com>
+ <20191016184954.14048-2-bparrot@ti.com>
+ <20191022154816.GO5610@atomide.com>
+ <20191022162134.fpawonjdjvd5kxza@ti.com>
+ <586dcabb-0400-50d6-5488-16bddc059286@ti.com>
+ <20191022165516.GE5610@atomide.com>
+ <20191023155657.GL5610@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191023155657.GL5610@atomide.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 09:50:40AM -0700, Stephen Boyd wrote:
-> Quoting Rajendra Nayak (2019-10-23 02:02:19)
-> > From: Maulik Shah <mkshah@codeaurora.org>
+Tony Lindgren <tony@atomide.com> wrote on Wed [2019-Oct-23 08:56:57 -0700]:
+> * Tony Lindgren <tony@atomide.com> [191022 16:56]:
+> > * Tero Kristo <t-kristo@ti.com> [191022 16:48]:
+> > > On 22/10/2019 19:21, Benoit Parrot wrote:
+> > > > Tony Lindgren <tony@atomide.com> wrote on Tue [2019-Oct-22 08:48:16 -0700]:
+> > > > > * Benoit Parrot <bparrot@ti.com> [191016 18:47]:
+> > > > > > --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+> > > > > > +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> > > > > > @@ -704,6 +704,60 @@
+> > > > > >   		ti,bit-shift = <8>;
+> > > > > >   		reg = <0x2a48>;
+> > > > > >   	};
+> > > > > > +
+> > > > > > +	clkout1_osc_div_ck: clkout1_osc_div_ck {
+> > > > > > +		#clock-cells = <0>;
+> > > > > > +		compatible = "ti,divider-clock";
+> > > > > > +		clocks = <&sys_clkin_ck>;
+> > > > > > +		ti,bit-shift = <20>;
+> > > > > > +		ti,max-div = <4>;
+> > > > > > +		reg = <0x4100>;
+> > > > > > +	};
+> > > > > 
+> > > > > Here too please describe why the clock names are not generic.
+> > > > 
+> > > > Tero originally had this patch in the kernel so this is somewhat of a
+> > > > revert. Since these "clock" were removed. If the name syntax is no longer
+> > > > valid for some reason, then I will need a little more informations to
+> > > > proceed.
+> > > > 
+> > > > Tero, can you assist here?
+> > > 
+> > > This one is just following the naming convention of the rest of the clocks
+> > > atm.
+> > > 
+> > > If we need to fix all the underscore name clocks, that requires pretty much
+> > > complete revamp of both the dts data + clock data under the clock driver,
+> > > and it is not backwards compatible either. How should we tackle that one?
+> > > 
+> > > We could maybe add support code in kernel to do s/-/_/g for the "new" clocks
+> > > so that their parent-child relationships would be retained, and then convert
+> > > the clocks in phases.
 > > 
-> > Add pdc interrupt controller for sc7180
+> > Well some of them can be fixed by configuring things based
+> > on the compatible value and then the node name can be just
+> > clock like it should be.
 > > 
-> > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> > ---
-> > v3:
-> > Used the qcom,sdm845-pdc compatible for pdc node
+> > Here too one option would be to add custom compatibles like:
+> > 
+> > compatible = "ti,clkout1-osc-div", "ti,divider-clock";
+> > 
+> > And then have match data configure the rest.
+> > 
+> > The other option would be to have lookup tables in the clock
+> > driver based on the SoC and reg address.
+> > 
+> > This is a hidden mine though.. We've hit it already several times,
+> > and any dts clean-up effort has a chance of breaking things.
 > 
-> Everything else isn't doing the weird old compatible thing. Why not just
-> add the new compatible and update the driver? I guess I'll have to go
-> read the history.
+> Hmm maybe in this case just doing this is enough:
+> 
+> clkout1_osc_div_ck: clock@4100 {
+> 	... 
+> }
 
-Marc Zyngier complained  on v2 about the churn from adding compatible
-strings for identical components, and I kinda see his point.
+But then we would end up with 6 clock node with the same name "clock@4100",
+doesn't pose a problem somewhere?
 
-I agree that using the 'sdm845' compatible string for sc7180 is odd too.
-Maybe we should introduce SoC independent compatible strings for IP blocks
-that are shared across multiple SoCs? If differentiation is needed SoC
-specific strings can be added.
+Tero?
 
+Benoit
 
+> 
+> Or do all the TI clocks we have have a dependency to the
+> node naming?
+> 
+> Regards,
+> 
+> Tony
+> 
