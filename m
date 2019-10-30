@@ -2,72 +2,146 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0518DCA9EC0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2C5CA9EC4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 08:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC7820856
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="nlo2Buu3"
+	by mail.kernel.org (Postfix) with ESMTP id EA47B20578
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 08:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfJ3IkB (ORCPT
+        id S1726088AbfJ3IxP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:40:01 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:12658 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfJ3IkB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 04:40:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572424796;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ytcblrQ9momi5mrUnfe2JEwJ9Mxpgs6jMh2V+tmJuCc=;
-        b=nlo2Buu3DZ5rZPdLyBiKsNJZxoY82t5YeZT8XYxJkP2Dd+PWitgLp0F4JA5pxE5CJw
-        F9VXsEuaYRopoOids9/Ma3wd2cWM8UYr8I8pY86udjfqv3kPy+a9BxZMoctG4hxA8Hyh
-        lZgXHVg160KiSJ0Gy6eNIf4pKVyfooxjNTIm51+dyC4cPVKS8xsyvo/4oEdcIjzQDeeo
-        t6ThIA8JASUxMay7jibiQiFYuZBLyOeJUD10+E0eP14+M31cXC3ifHRgk5/xwpOvrRq0
-        6U5H3klWDkxTB4KxYM06pfYD3XG4waO3L89OkRenPWH3/u11m+ZrhU13BgR+BQGwyAW7
-        lIxw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDvG"
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3v9U8dg1tu
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 30 Oct 2019 09:39:42 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC v2 1/2] ARM: dts: omap3: Add cpu trips and cooling map for omap3 family
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xLN+52ZW6tzCQPDvwqrdgaQaMrkhPFPotYDr7RdNwqeNA@mail.gmail.com>
-Date:   Wed, 30 Oct 2019 09:39:45 +0100
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>, Nishanth Menon <nm@ti.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Grazvydas Ignotas <notasas@gmail.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <C469028D-959D-4BD1-9226-C0190A197CE5@goldelico.com>
-References: <20190913153714.30980-1-aford173@gmail.com> <B710D701-6311-4344-BF4E-F39157BBF2BD@goldelico.com> <CAHCN7xKU1v-BFkwiuZQx82+Cmdgj_1CH1j51bN0TaaduWcu8rQ@mail.gmail.com> <97204F98-FA33-4EBA-80AC-2FB3A6E78B2B@goldelico.com> <CAHCN7xJus=Unsm5rvgtccM9jpdiwGnJXrfjhavwkoswGbNd7qw@mail.gmail.com> <CAHCN7x+=O6f4Q0ps1d5KA+-E9L-8wr5B9XggzurJWtEnxEj7yg@mail.gmail.com> <FD6FED45-EF20-49D8-A2B2-012FB314DCC6@goldelico.com> <CAHCN7xLN+52ZW6tzCQPDvwqrdgaQaMrkhPFPotYDr7RdNwqeNA@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Wed, 30 Oct 2019 04:53:15 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:7319 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfJ3IxP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 04:53:15 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: cI+a4Vq/q5z7vdc74fDOKro/iJQP/AVCXSmzsTcb1alrbT5d75PBB5UIyhnOScb+Fs1uPHNX6e
+ 8aGqe9kmE4x20O+5eBwGsnAfT8zIx7lVKQ5/3/2YhdSBGdG5Akc+HSnovvC+YzuUnnYc3wMnDQ
+ Fnvbfk4QT5wK0wZRAqTV3eBtwuv4pfAZLqc92ENP5e1mV2kB9uwo/j15g/ijk05lrHzf8ZrWQ4
+ lNbuHZ1ItAFaHG036TBKt9O2T/oFH3ve36HXnVZS4531+IxBu55o5oNon1b3pnvJwoQh8Oeacy
+ mQU=
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="52107702"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Oct 2019 01:53:14 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 30 Oct 2019 01:53:06 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 30 Oct 2019 01:53:06 -0700
+Date:   Wed, 30 Oct 2019 09:53:05 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <claudiu.beznea@microchip.com>
+Subject: Re: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
+Message-ID: <20191030085305.uwrt5g3mmbwthwms@M43218.corp.atmel.com>
+Mail-Followup-To: Rob Herring <robh@kernel.org>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com
+References: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
+ <20191029213757.GA8829@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191029213757.GA8829@bogus>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adam,
-what is the status of this RFC/PATCH?
+On Tue, Oct 29, 2019 at 04:37:57PM -0500, Rob Herring wrote:
+> On Thu, Oct 24, 2019 at 08:22:34PM +0300, Codrin Ciubotariu wrote:
+> > On SAM9X60, slewrate should be enabled on pins with a switching frequency
+> > below 50Mhz. Since most of our pins do not exceed this value, we enable
+> > slewrate by default. Pins with a switching value that exceeds 50Mhz will
+> > have to explicitly disable slewrate.
+> > 
+> > Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> > Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> > ---
+> >  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
+> >  include/dt-bindings/pinctrl/at91.h | 4 ++--
+> >  2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> > index 117075b5798f..c135149e84e9 100644
+> > --- a/drivers/pinctrl/pinctrl-at91.c
+> > +++ b/drivers/pinctrl/pinctrl-at91.c
+> > @@ -85,8 +85,8 @@ enum drive_strength_bit {
+> >  					 DRIVE_STRENGTH_SHIFT)
+> >  
+> >  enum slewrate_bit {
+> > -	SLEWRATE_BIT_DIS,
+> >  	SLEWRATE_BIT_ENA,
+> > +	SLEWRATE_BIT_DIS,
+> >  };
+> >  
+> >  #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
+> > @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
+> >  {
+> >  	unsigned int tmp;
+> >  
+> > -	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
+> > +	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
+> >  		return;
+> >  
+> >  	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
+> > diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+> > index 3831f91fb3ba..e8e117306b1b 100644
+> > --- a/include/dt-bindings/pinctrl/at91.h
+> > +++ b/include/dt-bindings/pinctrl/at91.h
+> > @@ -27,8 +27,8 @@
+> >  #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
+> >  #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
+> >  
+> > -#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
+> > -#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
+> > +#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
+> > +#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
+> 
+> This is an ABI. You can't just change the definition.
 
-BR and thanks,
-Nikolaus
+There is no DT using these definitions. They have been introduced for our new
+SoC but its DT is not submitted yet. I assume it's not too late to do this
+change as nothing will be broken.
 
+Regards
+
+Ludovic
+
+> 
+> Rob
