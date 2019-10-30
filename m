@@ -2,235 +2,103 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A434CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 17:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A182CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 18:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310CA208C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 17:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572456756;
-	bh=7YttjPf25uaH/HJ9LjN93gAC67M6cLBWLgKLTrTSIEI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kseqTNkNTaYIfjiHYwbaYHogcoJn/PMY3iW1YXR6nWmFCMdoqOOOki9eDXOhMerrb
-	 Ly4T0v7M9lwlahAAqa1nD6ehRYEVlMhS3vnDHoXVTeqIZ9wdAytGOD5MHBnjjkd3q9
-	 IBWyo+2nomCeTU06sVLKiGkrAwh6izdu6YifyK7g=
+	by mail.kernel.org (Postfix) with ESMTP id 2C3F92067D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 18:21:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIYtnp2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfJ3Rcc (ORCPT
+        id S1726982AbfJ3SVq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 13:32:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbfJ3Rcb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 13:32:31 -0400
-Received: from localhost.localdomain (unknown [194.230.155.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC06D208C0;
-        Wed, 30 Oct 2019 17:32:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572456750;
-        bh=7YttjPf25uaH/HJ9LjN93gAC67M6cLBWLgKLTrTSIEI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jdyAXwcuImbI5Dnlq9yhye6rNZ1vtiYHuRiN2L8gbUdOGL5amFQAfRXBN/oNUIDXQ
-         Rr0GeyLu7xuKScUnY6gDOVragLGpAe8+i4iaUEgigkqGy5LKaadTlTVr65c6J3b4FR
-         waArH0hxloCLG3ahcBQ+cvtPM2pe2sJdvzWb5/4M=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Wed, 30 Oct 2019 14:21:46 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41136 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfJ3SVq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 14:21:46 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t10so1349997plr.8;
+        Wed, 30 Oct 2019 11:21:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=m5V1c15U0TRN6vcPfIUexZJlP17sTsMG1spksDWqkgo=;
+        b=VIYtnp2tw82TUaocPbDHIebvaM6KlLz6C/l7fT8PzqeQNmI0H+TPWMF/EmeD4WdzJO
+         k1YC1RjTzBGMjHIo0QbbsAKn1/SgaRR0BlN1wku1+2W9TQNBg8Fbq2kgyQ28KCSaQj5H
+         PdCUEacbKLwm6rE6FcUGzhH7fixaUBu3t143lVuAq8QHm6m8KQBZ1Dx3G4dn42t+Zz/2
+         dbkzOnaSwRhOMq/GM53ACClQcNFPHV1NhH7BROnh1onPesk1t3nnKCMCWhxuNk3vW9Wh
+         9fQ2KqmF8+Az5hvlsGD61dZ4VAXRmI2z0yCeMZyi+fU6BlYo4QnSMlC42B0Gt2MTpTST
+         J34w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=m5V1c15U0TRN6vcPfIUexZJlP17sTsMG1spksDWqkgo=;
+        b=KA5yW/Gfc2sPayxdNLZmjGpW1FhB2HL5FpQzfCkwfVgIiY3oORjsuL57DScH05Rj/R
+         ggMrpu3uYeSyq3HSzZme3NczNwBOxvO1h3qFHoRluIE5uz0qcEiTfckfKzw5T/dqsniG
+         WZNnIsFIaFHEqYMkyfA9mefyWjcwW+nHJxDMfl/wJ9RwTwxhRRB3mEA2UsSCoBFvhutj
+         BjCN9xUGNS/NduFpbzeK0FscQTpOmUBtmPwWhH0WkO7i6tfy26/HdX+/EWRA/pcptmV0
+         Z993Izi0dqJCcUS5H4VCsKp6NskH8d+g5mYpQOYYv4z7Fa+A6NFSDyjYrOQlHX56T4Tq
+         7VHw==
+X-Gm-Message-State: APjAAAUCu5SiHsd3vXwmfblLcJ6Lhda8QIrj0yWml1HHAkiINn7ICO8e
+        BmUpoMAAYIY/c6RVaOLRC6Y5hvq/
+X-Google-Smtp-Source: APXvYqwovkeawEjQc8Fpc4nu8GD5wMmrSR/nUwd//Arjwauo1SKoqktzbXGHyeUCWuR0WQRs5GRFPA==
+X-Received: by 2002:a17:902:b7c2:: with SMTP id v2mr1464868plz.202.1572459704769;
+        Wed, 30 Oct 2019 11:21:44 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z5sm521637pgi.19.2019.10.30.11.21.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 11:21:43 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB AVS TMON
+        DRIVER), Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 2/2] dt-bindings: power: Convert Samsung Exynos Power Domain bindings to json-schema
-Date:   Wed, 30 Oct 2019 18:32:16 +0100
-Message-Id: <20191030173216.5993-2-krzk@kernel.org>
+        linux-pm@vger.kernel.org (open list:BROADCOM STB AVS TMON DRIVER),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE)
+Subject: [PATCH 0/6] brcmstb_thermal updates for new processes
+Date:   Wed, 30 Oct 2019 11:21:26 -0700
+Message-Id: <20191030182132.25763-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191030173216.5993-1-krzk@kernel.org>
-References: <20191030173216.5993-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Samsung Exynos Soc Power Domain bindings to DT schema format using
-json-schema.
+Hi,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This patch series contains a bug fix for the existing platforms and then
+paves the way for adding support for Broadcom STB's latest chips in 16nm
+processes, and finally updates the driver with pecularities introduced
+with the 16nm, like the lack of interrupt notification from the HW.
 
----
+Please queue up the first patch for -stable if you want, thanks!
 
-Changes since v2:
-1. Use new name of file in samsung,sysmmu.yaml and MAINTAINERS.
+Florian Fainelli (6):
+  thermal: brcmstb_thermal: Do not use DT coefficients
+  thermal: brcmstb_thermal: Prepare to support a different process
+  dt-bindings: thermal: Define BCM7216 thermal sensor compatible
+  thermal: brcmstb_thermal: Add 16nm process thermal parameters
+  thermal: brcmstb_thermal: Restructure interrupt registration
+  thermal: brcmstb_thermal: Register different ops per process
 
-Changes since v1:
-1. Indent example with four spaces (more readable),
-2. Remove unneeded types,
-3. Add missing address in example and fix the name.
----
- .../bindings/iommu/samsung,sysmmu.yaml        |  2 +-
- .../devicetree/bindings/power/pd-samsung.txt  | 45 -------------
- .../devicetree/bindings/power/pd-samsung.yaml | 66 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 4 files changed, 68 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/pd-samsung.txt
- create mode 100644 Documentation/devicetree/bindings/power/pd-samsung.yaml
+ .../bindings/thermal/brcm,avs-tmon.txt        |   8 +-
+ drivers/thermal/broadcom/brcmstb_thermal.c    | 108 ++++++++++--------
+ 2 files changed, 67 insertions(+), 49 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-index ecde98da5b72..7cdd3aaa2ba4 100644
---- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-@@ -69,7 +69,7 @@ properties:
-     description: |
-       Required if the System MMU is needed to gate its power.
-       Please refer to the following document:
--      Documentation/devicetree/bindings/power/pd-samsung.txt
-+      Documentation/devicetree/bindings/power/pd-samsung.yaml
-     maxItems: 1
- 
- required:
-diff --git a/Documentation/devicetree/bindings/power/pd-samsung.txt b/Documentation/devicetree/bindings/power/pd-samsung.txt
-deleted file mode 100644
-index 92ef355e8f64..000000000000
---- a/Documentation/devicetree/bindings/power/pd-samsung.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--* Samsung Exynos Power Domains
--
--Exynos processors include support for multiple power domains which are used
--to gate power to one or more peripherals on the processor.
--
--Required Properties:
--- compatible: should be one of the following.
--    * samsung,exynos4210-pd - for exynos4210 type power domain.
--    * samsung,exynos5433-pd - for exynos5433 type power domain.
--- reg: physical base address of the controller and length of memory mapped
--    region.
--- #power-domain-cells: number of cells in power domain specifier;
--    must be 0.
--
--Optional Properties:
--- label: Human readable string with domain name. Will be visible in userspace
--	to let user to distinguish between multiple domains in SoC.
--- power-domains: phandle pointing to the parent power domain, for more details
--		 see Documentation/devicetree/bindings/power/power_domain.txt
--
--Deprecated Properties:
--- clocks
--- clock-names
--
--Node of a device using power domains must have a power-domains property
--defined with a phandle to respective power domain.
--
--Example:
--
--	lcd0: power-domain-lcd0 {
--		compatible = "samsung,exynos4210-pd";
--		reg = <0x10023C00 0x10>;
--		#power-domain-cells = <0>;
--		label = "LCD0";
--	};
--
--	mfc_pd: power-domain@10044060 {
--		compatible = "samsung,exynos4210-pd";
--		reg = <0x10044060 0x20>;
--		#power-domain-cells = <0>;
--		label = "MFC";
--	};
--
--See Documentation/devicetree/bindings/power/power_domain.txt for description
--of consumer-side bindings.
-diff --git a/Documentation/devicetree/bindings/power/pd-samsung.yaml b/Documentation/devicetree/bindings/power/pd-samsung.yaml
-new file mode 100644
-index 000000000000..09bdd96c1ec1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/pd-samsung.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/pd-samsung.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos SoC Power Domains
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+description: |+
-+  Exynos processors include support for multiple power domains which are used
-+  to gate power to one or more peripherals on the processor.
-+
-+allOf:
-+  - $ref: power-domain.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,exynos4210-pd
-+      - samsung,exynos5433-pd
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    deprecated: true
-+    maxItems: 1
-+
-+  clock-names:
-+    deprecated: true
-+    maxItems: 1
-+
-+  label:
-+    description:
-+      Human readable string with domain name. Will be visible in userspace
-+      to let user to distinguish between multiple domains in SoC.
-+
-+  "#power-domain-cells":
-+    const: 0
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - "#power-domain-cells"
-+  - reg
-+
-+examples:
-+  - |
-+    lcd0_pd: power-domain@10023c80 {
-+        compatible = "samsung,exynos4210-pd";
-+        reg = <0x10023c80 0x20>;
-+        #power-domain-cells = <0>;
-+        label = "LCD0";
-+    };
-+
-+    mfc_pd: power-domain@10044060 {
-+        compatible = "samsung,exynos4210-pd";
-+        reg = <0x10044060 0x20>;
-+        #power-domain-cells = <0>;
-+        label = "MFC";
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8fde5aa64bda..7126d3e079a4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2258,7 +2258,7 @@ F:	drivers/soc/samsung/
- F:	include/linux/soc/samsung/
- F:	Documentation/arm/samsung/
- F:	Documentation/devicetree/bindings/arm/samsung/
--F:	Documentation/devicetree/bindings/power/pd-samsung.txt
-+F:	Documentation/devicetree/bindings/power/pd-samsung.yaml
- N:	exynos
- 
- ARM/SAMSUNG MOBILE MACHINE SUPPORT
 -- 
 2.17.1
 
