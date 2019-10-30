@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E130CCA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C037DCA9EC6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E4421734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912E620874
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450706;
-	bh=Du/6PTSuGoZ0Qf9UkdU/yHUEIgefC9EtDGfESH88STo=;
+	s=default; t=1572450710;
+	bh=4m9W6+lCWhClJDg8hqJlF4rraD1V7K6uCv5L3Br1eR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fv2e5GnZxlnUvRyDVee0DmuJHp+Th3Few0lBj3pPaM3AD1mrCuJks7bCQ5v/mHn3n
-	 qjlZEV6Y0Ywhhesylh1BsbYkI+6+qo3wQqsZdpXLrU+rMeWkkmEOxa8Id/nZjaTu69
-	 Su/Lo+vSNpxv9bHv6vnvsx42tPgZkx1tbbHHrbQE=
+	b=O4VCignLyB/eWRTEPbSO/U84zCWFkFPUgyrvk+a/7EvSXldbtuP8EXrMcQL9rolVm
+	 NB1RhaHIZ3SNGJ4puMm+yIE5cUeX4KeHxdYzT1ZPq7fK+zo1MZQgjdd2910POkv0pF
+	 2sz5brcsa7O94MNcr8fCkWH5diW7JlaQYIEWgPGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfJ3Pvc (ORCPT
+        id S1727278AbfJ3Pvr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52342 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:51:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfJ3Pvc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:32 -0400
+        id S1726825AbfJ3Pvr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:47 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E421D20874;
-        Wed, 30 Oct 2019 15:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CC5620656;
+        Wed, 30 Oct 2019 15:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450691;
-        bh=Du/6PTSuGoZ0Qf9UkdU/yHUEIgefC9EtDGfESH88STo=;
+        s=default; t=1572450706;
+        bh=4m9W6+lCWhClJDg8hqJlF4rraD1V7K6uCv5L3Br1eR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Nhr00SU9g5/5OehlzG6ky5i59mQSXgL3ph7dI/JwgDRToZgt1Muda3pXT1sqdoiZ
-         KKtDm+OhXkoWJV9z62yhATfT4QTlnFd5J5m4neepOx13KIEj2mA1+krShk54rybakH
-         d1+kfKIXGFgeiScc989HxFwICB3YUxjy2U/GKmpk=
+        b=H4Cz9i/xYPftaiEaiRBj0itIfgUjOylBdZZ0sgpBNODks06Sx8KZcTlVQzTu90lSY
+         dHf/BR9v3ii9EeAFQ7WYj63hwg6YqjixquHS+1H+rsp8THH2kXWFhvicz8UrYrMzsI
+         tATE0tS4/A3WPflUiUvodLaeRYFae24dJpEUS768=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Soeren Moch <smoch@web.de>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 26/81] arm64: dts: rockchip: fix RockPro64 sdhci settings
-Date:   Wed, 30 Oct 2019 11:48:32 -0400
-Message-Id: <20191030154928.9432-26-sashal@kernel.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 29/81] arm64: dts: zii-ultra: fix ARM regulator states
+Date:   Wed, 30 Oct 2019 11:48:35 -0400
+Message-Id: <20191030154928.9432-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -59,40 +59,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Soeren Moch <smoch@web.de>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 2558b3b1b11a1b32b336be2dd0aabfa6d35ddcb5 ]
+[ Upstream commit 21094ba5c1f4b15df096e8f6247a50b6ab57c869 ]
 
-The RockPro64 schematics [1], [2] show that the rk3399 EMMC_STRB pin is
-connected to the RESET pin instead of the DATA_STROBE pin of the eMMC module.
-So the data strobe cannot be used for its intended purpose on this board,
-and so the HS400 eMMC mode is not functional. Limit the controller to HS200.
+The GPIO controlled regulator for the ARM power supply is supplying
+the higher voltage when the GPIO is driven high. This is opposite to
+the similar regulator setup on the EVK board and is impacting stability
+of the board as the ARM domain has been supplied with a too low voltage
+when to faster OPPs are in use.
 
-[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
-[2] http://files.pine64.org/doc/rock64/PINE64_eMMC_Module_20170719.pdf
-
-Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
-Signed-off-by: Soeren Moch <smoch@web.de>
-Link: https://lore.kernel.org/r/20191003215036.15023-2-smoch@web.de
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 4a13b3bec3b4 (arm64: dts: imx: add Zii Ultra board support)
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index cad314f708300..1ff617230f6c4 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -625,8 +625,7 @@
- 
- &sdhci {
- 	bus-width = <8>;
--	mmc-hs400-1_8v;
--	mmc-hs400-enhanced-strobe;
-+	mmc-hs200-1_8v;
- 	non-removable;
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
+index 7a1706f969f09..3faa652fdf20d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
+@@ -101,8 +101,8 @@
+ 		regulator-min-microvolt = <900000>;
+ 		regulator-max-microvolt = <1000000>;
+ 		gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
+-		states = <1000000 0x0
+-		           900000 0x1>;
++		states = <1000000 0x1
++		           900000 0x0>;
+ 		regulator-always-on;
+ 	};
  };
 -- 
 2.20.1
