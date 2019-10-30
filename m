@@ -2,134 +2,95 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35DFCA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20959CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CA220874
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FAB205ED
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbfJ3JMh (ORCPT
+        id S1726109AbfJ3JPb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:12:37 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54454 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3JMg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:12:36 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A2F42984BC1C39FDC845;
-        Wed, 30 Oct 2019 17:12:34 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
- 17:12:33 +0800
-Subject: Re: [PATCH] arm64: dts: hisilicon: Add Mali-450 MP4 GPU DT entry
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <20191001183535.70835-1-john.stultz@linaro.org>
-CC:     Peter Griffin <peter.griffin@linaro.org>,
+        Wed, 30 Oct 2019 05:15:31 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:54468 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3JPb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:15:31 -0400
+Received: from [91.217.168.176] (helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iPk42-00079b-Tm; Wed, 30 Oct 2019 10:14:50 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     Cheng-Yi Chiang <cychiang@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5DB95401.2000609@hisilicon.com>
-Date:   Wed, 30 Oct 2019 17:12:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        Douglas Anderson <dianders@chromium.org>, dgreid@chromium.org,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v9 5/6] ARM: dts: rockchip: Add HDMI support to rk3288-veyron-analog-audio
+Date:   Wed, 30 Oct 2019 10:14:49 +0100
+Message-ID: <9095671.y4VLy4llMG@phil>
+In-Reply-To: <CA+Px+wXAo5EPjudneS+aFEAfBRAQR1Xp6goutdMdYTPeKcfTTA@mail.gmail.com>
+References: <20191028071930.145899-1-cychiang@chromium.org> <20191028071930.145899-6-cychiang@chromium.org> <CA+Px+wXAo5EPjudneS+aFEAfBRAQR1Xp6goutdMdYTPeKcfTTA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191001183535.70835-1-john.stultz@linaro.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
+
+Am Mittwoch, 30. Oktober 2019, 10:09:46 CET schrieb Tzung-Bi Shih:
+> This series has 6 patches.  We noticed you have merged the first 4
+> patches (includes the DT binding one:
+> https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/157668.html).
+> 
+> There are 2 DTS patches are still on the list:
+> - [PATCH v9 5/6] ARM: dts: rockchip: Add HDMI support to
+> rk3288-veyron-analog-audio
+> https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/157499.html
+> - [PATCH v9 6/6] ARM: dts: rockchip: Add HDMI audio support to
+> rk3288-veyron-mickey.dts
+> https://mailman.alsa-project.org/pipermail/alsa-devel/2019-October/157500.html
+> 
+> Are you waiting for other maintainers' acknowledgement?  Or do we need
+> to resend them with maybe some modifications?
+
+nope all good like it is, ideally driver-changes (including the binding)
+and the devicetree-changes itself go through my tree in this case, as
+otherwise we would often run into conflicts if dts change go through
+vastly different maintainer trees.
+
+Of course dts changes can only get applied after the driver side is happy,
+so I'll be picking up these 2 changes (hopefully shortly)
 
 
-On 2019/10/2 2:35, John Stultz wrote:
-> From: Peter Griffin <peter.griffin@linaro.org>
->
-> hi6220 has a Mali450 MP4 so lets add it into the DT.
->
-> Cc: Wei Xu <xuwei5@hisilicon.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+Heiko
 
-Thanks!
-Applied to the hisilicon arm64 dt tree.
-
-Best Regards,
-Wei
-
-> ---
->   arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 38 +++++++++++++++++++++++
->   1 file changed, 38 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index 108e2a4227f6..2072b637b5af 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -260,6 +260,7 @@
->   			compatible = "hisilicon,hi6220-aoctrl", "syscon";
->   			reg = <0x0 0xf7800000 0x0 0x2000>;
->   			#clock-cells = <1>;
-> +			#reset-cells = <1>;
->   		};
->   
->   		sys_ctrl: sys_ctrl@f7030000 {
-> @@ -1021,6 +1022,43 @@
->   			clock-names = "apb_pclk";
->   			cpu = <&cpu7>;
->   		};
-> +
-> +		mali: gpu@f4080000 {
-> +			compatible = "hisilicon,hi6220-mali", "arm,mali-450";
-> +			reg = <0x0 0xf4080000 0x0 0x00040000>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts =	<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			interrupt-names = "gp",
-> +					  "gpmmu",
-> +					  "pp",
-> +					  "pp0",
-> +					  "ppmmu0",
-> +					  "pp1",
-> +					  "ppmmu1",
-> +					  "pp2",
-> +					  "ppmmu2",
-> +					  "pp3",
-> +					  "ppmmu3";
-> +			clocks = <&media_ctrl HI6220_G3D_CLK>,
-> +				 <&media_ctrl HI6220_G3D_PCLK>;
-> +			clock-names = "core", "bus";
-> +			assigned-clocks = <&media_ctrl HI6220_G3D_CLK>,
-> +					  <&media_ctrl HI6220_G3D_PCLK>;
-> +			assigned-clock-rates = <500000000>, <144000000>;
-> +			reset-names = "ao_g3d", "media_g3d";
-> +			resets = <&ao_ctrl AO_G3D>, <&media_ctrl MEDIA_G3D>;
-> +		};
->   	};
->   };
->   
 
 
