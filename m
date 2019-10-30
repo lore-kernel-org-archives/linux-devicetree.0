@@ -2,166 +2,126 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C38CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F076CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1396E2087E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2206020856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:58:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W3gbXEvu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g0iggF+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfJ3O4L (ORCPT
+        id S1726784AbfJ3O6J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:56:11 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34065 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfJ3O4L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:56:11 -0400
-Received: by mail-wr1-f66.google.com with SMTP id e6so819275wrw.1
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 07:56:10 -0700 (PDT)
+        Wed, 30 Oct 2019 10:58:09 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:46637 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfJ3O6I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:58:08 -0400
+Received: by mail-ua1-f68.google.com with SMTP id o4so739535uat.13
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 07:58:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3KGaDNuZOqaW+oq9eCygfM069fZ/a2Mqyl7Of0Yf3Bk=;
-        b=W3gbXEvu5iu+v3Sxxu1RVFPekMr8X8F8JzwignYx4p0KZkG+YP9eZd1wnj1TxbgO6W
-         89sUUPKqCOeUlBJyiMxzKo1T2VxdYaaB/9mvCtJUBKg6nfKXG866CRoT9kPFz/dKq63G
-         vIGbZi4dC7QPg6QlVN1ZNSTW2qVYK+tmJHP1QfUFHfcloXf7RwIFFfrBODzE3rVy3Yk4
-         LZYG0txO706XP16RwRLHhfX+a+CoZ30rTJndNx+YgErlj3hiQVOnjPw6kQvJzH1mCauE
-         +NKqegFjdYqIo+X1UldYjNNnwl+mpUFiKwyoeP2qqOBU2EksImdTj08e+BmgjXA63eeX
-         Fwaw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hNZcxEruvf8VcEgV12QG1AuNsmpJsv+vCmtArpIWJMY=;
+        b=g0iggF+JgdTMYAr4mMgTLxZq7FZRkSb9aix7YOJppOGXwFuU39AeIlzKfye3jEC+Nf
+         E5WhW0ayBApGA3e6LQAmfNOehFs4XaZLnjzC7ylbmSjiSkkzxa18yngDgVAy+YPdf8YF
+         xzh4k4+vYJeNRay2Ay7FbZtxHpdDy9kXgIqZ559GP/rkZsw7YZC2nCN1T+d6UFyqsohT
+         mV0Yy+ut1dtfibK++DcGkXDlgi70hfa8+iO/DVyt7lOw3AwJKDbcj0I3v6f5sNIdnQZ0
+         DMRds/mSHEGNJOcd+6X5gfZlsom9I6uJ2Ww9uxmaFKR2KXDWn8SKCIRg7ZG/yv2Ldf++
+         lVbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3KGaDNuZOqaW+oq9eCygfM069fZ/a2Mqyl7Of0Yf3Bk=;
-        b=dhOy+0MiDeFWQUKzP8UyROkSV+jUOlV6bgMGSCh4FDx04qNct6Yru6LYv1Hk6/sxqH
-         xQTHBVy+5hNR8CZ952zCngBaDJGaczI6AjL0gGLCFa6JMLJG9SDIzSxmS14y4MvYUlPn
-         8Fp+JAh0ePRiUH/zL4BV0fcOpGu4GnncqGWtt6PCmgnxwoVT/tvegk3Xavp4sP5oP10J
-         688/BZ0k3xPQjOoBMgKPYN8hrJjxctGpR1bCSNH+fOHNCB+G3YA3GvEAhk4ejb+bo3Tl
-         jphWTONq3puby2gUgoNPdPkj8t8hZSo+u2ZfJhB+1Xm7Rr2UCtrhKU5mcwwIAnL76PnL
-         kaTw==
-X-Gm-Message-State: APjAAAU+j178neNTlHl2hZ+kZ7hg52Wa2lMOgW5DOhSaxXVtlGZrQnHE
-        9eiyNsMEnaXg4iUuCJ12gXmb37mGqbM=
-X-Google-Smtp-Source: APXvYqzNEp7v8VF6xzERjzhXpFhkFob5hrJIC4MZV7Tiihtvl6ZSZv8Ub0Haz1Ef1kEUnQ9Tnn0N1w==
-X-Received: by 2002:adf:828c:: with SMTP id 12mr274663wrc.40.1572447369376;
-        Wed, 30 Oct 2019 07:56:09 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id n11sm272188wmd.26.2019.10.30.07.56.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 07:56:08 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] soundwire: qcom: add support for SoundWire
- controller
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     robh@kernel.org, broonie@kernel.org, bgoswami@codeaurora.org,
-        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
-References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
- <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
- <20191021044405.GB2654@vkoul-mobl>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <17cb6d3f-2317-9667-8642-566a8a88bd4c@linaro.org>
-Date:   Wed, 30 Oct 2019 14:56:07 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hNZcxEruvf8VcEgV12QG1AuNsmpJsv+vCmtArpIWJMY=;
+        b=ZHASwNV7g9b4/HJWJN/hLW+K5LeScBtqTcficDCeHl8CopTyRXdKI7L8fuGTrzkqtj
+         bOCY4Ebj4eGjxt1Z31TnyJiqDrzXrarA3L/3W9fewnnM70C3hOrjSCeo7eKeNNxb2Ps0
+         WlySZ9RiiNiUw/fcSykmehhEk7cwqrHx64qxXHutr7mTMNupHqZ3UJD716VFNc7iY5yu
+         ro1+kZROblZ4UwCRMmRc4NgPNCnUpCYj+1hxXDNEua7VqDc5plKZxGFsHkBCHE4FFUkd
+         BZXaCHLs1TLWoPMK0DA9EMUhvuG0EoaIKU0DXkqDzJADEcx3BI/vsQIL7UENytC39B/J
+         7lZQ==
+X-Gm-Message-State: APjAAAVFZeec6bwkxTWsC76iYRnBxW20rvw6SsEioiXV49pIKnaIyWyA
+        qU/5DTXMZQam42I72KAv4i+hMJUVpWgqMZqh43CxcA==
+X-Google-Smtp-Source: APXvYqxwRGxtAP844tj/7wkb9yqnOyn/FSj46ZD8hZRQHKMQoF9toDZna5qDMU5k6nneyPMsHKvQq6HgHENy9Dudpy8=
+X-Received: by 2002:ab0:7095:: with SMTP id m21mr23352ual.15.1572447485669;
+ Wed, 30 Oct 2019 07:58:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191021044405.GB2654@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1572345042-101207-1-git-send-email-manish.narani@xilinx.com> <1572345042-101207-4-git-send-email-manish.narani@xilinx.com>
+In-Reply-To: <1572345042-101207-4-git-send-email-manish.narani@xilinx.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 30 Oct 2019 15:57:29 +0100
+Message-ID: <CAPDyKFqRmFPaiM=AoiWvy5xhYj=fHTt+S1wu8o0W67Nc5ZZ1kA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/8] dt-bindings: mmc: arasan: Add optional properties
+ for Arasan SDHCI
+To:     Manish Narani <manish.narani@xilinx.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>, jolly.shah@xilinx.com,
+        nava.manne@xilinx.com, rajan.vaja@xilinx.com,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        git@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, 29 Oct 2019 at 11:30, Manish Narani <manish.narani@xilinx.com> wrote:
+>
+> Add optional properties for Arasan SDHCI which are used to set clk delays
+> for different speed modes in the controller.
+>
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt     | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index b51e40b2e0c5..c0f505b6cab5 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -46,6 +46,22 @@ Optional Properties:
+>      properly. Test mode can be used to force the controller to function.
+>    - xlnx,int-clock-stable-broken: when present, the controller always reports
+>      that the internal clock is stable even when it is not.
+> +  - arasan-clk-phase-legacy: Input/Output Clock Delay pair in degrees for Legacy Mode.
+> +  - arasan-clk-phase-mmc-hs: Input/Output Clock Delay pair degrees for MMC HS.
+> +  - arasan-clk-phase-sd-hs: Input/Output Clock Delay pair in degrees for SD HS.
+> +  - arasan-clk-phase-uhs-sdr12: Input/Output Clock Delay pair in degrees for SDR12.
+> +  - arasan-clk-phase-uhs-sdr25: Input/Output Clock Delay pair in degrees for SDR25.
+> +  - arasan-clk-phase-uhs-sdr50: Input/Output Clock Delay pair in degrees for SDR50.
+> +  - arasan-clk-phase-uhs-sdr104: Input/Output Clock Delay pair in degrees for SDR104.
+> +  - arasan-clk-phase-uhs-ddr50: Input/Output Clock Delay pair in degrees for SD DDR50.
+> +  - arasan-clk-phase-mmc-ddr52: Input/Output Clock Delay pair in degrees for MMC DDR52.
+> +  - arasan-clk-phase-mmc-hs200: Input/Output Clock Delay pair in degrees for MMC HS200.
+> +  - arasan-clk-phase-mmc-hs400: Input/Output Clock Delay pair in degrees for MMC HS400.
 
+I don't mind if you convert these to common mmc bindings.
 
-On 21/10/2019 05:44, Vinod Koul wrote:
-> On 11-10-19, 16:44, Srinivas Kandagatla wrote:
-> 
->> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
->> +{
->> +	struct qcom_swrm_ctrl *ctrl = dev_id;
->> +	u32 sts, value;
->> +	unsigned long flags;
->> +
->> +	ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
->> +
->> +	if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
->> +		ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
->> +		dev_err_ratelimited(ctrl->dev,
->> +				    "CMD error, fifo status 0x%x\n",
->> +				     value);
->> +		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
->> +	}
->> +
->> +	if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
->> +	    sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
->> +		schedule_work(&ctrl->slave_work);
-> 
-> we are in irq thread, so why not do the work here rather than schedule
-> it?
+I think other controllers/platforms may find them useful, at least at
+some point, if not already.
 
-The reason is that, sdw_handle_slave_status() we will read device id 
-registers, which are fifo based in this controller and triggers an 
-interrupt for each read.
-So all the such reads will timeout waiting for interrupt if we do not do 
-it in a separate thread.
+> +
+> +  Above mentioned are the clock (phase) delays which are to be configured in the
+> +  controller while switching to particular speed mode. The range of values are
+> +  0 to 359 degrees. If not specified, driver will configure the default value
+> +  defined for particular mode in it.
+>
+>  Example:
+>         sdhci@e0100000 {
+> --
+> 2.17.1
+>
 
-
-
-> 
->> +static int qcom_swrm_compute_params(struct sdw_bus *bus)
->> +{
->> +	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
->> +	struct sdw_master_runtime *m_rt;
->> +	struct sdw_slave_runtime *s_rt;
->> +	struct sdw_port_runtime *p_rt;
->> +	struct qcom_swrm_port_config *pcfg;
->> +	int i = 0;
->> +
->> +	list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
->> +		list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
->> +			pcfg = &ctrl->pconfig[p_rt->num - 1];
->> +			p_rt->transport_params.port_num = p_rt->num;
->> +			p_rt->transport_params.sample_interval = pcfg->si + 1;
->> +			p_rt->transport_params.offset1 = pcfg->off1;
->> +			p_rt->transport_params.offset2 = pcfg->off2;
->> +		}
->> +
->> +		list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
->> +			list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
->> +				pcfg = &ctrl->pconfig[i];
->> +				p_rt->transport_params.port_num = p_rt->num;
->> +				p_rt->transport_params.sample_interval =
->> +					pcfg->si + 1;
->> +				p_rt->transport_params.offset1 = pcfg->off1;
->> +				p_rt->transport_params.offset2 = pcfg->off2;
->> +				i++;
->> +			}
-> 
-> Can you explain this one, am not sure I understood this. This fn is
-> supposed to compute and fill up the params, all I can see is filling up!
-> 
-Bandwidth parameters are currently coming from board specific Device 
-Tree, which are programmed here.
-
->> +static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
->> +	.hw_params = qcom_swrm_hw_params,
->> +	.prepare = qcom_swrm_prepare,
->> +	.hw_free = qcom_swrm_hw_free,
->> +	.startup = qcom_swrm_startup,
->> +	.shutdown = qcom_swrm_shutdown,
->> +        .set_sdw_stream = qcom_swrm_set_sdw_stream,
-> 
-> why does indent look off to me!
-> 
-Yep, Fixed in next version.
-
---srini
+Kind regards
+Uffe
