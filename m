@@ -2,107 +2,119 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81742CA9EC6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E51CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5595A20874
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572446059;
-	bh=cQ1r1GSwB3hVmeIwtUFlcFOgmsPuuu6iBKA2V/JzBZ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2r7eKjbtqJEeTP3uk9kVBEiG+lDbw8XdxVQ/VZQHYAGsU5zCB0c/eE3tHyYauxYKv
-	 dpHUKmzGpEWvabPmKvVGUwHPgpKHrqXzG2pMC5TUd8jo8hUJBWXQ82hRZDr9qYoVT1
-	 GVnNOkkOhxP/T3LANdjQ69D1DE7UYMxftrRcIO9Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1C2082087F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:37:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Elp7O9BU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfJ3OeS (ORCPT
+        id S1726384AbfJ3OhD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:34:18 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34524 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfJ3OeS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:34:18 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m19so2314231otp.1;
-        Wed, 30 Oct 2019 07:34:17 -0700 (PDT)
+        Wed, 30 Oct 2019 10:37:03 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32868 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfJ3OhD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:37:03 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u23so1631830pgo.0
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 07:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:subject:to:cc:user-agent:date;
+        bh=OnvHWKf31kU5T7G+GRyW8KQ7oVqd5iVGELerKYGud0Q=;
+        b=Elp7O9BUncdP/kE50ELNV29c9NTF1imKvURZMH5sXZIfYxerNFW5ykpzny2RkydmGC
+         BOv+NV204Y2aYpqRFT+f/3TKiNyPH1T5LdYJJ15VZ4XW5D0XZlBfIzsy3T80zkSyl/mf
+         w4xHnpNIIYyzH55a3XtRaOmRlzzLYRj+CyW0k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iNB9zaQ8dSRe5Mnad1wsyC4kIdvQ+zLzoATcArIwY64=;
-        b=U9rZWPkp5uz59474NlPkExX8zv4yq5tvJF7wdv4SI0BuPtvpBHZie3VF6eDZrWIVlp
-         TX65X8a1a8VNFPEmY60spCoHhro90dc0BA6kLgII1J6FuCYJZUWGhymRgs6xAYB+9ipn
-         vtTC2rzdWY7ER73owGPBfBdSlqm1Xoq+fUlXRxZemyUa/Lxi0s8xAD1gBPeXAeoZ2XHD
-         mg0SWVkZX4AGifhfz9EvaOHkU95wq5MUQOdHIqsXXtw9B34ktqC04iCqvyFLoK3r2Xmv
-         gYr7u98UpXGdzC0UU+2J23NgH6k3g9LadsKrbM+cadvL78FiVGEeicv7g0547b/kQrpd
-         xY8A==
-X-Gm-Message-State: APjAAAXSHA6l+aWc9j6OfPi67EoH7omPV7UYs/0vdxdyYxHugILG+DRN
-        ZCyjHRqOZmFX+aUw+tRPOg==
-X-Google-Smtp-Source: APXvYqxK9XtqYio/UoUdgfg5a2J5HDiBryxSLKGwIfeMVHAnes3sC9LJgcfHOh1ijxXGwwZBeASXKQ==
-X-Received: by 2002:a9d:4aa:: with SMTP id 39mr125853otm.311.1572446057489;
-        Wed, 30 Oct 2019 07:34:17 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b4sm53728oiy.30.2019.10.30.07.34.11
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
+         :user-agent:date;
+        bh=OnvHWKf31kU5T7G+GRyW8KQ7oVqd5iVGELerKYGud0Q=;
+        b=B+ik6Lmg8KvKZ0qWEeVm2DKHkTqJ0VUz76kwvmmSe58qgPTB0zcxxYDSWjpTQVXXqr
+         Mp76ufsK2VTL5EZS/PEmPR6DP5yThhPh9qCjmbVsd9AAQM5edYIB8MRvhbG5lJz7dsaA
+         BxNS5StnU0V43S/t5VDEOvhft6L+wfXsvRXpzSgEiI1i1V1tCIWiUdaFhXwXnOY5FD2U
+         dd9KPGWewUOHSfIiUthC75blo/YFE/Gqo9Md7p3wltdXCN7eNILnIpJmxYB+YzNhKLDw
+         VWXXeVGMcFZX3u5Kl1e0ncP7Y4FY52aVOjF75JtpwatQovrMF5s3V+Dw/5l8rDHbR5ye
+         matg==
+X-Gm-Message-State: APjAAAVrUxTue9Bdx5F2A2/4p1hnDujYppLeby1KXgiopocZS3AvaMaM
+        GMxWgMvwVizKNX2jGJRoenQ1Iw==
+X-Google-Smtp-Source: APXvYqwAOaDPJE9YX0kurT2C1478bGKudWPZUacz2albpuYXmSsOk433FmVtr64ecIfiXAWfaWF9DQ==
+X-Received: by 2002:aa7:8421:: with SMTP id q1mr34967091pfn.174.1572446222424;
+        Wed, 30 Oct 2019 07:37:02 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id e8sm128023pga.17.2019.10.30.07.37.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 07:34:15 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 09:34:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        geert+renesas@glider.be, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: clock: renesas: rcar-usb2-clock-sel:
- Add power-domains and resets properties
-Message-ID: <20191030143410.GA11171@bogus>
-References: <1572242850-9073-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1572242850-9073-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Wed, 30 Oct 2019 07:37:01 -0700 (PDT)
+Message-ID: <5db9a00d.1c69fb81.c3df6.04eb@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572242850-9073-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <78809ef8464c46018f3803454c1165ab@codeaurora.org>
+References: <20191023090219.15603-1-rnayak@codeaurora.org> <20191023090219.15603-8-rnayak@codeaurora.org> <5db86bb1.1c69fb81.dc254.ec0b@mx.google.com> <78809ef8464c46018f3803454c1165ab@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 07/11] arm64: dts: qcom: sc7180: Add SPMI PMIC arbiter device
+To:     kgunda@codeaurora.org
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org
+User-Agent: alot/0.8.1
+Date:   Wed, 30 Oct 2019 07:37:00 -0700
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 03:07:28PM +0900, Yoshihiro Shimoda wrote:
-> This patch adds missing required properties of power-domains and resets.
-> Fortunately, no one has this device node for now, so that we don't
-> need to think of backward compatibility.
-> 
-> Fixes: 311accb64570 ("clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0 clock selector PHY")
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  .../devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt        | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
-> index 5c1903f..bad876f 100644
-> --- a/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
-> @@ -43,6 +43,9 @@ Required properties:
->   - The USB_EXTAL clock pin must be "usb_extal"
->   - The USB_XTAL clock pin must be "usb_xtal"
->  - #clock-cells: Must be 0
-> +- power-domains: A phandle and symbolic PM domain specifier.
-> +                 See power/renesas,rcar-sysc.txt.
-> +- resets: A list of phandles and specifier pairs.
->  
->  Example (R-Car H3):
->  
-> @@ -54,4 +57,6 @@ Example (R-Car H3):
->  			 <&usb_extal>, <&usb_xtal>;
->  		clock-names = "ehci_ohci", "hs-usb-if", "usb_extal", "usb_xtal";
->  		#clock-cells = <0>;
-> +		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>>;
+Quoting kgunda@codeaurora.org (2019-10-29 23:06:43)
+> On 2019-10-29 22:11, Stephen Boyd wrote:
+> > Quoting Rajendra Nayak (2019-10-23 02:02:15)
+> >> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi=20
+> >> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> >> index 04808a07d7da..6584ac6e6c7b 100644
+> >> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> >> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> >> @@ -224,6 +224,25 @@
+> >>                         };
+> >>                 };
+> >>=20
+> >> +               spmi_bus: spmi@c440000 {
+> >> +                       compatible =3D "qcom,spmi-pmic-arb";
+> >> +                       reg =3D <0 0xc440000 0 0x1100>,
+> >=20
+> > Please pad out the registers to 8 numbers. See sdm845.
+> Ok.. Will address it in the next series.
+> >=20
+> >> +                             <0 0xc600000 0 0x2000000>,
+> >> +                             <0 0xe600000 0 0x100000>,
+> >> +                             <0 0xe700000 0 0xa0000>,
+> >> +                             <0 0xc40a000 0 0x26000>;
+> >> +                       reg-names =3D "core", "chnls", "obsrvr", "intr=
+",=20
+> >> "cnfg";
+> >> +                       interrupt-names =3D "periph_irq";
+> >> +                       interrupts-extended =3D <&pdc 1=20
+> >> IRQ_TYPE_LEVEL_HIGH>;
+> >=20
+> > This is different than sdm845. I guess pdc is working?
+> >=20
+> Yes. For SDM845 pdc controller support was not yet added. That's why=20
+> still the GIC interrupt is used.
+> Where as for SC7180 the same is added with=20
+> https://lore.kernel.org/patchwork/patch/1143335/.
+>=20
+> Yes. pdc is working.
 
-Typo in '>>'
+Cool. The patch that adds pdc to the DT should come before this one
+then. In reality, it would be better if it was all squashed down into
+one big commit that just introduces the SoC file and one commit for
+PMICs and then one commit for the idp board. Then we don't have this
+ordering problem.
 
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
