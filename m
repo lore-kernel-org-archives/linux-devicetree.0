@@ -2,107 +2,118 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911B5CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AADCA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2AD218DE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA4B218AC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jvpgtLZA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="fQ0EYHGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfJ3QiL (ORCPT
+        id S1726675AbfJ3QjY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:38:11 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:37020 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfJ3QiK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 12:38:10 -0400
-Received: by mail-vk1-f196.google.com with SMTP id u79so640959vke.4
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 09:38:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=auF46VoPrwU8q8xbExiYoCGq7R2SVCAVuNRFF7Vo6Q4=;
-        b=jvpgtLZAzhD5tmCnWI0+PjA+GxKnP96UKlIC/iCxYisv9XAIoCfOSEZ+czAl5xWenM
-         kEN0V+prh2T2uTepdHm3OgJYZ2bL36OEG0a32tUNVV1Jt52zdLFSLYWmVJ8+wyfce0ih
-         Gf8Ywk3HbDcDdQj2bpgMAWbiyxRLw6sC85pWLLtzMZ1fFn515niR5tWHJx0vc3s+ZpvE
-         axJEqpVx9cRBnl+fLit7piXAxxZ5pFstmeRw1/+yNLzxIAd0ZkLvGkoeF41pZUZm7qBl
-         1gb58hhxrwBlycMrGbNCHlwKLW6nGbnjGttpeK5uJ9iprV5Tc4qnI/LCx9wUEMuenw1P
-         v7BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=auF46VoPrwU8q8xbExiYoCGq7R2SVCAVuNRFF7Vo6Q4=;
-        b=fFY4Vuy6lV9Bwb20Bl0PIbxte8onywp+KHhQRyX4Avqq2+OdauXLai02hnNlY1AzHj
-         qB1Q+S1oD6pB0Osvz3B7S2hHhFD1Il7tDnSx4U3Zr0SD7HDBhfkvMdWvYZh+6KDNBuL6
-         B0skkeiXo6qWgJ+CJK93QvZpjyIjCENB4oURW1k/JqWyM8tKZlLrZ0PwMXXQjXnNVymT
-         Yv4cCSfwPm4AuWFgBJtc7oYlZ1sOuGRxSiaaIgTve0cVUi1MXbRCoKe0+96+NnSCasMq
-         CV+LPSt5ilzc/8QfFkH0YDofGJLoH4FAFNVOXsfNjKNBCoaGq/1XzSzPgxf8UZ8XpZPa
-         HHKg==
-X-Gm-Message-State: APjAAAXZl2KOpduf4b903blAPTmKDoE4udlerbOYex0YrAQ8Q1gjRJEu
-        FK89waqcBnzhqNAFx2i6w2j31iYl71AI95kJWS86UA==
-X-Google-Smtp-Source: APXvYqyw9H3UJasnYEPOA7qM+enY1BBSO79cCLBJeHD/ItiLI84vSH2Emor68J8dEUpRPo37gqz04ssqn79oqqupric=
-X-Received: by 2002:ac5:ce04:: with SMTP id j4mr164380vki.2.1572453489621;
- Wed, 30 Oct 2019 09:38:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191024114305.15581-1-linus.walleij@linaro.org>
- <20191024114305.15581-2-linus.walleij@linaro.org> <20191025192518.GA19549@bogus>
-In-Reply-To: <20191025192518.GA19549@bogus>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 30 Oct 2019 17:37:58 +0100
-Message-ID: <CACRpkdY8+Xa=QeTE6OQvZ6ZVkT14OapRLvGEmdsOhi0+==LPiw@mail.gmail.com>
-Subject: Re: [PATCH 2/3 v4] drm/panel: Add DT bindings for Sony ACX424AKP
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 30 Oct 2019 12:39:24 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:30140 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfJ3QjY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 12:39:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572453562;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Dn40tVbbGhA5NczjSxQCCaGadlXd23pRkpE7OM8NH5A=;
+        b=fQ0EYHGnVog07STSSHN1xVxozHHsN1q4avo/yikt4Mxs6niBW/Cdu/5zgLCk+NknRz
+        SmNRpolDwU+UIeiqmzeCT+C3pSkjtOO/zj/9G147LyD6NkvbKecOWHn8y3f3K/BV6+SW
+        Aoe71lBhAUSOVyfPZ9N/LZq30ueX3+6pqPRy2dYvJC8PXvW/0bfxfUIJaljRVIkoWeKA
+        DxRucbYmwLKbIchByJSYqPL8lKXugDik8xh7XqG+iGMmEQrGEAfXlu5XA+IgSB0yB9fy
+        Qa4a9MmcRAs7qNT9p9WT1E22l1J04kZ/xRF1MRVCRA4SeSWhEalK3DuDGNQ2Zo07+NQy
+        SYaw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCymhdRVSmPRBIbFC67m67z0KUz0RNG8vGE966zI"
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2001:16b8:2638:1d00:3142:f353:47a0:b4bd]
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id L09db3v9UGdC5Tu
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 30 Oct 2019 17:39:12 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191030161604.GA5610@atomide.com>
+Date:   Wed, 30 Oct 2019 17:39:11 +0100
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <61AAD023-6B22-4F81-A3B3-7C9571F967B2@goldelico.com>
+References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com> <20191030161604.GA5610@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 9:25 PM Rob Herring <robh@kernel.org> wrote:
-> On Thu, Oct 24, 2019 at 01:43:04PM +0200, Linus Walleij wrote:
-> > This adds device tree bindings for the Sony ACX424AKP panel.
-> > Let's use YAML.
->
-> Also broken. Run 'make dt_binding_check'.
+Hi,
 
-That is what I'm doing.
+> Am 30.10.2019 um 17:16 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [191018 18:47]:
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
+>> @@ -0,0 +1,76 @@
+>> +Imagination PVR/SGX GPU
+>> +
+>> +Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently =
+covered by this binding.
+>> +
+>> +Required properties:
+>> +- compatible:	Should be one of
+>> +		"img,sgx530-121", "img,sgx530", =
+"ti,omap-omap3-sgx530-121";
+>> +		  - BeagleBoard ABC, OpenPandora 600MHz
+>> +		"img,sgx530-125", "img,sgx530", =
+"ti,omap-omap3-sgx530-125";
+>> +		  - BeagleBoard XM, GTA04, OpenPandora 1GHz
+>> +		"img,sgx530-125", "img,sgx530", =
+"ti,omap-am3517-sgx530-125";
+>> +		"img,sgx530-125", "img,sgx530", =
+"ti,omap-am335x-sgx530-125";
+>> +		  - BeagleBone Black
+>> +		"img,sgx540-120", "img,sgx540", =
+"ti,omap-omap4-sgx540-120";
+>> +		  - Pandaboard (ES)
+>> +		"img,sgx544-112", "img,sgx544", =
+"ti,omap-omap4-sgx544-112";
+>> +		"img,sgx544-116", "img,sgx544", =
+"ti,omap-omap5-sgx544-116";
+>> +		  - OMAP5 UEVM, Pyra Handheld
+>> +		"img,sgx544-116", "img,sgx544", =
+"ti,omap-dra7-sgx544-116";
+>=20
+> FYI, the compatible names above have unnecessary omap in them:
+>=20
+> "ti,omap-omap3-sgx530-121" should be "ti,omap3-sgx530-121"
+> "ti,omap-am335x-sgx530-125" should be "ti,am335x-sgx530-125";
+> "ti,omap-dra7-sgx544-116" should be "ti,dra7-sgx544-116"
+>=20
+> And so on.
 
-make -f Makefile -j5 -l4 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
-KBUILD_OUTPUT=/home/linus/linux-stericsson/build-ux500
-dt_binding_check
-  CHKDT   Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
-  CHKDT   Documentation/devicetree/bindings/display/dsi-controller.yaml
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-(...)
+Yes,
+Rob already noted a while ago and our latest private code has it fixed.
 
-I'm a bit unsure how this thing works. Are the several passes?
-Because later on this breaks because of an unrelated error in
-the bindings upstream:
-/home/linus/linux-stericsson/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml:
-properties:compatible:enum:0: {'const': 'regulator-fixed'} is not of
-type 'string'
-/home/linus/linux-stericsson/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml:
-properties:compatible:enum:1: {'const': 'regulator-fixed-clock'} is
-not of type 'string'
-(...)
+There is no progress towards a v2 since I am still fighting with the new
+yaml format he also requested...
 
-This is v5.4-rc1.
+BR and thanks,
+Nikolaus
 
-Is there any way I can selectively make dt_bindings_check just target
-the files I wanna check as any brokenness upstream cause problems
-like this? (And I assume that will keep happening.)
-
-Yours,
-Linus Walleij
