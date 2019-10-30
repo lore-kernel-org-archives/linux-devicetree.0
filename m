@@ -2,176 +2,223 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF3ACA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 03:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7F1CA9EAF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 04:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4752080F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 03:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DDB2087F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 04:07:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WSSiufiZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dQYIYF1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfJ3Dv3 (ORCPT
+        id S1725308AbfJ3EG4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 29 Oct 2019 23:51:29 -0400
-Received: from mga12.intel.com ([192.55.52.136]:54887 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbfJ3Dv3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 Oct 2019 23:51:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 20:51:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,245,1569308400"; 
-   d="scan'208";a="190156181"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 29 Oct 2019 20:51:28 -0700
-Received: from [10.226.38.74] (unknown [10.226.38.74])
-        by linux.intel.com (Postfix) with ESMTP id 6A91958049B;
-        Tue, 29 Oct 2019 20:51:26 -0700 (PDT)
-Subject: Re: [PATCH v6 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-To:     Rob Herring <robh@kernel.org>
-Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-References: <20191021095436.50303-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191021095436.50303-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191029154842.GA3526@bogus>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <30be46f1-559a-2b37-23a5-df7383d1769a@linux.intel.com>
-Date:   Wed, 30 Oct 2019 11:51:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191029154842.GA3526@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 30 Oct 2019 00:06:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35998 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727197AbfJ3EGz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 00:06:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4340660F79; Wed, 30 Oct 2019 04:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572408414;
+        bh=8Pd/E1F2GITTQ0OZqlMrdEyd7JcogM8q9jE0bY5JquU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WSSiufiZbFYTGbq6mT4YhSQElJjvl2oQDa2WfZyFOh2DXTzpwaFT5ZW0ZCAVX2ghX
+         fnJVS4AVjGrWJ+2NEgEMnyxdxUp2zQXl4mDGOJC7mdfwfYY7gz4iJCxYDeR6aI9D3b
+         5/mdqkFlKREUuuZawPr5soexRyLWHQ2il+GMHcMc=
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4ED8F60F7E;
+        Wed, 30 Oct 2019 04:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572408413;
+        bh=8Pd/E1F2GITTQ0OZqlMrdEyd7JcogM8q9jE0bY5JquU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dQYIYF1OrkSyf+OkIfFTN+fgBH4rMhxySlJTMHQasioMTlqY6FCuWlc4kfzFY/ob1
+         YU5VmpqdQHFZNG2jeUXr0vK8xN06TAsCFTnwJzQYpLwd6TEGiDKJOdpL4IEpZj0UPG
+         F9iUnkwUXsWloVCRrlqbofaWSSWyQvp5mUfi7+z4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4ED8F60F7E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
+        dianders@chromium.org, Maulik Shah <mkshah@codeaurora.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sc7180: Add cpuidle low power states
+Date:   Wed, 30 Oct 2019 09:35:18 +0530
+Message-Id: <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
+References: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Add device bindings for cpuidle states for cpu devices.
 
-On 29/10/2019 11:48 PM, Rob Herring wrote:
-> On Mon, Oct 21, 2019 at 05:54:35PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add a YAML schema to use the host controller driver with the
->> eMMC PHY on Intel's Lightning Mountain SoC.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->> ---
->>   .../bindings/phy/intel,lgm-emmc-phy.yaml           | 63 ++++++++++++++++++++++
->>   1 file changed, 63 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> new file mode 100644
->> index 000000000000..bc1285be31f9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> @@ -0,0 +1,63 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +description: Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
->> +  node is used to reference the base address of eMMC phy registers.
->> +
->> +select:
-> You don't need a 'select'.
-
-Thanks for the review.
-
-will remove it.
-
->> +  properties:
->> +    compatible:
->> +      items:
->> +       - const: intel,lgm-syscon
->> +       - const: intel,lgm-emmc-phy
-> This is not right. You are saying 'compatible' must be:
->
-> compatible = "intel,lgm-syscon", "intel,lgm-emmc-phy";
-
-Agreed!,   Added like the below statement...
-
-  - compatible:         Should be one of the following:
-                                  "intel,lgm-syscon", "syscon"
-    - reg:
-        maxItems: 1
-
-  properties:
-      compatible:
-          contains:
-             const: intel,lgm-emmc-phy
-
->> +
->> +    reg:
->> +      maxItems: 1
->> +
->> +  required:
->> +    - compatible
->> +    - reg
->> +
->> +properties:
->> +  "#phy-cells":
->> +    const: 0
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    maxItems: 1
->> +
->> +required:
->> +  - "#phy-cells"
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +
->> +examples:
->> +  - |
->> +    sysconf: chiptop@e0200000 {
->> +      compatible = "intel,lgm-syscon";
->> +      reg = <0xe0200000 0x100>;
->> +
->> +      emmc-phy: emmc-phy {
-> phy@a8
-add it  in the next patch.
-> What else in in the chiptop block?
-chiptop don't have other properties except compatible and reg.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 ---
-With Best Regards
-Vadivel
->
->> +        compatible = "intel,lgm-emmc-phy";
->> +        reg = <0x00a8 0x10>;
->> +        clocks = <&emmc>;
->> +        clock-names = "emmcclk";
->> +        #phy-cells = <0>;
->> +      };
->> +    };
->> +...
->> -- 
->> 2.11.0
->>
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index fceac50..69d5e2c 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -70,6 +70,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_0>;
+ 			L2_0: l2-cache {
+ 				compatible = "cache";
+@@ -85,6 +88,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_100>;
+ 			L2_100: l2-cache {
+ 				compatible = "cache";
+@@ -97,6 +103,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x200>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_200>;
+ 			L2_200: l2-cache {
+ 				compatible = "cache";
+@@ -109,6 +118,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x300>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_300>;
+ 			L2_300: l2-cache {
+ 				compatible = "cache";
+@@ -121,6 +133,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x400>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_400>;
+ 			L2_400: l2-cache {
+ 				compatible = "cache";
+@@ -133,6 +148,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x500>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_500>;
+ 			L2_500: l2-cache {
+ 				compatible = "cache";
+@@ -145,6 +163,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x600>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&BIG_CPU_SLEEP_0
++					   &BIG_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_600>;
+ 			L2_600: l2-cache {
+ 				compatible = "cache";
+@@ -157,12 +178,69 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x700>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&BIG_CPU_SLEEP_0
++					   &BIG_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			next-level-cache = <&L2_700>;
+ 			L2_700: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+ 			};
+ 		};
++
++		idle-states {
++			entry-method = "psci";
++
++			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "little-power-down";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <350>;
++				exit-latency-us = <461>;
++				min-residency-us = <1890>;
++				local-timer-stop;
++			};
++
++			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
++				compatible = "arm,idle-state";
++				idle-state-name = "little-rail-power-down";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <360>;
++				exit-latency-us = <531>;
++				min-residency-us = <3934>;
++				local-timer-stop;
++			};
++
++			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "big-power-down";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <264>;
++				exit-latency-us = <621>;
++				min-residency-us = <952>;
++				local-timer-stop;
++			};
++
++			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
++				compatible = "arm,idle-state";
++				idle-state-name = "big-rail-power-down";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <702>;
++				exit-latency-us = <1061>;
++				min-residency-us = <4488>;
++				local-timer-stop;
++			};
++
++			CLUSTER_SLEEP_0: cluster-sleep-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "cluster-power-down";
++				arm,psci-suspend-param = <0x400000F4>;
++				entry-latency-us = <3263>;
++				exit-latency-us = <6562>;
++				min-residency-us = <9987>;
++				local-timer-stop;
++			};
++		};
+ 	};
+ 
+ 	memory@80000000 {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
