@@ -2,85 +2,47 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF5BCA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA86ECA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 10:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8982217D9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 09:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOMrdPbt"
+	by mail.kernel.org (Postfix) with ESMTP id 9417621835
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 10:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfJ3JzR (ORCPT
+        id S1726069AbfJ3KFl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:55:17 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38884 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfJ3JzQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 05:55:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v9so1532059wrq.5
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 02:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hs0Xj3TpOFo7Xi2C92NXMI0mClPmgg9hIzDJgVyM7dI=;
-        b=GOMrdPbtza7bahmXFnK8BFCvQpxJK0EQx9lvmMYCWiUB8A+wjb7ykcc+ZmPoJ8CvTM
-         jbyq/wUOW8NOvHiKNVmSnOYslZCf5BVbXBM+9pgUmRnmYbWAJ63oxlKbgAIbtYO6bvz8
-         m/OtQlCrNANBMhVXthUDHMx4y0ZR3qqXBkI/C5auNKC2tYlJ10Qfxk4M12PXQExMxYb+
-         QWWWervwvAlSmyLn037zf39ucwHSn8ESM+PcaORjBd6NWlYu0Q7I1q9gkWYPO5+X19Ip
-         OSwsj3JqkQxj4M4epdlGZ/m8HpkLhowk+0Reki9OuLANr649y8RLZyGnq1wGz0de2K0q
-         ZJbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hs0Xj3TpOFo7Xi2C92NXMI0mClPmgg9hIzDJgVyM7dI=;
-        b=DlI0aFBKEBG8+/fOLOg7IWiNbumC243euCVuk1GmnNqUWpBgt5sgqGBMj5NLHCaM0z
-         EXMb+/zj1FA1+7P+hqct44AgemaaRXhj7Y02tpLQ10VYmAxFv52z0Z3r4KIGcFQHLbOP
-         8MbkOIwp+3s6akQZ2NTvf5/DrPh4Y+Gyjs9gGZQTRuzAoIWgJ/L2bpDNdSoX8bFPE4Or
-         eterrZoomqjXKgxEvhJq1NII9X5LpZI1Eyq8jSCAWi6l6PF/wksOoAViy5ut/SEgzX69
-         Y/RvJbyuFxb7ewCrxFtpgJYd6E8RpkwLbNYvpW7xtbRXurzpGprE3NWXfAH0hPZV1iQP
-         sRHg==
-X-Gm-Message-State: APjAAAUb85TFBy5clQ5XgsP3g8WRGTudg/7jT9AjBLv0nBZBZTK1naZf
-        iJVdBwu+yQHGv4OmEPX683hVzg==
-X-Google-Smtp-Source: APXvYqyEXL1nWX9W5G1Oh1yg4gjs2XsDhJV/J4RZbb5xTf2TxaEp1juTXqmwC1y55FdaXSwMim9fMQ==
-X-Received: by 2002:a5d:4491:: with SMTP id j17mr9057873wrq.46.1572429314643;
-        Wed, 30 Oct 2019 02:55:14 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id g5sm1675086wmg.12.2019.10.30.02.55.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 02:55:13 -0700 (PDT)
-Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
+        Wed, 30 Oct 2019 06:05:41 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:35775 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfJ3KFk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 06:05:40 -0400
+X-Originating-IP: 91.217.168.176
+Received: from [172.20.50.240] (unknown [91.217.168.176])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 3DAAE60004;
+        Wed, 30 Oct 2019 10:05:38 +0000 (UTC)
+Subject: Re: [PATCH 1/2] dt-bindings: arm: at91: Document Kizbox2 boards
+ binding
 To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-2-srinivas.kandagatla@linaro.org>
- <20191025204338.GA25892@bogus>
- <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org>
- <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
- <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
-Date:   Wed, 30 Oct 2019 09:55:12 +0000
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191017085405.12599-1-kamel.bouhara@bootlin.com>
+ <20191017085405.12599-2-kamel.bouhara@bootlin.com>
+ <20191029014949.GA22009@bogus>
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+Message-ID: <3c3b1763-5185-34b6-8f68-bbc153eb916f@bootlin.com>
+Date:   Wed, 30 Oct 2019 11:05:37 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
+In-Reply-To: <20191029014949.GA22009@bogus>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -89,54 +51,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 29/10/2019 20:47, Rob Herring wrote:
-> On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
+On 29/10/2019 02:49, Rob Herring wrote:
+> On Thu, Oct 17, 2019 at 10:54:04AM +0200, Kamel Bouhara wrote:
+>> Document devicetree's bindings for the SAMA5D31 Kizbox2 boards of
+>> Overkiz SAS.
 >>
+>> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>> ---
+>>   .../devicetree/bindings/arm/atmel-at91.yaml   | 35 +++++++++++++++++++
+>>   1 file changed, 35 insertions(+)
 >>
->>
->> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
->>> Its Phandle.
->>>
->>> something like this is okay?
->>>
->>> slim-ifc-dev:
->>>     $ref: '/schemas/types.yaml#/definitions/phandle-array'
->>
->> Sorry this should not be an array, so something like this:
->>
->>     slim-ifc-dev:
->>       description: SLIMBus Interface device phandle
+>> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+>> index c0869cb860f3..7636bf7c2382 100644
+>> --- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+>> @@ -80,6 +80,41 @@ properties:
+>>             - const: atmel,sama5d3
+>>             - const: atmel,sama5
+>>   
+>> +      - description: Overkiz kizbox2 board without antenna
+>> +        items:
+>> +          - const: overkiz,kizbox2-0
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
+>> +
+>> +      - description: Overkiz kizbox2 board with one head
+>> +        items:
+>> +          - const: overkiz,kizbox2-1
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
+>> +
+>> +      - description: Overkiz kizbox2 board with two heads
+>> +        items:
+>> +          - const: overkiz,kizbox2-2
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
+>> +
+>> +      - description: Overkiz kizbox2 board with three heads
+>> +        items:
+>> +          - const: overkiz,kizbox2-3
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
+>> +
+>> +      - description: Overkiz kizbox2 board Rev2 with two heads
+>> +        items:
+>> +          - const: overkiz,kizbox2-rev2
+>> +          - const: atmel,sama5d31
+>> +          - const: atmel,sama5d3
+>> +          - const: atmel,sama5
 > 
-> You're just spelling out the abbreviated name. I can do that much.
-> What is 'SLIMBus Interface device'?
-
-Each SLIMBus Component contains one Interface Device. Which is 
-responsible for Monitoring and reporting the status of component, Data 
-line to Data pin connection setup for SLIMBus streaming. Interface 
-device is enumerated just like any other slim device.
-
-We already have exactly same bindings for WCD9335 in upstream at:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
-
+> These can all be made a single items list with the 1st entry being an
+> enum of all the boards. The board description can be a comment.
 > 
-> Is it a standard SLIMBus property? If so, document it in the right
-> place. If not, then needs a vendor prefix.
-
-"SLIMBus Interface Device" itself is documented in SLIMBus Specification.
-
-If I remember it correctly You suggested me to move to "slim-ifc-dev" 
-as this is part of SLIMBus Specification.
-
-Thanks,
-srini
-
-
+> Rob
 > 
->>       $ref: '/schemas/types.yaml#/definitions/phandle'
->>
->>
->>>     description: SLIMBus Interface device phandle
+Yes agree, actually it's already done in v2, by the way thanks for the 
+review.
+
+-- 
+Kamel Bouhara, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
