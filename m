@@ -2,126 +2,124 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D978CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEFBCA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271CE20656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572445795;
-	bh=K5ytgmxZF/cvacltd3pzbd6c3lkbJfhuVIHHxIhD918=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1whFCN4IqoZBmDEqFwTehH0f7KYaWF5iyqCqseZB8PTLJVdyktTDxyHUrAHvCP8yi
-	 8Ug39hE1BmHe3UyjjLlBKCVD3sISOA32UZYLbGn0f4TjxadM1YKId8FaS3r15lOR7C
-	 cGIZTxr64+Mm+C6Gue4iFBsLbLozDNuAe687FqBQ=
+	by mail.kernel.org (Postfix) with ESMTP id 44EC32087E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nsVLguS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfJ3O3y (ORCPT
+        id S1726423AbfJ3Oag (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:29:54 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46971 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfJ3O3y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:29:54 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 89so2228737oth.13;
-        Wed, 30 Oct 2019 07:29:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LMfeOlvx6eLj9u8wcVjU8j/3tqXZ55VLld17C/fRM+o=;
-        b=KXgQhjcQ6o+d1I35/G5kwAlyytym1XvmL30MxV8CKXiMEyoGyqlJx/gcWLBA1vLSN7
-         xqmNr0DH/snI+fdkwzhc1akCZItqMXZq5+BjJhmEprY2do+zbgMl55PSENysI2rxRb9G
-         67OT7Y8x4qqoahcoW86t9VYfVeJlysuN28TU3T2ph7HD7CUxr6QN3bkqckxz1eevJz8D
-         uxqU9moCK6DVKvI9eA5Pqt/nAPxaPt10WbKGmHWlFId2zLatg3/tIi5NWRFzPQ3S7+/s
-         RhXxb6iYJqjEHrWKOYP8mYUFX+qz1WlqtQ0b3M+o24IiW42dL9BS5STOVlE5NHWL4v6C
-         a9yg==
-X-Gm-Message-State: APjAAAXovf7x06qSWFlhxLTMRoe0Kx/lyRC2j91p64/4XAv95DWrApfE
-        KgqLXTvn+E9dN2OKMWJidlGXmvol4w==
-X-Google-Smtp-Source: APXvYqx+eBfjpYHuthtmmpS/yKuaO2Fxm/sTUZz0uJRp1IDCuerAIXzxDA1q1VJzYfDKZiAUqvmNqQ==
-X-Received: by 2002:a9d:7ac5:: with SMTP id m5mr138924otn.356.1572445793274;
-        Wed, 30 Oct 2019 07:29:53 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w33sm75635otb.68.2019.10.30.07.29.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 07:29:52 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 09:29:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Marcel Ziswiler <marcel@ziswiler.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        info@logictechno.com, j.bauer@endrich.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: display: panel: add bindings for
- logic technologies displays
-Message-ID: <20191030142952.GB31293@bogus>
-References: <20191027142609.12754-1-marcel@ziswiler.com>
- <20191027142609.12754-3-marcel@ziswiler.com>
+        Wed, 30 Oct 2019 10:30:36 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39410 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfJ3Oag (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:30:36 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UEURxE009017;
+        Wed, 30 Oct 2019 09:30:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572445827;
+        bh=sjHkzET0W6fegbqYYxLj/nvwD1jevn9Rf6o8Hy+EKt0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nsVLguS5Xvh99O0z62zWL3lSC+MN9kBVqEmmfnm/O7m0YbI3dzpEJ9/LF79owtHnr
+         usMVQ1IBXPcMRGu466VKLjcudML79XSK0hQ0OPj4xgGFlq32DI6Skv2fjFvoEEp7h9
+         Sfg1kNWjOF/itYDrveMdsYt3Qy5EDOg9xKn84xnk=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UEURZJ063645;
+        Wed, 30 Oct 2019 09:30:27 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 09:30:26 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 09:30:14 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UEUNHU130877;
+        Wed, 30 Oct 2019 09:30:24 -0500
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Mark Brown <broonie@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+ <20191030141736.GN4568@sirena.org.uk>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
+Date:   Wed, 30 Oct 2019 16:31:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191027142609.12754-3-marcel@ziswiler.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191030141736.GN4568@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Oct 27, 2019 at 03:26:09PM +0100, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> Add bindings for the following 3 previously added display panels
-> manufactured by Logic Technologies Limited:
-> 
-> - LT161010-2NHC e.g. as found in the Toradex Capacitive Touch Display
-> 7" Parallel [1]
-> - LT161010-2NHR e.g. as found in the Toradex Resistive Touch Display 7"
-> Parallel [2]
-> - LT170410-2WHC e.g. as found in the Toradex Capacitive Touch Display
-> 10.1" LVDS [3]
-> 
-> Those panels may also be distributed by Endrich Bauelemente Vertriebs
-> GmbH [4].
-> 
-> [1] https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
-> [2] https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
-> [3] https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
-> [4] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - New patch adding display panel bindings as well as suggested by Rob.
-> 
->  .../panel/logictechno,lt161010-2nhc.yaml      | 44 +++++++++++++++++++
->  .../panel/logictechno,lt161010-2nhr.yaml      | 44 +++++++++++++++++++
->  .../panel/logictechno,lt170410-2whc.yaml      | 44 +++++++++++++++++++
->  3 files changed, 132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhc.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhr.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/panel/logictechno,lt170410-2whc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhc.yaml b/Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhc.yaml
-> new file mode 100644
-> index 000000000000..0dfe94d38a47
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhc.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Except the license for new bindings should be: 
 
-(GPL-2.0-only OR BSD-2-Clause)
+On 30/10/2019 16.17, Mark Brown wrote:
+> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
+>> On 30/10/2019 15.12, Rob Herring wrote:
+> 
+>>> Why can't we just add a shared flag like we have for interrupts?
+>>> Effectively, we have that for resets too, it's just hardcoded in the
+>>> the drivers.
+> 
+>> This would be kind of the same thing what the
+>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
+>> fixed-regulators afaik.
+> 
+> The theory with that was that any usage of this would need the
+> higher level code using the GPIO to cooperate so they didn't step
+> on each other's toes so the GPIO code should just punt to it.
 
-Rob
+But from the client driver point of view a GPIO is still GPIO and if the
+components are unrelated then it is hard to patch things together from
+the top.
+
+>> But let's say that a board design will pick two components (C1 and C2)
+>> and use the same GPIO line to enable them. We already have the drivers
+>> for them and they are used in boards already.
+> 
+> This is basically an attempt to make a generic implementation of
+> that cooperation for simple cases.
+
+Without some generic implementation we would need to patch up drivers
+(sometimes unrelated) for components which uses the same GPIO line on
+some random board.
+
+We have such a thing for tlv310aic3x (for Nokia n900). I would need one
+for pcm3168a and there were an attempt for max98927 also.
+We also have boards where one GPIO is used for backlight and panel, etc.
+
+If we would have generic way then it can be tuned for more exotic
+setups, but again, I believe that board designers are not doing things
+just to be evil. What they connect most of the times are 'sane'
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
