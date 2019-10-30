@@ -2,147 +2,169 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00FFCA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA52CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69C620856
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F102080F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 13:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TYqPsN7N"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gdmK7b/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbfJ3NbO (ORCPT
+        id S1726322AbfJ3NeP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:31:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56058 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfJ3NbN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:31:13 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV5vB101659;
-        Wed, 30 Oct 2019 08:31:05 -0500
+        Wed, 30 Oct 2019 09:34:15 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42422 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfJ3NeP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 09:34:15 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UDYDge120315;
+        Wed, 30 Oct 2019 08:34:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572442265;
-        bh=STjwO10Amw2PZ9XYXEda6DiaqThl/EwMnKhScqY6AdQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TYqPsN7NUV/OLsDdttH86+fZ8BHWyOi4WuAyZ+QF4jEKxX4ZuYyo+0SD6RSz4B8U8
-         RpH805j8GTmIQS8kbR+fnlsQZNv7QZkBlK5Kbd+BL6GDgeGFDxxhDrBBOAto4WMPQ+
-         G5k3JfpVxKkQbnkwrKfzFSsCtkd4laKkTxcqGMXM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UDV4l4062652
+        s=ti-com-17Q1; t=1572442453;
+        bh=riPq1EjtRAH4k2brd9erciAO5pC1LvIMZqcdS/NknfM=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=gdmK7b/f9xsSEWH04DxtPVar7CK2ysklueV9IOK1ZpYDffekDLkk5BsSyq6tcSK+g
+         z7CnfVAcJeoIXjklxapgvhodvfgCdJ7isEFFqcW/d72iEngxGF+WiGDx8dmuo1FtGD
+         KADbjuHRe3H1uwrYpM/rNPkl3g/9tKEYPl+/FvBM=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UDYD9N117904
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 08:31:05 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 30 Oct 2019 08:34:13 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 08:30:51 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 08:34:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 08:30:51 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UDV1M8022289;
-        Wed, 30 Oct 2019 08:31:02 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
-Date:   Wed, 30 Oct 2019 15:32:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Frontend Transport; Wed, 30 Oct 2019 08:34:00 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x9UDYCc1028496;
+        Wed, 30 Oct 2019 08:34:12 -0500
+Date:   Wed, 30 Oct 2019 08:34:12 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 03/19] media: ti-vpe: cal: Add per platform data support
+Message-ID: <20191030133412.un4w25qpn3usmcnw@ti.com>
+References: <20191018153437.20614-1-bparrot@ti.com>
+ <20191018153437.20614-4-bparrot@ti.com>
+ <20191029131855.GA27597@bogus>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191029131855.GA27597@bogus>
+User-Agent: NeoMutt/20171215
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 30/10/2019 15.12, Rob Herring wrote:
-> On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->> Hi,
->>
->> The shared GPIO line for external components tends to be a common issue and
->> there is no 'clean' way of handling it.
->>
->> I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
->> a driver tries to request a GPIO which is already in use.
->> However the driver must know that the component is going to be used in such a
->> way, which can be said to any external components with GPIO line, so in theory
->> all drivers must set this flag when requesting the GPIO...
->>
->> But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
->> GPIO line. For example any device using the same GPIO as reset/enable line can
->> reset/enable other devices, which is not something the other device might like
->> or can handle.
->> For example a device needs to be configured after it is enabled, but some other
->> driver would reset it while handling the same GPIO -> the device is not
->> operational anymmore as it lost it's configuration.
->>
->> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
->> the role of making sure that the GPIO line only changes state when it will not
->> disturb any of the clients sharing the same GPIO line.
+Rob Herring <robh@kernel.org> wrote on Tue [2019-Oct-29 08:18:55 -0500]:
+> On Fri, Oct 18, 2019 at 10:34:21AM -0500, Benoit Parrot wrote:
+> > First this patch adds a method to access the CTRL_CORE_CAMERRX_CONTROL
+> > register to use the syscon mechanism. For backward compatibility we also
+> > handle using the existing camerrx_control "reg" entry if a syscon node
+> > is not found.
+> > 
+> > In addition the register bit layout for the CTRL_CORE_CAMERRX_CONTROL
+> > changes depending on the device. In order to support this we need to use
+> > a register access scheme based on data configuration instead of using
+> > static macro.
+> > 
+> > In this case we make use of the regmap facility and create data set
+> > based on the various device and phy available.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/ti-vpe/cal.c | 281 +++++++++++++++++++++-------
+> >  1 file changed, 212 insertions(+), 69 deletions(-)
 > 
-> Why can't we just add a shared flag like we have for interrupts?
-> Effectively, we have that for resets too, it's just hardcoded in the
-> the drivers.
+> 
+> > @@ -1816,6 +1911,18 @@ static int cal_probe(struct platform_device *pdev)
+> >  	if (!dev)
+> >  		return -ENOMEM;
+> >  
+> > +	match = of_match_device(of_match_ptr(cal_of_match), &pdev->dev);
+> 
+> Use of_device_get_match_data() instead.
 
-This would be kind of the same thing what the
-GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
-fixed-regulators afaik.
+Ok I'll change that.
 
-But let's say that a board design will pick two components (C1 and C2)
-and use the same GPIO line to enable them. We already have the drivers
-for them and they are used in boards already.
+> 
+> > +	if (!match)
+> > +		return -ENODEV;
+> > +
+> > +	if (match->data) {
+> > +		dev->data = (struct cal_data *)match->data;
+> > +		dev->flags = dev->data->flags;
+> > +	} else {
+> > +		dev_err(&pdev->dev, "Could not get feature data based on compatible version\n");
+> > +		return -ENODEV;
+> > +	}
+> > +
+> >  	/* set pseudo v4l2 device name so we can use v4l2_printk */
+> >  	strscpy(dev->v4l2_dev.name, CAL_MODULE_NAME,
+> >  		sizeof(dev->v4l2_dev.name));
+> > @@ -1823,6 +1930,43 @@ static int cal_probe(struct platform_device *pdev)
+> >  	/* save pdev pointer */
+> >  	dev->pdev = pdev;
+> >  
+> > +	if (parent && of_property_read_bool(parent, "syscon-camerrx")) {
+> > +		syscon_camerrx =
+> > +			syscon_regmap_lookup_by_phandle(parent,
+> > +							"syscon-camerrx");
+> > +		if (IS_ERR(syscon_camerrx)) {
+> > +			dev_err(&pdev->dev, "failed to get syscon-camerrx regmap\n");
+> > +			return PTR_ERR(syscon_camerrx);
+> > +		}
+> > +
+> > +		if (of_property_read_u32_index(parent, "syscon-camerrx", 1,
+> > +					       &syscon_camerrx_offset)) {
+> 
+> Kind of odd to read the property twice and using functions that don't 
+> match the type. We have functions to retrieve phandle and args.
 
-Both needs the GPIO line to be high for normal operation.
-One or both of them needs register writes after they are enabled.
+Yeah, I wanted to make a distinction between the node being present and
+any other kind of errors, so we can have a little more precise error
+message.
 
-During boot both requests the GPIO (OUTPUT_LOW) and sets it high, then
-run the register setup.
-
-C1 request GPIO (LOW)
-C1 gpio_set(1)
-C1 register writes
-C2 requests GPIO (LOW)
- C1 placed to reset and looses the configuration
-C2 gpio_set(1)
- C1 also enabled
-C2 register writes
-
-At this point C2 is operational, C1 is not.
-
-In shared GPIO case the GPIO should be handled like a regulator with a
-twist that the 'sticky' state of the GPIO might be low or high depending
-on the needs of the components it is connected to.
-
-The shared GPIO line is a board design quirk and basically any device
-which have reset/enable GPIO must be able to work in a situation when
-they are sharing that line with other components and the driver should
-not know much about this small detail.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> > +			dev_err(&pdev->dev, "failed to get syscon-camerrx offset\n");
+> > +			return -EINVAL;
+> > +		}
+> > +	} else {
+> > +		/*
+> > +		 * Backward DTS compatibility.
+> > +		 * If syscon entry is not present then check if the
+> > +		 * camerrx_control resource is present.
+> > +		 */
+> > +		syscon_camerrx = cal_get_camerarx_regmap(dev);
+> > +		if (IS_ERR(syscon_camerrx)) {
+> > +			dev_err(&pdev->dev, "failed to get camerrx_control regmap\n");
+> > +			return PTR_ERR(syscon_camerrx);
+> > +		}
+> > +		/* In this case the base already point to the direct
+> > +		 * CM register so no need for an offset
+> > +		 */
+> > +		syscon_camerrx_offset = 0;
+> > +	}
+> > +
+> > +	dev->syscon_camerrx = syscon_camerrx;
+> > +	dev->syscon_camerrx_offset = syscon_camerrx_offset;
+> > +	ret = cal_camerarx_regmap_init(dev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> >  	dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> >  						"cal_top");
+> >  	dev->base = devm_ioremap_resource(&pdev->dev, dev->res);
+> 
