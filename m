@@ -2,126 +2,103 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F076CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5A3CA9EC6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2206020856
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDDC208E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g0iggF+J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ukToVhLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfJ3O6J (ORCPT
+        id S1726827AbfJ3PHu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:58:09 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:46637 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfJ3O6I (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:58:08 -0400
-Received: by mail-ua1-f68.google.com with SMTP id o4so739535uat.13
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 07:58:06 -0700 (PDT)
+        Wed, 30 Oct 2019 11:07:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55805 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfJ3PHu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 11:07:50 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g24so2483136wmh.5;
+        Wed, 30 Oct 2019 08:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hNZcxEruvf8VcEgV12QG1AuNsmpJsv+vCmtArpIWJMY=;
-        b=g0iggF+JgdTMYAr4mMgTLxZq7FZRkSb9aix7YOJppOGXwFuU39AeIlzKfye3jEC+Nf
-         E5WhW0ayBApGA3e6LQAmfNOehFs4XaZLnjzC7ylbmSjiSkkzxa18yngDgVAy+YPdf8YF
-         xzh4k4+vYJeNRay2Ay7FbZtxHpdDy9kXgIqZ559GP/rkZsw7YZC2nCN1T+d6UFyqsohT
-         mV0Yy+ut1dtfibK++DcGkXDlgi70hfa8+iO/DVyt7lOw3AwJKDbcj0I3v6f5sNIdnQZ0
-         DMRds/mSHEGNJOcd+6X5gfZlsom9I6uJ2Ww9uxmaFKR2KXDWn8SKCIRg7ZG/yv2Ldf++
-         lVbA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IVhb82hZKy3JKoMCSWoDHfXIpFlhHoV+nkQ7avEsjo8=;
+        b=ukToVhLSujgmB9Tsiif4JAXcvd0xOODNlntL+1C3r/lc/f58KQACTRUGKbG5qP2hAw
+         U74Ix2ccXLUAiQWVrbAwUPMFq+yEXzkjX3nQIYGl6metluaAOkyl/5hiXQL/H4zKuJDB
+         WAK5Tbh2E2k0bvw6+aqmI9jZsOPu0Zk5/LfRcfrdUiSiHzP5FtUzqWAUddDJQovDB5Af
+         jhIDrBoTrTYtoKg3WrsnRBAZEAlanmnC0/BI7G0643ST2BUk7yyQzjCRVZjDUGq0MDQT
+         mm7VogHOeHMAOW74rp7Gw+/SyULbZD673Cah1FKY4JUzC3K8h6yfL4mt/m6L7tsHPq9+
+         +iLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hNZcxEruvf8VcEgV12QG1AuNsmpJsv+vCmtArpIWJMY=;
-        b=ZHASwNV7g9b4/HJWJN/hLW+K5LeScBtqTcficDCeHl8CopTyRXdKI7L8fuGTrzkqtj
-         bOCY4Ebj4eGjxt1Z31TnyJiqDrzXrarA3L/3W9fewnnM70C3hOrjSCeo7eKeNNxb2Ps0
-         WlySZ9RiiNiUw/fcSykmehhEk7cwqrHx64qxXHutr7mTMNupHqZ3UJD716VFNc7iY5yu
-         ro1+kZROblZ4UwCRMmRc4NgPNCnUpCYj+1hxXDNEua7VqDc5plKZxGFsHkBCHE4FFUkd
-         BZXaCHLs1TLWoPMK0DA9EMUhvuG0EoaIKU0DXkqDzJADEcx3BI/vsQIL7UENytC39B/J
-         7lZQ==
-X-Gm-Message-State: APjAAAVFZeec6bwkxTWsC76iYRnBxW20rvw6SsEioiXV49pIKnaIyWyA
-        qU/5DTXMZQam42I72KAv4i+hMJUVpWgqMZqh43CxcA==
-X-Google-Smtp-Source: APXvYqxwRGxtAP844tj/7wkb9yqnOyn/FSj46ZD8hZRQHKMQoF9toDZna5qDMU5k6nneyPMsHKvQq6HgHENy9Dudpy8=
-X-Received: by 2002:ab0:7095:: with SMTP id m21mr23352ual.15.1572447485669;
- Wed, 30 Oct 2019 07:58:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IVhb82hZKy3JKoMCSWoDHfXIpFlhHoV+nkQ7avEsjo8=;
+        b=Y1APl4FXHfnxQHkRzYDIcsEXVSnkPUu8DuwNXVYh4Tm7wztF1x/4zT83JJRH3V4yRe
+         6xTUHQc50ukOHEzbS1mSX9p8Byso3P8y1Pnb8X08tAqouxarSbakSYSDbqWcHu3H7PBb
+         o8r6FLGkS/Ul029TNb8nBeJUGuG2MtODFaJOjq3ED+wizyDBVsP1NXt3CdhSyeaf9i+Q
+         ArDm9ZQjUpI2Z2FHwUKKLTZvdhWTfSQ4XnJA+qXjGIodppYT33kcKV2Os/UxrITl0FsR
+         /WrMIidS2FRGurCZdspRHEhu7dtCdlYjXO+AHgKNCpuHUHO65yMoSwUfxJ2IIfJSMgwF
+         zHXg==
+X-Gm-Message-State: APjAAAWkHumqEl9JnUEFMglz5RCFRhIs+ghJiLljO6m7/JBrtVBLSR+h
+        5jTsAtsk2C/pjhugdBQeHLY=
+X-Google-Smtp-Source: APXvYqxbS22vg9ni+tcUXA1fmRlwnTOErKtdg+KUUsw6WFM4XaT+NAQHuQDlB3SGcH30V/QKToPdFA==
+X-Received: by 2002:a05:600c:254:: with SMTP id 20mr8704020wmj.123.1572448067972;
+        Wed, 30 Oct 2019 08:07:47 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id 11sm278074wmg.36.2019.10.30.08.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 08:07:47 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v7 0/2] Allwinner H6 Mali GPU support
+Date:   Wed, 30 Oct 2019 16:07:40 +0100
+Message-Id: <20191030150742.3573-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1572345042-101207-1-git-send-email-manish.narani@xilinx.com> <1572345042-101207-4-git-send-email-manish.narani@xilinx.com>
-In-Reply-To: <1572345042-101207-4-git-send-email-manish.narani@xilinx.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 30 Oct 2019 15:57:29 +0100
-Message-ID: <CAPDyKFqRmFPaiM=AoiWvy5xhYj=fHTt+S1wu8o0W67Nc5ZZ1kA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/8] dt-bindings: mmc: arasan: Add optional properties
- for Arasan SDHCI
-To:     Manish Narani <manish.narani@xilinx.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>, jolly.shah@xilinx.com,
-        nava.manne@xilinx.com, rajan.vaja@xilinx.com,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        git@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 29 Oct 2019 at 11:30, Manish Narani <manish.narani@xilinx.com> wrote:
->
-> Add optional properties for Arasan SDHCI which are used to set clk delays
-> for different speed modes in the controller.
->
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  .../devicetree/bindings/mmc/arasan,sdhci.txt     | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> index b51e40b2e0c5..c0f505b6cab5 100644
-> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> @@ -46,6 +46,22 @@ Optional Properties:
->      properly. Test mode can be used to force the controller to function.
->    - xlnx,int-clock-stable-broken: when present, the controller always reports
->      that the internal clock is stable even when it is not.
-> +  - arasan-clk-phase-legacy: Input/Output Clock Delay pair in degrees for Legacy Mode.
-> +  - arasan-clk-phase-mmc-hs: Input/Output Clock Delay pair degrees for MMC HS.
-> +  - arasan-clk-phase-sd-hs: Input/Output Clock Delay pair in degrees for SD HS.
-> +  - arasan-clk-phase-uhs-sdr12: Input/Output Clock Delay pair in degrees for SDR12.
-> +  - arasan-clk-phase-uhs-sdr25: Input/Output Clock Delay pair in degrees for SDR25.
-> +  - arasan-clk-phase-uhs-sdr50: Input/Output Clock Delay pair in degrees for SDR50.
-> +  - arasan-clk-phase-uhs-sdr104: Input/Output Clock Delay pair in degrees for SDR104.
-> +  - arasan-clk-phase-uhs-ddr50: Input/Output Clock Delay pair in degrees for SD DDR50.
-> +  - arasan-clk-phase-mmc-ddr52: Input/Output Clock Delay pair in degrees for MMC DDR52.
-> +  - arasan-clk-phase-mmc-hs200: Input/Output Clock Delay pair in degrees for MMC HS200.
-> +  - arasan-clk-phase-mmc-hs400: Input/Output Clock Delay pair in degrees for MMC HS400.
+Hi,
 
-I don't mind if you convert these to common mmc bindings.
+Proper iommu patches has been merged[0].
 
-I think other controllers/platforms may find them useful, at least at
-some point, if not already.
+There is still work to do to make it works with panfrost
+but all modules can be probed and removed smoothly.
 
-> +
-> +  Above mentioned are the clock (phase) delays which are to be configured in the
-> +  controller while switching to particular speed mode. The range of values are
-> +  0 to 359 degrees. If not specified, driver will configure the default value
-> +  defined for particular mode in it.
->
->  Example:
->         sdhci@e0100000 {
-> --
-> 2.17.1
->
+These bindings could be used also for out-of-tree modules.
 
-Kind regards
-Uffe
+[0]: https://lore.kernel.org/linux-iommu/cover.1569851517.git.robin.murphy@arm.com/
+
+Change since v6:
+ - Remove iommu patches
+ - Rebase on 5.4-rc4
+
+Clément Péron (2):
+  arm64: dts: allwinner: Add ARM Mali GPU node for H6
+  arm64: dts: allwinner: Add mali GPU supply for H6 boards
+
+ .../boot/dts/allwinner/sun50i-h6-beelink-gs1.dts   |  6 ++++++
+ .../boot/dts/allwinner/sun50i-h6-orangepi-3.dts    |  6 ++++++
+ .../boot/dts/allwinner/sun50i-h6-orangepi.dtsi     |  6 ++++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      |  6 ++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi       | 14 ++++++++++++++
+ 5 files changed, 38 insertions(+)
+
+-- 
+2.20.1
+
