@@ -6,94 +6,100 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAD7C47E49
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 18:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746C1CA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 18:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD755208C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 18:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D57520856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 18:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572460159;
-	bh=8mRUXTJjCOxuDC/f3E4dUcodPz2hwhq9ROb6xWimgUw=;
+	s=default; t=1572461386;
+	bh=gYeKNtUM/kM/t5fiqa/0cB3LfncGXAfE1NIk3loohs0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=S71aD/RLbMbdqrjA+IXFRpOfpalJh/SZL03gzD5dt5DXh8IACS5Om+DF6SMd9Bppd
-	 xiRd6ubPMJ/cuVpbR+i2fW5pO5IuGD2TCeDYj2ph5fKVARg8nzEDZgvU0yheO7ITp7
-	 otv5McvQx/Ath5gJ7XXPGIn/YzYQ4XLuZKGVsZqM=
+	b=YsLLI+H6dfvNBqbA4DCtutc97GX3SRbJO1FJnxbEcKljNMFAYPuuQEa9yXeBS5GD1
+	 RGOlvaxxgipTfIDOqvAnRYnGoG0hP4jQ7PMznKdfjPI0v7NF0JHJ462mEX+2R8Vv29
+	 C6udtx8GH23FfY6YYgwetUGwttHPzpZ0J6TduuFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfJ3S3T (ORCPT
+        id S1728357AbfJ3Stm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 14:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 14:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbfJ3S3T (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 14:29:19 -0400
-Received: from mail-yw1-f54.google.com (mail-yw1-f54.google.com [209.85.161.54])
+        id S1726509AbfJ3Stm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 14:49:42 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 361572080F;
-        Wed, 30 Oct 2019 18:29:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F06E20856;
+        Wed, 30 Oct 2019 18:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572460158;
-        bh=8mRUXTJjCOxuDC/f3E4dUcodPz2hwhq9ROb6xWimgUw=;
+        s=default; t=1572461381;
+        bh=gYeKNtUM/kM/t5fiqa/0cB3LfncGXAfE1NIk3loohs0=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fwUUaTjvZFgUJil1IXS9AhVEU264hZRXl50COz5x/XLMLHQQzQiRALUTQ+ZFqpamy
-         EpC+HkKQTFm3VhvBG21qnOQFaNNu8/JF98kgY2IBXw1rRQ8XcSpmpXBPDKlKbpoaKO
-         /I3qRD/IQ67J10iIrPFh0as4TQTn3WUwRL5dRv9k=
-Received: by mail-yw1-f54.google.com with SMTP id r134so1194316ywg.2;
-        Wed, 30 Oct 2019 11:29:18 -0700 (PDT)
-X-Gm-Message-State: APjAAAUNrv0htz6TpwPevU8aaNvIt7LDhiJzD2lpZY8JENDhjFSi516G
-        Hk8NjEwzqJh4txRaNcGi8szN7vA1sHDg73c5Rg==
-X-Google-Smtp-Source: APXvYqwPvbH97unUOfenxq59NvH7FZDQPpdp9wB2owQFa72spV1Qvwkwi3QT2jTWlOIv6li8nVbIoxwEwO/fQ1RCJj8=
-X-Received: by 2002:a81:2748:: with SMTP id n69mr760082ywn.281.1572460157381;
- Wed, 30 Oct 2019 11:29:17 -0700 (PDT)
+        b=qW8v5vaFBpy8dPo13YzVcehUY2UtQKk16IJw+Bk4VWe24nDSLm2qPzIM69qpJNggL
+         4v0bSEjX9mhBtaXoFNk81OKwuGDmDQzlnrHxA/KhX5oXXB8IT7ejLE3MLtbh/NXe+P
+         kjo3Mjn9NgMGtCG4WbgJ5N4RV59/BEGBc2+coMec=
+Received: by mail-qt1-f172.google.com with SMTP id x14so4705280qtq.3;
+        Wed, 30 Oct 2019 11:49:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAVYvlcxnU5X/lCsVTJgso2XE6GNoEgehuJlQPJ/Xq0Yx/KDSt/3
+        OnKjrwQLr2+/6VDprxbty5NfgUUOVNUrOcxv0A==
+X-Google-Smtp-Source: APXvYqxvF1bnQPOUd0XIfXsbyq6r9VwPToE4O24OpGpuMKLWZlpqRBut720AL7EXS1WuMfXKuOJLpZwQipA+aMdbyA4=
+X-Received: by 2002:a05:6214:8e5:: with SMTP id dr5mr311497qvb.79.1572461380557;
+ Wed, 30 Oct 2019 11:49:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <1572185379-21537-1-git-send-email-akinobu.mita@gmail.com>
- <1572185379-21537-2-git-send-email-akinobu.mita@gmail.com>
- <20191030142417.GA8919@bogus> <CAC5umyhZ+w9b7M=gWGDynoMerZ7FiP3+U_RXyQ2P_p7cuLVRgA@mail.gmail.com>
-In-Reply-To: <CAC5umyhZ+w9b7M=gWGDynoMerZ7FiP3+U_RXyQ2P_p7cuLVRgA@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 30 Oct 2019 13:29:06 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKa=936WNhTDQ0S9bW0fYPMHQXSwutjnQs0W9vP8h7sow@mail.gmail.com>
-Message-ID: <CAL_JsqKa=936WNhTDQ0S9bW0fYPMHQXSwutjnQs0W9vP8h7sow@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add leds-meter binding
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com> <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com> <20191030141736.GN4568@sirena.org.uk>
+ <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
+In-Reply-To: <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 30 Oct 2019 13:49:25 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+Message-ID: <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 10:27 AM Akinobu Mita <akinobu.mita@gmail.com> wrot=
-e:
+On Wed, Oct 30, 2019 at 9:30 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 >
-> 2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 23:24 Rob Herring <robh@ke=
-rnel.org>:
-> >
-> > On Sun, Oct 27, 2019 at 11:09:38PM +0900, Akinobu Mita wrote:
-> > > Add DT binding for generic LED level meter which consists of multiple=
- LED
-> > > devices by different drivers.
-> >
-> > Do you have some pointers to actual h/w?
 >
-> This doesn't require a specific hardware.
+>
+> On 30/10/2019 16.17, Mark Brown wrote:
+> > On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
+> >> On 30/10/2019 15.12, Rob Herring wrote:
+> >
+> >>> Why can't we just add a shared flag like we have for interrupts?
+> >>> Effectively, we have that for resets too, it's just hardcoded in the
+> >>> the drivers.
+> >
+> >> This would be kind of the same thing what the
+> >> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
+> >> fixed-regulators afaik.
+> >
+> > The theory with that was that any usage of this would need the
+> > higher level code using the GPIO to cooperate so they didn't step
+> > on each other's toes so the GPIO code should just punt to it.
+>
+> But from the client driver point of view a GPIO is still GPIO and if the
+> components are unrelated then it is hard to patch things together from
+> the top.
 
-But I do for my understanding. If I don't understand it, then my
-default answer is: no, we don't do "generic" bindings because the h/w
-is never generic.
-
-> If there are more than two LEDs that can be described by devicetree,
-> it can be an LED level meter by bundling them up with this binding.
-
-Depends on the physical locations too? If you just want to group any
-random LEDs, then do that from userspace because it's more flexible.
+You can't escape a driver being aware. If a driver depends on that
+GPIO to actually be set to states the driver says, then it can't be
+guaranteed to work. For example, maybe the driver assumes the device
+is in reset state after toggling reset and doesn't work if not in
+reset state. The driver has to be aware no matter what you do in DT.
 
 Rob
