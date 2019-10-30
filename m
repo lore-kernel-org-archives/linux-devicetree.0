@@ -2,169 +2,311 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D919CA9EC5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018BACA9EC5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E60220679
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B352720856
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 14:50:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXjnRC/x"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bNgUZU71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfJ3Ood (ORCPT
+        id S1726479AbfJ3Ou5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:44:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44783 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfJ3Ood (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:44:33 -0400
-Received: by mail-io1-f66.google.com with SMTP id w12so2786713iol.11;
-        Wed, 30 Oct 2019 07:44:32 -0700 (PDT)
+        Wed, 30 Oct 2019 10:50:57 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44139 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfJ3Ou4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 10:50:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q26so1729571pfn.11
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 07:50:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v69E/vAISH85pBxwVE2N7vhsH75pOHxu/fxiGY0QbeQ=;
-        b=jXjnRC/x0AeJB/QbSDoglLlI2mM7uoL59nA1SheOa24mpXYHVbx8ZGru91eHCOC5yI
-         SJ7vwR86I0EES8IlDT4BmaDC+tPi6otXqTk+VUUQQiYLCsCmtehR0jpFweGy7EDkdets
-         kUr2diEZfOmYvdliAUEOSVoTxDU+45JBI8xWqBWSRt8bxMK3LKc3fYZojC1uHE/Tlz9N
-         E8KOg3JZclRFc4rXl5LP83vK/QrmmmBVQp2o5mTvTyDf+dX3WPd4887MZPG8Yc7xsuco
-         oiVncDPY0nb1HmJ49VrFGHGIqvmcCr3BsVmxsXtwQYePRzEYveNrwfqIWRbnMbe3Rv8Z
-         S82w==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:subject:to:cc:user-agent:date;
+        bh=kUX+QB+n6uPsMbBuXUFFDaJg5lKGQ/rdJhKtAOQxM68=;
+        b=bNgUZU71v+0fmmNO32iK5sG8ShIFzxEVanGouBgUUl1TWyrYV9O7bG3dlDm8YLckH4
+         d+aygtJELB/eg5oR8mSOvB/gHvYdLip5dMSYcpm4ZFmdvQ9c11yC9alSFajCI0d29EH6
+         lsn085FJbQRp1w/1MosfnmNAbXjWAU5xYDf3o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v69E/vAISH85pBxwVE2N7vhsH75pOHxu/fxiGY0QbeQ=;
-        b=PbY+p/gIWZr8Fe45LLdvRhi2JWGNUKveD02P9sPNvwrVM6TyXQai1X3TdCpNLg7K8s
-         5vYI+NWF2TJeeoZFbBl5gkzbm6h2ImePkO7nDblT+FywB4pjpvfoLDDBS6Sz3VfKaKC7
-         QK2lBcqGPXHeeKLjIQ03C5dqiFloxosEqIlKtjG9I1RCUYQvG2gHJ/6LvKziI1MnSz11
-         Rt8orm0GDUs9sJoqWzz6Ph7pNV4Y7GPWEgHuTAJctEDgXkuSHJS9jQlP67rB3c4IuBoU
-         8AVun+X7TaXcdaIOs02NAY91Z+LdDIYAk26ztiQYO7pLzWgC4EeDByUSU2z1cxWmDWkV
-         cCcw==
-X-Gm-Message-State: APjAAAVahPdHEFL/emv/Pu7yb4wTTuQr7nURF81ZVjAopZ6RUB+NZpDQ
-        lO0HQgfcKI6Bfq8qXesa4a//b9U3jTHqTBTyImyDaw==
-X-Google-Smtp-Source: APXvYqz9ISkB3eGeL8FfMvO09xLvJ4YONlu+FugWEIXfRPeSrJQJUmxiQL8wy/pNoaUViiXqYAOHQtwSg3lnrA2NftI=
-X-Received: by 2002:a5e:9245:: with SMTP id z5mr87806iop.205.1572446672018;
- Wed, 30 Oct 2019 07:44:32 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
+         :user-agent:date;
+        bh=kUX+QB+n6uPsMbBuXUFFDaJg5lKGQ/rdJhKtAOQxM68=;
+        b=VQ42RcCR3l+zSc0H1jv3Bo6ZgK1XskY3nihltoeLTiqmZ/V1BYb8TxHMFj4kInJQAO
+         FGcZ3xDESy70mUjVWAkZHZrYAo8XJtNTeKu0nSw/on6Xqv833TPzgAFCKws1fD97QWms
+         of3pu024PTM+7j2h5f6cgiQjHtpCh/gqaABORXeFzMxNJO9GilfqnQULN3c0KPYAVlG0
+         KU0q1BspeYHGvjluV0xJipv3F07wZkP06Fke4AyMqitTbvy8o+9qf2q7BWAByVyx5psa
+         w1X5878x3Tcj+/i50UtP9AEA1cCgQDHnS0kflco3svYDdAKERqP3SzibDNK5yyXbPL6p
+         BJDA==
+X-Gm-Message-State: APjAAAUSCHgdQ6+T4EwyxyKYiEpKWez7QEeUhaaVoMpxuiZUaA+V8Lxl
+        wkGqdpnBlRWMj+n2FKV1XUUhzA==
+X-Google-Smtp-Source: APXvYqzbFFg5OC6TJ9lnqjvMpIqFnf7mzbiND6t96bWdmgGcpqetszJAYKhFjob6bIjnEsoSQ7lghA==
+X-Received: by 2002:a63:3442:: with SMTP id b63mr8798587pga.264.1572447055787;
+        Wed, 30 Oct 2019 07:50:55 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s11sm2394909pjp.26.2019.10.30.07.50.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 07:50:55 -0700 (PDT)
+Message-ID: <5db9a34f.1c69fb81.23dfc.7ea5@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191016135147.7743-1-aford173@gmail.com>
-In-Reply-To: <20191016135147.7743-1-aford173@gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 30 Oct 2019 09:44:20 -0500
-Message-ID: <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
-Subject: Re: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display support
-To:     dri-devel <dri-devel@lists.freedesktop.org>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191029112700.14548-10-srinivas.kandagatla@linaro.org>
+References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org> <20191029112700.14548-10-srinivas.kandagatla@linaro.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 09/11] pinctrl: qcom-wcd934x: Add support to wcd934x pinctrl driver.
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
+        robh@kernel.org
+Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org,
+        Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 30 Oct 2019 07:50:54 -0700
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 8:52 AM Adam Ford <aford173@gmail.com> wrote:
->
-> Previously, there was an omap panel-dpi driver that would
-> read generic timings from the device tree and set the display
-> timing accordingly.  This driver was removed so the screen
-> no longer functions.  This patch modifies the panel-simple
-> file to setup the timings to the same values previously used.
->
-> Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
->
+Quoting Srinivas Kandagatla (2019-10-29 04:26:58)
+> From: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
+>=20
+> This patch adds support to wcd934x pinctrl block found in
+> WCD9340/WC9341 Audio codecs.
+>=20
+> [Srini: multiple cleanups to the code]
 
-Will this be able to make it into linux-next for the 5.5 merge window?
- I believe Tony has picked up the device tree portion in his omap
-tree, but I haven't seen any notifications on this series on whether
-or not it's being applied.  I also don't know which tree I need to
-look if it's already been applied.
+This goes after the author signoff and before yours. Can you add more
+details too?
 
-This fixes a regression introduced a while ago where the driver I was
-using for the display was removed.
-
-thank you,
-
-adam
-
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
-> V5:  No Change
-> V4:  No Change
-> V3:  No Change
-> V2:  No Change
->
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 5d487686d25c..72f69709f349 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
->         .flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
->  };
->
-> +static const struct drm_display_mode logicpd_type_28_mode = {
-> +       .clock = 9000,
-> +       .hdisplay = 480,
-> +       .hsync_start = 480 + 3,
-> +       .hsync_end = 480 + 3 + 42,
-> +       .htotal = 480 + 3 + 42 + 2,
+>  drivers/pinctrl/qcom/Kconfig                |   7 +
+>  drivers/pinctrl/qcom/Makefile               |   1 +
+>  drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c | 365 ++++++++++++++++++++
+>  3 files changed, 373 insertions(+)
+>  create mode 100644 drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+>=20
+> diff --git a/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c b/drivers/pinctr=
+l/qcom/pinctrl-wcd934x-gpio.c
+> new file mode 100644
+> index 000000000000..1aff88d0bcb3
+> --- /dev/null
+> +++ b/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+> @@ -0,0 +1,365 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
+> +// Copyright (c) 2019, Linaro Limited
 > +
-> +       .vdisplay = 272,
-> +       .vsync_start = 272 + 2,
-> +       .vsync_end = 272 + 2 + 11,
-> +       .vtotal = 272 + 2 + 11 + 3,
-> +       .vrefresh = 60,
-> +       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+> +#include <linux/module.h>
+> +#include <linux/gpio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+> +
+> +#include "../core.h"
+> +#include "../pinctrl-utils.h"
+> +
+> +#define WCD_REG_DIR_CTL_OFFSET 0x42
+> +#define WCD_REG_VAL_CTL_OFFSET 0x43
+> +#define WCD_GPIO_PULL_UP       1
+> +#define WCD_GPIO_PULL_DOWN     2
+> +#define WCD_GPIO_BIAS_DISABLE  3
+> +#define WCD_GPIO_STRING_LEN    20
+> +#define WCD934X_NPINS          5
+> +
+> +/**
+> + * struct wcd_gpio_pad - keep current GPIO settings
+> + * @offset: offset of gpio.
+> + * @is_valid: Set to false, when GPIO in high Z state.
+> + * @value: value of a pin
+> + * @output_enabled: Set to true if GPIO is output and false if it is inp=
+ut
+> + * @pullup: Constant current which flow through GPIO output buffer.
+> + * @strength: Drive strength of a pin
+> + */
+> +struct wcd_gpio_pad {
+> +       u16  offset;
+> +       bool is_valid;
+> +       bool value;
+> +       bool output_enabled;
+> +       unsigned int pullup;
+> +       unsigned int strength;
 > +};
 > +
-> +static const struct panel_desc logicpd_type_28 = {
-> +       .modes = &logicpd_type_28_mode,
-> +       .num_modes = 1,
-> +       .bpc = 8,
-> +       .size = {
-> +               .width = 105,
-> +               .height = 67,
-> +       },
-> +       .delay = {
-> +               .prepare = 200,
-> +               .enable = 200,
-> +               .unprepare = 200,
-> +               .disable = 200,
-> +       },
-> +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +       .bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-> +                    DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
+> +struct wcd_gpio_priv {
+> +       struct device *dev;
+> +       struct regmap *map;
+> +       struct pinctrl_dev *ctrl;
+> +       struct gpio_chip chip;
 > +};
 > +
->  static const struct panel_desc mitsubishi_aa070mc01 = {
->         .modes = &mitsubishi_aa070mc01_mode,
->         .num_modes = 1,
-> @@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
->         }, {
->                 .compatible = "lg,lp129qe",
->                 .data = &lg_lp129qe,
-> +       }, {
-> +               .compatible = "logicpd,type28",
-> +               .data = &logicpd_type_28,
->         }, {
->                 .compatible = "mitsubishi,aa070mc01-ca1",
->                 .data = &mitsubishi_aa070mc01,
-> --
-> 2.17.1
->
+> +static int wcd_gpio_read(struct wcd_gpio_priv *priv_data,
+> +                        struct wcd_gpio_pad *pad, unsigned int addr)
+> +{
+> +       unsigned int val;
+> +       int ret;
+> +
+> +       ret =3D regmap_read(priv_data->map, addr, &val);
+> +       if (ret < 0)
+> +               dev_err(priv_data->dev, "%s: read 0x%x failed\n",
+> +                       __func__, addr);
+> +       else
+> +               ret =3D (val >> pad->offset);
+> +
+> +       return ret;
+> +}
+> +
+> +static int wcd_gpio_write(struct wcd_gpio_priv *priv_data,
+> +                         struct wcd_gpio_pad *pad, unsigned int addr,
+> +                         unsigned int val)
+> +{
+> +       int ret;
+> +
+> +       ret =3D regmap_update_bits(priv_data->map, addr, (1 << pad->offse=
+t),
+> +                                val << pad->offset);
+> +       if (ret < 0)
+> +               dev_err(priv_data->dev, "write 0x%x failed\n", addr);
+
+Is there value in these error messages? Also, use %#x to get '0x'.
+
+> +
+> +       return ret;
+> +}
+[...]
+> +
+> +static int wcd_pinctrl_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct pinctrl_pin_desc *pindesc;
+> +       struct pinctrl_desc *pctrldesc;
+> +       struct wcd_gpio_pad *pad, *pads;
+> +       struct wcd_gpio_priv *priv_data;
+> +       u32 npins =3D WCD934X_NPINS;
+> +       char **name;
+> +       int i;
+> +
+> +       priv_data =3D devm_kzalloc(dev, sizeof(*priv_data), GFP_KERNEL);
+> +       if (!priv_data)
+> +               return -ENOMEM;
+> +
+> +       priv_data->dev =3D dev;
+> +       priv_data->map =3D dev_get_regmap(dev->parent, NULL);
+> +       if (!priv_data->map) {
+> +               dev_err(dev, "%s: failed to get regmap\n", __func__);
+> +               return  -EINVAL;
+> +       }
+> +
+> +       pindesc =3D devm_kcalloc(dev, npins, sizeof(*pindesc), GFP_KERNEL=
+);
+> +       if (!pindesc)
+> +               return -ENOMEM;
+> +
+> +       pads =3D devm_kcalloc(dev, npins, sizeof(*pads), GFP_KERNEL);
+> +       if (!pads)
+> +               return -ENOMEM;
+
+Is it possible to put the pad struct around the pindesc struct? It's
+sort of sad that we have to allocate a chunk of memory twice for the
+pindesc and the pads when we could either use container_of() on the
+pindesc or just point the pindesc driver data member to the container
+structure for the qcom specific bits.
+
+> +
+> +       pctrldesc =3D devm_kzalloc(dev, sizeof(*pctrldesc), GFP_KERNEL);
+> +       if (!pctrldesc)
+> +               return -ENOMEM;
+> +
+> +       pctrldesc->pctlops =3D &wcd_pinctrl_ops;
+> +       pctrldesc->confops =3D &wcd_pinconf_ops;
+> +       pctrldesc->owner =3D THIS_MODULE;
+> +       pctrldesc->name =3D dev_name(dev);
+> +       pctrldesc->pins =3D pindesc;
+> +       pctrldesc->npins =3D npins;
+> +
+> +       name =3D devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
+> +       if (!name)
+> +               return -ENOMEM;
+> +
+> +       for (i =3D 0; i < npins; i++, pindesc++) {
+> +               name[i] =3D devm_kzalloc(dev, sizeof(char) * WCD_GPIO_STR=
+ING_LEN,
+> +                                      GFP_KERNEL);
+> +               if (!name[i])
+> +                       return -ENOMEM;
+> +
+> +               pad =3D &pads[i];
+> +               pindesc->drv_data =3D pad;
+> +               pindesc->number =3D i;
+> +               snprintf(name[i], (WCD_GPIO_STRING_LEN - 1), "gpio%d", (i=
++1));
+> +               pindesc->name =3D name[i];
+
+Why not use devm_kasprintf()? The 'name' array is also unnecessary?
+
+> +               pad->offset =3D i;
+> +               pad->is_valid  =3D true;
+> +       }
+> +
+> +       priv_data->chip =3D wcd_gpio_chip;
+> +       priv_data->chip.parent =3D dev;
+> +       priv_data->chip.base =3D -1;
+> +       priv_data->chip.ngpio =3D npins;
+> +       priv_data->chip.label =3D dev_name(dev);
+> +       priv_data->chip.of_gpio_n_cells =3D 2;
+> +       priv_data->chip.can_sleep =3D false;
+> +       platform_set_drvdata(pdev, priv_data);
+> +
+> +       priv_data->ctrl =3D devm_pinctrl_register(dev, pctrldesc, priv_da=
+ta);
+> +       if (IS_ERR(priv_data->ctrl)) {
+> +               dev_err(dev, "%s: failed to register to pinctrl\n", __fun=
+c__);
+> +               return PTR_ERR(priv_data->ctrl);
+> +       }
+> +
+> +       return gpiochip_add_data(&priv_data->chip, priv_data);
+
+WHy not use devm_gpiochip_add_data()?
+
+> +}
+> +
+> +static int wcd_pinctrl_remove(struct platform_device *pdev)
+> +{
+> +       struct wcd_gpio_priv *priv_data =3D platform_get_drvdata(pdev);
+> +
+> +       gpiochip_remove(&priv_data->chip);
+> +
+> +       return 0;
+
+And drop this function?
+
+> +}
+> +
+> +static const struct of_device_id wcd_pinctrl_of_match[] =3D {
+> +       { .compatible =3D "qcom,wcd9340-pinctrl" },
+> +       { .compatible =3D "qcom,wcd9341-pinctrl" },
+> +       { },
+
+Nitpick: Drop the comma on the sentinel.
+
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, wcd_pinctrl_of_match);
+
+Nitpick: Drop the newline between device table and match table.
+
