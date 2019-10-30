@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9147FC47E49
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E43DCA9EC6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51983208E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E12D208E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 15:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450611;
-	bh=A8OJ0gmDn66ao2MoOx6aQnaAj57Lc5OKhEELCpvSyIg=;
+	s=default; t=1572450689;
+	bh=Jcb41jK/gNTOcohgptRyqBDiCEXmFksh7t2MhPz/fk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iMudRv9+2TI3K71tbk2X8NPFV8mX71OdCtnO0AbD4UXuOVm7n8uxyVebbeTtdNA1z
-	 PnnMs0WgvlejFQ+gebOyqRAgr6QgiZ3ijPxf6DhoaHqYnrDm11ExdV8vmRwOeV/p8R
-	 dKkX2dYZKW7IMOQN5NgZ4ij360LPfG2OT5pR19no=
+	b=I8EPDv+qt2vRz2p+QTro+/Sxaa3rzIh9EREZ/O0tV3Yexc8n3inJTXD/Sw8Vk65la
+	 n8qRqdmYvH3/+UeBOiHFB/LZmC0JVs1Vx0K0oUVv5wTsOfuuAEh4c4u9q0KXa1xIJh
+	 wWS1p+tKk5T06zR+yVzBew4pvJriYpLo58vgm5Dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfJ3Ptm (ORCPT
+        id S1727778AbfJ3Pv2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50168 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:51:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfJ3Ptm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:49:42 -0400
+        id S1727725AbfJ3Pv1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:27 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 240E221924;
-        Wed, 30 Oct 2019 15:49:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74C06208C0;
+        Wed, 30 Oct 2019 15:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450581;
-        bh=A8OJ0gmDn66ao2MoOx6aQnaAj57Lc5OKhEELCpvSyIg=;
+        s=default; t=1572450686;
+        bh=Jcb41jK/gNTOcohgptRyqBDiCEXmFksh7t2MhPz/fk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVOsCBVqZM5jKmwcgK6phzaFWQUh60CiC5PrXPjjPtkSVSurdKQHiEI1TGDFUo8uW
-         pwzPv3AZpIlMuxvsJhlV7zI7jMVfz6jK6Z0hCe3raZABVmCPr9DjrusOpWCh0sz9Ub
-         KkiboXVeF5PbBJHSvv/Fja1POTIFnt2ILHDhB3SU=
+        b=mMRBS3LFbJsx2GZwh1IkIuNYtVwBWNjmA8TLDfo+umrZ5//lsyLd6e4Kilwkrx1Fw
+         dZHV0D22BNNn//xXX+xR0iibX2gY6EA+I7PetQQV2FIt9RbaM083UDU7eJCQpGzDtH
+         qvhfj1tSU7E5ptXm1H2MX0rwEZ38kACyPvoUGSgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 06/81] arm64: dts: allwinner: a64: pine64-plus: Add PHY regulator delay
-Date:   Wed, 30 Oct 2019 11:48:12 -0400
-Message-Id: <20191030154928.9432-6-sashal@kernel.org>
+Cc:     Soeren Moch <smoch@web.de>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 25/81] arm64: dts: rockchip: fix RockPro64 vdd-log regulator settings
+Date:   Wed, 30 Oct 2019 11:48:31 -0400
+Message-Id: <20191030154928.9432-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -60,44 +59,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Soeren Moch <smoch@web.de>
 
-[ Upstream commit 2511366797fa6ab4a404b4b000ef7cd262aaafe8 ]
+[ Upstream commit 0990c5e7573098117c69651821647c228483e31b ]
 
-Depending on kernel and bootloader configuration, it's possible that
-Realtek ethernet PHY isn't powered on properly. According to the
-datasheet, it needs 30ms to power up and then some more time before it
-can be used.
+The RockPro64 schematic [1] page 18 states a min voltage of 0.8V and a
+max voltage of 1.4V for the VDD_LOG pwm regulator. However, there is an
+additional note that the pwm parameter needs to be modified.
+From the schematics a voltage range of 0.8V to 1.7V can be calculated.
+Additional voltage measurements on the board show that this fix indeed
+leads to the correct voltage, while without this fix the voltage was set
+too high.
 
-Fix that by adding 100ms ramp delay to regulator responsible for
-powering PHY.
+[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
 
-Fixes: 94dcfdc77fc5 ("arm64: allwinner: pine64-plus: Enable dwmac-sun8i")
-Suggested-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
+Signed-off-by: Soeren Moch <smoch@web.de>
+Link: https://lore.kernel.org/r/20191003215036.15023-1-smoch@web.de
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-index 24f1aac366d64..d5b6e8159a335 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-@@ -63,3 +63,12 @@
- 		reg = <1>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+index 5818b85255123..cad314f708300 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -166,7 +166,7 @@
+ 		regulator-always-on;
+ 		regulator-boot-on;
+ 		regulator-min-microvolt = <800000>;
+-		regulator-max-microvolt = <1400000>;
++		regulator-max-microvolt = <1700000>;
+ 		vin-supply = <&vcc5v0_sys>;
  	};
  };
-+
-+&reg_dc1sw {
-+	/*
-+	 * Ethernet PHY needs 30ms to properly power up and some more
-+	 * to initialize. 100ms should be plenty of time to finish
-+	 * whole process.
-+	 */
-+	regulator-enable-ramp-delay = <100000>;
-+};
 -- 
 2.20.1
 
