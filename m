@@ -2,113 +2,174 @@ Return-Path: <SRS0=UUkD=YX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BD2CA9EAF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 06:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832D0CA9EC0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 06:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B7820856
-	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 06:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F262053B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 30 Oct 2019 06:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EuV+imwY";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EuV+imwY"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="q+9Y348d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfJ3GGo (ORCPT
+        id S1726895AbfJ3GLp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 02:06:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46510 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfJ3GGo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 02:06:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C02F660F36; Wed, 30 Oct 2019 06:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572415603;
-        bh=4s51Cnb1yRkUC9YAVygkrHqi5ty/axuCrm5Hc1HwD1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EuV+imwY8HNt7pVYcglKgm5zzIwv6ou9HN0JTsUjPoV/YpeZEzhRrlnU9iLUJb2ui
-         j2/BZIHFa1Ag3ZcWfn4D94+DifneSRMUMuaj0aM4PwSvLrGff0N/R5bgzwTM9NiRNN
-         AQeSmEQ1izCnOe2hTmn/wU801uqKeT9TzO7kZ8gw=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 229CE60DF8;
-        Wed, 30 Oct 2019 06:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572415603;
-        bh=4s51Cnb1yRkUC9YAVygkrHqi5ty/axuCrm5Hc1HwD1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EuV+imwY8HNt7pVYcglKgm5zzIwv6ou9HN0JTsUjPoV/YpeZEzhRrlnU9iLUJb2ui
-         j2/BZIHFa1Ag3ZcWfn4D94+DifneSRMUMuaj0aM4PwSvLrGff0N/R5bgzwTM9NiRNN
-         AQeSmEQ1izCnOe2hTmn/wU801uqKeT9TzO7kZ8gw=
+        Wed, 30 Oct 2019 02:11:45 -0400
+Received: from mout01.posteo.de ([185.67.36.65]:36996 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbfJ3GLp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 02:11:45 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 343A416005E
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 07:11:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1572415901; bh=bjRhH7L04xI1t66KP/kQ2Su2wboOBZ/3yJiOmyTIH+w=;
+        h=Subject:From:To:Cc:Openpgp:Autocrypt:Date:From;
+        b=q+9Y348dGwU+vg42+pqRSOurF/oL2DxGCGyiHZik5RZnpATrWR8pzmQLC5qJFKbSf
+         C1uJv0dSuE1eopwolk6vKYgOxGq9Dqg9oZ3PrXVjsjmPbl8hYBHom6htkhaJNRyQ8y
+         vreewHt0NYPLLjemEQ6mtgEgLCpWVrsNHBiFS6c0SCyYwnOJ3H9k3DpYszfpPXlWOK
+         d0OyoPsWi+hMi1HgzcRWOpQ41c4anEQsg8Z25kEU4q3VaeYaahI0QL4Agp7kv0JgQU
+         6ZaqjUBm0dbh46QxvKeVDQhQQbzRBwLv53IqscTPKkHzV/Pf1I7NJQZRI1IsSdZ3aH
+         qO3Bhsu1sulJA==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 472ylG50jVz6tmP;
+        Wed, 30 Oct 2019 07:11:38 +0100 (CET)
+Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+From:   Martin Kepplinger <martink@posteo.de>
+To:     Abel Vesa <abelvesa@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bai Ping <ping.bai@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     devicetree@vger.kernel.org, Carlo Caione <ccaione@baylibre.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=martink@posteo.de; keydata=
+ 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
+Message-ID: <7d3a868a-768c-3cb1-c6d8-bf5fcd1ddd1c@posteo.de>
+Date:   Wed, 30 Oct 2019 07:11:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 30 Oct 2019 11:36:43 +0530
-From:   kgunda@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-Subject: Re: [PATCH v3 07/11] arm64: dts: qcom: sc7180: Add SPMI PMIC arbiter
- device
-In-Reply-To: <5db86bb1.1c69fb81.dc254.ec0b@mx.google.com>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-8-rnayak@codeaurora.org>
- <5db86bb1.1c69fb81.dc254.ec0b@mx.google.com>
-Message-ID: <78809ef8464c46018f3803454c1165ab@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+In-Reply-To: <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-29 22:11, Stephen Boyd wrote:
-> Quoting Rajendra Nayak (2019-10-23 02:02:15)
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 04808a07d7da..6584ac6e6c7b 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -224,6 +224,25 @@
->>                         };
->>                 };
->> 
->> +               spmi_bus: spmi@c440000 {
->> +                       compatible = "qcom,spmi-pmic-arb";
->> +                       reg = <0 0xc440000 0 0x1100>,
+On 23.06.19 13:47, Martin Kepplinger wrote:
+> On 10.06.19 14:13, Abel Vesa wrote:
+>> This is another alternative for the RFC:
+>> https://lkml.org/lkml/2019/3/27/545
+>>
+>> This new workaround proposal is a little bit more hacky but more contained
+>> since everything is done within the irq-imx-gpcv2 driver.
+>>
+>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
+>> handler and registers instead a wrapper which calls in the 'hijacked' 
+>> handler, after that calling into EL3 which will take care of the actual
+>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
+>>
+>> I also have the patches ready for TF-A but I'll hold on to them until I see if
+>> this has a chance of getting in.
 > 
-> Please pad out the registers to 8 numbers. See sdm845.
-Ok.. Will address it in the next series.
-> 
->> +                             <0 0xc600000 0 0x2000000>,
->> +                             <0 0xe600000 0 0x100000>,
->> +                             <0 0xe700000 0 0xa0000>,
->> +                             <0 0xc40a000 0 0x26000>;
->> +                       reg-names = "core", "chnls", "obsrvr", "intr", 
->> "cnfg";
->> +                       interrupt-names = "periph_irq";
->> +                       interrupts-extended = <&pdc 1 
->> IRQ_TYPE_LEVEL_HIGH>;
-> 
-> This is different than sdm845. I guess pdc is working?
-> 
-Yes. For SDM845 pdc controller support was not yet added. That's why 
-still the GIC interrupt is used.
-Where as for SC7180 the same is added with 
-https://lore.kernel.org/patchwork/patch/1143335/.
 
-Yes. pdc is working.
+Hi Abel,
 
->> +                       qcom,ee = <0>;
->> +                       qcom,channel = <0>;
->> +                       #address-cells = <1>;
->> +                       #size-cells = <1>;
->> +                       interrupt-controller;
->> +                       #interrupt-cells = <4>;
->> +                       cell-index = <0>;
->> +               };
->> +
+Running this workaround doesn't seem to work anymore on 5.4-rcX. Linux
+doesn't boot, with ATF unchanged (includes your workaround changes). I
+can try to add more details to this...
+
+Have you tested this for 5.4? Could you update this workaround? Please
+let me know if I missed any earlier update on this (having a cpu-sleep
+idle state).
+
+thanks!
+
+                              martin
