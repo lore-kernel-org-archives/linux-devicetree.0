@@ -2,107 +2,149 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D551CCA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB64CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 02:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A623C2080F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wkipk/vm"
+	by mail.kernel.org (Postfix) with ESMTP id E85B22080F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 02:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572490614;
+	bh=CgofPTQeAtB7ix6hkuuEnOtyruLFdF91qMc25Bi7BWc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wZnpJxWwJRI/1/99nEmr/pUwkhpQJE9hWUaQOhtW2V2Twz+6fWw4lPWfRPk2qypsK
+	 Iqg6bMN1hbgeuDHXUcz0wbugMsQTACtHq1nerAmMuo9dKQp/bxh7T/Cx2E/cnQHzNw
+	 Nls6Mis5/7xkGD8f7Mu9q2V369Vf+2pWU0ZmbAUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfJaCO6 (ORCPT
+        id S1726359AbfJaC4x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 22:14:58 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37721 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfJaCO6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 22:14:58 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b20so3245706lfp.4
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 19:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LsH3A1DqDOFl2XsHUyxDjmPi6g5GPerOQXufskJ4zsE=;
-        b=wkipk/vmz3K+UqUSWwx9TakqLnbKR+02jMAR5SGMZCzif8JAFmJ08VLcACypiWHgd3
-         Nq3A9LCWfNpUNIycEwlJ4UAxP5zL23OJiIho6/dnsB9Q36nvjP7/yqh7dc8MTagsv+FN
-         AAqP79LixqCc1p/WSlBvTZWZFa4zOOvid5BNy/2G4O03423a8n8czYonP/S1X7AzJei+
-         xFnAp1z2bYsMIRUatRet7wQ9djRfkazHtwwoJqZNe14MmN+igdTj+tXsgOE67YF8E3qO
-         ecbGQkektDWSE7iJ49llVAzwhgYwCscfYLsFMckewsT8APYyRdOiFPK6vFFNQb4UEuxg
-         dXfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LsH3A1DqDOFl2XsHUyxDjmPi6g5GPerOQXufskJ4zsE=;
-        b=T6/DHzLBggKP4E6Vr9w9I/bfJYUDMpNzoxPcMW86dnhmp9KdvUSE0/4/bvZycioEWL
-         J90d6uGTN+o04K7rUa33WBwy/zKmROSBiTcr0zllFbWw3iGnGIyk/SSJOMmAdPV129jB
-         Co58oh04vqGT1l23/25xs/Sggkdb0E0lPWXws4r7CuUwc8aT7TtgTJcdzIgBB+hop50N
-         TuP5RMSnn/uEGtx2kg4HbDDlgEM/M94R7HC0HHJxF07haDNCM4QhibeHgEC9skUdJk/v
-         gN01ah+9DDwCpCSP6gkxZGLyzzJvId+qCK5aeSPUEr6z4zsTqCsQgS4V6evraal/6pEO
-         XXUQ==
-X-Gm-Message-State: APjAAAWlA6Lu+7lQa8glQ2+eM0Pqd1ijBDNaDZHqZ/ohweEtBgryxZ5Z
-        M2XxGhiwtZFTtz4NG7xiIr2H9fsEn03oU2vbUM7Nqw==
-X-Google-Smtp-Source: APXvYqw+VI3/9pmeyk/FQBCxrTYSXbxKCCcEUYb6gLT2e3GJrpxbjpDnQJnhwJNDWQ47aNAf2rbGE63JO7PrPoICa+g=
-X-Received: by 2002:ac2:420a:: with SMTP id y10mr997190lfh.65.1572488096719;
- Wed, 30 Oct 2019 19:14:56 -0700 (PDT)
+        Wed, 30 Oct 2019 22:56:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbfJaC4x (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 Oct 2019 22:56:53 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3604B20873;
+        Thu, 31 Oct 2019 02:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572490611;
+        bh=CgofPTQeAtB7ix6hkuuEnOtyruLFdF91qMc25Bi7BWc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=D88RstLWgoLlxw5O8k1/0V3YHb6ABXLHRTKjkwMqa0IrHCE5VPI8El522iA8V2S0K
+         mBnRWfLgZaTzLUPYVCv2Oa2ruABuhTkwPf7YC8NoezrDe45QfGZ7W+hNtmrWxHKW/O
+         sGjYuq1l3Ppt4WU+qwNWqiLvABQovjX5avnt0Sks=
+Date:   Wed, 30 Oct 2019 21:56:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        martin.blumenstingl@googlemail.com,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
+ pcie link
+Message-ID: <20191031025637.GA25497@google.com>
 MIME-Version: 1.0
-References: <cover.1572245011.git.baolin.wang@linaro.org> <00202f739348258555dcc40982c330542ac61863.1572245011.git.baolin.wang@linaro.org>
- <20191030143949.GA18637@bogus>
-In-Reply-To: <20191030143949.GA18637@bogus>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Thu, 31 Oct 2019 10:14:45 +0800
-Message-ID: <CAMz4kuJ=8dOj6XbayNHKAYW7LD1EOaqv+Q4hYk_-7+R-z_m2Xw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] dt-bindings: power: sc27xx: Add a new property to
- describe the real resistance of coulomb counter chip
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com,
-        baolin.wang7@gmail.com, Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jiSKza2rM9=4=qw5UEEp6rpBkJwPHePSzikQhJF7TpLw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wed, 30 Oct 2019 at 22:39, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Oct 28, 2019 at 03:19:00PM +0800, Baolin Wang wrote:
-> > Add a new property to describe the real resistance of coulomb counter chip,
-> > which is used to calibrate the accuracy of the coulomb counter chip.
+On Thu, Oct 31, 2019 at 12:31:44AM +0100, Rafael J. Wysocki wrote:
+> On Wed, Oct 30, 2019 at 11:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 > >
-> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > ---
-> >  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    2 ++
-> >  1 file changed, 2 insertions(+)
+> > [+cc Heiner, Rajat]
 > >
-> > diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> > index 0a5705b..fc042d0 100644
-> > --- a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> > +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> > @@ -13,6 +13,7 @@ Required properties:
-> >  - io-channel-names: Should be "bat-temp" or "charge-vol".
-> >  - nvmem-cells: A phandle to the calibration cells provided by eFuse device.
-> >  - nvmem-cell-names: Should be "fgu_calib".
-> > +- sprd,calib-resistance: Specify the real resistance of coulomb counter chip in micro Ohms.
-> >  - monitored-battery: Phandle of battery characteristics devicetree node.
-> >    See Documentation/devicetree/bindings/power/supply/battery.txt
->
-> Needs a standard unit suffix.
+> > On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
+> > > On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
+> > > > [+cc Rafael, linux-pm, beginning of discussion at
+> > > > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
+> > > >
+> > > > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
+> > > > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+> > > > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+> > > > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+> > > > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
+> > > > > > > > of changing link width and speed on the fly.
+> > > > > > Please add more details about why this is needed.  Since you're adding
+> > > > > > sysfs files, it sounds like it's not actually the *driver* that needs
+> > > > > > this; it's something in userspace?
+> > > > > We have use cases to change the link speed and width on the fly.
+> > > > > One is EMI check and other is power saving.  Some battery backed
+> > > > > applications have to switch PCIe link from higher GEN to GEN1 and
+> > > > > width to x1. During the cases like external power supply got
+> > > > > disconnected or broken. Once external power supply is connected then
+> > > > > switch PCIe link to higher GEN and width.
+> > > > That sounds plausible, but of course nothing there is specific to the
+> > > > Intel Gateway, so we should implement this generically so it would
+> > > > work on all hardware.
+> > > Agree.
+> > > >
+> > > > I'm not sure what the interface should look like -- should it be a
+> > > > low-level interface as you propose where userspace would have to
+> > > > identify each link of interest, or is there some system-wide
+> > > > power/performance knob that could tune all links?  Cc'd Rafael and
+> > > > linux-pm in case they have ideas.
+> > >
+> > > To my knowledge sysfs is the appropriate way to go.
+> > > If there are any other best possible knobs, will be helpful.
+> >
+> > I agree sysfs is the right place for it; my question was whether we
+> > should have files like:
+> >
+> >   /sys/.../0000:00:1f.3/pcie_speed
+> >   /sys/.../0000:00:1f.3/pcie_width
+> >
+> > as I think this patch would add (BTW, please include sample paths like
+> > the above in the commit log), or whether there should be a more global
+> > thing that would affect all the links in the system.
+> >
+> > I think the low-level files like you propose would be better because
+> > one might want to tune link performance differently for different
+> > types of devices and workloads.
+> >
+> > We also have to decide if these files should be associated with the
+> > device at the upstream or downstream end of the link.  For ASPM, the
+> > current proposal [1] has the files at the downstream end on the theory
+> > that the GPU, NIC, NVMe device, etc is the user-recognizable one.
+> > Also, neither ASPM nor link speed/width make any sense unless there
+> > *is* a device at the downstream end, so putting them there
+> > automatically makes them visible only when they're useful.
+> >
+> > Rafael had some concerns about the proposed ASPM interface [2], but I
+> > don't know what they are yet.
+> 
+> I was talking about the existing ASPM interface in sysfs.  The new one
+> I still have to review, but I'm kind of wondering what about people
+> who used the old one?  Would it be supported going forward?
 
-Got it. Thanks.
+The old one interface was enabled by CONFIG_PCIEASPM_DEBUG.  Red Hat
+doesn't enable that.  Ubuntu does.  I *thought* we heard from a
+Canonical person who said they didn't have any tools that used it, but
+I can't find that now.  I don't know about SUSE.
 
--- 
-Baolin Wang
-Best Regards
+So the idea was to drop it on the theory that nobody is using it.
+Possibly that's too aggressive.
+
+Bjorn
