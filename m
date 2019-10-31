@@ -2,91 +2,185 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B9DCA9EC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 10:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FDCA9ED0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 10:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1342086D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 10:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAA720862
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 10:58:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="I6y0jQZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfJaK5Y (ORCPT
+        id S1726952AbfJaK6V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:57:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54178 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727360AbfJaK5U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:57:20 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 03:57:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="204169799"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 31 Oct 2019 03:57:15 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iQ88h-000HKK-Bl; Thu, 31 Oct 2019 18:57:15 +0800
-Date:   Thu, 31 Oct 2019 18:56:48 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     kbuild-all@lists.01.org, jic23@kernel.org,
-        devel@driverdev.osuosl.org, mark.rutland@arm.com, lars@metafoo.de,
-        biabeniamin@outlook.com, Michael.Hennerich@analog.com,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com,
-        robh+dt@kernel.org, Beniamin Bia <beniamin.bia@analog.com>,
-        pmeerw@pmeerw.net, knaack.h@gmx.de, mchehab+samsung@kernel.org,
-        paulmck@linux.ibm.com, Paul Cercueil <paul.cercueil@analog.com>
-Subject: Re: [PATCH v2 2/4] iio: adc: ad7091r5: Add scale and external VREF
- support
-Message-ID: <201910311822.8dBF4MQ7%lkp@intel.com>
-References: <20191029162928.9720-2-beniamin.bia@analog.com>
+        Thu, 31 Oct 2019 06:58:21 -0400
+Received: from forward101o.mail.yandex.net ([37.140.190.181]:51347 "EHLO
+        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726897AbfJaK6V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:58:21 -0400
+Received: from mxback27j.mail.yandex.net (mxback27j.mail.yandex.net [IPv6:2a02:6b8:0:1619::227])
+        by forward101o.mail.yandex.net (Yandex) with ESMTP id CEB973C01509;
+        Thu, 31 Oct 2019 13:58:15 +0300 (MSK)
+Received: from iva6-6f4302ae52e5.qloud-c.yandex.net (iva6-6f4302ae52e5.qloud-c.yandex.net [2a02:6b8:c0c:9a82:0:640:6f43:2ae])
+        by mxback27j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id MqTxeuNTtt-wEaiEtox;
+        Thu, 31 Oct 2019 13:58:15 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1572519495;
+        bh=CnUEsomcZToujM6zlvvqh/M/VDXtZjPQrvhlDicaFhA=;
+        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
+        b=I6y0jQZyDWddPsb6XQzTUD9AGwNj+wzirysDdK6n3vAKco0tvXiWJXopQFW6Hul2i
+         mW3dDcFOxIOpv3/qQonhhobhPY9809zVHbCFJkYa8zuWuLcRz+phBikZ6JcovA3iv4
+         p92mVe+TLRskv3vPizha5J+XQWdjNhWgSw2CViMo=
+Authentication-Results: mxback27j.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by iva6-6f4302ae52e5.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id apLSeE0B5F-vTVigpuo;
+        Thu, 31 Oct 2019 13:58:13 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH 4/5] dt-bindings: net: document loongson.pci-gmac
+To:     Simon Horman <simon.horman@netronome.com>
+Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, bhelgaas@google.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
+ <20191030135347.3636-5-jiaxun.yang@flygoat.com>
+ <20191031083509.GA30739@netronome.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <a93eedb9-8863-3802-a563-fe4955d846c3@flygoat.com>
+Date:   Thu, 31 Oct 2019 18:57:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029162928.9720-2-beniamin.bia@analog.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191031083509.GA30739@netronome.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Beniamin,
 
-I love your patch! Perhaps something to improve:
+ÔÚ 2019/10/31 ÏÂÎç4:35, Simon Horman Ð´µÀ:
+> Hi Jiaxun,
+>
+> thanks for your patch.
+>
+> On Wed, Oct 30, 2019 at 09:53:46PM +0800, Jiaxun Yang wrote:
+>> This binding will provide extra information for PCI enabled
+>> device.
+>>
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Please verify the bindings using dtbs_check as described in
+> Documentation/devicetree/writing-schema.rst
+>
+>> ---
+>>   .../net/wireless/loongson,pci-gmac.yaml       | 71 +++++++++++++++++++
+>>   1 file changed, 71 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+>> new file mode 100644
+>> index 000000000000..5f764bd46735
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+>> @@ -0,0 +1,71 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/allwinner,sun7i-a20-gmac.yaml#
+> The id does not match the filename of the schema.
+>
+> i.e. the above should be:
+>
+> 	$id: http://devicetree.org/schemas/net/wireless/loongson,pci-gmac.yaml#
+>
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Loongson PCI GMAC Device Tree Bindings
+>> +
+>> +allOf:
+>> +  - $ref: "snps,dwmac.yaml#"
+> snps,dwmac.yaml# is in the parent directory relative to loongson,pci-gmac.yaml.
+> So I think the above needs to be:
+>
+> 	$ref: "../snps,dwmac.yaml#"
+>
+>> +
+>> +maintainers:
+>> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: loongson,pci-gmac
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    minItems: 1
+>> +    maxItems: 3
+>> +    items:
+>> +      - description: Combined signal for various interrupt events
+>> +      - description: The interrupt to manage the remote wake-up packet detection
+>> +      - description: The interrupt that occurs when Rx exits the LPI state
+>> +
+>> +  interrupt-names:
+>> +    minItems: 1
+>> +    maxItems: 3
+>> +    items:
+>> +      - const: macirq
+>> +      - const: eth_wake_irq
+>> +      - const: eth_lpi
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: GMAC main clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: stmmaceth
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - interrupt-names
+>> +  - clocks
+>> +  - clock-names
+>> +  - phy-mode
+>> +
+>> +examples:
+>> +  - |
+>> +    gmac: ethernet@ {
+> I would have expected a bus address here, f.e.:
+>
+> 	gmac: ethernet@0x00001800
+>
+>> +        compatible = "loongson,pci-irq";
+>> +        reg = <0x00001800 0 0 0 0>;
+> I think there is one to many cell in the above, perhaps it should be.
+>
+> 	reg = <0x00001800 0 0 0>;
+>
+> Also, I would expect the registers to be wider than 0, i.e. no registers.
 
-[auto build test WARNING on iio/togreg]
-[also build test WARNING on v5.4-rc5 next-20191030]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+Hi Simon,
 
-url:    https://github.com/0day-ci/linux/commits/Beniamin-Bia/iio-adc-Add-support-for-AD7091R5-ADC/20191031-100114
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Thanks for your suggestions above, will fix in v1.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Here, the reg domain is a standard 5-cell representing a PCI device,
 
+See: Documentation/devicetree/bindings/pci/pci.txt and IEEE Std 
+1275-1994,<https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/pci/pci.txt>
 
-sparse warnings: (new ones prefixed by >>)
+Should I add some description?
 
->> drivers/iio/adc/ad7091r-base.c:207:6: sparse: sparse: symbol 'ad7091r_remove' was not declared. Should it be static?
+Jiaxun
 
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
