@@ -2,64 +2,64 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC6BCA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D551CCA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9994E20862
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A623C2080F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N8tiDiHd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wkipk/vm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfJaCOI (ORCPT
+        id S1726246AbfJaCO6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 30 Oct 2019 22:14:08 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42670 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfJaCOI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 22:14:08 -0400
-Received: by mail-lf1-f65.google.com with SMTP id z12so3232132lfj.9
-        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 19:14:07 -0700 (PDT)
+        Wed, 30 Oct 2019 22:14:58 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37721 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfJaCO6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 30 Oct 2019 22:14:58 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b20so3245706lfp.4
+        for <devicetree@vger.kernel.org>; Wed, 30 Oct 2019 19:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0Q35Qrmg9wkHjqF+0NfAUFB1yR1/10F2WnVxGw+K294=;
-        b=N8tiDiHdtPsksEd3ROvQIlUsCu82XyKi8Txes5hv3NlYMQZbCqlL/T3M4JbOxPTB6p
-         Oq/yIeAjAo9+HB+fMGZ6zuqkmSpCcV4SxxtB8D2Y3oRX5PP/DLtTo7oA6KRWgh7d7tGg
-         uoZfrZvshqP8jjpzk5bcYJy8IthFfjxU/1WOK0wjpq41r5hr6VAtOd+SsBxLR8h3JSqf
-         vrQbaNrCk1CaKOl+KtMakLELlr3Zs83OW+3ybUkkLdS7/HeN1EsmfBWp0esMiyPD0KXv
-         RSAKHz+ftDKOoHI3JrnHrJ51GL2khuEKu/X7vXg6lkd8ZM4wECJzM96VL9A5BAzeYJJG
-         7joQ==
+        bh=LsH3A1DqDOFl2XsHUyxDjmPi6g5GPerOQXufskJ4zsE=;
+        b=wkipk/vmz3K+UqUSWwx9TakqLnbKR+02jMAR5SGMZCzif8JAFmJ08VLcACypiWHgd3
+         Nq3A9LCWfNpUNIycEwlJ4UAxP5zL23OJiIho6/dnsB9Q36nvjP7/yqh7dc8MTagsv+FN
+         AAqP79LixqCc1p/WSlBvTZWZFa4zOOvid5BNy/2G4O03423a8n8czYonP/S1X7AzJei+
+         xFnAp1z2bYsMIRUatRet7wQ9djRfkazHtwwoJqZNe14MmN+igdTj+tXsgOE67YF8E3qO
+         ecbGQkektDWSE7iJ49llVAzwhgYwCscfYLsFMckewsT8APYyRdOiFPK6vFFNQb4UEuxg
+         dXfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0Q35Qrmg9wkHjqF+0NfAUFB1yR1/10F2WnVxGw+K294=;
-        b=e6TbCbKlIFBldy54ugIMJhBrVeTE3bU8Zv161aVk72X0vQC98irJD8IilIJGUOt7lQ
-         7/7+/2DKom3tPeGGRqMLl9VeShKNczXkmhLhc7K/Ar3yudav6xbvE5V6DjmzofyY/zYp
-         MYkGul1rD1aaiu2M52gxB+9NfOlaBq9GPeWJs/cNtRJENCnQZ//u59iFG0jW52+irdZ0
-         xU7R9cWrP9ibx+AWZRZ1+LEKfVLyGpQKrXJYMApKRs8YuGtn543JAq17jELUV/2rinRy
-         KnCMnS9qTB6YY30uHnkl8FPQGC8CLvbW07Ox4xL3xLeHOzxxGX980rgBK49jjF4Pgb6c
-         1urA==
-X-Gm-Message-State: APjAAAVkgmhQA4OlVs+pZ1ayPV605QgcNbHdWnJU+J2YQ1dGsw82leI5
-        1ZbM6A2NzFEkzK9Q9nmCZjG9xFzcFCtbwX4nJQK2Dw==
-X-Google-Smtp-Source: APXvYqzt5GwVr8iqs7GK09m3Y5rMVOPcTeuhfSQpo73+hoiTYTRcTwHFX7BcTFNYVFr1DATKDchziDslGCBtc8/XWKc=
-X-Received: by 2002:a19:911c:: with SMTP id t28mr1004590lfd.84.1572488046183;
- Wed, 30 Oct 2019 19:14:06 -0700 (PDT)
+        bh=LsH3A1DqDOFl2XsHUyxDjmPi6g5GPerOQXufskJ4zsE=;
+        b=T6/DHzLBggKP4E6Vr9w9I/bfJYUDMpNzoxPcMW86dnhmp9KdvUSE0/4/bvZycioEWL
+         J90d6uGTN+o04K7rUa33WBwy/zKmROSBiTcr0zllFbWw3iGnGIyk/SSJOMmAdPV129jB
+         Co58oh04vqGT1l23/25xs/Sggkdb0E0lPWXws4r7CuUwc8aT7TtgTJcdzIgBB+hop50N
+         TuP5RMSnn/uEGtx2kg4HbDDlgEM/M94R7HC0HHJxF07haDNCM4QhibeHgEC9skUdJk/v
+         gN01ah+9DDwCpCSP6gkxZGLyzzJvId+qCK5aeSPUEr6z4zsTqCsQgS4V6evraal/6pEO
+         XXUQ==
+X-Gm-Message-State: APjAAAWlA6Lu+7lQa8glQ2+eM0Pqd1ijBDNaDZHqZ/ohweEtBgryxZ5Z
+        M2XxGhiwtZFTtz4NG7xiIr2H9fsEn03oU2vbUM7Nqw==
+X-Google-Smtp-Source: APXvYqw+VI3/9pmeyk/FQBCxrTYSXbxKCCcEUYb6gLT2e3GJrpxbjpDnQJnhwJNDWQ47aNAf2rbGE63JO7PrPoICa+g=
+X-Received: by 2002:ac2:420a:: with SMTP id y10mr997190lfh.65.1572488096719;
+ Wed, 30 Oct 2019 19:14:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1572245011.git.baolin.wang@linaro.org> <44f0c19510c7317cb4ee6cac54b3adfa81c2d6d0.1572245011.git.baolin.wang@linaro.org>
- <20191030143814.GA14919@bogus>
-In-Reply-To: <20191030143814.GA14919@bogus>
+References: <cover.1572245011.git.baolin.wang@linaro.org> <00202f739348258555dcc40982c330542ac61863.1572245011.git.baolin.wang@linaro.org>
+ <20191030143949.GA18637@bogus>
+In-Reply-To: <20191030143949.GA18637@bogus>
 From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Thu, 31 Oct 2019 10:13:54 +0800
-Message-ID: <CAMz4kuKYTHWaRnYhFn2kNzv04g_pWTVqPXvRqwO78htJ9jAnFg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dt-bindings: power: Introduce one property to
- describe the battery resistance with temperature changes
+Date:   Thu, 31 Oct 2019 10:14:45 +0800
+Message-ID: <CAMz4kuJ=8dOj6XbayNHKAYW7LD1EOaqv+Q4hYk_-7+R-z_m2Xw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] dt-bindings: power: sc27xx: Add a new property to
+ describe the real resistance of coulomb counter chip
 To:     Rob Herring <robh@kernel.org>
 Cc:     Sebastian Reichel <sre@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -76,53 +76,32 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Rob,
 
-On Wed, 30 Oct 2019 at 22:38, Rob Herring <robh@kernel.org> wrote:
+On Wed, 30 Oct 2019 at 22:39, Rob Herring <robh@kernel.org> wrote:
 >
-> On Mon, Oct 28, 2019 at 03:18:57PM +0800, Baolin Wang wrote:
-> > Since the battery internal resistance can be changed as the temperature
-> > changes, thus add one table to describe the battery resistance percent
-> > in different temperature to get a accurate battery internal resistance.
+> On Mon, Oct 28, 2019 at 03:19:00PM +0800, Baolin Wang wrote:
+> > Add a new property to describe the real resistance of coulomb counter chip,
+> > which is used to calibrate the accuracy of the coulomb counter chip.
 > >
 > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > > ---
-> >  .../devicetree/bindings/power/supply/battery.txt   |    5 +++++
-> >  1 file changed, 5 insertions(+)
+> >  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    2 ++
+> >  1 file changed, 2 insertions(+)
 > >
-> > diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-> > index 5c913d4c..1a6f951 100644
-> > --- a/Documentation/devicetree/bindings/power/supply/battery.txt
-> > +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> > @@ -35,6 +35,10 @@ Optional Properties:
-> >     for each of the battery capacity lookup table. The first temperature value
-> >     specifies the OCV table 0, and the second temperature value specifies the
-> >     OCV table 1, and so on.
-> > + - resistance-temp-table: An array providing the resistance percent and
-> > +   corresponding temperature in degree Celsius, which is used to look up the
-> > +   resistance percent according to current temperature to get a accurate
-> > +   batterty internal resistance.
+> > diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> > index 0a5705b..fc042d0 100644
+> > --- a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> > +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> > @@ -13,6 +13,7 @@ Required properties:
+> >  - io-channel-names: Should be "bat-temp" or "charge-vol".
+> >  - nvmem-cells: A phandle to the calibration cells provided by eFuse device.
+> >  - nvmem-cell-names: Should be "fgu_calib".
+> > +- sprd,calib-resistance: Specify the real resistance of coulomb counter chip in micro Ohms.
+> >  - monitored-battery: Phandle of battery characteristics devicetree node.
+> >    See Documentation/devicetree/bindings/power/supply/battery.txt
 >
-> What's the order of values? The description and example don't seem to
-> agree unless negative percent is a thing.
+> Needs a standard unit suffix.
 
-Ah, right. I will fix the example according to the description's order
-in next version. Thanks.
-
-> >
-> >  Battery properties are named, where possible, for the corresponding
-> >  elements in enum power_supply_property, defined in
-> > @@ -61,6 +65,7 @@ Example:
-> >               ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
-> >               ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
-> >               ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
-> > +             resistance-temp-table = <20 100>, <10 90>, <0 80>, <(-10) 60>;
-> >       };
-> >
-> >       charger: charger@11 {
-> > --
-> > 1.7.9.5
-> >
-
-
+Got it. Thanks.
 
 -- 
 Baolin Wang
