@@ -2,78 +2,324 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC93ACA9EC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 09:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B768FCA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 10:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF4B21734
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 09:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572515329;
-	bh=pQ2TZ8AZGjE832CFWtP12FmqR4rocBUFpuSdy3IhJps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tVMhq/4ekB9EmHDElInBCkUwFr8MqwS0mRnEdN2xgtTcY6dxwuWLspgHSFR64FcZb
-	 G/wyO3Btd+SERQxK5MZ/wObAoHbasOjMbLicxvjTXktewZzla5qHzKTZ4afHtZ2mag
-	 y5IDA6421JFloS4N1d812lY1NUbAXDt3Mm7twKKU=
+	by mail.kernel.org (Postfix) with ESMTP id 7935C2087F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 10:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FTzhdX6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfJaJst (ORCPT
+        id S1727158AbfJaKbZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbfJaJss (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:48:48 -0400
-Received: from localhost (lns-bzn-32-82-254-4-138.adsl.proxad.net [82.254.4.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4EDD2086D;
-        Thu, 31 Oct 2019 09:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572515328;
-        bh=pQ2TZ8AZGjE832CFWtP12FmqR4rocBUFpuSdy3IhJps=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ecnwFU71ceqdrL0AkjJR5tVBlshMAAl40bFLHlhvuyeRilCtOSdIqM3aUH9rIYomt
-         uqFUHzTJvOCzAUGfbJ5UJsB7+hWo0abFBvUSVWS2cfwZF0MxNWWQkothYzO2b6ulSn
-         Ag1eINk53eyrnibM0eL5ntAKipomJK0pgdMDeTI8=
-Date:   Thu, 31 Oct 2019 10:48:37 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        jernej.skrabec@siol.net, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 1/3] ARM64: dts: sun50i-h6-pine-h64: state that the DT
- supports the modelB
-Message-ID: <20191031094837.wy4gj6xo4youao75@hendrix>
-References: <1572438255-26107-1-git-send-email-clabbe@baylibre.com>
- <1572438255-26107-2-git-send-email-clabbe@baylibre.com>
+        Thu, 31 Oct 2019 06:31:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36672 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfJaKbY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 06:31:24 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c22so5317582wmd.1
+        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 03:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NlAiN393nCfoZAygvg08JmQmUPznfSWcWyubnTUIKKE=;
+        b=FTzhdX6xA9OuelCfgiKsLtlknqLLFGDnkv0Ewxq2ueMPposxkBjtBde1+K6HfGCUPt
+         qIYL83dFAJt4Th0bz7plX90V/6hkhi6ob0yugsKsSgKe/ghH4tlSh+SoA1k9Tk54F0Jh
+         V8nnC5ExLwC7ZcXv6m5ixQXNUy5M+WMBh4SmeLRarr+P1n5nDUHRCW1o1x5Pq+BcKLf2
+         LDhTiUEXX9BfDRntrXDxlZyGXFsI+oRv1L8d94JIGzD3174pXs3lrMWpyAw8qRT6ukOs
+         6G0lH4FT698KoWL74vFlbOofb40GvIoZx3r/XaxhbuO9AeGS7l+V/eqF6EPxVn+xokZU
+         zqYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NlAiN393nCfoZAygvg08JmQmUPznfSWcWyubnTUIKKE=;
+        b=eSos3LcR9eGq0ZIJHv4VCqbkZ2saskPfQBzfK2jEDTjwZAo7PAjsIqZOk5YYJ6PPfD
+         qgtQlgTqx3xEiTiyyevSX8c/yF3keiKLn3GxxxeTGidAAUdoxtucPyJ+hkBsJbucnFIV
+         TRhJUzrZVO58cEB47SZ0LnsY6/5f1JeZZGpp9evCLPfav5Nc9lRMoLIBMOmNMDMXOmwV
+         Qca0ika9+O2t4cmk6GxJTdb6SNvfi9xlvMgb27t84d4QfmtbytbRvMW5w5GgwZ3PK89c
+         Xckz20BTNbSFL4p0br6S5Bwbj29LE3h4PepJtG/Y7P2Y7a3a3VekiZwR15yp1HOiRWCw
+         TOzQ==
+X-Gm-Message-State: APjAAAUdMhmpcAby0TBjRL6R0Y5EjxgeSeWuXFkPkeIQz7lWTbHP2Cgs
+        cIGGMQI7ROtoueytHWUBxq/cJQ==
+X-Google-Smtp-Source: APXvYqwzIQFibqNdvPGWNk3heHcVRqkP3v0Z/1/+VvfGQ7xyaMJGSMdiwbE3vgpAkeqas6x5ShMlxA==
+X-Received: by 2002:a1c:5459:: with SMTP id p25mr4216403wmi.109.1572517881852;
+        Thu, 31 Oct 2019 03:31:21 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id d4sm4614799wrc.54.2019.10.31.03.31.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 31 Oct 2019 03:31:20 -0700 (PDT)
+Subject: Re: [PATCH v3 09/11] pinctrl: qcom-wcd934x: Add support to wcd934x
+ pinctrl driver.
+To:     Stephen Boyd <swboyd@chromium.org>, broonie@kernel.org,
+        lee.jones@linaro.org, linus.walleij@linaro.org, robh@kernel.org
+Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org,
+        Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
+References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
+ <20191029112700.14548-10-srinivas.kandagatla@linaro.org>
+ <5db9a34f.1c69fb81.23dfc.7ea5@mx.google.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <85aa859f-9d20-2a13-caba-d4901f18829c@linaro.org>
+Date:   Thu, 31 Oct 2019 10:31:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572438255-26107-2-git-send-email-clabbe@baylibre.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <5db9a34f.1c69fb81.23dfc.7ea5@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 12:24:13PM +0000, Corentin Labbe wrote:
-> The current sun50i-h6-pine-h64 DT does not specify which model (A or B)
-> it supports.
-> When this file was created, only modelA was existing, but now both model
-> exists and with the time, this DT drifted to support the model B since it is
-> the most common one.
-> Furtheremore, some part of the model A does not work with it like ethernet and
-> HDMI connector (as confirmed by Jernej on IRC).
->
-> So it is time to settle the issue, and the easiest way is to state that
-> this DT is for model B.
+Thanks Stephen for reviewing this patch.
 
-No, this DT was introduced for model A, and we have to keep that. If
-some model B changes crept in, that's unfortunate, but it should be
-reverted, instead of changing the assumptions like this.
+On 30/10/2019 14:50, Stephen Boyd wrote:
+> Quoting Srinivas Kandagatla (2019-10-29 04:26:58)
+>> From: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
+>>
+>> This patch adds support to wcd934x pinctrl block found in
+>> WCD9340/WC9341 Audio codecs.
+>>
+>> [Srini: multiple cleanups to the code]
+> 
+> This goes after the author signoff and before yours. Can you add more
+> details too?
+I agree, will fix this in next spin.
+> 
+>> Signed-off-by: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/pinctrl/qcom/Kconfig                |   7 +
+>>   drivers/pinctrl/qcom/Makefile               |   1 +
+>>   drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c | 365 ++++++++++++++++++++
+>>   3 files changed, 373 insertions(+)
+>>   create mode 100644 drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c b/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+>> new file mode 100644
+>> index 000000000000..1aff88d0bcb3
+>> --- /dev/null
+>> +++ b/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
+>> @@ -0,0 +1,365 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
+>> +// Copyright (c) 2019, Linaro Limited
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_gpio.h>
+>> +
+>> +#include "../core.h"
+>> +#include "../pinctrl-utils.h"
+>> +
+>> +#define WCD_REG_DIR_CTL_OFFSET 0x42
+>> +#define WCD_REG_VAL_CTL_OFFSET 0x43
+>> +#define WCD_GPIO_PULL_UP       1
+>> +#define WCD_GPIO_PULL_DOWN     2
+>> +#define WCD_GPIO_BIAS_DISABLE  3
+>> +#define WCD_GPIO_STRING_LEN    20
+>> +#define WCD934X_NPINS          5
+>> +
+>> +/**
+>> + * struct wcd_gpio_pad - keep current GPIO settings
+>> + * @offset: offset of gpio.
+>> + * @is_valid: Set to false, when GPIO in high Z state.
+>> + * @value: value of a pin
+>> + * @output_enabled: Set to true if GPIO is output and false if it is input
+>> + * @pullup: Constant current which flow through GPIO output buffer.
+>> + * @strength: Drive strength of a pin
+>> + */
+>> +struct wcd_gpio_pad {
+>> +       u16  offset;
+>> +       bool is_valid;
+>> +       bool value;
+>> +       bool output_enabled;
+>> +       unsigned int pullup;
+>> +       unsigned int strength;
+>> +};
+>> +
+>> +struct wcd_gpio_priv {
+>> +       struct device *dev;
+>> +       struct regmap *map;
+>> +       struct pinctrl_dev *ctrl;
+>> +       struct gpio_chip chip;
+>> +};
+>> +
+>> +static int wcd_gpio_read(struct wcd_gpio_priv *priv_data,
+>> +                        struct wcd_gpio_pad *pad, unsigned int addr)
+>> +{
+>> +       unsigned int val;
+>> +       int ret;
+>> +
+>> +       ret = regmap_read(priv_data->map, addr, &val);
+>> +       if (ret < 0)
+>> +               dev_err(priv_data->dev, "%s: read 0x%x failed\n",
+>> +                       __func__, addr);
+>> +       else
+>> +               ret = (val >> pad->offset);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static int wcd_gpio_write(struct wcd_gpio_priv *priv_data,
+>> +                         struct wcd_gpio_pad *pad, unsigned int addr,
+>> +                         unsigned int val)
+>> +{
+>> +       int ret;
+>> +
+>> +       ret = regmap_update_bits(priv_data->map, addr, (1 << pad->offset),
+>> +                                val << pad->offset);
+>> +       if (ret < 0)
+>> +               dev_err(priv_data->dev, "write 0x%x failed\n", addr);
+> 
+> Is there value in these error messages? Also, use %#x to get '0x'.
 
-Maxime
+I can add ret in the err message.
+
+I did not knew about "%#x".. nice, I will use this in future!
+> 
+>> +
+>> +       return ret;
+>> +}
+> [...]
+>> +
+>> +static int wcd_pinctrl_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       struct pinctrl_pin_desc *pindesc;
+>> +       struct pinctrl_desc *pctrldesc;
+>> +       struct wcd_gpio_pad *pad, *pads;
+>> +       struct wcd_gpio_priv *priv_data;
+>> +       u32 npins = WCD934X_NPINS;
+>> +       char **name;
+>> +       int i;
+>> +
+>> +       priv_data = devm_kzalloc(dev, sizeof(*priv_data), GFP_KERNEL);
+>> +       if (!priv_data)
+>> +               return -ENOMEM;
+>> +
+>> +       priv_data->dev = dev;
+>> +       priv_data->map = dev_get_regmap(dev->parent, NULL);
+>> +       if (!priv_data->map) {
+>> +               dev_err(dev, "%s: failed to get regmap\n", __func__);
+>> +               return  -EINVAL;
+>> +       }
+>> +
+>> +       pindesc = devm_kcalloc(dev, npins, sizeof(*pindesc), GFP_KERNEL);
+>> +       if (!pindesc)
+>> +               return -ENOMEM;
+>> +
+>> +       pads = devm_kcalloc(dev, npins, sizeof(*pads), GFP_KERNEL);
+>> +       if (!pads)
+>> +               return -ENOMEM;
+> 
+> Is it possible to put the pad struct around the pindesc struct? It's
+> sort of sad that we have to allocate a chunk of memory twice for the
+> pindesc and the pads when we could either use container_of() on the
+> pindesc or just point the pindesc driver data member to the container
+> structure for the qcom specific bits.
+> 
+
+I will give that a go in next version!
+
+>> +
+>> +       pctrldesc = devm_kzalloc(dev, sizeof(*pctrldesc), GFP_KERNEL);
+>> +       if (!pctrldesc)
+>> +               return -ENOMEM;
+>> +
+>> +       pctrldesc->pctlops = &wcd_pinctrl_ops;
+>> +       pctrldesc->confops = &wcd_pinconf_ops;
+>> +       pctrldesc->owner = THIS_MODULE;
+>> +       pctrldesc->name = dev_name(dev);
+>> +       pctrldesc->pins = pindesc;
+>> +       pctrldesc->npins = npins;
+>> +
+>> +       name = devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
+>> +       if (!name)
+>> +               return -ENOMEM;
+>> +
+>> +       for (i = 0; i < npins; i++, pindesc++) {
+>> +               name[i] = devm_kzalloc(dev, sizeof(char) * WCD_GPIO_STRING_LEN,
+>> +                                      GFP_KERNEL);
+>> +               if (!name[i])
+>> +                       return -ENOMEM;
+>> +
+>> +               pad = &pads[i];
+>> +               pindesc->drv_data = pad;
+>> +               pindesc->number = i;
+>> +               snprintf(name[i], (WCD_GPIO_STRING_LEN - 1), "gpio%d", (i+1));
+>> +               pindesc->name = name[i];
+> 
+> Why not use devm_kasprintf()? The 'name' array is also unnecessary?
+Am not sure why its not used her, but I can do that change in next version.
+
+> 
+>> +               pad->offset = i;
+>> +               pad->is_valid  = true;
+>> +       }
+>> +
+>> +       priv_data->chip = wcd_gpio_chip;
+>> +       priv_data->chip.parent = dev;
+>> +       priv_data->chip.base = -1;
+>> +       priv_data->chip.ngpio = npins;
+>> +       priv_data->chip.label = dev_name(dev);
+>> +       priv_data->chip.of_gpio_n_cells = 2;
+>> +       priv_data->chip.can_sleep = false;
+>> +       platform_set_drvdata(pdev, priv_data);
+>> +
+>> +       priv_data->ctrl = devm_pinctrl_register(dev, pctrldesc, priv_data);
+>> +       if (IS_ERR(priv_data->ctrl)) {
+>> +               dev_err(dev, "%s: failed to register to pinctrl\n", __func__);
+>> +               return PTR_ERR(priv_data->ctrl);
+>> +       }
+>> +
+>> +       return gpiochip_add_data(&priv_data->chip, priv_data);
+> 
+> WHy not use devm_gpiochip_add_data()?
+
+Good idea, will do that in next spin.
+> 
+>> +}
+>> +
+>> +static int wcd_pinctrl_remove(struct platform_device *pdev)
+>> +{
+>> +       struct wcd_gpio_priv *priv_data = platform_get_drvdata(pdev);
+>> +
+>> +       gpiochip_remove(&priv_data->chip);
+>> +
+>> +       return 0;
+> 
+> And drop this function?
+> 
+>> +}
+>> +
+>> +static const struct of_device_id wcd_pinctrl_of_match[] = {
+>> +       { .compatible = "qcom,wcd9340-pinctrl" },
+>> +       { .compatible = "qcom,wcd9341-pinctrl" },
+>> +       { },
+> 
+> Nitpick: Drop the comma on the sentinel.
+> 
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, wcd_pinctrl_of_match);
+> 
+> Nitpick: Drop the newline between device table and match table.
+> 
