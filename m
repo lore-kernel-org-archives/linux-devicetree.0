@@ -7,28 +7,29 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B133CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B1FCA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1F52080F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739FD2080F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="YUvI81fL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="qeMNWRac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbfJaTF2 (ORCPT
+        id S1729542AbfJaTFr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:05:28 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.31]:26890 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729572AbfJaTF1 (ORCPT
+        Thu, 31 Oct 2019 15:05:47 -0400
+Received: from gateway36.websitewelcome.com ([192.185.187.5]:17524 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729515AbfJaTFr (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:05:27 -0400
+        Thu, 31 Oct 2019 15:05:47 -0400
+X-Greylist: delayed 1439 seconds by postgrey-1.27 at vger.kernel.org; Thu, 31 Oct 2019 15:05:46 EDT
 Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 748D21C9C
-        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 13:41:53 -0500 (CDT)
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 6B4F1409C21CA
+        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 12:49:59 -0500 (CDT)
 Received: from br164.hostgator.com.br ([192.185.176.180])
         by cmsmtp with SMTP
-        id QFOLiqt4h3Qi0QFOLiDPK0; Thu, 31 Oct 2019 13:41:53 -0500
+        id QFOEiqsxm3Qi0QFOEiDPD0; Thu, 31 Oct 2019 13:41:46 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
@@ -36,17 +37,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=V94B8xdnq24BoAQFYkXN5tfRIqIwmBgiwRAbgoWmaDo=; b=YUvI81fLMwBkZfBILvu52UW2t8
-        6HR2nBtZfh5u0eefDjVAu6Vewg2pbkIyvK1wrR4IjbbPa4gYoGdIrDnFCFELQ6Nq9Haub6AC4IvTL
-        EcYPOhrIUCHTYQ3npi7ZUCh3GPO9aaoUxBTdzVdZn4XhT5UU0zPYZ+Bx+9ulLiARBPNxsZNu3KS8B
-        IN1xI5o7EFFZh5SQ/p5mp6APuM66yEAedHf0LMnKJlZdzF4ifTmGfXSBNZ/aPQD40jyA9t9tB9S9M
-        BeydakdIQCd4cTU78Vfv4ZN9adSv3I8F8sixRM4if1jVhgjTzPmcYAN0mb3YYDTY7tgrs9Vjjn0bw
-        s4b7hxCw==;
+        bh=0s7yqwze+IyjqCaWlQRpYCliMtnXouGLS0DZiyaG5jI=; b=qeMNWRacdzT21rXVTgy7O8X1d+
+        Nk4KV3n7si3naxRSsiN98hwfTFtgz1lywNFlqvBOYYD1NZZVP8iL2fdjYaQhDMVaYoBdsXaobXcjv
+        e4FHDu+Sj0Lh4oiD05HSB5VlQ0L+cKDRVJXGgVOMvgyuCP1SnVMYO/QoCYa5pPw9RDD5i9JOtzds8
+        0zL9xYeuu9NrlC5HmLuuyvNw7rz9I0tMSmvIJrzTN2Gaa1Xr+dHX52bfkNl/4eynvK2WL+Hl+dmUD
+        Gc48Hh5TFBlwIKGo30KrYOuuU/bezmD6unVadJDFRG1rZUvRbgmq2ZSIJjT+EX13fzRoncM752hc4
+        c3xrmTrQ==;
 Received: from [191.31.195.127] (port=35710 helo=castello.bz.toradex.local)
         by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <matheus@castello.eng.br>)
-        id 1iQFOK-0035gz-4p; Thu, 31 Oct 2019 15:41:52 -0300
+        id 1iQFOD-0035gz-JB; Thu, 31 Oct 2019 15:41:46 -0300
 From:   Matheus Castello <matheus@castello.eng.br>
 To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
 Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
@@ -54,9 +55,9 @@ Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v4 3/4] power: supply: max17040: Config alert SOC low level threshold from FDT
-Date:   Thu, 31 Oct 2019 15:41:33 -0300
-Message-Id: <20191031184134.30621-4-matheus@castello.eng.br>
+Subject: [PATCH v4 1/4] power: supply: max17040: Add IRQ handler for low SOC alert
+Date:   Thu, 31 Oct 2019 15:41:31 -0300
+Message-Id: <20191031184134.30621-2-matheus@castello.eng.br>
 X-Mailer: git-send-email 2.24.0.rc2
 In-Reply-To: <20191031184134.30621-1-matheus@castello.eng.br>
 References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
@@ -71,13 +72,13 @@ X-AntiAbuse: Sender Address Domain - castello.eng.br
 X-BWhitelist: no
 X-Source-IP: 191.31.195.127
 X-Source-L: No
-X-Exim-ID: 1iQFOK-0035gz-4p
+X-Exim-ID: 1iQFOD-0035gz-JB
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
 X-Source-Sender: (castello.bz.toradex.local) [191.31.195.127]:35710
 X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 35
+X-Email-Count: 13
 X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
 X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
@@ -85,173 +86,133 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For configuration of fuel gauge alert for a low level state of charge
-interrupt we add a function to config level threshold and a device tree
-binding property to set it in flatned device tree node.
+According datasheet max17040 has a pin for alert host for low SOC.
+This pin can be used as external interrupt, so we need to check for
+interrupts assigned for device and handle it.
 
-Now we can use "maxim,alert-low-soc-level" property with the values from
-1% up to 32% to configure alert interrupt threshold.
+In handler we are checking and storing fuel gauge registers values
+and send an uevent to notificate user space, so user space can decide
+save work or turn off since the alert demonstrate that the battery may
+no have the power to keep the system turned on for much longer.
 
 Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 ---
- drivers/power/supply/max17040_battery.c | 88 +++++++++++++++++++++----
- 1 file changed, 74 insertions(+), 14 deletions(-)
+ drivers/power/supply/max17040_battery.c | 65 +++++++++++++++++++++++--
+ 1 file changed, 60 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 75459f76d02c..802575342c72 100644
+index 62499018e68b..75459f76d02c 100644
 --- a/drivers/power/supply/max17040_battery.c
 +++ b/drivers/power/supply/max17040_battery.c
-@@ -29,6 +29,9 @@
- #define MAX17040_DELAY		1000
- #define MAX17040_BATTERY_FULL	95
-
-+#define MAX17040_ATHD_MASK		0xFFC0
-+#define MAX17040_ATHD_DEFAULT_POWER_UP	4
-+
- struct max17040_chip {
- 	struct i2c_client		*client;
- 	struct delayed_work		work;
-@@ -43,6 +46,8 @@ struct max17040_chip {
- 	int soc;
- 	/* State Of Charge */
- 	int status;
-+	/* Low alert threshold from 32% to 1% of the State of Charge */
-+	u32 low_soc_alert_threshold;
- };
-
- static int max17040_get_property(struct power_supply *psy,
-@@ -99,6 +104,22 @@ static void max17040_reset(struct i2c_client *client)
- 	max17040_write_reg(client, MAX17040_CMD, 0x0054);
- }
-
-+static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
-+	u32 level)
-+{
-+	int ret;
-+	u16 data;
-+
-+	level = 32 - level;
-+	data = max17040_read_reg(client, MAX17040_RCOMP);
-+	/* clear the alrt bit and set LSb 5 bits */
-+	data &= MAX17040_ATHD_MASK;
-+	data |= level;
-+	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
-+
-+	return ret;
-+}
-+
- static void max17040_get_vcell(struct i2c_client *client)
- {
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
-@@ -115,7 +136,6 @@ static void max17040_get_soc(struct i2c_client *client)
- 	u16 soc;
-
- 	soc = max17040_read_reg(client, MAX17040_SOC);
--
- 	chip->soc = (soc >> 8);
- }
-
-@@ -161,6 +181,24 @@ static void max17040_get_status(struct i2c_client *client)
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+ #include <linux/delay.h>
++#include <linux/interrupt.h>
+ #include <linux/power_supply.h>
+ #include <linux/max17040_battery.h>
+ #include <linux/slab.h>
+@@ -160,21 +161,40 @@ static void max17040_get_status(struct i2c_client *client)
  		chip->status = POWER_SUPPLY_STATUS_FULL;
  }
 
-+static int max17040_get_of_data(struct max17040_chip *chip)
++static void max17040_check_changes(struct i2c_client *client)
 +{
-+	struct device *dev = &chip->client->dev;
-+	struct device_node *np = dev->of_node;
-+	int ret = 0;
-+
-+	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
-+			&chip->low_soc_alert_threshold)) {
-+		chip->low_soc_alert_threshold = MAX17040_ATHD_DEFAULT_POWER_UP;
-+	/* check if low_soc_alert_threshold is between 1% and 32% */
-+	} else if (chip->low_soc_alert_threshold <= 0 ||
-+			chip->low_soc_alert_threshold >= 33){
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
++	max17040_get_vcell(client);
++	max17040_get_soc(client);
++	max17040_get_online(client);
++	max17040_get_status(client);
 +}
 +
- static void max17040_check_changes(struct i2c_client *client)
+ static void max17040_work(struct work_struct *work)
  {
- 	max17040_get_vcell(client);
-@@ -192,6 +230,10 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
- 	/* send uevent */
- 	power_supply_changed(chip->battery);
+ 	struct max17040_chip *chip;
 
-+	/* reset alert bit */
-+	max17040_set_low_soc_threshold_alert(client,
-+		chip->low_soc_alert_threshold);
-+
- 	return IRQ_HANDLED;
+ 	chip = container_of(work, struct max17040_chip, work.work);
+-
+-	max17040_get_vcell(chip->client);
+-	max17040_get_soc(chip->client);
+-	max17040_get_online(chip->client);
+-	max17040_get_status(chip->client);
++	max17040_check_changes(chip->client);
+
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
  }
 
-@@ -216,6 +258,7 @@ static int max17040_probe(struct i2c_client *client,
- 	struct i2c_adapter *adapter = client->adapter;
- 	struct power_supply_config psy_cfg = {};
- 	struct max17040_chip *chip;
-+	int ret;
++static irqreturn_t max17040_thread_handler(int id, void *dev)
++{
++	struct max17040_chip *chip = dev;
++	struct i2c_client *client = chip->client;
++
++	dev_warn(&client->dev, "IRQ: Alert battery low level");
++	/* read registers */
++	max17040_check_changes(chip->client);
++
++	/* send uevent */
++	power_supply_changed(chip->battery);
++
++	return IRQ_HANDLED;
++}
++
+ static enum power_supply_property max17040_battery_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_ONLINE,
+@@ -220,6 +240,25 @@ static int max17040_probe(struct i2c_client *client,
+ 	max17040_reset(client);
+ 	max17040_get_version(client);
 
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
- 		return -EIO;
-@@ -226,6 +269,12 @@ static int max17040_probe(struct i2c_client *client,
-
- 	chip->client = client;
- 	chip->pdata = client->dev.platform_data;
-+	ret = max17040_get_of_data(chip);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"failed: low SOC alert OF data out of bounds\n");
-+		return ret;
++	/* check interrupt */
++	if (client->irq) {
++		int ret;
++		unsigned int flags;
++
++		dev_info(&client->dev, "IRQ: enabled\n");
++		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
++		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
++						max17040_thread_handler, flags,
++						chip->battery->desc->name,
++						chip);
++
++		if (ret) {
++			client->irq = 0;
++			dev_warn(&client->dev,
++				"Failed to get IRQ err %d\n", ret);
++		}
 +	}
-
- 	i2c_set_clientdata(client, chip);
- 	psy_cfg.drv_data = chip;
-@@ -242,20 +291,31 @@ static int max17040_probe(struct i2c_client *client,
-
- 	/* check interrupt */
- 	if (client->irq) {
--		int ret;
--		unsigned int flags;
--
--		dev_info(&client->dev, "IRQ: enabled\n");
--		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
--		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
--						max17040_thread_handler, flags,
--						chip->battery->desc->name,
--						chip);
--
--		if (ret) {
--			client->irq = 0;
-+		if (of_device_is_compatible(client->dev.of_node,
-+			"maxim,max77836-battery")) {
-+			ret = max17040_set_low_soc_threshold_alert(client,
-+				chip->low_soc_alert_threshold);
-+			if (ret) {
-+				dev_err(&client->dev,
-+					"Failed to set low SOC alert: err %d\n",
-+					ret);
-+				return ret;
-+			}
 +
-+			dev_info(&client->dev, "IRQ: enabled\n");
-+			ret = devm_request_threaded_irq(&client->dev,
-+				client->irq, NULL, max17040_thread_handler,
-+				(client->flags | IRQF_ONESHOT),
-+				chip->battery->desc->name, chip);
+ 	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+@@ -244,6 +283,14 @@ static int max17040_suspend(struct device *dev)
+ 	struct max17040_chip *chip = i2c_get_clientdata(client);
+
+ 	cancel_delayed_work(&chip->work);
 +
-+			if (ret) {
-+				client->irq = 0;
-+				dev_warn(&client->dev,
-+					"Failed to get IRQ err %d\n", ret);
-+			}
-+		} else {
- 			dev_warn(&client->dev,
--				"Failed to get IRQ err %d\n", ret);
-+				"Device not compatible for IRQ");
- 		}
- 	}
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			enable_irq_wake(client->irq);
++		else
++			disable_irq_wake(client->irq);
++	}
++
+ 	return 0;
+ }
+
+@@ -254,6 +301,14 @@ static int max17040_resume(struct device *dev)
+
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
++
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			disable_irq_wake(client->irq);
++		else
++			enable_irq_wake(client->irq);
++	}
++
+ 	return 0;
+ }
 
 --
 2.24.0.rc2
