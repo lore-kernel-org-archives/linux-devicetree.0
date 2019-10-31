@@ -2,249 +2,151 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1169CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A62CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B4220873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F7E208C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:54:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PVK30HOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbfJaQxW (ORCPT
+        id S1728627AbfJaQyy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:53:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34794 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727715AbfJaQxO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:53:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 66270B307;
-        Thu, 31 Oct 2019 16:53:12 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v2 3/4] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
-Date:   Thu, 31 Oct 2019 17:53:06 +0100
-Message-Id: <20191031165308.14102-4-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191031165308.14102-1-afaerber@suse.de>
-References: <20191031165308.14102-1-afaerber@suse.de>
+        Thu, 31 Oct 2019 12:54:54 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:52688 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfJaQyy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 12:54:54 -0400
+Received: from pendragon.ideasonboard.com (lns-bzn-54-82-251-103-167.adsl.proxad.net [82.251.103.167])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 53149320;
+        Thu, 31 Oct 2019 17:54:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1572540892;
+        bh=I0lsKlRo8h8+ZQ76HwSLs3FK8PL5qPzYqQsGyswPjrQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PVK30HORF1u/zgODSSTgbbsJBIHX/VA6zXrPDte4F/kTgR/MFFATBCBH00THDBx12
+         MUxE1wrz6ZuhyCCrMcjsnqz+7H25LEtqW5WF2PF2z2ZK68XsFTluV49bMoIaaY3eEI
+         GUdPbA0afhnRk+5nRdJMyIX+yzFDMClZIdYGIMYU=
+Date:   Thu, 31 Oct 2019 18:54:44 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191031165444.GE5018@pendragon.ideasonboard.com>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191031131538.GA9170@pendragon.ideasonboard.com>
+ <20191031134512.GB24273@mani>
+ <20191031141141.GD5018@pendragon.ideasonboard.com>
+ <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
+Hi Sakari,
 
-Reuse the existing RTD1295 watchdog compatible for now.
+On Thu, Oct 31, 2019 at 04:28:17PM +0200, Sakari Ailus wrote:
+> On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
+> > On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
+> >> On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
+> >>> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> >>>> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> >>>> add MAINTAINERS entry for the binding and driver.
+> >>>> 
+> >>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>> ---
+> >>>>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> >>>>  MAINTAINERS                                   |  8 ++
+> >>>>  2 files changed, 102 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>> 
+> >>>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..c04ec2203268
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>> @@ -0,0 +1,94 @@
+> >>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> >>>> +
+> >>>> +maintainers:
+> >>>> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>> +
+> >>>> +description: |-
+> >>>> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> >>>> +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> >>>> +  features a global shutter with variable charge-integration time. It is
+> >>>> +  programmable through I2C and 4-wire interfaces. The sensor output is
+> >>>> +  available via CSI-2 serial data output (1 Lane).
+> >>>> +
+> >>>> +properties:
+> >>>> +  compatible:
+> >>>> +    const: sony,imx296
+> >>>> +
+> >>>> +  reg:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  clocks:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  clock-names:
+> >>>> +    description:
+> >>>> +      Input clock for the sensor.
+> >>>> +    items:
+> >>>> +      - const: mclk
+> >>> 
+> >>> The pin is named INCK, let's name the clock accordingly.
+> >> 
+> >> Okay, I thought generic names are preferred here!
+> >>  
+> >>>> +  clock-frequency:
+> >>>> +    description:
+> >>>> +      Frequency of the mclk clock in Hertz.
+> >>> 
+> >>> This shouldn't be needed, you can retrieve the clock frequency at
+> >>> runtime from the clock source.
+> >> 
+> >> Unless the clock source is a fixed one! What if the clock source comes from
+> >> SoC? We need to set the rate, right?
+> > 
+> > In that case, if you want to hardcode the clock in DT, the preferred way
+> > is to use the assigned-clock-rates property. Otherwise, if the driver
+> > requires a specific clock frequency, it's better to hardcode it in the
+> > driver itself. In this specific case, I think assigned-clock-rates is
+> > best as the device can support three different clock frequencies.
+> 
+> Just note that if ACPI support is added to the sensor driver, you'll need
+> the clock-frequency property again, for that's the only way how the driver
+> will get the clock frequency.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v1 -> v2:
- * Dropped /memreserve/ and reserved-memory nodes for peripherals and NOR (Rob)
- * Carved them out from memory reg instead (Rob)
- * Converted some /memreserve/s to reserved-memory nodes
- 
- arch/arm/boot/dts/Makefile               |   2 +
- arch/arm/boot/dts/rtd1195-mele-x1000.dts |  31 ++++++++
- arch/arm/boot/dts/rtd1195.dtsi           | 127 +++++++++++++++++++++++++++++++
- 3 files changed, 160 insertions(+)
- create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
- create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
+Why is so ? Why can't we implement of assigned-clock-rates for ACPI ?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e352598c05ae..cb710bf98a80 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -864,6 +864,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- dtb-$(CONFIG_ARCH_RDA) += \
- 	rda8810pl-orangepi-2g-iot.dtb \
- 	rda8810pl-orangepi-i96.dtb
-+dtb-$(CONFIG_ARCH_REALTEK) += \
-+	rtd1195-mele-x1000.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pb1176.dtb \
- 	arm-realview-pb11mp.dtb \
-diff --git a/arch/arm/boot/dts/rtd1195-mele-x1000.dts b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
-new file mode 100644
-index 000000000000..834b430e6250
---- /dev/null
-+++ b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Copyright (c) 2017-2019 Andreas Färber
-+ */
-+
-+/dts-v1/;
-+
-+#include "rtd1195.dtsi"
-+
-+/ {
-+	compatible = "mele,x1000", "realtek,rtd1195";
-+	model = "MeLE X1000";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x18000000>,
-+		      <0x19100000 0x26f00000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
-new file mode 100644
-index 000000000000..582f169644b5
---- /dev/null
-+++ b/arch/arm/boot/dts/rtd1195.dtsi
-@@ -0,0 +1,127 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Copyright (c) 2017-2019 Andreas Färber
-+ */
-+
-+/memreserve/ 0x00000000 0x0000a800; /* boot code */
-+/memreserve/ 0x0000c000 0x000f4000;
-+/memreserve/ 0x17fff000 0x00001000;
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "realtek,rtd1195";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+			clock-frequency = <1000000000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+			clock-frequency = <1000000000>;
-+		};
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		rpc_comm: rpc@b000 {
-+			reg = <0x0000b000 0x1000>;
-+		};
-+
-+		audio@1b00000 {
-+			reg = <0x01b00000 0x400000>;
-+		};
-+
-+		rpc_ringbuf: rpc@1ffe000 {
-+			reg = <0x01ffe000 0x4000>;
-+		};
-+
-+		secure@10000000 {
-+			reg = <0x10000000 0x100000>;
-+			no-map;
-+		};
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
-+		clock-frequency = <27000000>;
-+	};
-+
-+	osc27M: osc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <27000000>;
-+		#clock-cells = <0>;
-+		clock-output-names = "osc27M";
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x18000000 0x18000000 0x00100000>,
-+		         <0x18100000 0x18100000 0x01000000>,
-+		         <0x40000000 0x40000000 0xc0000000>;
-+
-+		wdt: watchdog@18007680 {
-+			compatible = "realtek,rtd1295-watchdog";
-+			reg = <0x18007680 0x100>;
-+			clocks = <&osc27M>;
-+		};
-+
-+		uart0: serial@18007800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x18007800 0x400>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clock-frequency = <27000000>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@1801b200 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x1801b200 0x100>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clock-frequency = <27000000>;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@ff011000 {
-+			compatible = "arm,cortex-a7-gic";
-+			reg = <0xff011000 0x1000>,
-+			      <0xff012000 0x2000>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+	};
-+};
+> This is certainly not something that has to be taken into account in DT
+> bindings, but in any case it'll add some lines of code in the driver which
+> are not very useful.
+
 -- 
-2.16.4
+Regards,
 
+Laurent Pinchart
