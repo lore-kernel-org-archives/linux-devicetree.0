@@ -2,159 +2,172 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96708CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91C4CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6806220663
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:07:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Lqpd/6ve"
+	by mail.kernel.org (Postfix) with ESMTP id 7E3882086D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfJaOHG (ORCPT
+        id S1727758AbfJaOLB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:07:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35734 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfJaOHG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:07:06 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9VE721j018372;
-        Thu, 31 Oct 2019 09:07:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572530822;
-        bh=gXlDD/veFRApipmYmd4pB/kMLt9HDcd6FQb3Up3HhD8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Lqpd/6vevC3PHl2R41apuC5tes6oO9pb6lTXLMH/IQI8Rmxhi17UYVsXTEzv8JZuh
-         OuTph8htEQ0X1glpsRb8c5l2aYwl5xwqE8xt6r7B4klGqnQb3qFo+nzsL5S9LAVOq6
-         dMsCtCkRotsrhtWfDyOyHyzhzTi59HI1ablT/o24=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9VE71ZG034519
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 31 Oct 2019 09:07:02 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
- Oct 2019 09:06:49 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 31 Oct 2019 09:06:49 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9VE6x5I089523;
-        Thu, 31 Oct 2019 09:07:00 -0500
-Subject: Re: [Patch 1/3] ARM: dts: am43xx: add support for clkout1 clock
-To:     Benoit Parrot <bparrot@ti.com>, Tony Lindgren <tony@atomide.com>
-CC:     Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191016184954.14048-1-bparrot@ti.com>
- <20191016184954.14048-2-bparrot@ti.com> <20191022154816.GO5610@atomide.com>
- <20191022162134.fpawonjdjvd5kxza@ti.com>
- <586dcabb-0400-50d6-5488-16bddc059286@ti.com>
- <20191022165516.GE5610@atomide.com> <20191023155657.GL5610@atomide.com>
- <20191030195946.ouexmis632nb7lqj@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <39b79438-ad82-0840-b2a5-36856d0ac520@ti.com>
-Date:   Thu, 31 Oct 2019 16:06:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 10:11:01 -0400
+Received: from maillog.nuvoton.com ([202.39.227.15]:44204 "EHLO
+        maillog.nuvoton.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727752AbfJaOLB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:11:01 -0400
+Received: from NTHCCAS02.nuvoton.com (nthccas02.nuvoton.com [10.1.8.29])
+        by maillog.nuvoton.com (Postfix) with ESMTP id 7A1761C80E13;
+        Thu, 31 Oct 2019 21:56:25 +0800 (CST)
+Received: from NTILML02.nuvoton.com (10.190.1.46) by NTHCCAS02.nuvoton.com
+ (10.1.8.29) with Microsoft SMTP Server (TLS) id 15.0.1130.7; Thu, 31 Oct 2019
+ 21:56:24 +0800
+Received: from NTILML02.nuvoton.com (10.190.1.46) by NTILML02.nuvoton.com
+ (10.190.1.46) with Microsoft SMTP Server (TLS) id 15.0.1130.7; Thu, 31 Oct
+ 2019 15:56:19 +0200
+Received: from taln70.nuvoton.co.il (10.191.1.70) by NTILML02.nuvoton.com
+ (10.190.1.46) with Microsoft SMTP Server id 15.0.1130.7 via Frontend
+ Transport; Thu, 31 Oct 2019 15:56:19 +0200
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+        by taln70.nuvoton.co.il (Postfix) with ESMTP id 5D3C61A4;
+        Thu, 31 Oct 2019 15:56:19 +0200 (IST)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id 5DABD60275; Thu, 31 Oct 2019 15:56:19 +0200 (IST)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <yuenn@google.com>, <venture@google.com>,
+        <benjaminfair@google.com>, <avifishman70@gmail.com>,
+        <joel@jms.id.au>
+CC:     <openbmc@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v3 2/3] dt-bindings: reset: Add binding constants for NPCM7xx reset controller
+Date:   Thu, 31 Oct 2019 15:56:16 +0200
+Message-ID: <20191031135617.249303-3-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191031135617.249303-1-tmaimon77@gmail.com>
+References: <20191031135617.249303-1-tmaimon77@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191030195946.ouexmis632nb7lqj@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 30/10/2019 21:59, Benoit Parrot wrote:
-> Tony Lindgren <tony@atomide.com> wrote on Wed [2019-Oct-23 08:56:57 -0700]:
->> * Tony Lindgren <tony@atomide.com> [191022 16:56]:
->>> * Tero Kristo <t-kristo@ti.com> [191022 16:48]:
->>>> On 22/10/2019 19:21, Benoit Parrot wrote:
->>>>> Tony Lindgren <tony@atomide.com> wrote on Tue [2019-Oct-22 08:48:16 -0700]:
->>>>>> * Benoit Parrot <bparrot@ti.com> [191016 18:47]:
->>>>>>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>>>>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>>>>> @@ -704,6 +704,60 @@
->>>>>>>    		ti,bit-shift = <8>;
->>>>>>>    		reg = <0x2a48>;
->>>>>>>    	};
->>>>>>> +
->>>>>>> +	clkout1_osc_div_ck: clkout1_osc_div_ck {
->>>>>>> +		#clock-cells = <0>;
->>>>>>> +		compatible = "ti,divider-clock";
->>>>>>> +		clocks = <&sys_clkin_ck>;
->>>>>>> +		ti,bit-shift = <20>;
->>>>>>> +		ti,max-div = <4>;
->>>>>>> +		reg = <0x4100>;
->>>>>>> +	};
->>>>>>
->>>>>> Here too please describe why the clock names are not generic.
->>>>>
->>>>> Tero originally had this patch in the kernel so this is somewhat of a
->>>>> revert. Since these "clock" were removed. If the name syntax is no longer
->>>>> valid for some reason, then I will need a little more informations to
->>>>> proceed.
->>>>>
->>>>> Tero, can you assist here?
->>>>
->>>> This one is just following the naming convention of the rest of the clocks
->>>> atm.
->>>>
->>>> If we need to fix all the underscore name clocks, that requires pretty much
->>>> complete revamp of both the dts data + clock data under the clock driver,
->>>> and it is not backwards compatible either. How should we tackle that one?
->>>>
->>>> We could maybe add support code in kernel to do s/-/_/g for the "new" clocks
->>>> so that their parent-child relationships would be retained, and then convert
->>>> the clocks in phases.
->>>
->>> Well some of them can be fixed by configuring things based
->>> on the compatible value and then the node name can be just
->>> clock like it should be.
->>>
->>> Here too one option would be to add custom compatibles like:
->>>
->>> compatible = "ti,clkout1-osc-div", "ti,divider-clock";
->>>
->>> And then have match data configure the rest.
->>>
->>> The other option would be to have lookup tables in the clock
->>> driver based on the SoC and reg address.
->>>
->>> This is a hidden mine though.. We've hit it already several times,
->>> and any dts clean-up effort has a chance of breaking things.
->>
->> Hmm maybe in this case just doing this is enough:
->>
->> clkout1_osc_div_ck: clock@4100 {
->> 	...
->> }
-> 
-> But then we would end up with 6 clock node with the same name "clock@4100",
-> doesn't pose a problem somewhere?
+Add device tree binding constants for Nuvoton BMC NPCM7xx
+reset controller.
 
-Yeah, clk core would not know which one to use then.
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../dt-bindings/reset/nuvoton,npcm7xx-reset.h | 91 +++++++++++++++++++
+ 1 file changed, 91 insertions(+)
+ create mode 100644 include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
 
-> 
-> Tero?
-> 
-> Benoit
-> 
->>
->> Or do all the TI clocks we have have a dependency to the
->> node naming?
-
-This is a feature of clock core. Clock parents need to have distinct 
-names, otherwise it won't work.
-
--Tero
+diff --git a/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
+new file mode 100644
+index 000000000000..df088e68a9ba
+--- /dev/null
++++ b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
+@@ -0,0 +1,91 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (c) 2019 Nuvoton Technology corporation.
++
++#ifndef _DT_BINDINGS_NPCM7XX_RESET_H
++#define _DT_BINDINGS_NPCM7XX_RESET_H
++
++#define NPCM7XX_RESET_IPSRST1          0x20
++#define NPCM7XX_RESET_IPSRST2          0x24
++#define NPCM7XX_RESET_IPSRST3          0x34
++
++/* Reset lines on IP1 reset module (NPCM7XX_RESET_IPSRST1) */
++#define NPCM7XX_RESET_FIU3             1
++#define NPCM7XX_RESET_UDC1             5
++#define NPCM7XX_RESET_EMC1             6
++#define NPCM7XX_RESET_UART_2_3         7
++#define NPCM7XX_RESET_UDC2             8
++#define NPCM7XX_RESET_PECI             9
++#define NPCM7XX_RESET_AES              10
++#define NPCM7XX_RESET_UART_0_1         11
++#define NPCM7XX_RESET_MC               12
++#define NPCM7XX_RESET_SMB2             13
++#define NPCM7XX_RESET_SMB3             14
++#define NPCM7XX_RESET_SMB4             15
++#define NPCM7XX_RESET_SMB5             16
++#define NPCM7XX_RESET_PWM_M0           18
++#define NPCM7XX_RESET_TIMER_0_4                19
++#define NPCM7XX_RESET_TIMER_5_9                20
++#define NPCM7XX_RESET_EMC2             21
++#define NPCM7XX_RESET_UDC4             22
++#define NPCM7XX_RESET_UDC5             23
++#define NPCM7XX_RESET_UDC6             24
++#define NPCM7XX_RESET_UDC3             25
++#define NPCM7XX_RESET_ADC              27
++#define NPCM7XX_RESET_SMB6             28
++#define NPCM7XX_RESET_SMB7             29
++#define NPCM7XX_RESET_SMB0             30
++#define NPCM7XX_RESET_SMB1             31
++
++/* Reset lines on IP2 reset module (NPCM7XX_RESET_IPSRST2) */
++#define NPCM7XX_RESET_MFT0             0
++#define NPCM7XX_RESET_MFT1             1
++#define NPCM7XX_RESET_MFT2             2
++#define NPCM7XX_RESET_MFT3             3
++#define NPCM7XX_RESET_MFT4             4
++#define NPCM7XX_RESET_MFT5             5
++#define NPCM7XX_RESET_MFT6             6
++#define NPCM7XX_RESET_MFT7             7
++#define NPCM7XX_RESET_MMC              8
++#define NPCM7XX_RESET_SDHC             9
++#define NPCM7XX_RESET_GFX_SYS          10
++#define NPCM7XX_RESET_AHB_PCIBRG       11
++#define NPCM7XX_RESET_VDMA             12
++#define NPCM7XX_RESET_ECE              13
++#define NPCM7XX_RESET_VCD              14
++#define NPCM7XX_RESET_OTP              16
++#define NPCM7XX_RESET_SIOX1            18
++#define NPCM7XX_RESET_SIOX2            19
++#define NPCM7XX_RESET_3DES             21
++#define NPCM7XX_RESET_PSPI1            22
++#define NPCM7XX_RESET_PSPI2            23
++#define NPCM7XX_RESET_GMAC2            25
++#define NPCM7XX_RESET_USB_HOST         26
++#define NPCM7XX_RESET_GMAC1            28
++#define NPCM7XX_RESET_CP               31
++
++/* Reset lines on IP3 reset module (NPCM7XX_RESET_IPSRST3) */
++#define NPCM7XX_RESET_PWM_M1           0
++#define NPCM7XX_RESET_SMB12            1
++#define NPCM7XX_RESET_SPIX             2
++#define NPCM7XX_RESET_SMB13            3
++#define NPCM7XX_RESET_UDC0             4
++#define NPCM7XX_RESET_UDC7             5
++#define NPCM7XX_RESET_UDC8             6
++#define NPCM7XX_RESET_UDC9             7
++#define NPCM7XX_RESET_PCI_MAILBOX      9
++#define NPCM7XX_RESET_SMB14            12
++#define NPCM7XX_RESET_SHA              13
++#define NPCM7XX_RESET_SEC_ECC          14
++#define NPCM7XX_RESET_PCIE_RC          15
++#define NPCM7XX_RESET_TIMER_10_14      16
++#define NPCM7XX_RESET_RNG              17
++#define NPCM7XX_RESET_SMB15            18
++#define NPCM7XX_RESET_SMB8             19
++#define NPCM7XX_RESET_SMB9             20
++#define NPCM7XX_RESET_SMB10            21
++#define NPCM7XX_RESET_SMB11            22
++#define NPCM7XX_RESET_ESPI             23
++#define NPCM7XX_RESET_USB_PHY_1                24
++#define NPCM7XX_RESET_USB_PHY_2                25
++
++#endif
 --
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.22.0
+
+
+
+===========================================================================================
+The privileged confidential information contained in this email is intended for use only by the addressees as indicated by the original sender of this email. If you are not the addressee indicated in this email or are not responsible for delivery of the email to such a person, please kindly reply to the sender indicating this fact and delete all copies of it from your computer and network server immediately. Your cooperation is highly appreciated. It is advised that any unauthorized use of confidential information of Nuvoton is strictly prohibited; and any information in this email irrelevant to the official business of Nuvoton shall be deemed as neither given nor endorsed by Nuvoton.
