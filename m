@@ -2,225 +2,159 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5175CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96708CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DC52080F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6806220663
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:07:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Lqpd/6ve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfJaNuK (ORCPT
+        id S1727804AbfJaOHG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:50:10 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:34825 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727446AbfJaNuK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:50:10 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 31 Oct 2019 19:19:37 +0530
-IronPort-SDR: tOZQep9yi+hYi70fpoamKgfI4jkNF15pKHwIdCg5Ed5Y1Um3m3fJ7GUkScrr8Eh9Fut/COthea
- CsZRUlqUh19DIoAWZiWQb/PjTyz3r6SHPQnbRt/Ljdlg9/uhpQktJ5MZdR8zIsbBY+ed3amD6h
- 4M0AGzLg/mXVDQTjHWniV9fydT5U9L/3s6ZL/+tYxw54QxfmJ7HLgYZuMQ+O6mfps3tmqY6NkD
- yucOtTbm10CmhtUFAxzihtIzzryDP2pPemOkjy1Vzv4lgCr8DjgUYlwGVornWTBBD0G0sjJxl1
- BamKJuDauV3uZOy+TbdOv75e
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 31 Oct 2019 19:19:27 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 5F3DE19D7; Thu, 31 Oct 2019 19:19:26 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     sanm@codeaurora.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH 1/1] arm64: dts: qcom: sc7180: Add USB related nodes
-Date:   Thu, 31 Oct 2019 19:19:22 +0530
-Message-Id: <1572529762-31256-2-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572529762-31256-1-git-send-email-sanm@codeaurora.org>
-References: <1572529762-31256-1-git-send-email-sanm@codeaurora.org>
+        Thu, 31 Oct 2019 10:07:06 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35734 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfJaOHG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:07:06 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9VE721j018372;
+        Thu, 31 Oct 2019 09:07:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572530822;
+        bh=gXlDD/veFRApipmYmd4pB/kMLt9HDcd6FQb3Up3HhD8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Lqpd/6vevC3PHl2R41apuC5tes6oO9pb6lTXLMH/IQI8Rmxhi17UYVsXTEzv8JZuh
+         OuTph8htEQ0X1glpsRb8c5l2aYwl5xwqE8xt6r7B4klGqnQb3qFo+nzsL5S9LAVOq6
+         dMsCtCkRotsrhtWfDyOyHyzhzTi59HI1ablT/o24=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9VE71ZG034519
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 31 Oct 2019 09:07:02 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
+ Oct 2019 09:06:49 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 31 Oct 2019 09:06:49 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9VE6x5I089523;
+        Thu, 31 Oct 2019 09:07:00 -0500
+Subject: Re: [Patch 1/3] ARM: dts: am43xx: add support for clkout1 clock
+To:     Benoit Parrot <bparrot@ti.com>, Tony Lindgren <tony@atomide.com>
+CC:     Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191016184954.14048-1-bparrot@ti.com>
+ <20191016184954.14048-2-bparrot@ti.com> <20191022154816.GO5610@atomide.com>
+ <20191022162134.fpawonjdjvd5kxza@ti.com>
+ <586dcabb-0400-50d6-5488-16bddc059286@ti.com>
+ <20191022165516.GE5610@atomide.com> <20191023155657.GL5610@atomide.com>
+ <20191030195946.ouexmis632nb7lqj@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <39b79438-ad82-0840-b2a5-36856d0ac520@ti.com>
+Date:   Thu, 31 Oct 2019 16:06:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191030195946.ouexmis632nb7lqj@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add nodes for DWC3 USB controller, QMP and QUSB PHYs.
+On 30/10/2019 21:59, Benoit Parrot wrote:
+> Tony Lindgren <tony@atomide.com> wrote on Wed [2019-Oct-23 08:56:57 -0700]:
+>> * Tony Lindgren <tony@atomide.com> [191022 16:56]:
+>>> * Tero Kristo <t-kristo@ti.com> [191022 16:48]:
+>>>> On 22/10/2019 19:21, Benoit Parrot wrote:
+>>>>> Tony Lindgren <tony@atomide.com> wrote on Tue [2019-Oct-22 08:48:16 -0700]:
+>>>>>> * Benoit Parrot <bparrot@ti.com> [191016 18:47]:
+>>>>>>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+>>>>>>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+>>>>>>> @@ -704,6 +704,60 @@
+>>>>>>>    		ti,bit-shift = <8>;
+>>>>>>>    		reg = <0x2a48>;
+>>>>>>>    	};
+>>>>>>> +
+>>>>>>> +	clkout1_osc_div_ck: clkout1_osc_div_ck {
+>>>>>>> +		#clock-cells = <0>;
+>>>>>>> +		compatible = "ti,divider-clock";
+>>>>>>> +		clocks = <&sys_clkin_ck>;
+>>>>>>> +		ti,bit-shift = <20>;
+>>>>>>> +		ti,max-div = <4>;
+>>>>>>> +		reg = <0x4100>;
+>>>>>>> +	};
+>>>>>>
+>>>>>> Here too please describe why the clock names are not generic.
+>>>>>
+>>>>> Tero originally had this patch in the kernel so this is somewhat of a
+>>>>> revert. Since these "clock" were removed. If the name syntax is no longer
+>>>>> valid for some reason, then I will need a little more informations to
+>>>>> proceed.
+>>>>>
+>>>>> Tero, can you assist here?
+>>>>
+>>>> This one is just following the naming convention of the rest of the clocks
+>>>> atm.
+>>>>
+>>>> If we need to fix all the underscore name clocks, that requires pretty much
+>>>> complete revamp of both the dts data + clock data under the clock driver,
+>>>> and it is not backwards compatible either. How should we tackle that one?
+>>>>
+>>>> We could maybe add support code in kernel to do s/-/_/g for the "new" clocks
+>>>> so that their parent-child relationships would be retained, and then convert
+>>>> the clocks in phases.
+>>>
+>>> Well some of them can be fixed by configuring things based
+>>> on the compatible value and then the node name can be just
+>>> clock like it should be.
+>>>
+>>> Here too one option would be to add custom compatibles like:
+>>>
+>>> compatible = "ti,clkout1-osc-div", "ti,divider-clock";
+>>>
+>>> And then have match data configure the rest.
+>>>
+>>> The other option would be to have lookup tables in the clock
+>>> driver based on the SoC and reg address.
+>>>
+>>> This is a hidden mine though.. We've hit it already several times,
+>>> and any dts clean-up effort has a chance of breaking things.
+>>
+>> Hmm maybe in this case just doing this is enough:
+>>
+>> clkout1_osc_div_ck: clock@4100 {
+>> 	...
+>> }
+> 
+> But then we would end up with 6 clock node with the same name "clock@4100",
+> doesn't pose a problem somewhere?
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  25 ++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 104 ++++++++++++++++++++++++++++++++
- 2 files changed, 129 insertions(+)
+Yeah, clk core would not know which one to use then.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 189254f..aecc994 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -400,3 +400,28 @@
- 			bias-pull-up;
- 		};
- };
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3 {
-+	dr_mode = "host";
-+};
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+	vdd-supply = <&vreg_l4a_0p8>;
-+	vdda-pll-supply = <&vreg_l11a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l17a_3p0>;
-+	qcom,imp-res-offset-value = <8>;
-+	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
-+	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
-+	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
-+};
-+
-+&usb_1_qmpphy {
-+	status = "okay";
-+	vdda-phy-supply = <&vreg_l3c_1p2>;
-+	vdda-pll-supply = <&vreg_l4a_0p8>;
-+};
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index cb623b7..7ee068f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-+#include <dt-bindings/phy/phy-qcom-qusb2.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -184,6 +185,17 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		qfprom@784000 {
-+			compatible = "qcom,qfprom";
-+			reg = <0 0x00784000 0 0x8ff>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			qusb2p_hstx_trim: hstx-trim-primary@25b {
-+				reg = <0x25b 0x1>;
-+				bits = <1 3>;
-+			};
-+		};
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sdm845-pdc";
- 			reg = <0 0xb220000 0 0x30000>;
-@@ -913,6 +925,98 @@
- 			status = "disabled";
- 		};
- 
-+		usb_1_hsphy: phy@88e3000 {
-+			compatible = "qcom,sc7180-qusb2-phy";
-+			reg = <0 0x088e3000 0 0x400>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+			<&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "cfg_ahb","ref";
-+			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+
-+			nvmem-cells = <&qusb2p_hstx_trim>;
-+		};
-+
-+		usb_1_qmpphy: phy@88e9000 {
-+			compatible = "qcom,sc7180-qmp-usb3-phy";
-+			reg = <0 0x088e9000 0 0x18c>,
-+			      <0 0x088e8000 0 0x38>;
-+			reg-names = "reg-base", "dp_com";
-+			status = "disabled";
-+			#clock-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
-+				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-+				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
-+			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
-+
-+			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
-+				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
-+			reset-names = "phy", "common";
-+
-+			usb_1_ssphy: lanes@88e9200 {
-+				reg = <0 0x088e9200 0 0x128>,
-+				      <0 0x088e9400 0 0x200>,
-+				      <0 0x088e9c00 0 0x218>,
-+				      <0 0x088e9600 0 0x128>,
-+				      <0 0x088e9800 0 0x200>,
-+				      <0 0x088e9a00 0 0x18>;
-+				#phy-cells = <0>;
-+				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-+				clock-names = "pipe0";
-+				clock-output-names = "usb3_phy_pipe_clk_src";
-+			};
-+		};
-+
-+		usb_1: usb@a6f8800 {
-+			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
-+			reg = <0 0x0a6f8800 0 0x400>;
-+			status = "disabled";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			dma-ranges;
-+
-+			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
-+			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+				      "sleep";
-+
-+			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <150000000>;
-+
-+			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hs_phy_irq", "ss_phy_irq",
-+					  "dm_hs_phy_irq", "dp_hs_phy_irq";
-+
-+			power-domains = <&gcc USB30_PRIM_GDSC>;
-+
-+			resets = <&gcc GCC_USB30_PRIM_BCR>;
-+
-+			usb_1_dwc3: dwc3@a600000 {
-+				compatible = "snps,dwc3";
-+				reg = <0 0x0a600000 0 0xe000>;
-+				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+				iommus = <&apps_smmu 0x540 0>;
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
-+				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0 0xc440000 0 0x1100>,
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> Tero?
+> 
+> Benoit
+> 
+>>
+>> Or do all the TI clocks we have have a dependency to the
+>> node naming?
 
+This is a feature of clock core. Clock parents need to have distinct 
+names, otherwise it won't work.
+
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
