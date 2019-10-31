@@ -2,252 +2,115 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E91CA9ECE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B018CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E782086D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0F72080F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:47:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KVauYvVS"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="kqiwf0p2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="C+ziwgP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbfJaNpZ (ORCPT
+        id S1727696AbfJaNrT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:45:25 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38254 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbfJaNpW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 09:45:22 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c13so4412902pfp.5
-        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 06:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B4S3LkETZTQ6ciTtg+e4/uC9IOySHk8KduItAFIDCAk=;
-        b=KVauYvVSqsYWwSxOsteFFPrRimBn3s6dfVYJPLzP/z3LcsfsDO/h9ST4jQH6/Au/D5
-         CY65Z5zdq4G7NHpb17ZLHkVV2lp+aNBPNGGr2ZUq+0mkno2gL40mDh7CPP6iF05oCyYX
-         xbC2P2Hi13dEu55xAmMNe5FjzHJiW8uYrCVVbz9zqk3LVWLcZEj4g/PjgHn+MwncGcBF
-         UzFUlpfv9/oVlYkzhbH9p1Tek1X5VWAC9mHf6iewIGKmFCgYJeJhvbl1q+Rft5QE/CaZ
-         y64ojSEFKoEm+dqTqj3axvCH4zV7DlRNr5I4opyn0gQN0UBtnvk9lYlfZPxVYvUpPZBD
-         LZsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B4S3LkETZTQ6ciTtg+e4/uC9IOySHk8KduItAFIDCAk=;
-        b=AFV/G8nQC7uafueAuF/BdtyrBNH98C4ELHxQF4aNs0KN/kaH+NYS6zhkrXwJSCA74N
-         QCSxIemhPOSeNoZ2ENBTK2mn+2zFFQDmv8O/mh/ZgEXl8GgyHwcThL+dVEKPSNG3Sxs0
-         Um0ypxyjklvH6hNuXeU/MC8Elcrq2JCSCHb62HkMPVLbFaPzdygjQ6vuOxSzRk9t99GE
-         vWOJm8PRSlL0YU2NavG0LUP8RkTmylfK8Jpjlq54ycc+d/akqFtqakvEI2go+JdyFidB
-         OtEiNldtJ36s+wKObPRVkJ3DeCDwvY/Y9kNSIerkistZByjCl/kgcLOFVdPBZShHy9fd
-         Rb/w==
-X-Gm-Message-State: APjAAAX7aTMwg7qXQ7sCSKb4sAFkUhPYPHleYZDZC39XatNc723Z8nWX
-        uNGN0q+Ky5VVA90VlDLJTfAf
-X-Google-Smtp-Source: APXvYqyuqikEx9a3SP3UIaKfDeFTz5s3pu4Hg2hMzULCTaQWQKi9SfavbFkVlqJwlYsJqfgnYKSBzw==
-X-Received: by 2002:a63:d70e:: with SMTP id d14mr6718846pgg.10.1572529521194;
-        Thu, 31 Oct 2019 06:45:21 -0700 (PDT)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id f5sm4898579pjq.24.2019.10.31.06.45.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 31 Oct 2019 06:45:20 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 19:15:12 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191031134512.GB24273@mani>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
- <20191031131538.GA9170@pendragon.ideasonboard.com>
+        Thu, 31 Oct 2019 09:47:19 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57759 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727580AbfJaNrT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:47:19 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id DFFD8537E;
+        Thu, 31 Oct 2019 09:47:17 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 31 Oct 2019 09:47:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version:content-type
+        :content-transfer-encoding; s=fm1; bh=mxOfBSFmMtNDkPSOJie/vgVchS
+        SSrW9932xKMGBkwl4=; b=kqiwf0p2+WFRFjYSGqu+RWMGsO6fuvkeG4l6AOf2hH
+        OmBGK9yrr6PzHVze2juELULcdBZKNE6ppkVMpjVzUf8Zfoy+vY4/5FQ0SFfCToZT
+        G0poaGByzujt3yA+JN/NtOgTpGalF4Ihcb2jCKziKqILdrzeMCDByYrRZThm/aD7
+        Qr87hNHdk95MBJ1sCWm32Yfpg21QiqPCIS5A+JkJc08tLZF4bhW2XtLGqlsleFQ3
+        oImk3TgEhDipO5AGiE+7EbOmqLkYQywJai1injDvNsFEAXhaZTZivmX8vhjfBi+8
+        i+7FnBQyqLdvbLXBbdv+EFZ1Jscbnt6VzqGwJfan90qA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=mxOfBS
+        FmMtNDkPSOJie/vgVchSSSrW9932xKMGBkwl4=; b=C+ziwgP4Lq6S/b2UlYclsf
+        cuQbCIPXiREKnSeouyyA3A1XQPJ/QR6pw7welKc4QwKwFCgvWeE6UbbuN4HvThsN
+        cflRjsLtfN8pFsvQDqNpVC5pTJrhJZ//A0qmPYGzzKxbzC7PbSmrRli5cU8rVr1o
+        Mx8UbWcCSKlw75PxnYQaGdfHVAHhHvKp5SYbsLeiP0LM4poZmczk89Gs/gb9bT0V
+        aS2mlm51A7AICQQSGkOKvlIWHHwk4OVq8PX0MJWVKPrR3jO/JuhC1924OQm4yqqe
+        +VTZI7I2pDcttJdktxnpe7S9lfVhxyJma0NBFq77JX2SZyv88axtuzIhpSGoa6AA
+        ==
+X-ME-Sender: <xms:5OW6XXsjKac-cLE5jiB5Gs6KEGi32dXpWIY5NfBWZcKEzC1f9mghQA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddthedgheegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffogggtgfesthekredtredtjeenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepkedvrd
+    dvheegrdegrddufeeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
+    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:5OW6XWJ9JCshUvBTeglksUS7tvVeTJb8YJ9DgWWGgrtEgodaA7PZZQ>
+    <xmx:5OW6XS1WFigLB_FaKpA_heus3FTGuteKmv2H7_LDuxMpkZKNutnlOQ>
+    <xmx:5OW6XekB3NUWGy1mc_3LIMg-beiVCqYpgOoFF6Fuz95srIDgSFRl_w>
+    <xmx:5eW6XQG10NOZThzujco-9w-20MKWRf05yDNh3SsBIuZ5nGpUwR9IYg>
+Received: from localhost (lns-bzn-32-82-254-4-138.adsl.proxad.net [82.254.4.138])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7B85A3060065;
+        Thu, 31 Oct 2019 09:47:16 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>, broonie@kernel.org,
+        lgirdwood@gmail.com
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Maxime Ripard <maxime@cerno.tech>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
+Subject: [PATCH] dt-bindings: sound: adau7118: Fix example warning
+Date:   Thu, 31 Oct 2019 14:47:13 +0100
+Message-Id: <20191031134713.241157-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031131538.GA9170@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+The ADAU7118 has an example where the codec has an i2c address of 14, and
+the unit address set to 14 as well.
 
-On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
-> Hi Mani,
-> 
-> Thank you for the patch.
-> 
-> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
-> > Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
-> > add MAINTAINERS entry for the binding and driver.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
-> >  MAINTAINERS                                   |  8 ++
-> >  2 files changed, 102 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > new file mode 100644
-> > index 000000000000..c04ec2203268
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > @@ -0,0 +1,94 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> > +
-> > +maintainers:
-> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > +
-> > +description: |-
-> > +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> > +  sensor with square pixel array and 1.58 M effective pixels. This chip
-> > +  features a global shutter with variable charge-integration time. It is
-> > +  programmable through I2C and 4-wire interfaces. The sensor output is
-> > +  available via CSI-2 serial data output (1 Lane).
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: sony,imx296
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    description:
-> > +      Input clock for the sensor.
-> > +    items:
-> > +      - const: mclk
-> 
-> The pin is named INCK, let's name the clock accordingly.
->
+However, while the address is expressed in decimal, the unit-address is
+supposed to be in hexadecimal, which ends up with two different addresses
+that trigger a DTC warning. Fix this by setting the unit address to (0x)e.
 
-Okay, I thought generic names are preferred here!
- 
-> > +  clock-frequency:
-> > +    description:
-> > +      Frequency of the mclk clock in Hertz.
-> 
-> This shouldn't be needed, you can retrieve the clock frequency at
-> runtime from the clock source.
-> 
+Cc: Nuno Sá <nuno.sa@analog.com>
+Fixes: 969d49b2cdc8 ("dt-bindings: asoc: Add ADAU7118 documentation")
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ Documentation/devicetree/bindings/sound/adi,adau7118.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Unless the clock source is a fixed one! What if the clock source comes from
-SoC? We need to set the rate, right?
+diff --git a/Documentation/devicetree/bindings/sound/adi,adau7118.yaml b/Documentation/devicetree/bindings/sound/adi,adau7118.yaml
+index c3f10afbdd6f..65f6844a0c6d 100644
+--- a/Documentation/devicetree/bindings/sound/adi,adau7118.yaml
++++ b/Documentation/devicetree/bindings/sound/adi,adau7118.yaml
+@@ -65,7 +65,7 @@ examples:
+         /* example with i2c support */
+         #address-cells = <1>;
+         #size-cells = <0>;
+-        adau7118_codec: audio-codec@14 {
++        adau7118_codec: audio-codec@e {
+                 compatible = "adi,adau7118";
+                 reg = <14>;
+                 #sound-dai-cells = <0>;
+-- 
+2.23.0
 
-> > +  vddo-supply:
-> > +    description:
-> > +      Definition of the regulator used as interface power supply.
-> > +
-> > +  vdda-supply:
-> > +    description:
-> > +      Definition of the regulator used as analog power supply.
-> > +
-> > +  vddd-supply:
-> > +    description:
-> > +      Definition of the regulator used as digital power supply.
-> 
-> Do we really need three regulators ? I agree that the sensor has three
-> power rails, but aren't they usually powered by regulators that are
-> tied together, without individual control ? The IMX926 specifications
-> require the three power supplies to raise within 200ms, which we should
-> be able to ensure in software. What does your board use, does it have
-> multiple GPIOs to control each power supply ? If not I wonder if we
-> could just define vddd-supply now, and add vdda-supply and vddo-supply
-> later if we need to support systems that can control the supplies
-> individually.
-> 
-
-The whole power supply model is a bit rotten. In my case, there are 3 different
-regulators used with no software control. So, I can't control the rise time
-(I assume that they are handled by the external power regulator itself).
-
-So to be sane, I just documented with the assumption of fixed-regulators.
-
-Thanks,
-Mani
-> > +  reset-gpios:
-> > +    description:
-> > +      The phandle and specifier for the GPIO that controls sensor reset.
-> > +    maxItems: 1
-> > +
-> > +  port: true
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - clock-frequency
-> > +  - vddo-supply
-> > +  - vdda-supply
-> > +  - vddd-supply
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    imx296: camera-sensor@1a {
-> > +        compatible = "sony,imx296";
-> > +        reg = <0x1a>;
-> > +        reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> > +        pinctrl-names = "default";
-> > +        pinctrl-0 = <&camera_rear_default>;
-> > +        clocks = <&gcc 90>;
-> > +        clock-names = "mclk";
-> > +        clock-frequency = <37125000>;
-> > +        vddo-supply = <&camera_vddo_1v8>;
-> > +        vdda-supply = <&camera_vdda_3v3>;
-> > +        vddd-supply = <&camera_vddd_1v2>;
-> > +
-> > +        port {
-> > +            imx296_ep: endpoint {
-> > +                remote-endpoint = <&csiphy0_ep>;
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +...
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 55199ef7fa74..51194bb2c392 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -15140,6 +15140,14 @@ S:	Maintained
-> >  F:	drivers/media/i2c/imx274.c
-> >  F:	Documentation/devicetree/bindings/media/i2c/imx274.txt
-> >  
-> > +SONY IMX296 SENSOR DRIVER
-> > +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > +L:	linux-media@vger.kernel.org
-> > +T:	git git://linuxtv.org/media_tree.git
-> > +S:	Maintained
-> > +F:	drivers/media/i2c/imx296.c
-> > +F:	Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > +
-> >  SONY IMX319 SENSOR DRIVER
-> >  M:	Bingbu Cao <bingbu.cao@intel.com>
-> >  L:	linux-media@vger.kernel.org
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
