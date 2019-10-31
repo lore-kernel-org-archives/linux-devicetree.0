@@ -2,116 +2,103 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA1CCA9EC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF44CA9EC3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F8D2086D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFB0208E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vg+lZfpN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfJaLIP (ORCPT
+        id S1727228AbfJaLQw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:08:15 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42819 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbfJaLIP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 07:08:15 -0400
-X-Originating-IP: 91.217.168.176
-Received: from localhost (unknown [91.217.168.176])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 942B6FF810;
-        Thu, 31 Oct 2019 11:08:11 +0000 (UTC)
-Date:   Thu, 31 Oct 2019 12:08:11 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?K=E9vin?= RAYMOND <k.raymond@overkiz.com>,
-        Mickael GARDET <m.gardet@overkiz.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: add a common kizboxmini dtsi file
-Message-ID: <20191031110811.GC2967@piout.net>
-References: <20191018140304.31547-1-kamel.bouhara@bootlin.com>
- <20191018140304.31547-3-kamel.bouhara@bootlin.com>
- <20191029123426.GB8412@bogus>
+        Thu, 31 Oct 2019 07:16:52 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53812 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfJaLQw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 07:16:52 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n7so5488590wmc.3;
+        Thu, 31 Oct 2019 04:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9FkS3vnY8rTwRRvDNh5lutxmRI2CZBA9wqCIHbI5rZ0=;
+        b=vg+lZfpNhWzyv/pXu5wozvjq3xIj3xNyUJZutrYzcRdSo4PRTg/avwYc3/ulRl/SAK
+         fVl3XqVKOo473p8ARz3bpBcGDjs2651rSBjIdxuMCcynJq9t6sSPbL45Psp1lzejHp4q
+         zcIZkO/dHyjH2Hon2O3QGyFUQJbQdDqojJspoM7WerqzyGOMkAcOODEARetXTxpMSsfR
+         SDb9qNKT79y724sB1cZnYrIgG32a5GCWt8JovUdj6DzAoTq0J4GHQi829sYboVAy0O5k
+         gsuxCItj6zdKH5BOummt3dXDqYYDCp99pBkis4VrhnmMoZHwdjunZfn8nQpr3CSC/YE+
+         otAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9FkS3vnY8rTwRRvDNh5lutxmRI2CZBA9wqCIHbI5rZ0=;
+        b=dLuF1kibMBU4YjpstA+0IHJUeq0sYwgIxpn4i/dRJyLpD1pXNYUHLTw6VOkBLWXCVg
+         /eynWIalh6mZpP1fOjde+/gBGWIXbWwIpPX+vgkN5CGRhwKWoXnxCdtDVZZaGU5l8wlH
+         rmoosf2mXxz6iwGFAmcBHU3+RLeFIvPr6Jw5Cu5XDliQR8PeS9A6aj0SFpSENWyHhk1O
+         YB/UtfeYipofFfhvzOqJU2r7p9gCd2CxoqVwnX6d3Emu70CMsSsDgoAjSQlDaCCA7CBY
+         KUDwhpXzEvNj8sOUb3vtSsQnridD1szoRc8lbP4VQwevEv+sRW1PNnWG6we7wIQRS4Yl
+         mwIA==
+X-Gm-Message-State: APjAAAUwPCGbv7QuzG6ssdNcDr26v2OFEglv5m8VE7ve7LHUvPGo+rtz
+        4Lc34iVf+6r+ZSI3A0WVTt1SwOKYwJ4=
+X-Google-Smtp-Source: APXvYqxqLeQH/07i5VOT0bRcQbGS2nwfUxiYsaFc0vq7Py9ndCg/jLaP06NUYjb77keqV/YTsPAFtQ==
+X-Received: by 2002:a1c:40c1:: with SMTP id n184mr4875508wma.116.1572520609976;
+        Thu, 31 Oct 2019 04:16:49 -0700 (PDT)
+Received: from IcarusMOD.eternityproject.eu ([93.51.16.173])
+        by smtp.gmail.com with ESMTPSA id s17sm3009306wmh.3.2019.10.31.04.16.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 31 Oct 2019 04:16:49 -0700 (PDT)
+From:   kholk11@gmail.com
+To:     linux-arm-msm@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, ccross@android.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, marijns95@gmail.com, kholk11@gmail.com
+Subject: [PATCH v2 1/5] dt-bindings: iio: spmi-vadc: Add definitions for USB DP/DM VADCs
+Date:   Thu, 31 Oct 2019 12:16:41 +0100
+Message-Id: <20191031111645.34777-2-kholk11@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191031111645.34777-1-kholk11@gmail.com>
+References: <20191031111645.34777-1-kholk11@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029123426.GB8412@bogus>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/10/2019 07:34:26-0500, Rob Herring wrote:
-> On Fri, Oct 18, 2019 at 04:03:04PM +0200, Kamel Bouhara wrote:
-> > Split the Kizbox Mini boards into two board configuration, the
-> > Kizboxmini Mother board and the Kizboxmini RailDIN board.
-> > 
-> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-> > Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
-> > ---
-> >  arch/arm/boot/dts/Makefile                    |   2 +
-> >  arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  38 ++++
-> >  arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  54 ++++++
-> >  arch/arm/boot/dts/at91-kizboxmini_common.dtsi | 166 ++++++++++++++++++
-> >  4 files changed, 260 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> >  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
-> >  create mode 100644 arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index c976b72a4c94..6b3a65f3f6f8 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -38,6 +38,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
-> >  	at91-ariettag25.dtb \
-> >  	at91-cosino_mega2560.dtb \
-> >  	at91-kizboxmini.dtb \
-> > +	at91-kizboxmini-mb.dtb \
-> > +	at91-kizboxmini-rd.dtb \
-> >  	at91-wb45n.dtb \
-> >  	at91sam9g15ek.dtb \
-> >  	at91sam9g25ek.dtb \
-> > diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> > new file mode 100644
-> > index 000000000000..52921f547dd6
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> > @@ -0,0 +1,38 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2015-2018 Overkiz SAS
-> > + *   Author: Mickael Gardet <m.gardet@overkiz.com>
-> > + *           Kévin Raymond <k.raymond@overkiz.com>
-> > + */
-> > +/dts-v1/;
-> > +#include "at91-kizboxmini_common.dtsi"
-> > +
-> > +/ {
-> > +	model = "Overkiz Kizbox Mini Mother Board";
-> > +	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
-> > +		     "atmel,at91sam9x5", "atmel,at91sam9";
-> > +
-> > +	clocks {
-> > +		slow_xtal {
-> 
-> Don't use '_' in node names.
-> 
+From: AngeloGioacchino Del Regno <kholk11@gmail.com>
 
-We are stuck with that one until we change the dtsi.
+Some PMICs, like PMI8950, feature two ADCs, at 0x43 and 0x44,
+respectively used for USB D+ and USB D- (DP/DM): add the definition
+for them as VADC_USB_DP and VADC_USB_DM.
 
+Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
+---
+ include/dt-bindings/iio/qcom,spmi-vadc.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/include/dt-bindings/iio/qcom,spmi-vadc.h b/include/dt-bindings/iio/qcom,spmi-vadc.h
+index 61d556db1542..c4c3914d831c 100644
+--- a/include/dt-bindings/iio/qcom,spmi-vadc.h
++++ b/include/dt-bindings/iio/qcom,spmi-vadc.h
+@@ -72,6 +72,9 @@
+ #define VADC_AMUX_PU2				0x3b
+ #define VADC_LR_MUX3_BUF_XO_THERM		0x3c
+ 
++#define VADC_USB_DP				0x43
++#define VADC_USB_DM				0x44
++
+ #define VADC_LR_MUX1_PU1_BAT_THERM		0x70
+ #define VADC_LR_MUX2_PU1_BAT_ID			0x71
+ #define VADC_LR_MUX3_PU1_XO_THERM		0x72
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.21.0
+
