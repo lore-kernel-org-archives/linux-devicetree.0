@@ -2,102 +2,110 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7A6C47E49
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36C5CA9ECE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CCD2086D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD99216F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:42:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ky5zw8Br"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8Qe+GkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbfJaSii (ORCPT
+        id S1729317AbfJaSmV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:38:38 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45019 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729496AbfJaSii (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 14:38:38 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e10so4585239pgd.11
-        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 11:38:37 -0700 (PDT)
+        Thu, 31 Oct 2019 14:42:21 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37358 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729266AbfJaSmV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 14:42:21 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p13so3081347pll.4;
+        Thu, 31 Oct 2019 11:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=aMdrJzILxuSr5g6YT+uoh2+W6L6BuGxRIbKk0lFLJqE=;
-        b=ky5zw8BrhKjOq5PB9CX6M7JcJcee0wQzZvClB7rN/0BkDTbxI2OJvuN9t/KG6z3dMO
-         /Md9+UdzQHWzheYBk8zSY3L+/CBqbQTjfGm4RZVQLtK0oyotTESrxsCa63z3BsFjHpzm
-         tfdWsqpwHLile/bwnxuwhBE7GTdzoLatHXipLArihmzrHnwdKOLlCDLk4igLht1iJGtl
-         l0T45Y4Ohu4r5dlgAYomF0wLzuvZ1h4Slu6SxISK3r5zH/b/Els4KvCRbQuxhETZNJky
-         ZnI/P180SHO2M7og0G89CzsJCae+Ez1LZvrG1i4k/xPKrEK//0YYwaTDvcjyxII4K49A
-         a81g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mOGUK5o3jF1p1Y2eIo51S/GjvyM21GlwSNR8PmNMiXg=;
+        b=D8Qe+GkSEbF2UB9zOoTJWhjptWn1t131cSjAdJUZz3AWWUmB+ldbx8F4TVpr4W2eeJ
+         3qg51Bq9dLt4pMg0LP12DX4fm/rrQYuzDsKjUGe2HKkLdsxgXe0mpzjbDVdiq3F1d6+p
+         dA0T1xjazLrxLpKZaNsOpCzhqHzARInzRY3cYxkECjdPrmCCnkc+F629Yd6MqK6u8xT7
+         x1aUrlOPl1Ek3N3AmeglBq745U1VvC7tDapMcijOlMpTchBKBU5BKyHbbgcui4ZxKoj4
+         rTNcG4rm9PAcEM6rPpo408uIztWOGckiKOfI09SmmArWhudXLnEph9gP4i136EFlAh83
+         LEAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=aMdrJzILxuSr5g6YT+uoh2+W6L6BuGxRIbKk0lFLJqE=;
-        b=K3SFiW6Vbw2/bGHR2mV4DAnlsV7YdoALJV069KBro6L3ivePQaqj2t2tOA16BImyOk
-         RLay55H+gLv/0RVbAn/Kq2zufJG6sR4QBbAEbnUnQjRAdYhbOwBqvpD6BozmdABFOwk6
-         JSv6A4XFcdzu0UcbvUX6m3ouP0Wl+jNtT2o5yvoMKBpztW+lkqgN27e9uoGM1kKLWAVX
-         gTuqclQgjtHIRxZ32nNrbwhoPuUJ1/jwasxyfSIpZ4+NW0b1Xe2RLDM90mPTIIA4x5M5
-         BweTkjX+UlsPqf8mOpBd2KQ9c8qo7kONOEPbUNv83AWXQrjzRt2bQ+hs68M/JzeLXNRT
-         o/Ig==
-X-Gm-Message-State: APjAAAWYv0JAytP+WzeQtz97geP2Q4fB/KF4l+ew6rWm8WTTZXIDozas
-        Z89Ewjc93/UDH2RQnG0iSRtIYI8x8ANSGQ==
-X-Google-Smtp-Source: APXvYqyaOu761Su0gt/rthTGFVYQl4Zz7k4JdP1DxFjOS4wsatvGYfvAgkmIt5GHQmwvgRSXF8IG8A==
-X-Received: by 2002:a65:670d:: with SMTP id u13mr7825488pgf.19.1572547117004;
-        Thu, 31 Oct 2019 11:38:37 -0700 (PDT)
-Received: from localhost ([49.248.58.234])
-        by smtp.gmail.com with ESMTPSA id f185sm4716195pfb.183.2019.10.31.11.38.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 31 Oct 2019 11:38:36 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
-        masneyb@onstation.org, swboyd@chromium.org, julia.lawall@lip6.fr,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v7 11/15] arm64: dts: qcs404: thermal: Add interrupt support
-Date:   Fri,  1 Nov 2019 00:07:35 +0530
-Message-Id: <63d6b0b8bba0d217c2f7bb4240c587ead933b6be.1572526427.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1572526427.git.amit.kucheria@linaro.org>
-References: <cover.1572526427.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1572526427.git.amit.kucheria@linaro.org>
-References: <cover.1572526427.git.amit.kucheria@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mOGUK5o3jF1p1Y2eIo51S/GjvyM21GlwSNR8PmNMiXg=;
+        b=YoIVqpnai0NHuMW8IQZUSbN9GIwGFx+SQd/tV3TT1kblxflddkHIEEV8NQRggPps0P
+         4wScIEBjEhMrAcrkf4Dk7CRuhrYafZZgZ/kWTVRzNjyL68dpnRRl0zBXLWvFwE2EGPjY
+         l6iBILpbVd6knql2ap29zjNbXvq9ckjTxUdzqoePprVDxF9rXiDutiFgU4WccpfN0iJm
+         Y3pI8zI8jFUJkCNOPEpz6W6R+rbLFUb551HgFRvM6IJm30OKyMVfIDT/+tVDR2s4O9p7
+         pEw5K/KhR8TwU1Fqo4wWzT6PVCxIQE013ZE9pTuontPtf1RWIX1f/YDwJu1P8u09chPH
+         551A==
+X-Gm-Message-State: APjAAAWqJVYuR4QJbDiri6LOI/F2pxgYgdb5GlnEwIJHmF0viEfcghBx
+        7EZ390980AveBrCqBd44+gCAzOjz
+X-Google-Smtp-Source: APXvYqyME+Sr4dcNOEyJBsn6UMyFA0KQ9xeaxpAN3OCNXOwcpprTSYjBoKHAdoUZqydVO8s2oHdweA==
+X-Received: by 2002:a17:902:8305:: with SMTP id bd5mr7943187plb.184.1572547338232;
+        Thu, 31 Oct 2019 11:42:18 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r11sm7567137pjp.14.2019.10.31.11.42.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 11:42:17 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 11:42:14 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jeff LaBundy <jeff@labundy.com>, jdelvare@suse.com,
+        linux@roeck-us.net, thierry.reding@gmail.com, jic23@kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH 2/8] mfd: Add support for Azoteq IQS620A/621/622/624/625
+Message-ID: <20191031184214.GL57214@dtor-ws>
+References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
+ <1571631083-4962-3-git-send-email-jeff@labundy.com>
+ <20191031134410.GB5700@dell>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031134410.GB5700@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Register upper-lower interrupt for the tsens controller.
+On Thu, Oct 31, 2019 at 01:44:10PM +0000, Lee Jones wrote:
+> On Sun, 20 Oct 2019, Jeff LaBundy wrote:
+> > + * Author: Jeff LaBundy <jeff@labundy.com>
+> > + *
+> > + * These devices rely on application-specific register settings and calibration
+> > + * data developed in and exported from a suite of GUIs offered by the vendor. A
+> > + * separate tool converts the GUIs' ASCII-based output into a standard firmware
+> > + * file parsed by the driver.
+> 
+> This troubles me somewhat. So here we take a C header file which is
+> the output of a vendor supplied configuration tool, convert it to a
+> bespoke file format using a Python script authored by yourself, which
+> we masquerade as Linux firmware in order to set-up the hardware.
+> 
+> Is that correct?
+> 
+> What is preventing a very naughty person from providing their own
+> register map (firmware) in order to read/write unsuitable registers
+> from kernel context for their own gains; simply by swapping out a file
+> contained in userspace?
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+How is it different from, let's say, Intel WiFi firmware that you load
+into the kernel and then into the card every time you boot up your
+laptop?
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index a97eeb4569c0..b6a4e6073936 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -290,6 +290,8 @@
- 			nvmem-cells = <&tsens_caldata>;
- 			nvmem-cell-names = "calib";
- 			#qcom,sensors = <10>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow";
- 			#thermal-sensor-cells = <1>;
- 		};
- 
+Thanks.
+
 -- 
-2.17.1
-
+Dmitry
