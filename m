@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D352CA9ECF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4970CA9ECE
 	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22577218AC
+	by mail.kernel.org (Postfix) with ESMTP id 77F20217D9
 	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfJaQld (ORCPT
+        id S1728646AbfJaQld (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 31 Oct 2019 12:41:33 -0400
-Received: from shell.v3.sk ([90.176.6.54]:48150 "EHLO shell.v3.sk"
+Received: from shell.v3.sk ([90.176.6.54]:48152 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728645AbfJaQld (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1728644AbfJaQld (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Thu, 31 Oct 2019 12:41:33 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id A295C51142;
-        Thu, 31 Oct 2019 17:35:10 +0100 (CET)
+        by zimbra.v3.sk (Postfix) with ESMTP id 405695114D;
+        Thu, 31 Oct 2019 17:35:09 +0100 (CET)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Te_oO1nBQVKz; Thu, 31 Oct 2019 17:35:02 +0100 (CET)
+        with ESMTP id fB_YYktOwu0c; Thu, 31 Oct 2019 17:35:01 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 51A1651146;
-        Thu, 31 Oct 2019 17:35:02 +0100 (CET)
+        by zimbra.v3.sk (Postfix) with ESMTP id 8BB5251139;
+        Thu, 31 Oct 2019 17:35:01 +0100 (CET)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 6mCmVhTsI1n8; Thu, 31 Oct 2019 17:34:59 +0100 (CET)
+        with ESMTP id t8LyQxIbM0De; Thu, 31 Oct 2019 17:34:59 +0100 (CET)
 Received: from belphegor.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 3979C51144;
-        Thu, 31 Oct 2019 17:34:59 +0100 (CET)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id DB08251141;
+        Thu, 31 Oct 2019 17:34:58 +0100 (CET)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     soc@kernel.org
 Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 4/4] ARM: dts: mmp3-dell-ariel: Add a serial point alias
-Date:   Thu, 31 Oct 2019 17:34:55 +0100
-Message-Id: <20191031163455.1711872-5-lkundrak@v3.sk>
+Subject: [PATCH 2/4] ARM: dts: mmp3: Fix /soc/watchdog node name
+Date:   Thu, 31 Oct 2019 17:34:53 +0100
+Message-Id: <20191031163455.1711872-3-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191031163455.1711872-1-lkundrak@v3.sk>
 References: <20191031163455.1711872-1-lkundrak@v3.sk>
@@ -53,30 +53,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Make sure UART3, where the console is, is called ttyS2. That is
-consistent with the early console.
+There's a typo there that rightfully upsets DTS:
+
+  <stdout>: Warning (simple_bus_reg): /soc/watchdog@2c000620: simple-bus
+  unit address format error, expected "e0000620"
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/mmp3-dell-ariel.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/mmp3.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/mmp3-dell-ariel.dts b/arch/arm/boot/dts/mm=
-p3-dell-ariel.dts
-index 0855b5f1d1f35..c1947b5a688d7 100644
---- a/arch/arm/boot/dts/mmp3-dell-ariel.dts
-+++ b/arch/arm/boot/dts/mmp3-dell-ariel.dts
-@@ -14,6 +14,10 @@
- 	model =3D "Dell Ariel";
- 	compatible =3D "dell,wyse-ariel", "marvell,mmp3";
+diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
+index b1e928ed77d66..d9762de0ed34b 100644
+--- a/arch/arm/boot/dts/mmp3.dtsi
++++ b/arch/arm/boot/dts/mmp3.dtsi
+@@ -517,7 +517,7 @@
+ 			reg =3D <0xe0000600 0x20>;
+ 		};
 =20
-+	aliases {
-+		serial2 =3D &uart3;
-+	};
-+
- 	chosen {
- 		#address-cells =3D <0x1>;
- 		#size-cells =3D <0x1>;
+-		watchdog@2c000620 {
++		watchdog@e0000620 {
+ 			compatible =3D "arm,arm11mp-twd-wdt";
+ 			reg =3D <0xe0000620 0x20>;
+ 			interrupts =3D <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
 --=20
 2.23.0
 
