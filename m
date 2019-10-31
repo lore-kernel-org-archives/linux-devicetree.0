@@ -2,109 +2,99 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6392ECA9ECE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE876CA9EC3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 09:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A25720873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:58:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sjxcXNY1"
+	by mail.kernel.org (Postfix) with ESMTP id 9AA202086D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 09:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfJaI6t (ORCPT
+        id S1726874AbfJaJCa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:58:49 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36702 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfJaI6t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 04:58:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w18so5313134wrt.3
-        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 01:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=mM5JWFj5/j1kMfO0LYYDWqFAXV7BHBUBoAurAtsh+vs=;
-        b=sjxcXNY1tNdgNLsdckLy5C5ghG1YOXnEJggZIwKLSbYHASKZ0ONzEsR8o2/z4bNoP3
-         9Teai83oT5ZDna4z6Nt0jrz+QGFloBaBOr4xleRjnZCXPGaTaASxPAEgS3gkaR4UOUim
-         HgufBrfwRfalglmkFZFdGS+v8blf8XzFfWvbg9zbnzix7ZdBQFQZj8/iK8td64QFmIqn
-         YUWxnRz3USDGpylVcwrFMAUKt2ahxOCdzQnhRrLOxA2Bslx3GIlT//nu0z++uJRYxUWL
-         Lb79ddtanLSnRnJjuVuxNA8I6VQTpjKBrL1O9ccy+PzpYaOgjKdplScT4ZxBNKagFyia
-         PUlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=mM5JWFj5/j1kMfO0LYYDWqFAXV7BHBUBoAurAtsh+vs=;
-        b=O0t9HA7axik3/Ix989bMHplVRHc6Uz5EKOqn6ZouVzjMCME15Rk8m/IrWvtaPQXaGe
-         ixTWsWMnt0ee/svmcH0zqABsGjgN4gbSXcVx5ygvmQaKaWyGciOGzKRl4+82aro/C13n
-         w1kziLPlZtvkEe0Pyvx8FWZFtJxjDhWFvFLn2X9B1b2VJdbh9h/nkF91gm8eG/G2S95n
-         l/kEZl1wGLgtUqfFbN3SQit7/WS9d4UJhvh6GmrByv3wYtxUnF7/w7IBvxZUXk1urARf
-         bi/giMEkqF362y4s85ycxvqphdnCKyC/zOxTfM/7o1yaYal+bRlhrfMiIxdxwvba0aqm
-         bzZQ==
-X-Gm-Message-State: APjAAAXCBW+YzQ1suvDxae9FJT/TlLlG4QyQiRc3hYUVIuGIc3RyJyCp
-        yL8/7Mt0xdLzL3SPtP8o3L0xfw==
-X-Google-Smtp-Source: APXvYqxdn+1tmOLx8ifp3F1PxxrO/zj4IhisAc9DnkIGdD19EJUgI1oKHtPcrdKzBLR3SbDRmKd/OA==
-X-Received: by 2002:adf:cf11:: with SMTP id o17mr4389080wrj.284.1572512327362;
-        Thu, 31 Oct 2019 01:58:47 -0700 (PDT)
-Received: from dell ([2.31.163.64])
-        by smtp.gmail.com with ESMTPSA id a206sm3494167wmf.15.2019.10.31.01.58.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 31 Oct 2019 01:58:46 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 08:58:45 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V9 1/6] backlight: qcom-wled: Add new properties for
- PMI8998.
-Message-ID: <20191031085845.GA5700@dell>
-References: <1571814423-6535-1-git-send-email-kgunda@codeaurora.org>
- <1571814423-6535-2-git-send-email-kgunda@codeaurora.org>
+        Thu, 31 Oct 2019 05:02:30 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:2792 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726776AbfJaJC3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 05:02:29 -0400
+X-UUID: c6fa13f813ab4e2f9a6293d6b065807b-20191031
+X-UUID: c6fa13f813ab4e2f9a6293d6b065807b-20191031
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1913279059; Thu, 31 Oct 2019 17:02:23 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 31 Oct 2019 17:02:19 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 31 Oct 2019 17:02:19 +0800
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
+        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
+        <bingbu.cao@intel.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>,
+        <dongchun.zhu@mediatek.com>
+Subject: [V3, 0/2] media: ov8856: Add YAML binding and sensor mode support
+Date:   Thu, 31 Oct 2019 17:02:11 +0800
+Message-ID: <20191031090213.27727-1-dongchun.zhu@mediatek.com>
+X-Mailer: git-send-email 2.9.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1571814423-6535-2-git-send-email-kgunda@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 23 Oct 2019, Kiran Gunda wrote:
+Hello,
 
-> Update the bindings with the new properties used for
-> PMI8998.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  .../bindings/leds/backlight/qcom-wled.txt          | 74 ++++++++++++++++++----
->  1 file changed, 63 insertions(+), 11 deletions(-)
+This series adds new DT bindings in YAML and two more sensor modes for users to call.
 
-This patch no longer applies.
+From the latest ov8856 datasheet, it is proposed to adopt the resolution of 1632*1224 and 3264*2448,
+together with Bayer Order of BGGR. Here two more scenario settings are provided.
 
-It looks like you dropped the rename patch.
+The hardware revision of ov8856 could be distinguished from one OTP SRAM register R700F.
+PLL register R3614 requires to be correspondingly updated.
+For instance, 0x20 is suggested for 1B camera module.
 
-Please rebase all of the patches in this set on top of a released
-commit and resend.
+Finally, The driver has been validated in camera features on CrOS application.
+
+Changes of V3 mainly address comments from Andy, Tomasz, Sakari, Rob.
+ - Convert text documentation to YAML schema.
+ - Enable VSYNC singal output
+ - Add ov8856_runtime_suspend() which would call __ov8856_power_off()
+ - Add ov8856_runtime_resume() which would call __ov8856_power_on()
+ - Fix other reviewed issues in V2
+
+Mainly changes of V2 are addressing the comments from Sakari, Tomasz,
+including,
+ - Add clock-frequency and link-frequencies in DT
+ - Re-define some macros like R3614, R3d84, n_shutdn
+ - Rename OV8856_MCLK to OV8856_XVCLK per datasheet
+ - Refine ov8856_update_otp_reg, ov8856_configure_regulators and ov8856_cal_delay
+ - Set the bayer order in the mode struct, and directly links to register R3808, R3809
+ - Remove or refine redundant log print
+ - Fix other reviewed issues in V1
+
+Dongchun Zhu (2):
+  media: dt-bindings: ov8856: Document YAML bindings
+  media: i2c: ov8856: Add support for more sensor modes
+
+ .../devicetree/bindings/media/i2c/ov8856.yaml      | 126 ++++
+ MAINTAINERS                                        |   1 +
+ drivers/media/i2c/ov8856.c                         | 661 ++++++++++++++++++++-
+ 3 files changed, 779 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.9.2
+
