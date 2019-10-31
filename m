@@ -2,96 +2,151 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F65ECA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51F3CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14047208C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FFC32087F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfJaPt2 (ORCPT
+        id S1727630AbfJaP4o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:49:28 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:35032 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726664AbfJaPt2 (ORCPT
+        Thu, 31 Oct 2019 11:56:44 -0400
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:38614 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727580AbfJaP4n (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:49:28 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id AE154634C87;
-        Thu, 31 Oct 2019 17:48:34 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iQCgb-0001mv-Nb; Thu, 31 Oct 2019 17:48:33 +0200
-Date:   Thu, 31 Oct 2019 17:48:33 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 0/2] Add IMX296 CMOS image sensor support
-Message-ID: <20191031154833.GM6253@valkosipuli.retiisi.org.uk>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191031131644.GA8917@pendragon.ideasonboard.com>
- <20191031132352.GA24273@mani>
- <20191031132801.GC5018@pendragon.ideasonboard.com>
+        Thu, 31 Oct 2019 11:56:43 -0400
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iQCoO-0004RM-1y; Thu, 31 Oct 2019 16:56:36 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9VFuVLG025660
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 31 Oct 2019 16:56:31 +0100
+Subject: Re: [PATCH] arm64: dts: rockchip: Rework voltage supplies for
+ regulators on rk3399-roc-pc
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <22b56700-3c9e-0f60-cd74-7ff24d4f1a23@fivetechno.de>
+ <2490751.hSll4LLrj9@phil>
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ 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
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <3d9bb8bb-eb4a-1bf4-bbfb-f48da4e97083@fivetechno.de>
+Date:   Thu, 31 Oct 2019 16:56:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031132801.GC5018@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2490751.hSll4LLrj9@phil>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1572537402;24615748;
+X-HE-SMSGID: 1iQCoO-0004RM-1y
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mani, Laurent,
-
-On Thu, Oct 31, 2019 at 03:28:01PM +0200, Laurent Pinchart wrote:
-> Hi Mani,
+Am 31.10.19 um 15:24 schrieb Heiko Stuebner:
+> Am Donnerstag, 31. Oktober 2019, 14:30:06 CET schrieb Markus Reichl:
+>> Correct the voltage supplies according to the board schematics
+>> ROC-3399-PC-V10-A-20180804.
+>> 
+>> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+>> ---
+>>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 30 ++++++++++---------
+>>  1 file changed, 16 insertions(+), 14 deletions(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+>> index e06e4163605b..def8bca7d158 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+>> @@ -142,7 +142,7 @@
+>>  		regulator-boot-on;
+>>  		regulator-min-microvolt = <3300000>;
+>>  		regulator-max-microvolt = <3300000>;
+>> -		vin-supply = <&vcc_sys>;
+>> +		vin-supply = <&dc_12v>;
+>>  	};
+>>  
+>>  	/* Actually 3 regulators (host0, 1, 2) controlled by the same gpio */
+>> @@ -190,7 +190,7 @@
+>>  		regulator-boot-on;
+>>  		regulator-min-microvolt = <800000>;
+>>  		regulator-max-microvolt = <1400000>;
+>> -		vin-supply = <&vcc_sys>;
+>> +		vin-supply = <&vcc3v3_sys>;
+>>  	};
+>>  
+>>  	/* on roc-rk3399-mezzanine board */
 > 
-> On Thu, Oct 31, 2019 at 06:53:52PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Oct 31, 2019 at 03:16:44PM +0200, Laurent Pinchart wrote:
-> > > On Wed, Oct 30, 2019 at 03:19:00PM +0530, Manivannan Sadhasivam wrote:
-> > > > Hello,
-> > > > 
-> > > > This patchset adds support for IMX296 CMOS image sensor from Sony.
-> > > > Sensor can be programmed through I2C and 4-wire interface but the
-> > > > current driver only supports I2C interface. The sensor is
-> > > > capable of outputting frames in CSI2 format (1 Lane). In the case
-> > > > of sensor resolution, driver only supports 1440x1088 at 30 FPS.
-> > > > 
-> > > > The driver has been validated using Framos IMX296 module interfaced to
-> > > > 96Boards Dragonboard410c.
-> > > 
-> > > I've just been made aware of your work. I also worked on an IMX296
-> > > sensor driver in parallel, which I will post to the list. My driver
-> > > doesn't hardcode the resolution but computes register values at runtime,
-> > > so I wonder if it could be a better option. I'll post it now.
-> > 
-> > I'm fine with it. The reason the driver is simple in the first place is, that's
-> > how my usual workflow is. Start small and build it big ;-)
-> > 
-> > Anyway, I'm happy if your driver gets in.
+> This seems to be some change from somewhere else.
+> In any case I adapted that to the current dts and applied
+> the patch for 5.5. Please double-check though.
+
+Yes this comes from:
+
+"arm64: dts: rockchip: Add PCIe node on rk3399-roc-pc"
+
+https://patchwork.kernel.org/patch/11215659/
+
 > 
-> My driver sometimes has trouble finding the sensor at probe time, so
-> I'll study and try your code too. It could be a problem specific to my
-> platform (I'm testing on a custom i.MX7 board).
+> Thanks
+> Heiko
+> 
+> 
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
 
-Based on this discussion I'll mark the second patch of the set obsolete in
-Patchwork.
-
-Laurent: please see my comments on the driver as well.
-
+Gruß,
 -- 
-Kind regards,
-
-Sakari Ailus
+Markus Reichl
