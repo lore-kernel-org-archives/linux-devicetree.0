@@ -2,137 +2,234 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EB0CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E28CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0485C20873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66ED921734
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:59:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MFPuR6yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfJaQ5p (ORCPT
+        id S1728699AbfJaQ7n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:57:45 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39638 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbfJaQ5p (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:57:45 -0400
-Received: from dhcp-64-28.ens-lyon.fr ([140.77.64.28] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iQDlQ-0006YQ-Kx; Thu, 31 Oct 2019 17:57:36 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Add PCIe node on rk3399-roc-pc
-Date:   Thu, 31 Oct 2019 17:57:35 +0100
-Message-ID: <1719506.vT9a8mQdzu@phil>
-In-Reply-To: <09300c2d-4298-1b01-ac41-d1b2610589d4@fivetechno.de>
-References: <09300c2d-4298-1b01-ac41-d1b2610589d4@fivetechno.de>
+        Thu, 31 Oct 2019 12:59:43 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:44245 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbfJaQ7n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 12:59:43 -0400
+Received: by mail-vs1-f67.google.com with SMTP id j85so4529354vsd.11
+        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 09:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rBXjy64QhAJngU1bLCgW8NmRIabhTqAJ4rYpSUJH/vA=;
+        b=MFPuR6yrPRTAmL9shB7f7ccQmfeaxlzOoX57mPiTDTNTInAdnhDq1qiWaZtEhzbSLI
+         aLEv7aV9AfTmYN2RGLov44yiuhk/5h8r4Z03gT3ZXWcaMGCrA2GoczDlv5IVrmoOhv4t
+         WcfOOehtYLlEpYEn0voLWT83cdteFabhYfsqZC54x6OQXZwgDcqZkFmA5SMMHwjWTNSG
+         sYg9VpHJwIznNow79XZhVdyqPv493SMXP9sXVX7fApFQoibaYXQZ08TdkHafK52H7w9Y
+         fikkLMrmkfpckOrp6DlZiXfmWE8rD0t0Bw6Jbyw+t93JF2MRH6PaH9+QYnvO5UucNtMy
+         ON5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rBXjy64QhAJngU1bLCgW8NmRIabhTqAJ4rYpSUJH/vA=;
+        b=loNU4/Y+xBqV5ModAIYdA/vgHANGY8KL6LvXiH+8G1xhmjR3MStnvxcnoBDhI/Rsc5
+         q0lQhBsqzTUcANs6NWYG46RY+N0ivI49LCUqlgtSnr9RXOddMMlHt1RCxrqbrDovHRBl
+         URNSG51vMhnFvsncdmNyFVGzfUPLri0BziD7h0EpfPyqBUdMtLOQaq3ASsR1fwd9G3Co
+         sx5VVXtzAuoY4pOWtLNwkvVNviBmFgYa/rXtRKTjYlhJPbMTbbiDx/XKX7E44KUbEyiA
+         ILWyxS866MnXZIHx1sZENT5liHSaNOSn+uNKac2geCqJfIWuYIon4DkMaoBo3ZBkOXyM
+         qqSQ==
+X-Gm-Message-State: APjAAAXUAc8zi2/98oPHDXV+57sV3J7yNUsq4z1XSkplOpMTruEJH7B4
+        5rRs2JNLzi9h3mw1dYNZwmT4+2Y80AT5PnBcBAiMoQ==
+X-Google-Smtp-Source: APXvYqxUDYzIwZUL5FbFN+ofBpA8OFEwiksm7t/nLo1J8VkpA/QJoge6ynXgiOcDbF0m20N6ahz2Rokt9mlDmh48qB4=
+X-Received: by 2002:a67:fb5a:: with SMTP id e26mr3354691vsr.200.1572541182099;
+ Thu, 31 Oct 2019 09:59:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <cover.1571510481.git.hns@goldelico.com> <bec9d76e6da03d734649b9bdf76e9d575c57631a.1571510481.git.hns@goldelico.com>
+ <CAPDyKFrMQ3fBaeeAYVJfUdL8m=PDRU9Xt_9oGw6D1XOY68qDuQ@mail.gmail.com> <D9A82904-35BE-41F2-A308-9A49606428B1@goldelico.com>
+In-Reply-To: <D9A82904-35BE-41F2-A308-9A49606428B1@goldelico.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 31 Oct 2019 17:59:05 +0100
+Message-ID: <CAPDyKFrbOH=ROv_JefSQsEnmGqN6oFVfbhpqscOK=KUqJgzarw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/11] DTS: ARM: pandora-common: define wl1251 as child
+ node of mmc3
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        "# 4.0+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 30 Oct 2019 at 18:25, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+>
+> > Am 30.10.2019 um 17:44 schrieb Ulf Hansson <ulf.hansson@linaro.org>:
+> >
+> > On Sat, 19 Oct 2019 at 20:42, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >>
+> >> Since v4.7 the dma initialization requires that there is a
+> >> device tree property for "rx" and "tx" channels which is
+> >> not provided by the pdata-quirks initialization.
+> >>
+> >> By conversion of the mmc3 setup to device tree this will
+> >> finally allows to remove the OpenPandora wlan specific omap3
+> >> data-quirks.
+> >>
+> >> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+> >>
+> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >> Cc: <stable@vger.kernel.org> # 4.7.0
+> >> ---
+> >> arch/arm/boot/dts/omap3-pandora-common.dtsi | 37 +++++++++++++++++++--
+> >> 1 file changed, 35 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/omap3-pandora-common.dtsi b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+> >> index ec5891718ae6..c595b3eb314d 100644
+> >> --- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
+> >> +++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+> >> @@ -226,6 +226,18 @@
+> >>                gpio = <&gpio6 4 GPIO_ACTIVE_HIGH>;     /* GPIO_164 */
+> >>        };
+> >>
+> >> +       /* wl1251 wifi+bt module */
+> >> +       wlan_en: fixed-regulator-wg7210_en {
+> >> +               compatible = "regulator-fixed";
+> >> +               regulator-name = "vwlan";
+> >> +               regulator-min-microvolt = <1800000>;
+> >> +               regulator-max-microvolt = <1800000>;
+> >
+> > I doubt these are correct.
+> >
+> > I guess this should be in the range of 2.7V-3.6V.
+>
+> Well, it is a gpio which enables some LDO inside the
+> wifi chip. We do not really know the voltage it produces
+> and it does not matter. The gpio voltage is 1.8V.
+>
+> Basically we use a fixed-regulator to "translate" a
+> regulator into a control gpio because the mmc interface
+> wants to see a vmmc-supply.
 
-Am Montag, 28. Oktober 2019, 15:47:27 CET schrieb Markus Reichl:
-> rk3399-roc-pc has a PCIe interface. Enable it for use with
-> the M.2 NGFF M_KEY slot on roc-rk3399-mezzanine board.
-> Tested with Samsung 970 evo plus SSD.
-> 
-> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
-> ---
->  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> index 9313251765c7..2d637d54994b 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> @@ -158,6 +158,21 @@
->  		regulator-max-microvolt = <1400000>;
->  		vin-supply = <&vcc_sys>;
->  	};
-> +
-> +	/* on roc-rk3399-mezzanine board */
+The vmmc supply represent the core power to the SDIO card (or
+SD/(e)MMC). Depending on what voltage range the vmmc supply supports,
+the so called OCR mask is created by the mmc core. The mask is then
+used to let the core negotiate the voltage level with the SDIO card,
+during the card initialization. This is not to confuse with the I/O
+voltage level, which is a different regulator.
 
-I'm undecided on this. From what I've seen that mezzanine board is some
-sort of addon, like a raspberry pi hat. Therefore it's not always present,
-so probably should not be part of the base board dts.
+Anyway, according to the TI WiLink series specifications, it looks
+like vmmc should be a regulator supporting 3-3.3V (in many schematics
+it's called VBAT).
 
-I'm thinking a dt-overlay that can then be activated might be the solution
-of choice, but I've reached out to arm-soc poeple on irc to determine the
-correct course.
+Furthermore I decided to dig into various DTS files that specifies the
+vmmc regulator, of course for mmc nodes having a subnode specifying an
+SDIO card for a TI WiLink. In most cases a 1.8V fixed GPIO regulator
+is used. This looks wrong to me. The fixed GPIO regulator isn't really
+the one that should model vmmc.
 
+The proper solution, would rather be to use separate regulator for
+vmmc and instead use a so called mmc-pwrseq node to manage the GPIO.
 
-Heiko
+To conclude from my side, as we have lots of DTS that are wrong, I
+don't really care if we add another one in the way you suggest above.
+But feel free to look into the mmc-pwrseq option.
 
-> +	vcc3v3_pcie: vcc3v3-pcie {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc3v3_pcie";
-> +		enable-active-high;
-> +		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&vcc3v3_pcie_en>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&dc_12v>;
-> +	};
->  };
->  
->  &cpu_l0 {
-> @@ -514,6 +529,19 @@
->  	status = "okay";
->  };
->  
-> +&pcie_phy {
-> +	status = "okay";
-> +};
-> +
-> +&pcie0 {
-> +	ep-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
-> +	num-lanes = <4>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_perst>;
-> +	vpcie3v3-supply = <&vcc3v3_pcie>;
-> +	status = "okay";
-> +};
-> +
->  &pinctrl {
->  	lcd-panel {
->  		lcd_panel_reset: lcd-panel-reset {
-> @@ -535,6 +563,16 @@
->  		};
->  	};
->  
-> +	pcie {
-> +		vcc3v3_pcie_en: vcc3v3-pcie-en {
-> +			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		pcie_perst: pcie-perst {
-> +			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
->  	pmic {
->  		vsel1_gpio: vsel1-gpio {
->  			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
-> 
+>
+> >
+> >> +               startup-delay-us = <50000>;
+> >> +               regulator-always-on;
+> >
+> > Always on?
+>
+> Oops. Yes, that is something to check!
 
+As it's a GPIO regulator, for sure it's not always on.
 
+>
+> >
+> >> +               enable-active-high;
+> >> +               gpio = <&gpio1 23 GPIO_ACTIVE_HIGH>;
+> >> +       };
+> >> +
+> >>        /* wg7210 (wifi+bt module) 32k clock buffer */
+> >>        wg7210_32k: fixed-regulator-wg7210_32k {
+> >>                compatible = "regulator-fixed";
+> >> @@ -522,9 +534,30 @@
+> >>        /*wp-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;*/    /* GPIO_127 */
+> >> };
+> >>
+> >> -/* mmc3 is probed using pdata-quirks to pass wl1251 card data */
+> >> &mmc3 {
+> >> -       status = "disabled";
+> >> +       vmmc-supply = <&wlan_en>;
+> >> +
+> >> +       bus-width = <4>;
+> >> +       non-removable;
+> >> +       ti,non-removable;
+> >> +       cap-power-off-card;
+> >> +
+> >> +       pinctrl-names = "default";
+> >> +       pinctrl-0 = <&mmc3_pins>;
+> >> +
+> >> +       #address-cells = <1>;
+> >> +       #size-cells = <0>;
+> >> +
+> >> +       wlan: wl1251@1 {
+> >> +               compatible = "ti,wl1251";
+> >> +
+> >> +               reg = <1>;
+> >> +
+> >> +               interrupt-parent = <&gpio1>;
+> >> +               interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;  /* GPIO_21 */
+> >> +
+> >> +               ti,wl1251-has-eeprom;
+> >> +       };
+> >> };
+> >>
+> >> /* bluetooth*/
+> >> --
+> >> 2.19.1
+> >>
+>
+> BR and thanks,
+> Nikolaus
+>
 
-
+Kind regards
+Uffe
