@@ -2,185 +2,159 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FDCA9ED0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 10:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D139CA9ECE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAA720862
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 10:58:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="I6y0jQZy"
+	by mail.kernel.org (Postfix) with ESMTP id 2D9D52087F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfJaK6V (ORCPT
+        id S1727189AbfJaLEh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:58:21 -0400
-Received: from forward101o.mail.yandex.net ([37.140.190.181]:51347 "EHLO
-        forward101o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726897AbfJaK6V (ORCPT
+        Thu, 31 Oct 2019 07:04:37 -0400
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:43720 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726913AbfJaLEh (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:58:21 -0400
-Received: from mxback27j.mail.yandex.net (mxback27j.mail.yandex.net [IPv6:2a02:6b8:0:1619::227])
-        by forward101o.mail.yandex.net (Yandex) with ESMTP id CEB973C01509;
-        Thu, 31 Oct 2019 13:58:15 +0300 (MSK)
-Received: from iva6-6f4302ae52e5.qloud-c.yandex.net (iva6-6f4302ae52e5.qloud-c.yandex.net [2a02:6b8:c0c:9a82:0:640:6f43:2ae])
-        by mxback27j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id MqTxeuNTtt-wEaiEtox;
-        Thu, 31 Oct 2019 13:58:15 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1572519495;
-        bh=CnUEsomcZToujM6zlvvqh/M/VDXtZjPQrvhlDicaFhA=;
-        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
-        b=I6y0jQZyDWddPsb6XQzTUD9AGwNj+wzirysDdK6n3vAKco0tvXiWJXopQFW6Hul2i
-         mW3dDcFOxIOpv3/qQonhhobhPY9809zVHbCFJkYa8zuWuLcRz+phBikZ6JcovA3iv4
-         p92mVe+TLRskv3vPizha5J+XQWdjNhWgSw2CViMo=
-Authentication-Results: mxback27j.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by iva6-6f4302ae52e5.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id apLSeE0B5F-vTVigpuo;
-        Thu, 31 Oct 2019 13:58:13 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 4/5] dt-bindings: net: document loongson.pci-gmac
-To:     Simon Horman <simon.horman@netronome.com>
-Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, bhelgaas@google.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
- <20191030135347.3636-5-jiaxun.yang@flygoat.com>
- <20191031083509.GA30739@netronome.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <a93eedb9-8863-3802-a563-fe4955d846c3@flygoat.com>
-Date:   Thu, 31 Oct 2019 18:57:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 07:04:37 -0400
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iQ8Fl-00014Z-Fv; Thu, 31 Oct 2019 12:04:33 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9VB4TRM026585
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 31 Oct 2019 12:04:29 +0100
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Subject: [PATCH] arm64: dts: rockchip: Add nodes for buttons on rk3399-roc-pc
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ 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
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <1ce152cc-bd6b-63af-7892-221e084d087f@fivetechno.de>
+Date:   Thu, 31 Oct 2019 12:04:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191031083509.GA30739@netronome.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1572519877;688da8e9;
+X-HE-SMSGID: 1iQ8Fl-00014Z-Fv
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+rk3399-roc-pc has a power and a recovery button, enable them.
 
-ÔÚ 2019/10/31 ÏÂÎç4:35, Simon Horman Ð´µÀ:
-> Hi Jiaxun,
->
-> thanks for your patch.
->
-> On Wed, Oct 30, 2019 at 09:53:46PM +0800, Jiaxun Yang wrote:
->> This binding will provide extra information for PCI enabled
->> device.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Please verify the bindings using dtbs_check as described in
-> Documentation/devicetree/writing-schema.rst
->
->> ---
->>   .../net/wireless/loongson,pci-gmac.yaml       | 71 +++++++++++++++++++
->>   1 file changed, 71 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
->> new file mode 100644
->> index 000000000000..5f764bd46735
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
->> @@ -0,0 +1,71 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/net/allwinner,sun7i-a20-gmac.yaml#
-> The id does not match the filename of the schema.
->
-> i.e. the above should be:
->
-> 	$id: http://devicetree.org/schemas/net/wireless/loongson,pci-gmac.yaml#
->
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Loongson PCI GMAC Device Tree Bindings
->> +
->> +allOf:
->> +  - $ref: "snps,dwmac.yaml#"
-> snps,dwmac.yaml# is in the parent directory relative to loongson,pci-gmac.yaml.
-> So I think the above needs to be:
->
-> 	$ref: "../snps,dwmac.yaml#"
->
->> +
->> +maintainers:
->> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: loongson,pci-gmac
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    minItems: 1
->> +    maxItems: 3
->> +    items:
->> +      - description: Combined signal for various interrupt events
->> +      - description: The interrupt to manage the remote wake-up packet detection
->> +      - description: The interrupt that occurs when Rx exits the LPI state
->> +
->> +  interrupt-names:
->> +    minItems: 1
->> +    maxItems: 3
->> +    items:
->> +      - const: macirq
->> +      - const: eth_wake_irq
->> +      - const: eth_lpi
->> +
->> +  clocks:
->> +    items:
->> +      - description: GMAC main clock
->> +
->> +  clock-names:
->> +    items:
->> +      - const: stmmaceth
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - interrupt-names
->> +  - clocks
->> +  - clock-names
->> +  - phy-mode
->> +
->> +examples:
->> +  - |
->> +    gmac: ethernet@ {
-> I would have expected a bus address here, f.e.:
->
-> 	gmac: ethernet@0x00001800
->
->> +        compatible = "loongson,pci-irq";
->> +        reg = <0x00001800 0 0 0 0>;
-> I think there is one to many cell in the above, perhaps it should be.
->
-> 	reg = <0x00001800 0 0 0>;
->
-> Also, I would expect the registers to be wider than 0, i.e. no registers.
+Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+---
+ .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Hi Simon,
-
-Thanks for your suggestions above, will fix in v1.
-
-Here, the reg domain is a standard 5-cell representing a PCI device,
-
-See: Documentation/devicetree/bindings/pci/pci.txt and IEEE Std 
-1275-1994,<https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/pci/pci.txt>
-
-Should I add some description?
-
-Jiaxun
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+index c0c2d896f4da..07beb9199700 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+@@ -4,6 +4,7 @@
+  */
+ 
+ /dts-v1/;
++#include <dt-bindings/input/linux-event-codes.h>
+ #include <dt-bindings/pwm/pwm.h>
+ #include "rk3399.dtsi"
+ #include "rk3399-opp.dtsi"
+@@ -28,6 +29,35 @@
+ 		#clock-cells = <0>;
+ 	};
+ 
++	adc-keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 1>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1500000>;
++		poll-interval = <100>;
++
++		recovery {
++			label = "Recovery";
++			linux,code = <KEY_VENDOR>;
++			press-threshold-microvolt = <18000>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		autorepeat;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwr_key_l>;
++
++		power {
++			debounce-interval = <100>;
++			gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_LOW>;
++			label = "GPIO Key Power";
++			linux,code = <KEY_POWER>;
++			wakeup-source;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -547,6 +577,12 @@
+ };
+ 
+ &pinctrl {
++	buttons {
++		pwr_key_l: pwr-key-l {
++			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
+ 	lcd-panel {
+ 		lcd_panel_reset: lcd-panel-reset {
+ 			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
+-- 
+2.20.1
