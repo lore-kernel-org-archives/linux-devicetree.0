@@ -2,228 +2,166 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF76C47E49
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 20:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99C5CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 21:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB2C21835
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 20:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="u0ihDxay"
+	by mail.kernel.org (Postfix) with ESMTP id B00EB208E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 21:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbfJaUmJ (ORCPT
+        id S1729099AbfJaVuf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 16:42:09 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43790 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729778AbfJaUmJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 16:42:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n1so7715250wra.10
-        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 13:42:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ewVs5CtQ7DC3g05WS9zawrxD8UKXFocxlzIj1rs+CGo=;
-        b=u0ihDxayWOgyQVQJ0HnyyQV8MdcVTSlc9z0upUFnL4td3Vz2c+ZDBdgZV+FbOVvTKB
-         KyicvBpvnE+gPjSNYOdE42ZCZimvwATHdZ0sREgteu4D1Vy2P/PLH1EujlUy3uU2YH0u
-         Ql87qI3xi74tVhTE2Hp4tNZOA4nforHEDVnKL9xidnEv7OBTGuOmJHfp4ki++RQYnJ62
-         tA9BsUqpb8FG3LxSLtnA4zsIBkAnANjIV0eO+jIbKTda3Uef/jtfp1arlnLoCUZB+KAJ
-         o8N+NHjrKPbc0yHkNaX1jlHHZGT85UoMEFRIt0LymlKx7Xk9kyvCM9LMMFF95+MSZi2i
-         2ytg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ewVs5CtQ7DC3g05WS9zawrxD8UKXFocxlzIj1rs+CGo=;
-        b=hpD38qSmMbu1tsdSbkoz3sSLcoHB7C/xPK9i2MUIzppxv16hJkPViujMN42qalkZSQ
-         JeVrmHZ0XHyx2oUpQGV6ZxsDVglqJ52YYBaUPBNkSOwP/SId4jYCfN95BG9nUxoszmw7
-         xjBVUGAis7pHoSwX0AgzOhdx4TI2dEzQQDEysLraMiRb9bocmj4GNwsLoePVFLdSEXoF
-         7CMmEiZHRg5rTiyhqZ3WnAjqZDO1573aWj1xI9K5jlday6jD3SSWT+jHdnZk53K4LwAA
-         WTlre1Sllbcaa9fWyfn44j+uUfmlZNW8fovfUDrNg/8GRPgFayYhIW0Xmqal6j+harvP
-         lnNA==
-X-Gm-Message-State: APjAAAWCoNsxFapgBqQXEcyI4ozqCigImqC/AQI8cIU6fKtQ6MOELlO6
-        BS9pPEt5UOAfV8WRuaKih02Iuw==
-X-Google-Smtp-Source: APXvYqytoC1inlbhKyAShJk2vZ4/FrApDyUfeDB8ENq8oN9Tzf1PWk1mBfwKPUqV/Nn6LHUv3NjgQg==
-X-Received: by 2002:adf:9044:: with SMTP id h62mr7744773wrh.91.1572554525976;
-        Thu, 31 Oct 2019 13:42:05 -0700 (PDT)
-Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
-        by smtp.gmail.com with ESMTPSA id l4sm7047929wrf.46.2019.10.31.13.42.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 13:42:05 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 21:42:03 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, bhelgaas@google.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 4/5] dt-bindings: net: document loongson.pci-gmac
-Message-ID: <20191031204202.GB30739@netronome.com>
-References: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
- <20191030135347.3636-5-jiaxun.yang@flygoat.com>
- <20191031083509.GA30739@netronome.com>
- <a93eedb9-8863-3802-a563-fe4955d846c3@flygoat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a93eedb9-8863-3802-a563-fe4955d846c3@flygoat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 31 Oct 2019 17:50:35 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:42258 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728561AbfJaVuf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 17:50:35 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1D7391A057E;
+        Thu, 31 Oct 2019 22:50:32 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0549F1A00B6;
+        Thu, 31 Oct 2019 22:50:32 +0100 (CET)
+Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E3827205E9;
+        Thu, 31 Oct 2019 22:50:30 +0100 (CET)
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 0/6] PM / devfreq: Add dynamic scaling for imx ddr controller
+Date:   Thu, 31 Oct 2019 23:50:21 +0200
+Message-Id: <cover.1572558427.git.leonard.crestez@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 06:57:16PM +0800, Jiaxun Yang wrote:
-> 
-> 在 2019/10/31 下午4:35, Simon Horman 写道:
-> > Hi Jiaxun,
-> > 
-> > thanks for your patch.
-> > 
-> > On Wed, Oct 30, 2019 at 09:53:46PM +0800, Jiaxun Yang wrote:
-> > > This binding will provide extra information for PCI enabled
-> > > device.
-> > > 
-> > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > Please verify the bindings using dtbs_check as described in
-> > Documentation/devicetree/writing-schema.rst
-> > 
-> > > ---
-> > >   .../net/wireless/loongson,pci-gmac.yaml       | 71 +++++++++++++++++++
-> > >   1 file changed, 71 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
-> > > new file mode 100644
-> > > index 000000000000..5f764bd46735
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
-> > > @@ -0,0 +1,71 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/net/allwinner,sun7i-a20-gmac.yaml#
-> > The id does not match the filename of the schema.
-> > 
-> > i.e. the above should be:
-> > 
-> > 	$id: http://devicetree.org/schemas/net/wireless/loongson,pci-gmac.yaml#
-> > 
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Loongson PCI GMAC Device Tree Bindings
-> > > +
-> > > +allOf:
-> > > +  - $ref: "snps,dwmac.yaml#"
-> > snps,dwmac.yaml# is in the parent directory relative to loongson,pci-gmac.yaml.
-> > So I think the above needs to be:
-> > 
-> > 	$ref: "../snps,dwmac.yaml#"
-> > 
-> > > +
-> > > +maintainers:
-> > > +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: loongson,pci-gmac
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    minItems: 1
-> > > +    maxItems: 3
-> > > +    items:
-> > > +      - description: Combined signal for various interrupt events
-> > > +      - description: The interrupt to manage the remote wake-up packet detection
-> > > +      - description: The interrupt that occurs when Rx exits the LPI state
-> > > +
-> > > +  interrupt-names:
-> > > +    minItems: 1
-> > > +    maxItems: 3
-> > > +    items:
-> > > +      - const: macirq
-> > > +      - const: eth_wake_irq
-> > > +      - const: eth_lpi
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: GMAC main clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: stmmaceth
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - interrupts
-> > > +  - interrupt-names
-> > > +  - clocks
-> > > +  - clock-names
-> > > +  - phy-mode
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    gmac: ethernet@ {
-> > I would have expected a bus address here, f.e.:
-> > 
-> > 	gmac: ethernet@0x00001800
-> > 
-> > > +        compatible = "loongson,pci-irq";
-> > > +        reg = <0x00001800 0 0 0 0>;
-> > I think there is one to many cell in the above, perhaps it should be.
-> > 
-> > 	reg = <0x00001800 0 0 0>;
-> > 
-> > Also, I would expect the registers to be wider than 0, i.e. no registers.
-> 
-> Hi Simon,
-> 
-> Thanks for your suggestions above, will fix in v1.
-> 
-> Here, the reg domain is a standard 5-cell representing a PCI device,
-> 
-> See: Documentation/devicetree/bindings/pci/pci.txt and IEEE Std 1275-1994,<https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/pci/pci.txt>
-> 
-> Should I add some description?
+This adds support for dynamic scaling of the DDR Controller (ddrc) present in
+imx8m series. Actual frequency switching is implemented inside TF-A, this
+driver wraps the SMC calls and synchronizes the clk tree.
 
-Thanks, sorry for missing that.
-As that is the case I think you need something like the following
-as an example that compiles.
+DRAM frequency switching requires clock manipulation but during this operation
+DRAM itself is briefly inaccessible so this operation is performed a SMC call
+to by TF-A which runs from a SRAM area. Upon returning to linux the clock tree
+is updated to correspond to hardware configuration.
 
-examples:
-  - |
-    pcie@0 {
-        reg = <0 0 0 0>;
-        #size-cells = <2>;
-        #address-cells = <3>;
-        ranges = <0 0 0 0 0 0>;
-        device_type = "pci";
+This is handled via CLK_GET_RATE_NO_CACHE for dividers but muxes are handled
+manually: the driver will prepare/enable the new parents ahead of switching (so
+that the expected roots are enabled) and afterwards it will call clk_set_parent
+to ensure the parents in clock framework are up-to-date.
 
-        gmac: ethernet@1800 {
-            compatible = "loongson,pci-irq";
-            reg = <0x00001800 0 0 0 0>;
-            interrupts = <12>, <13>;
-            interrupt-names = "macirq", "eth_lpi";
-            clocks =  <&clk_pch_gmac>;
-            clock-names = "stmmaceth";
-            phy-mode = "rgmii";
-        };
-    };
+This series is atomically useful and roughly similar to devfreq drivers for
+tegra and rockchip.
+
+Running at lower dram rates saves power but can affect the functionality of
+other blocks in the chip (display, vpu etc). Support for in-kernel constraints
+will some separately.
+
+Angus/Martin: You previously attempted to test on purism boards, this updated
+version should work without hacks and has no dependencies.
+
+Changes since v2:
+* Add support for entire imx8m family including imx8mq B0.
+* Also mark dram PLLs as CLK_GET_RATE_NO_CACHE (required for imx8mq b0 low OPP)
+* Explicitly update dram pll rate at the end of imx_ddrc_set_freq.
+* Use do_div in imx-ddrc (kbuild robot)
+* Improve explanations around adding CLK_GET_RATE_NO_CACHE to dram clks.
+(Stephen Boyd)
+* Handle ddrc devfreq-events earlier for fewer probe defers.
+* Validate DDRC opp tables versus firmware: supported OPPs depend on board and
+SOC revision.
+* Move DDRC opp tables to board dts because they can vary based on ram type on
+board.
+* Verify DDRC rate is changed in clk tree and otherwise report an error.
+* Change imx_ddrc_freq.rate to be measure in MT/s and round down from HZ in
+imx_ddrc_find_freq instead.
+* Split NOC scaling away.
+Link to v2: https://patchwork.kernel.org/cover/11104113/
+
+Changes since v1:
+* bindings: Stop using "contains" for "compatible"
+* bindings: Set "additionalProperties: false" and document missing stuff.
+* Remove (c) from NXP copyright notice
+* Fix various checkpatch issues
+* Remove unused dram_alt_root clk from imx-ddrc
+Link to v1: https://patchwork.kernel.org/cover/11090649/
+
+Changes since RFC v3:
+* Implement passive support and set NOC's parent to DDRC
+* Drop scaling AHB/AXI for now (NOC/DDRC use most power anyway)
+* Stop relying on clk_min_rate
+* Split into two devreq drivers (and bindings) because the ddrc is
+really a distinct piece of hardware.
+* Perform DRAM frequency inside devfreq instead of clk, mostly due to
+objections to earlier RFCs for imx8m-dram-clk.
+* Fetch info about dram clk parents from firmware instead of
+hardcoding in driver. This can more easily support additional rates.
+* Link: https://patchwork.kernel.org/cover/11056779/
+* Link: https://patchwork.kernel.org/patch/11049429/
+
+Scaling buses can cause problems for devices with realtime bandwith
+requirements such as display, the intention is to use the interconnect
+framework to make DEV_PM_QOS_MIN_FREQUENCY to devfreq. There are
+separate patches for that:
+
+* https://patchwork.kernel.org/cover/11104055/
+* https://patchwork.kernel.org/cover/11078671/
 
 
+Leonard Crestez (6):
+  clk: imx8m: Set CLK_GET_RATE_NOCACHE on dram clocks
+  clk: imx: Mark dram pll on 8mm and 8mn with CLK_GET_RATE_NOCACHE
+  dt-bindings: devfreq: Add bindings for imx ddr controller
+  PM / devfreq: Add dynamic scaling for imx ddr controller
+  PM / devfreq: imx-ddrc: Measure bandwidth with perf
+  arm64: dts: imx8m: Add ddr controller nodes
 
+ .../devicetree/bindings/devfreq/imx-ddrc.yaml |  60 ++
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts  |  18 +
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     |  17 +-
+ .../boot/dts/freescale/imx8mn-ddr4-evk.dts    |  18 +
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi     |  16 +-
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  24 +
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  16 +-
+ drivers/clk/imx/clk-imx8mm.c                  |  13 +-
+ drivers/clk/imx/clk-imx8mn.c                  |  14 +-
+ drivers/clk/imx/clk-imx8mq.c                  |  15 +-
+ drivers/clk/imx/clk-pll14xx.c                 |   7 +
+ drivers/clk/imx/clk.h                         |   1 +
+ drivers/devfreq/Makefile                      |   1 +
+ drivers/devfreq/imx-ddrc.c                    | 570 ++++++++++++++++++
+ 14 files changed, 777 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml
+ create mode 100644 drivers/devfreq/imx-ddrc.c
 
+-- 
+2.17.1
 
