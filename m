@@ -2,270 +2,116 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD33CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1E1C47E49
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E55208E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920B72083E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:06:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MATi3vkP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+P6rpmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfJaO6n (ORCPT
+        id S1728025AbfJaPGI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:58:43 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46613 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727477AbfJaO6m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:58:42 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 193so3251664pfc.13
-        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 07:58:42 -0700 (PDT)
+        Thu, 31 Oct 2019 11:06:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43478 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727630AbfJaPGH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 11:06:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 3so4548735pfb.10;
+        Thu, 31 Oct 2019 08:06:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wd8Ydy5zI08ENTcanTYfVXPKw0S2sQWsullzEMfk7rQ=;
-        b=MATi3vkPvCiMr4+UiaeWs9j6XA6Ee4hxcdUFDrIZUcE960Da2PCpKrgNX3lOYJVORf
-         kjGtwykAZk1CO3SPjlEM19TYE10BGXfr6iodpfABU+PvPt8W9d/GGtXfQwaRS3cpI4t8
-         X8v8E0VU9loMbWAfNuCIeHtf41n24YolQpRSOw2aq277L3Kexz1Izu+FC01MH/amZYZS
-         6etmN7QJnMaFVEq9WMgkdq02ym+4qkl0M64AxMRuGGko2h5fWoHE7f2P/Y6nMF+xMJRa
-         90RVs5Lx07rcWPbkp4WYJ/pGMxhUsy/QHCxUoOoK4MiwSGun6H02mdjrtL1YDS3i5YSp
-         EAOQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=aQQdueZH/eKXSKk+PwrJBs8Uz0zrwt/H/dSmnbFJlc8=;
+        b=c+P6rpmYISPGDC5K126fVe/cpTMdcs//Xhfu5cAl4eXSuW9R50ESGxqoiDedHVRwg7
+         GPjnL8QqPOC9GoCNhsK7vicUBtBf70Ct2JmKb0Yt76jCYt6rkL52gthZgoFMU6Vexrp6
+         UgbxYmyBT5x/HDYdE7cYgPIcp9c+S2gcsPhSR/lGu8Pns1Y8DW7zOo2GVb+b33tEA/Zy
+         ZH3t4biqyJUEkBwmr3IbfrPwbelJHBxTTRy3r7TZGRERquD1yBf/Mk4Yfy/fBOSkkrls
+         6naR7Jxlrez53JzIfU5+e9RN0pqAwfxGtX0sRSLOAtivpOxHKXWnNaPBwez7R6lX0eeX
+         M5+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wd8Ydy5zI08ENTcanTYfVXPKw0S2sQWsullzEMfk7rQ=;
-        b=ZEpFhd3gIevCOljIJvwzzL+GYLnDPd3OD5mv2sLnYmoC5bkbBiM3sG1n0GhqvgviCK
-         ViIi2hclnEM08GoKQ5QynPtXi+MgpFqsLedL5Bhpy++9mbOlzW1OLft7SRpCdEaC0XSV
-         gqs1y7wHv6xc6vlsRophZZrbclPTDchL3y9uWUBtI3EJiBLwjnOQGFZcb8yPOzvcxJCi
-         pJjVxjcdAB4G5Wi6ZMbTGgET5QsAGJPLP7sEnTnfDDswWzCaA9NCybtfIbar+A1zday5
-         H3pMl2MRQaILcdhx88D6PkbiaDzMT7BCaFDW7eyNJb+UHdfn9XJKdT63s7UPn0rABq7S
-         Ubiw==
-X-Gm-Message-State: APjAAAVJbibWICncgy+aItZYOvdUakIZxf1Xt50MrtA5cgoxVVUqIsk7
-        HrmE+uP8C92uSJ2earu1oVKm
-X-Google-Smtp-Source: APXvYqxM+gswwlpQxJViGySnazlj4i+t35eyJuQby6bTFIUSurtlH9D8LQqbBLKTMOWksA2rFGOkHw==
-X-Received: by 2002:a63:6581:: with SMTP id z123mr7193723pgb.367.1572533921416;
-        Thu, 31 Oct 2019 07:58:41 -0700 (PDT)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id fh5sm5626592pjb.2.2019.10.31.07.58.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 31 Oct 2019 07:58:40 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 20:28:31 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191031145831.GA27800@mani>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
- <20191031131538.GA9170@pendragon.ideasonboard.com>
- <20191031134512.GB24273@mani>
- <20191031141141.GD5018@pendragon.ideasonboard.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=aQQdueZH/eKXSKk+PwrJBs8Uz0zrwt/H/dSmnbFJlc8=;
+        b=NlkUFkYYYgARkoppglpDh6g58hfprShh6VGDEuBUdvifCRd0xCh5ACFO6cWHGve4wG
+         uFjF4NyFbLDEOpwmdlh3cBnToU+8CZ86cg/YwpGFQo79NQi8nU0JgTbY1WYH+vtk2ziz
+         laefj+XaHomUNpxSepn+1R6PvsNkKPCZmVK45HjS3AIHeRq1ZXM4Qmr9cWIs6Jl+9AXk
+         yOIroMlS4xl7Ygi809Gi1CMSMY24kt/DGZNI8aisAW2QL5vKhpwJnQlHY4+/Mmrh7uDf
+         UyZWffAe/T2aL80Tm4CZcfbrBZOk9fOVQs3k+vo+XZP3lbTs+p9w9oAgSxH6vWKx+cvU
+         Tidg==
+X-Gm-Message-State: APjAAAVwhVtHwwjHZPLsfsoFA5qLasnfXl4yBU9+3InHaZYVx2sfoo6X
+        FWHbhLNmgSlWR7ybnDKbbLe7OHyTY3TtaT8i5WY=
+X-Google-Smtp-Source: APXvYqwmDbdtPu/i1FNIN9/w6Ny4clnYWdl5KUnedpMAFwvmLGJ0nDRYLFLdXLbFnKlr4ZeEwM25w2PVaxL94BmDAa0=
+X-Received: by 2002:a17:90a:f48f:: with SMTP id bx15mr8199576pjb.115.1572534366617;
+ Thu, 31 Oct 2019 08:06:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031141141.GD5018@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1572185379-21537-1-git-send-email-akinobu.mita@gmail.com>
+ <1572185379-21537-2-git-send-email-akinobu.mita@gmail.com>
+ <20191030142417.GA8919@bogus> <CAC5umyhZ+w9b7M=gWGDynoMerZ7FiP3+U_RXyQ2P_p7cuLVRgA@mail.gmail.com>
+ <CAL_JsqKa=936WNhTDQ0S9bW0fYPMHQXSwutjnQs0W9vP8h7sow@mail.gmail.com>
+In-Reply-To: <CAL_JsqKa=936WNhTDQ0S9bW0fYPMHQXSwutjnQs0W9vP8h7sow@mail.gmail.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Fri, 1 Nov 2019 00:05:55 +0900
+Message-ID: <CAC5umyh0_2MN4=uin91sYVWNxvF1uwg_bEWME0XKurTiV08q0w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add leds-meter binding
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn@kryo.se>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+2019=E5=B9=B410=E6=9C=8831=E6=97=A5(=E6=9C=A8) 3:29 Rob Herring <robh@kerne=
+l.org>:
+>
+> On Wed, Oct 30, 2019 at 10:27 AM Akinobu Mita <akinobu.mita@gmail.com> wr=
+ote:
+> >
+> > 2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 23:24 Rob Herring <robh@=
+kernel.org>:
+> > >
+> > > On Sun, Oct 27, 2019 at 11:09:38PM +0900, Akinobu Mita wrote:
+> > > > Add DT binding for generic LED level meter which consists of multip=
+le LED
+> > > > devices by different drivers.
+> > >
+> > > Do you have some pointers to actual h/w?
+> >
+> > This doesn't require a specific hardware.
+>
+> But I do for my understanding. If I don't understand it, then my
+> default answer is: no, we don't do "generic" bindings because the h/w
+> is never generic.
 
-On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
-> Hi Mani,
-> 
-> On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
-> > > On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
-> > >> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
-> > >> add MAINTAINERS entry for the binding and driver.
-> > >> 
-> > >> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >> ---
-> > >>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
-> > >>  MAINTAINERS                                   |  8 ++
-> > >>  2 files changed, 102 insertions(+)
-> > >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >> 
-> > >> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >> new file mode 100644
-> > >> index 000000000000..c04ec2203268
-> > >> --- /dev/null
-> > >> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >> @@ -0,0 +1,94 @@
-> > >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > >> +%YAML 1.2
-> > >> +---
-> > >> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
-> > >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > >> +
-> > >> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> > >> +
-> > >> +maintainers:
-> > >> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >> +
-> > >> +description: |-
-> > >> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> > >> +  sensor with square pixel array and 1.58 M effective pixels. This chip
-> > >> +  features a global shutter with variable charge-integration time. It is
-> > >> +  programmable through I2C and 4-wire interfaces. The sensor output is
-> > >> +  available via CSI-2 serial data output (1 Lane).
-> > >> +
-> > >> +properties:
-> > >> +  compatible:
-> > >> +    const: sony,imx296
-> > >> +
-> > >> +  reg:
-> > >> +    maxItems: 1
-> > >> +
-> > >> +  clocks:
-> > >> +    maxItems: 1
-> > >> +
-> > >> +  clock-names:
-> > >> +    description:
-> > >> +      Input clock for the sensor.
-> > >> +    items:
-> > >> +      - const: mclk
-> > > 
-> > > The pin is named INCK, let's name the clock accordingly.
-> > 
-> > Okay, I thought generic names are preferred here!
-> >  
-> > >> +  clock-frequency:
-> > >> +    description:
-> > >> +      Frequency of the mclk clock in Hertz.
-> > > 
-> > > This shouldn't be needed, you can retrieve the clock frequency at
-> > > runtime from the clock source.
-> > 
-> > Unless the clock source is a fixed one! What if the clock source comes from
-> > SoC? We need to set the rate, right?
-> 
-> In that case, if you want to hardcode the clock in DT, the preferred way
-> is to use the assigned-clock-rates property. Otherwise, if the driver
-> requires a specific clock frequency, it's better to hardcode it in the
-> driver itself. In this specific case, I think assigned-clock-rates is
-> best as the device can support three different clock frequencies.
-> 
+For example, https://www.switch-science.com/catalog/2677/
+The LEDs on this board are controlled by NXP PCA9956B.
+The driver is under development by Bjorn Andersson.
 
-Agree. assigned-clock* properties makes sense for multiple frequencies. In
-my driver, I only used one frequency so I was happy with clock-frequency :)
+But the LED level meter doesn't depend on the actual LED controller driver,
+so I call it "generic" LED level meter driver.
 
-> > >> +  vddo-supply:
-> > >> +    description:
-> > >> +      Definition of the regulator used as interface power supply.
-> > >> +
-> > >> +  vdda-supply:
-> > >> +    description:
-> > >> +      Definition of the regulator used as analog power supply.
-> > >> +
-> > >> +  vddd-supply:
-> > >> +    description:
-> > >> +      Definition of the regulator used as digital power supply.
-> > > 
-> > > Do we really need three regulators ? I agree that the sensor has three
-> > > power rails, but aren't they usually powered by regulators that are
-> > > tied together, without individual control ? The IMX926 specifications
-> > > require the three power supplies to raise within 200ms, which we should
-> > > be able to ensure in software. What does your board use, does it have
-> > > multiple GPIOs to control each power supply ? If not I wonder if we
-> > > could just define vddd-supply now, and add vdda-supply and vddo-supply
-> > > later if we need to support systems that can control the supplies
-> > > individually.
-> > 
-> > The whole power supply model is a bit rotten. In my case, there are 3 different
-> > regulators used with no software control. So, I can't control the rise time
-> > (I assume that they are handled by the external power regulator itself).
-> > 
-> > So to be sane, I just documented with the assumption of fixed-regulators.
-> 
-> Should we then go for one supply, and add the other two when (and if)
-> needed ?
-> 
+> > If there are more than two LEDs that can be described by devicetree,
+> > it can be an LED level meter by bundling them up with this binding.
+>
+> Depends on the physical locations too? If you just want to group any
+> random LEDs, then do that from userspace because it's more flexible.
 
-I'm not really sure if we should use one power supply here. The single power
-supply configuration is not true for all cases. And following what other
-sensors are using, I'd prefer to have 3 individual power supplies.
-
-Thanks,
-Mani
-
-> > >> +  reset-gpios:
-> > >> +    description:
-> > >> +      The phandle and specifier for the GPIO that controls sensor reset.
-> > >> +    maxItems: 1
-> > >> +
-> > >> +  port: true
-> > >> +
-> > >> +required:
-> > >> +  - compatible
-> > >> +  - reg
-> > >> +  - clocks
-> > >> +  - clock-names
-> > >> +  - clock-frequency
-> > >> +  - vddo-supply
-> > >> +  - vdda-supply
-> > >> +  - vddd-supply
-> > >> +
-> > >> +additionalProperties: false
-> > >> +
-> > >> +examples:
-> > >> +  - |
-> > >> +    #include <dt-bindings/gpio/gpio.h>
-> > >> +
-> > >> +    imx296: camera-sensor@1a {
-> > >> +        compatible = "sony,imx296";
-> > >> +        reg = <0x1a>;
-> > >> +        reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> > >> +        pinctrl-names = "default";
-> > >> +        pinctrl-0 = <&camera_rear_default>;
-> > >> +        clocks = <&gcc 90>;
-> > >> +        clock-names = "mclk";
-> > >> +        clock-frequency = <37125000>;
-> > >> +        vddo-supply = <&camera_vddo_1v8>;
-> > >> +        vdda-supply = <&camera_vdda_3v3>;
-> > >> +        vddd-supply = <&camera_vddd_1v2>;
-> > >> +
-> > >> +        port {
-> > >> +            imx296_ep: endpoint {
-> > >> +                remote-endpoint = <&csiphy0_ep>;
-> > >> +            };
-> > >> +        };
-> > >> +    };
-> > >> +
-> > >> +...
-> > >> diff --git a/MAINTAINERS b/MAINTAINERS
-> > >> index 55199ef7fa74..51194bb2c392 100644
-> > >> --- a/MAINTAINERS
-> > >> +++ b/MAINTAINERS
-> > >> @@ -15140,6 +15140,14 @@ S:	Maintained
-> > >>  F:	drivers/media/i2c/imx274.c
-> > >>  F:	Documentation/devicetree/bindings/media/i2c/imx274.txt
-> > >>  
-> > >> +SONY IMX296 SENSOR DRIVER
-> > >> +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >> +L:	linux-media@vger.kernel.org
-> > >> +T:	git git://linuxtv.org/media_tree.git
-> > >> +S:	Maintained
-> > >> +F:	drivers/media/i2c/imx296.c
-> > >> +F:	Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >> +
-> > >>  SONY IMX319 SENSOR DRIVER
-> > >>  M:	Bingbu Cao <bingbu.cao@intel.com>
-> > >>  L:	linux-media@vger.kernel.org
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
+Yes.  I assume that the level meter's LEDs are mounted in a line, or matrix=
+.
+I plan to rename it to 'leds-array' because 'leds-meter' is unclear.
