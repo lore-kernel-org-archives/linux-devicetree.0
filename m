@@ -2,191 +2,369 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B799CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 17:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DA3CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 17:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9EF20659
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 17:41:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eWiDdNXj"
+	by mail.kernel.org (Postfix) with ESMTP id D49702067D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 17:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572544277;
+	bh=zhmMKUTLwGOLkNxC1vCZG7S32lZJoG/WRDbEbnRFarU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WzquuzUw90fIVB06XR+m4wSZQZ9atZwmnOUJTxu1urAXEmpbxLxlN6nS3RlX4pYWC
+	 c6c24yesl3fl66EQEiBeEHjK8PB5eTC1uVtWboE6zEIq8QSpgT/RVu+OjdyOYIJQUu
+	 MnJDmSbzcRuU4DNGhR5j6YzQvCormgZXTPpg5Nh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfJaRly (ORCPT
+        id S1728999AbfJaRvO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:41:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43332 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbfJaRlx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 13:41:53 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 3so4832932pfb.10
-        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 10:41:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DFxY9HZbAftkc6ZEf7DIO4SCG3jzu7OlqMydfjKW4pU=;
-        b=eWiDdNXjXm7b0tkJhXmJW29hx5jKtPuG/5ga1AQNcM+4BCNwzsLltNphqpnoZJV5h4
-         NlvsSh4M87vrh+o13iwst4Uso0yA3I9BE7bdOzzEAXmzEJ8rxMzhBlm41sjp/vU+9f6u
-         BB/Jm75OaBDHyhpSxf1NtlpsIec7WZaZXaU0A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DFxY9HZbAftkc6ZEf7DIO4SCG3jzu7OlqMydfjKW4pU=;
-        b=DKRQWsStlswXmPx7ltoaVcqMczDhZ8Ssk3rbGo5xs7vgMQbHhzv9UkDfrAy/2ckm0L
-         kjkWyw8u85eAXZ2/8m6AD579msfgQFVvig/qpaM/53n9BX3+kKZmwg2UptTUksvoJJVL
-         iPJh34QeIulQfRnDVCW/oggEOWh0EONamck6x3DoU0ck3m83Rl25/emU3uHHKaq0O7tb
-         LEhLEb+0rnlsG3iqkFc1HuACiLHUVhAqYWLh9bWFDbl1rzbbdpTAC2rpnZ/6MeOzT6Hl
-         QpwR6DNk2JBkGvaqJkgnrM1o0vSQC0rGmFAZAKqBE2kOqDt7ECy/T+6JOwFFmeV0yY2u
-         ezfA==
-X-Gm-Message-State: APjAAAV8E3eVPed3vPLCwjpychNC7TUJ0sAhgc8/bUHJ9SdVuod+sMvA
-        2DNeKs6ik1xIxeLipp0M8IYkQA==
-X-Google-Smtp-Source: APXvYqxaAic0W+0GltNXLrUaUFbKQaUKuojcLcEWtkxF1z781kp35xDw1V+TzemJKEpy0ZBkO/29BA==
-X-Received: by 2002:a17:90a:e90:: with SMTP id 16mr9046788pjx.65.1572543711707;
-        Thu, 31 Oct 2019 10:41:51 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id d14sm5531817pfh.36.2019.10.31.10.41.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Oct 2019 10:41:51 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 10:41:49 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        eykumar Sankaran <jsanka@codeaurora.org>
-Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Message-ID: <20191031174149.GD27773@google.com>
-References: <20191014102308.27441-1-tdas@codeaurora.org>
- <20191014102308.27441-6-tdas@codeaurora.org>
- <20191029175941.GA27773@google.com>
- <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org>
+        Thu, 31 Oct 2019 13:51:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbfJaRvO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 13:51:14 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B1E42067D;
+        Thu, 31 Oct 2019 17:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572544272;
+        bh=zhmMKUTLwGOLkNxC1vCZG7S32lZJoG/WRDbEbnRFarU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oT65MvjP6peplfZ/wSFv/rFNulH7Vb0RS4ke6ddCDvWxZz/42xCRCbszNzLb6dzee
+         Y7toaGN7SLHU3pvsILgd8qa0fQaaDRW6FjJP7ybHSPadv7Dvo/OjGs/rc4NGSYH4Cm
+         reZSMMYJJRK81PTFXIPGhur/pKJbzbEPhuIKUgm0=
+Received: by mail-qk1-f180.google.com with SMTP id e66so7847314qkf.13;
+        Thu, 31 Oct 2019 10:51:12 -0700 (PDT)
+X-Gm-Message-State: APjAAAUobNGqUwA36oEJY1deW1yHQoqGiJs2c0b/Kdo3a133x5t9yizh
+        uJI1vn7jqKin4iAyEM2vFuHixrxTAElgqsSnZA==
+X-Google-Smtp-Source: APXvYqyyBycVGgR82w3nJ2gAeNKcxZHW7J9XVnJiGMY/B+GhYIuxpzQdNSLNOx3KK09ue5JgLjpNGUGDtH1dwXd4I9s=
+X-Received: by 2002:a37:9847:: with SMTP id a68mr6570552qke.223.1572544271035;
+ Thu, 31 Oct 2019 10:51:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+ <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+ <ed0b2aa8-8a70-0341-4ecf-8959f37c53bd@ti.com> <5c793f1308ccc6e787260b64fe6a875a8d0eb9d0.camel@fi.rohmeurope.com>
+ <20191029193440.GA1812@bogus> <3e0f0943cd599cae544bd7a7a49dded46d57a604.camel@fi.rohmeurope.com>
+ <CAL_JsqJgnYqv1q=wf++5FOX-niRWQ=H9wWYgUKy+z=H933Qraw@mail.gmail.com> <1e3901d1c7c26f4dbbc1de78b607b92bf9ddc098.camel@fi.rohmeurope.com>
+In-Reply-To: <1e3901d1c7c26f4dbbc1de78b607b92bf9ddc098.camel@fi.rohmeurope.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 31 Oct 2019 12:50:59 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ6kmZyfXtZy_gz_6sxgK2CTXKTcpARkaf462QiwJXYZA@mail.gmail.com>
+Message-ID: <CAL_JsqJ6kmZyfXtZy_gz_6sxgK2CTXKTcpARkaf462QiwJXYZA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828 bindings
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Taniya,
+On Thu, Oct 31, 2019 at 7:54 AM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+>
+>
+> On Wed, 2019-10-30 at 14:22 -0500, Rob Herring wrote:
+> > On Wed, Oct 30, 2019 at 3:27 AM Vaittinen, Matti
+> > <Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> > >
+> > > On Tue, 2019-10-29 at 14:34 -0500, Rob Herring wrote:
+> > > > On Fri, Oct 25, 2019 at 05:49:17AM +0000, Vaittinen, Matti wrote:
+> > > > > Hello Dan,
+> > > > >
+> > > > > Thanks again for checking this :)
+> > > > >
+> > > > > On Thu, 2019-10-24 at 14:35 -0500, Dan Murphy wrote:
+> > > > > > Matti
+> > > > > >
+> > > > > > On 10/24/19 6:41 AM, Matti Vaittinen wrote:
+> > > > > > > ROHM BD71828 Power management IC integrates 7 buck
+> > > > > > > converters,
+> > > > > > > 7
+> > > > > > > LDOs,
+> > > > > > > a real-time clock (RTC), 3 GPO/regulator control pins, HALL
+> > > > > > > input
+> > > > > > > and a 32.768 kHz clock gate.
+> > > > > > >
+> > > > > > > Document the dt bindings drivers are using.
+> > > > > > >
+> > > > > > > Signed-off-by: Matti Vaittinen <
+> > > > > > > matti.vaittinen@fi.rohmeurope.com>
+> > > > > > > ---
+> > > > > > >
+> > > > > > > No changes since v1
+> > > > > > >
+> > > > > > >   .../bindings/mfd/rohm,bd71828-pmic.txt        | 180
+> > > > > > > ++++++++++++++++++
+> > > > > > >   1 file changed, 180 insertions(+)
+> > > > > > >   create mode 100644
+> > > > > > > Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
+> > > > > >
+> > > > > > I will let maintainers weigh in here but if this is new this
+> > > > > > should
+> > > > > > probably be in the yaml format to avoid conversion in the
+> > > > > > future
+> > > > >
+> > > > > Oh... This is new to me. I guess there are reasons for this -
+> > > > > but I
+> > > > > must say I am not excited as I have never used yaml for
+> > > > > anything.
+> > > > > I'll
+> > > > > do as you suggest and wait for what others have to say :)
+> > > > > Thanks
+> > > > > for
+> > > > > pointing this out though.
+> > > >
+> > > > Sorry for your lack of excitement. It could be XML...
+> > >
+> > > Thanks, I appreciate that, apology accepted X-D
+> > >
+> > > > There aren't many MFD examples yet, but there is max77650 in my
+> > > > tree
+> > > > and
+> > > > linux-next.
+> > >
+> > > I looked at the max77650 MFD binding from linux-next. After that I
+> > > also
+> > > looked some of the generic documents for DT bindings (I know - I
+> > > should
+> > > have done that earlier and your job had been easier). But all that
+> > > left
+> > > me "slightly" puzzled. After some further wandering in the virtual
+> > > world I spotted this:
+> > > https://elinux.org/images/6/6b/LPC2018_json-schema_for_Devicetree.pdf
+> > >
+> > > I think this link in some dt-yaml-binding-readme might be helpful.
+> >
+> > Presentations bit rot, so I'd rather not. I'd hope that
+> > writing-schema.rst and example-schema.yaml capture what's in the
+> > presentation. What do you think is missing?
+>
+> I personally wanted to understand "why?". Why not text doc. What is the
+> yaml thing aiming at? What are the problems we are solving here. And
+> maybe most crucially - I had no idea what is schema? It sure sounded
+> like some toolchain thingy or perhaps piece of new yaml representation
+> of dts (please note, I somehow thought that dts files were going to be
+> converted to yaml - maybe due to some reading about DTC getting yaml
+> support) which I thought would not need to be touched by me :) It took
+> me quite a while to understand that the old binding doc is actually a
+> schema. Without that piece finding out the new format of binding docs
+> was painful.
 
-On Thu, Oct 31, 2019 at 04:59:26PM +0530, Taniya Das wrote:
-> Hi Matthias,
-> 
-> Thanks for your comments.
-> 
-> On 10/29/2019 11:29 PM, Matthias Kaehlcke wrote:
-> > Hi Taniya,
-> > 
-> > On Mon, Oct 14, 2019 at 03:53:08PM +0530, Taniya Das wrote:
-> > > Add support for the global clock controller found on SC7180
-> > > based devices. This should allow most non-multimedia device
-> > > drivers to probe and control their clocks.
-> > > 
-> > > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> 
-> > 
-> > v3 also had
-> > 
-> > +	[GCC_DISP_AHB_CLK] = &gcc_disp_ahb_clk.clkr,
-> > 
-> > Removing it makes the dpu_mdss driver unhappy:
-> > 
-> > [    2.999855] dpu_mdss_enable+0x2c/0x58->msm_dss_enable_clk: 'iface' is not available
-> > 
-> > because:
-> > 
-> >          mdss: mdss@ae00000 {
-> >      	        ...
-> > 
-> >   =>             clocks = <&gcc GCC_DISP_AHB_CLK>,
-> >                           <&gcc GCC_DISP_HF_AXI_CLK>,
-> >                           <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> >                  clock-names = "iface", "gcc_bus", "core";
-> > 	};
-> > 
-> 
-> The basic idea as you mentioned below was to move the CRITICAL clocks to
-> probe. The clock provider to return NULL in case the clocks are not
-> registered.
-> This was discussed with Stephen on v3. Thus I submitted the below patch.
-> clk: qcom: common: Return NULL from clk_hw OF provider.
+I guess 'why' is easy enough to address.
 
-I see. My assumption was that the entire clock hierarchy should be registered,
-but Stephen almost certainly knows better :)
+> Also, binding and binding document were not completely same thing in my
+> mind. I thought that binding is actual piece of dt - probably living
+> under arch/x/boot/dts - binding document is what explains how that
+> should be construct and is under Documentation/devicetree/bindings/.
+> This is probably largely due to my ignorance and habit oh skipping much
+> of reading and just trying out things. But I hoped I had these cleared
+> in first documents I tried reading for creation binding docs..
+>
+> ...which brings me here. I looked at the
+> Documentation/devicetree/bindings folder and did read the 'writing-
+> bindings.txt' and 'submitting-patches.txt' from there. Then I also
+> checked the Documentation/devicetree/usage-model.txt None of which
+> helped me out. I did also open the 'writing-schema.rst' but I didn't
+> read it carefully enough. Probably because I thought after reading the
+> opening chapter that this described how to do actual dts in yaml.
 
-> Yes it would throw these warnings, but no functional issue is observed from
-> display. I have tested it on the cheza board.
+Things are a bit scattered around I'll admit. I feel like we need a
+'start here', but the challenge is people have different starting
+points.
 
-The driver considers it an error (uses DEV_ERR to log the message) and doesn't
-handle other clocks when one is found missing. I'm not really famililar with
-the dpu_mdss driver, but I imagine this can have some side effects. Added some
-of the authors/contributors to cc.
+> Anyways, I might add some notes about using yaml format (and perhaps
+> shortly note that the yaml dt binding doc is called schema) in
+> Documentation/devicetree/bindings/writing-bindings.txt and
+> Documentation/devicetree/bindings/submitting-patches.txt
+>
+> I could also appreciate some note about benefits/goals of using yaml
+> instead of text docs in writing-schema.rst - although I understand that
+> this may not be relevant for all readers.
+>
+> > > So if I understand this correctly, idea is to convert the dts
+> > > sources
+> > > to use yaml (right?). This is seen better because more people
+> > > knowsubmitting-patches.txt
+> > > JSON/YAML than dts format(?) Fair enough. Although some of us know
+> > > dts
+> > > format decently well but have never used JSON or yaml. I guess dts
+> > > support is not going away though and yaml examples do not seem
+> > > terribly
+> > > hard at first sight.
+> >
+> > No, nothing is changing for .dts files (other than fixing errors the
+> > schemas find). The free form, human readable only prose called
+> > binding
+> > documentation is changing to YAML formatted, json-schema vocabulary
+> > binding schema which can be used to validate dts files.
+>
+> Thanks for sorting this out. It all makes more sense now.
+>
+> > > What comes to binding docs - well, in my eyes (which may be biased)
+> > > writing documentation in anything intended to be interpreted by a
+> > > machine is still a step backwards for a human document reader. Sure
+> > > syntax validation or reviewing is easier if format is machine
+> > > readable
+> > > - but free text info is more, well, informative (form me at least).
+> > > I
+> > > for example wouldn't like reading a book written in any script or
+> > > markup language. Nor writing one. It is difficult for me to
+> > > understand
+> > > the documentation change to yaml, maybe because I am more often
+> > > using
+> > > the binding docs for composing DT for a device than reviewing them
+> > > ;)
+> >
+> > ICYMI, all the kernel docs are in a markup language now...
+> >
+> > Free form descriptions are easier to use because you can put in dts
+> > whatever you want. Nothing is going to check. There's been no
+> > shortage
+> > of errors and inconsistencies that we've already found.
+>
+> I won't start arguing on this :)
+>
+> > You can have as much description and comments as you like (though I'm
+> > trying to cut down on the copy-n-paste genericish 'clock for the
+> > module' type comments).
+>
+> This is good to note. Thanks.
+>
+> > > Anyways, I guess I'd better either try learning the yaml, figure
+> > > out
+> > > what are schemas and see how to convert yaml docs to text for nicer
+> > > reading (I assume this is doable) and how to verify yaml binding
+> > > docs
+> > > are Ok - or quit contributing. No one is forcing me to do this.
+> > > Continuing complaining on this is probably not getting us anywhere
+> > > so I
+> > > might as well shut up now :/
+> >
+> > There is some notion to convert the DT spec to schema and then
+> > generate the spec from the schema. Take properties, their type, and
+> > descriptions and put that back into tables for example. Would love to
+> > have someone work on that. :)
+>
+> I am glad to hear you have developed / are developing such tooling.
 
-> I guess we could fix the DRM driver to use the "devm_clk_get_optional()"
-> instead?
+TBC, I have not and am not. It's just an idea. There's been nothing
+done beyond experimenting if rST could be embedded into yaml.
 
-It would also require a minor rework of the driver, which currently expects
-all specified clocks to be available.
+> I
+> really appreciate it. What comes to giving a helping hand - I'd better
+> to stick the simple C drivers for now ;) But if I ever get the feeling
+> that I don't know what to do I'll keep this in mind :] Let me do some
+> calculus... Only 11 years and my youngest son will probably leave our
+> house - do you think 2030 is a bit too late? Just let me know if this
+> is still relevant then - and I'll buy you a beer or write a tool (of
+> some kind) xD
 
-Another option could be to not list the clock in the device tree, then the
-driver won't notice it as missing.
+I've scheduled you in for 2030. :)
 
-> > More clocks were removed in v4:
-> > 
-> > -       [GCC_CPUSS_GNOC_CLK] = &gcc_cpuss_gnoc_clk.clkr,
-> > -       [GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
-> > -       [GCC_VIDEO_AHB_CLK] = &gcc_video_ahb_clk.clkr,
-> > 
-> > I guess this part of "remove registering the CRITICAL clocks to clock provider
-> > and leave them always ON from the GCC probe." (change log entry), but are you
-> > sure nobody is going to reference these clocks?
-> > 
-> 
-> Even if they are referenced clk provider would return NULL.
-> 
-> > > +static int gcc_sc7180_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct regmap *regmap;
-> > > +	int ret;
-> > > +
-> > > +	regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
-> > > +	if (IS_ERR(regmap))
-> > > +		return PTR_ERR(regmap);
-> > > +
-> > > +	/*
-> > > +	 * Disable the GPLL0 active input to MM blocks, NPU
-> > > +	 * and GPU via MISC registers.
-> > > +	 */
-> > > +	regmap_update_bits(regmap, 0x09ffc, 0x3, 0x3);
-> > > +	regmap_update_bits(regmap, 0x4d110, 0x3, 0x3);
-> > > +	regmap_update_bits(regmap, 0x71028, 0x3, 0x3);
-> > 
-> > In v3 this was:
-> > 
-> > 	regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
-> > 	regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
-> > 	regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
-> > 
-> > IMO register names seem preferable, why switch to literal addresses
-> > instead?
-> > 
-> 
-> :). These cleanups where done based on the comments I had received during
-> SDM845 review. If Stephen is fine moving them to names, I could submit them
-> in the next patch series.
+> Meanwhile... I have tried to convert the BD71828 DT doc from the RFC
+> patch to yaml - and I am having hard time. Especially with the
+> regulators node - which I would like to place in
+> Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+>
+> My problem is the
+> regulators {
+> buck1: BUCK1 {
+>                     regulator-name = "buck1";
+>                     regulator-min-microvolt = <500000>;
+>                     regulator-max-microvolt = <2000000>;
+>                     regulator-ramp-delay = <2500>;
+>                     rohm,dvs-runlvl-ctrl;
+>                     rohm,dvs-runlevel0-voltage = <500000>;
+>                     rohm,dvs-runlevel1-voltage = <506250>;
+>                     rohm,dvs-runlevel2-voltage = <512500>;
+>                     rohm,dvs-runlevel3-voltage = <518750>;
+>                     regulator-boot-on;
+>     };
+>     ...
+> };
+> node which only contains BUCKX and LDOX sub-nodes. It has no own
+> properties.
+>
+> From MFD yaml I did try:
+>
+>   regulators:
+>     $ref: ../regulator/rohm,bd71828-regulator.yaml
+>     description:
+>       List of child nodes that specify the regulators.
+>
+> and in rohm,bd71828-regulator.yaml
+>
+> I tried doing:
+>
+> patternProperties:
+>   "^BUCK[1-7]$":
+>     type: object
+>     description:
+>       Properties for single regulator.
+>     properties:
+>         ...
+>
+> but this fails validation as properties: is not given.
+>
+> [mvaittin@localhost linux]$ dt-doc-validate
+> Documentation/devicetree/bindings/regulator/rohm,bd71828-
+> regulator.yaml
+> /home/mvaittin/torvalds/linux/Documentation/devicetree/bindings/regulat
+> or/rohm,bd71828-regulator.yaml: 'properties' is a required property
+>
+> If I try and add:
+>
+> properties:
+>   foo: true
+>
+> patternProperties:
+>     "^BUCK[1-7]$":
+>       type: object
+>       description:
+>         Properties for single regulator.
+>       properties:
+>         ...
 
-Ok, thanks
+That's a case of needing to adjust the meta-schema (the schema that
+checks the schemas). It's a bit overly restrictive just to try to
+contain what's allowed. I've fixed it now. Update dtschema and it
+should work now.
+
+BTW, what you will also need is to reference the common schema:
+
+"^BUCK[1-7]$":
+  type: object
+  allOf:
+    - $ref: regulator.yaml#
+  properties:
+   rohm,dvs-runlvl-ctrl:
+     type: boolean
+     description: ...
+   ...
+
+Rob
