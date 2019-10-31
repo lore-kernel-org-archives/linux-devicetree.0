@@ -2,106 +2,109 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217FFCA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31170CA9ECE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C38208E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070382087F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BqkSGS3M"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hZwNCeV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfJaMXy (ORCPT
+        id S1726887AbfJaMbS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:23:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39249 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbfJaMXx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 08:23:53 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p12so3957830pgn.6
-        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 05:23:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=dics1qLSQG/6LjTjU1Zksk8uqo/tbnnILQwq9HvjeE8=;
-        b=BqkSGS3MEt3vqyBV2jt/evjT92CEC8fhA5pKhgaSsQ8tWWeOmTv581aMDyQGGAoM+u
-         CizlHBmVS7JFv+AbHdVIc+fwuPNnYDQ5G0QdKchvh1pTgp29tF6A8zyKt1QvwMol/BRT
-         p+m+UaMhQoR5c9CeXA4YXY2NWs4lmn2+jxCulIUrfb/1nlgCzquadJ4snfiwfiqBJOO7
-         GsgrWxVtEQtBNSBAF4KO2JUtdxh+Jq/nS60cxugG06jl7Yqy+Gp+8LWEd1/z7LVsMtdg
-         Ft/z8YOxhFafX9kqa0ciDJBhWo0+vNVMk8217RiU0dh+3EYYDQ8obAO1US0ZTzG8MNEo
-         xeDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=dics1qLSQG/6LjTjU1Zksk8uqo/tbnnILQwq9HvjeE8=;
-        b=hpdR+Q/hGAfaorEMeJAffyk9qjt2tAAeaUNxZUo2/Xb/VflPQmYCoQ1zFdOUj7uD9I
-         tQdUIU6kneNRjIbJAEOdZiHl6KOZcIrKpC4WbT58Kyo/D7/x/1gH2gbIhyZRuWbFtaRU
-         QOb1UK0w6xtD9DxcFQ30Wf1s3Am2W/x+o1Q0c1caNiXUZhK++uA2qfvQSS9Pn/IyPHxE
-         cfuDvjumoJxpwvg4Jew15DeGOjPIRimsw/5D9Kfow18jbv3d3gU1Pufi2xT39UlgC115
-         EFonGDMQW5o5bR0EgRKhVYRHFwnEtkQ0v16TF4IvI7ubxfr/JS8KTsECuzpgL5Uz5nO+
-         aXew==
-X-Gm-Message-State: APjAAAX7/8Y6ARsmH0Aoy4sb2Z0t/nNjFQIk7LULhg/JNeauF/q7R9Y7
-        kwJwuBnU0lvtkLxvLbx4tTuhHQ==
-X-Google-Smtp-Source: APXvYqywmmnkq0C9/UxdrNA51atayjz+UUdnkuN6KmsYJy4LVGSMq8xCRtxjvmuamdEq9iWHISdLdQ==
-X-Received: by 2002:a62:1d8d:: with SMTP id d135mr6267445pfd.172.1572524632666;
-        Thu, 31 Oct 2019 05:23:52 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j25sm2983077pfi.113.2019.10.31.05.23.48
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 31 Oct 2019 05:23:51 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com,
-        baolin.wang@linaro.org, baolin.wang7@gmail.com,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com
-Subject: [PATCH v2 4/5] dt-bindings: power: sc27xx: Add a new property to describe the real resistance of coulomb counter chip
-Date:   Thu, 31 Oct 2019 20:22:43 +0800
-Message-Id: <b7c373b4329fe7a506890dd4c4c53e73cc64ff8d.1572523415.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1572523415.git.baolin.wang@linaro.org>
-References: <cover.1572523415.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1572523415.git.baolin.wang@linaro.org>
-References: <cover.1572523415.git.baolin.wang@linaro.org>
+        Thu, 31 Oct 2019 08:31:18 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13350 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726552AbfJaMbR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 08:31:17 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9VCQaIl028820;
+        Thu, 31 Oct 2019 13:30:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=L36yhhdynvYVY+TShwfA0Bhl1r4mffURb+EBrQF9gKk=;
+ b=hZwNCeV0xEvhrGeulpsouJPO18vN4wZjzkNBh2T0NPOiJrfZJSXxflA/SpZVj8QjZTrp
+ 6ll8NBUTTZtsi6cCL2RFUN4M/tMFU9hBxf8Sg76ZsvbB/cf5QJHnTZ84EJD/1reV24Au
+ kToKzeMtDgAfdV5iMrvyV/hXCmx8kTfkOA1G6trbZ75TeLNtTXTBTenqIk0oPuNC1GXb
+ SkZTjuSDvD9vCFuc0zoXr4SnxiyAi3Vvz9jIbMLOvOfJw6A+9hepDA7tTKxnkBxrLOi4
+ X0zTv7LHQk8uWTPL3x/1nRlRVI4FnGG6DIhJ+En2Ba9BD4opWcvdFQ6c0DgjIaTEgdcw wg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vxwhusser-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 31 Oct 2019 13:30:50 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7F52D10002A;
+        Thu, 31 Oct 2019 13:30:49 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5EFBD2B7837;
+        Thu, 31 Oct 2019 13:30:49 +0100 (CET)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct
+ 2019 13:30:49 +0100
+Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct 2019 13:30:48
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
+        <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <lee.jones@linaro.org>,
+        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <benjamin.gaignard@st.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>
+Subject: [PATCH 0/4] Convert STM32 Timer mdf bindings to yaml
+Date:   Thu, 31 Oct 2019 13:30:36 +0100
+Message-ID: <20191031123040.26316-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-31_05:2019-10-30,2019-10-31 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a new property to describe the real resistance of coulomb counter chip,
-which is used to calibrate the accuracy of the coulomb counter chip.
+This series converts STM32 Timer mfd bindings to json-schema.
+The original binding split between all the subnode remains the same
+that why subnode bindings are converted first and then included in
+the mfd binding.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- .../devicetree/bindings/power/supply/sc27xx-fg.txt |    3 +++
- 1 file changed, 3 insertions(+)
+Benjamin Gaignard (4):
+  dt-bindings: counter: Convert stm32 counter bindings to json-schema
+  dt-bindings: iio: timer: Convert stm32 IIO trigger bindings to
+    json-schema
+  dt-bindings: pwm: Convert stm32 pwm bindings to json-schema
+  dt-bindings: mfd: Convert stm32 timers bindings to json-schema
 
-diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-index 0a5705b..b6359b5 100644
---- a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-+++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-@@ -13,6 +13,8 @@ Required properties:
- - io-channel-names: Should be "bat-temp" or "charge-vol".
- - nvmem-cells: A phandle to the calibration cells provided by eFuse device.
- - nvmem-cell-names: Should be "fgu_calib".
-+- sprd,calib-resistance-micro-ohms: Specify the real resistance of coulomb counter
-+  chip in micro Ohms.
- - monitored-battery: Phandle of battery characteristics devicetree node.
-   See Documentation/devicetree/bindings/power/supply/battery.txt
- 
-@@ -52,5 +54,6 @@ Example:
- 			nvmem-cells = <&fgu_calib>;
- 			nvmem-cell-names = "fgu_calib";
- 			monitored-battery = <&bat>;
-+			sprd,calib-resistance-micro-ohms = <21500>;
- 		};
- 	};
+ .../bindings/counter/st,stm32-timer-cnt.yaml       | 38 +++++++++
+ .../bindings/counter/stm32-timer-cnt.txt           | 31 --------
+ .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 +++++++++++
+ .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------
+ .../devicetree/bindings/mfd/st,stm32-timers.yaml   | 91 ++++++++++++++++++++++
+ .../devicetree/bindings/mfd/stm32-timers.txt       | 73 -----------------
+ .../devicetree/bindings/pwm/pwm-stm32.txt          | 38 ---------
+ .../devicetree/bindings/pwm/st,stm32-pwm.yaml      | 51 ++++++++++++
+ 8 files changed, 224 insertions(+), 167 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
+ delete mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+ delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/st,stm32-pwm.yaml
+
 -- 
-1.7.9.5
+2.15.0
 
