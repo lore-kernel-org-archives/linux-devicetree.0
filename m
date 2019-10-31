@@ -2,71 +2,68 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3938CA9ED0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2E6CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7999A208E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5D9208C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 11:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwC3mgpR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="meu+aGMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfJaLQy (ORCPT
+        id S1727247AbfJaLQx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:16:54 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53812 "EHLO
+        Thu, 31 Oct 2019 07:16:53 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38853 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfJaLQx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 07:16:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id n7so5488644wmc.3;
-        Thu, 31 Oct 2019 04:16:52 -0700 (PDT)
+        with ESMTP id S1726897AbfJaLQw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 07:16:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z19so1306629wmk.3;
+        Thu, 31 Oct 2019 04:16:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HO9O/trmPz5jaJTIM+EKo9GXaFEizkYtRsjEdro7UN4=;
-        b=uwC3mgpRnYQGgv+iA3yufLDb3pazp6PFJ7HrvX1rZHVtXb9SGcNgbTCp5b2ADvz6Ti
-         RJPWTBY+Wt/p48KZN/NslmMP+v7GipGrKxQ3NfxRQkT+HaLbmT95rnZivKRA+gt11W4T
-         DmjzUnyCRDJS46rDjG3oiNlSOl4AKBXQXjyyL1UrPKSdhbyVjRRCljbePebPaH6JhfE0
-         +FyrujxJFivYjQg0eYA8pZNImC9shxkyjqezel5vr2VHoNj0clWBB3fOe3PBziKHdo69
-         7dWdlBTomcsiNplIzwBbHC82W4ijRLhBhlmKpHoJcaz7eMl2rw4kb8X8g2lkwfSbFn+8
-         N90A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+PNsOE4fENaOwhTZnvRCyw50CWL6R5gR5zazjJkSQ7Y=;
+        b=meu+aGMBXztMLuPJljDcgF5XrXgqTSoWhNAe7rIW/BovvNzp17mkiSKP2LQD2qy0eJ
+         UvNxEoignSKWWBR8SvH1HkQa4Y6J4RD8905XNjKFKNLNWUOfDIktmoVAYOyDIldhY0iE
+         RAdWZciZO7bQL+ZLprv+/9koTpBn16jGppJbLiFGayrTQqSx4LkJG4nDxD0Ng1YHbaja
+         kmnpsSgk6fUh9W5Fnk8cAZ6fmvPQbd1xZXwaDja4zWbZZDwMJKSJqtXL7QHA5wW/59Zr
+         E8aGzZ7k/+EPt1JrRILeWEhgwc7+WHsCbiUOxSC9cSiYFHe+NgHBR9xs+OBlEWrFpm6D
+         xSMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HO9O/trmPz5jaJTIM+EKo9GXaFEizkYtRsjEdro7UN4=;
-        b=M/dpJ9k81+di+wHWrd+RsLjUNXI149ITPhvo/csp6/NmgHUW/19gZ3r1/UpHacZVmr
-         p+XWrFVJX7ip6tqUXek99xWE8dX4Y16xQjthz2gg4FtkGMRAAJs9/sHdZFBkRLvHI4ow
-         TyeKgZe7esYxlvpmu273km7cOkE63fkzqBigKw81Oza4ZZfxKvs7syO2hm3IRtTna3/v
-         NCvMqohXT+DCYoejfj3wMYnjPdSyN6l/I/5GvhpQU4+sgm1thj+4znDl5NM+HycE1VAW
-         qlYkLDuNGQ4JgTGLtZWYQgrbGhlCWe2tXBAqAqsrNNyF7RJOx5U8B7up3PnG4i+Cp7Ry
-         UXeA==
-X-Gm-Message-State: APjAAAUoDvpWfRw9zkhykLQrpMdGCj1NJ7+8q3t0bq63+8ALRnvuV254
-        FZVVM+I228OPWmkfBnhynHpIn5RkI88=
-X-Google-Smtp-Source: APXvYqyNrvpP/uPDtgXT6IXRCV4YQASucVHUi0q6i2bwirmgSO3FGI07fpzcT6qJ1Osvl/Y5hHZ+wA==
-X-Received: by 2002:a7b:c748:: with SMTP id w8mr773494wmk.114.1572520611157;
-        Thu, 31 Oct 2019 04:16:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+PNsOE4fENaOwhTZnvRCyw50CWL6R5gR5zazjJkSQ7Y=;
+        b=VxDpFVLABxChNCGwQqNIN7RY/j/p7aYb/RREi+8biPoJbPgaUkQDlVuZVWYCHXmPhT
+         nL5tlZtLAzEeQO3YKY0ix4wsb4irT92gQKebUwN1J6c2fRh8eK8nH6HfVl6Na6Bu2Nnd
+         mIy5WlkJY39Zmnlfj1sF9IG2UKsQrWc59qAclAcIRRYespI39lHdYtkUQKkc9yExWkUN
+         TsxfRGDRxmvRdNGKpGt8Ph3eUBB56bpsxIgWbtLGdTIn72YGsqpYJAJyRPl2bkeKIYje
+         hmIQj6REmeDmWB087McnOjdNpCn9iXEN/lbHVi7Cpd5GVimZ6w8aD7r50c48xdXi+LTC
+         1tkg==
+X-Gm-Message-State: APjAAAVXRJVp3jJ6OrRH6H6lEIcJ0xQHrniayHxHnJWqSyNpzEHiqnRY
+        qAw9e25E7w3TxWuHR472R9mXzaqbJlM=
+X-Google-Smtp-Source: APXvYqzlcyG1MenaxSM7ZLfN5aIk9CUiireojdgdzin/zZ07O/IQhOu+6VBowUajq2vKu/XTbV6rZQ==
+X-Received: by 2002:a1c:c90f:: with SMTP id f15mr4727564wmb.125.1572520609176;
+        Thu, 31 Oct 2019 04:16:49 -0700 (PDT)
 Received: from IcarusMOD.eternityproject.eu ([93.51.16.173])
-        by smtp.gmail.com with ESMTPSA id s17sm3009306wmh.3.2019.10.31.04.16.50
+        by smtp.gmail.com with ESMTPSA id s17sm3009306wmh.3.2019.10.31.04.16.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Oct 2019 04:16:50 -0700 (PDT)
+        Thu, 31 Oct 2019 04:16:48 -0700 (PDT)
 From:   kholk11@gmail.com
 To:     linux-arm-msm@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, ccross@android.com,
         mark.rutland@arm.com, robh+dt@kernel.org, agross@kernel.org,
         bjorn.andersson@linaro.org, marijns95@gmail.com, kholk11@gmail.com
-Subject: [PATCH v2 2/5] arm64: dts: pm8004: Add SPMI regulator and add phandles to lsids
-Date:   Thu, 31 Oct 2019 12:16:42 +0100
-Message-Id: <20191031111645.34777-3-kholk11@gmail.com>
+Subject: [PATCH v2 0/5] MSM8976/56 Sony Xperia Loire (X/XCompact) smartphones
+Date:   Thu, 31 Oct 2019 12:16:40 +0100
+Message-Id: <20191031111645.34777-1-kholk11@gmail.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191031111645.34777-1-kholk11@gmail.com>
-References: <20191031111645.34777-1-kholk11@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -76,50 +73,107 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: AngeloGioacchino Del Regno <kholk11@gmail.com>
 
-Add the SPMI regulator node in the PM8004 LSID5 (as there is where
-it resides basically 99% of the times) and set the nodes to be
-disabled by default, as not all boards have both or one of the
-lsids specified in this generic pm8004 DT.
+Here it all comes together.
 
-While at it, also add nice phandles to the lsids specified in this
-DT to allow configuration in specific board dts in a more human
-readable fashion.
+This patch series enables support for MSM8976 and MSM8956 with all
+the extra functionality that has been tested and sent upstream and
+also adds support for the Sony Xperia Loire platform, including two
+devices in the Loire project: the Xperia X (Suzu) and the Xperia
+X Compact (Kugo).
 
-Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
----
- arch/arm64/boot/dts/qcom/pm8004.dtsi | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+That's only a subset of what I actually have in my hat.. I didn't
+feel like sending the entire thing because the rest is not perfectly
+clean yet (even if working, and we all know that "works != clean").
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8004.dtsi b/arch/arm64/boot/dts/qcom/pm8004.dtsi
-index 297b57bfa87a..0abd1abe12fc 100644
---- a/arch/arm64/boot/dts/qcom/pm8004.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8004.dtsi
-@@ -4,17 +4,23 @@
- 
- &spmi_bus {
- 
--	pmic@4 {
-+	pm8004_lsid4: pmic@4 {
- 		compatible = "qcom,pm8004", "qcom,spmi-pmic";
- 		reg = <0x4 SPMI_USID>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		status = "disabled";
- 	};
- 
--	pmic@5 {
-+	pm8004_lsid5: pmic@5 {
- 		compatible = "qcom,pm8004", "qcom,spmi-pmic";
- 		reg = <0x5 SPMI_USID>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		status = "disabled";
-+
-+		pm8004_spmi_regulators: regulators {
-+			compatible = "qcom,pm8004-regulators";
-+		};
- 	};
- };
+As for my entire local stuff, here I can successfully boot Android 10
+with nice display and 3d on both smartphones.
+
+So, this is composed of:
+- A main device-tree for the MSM8976/56 SoC (*)
+- Standard configuration for the PM/PMI8950 and PM8004, which are
+  found on all (from what I know) MSM8976 and 8956 boards, since
+  that seems to be the recommended hardware configuration from qcom
+- A main device-tree for the Sony Xperia Loire project (**)
+- Device specific device-trees for Loire Kugo and Loire Suzu. (***)
+
+(*) The MSM8956 SoC is a "broken" MSM8976. It has got two *disabled*
+    BIG cores and you can't preventively know which ones are enabled
+    and which ones are not: there you only know that you've got two.
+    So, you can get any combination of disabled cores (relative to
+    cluster 1, it can be 0,1 or 1,2 or 2,3 or 0,3 or 1,3.. etc) on
+    the chip that you own.
+    After many trials on (various) downstream kernels and a number of
+    devices, I have concluded that the only way to get both the enabled
+    big cores up is to actually declare all four and let Linux error
+    out on the disabled cores (and - of course - never use them), mostly
+    because there doesn't seem to be any register that can be read for
+    that purpose... may sound stupid, but ... eh :)
+
+(**) The Sony Xperia Loire platform is composed of 3 devices with their
+     specific region variants, specifically, two MSM8956 smartphones
+     (Suzu, Kugo) and one APQ8056 smart projector (Blanc). All these
+     devices reuse the same base board design, so I thought that it is
+     just better to create a common DT for all of them, hence avoiding
+     a whole lot of code duplication.
+     P.S.: I don't know if I'll ever try to upstream the SmartLoire
+           APQ8056 Xperia Touch projector. I hope to have time to do
+           it as it's a great device and I really want to but, as of
+           now, I can't make any promise about that specific device.
+
+(***) These DTs are now very light, but they will contain some
+      more nodes as I get more components upstreamed. For example, the
+      X Compact (Kugo) smartphone has Type-C through the FUSB301 chip,
+      which resides on i2c, a RGBC-IR sensor and a VL53L0 ToF, while X
+      (Suzu) has just MicroUSB and none of these sensors.
+      These devices also are of a different form factor, so they've got
+      different displays but connected to the same power rails anyway.
+
+
+Changes in v2 (all changes requested by Bjorn):
+- Reordered DT nodes by address and padded them to 8 digits
+- Dropped useless inner subnodes for pinctrl configurations
+- Removed the forgotten useless "qcom,init-voltage" property
+- Moved BLSP2 UART2 node to main DT, declared as disabled
+- Refactored SDC related pinctrl nodes as suggested
+- Deleted msm8976-pins DT, moved stripped-to-the-bone pinctrl
+  in msm8976.dtsi, plus remaining board-specific nodes in the
+  loire board dtsi
+- Removed the split mux/config in pinctrl nodes
+- Added explicit "qcom,scm-msm8976" to the scm node
+- Removed PM8950 regulators configuration skeleton from msm8976.dtsi
+  and moved the entire thing to board specific files (in this
+  case, msm8956-sony-xperia-loire.dtsi)
+- Moved non-mmio nodes from /soc to /
+- Removed the remoteproc/hexagon configuration completely, as it
+  was just a forgotten node from various tests that I did on the
+  platform (sorry guys -- plan is now to enable modem and hexagon
+  in a future patch series)
+- Fixed trailing whitespace issues in xperia-loire DT.
+
+AngeloGioacchino Del Regno (5):
+  dt-bindings: iio: spmi-vadc: Add definitions for USB DP/DM VADCs
+  arm64: dts: pm8004: Add SPMI regulator and add phandles to lsids
+  arm64: dts: qcom: Add configuration for PM8950 and PMI8950 peripherals
+  arm64: dts: qcom: Add MSM8976 SoC support dts files
+  arm64: dts: qcom: Add Sony Xperia (Loire) X and X Compact support
+
+ arch/arm64/boot/dts/qcom/Makefile             |    2 +
+ .../qcom/msm8956-sony-xperia-loire-kugo.dts   |   56 +
+ .../qcom/msm8956-sony-xperia-loire-suzu.dts   |   17 +
+ .../dts/qcom/msm8956-sony-xperia-loire.dtsi   |  744 +++++++
+ arch/arm64/boot/dts/qcom/msm8976.dtsi         | 1705 +++++++++++++++++
+ arch/arm64/boot/dts/qcom/pm8004.dtsi          |   10 +-
+ arch/arm64/boot/dts/qcom/pm8950.dtsi          |  187 ++
+ arch/arm64/boot/dts/qcom/pmi8950.dtsi         |   98 +
+ include/dt-bindings/iio/qcom,spmi-vadc.h      |    3 +
+ 9 files changed, 2820 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire-kugo.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire-suzu.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8976.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8950.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pmi8950.dtsi
+
 -- 
 2.21.0
 
