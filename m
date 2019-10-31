@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3339CA9ED0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 22:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80483CA9ED1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 22:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A7820862
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 22:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E9E420862
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 22:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbfJaWwX (ORCPT
+        id S1727721AbfJaWwZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 18:52:23 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56480 "EHLO inva020.nxp.com"
+        Thu, 31 Oct 2019 18:52:25 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51564 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727477AbfJaWwX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 18:52:23 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 43D761A02DC;
-        Thu, 31 Oct 2019 23:52:20 +0100 (CET)
+        id S1726739AbfJaWwY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 18:52:24 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 73031200946;
+        Thu, 31 Oct 2019 23:52:22 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B2D31A01D2;
-        Thu, 31 Oct 2019 23:52:20 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 58DC0200130;
+        Thu, 31 Oct 2019 23:52:22 +0100 (CET)
 Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 1F5EE205E9;
-        Thu, 31 Oct 2019 23:52:19 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 52A1B205E9;
+        Thu, 31 Oct 2019 23:52:21 +0100 (CET)
 From:   Leonard Crestez <leonard.crestez@nxp.com>
 To:     Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -54,9 +54,9 @@ Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
         Martin Kepplinger <martink@posteo.de>,
         linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH RFC v5 02/10] PM / devfreq: Add generic imx bus driver
-Date:   Fri,  1 Nov 2019 00:52:01 +0200
-Message-Id: <0d9b694504c760b6f7938c90c75d83d167a214e4.1572562150.git.leonard.crestez@nxp.com>
+Subject: [PATCH RFC v5 04/10] PM / devfreq: Add devfreq_get_devfreq_by_node
+Date:   Fri,  1 Nov 2019 00:52:03 +0200
+Message-Id: <69885e720ae7d51b1080e2386b1612366d86a1f4.1572562150.git.leonard.crestez@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1572562150.git.leonard.crestez@nxp.com>
 References: <cover.1572562150.git.leonard.crestez@nxp.com>
@@ -68,217 +68,104 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial support for dynamic frequency switching on pieces of the imx
-interconnect fabric.
-
-All this driver does is set a clk rate based on an opp table, it does
-not even map registers.
+Split off part of devfreq_get_devfreq_by_phandle into a separate
+function. This allows callers to fetch devfreq instances by enumerating
+devicetree instead of explicit phandles.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- drivers/devfreq/Kconfig       |  12 +++
- drivers/devfreq/Makefile      |   1 +
- drivers/devfreq/imx-devfreq.c | 148 ++++++++++++++++++++++++++++++++++
- 3 files changed, 161 insertions(+)
- create mode 100644 drivers/devfreq/imx-devfreq.c
+ drivers/devfreq/devfreq.c | 42 +++++++++++++++++++++++++++++----------
+ include/linux/devfreq.h   |  1 +
+ 2 files changed, 32 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index defe1d438710..9088a151bafe 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -90,10 +90,22 @@ config ARM_EXYNOS_BUS_DEVFREQ
- 	  Each memory bus group could contain many memoby bus block. It reads
- 	  PPMU counters of memory controllers by using DEVFREQ-event device
- 	  and adjusts the operating frequencies and voltages with OPP support.
- 	  This does not yet operate with optimal voltages.
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index dab31b63eb10..bc83d0aab279 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -931,10 +931,33 @@ struct devfreq *devm_devfreq_add_device(struct device *dev,
+ 	return devfreq;
+ }
+ EXPORT_SYMBOL(devm_devfreq_add_device);
  
-+config ARM_IMX_DEVFREQ
-+	tristate "i.MX DEVFREQ Driver"
-+	depends on ARCH_MXC || COMPILE_TEST
-+	select DEVFREQ_GOV_PASSIVE
-+	select DEVFREQ_GOV_SIMPLE_ONDEMAND
-+	select DEVFREQ_GOV_USERSPACE
-+	select PM_OPP
-+	help
-+	  This adds the DEVFREQ driver for the i.MX family of SoCs.
-+	  It allows adjusting frequencies for DDRC (DDR Controller) and various
-+	  NICs and NOCs which form the SOC interconnect fabric
-+
- config ARM_TEGRA_DEVFREQ
- 	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
- 	depends on ARCH_TEGRA_3x_SOC || ARCH_TEGRA_114_SOC || \
- 		ARCH_TEGRA_132_SOC || ARCH_TEGRA_124_SOC || \
- 		ARCH_TEGRA_210_SOC || \
-diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-index 1ac92614b6aa..1c1f35f74d24 100644
---- a/drivers/devfreq/Makefile
-+++ b/drivers/devfreq/Makefile
-@@ -8,10 +8,11 @@ obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
- obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
- 
- # DEVFREQ Drivers
- obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
- obj-$(CONFIG_ARM_IMX_DEVFREQ)		+= imx-ddrc.o
-+obj-$(CONFIG_ARM_IMX_DEVFREQ)		+= imx-devfreq.o
- obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
- obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
- obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+= tegra20-devfreq.o
- 
- # DEVFREQ Event Drivers
-diff --git a/drivers/devfreq/imx-devfreq.c b/drivers/devfreq/imx-devfreq.c
-new file mode 100644
-index 000000000000..5c907b3ab9c0
---- /dev/null
-+++ b/drivers/devfreq/imx-devfreq.c
-@@ -0,0 +1,148 @@
-+// SPDX-License-Identifier: GPL-2.0
+ #ifdef CONFIG_OF
 +/*
-+ * Copyright 2019 NXP
++ * devfreq_get_devfreq_by_node - Get the devfreq device from devicetree
++ * @np - pointer to device_node
++ *
++ * return the instance of devfreq device
 + */
-+
-+#include <linux/clk.h>
-+#include <linux/devfreq.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+struct imx_devfreq {
-+	struct devfreq_dev_profile profile;
++struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
++{
 +	struct devfreq *devfreq;
-+	struct clk *clk;
-+	struct devfreq_passive_data passive_data;
-+};
 +
-+static int imx_devfreq_target(struct device *dev, unsigned long *freq, u32 flags)
-+{
-+	struct imx_devfreq *priv = dev_get_drvdata(dev);
-+	struct dev_pm_opp *new_opp;
-+	unsigned long new_freq;
-+	int ret;
-+
-+	new_opp = devfreq_recommended_opp(dev, freq, flags);
-+	if (IS_ERR(new_opp)) {
-+		ret = PTR_ERR(new_opp);
-+		dev_err(dev, "failed to get recommended opp: %d\n", ret);
-+		return ret;
++	mutex_lock(&devfreq_list_lock);
++	list_for_each_entry(devfreq, &devfreq_list, node) {
++		if (devfreq->dev.parent
++			&& devfreq->dev.parent->of_node == node) {
++			mutex_unlock(&devfreq_list_lock);
++			return devfreq;
++		}
 +	}
-+	new_freq = dev_pm_opp_get_freq(new_opp);
-+	dev_pm_opp_put(new_opp);
++	mutex_unlock(&devfreq_list_lock);
 +
-+	return clk_set_rate(priv->clk, new_freq);
++	return ERR_PTR(-EPROBE_DEFER);
 +}
 +
-+static int imx_devfreq_get_cur_freq(struct device *dev, unsigned long *freq)
+ /*
+  * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
+  * @dev - instance to the given device
+  * @index - index into list of devfreq
+  *
+@@ -953,25 +976,22 @@ struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+ 
+ 	node = of_parse_phandle(dev->of_node, "devfreq", index);
+ 	if (!node)
+ 		return ERR_PTR(-ENODEV);
+ 
+-	mutex_lock(&devfreq_list_lock);
+-	list_for_each_entry(devfreq, &devfreq_list, node) {
+-		if (devfreq->dev.parent
+-			&& devfreq->dev.parent->of_node == node) {
+-			mutex_unlock(&devfreq_list_lock);
+-			of_node_put(node);
+-			return devfreq;
+-		}
+-	}
+-	mutex_unlock(&devfreq_list_lock);
++	devfreq = devfreq_get_devfreq_by_node(node);
+ 	of_node_put(node);
+ 
+-	return ERR_PTR(-EPROBE_DEFER);
++	return devfreq;
+ }
++
+ #else
++struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
 +{
-+	struct imx_devfreq *priv = dev_get_drvdata(dev);
-+
-+	*freq = clk_get_rate(priv->clk);
-+
-+	return 0;
++	return ERR_PTR(-ENODEV);
 +}
 +
-+static int imx_devfreq_get_dev_status(struct device *dev,
-+		struct devfreq_dev_status *stat)
-+{
-+	struct imx_devfreq *priv = dev_get_drvdata(dev);
-+
-+	stat->busy_time = 0;
-+	stat->total_time = 0;
-+	stat->current_frequency = clk_get_rate(priv->clk);
-+
-+	return 0;
-+}
-+
-+static void imx_devfreq_exit(struct device *dev)
-+{
-+	dev_pm_opp_of_remove_table(dev);
-+}
-+
-+static int imx_devfreq_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct imx_devfreq *priv;
-+	const char *gov = DEVFREQ_GOV_USERSPACE;
-+	void *govdata = NULL;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		ret = PTR_ERR(priv->clk);
-+		dev_err(dev, "failed to fetch clk: %d\n", ret);
-+		return ret;
-+	}
-+	platform_set_drvdata(pdev, priv);
-+
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get OPP table\n");
-+		return ret;
-+	}
-+
-+	priv->profile.polling_ms = 1000;
-+	priv->profile.target = imx_devfreq_target;
-+	priv->profile.get_dev_status = imx_devfreq_get_dev_status;
-+	priv->profile.exit = imx_devfreq_exit;
-+	priv->profile.get_cur_freq = imx_devfreq_get_cur_freq;
-+	priv->profile.initial_freq = clk_get_rate(priv->clk);
-+
-+	/* Handle passive devfreq parent link */
-+	priv->passive_data.parent = devfreq_get_devfreq_by_phandle(dev, 0);
-+	if (!IS_ERR(priv->passive_data.parent)) {
-+		dev_info(dev, "passive link to %s\n",
-+				dev_name(priv->passive_data.parent->dev.parent));
-+		gov = DEVFREQ_GOV_PASSIVE;
-+		govdata = &priv->passive_data;
-+	} else if (priv->passive_data.parent != ERR_PTR(-ENODEV)) {
-+		// -ENODEV means no parent: not an error.
-+		ret = PTR_ERR(priv->passive_data.parent);
-+		if (ret != -EPROBE_DEFER)
-+			dev_warn(dev, "failed to get passive parent: %d\n", ret);
-+		goto err;
-+	}
-+
-+	priv->devfreq = devm_devfreq_add_device(dev, &priv->profile,
-+						gov, govdata);
-+	if (IS_ERR(priv->devfreq)) {
-+		ret = PTR_ERR(priv->devfreq);
-+		dev_err(dev, "failed to add devfreq device: %d\n", ret);
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	dev_pm_opp_of_remove_table(dev);
-+	return ret;
-+}
-+
-+static const struct of_device_id imx_devfreq_of_match[] = {
-+	{ .compatible = "fsl,imx8m-noc", },
-+	{ .compatible = "fsl,imx8m-nic", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, imx_devfreq_of_match);
-+
-+static struct platform_driver imx_devfreq_platdrv = {
-+	.probe		= imx_devfreq_probe,
-+	.driver = {
-+		.name	= "imx-devfreq",
-+		.of_match_table = of_match_ptr(imx_devfreq_of_match),
-+	},
-+};
-+module_platform_driver(imx_devfreq_platdrv);
-+
-+MODULE_DESCRIPTION("Generic i.MX bus frequency driver");
-+MODULE_AUTHOR("Leonard Crestez <leonard.crestez@nxp.com>");
-+MODULE_LICENSE("GPL v2");
+ struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
+ #endif /* CONFIG_OF */
+diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+index fb376b5b7281..d4d1ec04aeea 100644
+--- a/include/linux/devfreq.h
++++ b/include/linux/devfreq.h
+@@ -242,10 +242,11 @@ extern int devm_devfreq_register_notifier(struct device *dev,
+ 				unsigned int list);
+ extern void devm_devfreq_unregister_notifier(struct device *dev,
+ 				struct devfreq *devfreq,
+ 				struct notifier_block *nb,
+ 				unsigned int list);
++extern struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node);
+ extern struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
+ 						int index);
+ 
+ #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)
+ /**
 -- 
 2.17.1
 
