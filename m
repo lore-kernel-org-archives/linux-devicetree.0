@@ -2,102 +2,173 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0864CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F084CCA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC782086D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572546962;
-	bh=+GGvRJQDbSECjkJorvzm1EDXq/8N+0xaa3y4BFOmR84=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nrbSIFsqy+nkwjPPhCKJRkSB8BqU090Md4/SRYRnGTrfcH0N7xJnPiHGJceby37+S
-	 Q9xuExrIcZKgYQpcbCYfen7m4jL+Cy5ijy/iWeHQf2Ifv3OIZKJuz2us0WQjs9XPqU
-	 GMCta7FIB7IqQwhe7e7RBtDxn880/lJTiwln+y10=
+	by mail.kernel.org (Postfix) with ESMTP id C055120650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNlZB+uF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbfJaSgC (ORCPT
+        id S1729312AbfJaShv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:36:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbfJaSgB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:36:01 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 014A021906;
-        Thu, 31 Oct 2019 18:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572546961;
-        bh=+GGvRJQDbSECjkJorvzm1EDXq/8N+0xaa3y4BFOmR84=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DJgoTfOWutCHY+BK7DpMbXu0zgkmPAGOEQ50jcksR2SZp/LK0PBP57EW9+ZuP8p/b
-         hi3viyM1d60/UHdam+qxXkqhetfFvaeKRbL7vO7ue8cP8uD9AR0WbRwjeB/TI1SRUC
-         eS9QX3zbPO3U1Dyg6vGDpDIkxDfwmXM9ohXwpGWo=
-Received: by mail-qk1-f170.google.com with SMTP id 205so6736488qkk.1;
-        Thu, 31 Oct 2019 11:36:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAWaP1FGRZKtOPDZRVtBLSCL9q+V5rAvgr5+y7cGp+yDXNPab9qb
-        fjrIXD/gQYvDPqZZCAzwSv0KIqmWxLovsMR91Q==
-X-Google-Smtp-Source: APXvYqwFhgHT1SMXl79Xzh/JwuzRY9uTKEqBRGw/ukoS3FcMI33qXLJFkSMSVcxVqiKW9GQY49Vk46zwzi8XNcVs2Io=
-X-Received: by 2002:a37:f703:: with SMTP id q3mr6799002qkj.254.1572546960078;
- Thu, 31 Oct 2019 11:36:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
- <20191025165352.GA30602@bogus> <72d46086-0918-a5af-d798-7488b55a8e07@linux.intel.com>
- <24f17c73-6e90-ae7e-72a7-5223f0f5b5fd@linux.intel.com>
-In-Reply-To: <24f17c73-6e90-ae7e-72a7-5223f0f5b5fd@linux.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 31 Oct 2019 13:35:48 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKhCY-z+1qzLeZrfYQf0GWe6H9s4PHLa_L_qSiQheBmCA@mail.gmail.com>
-Message-ID: <CAL_JsqKhCY-z+1qzLeZrfYQf0GWe6H9s4PHLa_L_qSiQheBmCA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 31 Oct 2019 14:37:51 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35933 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729254AbfJaShv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 14:37:51 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v19so4964719pfm.3
+        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 11:37:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=2nYGKPeQWZBCF+i8MPNjPGjQ92pRq1yryrClg8ZxihQ=;
+        b=XNlZB+uFwf+YEk52zj5fYFrMl+TYfnxJ8l5OOnSz4fxogzmG9rh7I/aqY7IUN3I8iw
+         jHLvXy8BxL3FIYfzm9MzcEbBQHXG3T95PtNuEcm9xoQ2qOs+xGyk922A/y7a+JRTCURL
+         uNJzArQp3mvvB1qTE0qY3i/6R6fzMXFeHeKsZWW4JhcsArOpvov31yZE46vsuvO9BXUk
+         xkEoVt9J6mhcNdrPimKvSn4EgPwy0gs2+SUS28Agwpe28PfpHhh4YvoEochEJNabddb0
+         7wqZ2T4aG0erbXPS2/bBQUc/WgYQEIcUi2cglMBScG3Qd+hx/354PbWvZ73eogRM56lg
+         CTdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2nYGKPeQWZBCF+i8MPNjPGjQ92pRq1yryrClg8ZxihQ=;
+        b=e7N+sxQFMVisfOAiOF2GuzT+g4O5sF3Y5QV8hmaBd/Pzl2J4NQeAAUgv7yrH+gBxfv
+         pesgXIcmbCsJak+Khu7FwhSeW79y+78/WsNpO8SkPTD/4JSJ5wTHPty7GeMhRHGd2O0k
+         zXyWAPC5CIQxZCmSHf4BmS4qYAi6Ai0opyaTre1SuF1NBSKjHJzRZWFNno9TkwvxLoT/
+         eedqPmcoByM6RkeqENI7aKwLaCgSlJZAI8CSqhrIt+ZvTStX8PG4B9Rot0nrZnPegwSE
+         69pj3CHGJDIvalDoIEh/IKBbNXZ6x7L3fP9/K3t5Un2Oo3txsmpowE4L6CEfNz1BA2PL
+         zM3Q==
+X-Gm-Message-State: APjAAAXa2c4HBhFxoVNhYciM4Vz1IUPfnEgvpDHFG5fG4kNRKwKx6toe
+        kVjIKHcgUXNQfj/rPaGXaFqeYg==
+X-Google-Smtp-Source: APXvYqyPHEkV60aWdkW+CKAXt0QX5BkXpxwo+C9E0ethNA36xWJaG6E5gnjBFVBSbHE6cXo1DdeHMQ==
+X-Received: by 2002:aa7:96bd:: with SMTP id g29mr8447978pfk.28.1572547069886;
+        Thu, 31 Oct 2019 11:37:49 -0700 (PDT)
+Received: from localhost ([49.248.58.234])
+        by smtp.gmail.com with ESMTPSA id w27sm4150620pgc.20.2019.10.31.11.37.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 31 Oct 2019 11:37:48 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
+        masneyb@onstation.org, swboyd@chromium.org, julia.lawall@lip6.fr,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v7 00/15] thermal: qcom: tsens: Add interrupt support
+Date:   Fri,  1 Nov 2019 00:07:24 +0530
+Message-Id: <cover.1572526427.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 5:51 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
->
->
-> On 10/29/2019 4:34 PM, Dilip Kota wrote:
-> >
-> > On 10/26/2019 12:53 AM, Rob Herring wrote:
-> >> On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
-> >>> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
-> >>> which is Synopsys DesignWare based PCIe core.
-> >>>
-> [...]
-> >>>
-> >>
-> >> +
-> >> +  linux,pci-domain:
-> >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >> +    description: PCI domain ID.
-> >> Just a value of 'true' is fine here.
-> > Ok.
-> dt_binding_check is failing for adding 'true' alone.
-> It is passing only if "$ref" is mentioned.
+Daniel, only patch 15 needs to be changed in the tree being submitted
+to linux-next. But here is the entire series for completeness.
 
-Update dtschema. That should be fixed.
+Hi Thermal and MSM maintainers,
 
-Rob
+I believe this series is now ready to be merged. The DT bindings and driver
+changes should go through the thermal tree and the changes to the DT files
+themselves should go through the MSM tree. There is no hard ordering
+dependency because we're adding a new property to the driver. It would help
+to soak in linux-next for a few weeks to catch anything on kernelci.org.
+
+1-4, 7, 14, 15 => thermal tree
+5, 6, 8-13 => msm tree (already applied by Andy)
+
+Regards,
+Amit
+
+Changes since v6:
+- Stephen reported a warning that only shows up with gcc 9.x
+  (https://lore.kernel.org/lkml/CAHLCerOkeOEEUgtJ=YgDKKXDiyFXHQ4LBdzg3-3VtKvpyceqFg@mail.gmail.com/). Include a patch to initialise the index variable to zero.
+
+Changes since v5:
+- Julia found a missing put_device() call in the success path of
+  tsens_register() while baking in linux-next. A single line change to
+  allow the error and success path to use the call to put_device(). Thanks
+  Julia and LKP.
+
+Changes since v4:
+- Change to of-thermal core[1] to force interrupts w/o changing polling-delay DT
+  parameter
+- Corresponding changes to DT files to remove the hunks setting the values
+  to 0
+- Collected reviews and acks
+
+Changes since v3:
+- Fix up the YAML definitions based on Rob's review
+
+Changes since v2:
+- Addressed Stephen's review comment
+- Moved the dt-bindings to yaml (This throws up some new warnings in various QCOM
+devicetrees. I'll send out a separate series to fix them up)
+- Collected reviews and acks
+- Added the dt-bindings to MAINTAINERS
+
+Changes since v1:
+- Collected reviews and acks
+- Addressed Stephen's review comments (hopefully I got them all).
+- Completely removed critical interrupt infrastructure from this series.
+  Will post that separately.
+- Fixed a bug in sign-extension of temperature.
+- Fixed DT bindings to use the name of the interrupt e.g. "uplow" and use
+  platform_get_irq_byname().
+
+Add interrupt support to TSENS. The first 6 patches are general fixes and
+cleanups to the driver before interrupt support is introduced.
+
+[1] https://lore.kernel.org/linux-arm-msm/1b53ef537203e629328285b4597a09e4a586d688.1571181041.git.amit.kucheria@linaro.org/
+
+
+Amit Kucheria (15):
+  drivers: thermal: tsens: Get rid of id field in tsens_sensor
+  drivers: thermal: tsens: Simplify code flow in tsens_probe
+  drivers: thermal: tsens: Add __func__ identifier to debug statements
+  drivers: thermal: tsens: Add debugfs support
+  arm: dts: msm8974: thermal: Add thermal zones for each sensor
+  arm64: dts: msm8916: thermal: Fixup HW ids for cpu sensors
+  dt-bindings: thermal: tsens: Convert over to a yaml schema
+  arm64: dts: sdm845: thermal: Add interrupt support
+  arm64: dts: msm8996: thermal: Add interrupt support
+  arm64: dts: msm8998: thermal: Add interrupt support
+  arm64: dts: qcs404: thermal: Add interrupt support
+  arm: dts: msm8974: thermal: Add interrupt support
+  arm64: dts: msm8916: thermal: Add interrupt support
+  drivers: thermal: tsens: Create function to return sign-extended
+    temperature
+  drivers: thermal: tsens: Add interrupt support
+
+ .../bindings/thermal/qcom-tsens.txt           |  55 --
+ .../bindings/thermal/qcom-tsens.yaml          | 168 ++++++
+ MAINTAINERS                                   |   1 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi           |  92 +++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |   6 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |   6 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |   2 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   4 +
+ drivers/thermal/qcom/tsens-8960.c             |   4 +-
+ drivers/thermal/qcom/tsens-common.c           | 529 ++++++++++++++++--
+ drivers/thermal/qcom/tsens-v0_1.c             |  11 +
+ drivers/thermal/qcom/tsens-v1.c               |  29 +
+ drivers/thermal/qcom/tsens-v2.c               |  13 +
+ drivers/thermal/qcom/tsens.c                  |  59 +-
+ drivers/thermal/qcom/tsens.h                  | 286 ++++++++--
+ 16 files changed, 1102 insertions(+), 167 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+
+-- 
+2.17.1
+
