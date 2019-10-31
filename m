@@ -2,91 +2,118 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DAECA9EC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBE0CA9ECE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 216DB208E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A9820862
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:21:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LhIKUufu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VkO8QGUg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfJaMIx (ORCPT
+        id S1726538AbfJaMVa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:08:53 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:36192 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfJaMIx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:08:53 -0400
-Received: from dhcp-159-84-61-180.univ-lyon2.fr ([159.84.61.180] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iQ9Fx-00050d-VD; Thu, 31 Oct 2019 13:08:50 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     kishon@ti.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-rockchip@lists.infradead.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH] phy: phy-rockchip-inno-usb2: add phy description for px30
-Date:   Thu, 31 Oct 2019 13:08:48 +0100
-Message-ID: <1974613.gpRaQal8Ma@phil>
-In-Reply-To: <20190917082532.25479-1-heiko@sntech.de>
-References: <20190917082532.25479-1-heiko@sntech.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Thu, 31 Oct 2019 08:21:30 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37806 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfJaMV3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 08:21:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6658E607EF; Thu, 31 Oct 2019 12:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572524488;
+        bh=Ki3aKynv1XZjEovrcTD2QZluVpFd7CgUvfnjPmWeN48=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LhIKUufug+7s5Ssxfd7WneQNi6y0sHEAYTPCqle0BpIhE1wH6a+Lm//qCSVGgY5Ji
+         hEg6bSKnskj8orFVhZcIcj/v9cD1mlTpGUaCqsAA44IZUI6+DLyQAOTDZmRPV98/jQ
+         AtnHZUFYnG9pav9y5qLKEUHH971x35nJbxkvwHXQ=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 297F4601C4;
+        Thu, 31 Oct 2019 12:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572524487;
+        bh=Ki3aKynv1XZjEovrcTD2QZluVpFd7CgUvfnjPmWeN48=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VkO8QGUgWqrJeE5jMb3geNEIOw/9IeeledGAJosS5+ELY4zaeDSXgwotPQ8PDoW17
+         /yTQ0kAq2aJw69fk2NeMFgdn4TH/eetDZoYPFhCluUvwuSnxqfkMQdwBOgoppvqu0z
+         wlR9b8cRUk2Zhdlel2oEa2L2rZLRoCI3R6JdvOPo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 297F4601C4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 0/7] Add GPU & Video Clock controller driver for SC7180
+Date:   Thu, 31 Oct 2019 17:51:06 +0530
+Message-Id: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kishon,
+[v1]
+ * Fabia PLLs could fail latching in the case where the PLL is not
+   calibrated, so add support to calibrate in prepare clock ops.
 
-Am Dienstag, 17. September 2019, 10:25:32 CET schrieb Heiko Stuebner:
-> The px30 soc from Rockchip shares the same register description as
-> the rk3328, so can re-use its definitions.
-> 
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+ * Add driver support for Graphics clock controller for SC7180 and also
+   update device tree bindings for the various clocks supported in the
+   clock controller.
 
-could you pick this up as well please?
+ * Add driver support for Video clock controller for SC7180 and also
+   update device tree bindings for the various clocks supported in the
+   clock controller.
 
-Thanks
-Heiko
+This change depends on below GCC clock driver series
+https://patchwork.kernel.org/project/linux-clk/list/?series=187089
 
-> ---
->  Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt | 1 +
->  drivers/phy/rockchip/phy-rockchip-inno-usb2.c                    | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> index 00639baae74a..541f5298827c 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> @@ -2,6 +2,7 @@ ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
->  
->  Required properties (phy (parent) node):
->   - compatible : should be one of the listed compatibles:
-> +	* "rockchip,px30-usb2phy"
->  	* "rockchip,rk3228-usb2phy"
->  	* "rockchip,rk3328-usb2phy"
->  	* "rockchip,rk3366-usb2phy"
-> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-> index eae865ff312c..680cc0c8825c 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-> @@ -1423,6 +1423,7 @@ static const struct rockchip_usb2phy_cfg rv1108_phy_cfgs[] = {
->  };
->  
->  static const struct of_device_id rockchip_usb2phy_dt_match[] = {
-> +	{ .compatible = "rockchip,px30-usb2phy", .data = &rk3328_phy_cfgs },
->  	{ .compatible = "rockchip,rk3228-usb2phy", .data = &rk3228_phy_cfgs },
->  	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
->  	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
-> 
+Taniya Das (7):
+  clk: qcom: clk-alpha-pll: Add support for Fabia PLL calibration
+  dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
+  dt-bindings: clock: Introduce QCOM Graphics clock bindings
+  clk: qcom: Add graphics clock controller driver for SC7180
+  dt-bindings: clock: Add YAML schemas for the QCOM VIDEOCC clock
+    bindings
+  dt-bindings: clock: Introduce QCOM Video clock bindings
+  clk: qcom: Add video clock controller driver for SC7180
 
+ .../devicetree/bindings/clock/qcom,gpucc.txt       |  24 --
+ .../devicetree/bindings/clock/qcom,gpucc.yaml      |  70 ++++++
+ .../devicetree/bindings/clock/qcom,videocc.txt     |  18 --
+ .../devicetree/bindings/clock/qcom,videocc.yaml    |  62 +++++
+ drivers/clk/qcom/Kconfig                           |  16 ++
+ drivers/clk/qcom/Makefile                          |   2 +
+ drivers/clk/qcom/clk-alpha-pll.c                   |  84 ++++++-
+ drivers/clk/qcom/clk-alpha-pll.h                   |   4 +
+ drivers/clk/qcom/gpucc-sc7180.c                    | 274 +++++++++++++++++++++
+ drivers/clk/qcom/videocc-sc7180.c                  | 263 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gpucc-sc7180.h      |  21 ++
+ include/dt-bindings/clock/qcom,videocc-sc7180.h    |  23 ++
+ 12 files changed, 814 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+ create mode 100644 drivers/clk/qcom/gpucc-sc7180.c
+ create mode 100644 drivers/clk/qcom/videocc-sc7180.c
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sc7180.h
+ create mode 100644 include/dt-bindings/clock/qcom,videocc-sc7180.h
 
-
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
 
