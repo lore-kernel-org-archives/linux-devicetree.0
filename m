@@ -2,113 +2,65 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EF0CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B59CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24B42086D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:48:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="odXBMtDi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QJrgzIuP"
+	by mail.kernel.org (Postfix) with ESMTP id 887D0208C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfJaNsk (ORCPT
+        id S1727511AbfJaNtl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:48:40 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:33977 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727567AbfJaNsj (ORCPT
+        Thu, 31 Oct 2019 09:49:41 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:14456 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727446AbfJaNtk (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:48:39 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id B3D106B7B;
-        Thu, 31 Oct 2019 09:48:38 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 31 Oct 2019 09:48:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=Z7sZc/mS+DIqHU1l0y9g4Urgyp
-        E7oJRWd6x17FvkVNE=; b=odXBMtDibR0QeeKvulcqmjbVqHWiJmLMYGMqvhvEiC
-        Sj9C6f4usphc8V4BUytdifjrm9zbO9Ngt3VOXG/UPMpwOi9VPQkAyZ14dy1TnEH/
-        2qGDAGjTjT5Ot8Hizm3SqctCvDyuiQzAnC5aHcYMKP40Px2EhENtnhk06rj3J0oe
-        D3n4bSt0n3ekClL85dPAROgYIOEh2grWiEE7U47sr9qrGLcOI0LyxtpYA4RMsF3j
-        YcDCZCmY4zu4sSLw4mZ97uCucWzIZizHJC21PdHWgzHYJ4Qi6G4KUsOhnPLXVGVS
-        CClLwvpYbsG36C/UrCoP3BUBU6XqVYwqEuJguhyAgbeA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Z7sZc/mS+DIqHU1l0
-        y9g4UrgypE7oJRWd6x17FvkVNE=; b=QJrgzIuP6jhlo0p4CKIztWb24lcUh7BEq
-        tI+VFDepnBPWe5zKyrrFmbl6IISFouiR0FzKFy1OKsGPtWCAYaTRTMZsy+CN7Q1g
-        I7RUwlqXSRDvoSlx+bVetSXWUqibvsRGX7uZS9S+cHdT1VNwcSI7JzfXY+sW30g+
-        zwX/uXKJKB/PMRew2uzbYF5Pj4MSZHDcnbBA0/KVEIEz2v5PbPosx8T32GnNDrX+
-        uucjL4QgIK0v1HrIThuJvETSQlJQACkNUXLykXqwxUTFpgOo6VwA+2dxCxylTE7h
-        r8J3Ge2vnGcdoNFrM4NfFfs/QAgU9s8H60/j/T2PEJdXgXTy+peLg==
-X-ME-Sender: <xms:Nea6XZzladOU5qZCq02GiUIqUPKxSX7CXONok_G-PGMyq-KRo9P3Uw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddthedgheegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcu
-    tfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeekvddrvd
-    ehgedrgedrudefkeenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghr
-    nhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:Nea6Xe3YbpCTTQvnjBST_fabJiq2oBC3ANu-No6fxyl_OgWTq0Eb3A>
-    <xmx:Nea6XVUiOuLAcbT_1L4DB5-m-1Ma46oenFB_6NmTuGnsHjA8eYWeHQ>
-    <xmx:Nea6XaCg6jHCIpWsXvglEj8TNh4_jTVaO2l_LCEZp9iRJcOqqsBFJQ>
-    <xmx:Nua6XWoLxGs86y8H8vYGBZZJg3eLe_mF7b7zFSJW5kBTfzFLIDpoLkBhfs0>
-Received: from localhost (lns-bzn-32-82-254-4-138.adsl.proxad.net [82.254.4.138])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B96528005A;
-        Thu, 31 Oct 2019 09:48:36 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Mark Rutland <mark.rutland@arm.com>,
+        Thu, 31 Oct 2019 09:49:40 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 31 Oct 2019 19:19:37 +0530
+IronPort-SDR: RDLu8+cv2XI0GHzKx82CrkHZ/FDKkQYGpHY+M4IpAyh33exsr6xhf8L52OfaPKM4U8eqVXgGsS
+ mAXebbIsmrfaOBBCA3Ux+FiW9d5xMTN6LBwijuudWBVLwrOZZOI2m55rXjy0NMqNCQrW/nLZGa
+ cMoq5E/eLgrdLH/9qF5Pf3EJYujX5DvH/OTuQZ9n0VhDctOwQ5XXo7qdK+kCb7lJZibgPaHj1m
+ A49mSTG/s1DRcBmpn9VzHCxCeI96EBPttwC8u1xEgpXV8C0XCZpYDbyrOIq73UitSLzanWFGTg
+ /RBtfZjjPDA1q0L6t+00xHk7
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 31 Oct 2019 19:19:26 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 94DF419D0; Thu, 31 Oct 2019 19:19:25 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     sanm@codeaurora.org, Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>, lee.jones@linaro.org,
-        daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime@cerno.tech>,
-        Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH] dt-bindings: leds: lm3630a: Fix the example compilation
-Date:   Thu, 31 Oct 2019 14:48:33 +0100
-Message-Id: <20191031134833.241303-1-maxime@cerno.tech>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>
+Subject: [PATCH 0/1] Add USB related nodes for SC7180
+Date:   Thu, 31 Oct 2019 19:19:21 +0530
+Message-Id: <1572529762-31256-1-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit ae92365cdd75 ("dt-bindings: backlight: lm3630a: Add enable-gpios to
-describe HWEN pin") introduced in the example a GPIO flag that isn't
-declared anywhere, resulting in a compilation breakage when running the
-validation tools. Add the proper define.
+Add nodes for DWC3 USB controller, QMP and QUSB PHYs
+and enable them in idp device
 
-Cc: Andreas Kemnade <andreas@kemnade.info>
-Cc: Lee Jones <lee.jones@linaro.org>
-Fixes: ae92365cdd75 ("dt-bindings: backlight: lm3630a: Add enable-gpios to describe HWEN pin")
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- .../devicetree/bindings/leds/backlight/lm3630a-backlight.yaml   | 2 ++
- 1 file changed, 2 insertions(+)
+This patch has dependency on below series
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-index c8470628fe02..72fc6f7ef90a 100644
---- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-+++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-@@ -93,6 +93,8 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-     i2c {
-         #address-cells = <1>;
-         #size-cells = <0>;
+https://lore.kernel.org/patchwork/patch/1146675/
+
+Sandeep Maheswaram (1):
+  arm64: dts: qcom: sc7180: Add USB related nodes
+
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  25 ++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 104 ++++++++++++++++++++++++++++++++
+ 2 files changed, 129 insertions(+)
+
 -- 
-2.23.0
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
