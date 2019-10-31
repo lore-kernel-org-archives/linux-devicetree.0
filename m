@@ -2,57 +2,38 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B2ACA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0A9CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2132087E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572527274;
-	bh=xMigDxa3I9yFnuaA1/rSvcF5DRLGFmKTKGP8/j2Poeg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YpXhYs159sDJRDllVE1KuKvyVsOKj3/YGaSso1nhAfn4Q+uzvSNJoENAA8NO++x5n
-	 2E/TUkt0U45olp6G6kc4/xhyVKn41IlsS9qECwcOowjsZ00A4RSmURCm3Ge953hyH8
-	 NVCkeW16Fm3XQ80DRSyjef98icZfRUNF3J/mzpf8=
+	by mail.kernel.org (Postfix) with ESMTP id 695CB2083E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfJaNHx (ORCPT
+        id S1726728AbfJaNMB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:07:53 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35905 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfJaNHx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 09:07:53 -0400
-Received: by mail-ed1-f68.google.com with SMTP id f7so1615644edq.3;
-        Thu, 31 Oct 2019 06:07:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=33+edZoJSD4COmLxAmuLRBayFF47TyCyfQ5sB53fkNg=;
-        b=fmT1nE7RJQoDNhpZQCRgKBXwSv5YmnDIQXc3l4kfQhoIgKS8TtCD839yykMQGro993
-         TrzEzza2ZjF5zxQeBe8b/qAhIOH/yF1VOLJHkJZGilgClM09V4r5OQjU4U/5UolneaXQ
-         CNEF6bv0RSdvzwtRx9+s8fZE1oGg1LfaWHQfRYcu3VCuDahRMuPLdREcdfBfwQtI8EcW
-         vnHzTw3kOdILqCncZxNVwVoeAhekfjn9ZTtfvNRBjbLA/UUueKBjAeBKMivVS1hcAduf
-         CAIT+mkGHICRdWbAsIaIEYSaqXXS9XWfbU1s7YNp8cYPpd9flkiPaft3n74inukrQB52
-         QB7g==
-X-Gm-Message-State: APjAAAUmT6vzgf0YLqZDpK3NsmPKQ1M1+0mjNjHxeN4IFFEj+0VBkgrb
-        vB+tlPPEMObnnxp7Ub2sFpyNOyQu
-X-Google-Smtp-Source: APXvYqz4VxBrjaFKNam8HxGYebLyu4OQUFPsJAleYl1IAKYrh6TRa2TfdjIxJwYwEwR4b6LuyxC7Xw==
-X-Received: by 2002:a17:906:a986:: with SMTP id jr6mr3834820ejb.158.1572527271575;
-        Thu, 31 Oct 2019 06:07:51 -0700 (PDT)
-Received: from pi3 ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id a102sm27645edf.46.2019.10.31.06.07.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 06:07:50 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 14:07:48 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Fabio Estevam <festevam@gmail.com>,
+        Thu, 31 Oct 2019 09:12:01 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:48832 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfJaNMB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 09:12:01 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 3B4B160CB06;
+        Thu, 31 Oct 2019 14:11:58 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 31 Oct
+ 2019 14:11:57 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Thu, 31 Oct 2019 14:11:57 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     Fabio Estevam <festevam@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -63,56 +44,68 @@ Cc:     Fabio Estevam <festevam@gmail.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 11/11] ARM: dts: imx6ul-kontron-n6310-s-43: Add
+Subject: Re: [PATCH v2 11/11] ARM: dts: imx6ul-kontron-n6310-s-43: Add missing
+ includes for GPIOs and IRQs
+Thread-Topic: [PATCH v2 11/11] ARM: dts: imx6ul-kontron-n6310-s-43: Add
  missing includes for GPIOs and IRQs
-Message-ID: <20191031130748.GC27967@pi3>
+Thread-Index: AQHVjkv1caDmIh8k/USvzgDB9794sqd0qwcAgAABJwA=
+Date:   Thu, 31 Oct 2019 13:11:57 +0000
+Message-ID: <83173997-c3dd-319f-35bc-503485d80131@kontron.de>
 References: <20191029112655.15058-1-frieder.schrempf@kontron.de>
  <20191029112655.15058-12-frieder.schrempf@kontron.de>
+ <20191031130748.GC27967@pi3>
+In-Reply-To: <20191031130748.GC27967@pi3>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C6362DCFD56BBC4DA3EA755A016B9B8F@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191029112655.15058-12-frieder.schrempf@kontron.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 3B4B160CB06.AE926
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
+        kernel@pengutronix.de, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:28:16AM +0000, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
-> ---
->  arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-> index 5bad29683cc3..295bc3138fea 100644
-> --- a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-> @@ -7,6 +7,9 @@
->  
->  #include "imx6ul-kontron-n6310-s.dts"
->  
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/gpio/gpio.h>
-
-This is not needed. This includes imx6ul-kontron-n6310-s.dts, which
-includes imx6ul-kontron-n6310-som.dtsi which has proper GPIO include. It
-also polls imx6ul.dtsi which has the IRQ defines.
-
-My comment from v1 was for a case where you have a DTSI standing on its
-own. If it does not include anything else, then it should have all
-necessary inclusions (not only GPIO but also iMX-specific pinctrl and clock).
-
-Best regards,
-Krzysztof
-
-
-> +
->  / {
->  	model = "Kontron N6310 S 43";
->  	compatible = "kontron,imx6ul-n6310-s-43", "kontron,imx6ul-n6310-s",
-> -- 
-> 2.17.1
+T24gMzEuMTAuMTkgMTQ6MDcsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+IE9uIFR1ZSwg
+T2N0IDI5LCAyMDE5IGF0IDExOjI4OjE2QU0gKzAwMDAsIFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6
+DQo+PiBGcm9tOiBGcmllZGVyIFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+
+DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1w
+ZkBrb250cm9uLmRlPg0KPj4gRml4ZXM6IDFlYTRiNzZjZGZkZSAoIkFSTTogZHRzOiBpbXg2dWwt
+a29udHJvbi1uNjMxMDogQWRkIEtvbnRyb24gaS5NWDZVTCBONjMxMCBTb00gYW5kIGJvYXJkcyIp
+DQo+PiAtLS0NCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLWtvbnRyb24tbjYzMTAtcy00
+My5kdHMgfCAzICsrKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspDQo+Pg0K
+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1rb250cm9uLW42MzEwLXMt
+NDMuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLWtvbnRyb24tbjYzMTAtcy00My5kdHMN
+Cj4+IGluZGV4IDViYWQyOTY4M2NjMy4uMjk1YmMzMTM4ZmVhIDEwMDY0NA0KPj4gLS0tIGEvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14NnVsLWtvbnRyb24tbjYzMTAtcy00My5kdHMNCj4+ICsrKyBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1rb250cm9uLW42MzEwLXMtNDMuZHRzDQo+PiBAQCAtNyw2
+ICs3LDkgQEANCj4+ICAgDQo+PiAgICNpbmNsdWRlICJpbXg2dWwta29udHJvbi1uNjMxMC1zLmR0
+cyINCj4+ICAgDQo+PiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVy
+L2lycS5oPg0KPj4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9ncGlvL2dwaW8uaD4NCj4gDQo+IFRo
+aXMgaXMgbm90IG5lZWRlZC4gVGhpcyBpbmNsdWRlcyBpbXg2dWwta29udHJvbi1uNjMxMC1zLmR0
+cywgd2hpY2gNCj4gaW5jbHVkZXMgaW14NnVsLWtvbnRyb24tbjYzMTAtc29tLmR0c2kgd2hpY2gg
+aGFzIHByb3BlciBHUElPIGluY2x1ZGUuIEl0DQo+IGFsc28gcG9sbHMgaW14NnVsLmR0c2kgd2hp
+Y2ggaGFzIHRoZSBJUlEgZGVmaW5lcy4NCj4gDQo+IE15IGNvbW1lbnQgZnJvbSB2MSB3YXMgZm9y
+IGEgY2FzZSB3aGVyZSB5b3UgaGF2ZSBhIERUU0kgc3RhbmRpbmcgb24gaXRzDQo+IG93bi4gSWYg
+aXQgZG9lcyBub3QgaW5jbHVkZSBhbnl0aGluZyBlbHNlLCB0aGVuIGl0IHNob3VsZCBoYXZlIGFs
+bA0KPiBuZWNlc3NhcnkgaW5jbHVzaW9ucyAobm90IG9ubHkgR1BJTyBidXQgYWxzbyBpTVgtc3Bl
+Y2lmaWMgcGluY3RybCBhbmQgY2xvY2spLg0KDQpPaywgZ290IGl0LiBUaGFua3MgZm9yIGNsYXJp
+ZnlpbmcuDQpUaGlzIHBhdGNoIGNhbiBiZSBkcm9wcGVkIHRoZW4uDQoNCj4gDQo+IEJlc3QgcmVn
+YXJkcywNCj4gS3J6eXN6dG9mDQo+IA0KPiANCj4+ICsNCj4+ICAgLyB7DQo+PiAgIAltb2RlbCA9
+ICJLb250cm9uIE42MzEwIFMgNDMiOw0KPj4gICAJY29tcGF0aWJsZSA9ICJrb250cm9uLGlteDZ1
+bC1uNjMxMC1zLTQzIiwgImtvbnRyb24saW14NnVsLW42MzEwLXMiLA0KPj4gLS0gDQo+PiAyLjE3
+LjE=
