@@ -2,307 +2,183 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E078CA9ED9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 21:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91529CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 22:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AEB217D9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 21:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E31C2190F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 22:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbfJaVuk (ORCPT
+        id S1727511AbfJaWwV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 17:50:40 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:41914 "EHLO inva021.nxp.com"
+        Thu, 31 Oct 2019 18:52:21 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51476 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729136AbfJaVuj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 17:50:39 -0400
+        id S1726735AbfJaWwV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 18:52:21 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B7DC920056E;
-        Thu, 31 Oct 2019 22:50:37 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 078442002ED;
+        Thu, 31 Oct 2019 23:52:18 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C26C2001E6;
-        Thu, 31 Oct 2019 22:50:37 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EBF892000BB;
+        Thu, 31 Oct 2019 23:52:17 +0100 (CET)
 Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 8DA2D20605;
-        Thu, 31 Oct 2019 22:50:36 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E39D0205E9;
+        Thu, 31 Oct 2019 23:52:16 +0100 (CET)
 From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
         Kyungmin Park <kyungmin.park@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
         Saravana Kannan <saravanak@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
         Angus Ainslie <angus@akkea.ca>,
         Martin Kepplinger <martink@posteo.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 5/6] PM / devfreq: imx-ddrc: Measure bandwidth with perf
-Date:   Thu, 31 Oct 2019 23:50:26 +0200
-Message-Id: <259544688d43fbe66290d1b4f06826f57c8f18a0.1572558427.git.leonard.crestez@nxp.com>
+        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH RFC v5 00/10] interconnect: Add imx support via devfreq
+Date:   Fri,  1 Nov 2019 00:51:59 +0200
+Message-Id: <cover.1572562150.git.leonard.crestez@nxp.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1572558427.git.leonard.crestez@nxp.com>
-References: <cover.1572558427.git.leonard.crestez@nxp.com>
-In-Reply-To: <cover.1572558427.git.leonard.crestez@nxp.com>
-References: <cover.1572558427.git.leonard.crestez@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The imx8m ddrc has a performance monitoring block attached which can
-be used to measure bandwidth usage and automatically adjust frequency.
+This series adds upstream DRAM and interconnect scaling support for imx8m
+series chips. It uses a per-SOC interconnect provider layered on top of
+multiple instances of devfreq for scalable nodes along the interconnect.
 
-There is already a perf driver for that block so instead of implementing
-a devfreq events driver use the in-kernel perf API to implement
-get_dev_status directly.
+Existing qcom interconnect providers mostly translate bandwidth requests into
+firmware calls but equivalent firmware on imx8m is much thinner. Scaling
+support for individual nodes (NIC/NOC and DDRC) is implemented through
+devfreq.
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
----
- drivers/devfreq/imx-ddrc.c | 146 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 143 insertions(+), 3 deletions(-)
+The imx interconnect provider doesn't communicate with devfreq instance
+directly but rather computes "minimum frequencies" for nodes along the path
+and creates dev_pm_qos requests.
 
-diff --git a/drivers/devfreq/imx-ddrc.c b/drivers/devfreq/imx-ddrc.c
-index 3ce51614ecab..c74dec7fbfe4 100644
---- a/drivers/devfreq/imx-ddrc.c
-+++ b/drivers/devfreq/imx-ddrc.c
-@@ -11,10 +11,13 @@
- #include <linux/pm_opp.h>
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
- #include <linux/arm-smccc.h>
- 
-+#include <asm/perf_event.h>
-+#include <linux/perf_event.h>
-+
- #define IMX_SIP_DDR_DVFS			0xc2000004
- 
- /* Values starting from 0 switch to specific frequency */
- #define IMX_SIP_DDR_FREQ_SET_HIGH		0x00
- 
-@@ -80,10 +83,22 @@ struct imx_ddrc {
- 	struct clk *dram_alt;
- 	struct clk *dram_apb;
- 
- 	int freq_count;
- 	struct imx_ddrc_freq freq_table[IMX_DDRC_MAX_FREQ_COUNT];
-+
-+	/* For measuring load with perf events: */
-+	struct platform_device *pmu_pdev;
-+	struct pmu *pmu;
-+
-+	struct perf_event_attr rd_event_attr;
-+	struct perf_event_attr wr_event_attr;
-+	struct perf_event *rd_event;
-+	struct perf_event *wr_event;
-+
-+	u64 last_rd_val, last_rd_ena, last_rd_run;
-+	u64 last_wr_val, last_wr_ena, last_wr_run;
- };
- 
- static struct imx_ddrc_freq *imx_ddrc_find_freq(struct imx_ddrc *priv,
- 						unsigned long rate)
- {
-@@ -247,19 +262,128 @@ static int imx_ddrc_get_cur_freq(struct device *dev, unsigned long *freq)
- 
- 	return 0;
- }
- 
- static int imx_ddrc_get_dev_status(struct device *dev,
--		struct devfreq_dev_status *stat)
-+				   struct devfreq_dev_status *stat)
- {
- 	struct imx_ddrc *priv = dev_get_drvdata(dev);
- 
--	stat->busy_time = 0;
--	stat->total_time = 0;
- 	stat->current_frequency = clk_get_rate(priv->dram_core);
- 
-+	if (priv->rd_event && priv->wr_event) {
-+		u64 rd_delta, rd_val, rd_ena, rd_run;
-+		u64 wr_delta, wr_val, wr_ena, wr_run;
-+
-+		rd_val = perf_event_read_value(priv->rd_event,
-+					       &rd_ena, &rd_run);
-+		wr_val = perf_event_read_value(priv->wr_event,
-+					       &wr_ena, &wr_run);
-+
-+		rd_delta = (rd_val - priv->last_rd_val) *
-+			   (rd_ena - priv->last_rd_ena);
-+		do_div(rd_delta, rd_run - priv->last_rd_run);
-+		priv->last_rd_val = rd_val;
-+		priv->last_rd_ena = rd_ena;
-+		priv->last_rd_run = rd_run;
-+
-+		wr_delta = (wr_val - priv->last_wr_val) *
-+			   (wr_ena - priv->last_wr_ena);
-+		do_div(wr_delta, wr_run - priv->last_wr_run);
-+		priv->last_wr_val = wr_val;
-+		priv->last_wr_ena = wr_ena;
-+		priv->last_wr_run = wr_run;
-+
-+		/* magic numbers, possibly wrong */
-+		stat->busy_time = 4 * (rd_delta + wr_delta);
-+		stat->total_time = stat->current_frequency;
-+	} else {
-+		stat->busy_time = 0;
-+		stat->total_time = 0;
-+	}
-+
-+	return 0;
-+}
-+
-+static int imx_ddrc_perf_disable(struct imx_ddrc *priv)
-+{
-+	/* release and set to NULL */
-+	if (!IS_ERR_OR_NULL(priv->rd_event))
-+		perf_event_release_kernel(priv->rd_event);
-+	if (!IS_ERR_OR_NULL(priv->wr_event))
-+		perf_event_release_kernel(priv->wr_event);
-+	priv->rd_event = NULL;
-+	priv->wr_event = NULL;
-+
-+	return 0;
-+}
-+
-+static int imx_ddrc_perf_enable(struct imx_ddrc *priv)
-+{
-+	int ret;
-+
-+	priv->rd_event_attr.size = sizeof(priv->rd_event_attr);
-+	priv->rd_event_attr.type = priv->pmu->type;
-+	priv->rd_event_attr.config = 0x2a;
-+
-+	priv->rd_event = perf_event_create_kernel_counter(
-+			&priv->rd_event_attr, 0, NULL, NULL, NULL);
-+	if (IS_ERR(priv->rd_event)) {
-+		ret = PTR_ERR(priv->rd_event);
-+		goto err;
-+	}
-+
-+	priv->wr_event_attr.size = sizeof(priv->wr_event_attr);
-+	priv->wr_event_attr.type = priv->pmu->type;
-+	priv->wr_event_attr.config = 0x2b;
-+
-+	priv->wr_event = perf_event_create_kernel_counter(
-+			&priv->wr_event_attr, 0, NULL, NULL, NULL);
-+	if (IS_ERR(priv->wr_event)) {
-+		ret = PTR_ERR(priv->wr_event);
-+		goto err;
-+	}
-+
- 	return 0;
-+
-+err:
-+	imx_ddrc_perf_disable(priv);
-+	return ret;
-+}
-+
-+static int imx_ddrc_init_events(struct device *dev,
-+				struct device_node *events_node)
-+{
-+	struct imx_ddrc *priv = dev_get_drvdata(dev);
-+	struct device_driver *driver;
-+
-+	/*
-+	 * We need pmu->type for perf_event_attr but there is no API for
-+	 * mapping device_node to pmu. Fetch private data for imx-ddr-pmu and
-+	 * cast that to a struct pmu instead.
-+	 */
-+	priv->pmu_pdev = of_find_device_by_node(events_node);
-+	if (!priv->pmu_pdev)
-+		return -EPROBE_DEFER;
-+	driver = priv->pmu_pdev->dev.driver;
-+	if (!driver)
-+		return -EPROBE_DEFER;
-+	if (strcmp(driver->name, "imx-ddr-pmu")) {
-+		dev_warn(dev, "devfreq-events node %pOF has unexpected driver %s\n",
-+				events_node, driver->name);
-+		return -ENODEV;
-+	}
-+
-+	priv->pmu = platform_get_drvdata(priv->pmu_pdev);
-+	if (!priv->pmu) {
-+		dev_err(dev, "devfreq-events device missing private data\n");
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(dev, "events from pmu %s\n", priv->pmu->name);
-+
-+	return imx_ddrc_perf_enable(priv);
- }
- 
- static int imx_ddrc_init_freq_info(struct device *dev)
- {
- 	struct imx_ddrc *priv = dev_get_drvdata(dev);
-@@ -340,10 +464,15 @@ static int imx_ddrc_check_opps(struct device *dev)
- 	return 0;
- }
- 
- static void imx_ddrc_exit(struct device *dev)
- {
-+	struct imx_ddrc *priv = dev_get_drvdata(dev);
-+
-+	imx_ddrc_perf_disable(priv);
-+	platform_device_put(priv->pmu_pdev);
-+
- 	dev_pm_opp_of_remove_table(dev);
- }
- 
- static int imx_ddrc_probe(struct platform_device *pdev)
- {
-@@ -363,10 +492,19 @@ static int imx_ddrc_probe(struct platform_device *pdev)
- 	if (ret) {
- 		dev_err(dev, "failed to init firmware freq info: %d\n", ret);
- 		return ret;
- 	}
- 
-+	events_node = of_parse_phandle(dev->of_node, "devfreq-events", 0);
-+	if (events_node) {
-+		ret = imx_ddrc_init_events(dev, events_node);
-+		of_node_put(events_node);
-+		if (ret)
-+			goto err;
-+		gov = DEVFREQ_GOV_SIMPLE_ONDEMAND;
-+	}
-+
- 	priv->dram_core = devm_clk_get(dev, "dram_core");
- 	priv->dram_pll = devm_clk_get(dev, "dram_pll");
- 	priv->dram_alt = devm_clk_get(dev, "dram_alt");
- 	priv->dram_apb = devm_clk_get(dev, "dram_apb");
- 	if (IS_ERR(priv->dram_core) ||
-@@ -404,10 +542,12 @@ static int imx_ddrc_probe(struct platform_device *pdev)
- 	}
- 
- 	return 0;
- 
- err:
-+	imx_ddrc_perf_disable(priv);
-+	platform_device_put(priv->pmu_pdev);
- 	dev_pm_opp_of_remove_table(dev);
- 	return ret;
- }
- 
- static const struct of_device_id imx_ddrc_of_match[] = {
+This needs core changes for dev_pm_qos frequency support for devfreq:
+
+	https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=196443
+
+Since imx interconnect only needs to interact with imx devfreq it would also be
+possible to tie them together directly, but it would be a little sad.
+
+Since there is no single devicetree node that can represent the
+"interconnect" the main NOC is picked as the "interconnect provider" and
+will probe the interconnect platform device if #interconnect-cells is
+present. This is a bit odd.
+
+On i.MX there are multiple instances of a few interconnect IPs, this
+patch identifies them by enumerating the entire devicetree scanning for
+the "interconnect-node-id" property. As far as I see current providers
+do this based entirely on compatible string of the interconnect instance
+and this seems very odd to me. Do you think we could move this
+"interconnect-node-id" approach to core interconnect bindings?
+
+The same interconnect-node-id property is used to identify the DDRC and
+this is arguably a hack.
+
+Also as a github branch (with few other changes):
+    https://github.com/cdleonard/linux/tree/next_imx_busfreq
+
+This is layered upon imx-ddrc scaling support:
+* https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=196459
+The DDRC only really interacts by receiving dev_pm_qos requests.
+
+Changes since RFCv4:
+* Drop icc proxy nonsense
+* Make devfreq driver for NOC probe the ICC driver if
+#interconnect-cells is present.
+* Move NOC support to interconnect series and rename the node in DT
+* Add support for all chips at once, differences are not intereseting
+and there is more community interest for 8mq than 8mm.
+Link: https://patchwork.kernel.org/cover/11111865/
+
+Changes since RFCv3:
+* Remove the virtual "icc" node and add devfreq nodes as proxy providers
+* Fix build on 32-bit arm (reported by kbuilt test robot)
+* Remove ARCH_MXC_ARM64 (never existed in upstream)
+* Remove _numlinks, calculate instead
+* Replace __BUSFREQ_H header guard
+* Improve commit message and comment spelling
+* Fix checkpatch issues
+Link to RFCv3: https://patchwork.kernel.org/cover/11078671/
+
+Changes since RFCv2 and initial work by Alexandre Bailon:
+* Relying on devfreq and dev_pm_qos instead of CLK
+* No more "platform opp" stuff
+* No more special suspend handling: use suspend-opp on devfreq instead.
+* Replace all mentions of "busfreq" with "interconnect"
+Link to v2: https://patchwork.kernel.org/patch/11056789/
+
+Leonard Crestez (10):
+  dt-bindings: devfreq: Add bindings for generic imx buses
+  PM / devfreq: Add generic imx bus driver
+  PM / devfreq: imx: Register interconnect device
+  PM / devfreq: Add devfreq_get_devfreq_by_node
+  interconnect: Add imx core driver
+  interconnect: imx: Add platform driver for imx8mm
+  interconnect: imx: Add platform driver for imx8mq
+  interconnect: imx: Add platform driver for imx8mn
+  arm64: dts: imx8m: Add NOC nodes
+  arm64: dts: imx8m: Add interconnect provider properties
+
+ .../devicetree/bindings/devfreq/imx.yaml      |  83 ++++++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     |  26 ++
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi     |  26 ++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  26 ++
+ drivers/devfreq/Kconfig                       |  12 +
+ drivers/devfreq/Makefile                      |   1 +
+ drivers/devfreq/devfreq.c                     |  42 ++-
+ drivers/devfreq/imx-devfreq.c                 | 185 ++++++++++++
+ drivers/interconnect/Kconfig                  |   1 +
+ drivers/interconnect/Makefile                 |   1 +
+ drivers/interconnect/imx/Kconfig              |  17 ++
+ drivers/interconnect/imx/Makefile             |   4 +
+ drivers/interconnect/imx/imx.c                | 273 ++++++++++++++++++
+ drivers/interconnect/imx/imx.h                |  60 ++++
+ drivers/interconnect/imx/imx8mm.c             | 105 +++++++
+ drivers/interconnect/imx/imx8mn.c             |  94 ++++++
+ drivers/interconnect/imx/imx8mq.c             | 103 +++++++
+ include/dt-bindings/interconnect/imx8mm.h     |  49 ++++
+ include/dt-bindings/interconnect/imx8mn.h     |  41 +++
+ include/dt-bindings/interconnect/imx8mq.h     |  48 +++
+ include/linux/devfreq.h                       |   1 +
+ 21 files changed, 1187 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/imx.yaml
+ create mode 100644 drivers/devfreq/imx-devfreq.c
+ create mode 100644 drivers/interconnect/imx/Kconfig
+ create mode 100644 drivers/interconnect/imx/Makefile
+ create mode 100644 drivers/interconnect/imx/imx.c
+ create mode 100644 drivers/interconnect/imx/imx.h
+ create mode 100644 drivers/interconnect/imx/imx8mm.c
+ create mode 100644 drivers/interconnect/imx/imx8mn.c
+ create mode 100644 drivers/interconnect/imx/imx8mq.c
+ create mode 100644 include/dt-bindings/interconnect/imx8mm.h
+ create mode 100644 include/dt-bindings/interconnect/imx8mn.h
+ create mode 100644 include/dt-bindings/interconnect/imx8mq.h
+
 -- 
 2.17.1
 
