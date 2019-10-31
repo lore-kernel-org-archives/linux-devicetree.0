@@ -2,151 +2,93 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81661CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 17:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A469CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 17:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E43320873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 17:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB08B20873
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 17:14:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EagMqH3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbfJaRJc (ORCPT
+        id S1728791AbfJaROT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:09:32 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:35702 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728474AbfJaRJc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:09:32 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 31 Oct 2019 13:14:19 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:56589 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728547AbfJaROT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 13:14:19 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id E1E9E634C87;
-        Thu, 31 Oct 2019 19:08:38 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iQDw5-0001nA-UE; Thu, 31 Oct 2019 19:08:37 +0200
-Date:   Thu, 31 Oct 2019 19:08:37 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191031170837.GN6253@valkosipuli.retiisi.org.uk>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
- <20191031131538.GA9170@pendragon.ideasonboard.com>
- <20191031134512.GB24273@mani>
- <20191031141141.GD5018@pendragon.ideasonboard.com>
- <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
- <20191031165444.GE5018@pendragon.ideasonboard.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 7B49622EE3;
+        Thu, 31 Oct 2019 18:14:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1572542056;
+        bh=H+8psUup3ZCDa9zLbaL2GibnjLdJl/ZYLNn90edDLYo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EagMqH3WE92hn7Nn173jsO1ZzBo0UCnH8fjglgONoeTflWtmWz/SIStEYP/EOodtA
+         keflHhOOzIIxga3jfQPyIwWk3H5m0wX+rDbpcp0PJuqtdXDzLUHUPvNHvFVrRauzv9
+         PYi7RsbsJ897hu8dpHWzpV9mZzxy7gbnIQewzqig=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031165444.GE5018@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 31 Oct 2019 18:14:16 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] dt-bindings: net: phy: Add support for AT803X
+In-Reply-To: <b2c1988e-ffa7-ca13-081f-3d7f18c31233@gmail.com>
+References: <20191030224251.21578-1-michael@walle.cc>
+ <20191030224251.21578-3-michael@walle.cc> <20191030231706.GG10555@lunn.ch>
+ <9C1BD4CD-DB02-40CA-940E-3F5579BAE5F4@walle.cc>
+ <b2c1988e-ffa7-ca13-081f-3d7f18c31233@gmail.com>
+Message-ID: <d68a8bef6f7d5193e7d373311c8045d7@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.2.3
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Thu, Oct 31, 2019 at 06:54:44PM +0200, Laurent Pinchart wrote:
-> Hi Sakari,
+Am 2019-10-31 17:45, schrieb Florian Fainelli:
+> On 10/30/19 5:14 PM, Michael Walle wrote:
+>>> So we can later add atheros,rgmii-io-2v5. That might need a regulator
+>>> as well. Maybe add that 2.5V is currently not supported.
+>> 
+>> There is no special setting for the 2.5V mode. This is how it works: 
+>> there is one voltage pad for the RGMII interface. Either you connect 
+>> this pad to a 2.5V voltage or you leave it open (well you would 
+>> connect some decoupling Cs). If you leave it open the internal LDO, 
+>> which seems to be enabled in any case takes over, supplying 1.5V. then 
+>> there is a bit in the debug register which can switch the internal LDO 
+>> to 1.8V. So if you'll use 2.5V the bit is irrelevant.
+>> 
+>> Like I said maybe a "rgmii-io-microvolts" is a better property and 
+>> only in the 1800000 setting would turn on this bit. but then both 
+>> other setting would be a noop.
 > 
-> On Thu, Oct 31, 2019 at 04:28:17PM +0200, Sakari Ailus wrote:
-> > On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
-> > > On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
-> > >> On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
-> > >>> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
-> > >>>> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
-> > >>>> add MAINTAINERS entry for the binding and driver.
-> > >>>> 
-> > >>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >>>> ---
-> > >>>>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
-> > >>>>  MAINTAINERS                                   |  8 ++
-> > >>>>  2 files changed, 102 insertions(+)
-> > >>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >>>> 
-> > >>>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >>>> new file mode 100644
-> > >>>> index 000000000000..c04ec2203268
-> > >>>> --- /dev/null
-> > >>>> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >>>> @@ -0,0 +1,94 @@
-> > >>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > >>>> +%YAML 1.2
-> > >>>> +---
-> > >>>> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
-> > >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > >>>> +
-> > >>>> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> > >>>> +
-> > >>>> +maintainers:
-> > >>>> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >>>> +
-> > >>>> +description: |-
-> > >>>> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> > >>>> +  sensor with square pixel array and 1.58 M effective pixels. This chip
-> > >>>> +  features a global shutter with variable charge-integration time. It is
-> > >>>> +  programmable through I2C and 4-wire interfaces. The sensor output is
-> > >>>> +  available via CSI-2 serial data output (1 Lane).
-> > >>>> +
-> > >>>> +properties:
-> > >>>> +  compatible:
-> > >>>> +    const: sony,imx296
-> > >>>> +
-> > >>>> +  reg:
-> > >>>> +    maxItems: 1
-> > >>>> +
-> > >>>> +  clocks:
-> > >>>> +    maxItems: 1
-> > >>>> +
-> > >>>> +  clock-names:
-> > >>>> +    description:
-> > >>>> +      Input clock for the sensor.
-> > >>>> +    items:
-> > >>>> +      - const: mclk
-> > >>> 
-> > >>> The pin is named INCK, let's name the clock accordingly.
-> > >> 
-> > >> Okay, I thought generic names are preferred here!
-> > >>  
-> > >>>> +  clock-frequency:
-> > >>>> +    description:
-> > >>>> +      Frequency of the mclk clock in Hertz.
-> > >>> 
-> > >>> This shouldn't be needed, you can retrieve the clock frequency at
-> > >>> runtime from the clock source.
-> > >> 
-> > >> Unless the clock source is a fixed one! What if the clock source comes from
-> > >> SoC? We need to set the rate, right?
-> > > 
-> > > In that case, if you want to hardcode the clock in DT, the preferred way
-> > > is to use the assigned-clock-rates property. Otherwise, if the driver
-> > > requires a specific clock frequency, it's better to hardcode it in the
-> > > driver itself. In this specific case, I think assigned-clock-rates is
-> > > best as the device can support three different clock frequencies.
-> > 
-> > Just note that if ACPI support is added to the sensor driver, you'll need
-> > the clock-frequency property again, for that's the only way how the driver
-> > will get the clock frequency.
-> 
-> Why is so ? Why can't we implement of assigned-clock-rates for ACPI ?
+> That would align with the regulator subsystem units, but maybe you
+> should have the PHY driver be a regulator provider for itself so you 
+> can
+> chose wether you want to operate at 1.5V or 1.8V, or you have an
+> external regulator providing I/O supplies. That would make the whole
+> thing consistent from the driver's perspective and would not 
+> necessarily
+> be too far fetched from a HW description perspective?
 
-ACPI doesn't deal with clocks as such. So there's also no ACPI defined way
-to access clocks specifically, including the frequency --- instead the
-clock is controlled by an AML methods which implement power on and off
-sequences for the device.
+Sounds good. But again, I'm not too familiar with that. Could you give 
+an
+example how the device tree would look like then? Maybe that way I can 
+work
+myself through that regulator stuff.
 
 -- 
-Sakari Ailus
+michael
