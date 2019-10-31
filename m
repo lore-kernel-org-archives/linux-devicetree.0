@@ -2,158 +2,203 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F03CCA9ECE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9855ECA9EC3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F78320873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E95220862
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z82auzUS"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="r19RbJrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfJaIBF (ORCPT
+        id S1726995AbfJaIfP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:01:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35736 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfJaIBF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 04:01:05 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9V80tYr099287;
-        Thu, 31 Oct 2019 03:00:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572508855;
-        bh=TKe46EoF1J60ShuFHgR4qomu3QEwz48sNCBTYx/91/g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Z82auzUS36CE6SDIajfIV5GVqXyvm0MdUM2vZQwy7QPNnOg7JRHukjfaOarY/WBY5
-         iQh3/UuGeO55Qlkz/v23GMqgbe4oBFuaJa/fnJt3sBs+p6ipEwo9jCN1YENffpxO+S
-         zKUZkRnJQ2yT2AORtx6k2wFA686JgUYWYe1YRkys=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9V80sEM067010
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 31 Oct 2019 03:00:55 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
- Oct 2019 03:00:54 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 31 Oct 2019 03:00:54 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9V80pDA057797;
-        Thu, 31 Oct 2019 03:00:52 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
- <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
-Date:   Thu, 31 Oct 2019 10:01:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 04:35:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36259 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfJaIfO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 04:35:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c22so4935066wmd.1
+        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 01:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rmDq6FxRuUYkoax7fknWg9lZtSi88FQnuHiD1s4eg5U=;
+        b=r19RbJrrR3TTQRFvNVgH7muc0VuAYAy6rKwAenBj+MBaMLmAwvooeA4uJPujOZH/3f
+         Z38+un06J7GpZ7qzlIBluqhhNCKQaWpQMA676w27Uq3/NB3ccSjBROSFDlaPHO1d4VHG
+         IJrmYs9psQzlLCLW1tNvWUHfZ5FD3R+nqfWbEJQWVUHNzGo1biYTUC47PS4wDJYYoNdB
+         efvLI/52efMQGN2fhxcU3VXQUIWQIzCIuhCef1hEsbPzN6iWNVoVX7W4Rx1VirV8VhAT
+         C6K1MLxvnxYyF2hCKEzWrb24APK5ufdQEoK8a7DMjJzeFDQQmPGQ5GSzPZ/glg65NJDL
+         kEJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rmDq6FxRuUYkoax7fknWg9lZtSi88FQnuHiD1s4eg5U=;
+        b=K88IPkCZRWi4D/QfNQPAIt00W18HQ7ZB4OgbupSg/nfDsC6izNDCcuORN84IqHCiXN
+         6ZExANUQwEE5f8+j5g/I+mq6A/QqMFDf2itCl9q0OQhcZ44iICPXZC+ogHAyl+4j8JNN
+         BToQUfXjw/WA077nUs0QtfSHOCNL3KdmwMvByRhS5InegcafWohODa8vye5oI92oFQsp
+         0xbLeyaQ/RZySu0JTICkrMLDkOZi9g0Oig+zZ5Nioq61zM20e9OkaCfc2598TukkwSGJ
+         cQQPoTjxwbDFTYJ3di5PncIdgUWa3QQ6QS9rbINUUjYm9ls6GZhdqg9ceD6p6VGqKWLa
+         vRIQ==
+X-Gm-Message-State: APjAAAU320I2MHQBjSikLZH2QEliDaYHqDAn2IO0+ce+IlkR5hIhds8X
+        cQhoFtASiJh6KemW0nyDbxTCWA==
+X-Google-Smtp-Source: APXvYqzFt/7CmZZG28e813dIiqfXPdkh/FrOn1ZW0fYjE3EhnPpwhz4KlImOvd6t8BDPMhbuXOGzHQ==
+X-Received: by 2002:a1c:3b44:: with SMTP id i65mr3744553wma.1.1572510912455;
+        Thu, 31 Oct 2019 01:35:12 -0700 (PDT)
+Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
+        by smtp.gmail.com with ESMTPSA id 11sm3233576wmb.34.2019.10.31.01.35.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 01:35:12 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 09:35:10 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, bhelgaas@google.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 4/5] dt-bindings: net: document loongson.pci-gmac
+Message-ID: <20191031083509.GA30739@netronome.com>
+References: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
+ <20191030135347.3636-5-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030135347.3636-5-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Jiaxun,
 
+thanks for your patch.
 
-On 30/10/2019 20.49, Rob Herring wrote:
-> On Wed, Oct 30, 2019 at 9:30 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->>
->>
->> On 30/10/2019 16.17, Mark Brown wrote:
->>> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
->>>> On 30/10/2019 15.12, Rob Herring wrote:
->>>
->>>>> Why can't we just add a shared flag like we have for interrupts?
->>>>> Effectively, we have that for resets too, it's just hardcoded in the
->>>>> the drivers.
->>>
->>>> This would be kind of the same thing what the
->>>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
->>>> fixed-regulators afaik.
->>>
->>> The theory with that was that any usage of this would need the
->>> higher level code using the GPIO to cooperate so they didn't step
->>> on each other's toes so the GPIO code should just punt to it.
->>
->> But from the client driver point of view a GPIO is still GPIO and if the
->> components are unrelated then it is hard to patch things together from
->> the top.
+On Wed, Oct 30, 2019 at 09:53:46PM +0800, Jiaxun Yang wrote:
+> This binding will provide extra information for PCI enabled
+> device.
 > 
-> You can't escape a driver being aware. If a driver depends on that
-> GPIO to actually be set to states the driver says, then it can't be
-> guaranteed to work. For example, maybe the driver assumes the device
-> is in reset state after toggling reset and doesn't work if not in
-> reset state. The driver has to be aware no matter what you do in DT.
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-That's true for some device, but it is also true that some can not
-tolerate being reset without them knowing it.
+Please verify the bindings using dtbs_check as described in
+Documentation/devicetree/writing-schema.rst
 
-If all users of the shared GPIO have full control over it then they can
-just toggle it whatever way they want. How would a regulator, codec,
-amplifier would negotiate on what to do with the shared GPIO?
+> ---
+>  .../net/wireless/loongson,pci-gmac.yaml       | 71 +++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+> new file mode 100644
+> index 000000000000..5f764bd46735
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/loongson,pci-gmac.yaml
+> @@ -0,0 +1,71 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/allwinner,sun7i-a20-gmac.yaml#
 
-Another not uncommon setup is when the two components needs different level:
-C1: ENABLE is high active
-C2: RESET is high active
+The id does not match the filename of the schema.
 
-To enable C1, the GPIO should be high. To enable C2 the GPIO must be low.
-In the board one of the branch of the shared GPIO needs (and have) a
-logic inverter.
+i.e. the above should be:
 
-If they both control the same GPIO then they must have requested it with
-different GPIO_ACTIVE_ since the drivers are written according to chip
-spec, so C1 sets the GPIO to 1, C2 sets it to 0, the inversion for one
-of them must happen in gpio core, right?
+	$id: http://devicetree.org/schemas/net/wireless/loongson,pci-gmac.yaml#
 
-It should be possible to add pass-through mode for gpio-shared so that
-all requests would propagate to the root GPIO if that's what needed for
-some setups.
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson PCI GMAC Device Tree Bindings
+> +
+> +allOf:
+> +  - $ref: "snps,dwmac.yaml#"
 
-That way the gpio-shared would nicely handle the GPIO inversions, would
-be able to handle cases to avoid unwanted reset/enable of components or
-allow components to be ninja-reset.
+snps,dwmac.yaml# is in the parent directory relative to loongson,pci-gmac.yaml.
+So I think the above needs to be:
 
-I think it would be possible to add gpiod_is_shared(struct gpio_desc
-*desc) so users can check if the GPIO is shared - it would only return
-true if the gpio-shared is not in pass-through mode so they can know
-that the state they see on their gpio desc is not necessary matching
-with reality.
-Probably another gpiod_shared_get_root_value() to fetch the root's state?
+	$ref: "../snps,dwmac.yaml#"
 
-I intentionally not returning that in the driver as clients might skip a
-gpio_set_value() seeing that the GPIO line is already in a state they
-would want it, but that would not register their needs for the level.
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: loongson,pci-gmac
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 3
+> +    items:
+> +      - description: Combined signal for various interrupt events
+> +      - description: The interrupt to manage the remote wake-up packet detection
+> +      - description: The interrupt that occurs when Rx exits the LPI state
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 3
+> +    items:
+> +      - const: macirq
+> +      - const: eth_wake_irq
+> +      - const: eth_lpi
+> +
+> +  clocks:
+> +    items:
+> +      - description: GMAC main clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: stmmaceth
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-names
+> +  - clocks
+> +  - clock-names
+> +  - phy-mode
+> +
+> +examples:
+> +  - |
+> +    gmac: ethernet@ {
 
-- Péter
+I would have expected a bus address here, f.e.:
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+	gmac: ethernet@0x00001800
+
+> +        compatible = "loongson,pci-irq";
+> +        reg = <0x00001800 0 0 0 0>;
+
+I think there is one to many cell in the above, perhaps it should be.
+
+	reg = <0x00001800 0 0 0>;
+
+Also, I would expect the registers to be wider than 0, i.e. no registers.
+
+`
+> +        interrupts = <12>, <13>;
+> +        interrupt-names = "macirq", "eth_lpi";
+> +        clocks =  <&clk_pch_gmac>;
+> +        clock-names = "stmmaceth";
+> +        phy-mode = "rgmii";
+> +    };
+> +
+> +# FIXME: We should set it, but it would report all the generic
+> +# properties as additional properties.
+> +# additionalProperties: false
+> +
+> +...
+> -- 
+> 2.23.0
+> 
