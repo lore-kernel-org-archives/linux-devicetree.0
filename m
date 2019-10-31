@@ -2,101 +2,145 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CC4CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C194CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51E020873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C33C20873
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbfJaOZS (ORCPT
+        id S1728002AbfJaO3L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:25:18 -0400
-Received: from muru.com ([72.249.23.125]:40346 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfJaOZR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:25:17 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id AC50F8120;
-        Thu, 31 Oct 2019 14:25:51 +0000 (UTC)
-Date:   Thu, 31 Oct 2019 07:25:13 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Benoit Parrot <bparrot@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch 1/3] ARM: dts: am43xx: add support for clkout1 clock
-Message-ID: <20191031142513.GB5610@atomide.com>
-References: <20191016184954.14048-1-bparrot@ti.com>
- <20191016184954.14048-2-bparrot@ti.com>
- <20191022154816.GO5610@atomide.com>
- <20191022162134.fpawonjdjvd5kxza@ti.com>
- <586dcabb-0400-50d6-5488-16bddc059286@ti.com>
- <20191022165516.GE5610@atomide.com>
- <20191023155657.GL5610@atomide.com>
- <20191030195946.ouexmis632nb7lqj@ti.com>
- <39b79438-ad82-0840-b2a5-36856d0ac520@ti.com>
+        Thu, 31 Oct 2019 10:29:11 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:34512 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727742AbfJaO3L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 10:29:11 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id AF5C9634C87;
+        Thu, 31 Oct 2019 16:28:18 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1iQBQv-0001lR-Oc; Thu, 31 Oct 2019 16:28:17 +0200
+Date:   Thu, 31 Oct 2019 16:28:17 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191031131538.GA9170@pendragon.ideasonboard.com>
+ <20191031134512.GB24273@mani>
+ <20191031141141.GD5018@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <39b79438-ad82-0840-b2a5-36856d0ac520@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191031141141.GD5018@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [191031 14:07]:
-> On 30/10/2019 21:59, Benoit Parrot wrote:
-> > Tony Lindgren <tony@atomide.com> wrote on Wed [2019-Oct-23 08:56:57 -0700]:
-> > > Hmm maybe in this case just doing this is enough:
+Hi Laurent,
+
+On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
+> Hi Mani,
+> 
+> On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
+> > > On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> > >> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> > >> add MAINTAINERS entry for the binding and driver.
+> > >> 
+> > >> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > >> ---
+> > >>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> > >>  MAINTAINERS                                   |  8 ++
+> > >>  2 files changed, 102 insertions(+)
+> > >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > >> 
+> > >> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > >> new file mode 100644
+> > >> index 000000000000..c04ec2203268
+> > >> --- /dev/null
+> > >> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > >> @@ -0,0 +1,94 @@
+> > >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > >> +%YAML 1.2
+> > >> +---
+> > >> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> > >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > >> +
+> > >> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> > >> +
+> > >> +maintainers:
+> > >> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > >> +
+> > >> +description: |-
+> > >> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> > >> +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> > >> +  features a global shutter with variable charge-integration time. It is
+> > >> +  programmable through I2C and 4-wire interfaces. The sensor output is
+> > >> +  available via CSI-2 serial data output (1 Lane).
+> > >> +
+> > >> +properties:
+> > >> +  compatible:
+> > >> +    const: sony,imx296
+> > >> +
+> > >> +  reg:
+> > >> +    maxItems: 1
+> > >> +
+> > >> +  clocks:
+> > >> +    maxItems: 1
+> > >> +
+> > >> +  clock-names:
+> > >> +    description:
+> > >> +      Input clock for the sensor.
+> > >> +    items:
+> > >> +      - const: mclk
 > > > 
-> > > clkout1_osc_div_ck: clock@4100 {
-> > > 	...
-> > > }
+> > > The pin is named INCK, let's name the clock accordingly.
 > > 
-> > But then we would end up with 6 clock node with the same name "clock@4100",
-> > doesn't pose a problem somewhere?
+> > Okay, I thought generic names are preferred here!
+> >  
+> > >> +  clock-frequency:
+> > >> +    description:
+> > >> +      Frequency of the mclk clock in Hertz.
+> > > 
+> > > This shouldn't be needed, you can retrieve the clock frequency at
+> > > runtime from the clock source.
+> > 
+> > Unless the clock source is a fixed one! What if the clock source comes from
+> > SoC? We need to set the rate, right?
 > 
-> Yeah, clk core would not know which one to use then.
+> In that case, if you want to hardcode the clock in DT, the preferred way
+> is to use the assigned-clock-rates property. Otherwise, if the driver
+> requires a specific clock frequency, it's better to hardcode it in the
+> driver itself. In this specific case, I think assigned-clock-rates is
+> best as the device can support three different clock frequencies.
 
-So we have two issues with the non-standard devicetree use
-for omap clocks:
+Just note that if ACPI support is added to the sensor driver, you'll need
+the clock-frequency property again, for that's the only way how the driver
+will get the clock frequency.
 
-1. Multiple clock nodes with the same reg property
+This is certainly not something that has to be taken into account in DT
+bindings, but in any case it'll add some lines of code in the driver which
+are not very useful.
 
-This we sorted out for the clkctrl binding, but we still
-have other clocks with this issue.
-
-I guess some of them can be now removed if they are just
-legacy clkctrl clocks.
-
-For the rest we could maybe group them under a node with
-just one reg property?
-
-The clocks could just look up the reg property from parent
-in this case.
-
-2. Dependency to using custom clock node names
-
-This can be sorted out by adding custom compatibles to
-the parent node for both clkctrl clock manger nodes and
-for the clocks grouped in step #1 above I think.
-
-> > > Or do all the TI clocks we have have a dependency to the
-> > > node naming?
-> 
-> This is a feature of clock core. Clock parents need to have distinct names,
-> otherwise it won't work.
-
-With steps #1 and #2 above I think this issue would
-also disappear, the clock framework naming could be like
-what we already use for the clkctrl clocks.
-
-Regards,
-
-Tony
-
+-- 
+Sakari Ailus
