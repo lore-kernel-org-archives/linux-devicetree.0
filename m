@@ -2,116 +2,54 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1E1C47E49
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E09CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920B72083E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:06:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+P6rpmY"
+	by mail.kernel.org (Postfix) with ESMTP id D54B32086D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfJaPGI (ORCPT
+        id S1727779AbfJaPgq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:06:08 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43478 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727630AbfJaPGH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 11:06:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 3so4548735pfb.10;
-        Thu, 31 Oct 2019 08:06:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=aQQdueZH/eKXSKk+PwrJBs8Uz0zrwt/H/dSmnbFJlc8=;
-        b=c+P6rpmYISPGDC5K126fVe/cpTMdcs//Xhfu5cAl4eXSuW9R50ESGxqoiDedHVRwg7
-         GPjnL8QqPOC9GoCNhsK7vicUBtBf70Ct2JmKb0Yt76jCYt6rkL52gthZgoFMU6Vexrp6
-         UgbxYmyBT5x/HDYdE7cYgPIcp9c+S2gcsPhSR/lGu8Pns1Y8DW7zOo2GVb+b33tEA/Zy
-         ZH3t4biqyJUEkBwmr3IbfrPwbelJHBxTTRy3r7TZGRERquD1yBf/Mk4Yfy/fBOSkkrls
-         6naR7Jxlrez53JzIfU5+e9RN0pqAwfxGtX0sRSLOAtivpOxHKXWnNaPBwez7R6lX0eeX
-         M5+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=aQQdueZH/eKXSKk+PwrJBs8Uz0zrwt/H/dSmnbFJlc8=;
-        b=NlkUFkYYYgARkoppglpDh6g58hfprShh6VGDEuBUdvifCRd0xCh5ACFO6cWHGve4wG
-         uFjF4NyFbLDEOpwmdlh3cBnToU+8CZ86cg/YwpGFQo79NQi8nU0JgTbY1WYH+vtk2ziz
-         laefj+XaHomUNpxSepn+1R6PvsNkKPCZmVK45HjS3AIHeRq1ZXM4Qmr9cWIs6Jl+9AXk
-         yOIroMlS4xl7Ygi809Gi1CMSMY24kt/DGZNI8aisAW2QL5vKhpwJnQlHY4+/Mmrh7uDf
-         UyZWffAe/T2aL80Tm4CZcfbrBZOk9fOVQs3k+vo+XZP3lbTs+p9w9oAgSxH6vWKx+cvU
-         Tidg==
-X-Gm-Message-State: APjAAAVwhVtHwwjHZPLsfsoFA5qLasnfXl4yBU9+3InHaZYVx2sfoo6X
-        FWHbhLNmgSlWR7ybnDKbbLe7OHyTY3TtaT8i5WY=
-X-Google-Smtp-Source: APXvYqwmDbdtPu/i1FNIN9/w6Ny4clnYWdl5KUnedpMAFwvmLGJ0nDRYLFLdXLbFnKlr4ZeEwM25w2PVaxL94BmDAa0=
-X-Received: by 2002:a17:90a:f48f:: with SMTP id bx15mr8199576pjb.115.1572534366617;
- Thu, 31 Oct 2019 08:06:06 -0700 (PDT)
+        Thu, 31 Oct 2019 11:36:46 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38990 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728308AbfJaPgq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:36:46 -0400
+Received: from dhcp-64-28.ens-lyon.fr ([140.77.64.28] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iQCV4-000698-Qw; Thu, 31 Oct 2019 16:36:38 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Andy Yan <andy.yan@rock-chips.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: Add doc for Firefly ROC-RK3308-CC board
+Date:   Thu, 31 Oct 2019 16:36:37 +0100
+Message-ID: <314513738.FDhnDVbnjr@phil>
+In-Reply-To: <20191030072648.29738-1-andy.yan@rock-chips.com>
+References: <20191030072648.29738-1-andy.yan@rock-chips.com>
 MIME-Version: 1.0
-References: <1572185379-21537-1-git-send-email-akinobu.mita@gmail.com>
- <1572185379-21537-2-git-send-email-akinobu.mita@gmail.com>
- <20191030142417.GA8919@bogus> <CAC5umyhZ+w9b7M=gWGDynoMerZ7FiP3+U_RXyQ2P_p7cuLVRgA@mail.gmail.com>
- <CAL_JsqKa=936WNhTDQ0S9bW0fYPMHQXSwutjnQs0W9vP8h7sow@mail.gmail.com>
-In-Reply-To: <CAL_JsqKa=936WNhTDQ0S9bW0fYPMHQXSwutjnQs0W9vP8h7sow@mail.gmail.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Fri, 1 Nov 2019 00:05:55 +0900
-Message-ID: <CAC5umyh0_2MN4=uin91sYVWNxvF1uwg_bEWME0XKurTiV08q0w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add leds-meter binding
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn@kryo.se>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-2019=E5=B9=B410=E6=9C=8831=E6=97=A5(=E6=9C=A8) 3:29 Rob Herring <robh@kerne=
-l.org>:
->
-> On Wed, Oct 30, 2019 at 10:27 AM Akinobu Mita <akinobu.mita@gmail.com> wr=
-ote:
-> >
-> > 2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 23:24 Rob Herring <robh@=
-kernel.org>:
-> > >
-> > > On Sun, Oct 27, 2019 at 11:09:38PM +0900, Akinobu Mita wrote:
-> > > > Add DT binding for generic LED level meter which consists of multip=
-le LED
-> > > > devices by different drivers.
-> > >
-> > > Do you have some pointers to actual h/w?
-> >
-> > This doesn't require a specific hardware.
->
-> But I do for my understanding. If I don't understand it, then my
-> default answer is: no, we don't do "generic" bindings because the h/w
-> is never generic.
+Am Mittwoch, 30. Oktober 2019, 08:26:48 CET schrieb Andy Yan:
+> Add compatible for Firefly ROC-RK3308-CC board.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-For example, https://www.switch-science.com/catalog/2677/
-The LEDs on this board are controlled by NXP PCA9956B.
-The driver is under development by Bjorn Andersson.
+applied both patches for 5.5, with some small fixes.
 
-But the LED level meter doesn't depend on the actual LED controller driver,
-so I call it "generic" LED level meter driver.
+Thanks
+Heiko
 
-> > If there are more than two LEDs that can be described by devicetree,
-> > it can be an LED level meter by bundling them up with this binding.
->
-> Depends on the physical locations too? If you just want to group any
-> random LEDs, then do that from userspace because it's more flexible.
 
-Yes.  I assume that the level meter's LEDs are mounted in a line, or matrix=
-.
-I plan to rename it to 'leds-array' because 'leds-meter' is unclear.
