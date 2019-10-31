@@ -2,223 +2,177 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD034CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20446C47E49
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BE42080F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA676216F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CH4+kRM7"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="lyAxphNj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfJaTKb (ORCPT
+        id S1727549AbfJaT6T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:10:31 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53366 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbfJaTKb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 15:10:31 -0400
-Received: by mail-wm1-f65.google.com with SMTP id n7so7117129wmc.3
-        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 12:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Jmn2P1ld/NeoSnxg7DOmQ98R2sPr7Eaq2YhqfnjLpSs=;
-        b=CH4+kRM7vdK1gdk6cFx9eWuWLEa5CnW1s/j51KQGHPAntwlwEXDzPQAaHQzhVhtT3b
-         SnoQuscBwdZxOHLdTLp+VvZvGQI/nwKGRdb9tBUfc02zP4vWmS1Nn9SVrzdzs96hDP7r
-         UXWe5pN0ERUBiFgUL5KU/JGcauynTOKyb3JLxwFuylDyq/mfxQLHsdoZ/BMK2yuaESij
-         E1x4gYrPcmtwu8TTPFDu7FkaXXu7jAuFqSmXOswa3a8p04UX8YO0toA8AAumCVDK8Tql
-         UAZKSbZ7WDBoEwyaD80rA5/KoMAF6MHq2eyEyK6xT4acDJf1P/zvlDjRLvm6EWB6qXpn
-         P1qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Jmn2P1ld/NeoSnxg7DOmQ98R2sPr7Eaq2YhqfnjLpSs=;
-        b=DQGhBFv9aplNXkcgYSOrf0d3S0udBrQUM75fMRqhTo1AUhF0nis14Jje27S9fAxAkG
-         oxEmU32yvy2q4z2rff1AjlTVHgvkcNZ8m0GhTNbKvPA/Gt98tIrY0p6z612a52JnLRJh
-         0a4JaIMZx/ODYf1QG11RSeAuh8H98mZE7q5T5QGK6TfTD4z8pHil75LDQHXguEYvlHF0
-         +VBMvhKpGZRkAvAlyBIUmT3UwgzUhgYjRlmERTu+DiSUN+TGpIyJy9Ku53DfSPHl2FqL
-         hQTCzF3axIoOVdgn3VcMs+PUUgX/hab/2sqqkW/kl9XkSyAwXH+qr8goDZOHisuTwFsJ
-         VwOw==
-X-Gm-Message-State: APjAAAUSNaqeITj0tJMsALpRWZZmBZyCKAAKmI7MPIuxc48VV7Z95CNT
-        8ZbPNiPrvKN1iKrytfUut68Rksyh9qruQkD0zPc=
-X-Google-Smtp-Source: APXvYqzD6tyzrMQtB5mYa7a1zAvNnZlKCvaIwiMX0TlT5De5CqiNFj8/i0WW76jPnlanpmKm1dLU9j4TzA2JBtH6+5c=
-X-Received: by 2002:a1c:a512:: with SMTP id o18mr6335335wme.4.1572549027764;
- Thu, 31 Oct 2019 12:10:27 -0700 (PDT)
+        Thu, 31 Oct 2019 15:58:19 -0400
+Received: from onstation.org ([52.200.56.107]:60654 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726741AbfJaT6T (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 15:58:19 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 0726C3E94C;
+        Thu, 31 Oct 2019 19:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1572551897;
+        bh=lpAg37b5Vwth+ogtYsoov8MBcpIvTZL2Kf6dlzNRaTo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lyAxphNj+mdKM6qCi9armpKi1a1z4sQuWKvj0HvQsWBa40E4ePsTlpPWGDAgRNoUW
+         w+4svYFMom/hJ6xjuQ7cuKh6wPMgcslVGLdqK6/VX2/bbg0YXgMuWgrtUx+JXoFcgX
+         meS7SUZA2LfJVHB7QJ7dR2Apj2lE5H0yVmDP0jwY=
+Date:   Thu, 31 Oct 2019 15:58:16 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     kholk11@gmail.com
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        ccross@android.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, marijns95@gmail.com,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/5] arm64: dts: qcom: Add configuration for PM8950
+ and PMI8950 peripherals
+Message-ID: <20191031195816.GA1462@onstation.org>
+References: <20191031111645.34777-1-kholk11@gmail.com>
+ <20191031111645.34777-4-kholk11@gmail.com>
 MIME-Version: 1.0
-References: <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
- <20190807115614.phm7sbyae6yajkug@flea> <CA+E=qVdh3MHMsEC9XKe5-7O8fGTHFh76WLOgVf+PZPv7c4JE9w@mail.gmail.com>
- <20190808162628.pthvy3tgf3naj76s@flea> <CA+E=qVeiWoRGn05HpMzx_5yidit4GM18tBrziW5MBo00f_-PKQ@mail.gmail.com>
- <20190812080420.saelmqb36vkelxn4@flea> <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
- <20190813053905.hu2hyi7fah2vujzz@flea> <CA+E=qVegU8M09tmbxGUaBSoueGU6PRsAtr9XWrc8V8HnCPjULg@mail.gmail.com>
- <CA+E=qVeArUV0u_17ty=HgaU35TwcBfQjSOJf0A5yM6L6+W-0Og@mail.gmail.com> <20190925110844.qfm5ris7xeze44th@gilmour>
-In-Reply-To: <20190925110844.qfm5ris7xeze44th@gilmour>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 31 Oct 2019 20:10:16 +0100
-Message-ID: <CAJiuCcfcmkb_BgDcDJziUwoZXAgLN4Bh0GGZKR3NVNRpnFhBEQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Jared D . McNeill" <jmcneill@netbsd.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Harald Geyer <harald@ccbib.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031111645.34777-4-kholk11@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Thanks for the patches. Good to see the progress!
 
-Just a remark here but the interrupt are from 152 to 155 SPI.
-But there is an offset of 32 no (remove SGI/PPI)?
-This should be from 120 to 123
+On Thu, Oct 31, 2019 at 12:16:43PM +0100, kholk11@gmail.com wrote:
+> From: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> 
+> The PM(I)8950 feature integrated peripherals like ADC, GPIO
+> controller, MPPs, PON keys and others.
+> Add them to DT files that will be imported on boards having
+> this PMIC combo (or one of them, anyways).
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/pm8950.dtsi  | 187 ++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/pmi8950.dtsi |  98 ++++++++++++++
+>  2 files changed, 285 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8950.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/pmi8950.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm8950.dtsi b/arch/arm64/boot/dts/qcom/pm8950.dtsi
+> new file mode 100644
+> index 000000000000..a349a8dd867e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/pm8950.dtsi
+> @@ -0,0 +1,187 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2019, AngeloGioacchino Del Regno <kholk11@gmail.com>
+> +
+> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
+> +#include <dt-bindings/input/linux-event-codes.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
+> +#include <dt-bindings/spmi/spmi.h>
+> +
+> +&spmi_bus {
+> +	pm8950_lsid0: pm8950@0 {
+> +		compatible = "qcom,pm8950", "qcom,spmi-pmic";
+> +		reg = <0x0 SPMI_USID>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pon@800 {
+> +			compatible = "qcom,pm8916-pon";
+> +			reg = <0x0800>;
+> +			mode-bootloader = <0x2>;
+> +			mode-recovery = <0x1>;
+> +
+> +			pwrkey {
+> +				compatible = "qcom,pm8941-pwrkey";
+> +				interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
+> +				debounce = <15625>;
+> +				bias-pull-up;
+> +				linux,code = <KEY_POWER>;
+> +			};
+> +		};
+> +
+> +		pm8950_mpps: mpps@a000 {
+> +			compatible = "qcom,pm8950-mpp", "qcom,spmi-mpp";
+> +			reg = <0xa000>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupts = <0 0xa0 0 IRQ_TYPE_NONE>,
+> +				     <0 0xa1 0 IRQ_TYPE_NONE>,
+> +				     <0 0xa2 0 IRQ_TYPE_NONE>,
+> +				     <0 0xa3 0 IRQ_TYPE_NONE>;
+> +
+> +			/* MPP_2: PA_THERM1 */
+> +			pa_therm {
+> +				pm8950_mpp2_def: pa_therm1_default {
+> +					pins = "mpp2";
+> +					function = "analog";
+> +					input-enable;
+> +					qcom,amux-route =
+> +						<PMIC_MPP_AMUX_ROUTE_CH6>;
+> +				};
+> +			};
+> +
+> +			/* MPP_4: QUIET_THERM */
+> +			case_therm {
+> +				pm8950_mpp4_def: case_therm_default {
+> +					pins = "mpp4";
+> +					function = "analog";
+> +					input-enable;
+> +					qcom,amux-route =
+> +						<PMIC_MPP_AMUX_ROUTE_CH8>;
+> +				};
+> +			};
+> +		};
+> +
+> +		pm8950_gpios: gpio@c000 {
+> +			compatible = "qcom,pm8950-gpio", "qcom,spmi-gpio";
+> +			reg = <0xc000>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
+> +				<0 0xc1 0 IRQ_TYPE_NONE>,
+> +				<0 0xc3 0 IRQ_TYPE_NONE>,
+> +				<0 0xc4 0 IRQ_TYPE_NONE>,
+> +				<0 0xc5 0 IRQ_TYPE_NONE>,
+> +				<0 0xc6 0 IRQ_TYPE_NONE>,
+> +				<0 0xc7 0 IRQ_TYPE_NONE>;
+> +		};
 
-Regards,
-Cl=C3=A9ment
+Please add gpio-ranges so that gpio-hogging will work properly. See
+commits for pm8941 and spmi-gpio that describes the problem and how
+to fix it:
 
-On Wed, 25 Sep 2019 at 13:09, Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Mon, Sep 23, 2019 at 04:55:59PM -0700, Vasily Khoruzhick wrote:
-> > On Mon, Sep 23, 2019 at 4:51 PM Vasily Khoruzhick <anarsoul@gmail.com> =
-wrote:
-> > >
-> > > On Mon, Aug 12, 2019 at 10:39 PM Maxime Ripard
-> > > <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > On Mon, Aug 12, 2019 at 11:01:51AM -0700, Vasily Khoruzhick wrote:
-> > > > > On Mon, Aug 12, 2019 at 1:04 AM Maxime Ripard <maxime.ripard@boot=
-lin.com> wrote:
-> > > > > >
-> > > > > > On Thu, Aug 08, 2019 at 12:59:07PM -0700, Vasily Khoruzhick wro=
-te:
-> > > > > > > On Thu, Aug 8, 2019 at 9:26 AM Maxime Ripard <maxime.ripard@b=
-ootlin.com> wrote:
-> > > > > > > >
-> > > > > > > > On Wed, Aug 07, 2019 at 10:36:08AM -0700, Vasily Khoruzhick=
- wrote:
-> > > > > > > > > On Wed, Aug 7, 2019 at 4:56 AM Maxime Ripard <maxime.ripa=
-rd@bootlin.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Tue, Aug 06, 2019 at 07:39:26PM -0700, Vasily Khoruz=
-hick wrote:
-> > > > > > > > > > > On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robin.mu=
-rphy@arm.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
-> > > > > > > > > > > > > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <hara=
-ld@ccbib.org> wrote:
-> > > > > > > > > > > > >>
-> > > > > > > > > > > > >> Vasily Khoruzhick writes:
-> > > > > > > > > > > > >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <ro=
-bin.murphy@arm.com> wrote:
-> > > > > > > > > > > > >>>>
-> > > > > > > > > > > > >>>> On 06/08/2019 15:01, Vasily Khoruzhick wrote:
-> > > > > > > > > > > > >>>>> Looks like PMU in A64 is broken, it generates=
- no interrupts at all and
-> > > > > > > > > > > > >>>>> as result 'perf top' shows no events.
-> > > > > > > > > > > > >>>>
-> > > > > > > > > > > > >>>> Does something like 'perf stat sleep 1' at lea=
-st count cycles correctly?
-> > > > > > > > > > > > >>>> It could well just be that the interrupt numbe=
-rs are wrong...
-> > > > > > > > > > > > >>>
-> > > > > > > > > > > > >>> Looks like it does, at least result looks plaus=
-ible:
-> > > > > > > > > > > > >>
-> > > > > > > > > > > > >> I'm using perf stat regularly (cache benchmarks)=
- and it works fine.
-> > > > > > > > > > > > >>
-> > > > > > > > > > > > >> Unfortunately I wasn't aware that perf stat is a=
- poor test for
-> > > > > > > > > > > > >> the interrupts part of the node, when I added it=
-. So I'm not too
-> > > > > > > > > > > > >> surprised I got it wrong.
-> > > > > > > > > > > > >>
-> > > > > > > > > > > > >> However, it would be unfortunate if the node got=
- removed completely,
-> > > > > > > > > > > > >> because perf stat would not work anymore. Maybe =
-we can only remove
-> > > > > > > > > > > > >> the interrupts or just fix them even if the HW d=
-oesn't work?
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > I'm not familiar with PMU driver. Is it possible =
-to get it working
-> > > > > > > > > > > > > without interrupts?
-> > > > > > > > > > > >
-> > > > > > > > > > > > Yup - you get a grumpy message from the driver, it =
-will refuse sampling
-> > > > > > > > > > > > events (the ones which weren't working anyway), and=
- if you measure
-> > > > > > > > > > > > anything for long enough that a counter overflows y=
-ou'll get wonky
-> > > > > > > > > > > > results. But for counting hardware events over rela=
-tively short periods
-> > > > > > > > > > > > it'll still do the job.
-> > > > > > > > > > >
-> > > > > > > > > > > I tried to drop interrupts completely from the node b=
-ut 'perf top' is
-> > > > > > > > > > > still broken. Though now in different way: it complai=
-ns "cycles: PMU
-> > > > > > > > > > > Hardware doesn't support sampling/overflow-interrupts=
-. Try 'perf
-> > > > > > > > > > > stat'"
-> > > > > > > > > >
-> > > > > > > > > > I have no idea if that's the culprit, but what is the s=
-tate of the
-> > > > > > > > > > 0x09010000 register?
-> > > > > > > > >
-> > > > > > > > > What register is that and how do I check it?
-> > > > > > > >
-> > > > > > > > It's in the CPUX Configuration block, and the bits are labe=
-lled as CPU
-> > > > > > > > Debug Reset.
-> > > > > > > >
-> > > > > > > > And if you have busybox, you can use devmem.
-> > > > > > >
-> > > > > > > CPUX configuration block is at 0x01700000 according to A64 us=
-er
-> > > > > > > manual, and particular register you're interested in is at 0x=
-01700080,
-> > > > > > > its value is 0x1110110F.
-> > > > > > >
-> > > > > > > Bits 16-19 are not defined in user manual and are not set.
-> > > > > >
-> > > > > > Sorry, I somehow thought this was for the H6...
-> > > > > >
-> > > > > > I don't have any idea then :/
-> > > > >
-> > > > > OK, so what should we do? 'perf top'/'perf record' work fine if P=
-MU
-> > > > > node is dropped, but they don't work if PMU node is present (even=
- with
-> > > > > interrupts dropped). I'd prefer to have 'perf top' and 'perf reco=
-rd'
-> > > > > working instead of 'perf stat'
-> > > >
-> > > > Well, it doesn't work so we should just remove the node, and if
-> > > > someone wants it back, they should figure it out.
-> > >
-> > > Hey Maxime,
-> > >
-> > > So can you merge this patch?
-> >
-> > Added new Maxime's email to CC
->
-> Queued as a fix for 5.4, thanks!
-> Maxime
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=149a96047237574b756d872007c006acd0cc6687
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cdd3d64d843a2a4c658a182b744bfefbd021d542
+
+Please drop the interrupts property and configure this to be a
+hierarchical IRQ chip. See these two commits for more details:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ca69e2d165eb3d060cc9ad70a745e27a2cf4310b
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5f540fb4821a5444350ab3311fff60013d755d8f
+
+There is some kind of mask that you'll need to add to omit 0xc2 that
+Linus Walleij told me about before. I don't have the property handy
+right now, but can look it up later if needed.
+
+Brian
