@@ -2,151 +2,199 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51F3CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53564CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFC32087F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 15:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DE02086D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 16:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="khzDIJIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfJaP4o (ORCPT
+        id S1728428AbfJaQYS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:56:44 -0400
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:38614 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727580AbfJaP4n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:56:43 -0400
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iQCoO-0004RM-1y; Thu, 31 Oct 2019 16:56:36 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9VFuVLG025660
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Thu, 31 Oct 2019 16:56:31 +0100
-Subject: Re: [PATCH] arm64: dts: rockchip: Rework voltage supplies for
- regulators on rk3399-roc-pc
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <22b56700-3c9e-0f60-cd74-7ff24d4f1a23@fivetechno.de>
- <2490751.hSll4LLrj9@phil>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <3d9bb8bb-eb4a-1bf4-bbfb-f48da4e97083@fivetechno.de>
-Date:   Thu, 31 Oct 2019 16:56:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 31 Oct 2019 12:24:18 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:40425 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727593AbfJaQYS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 12:24:18 -0400
+Received: by mail-vs1-f66.google.com with SMTP id v10so4467514vsc.7
+        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 09:24:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yPIDo2fSmnVpiauzvpAAbaK4lF2gIAi5NghO5p90Ozs=;
+        b=khzDIJIPRAGhIdZTay7i4L5qhMiwaisFOVhQwT9VB0W5RAwk50WnAC+s9lN4QBmjet
+         S7nW7xbAJsHQj/lREQfdyhdToFzSWNsG6Nmzoa8CYnhTNFRyVJzi8KdEOAiZagzomntK
+         SvI9itLHPv9NBi04RsumdCRqAEYfHRgcDUD7Ih2vFEfb0DBwd86oieQekamm/PIJQF9y
+         uHJdXeFqkylwDT+4BlpG1idBPSeXoomT0mr64+OlZ9yH9o9FDVe7dRR20+DP/cuCTObZ
+         l71VczynWJnlq6y4ZzHfL6HNCs+XxS4+9ksqEFfqGvufglrkApqnwWLEmTLZ9QkBcYv6
+         iEmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yPIDo2fSmnVpiauzvpAAbaK4lF2gIAi5NghO5p90Ozs=;
+        b=BkxZth/V10v6IBN2Tadq9rGDnmX19zFOlCU6rb98rehfT5H1Z0cZKxtG16YeWODL5c
+         IQHX0y9qUOv914aqa1db8u/UjwJJdSeb4pBM9/PjLYRZ4dsGCla9D55Aqh6jGvK/Zu/j
+         1RUXhs6Iq5hxdk2J2QhvkmVWLIFS19wzXSMuRY6WnESq/X1af4QD+AZiE2kVePH9JZa7
+         FrK7kuGF69f1BuHDlD1sCBsY8FDeYdUP8ErZAvUe2Fejhjyk0nzaScmdFHFshJkJgWLL
+         a1WghDS886MaW0IR/Ih5diEJZIix1UPkvS40/I1Qga2bW/HaGOoNPQLpkwF9+dSlmWLk
+         kx4A==
+X-Gm-Message-State: APjAAAW5nXVvTx3WLoLasmsPzXtE9+P5JWxO8K2rgV/OrAY/GATli5T5
+        KNr0ufFp7goisLUNWEjp35/cNjNqwpLsVgMiOM064A==
+X-Google-Smtp-Source: APXvYqwALcYbrmJQuMMQV7datNl1JuMFD5T9xVx+oBGGYVorWljG30SurqydJbjDqFGCToghHd7hGUnpIqW5lZBfwrE=
+X-Received: by 2002:a05:6102:36d:: with SMTP id f13mr3268985vsa.34.1572539056794;
+ Thu, 31 Oct 2019 09:24:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2490751.hSll4LLrj9@phil>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1572537402;24615748;
-X-HE-SMSGID: 1iQCoO-0004RM-1y
+References: <cover.1571510481.git.hns@goldelico.com> <0887d84402f796d1e7361261b88ec6057fbb0065.1571510481.git.hns@goldelico.com>
+ <CAPDyKFp3EjTuCTj+HXhxf+Ssti0hW8eMDR-NrGYWDWSDmQz6Lw@mail.gmail.com> <607E3AE4-65BF-4003-86BE-C70646D53D09@goldelico.com>
+In-Reply-To: <607E3AE4-65BF-4003-86BE-C70646D53D09@goldelico.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 31 Oct 2019 17:23:40 +0100
+Message-ID: <CAPDyKFr3oh9HcExn4Sx0Cd2e0oBTsxz+L4tDvypRFP8=hQP=cg@mail.gmail.com>
+Subject: Re: [PATCH v2 04/11] mmc: host: omap_hsmmc: add code for special init
+ of wl1251 to get rid of pandora_wl1251_init_card
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        "# 4.0+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 31.10.19 um 15:24 schrieb Heiko Stuebner:
-> Am Donnerstag, 31. Oktober 2019, 14:30:06 CET schrieb Markus Reichl:
->> Correct the voltage supplies according to the board schematics
->> ROC-3399-PC-V10-A-20180804.
->> 
->> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
->> ---
->>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 30 ++++++++++---------
->>  1 file changed, 16 insertions(+), 14 deletions(-)
->> 
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
->> index e06e4163605b..def8bca7d158 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
->> @@ -142,7 +142,7 @@
->>  		regulator-boot-on;
->>  		regulator-min-microvolt = <3300000>;
->>  		regulator-max-microvolt = <3300000>;
->> -		vin-supply = <&vcc_sys>;
->> +		vin-supply = <&dc_12v>;
->>  	};
->>  
->>  	/* Actually 3 regulators (host0, 1, 2) controlled by the same gpio */
->> @@ -190,7 +190,7 @@
->>  		regulator-boot-on;
->>  		regulator-min-microvolt = <800000>;
->>  		regulator-max-microvolt = <1400000>;
->> -		vin-supply = <&vcc_sys>;
->> +		vin-supply = <&vcc3v3_sys>;
->>  	};
->>  
->>  	/* on roc-rk3399-mezzanine board */
-> 
-> This seems to be some change from somewhere else.
-> In any case I adapted that to the current dts and applied
-> the patch for 5.5. Please double-check though.
+On Wed, 30 Oct 2019 at 18:25, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> Hi Ulf,
+>
+> > Am 30.10.2019 um 16:51 schrieb Ulf Hansson <ulf.hansson@linaro.org>:
+> >
+> >> +
+> >> +               np = of_get_compatible_child(np, "ti,wl1251");
+> >> +               if (np) {
+> >> +                       /*
+> >> +                        * We have TI wl1251 attached to MMC3. Pass this information to
+> >> +                        * SDIO core because it can't be probed by normal methods.
+> >> +                        */
+> >> +
+> >> +                       dev_info(host->dev, "found wl1251\n");
+> >> +                       card->quirks |= MMC_QUIRK_NONSTD_SDIO;
+> >> +                       card->cccr.wide_bus = 1;
+> >> +                       card->cis.vendor = 0x104c;
+> >> +                       card->cis.device = 0x9066;
+> >> +                       card->cis.blksize = 512;
+> >> +                       card->cis.max_dtr = 24000000;
+> >> +                       card->ocr = 0x80;
+> >
+> > These things should really be figured out by the mmc core during SDIO
+> > card initialization itself, not via the host ops ->init_card()
+> > callback. That is just poor hack, which in the long run should go
+> > away.
+>
+> Yes, I agree.
+>
+> But I am just the poor guy who is trying to fix really broken code with
+> as low effort as possible.
 
-Yes this comes from:
+I see. Thanks for looking at this mess!
 
-"arm64: dts: rockchip: Add PCIe node on rk3399-roc-pc"
+In general, as long as we improve the code, I am happy to move forward.
 
-https://patchwork.kernel.org/patch/11215659/
+However, my main concern at this point, is to make sure we get the DT
+bindings and the DTS files updated correctly. We don't want to come
+back to this again.
 
-> 
-> Thanks
-> Heiko
-> 
-> 
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+>
+> I don't even have a significant clue what this code is exactly doing and what
+> the magic values mean. They were setup by pandora_wl1251_init_card() in the
+> same way so that I have just moved the code here and make it called in (almost)
+> the same situation.
 
-Gruß,
--- 
-Markus Reichl
+Okay!
+
+>
+> > Moreover, I think we should add a subnode to the host node in the DT,
+> > to describe the embedded SDIO card, rather than parsing the subnode
+> > for the SDIO func - as that seems wrong to me.
+>
+> You mean a second subnode?
+>
+> The wl1251 is the child node of the mmc node and describes the SDIO card.
+> We just check if it is a wl1251 or e.g. wl1837 or something else or even
+> no child.
+
+The reason why I brought this up, was because there are sometimes
+cases where an SDIO card is shared between more than one SDIO func.
+WiFi+Bluetooth for example, but if I am correct, that is not the case
+for wl1251?
+
+That said, I am happy to continue with your approach.
+
+>
+> > To add a subnode for the SDIO card, we already have a binding that I
+> > think we should extend. Please have a look at
+> > Documentation/devicetree/bindings/mmc/mmc-card.txt.
+> >
+> > If you want an example of how to implement this for your case, do a
+> > git grep "broken-hpi" in the driver/mmc/core/, I think it will tell
+> > you more of what I have in mind.
+>
+> So while I agree that it should be improved in the long run, we should
+> IMHO fix the hack first (broken since v4.9!), even if it remains a hack
+> for now. Improving this part seems to be quite independent and focussed
+> on the mmc subsystem, while the other patches involve other subsystems.
+
+I agree.
+
+>
+> Maybe should we make a REVISIT note in the code? Or add something to
+> the commit message about the idea how it should be done right?
+
+Just add a note that we should move this DT parsing of the subnode to
+the mmc core, but that we are leaving that as a future improvement.
+That's good enough. Then I can have a look as a second step, and when
+I get some time, to move this to the mmc core.
+
+However, there is one thing I would like you to add to the series. That is:
+
+In the struct omap_hsmmc_platform_data, there is an ->init_card()
+callback. Beyond the changes of this series, there is no longer any
+users of that, unless I am mistaken. Going forward, let's make sure it
+doesn't get used again, so can you please remove it!?
+
+[...]
+
+Kind regards
+Uffe
