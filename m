@@ -2,148 +2,138 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4079FCA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E88CC47E49
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEF92080F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 18:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4B82080F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 19:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="M3gty6y7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="G1Lm9dgq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbfJaS74 (ORCPT
+        id S1729558AbfJaTEh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:59:56 -0400
-Received: from mail-eopbgr70052.outbound.protection.outlook.com ([40.107.7.52]:12941
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729252AbfJaS74 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:59:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OK3zVpYD9idLJsK3ZaVezV+LWZRALT9cSwAFolZIBpwZzKThtkiGNVLKBBZiiSDhl6zs9P49Bv9jxz6D1i5Q+pLrjIDC6Ec9mPPaoB5q4uEQt16Mx/3tjiCQ533S4HE5uFtEZe7Gz/bXbmFtJF/HEufbNzyYszWzprgC1WLhLLKMOf3qYvopUzlLpcL4o8rOQ55PREi98vFD6rN+rVGmxJTqIUGJTUWgdIE6BsMbmxLXMXC4TKi+kqZsFvxVxiuRKZWvfZuXLa0tQMcrqQYtVurxzP0V1n0hfVIoexfHXsPdjf7OWFxJyPzzaFiHnBviP28awPHyKW1yzzyykAmBBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6AMLu3E8kxrU9QotbLYp1xVEQD1NbeopbsrfdAFANlA=;
- b=kqoWbJbdIkm6kZMRjCol147lBraFaemNh9YyYn6nAsLPxMk/Z35L3zyK1j7kMfboEDZUPJni81M7qksQ1su+tQ1E5ZFdfLtrm+f8d/MJ/iZj6BPxjx4fi9mCvPt0vvI4tHgr2/DWSRIGBpzQnS5cgtz7a30m5xuW2TujQ9v/S2IUXKNzXVBB/pqhd7UKXNT42a+IheEE39YLjau6jwKZ/Hfz6Bp5V0m6J5bIXWTu4gYt8Gubc+A8cg+7CkMsJQVvP2/jNSBA/dmmVZQi11Emii56MbEccpQWld740mcKSgqHV4XTM8f5cvACLgbSKG1lGwkRRyXDXmGUIvDuD4hM8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6AMLu3E8kxrU9QotbLYp1xVEQD1NbeopbsrfdAFANlA=;
- b=M3gty6y7ujEcFty170GriH6HyGEOkEcC7czWHdGJV7nzWJ1hVk29hb0avcvR5lIYdSFqz8lic/aHo5jMZQ6STCYcW+KUj1vRypDTHsfWk39d/4Fc+1pMwyk5vRAXh18bXo1VKOSmRpyC5yPxyS02RWX/K4ir9aYiE1IAcl6l+Pw=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB5038.eurprd04.prod.outlook.com (20.177.51.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.25; Thu, 31 Oct 2019 18:59:51 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3%5]) with mapi id 15.20.2387.028; Thu, 31 Oct 2019
- 18:59:51 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>
-Subject: Re: [PATCH V2 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for
- fec1
-Thread-Topic: [PATCH V2 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for
- fec1
-Thread-Index: AQHVh/j+k1XoWkwF8kWzRGGsNvXoFQ==
-Date:   Thu, 31 Oct 2019 18:59:51 +0000
-Message-ID: <VI1PR04MB70239911C3C71E0503808F85EE630@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <1571652977-4754-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b70f40ea-6da6-452e-1dd8-08d75e348262
-x-ms-traffictypediagnostic: VI1PR04MB5038:|VI1PR04MB5038:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB503832DA64F49051CBAB4DA2EE630@VI1PR04MB5038.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:983;
-x-forefront-prvs: 02070414A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(39860400002)(366004)(346002)(189003)(199004)(26005)(86362001)(99286004)(6116002)(305945005)(6506007)(66066001)(186003)(14454004)(256004)(2501003)(4326008)(7696005)(102836004)(2906002)(110136005)(54906003)(3846002)(53546011)(74316002)(7736002)(316002)(76176011)(8676002)(478600001)(91956017)(66946007)(6436002)(6246003)(64756008)(44832011)(81166006)(52536014)(33656002)(76116006)(486006)(446003)(71200400001)(81156014)(66476007)(9686003)(476003)(66446008)(8936002)(55016002)(66556008)(25786009)(71190400001)(229853002)(5660300002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5038;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cI1E9xjhXUhTimmnhaTzTugMCOV6CreyZENQM7UEjcQPv9bM4ia19l8QHvtCBbpeEFlktzM60g3TjNCoQogMGEvsc/pmlNMJzkeU+vc6cPttrdBsmi+0YFEGKfWABqLLc7sAF7OloKClVUg3RmmUbGutwecfDd+BYM2118tcZ3brUBPgdT3y0nZuth/HvIZcSf/sWx5jEJNj8af4TwbrmklHiWEL1qbu2VePDzy1gvpdf6CGz70e2gz0cVmwGZXUaFIPX+fkvAyRUxKXz28JmpEHNWPUhA+p3RrgL2Ia89acIIxJtd4PFMlH2TXp/vW4VHaIJk9YeP5cNaKnZEtMcSU2hT5VtrgK49K5ASrWVx5x8MdgVLTz/+dj3cePVad0R2Iw/RDO9u8jNDj8S2mGF1jGxXkqPMMUtN4uiEzTfj5GqLwdIq0cpIIHTyZBLY2+
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 31 Oct 2019 15:04:37 -0400
+Received: from gateway23.websitewelcome.com ([192.185.49.60]:30165 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729312AbfJaTEh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 15:04:37 -0400
+X-Greylist: delayed 1366 seconds by postgrey-1.27 at vger.kernel.org; Thu, 31 Oct 2019 15:04:36 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 649C8A4D9
+        for <devicetree@vger.kernel.org>; Thu, 31 Oct 2019 13:41:50 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id QFOIinn8XOdBHQFOIi5lD2; Thu, 31 Oct 2019 13:41:50 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=u9eu9WCQNyseKzoI8Ryx9iIExl/72+uskdYexjehiNk=; b=G1Lm9dgqzDhBZfmncbb1NY3Nkf
+        UrAJyZ8rwlAaCbFyKhYobMYu310kkHTIgLf60Ypi+azzXJtNlo+vYhqYqBsEMPz+Un1+bezqAGkMQ
+        09OBEFwIoEizfwAnAcDvYmztTgr1xOaYVY4cSgKMdVRw3nvmZyV/d76dU4d81GneZ6QtTd0WW6dtp
+        blKJNAA6Pbv4lvSbq3phZT0DJWyNVP/BGLcwNE4eXTiP3ELlFr6k19M1M2/xCadkal2aAUxi/k0HC
+        BAQTqISdltabD0qmLX3J1jD8XC6yaXJWrpGNmPvP8DUjFYmxXyS9wBuORKM+BVY4Vy8mmLtAEWpDW
+        DDUzMjSg==;
+Received: from [191.31.195.127] (port=35710 helo=castello.bz.toradex.local)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iQFOH-0035gz-3t; Thu, 31 Oct 2019 15:41:49 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v4 2/4] dt-bindings: power: supply: Max17040: Add low level SOC alert threshold
+Date:   Thu, 31 Oct 2019 15:41:32 -0300
+Message-Id: <20191031184134.30621-3-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191031184134.30621-1-matheus@castello.eng.br>
+References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
+ <20191031184134.30621-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b70f40ea-6da6-452e-1dd8-08d75e348262
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 18:59:51.4067
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Gzy1hvxwGphpPab87wVwFJKvQZIa0R8mRyR47HU12I9+2I8Gmfm2dhAj+o8Polr38mdUZNVP9jR4Yf/7D1QojQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5038
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.195.127
+X-Source-L: No
+X-Exim-ID: 1iQFOH-0035gz-3t
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.bz.toradex.local) [191.31.195.127]:35710
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 24
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 21.10.2019 13:19, Peng Fan wrote:=0A=
-> From: Peng Fan <peng.fan@nxp.com>=0A=
-> =0A=
-> We should not rely on bootloader to configure the phy reset.=0A=
-> So introduce phy-reset-gpios property to let Linux handle phy reset=0A=
-> itself.=0A=
-> =0A=
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>=0A=
-> Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>=0A=
-=0A=
-This broke NFS boot for me in next-20191031: board now hangs on DHCP.=0A=
-=0A=
-It can be fixed by reverting this DT patch or by setting =0A=
-CONFIG_AT803X_PHY to y instead of m.=0A=
-=0A=
-Needing a phy module is not a bug but everybody will need to either =0A=
-adjust .config or build modules into an initramfs somehow.=0A=
-=0A=
-> ---=0A=
-> =0A=
-> V2:=0A=
->   U-Boot->bootloader=0A=
->   Add R-b tag=0A=
-> =0A=
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 1 +=0A=
->   1 file changed, 1 insertion(+)=0A=
-> =0A=
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/bo=
-ot/dts/freescale/imx8mm-evk.dts=0A=
-> index faefb7182af1..e4d66f7db09d 100644=0A=
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts=0A=
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts=0A=
-> @@ -80,6 +80,7 @@=0A=
->   	pinctrl-0 =3D <&pinctrl_fec1>;=0A=
->   	phy-mode =3D "rgmii-id";=0A=
->   	phy-handle =3D <&ethphy0>;=0A=
-> +	phy-reset-gpios =3D <&gpio4 22 GPIO_ACTIVE_LOW>;=0A=
->   	fsl,magic-packet;=0A=
->   	status =3D "okay";=0A=
+For configure low level state of charge threshold alert signaled from
+max17040 we add "maxim,alert-low-soc-level" property.
+
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+---
+ .../power/supply/max17040_battery.txt         | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+
+diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+new file mode 100644
+index 000000000000..f2d0b22b5f79
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+@@ -0,0 +1,33 @@
++max17040_battery
++~~~~~~~~~~~~~~~~
++
++Required properties :
++ - compatible : "maxim,max17040" or "maxim,max77836-battery"
++ - reg: i2c slave address
++
++Optional properties :
++- maxim,alert-low-soc-level :	The alert threshold that sets the state of
++ 				charge level (%) where an interrupt is
++				generated. Can be configured from 1 up to 32
++				(%). If skipped the power up default value of
++				4 (%) will be used.
++- interrupts : 			Interrupt line see Documentation/devicetree/
++				bindings/interrupt-controller/interrupts.txt
++- wakeup-source :		This device has wakeup capabilities. Use this
++				property to use alert low SOC level interrupt
++				as wake up source.
++
++Optional properties support interrupt functionality for alert low state of
++charge level, present in some ICs in the same family, and should be used with
++compatible "maxim,max77836-battery".
++
++Example:
++
++	battery-fuel-gauge@36 {
++		compatible = "maxim,max77836-battery";
++		reg = <0x36>;
++		maxim,alert-low-soc-level = <10>;
++		interrupt-parent = <&gpio7>;
++		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++		wakeup-source;
++	};
+--
+2.24.0.rc2
+
