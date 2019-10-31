@@ -2,104 +2,163 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFA2CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A4DCA9ECE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33ED82087F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:16:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rc9ZmDhq"
+	by mail.kernel.org (Postfix) with ESMTP id 6D7D3218DE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 13:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572528155;
+	bh=zruVTxdh0XT+H8vfWSCep3RGbNYbucR4OdG7NeyqI70=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Y8z5QNgZN+l/9OAwUk5WpCGcWeJfmg/pg3yRqlBYv7Ty5mf1UKQ6OL7ZP7LoOkazO
+	 CPR3DbbREuBarxuOiUHaeN/WOm3mMMXxn7AUbZYlGknvaFcap1XelpycgWXtOAuEV3
+	 bJxUxA7cwWM/En2wrGDDxe1jW5vaMu726C3/hpQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfJaNQz (ORCPT
+        id S1727188AbfJaNWb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:16:55 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51752 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfJaNQz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 09:16:55 -0400
-Received: from pendragon.ideasonboard.com (lmontsouris-658-1-103-151.w92-154.abo.wanadoo.fr [92.154.14.151])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7F29B320;
-        Thu, 31 Oct 2019 14:16:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1572527813;
-        bh=PLmT7haSn/x6jKex7ohVnLZSNCbvD6oFv1ZIkyIdKJ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rc9ZmDhqhFW5wMz4EyRD2ilAFzR4j/Mx35VYo5lruLiGrsRxblokmre5HepxFfDm6
-         ALoJTDw2jErAaU8q95C2upbb0/H7emxuvdGZ2DN+SRDBvROKfpd/elRiJa52yKlQwG
-         pqFFjBnvbcnIkdO9fmoVAKfHn4jcRVnPEjVQNTGk=
-Date:   Thu, 31 Oct 2019 15:16:44 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 0/2] Add IMX296 CMOS image sensor support
-Message-ID: <20191031131644.GA8917@pendragon.ideasonboard.com>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+        Thu, 31 Oct 2019 09:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727007AbfJaNWb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:22:31 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A239720873;
+        Thu, 31 Oct 2019 13:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572528149;
+        bh=zruVTxdh0XT+H8vfWSCep3RGbNYbucR4OdG7NeyqI70=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mcdXJCa9XrkbnLC507yZxb+JYFZ/nyEUHDLD/McRqh6iR7hw7VA5KAvAuxLjC5yVI
+         uJ8SgG23Yl0X24vWRosl390QnbljMaIv4ZvySQOtXkOO2saVDvSjnbaunmOp2gvT2p
+         RT7KtVboq6rNTSACjjU236SY5HJoitTzSbjRxbJ8=
+Date:   Thu, 31 Oct 2019 08:22:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Rajat Jain <rajatja@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
+ pcie link
+Message-ID: <20191031132228.GA44315@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f49e1e3c-aa26-2d9d-c100-fa073ada958b@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mani,
+On Thu, Oct 31, 2019 at 06:47:10PM +0800, Dilip Kota wrote:
+> On 10/31/2019 6:14 AM, Bjorn Helgaas wrote:
+> > On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
+> > > On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
+> > > > [+cc Rafael, linux-pm, beginning of discussion at
+> > > > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
+> > > > 
+> > > > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
+> > > > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+> > > > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+> > > > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+> > > > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
+> > > > > > > > of changing link width and speed on the fly.
+> > > > > > Please add more details about why this is needed.  Since
+> > > > > > you're adding sysfs files, it sounds like it's not
+> > > > > > actually the *driver* that needs this; it's something in
+> > > > > > userspace?
+> > > > > We have use cases to change the link speed and width on the fly.
+> > > > > One is EMI check and other is power saving.  Some battery backed
+> > > > > applications have to switch PCIe link from higher GEN to GEN1 and
+> > > > > width to x1. During the cases like external power supply got
+> > > > > disconnected or broken. Once external power supply is connected then
+> > > > > switch PCIe link to higher GEN and width.
+> > > > That sounds plausible, but of course nothing there is specific to the
+> > > > Intel Gateway, so we should implement this generically so it would
+> > > > work on all hardware.
+> > > Agree.
+> > > > I'm not sure what the interface should look like -- should it be a
+> > > > low-level interface as you propose where userspace would have to
+> > > > identify each link of interest, or is there some system-wide
+> > > > power/performance knob that could tune all links?  Cc'd Rafael and
+> > > > linux-pm in case they have ideas.
+> > > To my knowledge sysfs is the appropriate way to go.
+> > > If there are any other best possible knobs, will be helpful.
+> > I agree sysfs is the right place for it; my question was whether we
+> > should have files like:
+> > 
+> >    /sys/.../0000:00:1f.3/pcie_speed
+> >    /sys/.../0000:00:1f.3/pcie_width
+> > 
+> > as I think this patch would add (BTW, please include sample paths like
+> > the above in the commit log), or whether there should be a more global
+> > thing that would affect all the links in the system.
+> Sure, i will add them.
+> > 
+> > I think the low-level files like you propose would be better because
+> > one might want to tune link performance differently for different
+> > types of devices and workloads.
+> > 
+> > We also have to decide if these files should be associated with the
+> > device at the upstream or downstream end of the link.  For ASPM, the
+> > current proposal [1] has the files at the downstream end on the theory
+> > that the GPU, NIC, NVMe device, etc is the user-recognizable one.
+> > Also, neither ASPM nor link speed/width make any sense unless there
+> > *is* a device at the downstream end, so putting them there
+> > automatically makes them visible only when they're useful.
+> 
+> This patch places the speed and width in the host controller directory.
+> /sys/.../xxx.pcie/pcie_speed
+> /sys/.../xxx.pcie/pcie_width
+> 
+> I agree with you partially,  because i am having couple of points
+> making me to keep speed and width change entries in controller
+> directory:
+> 
+> -- For changing the speed/width with device node, software ends up
+>    traversing to the controller from the device and do the
+>    operations.
+> -- Change speed and width are performed at controller level,
 
-Thank you for the patches.
+The controller is effectively a Root Complex, which may contain
+several Root Ports.  I have the impression that the Synopsys
+controller only supports a single Root Port, but that's just a detail
+of the Synopsys implementation.  I think it should be possible to
+configure the width/speed of each Root Port individually.
 
-On Wed, Oct 30, 2019 at 03:19:00PM +0530, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This patchset adds support for IMX296 CMOS image sensor from Sony.
-> Sensor can be programmed through I2C and 4-wire interface but the
-> current driver only supports I2C interface. The sensor is
-> capable of outputting frames in CSI2 format (1 Lane). In the case
-> of sensor resolution, driver only supports 1440x1088 at 30 FPS.
-> 
-> The driver has been validated using Framos IMX296 module interfaced to
-> 96Boards Dragonboard410c.
+> -- Keeping speed and width in controller gives a perspective (to the
+>    user) of changing them only once irrespective of no. of devices.
 
-I've just been made aware of your work. I also worked on an IMX296
-sensor driver in parallel, which I will post to the list. My driver
-doesn't hardcode the resolution but computes register values at runtime,
-so I wonder if it could be a better option. I'll post it now.
+What if there's a switch?  If we change the width/speed of the link
+between the Root Port and the Switch Upstream Port, that doesn't do
+anything about the links from the Switch Downstream Ports.
 
-> Changes in v4:
-> 
-> * Fixed issues related to gain settings and few misc cleanups in driver
-> * Documented port node and removed maxItems, default prop from dt binding
->   as per the review
-> 
-> Changes in v3:
-> 
-> * Fixed the reference to video-interfaces.txt in binding.
-> 
-> Changes in v2:
-> 
-> * Switched to YAML binding
-> 
-> Manivannan Sadhasivam (2):
->   dt-bindings: media: i2c: Add IMX296 CMOS sensor binding
->   media: i2c: Add IMX296 CMOS image sensor driver
-> 
->  .../devicetree/bindings/media/i2c/imx296.yaml |  94 +++
->  MAINTAINERS                                   |   8 +
->  drivers/media/i2c/Kconfig                     |  11 +
->  drivers/media/i2c/Makefile                    |   1 +
->  drivers/media/i2c/imx296.c                    | 715 ++++++++++++++++++
->  5 files changed, 829 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
->  create mode 100644 drivers/media/i2c/imx296.c
+> -- For speed and link change in Synopsys PCIe controller, specific
+>    registers need to be configured.  This prevents or complicates
+>    adding the speed and width change functionality in pci-sysfs or
+>    pci framework.
 
--- 
-Regards,
+Don't the Link Control and related registers in PCIe spec give us
+enough control to manage the link width/speed of *all* links,
+including those from Root Ports and Switch Downstream Ports?
 
-Laurent Pinchart
+If the Synopsys controller requires controller-specific registers,
+that sounds to me like it doesn't quite conform to the spec.  Maybe
+that means we would need some sort of quirk or controller callback?
+
+Bjorn
