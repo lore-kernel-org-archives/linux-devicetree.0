@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0DCCA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728D9CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC94A2173E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523772087F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfJaOYb convert rfc822-to-8bit (ORCPT
+        id S1728065AbfJaOYW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:24:31 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:55006 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728113AbfJaOYa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:24:30 -0400
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        Thu, 31 Oct 2019 10:24:22 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:42542 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbfJaOYV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:24:21 -0400
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 7640BD4A561;
-        Thu, 31 Oct 2019 15:24:28 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+        by skedge03.snt-world.com (Postfix) with ESMTPS id B4E0A60CB02;
+        Thu, 31 Oct 2019 15:24:18 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 31 Oct
- 2019 15:24:28 +0100
+ 2019 15:24:18 +0100
 Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
  sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Thu, 31 Oct 2019 15:24:28 +0100
+ 15.01.1713.004; Thu, 31 Oct 2019 15:24:18 +0100
 From:   Schrempf Frieder <frieder.schrempf@kontron.de>
 To:     Krzysztof Kozlowski <krzk@kernel.org>,
         Fabio Estevam <festevam@gmail.com>,
@@ -46,13 +46,13 @@ CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 09/11] ARM: dts: imx6ul-kontron-n6x1x-s: Disable the
- snvs-poweroff driver
-Thread-Topic: [PATCH v3 09/11] ARM: dts: imx6ul-kontron-n6x1x-s: Disable the
- snvs-poweroff driver
-Thread-Index: AQHVj/bnGF5WcKYgcUiKBHtcAgBibw==
-Date:   Thu, 31 Oct 2019 14:24:27 +0000
-Message-ID: <20191031142112.12431-10-frieder.schrempf@kontron.de>
+Subject: [PATCH v3 06/11] ARM: dts: imx6ul-kontron-n6x1x-s: Specify bus-width
+ for SD card and eMMC
+Thread-Topic: [PATCH v3 06/11] ARM: dts: imx6ul-kontron-n6x1x-s: Specify
+ bus-width for SD card and eMMC
+Thread-Index: AQHVj/bhrI8+Sinp0EmCHJdFZK6p5A==
+Date:   Thu, 31 Oct 2019 14:24:18 +0000
+Message-ID: <20191031142112.12431-7-frieder.schrempf@kontron.de>
 References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
 In-Reply-To: <20191031142112.12431-1-frieder.schrempf@kontron.de>
 Accept-Language: de-DE, en-US
@@ -66,7 +66,7 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 7640BD4A561.AEF77
+X-SnT-MailScanner-ID: B4E0A60CB02.AFAC1
 X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 X-SnT-MailScanner-SpamCheck: 
 X-SnT-MailScanner-From: frieder.schrempf@kontron.de
@@ -82,35 +82,35 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-The snvs-poweroff driver can power off the system by pulling the
-PMIC_ON_REQ signal low, to let the PMIC disable the power.
-The Kontron SoMs do not have this signal connected, so let's remove
-the node.
-
-This seems to fix a real issue when the signal is asserted at
-poweroff, but not actually causing the power to turn off. It was
-observed, that in this case the system would not shut down properly.
+Both, the SD card and the eMMC are connected to the usdhc controller
+by four data lines. Therefore we set 'bus-width = <4>' for both
+interfaces.
 
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
 ---
- arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-index e18a8bd239be..4682a79f5b23 100644
+index 7c98a1a46fb1..2299cad900af 100644
 --- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
 +++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-@@ -158,10 +158,6 @@
+@@ -209,6 +209,7 @@
+ 	wakeup-source;
+ 	vmmc-supply = <&reg_3v3>;
+ 	voltage-ranges = <3300 3300>;
++	bus-width = <4>;
+ 	no-1-8-v;
  	status = "okay";
  };
- 
--&snvs_poweroff {
--	status = "okay";
--};
--
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
+@@ -223,6 +224,7 @@
+ 	wakeup-source;
+ 	vmmc-supply = <&reg_3v3>;
+ 	voltage-ranges = <3300 3300>;
++	bus-width = <4>;
+ 	no-1-8-v;
+ 	status = "okay";
+ };
 -- 
 2.17.1
