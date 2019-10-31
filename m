@@ -2,394 +2,231 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF071CA9ED0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B763CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958572086D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2370B2087E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:11:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bn0e7Jt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfJaOLB convert rfc822-to-8bit (ORCPT
+        id S1727595AbfJaOLv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:11:01 -0400
-Received: from maillog.nuvoton.com ([202.39.227.15]:44196 "EHLO
-        maillog.nuvoton.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbfJaOLB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:11:01 -0400
-X-Greylist: delayed 875 seconds by postgrey-1.27 at vger.kernel.org; Thu, 31 Oct 2019 10:10:59 EDT
-Received: from NTHCCAS02.nuvoton.com (nthccas02.nuvoton.com [10.1.8.29])
-        by maillog.nuvoton.com (Postfix) with ESMTP id C296C1C80E38;
-        Thu, 31 Oct 2019 21:56:26 +0800 (CST)
-Received: from NTILML02.nuvoton.com (10.190.1.46) by NTHCCAS02.nuvoton.com
- (10.1.8.29) with Microsoft SMTP Server (TLS) id 15.0.1130.7; Thu, 31 Oct 2019
- 21:56:25 +0800
-Received: from NTILML02.nuvoton.com (10.190.1.46) by NTILML02.nuvoton.com
- (10.190.1.46) with Microsoft SMTP Server (TLS) id 15.0.1130.7; Thu, 31 Oct
- 2019 15:56:19 +0200
-Received: from taln70.nuvoton.co.il (10.191.1.70) by NTILML02.nuvoton.com
- (10.190.1.47) with Microsoft SMTP Server id 15.0.1130.7 via Frontend
- Transport; Thu, 31 Oct 2019 15:56:19 +0200
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-        by taln70.nuvoton.co.il (Postfix) with ESMTP id B0E551A4;
-        Thu, 31 Oct 2019 15:56:19 +0200 (IST)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id B163660275; Thu, 31 Oct 2019 15:56:19 +0200 (IST)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <yuenn@google.com>, <venture@google.com>,
-        <benjaminfair@google.com>, <avifishman70@gmail.com>,
-        <joel@jms.id.au>
-CC:     <openbmc@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v3 3/3] reset: npcm: add NPCM reset controller driver
-Date:   Thu, 31 Oct 2019 15:56:17 +0200
-Message-ID: <20191031135617.249303-4-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191031135617.249303-1-tmaimon77@gmail.com>
-References: <20191031135617.249303-1-tmaimon77@gmail.com>
+        Thu, 31 Oct 2019 10:11:51 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:52010 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfJaOLv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:11:51 -0400
+Received: from pendragon.ideasonboard.com (lmontsouris-658-1-103-151.w92-154.abo.wanadoo.fr [92.154.14.151])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3FDD8320;
+        Thu, 31 Oct 2019 15:11:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1572531109;
+        bh=Wy1EJIyM5Xko+hpHgTbTOnoLXdTpLGZwkf8MB9pi6y4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bn0e7Jt1ZiznZxnPGnBJzZ2+cXr03+oWvdis9p/f90urUTazPe38o6v5mzrbqBSb0
+         WcTmNliMtfVr9LDYesFGpoqBC6j9jV9aF8VGLygJUsL49YAXU06s9vyy/+IHm0kSw1
+         UXZQW+zLG6xa7VaTJvkv31IbBPZnZZg/9RY5nuUg=
+Date:   Thu, 31 Oct 2019 16:11:41 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191031141141.GD5018@pendragon.ideasonboard.com>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191031131538.GA9170@pendragon.ideasonboard.com>
+ <20191031134512.GB24273@mani>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191031134512.GB24273@mani>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Nuvoton NPCM BMC reset controller driver.
+Hi Mani,
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- drivers/reset/Kconfig      |   7 +
- drivers/reset/Makefile     |   1 +
- drivers/reset/reset-npcm.c | 281 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 289 insertions(+)
- create mode 100644 drivers/reset/reset-npcm.c
+On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
+> > On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> >> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> >> add MAINTAINERS entry for the binding and driver.
+> >> 
+> >> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >> ---
+> >>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> >>  MAINTAINERS                                   |  8 ++
+> >>  2 files changed, 102 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >> new file mode 100644
+> >> index 000000000000..c04ec2203268
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >> @@ -0,0 +1,94 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> >> +
+> >> +maintainers:
+> >> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >> +
+> >> +description: |-
+> >> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> >> +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> >> +  features a global shutter with variable charge-integration time. It is
+> >> +  programmable through I2C and 4-wire interfaces. The sensor output is
+> >> +  available via CSI-2 serial data output (1 Lane).
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: sony,imx296
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +
+> >> +  clock-names:
+> >> +    description:
+> >> +      Input clock for the sensor.
+> >> +    items:
+> >> +      - const: mclk
+> > 
+> > The pin is named INCK, let's name the clock accordingly.
+> 
+> Okay, I thought generic names are preferred here!
+>  
+> >> +  clock-frequency:
+> >> +    description:
+> >> +      Frequency of the mclk clock in Hertz.
+> > 
+> > This shouldn't be needed, you can retrieve the clock frequency at
+> > runtime from the clock source.
+> 
+> Unless the clock source is a fixed one! What if the clock source comes from
+> SoC? We need to set the rate, right?
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 7b07281aa0ae..9e3eac30e7db 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -89,6 +89,13 @@ config RESET_MESON_AUDIO_ARB
-          This enables the reset driver for Audio Memory Arbiter of
-          Amlogic's A113 based SoCs
+In that case, if you want to hardcode the clock in DT, the preferred way
+is to use the assigned-clock-rates property. Otherwise, if the driver
+requires a specific clock frequency, it's better to hardcode it in the
+driver itself. In this specific case, I think assigned-clock-rates is
+best as the device can support three different clock frequencies.
 
-+config RESET_NPCM
-+       bool "NPCM BMC Reset Driver" if COMPILE_TEST
-+       default ARCH_NPCM
-+       help
-+         This enables the reset controller driver for Nuvoton NPCM
-+         BMC SoCs.
-+
- config RESET_OXNAS
-        bool
+> >> +  vddo-supply:
+> >> +    description:
+> >> +      Definition of the regulator used as interface power supply.
+> >> +
+> >> +  vdda-supply:
+> >> +    description:
+> >> +      Definition of the regulator used as analog power supply.
+> >> +
+> >> +  vddd-supply:
+> >> +    description:
+> >> +      Definition of the regulator used as digital power supply.
+> > 
+> > Do we really need three regulators ? I agree that the sensor has three
+> > power rails, but aren't they usually powered by regulators that are
+> > tied together, without individual control ? The IMX926 specifications
+> > require the three power supplies to raise within 200ms, which we should
+> > be able to ensure in software. What does your board use, does it have
+> > multiple GPIOs to control each power supply ? If not I wonder if we
+> > could just define vddd-supply now, and add vdda-supply and vddo-supply
+> > later if we need to support systems that can control the supplies
+> > individually.
+> 
+> The whole power supply model is a bit rotten. In my case, there are 3 different
+> regulators used with no software control. So, I can't control the rise time
+> (I assume that they are handled by the external power regulator itself).
+> 
+> So to be sane, I just documented with the assumption of fixed-regulators.
 
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index cf60ce526064..00767c03f5f2 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
- obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
- obj-$(CONFIG_RESET_MESON) += reset-meson.o
- obj-$(CONFIG_RESET_MESON_AUDIO_ARB) += reset-meson-audio-arb.o
-+obj-$(CONFIG_RESET_NPCM) += reset-npcm.o
- obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
- obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
- obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
-diff --git a/drivers/reset/reset-npcm.c b/drivers/reset/reset-npcm.c
-new file mode 100644
-index 000000000000..ad09d466d7f9
---- /dev/null
-+++ b/drivers/reset/reset-npcm.c
-@@ -0,0 +1,281 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019 Nuvoton Technology corporation.
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/reset-controller.h>
-+#include <linux/spinlock.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+#include <linux/of_address.h>
-+
-+/* NPCM7xx GCR registers */
-+#define NPCM_MDLR_OFFSET       0x7C
-+#define NPCM_MDLR_USBD0                BIT(9)
-+#define NPCM_MDLR_USBD1                BIT(8)
-+#define NPCM_MDLR_USBD2_4      BIT(21)
-+#define NPCM_MDLR_USBD5_9      BIT(22)
-+
-+#define NPCM_USB1PHYCTL_OFFSET 0x140
-+#define NPCM_USB2PHYCTL_OFFSET 0x144
-+#define NPCM_USBXPHYCTL_RS     BIT(28)
-+
-+/* NPCM7xx Reset registers */
-+#define NPCM_SWRSTR            0x14
-+#define NPCM_SWRST             BIT(2)
-+
-+#define NPCM_IPSRST1           0x20
-+#define NPCM_IPSRST1_USBD1     BIT(5)
-+#define NPCM_IPSRST1_USBD2     BIT(8)
-+#define NPCM_IPSRST1_USBD3     BIT(25)
-+#define NPCM_IPSRST1_USBD4     BIT(22)
-+#define NPCM_IPSRST1_USBD5     BIT(23)
-+#define NPCM_IPSRST1_USBD6     BIT(24)
-+
-+#define NPCM_IPSRST2           0x24
-+#define NPCM_IPSRST2_USB_HOST  BIT(26)
-+
-+#define NPCM_IPSRST3           0x34
-+#define NPCM_IPSRST3_USBD0     BIT(4)
-+#define NPCM_IPSRST3_USBD7     BIT(5)
-+#define NPCM_IPSRST3_USBD8     BIT(6)
-+#define NPCM_IPSRST3_USBD9     BIT(7)
-+#define NPCM_IPSRST3_USBPHY1   BIT(24)
-+#define NPCM_IPSRST3_USBPHY2   BIT(25)
-+
-+#define NPCM_RC_RESETS_PER_REG 32
-+#define NPCM_MASK_RESETS       GENMASK(4, 0)
-+
-+struct npcm_rc_data {
-+       struct reset_controller_dev rcdev;
-+       struct notifier_block restart_nb;
-+       u32 sw_reset_number;
-+       void __iomem *base;
-+       spinlock_t lock;
-+};
-+
-+#define to_rc_data(p) container_of(p, struct npcm_rc_data, rcdev)
-+
-+static int npcm_rc_restart(struct notifier_block *nb, unsigned long mode,
-+                          void *cmd)
-+{
-+       struct npcm_rc_data *rc = container_of(nb, struct npcm_rc_data,
-+                                              restart_nb);
-+
-+       writel(NPCM_SWRST << rc->sw_reset_number, rc->base + NPCM_SWRSTR);
-+       mdelay(1000);
-+
-+       pr_emerg("%s: unable to restart system\n", __func__);
-+
-+       return NOTIFY_DONE;
-+}
-+
-+static int npcm_rc_setclear_reset(struct reset_controller_dev *rcdev,
-+                                 unsigned long id, bool set)
-+{
-+       struct npcm_rc_data *rc = to_rc_data(rcdev);
-+       unsigned int rst_bit = BIT(id & NPCM_MASK_RESETS);
-+       unsigned int ctrl_offset = id >> 8;
-+       unsigned long flags;
-+       u32 stat;
-+
-+       spin_lock_irqsave(&rc->lock, flags);
-+       stat = readl(rc->base + ctrl_offset);
-+       if (set)
-+               writel(stat | rst_bit, rc->base + ctrl_offset);
-+       else
-+               writel(stat & ~rst_bit, rc->base + ctrl_offset);
-+       spin_unlock_irqrestore(&rc->lock, flags);
-+
-+       return 0;
-+}
-+
-+static int npcm_rc_assert(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+       return npcm_rc_setclear_reset(rcdev, id, true);
-+}
-+
-+static int npcm_rc_deassert(struct reset_controller_dev *rcdev,
-+                           unsigned long id)
-+{
-+       return npcm_rc_setclear_reset(rcdev, id, false);
-+}
-+
-+static int npcm_rc_status(struct reset_controller_dev *rcdev,
-+                         unsigned long id)
-+{
-+       struct npcm_rc_data *rc = to_rc_data(rcdev);
-+       unsigned int rst_bit = BIT(id & NPCM_MASK_RESETS);
-+       unsigned int ctrl_offset = id >> 8;
-+
-+       return (readl(rc->base + ctrl_offset) & rst_bit);
-+}
-+
-+/*
-+ *  The following procedure should be observed in USB PHY, USB device and
-+ *  USB host initialization at BMC boot
-+ */
-+static int npcm_usb_reset(struct platform_device *pdev, struct npcm_rc_data *rc)
-+{
-+       struct device_node *np = pdev->dev.of_node;
-+       u32 mdlr, iprst1, iprst2, iprst3;
-+       struct regmap *gcr_regmap = NULL;
-+       u32 ipsrst1_bits = 0;
-+       u32 ipsrst2_bits = NPCM_IPSRST2_USB_HOST;
-+       u32 ipsrst3_bits = 0;
-+
-+       if (of_device_is_compatible(np, "nuvoton,npcm750-reset")) {
-+               gcr_regmap = syscon_regmap_lookup_by_compatible("nuvoton,npcm750-gcr");
-+               if (IS_ERR(gcr_regmap)) {
-+                       dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-gcr\n");
-+                       return PTR_ERR(gcr_regmap);
-+               }
-+       }
-+       if (!gcr_regmap)
-+               return -ENXIO;
-+
-+       /* checking which USB device is enabled */
-+       regmap_read(gcr_regmap, NPCM_MDLR_OFFSET, &mdlr);
-+       if (!(mdlr & NPCM_MDLR_USBD0))
-+               ipsrst3_bits |= NPCM_IPSRST3_USBD0;
-+       if (!(mdlr & NPCM_MDLR_USBD1))
-+               ipsrst1_bits |= NPCM_IPSRST1_USBD1;
-+       if (!(mdlr & NPCM_MDLR_USBD2_4))
-+               ipsrst1_bits |= (NPCM_IPSRST1_USBD2 |
-+                                NPCM_IPSRST1_USBD3 |
-+                                NPCM_IPSRST1_USBD4);
-+       if (!(mdlr & NPCM_MDLR_USBD0)) {
-+               ipsrst1_bits |= (NPCM_IPSRST1_USBD5 |
-+                                NPCM_IPSRST1_USBD6);
-+               ipsrst3_bits |= (NPCM_IPSRST3_USBD7 |
-+                                NPCM_IPSRST3_USBD8 |
-+                                NPCM_IPSRST3_USBD9);
-+       }
-+
-+       /* assert reset USB PHY and USB devices */
-+       iprst1 = readl(rc->base + NPCM_IPSRST1);
-+       iprst2 = readl(rc->base + NPCM_IPSRST2);
-+       iprst3 = readl(rc->base + NPCM_IPSRST3);
-+
-+       iprst1 |= ipsrst1_bits;
-+       iprst2 |= ipsrst2_bits;
-+       iprst3 |= (ipsrst3_bits | NPCM_IPSRST3_USBPHY1 |
-+                  NPCM_IPSRST3_USBPHY2);
-+
-+       writel(iprst1, rc->base + NPCM_IPSRST1);
-+       writel(iprst2, rc->base + NPCM_IPSRST2);
-+       writel(iprst3, rc->base + NPCM_IPSRST3);
-+
-+       /* clear USB PHY RS bit */
-+       regmap_update_bits(gcr_regmap, NPCM_USB1PHYCTL_OFFSET,
-+                          NPCM_USBXPHYCTL_RS, 0);
-+       regmap_update_bits(gcr_regmap, NPCM_USB2PHYCTL_OFFSET,
-+                          NPCM_USBXPHYCTL_RS, 0);
-+
-+       /* deassert reset USB PHY */
-+       iprst3 &= ~(NPCM_IPSRST3_USBPHY1 | NPCM_IPSRST3_USBPHY2);
-+       writel(iprst3, rc->base + NPCM_IPSRST3);
-+
-+       udelay(50);
-+
-+       /* set USB PHY RS bit */
-+       regmap_update_bits(gcr_regmap, NPCM_USB1PHYCTL_OFFSET,
-+                          NPCM_USBXPHYCTL_RS, NPCM_USBXPHYCTL_RS);
-+       regmap_update_bits(gcr_regmap, NPCM_USB2PHYCTL_OFFSET,
-+                          NPCM_USBXPHYCTL_RS, NPCM_USBXPHYCTL_RS);
-+
-+       /* deassert reset USB devices*/
-+       iprst1 &= ~ipsrst1_bits;
-+       iprst2 &= ~ipsrst2_bits;
-+       iprst3 &= ~ipsrst3_bits;
-+
-+       writel(iprst1, rc->base + NPCM_IPSRST1);
-+       writel(iprst2, rc->base + NPCM_IPSRST2);
-+       writel(iprst3, rc->base + NPCM_IPSRST3);
-+
-+       return 0;
-+}
-+
-+static int npcm_reset_xlate(struct reset_controller_dev *rcdev,
-+                           const struct of_phandle_args *reset_spec)
-+{
-+       unsigned int offset, bit;
-+
-+       offset = reset_spec->args[0];
-+       bit = reset_spec->args[1];
-+
-+       return (offset << 8) | bit;
-+}
-+
-+static const struct reset_control_ops npcm_rc_ops = {
-+       .assert         = npcm_rc_assert,
-+       .deassert       = npcm_rc_deassert,
-+       .status         = npcm_rc_status,
-+};
-+
-+static int npcm_rc_probe(struct platform_device *pdev)
-+{
-+       struct npcm_rc_data *rc;
-+       int ret;
-+
-+       rc = devm_kzalloc(&pdev->dev, sizeof(*rc), GFP_KERNEL);
-+       if (!rc)
-+               return -ENOMEM;
-+
-+       rc->base = devm_platform_ioremap_resource(pdev, 0);
-+       if (IS_ERR(rc->base))
-+               return PTR_ERR(rc->base);
-+
-+       spin_lock_init(&rc->lock);
-+
-+       rc->rcdev.owner = THIS_MODULE;
-+       rc->rcdev.nr_resets = NPCM_RC_RESETS_PER_REG;
-+       rc->rcdev.ops = &npcm_rc_ops;
-+       rc->rcdev.of_node = pdev->dev.of_node;
-+       rc->rcdev.of_reset_n_cells = 2;
-+       rc->rcdev.of_xlate = npcm_reset_xlate;
-+
-+       platform_set_drvdata(pdev, rc);
-+
-+       ret = devm_reset_controller_register(&pdev->dev, &rc->rcdev);
-+       if (ret) {
-+               dev_err(&pdev->dev, "unable to register device\n");
-+               return ret;
-+       }
-+
-+       if (npcm_usb_reset(pdev, rc))
-+               dev_warn(&pdev->dev, "NPCM USB reset failed, can cause issues with UDC and USB host\n");
-+
-+       if (!of_property_read_u32(pdev->dev.of_node, "nuvoton,sw-reset-number",
-+                                 &rc->sw_reset_number)) {
-+               if (rc->sw_reset_number && rc->sw_reset_number < 5) {
-+                       rc->restart_nb.priority = 192,
-+                       rc->restart_nb.notifier_call = npcm_rc_restart,
-+                       ret = register_restart_handler(&rc->restart_nb);
-+                       if (ret)
-+                               dev_warn(&pdev->dev, "failed to register restart handler\n");
-+               }
-+       }
-+
-+       return ret;
-+}
-+
-+static const struct of_device_id npcm_rc_match[] = {
-+       { .compatible = "nuvoton,npcm750-reset" },
-+       { }
-+};
-+
-+static struct platform_driver npcm_rc_driver = {
-+       .probe  = npcm_rc_probe,
-+       .driver = {
-+               .name                   = "npcm-reset",
-+               .of_match_table         = npcm_rc_match,
-+               .suppress_bind_attrs    = true,
-+       },
-+};
-+builtin_platform_driver(npcm_rc_driver);
---
-2.22.0
+Should we then go for one supply, and add the other two when (and if)
+needed ?
 
+> >> +  reset-gpios:
+> >> +    description:
+> >> +      The phandle and specifier for the GPIO that controls sensor reset.
+> >> +    maxItems: 1
+> >> +
+> >> +  port: true
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - clocks
+> >> +  - clock-names
+> >> +  - clock-frequency
+> >> +  - vddo-supply
+> >> +  - vdda-supply
+> >> +  - vddd-supply
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include <dt-bindings/gpio/gpio.h>
+> >> +
+> >> +    imx296: camera-sensor@1a {
+> >> +        compatible = "sony,imx296";
+> >> +        reg = <0x1a>;
+> >> +        reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> >> +        pinctrl-names = "default";
+> >> +        pinctrl-0 = <&camera_rear_default>;
+> >> +        clocks = <&gcc 90>;
+> >> +        clock-names = "mclk";
+> >> +        clock-frequency = <37125000>;
+> >> +        vddo-supply = <&camera_vddo_1v8>;
+> >> +        vdda-supply = <&camera_vdda_3v3>;
+> >> +        vddd-supply = <&camera_vddd_1v2>;
+> >> +
+> >> +        port {
+> >> +            imx296_ep: endpoint {
+> >> +                remote-endpoint = <&csiphy0_ep>;
+> >> +            };
+> >> +        };
+> >> +    };
+> >> +
+> >> +...
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index 55199ef7fa74..51194bb2c392 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -15140,6 +15140,14 @@ S:	Maintained
+> >>  F:	drivers/media/i2c/imx274.c
+> >>  F:	Documentation/devicetree/bindings/media/i2c/imx274.txt
+> >>  
+> >> +SONY IMX296 SENSOR DRIVER
+> >> +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >> +L:	linux-media@vger.kernel.org
+> >> +T:	git git://linuxtv.org/media_tree.git
+> >> +S:	Maintained
+> >> +F:	drivers/media/i2c/imx296.c
+> >> +F:	Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >> +
+> >>  SONY IMX319 SENSOR DRIVER
+> >>  M:	Bingbu Cao <bingbu.cao@intel.com>
+> >>  L:	linux-media@vger.kernel.org
 
+-- 
+Regards,
 
-===========================================================================================
-The privileged confidential information contained in this email is intended for use only by the addressees as indicated by the original sender of this email. If you are not the addressee indicated in this email or are not responsible for delivery of the email to such a person, please kindly reply to the sender indicating this fact and delete all copies of it from your computer and network server immediately. Your cooperation is highly appreciated. It is advised that any unauthorized use of confidential information of Nuvoton is strictly prohibited; and any information in this email irrelevant to the official business of Nuvoton shall be deemed as neither given nor endorsed by Nuvoton.
+Laurent Pinchart
