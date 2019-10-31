@@ -2,126 +2,151 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAB4CA9EC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9A3CA9EC3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FD12086D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B6B2083E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 08:53:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="CGkhjcUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfJaIwL (ORCPT
+        id S1726995AbfJaIxG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:52:11 -0400
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:40750 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726774AbfJaIwL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:52:11 -0400
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iQ6BU-0006VO-BN; Thu, 31 Oct 2019 09:52:00 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9V8puaM011029
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Thu, 31 Oct 2019 09:51:56 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Subject: [PATCH] arm64: dts: rockchip: Add vcc_sys enable pin on rk3399-roc-pc
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <c72db0ad-c261-af4f-efe6-22bbcf4a0b7b@fivetechno.de>
-Date:   Thu, 31 Oct 2019 09:51:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 31 Oct 2019 04:53:06 -0400
+Received: from mail-eopbgr720082.outbound.protection.outlook.com ([40.107.72.82]:60512
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726945AbfJaIxG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 04:53:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YieYjOgAxxutKBL5iNVVMwEF8hZS68ZS5MCLCz+JRqfTfrjpSVVqjxOCSrdYIw2Hgtk+eK2y+UCkg6cHXkmKvt63Qs8/utc/HLcu0q3oVC9Yzs9CaGQjj9K44feQ80ok6NwrB466HygkT0HkI1ugqOQzllrroNDqLTFyRJatJt2lH+N3I0jwi12y5EpU30ulePagCKmp10EhWhKJwGhzK9AnIDSD6E34+cP5ejO2J7bkigPe84YSE0jCsRpqXTsI3ztOjUI6wFqt77v0SthCIGN/12LT+Al/drsZ8AmWO/t6TLOku71p4xDg+/Rbjz+YrT0aVrRL8pmpKijOLjVzCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kcbWl71JBgGt07nIOqhZR72zL1/fEecWGfLHw+BhfCw=;
+ b=nNCmbWUfy9d/tQ7YRt68M6q7vPcBmhD3+WZRsWHTJgnl5raMl8xc7bocnaJFwbSVxJS/lADuqGCzrbHXC2CncXQWKY/fWV2gj5K2D1/u4qOkfAPoJmaYCFq+S9GcaXx4hB25O0ts/sF2wnpUXO2UiEDx3bM8+Aytr4pkce/sK3feOu/73S0k3x/U7nU+gLBShMxmXereTc1NNuixJCLv8n9/PX5CDRwtyrb8/AAj7POP97+nvWFvobaRr9sNjkAUvhjwy+EVF/MDKBgjZANw8dbgU1C2kYtkrEF41hzMK2Bi3ihgX6C2nomJlbAx8nxpfxC0q/DvgAfa/w4gi0OkmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kcbWl71JBgGt07nIOqhZR72zL1/fEecWGfLHw+BhfCw=;
+ b=CGkhjcUuneguOyTrveKwGVKYULQ22dvX4V2Q8XzpCP8qWRLZaCAtEB4kxcR8qGpUqBr7H1ll2CIIMk3AS9YnWgIlud+u9TrwE/6ioAkQV6jNFSYiCcE+tq78ai9HP85MtdFnxV50ClbG/BD76Yk4n7RboJ9GLJvOadzpQRxgIH4=
+Received: from MN2PR02MB6029.namprd02.prod.outlook.com (52.132.174.207) by
+ MN2PR02MB6144.namprd02.prod.outlook.com (52.132.175.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.18; Thu, 31 Oct 2019 08:52:59 +0000
+Received: from MN2PR02MB6029.namprd02.prod.outlook.com
+ ([fe80::60f4:2360:4c7d:cad6]) by MN2PR02MB6029.namprd02.prod.outlook.com
+ ([fe80::60f4:2360:4c7d:cad6%5]) with mapi id 15.20.2387.028; Thu, 31 Oct 2019
+ 08:52:59 +0000
+From:   Manish Narani <MNARANI@xilinx.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        Michal Simek <michals@xilinx.com>,
+        Jolly Shah <JOLLYS@xilinx.com>,
+        Nava kishore Manne <navam@xilinx.com>,
+        Rajan Vaja <RAJANV@xilinx.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, git <git@xilinx.com>
+Subject: RE: [PATCH v4 2/8] dt-bindings: mmc: arasan: Update Documentation for
+ the input clock
+Thread-Topic: [PATCH v4 2/8] dt-bindings: mmc: arasan: Update Documentation
+ for the input clock
+Thread-Index: AQHVjkQM7Ec7DXqR8UKpys1AJLmbRKdx9BIAgAJ/LwA=
+Date:   Thu, 31 Oct 2019 08:52:59 +0000
+Message-ID: <MN2PR02MB6029A5A7D65C8360B55A1E93C1630@MN2PR02MB6029.namprd02.prod.outlook.com>
+References: <1572345042-101207-1-git-send-email-manish.narani@xilinx.com>
+ <1572345042-101207-2-git-send-email-manish.narani@xilinx.com>
+ <20191029184014.GA837@bogus>
+In-Reply-To: <20191029184014.GA837@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=MNARANI@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6b2d3f77-80c9-45a5-ad32-08d75ddfbaf9
+x-ms-traffictypediagnostic: MN2PR02MB6144:|MN2PR02MB6144:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB6144C5C85B7CC6FE4E0E2FB7C1630@MN2PR02MB6144.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 02070414A1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(396003)(376002)(136003)(13464003)(189003)(199004)(26005)(7416002)(11346002)(74316002)(7696005)(229853002)(71190400001)(52536014)(486006)(478600001)(102836004)(6246003)(305945005)(99286004)(6916009)(476003)(66066001)(86362001)(446003)(7736002)(6436002)(9686003)(186003)(53546011)(107886003)(76176011)(5660300002)(55016002)(6506007)(81166006)(54906003)(3846002)(33656002)(8936002)(81156014)(256004)(2906002)(14444005)(8676002)(6116002)(4326008)(316002)(25786009)(64756008)(66946007)(66476007)(76116006)(66446008)(14454004)(71200400001)(66556008)(15650500001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6144;H:MN2PR02MB6029.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: btOPA5j+nbx3Tb1WXpzkINVLoMIuqLCf1ZCK4yIh07c9AzyNCzwaDRCVxH5DLDSqoYS7BEoHnrhx8ocsgQl0lgT8i5XsJQ3vKxj3UX0VaMPNfqqUPWoEh1bn5U02g4+G84W56HYaPd4V7OSl96llBnOjNkVGTWsyNg0O/Qw5KWHoJI2YVWtgwUl6zb2wxeStvld6DWZPv/6TniEOczdDCZkDc9Vitwik2hChXGLS4B4Z0vixFRHqkg+2OkhEAqC6zw6BQgHGq1euQY0kdSnD3GpQAYkF5Xs5ZbWKqt5oYMqSp6UyuzMGo11j75t6gUukoBo2UFb5pLff/1Sgrv8xg1tHbyjczUvhrU87RtLiZ04J/zrEuRQY2siOWlHvx6RE93ya3uGgy8PLnreD9+gKcolssr8VzPnNMT3R0l5X476mp4WsckG28DLQ/Ru1qym3
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1572511929;615ab41f;
-X-HE-SMSGID: 1iQ6BU-0006VO-BN
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b2d3f77-80c9-45a5-ad32-08d75ddfbaf9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 08:52:59.0410
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gnT3hRRZTJulQbZC/L3SeFR3oYcJLmxQHkD/tTGM7m9JUezlIdW9EQVLjb/xngjH8NilQJFxCAW5M82X3Jmfmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6144
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-rk3399-roc-pc has vcc_sys 5V supply for USB and other peripherals.
-Add the GPIO pin to enable the regulator.
+Hi Rob,
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
- arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Wednesday, October 30, 2019 12:10 AM
+> To: Manish Narani <MNARANI@xilinx.com>
+> Cc: ulf.hansson@linaro.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> adrian.hunter@intel.com; Michal Simek <michals@xilinx.com>; Jolly Shah
+> <JOLLYS@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Rajan Vaja
+> <RAJANV@xilinx.com>; Manish Narani <MNARANI@xilinx.com>; linux-
+> mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; git
+> <git@xilinx.com>
+> Subject: Re: [PATCH v4 2/8] dt-bindings: mmc: arasan: Update
+> Documentation for the input clock
+>=20
+> On Tue, 29 Oct 2019 16:00:36 +0530, Manish Narani wrote:
+> > Add documentation for an optional input clock which is essentially used
+> > in sampling the input data coming from the card.
+> >
+> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> > ---
+> >  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions.
+> However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>=20
+> If a tag was not added on purpose, please state why and what changed.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-index 4150e6900788..c0c2d896f4da 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-@@ -140,6 +140,10 @@
- 
- 	vcc_sys: vcc-sys {
- 		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio2 RK_PA6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc_sys_en>;
- 		regulator-name = "vcc_sys";
- 		regulator-always-on;
- 		regulator-boot-on;
-@@ -600,6 +604,10 @@
- 			rockchip,pins = <1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 
-+		vcc_sys_en: vcc-sys-en {
-+			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
- 		hub_rst: hub-rst {
- 			rockchip,pins = <2 RK_PA4 RK_FUNC_GPIO &pcfg_output_high>;
- 		};
--- 
-2.20.1
+That was mistakenly not added. My apologies.
+However, Uffe has some comments on this version, so will send out v5 with a=
+ddressing them and will include the 'reviewed-by' tag.
 
+Thanks,
+Manish
