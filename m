@@ -2,148 +2,90 @@ Return-Path: <SRS0=y4GH=YY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19219CA9ECE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC7FCA9EC3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE22F20873
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94AC120862
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:45:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572525902;
+	bh=0DNBeenyH7rB/8g2YXDHf6rJYEKF+j4UGX0CUbblXaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XavDL/F8EBBnkn3Yer6cA33hPYIln6eoqXL+3Vw0VTl8n+iyHMrBbUZiYFo0VzJbD
+	 SvMuJWZgWip/S/BBmfOwK7lg3mL9jcb8sXT0hFc3ECRAcM7lf3YtI3KB7itF2Zgu9w
+	 zwiVKhZQNKghxb2vayKv2OTzUT2EWqf2NNwXpw2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfJaMkd (ORCPT
+        id S1726642AbfJaMpC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:40:33 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:14675 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfJaMkd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 08:40:33 -0400
-Received: from [10.28.19.135] (10.28.19.135) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 31 Oct
- 2019 20:40:44 +0800
-Subject: Re: [PATCH v3 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-To:     Rob Herring <robh@kernel.org>
-CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1571983984-11771-1-git-send-email-xingyu.chen@amlogic.com>
- <1571983984-11771-3-git-send-email-xingyu.chen@amlogic.com>
- <20191025203030.GA28391@bogus>
- <1914e315-3cb7-9251-f871-0024e0e4f68b@amlogic.com>
- <CAL_JsqLr-Cgu4yZFGTfO=qpFPLBZ1gb-1+DZ35eQX3dUsadm4g@mail.gmail.com>
- <2808a8c9-a835-2706-f300-0deb924d3686@amlogic.com>
- <CAL_JsqKwmF1Ygbjiteq42t5xaG75vG-=hZYq=S-8e=s0m2FiWA@mail.gmail.com>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <8a663e01-9d6e-cced-cb97-8e793006f0c6@amlogic.com>
-Date:   Thu, 31 Oct 2019 20:40:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 08:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbfJaMpC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 08:45:02 -0400
+Received: from localhost (lns-bzn-32-82-254-4-138.adsl.proxad.net [82.254.4.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAAF02067D;
+        Thu, 31 Oct 2019 12:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572525901;
+        bh=0DNBeenyH7rB/8g2YXDHf6rJYEKF+j4UGX0CUbblXaA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mZ2EFnFaQxMFoSOwRwqwyd2Y9KZ+YtRrSiC6EbdzRR+rfKo31dkjxb3WqL6WD2PLV
+         CXi8nj0pOAqaL5Jz40Ey/pB2Q/l9RqFR3ZJ7RxF6l/Ildoo5XduUSMQXz18Y2y0tzL
+         GzoBlIYLheWU7SCpbNIdcCe9B1hw0oYK3jgmmIdY=
+Date:   Thu, 31 Oct 2019 13:35:43 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/2] Allwinner H6 Mali GPU support
+Message-ID: <20191031123543.lllmoat4zv5f47pd@hendrix>
+References: <20191030150742.3573-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKwmF1Ygbjiteq42t5xaG75vG-=hZYq=S-8e=s0m2FiWA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.19.135]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nd6i5yai3phkhdlv"
+Content-Disposition: inline
+In-Reply-To: <20191030150742.3573-1-peron.clem@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Rob
 
-On 2019/10/30 21:41, Rob Herring wrote:
-> On Wed, Oct 30, 2019 at 7:59 AM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
->>
->> Hi,Rob
->>
->> On 2019/10/30 4:51, Rob Herring wrote:
->>> On Mon, Oct 28, 2019 at 3:35 AM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
->>>>
->>>> Hi, Rob
->>>>
->>>> On 2019/10/26 4:30, Rob Herring wrote:
->>>>> On Fri, Oct 25, 2019 at 02:13:02PM +0800, Xingyu Chen wrote:
->>>>>> The binding targets the Meson-A/C series compatible SoCs, in which the
->>>>>> watchdog registers are in secure world.
->>>>>>
->>>>>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->>>>>> ---
->>>>>>     .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   | 34 ++++++++++++++++++++++
->>>>>>     1 file changed, 34 insertions(+)
->>>>>>     create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
->>>>>> new file mode 100644
->>>>>> index 00000000..0bbc807
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
->>>>>> @@ -0,0 +1,34 @@
->>>>>> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>>>>> +# Copyright (c) 2019 Amlogic, Inc
->>>>>> +%YAML 1.2
->>>>>> +---
->>>>>> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-wdt.yaml#"
->>>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>>>>> +
->>>>>> +title: Amlogic Meson Secure Watchdog Timer
->>>>>> +
->>>>>> +maintainers:
->>>>>> +  - Xingyu Chen <xingyu.chen@amlogic.com>
->>>>>> +
->>>>>> +description: |+
->>>>>> +  Secure Watchdog Timer used in Meson-A/C series Compatible SoCs
->>>>>> +
->>>>>> +properties:
->>>>>> +  compatible:
->>>>>> +    enum:
->>>>>> +      - amlogic,meson-sec-wdt
->>>>>
->>>>> If there are no other properties, then you don't need this. Just have
->>>>> the secure firmware driver instantiate the watchdog.
->>>> I'am very sorry i don't understand how to initialize the watchdog driver
->>>> if the compatible property is removed, Could you give me more
->>>> suggestions or examples ？ Thank you very much.
->>>
->>> platform_device_register_simple() from the secure firmware driver.
->> Thanks for your help. The device node of wdt looks useless if I use this
->> function to register device. if so, how should I get the pointer to
->> secure-monitor in wdt driver ? or should I use directly arm_smccc to
->> access the secfw ?
-> 
-> You can use of_find_compatible_node(). There should only be one firmware node.
-Thanks for your answer.
+--nd6i5yai3phkhdlv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I seem to miss something about registration of watchdog device. The 
-secure watchdog driver is used only to A1/C1 compatible SoCs, but is not
-support for previous SoCs (Eg: gxl axg).
+On Wed, Oct 30, 2019 at 04:07:40PM +0100, Cl=E9ment P=E9ron wrote:
+> Hi,
+>
+> Proper iommu patches has been merged[0].
+>
+> There is still work to do to make it works with panfrost
+> but all modules can be probed and removed smoothly.
+>
+> These bindings could be used also for out-of-tree modules.
 
-I have to think about platform difference If I use the 
-platform_device_register_simple() to register the wdt device in secure
-fw driver, because fw driver is compatible with all known SoCs, but the 
-secure wdt driver is only compatible with some SoCs. In other
-words, the registered wdt device is useless for gxl or axg.
+Applied both, thanks
 
-There is no such problem If I use the DT to describe the wdt device.
+Maxime
 
-> 
-> Rob
-> 
-> .
-> 
+--nd6i5yai3phkhdlv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbrVHwAKCRDj7w1vZxhR
+xWqMAQClAAyrxFvMUcdFqsOw4AphcLAVcXIVqpAF1731LJ7ZBgEAn8EdQHaxfj6V
+RLMcF7zHur0tsbHuhAtC/gJY0sHFFQM=
+=pJeb
+-----END PGP SIGNATURE-----
+
+--nd6i5yai3phkhdlv--
