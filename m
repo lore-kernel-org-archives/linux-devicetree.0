@@ -4,34 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21422CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48034CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00344208C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245802083E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 14:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfJaOYV convert rfc822-to-8bit (ORCPT
+        id S1727807AbfJaOZC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:24:21 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:54834 "EHLO
+        Thu, 31 Oct 2019 10:25:02 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:55148 "EHLO
         skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfJaOYU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:24:20 -0400
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        with ESMTP id S1727705AbfJaOZC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 10:25:02 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 85A9BD4A576;
-        Thu, 31 Oct 2019 15:24:15 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
+        by skedge04.snt-world.com (Postfix) with ESMTPS id A628DD4A56B;
+        Thu, 31 Oct 2019 15:24:31 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 31 Oct
- 2019 15:24:15 +0100
+ 2019 15:24:31 +0100
 Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
  sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Thu, 31 Oct 2019 15:24:15 +0100
+ 15.01.1713.004; Thu, 31 Oct 2019 15:24:31 +0100
 From:   Schrempf Frieder <frieder.schrempf@kontron.de>
 To:     Krzysztof Kozlowski <krzk@kernel.org>,
         Fabio Estevam <festevam@gmail.com>,
@@ -46,13 +45,13 @@ CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 05/11] ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen' node
- with 'stdout-path'
-Thread-Topic: [PATCH v3 05/11] ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen'
- node with 'stdout-path'
-Thread-Index: AQHVj/bfkccvcLeCpEuyLLVHKCmIow==
-Date:   Thu, 31 Oct 2019 14:24:15 +0000
-Message-ID: <20191031142112.12431-6-frieder.schrempf@kontron.de>
+Subject: [PATCH v3 10/11] dt-bindings: arm: fsl: Add more Kontron i.MX6UL/ULL
+ compatibles
+Thread-Topic: [PATCH v3 10/11] dt-bindings: arm: fsl: Add more Kontron
+ i.MX6UL/ULL compatibles
+Thread-Index: AQHVj/boZjsU03v60U6rh0cSmj8HZg==
+Date:   Thu, 31 Oct 2019 14:24:31 +0000
+Message-ID: <20191031142112.12431-11-frieder.schrempf@kontron.de>
 References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
 In-Reply-To: <20191031142112.12431-1-frieder.schrempf@kontron.de>
 Accept-Language: de-DE, en-US
@@ -66,7 +65,7 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 85A9BD4A576.A06DB
+X-SnT-MailScanner-ID: A628DD4A56B.A0BAA
 X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 X-SnT-MailScanner-SpamCheck: 
 X-SnT-MailScanner-From: frieder.schrempf@kontron.de
@@ -82,31 +81,54 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-The Kontron N6x1x SoMs all use uart4 as a debug serial interface.
-Therefore we set it in the 'chosen' node.
+Add the compatibles for Kontron i.MX6UL N6311 SoM and boards and
+the compatibles for Kontron i.MX6ULL N6411 SoM and boards.
 
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-index a843e028bcde..a17af4d9bfdf 100644
---- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
-@@ -7,6 +7,12 @@
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 1b4b4e6573b5..6d718272725d 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -162,6 +162,7 @@ properties:
+           - enum:
+               - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+               - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
++              - kontron,imx6ul-n6311-som  # Kontron N6311 SOM
+           - const: fsl,imx6ul
  
- #include <dt-bindings/gpio/gpio.h>
+       - description: Kontron N6310 S Board
+@@ -170,6 +171,12 @@ properties:
+           - const: kontron,imx6ul-n6310-som
+           - const: fsl,imx6ul
  
-+/ {
-+	chosen {
-+		stdout-path = &uart4;
-+	};
-+};
++      - description: Kontron N6311 S Board
++        items:
++          - const: kontron,imx6ul-n6311-s
++          - const: kontron,imx6ul-n6311-som
++          - const: fsl,imx6ul
 +
- &ecspi2 {
- 	cs-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
- 	pinctrl-names = "default";
+       - description: Kontron N6310 S 43 Board
+         items:
+           - const: kontron,imx6ul-n6310-s-43
+@@ -181,6 +188,13 @@ properties:
+         items:
+           - enum:
+               - fsl,imx6ull-14x14-evk     # i.MX6 UltraLiteLite 14x14 EVK Board
++              - kontron,imx6ull-n6411-som # Kontron N6411 SOM
++          - const: fsl,imx6ull
++
++      - description: Kontron N6411 S Board
++        items:
++          - const: kontron,imx6ull-n6411-s
++          - const: kontron,imx6ull-n6411-som
+           - const: fsl,imx6ull
+ 
+       - description: i.MX6ULZ based Boards
 -- 
 2.17.1
