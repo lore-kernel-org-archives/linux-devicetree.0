@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615D7CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360B4CA9ED0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A3A208C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABB42087F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eWEB6+B1"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AXFvmehU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfJaMbS (ORCPT
+        id S1726664AbfJaMbR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:31:18 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13352 "EHLO
+        Thu, 31 Oct 2019 08:31:17 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53926 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726538AbfJaMbR (ORCPT
+        by vger.kernel.org with ESMTP id S1726462AbfJaMbR (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
         Thu, 31 Oct 2019 08:31:17 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9VCQm2j029135;
-        Thu, 31 Oct 2019 13:30:55 +0100
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9VCRQ5U030921;
+        Thu, 31 Oct 2019 13:30:54 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=XobN5zu4BmNIGNVaY/JnEEHn+q2OpaXORVnInB3cdq4=;
- b=eWEB6+B1HOrepyJ4WJRDLMyuI9PXQWASN9adjrKxVIyL5yRCbF9YLcc/yPdmdPJYV3QT
- 2GHYgLY0xbpRqrX6IU1yZuwPpu89k2qmlIfcPZ86JtwCCIXQ1tRpT9T/Kv3zpqIzA/oz
- mTnH+WpF2bILB+mT+AlcIMeR7BnVHXs7M4S/PmFXdFlj6RDPwa8l5xtRULy1QdmM+RY5
- wOHeANc7j91gtBY3FtBXjwUtro+MQg4q9gdJOFyeT4Z5UdvkeU+2+bTFdC8V34jMJrYx
- 9biD4wHrOdpRH6hCWFr6Q+2+r8qQFJnUevIcG/X3Te/Ffy/2L8xpL+2bDpkWjqvGJr9r fg== 
+ bh=RgvneSBRTilulYhN5amimgSanJ3OY7+cEr1+3gGNZwE=;
+ b=AXFvmehUqvWgmAijEaStt+aCSiGdbb364k2EzKh67ktuGnrJlA7J56zQlRpeEereshnM
+ 4ds9IfY053aIy6FwVBvyefxPpPKbxsswu5mK2s5+wmwIedmdoYHZRiovbCIUW06XUSbn
+ 4O4ld/G22W4FMSURAFibeLWWZld3aIk5cN8YAV3uW+8M2IU8OBtdD2FaFtSLrj+EuIXs
+ yUB4AQXxnwSravd6ko1xEbqdkPfBKQTSBHbDkWxzxTFnzQV4Mlnu1aM7kS+IV8hbTSNe
+ 3ptJnBFFMCJVprjQ0tmeThdTtMjNU5XLeps0z+o6qg2AbOTiIzNynmxSBOluG82rvIps YQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vxwhussfa-1
+        by mx08-00178001.pphosted.com with ESMTP id 2vxwrnsrb3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 31 Oct 2019 13:30:55 +0100
+        Thu, 31 Oct 2019 13:30:54 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E0C8C100039;
-        Thu, 31 Oct 2019 13:30:53 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ACBAA100034;
+        Thu, 31 Oct 2019 13:30:50 +0100 (CET)
 Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CE8D12B7837;
-        Thu, 31 Oct 2019 13:30:53 +0100 (CET)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 98F0E2B7837;
+        Thu, 31 Oct 2019 13:30:50 +0100 (CET)
 Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
  (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct
- 2019 13:30:53 +0100
+ 2019 13:30:50 +0100
 Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct 2019 13:30:53
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct 2019 13:30:50
  +0100
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -63,9 +63,9 @@ CC:     <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
         <linux-pwm@vger.kernel.org>
-Subject: [PATCH 3/4] dt-bindings: pwm: Convert stm32 pwm bindings to json-schema
-Date:   Thu, 31 Oct 2019 13:30:39 +0100
-Message-ID: <20191031123040.26316-4-benjamin.gaignard@st.com>
+Subject: [PATCH 1/4] dt-bindings: counter: Convert stm32 counter bindings to json-schema
+Date:   Thu, 31 Oct 2019 13:30:37 +0100
+Message-ID: <20191031123040.26316-2-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20191031123040.26316-1-benjamin.gaignard@st.com>
 References: <20191031123040.26316-1-benjamin.gaignard@st.com>
@@ -79,42 +79,81 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 pwm binding to DT schema format using json-schema
+Convert the STM32 counter binding to DT schema format using json-schema
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- .../devicetree/bindings/pwm/pwm-stm32.txt          | 38 ----------------
- .../devicetree/bindings/pwm/st,stm32-pwm.yaml      | 51 ++++++++++++++++++++++
- 2 files changed, 51 insertions(+), 38 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/st,stm32-pwm.yaml
+ .../bindings/counter/st,stm32-timer-cnt.yaml       | 38 ++++++++++++++++++++++
+ .../bindings/counter/stm32-timer-cnt.txt           | 31 ------------------
+ 2 files changed, 38 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
+ delete mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+diff --git a/Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml b/Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
+new file mode 100644
+index 000000000000..56192d613601
+--- /dev/null
++++ b/Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/counter/st,stm32-timer-cnt.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Timers quadrature bindings
++
++description:
++  STM32 Timer provides quadrature encoder to detect angular position
++  and direction of rotary elements, from IN1 and IN2 input signals.
++
++maintainers:
++  - Benjamin Gaignard <benjamin.gaignard@st.com>
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
++
++properties:
++  counter:
++    type: object
++
++    description:
++      must be a sub-node of an STM32 Timer device tree node
++
++    properties:
++      compatible:
++        const: st,stm32-timer-counter
++            
++    required:
++      - compatible
++
++examples:
++  - |
++    counter {
++      compatible = "st,stm32-timer-counter";
++    };
++
++...
++
+diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
 deleted file mode 100644
-index a8690bfa5e1f..000000000000
---- a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+index c52fcdd4bf6c..000000000000
+--- a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
 +++ /dev/null
-@@ -1,38 +0,0 @@
--STMicroelectronics STM32 Timers PWM bindings
+@@ -1,31 +0,0 @@
+-STMicroelectronics STM32 Timer quadrature encoder
 -
--Must be a sub-node of an STM32 Timers device tree node.
+-STM32 Timer provides quadrature encoder to detect
+-angular position and direction of rotary elements,
+-from IN1 and IN2 input signals.
+-
+-Must be a sub-node of an STM32 Timer device tree node.
 -See ../mfd/stm32-timers.txt for details about the parent node.
 -
--Required parameters:
--- compatible:		Must be "st,stm32-pwm".
+-Required properties:
+-- compatible:		Must be "st,stm32-timer-counter".
 -- pinctrl-names: 	Set to "default".
--- pinctrl-0: 		List of phandles pointing to pin configuration nodes for PWM module.
--			For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
--- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
--			bindings defined in pwm.txt.
--
--Optional parameters:
--- st,breakinput:	One or two <index level filter> to describe break input configurations.
--			"index" indicates on which break input (0 or 1) the configuration
--			should be applied.
--			"level" gives the active level (0=low or 1=high) of the input signal
--			for this configuration.
--			"filter" gives the filtering value to be applied.
+-- pinctrl-0: 		List of phandles pointing to pin configuration nodes,
+-			to set CH1/CH2 pins in mode of operation for STM32
+-			Timer input on external pin.
 -
 -Example:
 -	timers@40010000 {
@@ -125,71 +164,12 @@ index a8690bfa5e1f..000000000000
 -		clocks = <&rcc 0 160>;
 -		clock-names = "int";
 -
--		pwm {
--			compatible = "st,stm32-pwm";
--			#pwm-cells = <3>;
--			pinctrl-0	= <&pwm1_pins>;
--			pinctrl-names	= "default";
--			st,breakinput = <0 1 5>;
+-		counter {
+-			compatible = "st,stm32-timer-counter";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&tim1_in_pins>;
 -		};
 -	};
-diff --git a/Documentation/devicetree/bindings/pwm/st,stm32-pwm.yaml b/Documentation/devicetree/bindings/pwm/st,stm32-pwm.yaml
-new file mode 100644
-index 000000000000..d3f8180edd88
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/st,stm32-pwm.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/st,stm32-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 Timers PWM bindings
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
-+
-+properties:
-+  pwn:
-+    type: object
-+
-+    description:
-+      must be a sub-node of an STM32 Timer device tree node
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-pwm
-+
-+      "#pwm-cells":
-+        const: 3
-+      
-+      st,breakinput:
-+        description: |
-+          One or two <index level filter> to describe break input configurations.
-+          "index" indicates on which break input (0 or 1) the configuration should be applied.
-+          "level" gives the active level (0=low or 1=high) of the input signal for this configuration.
-+          "filter" gives the filtering value (up to 15) to be applied.
-+   
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/uint32-array
-+          - minItems: 3
-+          - maxItems: 3
-+
-+    required:
-+      - "#pwm-cells"
-+      - compatible
-+
-+examples:
-+  - |
-+    pwm {
-+      compatible = "st,stm32-pwm";
-+      #pwm-cells = <3>;
-+      st,breakinput = <0 1 5>;
-+    };
-+
-+...
 -- 
 2.15.0
 
