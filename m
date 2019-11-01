@@ -2,159 +2,126 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8505CA9ED1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 15:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38683CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 16:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EDAA208E3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 15:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E112222D1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 16:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F9Ndl5Ph"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pqgUoVGB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfKAP4e (ORCPT
+        id S1727466AbfKAQJ5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:56:34 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44207 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbfKAP4d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 11:56:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id v4so7567323lfd.11
-        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 08:56:32 -0700 (PDT)
+        Fri, 1 Nov 2019 12:09:57 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38434 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbfKAQJ5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 12:09:57 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w8so4579737plq.5
+        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 09:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fFCvFToGeaHVIGU5sFBVgfSRoD2BKpJyYjD9mLtHujQ=;
-        b=F9Ndl5PhHtMPfUuMcm8khWvn73/BEOIl++HBIcr20Ca4EaRLGm0X6RFvsiVYxyTX1g
-         ScVc4k5lnnHBMJ/H/gnJWwg7s7cajawJ2YKfsHiEtNaOhBIrW6P82v9lWIsp4xPGOmsA
-         9q8ZHL/h7W1JGbUDLXrlJb3earEteWQrnKzeYI4pTOy0d8MaY+lfEZgmfgMGyFxVDWOZ
-         lusyDw5qW5fg9ImIFhykFIXEit3Pty0/IEovLGP9ElvcQ0+kyi6ngXU+wqtlfiMAIXmA
-         3oC4MDlTxQoJKR2Ml8zNsEQhHYR4x9mVMEqIxS+PkIWxgT1z+NItPSoSl+FuRRrny1sQ
-         xumw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mRy57XKTw+iRaQ47Zu7gF5ohXFgXAtsfkcxRhCEocfA=;
+        b=pqgUoVGB+Pvgs7uB4bZCVL9ddF6mUcusJ+t0IwqeiLrX6+prPEqal1X/OHf+0FpvvS
+         roWNNTa/wYh05Pj1boCFGl+442kLqX6wsmlUJ6S1tT+v2BWeeavOniuzuLm/u9bCtQYX
+         eQ8WBHmX0f1nkWYHj+8QpAIzUMREW7EDyaD9Ge6rO8FGPPMVtJOpLaI9G4fol8KUW/xi
+         TuNBxblEwg3XBK0qlvvnA++b8xIgGdtWlnxQW1qYSBIH1R3mI/GHMuJ9rSUTslOTzqCj
+         f3/WBWImyw0L4OrCd7MgfCSjXeIqz8kiJ2F16qgmfg/G1j+OBvwAP/1b9nQrUn+z0eYe
+         varw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fFCvFToGeaHVIGU5sFBVgfSRoD2BKpJyYjD9mLtHujQ=;
-        b=GBnY2lt06Bq/TpElTMnF0CTpcXyk6rmkNJCkVeAZ4QOFQrRYhUjp+mX/yd5h5DFSkg
-         3gua9WKwQyVneUO7qC6vP2h1/R4bzAF883LMkDOR+FzPYMJwTTdDEWjkwywWLGtf2P81
-         TOu9x+QD6172unW5hpCPbIbQv0PHNd7llJwLRbT9gwG06doa9K3FZmu+vmYImFOgbrne
-         oO03eil9+E/vK2sF5CNO38pgWuIBemjTTmNt7eE+r4WPA93m9l3tAW/5vdKFSQP6XUrc
-         +g+d88+ljJdh0/Jnyr9c7UJ00LMniylTcJ1waTvJOqVMxj7NneiABxSE1OClvjg4RGIe
-         ZtVw==
-X-Gm-Message-State: APjAAAW4wE4lHSCIJ6L2iFAOYncwALqRNtEO/f5spomCqviFJHrgI4Sz
-        v/Xxzvjt2WfNu0WJrr15BTNoFOrGOI665hlvIov0xw==
-X-Google-Smtp-Source: APXvYqxLkZQZkIBPHIuRg8wW008rxg1ziHdr9p3sXGGFnFmuX+RTcYVkFo7wPFbzWchz3TjPyV901OIH/V9MrUR/M5o=
-X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr7717304lfp.5.1572623791617;
- Fri, 01 Nov 2019 08:56:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mRy57XKTw+iRaQ47Zu7gF5ohXFgXAtsfkcxRhCEocfA=;
+        b=jQsBy7efxW+LsS4JTN7NgSRDCyO6Bc2UHeXGQ1yZkfsBnOgcmQDSCLb6CEx4wouCII
+         v7h7+VuiHOYUrgDe4+y/QK3jahDpvCc1yCRXA9O3dnf8orQTNV/Qs7in3xfNGaj/PjLB
+         A3ZuzNsE9ePOx8V7tIAb7qQaecjjdZkQNJWY4zZKMOGQuTe0geS5A3SC33PIhyHLFJEW
+         WO4lhebxDbud0uLV8UMPkyaHGktVoi4TBMF62Hil3oq5MahatBrQOUcxtg9plXqtIOKV
+         B1tGCiowl055sPgWs7GM+05Ri00ONeQqFGVchuWJwEtnATJ+Vc6tyMTNDI9SiO/3zAdq
+         h7xw==
+X-Gm-Message-State: APjAAAWWKfgkg6Uz1OPVOxV85ulMGgDxNqIn+ILahur478qyZ1eW4rgp
+        nuF7zWN6Gf4FXMMlakDX9Npi
+X-Google-Smtp-Source: APXvYqzfsLFiVzl52QPqi39geGbcUfS4XiTHJYRx20OJF5w9UUz77wUS+JTwJdlus1wJ1HApS5Y8cA==
+X-Received: by 2002:a17:902:6b07:: with SMTP id o7mr13800479plk.215.1572624596640;
+        Fri, 01 Nov 2019 09:09:56 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6413:fc8c:9538:d2ea:eab:d2c0])
+        by smtp.gmail.com with ESMTPSA id v63sm6705910pfb.181.2019.11.01.09.09.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Nov 2019 09:09:55 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 21:39:43 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Tudor.Ambarus@microchip.com
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        darshak.patel@einfochips.com, prajose.john@einfochips.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, marek.vasut@gmail.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 4/4] mtd: spi-nor: Add support for w25q256jw
+Message-ID: <20191101160943.GA20347@Mani-XPS-13-9360>
+References: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
+ <20191030090124.24900-5-manivannan.sadhasivam@linaro.org>
+ <87e0b459-8dbf-26cc-611f-1b1b5266aa55@microchip.com>
+ <20191101145806.GB13101@Mani-XPS-13-9360>
+ <beb8e7fc-02c2-8267-3612-20a526ac07fd@microchip.com>
 MIME-Version: 1.0
-References: <20191030114530.872-1-peter.ujfalusi@ti.com>
-In-Reply-To: <20191030114530.872-1-peter.ujfalusi@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 1 Nov 2019 16:56:19 +0100
-Message-ID: <CACRpkdbw9MVrQMSgVMenSqAOiti1pAy4d2LvWY-ssx9dhzWEcw@mail.gmail.com>
-Subject: Re: [RFC 0/2] gpio: Support for shared GPIO lines on boards
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Grant Likely <glikely@secretlab.ca>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <beb8e7fc-02c2-8267-3612-20a526ac07fd@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi folks,
+On Fri, Nov 01, 2019 at 03:55:01PM +0000, Tudor.Ambarus@microchip.com wrote:
+> 
+> 
+> On 11/01/2019 04:58 PM, Manivannan Sadhasivam wrote:
+> >>> Add MTD support for w25q256jw SPI NOR chip from Winbond. This chip
+> >>> supports dual/quad I/O mode with 512 blocks of memory organized in
+> >>> 64KB sectors. In addition to this, there is also small 4KB sectors
+> >>> available for flexibility. The device has been validated using Thor96
+> >>> board.
+> >>>
+> >>> Cc: Marek Vasut <marek.vasut@gmail.com>
+> >>> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+> >>> Cc: David Woodhouse <dwmw2@infradead.org>
+> >>> Cc: Brian Norris <computersforpeace@gmail.com>
+> >>> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> >>> Cc: Richard Weinberger <richard@nod.at>
+> >>> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> >>> Cc: linux-mtd@lists.infradead.org
+> >>> Signed-off-by: Darshak Patel <darshak.patel@einfochips.com>
+> >>> [Mani: cleaned up for upstream]
+> >> Can we keep Darshak's authorship? We usually change the author if we feel that
+> >> we made a significant change to what was originally published.
+> >>
+> >> If it's just about cosmetics, cleaning or rebase, you can specify what you did
+> >> after the author's S-o-b tag and then add your S-o-b, as you did above.
+> >>
+> > I'd suggest to keep Darshak's authorship since he did the actual change in
+> > the bsp. I have to clean it up before submitting upstream and I mentioned
+> > the same above.
+> > 
+> 
+> Ok, I'll amend the author when applying, it will be Darshak.
+> 
 
-cutting all the discussions in this thread we need to see the bigger
-pattern:
+Ah no. I was saying we should keep both of ours authorship. It shouldn't
+be an issue because we both are involved in the process.
 
-On GPIO rails
+Thanks,
+Mani
 
-People want "something like rails" for GPIO. In power supplies
-and thus the regulator subsystem, rails are connected to many
-logical endpoints.
-
-- The suggested inverter bindings would be effectively an
-  inverter on a GPIO rail.
-
-- This suggestion would be equal to many power consumers
-  on a rail, such as the usecase of shared gpio-enable lines in
-  the regulator subsystem already provides.
-
-The former seems to have been identified as solveable for the
-userspace that needed it and absorbed into the drafts for a
-virtualized GPIO controller. (Aggregating and creating a new
-virtual GPIO chip for some select physical GPIO lines.)
-
-I haven't seen an exact rationale from the DT community as
-to why these things should not be modeled, but as can be
-clearly seen in
-Documentation/devicetree/bindings/regulator/regulator.yaml
-the "rail abstraction" from the regulator subsystem which
-is in effect struct regulation_constraints and it sibling
-struct regulator_init_data is not in the DT bindings, instead
-this is encoded as properties in the regulator itself, so this
-is pretty consistent: the phandle from regulator to consumer
-*is* the rail.
-
-This goes back to Rajendras initial DT regulator support code
-see:
-git log -p 69511a452e6d
-
-So it would be logical then to just have:
-
-- More than one phandle taking the same GPIO line
-- Figure this situation out in the gpiolib OF core
-- Resolve the manageability of the situation (same
-  consumer flags etc)
-- Instantiate a kernel component as suggested,
-  mediating requests.
-- Handle it from there.
-
-So:
-
-gpio: gpio-controller@0 {
-        compatible = "foo,gpio";
-        gpio-controller;
-        #gpio-cells = <2>;
-};
-
-consumer-a {
-       compatible = "foo,consumer-a";
-       rst-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-};
-
-consumer-b {
-       compatible = "foo,consumer-b";
-       rst-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-};
-
-Hi kernel: figure it out.
-
-From this point the kernel driver(s) have to figure it out.
-
-I don't think this requires any changes to the DT bindings
-other than perhaps spelling out that if you link more than one
-phandle to a GPIO line, magic will happen. (We should probably
-make very verbose dmesg prints about this magic.)
-
-This is enough to start with. After that we can discuss adding
-flags and constraint properties to a certain GPIO line if
-need be. (That will be a big discussion as well, as we haven't
-even figured out how to assign default values to individual
-GPIO lines yet.)
-
-Yours,
-Linus Walleij
+> Thanks,
+> ta
