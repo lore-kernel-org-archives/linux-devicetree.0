@@ -2,168 +2,152 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065C2CA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 05:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70F0CA9EC9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 06:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCEAA2086D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 05:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6DB208E3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 06:06:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="N66EEaVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfKAFrq (ORCPT
+        id S1728797AbfKAGGN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 01:47:46 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60353 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbfKAFrq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Nov 2019 01:47:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 22:47:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
-   d="scan'208";a="199738011"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Oct 2019 22:47:44 -0700
-Received: from [10.226.39.46] (unknown [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 59030580499;
-        Thu, 31 Oct 2019 22:47:40 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
- link
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Rajat Jain <rajatja@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-References: <20191031132228.GA44315@google.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <33585725-51c7-6fe5-5d92-1e7fe77ca106@linux.intel.com>
-Date:   Fri, 1 Nov 2019 13:47:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 1 Nov 2019 02:06:13 -0400
+Received: from mail-eopbgr800058.outbound.protection.outlook.com ([40.107.80.58]:51024
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727995AbfKAGGN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Nov 2019 02:06:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ne07BTbih/2+IaF9XoCuyq65G3mC0SLybFkL3Anv0TPK1/feBx03hiEnBc+o6w7B9b8nCziDvuNyxzz49MuNdQ4NAbBxQ3deWbFZh6VwteVSvoUXcbgiFV0WHEviMl5tCREurZ9uRsNsb5qqx3qssUkN/86BQ3N1eesFh9biiGRB1bLPVaXb/tutiGhzFQF92pcmWn7uIMqvy6SHZuq1HR2wu2+hnGdBtTzQzJSQE9eIKhZIJkMwRLOWylZc8vRb7RJZliAf40oNMp370Q978thyyS39DHsqANT0rT9KBQ6rn3QNjTspG4qAw3Ml7kpmRnaxx6s0wfgYb5umcg/Ilw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qzXvD+IcJGqNn9EqJ780uC5HVrfKOntSd7rWjYG8Csg=;
+ b=R6lVbzxAECWfiKWxjiRmhzqAgLb6izDwKpMt8l97+u0FciJ4Qk9eQyX1jlzIOQo5C5kFDIOhsX+z1CZlxWVwPW021bJAf7dMfd5FxtfNAXUdkkaaG1Djx0Kdj/tMnRFEQRsmedkP1JwJWN4uJZMPvKvrnZvcysvGsAINc5nNztWw9sFatesb67cS4SRhisJmDA539+YS5P1ORb5e7HIOUV3Bf9Z6N4/8ZidTOo2jTG1OjkWuu6LepnP+qOFNBqtLuFj+1Z7pcs4SFbwSPXqQOmrxsVeeK7JfAqUp8OoW0uQvbzTLQ26wGMu/KwBRcBCAX6sZJpQ+R9e1XC5iW/L/ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qzXvD+IcJGqNn9EqJ780uC5HVrfKOntSd7rWjYG8Csg=;
+ b=N66EEaVgw2Te8HM65AfDbmTqD/03yQh9tispybXrsgDhaUP6WuPv4O4UG3je+DopQkSzbZxmRPXomQ6ea31u0PbPGIq5icuxQuVJxiW1uw5FfADux675Q+OvrUpOrYAFnavTxazMXwc1aNwlDJulBCIC8c/gLruYfcd53ckZw8Q=
+Received: from SN4PR0201CA0051.namprd02.prod.outlook.com
+ (2603:10b6:803:20::13) by CH2PR02MB6727.namprd02.prod.outlook.com
+ (2603:10b6:610:ac::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2408.18; Fri, 1 Nov
+ 2019 06:06:10 +0000
+Received: from SN1NAM02FT006.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::202) by SN4PR0201CA0051.outlook.office365.com
+ (2603:10b6:803:20::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2408.21 via Frontend
+ Transport; Fri, 1 Nov 2019 06:06:10 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT006.mail.protection.outlook.com (10.152.72.68) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
+ via Frontend Transport; Fri, 1 Nov 2019 06:06:10 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1iQQ4X-0005mX-Nn; Thu, 31 Oct 2019 23:06:09 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1iQQ4S-0007dN-Is; Thu, 31 Oct 2019 23:06:04 -0700
+Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xA165wT3005661;
+        Thu, 31 Oct 2019 23:05:58 -0700
+Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <mnarani@xilinx.com>)
+        id 1iQQ4L-0007Zu-ML; Thu, 31 Oct 2019 23:05:57 -0700
+Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
+        id E355E121380; Fri,  1 Nov 2019 11:35:56 +0530 (IST)
+From:   Manish Narani <manish.narani@xilinx.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, michal.simek@xilinx.com,
+        jolly.shah@xilinx.com, nava.manne@xilinx.com,
+        rajan.vaja@xilinx.com, manish.narani@xilinx.com
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        git@xilinx.com
+Subject: [PATCH v5 2/8] dt-bindings: mmc: arasan: Update Documentation for the input clock
+Date:   Fri,  1 Nov 2019 11:35:47 +0530
+Message-Id: <1572588353-110682-3-git-send-email-manish.narani@xilinx.com>
+X-Mailer: git-send-email 2.1.1
+In-Reply-To: <1572588353-110682-1-git-send-email-manish.narani@xilinx.com>
+References: <1572588353-110682-1-git-send-email-manish.narani@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(376002)(199004)(189003)(36756003)(6666004)(16586007)(316002)(8676002)(36386004)(2906002)(48376002)(81166006)(50466002)(103686004)(8936002)(81156014)(42186006)(356004)(106002)(70586007)(70206006)(4326008)(476003)(478600001)(486006)(47776003)(51416003)(50226002)(126002)(26005)(2616005)(186003)(107886003)(11346002)(76176011)(6266002)(5660300002)(44832011)(426003)(336012)(446003)(305945005)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6727;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-In-Reply-To: <20191031132228.GA44315@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d576206d-ae71-4bb1-598a-08d75e9197a2
+X-MS-TrafficTypeDiagnostic: CH2PR02MB6727:
+X-Microsoft-Antispam-PRVS: <CH2PR02MB672774A070CC56A62D9001CAC1620@CH2PR02MB6727.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 020877E0CB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FqsK8ePPEcInVTZs3GAK8aMjWCCQLZI/uLFsp1+JzO5Yf3AgKjZXeG8VZyEgoHjzpT+UedaLG7ZOhKDU+odHmchtQ3z7c8uvLZsoTFyfeevpvi/1vzRgad6tiaxw3Dc4Ln95FdHQ69/I1Z3VE4FvtWDur40cpx50vGVnrhuZS9FRZ7GEl1xyx6+iVov5Fdc2xcinxbeTP/KbDrFiVBEVW9euypSV2MIc6XPZDMh2JqdBqU6Vhvn8R/vumc8IOJEHlzUWtlTlGS2AONbEVg+PSVqus3+CMMgsDKg+m1paPBNqJu9CkolVlw/d3+icXDDLfIfnda+DUSKGpY9gL2A7uIEyVmCzGGlZEx44EF7ijlPAuXRIdo/Tv/thK1DUiJPlyboJzQJm11vymxhmc5KGBFmcNCEvR+nl8WT611MKWnZ1o1vMmaxO2vbejksx98Y1
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2019 06:06:10.2111
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d576206d-ae71-4bb1-598a-08d75e9197a2
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6727
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add documentation for an optional input clock which is essentially used
+in sampling the input data coming from the card.
 
-On 10/31/2019 9:22 PM, Bjorn Helgaas wrote:
-> On Thu, Oct 31, 2019 at 06:47:10PM +0800, Dilip Kota wrote:
->> On 10/31/2019 6:14 AM, Bjorn Helgaas wrote:
->>> On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
->>>> On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
->>>>> [+cc Rafael, linux-pm, beginning of discussion at
->>>>> https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
->>>>>
->>>>> On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
->>>>>> On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
->>>>>>> On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
->>>>>>>> On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
->>>>>>>>> PCIe RC driver on Intel Gateway SoCs have a requirement
->>>>>>>>> of changing link width and speed on the fly.
->>>>>>> Please add more details about why this is needed.  Since
->>>>>>> you're adding sysfs files, it sounds like it's not
->>>>>>> actually the *driver* that needs this; it's something in
->>>>>>> userspace?
->>>>>> We have use cases to change the link speed and width on the fly.
->>>>>> One is EMI check and other is power saving.  Some battery backed
->>>>>> applications have to switch PCIe link from higher GEN to GEN1 and
->>>>>> width to x1. During the cases like external power supply got
->>>>>> disconnected or broken. Once external power supply is connected then
->>>>>> switch PCIe link to higher GEN and width.
->>>>> That sounds plausible, but of course nothing there is specific to the
->>>>> Intel Gateway, so we should implement this generically so it would
->>>>> work on all hardware.
->>>> Agree.
->>>>> I'm not sure what the interface should look like -- should it be a
->>>>> low-level interface as you propose where userspace would have to
->>>>> identify each link of interest, or is there some system-wide
->>>>> power/performance knob that could tune all links?  Cc'd Rafael and
->>>>> linux-pm in case they have ideas.
->>>> To my knowledge sysfs is the appropriate way to go.
->>>> If there are any other best possible knobs, will be helpful.
->>> I agree sysfs is the right place for it; my question was whether we
->>> should have files like:
->>>
->>>     /sys/.../0000:00:1f.3/pcie_speed
->>>     /sys/.../0000:00:1f.3/pcie_width
->>>
->>> as I think this patch would add (BTW, please include sample paths like
->>> the above in the commit log), or whether there should be a more global
->>> thing that would affect all the links in the system.
->> Sure, i will add them.
->>> I think the low-level files like you propose would be better because
->>> one might want to tune link performance differently for different
->>> types of devices and workloads.
->>>
->>> We also have to decide if these files should be associated with the
->>> device at the upstream or downstream end of the link.  For ASPM, the
->>> current proposal [1] has the files at the downstream end on the theory
->>> that the GPU, NIC, NVMe device, etc is the user-recognizable one.
->>> Also, neither ASPM nor link speed/width make any sense unless there
->>> *is* a device at the downstream end, so putting them there
->>> automatically makes them visible only when they're useful.
->> This patch places the speed and width in the host controller directory.
->> /sys/.../xxx.pcie/pcie_speed
->> /sys/.../xxx.pcie/pcie_width
->>
->> I agree with you partially,  because i am having couple of points
->> making me to keep speed and width change entries in controller
->> directory:
->>
->> -- For changing the speed/width with device node, software ends up
->>     traversing to the controller from the device and do the
->>     operations.
->> -- Change speed and width are performed at controller level,
-> The controller is effectively a Root Complex, which may contain
-> several Root Ports.  I have the impression that the Synopsys
-> controller only supports a single Root Port, but that's just a detail
-> of the Synopsys implementation.  I think it should be possible to
-> configure the width/speed of each Root Port individually.
->
->> -- Keeping speed and width in controller gives a perspective (to the
->>     user) of changing them only once irrespective of no. of devices.
-> What if there's a switch?  If we change the width/speed of the link
-> between the Root Port and the Switch Upstream Port, that doesn't do
-> anything about the links from the Switch Downstream Ports.
-I missed to evaluate the multiple root port and switch scenarios, thanks 
-for pointing it.
-Then, placing the link speed and width change entries in the device node 
-will be appropriate.
-Software will traverse to the respective port or bus through the device 
-node and does the changes.
->
->> -- For speed and link change in Synopsys PCIe controller, specific
->>     registers need to be configured.  This prevents or complicates
->>     adding the speed and width change functionality in pci-sysfs or
->>     pci framework.
-> Don't the Link Control and related registers in PCIe spec give us
-> enough control to manage the link width/speed of *all* links,
-> including those from Root Ports and Switch Downstream Ports?
->
-> If the Synopsys controller requires controller-specific registers,
-> that sounds to me like it doesn't quite conform to the spec.  Maybe
-> that means we would need some sort of quirk or controller callback?
-Yes, Synopsys has specific registers configuration for link width 
-resizing and speed change.
-I will evaluate the possible mechanism for plugging in the controller 
-specific changes to the framework.
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Regards,
-Dilip
->
-> Bjorn
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index 7ca0aa7ccc0b..b51e40b2e0c5 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -38,9 +38,9 @@ Optional Properties:
+   - clock-output-names: If specified, this will be the name of the card clock
+     which will be exposed by this device.  Required if #clock-cells is
+     specified.
+-  - #clock-cells: If specified this should be the value <0>.  With this property
+-    in place we will export a clock representing the Card Clock.  This clock
+-    is expected to be consumed by our PHY.  You must also specify
++  - #clock-cells: If specified this should be the value <0> or <1>. With this
++    property in place we will export one or two clocks representing the Card
++    Clock. These clocks are expected to be consumed by our PHY.
+   - xlnx,fails-without-test-cd: when present, the controller doesn't work when
+     the CD line is not connected properly, and the line is not connected
+     properly. Test mode can be used to force the controller to function.
+-- 
+2.17.1
+
