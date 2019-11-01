@@ -2,152 +2,173 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395BCCA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 07:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413EACA9EC9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA0E2080F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 07:57:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WA+ly02R"
+	by mail.kernel.org (Postfix) with ESMTP id 1C1DF208E3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbfKAH5j (ORCPT
+        id S1729881AbfKAIGm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 03:57:39 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58988 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfKAH5j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 03:57:39 -0400
-Received: from pendragon.ideasonboard.com (unknown [109.190.253.13])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5624D2D1;
-        Fri,  1 Nov 2019 08:57:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1572595055;
-        bh=DKSEd/4zmCFtM4D8ZLoAyFUzhEtzYdFH9A2SAZ6Kmsg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WA+ly02RQE1bXxx9ReIa6usD0bl1d0D1w+iCYgmRRvvUZpa3hkog3EbmOq8v5Ui1q
-         4JG9vZOadNUP3DwmdCtRMOUpIxAQP2R5HeFwf8vlq7xD+LeH/8tP9M/zIr/dWbcszb
-         Pcd5Hz3IdhJhK6K4Ce+Cwr2E/vBruD5SNpzPX5SE=
-Date:   Fri, 1 Nov 2019 09:57:26 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Adam Ford <aford173@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Fri, 1 Nov 2019 04:06:42 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:44466 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729852AbfKAIGm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Nov 2019 04:06:42 -0400
+Received: from [46.218.74.72] (helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iQRx7-0001Qk-C2; Fri, 01 Nov 2019 09:06:37 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display
- support
-Message-ID: <20191101075726.GB6209@pendragon.ideasonboard.com>
-References: <20191016135147.7743-1-aford173@gmail.com>
- <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
+        Jagan Teki <jagan@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Add PCIe node on rk3399-roc-pc
+Date:   Fri, 01 Nov 2019 09:06:36 +0100
+Message-ID: <2490852.kIovObk3uj@phil>
+In-Reply-To: <f66fe5c3-6760-20b0-54cc-8f0c1a754bab@fivetechno.de>
+References: <09300c2d-4298-1b01-ac41-d1b2610589d4@fivetechno.de> <1719506.vT9a8mQdzu@phil> <f66fe5c3-6760-20b0-54cc-8f0c1a754bab@fivetechno.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 09:44:20AM -0500, Adam Ford wrote:
-> On Wed, Oct 16, 2019 at 8:52 AM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > Previously, there was an omap panel-dpi driver that would
-> > read generic timings from the device tree and set the display
-> > timing accordingly.  This driver was removed so the screen
-> > no longer functions.  This patch modifies the panel-simple
-> > file to setup the timings to the same values previously used.
-> >
-> > Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+Hi Markus,
+
+Am Donnerstag, 31. Oktober 2019, 19:12:10 CET schrieb Markus Reichl:
+> Am 31.10.19 um 17:57 schrieb Heiko Stuebner:
+> > Am Montag, 28. Oktober 2019, 15:47:27 CET schrieb Markus Reichl:
+> >> rk3399-roc-pc has a PCIe interface. Enable it for use with
+> >> the M.2 NGFF M_KEY slot on roc-rk3399-mezzanine board.
+> >> Tested with Samsung 970 evo plus SSD.
+> >> 
+> >> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> >> ---
+> >>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 38 +++++++++++++++++++
+> >>  1 file changed, 38 insertions(+)
+> >> 
+> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> >> index 9313251765c7..2d637d54994b 100644
+> >> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> >> @@ -158,6 +158,21 @@
+> >>  		regulator-max-microvolt = <1400000>;
+> >>  		vin-supply = <&vcc_sys>;
+> >>  	};
+> >> +
+> >> +	/* on roc-rk3399-mezzanine board */
+> > 
+> > I'm undecided on this. From what I've seen that mezzanine board is some
+> > sort of addon, like a raspberry pi hat. Therefore it's not always present,
+> > so probably should not be part of the base board dts.
+> > 
+> > I'm thinking a dt-overlay that can then be activated might be the solution
+> > of choice, but I've reached out to arm-soc poeple on irc to determine the
+> > correct course.
+> > 
+> I have seen some board.dtsi with board_only.dts respective board_extension.dts
+> in the arch/arm64/boot/dts/rockchip directory. Would that be ok?
+
+The answer is twofold I guess ;-)
+
+(1) The 100% correct way would probably be to use a devicetree overlay
+together with capemgr [0] to load the overlay from userspace, but
+
+(2a) The distinction between system-on-module + baseboard and
+board+cape is somewhat foggy I think and it really doesn't look like there
+will be a big plethora of capes for the roc-rk3399-pc
+
+(2b) People may actually want to boot of that nvme pcie drive attached
+to the mezzanine, so it will be somewhat permanent connection anyway
+and also the system then cannot wait for userspace to come up first, if
+the userspace is sitting on that drive ;-) .
+
+So I think, going the dts+dts-extension is the best way to go.
+
+Heiko
+
+
+[0] https://elinux.org/Capemgr
+
+
+
+> >> +	vcc3v3_pcie: vcc3v3-pcie {
+> >> +		compatible = "regulator-fixed";
+> >> +		regulator-name = "vcc3v3_pcie";
+> >> +		enable-active-high;
+> >> +		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+> >> +		pinctrl-names = "default";
+> >> +		pinctrl-0 = <&vcc3v3_pcie_en>;
+> >> +		regulator-always-on;
+> >> +		regulator-boot-on;
+> >> +		regulator-min-microvolt = <3300000>;
+> >> +		regulator-max-microvolt = <3300000>;
+> >> +		vin-supply = <&dc_12v>;
+> >> +	};
+> >>  };
+> >>  
+> >>  &cpu_l0 {
+> >> @@ -514,6 +529,19 @@
+> >>  	status = "okay";
+> >>  };
+> >>  
+> >> +&pcie_phy {
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&pcie0 {
+> >> +	ep-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
+> >> +	num-lanes = <4>;
+> >> +	pinctrl-names = "default";
+> >> +	pinctrl-0 = <&pcie_perst>;
+> >> +	vpcie3v3-supply = <&vcc3v3_pcie>;
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >>  &pinctrl {
+> >>  	lcd-panel {
+> >>  		lcd_panel_reset: lcd-panel-reset {
+> >> @@ -535,6 +563,16 @@
+> >>  		};
+> >>  	};
+> >>  
+> >> +	pcie {
+> >> +		vcc3v3_pcie_en: vcc3v3-pcie-en {
+> >> +			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
+> >> +		};
+> >> +
+> >> +		pcie_perst: pcie-perst {
+> >> +			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+> >> +		};
+> >> +	};
+> >> +
+> >>  	pmic {
+> >>  		vsel1_gpio: vsel1-gpio {
+> >>  			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
+> >> 
+> > 
+> > 
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > Linux-rockchip mailing list
+> > Linux-rockchip@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> > 
 > 
-> Will this be able to make it into linux-next for the 5.5 merge window?
-> I believe Tony has picked up the device tree portion in his omap
-> tree, but I haven't seen any notifications on this series on whether
-> or not it's being applied.  I also don't know which tree I need to
-> look if it's already been applied.
-> 
-> This fixes a regression introduced a while ago where the driver I was
-> using for the display was removed.
 
-Sam, would you be able to pick this up ?
 
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > ---
-> > V5:  No Change
-> > V4:  No Change
-> > V3:  No Change
-> > V2:  No Change
-> >
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > index 5d487686d25c..72f69709f349 100644
-> > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > @@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
-> >         .flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> >  };
-> >
-> > +static const struct drm_display_mode logicpd_type_28_mode = {
-> > +       .clock = 9000,
-> > +       .hdisplay = 480,
-> > +       .hsync_start = 480 + 3,
-> > +       .hsync_end = 480 + 3 + 42,
-> > +       .htotal = 480 + 3 + 42 + 2,
-> > +
-> > +       .vdisplay = 272,
-> > +       .vsync_start = 272 + 2,
-> > +       .vsync_end = 272 + 2 + 11,
-> > +       .vtotal = 272 + 2 + 11 + 3,
-> > +       .vrefresh = 60,
-> > +       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-> > +};
-> > +
-> > +static const struct panel_desc logicpd_type_28 = {
-> > +       .modes = &logicpd_type_28_mode,
-> > +       .num_modes = 1,
-> > +       .bpc = 8,
-> > +       .size = {
-> > +               .width = 105,
-> > +               .height = 67,
-> > +       },
-> > +       .delay = {
-> > +               .prepare = 200,
-> > +               .enable = 200,
-> > +               .unprepare = 200,
-> > +               .disable = 200,
-> > +       },
-> > +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> > +       .bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-> > +                    DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
-> > +};
-> > +
-> >  static const struct panel_desc mitsubishi_aa070mc01 = {
-> >         .modes = &mitsubishi_aa070mc01_mode,
-> >         .num_modes = 1,
-> > @@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
-> >         }, {
-> >                 .compatible = "lg,lp129qe",
-> >                 .data = &lg_lp129qe,
-> > +       }, {
-> > +               .compatible = "logicpd,type28",
-> > +               .data = &logicpd_type_28,
-> >         }, {
-> >                 .compatible = "mitsubishi,aa070mc01-ca1",
-> >                 .data = &mitsubishi_aa070mc01,
 
--- 
-Regards,
 
-Laurent Pinchart
