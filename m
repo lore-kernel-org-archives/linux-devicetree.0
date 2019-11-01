@@ -2,92 +2,168 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B51CA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 05:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065C2CA9EC9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 05:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F912085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 05:43:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QJq/W/+L";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AJl5A1k2"
+	by mail.kernel.org (Postfix) with ESMTP id CCEAA2086D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 05:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfKAFmk (ORCPT
+        id S1726351AbfKAFrq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 01:42:40 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47434 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKAFmk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 01:42:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DE5A160A66; Fri,  1 Nov 2019 05:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572586959;
-        bh=hfIUvKWAJJGAIiPINob40uFW3VATFr4Hy/OOMnNedZ4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QJq/W/+LeemfKfbuQt8carVNB0URGDh3KbVxp+VdHth6cbpLg4YAnp5NwdNlmDGaS
-         HD9E4VwrnJNbYy/qP17K3SeclV+MWLu1Nxbtv1K1qPNQ1qrbJfRLtpgZf5lE38kErP
-         /DJFNVuUlQW5+mlQ/lTxmYn0RmgyFIdAaQ500YcY=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id D668260A66;
-        Fri,  1 Nov 2019 05:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572586958;
-        bh=hfIUvKWAJJGAIiPINob40uFW3VATFr4Hy/OOMnNedZ4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AJl5A1k2zCnHgvYqAvbQ2tw0xbY7UZ487lMyuth0SXCeWAZy1iQ0A/UYUECO0mtq9
-         iL79uI+9ha4SC15D5PMNFY3e0Jy2CVpGZQvyYxUSd31WHzpMILh7xKbf7+8R04AYUN
-         CM2CgEzIe78GA80M9YzJSY2+1xt5ZUInUf3uwmh8=
+        Fri, 1 Nov 2019 01:47:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60353 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbfKAFrq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Nov 2019 01:47:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 22:47:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
+   d="scan'208";a="199738011"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Oct 2019 22:47:44 -0700
+Received: from [10.226.39.46] (unknown [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id 59030580499;
+        Thu, 31 Oct 2019 22:47:40 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
+ link
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Rajat Jain <rajatja@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <20191031132228.GA44315@google.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <33585725-51c7-6fe5-5d92-1e7fe77ca106@linux.intel.com>
+Date:   Fri, 1 Nov 2019 13:47:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 01 Nov 2019 11:12:38 +0530
-From:   kgunda@codeaurora.org
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V9 1/6] backlight: qcom-wled: Add new properties for
- PMI8998.
-In-Reply-To: <20191031085845.GA5700@dell>
-References: <1571814423-6535-1-git-send-email-kgunda@codeaurora.org>
- <1571814423-6535-2-git-send-email-kgunda@codeaurora.org>
- <20191031085845.GA5700@dell>
-Message-ID: <4b5c264b8d4b47c48bc87ca389041a02@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+In-Reply-To: <20191031132228.GA44315@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-31 14:28, Lee Jones wrote:
-> On Wed, 23 Oct 2019, Kiran Gunda wrote:
-> 
->> Update the bindings with the new properties used for
->> PMI8998.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
->> ---
->>  .../bindings/leds/backlight/qcom-wled.txt          | 74 
->> ++++++++++++++++++----
->>  1 file changed, 63 insertions(+), 11 deletions(-)
-> 
-> This patch no longer applies.
-> 
-> It looks like you dropped the rename patch.
-> 
-> Please rebase all of the patches in this set on top of a released
-> commit and resend.
-Sure. I will resend the complete series with the dropped patches.
+
+On 10/31/2019 9:22 PM, Bjorn Helgaas wrote:
+> On Thu, Oct 31, 2019 at 06:47:10PM +0800, Dilip Kota wrote:
+>> On 10/31/2019 6:14 AM, Bjorn Helgaas wrote:
+>>> On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
+>>>> On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
+>>>>> [+cc Rafael, linux-pm, beginning of discussion at
+>>>>> https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
+>>>>>
+>>>>> On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
+>>>>>> On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+>>>>>>> On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+>>>>>>>> On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+>>>>>>>>> PCIe RC driver on Intel Gateway SoCs have a requirement
+>>>>>>>>> of changing link width and speed on the fly.
+>>>>>>> Please add more details about why this is needed.  Since
+>>>>>>> you're adding sysfs files, it sounds like it's not
+>>>>>>> actually the *driver* that needs this; it's something in
+>>>>>>> userspace?
+>>>>>> We have use cases to change the link speed and width on the fly.
+>>>>>> One is EMI check and other is power saving.  Some battery backed
+>>>>>> applications have to switch PCIe link from higher GEN to GEN1 and
+>>>>>> width to x1. During the cases like external power supply got
+>>>>>> disconnected or broken. Once external power supply is connected then
+>>>>>> switch PCIe link to higher GEN and width.
+>>>>> That sounds plausible, but of course nothing there is specific to the
+>>>>> Intel Gateway, so we should implement this generically so it would
+>>>>> work on all hardware.
+>>>> Agree.
+>>>>> I'm not sure what the interface should look like -- should it be a
+>>>>> low-level interface as you propose where userspace would have to
+>>>>> identify each link of interest, or is there some system-wide
+>>>>> power/performance knob that could tune all links?  Cc'd Rafael and
+>>>>> linux-pm in case they have ideas.
+>>>> To my knowledge sysfs is the appropriate way to go.
+>>>> If there are any other best possible knobs, will be helpful.
+>>> I agree sysfs is the right place for it; my question was whether we
+>>> should have files like:
+>>>
+>>>     /sys/.../0000:00:1f.3/pcie_speed
+>>>     /sys/.../0000:00:1f.3/pcie_width
+>>>
+>>> as I think this patch would add (BTW, please include sample paths like
+>>> the above in the commit log), or whether there should be a more global
+>>> thing that would affect all the links in the system.
+>> Sure, i will add them.
+>>> I think the low-level files like you propose would be better because
+>>> one might want to tune link performance differently for different
+>>> types of devices and workloads.
+>>>
+>>> We also have to decide if these files should be associated with the
+>>> device at the upstream or downstream end of the link.  For ASPM, the
+>>> current proposal [1] has the files at the downstream end on the theory
+>>> that the GPU, NIC, NVMe device, etc is the user-recognizable one.
+>>> Also, neither ASPM nor link speed/width make any sense unless there
+>>> *is* a device at the downstream end, so putting them there
+>>> automatically makes them visible only when they're useful.
+>> This patch places the speed and width in the host controller directory.
+>> /sys/.../xxx.pcie/pcie_speed
+>> /sys/.../xxx.pcie/pcie_width
+>>
+>> I agree with you partially,  because i am having couple of points
+>> making me to keep speed and width change entries in controller
+>> directory:
+>>
+>> -- For changing the speed/width with device node, software ends up
+>>     traversing to the controller from the device and do the
+>>     operations.
+>> -- Change speed and width are performed at controller level,
+> The controller is effectively a Root Complex, which may contain
+> several Root Ports.  I have the impression that the Synopsys
+> controller only supports a single Root Port, but that's just a detail
+> of the Synopsys implementation.  I think it should be possible to
+> configure the width/speed of each Root Port individually.
+>
+>> -- Keeping speed and width in controller gives a perspective (to the
+>>     user) of changing them only once irrespective of no. of devices.
+> What if there's a switch?  If we change the width/speed of the link
+> between the Root Port and the Switch Upstream Port, that doesn't do
+> anything about the links from the Switch Downstream Ports.
+I missed to evaluate the multiple root port and switch scenarios, thanks 
+for pointing it.
+Then, placing the link speed and width change entries in the device node 
+will be appropriate.
+Software will traverse to the respective port or bus through the device 
+node and does the changes.
+>
+>> -- For speed and link change in Synopsys PCIe controller, specific
+>>     registers need to be configured.  This prevents or complicates
+>>     adding the speed and width change functionality in pci-sysfs or
+>>     pci framework.
+> Don't the Link Control and related registers in PCIe spec give us
+> enough control to manage the link width/speed of *all* links,
+> including those from Root Ports and Switch Downstream Ports?
+>
+> If the Synopsys controller requires controller-specific registers,
+> that sounds to me like it doesn't quite conform to the spec.  Maybe
+> that means we would need some sort of quirk or controller callback?
+Yes, Synopsys has specific registers configuration for link width 
+resizing and speed change.
+I will evaluate the possible mechanism for plugging in the controller 
+specific changes to the framework.
+
+Regards,
+Dilip
+>
+> Bjorn
