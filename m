@@ -2,595 +2,223 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521A1CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 12:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68E2CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 12:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D74E217F9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 12:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CAA21734
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 12:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfKAMQA (ORCPT
+        id S1728169AbfKAMSI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 08:16:00 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:45911 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727279AbfKAMQA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 08:16:00 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Nov 2019 17:38:48 +0530
-IronPort-SDR: 18joQudYus4ACgZj8lLhxVDhYBCuEjVF8uYnY0Gvn3CvYkFZi99P6HuMaKUHP1QyO/n/NKkg7f
- 3ddpIfMTa0TXf2LMoVnhI1fugbLpFhN4gtUGy9FjyDyPyh+L++BYAPgEovmMx3HFqhxpDiHxC/
- CsdnveCmUfD9fjv2LxDDL7E8IxdbrOXMewTCzSLx7VjmgeCoBUNx8QAnVSg3kdb+B160xn/eYN
- HVMtJ2DnTnyTJf/zkItdO1Mxw+PqBE5yO0xOkUkwxHUEBTw1p2Ejl2Bo+0LlbBloURJ+lVQ5ox
- +0qCh79T4A6fZRq4LMelAMFG
-Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 01 Nov 2019 17:38:35 +0530
-Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
-        id 70B7318F1; Fri,  1 Nov 2019 17:38:34 +0530 (IST)
-From:   Rajeshwari <rkambl@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaa@codeaurora.org,
-        sanm@codeaurora.org, Rajeshwari <rkambl@codeaurora.org>
-Subject: [PATCH 1/1] arm64: dts: qcom: sc7180:  Add device node support for TSENS in SC7180
-Date:   Fri,  1 Nov 2019 17:38:28 +0530
-Message-Id: <1572610108-1363-2-git-send-email-rkambl@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572610108-1363-1-git-send-email-rkambl@codeaurora.org>
-References: <1572610108-1363-1-git-send-email-rkambl@codeaurora.org>
+        Fri, 1 Nov 2019 08:18:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:34540 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727989AbfKAMSI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Nov 2019 08:18:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 314F31F1;
+        Fri,  1 Nov 2019 05:18:07 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BBFD3F6C4;
+        Fri,  1 Nov 2019 05:18:06 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 12:18:04 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, axboe@kernel.dk,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, bhelgaas@google.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/5] net: stmmac: Split devicetree parse
+Message-ID: <20191101121802.GD9723@e119886-lin.cambridge.arm.com>
+References: <20191030135347.3636-1-jiaxun.yang@flygoat.com>
+ <20191030135347.3636-3-jiaxun.yang@flygoat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030135347.3636-3-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add TSENS node and user thermal zone configurations for TSENS sensors in SC7180.
+On Wed, Oct 30, 2019 at 09:53:44PM +0800, Jiaxun Yang wrote:
+> PCI based devices can share devicetree info parse with platform
+> device based devices after split dt parse frpm dt probe.
 
-Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 518 +++++++++++++++++++++++++++++++++++
- 1 file changed, 518 insertions(+)
+s/frpm/from/
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 07ea393..06ded1d 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -238,6 +238,22 @@
- 			};
- 		};
- 
-+		tsens0: thermal-sensor@c263000 {
-+			compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-+			reg = <0 0x0c263000 0 0x1ff>, /* TM */
-+				<0 0x0c222000 0 0x1ff>; /* SROT */
-+			#qcom,sensors = <15>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
-+		tsens1: thermal-sensor@c265000 {
-+			compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-+			reg = <0 0x0c265000 0 0x1ff>, /* TM */
-+				<0 0x0c223000 0 0x1ff>; /* SROT */
-+			#qcom,sensors = <10>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0 0xc440000 0 0x1100>,
-@@ -449,6 +465,508 @@
- 		};
- 	};
- 
-+	thermal-zones {
-+		aoss-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-governor = "user_space";
-+			thermal-sensors = <&tsens0 0>;
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-governor = "user_space";
-+			thermal-sensors = <&tsens0 1>;
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-governor = "user_space";
-+			thermal-sensors = <&tsens0 2>;
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-2-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-governor = "user_space";
-+			thermal-sensors = <&tsens0 3>;
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-3-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 4>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-4-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 5>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-5-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 6>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpuss-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 7>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpuss-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 8>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-1-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 9>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-1-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 10>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-1-2-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 11>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-1-3-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 12>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		gpuss-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 13>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		gpuss-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 14>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		aoss-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 0>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cwlan-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 1>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		audio-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 2>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		ddr-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 3>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				ative-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		q6-hvx-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 4>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		camera-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 5>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		mdm-core-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 6>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		mdm-dsp-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 7>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		npu-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 8>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		video-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 9>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  .../ethernet/stmicro/stmmac/stmmac_platform.c | 63 ++++++++++++++-----
+>  .../ethernet/stmicro/stmmac/stmmac_platform.h |  3 +
+>  2 files changed, 49 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> index 170c3a052b14..7e29bc76b7c3 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> @@ -385,25 +385,19 @@ static int stmmac_of_get_mac_mode(struct device_node *np)
+>  }
+>  
+>  /**
+> - * stmmac_probe_config_dt - parse device-tree driver parameters
+> - * @pdev: platform_device structure
+> - * @mac: MAC address to use
+> + * stmmac_parse_config_dt - parse device-tree driver parameters
+> + * @np: device_mode structure
+> + * @plat: plat_stmmacenet_data structure
+>   * Description:
+>   * this function is to read the driver parameters from device-tree and
+>   * set some private fields that will be used by the main at runtime.
+>   */
+> -struct plat_stmmacenet_data *
+> -stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+> +int stmmac_parse_config_dt(struct device_node *np,
+> +				struct plat_stmmacenet_data *plat)
+>  {
+> -	struct device_node *np = pdev->dev.of_node;
+> -	struct plat_stmmacenet_data *plat;
+>  	struct stmmac_dma_cfg *dma_cfg;
+>  	int rc;
+>  
+> -	plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
+> -	if (!plat)
+> -		return ERR_PTR(-ENOMEM);
+> -
+>  	*mac = of_get_mac_address(np);
+>  	if (IS_ERR(*mac)) {
+>  		if (PTR_ERR(*mac) == -EPROBE_DEFER)
+> @@ -414,7 +408,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+>  
+>  	plat->phy_interface = of_get_phy_mode(np);
+>  	if (plat->phy_interface < 0)
+> -		return ERR_PTR(plat->phy_interface);
+> +		return plat->phy_interface;
+>  
+>  	plat->interface = stmmac_of_get_mac_mode(np);
+>  	if (plat->interface < 0)
+> @@ -453,7 +447,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+>  	/* To Configure PHY by using all device-tree supported properties */
+>  	rc = stmmac_dt_phy(plat, np, &pdev->dev);
+>  	if (rc)
+> -		return ERR_PTR(rc);
+> +		return rc;
+>  
+>  	of_property_read_u32(np, "tx-fifo-depth", &plat->tx_fifo_size);
+>  
+> @@ -531,7 +525,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+>  			       GFP_KERNEL);
+>  	if (!dma_cfg) {
+>  		stmmac_remove_config_dt(pdev, plat);
+> -		return ERR_PTR(-ENOMEM);
+> +		return -ENOMEM;
+>  	}
+>  	plat->dma_cfg = dma_cfg;
+>  
+> @@ -560,7 +554,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+>  	rc = stmmac_mtl_setup(pdev, plat);
+>  	if (rc) {
+>  		stmmac_remove_config_dt(pdev, plat);
+> -		return ERR_PTR(rc);
+> +		return rc;
+>  	}
+>  
+>  	/* clock setup */
+> @@ -604,14 +598,43 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+>  		plat->stmmac_rst = NULL;
+>  	}
+>  
+> -	return plat;
+> +	return 0;
+>  
+>  error_hw_init:
+>  	clk_disable_unprepare(plat->pclk);
+>  error_pclk_get:
+>  	clk_disable_unprepare(plat->stmmac_clk);
+>  
+> -	return ERR_PTR(-EPROBE_DEFER);
+> +	return -EPROBE_DEFER;
+> +}
+> +
+> +/**
+> + * stmmac_probe_config_dt - probe and setup stmmac platform data by devicetree
+> + * @pdev: platform_device structure
+> + * @mac: MAC address to use
+> + * Description:
+> + * this function is to set up plat_stmmacenet_data  private structure
+> + * for platform drivers.
+> + */
+> +struct plat_stmmacenet_data *
+> +stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct plat_stmmacenet_data *plat;
+> +	int rc;
+> +
+> +	plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
+> +	if (!plat)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	rc = stmmac_parse_config_dt(np, plat);
+> +
+> +	if (rc) {
+> +		free(plat);
 
+Given the devm_kzalloc - is the free really needed here?
+
+Thanks,
+
+Andrew Murray
+
+> +		return ERR_PTR(rc);
+> +	}
+> +
+> +	return plat;
+>  }
+>  
+>  /**
+> @@ -628,6 +651,11 @@ void stmmac_remove_config_dt(struct platform_device *pdev,
+>  	of_node_put(plat->mdio_node);
+>  }
+>  #else
+> +int stmmac_parse_config_dt(struct device_node *np,
+> +				struct plat_stmmacenet_data *plat)
+> +{
+> +	return -EINVAL;
+> +}
+>  struct plat_stmmacenet_data *
+>  stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+>  {
+> @@ -639,6 +667,7 @@ void stmmac_remove_config_dt(struct platform_device *pdev,
+>  {
+>  }
+>  #endif /* CONFIG_OF */
+> +EXPORT_SYMBOL_GPL(stmmac_parse_config_dt);
+>  EXPORT_SYMBOL_GPL(stmmac_probe_config_dt);
+>  EXPORT_SYMBOL_GPL(stmmac_remove_config_dt);
+>  
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
+> index 3a4663b7b460..0e4aec1f502a 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
+> @@ -11,6 +11,9 @@
+>  
+>  #include "stmmac.h"
+>  
+> +int stmmac_parse_config_dt(struct device_node *np,
+> +				struct plat_stmmacenet_data *plat);
+> +
+>  struct plat_stmmacenet_data *
+>  stmmac_probe_config_dt(struct platform_device *pdev, const char **mac);
+>  void stmmac_remove_config_dt(struct platform_device *pdev,
+> -- 
+> 2.23.0
+> 
