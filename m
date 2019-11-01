@@ -2,197 +2,131 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C85CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133DECA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4786217D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E4920862
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHSLrZ06"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ge/UTzPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbfKARg3 (ORCPT
+        id S1726900AbfKARk5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 13:36:29 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43301 "EHLO
+        Fri, 1 Nov 2019 13:40:57 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36901 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727365AbfKARg3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 13:36:29 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 3so7511681pfb.10;
-        Fri, 01 Nov 2019 10:36:28 -0700 (PDT)
+        with ESMTP id S1726658AbfKARk5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 13:40:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p24so1026234pfn.4;
+        Fri, 01 Nov 2019 10:40:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z0U01s7+6Ea8Fz436rHjv7Qqm8LV+DjHi5N/V/PY/XE=;
-        b=DHSLrZ06cWK6VEikHg0pEOqzDGREWugeMzuFhyHQML3yuLAveJ9HhOhiez3+tlZ90J
-         ek2rnq9dLqsqvfYs93BI2ss1DjBT9ww6ceZnAakeWDDqygwwrHEBE0DU1r+48gO7uBvi
-         0LnAWpTrgw3PTZaTIKTgzVYhrenwnYmhOM4EkTe9Hebw3GzNKGAGwUSVgYNSC2rekuMc
-         6p5bb6sylbtwTfi6ucTuR+a+72h3xghBMbpmrOs2i4Qt6R7hZLK1QHBZmrReRBajcPtn
-         9+m91Kxbd0i8KvMl6tbQ0EiRdNUO/wyaQ2EvmJp82qd/tMGqlRNU+4lJYFXxQgZsAP2+
-         0nOA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nFNT0LPVheWA4KBpnwRedDxe323lH3c78BcmwLbJ700=;
+        b=ge/UTzPgmx562dBN7M+gJnaLpgdt7tTLMJj965/UtlsjHMookPjfZEeSyuW6yaBJ/t
+         aziJDTH8+9YwXmzr0Xx5hpG5e9caR15dZKiaMPAf4PyasAzBv0vx87Vf02OLwoM8qUbQ
+         6lPYg2bQvvDGYW2hQQo3KXH6Ha7iuEaqv3kZymF1Pya4y1sjKq/0iDVomDCBsrW3lD8g
+         ojwug482SwJTWzYJ62hWzrQPU1DwHsebPq4qsbWjVIH8HEXoJSGpXC7EiUAYFoakcosh
+         BvXhyG9EnJgXnPi+dYOf2m1VxgGQ8+bZg54SqXSHvHom7gowiYfuCyJdZaeqoOS04AsO
+         TbAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Z0U01s7+6Ea8Fz436rHjv7Qqm8LV+DjHi5N/V/PY/XE=;
-        b=OXeSp2x1DNJGb8IagurdKzJMBlpXcvarpJM2FpYeu5IY2BZEfAgAe9tQ/pjF+SW0Y6
-         PJ8F0bdgU0D0doqsUtffyG8NWvZfxOxlNbaUpJ2QogVoqdNAuiUj2/j+mBILKNlbvsOm
-         +GUnU++k7ZUR+yvHxnBrVD1FalIW/winywLlqkxxoz3ZHjin7ENuA9DQLdYb2VW8pRs6
-         uAHyAFGqh9vybXaQXU2xNUBtsImh4fUkuprKMMU2p5NFL9IJeegGoUR6yF/msB4S+3cz
-         oqGqN0+NkzbY/tZWJL9iKQ1EanB1v6GJ3tBvjkP1YIGDVAEPcudpGcWB9DIfhQbh5zgO
-         JvYw==
-X-Gm-Message-State: APjAAAUjcZbjuOBpZ3L+7Wyd7jl/O0zL3bodc+k9E4XNau0TSWYXBczJ
-        fMNucYBsGDqopL8aHfprJSqgA9F0
-X-Google-Smtp-Source: APXvYqzXNPhKuW6XMfQ1f4g/1vBPp+SsbntUuSCigJvTWleeoY5iTIX6ZkUgdW09yT4cjQpzJULQfQ==
-X-Received: by 2002:a63:d609:: with SMTP id q9mr14832868pgg.110.1572629787326;
-        Fri, 01 Nov 2019 10:36:27 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id l24sm7141999pff.151.2019.11.01.10.36.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 10:36:26 -0700 (PDT)
-Subject: Re: [PATCH v5 net-next 05/12] dt-bindings: net: ti: add new cpsw
- switch driver bindings
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>
-Cc:     Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <20191024100914.16840-1-grygorii.strashko@ti.com>
- <20191024100914.16840-6-grygorii.strashko@ti.com>
- <caf68306-46ce-f97d-b45a-0fc1cd5323f7@gmail.com>
- <6e64b70e-604a-b8c6-12ce-7977ffa4ed5a@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
- xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
- X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
- AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
- ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
- SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
- nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
- qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz7QnRmxvcmlhbiBG
- YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+iGYEExECACYCGyMGCwkIBwMCBBUCCAME
- FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
- 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSC5BA0ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
- WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
- pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
- hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
- OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
- Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
- oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
- 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
- BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
- +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
- FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
- 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
- vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
- WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
- HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
- HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
- Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
- kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
- aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
- y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU4hPBBgRAgAPAhsMBQJU
- X9LxBQkeXB3fAAoJEGFXmRW1Y3YOj4UAn3nrFLPZekMeqX5aD/aq/dsbXSfyAKC45Go0YyxV
- HGuUuzv+GKZ6nsysJ7kCDQRXG8fwARAA6q/pqBi5PjHcOAUgk2/2LR5LjjesK50bCaD4JuNc
- YDhFR7Vs108diBtsho3w8WRd9viOqDrhLJTroVckkk74OY8r+3t1E0Dd4wHWHQZsAeUvOwDM
- PQMqTUBFuMi6ydzTZpFA2wBR9x6ofl8Ax+zaGBcFrRlQnhsuXLnM1uuvS39+pmzIjasZBP2H
- UPk5ifigXcpelKmj6iskP3c8QN6x6GjUSmYx+xUfs/GNVSU1XOZn61wgPDbgINJd/THGdqiO
- iJxCLuTMqlSsmh1+E1dSdfYkCb93R/0ZHvMKWlAx7MnaFgBfsG8FqNtZu3PCLfizyVYYjXbV
- WO1A23riZKqwrSJAATo5iTS65BuYxrFsFNPrf7TitM8E76BEBZk0OZBvZxMuOs6Z1qI8YKVK
- UrHVGFq3NbuPWCdRul9SX3VfOunr9Gv0GABnJ0ET+K7nspax0xqq7zgnM71QEaiaH17IFYGS
- sG34V7Wo3vyQzsk7qLf9Ajno0DhJ+VX43g8+AjxOMNVrGCt9RNXSBVpyv2AMTlWCdJ5KI6V4
- KEzWM4HJm7QlNKE6RPoBxJVbSQLPd9St3h7mxLcne4l7NK9eNgNnneT7QZL8fL//s9K8Ns1W
- t60uQNYvbhKDG7+/yLcmJgjF74XkGvxCmTA1rW2bsUriM533nG9gAOUFQjURkwI8jvMAEQEA
- AYkCaAQYEQIACQUCVxvH8AIbAgIpCRBhV5kVtWN2DsFdIAQZAQIABgUCVxvH8AAKCRCH0Jac
- RAcHBIkHD/9nmfog7X2ZXMzL9ktT++7x+W/QBrSTCTmq8PK+69+INN1ZDOrY8uz6htfTLV9+
- e2W6G8/7zIvODuHk7r+yQ585XbplgP0V5Xc8iBHdBgXbqnY5zBrcH+Q/oQ2STalEvaGHqNoD
- UGyLQ/fiKoLZTPMur57Fy1c9rTuKiSdMgnT0FPfWVDfpR2Ds0gpqWePlRuRGOoCln5GnREA/
- 2MW2rWf+CO9kbIR+66j8b4RUJqIK3dWn9xbENh/aqxfonGTCZQ2zC4sLd25DQA4w1itPo+f5
- V/SQxuhnlQkTOCdJ7b/mby/pNRz1lsLkjnXueLILj7gNjwTabZXYtL16z24qkDTI1x3g98R/
- xunb3/fQwR8FY5/zRvXJq5us/nLvIvOmVwZFkwXc+AF+LSIajqQz9XbXeIP/BDjlBNXRZNdo
- dVuSU51ENcMcilPr2EUnqEAqeczsCGpnvRCLfVQeSZr2L9N4svNhhfPOEscYhhpHTh0VPyxI
- pPBNKq+byuYPMyk3nj814NKhImK0O4gTyCK9b+gZAVvQcYAXvSouCnTZeJRrNHJFTgTgu6E0
- caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
- 6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <5c286f76-d108-5d78-dd8f-19e1baf64396@gmail.com>
-Date:   Fri, 1 Nov 2019 10:36:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nFNT0LPVheWA4KBpnwRedDxe323lH3c78BcmwLbJ700=;
+        b=Eca0500v2VUmd2jufYMCQSkCXOVUhqL2OtODLk38ixNRi3qNxrTYaqR2NSDPXoACve
+         v5NHYu5zWmck5UYD9PamEZ5oXw59aSDx9GdGSfZMF1nVm+qKPON5GyO+V4h7QMWG5nYV
+         bUJtSKfb+zntUUCULXv4CispBDiQNM9/3FL9RZ1yBy3vSepb7maZy7KgCwZMtUjzeo4v
+         N6NBRTHp5FymniNE7UG+drMuYj9ORNyA0EBkOzPi89LzoYA9rhxssIUjCgNoSac4eHIX
+         rjDUpIt5JmOIe6qR3B+7Sh4vX/SE7+jmj1tPaEf6jzWaHRhwQ2wb+pqc4/Q8XnMKo/h/
+         EOVA==
+X-Gm-Message-State: APjAAAWNdT1dGdHhDhqW4rbEgo6OKYqgxFpdP0kcMrtDA5Ld1VnQtyGV
+        mbAxLT2so9yW94eBvNZ5gkwut/p8o+g=
+X-Google-Smtp-Source: APXvYqxEMn19nRiQYdcMHXDUyl1sN5kC5K5u0Di4ZM95TyefIw5grebLlrUdxgtbp3mv1L0GC8D08g==
+X-Received: by 2002:a65:5388:: with SMTP id x8mr8040065pgq.398.1572630055931;
+        Fri, 01 Nov 2019 10:40:55 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:200::3:155b])
+        by smtp.gmail.com with ESMTPSA id b18sm7009793pfi.157.2019.11.01.10.40.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Nov 2019 10:40:55 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 10:40:45 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Tao Ren <taoren@fb.com>, Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/4] ARM: dts: aspeed: add dtsi for Facebook AST2500
+ Network BMCs
+Message-ID: <20191101174044.GA13557@taoren-ubuntu-R90MNF91>
+References: <20191021194820.293556-1-taoren@fb.com>
+ <CACPK8XcNxs5T=ZC_mRnvkOF_kqS1AvP=9PvMB6w9Fgn_XbtZQw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <6e64b70e-604a-b8c6-12ce-7977ffa4ed5a@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACPK8XcNxs5T=ZC_mRnvkOF_kqS1AvP=9PvMB6w9Fgn_XbtZQw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/1/19 10:25 AM, Grygorii Strashko wrote:
-> Hi Florian,
+On Fri, Nov 01, 2019 at 10:08:35AM +0000, Joel Stanley wrote:
+> Hi Tao,
 > 
-> On 25/10/2019 20:47, Florian Fainelli wrote:
->> On 10/24/19 3:09 AM, Grygorii Strashko wrote:
->>> Add bindings for the new TI CPSW switch driver. Comparing to the legacy
->>> bindings (net/cpsw.txt):
->>> - ports definition follows DSA bindings (net/dsa/dsa.txt) and ports
->>> can be
->>> marked as "disabled" if not physically wired.
->>> - all deprecated properties dropped;
->>> - all legacy propertiies dropped which represent constant HW
->>> cpapbilities
->>> (cpdma_channels, ale_entries, bd_ram_size, mac_control, slaves,
->>> active_slave)
->>> - TI CPTS DT properties are reused as is, but grouped in "cpts" sub-node
->>> - TI Davinci MDIO DT bindings are reused as is, because Davinci MDIO is
->>> reused.
->>>
->>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>> ---
->>
->> [snip]
->>> +- mdio : CPSW MDIO bus block description
->>> +    - bus_freq : MDIO Bus frequency
->>
->> clock-frequency is a more typical property to describe the bus clock's
->> frequency, that is what i2c and spi do.
+> On Mon, 21 Oct 2019 at 19:49, Tao Ren <taoren@fb.com> wrote:
+> >
+> > The patch series adds "facebook-netbmc-ast2500-common.dtsi" which defines
+> > devices that are common cross all Facebook AST2500 Network BMC platforms.
+> > The major purpose is to minimize duplicated device entries among Facebook
+> > Network BMC dts files.
+> >
+> > Patch #1 (of 4) adds "facebook-netbmc-ast2500-common.dtsi" file, and the
+> > remaining 3 patches update CMM, Minipack and Yamp device tree to consume
+> > the new dtsi file.
 > 
-> The MDIO is re-used here unchanged (including bindings).
-> i think, I could try to add standard optional property "bus-frequency"
-> to MDIO bindings
-> as separate series, and deprecate "bus_freq".
+> The patches look okay to me. I modified the file name to match the
+> convention used by other device trees in the arm directory, where it
+> includes the SOC name first.
+> 
+> I also reworded the commit messages a little.
+> 
+> They have been merged into the aspeed tree for submission to 5.5.
+> 
+> Thanks!
+> 
+> Joel
 
-What is wrong with 'clock-frequency'?
+Got it. Thanks a lot for doing this, Joel.
 
-Documentation/devicetree/bindings/i2c/i2c.txt:
+Cheers,
 
-- clock-frequency
-        frequency of bus clock in Hz.
+Tao
 
-Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt:
-
-- clock-frequency: the MDIO bus clock that must be output by the MDIO bus
-  hardware, if absent, the default hardware values are used
-
-Maybe this is a bit of a misnomer as it is usually considered a
-replacement for the lack of a proper "clocks" property with a clock
-provider, but we can flip the coin around any way we want, it looks
-almost the same.
--- 
-Florian
+> >
+> > Tao Ren (4):
+> >   ARM: dts: aspeed: add dtsi for Facebook AST2500 Network BMCs
+> >   ARM: dts: aspeed: cmm: include dtsi for common network BMC devices
+> >   ARM: dts: aspeed: minipack: include dtsi for common network BMC
+> >     devices
+> >   ARM: dts: aspeed: yamp: include dtsi for common network BMC devices
+> >
+> >  arch/arm/boot/dts/aspeed-bmc-facebook-cmm.dts | 66 ++++---------
+> >  .../boot/dts/aspeed-bmc-facebook-minipack.dts | 59 ++++--------
+> >  .../arm/boot/dts/aspeed-bmc-facebook-yamp.dts | 62 +-----------
+> >  .../dts/facebook-netbmc-ast2500-common.dtsi   | 96 +++++++++++++++++++
+> >  4 files changed, 136 insertions(+), 147 deletions(-)
+> >  create mode 100644 arch/arm/boot/dts/facebook-netbmc-ast2500-common.dtsi
+> >
+> > --
+> > 2.17.1
+> >
