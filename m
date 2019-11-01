@@ -2,621 +2,340 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F16ECA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 06:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E89CA9EC9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 06:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47453217D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 06:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="itR0zejM";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RoS3+f6S"
+	by mail.kernel.org (Postfix) with ESMTP id BC33C218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 06:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbfKAG23 (ORCPT
+        id S1725936AbfKAGnk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 02:28:29 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46662 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbfKAG22 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 02:28:28 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 51D2960F94; Fri,  1 Nov 2019 06:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572589707;
-        bh=jbbKzMNuIKsCrSVBFloO4+6mFPMvXOegRo7cqvecICQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=itR0zejM6I132eKRiqxjPEFpFMAFUdV2q5YNP0aTPikCWeoL7G/xyRNBHygRyb8IA
-         JiNLi9wuKMvSUsNVpYq7KoNQS3jrpikZgaRas2iaLFCZoP3LAw9RXQeT+8hdWBs3Ik
-         2EYYXhx3Ktg76uo8f/FIcotyGsTefw734REAfkEQ=
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6769860F74;
-        Fri,  1 Nov 2019 06:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572589704;
-        bh=jbbKzMNuIKsCrSVBFloO4+6mFPMvXOegRo7cqvecICQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RoS3+f6SQxZ/5SMMMjP0gY4vFWeYLedHhyccHBP6WPtxqO7rbkrF1KvV+jjcUTvyw
-         zaDBxN5Exm3zIz/RFHZphpvF2di9rN3uePXxdThhQpa5Nks1wReux8ggABJmqYSQ5n
-         /Jn1h8xwX9n6jm25Ef069jOLLW/HnUHGPm7n3StA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6769860F74
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org
-Cc:     Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V10 8/8] backlight: qcom-wled: Add auto string detection logic
-Date:   Fri,  1 Nov 2019 11:57:04 +0530
-Message-Id: <1572589624-6095-9-git-send-email-kgunda@codeaurora.org>
+        Fri, 1 Nov 2019 02:43:40 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:2333 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726132AbfKAGnk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 02:43:40 -0400
+X-UUID: c958f380f0414687bdb21af56c93c848-20191101
+X-UUID: c958f380f0414687bdb21af56c93c848-20191101
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <chun-hung.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 239938428; Fri, 01 Nov 2019 14:43:32 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 1 Nov 2019 14:43:25 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 1 Nov 2019 14:43:25 +0800
+From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
+To:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: [PATCH 2/3] [2/3] mmc: mediatek: command queue support
+Date:   Fri, 1 Nov 2019 14:43:01 +0800
+Message-ID: <1572590582-11056-2-git-send-email-chun-hung.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1572589624-6095-1-git-send-email-kgunda@codeaurora.org>
-References: <1572589624-6095-1-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <1572590582-11056-1-git-send-email-chun-hung.wu@mediatek.com>
+References: <1572590582-11056-1-git-send-email-chun-hung.wu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The auto string detection algorithm checks if the current WLED
-sink configuration is valid. It tries enabling every sink and
-checks if the OVP fault is observed. Based on this information
-it detects and enables the valid sink configuration.
-Auto calibration will be triggered when the OVP fault interrupts
-are seen frequently thereby it tries to fix the sink configuration.
+Support command queue for mt6779 platform.
 
-The auto-detection also kicks in when the connected LED string
-of the display-backlight malfunctions (because of damage) and
-requires the damaged string to be turned off to prevent the
-complete panel and/or board from being damaged.
-
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Change-Id: I56b866fa4097a3c0bee77f53486c470e4f1944b9
+Feature:
+Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
 ---
- drivers/video/backlight/qcom-wled.c | 400 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 394 insertions(+), 6 deletions(-)
+ drivers/mmc/host/mtk-sd.c | 151 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 141 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-index 658b1e0..33b6007 100644
---- a/drivers/video/backlight/qcom-wled.c
-+++ b/drivers/video/backlight/qcom-wled.c
-@@ -17,19 +17,29 @@
- #define WLED_MAX_STRINGS				4
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 189e426..b132397 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -31,6 +31,8 @@
+ #include <linux/mmc/sdio.h>
+ #include <linux/mmc/slot-gpio.h>
  
- #define WLED_DEFAULT_BRIGHTNESS				2048
--
-+#define WLED_SOFT_START_DLY_US				10000
- #define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
- 
- /* WLED3/WLED4 control registers */
-+#define WLED3_CTRL_REG_FAULT_STATUS			0x08
-+#define  WLED3_CTRL_REG_ILIM_FAULT_BIT			BIT(0)
-+#define  WLED3_CTRL_REG_OVP_FAULT_BIT			BIT(1)
-+#define  WLED4_CTRL_REG_SC_FAULT_BIT			BIT(2)
++#include "cqhci.h"
 +
-+#define WLED3_CTRL_REG_INT_RT_STS			0x10
-+#define  WLED3_CTRL_REG_OVP_FAULT_STATUS		BIT(1)
-+
- #define WLED3_CTRL_REG_MOD_EN				0x46
- #define  WLED3_CTRL_REG_MOD_EN_MASK			BIT(7)
- #define  WLED3_CTRL_REG_MOD_EN_SHIFT			7
+ #define MAX_BD_NUM          1024
  
-+#define WLED3_CTRL_REG_FEEDBACK_CONTROL			0x48
-+
- #define WLED3_CTRL_REG_FREQ				0x4c
- #define  WLED3_CTRL_REG_FREQ_MASK			GENMASK(3, 0)
+ /*--------------------------------------------------------------------------*/
+@@ -151,6 +153,7 @@
+ #define MSDC_INT_DMA_BDCSERR    (0x1 << 17)	/* W1C */
+ #define MSDC_INT_DMA_GPDCSERR   (0x1 << 18)	/* W1C */
+ #define MSDC_INT_DMA_PROTECT    (0x1 << 19)	/* W1C */
++#define MSDC_INT_CMDQ           (0x1 << 28)	/* W1C */
  
- #define WLED3_CTRL_REG_OVP				0x4d
--#define  WLED3_CTRL_REG_OVP_MASK				GENMASK(1, 0)
-+#define  WLED3_CTRL_REG_OVP_MASK			GENMASK(1, 0)
+ /* MSDC_INTEN mask */
+ #define MSDC_INTEN_MMCIRQ       (0x1 << 0)	/* RW */
+@@ -181,6 +184,7 @@
+ /* SDC_CFG mask */
+ #define SDC_CFG_SDIOINTWKUP     (0x1 << 0)	/* RW */
+ #define SDC_CFG_INSWKUP         (0x1 << 1)	/* RW */
++#define SDC_CFG_WRDTOC          (0x1fff  << 2)  /* RW */
+ #define SDC_CFG_BUSWIDTH        (0x3 << 16)	/* RW */
+ #define SDC_CFG_SDIO            (0x1 << 19)	/* RW */
+ #define SDC_CFG_SDIOIDE         (0x1 << 20)	/* RW */
+@@ -228,6 +232,7 @@
+ #define MSDC_PATCH_BIT_SPCPUSH    (0x1 << 29)	/* RW */
+ #define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)	/* RW */
  
- #define WLED3_CTRL_REG_ILIMIT				0x4e
- #define  WLED3_CTRL_REG_ILIMIT_MASK			GENMASK(2, 0)
-@@ -119,6 +129,7 @@ struct wled_config {
- 	bool ext_gen;
- 	bool cabc;
- 	bool external_pfet;
-+	bool auto_detection_enabled;
++#define MSDC_PB1_BUSY_CHECK_SEL   (0x1 << 7)    /* RW */
+ #define MSDC_PATCH_BIT1_STOP_DLY  (0xf << 8)    /* RW */
+ 
+ #define MSDC_PATCH_BIT2_CFGRESP   (0x1 << 15)   /* RW */
+@@ -431,6 +436,7 @@ struct msdc_host {
+ 	struct msdc_save_para save_para; /* used when gate HCLK */
+ 	struct msdc_tune_para def_tune_para; /* default tune setting */
+ 	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
++	struct cqhci_host *cq_host;
  };
  
- struct wled {
-@@ -127,17 +138,22 @@ struct wled {
- 	struct regmap *regmap;
- 	struct mutex lock;	/* Lock to avoid race from thread irq handler */
- 	ktime_t last_short_event;
-+	ktime_t start_ovp_fault_time;
- 	u16 ctrl_addr;
- 	u16 sink_addr;
- 	u16 max_string_count;
-+	u16 auto_detection_ovp_count;
- 	u32 brightness;
- 	u32 max_brightness;
- 	u32 short_count;
-+	u32 auto_detect_count;
- 	bool disabled_by_short;
- 	bool has_short_detect;
- 	int short_irq;
-+	int ovp_irq;
- 
- 	struct wled_config cfg;
-+	struct delayed_work ovp_work;
- 	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
+ static const struct mtk_mmc_compatible mt8135_compat = {
+@@ -527,6 +533,18 @@ struct msdc_host {
+ 	.use_internal_cd = true,
  };
  
-@@ -182,6 +198,13 @@ static int wled4_set_brightness(struct wled *wled, u16 brightness)
- 	return 0;
++static const struct mtk_mmc_compatible mt6779_compat = {
++	.clk_div_bits = 12,
++	.hs400_tune = false,
++	.pad_tune_reg = MSDC_PAD_TUNE0,
++	.async_fifo = true,
++	.data_tune = true,
++	.busy_check = true,
++	.stop_clk_fix = true,
++	.enhance_rx = true,
++	.support_64g = true,
++};
++
+ static const struct of_device_id msdc_of_ids[] = {
+ 	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
+ 	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
+@@ -536,6 +554,7 @@ struct msdc_host {
+ 	{ .compatible = "mediatek,mt7622-mmc", .data = &mt7622_compat},
+ 	{ .compatible = "mediatek,mt8516-mmc", .data = &mt8516_compat},
+ 	{ .compatible = "mediatek,mt7620-mmc", .data = &mt7620_compat},
++	{ .compatible = "mediatek,mt6779-mmc", .data = &mt6779_compat},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, msdc_of_ids);
+@@ -698,21 +717,21 @@ static void msdc_unprepare_data(struct msdc_host *host, struct mmc_request *mrq)
+ 	}
  }
  
-+static void wled_ovp_work(struct work_struct *work)
-+{
-+	struct wled *wled = container_of(work,
-+					 struct wled, ovp_work.work);
-+	enable_irq(wled->ovp_irq);
-+}
-+
- static int wled_module_enable(struct wled *wled, int val)
+-/* clock control primitives */
+-static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
++static u64 msdc_timeout_cal(struct msdc_host *host, u64 ns, u64 clks)
  {
- 	int rc;
-@@ -193,7 +216,25 @@ static int wled_module_enable(struct wled *wled, int val)
- 				WLED3_CTRL_REG_MOD_EN,
- 				WLED3_CTRL_REG_MOD_EN_MASK,
- 				val << WLED3_CTRL_REG_MOD_EN_SHIFT);
--	return rc;
-+	if (rc < 0)
-+		return rc;
+-	u32 timeout, clk_ns;
++	u64 timeout, clk_ns;
+ 	u32 mode = 0;
+ 
+-	host->timeout_ns = ns;
+-	host->timeout_clks = clks;
+ 	if (host->mmc->actual_clock == 0) {
+ 		timeout = 0;
+ 	} else {
+-		clk_ns  = 1000000000UL / host->mmc->actual_clock;
+-		timeout = (ns + clk_ns - 1) / clk_ns + clks;
++		clk_ns  = 1000000000ULL;
++		do_div(clk_ns, host->mmc->actual_clock);
++		timeout = ns + clk_ns - 1;
++		do_div(timeout, clk_ns);
++		timeout += clks;
+ 		/* in 1048576 sclk cycle unit */
+-		timeout = (timeout + (0x1 << 20) - 1) >> 20;
++		timeout = DIV_ROUND_UP(timeout, (0x1 << 20));
+ 		if (host->dev_comp->clk_div_bits == 8)
+ 			sdr_get_field(host->base + MSDC_CFG,
+ 				      MSDC_CFG_CKMOD, &mode);
+@@ -722,9 +741,30 @@ static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
+ 		/*DDR mode will double the clk cycles for data timeout */
+ 		timeout = mode >= 2 ? timeout * 2 : timeout;
+ 		timeout = timeout > 1 ? timeout - 1 : 0;
+-		timeout = timeout > 255 ? 255 : timeout;
+ 	}
+-	sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, timeout);
++	return timeout;
++}
 +
-+	if (wled->ovp_irq > 0) {
-+		if (val) {
-+			/*
-+			 * The hardware generates a storm of spurious OVP
-+			 * interrupts during soft start operations. So defer
-+			 * enabling the IRQ for 10ms to ensure that the
-+			 * soft start is complete.
-+			 */
-+			schedule_delayed_work(&wled->ovp_work, HZ / 100);
-+		} else {
-+			if (!cancel_delayed_work_sync(&wled->ovp_work))
-+				disable_irq(wled->ovp_irq);
-+		}
-+	}
++/* clock control primitives */
++static void msdc_set_timeout(struct msdc_host *host, u64 ns, u64 clks)
++{
++	u64 timeout;
 +
-+	return 0;
++	host->timeout_ns = ns;
++	host->timeout_clks = clks;
++
++	timeout = msdc_timeout_cal(host, ns, clks);
++	sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC,
++		      (u32)(timeout > 255 ? 255 : timeout));
++}
++
++static void msdc_set_busy_timeout(struct msdc_host *host, u64 ns, u64 clks)
++{
++	u64 timeout;
++
++	timeout = msdc_timeout_cal(host, ns, clks);
++	sdr_set_field(host->base + SDC_CFG, SDC_CFG_WRDTOC,
++		      (u32)(timeout > 8191 ? 8191 : timeout));
  }
  
- static int wled_sync_toggle(struct wled *wled)
-@@ -300,6 +341,304 @@ static irqreturn_t wled_short_irq_handler(int irq, void *_wled)
- 	return IRQ_HANDLED;
+ static void msdc_gate_clock(struct msdc_host *host)
+@@ -1413,6 +1453,36 @@ static void msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
+ 		pm_runtime_put_noidle(host->dev);
  }
  
-+#define AUTO_DETECT_BRIGHTNESS		200
-+
-+static void wled_auto_string_detection(struct wled *wled)
++#if IS_ENABLED(CONFIG_MMC_CQHCI)
++static irqreturn_t msdc_cmdq_irq(struct msdc_host *host, u32 intsts)
 +{
-+	int rc = 0, i;
-+	u32 sink_config = 0, int_sts;
-+	u8 sink_test = 0, sink_valid = 0, val;
++	int cmd_err = 0, dat_err = 0;
 +
-+	/* Read configured sink configuration */
-+	rc = regmap_read(wled->regmap, wled->sink_addr +
-+			 WLED4_SINK_REG_CURR_SINK, &sink_config);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to read SINK configuration rc=%d\n",
-+			rc);
-+		goto failed_detect;
++	if (intsts & MSDC_INT_RSPCRCERR) {
++		cmd_err = (unsigned int)-EILSEQ;
++		dev_err(host->dev, "%s: CMD CRC ERR", __func__);
++	} else if (intsts & MSDC_INT_CMDTMO) {
++		cmd_err = (unsigned int)-ETIMEDOUT;
++		dev_err(host->dev, "%s: CMD TIMEOUT ERR", __func__);
 +	}
 +
-+	/* Disable the module before starting detection */
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_MOD_EN,
-+				WLED3_CTRL_REG_MOD_EN_MASK, 0);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to disable WLED module rc=%d\n", rc);
-+		goto failed_detect;
++	if (intsts & MSDC_INT_DATCRCERR) {
++		dat_err = (unsigned int)-EILSEQ;
++		dev_err(host->dev, "%s: DATA CRC ERR", __func__);
++	} else if (intsts & MSDC_INT_DATTMO) {
++		dat_err = (unsigned int)-ETIMEDOUT;
++		dev_err(host->dev, "%s: DATA TIMEOUT ERR", __func__);
 +	}
 +
-+	/* Set low brightness across all sinks */
-+	rc = wled4_set_brightness(wled, AUTO_DETECT_BRIGHTNESS);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to set brightness for auto detection rc=%d\n",
-+			rc);
-+		goto failed_detect;
++	if (cmd_err || dat_err) {
++		dev_err(host->dev, "cmd_err = %d, dat_err =%d, intsts = 0x%x",
++			cmd_err, dat_err, intsts);
 +	}
 +
-+	if (wled->cfg.cabc) {
-+		for (i = 0; i < wled->cfg.num_strings; i++) {
-+			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
-+						WLED4_SINK_REG_STR_CABC(i),
-+						WLED4_SINK_REG_STR_CABC_MASK,
-+						0);
-+			if (rc < 0)
-+				goto failed_detect;
-+		}
-+	}
-+
-+	/* Disable all sinks */
-+	rc = regmap_write(wled->regmap,
-+			  wled->sink_addr + WLED4_SINK_REG_CURR_SINK, 0);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to disable all sinks rc=%d\n", rc);
-+		goto failed_detect;
-+	}
-+
-+	/* Iterate through the strings one by one */
-+	for (i = 0; i < wled->cfg.num_strings; i++) {
-+		sink_test = BIT((WLED4_SINK_REG_CURR_SINK_SHFT + i));
-+
-+		/* Enable feedback control */
-+		rc = regmap_write(wled->regmap, wled->ctrl_addr +
-+				  WLED3_CTRL_REG_FEEDBACK_CONTROL, i + 1);
-+		if (rc < 0) {
-+			dev_err(wled->dev, "Failed to enable feedback for SINK %d rc = %d\n",
-+				i + 1, rc);
-+			goto failed_detect;
-+		}
-+
-+		/* Enable the sink */
-+		rc = regmap_write(wled->regmap, wled->sink_addr +
-+				  WLED4_SINK_REG_CURR_SINK, sink_test);
-+		if (rc < 0) {
-+			dev_err(wled->dev, "Failed to configure SINK %d rc=%d\n",
-+				i + 1, rc);
-+			goto failed_detect;
-+		}
-+
-+		/* Enable the module */
-+		rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
-+					WLED3_CTRL_REG_MOD_EN,
-+					WLED3_CTRL_REG_MOD_EN_MASK,
-+					WLED3_CTRL_REG_MOD_EN_MASK);
-+		if (rc < 0) {
-+			dev_err(wled->dev, "Failed to enable WLED module rc=%d\n",
-+				rc);
-+			goto failed_detect;
-+		}
-+
-+		usleep_range(WLED_SOFT_START_DLY_US,
-+			     WLED_SOFT_START_DLY_US + 1000);
-+
-+		rc = regmap_read(wled->regmap, wled->ctrl_addr +
-+				 WLED3_CTRL_REG_INT_RT_STS, &int_sts);
-+		if (rc < 0) {
-+			dev_err(wled->dev, "Error in reading WLED3_CTRL_INT_RT_STS rc=%d\n",
-+				rc);
-+			goto failed_detect;
-+		}
-+
-+		if (int_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
-+			dev_dbg(wled->dev, "WLED OVP fault detected with SINK %d\n",
-+				i + 1);
-+		else
-+			sink_valid |= sink_test;
-+
-+		/* Disable the module */
-+		rc = regmap_update_bits(wled->regmap,
-+					wled->ctrl_addr + WLED3_CTRL_REG_MOD_EN,
-+					WLED3_CTRL_REG_MOD_EN_MASK, 0);
-+		if (rc < 0) {
-+			dev_err(wled->dev, "Failed to disable WLED module rc=%d\n",
-+				rc);
-+			goto failed_detect;
-+		}
-+	}
-+
-+	if (!sink_valid) {
-+		dev_err(wled->dev, "No valid WLED sinks found\n");
-+		wled->disabled_by_short = true;
-+		goto failed_detect;
-+	}
-+
-+	if (sink_valid != sink_config) {
-+		dev_warn(wled->dev, "%x is not a valid sink configuration - using %x instead\n",
-+			 sink_config, sink_valid);
-+		sink_config = sink_valid;
-+	}
-+
-+	/* Write the new sink configuration */
-+	rc = regmap_write(wled->regmap,
-+			  wled->sink_addr + WLED4_SINK_REG_CURR_SINK,
-+			  sink_config);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to reconfigure the default sink rc=%d\n",
-+			rc);
-+		goto failed_detect;
-+	}
-+
-+	/* Enable valid sinks */
-+	for (i = 0; i < wled->cfg.num_strings; i++) {
-+		if (wled->cfg.cabc) {
-+			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
-+						WLED4_SINK_REG_STR_CABC(i),
-+						WLED4_SINK_REG_STR_CABC_MASK,
-+						WLED4_SINK_REG_STR_CABC_MASK);
-+			if (rc < 0)
-+				goto failed_detect;
-+		}
-+
-+		if (sink_config & BIT(WLED4_SINK_REG_CURR_SINK_SHFT + i))
-+			val = WLED4_SINK_REG_STR_MOD_MASK;
-+		else
-+			val = 0x0; /* Disable modulator_en for unused sink */
-+
-+		rc = regmap_write(wled->regmap, wled->sink_addr +
-+				  WLED4_SINK_REG_STR_MOD_EN(i), val);
-+		if (rc < 0) {
-+			dev_err(wled->dev, "Failed to configure MODULATOR_EN rc=%d\n",
-+				rc);
-+			goto failed_detect;
-+		}
-+	}
-+
-+	/* Restore the feedback setting */
-+	rc = regmap_write(wled->regmap,
-+			  wled->ctrl_addr + WLED3_CTRL_REG_FEEDBACK_CONTROL, 0);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to restore feedback setting rc=%d\n",
-+			rc);
-+		goto failed_detect;
-+	}
-+
-+	/* Restore brightness */
-+	rc = wled4_set_brightness(wled, wled->brightness);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to set brightness after auto detection rc=%d\n",
-+			rc);
-+		goto failed_detect;
-+	}
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_MOD_EN,
-+				WLED3_CTRL_REG_MOD_EN_MASK,
-+				WLED3_CTRL_REG_MOD_EN_MASK);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to enable WLED module rc=%d\n", rc);
-+		goto failed_detect;
-+	}
-+
-+failed_detect:
-+	return;
++	return cqhci_irq(host->mmc, 0, cmd_err, dat_err);
 +}
++#endif
 +
-+#define WLED_AUTO_DETECT_OVP_COUNT		5
-+#define WLED_AUTO_DETECT_CNT_DLY_US		USEC_PER_SEC
-+static bool wled_auto_detection_required(struct wled *wled)
-+{
-+	s64 elapsed_time_us;
-+
-+	if (!wled->cfg.auto_detection_enabled)
-+		return false;
-+
-+	/*
-+	 * Check if the OVP fault was an occasional one
-+	 * or if it's firing continuously, the latter qualifies
-+	 * for an auto-detection check.
-+	 */
-+	if (!wled->auto_detection_ovp_count) {
-+		wled->start_ovp_fault_time = ktime_get();
-+		wled->auto_detection_ovp_count++;
-+	} else {
-+		elapsed_time_us = ktime_us_delta(ktime_get(),
-+						 wled->start_ovp_fault_time);
-+		if (elapsed_time_us > WLED_AUTO_DETECT_CNT_DLY_US)
-+			wled->auto_detection_ovp_count = 0;
-+		else
-+			wled->auto_detection_ovp_count++;
-+
-+		if (wled->auto_detection_ovp_count >=
-+				WLED_AUTO_DETECT_OVP_COUNT) {
-+			wled->auto_detection_ovp_count = 0;
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
-+static int wled_auto_detection_at_init(struct wled *wled)
-+{
-+	int rc;
-+	u32 fault_status, rt_status;
-+
-+	if (!wled->cfg.auto_detection_enabled)
-+		return 0;
-+
-+	rc = regmap_read(wled->regmap,
-+			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS,
-+			 &rt_status);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to read RT status rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = regmap_read(wled->regmap,
-+			 wled->ctrl_addr + WLED3_CTRL_REG_FAULT_STATUS,
-+			 &fault_status);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to read fault status rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	if ((rt_status & WLED3_CTRL_REG_OVP_FAULT_STATUS) ||
-+	    (fault_status & WLED3_CTRL_REG_OVP_FAULT_BIT)) {
-+		mutex_lock(&wled->lock);
-+		wled_auto_string_detection(wled);
-+		mutex_unlock(&wled->lock);
-+	}
-+
-+	return rc;
-+}
-+
-+static irqreturn_t wled_ovp_irq_handler(int irq, void *_wled)
-+{
-+	struct wled *wled = _wled;
-+	int rc;
-+	u32 int_sts, fault_sts;
-+
-+	rc = regmap_read(wled->regmap,
-+			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS, &int_sts);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Error in reading WLED3_INT_RT_STS rc=%d\n",
-+			rc);
-+		return IRQ_HANDLED;
-+	}
-+
-+	rc = regmap_read(wled->regmap, wled->ctrl_addr +
-+			 WLED3_CTRL_REG_FAULT_STATUS, &fault_sts);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Error in reading WLED_FAULT_STATUS rc=%d\n",
-+			rc);
-+		return IRQ_HANDLED;
-+	}
-+
-+	if (fault_sts & (WLED3_CTRL_REG_OVP_FAULT_BIT |
-+		WLED3_CTRL_REG_ILIM_FAULT_BIT))
-+		dev_dbg(wled->dev, "WLED OVP fault detected, int_sts=%x fault_sts= %x\n",
-+			int_sts, fault_sts);
-+
-+	if (fault_sts & WLED3_CTRL_REG_OVP_FAULT_BIT) {
-+		if (wled_auto_detection_required(wled)) {
-+			mutex_lock(&wled->lock);
-+			wled_auto_string_detection(wled);
-+			mutex_unlock(&wled->lock);
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int wled3_setup(struct wled *wled)
+ static irqreturn_t msdc_irq(int irq, void *dev_id)
  {
- 	u16 addr;
-@@ -436,8 +775,10 @@ static int wled4_setup(struct wled *wled)
- 		sink_en |= 1 << temp;
- 	}
+ 	struct msdc_host *host = (struct msdc_host *) dev_id;
+@@ -1449,6 +1519,16 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
+ 		if (!(events & (event_mask & ~MSDC_INT_SDIOIRQ)))
+ 			break;
  
--	if (sink_cfg == sink_en)
--		return 0;
-+	if (sink_cfg == sink_en) {
-+		rc = wled_auto_detection_at_init(wled);
-+		return rc;
-+	}
- 
- 	rc = regmap_update_bits(wled->regmap,
- 				wled->sink_addr + WLED4_SINK_REG_CURR_SINK,
-@@ -500,7 +841,9 @@ static int wled4_setup(struct wled *wled)
- 		return rc;
- 	}
- 
--	return 0;
-+	rc = wled_auto_detection_at_init(wled);
++#if IS_ENABLED(CONFIG_MMC_CQHCI)
++		if ((host->mmc->caps2 & MMC_CAP2_CQE) &&
++		    (events & MSDC_INT_CMDQ)) {
++			msdc_cmdq_irq(host, events);
++			/* clear interrupts */
++			writel(events, host->base + MSDC_INT);
++			return IRQ_HANDLED;
++		}
++#endif
 +
-+	return rc;
+ 		if (!mrq) {
+ 			dev_err(host->dev,
+ 				"%s: MRQ=NULL; events=%08X; event_mask=%08X\n",
+@@ -2132,6 +2212,36 @@ static int msdc_get_cd(struct mmc_host *mmc)
+ 		return !val;
  }
  
- static const struct wled_config wled4_config_defaults = {
-@@ -511,6 +854,7 @@ static int wled4_setup(struct wled *wled)
- 	.switch_freq = 11,
- 	.cabc = false,
- 	.external_pfet = false,
-+	.auto_detection_enabled = false,
- };
- 
- static const u32 wled3_boost_i_limit_values[] = {
-@@ -677,6 +1021,7 @@ static int wled_configure(struct wled *wled, int version)
- 		{ "qcom,ext-gen", &cfg->ext_gen, },
- 		{ "qcom,cabc", &cfg->cabc, },
- 		{ "qcom,external-pfet", &cfg->external_pfet, },
-+		{ "qcom,auto-string-detection", &cfg->auto_detection_enabled, },
- 	};
- 
- 	prop_addr = of_get_address(dev->of_node, 0, NULL, NULL);
-@@ -797,6 +1142,40 @@ static int wled_configure_short_irq(struct wled *wled,
- 	return rc;
- }
- 
-+static int wled_configure_ovp_irq(struct wled *wled,
-+				  struct platform_device *pdev)
++static void msdc_cqe_enable(struct mmc_host *mmc)
 +{
-+	int rc;
-+	u32 val;
++	struct msdc_host *host = mmc_priv(mmc);
 +
-+	wled->ovp_irq = platform_get_irq_byname(pdev, "ovp");
-+	if (wled->ovp_irq < 0) {
-+		dev_dbg(&pdev->dev, "OVP IRQ not found - disabling automatic string detection\n");
-+		return 0;
-+	}
-+
-+	rc = devm_request_threaded_irq(wled->dev, wled->ovp_irq, NULL,
-+				       wled_ovp_irq_handler, IRQF_ONESHOT,
-+				       "wled_ovp_irq", wled);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Unable to request ovp_irq (err:%d)\n",
-+			rc);
-+		wled->ovp_irq = 0;
-+		return 0;
-+	}
-+
-+	rc = regmap_read(wled->regmap, wled->ctrl_addr +
-+			 WLED3_CTRL_REG_MOD_EN, &val);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Keep OVP irq disabled until module is enabled */
-+	if (!(val & WLED3_CTRL_REG_MOD_EN_MASK))
-+		disable_irq(wled->ovp_irq);
-+
-+	return 0;
++	/* enable cmdq irq */
++	writel(MSDC_INT_CMDQ, host->base + MSDC_INTEN);
++	/* enable busy check */
++	sdr_set_bits(host->base + MSDC_PATCH_BIT1, MSDC_PB1_BUSY_CHECK_SEL);
++	/* default write data / busy timeout 20s */
++	msdc_set_busy_timeout(host, 20 * 1000000000ULL, 0);
++	/* default read data timeout 1s */
++	msdc_set_timeout(host, 1000000000ULL, 0);
 +}
 +
- static const struct backlight_ops wled_ops = {
- 	.update_status = wled_update_status,
++void msdc_cqe_disable(struct mmc_host *mmc, bool recovery)
++{
++	struct msdc_host *host = mmc_priv(mmc);
++
++	/* disable cmdq irq */
++	sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INT_CMDQ);
++	/* disable busy check */
++	sdr_clr_bits(host->base + MSDC_PATCH_BIT1, MSDC_PB1_BUSY_CHECK_SEL);
++
++	if (recovery) {
++		sdr_set_field(host->base + MSDC_DMA_CTRL,
++			      MSDC_DMA_CTRL_STOP, 1);
++		msdc_reset_hw(host);
++	}
++}
++
+ static const struct mmc_host_ops mt_msdc_ops = {
+ 	.post_req = msdc_post_req,
+ 	.pre_req = msdc_pre_req,
+@@ -2148,6 +2258,11 @@ static int msdc_get_cd(struct mmc_host *mmc)
+ 	.hw_reset = msdc_hw_reset,
  };
-@@ -837,6 +1216,7 @@ static int wled_probe(struct platform_device *pdev)
  
- 	switch (version) {
- 	case 3:
-+		wled->cfg.auto_detection_enabled = false;
- 		rc = wled3_setup(wled);
- 		if (rc) {
- 			dev_err(&pdev->dev, "wled3_setup failed\n");
-@@ -858,10 +1238,16 @@ static int wled_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
-+	INIT_DELAYED_WORK(&wled->ovp_work, wled_ovp_work);
++static const struct cqhci_host_ops msdc_cmdq_ops = {
++	.enable         = msdc_cqe_enable,
++	.disable        = msdc_cqe_disable,
++};
 +
- 	rc = wled_configure_short_irq(wled, pdev);
- 	if (rc < 0)
- 		return rc;
+ static void msdc_of_property_parse(struct platform_device *pdev,
+ 				   struct msdc_host *host)
+ {
+@@ -2299,6 +2414,22 @@ static int msdc_drv_probe(struct platform_device *pdev)
+ 		host->dma_mask = DMA_BIT_MASK(32);
+ 	mmc_dev(mmc)->dma_mask = &host->dma_mask;
  
-+	rc = wled_configure_ovp_irq(wled, pdev);
-+	if (rc < 0)
-+		return rc;
++#if IS_ENABLED(CONFIG_MMC_CQHCI)
++	if (mmc->caps2 & MMC_CAP2_CQE) {
++		host->cq_host = devm_kzalloc(host->mmc->parent,
++					     sizeof(*host->cq_host),
++					     GFP_KERNEL);
++		host->cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
++		host->cq_host->mmio = host->base + 0x800;
++		host->cq_host->ops = &msdc_cmdq_ops;
++		cqhci_init(host->cq_host, mmc, true);
++		mmc->max_segs = 128;
++		/* cqhci 16bit length */
++		/* 0 size, means 65536 so we don't have to -1 here */
++		mmc->max_seg_size = 64 * 1024;
++	}
++#endif
 +
- 	val = WLED_DEFAULT_BRIGHTNESS;
- 	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
- 
-@@ -880,7 +1266,9 @@ static int wled_remove(struct platform_device *pdev)
- 	struct wled *wled = dev_get_drvdata(&pdev->dev);
- 
- 	mutex_destroy(&wled->lock);
-+	cancel_delayed_work_sync(&wled->ovp_work);
- 	disable_irq(wled->short_irq);
-+	disable_irq(wled->ovp_irq);
- 
- 	return 0;
- }
+ 	host->timeout_clks = 3 * 1048576;
+ 	host->dma.gpd = dma_alloc_coherent(&pdev->dev,
+ 				2 * sizeof(struct mt_gpdma_desc),
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+1.9.1
 
