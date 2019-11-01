@@ -2,80 +2,206 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4819CCA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 20:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8240ACA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A7821855
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 20:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469F72085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TwU2swBh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7NqdaJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfKAU7s (ORCPT
+        id S1726689AbfKAVaU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:59:48 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46024 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbfKAU7s (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:59:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=6LFUYdtd/z6Wr9IKwpWqo+i0nhUSa4STX4GMDfZLnVM=; b=TwU2swBh1LPX6w8Fg51nF5S1eA
-        1MinZbzKnGyCGHxdSUL5v3Fq/GrMEKqWUrFsSzrTyG9nAlTfxzW9VwMix2U9wLtmASS7uEzwNUnWe
-        fVUnOb2pzQ1M4dunPcQNjwhBw6MtqSKZVsmdfv8zoFTWlv3IvYY3iMyGlsr45RfkuYmc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iQe1E-0000NN-KN; Fri, 01 Nov 2019 21:59:40 +0100
-Date:   Fri, 1 Nov 2019 21:59:40 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 net-next 06/12] net: ethernet: ti: introduce cpsw
- switchdev based driver part 1 - dual-emac
-Message-ID: <20191101205940.GF31534@lunn.ch>
-References: <20191024100914.16840-1-grygorii.strashko@ti.com>
- <20191024100914.16840-7-grygorii.strashko@ti.com>
- <20191029122422.GL15259@lunn.ch>
- <d87c72e1-cb91-04a2-c881-0d8eec4671e2@ti.com>
- <20191101203913.GD31534@lunn.ch>
- <8f3eb934-7dcd-b43a-de96-6a864ef67c92@ti.com>
+        Fri, 1 Nov 2019 17:30:20 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40956 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfKAVaU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 17:30:20 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r4so7887934pfl.7;
+        Fri, 01 Nov 2019 14:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j9Zzx2OmoZKK0YTGcIbk0+d45+ZuPxodkOVR0WatlxM=;
+        b=b7NqdaJnjQ60mtJTxu02zhkyysPO6X9h9nBYWOZVeQfsqZMkp5udUkAUZuXMWY7m/K
+         6kBCha9xyGlZPaZatv6dVbhxhl3E1MggDT9Nl/VZOTOZfWriIOqbFOSc40OCD7wQdKeJ
+         ShiNr7fC4C5tcjhBH0o4QhPz6aiq8mWjk/fv6PlkxFpEr0XTUqBt7UWV6aJIBK+NZX+h
+         4ndEV4cu6cXQ38GIkUUmpJ/aQtQpNJEl6t11YmzSc5fpvMvFOhzGgBkWx4rRkSHErEGP
+         j1OIElbnrmkAJAsABdetec2iyugAh2KsQm/oI8IceArlB1i1m/nW3SoG9CTf+r0qHM1i
+         THxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j9Zzx2OmoZKK0YTGcIbk0+d45+ZuPxodkOVR0WatlxM=;
+        b=bldsAld2lIrWso5MneYUqsvl1tMwxUurXvbnz8YuETXQuGqmV7kKROC85Uj03nJ35p
+         kw7TLVWUZ3LzUHSUV9+OSbNAhC28O/8NjdQK0FXUW2O8SBkcbLSRVyPrXxmA1oBFT1E0
+         SWrYVJEu02SCkNhCs6AgKNV2fVIBCCdD7pjnmgQLI3JPo1B/qKequL7dVynjXYrNt4wD
+         oUdr9X+VwKrNrI0MM7ORuk1TVU22k+aWuJu/QeeZsDCgRJQriBriJRIheuK4NiBkjwe+
+         j+yJQHIuNJKBgXZwRvD3bRZFoeZ/1MICDF4O1TT/yDjM/8pLN265Enzo44rRfPnPYVhk
+         XT8g==
+X-Gm-Message-State: APjAAAWmSiqy2utvVdP9r4nQWIa7TnsVPlJPnwY2VXTP2J6B+RoZLplx
+        14YS+/pMojL/mBvY9FZ4f8+PzdNGGRY=
+X-Google-Smtp-Source: APXvYqzP5pCISaMJxKLrH+bSwSReGvtyfZ76m0aWat/GKZQJBZbiZYsCWgReTQKrrx4mtLs9p7ogJQ==
+X-Received: by 2002:a62:61c4:: with SMTP id v187mr15954809pfb.23.1572643819363;
+        Fri, 01 Nov 2019 14:30:19 -0700 (PDT)
+Received: from [172.16.1.40] ([131.107.174.218])
+        by smtp.gmail.com with ESMTPSA id h66sm9315173pfg.23.2019.11.01.14.30.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Nov 2019 14:30:18 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
+To:     Lei Wang <wangglei@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc:     "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "hangl@microsoft.com" <hangl@microsoft.com>,
+        "lewan@microsoft.com" <lewan@microsoft.com>,
+        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
+        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
+        "ray.jui@broadcom.com" <ray.jui@broadcom.com>, shji@microsoft.com
+References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
+ <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
+ <f4b2c4b9-4999-6736-31eb-a63781013664@gmail.com>
+From:   Lei Wang <wangglei@gmail.com>
+Message-ID: <7ea42556-49d4-5951-cda7-08e1209b0145@gmail.com>
+Date:   Fri, 1 Nov 2019 14:30:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f3eb934-7dcd-b43a-de96-6a864ef67c92@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f4b2c4b9-4999-6736-31eb-a63781013664@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > And please you the standard file naming and location,
-> > Documentation/networking/devlink-params-foo.txt
-> Ok. I will.
-> But I'd like to clarify:
-> - drivers documentation placed in ./Documentation/networking/device_drivers/ti/
-> so could you confirm pls, that you want me to add devlink-params documentation in separate file
-> and palace it in ./Documentation/networking/ folder directly?
+Hi Rob,
 
-Hi Grygorii
+Kindly ping... I addressed your comments in below, and with one=20
+question. Thanks!
 
-That appears to be the expected place for devlink documentation. You
-can link to it from your document in the ti subdirectory.
+-Lei
 
-    Andrew
+On 10/25/19 10:31 AM, Lei Wang wrote:
+> Thanks James/Rob/Borislav for pointing out the email list issue. My wor=
+k=20
+> email does not work good either for this exercise. Going forward I'll=20
+> switch to my gmail account.
+>=20
+> And Thanks Rob for reviewing! Please see below.
+>=20
+>>> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>>> @@ -0,0 +1,26 @@
+>>> +* ARM DMC-520 EDAC node
+>>> +
+>>> +Required properties:
+>>> +- compatible=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 : "brcm,dmc-520", "arm,dm=
+c-520".
+>>> +- reg=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 : Address r=
+ange of the DMC-520 registers.
+>>> +- interrupts=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 : DMC-520 interrupt numbe=
+rs. The example=20
+>>> below specifies
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 two interrupt lines for dram_ecc_errc_int and
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 dram_ecc_errd_int.
+>>> +- interrupt-config=A0=A0=A0=A0 : This is an array of interrupt masks=
+=2E For=20
+>>> each of the
+>>
+>> Not a standard property, so would need a vendor prefix...
+>=20
+> Would dmc-interrupt-config as the property name work? Thanks!
+>=20
+>>
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 above interrupt line, add one interrupt=20
+>>> mask element to
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 it. That is, there is a 1:1 mapping from=20
+>>> each interrupt
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 line to an interrupt mask. An interrupt=20
+>>> mask can represent
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 multiple interrupts being enabled. Refer to=20
+>>> interrupt_control
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 register in DMC-520 TRM for interrupt=20
+>>> mapping. In the example
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 below, the interrupt configuration enables=20
+>>> dram_ecc_errc_int
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 and dram_ecc_errd_int. And each interrupt=20
+>>> is connected to
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 a separate interrupt line.
+>>
+>> I've gone and read thru the TRM some. This binding doesn't seem to
+>> correspond to the TRM at all. There are a bunch of interrupts and a
+>> combined interrupt, and then there's the same set for 'overflow'
+>> interrupts.
+>>
+>> There's only one 'interrupt_control' reg. How do you have more that 1
+>> 32-bit value?
+>=20
+> There is only one 'interrupt_control' register, for multiple interrupt =
+
+> sources. Then depending on platform hardware design, these interrupt=20
+> sources can be wired to different physical interrupt lines.
+>=20
+> That is, it is possible to mux interrupt sources into=A0 interrupt line=
+s=20
+> for dmc520 in different ways. For example, in this particular brcm=20
+> implementation,
+>=20
+> Line 841: source dram_ecc_errc_int
+> Line 843: source dram_ecc_errd_int
+> Line 839: source dram_ecc_errc_int and dram_ecc_errd_int
+>=20
+> There are two possibilities for implementing ecc counts for ce/ue. And =
+
+> we chose to use the single source line: as below, two interrupt lines=20
+> 0x349 and 0x34B, with interrupt masks 0x4 and 0x8 respectively.
+>=20
+> Also, it's possible to implement using the combined-source line too:=20
+> that would be one interrupt line 0x347, with interrupt mask 0xC.
+>=20
+> This dt binding can support both by modifying the properties, without=20
+> having to modify driver code.
+>=20
+>  >> +
+>  >> +Example:
+>  >> +
+>  >> +dmc0: dmc@200000 {
+>  >> +=A0=A0=A0=A0=A0=A0 compatible =3D "brcm,dmc-520", "arm,dmc-520";
+>  >> +=A0=A0=A0=A0=A0=A0 reg =3D <0x200000 0x80000>;
+>  >> +=A0=A0=A0=A0=A0=A0 interrupts =3D <0x0 0x349 0x4>, <0x0 0x34B 0x4>=
+;
+>  >> +=A0=A0=A0=A0=A0=A0 interrupt-config =3D <0x4>, <0x8>;
+>  >> +};
+>  >> --
+>  >> 2.17.1
+>=20
+> Thanks!
+>=20
+> -Lei
+>=20
+
