@@ -2,169 +2,178 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EC2CA9ED1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7EFCA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 13:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B95021897
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 13:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572615982;
-	bh=lswMlSOEv3IVKL2o6g/0/MZB83V2bKNcQKcLhOteMKY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Lz2QQVcUscKqiBupBc9vwZunrAZm6OXXsGAt1GrwnpS42vLnygH+UaT2LI3xeIDSy
-	 A00/GVarcH5jxivy0+jOJV2wgMaalWDQeTSKBOrpJ0o1rG+DydagCMoOhpLT3H5qH7
-	 1fAHImCF7+mD//hRHrsP+iRCG0mmQSfhOror+0YI=
+	by mail.kernel.org (Postfix) with ESMTP id F29C920862
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 13:48:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Z/RuR9P3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfKANqV (ORCPT
+        id S1727500AbfKANsW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 09:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfKANqV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:46:21 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C43E6217D9;
-        Fri,  1 Nov 2019 13:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572615979;
-        bh=lswMlSOEv3IVKL2o6g/0/MZB83V2bKNcQKcLhOteMKY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2VkCgmkJqOKWH5d+9KDukIcRTAHgjVukLo7+WnDE3TtykYaRb7rHNveONlNIa8z7C
-         Wvf1s2hGqg8xK0DzjTHvWERd5B6QiJWEpQb02QETpjyRKih31rBLTX7nsrqGZryAfR
-         nhqGnY7r7catGAEwdtg/1KASZ0QhIN/rBtzM7asA=
-Received: by mail-qt1-f182.google.com with SMTP id g50so13011584qtb.4;
-        Fri, 01 Nov 2019 06:46:19 -0700 (PDT)
-X-Gm-Message-State: APjAAAWegAhA0MSmZ56hns4n8acGINgkS5bridDXXvlZhRaj0c6Ie/jc
-        HWSteslGUTa/Kp8rUhF6fL4v6jMTPkJM0eM0PA==
-X-Google-Smtp-Source: APXvYqzSxs3/lKPGNsJo7QmVk87af0sBuK78lFCb7LPwSTyRxmDlUk2yWUVGBizpA0SlPdiVCwhtvME32ugnV3l7tjA=
-X-Received: by 2002:ac8:458c:: with SMTP id l12mr84256qtn.300.1572615978901;
- Fri, 01 Nov 2019 06:46:18 -0700 (PDT)
+        Fri, 1 Nov 2019 09:48:22 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:56062 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbfKANsW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 09:48:22 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: TM4YLM2emM9dNpPk9Z2MLVhIu7oHIfVDKTPNMZEICmqVZ2Ls2OpmkR/EKABAXxUwTBIQJetNpv
+ dFzBUCdq2Jm3ZSplaiyCdKiONV1XE9y7ZdIgG7YFKwscMWSNYFbQqMNV1g6zrLpvGhwoSf9HeO
+ qtqJEGAEzzPvETFmgplt2h1nkFa9gM+9uN8ZQ841wmixARPXrR7Cjj13Wl36C4PTYsfAO9HTu4
+ tq7MzpQ1iGZZIFz+3zHor5Zytm3Q9Azv1Z5Hcu+Piwj12a2xPMvfL4YcTda0ZfVBGTWRI/AWWd
+ C1Y=
+X-IronPort-AV: E=Sophos;i="5.68,255,1569308400"; 
+   d="scan'208";a="54967953"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Nov 2019 06:48:21 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 1 Nov 2019 06:48:18 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 1 Nov 2019 06:48:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YaW61mKrcN72jkr1L0ap8+hLUPgtsoERaPrXBQuBYRvdvYGSvI8obvTT2bYMSoscV2RE6F6jFWQKZt5wD0QnDYJ5NzwX/BCQ1Bg/QcDXX1E6YTCkuZQtijXIc4ifbeTmyVNsK8hI/bMCD4LqT1pEvDFr6AL7sshkV3jodzx8mUAHsMY0OtmWPaCyZxCs7ZsTJJMIJ0zAvPSSXXt+EtHcufCxaz+r7MGben87251HEOV0FEiF2Gz4lUSXr+1r85DTnw2hd17zMpxL8orYKSLpggA6Fh0F9tdOVvMlcwKnMUaypiGc439wrsW361XbBPzyZalLCUNCD1Inyd72RAmAtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ObPBdlFQTZW3zRCkN08jS2cHlBZ5QF+AjZzcTSsl+zQ=;
+ b=iuDrNVEarOxdFiLmbjHG2CwotVxCNsn/NSWiVcwaBV9EC+VBUTfq+3+8awVN86UU7gpXLHNEogDrXVHI6nCNT0jPvTK+ds9+/qp7tqIkXXWcVT8zUOYQnWRvbxiBV30nX4N5Q9IfuNgTrnOmcI1R3pX4WgeGFF4Ys8eN+81HyE3ZYB9WIiKpOKt/62lXTd+LZwc6UrUijnnYNgUC3E7y/3WJvzDwVjMN4ZQzNlawh7M+7aXeFMK5aKYXsKM1iq/ayRQbzM7sA5xXnppbpKyTN9O6FGGvazeAMvG229GyHEbzfGHdEZ38fi5SAnj7wqmZWes6SnGV9qRmt7zqA4Cq6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ObPBdlFQTZW3zRCkN08jS2cHlBZ5QF+AjZzcTSsl+zQ=;
+ b=Z/RuR9P37Anb8NXX/niYsM9Y8mwIPO0tiWNS+ESutorJLiliqGhuPtG914/ipI/j1udTfSOdy6OhfW8utG9XxKM/HMSejsXA3v8IHVZdzXCwUca3V9yfbbTwnB8epXvPn3n+IuPwrgzAcetAtVoFfm1ekgMDfHs25OnWOhGE6uU=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB4221.namprd11.prod.outlook.com (52.135.38.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.23; Fri, 1 Nov 2019 13:48:18 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::c09c:36c8:3301:4457]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::c09c:36c8:3301:4457%5]) with mapi id 15.20.2408.018; Fri, 1 Nov 2019
+ 13:48:17 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <manivannan.sadhasivam@linaro.org>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <robh+dt@kernel.org>
+CC:     <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
+        <darshak.patel@einfochips.com>, <prajose.john@einfochips.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <marek.vasut@gmail.com>,
+        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH v2 4/4] mtd: spi-nor: Add support for w25q256jw
+Thread-Topic: [PATCH v2 4/4] mtd: spi-nor: Add support for w25q256jw
+Thread-Index: AQHVjwDJaBck4npwFkmE20mgXgcXzqd2V+iA
+Date:   Fri, 1 Nov 2019 13:48:17 +0000
+Message-ID: <87e0b459-8dbf-26cc-611f-1b1b5266aa55@microchip.com>
+References: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
+ <20191030090124.24900-5-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20191030090124.24900-5-manivannan.sadhasivam@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR07CA0296.eurprd07.prod.outlook.com
+ (2603:10a6:800:130::24) To MN2PR11MB4448.namprd11.prod.outlook.com
+ (2603:10b6:208:193::29)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [86.120.239.29]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1dad48dc-79f4-40a3-d2a8-08d75ed22634
+x-ms-traffictypediagnostic: MN2PR11MB4221:
+x-microsoft-antispam-prvs: <MN2PR11MB42216FF965E9DA2511A11DE4F0620@MN2PR11MB4221.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 020877E0CB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(366004)(39860400002)(396003)(199004)(189003)(316002)(186003)(99286004)(6506007)(446003)(386003)(71190400001)(2616005)(53546011)(476003)(11346002)(71200400001)(26005)(31686004)(52116002)(486006)(76176011)(256004)(14444005)(25786009)(229853002)(6436002)(7416002)(6246003)(6512007)(3846002)(66446008)(66556008)(102836004)(64756008)(6116002)(81166006)(110136005)(36756003)(2501003)(8676002)(305945005)(31696002)(14454004)(8936002)(81156014)(66476007)(54906003)(6486002)(5660300002)(66946007)(2906002)(66066001)(7736002)(86362001)(4326008)(2201001)(478600001)(138113003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4221;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7qX7HNG+m5o82OodOnBBHLsOjdqA2uS7DswUl0mWswEPUJ29RFqpI/GGUimCqJ1UhoEx2GwcFYdRP8IeiXCFDbbPG8CVxXc0zHtuIDNCZcqzbfUU2ENzTSPGcJiD/sBmv+MeM6yPN1P65QMMkmGdm+38/Itxbvb/Qv9MqWNCPjaY0y+rjIp69FsdgLliOU2DvNeoGJkmLo+rCqWhkZSfHo+4dY24L3HxjPGWn+ioP3E3vmhjzkAA7DpBpXAzQAx42IfGqXExOZ1MyngwBqL43xPVu0nNwlJ28dNzVGCMQf/SdEWZKnQ24Gdx8y21P2yrv9QqekUdvcM8IvP/dxY02ZiBvg5IgczWZep2T1iHwOTXkXbg4Df4l15RTM04Uj2CyZXlmraVWxeMPSddRHJmFsSHxVGcbXRkGypqff5FfwkLkj5z+FZ2JFA5Pqp329GC
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <919B4C0A8FBB2E44A9EB9DE0E8E6A633@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com> <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com> <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com> <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
- <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
-In-Reply-To: <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 1 Nov 2019 08:46:06 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
-Message-ID: <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1dad48dc-79f4-40a3-d2a8-08d75ed22634
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 13:48:17.5222
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZNlTsyH3YD2CJqXa7C2MJTK0hcCUI3eFHx8X0SOZXIQlQCxSxNS5lpNHGJ0ovvdgdxsuXd3Zt1cdfvTKlkDzRGRjXcfzs2A9cxWvv4hcsPU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4221
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 3:00 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrot=
-e:
->
->
->
-> On 30/10/2019 20.49, Rob Herring wrote:
-> > On Wed, Oct 30, 2019 at 9:30 AM Peter Ujfalusi <peter.ujfalusi@ti.com> =
-wrote:
-> >>
-> >>
-> >>
-> >> On 30/10/2019 16.17, Mark Brown wrote:
-> >>> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
-> >>>> On 30/10/2019 15.12, Rob Herring wrote:
-> >>>
-> >>>>> Why can't we just add a shared flag like we have for interrupts?
-> >>>>> Effectively, we have that for resets too, it's just hardcoded in th=
-e
-> >>>>> the drivers.
-> >>>
-> >>>> This would be kind of the same thing what the
-> >>>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
-> >>>> fixed-regulators afaik.
-> >>>
-> >>> The theory with that was that any usage of this would need the
-> >>> higher level code using the GPIO to cooperate so they didn't step
-> >>> on each other's toes so the GPIO code should just punt to it.
-> >>
-> >> But from the client driver point of view a GPIO is still GPIO and if t=
-he
-> >> components are unrelated then it is hard to patch things together from
-> >> the top.
-> >
-> > You can't escape a driver being aware. If a driver depends on that
-> > GPIO to actually be set to states the driver says, then it can't be
-> > guaranteed to work. For example, maybe the driver assumes the device
-> > is in reset state after toggling reset and doesn't work if not in
-> > reset state. The driver has to be aware no matter what you do in DT.
->
-> That's true for some device, but it is also true that some can not
-> tolerate being reset without them knowing it.
-
-You mean a reset when the driver is not loaded would not work? How
-could that ever work? I don't think you can have any reset control in
-the drivers in that case.
-
-> If all users of the shared GPIO have full control over it then they can
-> just toggle it whatever way they want. How would a regulator, codec,
-> amplifier would negotiate on what to do with the shared GPIO?
->
-> Another not uncommon setup is when the two components needs different lev=
-el:
-> C1: ENABLE is high active
-> C2: RESET is high active
->
-> To enable C1, the GPIO should be high. To enable C2 the GPIO must be low.
-> In the board one of the branch of the shared GPIO needs (and have) a
-> logic inverter.
->
-> If they both control the same GPIO then they must have requested it with
-> different GPIO_ACTIVE_ since the drivers are written according to chip
-> spec, so C1 sets the GPIO to 1, C2 sets it to 0, the inversion for one
-> of them must happen in gpio core, right?
-
-No, drivers are written to set the state to active/inactive. The DT
-GPIO_ACTIVE_ flags can depend on an inverter being present (BTW, there
-was a recent attempt to do an inverter binding).
-
-
-> It should be possible to add pass-through mode for gpio-shared so that
-> all requests would propagate to the root GPIO if that's what needed for
-> some setups.
->
-> That way the gpio-shared would nicely handle the GPIO inversions, would
-> be able to handle cases to avoid unwanted reset/enable of components or
-> allow components to be ninja-reset.
-
-What does ninja-reset mean?
-
-> I think it would be possible to add gpiod_is_shared(struct gpio_desc
-> *desc) so users can check if the GPIO is shared - it would only return
-> true if the gpio-shared is not in pass-through mode so they can know
-> that the state they see on their gpio desc is not necessary matching
-> with reality.
-> Probably another gpiod_shared_get_root_value() to fetch the root's state?
->
-> I intentionally not returning that in the driver as clients might skip a
-> gpio_set_value() seeing that the GPIO line is already in a state they
-> would want it, but that would not register their needs for the level.
->
-> - P=C3=A9ter
->
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+DQoNCk9uIDEwLzMwLzIwMTkgMTE6MDEgQU0sIE1hbml2YW5uYW4gU2FkaGFzaXZhbSB3cm90ZToN
+Cj4gRXh0ZXJuYWwgRS1NYWlsDQo+IA0KPiANCj4gQWRkIE1URCBzdXBwb3J0IGZvciB3MjVxMjU2
+ancgU1BJIE5PUiBjaGlwIGZyb20gV2luYm9uZC4gVGhpcyBjaGlwDQo+IHN1cHBvcnRzIGR1YWwv
+cXVhZCBJL08gbW9kZSB3aXRoIDUxMiBibG9ja3Mgb2YgbWVtb3J5IG9yZ2FuaXplZCBpbg0KPiA2
+NEtCIHNlY3RvcnMuIEluIGFkZGl0aW9uIHRvIHRoaXMsIHRoZXJlIGlzIGFsc28gc21hbGwgNEtC
+IHNlY3RvcnMNCj4gYXZhaWxhYmxlIGZvciBmbGV4aWJpbGl0eS4gVGhlIGRldmljZSBoYXMgYmVl
+biB2YWxpZGF0ZWQgdXNpbmcgVGhvcjk2DQo+IGJvYXJkLg0KPiANCj4gQ2M6IE1hcmVrIFZhc3V0
+IDxtYXJlay52YXN1dEBnbWFpbC5jb20+DQo+IENjOiBUdWRvciBBbWJhcnVzIDx0dWRvci5hbWJh
+cnVzQG1pY3JvY2hpcC5jb20+DQo+IENjOiBEYXZpZCBXb29kaG91c2UgPGR3bXcyQGluZnJhZGVh
+ZC5vcmc+DQo+IENjOiBCcmlhbiBOb3JyaXMgPGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbT4N
+Cj4gQ2M6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+DQo+IENjOiBS
+aWNoYXJkIFdlaW5iZXJnZXIgPHJpY2hhcmRAbm9kLmF0Pg0KPiBDYzogVmlnbmVzaCBSYWdoYXZl
+bmRyYSA8dmlnbmVzaHJAdGkuY29tPg0KPiBDYzogbGludXgtbXRkQGxpc3RzLmluZnJhZGVhZC5v
+cmcNCj4gU2lnbmVkLW9mZi1ieTogRGFyc2hhayBQYXRlbCA8ZGFyc2hhay5wYXRlbEBlaW5mb2No
+aXBzLmNvbT4NCj4gW01hbmk6IGNsZWFuZWQgdXAgZm9yIHVwc3RyZWFtXQ0KDQpDYW4gd2Uga2Vl
+cCBEYXJzaGFrJ3MgYXV0aG9yc2hpcD8gV2UgdXN1YWxseSBjaGFuZ2UgdGhlIGF1dGhvciBpZiB3
+ZSBmZWVsIHRoYXQNCndlIG1hZGUgYSBzaWduaWZpY2FudCBjaGFuZ2UgdG8gd2hhdCB3YXMgb3Jp
+Z2luYWxseSBwdWJsaXNoZWQuDQoNCklmIGl0J3MganVzdCBhYm91dCBjb3NtZXRpY3MsIGNsZWFu
+aW5nIG9yIHJlYmFzZSwgeW91IGNhbiBzcGVjaWZ5IHdoYXQgeW91IGRpZA0KYWZ0ZXIgdGhlIGF1
+dGhvcidzIFMtby1iIHRhZyBhbmQgdGhlbiBhZGQgeW91ciBTLW8tYiwgYXMgeW91IGRpZCBhYm92
+ZS4NCg0KVGhlIHBhdGNoIGxvb2tzIGdvb2QuDQoNCkNoZWVycywNCnRhDQoNCj4gU2lnbmVkLW9m
+Zi1ieTogTWFuaXZhbm5hbiBTYWRoYXNpdmFtIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJv
+Lm9yZz4NCj4gLS0tDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYyB8IDIgKysNCj4g
+IDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5j
+DQo+IGluZGV4IDFkODYyMWQ0MzE2MC4uMmMyNWIzNzFkOWYwIDEwMDY0NA0KPiAtLS0gYS9kcml2
+ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYw0KPiArKysgYi9kcml2ZXJzL210ZC9zcGktbm9yL3Nw
+aS1ub3IuYw0KPiBAQCAtMjQ4Miw2ICsyNDgyLDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBmbGFz
+aF9pbmZvIHNwaV9ub3JfaWRzW10gPSB7DQo+ICAJeyAidzI1cTI1NiIsIElORk8oMHhlZjQwMTks
+IDAsIDY0ICogMTAyNCwgNTEyLCBTRUNUXzRLIHwgU1BJX05PUl9EVUFMX1JFQUQgfCBTUElfTk9S
+X1FVQURfUkVBRCkgfSwNCj4gIAl7ICJ3MjVxMjU2anZtIiwgSU5GTygweGVmNzAxOSwgMCwgNjQg
+KiAxMDI0LCA1MTIsDQo+ICAJCQkgICAgIFNFQ1RfNEsgfCBTUElfTk9SX0RVQUxfUkVBRCB8IFNQ
+SV9OT1JfUVVBRF9SRUFEKSB9LA0KPiArCXsgIncyNXEyNTZqdyIsIElORk8oMHhlZjYwMTksIDAs
+IDY0ICogMTAyNCwgNTEyLA0KPiArCQkJICAgICBTRUNUXzRLIHwgU1BJX05PUl9EVUFMX1JFQUQg
+fCBTUElfTk9SX1FVQURfUkVBRCkgfSwNCj4gIAl7ICJ3MjVtNTEyanYiLCBJTkZPKDB4ZWY3MTE5
+LCAwLCA2NCAqIDEwMjQsIDEwMjQsDQo+ICAJCQlTRUNUXzRLIHwgU1BJX05PUl9RVUFEX1JFQUQg
+fCBTUElfTk9SX0RVQUxfUkVBRCkgfSwNCj4gIA0KPiANCg==
