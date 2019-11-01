@@ -2,128 +2,204 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1488CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B098CCA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 16:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC08421734
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 846B5217F9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 16:45:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yeMa8ruk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfKAQjl (ORCPT
+        id S1727626AbfKAQpQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:39:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:32461 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbfKAQjk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:39:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 09:39:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,256,1569308400"; 
-   d="scan'208";a="199860587"
-Received: from ggarreto-mobl1.amr.corp.intel.com (HELO [10.255.92.243]) ([10.255.92.243])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Nov 2019 09:39:38 -0700
-Subject: Re: [alsa-devel] [PATCH v4 2/2] soundwire: qcom: add support for
- SoundWire controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        robh@kernel.org, vkoul@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org
-References: <20191030153150.18303-1-srinivas.kandagatla@linaro.org>
- <20191030153150.18303-3-srinivas.kandagatla@linaro.org>
- <af29ec6e-d89e-7fa4-a8cd-29ab944ecd5c@linux.intel.com>
- <926bd15f-e230-8f5e-378d-355bfeeecf27@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <3d17a2a2-3033-e740-a466-e6cf7919adb2@linux.intel.com>
-Date:   Fri, 1 Nov 2019 11:39:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 1 Nov 2019 12:45:16 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34242 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbfKAQpQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 12:45:16 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA1GjBsr085616;
+        Fri, 1 Nov 2019 11:45:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572626711;
+        bh=aLazdWHqwMmzhyqcTwdhpTY3yMjMZynbrNye1KKLlZs=;
+        h=From:To:CC:Subject:Date;
+        b=yeMa8rukT2H837Z9cSK/bSEAsvhyPlTrTzIZLUB9vE9WqcIQ9hyaox5er0rWkjixe
+         Nj8yUgxwBZ7zfv+RxkHZRwWMGC+snIcnV9zNmpztvzqcuMjuYPze5YnF720sTozaKp
+         8FB9TuoVBN2oatqEUNgDCJ9nujIehH0Lb0VBb4io=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA1GjBBL067059
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Nov 2019 11:45:11 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
+ 2019 11:44:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 1 Nov 2019 11:44:57 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA1GjAos082902;
+        Fri, 1 Nov 2019 11:45:10 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] dt-bindings: net: davinci-mdio: convert bindings to json-schema
+Date:   Fri, 1 Nov 2019 18:45:02 +0200
+Message-ID: <20191101164502.19089-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <926bd15f-e230-8f5e-378d-355bfeeecf27@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Now that we have the DT validation in place, let's convert the device tree
+bindings for the TI SoC Davinci/OMAP/Keystone2 MDIO Controllerr over to a
+YAML schemas.
 
->>> +static int qcom_swrm_prepare(struct snd_pcm_substream *substream,
->>> +                 struct snd_soc_dai *dai)
->>> +{
->>> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
->>> +
->>> +    if (!ctrl->sruntime[dai->id])
->>> +        return -EINVAL;
->>> +
->>> +    return sdw_enable_stream(ctrl->sruntime[dai->id]);
->>
->> So in hw_params you call sdw_prepare_stream() and in _prepare you call 
->> sdw_enable_stream()?
->>
->> Shouldn't this be handled in a .trigger operation as per the 
->> documentation "From ASoC DPCM framework, this stream state is linked to
->> .trigger() start operation."
-> 
-> If I move sdw_enable/disable_stream() to trigger I get a big click noise 
-> on my speakers at start and end of every playback. Tried different 
-> things but nothing helped so far!. Enabling Speaker DACs only after 
-> SoundWire ports are enabled is working for me!
-> There is nothing complicated on WSA881x codec side all the DACs are 
-> enabled/disabled as part of DAPM.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+changes since rfc:
+ - removed old bindings
+ - bus_freq defined as "required" for davinci_mdio
+rfc: https://lkml.org/lkml/2019/10/24/300
 
-that looks like a work-around to me? If you do a bank switch without 
-anything triggered, you are most likely sending a bunch of zeroes to 
-your amplifier and enabling click/pop removals somehow.
+ .../devicetree/bindings/net/davinci-mdio.txt  | 36 ----------
+ .../bindings/net/ti,davinci-mdio.yaml         | 71 +++++++++++++++++++
+ 2 files changed, 71 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/davinci-mdio.txt
+ create mode 100644 Documentation/devicetree/bindings/net/ti,davinci-mdio.yaml
 
-It'd be worth looking into this, maybe there's a missing digital 
-mute/unmute that's not done in the right order?
-
-> 
->>
->> It's also my understanding that .prepare will be called multiples times, 
-> 
-> I agree, need to add some extra checks in the prepare to deal with this!
-> 
->> including for underflows and resume if you don't support INFO_RESUME.
-> 
->>
->> the sdw_disable_stream() is in .hw_free, which is not necessarily 
->> called by the core, so you may have a risk of not being able to recover?
-> 
-> Hmm, I thought hw_free is always called to release resources allocated 
-> in hw_params.
-> 
-> In what cases does the core not call this?
-
-yes, but prepare can be called without hw_free called first. that's why 
-we updated the state machine to allow for DISABLED|DEPREPARED -> 
-PREPARED transitions.
-
->>> +static const struct dev_pm_ops qcom_swrm_dev_pm_ops = {
->>> +    SET_RUNTIME_PM_OPS(qcom_swrm_runtime_suspend,
->>> +               qcom_swrm_runtime_resume,
->>> +               NULL
->>> +    )
->>> +};
->>
->> Maybe define pm_runtime at a later time then? We've had a lot of race 
->> conditions to deal with, and it's odd that you don't support plain 
->> vanilla suspend first?
->>
-> Trying to keep things simple for the first patchset! added this dummies 
-> to keep the soundwire core happy!
-
-If you are referring to the errors when pm_runtime is not enabled, we 
-fixed this is the series that's been out for review for 10 days now...
-
-see '[PATCH 03/18] soundwire: bus: add PM/no-PM versions of read/write 
-functions', that should remove the need for dummy functions.
+diff --git a/Documentation/devicetree/bindings/net/davinci-mdio.txt b/Documentation/devicetree/bindings/net/davinci-mdio.txt
+deleted file mode 100644
+index e6527de80f10..000000000000
+--- a/Documentation/devicetree/bindings/net/davinci-mdio.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-TI SoC Davinci/Keystone2 MDIO Controller Device Tree Bindings
+----------------------------------------------------
+-
+-Required properties:
+-- compatible		: Should be "ti,davinci_mdio"
+-			  and "ti,keystone_mdio" for Keystone 2 SoCs
+-			  and "ti,cpsw-mdio" for am335x, am472x, am57xx/dra7, dm814x SoCs
+-			  and "ti,am4372-mdio" for am472x SoC
+-- reg			: physical base address and size of the davinci mdio
+-			  registers map
+-- bus_freq		: Mdio Bus frequency
+-
+-Optional properties:
+-- ti,hwmods		: Must be "davinci_mdio"
+-
+-Note: "ti,hwmods" field is used to fetch the base address and irq
+-resources from TI, omap hwmod data base during device registration.
+-Future plan is to migrate hwmod data base contents into device tree
+-blob so that, all the required data will be used from device tree dts
+-file.
+-
+-Examples:
+-
+-	mdio: davinci_mdio@4a101000 {
+-		compatible = "ti,davinci_mdio";
+-		reg = <0x4A101000 0x1000>;
+-		bus_freq = <1000000>;
+-	};
+-
+-(or)
+-
+-	mdio: davinci_mdio@4a101000 {
+-		compatible = "ti,davinci_mdio";
+-		ti,hwmods = "davinci_mdio";
+-		bus_freq = <1000000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/net/ti,davinci-mdio.yaml b/Documentation/devicetree/bindings/net/ti,davinci-mdio.yaml
+new file mode 100644
+index 000000000000..242ac4935a4b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/ti,davinci-mdio.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/ti,davinci-mdio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI SoC Davinci/Keystone2 MDIO Controller
++
++maintainers:
++  - Grygorii Strashko <grygorii.strashko@ti.com>
++
++description:
++  TI SoC Davinci/Keystone2 MDIO Controller
++
++allOf:
++  - $ref: "mdio.yaml#"
++
++properties:
++  compatible:
++    oneOf:
++       - const: ti,davinci_mdio
++       - items:
++         - const: ti,keystone_mdio
++         - const: ti,davinci_mdio
++       - items:
++         - const: ti,cpsw-mdio
++         - const: ti,davinci_mdio
++       - items:
++         - const: ti,am4372-mdio
++         - const: ti,cpsw-mdio
++         - const: ti,davinci_mdio
++
++  reg:
++    maxItems: 1
++
++  bus_freq:
++      maximum: 2500000
++      description:
++        MDIO Bus frequency
++
++  ti,hwmods:
++    description: TI hwmod name
++    deprecated: true
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/string-array
++      - items:
++          const: davinci_mdio
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: ti,davinci_mdio
++  required:
++    - bus_freq
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    davinci_mdio: mdio@4a101000 {
++         compatible = "ti,davinci_mdio";
++         #address-cells = <1>;
++         #size-cells = <0>;
++         reg = <0x4a101000 0x1000>;
++         bus_freq = <1000000>;
++    };
+-- 
+2.17.1
 
