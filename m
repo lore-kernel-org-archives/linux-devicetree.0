@@ -2,119 +2,127 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E9ACA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554A9CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896B3208E3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:43:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/dyk5yK"
+	by mail.kernel.org (Postfix) with ESMTP id 2E3E5217D9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfKARnC (ORCPT
+        id S1726651AbfKARwn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 13:43:02 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37142 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbfKARnC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 13:43:02 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p24so1029813pfn.4;
-        Fri, 01 Nov 2019 10:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QJl/9GvOTo1mXoprS9Z1FVuoJT7cvJ0SfTXW2ZwsvWU=;
-        b=j/dyk5yKG+/Zb+2zjd8u2xn3vzhnpgHTuI0xH+uDSZ798ljUjQgKbUMa+y4AKD4szr
-         CgKNJadkohLyHsfXr3XjvG8wEdsnapCo57hAincCLWN/bZgW/2PXLq1xqcg1W/6EWxlX
-         8Q0zZtGSnPhMRXK92TNutM7SdHm2GaTJT1EiOdvEbX/utf+AMfyGYxWbnAGkN6djE494
-         eHNyGrgpjH6Ar7SWoytBdfhd8Zbi6eiZPw1uRRTV4mx36oZ3kVA0j7mDDTgmfRf0Yty4
-         K1Zbd3kSgqOy/yxgWwlbo/e8LYg/9UoTPCZ6G7uHuYn0I8fmFokfdibxNpc94c4tcFJK
-         DLVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QJl/9GvOTo1mXoprS9Z1FVuoJT7cvJ0SfTXW2ZwsvWU=;
-        b=VDGdPVPnlkzyonUAA6Gh8Fp68K5cDLlJzV9gzKvqqqbmprYs+OkEJ8NLq6QzK2Y6Ir
-         P4urPrV7KPr6PP8MgJzsjXZ+jGmOK7Ln1v8Pd6guSZ2t1E9MHnuLUyM8KvZYn6ugvhWK
-         mps5NiPuo1jx5F/jaU2SX4ToZxhtNTNqtFWw9AWG0MLKf/+Y79gViPHF7y0ddkTc0S6M
-         8cVtgpjZ5lc/HZPSDq/Mrzs7Vb7tYIZpSt13avP1XbsC6Ecl8UZNL08tmhdqQPjKZtwI
-         nqQa2iuIPprHn0gcT/TTzcGSuA5wCLQpg1f9tAgk6hqHZqcn72sehE9drbW3odYJEBKF
-         AYhQ==
-X-Gm-Message-State: APjAAAWro4wZVpy5fTkDc9H+TJvQNynl0qQCusEAT8G/r+jF4b92erRe
-        zc4C64graGEbVxjnRj8PEk4=
-X-Google-Smtp-Source: APXvYqzRiEfVYYVOG6O+ih3xK5Ax5k+9SP+dNi0+K0ffGqjJhG2LgDZzVmOsjy+yKL16LdvxRSyadg==
-X-Received: by 2002:a65:4c41:: with SMTP id l1mr14902663pgr.163.1572630180944;
-        Fri, 01 Nov 2019 10:43:00 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:200::1:e697])
-        by smtp.gmail.com with ESMTPSA id a6sm9045892pja.30.2019.11.01.10.43.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Nov 2019 10:43:00 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 10:42:57 -0700
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Tao Ren <taoren@fb.com>, Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/4] ARM: dts: aspeed: add dtsi for Facebook AST2500
- Network BMCs
-Message-ID: <20191101174257.GB13557@taoren-ubuntu-R90MNF91>
-References: <20191021194820.293556-1-taoren@fb.com>
- <20191021194820.293556-2-taoren@fb.com>
- <CACPK8XfebA9PcpyWkofCJ5fAZ9ddUjQ4ZeCf73KXb51+k_+N1Q@mail.gmail.com>
+        Fri, 1 Nov 2019 13:52:43 -0400
+Received: from mga17.intel.com ([192.55.52.151]:30772 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbfKARwn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Nov 2019 13:52:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 10:52:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,256,1569308400"; 
+   d="scan'208";a="199876576"
+Received: from ggarreto-mobl1.amr.corp.intel.com (HELO [10.255.92.243]) ([10.255.92.243])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Nov 2019 10:52:41 -0700
+Subject: Re: [alsa-devel] [PATCH v4 2/2] soundwire: qcom: add support for
+ SoundWire controller
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        robh@kernel.org, vkoul@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org
+References: <20191030153150.18303-1-srinivas.kandagatla@linaro.org>
+ <20191030153150.18303-3-srinivas.kandagatla@linaro.org>
+ <af29ec6e-d89e-7fa4-a8cd-29ab944ecd5c@linux.intel.com>
+ <926bd15f-e230-8f5e-378d-355bfeeecf27@linaro.org>
+ <3d17a2a2-3033-e740-a466-e6cf7919adb2@linux.intel.com>
+ <7ea278b4-ecd4-bd17-4550-3f6f9136260e@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <3aa6695d-c9b6-b517-ff2f-8eb5a269f020@linux.intel.com>
+Date:   Fri, 1 Nov 2019 12:52:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACPK8XfebA9PcpyWkofCJ5fAZ9ddUjQ4ZeCf73KXb51+k_+N1Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <7ea278b4-ecd4-bd17-4550-3f6f9136260e@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 10:12:10AM +0000, Joel Stanley wrote:
-> On Mon, 21 Oct 2019 at 19:49, Tao Ren <taoren@fb.com> wrote:
-> >
-> > Introduce "facebook-netbmc-ast2500-common.dtsi" which is included by all
-> > Facebook AST2500 Network BMC platforms. The major purpose is to minimize
-> > duplicated device entries cross Facebook Network BMC dts files.
-> >
-> 
-> > +
-> > +&mac1 {
-> > +       status = "okay";
-> > +       no-hw-checksum;
-> 
-> Was this included to work around the IPv6 issue that Benh recently fixed?
-> 
-> If you can test your platform with
-> 88824e3bf29a2fcacfd9ebbfe03063649f0f3254 applied and the
-> no-hw-checksum property removed, please send a follow up to remove
-> this property.
-> 
-> It's not doing any harm, but by cleaning it up there's less chance
-> others blindly copy the same thing.
-> 
-> Thanks,
-> 
-> Joel
 
-Yes. I'm planning to try the patch. Will send out a followup patch to
-remove the line if everything goes fine.
 
-Cheers,
+On 11/1/19 12:22 PM, Srinivas Kandagatla wrote:
+> 
+> 
+> On 01/11/2019 16:39, Pierre-Louis Bossart wrote:
+>>
+>>>>> +static int qcom_swrm_prepare(struct snd_pcm_substream *substream,
+>>>>> +                 struct snd_soc_dai *dai)
+>>>>> +{
+>>>>> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+>>>>> +
+>>>>> +    if (!ctrl->sruntime[dai->id])
+>>>>> +        return -EINVAL;
+>>>>> +
+>>>>> +    return sdw_enable_stream(ctrl->sruntime[dai->id]);
+>>>>
+>>>> So in hw_params you call sdw_prepare_stream() and in _prepare you 
+>>>> call sdw_enable_stream()?
+>>>>
+>>>> Shouldn't this be handled in a .trigger operation as per the 
+>>>> documentation "From ASoC DPCM framework, this stream state is linked to
+>>>> .trigger() start operation."
+>>>
+>>> If I move sdw_enable/disable_stream() to trigger I get a big click 
+>>> noise on my speakers at start and end of every playback. Tried 
+>>> different things but nothing helped so far!. Enabling Speaker DACs 
+>>> only after SoundWire ports are enabled is working for me!
+>>> There is nothing complicated on WSA881x codec side all the DACs are 
+>>> enabled/disabled as part of DAPM.
+>>
+>> that looks like a work-around to me? If you do a bank switch without 
+>> anything triggered, you are most likely sending a bunch of zeroes to 
+>> your amplifier and enabling click/pop removals somehow.
+>>
+>> It'd be worth looking into this, maybe there's a missing digital 
+>> mute/unmute that's not done in the right order?
+> 
+> Digital mute does not help too, as they get unmuted before 
+> sdw_enable_stream() call in trigger, I hit same click sound.
+> 
+> Same in the disable path too!
+> 
+> Also I noticed that there are more than 20+ register read/writes in the 
+> sdw_enable_stream() path which took atleast 30 to 40 milliseconds.
 
-Tao
+wow, that's a very slow command bandwith, is this because of a low frame 
+rate or the SLIMbus transport in the middle?
 
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-> > +};
+At any rate, we've got to improve the bank switch. The intent of the 
+alternate banks is that software mirrors the register settings in the 
+background and only updates what needs to be changed during the 
+enable/disable part. when you operate with a fixed clock frequency 
+usually it's only the channel enable that changes so it could be very 
+fast (1 write deferred to the SSP point).
+
+On the intel side our command bandwidth is comparable with the usual 
+I2C/HDaudio codecs, but still things complicated and slower than they 
+should be. I have been chasing a bug happening on bank switches in 
+multi-stream configurations for 10+ days and it's quite hard to debug at 
+the moment.
+
+One possibility is to use regmap for the banked registers, and a manual 
+mirroring after each bank switch. Or maybe we could even have an 
+extension of regmap to do this for us.
+
+> I will try my luck checking the docs to see if I can find something 
+> which talks about this.
+
+
