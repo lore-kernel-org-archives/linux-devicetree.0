@@ -2,188 +2,157 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630E6CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 20:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0F3CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 20:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F308217D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 20:14:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572639260;
-	bh=lunQWXbwftcs+7yMIfaidOHeL/YqBSClHBky0SgR7wE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BX/zKfSsLuBL3ihwqqKz3grHJjkq17wvWV6sIuq48/gDbwfxSiMtuu6j7kn9lS/bw
-	 qpA8jQO+Wb4YuJ0vCUSL9x+B5DMWn4av2XZqdofJ1vyx72d8cy3oJrFeqKCNKkB3cg
-	 K8NiL4s/pgCF6o/MqnmDQ6nmfE1YkbPylFKMJ6p0=
+	by mail.kernel.org (Postfix) with ESMTP id B1AF72086D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 20:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KR7VIPH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfKAUOT (ORCPT
+        id S1727067AbfKAUQs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:14:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727089AbfKAUOT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:14:19 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08C85218DE;
-        Fri,  1 Nov 2019 20:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572639258;
-        bh=lunQWXbwftcs+7yMIfaidOHeL/YqBSClHBky0SgR7wE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SlmgLXRPl8uHE7aS8/mxIJwrV+QM8AjbfFFjnKWsVER1NKG6OJUlmsyMlqS2j5/03
-         Yz+VihHaTAxeZ64FLgSxIc1CQAc8zZ1QDs/DnDFMC0LVmWctfLquTW8WOv3axVgF2i
-         KhAsk5JpmjV+3MYt7lIc/QWUSJeALIDLrsTjGILQ=
-Received: by mail-qt1-f180.google.com with SMTP id t8so14562239qtc.6;
-        Fri, 01 Nov 2019 13:14:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAX/WK+bt6wWK8A1sVURPN7TTfyAbGvDII7Dj1zcCHVe/DnKklRr
-        O3CzEbh8Y+ZuHEN8jcFy4hpSPSLTqTyYtjYT+A==
-X-Google-Smtp-Source: APXvYqz/2b6NY6NgvOJ9O/tsdBnbptM389ZP3WBQKZTSQtyeLNhU2JaoDSnbvE3OXtxsWr0M+t1QxgR/42oqb66jKSw=
-X-Received: by 2002:ac8:7612:: with SMTP id t18mr1236558qtq.143.1572639257156;
- Fri, 01 Nov 2019 13:14:17 -0700 (PDT)
+        Fri, 1 Nov 2019 16:16:48 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41122 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfKAUQs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 16:16:48 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA1KGdvH007674;
+        Fri, 1 Nov 2019 15:16:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572639399;
+        bh=XckIMX9TOLpRUdwAePmoGCJdYT+5toAsS7w8nr/Ee6g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=KR7VIPH0NTgTtD80kS210fYpguS9kMl4YdKPGmpZbtSTuuhRX2+XlvkcwHp+D+ix3
+         XODUzzhmCjJUQ+xaiMe9D2M0m13QBd8GqNq21rOee59yOBZVyzbSJECZgT9FokhvQk
+         z93jEJIge/VQlVzsVtrT5h2rNa+ES67pz0TZSScA=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA1KGdwk109200
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Nov 2019 15:16:39 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
+ 2019 15:16:25 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 1 Nov 2019 15:16:25 -0500
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA1KGZS0093218;
+        Fri, 1 Nov 2019 15:16:36 -0500
+Subject: Re: [PATCH v5 net-next 06/12] net: ethernet: ti: introduce cpsw
+ switchdev based driver part 1 - dual-emac
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+References: <20191024100914.16840-1-grygorii.strashko@ti.com>
+ <20191024100914.16840-7-grygorii.strashko@ti.com>
+ <20191029122422.GL15259@lunn.ch>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <d87c72e1-cb91-04a2-c881-0d8eec4671e2@ti.com>
+Date:   Fri, 1 Nov 2019 22:16:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191014191256.12697-1-robh@kernel.org> <20191101170822.GE3603@willie-the-truck>
-In-Reply-To: <20191101170822.GE3603@willie-the-truck>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 1 Nov 2019 15:14:03 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLd52KfOc62b6Lg0nwy=xYqyJvM5Nqu5QR_2tYVvZbWOA@mail.gmail.com>
-Message-ID: <CAL_JsqLd52KfOc62b6Lg0nwy=xYqyJvM5Nqu5QR_2tYVvZbWOA@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: iommu: Convert Arm SMMUv3 to DT schema
-To:     Will Deacon <will@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191029122422.GL15259@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 12:08 PM Will Deacon <will@kernel.org> wrote:
->
-> Hi Rob,
->
-> On Mon, Oct 14, 2019 at 02:12:56PM -0500, Rob Herring wrote:
-> > Convert the Arm SMMv3 binding to the DT schema format.
-> >
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Robin Murphy <Robin.Murphy@arm.com>
-> > Cc: iommu@lists.linux-foundation.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > v2:
-> > - Refine interrupt definition based on Robin's comments
-> >
-> >  .../devicetree/bindings/iommu/arm,smmu-v3.txt |  77 --------------
-> >  .../bindings/iommu/arm,smmu-v3.yaml           | 100 ++++++++++++++++++
-> >  2 files changed, 100 insertions(+), 77 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
->
-> [...]
->
-> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-> > new file mode 100644
-> > index 000000000000..662cbc4592c9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-> > @@ -0,0 +1,100 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iommu/arm,smmu-v3.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ARM SMMUv3 Architecture Implementation
-> > +
-> > +maintainers:
-> > +  - Will Deacon <will@kernel.org>
-> > +  - Robin Murphy <Robin.Murphy@arm.com>
-> > +
-> > +description: |+
-> > +  The SMMUv3 architecture is a significant departure from previous
-> > +  revisions, replacing the MMIO register interface with in-memory command
-> > +  and event queues and adding support for the ATS and PRI components of
-> > +  the PCIe specification.
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "^iommu@[0-9a-f]*"
-> > +  compatible:
-> > +    const: arm,smmu-v3
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +
-> > +  interrupt-names:
-> > +    oneOf:
-> > +      - const: combined
-> > +        description:
-> > +          The combined interrupt is optional, and should only be provided if the
-> > +          hardware supports just a single, combined interrupt line.
-> > +          If provided, then the combined interrupt will be used in preference to
-> > +          any others.
-> > +      - items:
-> > +          - const: eventq     # Event Queue not empt
-> > +          - const: priq       # PRI Queue not empty
-> > +          - const: cmdq-sync  # CMD_SYNC complete
-> > +          - const: gerror     # Global Error activated
-> > +      - minItems: 2
-> > +        maxItems: 4
-> > +        items:
-> > +          - const: eventq
-> > +          - const: gerror
-> > +          - const: priq
-> > +          - const: cmdq-sync
->
-> I find it a bit odd to say "minItems: 2" here since, for example, if you
-> have an SMMU that supports PRI then you really want the PRIQ interrupt
-> hooked up. The only one never care about in the current driver is cmdq-sync,
-> but that's just a driver quirk.
+Hi Andrew,
 
-I don't know. I'm just documenting what exists and doesn't seem like
-an outright error. The one case is TI:
+On 29/10/2019 14:24, Andrew Lunn wrote:
+>>   config TI_CPTS
+>>   	bool "TI Common Platform Time Sync (CPTS) Support"
+>> -	depends on TI_CPSW || TI_KEYSTONE_NETCP || COMPILE_TEST
+>> +	depends on TI_CPSW || TI_KEYSTONE_NETCP || COMPILE_TEST || TI_CPSW_SWITCHDEV
+> 
+> nit picking, but COMPILE_TEST is generally last on the line.
+> 
+>> +/**
+>> + * cpsw_set_mc - adds multicast entry to the table if it's not added or deletes
+>> + * if it's not deleted
+>> + * @ndev: device to sync
+>> + * @addr: address to be added or deleted
+>> + * @vid: vlan id, if vid < 0 set/unset address for real device
+>> + * @add: add address if the flag is set or remove otherwise
+>> + */
+>> +static int cpsw_set_mc(struct net_device *ndev, const u8 *addr,
+>> +		       int vid, int add)
+>> +{
+>> +	struct cpsw_priv *priv = netdev_priv(ndev);
+>> +	struct cpsw_common *cpsw = priv->cpsw;
+>> +	int slave_no = cpsw_slave_index(cpsw, priv);
+>> +	int mask, flags, ret;
+> 
+> David will complain about reverse Christmas tree. You need to move
+> some of the assignments into the body of the function. This problems
+> happens a few times in the code.
+> 
+>> +static int cpsw_set_pauseparam(struct net_device *ndev,
+>> +			       struct ethtool_pauseparam *pause)
+>> +{
+>> +	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+>> +	struct cpsw_priv *priv = netdev_priv(ndev);
+>> +
+>> +	priv->rx_pause = pause->rx_pause ? true : false;
+>> +	priv->tx_pause = pause->tx_pause ? true : false;
+>> +
+>> +	return phy_restart_aneg(cpsw->slaves[priv->emac_port - 1].phy);
+>> +}
+> 
+> You should look at the value of pause.autoneg.
 
-arch/arm64/boot/dts/ti/k3-j721e-main.dtsi:
-interrupt-names = "eventq", "gerror";
+I'll use phy_validate_pause() and phy_set_asym_pause() here,
+and fix other comments.
 
-If we want to make priq conditionally required, then I need to know
-which compatibles would imply supporting PRI. If that's discoverable,
-then we can't really enforce the interrupt being present in the
-schema.
+> 
+>> +static const struct devlink_ops cpsw_devlink_ops;
+> 
+> It would be nice to avoid this forward declaration.
 
-> Also, if the thing supports MSIs then it might not have any wired interrupts
-> at all. Hmm.
+It's not declaration, it's definition of devlink_ops without any standard callbacks implemented.
 
-That would be why 'interrupts' is optional. The schema only applies if
-a property is present.
+> 
+>> +static const struct devlink_param cpsw_devlink_params[] = {
+>> +	DEVLINK_PARAM_DRIVER(CPSW_DL_PARAM_ALE_BYPASS,
+>> +			     "ale_bypass", DEVLINK_PARAM_TYPE_BOOL,
+>> +			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
+>> +			     cpsw_dl_ale_ctrl_get, cpsw_dl_ale_ctrl_set, NULL),
+>> +};
+> 
+> Is this documented?
 
-> > +  '#iommu-cells':
-> > +    const: 1
-> > +
-> > +  dma-coherent:
-> > +    description: |
-> > +      Present if page table walks made by the SMMU are cache coherent with the
-> > +      CPU.
->
-> This looks like you've taken the text from SMMUv2 by accident. For SMMUv3,
-> it's not just about page table walks, but *any* DMA operations made by the
-> SMMU (e.g. STE lookup). I don't see the need to change the current text tbh.
+In patch 9. But I'll update it and add standard devlink parameter definition, like:
 
-Indeed. I'll do a follow-up as I've already applied these 2 patches.
+ale_bypass	[DEVICE, DRIVER-SPECIFIC]
+		Allows to enable ALE_CONTROL(4).BYPASS mode for debug purposes
+		Type: bool
+		Configuration mode: runtime
 
-Rob
+Thank you for review.
+
+-- 
+Best regards,
+grygorii
