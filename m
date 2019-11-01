@@ -7,79 +7,80 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07FECA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 18:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC8ECA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 18:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCC7217D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 18:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC442086D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 18:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="2S1M79vF"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="vttfE+yH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfKASPZ (ORCPT
+        id S1726793AbfKASQE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 14:15:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44075 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfKASPY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 14:15:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f2so1566794wrs.11
-        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 11:15:23 -0700 (PDT)
+        Fri, 1 Nov 2019 14:16:04 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51779 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726457AbfKASQE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 14:16:04 -0400
+Received: by mail-wm1-f68.google.com with SMTP id q70so10175481wme.1
+        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 11:16:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=netronome-com.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=DaF/fN8ohwgwUWkK8En+70QBPGXgnEWmIV9bvJcYsGw=;
-        b=2S1M79vFdbXz9S+tocHSJzFBdka0QHGa+4GkHJg//hWg706Vo5rD9oenQfOtaSmAUr
-         Nk+Xd4+m+4czttRqQqXSum8FZZ65QDDeTkUjrFOxlHkLQTzGj+cUrk1h1XuuvMmLFRcc
-         lEXLOwGtliJMr9WIAPTkQcoyZ81IW7MhYB0BuJkeOLkw4/BkQfLckT0irJmjcQsomzLU
-         +GPO09k2Ymz5woSHeDQczPGhUFi9SEGe9bJ28Tf2qL+m6bC+0xAoBsx312A5mTCrVzIy
-         2AWuzg55SbyWLaQYh1BblY4f5/tV6fADaOazrHHe9CLV7L+buzkjGGWoCphBpoUFkJG/
-         H3VQ==
+        bh=sxZpbgKRxXNWGi7JPE5PJWysYsru4FyBDVNdoORRq6s=;
+        b=vttfE+yHueTydpOmGzXppeugfpRtDd2BWsq3YaVtIJ2Z0/Tokkp5mPQ7DMvO06zg5S
+         Tk4b1yFEhm2Wc5Z0iMzxyARZGJFr0ZwreXVX7yJsX52sKOP4mKT6zJqPUuEj3q72e/qN
+         zdgumdE0Dm8GOejq+pRy0oH9hv0NvzIaN9Eql4dQdJh7MFWEPiST+yyb3rh84kZdjAzy
+         Lbl9fdSGQ+heCbTnoNhbbjIn3AxlP6cIHb2UG61hvDkl/mO7rICswVRgJzGZWHiMFVe/
+         FDfcz4U8pQrhGgrUiPI0OQJkH0yZ1KDSH5NSgbbe7oXPcIDEf2eGdTGHV/3anZOfyOB2
+         v5Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DaF/fN8ohwgwUWkK8En+70QBPGXgnEWmIV9bvJcYsGw=;
-        b=fcZvfP+tn8egAi4ayz0DVPTevi6+wjph5ztmg8CvL4+jub0+jVROQqNfyvdzVxdfDF
-         j27PZqXOV4jhs434nlKDQijVh1N0edBFqeOjVNAwuc133RGkbFur5KjyiPXhKYgHKb3x
-         gbpKP9Kx7hvf3D+4VZLmE5fsut0IKQldnxCTdgfUyLhqrE6Tn9VZiBBMmcNE8a2ssXo9
-         Dchljip0yJh22oKq0JIajJ4shPcJxJbSFklbJa5uI9v1Q/fN7ZOsW8kcRKeeiIz4JOl3
-         KXcDKWXj9enNzvES8cQh5zX3UGtdjpF1MOK0l/WppqlibRYSnSI4veh6hjBMs7S9qYxJ
-         96iA==
-X-Gm-Message-State: APjAAAXzUnz91vhRjRirGaicuugfYuq53xhDpUv5NLzLu1ib2LdkH3od
-        2C8A7b3Z6czBsbGBnw7Wuu+4IEp6hfk=
-X-Google-Smtp-Source: APXvYqynjkno+tQJc/BZhuPrx+2HgsQ9d+fnoevBPdLgerZmbfcvhXVkLbrgtMikjKc41AEYKJVkQg==
-X-Received: by 2002:adf:f4c9:: with SMTP id h9mr7333981wrp.354.1572632122919;
-        Fri, 01 Nov 2019 11:15:22 -0700 (PDT)
+        bh=sxZpbgKRxXNWGi7JPE5PJWysYsru4FyBDVNdoORRq6s=;
+        b=nYquE5ZR+JpCv9o6H/viEdi79I9yWR1tcwyIZ/RV/x3y7xDM2W/3Rre0mZTKMj8ypG
+         vn0fEx0SjnW+XhOkZdx49Vfk8f5ib4gfF2URxvNDmMqrJi8DsPrn7ye8bPY7Q/b3uqKz
+         S0f+LAGWMb7GP74M7JcnXXtThFCzzDpQq0Ir1ZrvBRX7aja4XJNdLU4irHJ3Uj85lajf
+         4qKUM37IQt0ysAhbAVcizU0UQ8KE/nqYJQpmK9TEDafTNaVc8M2lDwXe2dlg1m5QsDed
+         XQ0ybmPbmOLfsBoIZHyI5ZvGMudIkS9GDb8nNF/fLpQ4eNpdE/mgfaRRsyk9giDh2ty2
+         d6Lg==
+X-Gm-Message-State: APjAAAV43ey155NHTeeYg4qCAO8iJiCes61EUksKf4/n9YHV9sSRqfpk
+        r8Rj+RFbHltKm4QhDNcyWzXqkg==
+X-Google-Smtp-Source: APXvYqxissnymQlTIZHuchg7pdEDwKYW3/LTmbLmpkQZw7CfA6kNNHUqMixo6wErYI+CKsI4eGbAYw==
+X-Received: by 2002:a1c:a791:: with SMTP id q139mr11147563wme.155.1572632162588;
+        Fri, 01 Nov 2019 11:16:02 -0700 (PDT)
 Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
-        by smtp.gmail.com with ESMTPSA id v6sm2006297wrt.13.2019.11.01.11.15.22
+        by smtp.gmail.com with ESMTPSA id w13sm10336198wrm.8.2019.11.01.11.16.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 11:15:22 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 19:15:21 +0100
+        Fri, 01 Nov 2019 11:16:02 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 19:16:01 +0100
 From:   Simon Horman <simon.horman@netronome.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: net: davinci-mdio: convert bindings to
- json-schema
-Message-ID: <20191101181520.GC5859@netronome.com>
-References: <20191101164502.19089-1-grygorii.strashko@ti.com>
+To:     vincent.cheng.xh@renesas.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: ptp: Add device tree binding for IDT
+ ClockMatrix based PTP clock
+Message-ID: <20191101181600.GD5859@netronome.com>
+References: <1572578407-32532-1-git-send-email-vincent.cheng.xh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191101164502.19089-1-grygorii.strashko@ti.com>
+In-Reply-To: <1572578407-32532-1-git-send-email-vincent.cheng.xh@renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 06:45:02PM +0200, Grygorii Strashko wrote:
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the TI SoC Davinci/OMAP/Keystone2 MDIO Controllerr over to a
-> YAML schemas.
+On Thu, Oct 31, 2019 at 11:20:06PM -0400, vincent.cheng.xh@renesas.com wrote:
+> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 > 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Add device tree binding doc for the IDT ClockMatrix PTP clock.
+> 
+> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
 
 Reviewed-by: Simon Horman <simon.horman@netronome.com>
+
