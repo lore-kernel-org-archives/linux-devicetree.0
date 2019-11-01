@@ -2,114 +2,157 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9936CA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1415CA9ED2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8C9217D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572596857;
-	bh=UGrR3iRTKwrbEPN+BHW52XhDbxZkXvMXHC6V2nHaiuU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=THbGrhSPOYfKgoCE9fn2EA4kx9+qFptUXwLxYoJvrBT0b6sgc4cipjNabVEWcN/ug
-	 hleURdQgXKhMXajIxYjKmlcnsrFerN00iwB2km/szc5Gblx4BgGW36Zz3Ue8P1B1Sz
-	 +KEgrVZ3GUBz892v3475b80tyve+LOzEGzD+OfHQ=
+	by mail.kernel.org (Postfix) with ESMTP id A0F4E21906
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="udZPvzC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730034AbfKAI1h (ORCPT
+        id S1727394AbfKAIkq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:27:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729975AbfKAI1h (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Nov 2019 04:27:37 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93E34208CB;
-        Fri,  1 Nov 2019 08:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572596856;
-        bh=UGrR3iRTKwrbEPN+BHW52XhDbxZkXvMXHC6V2nHaiuU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bmNAWnJ4mnMMumb5K9Z5TPfbVMVSG14pUOCb3DPJ2XA3W3x2H1DIt1TB7ofMdQf/9
-         xPDRzfPxGa0pirP3JilU8xsrw6ZA13MRWl7fwDeFP0EsYSKwGnLb8Rpw92376oeBOC
-         5oB8tSHl21zhhbFjvyD42aR6cbPogZi4FsIaQY2k=
-Date:   Fri, 1 Nov 2019 09:02:56 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: net: bluetooth: add DT binding for
- Realtek controllers
-Message-ID: <20191101080256.gjc4tacltehro3iw@hendrix>
-References: <20191030224333.70241-1-bonstra@bonstra.fr.eu.org>
- <20191030224333.70241-2-bonstra@bonstra.fr.eu.org>
+        Fri, 1 Nov 2019 04:40:46 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43518 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727363AbfKAIkq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 04:40:46 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA18eZsX021394;
+        Fri, 1 Nov 2019 03:40:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572597635;
+        bh=DfFRpw7GPtmxTaDqZ1grWeRPjfw/85ryCRcZj2Zxl7w=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=udZPvzC8uf/jzKdS3JOY6V3CXEvH+3WjFJvfQaPi5o8tiO1ArXA5vX1IgNfnAlP6S
+         9kC7s8wh3fc9ZWm5v9L5hWprJ3tdRhMBTJDs2YuBN7XIgfPOX0AZE7ywFITzWoAP8+
+         SpNPxGDOQXg79EYv3oGYtTarnmHGRLXPJ8RhuPV8=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA18eZpc121633;
+        Fri, 1 Nov 2019 03:40:35 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
+ 2019 03:40:33 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 1 Nov 2019 03:40:20 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA18eP8a036903;
+        Fri, 1 Nov 2019 03:40:30 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+Subject: [PATCH v4 01/15] bindings: soc: ti: add documentation for k3 ringacc
+Date:   Fri, 1 Nov 2019 10:41:21 +0200
+Message-ID: <20191101084135.14811-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030224333.70241-2-bonstra@bonstra.fr.eu.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hugo,
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-On Wed, Oct 30, 2019 at 11:43:31PM +0100, Hugo Grostabussiat wrote:
-> The rtl_bt driver already supports some Realtek controllers on ACPI
-> platforms.
-> This commit adds bindings for DT-only platforms.
->
-> Signed-off-by: Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
-> ---
->  .../bindings/net/realtek-bluetooth.txt        | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.txt
+The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+enable straightforward passing of work between a producer and a consumer.
+There is one RINGACC module per NAVSS on TI AM65x and j721e.
 
-You should write that binding using a YAML description. Free-form
-device tree bindings are more or less deprecated now.
+This patch introduces RINGACC device tree bindings.
 
-> diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth.txt b/Documentation/devicetree/bindings/net/realtek-bluetooth.txt
-> new file mode 100644
-> index 000000000000..01d4ed146705
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/realtek-bluetooth.txt
-> @@ -0,0 +1,25 @@
-> +Realtek Bluetooth controllers
-> +=============================
-> +
-> +This documents the binding structure and properties for the serial
-> +attached Bluetooth controllers from Realtek.
-> +
-> +Required properties:
-> +- compatible: currently, only "realtek,rt8723bs-bt" is supported
-> +
-> +Optional properties:
-> +- enable-gpio: gpio line controlling the power down (BT_DIS#) signal
-> +- device-wake: gpio line controlling the device wakeup (BT_WAKE) signal
-> +- config-name: postfix added to the name of the firmware file
-> +  containing the chip configuration
-> +
-> +Example:
-> +
-> +&uart1 {
-> +	bluetooth {
-> +		compatible = "realtek,rtl8723bs-bt";
-> +		enable-gpio = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
-> +		device-wake-gpio = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-> +		config-name = "teres_a64_i";
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/soc/ti/k3-ringacc.txt | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
 
-IIRC, that has been discussed before and the standard "model" property
-was to be preferred.
+diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+new file mode 100644
+index 000000000000..86954cf4fa99
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+@@ -0,0 +1,59 @@
++* Texas Instruments K3 NavigatorSS Ring Accelerator
++
++The Ring Accelerator (RA) is a machine which converts read/write accesses
++from/to a constant address into corresponding read/write accesses from/to a
++circular data structure in memory. The RA eliminates the need for each DMA
++controller which needs to access ring elements from having to know the current
++state of the ring (base address, current offset). The DMA controller
++performs a read or write access to a specific address range (which maps to the
++source interface on the RA) and the RA replaces the address for the transaction
++with a new address which corresponds to the head or tail element of the ring
++(head for reads, tail for writes).
++
++The Ring Accelerator is a hardware module that is responsible for accelerating
++management of the packet queues. The K3 SoCs can have more than one RA instances
++
++Required properties:
++- compatible	: Must be "ti,am654-navss-ringacc";
++- reg		: Should contain register location and length of the following
++		  named register regions.
++- reg-names	: should be
++		  "rt" - The RA Ring Real-time Control/Status Registers
++		  "fifos" - The RA Queues Registers
++		  "proxy_gcfg" - The RA Proxy Global Config Registers
++		  "proxy_target" - The RA Proxy Datapath Registers
++- ti,num-rings	: Number of rings supported by RA
++- ti,sci-rm-range-gp-rings : TI-SCI RM subtype for GP ring range
++- ti,sci	: phandle on TI-SCI compatible System controller node
++- ti,sci-dev-id	: TI-SCI device id
++- msi-parent	: phandle for "ti,sci-inta" interrupt controller
++
++Optional properties:
++ -- ti,dma-ring-reset-quirk : enable ringacc / udma ring state interoperability
++		  issue software w/a
++
++Example:
++
++ringacc: ringacc@3c000000 {
++	compatible = "ti,am654-navss-ringacc";
++	reg =	<0x0 0x3c000000 0x0 0x400000>,
++		<0x0 0x38000000 0x0 0x400000>,
++		<0x0 0x31120000 0x0 0x100>,
++		<0x0 0x33000000 0x0 0x40000>;
++	reg-names = "rt", "fifos",
++		    "proxy_gcfg", "proxy_target";
++	ti,num-rings = <818>;
++	ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
++	ti,dma-ring-reset-quirk;
++	ti,sci = <&dmsc>;
++	ti,sci-dev-id = <187>;
++	msi-parent = <&inta_main_udmass>;
++};
++
++client:
++
++dma_ipx: dma_ipx@<addr> {
++	...
++	ti,ringacc = <&ringacc>;
++	...
++}
+-- 
+Peter
 
-Maxime
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
