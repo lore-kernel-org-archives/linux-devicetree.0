@@ -2,304 +2,164 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934C8CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235F2CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5919621855
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:14:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="LLuhMLxu"
+	by mail.kernel.org (Postfix) with ESMTP id E84A02085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 17:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572628608;
+	bh=0VLtvy1Li+X4S07iJZuXHqdU+xhvhoGmzB/HsuY/Ov8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2FL/KJ/7Y1l7dqqj0o1wqTSkAjS+nu/SK1I9cShWy6QGe0SjKUTvk6S7cATqK5RdD
+	 Lq/uIOfXY5ZoYlIKtMXbUFWUKKp7U8LoZo7V17vibmUFSMwj1tQbvngY8/K6jzTuR2
+	 pDgzficjtlKZmy+9nrzg8vmStfg3ESX4Gf/sSZws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfKARO6 (ORCPT
+        id S1727123AbfKARQr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 13:14:58 -0400
-Received: from gateway34.websitewelcome.com ([192.185.150.114]:16263 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726957AbfKARO6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 13:14:58 -0400
-X-Greylist: delayed 1355 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Nov 2019 13:14:56 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 62CF56FA3A9
-        for <devicetree@vger.kernel.org>; Fri,  1 Nov 2019 11:52:20 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id Qa9si7eF3OdBHQa9siPRhy; Fri, 01 Nov 2019 11:52:20 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HHyjobs/ckpKQAI9xUTRrv1371GBsqGhDFk1LlCvmfI=; b=LLuhMLxum9H/U3wSytNZYn5L0t
-        j9XFXgRcvm2Ku6rXfHoH/4Y72kZMVv8hXznAliy51UTIK2j53+wq65IMgGwMUvKirW1gh3MMgB95/
-        49nPzSQZ96pKWorLELwGvsR/M8rCpYz6flH5b96YnjhEchKT5KmqbU2neNUu1238RsQASPy7C0Sg1
-        jvo7QLfSXZ834VC3slMVFy1gKHPfpnY4g4xd7ZbKUyhqutf0JBynZ57Zyuvnog7fisnAYag6c6au3
-        4rkEPx/LU9FrpFQbznZpe2RW8s3xiVRYrf9mE1xBUll4ZTbbpV/w/zCWfE0mFK9k8c9TJAouhWUZT
-        SYQUH1og==;
-Received: from [191.31.195.127] (port=55608 helo=[192.168.15.3])
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iQa9r-003IcE-H7; Fri, 01 Nov 2019 13:52:19 -0300
-Subject: Re: [PATCH v4 3/4] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
- <20191031184134.30621-1-matheus@castello.eng.br>
- <20191031184134.30621-4-matheus@castello.eng.br> <20191101152755.GC28931@pi3>
-From:   Matheus Castello <matheus@castello.eng.br>
-Message-ID: <c18ab487-6242-4ac2-b2c2-ef78c899521a@castello.eng.br>
-Date:   Fri, 1 Nov 2019 13:52:13 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 1 Nov 2019 13:16:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726957AbfKARQr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Nov 2019 13:16:47 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 517FE2085B;
+        Fri,  1 Nov 2019 17:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572628107;
+        bh=0VLtvy1Li+X4S07iJZuXHqdU+xhvhoGmzB/HsuY/Ov8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DhjUBZFokLgKbeFcbFEYX+4/vgqse2DiRVLKOazVZ7jeSb7JJau3jICFIlREBp6nT
+         A+WLX6ce3gzd42JF2h9Cg4xGQoCIXemZxX1i6yPRrzNMm67AYjFlW6Fsw8fi7xer+z
+         sESre9SUiTkjKoBixYasHL22b9CjBvICA0uJ/WmM=
+Date:   Fri, 1 Nov 2019 17:08:23 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2] dt-bindings: iommu: Convert Arm SMMUv3 to DT schema
+Message-ID: <20191101170822.GE3603@willie-the-truck>
+References: <20191014191256.12697-1-robh@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191101152755.GC28931@pi3>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: pt-BR
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.195.127
-X-Source-L: No
-X-Exim-ID: 1iQa9r-003IcE-H7
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.3]) [191.31.195.127]:55608
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 9
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014191256.12697-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
+On Mon, Oct 14, 2019 at 02:12:56PM -0500, Rob Herring wrote:
+> Convert the Arm SMMv3 binding to the DT schema format.
+> 
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Robin Murphy <Robin.Murphy@arm.com>
+> Cc: iommu@lists.linux-foundation.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v2:
+> - Refine interrupt definition based on Robin's comments
+> 
+>  .../devicetree/bindings/iommu/arm,smmu-v3.txt |  77 --------------
+>  .../bindings/iommu/arm,smmu-v3.yaml           | 100 ++++++++++++++++++
+>  2 files changed, 100 insertions(+), 77 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
+>  create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
 
-Em 11/1/19 12:27 PM, Krzysztof Kozlowski escreveu:
-> On Thu, Oct 31, 2019 at 03:41:33PM -0300, Matheus Castello wrote:
->> For configuration of fuel gauge alert for a low level state of charge
->> interrupt we add a function to config level threshold and a device tree
->> binding property to set it in flatned device tree node.
->>
->> Now we can use "maxim,alert-low-soc-level" property with the values from
->> 1% up to 32% to configure alert interrupt threshold.
->>
->> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
->> ---
->>   drivers/power/supply/max17040_battery.c | 88 +++++++++++++++++++++----
->>   1 file changed, 74 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
->> index 75459f76d02c..802575342c72 100644
->> --- a/drivers/power/supply/max17040_battery.c
->> +++ b/drivers/power/supply/max17040_battery.c
->> @@ -29,6 +29,9 @@
->>   #define MAX17040_DELAY		1000
->>   #define MAX17040_BATTERY_FULL	95
->>
->> +#define MAX17040_ATHD_MASK		0xFFC0
->> +#define MAX17040_ATHD_DEFAULT_POWER_UP	4
->> +
->>   struct max17040_chip {
->>   	struct i2c_client		*client;
->>   	struct delayed_work		work;
->> @@ -43,6 +46,8 @@ struct max17040_chip {
->>   	int soc;
->>   	/* State Of Charge */
->>   	int status;
->> +	/* Low alert threshold from 32% to 1% of the State of Charge */
->> +	u32 low_soc_alert_threshold;
->>   };
->>
->>   static int max17040_get_property(struct power_supply *psy,
->> @@ -99,6 +104,22 @@ static void max17040_reset(struct i2c_client *client)
->>   	max17040_write_reg(client, MAX17040_CMD, 0x0054);
->>   }
->>
->> +static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
->> +	u32 level)
->> +{
->> +	int ret;
->> +	u16 data;
->> +
->> +	level = 32 - level;
->> +	data = max17040_read_reg(client, MAX17040_RCOMP);
->> +	/* clear the alrt bit and set LSb 5 bits */
->> +	data &= MAX17040_ATHD_MASK;
->> +	data |= level;
->> +	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
->> +
->> +	return ret;
->> +}
->> +
->>   static void max17040_get_vcell(struct i2c_client *client)
->>   {
->>   	struct max17040_chip *chip = i2c_get_clientdata(client);
->> @@ -115,7 +136,6 @@ static void max17040_get_soc(struct i2c_client *client)
->>   	u16 soc;
->>
->>   	soc = max17040_read_reg(client, MAX17040_SOC);
->> -
->>   	chip->soc = (soc >> 8);
->>   }
->>
->> @@ -161,6 +181,24 @@ static void max17040_get_status(struct i2c_client *client)
->>   		chip->status = POWER_SUPPLY_STATUS_FULL;
->>   }
->>
->> +static int max17040_get_of_data(struct max17040_chip *chip)
->> +{
->> +	struct device *dev = &chip->client->dev;
->> +	struct device_node *np = dev->of_node;
->> +	int ret = 0;
->> +
->> +	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
->> +			&chip->low_soc_alert_threshold)) {
-> 
-> Please align the line break with line above. checkpatch --strict might
-> give you hints about this.
-> >> +		chip->low_soc_alert_threshold = MAX17040_ATHD_DEFAULT_POWER_UP;
->> +	/* check if low_soc_alert_threshold is between 1% and 32% */
-> 
-> The comment looks misleading here, like it belongs to previous block.
-> Maybe put it inside else if {} block?
-> 
->> +	} else if (chip->low_soc_alert_threshold <= 0 ||
->> +			chip->low_soc_alert_threshold >= 33){
-> 
-> Missing space before {.
-> 
->> +		ret = -EINVAL;
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->>   static void max17040_check_changes(struct i2c_client *client)
->>   {
->>   	max17040_get_vcell(client);
->> @@ -192,6 +230,10 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
->>   	/* send uevent */
->>   	power_supply_changed(chip->battery);
->>
->> +	/* reset alert bit */
->> +	max17040_set_low_soc_threshold_alert(client,
->> +		chip->low_soc_alert_threshold);
-> 
-> Unless the continuation exceeds 80 character limit, please align it with
-> previous line.
-> 
->> +
->>   	return IRQ_HANDLED;
->>   }
->>
->> @@ -216,6 +258,7 @@ static int max17040_probe(struct i2c_client *client,
->>   	struct i2c_adapter *adapter = client->adapter;
->>   	struct power_supply_config psy_cfg = {};
->>   	struct max17040_chip *chip;
->> +	int ret;
->>
->>   	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
->>   		return -EIO;
->> @@ -226,6 +269,12 @@ static int max17040_probe(struct i2c_client *client,
->>
->>   	chip->client = client;
->>   	chip->pdata = client->dev.platform_data;
->> +	ret = max17040_get_of_data(chip);
->> +	if (ret) {
->> +		dev_err(&client->dev,
->> +			"failed: low SOC alert OF data out of bounds\n");
->> +		return ret;
->> +	}
->>
->>   	i2c_set_clientdata(client, chip);
->>   	psy_cfg.drv_data = chip;
->> @@ -242,20 +291,31 @@ static int max17040_probe(struct i2c_client *client,
->>
->>   	/* check interrupt */
->>   	if (client->irq) {
->> -		int ret;
->> -		unsigned int flags;
->> -
->> -		dev_info(&client->dev, "IRQ: enabled\n");
->> -		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
->> -		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
->> -						max17040_thread_handler, flags,
->> -						chip->battery->desc->name,
->> -						chip);
->> -
->> -		if (ret) {
->> -			client->irq = 0;
->> +		if (of_device_is_compatible(client->dev.of_node,
->> +			"maxim,max77836-battery")) {
-> 
-> Alignment.
-> 
->> +			ret = max17040_set_low_soc_threshold_alert(client,
->> +				chip->low_soc_alert_threshold);
-> 
-> Ditto.
-> 
->> +			if (ret) {
->> +				dev_err(&client->dev,
->> +					"Failed to set low SOC alert: err %d\n",
->> +					ret);
->> +				return ret;
->> +			}
->> +
->> +			dev_info(&client->dev, "IRQ: enabled\n");
->> +			ret = devm_request_threaded_irq(&client->dev,
->> +				client->irq, NULL, max17040_thread_handler,
->> +				(client->flags | IRQF_ONESHOT),
-> 
-> This looks unrelated. Befor ethis were IRQF_TRIGGER_FALLING |
-> IRQF_ONESHOT, now you use client->flags. There is no reason why this
-> commit should change >
+[...]
 
-I am using client->flags here to not overwrite the flag passed in device 
-tree. Let me know what you think about it: if I should leave it as in 
-the previous commit, or should I modify the previous commit too.
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+> new file mode 100644
+> index 000000000000..662cbc4592c9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iommu/arm,smmu-v3.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM SMMUv3 Architecture Implementation
+> +
+> +maintainers:
+> +  - Will Deacon <will@kernel.org>
+> +  - Robin Murphy <Robin.Murphy@arm.com>
+> +
+> +description: |+
+> +  The SMMUv3 architecture is a significant departure from previous
+> +  revisions, replacing the MMIO register interface with in-memory command
+> +  and event queues and adding support for the ATS and PRI components of
+> +  the PCIe specification.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^iommu@[0-9a-f]*"
+> +  compatible:
+> +    const: arm,smmu-v3
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  interrupt-names:
+> +    oneOf:
+> +      - const: combined
+> +        description:
+> +          The combined interrupt is optional, and should only be provided if the
+> +          hardware supports just a single, combined interrupt line.
+> +          If provided, then the combined interrupt will be used in preference to
+> +          any others.
+> +      - items:
+> +          - const: eventq     # Event Queue not empt
+> +          - const: priq       # PRI Queue not empty
+> +          - const: cmdq-sync  # CMD_SYNC complete
+> +          - const: gerror     # Global Error activated
+> +      - minItems: 2
+> +        maxItems: 4
+> +        items:
+> +          - const: eventq
+> +          - const: gerror
+> +          - const: priq
+> +          - const: cmdq-sync
 
->> +				chip->battery->desc->name, chip);
-> 
-> This breaks alignment which was here before.
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+I find it a bit odd to say "minItems: 2" here since, for example, if you
+have an SMMU that supports PRI then you really want the PRIQ interrupt
+hooked up. The only one never care about in the current driver is cmdq-sync,
+but that's just a driver quirk.
 
-Thanks for the review i will work on it.
+Also, if the thing supports MSIs then it might not have any wired interrupts
+at all. Hmm.
 
->> +
->> +			if (ret) {
->> +				client->irq = 0;
->> +				dev_warn(&client->dev,
->> +					"Failed to get IRQ err %d\n", ret);
->> +			}
->> +		} else {
->>   			dev_warn(&client->dev,
->> -				"Failed to get IRQ err %d\n", ret);
->> +				"Device not compatible for IRQ");
->>   		}
->>   	}
->>
->> --
->> 2.24.0.rc2
->>
+> +
+> +  '#iommu-cells':
+> +    const: 1
+> +
+> +  dma-coherent:
+> +    description: |
+> +      Present if page table walks made by the SMMU are cache coherent with the
+> +      CPU.
+
+This looks like you've taken the text from SMMUv2 by accident. For SMMUv3,
+it's not just about page table walks, but *any* DMA operations made by the
+SMMU (e.g. STE lookup). I don't see the need to change the current text tbh.
+
+Will
