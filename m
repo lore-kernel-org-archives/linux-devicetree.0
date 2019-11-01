@@ -2,145 +2,271 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6D9CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 11:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC3ECA9ED1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 11:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E40E21734
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 11:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0609020656
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 11:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfKALBj (ORCPT
+        id S1728258AbfKAL2Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 07:01:39 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35990 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfKALBj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 07:01:39 -0400
-Received: by mail-oi1-f194.google.com with SMTP id j7so7837154oib.3;
-        Fri, 01 Nov 2019 04:01:38 -0700 (PDT)
+        Fri, 1 Nov 2019 07:28:24 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37650 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfKAL2X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 07:28:23 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b20so6998142lfp.4;
+        Fri, 01 Nov 2019 04:28:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BwOb7c/bCokB7dKeYdJq+R5da1cRDoqnSzfr9hONEPw=;
-        b=RnqYyopSWNe26xO6bVsGasMF+knlFFP5Bwppq8QQ0w8kKK+sn9r4w9bWXS/45r7vaA
-         t7i7jOP0Cmxm0Xrwx8iP1L5pzFIlTfJZcj2AT86cEMaUrRKNZbFJvaAd6WabDwEgiyMt
-         BEKz3LBRsoxXtAsgD0bmF6ZIC9s/ujn9+rzkELF2O9osQRYfWcrhAJYItdvAB3cVGMVn
-         GmqcKhD/CvaPOKpk5JpHUs2Qk8bOUc2h84uRmJJTs0ViT3A4cfidDe6q5hjUmyGddBfW
-         u0B/MJVPnEyOAbRU4nsaWuqfvpEO1kLbZu0TCvCC1yHpJDwfJQ45v8H1+sc4wZ7Appuz
-         bNoA==
-X-Gm-Message-State: APjAAAUFPughy0uv/MV9TLuWU+lNvq9YAkYxMEHfA9m38EUqtJJ8Mk9E
-        lVPo6pSdjM6kC9UukffVZAwtdmBY4fKefjZs5Vc=
-X-Google-Smtp-Source: APXvYqytWpFj+aHVVrjgJ+XuIgmDCveEj6FlTqbtlSt/b3e6XNqNbZZ0OLo3TR/ZeHv/URN1HIIZVg8kUhpb/iGo/CI=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr7835580oia.131.1572606097659;
- Fri, 01 Nov 2019 04:01:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191021161351.20789-1-krzk@kernel.org> <20191021161351.20789-4-krzk@kernel.org>
- <CAMuHMdXr7_HP5NUQ_0D76N-eBuootQqyPusqmf6nyDnLN__ORA@mail.gmail.com> <CAJKOXPcZGhC1+-tOwL6N_ohWzXEqJ3T6=HWefNzXsa3eeQN1fg@mail.gmail.com>
-In-Reply-To: <CAJKOXPcZGhC1+-tOwL6N_ohWzXEqJ3T6=HWefNzXsa3eeQN1fg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 1 Nov 2019 12:01:26 +0100
-Message-ID: <CAMuHMdV34BfnVGXCtoL1EDk=uYPiaku1WvBuB0cXoGy3zeoBJw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] dt-bindings: sram: Merge Renesas SRAM bindings
- into generic
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=DGPEzlzjC2eK7jBTZmkkeyeVTq7qEDIORYurK5LJmdU=;
+        b=p0ecw+jMORI49NPeLVxj+9UeCjSTIK15Bir2nyHimTD0JnOoJcVrZpuThkaYpNTP8P
+         WpaFMXaKuIVOixeDK7u3jmVCmYCxXG3sshBghqDdGLIjHMOYu42LMXTu8WMTrVQcE77V
+         4wRCmXxGqiOHkbMQy+gAho+Us8V9dARXPk7szrC5Z2Jg5Q0GMohLVaH27G09O+ZvVM4P
+         cYRUBWFM5eA4vODKCmFS5z15kAoD5z5/xtHbnK34Lztw09jPYVL/xc+IZKYdCUwMhCmt
+         IXbo1VdYUdANgiIN7iF86iUeqjO90bMMfCdEZrqIXQvMlG639dleIBcpW4OXSFG65FBT
+         6BJA==
+X-Gm-Message-State: APjAAAXAWToA4NS2OBV1EIF3jygMJRF5HvKZy0mGUvVqmI7Fpjtb+TaK
+        Ns27yI28C1qFObvDSqt1N0A=
+X-Google-Smtp-Source: APXvYqyVv7Z4QjcXS+Q8Oobr8MBvg6T1bPHiVeNEdL6+YYyiVFSZ2MnxmwdFYWL+WviBfWxrJW3ROA==
+X-Received: by 2002:a19:654d:: with SMTP id c13mr6911067lfj.30.1572607699878;
+        Fri, 01 Nov 2019 04:28:19 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id u11sm2220598ljo.17.2019.11.01.04.28.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 04:28:19 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 13:28:06 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RFC PATCH v3 00/15] Support ROHM BD71828 PMIC
+Message-ID: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Patch series introducing support for ROHM BD71828 PMIC
 
-On Fri, Nov 1, 2019 at 11:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Fri, 1 Nov 2019 at 11:08, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Mon, Oct 21, 2019 at 6:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > The Renesas SRAM bindings list only compatible so integrate them into
-> > > generic SRAM bindings schema.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > Thanks for your patch, whcih is now commit 0759b09eadd0d9a1 ("dt-bindings:
-> > sram: Merge Renesas SRAM bindings into generic") in Rob's for-next branch.
-> >
-> > > --- a/Documentation/devicetree/bindings/sram/renesas,smp-sram.txt
-> > > +++ /dev/null
-> > > @@ -1,27 +0,0 @@
-> > > -* Renesas SMP SRAM
-> > > -
-> > > -Renesas R-Car Gen2 and RZ/G1 SoCs need a small piece of SRAM for the jump stub
-> > > -for secondary CPU bringup and CPU hotplug.
-> > > -This memory is reserved by adding a child node to a "mmio-sram" node, cfr.
-> > > -Documentation/devicetree/bindings/sram/sram.txt.
-> > > -
-> > > -Required child node properties:
-> > > -  - compatible: Must be "renesas,smp-sram",
-> > > -  - reg: Address and length of the reserved SRAM.
-> > > -    The full physical (bus) address must be aligned to a 256 KiB boundary.
-> > > -
-> > > -
-> > > -Example:
-> > > -
-> > > -       icram1: sram@e63c0000 {
-> > > -               compatible = "mmio-sram";
-> > > -               reg = <0 0xe63c0000 0 0x1000>;
-> > > -               #address-cells = <1>;
-> > > -               #size-cells = <1>;
-> > > -               ranges = <0 0 0xe63c0000 0x1000>;
-> > > -
-> > > -               smp-sram@0 {
-> > > -                       compatible = "renesas,smp-sram";
-> > > -                       reg = <0 0x10>;
-> > > -               };
-> >
-> > > --- a/Documentation/devicetree/bindings/sram/sram.yaml
-> > > +++ b/Documentation/devicetree/bindings/sram/sram.yaml
-> >
-> > > @@ -186,3 +187,17 @@ examples:
-> > >              reg = <0x1ff80 0x8>;
-> > >          };
-> > >      };
-> > > +
-> > > +  - |
-> > > +    sram@e63c0000 {
-> > > +        compatible = "mmio-sram";
-> > > +        reg = <0xe63c0000 0x1000>;
-> >
-> > Is there any specific reason you converted the example from 64-bit to
-> > 32-bit addressing?
-> > All Renesas SoCs using this have #address-cells and #size-cells = <2>.
->
-> I should mention it in commit msg. The reason is because examples are
-> compiled inside a {} with address/size cells of 1. Instead of
+ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
+regulators can either be controlled individually via I2C. Bucks 1,2,6 and
+7 can also be assigned to a "regulator group" controlled by run-levels.
+Eg. Run level specific voltages and enable/disable statuses for each of
+these bucks can be set via register interface. The buck run-level group
+assignment (selection if buck is to be controlled individually or via
+run-levels) can be changed at run-time via I2C.
 
-Thanks, that's what I was already afraid of...
+Run level changes can then be initiated wither via I2C writes or GPIO.
+and when run-level is changed, state of all bucks which are set to be
+controlled via run-levels are changed accrdingly.
 
-> conversion maybe it would be reasonable to put it inside additional
-> node adjusting the address/size cells.
+This control mechanism selection (I2C or GPIO) is selected by data in
+one time programmable PMIC memory area (during production) and can't be
+changed later.
 
-I think it's fine to leave it as-as, though.  If we ever get to DT-ize
-secondary CPU startup on EMMA Mobile EV2 or SH-Mobile AG5, we'll have
-users without LPAE ;-)
+In addition to the bucks and LDOs there are:
 
-Gr{oetje,eeting}s,
+- The usual clk gate
+- 4 IO pins (mostly usable as GPO or tied to specific purpose)
+- power button support
+- RTC
+- two LEDs
+- battery charger
+- HALL sensor input
 
-                        Geert
+This patch series adds support to regulators, clk, RTC, and GPIOs. LED
+support will be added later when fate of RFC "Add DT node finding and
+parsing to core" is known.
+
+https://lore.kernel.org/lkml/cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com/
+
+Power-supply driver for charger is "under construction" and not included
+in this RFC series.
+
+Reason for RFC status is the regulator grouping to run-levels.
+
+Patches 8 and 9 bring more or less the usual regulator support.
+
+Patches 10, 11, 12 add run-level control which I am not entirely happy
+with. I don't like sysfs interface for run-level control. I am not
+entirely happy with the in-kernel APIs either as those provide run-level
+control via one *regulator pointer - but change impacts to more than one
+regulator.
+
+All suggestions are appreciated and welcome.
+
+Rest of the patches should be business as usual.
+
+Changelog v3:
+  DT-Bindings:
+    - yamlify
+    - add LED binding doc
+  CLK:
+    - Move clk register definitions from MFD headers to clk driver
+  GPIO:
+    - Add generic direction define and use it.
+  LED:
+    - Drop LED driver from the series (for now).
+
+Changelog v2: Mainly RTC and GPIO fixes suggested by Alexandre and Bartosz
+
+  General:
+    -Patch ordering changed to provide dt binding documents right after the
+     MFD core.
+  DT-Bindings for regulators (Patch 3)
+    -Fix typo in PMIC model number
+  RTC (patch 11)
+    -Reverted renaming in order to reduce patch size.
+    -Reworded commit message
+  BD71828 regulator (patch 7)
+    -Add MODULE_ALIAS
+  GPIO (patch 12)
+    -Remove file-name from comment
+    -prefix IN and OUT defines with chip type
+    -improved documentation for the INPUT only pin.
+    -removed empty left-over function
+    -removed unnecessary #ifdef CONFIG_OF_GPIO
+    -removed unnecessary error print
+    -Add MODULE_ALIAS
+
+Patch 1:
+        BD71828 MFD core.
+Patch 2:
+	dt-bindings for BD71828 PMIC
+Patch 3:
+        dt-bindings for regulators on BD71828 PMIC
+Patch 4:
+        dt-bindings for LEDs on BD71828 PMIC
+Patch 5:
+	Power button support using GPIO keys.
+Patch 6:
+        CLK gate support using existing clk-bd718x7
+Patch 7:
+        Move clk register definitions from headers to driver
+Patch 8:
+        Split existing bd718x7 regulator driver to generic ROHM dt
+        parsing portion (used by more than one ROHM drivers) and
+        bd718x8 specific parts
+Patch 9:
+        Basic regulator support (individual control via I2C). This
+        should be pretty standard stuff.
+Patch 10:
+        Add support for getting regulator voltages when GPIO controlled
+        run-levels are used. Allow specifying voltages for run-levels
+        via DT. Allow controlling run-levels via sysfs entries (I am not
+        happy about this. Probably should only provide in-kernel API for
+        this or is there better ideas? Showing can be done vis sysfs?
+        Debugfs?)
+Patch 11:
+        Support setting/getting run-levels when they are controlled via
+        I2C instead of GPIO. Add in-kernel API for settin run-level
+        voltages for regulators at run-time.
+Patch 12:
+        Add in-kernel APIs for changing the RUN-level. Safer than sysfs
+        I guess. But is there some better method for controlling this
+        kind of dynamic group of regulators?
+Patch 13:
+        Support BD71828 RTC block using BD70528 RTC driver
+Patch 14:
+        Add generic GPIO direction defines
+Patch 15:
+        Allow control of GP(I)O pins on BD71828 via GPIO subsystem
+Patch 16:
+        Support toggling the LEDs
+
+This patch series is based on v5.4-rc5
+
+---
+
+Matti Vaittinen (15):
+  mfd: bd71828: Support ROHM BD71828 PMIC - core
+  dt-bindings: mfd: Document ROHM BD71828 bindings
+  dt-bindings: regulator: Document ROHM BD71282 regulator bindings
+  dt-bindings: leds: ROHM BD71282 PMIC LED driver
+  mfd: input: bd71828: Add power-key support
+  clk: bd718x7: Support ROHM BD71828 clk block
+  clk: bd718x7: simplify header dependencies
+  regulator: bd718x7: Split driver to common and bd718x7 specific parts
+  regulator: bd71828: Basic support for ROHM bd71828 PMIC regulators
+  regulator: bd71828: Add GPIO based run-level control for regulators
+  regulator: bd71828: enhanced run-level support
+  regulator: bd71828: Support in-kernel APIs to change run-level
+  rtc: bd70528 add BD71828 support
+  gpio: Add definition for GPIO direction
+  gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
+
+ .../bindings/leds/rohm,leds-bd71828.yaml      |   46 +
+ .../bindings/mfd/rohm,bd71828-pmic.yaml       |  249 +++
+ .../regulator/rohm,bd71828-regulator.yaml     |  123 ++
+ drivers/clk/Kconfig                           |    6 +-
+ drivers/clk/clk-bd718x7.c                     |   37 +-
+ drivers/gpio/Kconfig                          |   12 +
+ drivers/gpio/Makefile                         |    1 +
+ drivers/gpio/gpio-bd71828.c                   |  149 ++
+ drivers/mfd/Kconfig                           |   15 +
+ drivers/mfd/Makefile                          |    2 +-
+ drivers/mfd/rohm-bd71828.c                    |  350 ++++
+ drivers/regulator/Kconfig                     |   16 +
+ drivers/regulator/Makefile                    |    2 +
+ drivers/regulator/bd71828-regulator.c         | 1443 +++++++++++++++++
+ drivers/regulator/bd718x7-regulator.c         |  183 +--
+ drivers/regulator/rohm-regulator.c            |   95 ++
+ drivers/rtc/Kconfig                           |    3 +-
+ drivers/rtc/rtc-bd70528.c                     |  150 +-
+ include/linux/gpio/driver.h                   |    3 +
+ include/linux/mfd/rohm-bd70528.h              |   19 +-
+ include/linux/mfd/rohm-bd71828.h              |  428 +++++
+ include/linux/mfd/rohm-bd718x7.h              |    6 -
+ include/linux/mfd/rohm-generic.h              |   45 +
+ include/linux/mfd/rohm-shared.h               |   27 +
+ 24 files changed, 3230 insertions(+), 180 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+ create mode 100644 drivers/gpio/gpio-bd71828.c
+ create mode 100644 drivers/mfd/rohm-bd71828.c
+ create mode 100644 drivers/regulator/bd71828-regulator.c
+ create mode 100644 drivers/regulator/rohm-regulator.c
+ create mode 100644 include/linux/mfd/rohm-bd71828.h
+ create mode 100644 include/linux/mfd/rohm-shared.h
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.21.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
