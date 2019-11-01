@@ -2,252 +2,189 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D1FCA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 11:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E9DCA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 11:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECFB217F9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 11:30:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n24VmXW/"
+	by mail.kernel.org (Postfix) with ESMTP id 5A43B217F9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 11:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfKALaZ (ORCPT
+        id S1727072AbfKALaf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 07:30:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38436 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfKALaZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 07:30:25 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v9so9365304wrq.5
-        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 04:30:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=R4syCX2+rbby40ZaE8PkjBwbJN5LlvdrVrHq+IDW1jU=;
-        b=n24VmXW/yTXjtCdA3Z1LUPWdyiOR0bcu7P9XIcl3wtpiguJwpGnd9fT8UkKEGhCmMc
-         GA/xtbtt1+v6DrROZxBAu3SN9A1eKIrPylD8W4hPw0PauGppqHNFsQwZKt8cLXrt/EM4
-         fFO5Ztn+07HB5TUTUHp5bgontyK2W0sN7PXc5Ieog5bs9qBcJGH2ZukuhtN0a9KMvINn
-         lcSCUiOdlKBhN/ry941KF6PuphPp643x8C7AiJ/bhcssieElDw0m18JG4MmR3Ge1FhDV
-         cZ7yzoSlsAFEBeEntGn3XmvbXHZqV7KKQgBeQVmZzIeGS3dawa+o3C/CORFHkwxVwfge
-         DdOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=R4syCX2+rbby40ZaE8PkjBwbJN5LlvdrVrHq+IDW1jU=;
-        b=tojLU5Bdvt1xolIgBqTSIl5ZVP0EBI4m0dHUA9W2+9uKlxvp3fct8xk8N1IJWjqRY/
-         n2Df1vfBSbuTl5b2fk3D/PUaGoCZf1E2S8AX8EL368UtWDMvVRy3JfWDfxHMGKS6vAaf
-         O2KRVcWZi8twVM8f3r3EKMKGKIN2oeBF0IBOufsC4MeJ3pEnVYa4RqiuNDDNiGx89wJz
-         3TjSqVzhNf592tMiyXvfynnnAB+yDW4pYvOL2E8g0ls6uqESh2L0bcUZdjhDIe7bprXB
-         ewEFDvuyeVfaFPc0ExPLzR2Re4rOvC9I6Azy+MgLJ831GPQP7D2FYHBMuwH2W8bVtgWZ
-         LVwQ==
-X-Gm-Message-State: APjAAAUgWF4y5js4nx9jETKwUuir7wuxFShp0jDlITwczSonLN9XuaqT
-        +ffUV1w8DwWvduCr4MbRfBEni7Eulfh1md0/3e4=
-X-Google-Smtp-Source: APXvYqyM/mqK/VWcCqRMAYxiKZnA437b7QfAY99b1X5lSRZ/Yi9364xcnYIHibsLYRCYUI2OcnfEaOxMv31oFWnTZcM=
-X-Received: by 2002:a5d:63c1:: with SMTP id c1mr9800942wrw.332.1572607821817;
- Fri, 01 Nov 2019 04:30:21 -0700 (PDT)
+        Fri, 1 Nov 2019 07:30:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:34206 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbfKALaf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 1 Nov 2019 07:30:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EB661FB;
+        Fri,  1 Nov 2019 04:30:34 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C1653F6C4;
+        Fri,  1 Nov 2019 04:30:33 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 11:30:31 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Rajat Jain <rajatja@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
+ pcie link
+Message-ID: <20191101113031.GC9723@e119886-lin.cambridge.arm.com>
+References: <20191031132228.GA44315@google.com>
+ <33585725-51c7-6fe5-5d92-1e7fe77ca106@linux.intel.com>
 MIME-Version: 1.0
-References: <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
- <20190807115614.phm7sbyae6yajkug@flea> <CA+E=qVdh3MHMsEC9XKe5-7O8fGTHFh76WLOgVf+PZPv7c4JE9w@mail.gmail.com>
- <20190808162628.pthvy3tgf3naj76s@flea> <CA+E=qVeiWoRGn05HpMzx_5yidit4GM18tBrziW5MBo00f_-PKQ@mail.gmail.com>
- <20190812080420.saelmqb36vkelxn4@flea> <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
- <20190813053905.hu2hyi7fah2vujzz@flea> <CA+E=qVegU8M09tmbxGUaBSoueGU6PRsAtr9XWrc8V8HnCPjULg@mail.gmail.com>
- <CA+E=qVeArUV0u_17ty=HgaU35TwcBfQjSOJf0A5yM6L6+W-0Og@mail.gmail.com>
- <20190925110844.qfm5ris7xeze44th@gilmour> <CAJiuCcfcmkb_BgDcDJziUwoZXAgLN4Bh0GGZKR3NVNRpnFhBEQ@mail.gmail.com>
- <CA+E=qVeopby6zn1PBsOGb0JjA6-viTN_iXxRnWF6+NGtbZ_BtQ@mail.gmail.com>
-In-Reply-To: <CA+E=qVeopby6zn1PBsOGb0JjA6-viTN_iXxRnWF6+NGtbZ_BtQ@mail.gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Fri, 1 Nov 2019 12:30:10 +0100
-Message-ID: <CAJiuCcdZfbO+s2L-PcKA4PEm8B8=niYMO1w1nLVQ9hzq6Fjv=A@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
-To:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Jared D . McNeill" <jmcneill@netbsd.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Harald Geyer <harald@ccbib.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <33585725-51c7-6fe5-5d92-1e7fe77ca106@linux.intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
+On Fri, Nov 01, 2019 at 01:47:39PM +0800, Dilip Kota wrote:
+> 
+> On 10/31/2019 9:22 PM, Bjorn Helgaas wrote:
+> > On Thu, Oct 31, 2019 at 06:47:10PM +0800, Dilip Kota wrote:
+> > > On 10/31/2019 6:14 AM, Bjorn Helgaas wrote:
+> > > > On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
+> > > > > On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
+> > > > > > [+cc Rafael, linux-pm, beginning of discussion at
+> > > > > > https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
+> > > > > > 
+> > > > > > On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
+> > > > > > > On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
+> > > > > > > > On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
+> > > > > > > > > On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
+> > > > > > > > > > PCIe RC driver on Intel Gateway SoCs have a requirement
+> > > > > > > > > > of changing link width and speed on the fly.
+> > > > > > > > Please add more details about why this is needed.  Since
+> > > > > > > > you're adding sysfs files, it sounds like it's not
+> > > > > > > > actually the *driver* that needs this; it's something in
+> > > > > > > > userspace?
+> > > > > > > We have use cases to change the link speed and width on the fly.
+> > > > > > > One is EMI check and other is power saving.  Some battery backed
+> > > > > > > applications have to switch PCIe link from higher GEN to GEN1 and
+> > > > > > > width to x1. During the cases like external power supply got
+> > > > > > > disconnected or broken. Once external power supply is connected then
+> > > > > > > switch PCIe link to higher GEN and width.
+> > > > > > That sounds plausible, but of course nothing there is specific to the
+> > > > > > Intel Gateway, so we should implement this generically so it would
+> > > > > > work on all hardware.
+> > > > > Agree.
+> > > > > > I'm not sure what the interface should look like -- should it be a
+> > > > > > low-level interface as you propose where userspace would have to
+> > > > > > identify each link of interest, or is there some system-wide
+> > > > > > power/performance knob that could tune all links?  Cc'd Rafael and
+> > > > > > linux-pm in case they have ideas.
+> > > > > To my knowledge sysfs is the appropriate way to go.
+> > > > > If there are any other best possible knobs, will be helpful.
+> > > > I agree sysfs is the right place for it; my question was whether we
+> > > > should have files like:
+> > > > 
+> > > >     /sys/.../0000:00:1f.3/pcie_speed
+> > > >     /sys/.../0000:00:1f.3/pcie_width
+> > > > 
+> > > > as I think this patch would add (BTW, please include sample paths like
+> > > > the above in the commit log), or whether there should be a more global
+> > > > thing that would affect all the links in the system.
+> > > Sure, i will add them.
+> > > > I think the low-level files like you propose would be better because
+> > > > one might want to tune link performance differently for different
+> > > > types of devices and workloads.
+> > > > 
+> > > > We also have to decide if these files should be associated with the
+> > > > device at the upstream or downstream end of the link.  For ASPM, the
+> > > > current proposal [1] has the files at the downstream end on the theory
+> > > > that the GPU, NIC, NVMe device, etc is the user-recognizable one.
+> > > > Also, neither ASPM nor link speed/width make any sense unless there
+> > > > *is* a device at the downstream end, so putting them there
+> > > > automatically makes them visible only when they're useful.
+> > > This patch places the speed and width in the host controller directory.
+> > > /sys/.../xxx.pcie/pcie_speed
+> > > /sys/.../xxx.pcie/pcie_width
+> > > 
+> > > I agree with you partially,  because i am having couple of points
+> > > making me to keep speed and width change entries in controller
+> > > directory:
+> > > 
+> > > -- For changing the speed/width with device node, software ends up
+> > >     traversing to the controller from the device and do the
+> > >     operations.
+> > > -- Change speed and width are performed at controller level,
+> > The controller is effectively a Root Complex, which may contain
+> > several Root Ports.  I have the impression that the Synopsys
+> > controller only supports a single Root Port, but that's just a detail
+> > of the Synopsys implementation.  I think it should be possible to
+> > configure the width/speed of each Root Port individually.
+> > 
+> > > -- Keeping speed and width in controller gives a perspective (to the
+> > >     user) of changing them only once irrespective of no. of devices.
+> > What if there's a switch?  If we change the width/speed of the link
+> > between the Root Port and the Switch Upstream Port, that doesn't do
+> > anything about the links from the Switch Downstream Ports.
+> I missed to evaluate the multiple root port and switch scenarios, thanks for
+> pointing it.
+> Then, placing the link speed and width change entries in the device node
+> will be appropriate.
+> Software will traverse to the respective port or bus through the device node
+> and does the changes.
+> > 
+> > > -- For speed and link change in Synopsys PCIe controller, specific
+> > >     registers need to be configured.  This prevents or complicates
+> > >     adding the speed and width change functionality in pci-sysfs or
+> > >     pci framework.
+> > Don't the Link Control and related registers in PCIe spec give us
+> > enough control to manage the link width/speed of *all* links,
+> > including those from Root Ports and Switch Downstream Ports?
+> > 
+> > If the Synopsys controller requires controller-specific registers,
+> > that sounds to me like it doesn't quite conform to the spec.  Maybe
+> > that means we would need some sort of quirk or controller callback?
+> Yes, Synopsys has specific registers configuration for link width resizing
+> and speed change.
+> I will evaluate the possible mechanism for plugging in the controller
+> specific changes to the framework.
 
-On Thu, 31 Oct 2019 at 21:35, Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Thu, Oct 31, 2019 at 12:10 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmai=
-l.com> wrote:
-> >
-> > Hi,
-> >
-> > Just a remark here but the interrupt are from 152 to 155 SPI.
-> > But there is an offset of 32 no (remove SGI/PPI)?
-> > This should be from 120 to 123
->
-> I already tried it (and I believe someone already suggested it above),
-> it doesn't fix PMU interrupts though.
+According to the spec, "Software is permitted to restrict the maximum speed
+of Link operation and set the perferred Link speed by setting the value in the
+Target Link Speed field in the Upstream component." - This is the Link Control
+2 Register, and a link retrain should then be triggered.
 
-Ok thanks for the confirmation.
+With regards to this proposed sysfs API - I wonder if this implies we should
+also disable 'Hardware Autonomous Speed Disable' to prevent a link speed
+change for device specific reasons?
 
-Made a research about the PMU for A64 and found that Andre Przywara
-made a patch to enable it:
-https://gist.github.com/apritzel/d025abaa1425fcaf5991b5ffcf18a0a3
+In my view, this means we *can* have a sysfs control for limiting the link
+speed using standard PCI means - though callbacks and quirks may be needed
+for host bridge controllers and similar.
 
-Maybe he can confirm or not the issue on A64 ?
+With regards to link width, I can't see any obvious software initiated means
+to change the link width (they are all RO) - though a device can change its
+own link width so long as it's 'Hardware Autonomous Width Disable' bit is
+clear. So whilst there may be some benefit for the initial links of a few
+host bridge controllers that may opt-in to some framework for this - such an
+API wouldn't benefit the majority of links in a PCI fabric. Perhaps this
+(width) should be DWC specific.
 
-Regards,
-Cl=C3=A9ment
+Thanks,
 
->
-> > Regards,
-> > Cl=C3=A9ment
-> >
-> > On Wed, 25 Sep 2019 at 13:09, Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > On Mon, Sep 23, 2019 at 04:55:59PM -0700, Vasily Khoruzhick wrote:
-> > > > On Mon, Sep 23, 2019 at 4:51 PM Vasily Khoruzhick <anarsoul@gmail.c=
-om> wrote:
-> > > > >
-> > > > > On Mon, Aug 12, 2019 at 10:39 PM Maxime Ripard
-> > > > > <maxime.ripard@bootlin.com> wrote:
-> > > > > >
-> > > > > > On Mon, Aug 12, 2019 at 11:01:51AM -0700, Vasily Khoruzhick wro=
-te:
-> > > > > > > On Mon, Aug 12, 2019 at 1:04 AM Maxime Ripard <maxime.ripard@=
-bootlin.com> wrote:
-> > > > > > > >
-> > > > > > > > On Thu, Aug 08, 2019 at 12:59:07PM -0700, Vasily Khoruzhick=
- wrote:
-> > > > > > > > > On Thu, Aug 8, 2019 at 9:26 AM Maxime Ripard <maxime.ripa=
-rd@bootlin.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Wed, Aug 07, 2019 at 10:36:08AM -0700, Vasily Khoruz=
-hick wrote:
-> > > > > > > > > > > On Wed, Aug 7, 2019 at 4:56 AM Maxime Ripard <maxime.=
-ripard@bootlin.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > On Tue, Aug 06, 2019 at 07:39:26PM -0700, Vasily Kh=
-oruzhick wrote:
-> > > > > > > > > > > > > On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robi=
-n.murphy@arm.com> wrote:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
-> > > > > > > > > > > > > > > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <=
-harald@ccbib.org> wrote:
-> > > > > > > > > > > > > > >>
-> > > > > > > > > > > > > > >> Vasily Khoruzhick writes:
-> > > > > > > > > > > > > > >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy=
- <robin.murphy@arm.com> wrote:
-> > > > > > > > > > > > > > >>>>
-> > > > > > > > > > > > > > >>>> On 06/08/2019 15:01, Vasily Khoruzhick wro=
-te:
-> > > > > > > > > > > > > > >>>>> Looks like PMU in A64 is broken, it gener=
-ates no interrupts at all and
-> > > > > > > > > > > > > > >>>>> as result 'perf top' shows no events.
-> > > > > > > > > > > > > > >>>>
-> > > > > > > > > > > > > > >>>> Does something like 'perf stat sleep 1' at=
- least count cycles correctly?
-> > > > > > > > > > > > > > >>>> It could well just be that the interrupt n=
-umbers are wrong...
-> > > > > > > > > > > > > > >>>
-> > > > > > > > > > > > > > >>> Looks like it does, at least result looks p=
-lausible:
-> > > > > > > > > > > > > > >>
-> > > > > > > > > > > > > > >> I'm using perf stat regularly (cache benchma=
-rks) and it works fine.
-> > > > > > > > > > > > > > >>
-> > > > > > > > > > > > > > >> Unfortunately I wasn't aware that perf stat =
-is a poor test for
-> > > > > > > > > > > > > > >> the interrupts part of the node, when I adde=
-d it. So I'm not too
-> > > > > > > > > > > > > > >> surprised I got it wrong.
-> > > > > > > > > > > > > > >>
-> > > > > > > > > > > > > > >> However, it would be unfortunate if the node=
- got removed completely,
-> > > > > > > > > > > > > > >> because perf stat would not work anymore. Ma=
-ybe we can only remove
-> > > > > > > > > > > > > > >> the interrupts or just fix them even if the =
-HW doesn't work?
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > I'm not familiar with PMU driver. Is it possi=
-ble to get it working
-> > > > > > > > > > > > > > > without interrupts?
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Yup - you get a grumpy message from the driver,=
- it will refuse sampling
-> > > > > > > > > > > > > > events (the ones which weren't working anyway),=
- and if you measure
-> > > > > > > > > > > > > > anything for long enough that a counter overflo=
-ws you'll get wonky
-> > > > > > > > > > > > > > results. But for counting hardware events over =
-relatively short periods
-> > > > > > > > > > > > > > it'll still do the job.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > I tried to drop interrupts completely from the no=
-de but 'perf top' is
-> > > > > > > > > > > > > still broken. Though now in different way: it com=
-plains "cycles: PMU
-> > > > > > > > > > > > > Hardware doesn't support sampling/overflow-interr=
-upts. Try 'perf
-> > > > > > > > > > > > > stat'"
-> > > > > > > > > > > >
-> > > > > > > > > > > > I have no idea if that's the culprit, but what is t=
-he state of the
-> > > > > > > > > > > > 0x09010000 register?
-> > > > > > > > > > >
-> > > > > > > > > > > What register is that and how do I check it?
-> > > > > > > > > >
-> > > > > > > > > > It's in the CPUX Configuration block, and the bits are =
-labelled as CPU
-> > > > > > > > > > Debug Reset.
-> > > > > > > > > >
-> > > > > > > > > > And if you have busybox, you can use devmem.
-> > > > > > > > >
-> > > > > > > > > CPUX configuration block is at 0x01700000 according to A6=
-4 user
-> > > > > > > > > manual, and particular register you're interested in is a=
-t 0x01700080,
-> > > > > > > > > its value is 0x1110110F.
-> > > > > > > > >
-> > > > > > > > > Bits 16-19 are not defined in user manual and are not set=
-.
-> > > > > > > >
-> > > > > > > > Sorry, I somehow thought this was for the H6...
-> > > > > > > >
-> > > > > > > > I don't have any idea then :/
-> > > > > > >
-> > > > > > > OK, so what should we do? 'perf top'/'perf record' work fine =
-if PMU
-> > > > > > > node is dropped, but they don't work if PMU node is present (=
-even with
-> > > > > > > interrupts dropped). I'd prefer to have 'perf top' and 'perf =
-record'
-> > > > > > > working instead of 'perf stat'
-> > > > > >
-> > > > > > Well, it doesn't work so we should just remove the node, and if
-> > > > > > someone wants it back, they should figure it out.
-> > > > >
-> > > > > Hey Maxime,
-> > > > >
-> > > > > So can you merge this patch?
-> > > >
-> > > > Added new Maxime's email to CC
-> > >
-> > > Queued as a fix for 5.4, thanks!
-> > > Maxime
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Andrew Murray
+
+> 
+> Regards,
+> Dilip
+> > 
+> > Bjorn
