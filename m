@@ -2,206 +2,185 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8240ACA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4FDCA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 22:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 469F72085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C91E208CB
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 22:26:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7NqdaJn"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="oHuEBqES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfKAVaU (ORCPT
+        id S1726986AbfKAW0L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:30:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40956 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfKAVaU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 17:30:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r4so7887934pfl.7;
-        Fri, 01 Nov 2019 14:30:19 -0700 (PDT)
+        Fri, 1 Nov 2019 18:26:11 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:20932 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKAW0L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 18:26:11 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: vTk8Xw/Jz0giKfyq11MxmgdHKVtgrzmmS9WtKt4n0u6JD8ieR5/2zzuIdZRl4fXCXnLhRjPQjQ
+ nnrZgVrI6kGncKvGD6kfUteDHokMgD3Q4yGU5i/Zc/SyXN28UU7n/Taq7sRB6SBG0eTNqOBgle
+ ECkK6OQKptzQwhZ1A45kj2Cx54qKsf18CAhsCi6Wgb7474U/HcHBdBCQg/ue+pkHpSyCz9wqqR
+ oiKVAV9VnqSZ4aC7lza7kx3xvagjNG8eeHHM6mHNayXVQUK1uEd7tyfpPGCfi8gwfrNdQFs2Eu
+ Z/E=
+X-IronPort-AV: E=Sophos;i="5.68,257,1569308400"; 
+   d="scan'208";a="55383965"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Nov 2019 15:26:09 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 1 Nov 2019 15:26:09 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 1 Nov 2019 15:26:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ETuSKV3eExHhosRqvtQbfELNCbacmO/TfExpjstCtV/+q/S2gVk+sIISj9SVnrwz9huwtHbEZ0bND5r681BOT/S9pTsboCXFdYfgMwNLG0Z2oq5xGTWnq6Yc6E7XeaqQ5Df8BJ49brweYE+pofty/cMTme/+R6eORtB4sAhLtFfURH0r9nzWeF6LavGqP41YQYsDqfqQtWizsoAg/fRmlPv99KBgZHj50XdHiKBYyrEnJJz94vGujPyEHBDQg+pymbFJu0X32K+vVAe2v6IGQChcmH+SM5itMWrm259nI5qP933rBMxGVIkRZ2h+6gIdthHrklTRDEuNMRRKgJ+Q8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hWSwu6l/A38ttzOxR6zL+0Q2TPRNkyixy5A9GPh/0NQ=;
+ b=crXAdE93DAPJJGlJ/lkAhLUF/VUJK26JlKxxOG3mIQwhpHs4en2Bf1VS4KBAZKwjYkZkmq5e7cUORVSkIZhaZ6tcQ5OlHpWwitNNSC3vcLOubivZEcy6RVZSM3q22arM31MjhY04/J6/d6/rDYgkIuvZo8Oeo+BkhXeGvKZfFbHRgZVmq2b00cFA5jD1GPjZ+D1gIiuy+T96R5WABBXGhrA3MzwK3CsHx14ZHY4/ocEa85qKTgo5IqEcfVEL44atYKF9mJUq1W8F65PUvPcyBKCVgAMqgbVve9wOwlYA8P0egXIOrHn4yDAeUGnj06ok0q7HOJfE9QGJsSOLAanDhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j9Zzx2OmoZKK0YTGcIbk0+d45+ZuPxodkOVR0WatlxM=;
-        b=b7NqdaJnjQ60mtJTxu02zhkyysPO6X9h9nBYWOZVeQfsqZMkp5udUkAUZuXMWY7m/K
-         6kBCha9xyGlZPaZatv6dVbhxhl3E1MggDT9Nl/VZOTOZfWriIOqbFOSc40OCD7wQdKeJ
-         ShiNr7fC4C5tcjhBH0o4QhPz6aiq8mWjk/fv6PlkxFpEr0XTUqBt7UWV6aJIBK+NZX+h
-         4ndEV4cu6cXQ38GIkUUmpJ/aQtQpNJEl6t11YmzSc5fpvMvFOhzGgBkWx4rRkSHErEGP
-         j1OIElbnrmkAJAsABdetec2iyugAh2KsQm/oI8IceArlB1i1m/nW3SoG9CTf+r0qHM1i
-         THxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j9Zzx2OmoZKK0YTGcIbk0+d45+ZuPxodkOVR0WatlxM=;
-        b=bldsAld2lIrWso5MneYUqsvl1tMwxUurXvbnz8YuETXQuGqmV7kKROC85Uj03nJ35p
-         kw7TLVWUZ3LzUHSUV9+OSbNAhC28O/8NjdQK0FXUW2O8SBkcbLSRVyPrXxmA1oBFT1E0
-         SWrYVJEu02SCkNhCs6AgKNV2fVIBCCdD7pjnmgQLI3JPo1B/qKequL7dVynjXYrNt4wD
-         oUdr9X+VwKrNrI0MM7ORuk1TVU22k+aWuJu/QeeZsDCgRJQriBriJRIheuK4NiBkjwe+
-         j+yJQHIuNJKBgXZwRvD3bRZFoeZ/1MICDF4O1TT/yDjM/8pLN265Enzo44rRfPnPYVhk
-         XT8g==
-X-Gm-Message-State: APjAAAWmSiqy2utvVdP9r4nQWIa7TnsVPlJPnwY2VXTP2J6B+RoZLplx
-        14YS+/pMojL/mBvY9FZ4f8+PzdNGGRY=
-X-Google-Smtp-Source: APXvYqzP5pCISaMJxKLrH+bSwSReGvtyfZ76m0aWat/GKZQJBZbiZYsCWgReTQKrrx4mtLs9p7ogJQ==
-X-Received: by 2002:a62:61c4:: with SMTP id v187mr15954809pfb.23.1572643819363;
-        Fri, 01 Nov 2019 14:30:19 -0700 (PDT)
-Received: from [172.16.1.40] ([131.107.174.218])
-        by smtp.gmail.com with ESMTPSA id h66sm9315173pfg.23.2019.11.01.14.30.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 14:30:18 -0700 (PDT)
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
-To:     Lei Wang <wangglei@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "hangl@microsoft.com" <hangl@microsoft.com>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
-        "ray.jui@broadcom.com" <ray.jui@broadcom.com>, shji@microsoft.com
-References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
- <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
- <f4b2c4b9-4999-6736-31eb-a63781013664@gmail.com>
-From:   Lei Wang <wangglei@gmail.com>
-Message-ID: <7ea42556-49d4-5951-cda7-08e1209b0145@gmail.com>
-Date:   Fri, 1 Nov 2019 14:30:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <f4b2c4b9-4999-6736-31eb-a63781013664@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hWSwu6l/A38ttzOxR6zL+0Q2TPRNkyixy5A9GPh/0NQ=;
+ b=oHuEBqESFm3cOpN9YcKBULsEung1q2hkeP/qY6D8riht6XDGpEA/eYB39sFdcKnJHEeqp1O24093VDD1vZDH9rcjFu0rxeyP9OayhZ0M3Lu3X9U6h+vWfJ/tG39cMcXRArH5XIbpJIy2OUJAqsgbpc9x3jZh051vQDkKwovMMUA=
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com (20.176.120.85) by
+ DM6PR11MB4186.namprd11.prod.outlook.com (20.176.127.223) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Fri, 1 Nov 2019 22:26:07 +0000
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::3874:9f3c:5325:d22]) by DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::3874:9f3c:5325:d22%6]) with mapi id 15.20.2408.018; Fri, 1 Nov 2019
+ 22:26:07 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <Ludovic.Desroches@microchip.com>,
+        <Codrin.Ciubotariu@microchip.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] pinctrl: at91: Enable slewrate by default on SAM9X60
+Thread-Topic: [PATCH v2] pinctrl: at91: Enable slewrate by default on SAM9X60
+Thread-Index: AQHVkQNaIVwwnhsvuE+7AE46+3c0oQ==
+Date:   Fri, 1 Nov 2019 22:26:07 +0000
+Message-ID: <4255d320-e6c2-8865-7167-ddf9e1951250@microchip.com>
+References: <20191101092031.24896-1-codrin.ciubotariu@microchip.com>
+ <20191101142602.voj2jeexvvgwgr23@M43218.corp.atmel.com>
+In-Reply-To: <20191101142602.voj2jeexvvgwgr23@M43218.corp.atmel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR1PR01CA0009.eurprd01.prod.exchangelabs.com
+ (2603:10a6:102::22) To DM6PR11MB3225.namprd11.prod.outlook.com
+ (2603:10b6:5:59::21)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20191102002600222
+x-originating-ip: [65.39.94.206]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4449cc85-e3ea-427d-804c-08d75f1a7d29
+x-ms-traffictypediagnostic: DM6PR11MB4186:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB4186711CCBA4FE109284905F87620@DM6PR11MB4186.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1051;
+x-forefront-prvs: 020877E0CB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(39860400002)(366004)(396003)(199004)(189003)(6246003)(2616005)(64756008)(66556008)(66476007)(66446008)(446003)(11346002)(476003)(486006)(4326008)(14454004)(6486002)(31696002)(110136005)(86362001)(186003)(316002)(229853002)(66946007)(53546011)(36756003)(3846002)(6506007)(102836004)(6116002)(26005)(54906003)(76176011)(386003)(52116002)(5660300002)(31686004)(256004)(6636002)(66066001)(14444005)(81156014)(71190400001)(71200400001)(25786009)(99286004)(478600001)(7736002)(305945005)(6436002)(6512007)(8936002)(81166006)(2906002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB4186;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SEQVpM5+QBYNIOscFMiJX0o/DO/wBLGl0LnegaZ6jRWseYaKfUCLOW2sfuK3GG051JQUKnRF59KapeLjDVxW7VaspC7r0Qbs8Ff7ZBbUlqnzAaOASDxOCul5YQwZ3tlPT9qur3aDxqokFURA3yRp48uMeUQVryu6o3IEq/D6KCDFLXniTNo+S6PwDVhEF0z4ZBDkwHu+TfWdX1A2wEQoAGvEn8NoaG33RGzmwYPUnEVeKVLqqWK2SCPxrCsLwLjwYzZxa53gGYHe4AB1ULBcKnLvNxyF+MCiZGYyh23ZOD1Zw5Gze1BSwIYHFNnVCC2eo+t56G3c39u5MLoBmYhYrxhyD2SACQWfEnhrx25dHDyFKU9R2Q2lQnrVMdNuiH+iw1BYTueIsYHZ+uVyIrsZRkYOVc1TTKvOGE5UWO44GnUYP+/Cg4qNugxZbqmUj+sX
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <582B8FF54CA6194CADDB631A932BB54C@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4449cc85-e3ea-427d-804c-08d75f1a7d29
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 22:26:07.5141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ojpnM6EC2Ys632QfqldCFI7SkkRn8VwSK4sW6NxWhaHdsIK4R6aXvVSz40T9sftrE/xd/TxHtl3BbiDda7AVUcffnzoeRhRsCZUTl8u+88A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4186
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Kindly ping... I addressed your comments in below, and with one=20
-question. Thanks!
-
--Lei
-
-On 10/25/19 10:31 AM, Lei Wang wrote:
-> Thanks James/Rob/Borislav for pointing out the email list issue. My wor=
-k=20
-> email does not work good either for this exercise. Going forward I'll=20
-> switch to my gmail account.
->=20
-> And Thanks Rob for reviewing! Please see below.
->=20
->>> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
->>> @@ -0,0 +1,26 @@
->>> +* ARM DMC-520 EDAC node
->>> +
->>> +Required properties:
->>> +- compatible=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 : "brcm,dmc-520", "arm,dm=
-c-520".
->>> +- reg=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 : Address r=
-ange of the DMC-520 registers.
->>> +- interrupts=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 : DMC-520 interrupt numbe=
-rs. The example=20
->>> below specifies
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 two interrupt lines for dram_ecc_errc_int and
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 dram_ecc_errd_int.
->>> +- interrupt-config=A0=A0=A0=A0 : This is an array of interrupt masks=
-=2E For=20
->>> each of the
->>
->> Not a standard property, so would need a vendor prefix...
->=20
-> Would dmc-interrupt-config as the property name work? Thanks!
->=20
->>
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 above interrupt line, add one interrupt=20
->>> mask element to
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 it. That is, there is a 1:1 mapping from=20
->>> each interrupt
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 line to an interrupt mask. An interrupt=20
->>> mask can represent
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 multiple interrupts being enabled. Refer to=20
->>> interrupt_control
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 register in DMC-520 TRM for interrupt=20
->>> mapping. In the example
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 below, the interrupt configuration enables=20
->>> dram_ecc_errc_int
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 and dram_ecc_errd_int. And each interrupt=20
->>> is connected to
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 a separate interrupt line.
->>
->> I've gone and read thru the TRM some. This binding doesn't seem to
->> correspond to the TRM at all. There are a bunch of interrupts and a
->> combined interrupt, and then there's the same set for 'overflow'
->> interrupts.
->>
->> There's only one 'interrupt_control' reg. How do you have more that 1
->> 32-bit value?
->=20
-> There is only one 'interrupt_control' register, for multiple interrupt =
-
-> sources. Then depending on platform hardware design, these interrupt=20
-> sources can be wired to different physical interrupt lines.
->=20
-> That is, it is possible to mux interrupt sources into=A0 interrupt line=
-s=20
-> for dmc520 in different ways. For example, in this particular brcm=20
-> implementation,
->=20
-> Line 841: source dram_ecc_errc_int
-> Line 843: source dram_ecc_errd_int
-> Line 839: source dram_ecc_errc_int and dram_ecc_errd_int
->=20
-> There are two possibilities for implementing ecc counts for ce/ue. And =
-
-> we chose to use the single source line: as below, two interrupt lines=20
-> 0x349 and 0x34B, with interrupt masks 0x4 and 0x8 respectively.
->=20
-> Also, it's possible to implement using the combined-source line too:=20
-> that would be one interrupt line 0x347, with interrupt mask 0xC.
->=20
-> This dt binding can support both by modifying the properties, without=20
-> having to modify driver code.
->=20
->  >> +
->  >> +Example:
->  >> +
->  >> +dmc0: dmc@200000 {
->  >> +=A0=A0=A0=A0=A0=A0 compatible =3D "brcm,dmc-520", "arm,dmc-520";
->  >> +=A0=A0=A0=A0=A0=A0 reg =3D <0x200000 0x80000>;
->  >> +=A0=A0=A0=A0=A0=A0 interrupts =3D <0x0 0x349 0x4>, <0x0 0x34B 0x4>=
-;
->  >> +=A0=A0=A0=A0=A0=A0 interrupt-config =3D <0x4>, <0x8>;
->  >> +};
->  >> --
->  >> 2.17.1
->=20
-> Thanks!
->=20
-> -Lei
->=20
-
+DQoNCk9uIDAxLjExLjIwMTkgMTY6MjYsIEx1ZG92aWMgRGVzcm9jaGVzIC0gTTQzMjE4IHdyb3Rl
+Og0KPiBPbiBGcmksIE5vdiAwMSwgMjAxOSBhdCAxMToyMDozMUFNICswMjAwLCBDb2RyaW4gQ2l1
+Ym90YXJpdSB3cm90ZToNCj4+IE9uIFNBTTlYNjAsIHNsZXdyYXRlIHNob3VsZCBiZSBlbmFibGVk
+IG9uIHBpbnMgd2l0aCBhIHN3aXRjaGluZyBmcmVxdWVuY3kNCj4+IGJlbG93IDUwTWh6LiBTaW5j
+ZSBtb3N0IG9mIG91ciBwaW5zIGRvIG5vdCBleGNlZWQgdGhpcyB2YWx1ZSwgd2UgZW5hYmxlDQo+
+PiBzbGV3cmF0ZSBieSBkZWZhdWx0LiBQaW5zIHdpdGggYSBzd2l0Y2hpbmcgdmFsdWUgdGhhdCBl
+eGNlZWRzIDUwTWh6IHdpbGwNCj4+IGhhdmUgdG8gZXhwbGljaXRseSBkaXNhYmxlIHNsZXdyYXRl
+Lg0KPj4NCj4+IFRoaXMgcGF0Y2ggY2hhbmdlcyB0aGUgQUJJLiBIb3dldmVyLCB0aGUgc2xld3Jh
+dGUgbWFjcm9zIGFyZSBvbmx5IHVzZWQNCj4+IGJ5IFNBTTlYNjAgYW5kLCBhdCB0aGlzIG1vbWVu
+dCwgdGhlcmUgYXJlIG5vIGRldmljZS10cmVlIGZpbGVzIGF2YWlsYWJsZQ0KPj4gZm9yIHRoaXMg
+cGxhdGZvcm0uDQo+Pg0KPj4gU3VnZ2VzdGVkLWJ5OiBMdWRvdmljIERlc3JvY2hlcyA8bHVkb3Zp
+Yy5kZXNyb2NoZXNAbWljcm9jaGlwLmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6IENvZHJpbiBDaXVi
+b3Rhcml1IDxjb2RyaW4uY2l1Ym90YXJpdUBtaWNyb2NoaXAuY29tPg0KPiBBY2tlZC1ieTogTHVk
+b3ZpYyBEZXNyb2NoZXMgPGx1ZG92aWMuZGVzcm9jaGVzQG1pY3JvY2hpcC5jb20+DQoNClJldmll
+d2VkLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4NCg0K
+PiANCj4gVGhhbmtzDQo+IA0KPj4gLS0tDQo+Pg0KPj4gQ2hhbmdlcyBpbiB2MjoNCj4+ICAtIHVw
+ZGF0ZWQgY29tbWl0IG1lc3NhZ2UgdG8gcmVmbGVjdCB0aGUgQUJJIGNoYW5nZQ0KPj4NCj4+ICBk
+cml2ZXJzL3BpbmN0cmwvcGluY3RybC1hdDkxLmMgICAgIHwgNCArKy0tDQo+PiAgaW5jbHVkZS9k
+dC1iaW5kaW5ncy9waW5jdHJsL2F0OTEuaCB8IDQgKystLQ0KPj4gIDIgZmlsZXMgY2hhbmdlZCwg
+NCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL3BpbmN0cmwvcGluY3RybC1hdDkxLmMgYi9kcml2ZXJzL3BpbmN0cmwvcGluY3RybC1hdDkx
+LmMNCj4+IGluZGV4IDExNzA3NWI1Nzk4Zi4uYzEzNTE0OWU4NGU5IDEwMDY0NA0KPj4gLS0tIGEv
+ZHJpdmVycy9waW5jdHJsL3BpbmN0cmwtYXQ5MS5jDQo+PiArKysgYi9kcml2ZXJzL3BpbmN0cmwv
+cGluY3RybC1hdDkxLmMNCj4+IEBAIC04NSw4ICs4NSw4IEBAIGVudW0gZHJpdmVfc3RyZW5ndGhf
+Yml0IHsNCj4+ICAJCQkJCSBEUklWRV9TVFJFTkdUSF9TSElGVCkNCj4+ICANCj4+ICBlbnVtIHNs
+ZXdyYXRlX2JpdCB7DQo+PiAtCVNMRVdSQVRFX0JJVF9ESVMsDQo+PiAgCVNMRVdSQVRFX0JJVF9F
+TkEsDQo+PiArCVNMRVdSQVRFX0JJVF9ESVMsDQo+PiAgfTsNCj4+ICANCj4+ICAjZGVmaW5lIFNM
+RVdSQVRFX0JJVF9NU0sobmFtZSkJCShTTEVXUkFURV9CSVRfIyNuYW1lIDw8IFNMRVdSQVRFX1NI
+SUZUKQ0KPj4gQEAgLTY2OSw3ICs2NjksNyBAQCBzdGF0aWMgdm9pZCBhdDkxX211eF9zYW05eDYw
+X3NldF9zbGV3cmF0ZSh2b2lkIF9faW9tZW0gKnBpbywgdW5zaWduZWQgcGluLA0KPj4gIHsNCj4+
+ICAJdW5zaWduZWQgaW50IHRtcDsNCj4+ICANCj4+IC0JaWYgKHNldHRpbmcgPCBTTEVXUkFURV9C
+SVRfRElTIHx8IHNldHRpbmcgPiBTTEVXUkFURV9CSVRfRU5BKQ0KPj4gKwlpZiAoc2V0dGluZyA8
+IFNMRVdSQVRFX0JJVF9FTkEgfHwgc2V0dGluZyA+IFNMRVdSQVRFX0JJVF9ESVMpDQo+PiAgCQly
+ZXR1cm47DQo+PiAgDQo+PiAgCXRtcCA9IHJlYWRsX3JlbGF4ZWQocGlvICsgU0FNOVg2MF9QSU9f
+U0xFV1IpOw0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHQtYmluZGluZ3MvcGluY3RybC9hdDkx
+LmggYi9pbmNsdWRlL2R0LWJpbmRpbmdzL3BpbmN0cmwvYXQ5MS5oDQo+PiBpbmRleCAzODMxZjkx
+ZmIzYmEuLmU4ZTExNzMwNmIxYiAxMDA2NDQNCj4+IC0tLSBhL2luY2x1ZGUvZHQtYmluZGluZ3Mv
+cGluY3RybC9hdDkxLmgNCj4+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcGluY3RybC9hdDkx
+LmgNCj4+IEBAIC0yNyw4ICsyNyw4IEBADQo+PiAgI2RlZmluZSBBVDkxX1BJTkNUUkxfRFJJVkVf
+U1RSRU5HVEhfTUVECQkJKDB4MiA8PCA1KQ0KPj4gICNkZWZpbmUgQVQ5MV9QSU5DVFJMX0RSSVZF
+X1NUUkVOR1RIX0hJCQkJKDB4MyA8PCA1KQ0KPj4gIA0KPj4gLSNkZWZpbmUgQVQ5MV9QSU5DVFJM
+X1NMRVdSQVRFX0RJUwkoMHgwIDw8IDkpDQo+PiAtI2RlZmluZSBBVDkxX1BJTkNUUkxfU0xFV1JB
+VEVfRU5BCSgweDEgPDwgOSkNCj4+ICsjZGVmaW5lIEFUOTFfUElOQ1RSTF9TTEVXUkFURV9FTkEJ
+KDB4MCA8PCA5KQ0KPj4gKyNkZWZpbmUgQVQ5MV9QSU5DVFJMX1NMRVdSQVRFX0RJUwkoMHgxIDw8
+IDkpDQo+PiAgDQo+PiAgI2RlZmluZSBBVDkxX1BJT0EJMA0KPj4gICNkZWZpbmUgQVQ5MV9QSU9C
+CTENCj4+IC0tIA0KPj4gMi4yMC4xDQo+Pg0KPiANCg==
