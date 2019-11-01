@@ -2,309 +2,204 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD14CA9ED1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 14:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F2DCA9ED1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 14:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD2F21734
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 14:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F69721734
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 14:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ED9IcbV/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E87daGXO"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="UPZO8OtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfKAOVu (ORCPT
+        id S1727012AbfKAO0X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:21:50 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:42231 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726229AbfKAOVt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 10:21:49 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2D24A43B8;
-        Fri,  1 Nov 2019 10:21:48 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 01 Nov 2019 10:21:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=/vA5rSOkS5mFShcyUSZGmOIQfH
-        z63Wl99qJ40KPRpp0=; b=ED9IcbV/CCuAYb5jbwVaaubyIpibJ4qKhxhxtyGooT
-        Qan8qwgxViNpJDsLUiYEDOvol4fVwEDKEh9M+u6xOjJC5O6Q1gV8SpkDmkpOA7y9
-        0/IuMQZeX+C0bMx2a86w1VnBwu6nRomIObFuBkreOizn31U08lpg9Omqh32J2L1U
-        6UIwUDx/fP6U9QDRcmaRf1dqxKx5lCZJKdEXXrkwjjwFFWWXJYdhkWmsyy6Y2Dt1
-        DGmVEacWD0AlAx1miOl8SYSiX1w6HYq4JjE6mPdDRyEArMQ7VZw67s5CBiXG+AiN
-        oAt0bhXVyoGwRAKyB646yVI7IkpdOuxRWauhlNqv7/Gg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=/vA5rSOkS5mFShcyU
-        SZGmOIQfHz63Wl99qJ40KPRpp0=; b=E87daGXO2wrolnfbqC/kaOW1Ra0TjzwGs
-        5kedHJw0F6boaUrj/ymo3LdobVwaucwnrY5Rrsh35DV9bdDLK4keZ0oP444IhTM5
-        x1iR5Apfl/MdWFUxm5Qz0ERWnDMIv8t1huhywjC3wPmUVuryWWjNWUPW8obfoKDg
-        xqHLbd6zH10u4uoIzQl7gOQj8wKq9X0tk+bdqlYODIpoChIjYSTHDeXTJOGPO+Jw
-        nzSEqTGhzegW9izOdRO08z4EYc3jl/smSHPrx+bWbGwnPaiSX6/Z1flhArcjWbYL
-        DKBFrFMzE+6qrUaxgWQ1uySum7YWafcnJTn1KbEKwy1uA38ZLJFqw==
-X-ME-Sender: <xms:ej-8XQRQQCIverQ8EW-q-X0BDRmDZsdVTUkcUjDOKhtMf7kAHSajDg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddtjedgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcu
-    tfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrke
-    elrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhn
-    ohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:ej-8XYBHMVNIfyWkg22sdzFOJpLN9f6sK_bnI1sO6WuW-IeioS_H5Q>
-    <xmx:ej-8Xfk_OolLAFWd4V9ciA2LRYNlGg6DtRIRzsHTh2PIGoJZMpznvQ>
-    <xmx:ej-8XYk4-ZVcBTdA0ZPPpfC-GsY4o_zTJUPj_DVg4uSK3RFPlje5Cg>
-    <xmx:ez-8Xadh2q6wON56ymqf5bzbUg3Ja_QCVQRnb4NJbhUs56mCtaPNSQ>
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D5C2E8005C;
-        Fri,  1 Nov 2019 10:21:45 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH] dt-bindings: Remove FIXME in yaml bindings
-Date:   Fri,  1 Nov 2019 14:58:08 +0100
-Message-Id: <20191101135808.259371-1-maxime@cerno.tech>
-X-Mailer: git-send-email 2.23.0
+        Fri, 1 Nov 2019 10:26:23 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:20808 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfKAO0X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 10:26:23 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 8CdFUQhd9wrAwmO8o5DQMUeVdTlK2L0GGdr5jlSSquBiuoytO0xbI8ivnXlsZIRn2P4YoX52iC
+ 1QtgZypqKsBoPlUY+OmcM+3WI5TcRbWzSd4htAgYLYRWR4iCm/9qgbYbVBj18MoyCq3qhnMwio
+ v+J4T1fadVOhlH1tl+GmhpwbekbZCoqIxXd3uqT2aM/t+lvgW6SkZeYn165uJuSrxh3jpqp4C4
+ tSqCLhu3p+HU/EQgVn8QwiaHX+0C9+r81OvAG4KA75lvu46aaOFCSCSUSbaqzVrZ3by/4Jt9G2
+ Qac=
+X-IronPort-AV: E=Sophos;i="5.68,255,1569308400"; 
+   d="scan'208";a="53823068"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Nov 2019 07:26:22 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 1 Nov 2019 07:26:14 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 1 Nov 2019 07:26:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FY/Cn/S2tHF1xzuZkQqjtueVhYDVpPc/TKcEhnIwpx/ya0gPmQ75Vx+VtVOVNtkPbUC62z3zom2oUh6o3hz0ksAs0l5IcZlGf5CAXUuEeDzPgmCosEbkkIrr3KTvlHNFM2sLGIut1OW5mH5mE3ue8LzkUNOCp+3V8aZ5ix70iefg9ImbDaf+Otkhki7imXIff38kR/TBFcbLJDpFT5EdruRN2k3QwfvMAz5jeEsMNnFB0AQ722ZtsNlbaZh0DLxVDX+W5U6tQALdHA4sJniieb/DoFNWw4+0p1eA4lLCa879RZORgqv9w7QnTDLVLOFAVqMHuBVKBGK9FK9IVjAYCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZyJO+BjyhQwwlhi1qVv7ecc4vRoQQBxF9ABVX6+nU1o=;
+ b=IgDetbDWmttj58nHC4t2VzYHfZk6/yJX02EqskRxckV24/5EIuuJ/+yH9AT0YKARpDNv8rkZ51nEdy2BKzEvrXUZXzHw5Yd1Y67FmThh/5Lmc4Nkd0bju/4xpKJmXyjqaEmgfEvST1MogghW3cgqx5Fn9eW0SCH8UDfnZ7pl3dY00uLdpLMfLRw7ELHh0qpiSJIcYVVFzlV0v9pDRsXiNHXxWp7YY15CkbYHf61Z3Vi46Qcdozjiqb1ruch0Hnlz+dvtIV+c6AVp9l+tcP2FJlDENpLR4yFP8QltVePVdoq0sYRjz5JMyriqMcByDq2bzR0FeunzkUle0ejOJdDzMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZyJO+BjyhQwwlhi1qVv7ecc4vRoQQBxF9ABVX6+nU1o=;
+ b=UPZO8OtBn/yNrgUNbIYDcArt8eklg4Mbz9m8g7kXJgJCRMZ80n+2Cgi9KHtbm6j24Xy/G+PZCviVxnweo2c/DFJpf1l0JAeoNBXngiFi3Hc3N7B6X0dLRdzCpA5jiJVy+0onPocWCkVcKvD81gWq0iDkJ3lNJbO8mquRaBzhiC0=
+Received: from BY5PR11MB3895.namprd11.prod.outlook.com (10.255.162.149) by
+ BY5PR11MB4210.namprd11.prod.outlook.com (52.132.253.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.17; Fri, 1 Nov 2019 14:26:11 +0000
+Received: from BY5PR11MB3895.namprd11.prod.outlook.com
+ ([fe80::7421:5f52:f95a:2ae7]) by BY5PR11MB3895.namprd11.prod.outlook.com
+ ([fe80::7421:5f52:f95a:2ae7%7]) with mapi id 15.20.2408.018; Fri, 1 Nov 2019
+ 14:26:11 +0000
+From:   <Ludovic.Desroches@microchip.com>
+To:     <Codrin.Ciubotariu@microchip.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <robh+dt@kernel.org>, <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH v2] pinctrl: at91: Enable slewrate by default on SAM9X60
+Thread-Topic: [PATCH v2] pinctrl: at91: Enable slewrate by default on SAM9X60
+Thread-Index: AQHVkJWwWZ15LZwW00ihLtm4ve/EKad2X2iA
+Date:   Fri, 1 Nov 2019 14:26:09 +0000
+Message-ID: <20191101142602.voj2jeexvvgwgr23@M43218.corp.atmel.com>
+References: <20191101092031.24896-1-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20191101092031.24896-1-codrin.ciubotariu@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR2PR09CA0022.eurprd09.prod.outlook.com
+ (2603:10a6:101:16::34) To BY5PR11MB3895.namprd11.prod.outlook.com
+ (2603:10b6:a03:18e::21)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [213.41.198.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 77c5314a-7882-45fd-0495-08d75ed7703d
+x-ms-traffictypediagnostic: BY5PR11MB4210:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB4210FBFB5DD3AE501C755E20EF620@BY5PR11MB4210.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1051;
+x-forefront-prvs: 020877E0CB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(136003)(366004)(396003)(189003)(199004)(5660300002)(66446008)(52116002)(99286004)(486006)(229853002)(6436002)(8936002)(446003)(476003)(25786009)(11346002)(6116002)(76176011)(102836004)(26005)(186003)(71190400001)(71200400001)(6862004)(2906002)(1076003)(386003)(6506007)(86362001)(478600001)(8676002)(66476007)(14444005)(6636002)(66946007)(316002)(54906003)(256004)(66556008)(305945005)(3846002)(107886003)(14454004)(6486002)(4326008)(6246003)(7736002)(81156014)(66066001)(9686003)(6512007)(64756008)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4210;H:BY5PR11MB3895.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:3;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NckErDsEkxyAMfL/zCmguTKCSL2RkCy3daIaEZihOPf/0AehRfGy0hUJuHNhI4hYOl4ieMv6b8LyhCKRy1+kA/MAIndvYrg1XNKCFhWB94f5FkI6HURzOaKzd0w89TgzxZFnfJxC2BwvgNA3WthcKu12p8NtLWmRNy3gyI0z1zmfWXraTxSi9BVWU37MJBoaUyhf/Sv0Jovljv0sgA4oDFhYjrHJCuyqxseaoKYUItX6EDtqDrefdx7C897gA/3YkjOuw9UAuwBXxtg2Pw752ve1rwDjtNkKwPR6cB6aWSCYbZ2k6sU0QiTb0NkyAEwtLQXXeaY3i7zaakI/lg0A2R3GZDPNAr9DBJmjwaM+3nyWfhXMLC+xIy2ZEX5teeM00ZN+B7ak+vaAz2GHTGQP35Y9qlAtZsfU8K5qt1D27Gyps0Dlw/rsajC27CGoGgu9
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <379D81F24D960043BE8C2E730B0BDF76@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77c5314a-7882-45fd-0495-08d75ed7703d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 14:26:10.6581
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2QDSnOIQjavG9FjeDC/4vj4I+5bb8i5i3w6+2DPiOwe6/lvOq8EPd28bysFpqujDhsUqb6345/bfAEakx26sJhrPA/HJwk6mxrIVJZPQiqw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4210
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some binding that were introduced early on got a comment to enable
-additionalProperties, but we couldn't due to the generic properties being
-reported as errors.
+On Fri, Nov 01, 2019 at 11:20:31AM +0200, Codrin Ciubotariu wrote:
+> On SAM9X60, slewrate should be enabled on pins with a switching frequency
+> below 50Mhz. Since most of our pins do not exceed this value, we enable
+> slewrate by default. Pins with a switching value that exceeds 50Mhz will
+> have to explicitly disable slewrate.
+>=20
+> This patch changes the ABI. However, the slewrate macros are only used
+> by SAM9X60 and, at this moment, there are no device-tree files available
+> for this platform.
+>=20
+> Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-The way we're dealing with this now is to use the draft-08's
-unevaluatedProperties (even though the tools doesn't do anything with it
-yet).
+Thanks
 
-Let's convert those old bindings to it.
-
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- .../devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml   | 4 +---
- .../devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml   | 4 +---
- .../devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml        | 4 +---
- .../interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml    | 4 +---
- .../devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml   | 4 +---
- .../devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml    | 6 ++----
- .../devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml   | 6 ++----
- .../devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml   | 6 ++----
- .../devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml   | 6 ++----
- .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml  | 6 ++----
- .../devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml  | 4 +---
- 11 files changed, 16 insertions(+), 38 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-index 4cb9d6b93138..387d599522c7 100644
---- a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-@@ -68,9 +68,7 @@ else:
-     clocks:
-       maxItems: 1
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
-diff --git a/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml b/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
-index f9d526b7da01..9346ef6ba61b 100644
---- a/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
-+++ b/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
-@@ -40,9 +40,7 @@ required:
-   - clocks
-   - resets
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
-diff --git a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-index c779000515d6..2ceb05ba2df5 100644
---- a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-+++ b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-@@ -93,9 +93,7 @@ allOf:
-       required:
-         - resets
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-index 0eccf5551786..8cd08cfb25be 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-@@ -52,9 +52,7 @@ required:
-   - interrupts
-   - interrupt-controller
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-index 98c1bdde9a86..dea36d68cdbe 100644
---- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-@@ -60,9 +60,7 @@ required:
-   - clocks
-   - clock-names
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
-diff --git a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
-index d2d4308596b8..64bca41031d5 100644
---- a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
-+++ b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
-@@ -85,6 +85,8 @@ required:
-   - clocks
-   - clock-names
- 
-+unevaluatedProperties: false
-+
- examples:
-   - |
-     mmc0: mmc@1c0f000 {
-@@ -97,8 +99,4 @@ examples:
-         cd-gpios = <&pio 7 1 0>;
-     };
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
--
- ...
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
-index 792196bf4abd..ae4796ec50a0 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
-@@ -38,6 +38,8 @@ required:
-   - phy-handle
-   - allwinner,sram
- 
-+unevaluatedProperties: false
-+
- examples:
-   - |
-     emac: ethernet@1c0b000 {
-@@ -49,8 +51,4 @@ examples:
-         allwinner,sram = <&emac_sram 1>;
-     };
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
--
- ...
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
-index df24d9d969f7..e5562c525ed9 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
-@@ -49,6 +49,8 @@ required:
-   - compatible
-   - reg
- 
-+unevaluatedProperties: false
-+
- examples:
-   - |
-     mdio@1c0b080 {
-@@ -63,8 +65,4 @@ examples:
-         };
-     };
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
--
- ...
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-index ef446ae166f3..f683b7104e3e 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-@@ -49,6 +49,8 @@ required:
-   - clock-names
-   - phy-mode
- 
-+unevaluatedProperties: false
-+
- examples:
-   - |
-     gmac: ethernet@1c50000 {
-@@ -61,8 +63,4 @@ examples:
-         phy-mode = "mii";
-     };
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
--
- ...
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-index 3fb0714e761e..11654d4b80fb 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -184,6 +184,8 @@ allOf:
-             - mdio-parent-bus
-             - mdio@1
- 
-+unevaluatedProperties: false
-+
- examples:
-   - |
-     ethernet@1c0b000 {
-@@ -314,8 +316,4 @@ examples:
-         };
-     };
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
--
- ...
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-index 1084e9d2917d..659b02002a35 100644
---- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-@@ -31,9 +31,7 @@ required:
-   - compatible
-   - reg
- 
--# FIXME: We should set it, but it would report all the generic
--# properties as additional properties.
--# additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
--- 
-2.23.0
-
+> ---
+>=20
+> Changes in v2:
+>  - updated commit message to reflect the ABI change
+>=20
+>  drivers/pinctrl/pinctrl-at91.c     | 4 ++--
+>  include/dt-bindings/pinctrl/at91.h | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at9=
+1.c
+> index 117075b5798f..c135149e84e9 100644
+> --- a/drivers/pinctrl/pinctrl-at91.c
+> +++ b/drivers/pinctrl/pinctrl-at91.c
+> @@ -85,8 +85,8 @@ enum drive_strength_bit {
+>  					 DRIVE_STRENGTH_SHIFT)
+> =20
+>  enum slewrate_bit {
+> -	SLEWRATE_BIT_DIS,
+>  	SLEWRATE_BIT_ENA,
+> +	SLEWRATE_BIT_DIS,
+>  };
+> =20
+>  #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
+> @@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iome=
+m *pio, unsigned pin,
+>  {
+>  	unsigned int tmp;
+> =20
+> -	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
+> +	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
+>  		return;
+> =20
+>  	tmp =3D readl_relaxed(pio + SAM9X60_PIO_SLEWR);
+> diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pin=
+ctrl/at91.h
+> index 3831f91fb3ba..e8e117306b1b 100644
+> --- a/include/dt-bindings/pinctrl/at91.h
+> +++ b/include/dt-bindings/pinctrl/at91.h
+> @@ -27,8 +27,8 @@
+>  #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
+>  #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
+> =20
+> -#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
+> -#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
+> +#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
+> +#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
+> =20
+>  #define AT91_PIOA	0
+>  #define AT91_PIOB	1
+> --=20
+> 2.20.1
+>=20
