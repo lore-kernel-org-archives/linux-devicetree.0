@@ -2,115 +2,81 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C189AC47E49
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 06:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AE0CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 07:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C68217D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 06:59:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fouVRXN9";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NCChyQLc"
+	by mail.kernel.org (Postfix) with ESMTP id C5B2421734
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 07:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbfKAG7Z (ORCPT
+        id S1728888AbfKAHDN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 02:59:25 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:32832 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfKAG7Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 02:59:24 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3F34160D4C; Fri,  1 Nov 2019 06:59:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572591563;
-        bh=SfMS6ugI/rbxN40RZqNQuk+KKQDvTM9lmtZxl8kl5+A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fouVRXN9i+GIe+yNFqu7GLWeB+vNlPCkh/VxSs9kWtfnPAsDvQqVoOGWIc3l+3u+e
-         rGoT2OJ/honfGmZurv24PifUyNVwHXvn196gZRXo0IxZ4tWmBpY0TWSm+SHPrLwrL7
-         MSheDSY9otv9EnbhUwX5fdmpH+ZGf36Iur8Ezd0g=
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0403360BF4;
-        Fri,  1 Nov 2019 06:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572591559;
-        bh=SfMS6ugI/rbxN40RZqNQuk+KKQDvTM9lmtZxl8kl5+A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NCChyQLcN0/uqr0XwNlkbiPhqcQXduvY1sPUW1EqChXbIn11T7O9GQajpBD48TxdF
-         KiWtIX0jh8NTe892E9BLe+hpL47tzsca7iAZEIWZ0jGg0LfMQKc1dR9Gu+8yPUu3bM
-         B+xNMdHU8L3O6+N72dKiV63pVb1ndFBcQSu4ycRU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0403360BF4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, swboyd@chromium.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V1] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
-Date:   Fri,  1 Nov 2019 12:29:03 +0530
-Message-Id: <1572591543-15501-1-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 1 Nov 2019 03:03:13 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:63273 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728529AbfKAHDM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 03:03:12 -0400
+X-IronPort-AV: E=Sophos;i="5.68,254,1569250800"; 
+   d="scan'208";a="30605227"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 01 Nov 2019 16:03:11 +0900
+Received: from localhost.localdomain (unknown [10.166.17.210])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 94E2E419B1D2;
+        Fri,  1 Nov 2019 16:03:11 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, geert+renesas@glider.be
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3 0/4] clk: renesas: rcar-usb2-clock-sel: Fix clks/resets handling
+Date:   Fri,  1 Nov 2019 16:03:07 +0900
+Message-Id: <1572591791-11280-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
-found on SC7180 based platforms.
+This patch series is based on the latest renesas-drivers.git /
+clk-renesas-for-v5.5 branch.
+The hardware also needs multiple clocks/resets management like
+renesas_usbhs driver [1], so this patch series fixes it.
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
----
- Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
- drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
- 2 files changed, 6 insertions(+)
+[1]
+3df0e24 usb: renesas_usbhs: Add multiple clocks management
+f181dbb usb: renesas_usbhs: Add reset_control
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-index 1437062..b5fc64e 100644
---- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-+++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-@@ -32,6 +32,8 @@ Required properties:
-                    "qcom,pm8998",
-                    "qcom,pmi8998",
-                    "qcom,pm8005",
-+		   "qcom,pm6150",
-+		   "qcom,pm6150l",
-                    or generalized "qcom,spmi-pmic".
- - reg:             Specifies the SPMI USID slave address for this device.
-                    For more information see:
-diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
-index e8fe705..d916aa8 100644
---- a/drivers/mfd/qcom-spmi-pmic.c
-+++ b/drivers/mfd/qcom-spmi-pmic.c
-@@ -34,6 +34,8 @@
- #define PM8998_SUBTYPE		0x14
- #define PMI8998_SUBTYPE		0x15
- #define PM8005_SUBTYPE		0x18
-+#define PM6150L_SUBTYPE		0x27
-+#define PM6150_SUBTYPE		0x28
- 
- static const struct of_device_id pmic_spmi_id_table[] = {
- 	{ .compatible = "qcom,spmi-pmic", .data = (void *)COMMON_SUBTYPE },
-@@ -53,6 +55,8 @@
- 	{ .compatible = "qcom,pm8998",    .data = (void *)PM8998_SUBTYPE },
- 	{ .compatible = "qcom,pmi8998",   .data = (void *)PMI8998_SUBTYPE },
- 	{ .compatible = "qcom,pm8005",    .data = (void *)PM8005_SUBTYPE },
-+	{ .compatible = "qcom,pm6150l",   .data = (void *)PM6150L_SUBTYPE },
-+	{ .compatible = "qcom,pm6150",    .data = (void *)PM6150_SUBTYPE },
- 	{ }
- };
- 
+Changes from v2:
+ - Add Rob's Reviewed-by into the patch [12]/4.
+ - Fix typo in patch 2/4.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=194309
+
+Changes from v1:
+ - Add Reviewed-by into this series' patch 1/4.
+ - (new) Add resets and power-domains properties into the patch 2/4.
+ - Use clk_bulk_* APIs (except clk_bulk_get() because this driver has
+   4 clocks and used only 2 clocks).
+ - Add "select RESET_CONTROLLER" into Kconfig
+ - Use devm_reset_control_array_get() instead of optional API.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=192869
+
+Yoshihiro Shimoda (4):
+  dt-bindings: clock: renesas: rcar-usb2-clock-sel: Fix clock[-name]s
+    properties
+  dt-bindings: clock: renesas: rcar-usb2-clock-sel: Add power-domains
+    and resets properties
+  clk: renesas: rcar-usb2-clock-sel: Add multiple clocks management
+  clk: renesas: rcar-usb2-clock-sel: Add reset_control
+
+ .../bindings/clock/renesas,rcar-usb2-clock-sel.txt | 13 +++++--
+ drivers/clk/renesas/Kconfig                        |  1 +
+ drivers/clk/renesas/rcar-usb2-clock-sel.c          | 43 +++++++++++++++++++++-
+ 3 files changed, 52 insertions(+), 5 deletions(-)
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+2.7.4
 
