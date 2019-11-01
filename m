@@ -4,94 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E153C47E49
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 01:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6087CA9ECB
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 01:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601CD208CB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 01:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7CB2086D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 01:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfKABVb (ORCPT
+        id S1728220AbfKABbs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 21:21:31 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:39663 "EHLO
+        Thu, 31 Oct 2019 21:31:48 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:1099 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726540AbfKABVb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 21:21:31 -0400
-X-UUID: 1887ff2598ca4eabab24c603a40aa4d3-20191101
-X-UUID: 1887ff2598ca4eabab24c603a40aa4d3-20191101
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1343126105; Fri, 01 Nov 2019 09:21:17 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N2.mediatek.inc
- (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 1 Nov
- 2019 09:21:15 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 1 Nov 2019 09:21:15 +0800
-Message-ID: <1572571279.18464.39.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 04/11] dt-bindings: phy-mtk-tphy: add a new reference
- clock
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
+        with ESMTP id S1726540AbfKABbs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 21:31:48 -0400
+X-UUID: cceab31f80664af784cf9a81d1993b5e-20191101
+X-UUID: cceab31f80664af784cf9a81d1993b5e-20191101
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 637181562; Fri, 01 Nov 2019 09:31:41 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 1 Nov 2019 09:31:35 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 1 Nov 2019 09:31:35 +0800
+Message-ID: <1572571899.23942.3.camel@mtksdccf07>
+Subject: Re: [RESEND PATCH] thermal: mediatek: add suspend/resume callback
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
+        <hsinyi@chromium.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Date:   Fri, 1 Nov 2019 09:21:19 +0800
-In-Reply-To: <32bc288e-dbbb-8930-4750-826e9e17d58c@ti.com>
-References: <1567149298-29366-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1567149298-29366-4-git-send-email-chunfeng.yun@mediatek.com>
-         <20190917202805.GA13405@bogus>
-         <32bc288e-dbbb-8930-4750-826e9e17d58c@ti.com>
+        Louis Yu <louis.yu@mediatek.com>
+Date:   Fri, 1 Nov 2019 09:31:39 +0800
+In-Reply-To: <a0af0b72-dbc3-f284-34b7-fc94bbe349a4@linaro.org>
+References: <1570613704-16609-1-git-send-email-michael.kao@mediatek.com>
+         <a0af0b72-dbc3-f284-34b7-fc94bbe349a4@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: B5B93674122E8E6B22D53ED9A4AF45EE5591A27E1563D74407986ECF551E27B62000:8
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: FBAAD417DA093FF98E142D814BA2901E3D11B820C756EC48F85BA1DB00C7872C2000:8
 X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-Hi Rob,
-
-On Wed, 2019-10-23 at 11:10 +0530, Kishon Vijay Abraham I wrote:
-> Hi Rob,
-> 
-> On 18/09/19 1:58 AM, Rob Herring wrote:
-> > On Fri, 30 Aug 2019 15:14:51 +0800, Chunfeng Yun wrote:
-> >> Usually the digital and analog phys use the same reference clock,
-> >> but on some platforms, they are separated, so add another optional
-> >> clock to support it.
-> >> In order to keep the clock names consistent with PHY IP's, use
-> >> the da_ref for analog phy and ref clock for digital phy.
-> >>
-> >> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> >> ---
-> >> v2: fix typo of analog and needed
-> >> ---
-> >>  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 7 +++++--
-> >>  1 file changed, 5 insertions(+), 2 deletions(-)
-> >>
+On Sun, 2019-10-13 at 19:50 +0200, Daniel Lezcano wrote:
+> On 09/10/2019 11:35, michael.kao@mediatek.com wrote:
+> > From: Louis Yu <louis.yu@mediatek.com>
 > > 
-> > Acked-by: Rob Herring <robh@kernel.org>
+> > Add suspend/resume callback to disable/enable Mediatek thermal sensor
+> > respectively. Since thermal power domain is off in suspend, thermal driver
+> > needs re-initialization during resume.
+> > 
+> > Signed-off-by: Louis Yu <louis.yu@mediatek.com>
+> > Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> > ---
+> > This patch series base on these patches [1][2].
+> > 
+> > [1]thermal: mediatek: mt8183: fix bank number settings (https://patchwork.kernel.org/patch/10938817/)
+> > [2]thermal: mediatek: add another get_temp ops for thermal sensors (https://patchwork.kernel.org/patch/10938829/)
 > 
-> I see you've acked a couple of patches in the series. However the other
-> dt-binding patch neither has an Ack or NAK. Is there a specific reason or can I
-> merge the series?
-
-Ping?
-
+> There is no new version with the comments take into account. Did I miss
+> something?
 > 
-> Thanks
-> Kishon
-
+> The patch base on Kenrel 5.4. I resend to linux-pm. The original patch is at linux-mediatek only.
 
 
