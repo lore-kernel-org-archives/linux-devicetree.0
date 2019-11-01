@@ -2,207 +2,319 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E598FCA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449BCC47E49
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A982221929
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE79218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mGvfEJRt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AbDB/v5l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfKAIq6 (ORCPT
+        id S1727165AbfKAI4S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:46:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36977 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfKAIq5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 04:46:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q130so8365336wme.2
-        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 01:46:55 -0700 (PDT)
+        Fri, 1 Nov 2019 04:56:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44985 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbfKAI4S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 04:56:18 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f2so56635wrs.11
+        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 01:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PgH/EKzRLT5jJoxf9CSs6yfql44XE/FVhESN+wEtbRg=;
-        b=mGvfEJRt00doMqgAiLStXj79wDTsPiHNEQvge/qvticWX5WZ0a6TD79eBwounWiM5h
-         885SK+oif4Mgfx4CKA6ygBWvGRMvHH2JL2aSwlogTtbcck8GH4xxk02U4PAa8nV6Rlv1
-         5KdDReBinV8trX01l6XIIgABHOGfKneJ9aO+kCmgsdrOfvBj1thoHGRSCCocYcZuQAVJ
-         7/FLh7MYfJKWqXqISd2uFoRG05SQO15bDyRG+kd5rkq0x86j5fN6ngwnuRsT4GXeYt2k
-         ALH5KfcUm/jvKEb8RHvpX3eYXqARWSZSHPU+syWfvS4lX4pv0RaTUWblWkKkJWeR7CGX
-         /cvQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Mcc8FPSg8d1iUrNVS8TAkGGAGXNSDpP0S5HU510p9ao=;
+        b=AbDB/v5lUaJR0xXG/DsW5XUDLbnV5iagZLBemciunKpeJOYeuhiQdMjFCEpnBdf7e9
+         RiLf50pog9yK+RBO/pyWEmtKDEzhm8kz770MmT+ghthe6InhX1bbOmJ7e2L+ERfhZP12
+         SizzIW/wGjYq2tYHNVHowQvLWxvH+E3QhQLykfpBkScIhI2zMIOEcrrrNVpD1J7vh6pI
+         pgkvVjgGZkzWBym4F7YhC3cA6s5XBs0U4awcSxIbOHrioO2YTqNmp5bJH0u9HMkHT7Ee
+         iCne/n1jVG6KRi8NGgaVJFfkGsHXjNewozsfdDBQArRZimc8Y1FLQlAr+KBIyLXSlH+r
+         02HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=PgH/EKzRLT5jJoxf9CSs6yfql44XE/FVhESN+wEtbRg=;
-        b=rC68cp2Cle1jAAlu0M/NzsvSjv6+bTI9nlTNfDqNLHbIrTeD3SC5KFvrBylScWtx3O
-         SOYL1J34Uoyvb/dKnis/swKApD3oH0SQ2OLS3g+qa6fpwLrFLlTYABELP+90f1cpNipR
-         +47iSj2POLveDixCa1h1hn23hbjAImbDYog+GDrT4YFQS6A01vAmTICG8yqTv6LpfvO1
-         xksSGPk6NK/qqKXswP9vp7bCidwVaArykkGwxKNmzI+uXsHq+XgAxkrvvDKvpVtA6Zf4
-         I8V052QDji4Z5OcI9oJpipBKsv3eppxx87OjrtMAq3L1NcwVmfSyJgSAyhw1fVLiWGF7
-         Oa1g==
-X-Gm-Message-State: APjAAAUpLlKqxH/z4M8WZPGCefi+9nLu/kPwtAtIHdGhRxGCnsw6s2FD
-        G6eI4kcUIiPOlRe3fmbm4dgZSg==
-X-Google-Smtp-Source: APXvYqxLCOyj1kNEUCerOyyRQV0kRPeBkx4CaYfk+yL1Jdp/FJxDWl8BtqaPpgY2e1OQ9wIm9kKZ/w==
-X-Received: by 2002:a1c:7709:: with SMTP id t9mr2946852wmi.80.1572598014232;
-        Fri, 01 Nov 2019 01:46:54 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:4cb0:7f54:9d5f:4d40? ([2a01:e34:ed2f:f020:4cb0:7f54:9d5f:4d40])
-        by smtp.googlemail.com with ESMTPSA id n13sm1251650wmi.25.2019.11.01.01.46.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 01:46:53 -0700 (PDT)
-Subject: Re: [RESEND PATCH] thermal: mediatek: add suspend/resume callback
-To:     Michael Kao <michael.kao@mediatek.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Louis Yu <louis.yu@mediatek.com>
-References: <1570613704-16609-1-git-send-email-michael.kao@mediatek.com>
- <a0af0b72-dbc3-f284-34b7-fc94bbe349a4@linaro.org>
- <1572571899.23942.3.camel@mtksdccf07>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- mQINBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABtCpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz6JAlcEEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAK
- CRCP9LjScWdVJ+vYEACStDg7is2JdE7xz1PFu7jnrlOzoITfw05BurgJMqlvoiFYt9tEeUMl
- zdU2+r0cevsmepqSUVuUvXztN8HA/Ep2vccmWnCXzlE56X1AK7PRRdaQd1SK/eVsJVaKbQTr
- ii0wjbs6AU1uo0LdLINLjwwItnQ83/ttbf1LheyN8yknlch7jn6H6J2A/ORZECTfJbG4ecVr
- 7AEm4A/G5nyPO4BG7dMKtjQ+crl/pSSuxV+JTDuoEWUO+YOClg6azjv8Onm0cQ46x9JRtahw
- YmXdIXD6NsJHmMG9bKmVI0I7o5Q4XL52X6QxkeMi8+VhvqXXIkIZeizZe5XLTYUvFHLdexzX
- Xze0LwLpmMObFLifjziJQsLP2lWwOfg6ZiH8z8eQJFB8bYTSMqmfTulB61YO0mhd676q17Y7
- Z7u3md3CLH7rh61wU1g7FcLm9p5tXXWWaAud9Aa2kne2O3sirO0+JhsKbItz3d9yXuWgv6w3
- heOIF0b91JyrY6tjz42hvyjxtHywRr4cdAEQa2S7HeQkw48BQOG6PqQ9d3FYU34pt3WFJ19V
- A5qqAiEjqc4N0uPkC79W32yLGdyg0EEe8v0Uhs3CxM9euGg37kr5fujMm+akMtR1ENITo+UI
- fgsxdwjBD5lNb/UGodU4QvPipB/xx4zz7pS5+2jGimfLeoe7mgGJxrkBDQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABiQI2BBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwACgkQj/S40nFnVSf4OhAAhWJPjgUu6VfS
- mV53AUGIyqpOynPvSaMoGJzhNsDeNUDfV5dEZN8K4qjuz2CTNvGIyt4DE/IJbtasvi5dW4wW
- Fl85bF6xeLM0qpCaZtXAsU5gzp3uT7ut++nTPYW+CpfYIlIpyOIzVAmw7rZbfgsId2Lj7g1w
- QCjvGHw19mq85/wiEiZZNHeJQ3GuAr/uMoiaRBnf6wVcdpUTFMXlkE8/tYHPWbW0YKcKFwJ3
- uIsNxZUe6coNzYnL0d9GK2fkDoqKfKbFjNhW9TygfeL2Qhk949jMGQudFS3zlwvN9wwVaC0i
- KC/D303DiTnB0WFPT8CltMAZSbQ1WEWfwqxhY26di3k9pj+X3BfOmDL9GBlnRTSgwjqjqzpG
- VZsWouuTfXd9ZPPzvYdUBrlTKgojk1C8v4fhSqb+ard+bZcwNp8Tzl/EI9ygw6lYEATGCUYI
- Wco+fjehCgG1FWvWavMU+jLNs8/8uwj1u+BtRpWFj4ug/VaDDIuiApKPwl1Ge+zoC7TLMtyb
- c00W5/8EckjmNgLDIINEsOsidMH61ZOlwDKCxo2lbV+Ij078KHBIY76zuHlwonEQaHLCAdqm
- WiI95pYZNruAJEqZCpvXDdClmBVMZRDRePzSljCvoHxn7ArEt3F14mabn2RRq/hqB8IhC6ny
- xAEPQIZaxxginIFYEziOjR65AQ0EW//NCAEIALcJqSmQdkt04vIBD12dryF6WcVWYvVwhspt
- RlZbZ/NZ6nzarzEYPFcXaYOZCOCv+Xtm6hB8fh5XHd7Y8CWuZNDVp3ozuqwTkzQuux/aVdNb
- Fe4VNeKGN2FK1aNlguAXJNCDNRCpWgRHuU3rWwGUMgentJogARvxfex2/RV/5mzYG/N1DJKt
- F7g1zEcQD3JtK6WOwZXd+NDyke3tdG7vsNRFjMDkV4046bOOh1BKbWYu8nL3UtWBxhWKx3Pu
- 1VOBUVwL2MJKW6umk+WqUNgYc2bjelgcTSdz4A6ZhJxstUO4IUfjvYRjoqle+dQcx1u+mmCn
- 8EdKJlbAoR4NUFZy7WUAEQEAAYkDbAQYAQgAIBYhBCTWJvJTvp6H5s5b9I/0uNJxZ1UnBQJb
- /80IAhsCAUAJEI/0uNJxZ1UnwHQgBBkBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlv/
- zQgACgkQqDIjiipP6E+FuggAl6lkO7BhTkrRbFhrcjCm0bEoYWnCkQtX9YFvElQeA7MhxznO
- BY/r1q2Uf6Ifr3YGEkLnME/tQQzUwznydM94CtRJ8KDSa1CxOseEsKq6B38xJtjgYSxNdgQb
- EIfCzUHIGfk94AFKPdV6pqqSU5VpPUagF+JxiAkoEPOdFiQCULFNRLMsOtG7yp8uSyJRp6Tz
- cQ+0+1QyX1krcHBUlNlvfdmL9DM+umPtbS9F6oRph15mvKVYiPObI1z8ymHoc68ReWjhUuHc
- IDQs4w9rJVAyLypQ0p+ySDcTc+AmPP6PGUayIHYX63Q0KhJFgpr1wH0pHKpC78DPtX1a7HGM
- 7MqzQ4NbD/4oLKKwByrIp12wLpSe3gDQPxLpfGgsJs6BBuAGVdkrdfIx2e6ENnwDoF0Veeji
- BGrVmjVgLUWV9nUP92zpyByzd8HkRSPNZNlisU4gnz1tKhQl+j6G/l2lDYsqKeRG55TXbu9M
- LqJYccPJ85B0PXcy63fL9U5DTysmxKQ5RgaxcxIZCM528ULFQs3dfEx5euWTWnnh7pN30RLg
- a+0AjSGd886Bh0kT1Dznrite0dzYlTHlacbITZG84yRk/gS7DkYQdjL8zgFr/pxH5CbYJDk0
- tYUhisTESeesbvWSPO5uNqqy1dAFw+dqRcF5gXIh3NKX0gqiAA87NM7nL5ym/CNpJ7z7nRC8
- qePOXubgouxumi5RQs1+crBmCDa/AyJHKdG2mqCt9fx5EPbDpw6Zzx7hgURh4ikHoS7/tLjK
- iqWjuat8/HWc01yEd8rtkGuUcMqbCi1XhcAmkaOnX8FYscMRoyyMrWClRZEQRokqZIj79+PR
- adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
- CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
- 4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+XrkBDQRb/80VAQgA8QHL8REXb0Cy
- 79EKg2lmFl/Vp14kb2yNssurgDbi/+lslAifbBP8uwqkOZ9QAq/DKuF6dfoXoceWjQFbm+Yx
- 0VICaLdsCdm+QTjZCpqTE/FTg53Ur6GHDKlMurxaT+ItFC2uRGhuog+roLSGBzECfRG0VgPz
- 5KxiwDl2lXtzE4AQOPzoh8nW7ibvWJ13r7H8h1VkaJRLbGi+hWJ10PYm44ar9ozCLe9/vfdz
- +t9Z1MYyvHCnzeaej5G2O00jNGuXPjmSgz6nagFVO6RYxt3J6Ru3Xfz7T3FGlCJuGtvejo4K
- fQb5DRNRsZp3my/qE0ixh2lio79giWTR6dURdYXWGwARAQABiQI2BBgBCAAgFiEEJNYm8lO+
- nofmzlv0j/S40nFnVScFAlv/zRUCGyAACgkQj/S40nFnVSdS0g//a5ahjaIt6hbDKb/gmBHO
- FuB9M/IIU/Ee+tXToWw1igxfXdP+CGS5BGR+myCyDejNilYypm4tQRyPYpNvXjwHFlzvvhNc
- VkWJeTRx778eyZcx441DgfbQpH3U9OYSg9cobchn7OPiy1gQRNAROb004m0jwk4yldbCmWS6
- ovmJkRsdBcyRmpRE4644bbFMULGfPkB9mN3OHPTiUIulLlyXt5PPX68wA4UVjR3vKPAoJekx
- ulW043tveaNktIhOeObwaJIKaqMvr6EuB9h9akqEAcjAZ/4Y21wawb5aAB9eyx07OdsRZRnV
- yrfuDuwdn8yDNEyLdVQPcHC2T0eGuiJEDpPGiOtC6XOi+u8AWygw1NaltVyjW1zZt4fu4z5S
- uRccMjf84wsbC9K9vplNJmgM2c2qvvgn19Lfofw4SIX0BMhpnkKrRMx19wAG0PwrRiS0JVsI
- op7JpZPGVNqCnAgGujh9ZgvSJchJ2RFXY3jJCq/C/E3venVGlqDprU61Ot1moaBD1Q5igmlT
- GZae2XlFWBEWfqX3hb8fJbEGIWTRWz0uR2WroDg7vG3k+iLkqQfp61rsVzJNzeF/nGFr1AYg
- D53Es2aGJyrAeHWCnk9vzsPJoI5k5P1yNjgjA+W6tnOj8Kdpo//uKMYXV6hXkEAtyap6ggsw
- PASsWZc3OelnWN2JAq0EGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCB
- CRCP9LjScWdVJ3YgBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIACgkQ3uar
- Ti9/eqZ2RgD9HN1UWo90QRDlBisR83Lte2VJyKCS46R3ZDXwZ1lPflIA/28E8ROelnfJEGdn
- tlE8uATPPdOxbCYAECy+LQ9mGYIMkJoP/RhDJ9TOOlHUacJKRtothMRSzJoe5Y8j+5KkpO1x
- u22li/5CZiwjAP3wJ4ffPBjReX/V8T0fLn3PpXG/1hVqkvHSc8M4DXMNU2rYye63Edvy34ia
- PPgRELHKyq19iu+BqjcT+HRzxIR6H5uHkySPCZTwLBnd2hbKJV1QsoRJ7v8azk66EXNoNU8K
- lZ2wp0IAbJS4//6pFbAoZWlY/RGu3oxMrbght67fERk7xzdc4Rcfl32d/phGoEQiLMB5ygKv
- TQT1z7oGVFLQCpE5ALf8ybuta1yjf5Y6uJ2pVeSSj0BxnwCIzme7QXwCpgYqDTLu+QvYs4/y
- 6zzkvSnnsyohHW6AOchOVNjTHhFhFYn36TuV53laydaXK/zgo3NsOpATFObyK3N5lhb1G9tN
- Lrev/4WVxNr0LPXl9bdCbQGzIQK+kAPcg8u9f2MMhHQiQX8FAjhP3wtACRhfUz9RaQykxiwv
- y0s5uI05ZSXhqFs9iLlh3zNU1i6J1cdzA8BReoa3cKz4UiGKEffT857iMvT/ZmgSdYY57EgV
- UWm57SN2ok2Ii8AXlanH5SJPkbwJZhiB7kO0cjebmoA/1SA+5yTc3zEKKFuxcpfiXxt0d/OJ
- om6jCJ5/uKB5Cz9bJj0WdlvS2Xb11Jrs90MoVa74H5me4jOw7m9Yyg3qExOFOXUPFL6N
-Message-ID: <81f767f4-3dd6-b20c-1c4e-8e5229ddf66d@linaro.org>
-Date:   Fri, 1 Nov 2019 09:46:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Mcc8FPSg8d1iUrNVS8TAkGGAGXNSDpP0S5HU510p9ao=;
+        b=ZtvJT9cYuyYqkH6/yNDojdRTylaRNxpOe5tYiNR1cq1tVC8Kmlo2HezZsz0+tv3ROq
+         JM+hueNMpcZ4mPxjCl2Mv8MmGCKy/f1k/k7W8p/ZX3PD//EqBRjES7U2/NCUAuXElVGa
+         HoYAf880z7H+SHJXIHBcys4gGiwmcFNuPMuHGY8dNtqWD9xBnMTrbhXR3hOxw2zTf6bd
+         0sdFQzJG4tOoah+O4wSJCT/GJUbfG1uR/fWtPqnDDhlDjDAohDi/lwg4uThKPjXX89Xg
+         e9OIKH09rD5413yAg8Q+zsGj5ZwBvMyL8vNC8D2TwTXgGQkfMIMNmhFfpuX1SQvlX6Jz
+         3/8w==
+X-Gm-Message-State: APjAAAXn33jj0itONDw+HkSwXQy9apq1bQlkgQpUCZrPlov484mwFjrN
+        pSGrJy7AJFzYKFG73MN0NjwwuQ==
+X-Google-Smtp-Source: APXvYqxcnGclPhPFKYqw2nY140x/CI8oV9sid8o/PmQ7OzfU+43ZCx/Py+Di/opIZp3ITDjdOgUUGw==
+X-Received: by 2002:a5d:55c4:: with SMTP id i4mr9479938wrw.140.1572598574726;
+        Fri, 01 Nov 2019 01:56:14 -0700 (PDT)
+Received: from dell ([2.31.163.64])
+        by smtp.gmail.com with ESMTPSA id t185sm9647226wmf.45.2019.11.01.01.56.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Nov 2019 01:56:14 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 08:56:12 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     dmitry.torokhov@gmail.com, jdelvare@suse.com, linux@roeck-us.net,
+        thierry.reding@gmail.com, jic23@kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH 2/8] mfd: Add support for Azoteq IQS620A/621/622/624/625
+Message-ID: <20191101085612.GC5700@dell>
+References: <1571631083-4962-1-git-send-email-jeff@labundy.com>
+ <1571631083-4962-3-git-send-email-jeff@labundy.com>
+ <20191031134410.GB5700@dell>
+ <20191101045924.GA2119@labundy.com>
 MIME-Version: 1.0
-In-Reply-To: <1572571899.23942.3.camel@mtksdccf07>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191101045924.GA2119@labundy.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 01/11/2019 02:31, Michael Kao wrote:
-> On Sun, 2019-10-13 at 19:50 +0200, Daniel Lezcano wrote:
->> On 09/10/2019 11:35, michael.kao@mediatek.com wrote:
->>> From: Louis Yu <louis.yu@mediatek.com>
->>>
->>> Add suspend/resume callback to disable/enable Mediatek thermal sensor
->>> respectively. Since thermal power domain is off in suspend, thermal driver
->>> needs re-initialization during resume.
->>>
->>> Signed-off-by: Louis Yu <louis.yu@mediatek.com>
->>> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
->>> ---
->>> This patch series base on these patches [1][2].
->>>
->>> [1]thermal: mediatek: mt8183: fix bank number settings (https://patchwork.kernel.org/patch/10938817/)
->>> [2]thermal: mediatek: add another get_temp ops for thermal sensors (https://patchwork.kernel.org/patch/10938829/)
->>
->> There is no new version with the comments take into account. Did I miss
->> something?
->>
->> The patch base on Kenrel 5.4. I resend to linux-pm. The original patch is at linux-mediatek only.
+On Thu, 31 Oct 2019, Jeff LaBundy wrote:
+> On Thu, Oct 31, 2019 at 01:44:10PM +0000, Lee Jones wrote:
+> > On Sun, 20 Oct 2019, Jeff LaBundy wrote:
+> > 
+> > > This patch adds support for core functions common to all six-channel
+> > > members of the Azoteq ProxFusion family of sensor devices.
+> > > 
+> > > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> > > ---
+> > >  drivers/mfd/Kconfig         |  13 +
+> > >  drivers/mfd/Makefile        |   2 +
+> > >  drivers/mfd/iqs62x-core.c   | 638 ++++++++++++++++++++++++++++++++++++++++++++
+> > >  drivers/mfd/iqs62x-tables.c | 424 +++++++++++++++++++++++++++++
+> > >  include/linux/mfd/iqs62x.h  | 148 ++++++++++
+> > >  5 files changed, 1225 insertions(+)
+> > >  create mode 100644 drivers/mfd/iqs62x-core.c
+> > >  create mode 100644 drivers/mfd/iqs62x-tables.c
+> > >  create mode 100644 include/linux/mfd/iqs62x.h
+> > > 
+> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > index ae24d3e..df391f7 100644
+> > > --- a/drivers/mfd/Kconfig
+> > > +++ b/drivers/mfd/Kconfig
+> > > @@ -642,6 +642,19 @@ config MFD_IPAQ_MICRO
+> > >  	  AT90LS8535 microcontroller flashed with a special iPAQ
+> > >  	  firmware using the custom protocol implemented in this driver.
 
-Sorry I don't get your anwser, can you rephrase it ?
+[...]
+
+> > What is preventing a very naughty person from providing their own
+> > register map (firmware) in order to read/write unsuitable registers
+> > from kernel context for their own gains; simply by swapping out a file
+> > contained in userspace?
+> 
+> I would argue that if someone is willing to go that length, they likely understand
+> that their dock switch sensitivity may change or their ambient light sensor may no
+> longer function properly.
+> 
+> > It would probably be a better idea to compile the register definitions
+> > with the kernel/module to be safe. You can use Device Tree for
+> > run-time configuration changes.
+> 
+> Taking the IQS620A as an example, there are over 100 individual fields that need
+> configured. Forcing customers to manually transfer the values derived within the
+> GUI to a corresponding collection of device tree bindings would be prohibitively
+> complex.
+> 
+> To complicate matters, many registers change meaning or restrict their available
+> values based on the values stored in other registers. Duplicating all of the de-
+> pendencies and restrictions comprehended by the vendor's tool in the driver and/
+> or the bindings document would not be practical.
+> 
+> Just to clarify, we're not storing register definitions (i.e. addresses) in this
+> "firmware"; rather, we're storing application-specific register values that don't
+> belong in the driver source.
+
+Okay, this allays my fears. I was under the impression that you could
+manipulate addresses in the firmware in order to read/write from
+non-expected registers in kernel context.
+
+[...]
+
+> > > +	/*
+> > > +	 * The device resets itself in response to the I2C master stalling
+> > > +	 * communication beyond a timeout. In this case, all registers are
+> > > +	 * restored and any interested sub-device drivers are notified.
+> > > +	 */
+> > > +	if (event_flags & BIT(IQS62X_EVENT_SYS_RESET)) {
+> > > +		dev_err(&iqs62x->client->dev, "Unexpected device reset\n");
+> > > +
+> > > +		error = iqs62x_dev_init(iqs62x);
+> > 
+> > Is it safe to re-initialise the entire device in IRQ context?
+> > 
+> 
+> Here, we are simply re-writing several registers from memory. This is a threaded
+> interrupt handler, so it should be safe to do so. But if I've misunderstood your
+> concern, please let me know.
+
+My intent here is to ensure it's been thought about. I see that you
+are in a threaded handler, so it should be save to read/write register
+and sleep.
+
+> > > +		if (error) {
+> > > +			dev_err(&iqs62x->client->dev,
+> > > +				"Failed to re-initialize device: %d\n", error);
+> > > +			return IRQ_NONE;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	error = blocking_notifier_call_chain(&iqs62x->nh, event_flags,
+> > > +					     &event_data);
+> > > +	if (error & NOTIFY_STOP_MASK)
+> > > +		return IRQ_NONE;
+> > > +
+> > > +	/*
+> > > +	 * Once the communication window is closed, a small delay is added to
+> > > +	 * ensure the device's RDY output has been deasserted by the time the
+> > > +	 * interrupt handler returns.
+> > > +	 */
+> > > +	usleep_range(50, 100);
+> > > +
+> > > +	return IRQ_HANDLED;
+> > > +}
+> > 
+> > [...]
+> > 
+> > > +static int iqs62x_probe(struct i2c_client *client,
+> > > +			const struct i2c_device_id *id)
+> > > +{
+> > > +	struct iqs62x_core *iqs62x;
+> > > +	struct iqs62x_info info;
+> > > +	unsigned int val;
+> > > +	int error, i, j;
+> > 
+> > Nit: It's more common to use 'ret' or 'err' - my preference is 'ret'.
+> > 
+> 
+> I think there are valid arguments both ways, but in my experience, the preference
+> is not consistent across the audience of this patch series. Unless this is a deal
+> breaker, I'd like to leave it as 'error' simply for consistency.
+
+The difference is *very* significant, more than an order of magnitude:
+
+$ git grep "int.* ret[;\|,]" | wc -l
+40549
+$ git grep "int.* err[;\|,]" | wc -l
+18558
+$ git grep "int.* error[;\|,]" | wc -l
+3381
+
+[...]
+
+> > > +		for (j = 0; j < iqs62x->dev_desc->num_cal_regs; j++) {
+> > 
+> > What are you doing here? Please provide a comment.
+> 
+> The search process here is as follows:
+> 
+> 1. Check if the product number (device ID) is recognized, and if so:
+> 2. Check that the software number (FW revision) is valid, and if so:
+> 3. Check that the device's calibration (OTP) registers are non-zero (i.e.
+>    programmed) in which case some additional functionality is awarded, or
+>    the device is bad.
+> 
+> For example, the IQS620A device can report its absolute die temperature if
+> its scale/offset registers (0xC2 through 0xC4) have been programmed at the
+> factory. In that case, we're actually talking to an IQS620AT device and we
+> load an additional hwmon (soon to be iio) driver. However if they're blank,
+> we're talking to a plain IQS620A device and stick to input and pwm drivers.
+> 
+> In another example, the IQS621 (which includes an ambient light sensor) is
+> _only_ sold in a calibrated version. If we happen to come across a device
+> with empty calibration registers, its lux output will be garbage. In this
+> case we don't register the device at all.
+> 
+> I would be happy to add some comments here to explain what's happening.
+
+Please.
+
+> > > +			error = regmap_read(iqs62x->map,
+> > > +					    iqs62x->dev_desc->cal_regs[j],
+> > > +					    &val);
+> > > +			if (error)
+> > > +				return error;
+> > > +
+> > > +			if (!val)
+> > > +				break;
+> > > +		}
+> > > +
+> > > +		if (j == iqs62x->dev_desc->num_cal_regs)
+> > > +			break;
+> > 
+> > Is there a reason not to break here? If the product number matched
+> > once, can it match for a second time?
+> > 
+> 
+> It can in the case of the aforementioned IQS620A (no 'T') device. The driver
+> first looks for the IQS620AT which defines 3 calibration registers. If we're
+> talking to an IQS620A, the first pass of the loop (i = 0) will find 0xC2 = 0,
+> then j < num_cal_regs and the outer loop will wind forward (i = 1).
+> 
+> At that point, the second pass of the outer loop will check for an IQS620A,
+> which has the same product number but defines num_cal_regs as zero. In that
+> case, j = num_cal_regs = 0 and the outer loop will break.
+> 
+> After the outer loop finishes, if i < NUM_DEV then we know the following:
+> 
+> 1. The product number is recognized, and:
+> 2. The software number is valid, and:
+> 3. All calibration registers, if any, are nonzero.
+> 
+> Again, this process warrants some comments and I would be happy to add some.
+
+Great, thanks.
+
+[...]
+
+> > > +static const struct mfd_cell iqs625_sub_devs[] = {
+> > > +	{
+> > > +		.name = IQS62X_DRV_NAME_KEYS,
+> > > +		.of_compatible = "azoteq,iqs625-keys",
+> > > +	},
+> > > +	{
+> > > +		.name = IQS624_DRV_NAME_POS,
+> > > +	},
+> > > +};
+> > 
+> > These should be moved into the core driver.
+> > 
+> 
+> The reason they're placed here is because they're referenced in the iqs62x_devs
+> array, members of which are then referenced by devm_mfd_add_devices in the core
+> driver.
+> 
+> If the mfd_cell arrays move to the core driver (where they're not used directly),
+> I think I'd have to make them extern. I think it's cleaner to limit the scope of
+> any given element to the minimum level that is necessary.
+> 
+> However if I have misunderstood or I could possibly make this more clear with a
+> comment or two, please let me know.
+
+Leave them where they are for now. I still need to do a review of this
+file. It's strange to see such an odd weave of; registers, masks,
+files, values and names bundled up in structure arrays like this. It
+may take a little time.
+
+[...]
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
