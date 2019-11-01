@@ -2,189 +2,146 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83582CA9ECB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 02:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C055CA9EC9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 03:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52140208CB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 02:45:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehpdFbf9"
+	by mail.kernel.org (Postfix) with ESMTP id 6ED70208CB
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 03:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfKACpG (ORCPT
+        id S1727332AbfKADUl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 31 Oct 2019 22:45:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46810 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbfKACpG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 31 Oct 2019 22:45:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id q21so3660314plr.13;
-        Thu, 31 Oct 2019 19:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2alu0Zc/ft6aP0mMKc3T9tiyxMrXfO91QDsxper6hEU=;
-        b=ehpdFbf9etA7HW62oqX1LZFKJYoVBbPQJudG07hAzBC8Og6HDH61qiMQ+BoApygcx7
-         k4M4QURpehSj5Bf6xW8xD0TR3ZveBXnF0CrejEW9xdyohY+Ct54ePpe4fTLWuL/PY8EZ
-         51aGcxxyFVTnM9L92Rkx6bUf2y0UWYrA0zztnFrwyy2jOzvAAnHUVAg3/9hXLFeansxV
-         fsHnL82XtkqpyvS8v8eVGOzZzDEg2kAk7xNZbc6VdBkNESHRj2flPiqtfybbwBWpK2+S
-         qESYgQCuX/I6AQZz4wDTI77agsVXerggJem0FahjKdWti7PNUOyWH5CZxkcn+gomZyt/
-         btHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2alu0Zc/ft6aP0mMKc3T9tiyxMrXfO91QDsxper6hEU=;
-        b=iP2MNpT7P7x57KkYLXFAo6AIcae9uIMVYWOBlr2FwfBJxFha03S5qA1QEDIP2Cu/GW
-         Ay4jKBnHJxON/fhMu+ACO48JbFl/biyfkBCVq40aoR8xS235PT2xrGTwadFYQZ9Ya3TD
-         L4dW4jl3iAiaoGEaXLuraCvYU1Uzn2x1oPlqHitHPg9RWugvvsutCflodA4pgNBiw1/p
-         nFKuZtdT8iRkZLW5BCMFW0eylgvmA8GFoR5RKBVtBtOplgYlimHKl+UtxX1sW9Sy1vl8
-         dYcfCksCD3OJQIhVWYEgL1dgoz3g1Tr8Rzsva8obUOvmmHYsYJBc8JZ/Wq7lf9+5ehxf
-         F0zg==
-X-Gm-Message-State: APjAAAWpyoFZrciEXkv4ydEJ5ynP2c2MwEXLHBNtwbIIre2LWynXGyDu
-        D87poF7hP5K0rtrWpKlh52w=
-X-Google-Smtp-Source: APXvYqwePioh5LZFvobRYjFvfwGYHFfaowQT003aLyNZ6K7yaoHsR9ZUDrhlk3TRnP0FADX8XNgH/Q==
-X-Received: by 2002:a17:902:6f01:: with SMTP id w1mr10214320plk.35.1572576305307;
-        Thu, 31 Oct 2019 19:45:05 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id e71sm6641948pgc.91.2019.10.31.19.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 19:45:04 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     agross@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 2/2] remoteproc: qcom_q6v5_mss: Add support for MSM8998
-Date:   Thu, 31 Oct 2019 19:45:01 -0700
-Message-Id: <20191101024501.22026-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
-References: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
+        Thu, 31 Oct 2019 23:20:41 -0400
+Received: from mxout2.idt.com ([157.165.5.26]:57573 "EHLO mxout2.idt.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbfKADUl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 31 Oct 2019 23:20:41 -0400
+Received: from mail3.idt.com (localhost [127.0.0.1])
+        by mxout2.idt.com (8.14.4/8.14.4) with ESMTP id xA13KYJu022983;
+        Thu, 31 Oct 2019 20:20:34 -0700
+Received: from corpml1.corp.idt.com (corpml1.corp.idt.com [157.165.140.20])
+        by mail3.idt.com (8.14.4/8.14.4) with ESMTP id xA13KXs5004839;
+        Thu, 31 Oct 2019 20:20:33 -0700
+Received: from vcheng-VirtualBox.localdomain (corpimss2.corp.idt.com [157.165.141.30])
+        by corpml1.corp.idt.com (8.11.7p1+Sun/8.11.7) with ESMTP id xA13KRV10326;
+        Thu, 31 Oct 2019 20:20:27 -0700 (PDT)
+From:   vincent.cheng.xh@renesas.com
+To:     robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com
+Cc:     devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vincent Cheng <vincent.cheng.xh@renesas.com>
+Subject: [PATCH v4 1/2] dt-bindings: ptp: Add device tree binding for IDT ClockMatrix based PTP clock
+Date:   Thu, 31 Oct 2019 23:20:06 -0400
+Message-Id: <1572578407-32532-1-git-send-email-vincent.cheng.xh@renesas.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-MML: disable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-MSM8998 sits between MSM8996 and SDM845 in terms of functionality needed to
-boot the modem subsystem.  Booting mss allows for servicing the traditional
-cellular usecases along with the wireless usecases such as wifi.
+From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Add device tree binding doc for the IDT ClockMatrix PTP clock.
+
+Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
 ---
- drivers/remoteproc/qcom_q6v5_mss.c | 52 ++++++++++++++++++++++++++----
- 1 file changed, 46 insertions(+), 6 deletions(-)
+Changes since v3:
+ - Reported-by: Rob Herring:
+   1. Fix dtbs_check error: Warning (reg_format):
+          /example-0/phc@5b:reg: property has invalid length
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index bdf1dd00b89b..685182368aa7 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -61,6 +61,7 @@
- #define QDSP6SS_GFMUX_CTL_REG		0x020
- #define QDSP6SS_PWR_CTL_REG		0x030
- #define QDSP6SS_MEM_PWR_CTL		0x0B0
-+#define QDSP6V6SS_MEM_PWR_CTL		0x034
- #define QDSP6SS_STRAP_ACC		0x110
- 
- /* AXI Halt Register Offsets */
-@@ -196,6 +197,7 @@ enum {
- 	MSS_MSM8916,
- 	MSS_MSM8974,
- 	MSS_MSM8996,
-+	MSS_MSM8998,
- 	MSS_SDM845,
- };
- 
-@@ -504,7 +506,10 @@ static int q6v5proc_reset(struct q6v5 *qproc)
- 		}
- 
- 		goto pbl_wait;
--	} else if (qproc->version == MSS_MSM8996) {
-+	} else if (qproc->version == MSS_MSM8996 ||
-+		   qproc->version == MSS_MSM8998) {
-+		int mem_pwr_ctl;
+Changes since v2:
+ - As suggested by Rob Herring:
+ - Replace with DT schema
+ - Remove '-ptp' from compatible string
+ - Replace wildcard 'x' with the part numbers.
+
+Changes since v1:
+ - No changes
+---
+ .../devicetree/bindings/ptp/ptp-idtcm.yaml         | 69 ++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
+
+diff --git a/Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml b/Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
+new file mode 100644
+index 0000000..9e21b83
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ptp/ptp-idtcm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 		/* Override the ACC value if required */
- 		writel(QDSP6SS_ACC_OVERRIDE_VAL,
- 		       qproc->reg_base + QDSP6SS_STRAP_ACC);
-@@ -549,17 +554,24 @@ static int q6v5proc_reset(struct q6v5 *qproc)
- 		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
- 
- 		/* Turn on L1, L2, ETB and JU memories 1 at a time */
--		val = readl(qproc->reg_base + QDSP6SS_MEM_PWR_CTL);
--		for (i = 19; i >= 0; i--) {
-+		if (qproc->version == MSS_MSM8996) {
-+			mem_pwr_ctl = QDSP6SS_MEM_PWR_CTL;
-+			i = 19;
-+		} else {
-+			/* MSS_MSM8998 */
-+			mem_pwr_ctl = QDSP6V6SS_MEM_PWR_CTL;
-+			i = 28;
-+		}
-+		val = readl(qproc->reg_base + mem_pwr_ctl);
-+		for (; i >= 0; i--) {
- 			val |= BIT(i);
--			writel(val, qproc->reg_base +
--						QDSP6SS_MEM_PWR_CTL);
-+			writel(val, qproc->reg_base + mem_pwr_ctl);
- 			/*
- 			 * Read back value to ensure the write is done then
- 			 * wait for 1us for both memory peripheral and data
- 			 * array to turn on.
- 			 */
--			val |= readl(qproc->reg_base + QDSP6SS_MEM_PWR_CTL);
-+			val |= readl(qproc->reg_base + mem_pwr_ctl);
- 			udelay(1);
- 		}
- 		/* Remove word line clamp */
-@@ -1592,6 +1604,33 @@ static const struct rproc_hexagon_res sdm845_mss = {
- 	.version = MSS_SDM845,
- };
- 
-+static const struct rproc_hexagon_res msm8998_mss = {
-+	.hexagon_mba_image = "mba.mbn",
-+	.proxy_clk_names = (char*[]){
-+			"xo",
-+			"qdss",
-+			"mem",
-+			NULL
-+	},
-+	.active_clk_names = (char*[]){
-+			"iface",
-+			"bus",
-+			"mem",
-+			"gpll0_mss",
-+			"mnoc_axi",
-+			"snoc_axi",
-+			NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+			"cx",
-+			"mx",
-+			NULL
-+	},
-+	.need_mem_protection = true,
-+	.has_alt_reset = false,
-+	.version = MSS_MSM8998,
-+};
++title: IDT ClockMatrix (TM) PTP Clock Device Tree Bindings
 +
- static const struct rproc_hexagon_res msm8996_mss = {
- 	.hexagon_mba_image = "mba.mbn",
- 	.proxy_supply = (struct qcom_mss_reg_res[]) {
-@@ -1698,6 +1737,7 @@ static const struct of_device_id q6v5_of_match[] = {
- 	{ .compatible = "qcom,msm8916-mss-pil", .data = &msm8916_mss},
- 	{ .compatible = "qcom,msm8974-mss-pil", .data = &msm8974_mss},
- 	{ .compatible = "qcom,msm8996-mss-pil", .data = &msm8996_mss},
-+	{ .compatible = "qcom,msm8998-mss-pil", .data = &msm8998_mss},
- 	{ .compatible = "qcom,sdm845-mss-pil", .data = &sdm845_mss},
- 	{ },
- };
++maintainers:
++  - Vincent Cheng <vincent.cheng.xh@renesas.com>
++
++properties:
++  compatible:
++    enum:
++      # For System Synchronizer
++      - idt,8a34000
++      - idt,8a34001
++      - idt,8a34002
++      - idt,8a34003
++      - idt,8a34004
++      - idt,8a34005
++      - idt,8a34006
++      - idt,8a34007
++      - idt,8a34008
++      - idt,8a34009
++      # For Port Synchronizer
++      - idt,8a34010
++      - idt,8a34011
++      - idt,8a34012
++      - idt,8a34013
++      - idt,8a34014
++      - idt,8a34015
++      - idt,8a34016
++      - idt,8a34017
++      - idt,8a34018
++      - idt,8a34019
++      # For Universal Frequency Translator (UFT)
++      - idt,8a34040
++      - idt,8a34041
++      - idt,8a34042
++      - idt,8a34043
++      - idt,8a34044
++      - idt,8a34045
++      - idt,8a34046
++      - idt,8a34047
++      - idt,8a34048
++      - idt,8a34049
++
++  reg:
++    maxItems: 1
++    description:
++      I2C slave address of the device.
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c@1 {
++        compatible = "abc,acme-1234";
++        reg = <0x01 0x400>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++        phc@5b {
++            compatible = "idt,8a34000";
++            reg = <0x5b>;
++        };
++    };
 -- 
-2.17.1
+2.7.4
 
