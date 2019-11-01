@@ -2,246 +2,147 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE75DCA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 14:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B895CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 14:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D44217D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 14:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFEA20650
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 14:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Fu3RKirp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hrMDNZWx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I1/WHsVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfKAOjB (ORCPT
+        id S1727365AbfKAO6T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:39:01 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:54479 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727027AbfKAOjB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 10:39:01 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id B2E936EA0;
-        Fri,  1 Nov 2019 10:38:59 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 01 Nov 2019 10:38:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=nLHXblFEn0w6PsQb9pnCNOhicB
-        izM/LlhwcXBavexy8=; b=Fu3RKirpNX+TMEFQ4wM+k78wGEVG2KTpxcVvyjbzrv
-        QiM8b4aoF5rWbcV1IywxYU4yTauSJkdEBt/qCbOsRVSnDzyMwNS4b3RJOHBd56dF
-        javmP/AUiE9UnCQjcPezZYKXrjHCld1Sc1qxPVVZ+wrdQFcXUYBaE+wqSqN9T/fn
-        /9o43+Gp4vjKL95pv0zDvw7Vg1X2HZGE1chkZK+HQuacSlzmSH+23Luhj87kZw9Q
-        JCfg1M6Awh/m2SNMdrWMY/G3nkOK3AwcUjtVBfuwmSNMVrUhIA0edBAeHNHLAPZ2
-        PwQFlPckHeSmg/FdpTuNZLO2y+ZzRjLWLCnlTqoZv3rg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=nLHXblFEn0w6PsQb9
-        pnCNOhicBizM/LlhwcXBavexy8=; b=hrMDNZWx2uW0GKDASAoLLxmF/xn7ZXxOA
-        JUXR5fV9Tyml6j1jvnpvDaYMorjfTBskqNHDlPRkeS1bxi2ZJvbALBJXRXA2Bq37
-        +U2FPrGfEdH+9g3Ghhiu9kHt1voL8Asa9OK5+hgqtAa8CtaTn9A+R4Y/ac4z5m4q
-        K1GbOEeM+jaZZLSIRj+up3DSJ2H5Y32VtE5XXeGpNRZZj3/pfHPb66fuw5uBHVwd
-        ICaGFz2Eesgbs5I0CUSyxOyUqBO2+8ejcp8rl+8/3CL0FkE4PmWkqJ3yH9+uibRX
-        13motlBmU7z3o0QE1BFuQVvlbE+bFgNE2gnLsUsf90hvJA6hA7hCg==
-X-ME-Sender: <xms:gEO8XcEuPYC_qqgPRVa5QJjK5DongDXr5B--xY54P7pN6IqIET8L0Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddtjedgieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    govehorghsthgrlhdqhfeguddvqddtvdculdduhedtmdenucfjughrpefhvffufffkofgg
-    gfestdekredtredttdenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrgigih
-    hmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinhepuggvvhhitggvthhrvggvrdho
-    rhhgnecukfhppeeltddrkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hmrgigihhmvgestggvrhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:gEO8XZlDH6tp4jiukMU-B0Sf9iKHIfZ-Mzaw_QhKZOAvbPUmJ1KgKQ>
-    <xmx:gEO8XRIrwrOuE3pszUOo6uUdq9MgXX_VP_bR5mbkIXxtDd-mKC0mhA>
-    <xmx:gEO8XSaM9Vt0098nk9afi5LEcniGh9ZW0Glo-awYmGMC3J3ldN1oUg>
-    <xmx:g0O8XWfiD29jWhiVAKoBdl8IzeErt30Kk4TTrNv_S9-SC59joW9_lQ>
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1E4678005B;
-        Fri,  1 Nov 2019 10:38:55 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     lee.jones@linaro.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH] dt-bindings: Add syscon YAML description
-Date:   Fri,  1 Nov 2019 15:10:34 +0100
-Message-Id: <20191101141034.259906-1-maxime@cerno.tech>
-X-Mailer: git-send-email 2.23.0
+        Fri, 1 Nov 2019 10:58:19 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34807 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbfKAO6S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 10:58:18 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e4so6670813pgs.1
+        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 07:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o3PotZZzGd3n0vtfT41UhnCQaaRUmL4E0PRscYzEIDo=;
+        b=I1/WHsVyWQVAH+7YIQ9FJxjw/3+UZ4eJ1j/SDFWtIEofNsreSoGawixnCPLXHfjS4I
+         xlDwa3u66eEwoOJUAPlHK0dUeT0aet3AJF7Hh7vmKlsgkC0XBk6UfewUnoYtCFXoeX5g
+         7fSank49zBRoLLYkoib3osby1hKIjugYLT3XialA5XwBx2NicKvLZ0AL8HaA0MYN2gGJ
+         6I7li89dPySlSyjub59Y1gl2eGkUAndynwIHLXQ4f01kEq7g1XzQ0k9tdlQaGRx6v+Xw
+         shsJV6s6wDw/l6GpKrmsUj23FJcOIaobHKjzfOKXCDKJMXhdUTkbzBcGYz4z5yGtH0e+
+         thcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o3PotZZzGd3n0vtfT41UhnCQaaRUmL4E0PRscYzEIDo=;
+        b=DHNA0mTbAz/chgtAG6nMRwxOkZydBqftx7REjM2PJaJ4d79ExhIrRIM2xEM9e06C5u
+         IMUfzgjBNSuR2s+A81Jat25KbGOmTNgwWQMYjaRPONvOJ1G1bjjj+80PMnb0v3l6Q0fQ
+         atTr3TiXHgmkJgr7ufy+EGRQJgsIx64DpVbG+8wf60ZnkTmGd9KqYhjXK3oxSNmUfpRZ
+         wOGfeg/LS5JE/hkOX0ngMgiq3/U1ztl5kxeTeUNzv3RCr6z9xlFAMudZYDKJoRBnxTIE
+         4g06s2vYFMY7KsKTQOlV9Se2Cua3qn6pW4L4ui8ki8Vf55DqaDOkF02MuYAcTvVUGR1S
+         pmpw==
+X-Gm-Message-State: APjAAAVx7fVXEHW5a6ON9fSVRDfdoD7jEdb9bfpEjtsoL9ydNixpU8EO
+        3cU0+N6YhTDIDTlFPAySx8V8
+X-Google-Smtp-Source: APXvYqyyHMBHWz8vbhnckMVAipVVWfbs6zJpy+GNzFBfp8NvRJbt08PIocOSMFo+vTjHOv8EaNNmig==
+X-Received: by 2002:a05:6a00:51:: with SMTP id i17mr14214665pfk.8.1572620297826;
+        Fri, 01 Nov 2019 07:58:17 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6413:fc8c:9538:d2ea:eab:d2c0])
+        by smtp.gmail.com with ESMTPSA id z21sm6644869pfa.119.2019.11.01.07.58.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Nov 2019 07:58:17 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 20:28:06 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Tudor.Ambarus@microchip.com
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        darshak.patel@einfochips.com, prajose.john@einfochips.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, marek.vasut@gmail.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 4/4] mtd: spi-nor: Add support for w25q256jw
+Message-ID: <20191101145806.GB13101@Mani-XPS-13-9360>
+References: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
+ <20191030090124.24900-5-manivannan.sadhasivam@linaro.org>
+ <87e0b459-8dbf-26cc-611f-1b1b5266aa55@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87e0b459-8dbf-26cc-611f-1b1b5266aa55@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The syscon binding is a pretty loose one, with everyone having a bunch of
-vendor specific compatibles.
+Hi Tudor,
 
-In order to start the effort to describe them using YAML, let's create a
-binding that tolerates additional, not listed, compatibles.
+On Fri, Nov 01, 2019 at 01:48:17PM +0000, Tudor.Ambarus@microchip.com wrote:
+> 
+> 
+> On 10/30/2019 11:01 AM, Manivannan Sadhasivam wrote:
+> > External E-Mail
+> > 
+> > 
+> > Add MTD support for w25q256jw SPI NOR chip from Winbond. This chip
+> > supports dual/quad I/O mode with 512 blocks of memory organized in
+> > 64KB sectors. In addition to this, there is also small 4KB sectors
+> > available for flexibility. The device has been validated using Thor96
+> > board.
+> > 
+> > Cc: Marek Vasut <marek.vasut@gmail.com>
+> > Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+> > Cc: David Woodhouse <dwmw2@infradead.org>
+> > Cc: Brian Norris <computersforpeace@gmail.com>
+> > Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> > Cc: Richard Weinberger <richard@nod.at>
+> > Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> > Cc: linux-mtd@lists.infradead.org
+> > Signed-off-by: Darshak Patel <darshak.patel@einfochips.com>
+> > [Mani: cleaned up for upstream]
+> 
+> Can we keep Darshak's authorship? We usually change the author if we feel that
+> we made a significant change to what was originally published.
+> 
+> If it's just about cosmetics, cleaning or rebase, you can specify what you did
+> after the author's S-o-b tag and then add your S-o-b, as you did above.
+> 
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- .../devicetree/bindings/mfd/syscon.txt        | 32 --------
- .../bindings/misc/allwinner,syscon.txt        | 20 -----
- .../devicetree/bindings/misc/syscon.yaml      | 74 +++++++++++++++++++
- 3 files changed, 74 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/syscon.txt
- delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,syscon.txt
- create mode 100644 Documentation/devicetree/bindings/misc/syscon.yaml
+I'd suggest to keep Darshak's authorship since he did the actual change in
+the bsp. I have to clean it up before submitting upstream and I mentioned
+the same above.
 
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-deleted file mode 100644
-index 25d9e9c2fd53..000000000000
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ /dev/null
-@@ -1,32 +0,0 @@
--* System Controller Registers R/W driver
--
--System controller node represents a register region containing a set
--of miscellaneous registers. The registers are not cohesive enough to
--represent as any specific type of device. The typical use-case is for
--some other node's driver, or platform-specific code, to acquire a
--reference to the syscon node (e.g. by phandle, node path, or search
--using a specific compatible value), interrogate the node (or associated
--OS driver) to determine the location of the registers, and access the
--registers directly.
--
--Required properties:
--- compatible: Should contain "syscon".
--- reg: the register region can be accessed from syscon
--
--Optional property:
--- reg-io-width: the size (in bytes) of the IO accesses that should be
--  performed on the device.
--- hwlocks: reference to a phandle of a hardware spinlock provider node.
--
--Examples:
--gpr: iomuxc-gpr@20e0000 {
--	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
--	reg = <0x020e0000 0x38>;
--	hwlocks = <&hwlock1 1>;
--};
--
--hwlock1: hwspinlock@40500000 {
--	...
--	reg = <0x40500000 0x1000>;
--	#hwlock-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/misc/allwinner,syscon.txt b/Documentation/devicetree/bindings/misc/allwinner,syscon.txt
-deleted file mode 100644
-index 31494a24fe69..000000000000
---- a/Documentation/devicetree/bindings/misc/allwinner,syscon.txt
-+++ /dev/null
-@@ -1,20 +0,0 @@
--* Allwinner sun8i system controller
--
--This file describes the bindings for the system controller present in
--Allwinner SoC H3, A83T and A64.
--The principal function of this syscon is to control EMAC PHY choice and
--config.
--
--Required properties for the system controller:
--- reg: address and length of the register for the device.
--- compatible: should be "syscon" and one of the following string:
--		"allwinner,sun8i-h3-system-controller"
--		"allwinner,sun8i-v3s-system-controller"
--		"allwinner,sun50i-a64-system-controller"
--		"allwinner,sun8i-a83t-system-controller"
--
--Example:
--syscon: syscon@1c00000 {
--	compatible = "allwinner,sun8i-h3-system-controller", "syscon";
--	reg = <0x01c00000 0x1000>;
--};
-diff --git a/Documentation/devicetree/bindings/misc/syscon.yaml b/Documentation/devicetree/bindings/misc/syscon.yaml
-new file mode 100644
-index 000000000000..f2d81bed612f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/syscon.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/misc/syscon.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: System Controller Registers R/W Device Tree Bindings
-+
-+description: |
-+  System controller node represents a register region containing a set
-+  of miscellaneous registers. The registers are not cohesive enough to
-+  represent as any specific type of device. The typical use-case is
-+  for some other node's driver, or platform-specific code, to acquire
-+  a reference to the syscon node (e.g. by phandle, node path, or
-+  search using a specific compatible value), interrogate the node (or
-+  associated OS driver) to determine the location of the registers,
-+  and access the registers directly.
-+
-+maintainers:
-+  - Lee Jones <lee.jones@linaro.org>
-+
-+properties:
-+  compatible:
-+    anyOf:
-+      - items:
-+        - enum:
-+          - allwinner,sun8i-a83t-system-controller
-+          - allwinner,sun8i-h3-system-controller
-+          - allwinner,sun8i-v3s-system-controller
-+          - allwinner,sun50i-a64-system-controller
-+
-+        - const: syscon
-+
-+      - contains:
-+          const: syscon
-+        additionalItems: true
-+
-+  reg:
-+    maxItems: 1
-+
-+  reg-io-width:
-+    description: |
-+      The size (in bytes) of the IO accesses that should be performed
-+      on the device.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 1, 2, 4, 8 ]
-+
-+  hwlocks:
-+    maxItems: 1
-+    description:
-+      Reference to a phandle of a hardware spinlock provider node.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    syscon: syscon@1c00000 {
-+        compatible = "allwinner,sun8i-h3-system-controller", "syscon";
-+        reg = <0x01c00000 0x1000>;
-+    };
-+
-+  - |
-+    gpr: iomuxc-gpr@20e0000 {
-+        compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
-+        reg = <0x020e0000 0x38>;
-+        hwlocks = <&hwlock1 1>;
-+    };
-+
-+...
--- 
-2.23.0
+> The patch looks good.
+> 
 
+Thanks,
+Mani
+
+> Cheers,
+> ta
+> 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/mtd/spi-nor/spi-nor.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> > index 1d8621d43160..2c25b371d9f0 100644
+> > --- a/drivers/mtd/spi-nor/spi-nor.c
+> > +++ b/drivers/mtd/spi-nor/spi-nor.c
+> > @@ -2482,6 +2482,8 @@ static const struct flash_info spi_nor_ids[] = {
+> >  	{ "w25q256", INFO(0xef4019, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> >  	{ "w25q256jvm", INFO(0xef7019, 0, 64 * 1024, 512,
+> >  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> > +	{ "w25q256jw", INFO(0xef6019, 0, 64 * 1024, 512,
+> > +			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> >  	{ "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
+> >  			SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
+> >  
+> > 
