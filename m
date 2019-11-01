@@ -2,173 +2,130 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413EACA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0220FCA9EC9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1DF208E3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E0F208E3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 08:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbfKAIGm (ORCPT
+        id S1730067AbfKAIJM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:06:42 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:44466 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729852AbfKAIGm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Nov 2019 04:06:42 -0400
-Received: from [46.218.74.72] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iQRx7-0001Qk-C2; Fri, 01 Nov 2019 09:06:37 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Fri, 1 Nov 2019 04:09:12 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:64131 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729975AbfKAIJM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 04:09:12 -0400
+X-UUID: 9d1bb3c0240a495ca1d94641288e2b60-20191101
+X-UUID: 9d1bb3c0240a495ca1d94641288e2b60-20191101
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <roger.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 598440622; Fri, 01 Nov 2019 16:09:00 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 1 Nov 2019 16:08:54 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 1 Nov 2019 16:08:54 +0800
+Message-ID: <1572595738.6939.7.camel@mtksdaap41>
+Subject: Re: [v4, 6/8] PM / OPP: Support adjusting OPP voltages at runtime
+From:   Roger Lu <roger.lu@mediatek.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     Andrew-sh Cheng =?UTF-8?Q?=28=E9=84=AD=E5=BC=8F=E5=8B=B3=29?= 
+        <andrew-sh.cheng@mediatek.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Add PCIe node on rk3399-roc-pc
-Date:   Fri, 01 Nov 2019 09:06:36 +0100
-Message-ID: <2490852.kIovObk3uj@phil>
-In-Reply-To: <f66fe5c3-6760-20b0-54cc-8f0c1a754bab@fivetechno.de>
-References: <09300c2d-4298-1b01-ac41-d1b2610589d4@fivetechno.de> <1719506.vT9a8mQdzu@phil> <f66fe5c3-6760-20b0-54cc-8f0c1a754bab@fivetechno.de>
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Fan Chen =?UTF-8?Q?=28=E9=99=B3=E5=87=A1=29?= 
+        <fan.chen@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
+Date:   Fri, 1 Nov 2019 16:08:58 +0800
+In-Reply-To: <20190819111836.5cu245xre6ky6xav@vireshk-i7>
+References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+         <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
+         <20190819111836.5cu245xre6ky6xav@vireshk-i7>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: DA0E43A199AF13C7A7A488606389C63F2A52057B18D158DDCD6B0E5FDE7197552000:8
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Markus,
+Dear Viresh,
 
-Am Donnerstag, 31. Oktober 2019, 19:12:10 CET schrieb Markus Reichl:
-> Am 31.10.19 um 17:57 schrieb Heiko Stuebner:
-> > Am Montag, 28. Oktober 2019, 15:47:27 CET schrieb Markus Reichl:
-> >> rk3399-roc-pc has a PCIe interface. Enable it for use with
-> >> the M.2 NGFF M_KEY slot on roc-rk3399-mezzanine board.
-> >> Tested with Samsung 970 evo plus SSD.
-> >> 
-> >> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
-> >> ---
-> >>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 38 +++++++++++++++++++
-> >>  1 file changed, 38 insertions(+)
-> >> 
-> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> >> index 9313251765c7..2d637d54994b 100644
-> >> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> >> @@ -158,6 +158,21 @@
-> >>  		regulator-max-microvolt = <1400000>;
-> >>  		vin-supply = <&vcc_sys>;
-> >>  	};
-> >> +
-> >> +	/* on roc-rk3399-mezzanine board */
+Sorry for the late reply.
+
+On Mon, 2019-08-19 at 19:18 +0800, Viresh Kumar wrote:
+> On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
+> > From: Stephen Boyd <sboyd@codeaurora.org>
 > > 
-> > I'm undecided on this. From what I've seen that mezzanine board is some
-> > sort of addon, like a raspberry pi hat. Therefore it's not always present,
-> > so probably should not be part of the base board dts.
+> > On some SoCs the Adaptive Voltage Scaling (AVS) technique is
+> > employed to optimize the operating voltage of a device. At a
+> > given frequency, the hardware monitors dynamic factors and either
+> > makes a suggestion for how much to adjust a voltage for the
+> > current frequency, or it automatically adjusts the voltage
+> > without software intervention. Add an API to the OPP library for
+> > the former case, so that AVS type devices can update the voltages
+> > for an OPP when the hardware determines the voltage should
+> > change. The assumption is that drivers like CPUfreq or devfreq
+> > will register for the OPP notifiers and adjust the voltage
+> > according to suggestions that AVS makes.
 > > 
-> > I'm thinking a dt-overlay that can then be activated might be the solution
-> > of choice, but I've reached out to arm-soc poeple on irc to determine the
-> > correct course.
+> > This patch is devired from [1] submitted by Stephen.
+> > [1] https://lore.kernel.org/patchwork/patch/599279/
 > > 
-> I have seen some board.dtsi with board_only.dts respective board_extension.dts
-> in the arch/arm64/boot/dts/rockchip directory. Would that be ok?
-
-The answer is twofold I guess ;-)
-
-(1) The 100% correct way would probably be to use a devicetree overlay
-together with capemgr [0] to load the overlay from userspace, but
-
-(2a) The distinction between system-on-module + baseboard and
-board+cape is somewhat foggy I think and it really doesn't look like there
-will be a big plethora of capes for the roc-rk3399-pc
-
-(2b) People may actually want to boot of that nvme pcie drive attached
-to the mezzanine, so it will be somewhat permanent connection anyway
-and also the system then cannot wait for userspace to come up first, if
-the userspace is sitting on that drive ;-) .
-
-So I think, going the dts+dts-extension is the best way to go.
-
-Heiko
-
-
-[0] https://elinux.org/Capemgr
-
-
-
-> >> +	vcc3v3_pcie: vcc3v3-pcie {
-> >> +		compatible = "regulator-fixed";
-> >> +		regulator-name = "vcc3v3_pcie";
-> >> +		enable-active-high;
-> >> +		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
-> >> +		pinctrl-names = "default";
-> >> +		pinctrl-0 = <&vcc3v3_pcie_en>;
-> >> +		regulator-always-on;
-> >> +		regulator-boot-on;
-> >> +		regulator-min-microvolt = <3300000>;
-> >> +		regulator-max-microvolt = <3300000>;
-> >> +		vin-supply = <&dc_12v>;
-> >> +	};
-> >>  };
-> >>  
-> >>  &cpu_l0 {
-> >> @@ -514,6 +529,19 @@
-> >>  	status = "okay";
-> >>  };
-> >>  
-> >> +&pcie_phy {
-> >> +	status = "okay";
-> >> +};
-> >> +
-> >> +&pcie0 {
-> >> +	ep-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
-> >> +	num-lanes = <4>;
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&pcie_perst>;
-> >> +	vpcie3v3-supply = <&vcc3v3_pcie>;
-> >> +	status = "okay";
-> >> +};
-> >> +
-> >>  &pinctrl {
-> >>  	lcd-panel {
-> >>  		lcd_panel_reset: lcd-panel-reset {
-> >> @@ -535,6 +563,16 @@
-> >>  		};
-> >>  	};
-> >>  
-> >> +	pcie {
-> >> +		vcc3v3_pcie_en: vcc3v3-pcie-en {
-> >> +			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-> >> +		};
-> >> +
-> >> +		pcie_perst: pcie-perst {
-> >> +			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
-> >> +		};
-> >> +	};
-> >> +
-> >>  	pmic {
-> >>  		vsel1_gpio: vsel1-gpio {
-> >>  			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
-> >> 
+> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> > ---
+> >  drivers/opp/core.c     | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pm_opp.h | 11 +++++++++
+> >  2 files changed, 74 insertions(+)
 > > 
-> > 
-> > 
-> > 
-> > 
-> > _______________________________________________
-> > Linux-rockchip mailing list
-> > Linux-rockchip@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> > 
+> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > index c094d5d20fd7..407a07f29b12 100644
+> > --- a/drivers/opp/core.c
+> > +++ b/drivers/opp/core.c
+> > @@ -2054,6 +2054,69 @@ static int _opp_set_availability(struct device *dev, unsigned long freq,
+> >  }
+> >  
+> >  /**
+> > + * dev_pm_opp_adjust_voltage() - helper to change the voltage of an OPP
+> > + * @dev:		device for which we do this operation
+> > + * @freq:		OPP frequency to adjust voltage of
+> > + * @u_volt:		new OPP voltage
+> > + *
+> > + * Return: -EINVAL for bad pointers, -ENOMEM if no memory available for the
+> > + * copy operation, returns 0 if no modifcation was done OR modification was
+> > + * successful.
+> > + */
+> > +int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
+> > +			      unsigned long u_volt)
 > 
+> Can you please update this to take a triplet instead ? That is what we are
+> storing in OPP core now a days.
 
-
-
+I've studied opp/core.c and still don't know meaning of triplet here.
+Could you give me more hints (reference API?) about how to take a
+triplet instead? Thanks in advance.
 
