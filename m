@@ -2,85 +2,142 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DD6CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 09:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD49CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC056217F9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 09:49:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572601786;
-	bh=aiGS91Hq8+Tec6OiEGfp5Qwq1/HH+r0uYEeMYIfR75k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D2ekfnrWBB3kF/Ly0lVOgmn4mMrMDMQrMxhz/UCkiKsTyUTQ9UTgwT8lPCJ/jT7bR
-	 hyUGdANNBDtseWvyg27s7idGDGGTOSOtxcxSlYvia8+I0mTFEuWGK2mFUAVdWay6ep
-	 qCYeRNTpNC6V9Cm41y7R8n+hKK1qcQ8fFzyYfPFE=
+	by mail.kernel.org (Postfix) with ESMTP id 7CBF42086D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfKAJtq (ORCPT
+        id S1729475AbfKAKIU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 05:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726957AbfKAJtq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Nov 2019 05:49:46 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C21E21734;
-        Fri,  1 Nov 2019 09:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572601785;
-        bh=aiGS91Hq8+Tec6OiEGfp5Qwq1/HH+r0uYEeMYIfR75k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i3qeQrfZSl3zPj3zgJ30NfU7CFQF6wiw1wKgjJT2us5LYriK7mZUp7vPfkzIQq6DE
-         c2bYz9vhIqMCQCzs/YkdCyepzJSh5lmKiCesD810nITnWA0su/BJ3EnXAFlwUV5zAA
-         vziUQOMwyTUiIzbjW9o3TXvNm0jL9qWrEMZxW1i8=
-Date:   Fri, 1 Nov 2019 10:12:53 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Georgii Staroselskii <georgii.staroselskii@emlid.com>
-Cc:     robh+dt@kernel.org, wens@csie.org, linux-sunxi@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: allwinner: bluetooth for Emlid Neutis N5
-Message-ID: <20191101091253.oxopdmq7igtyfpjz@hendrix>
-References: <1572601413-10353-1-git-send-email-georgii.staroselskii@emlid.com>
+        Fri, 1 Nov 2019 06:08:20 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34410 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729181AbfKAKIU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 06:08:20 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l202so7740132oig.1;
+        Fri, 01 Nov 2019 03:08:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+I3xQl9ln+lrGFb5a1qNX1dE+zwF+Br3GKgAcoIpVg0=;
+        b=E86Ut/9mOUJMvaqA5+eSoAUsqlTb0yuor9HT/pOHVQ0e/P60l6QqFmSQSwqJepTqwz
+         6vHFsDiAMAT4dxeniEOgv4V6oWtMGzYfvUPFAgZ3km+XuoqthlMWLOdxtZAvjxHjlB80
+         YCFKezgLzXYX9si5v4uRCGxO3FRtA18gqDdLpPc2IMTAhVwYXnSdSJZLL2zmxj4XGC/y
+         22tgHgKtfT7X3rh4wTR3WxWF/O/gBIwuhGkmWbMtDSoEum2xaMOa6YH0rCdfk8eCMPJz
+         2teCcFwMP8o2c5L+uaEktlxxj7z0F067R+kZ7TwRIpnEf9WEBpUC/xfRE8uDj6iw05TD
+         uSbQ==
+X-Gm-Message-State: APjAAAX6YY+SgGYZwfB8GMiwbFOKQyunaKGT6ZD0CFEpQjCYMTXDlJwz
+        l1bmMH/clREXZLeDbtkWwe8+bKgTtiA1yrTIwGo=
+X-Google-Smtp-Source: APXvYqyFWgpB6XEGfMCjZsYPk2WDJOLqiGcZrURCT7LaEN/S0hFYXldPAmBySb2Ylqn/7Yv1GVxJdkW9M3x45yHrDHI=
+X-Received: by 2002:aca:4ac5:: with SMTP id x188mr3592931oia.148.1572602898727;
+ Fri, 01 Nov 2019 03:08:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mzwb6azrgqwhad27"
-Content-Disposition: inline
-In-Reply-To: <1572601413-10353-1-git-send-email-georgii.staroselskii@emlid.com>
+References: <20191021161351.20789-1-krzk@kernel.org> <20191021161351.20789-4-krzk@kernel.org>
+In-Reply-To: <20191021161351.20789-4-krzk@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 1 Nov 2019 11:08:07 +0100
+Message-ID: <CAMuHMdXr7_HP5NUQ_0D76N-eBuootQqyPusqmf6nyDnLN__ORA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/7] dt-bindings: sram: Merge Renesas SRAM bindings
+ into generic
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Krzysztof,
 
---mzwb6azrgqwhad27
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Nov 01, 2019 at 12:43:33PM +0300, Georgii Staroselskii wrote:
-> The Emlid Neutis N5 board has AP6212 BT+WiFi chip. This patch is in
-> line with 8558c6e21ceb ("ARM: dts: sun8i: h3: bluetooth for Banana Pi
-> M2 Zero board") and other commits that add Bluetooth support for
-> similar boards.
+On Mon, Oct 21, 2019 at 6:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> The Renesas SRAM bindings list only compatible so integrate them into
+> generic SRAM bindings schema.
 >
-> Signed-off-by: Georgii Staroselskii <georgii.staroselskii@emlid.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Applied, thanks!
-Maxime
+Thanks for your patch, whcih is now commit 0759b09eadd0d9a1 ("dt-bindings:
+sram: Merge Renesas SRAM bindings into generic") in Rob's for-next branch.
 
---mzwb6azrgqwhad27
-Content-Type: application/pgp-signature; name="signature.asc"
+> --- a/Documentation/devicetree/bindings/sram/renesas,smp-sram.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -* Renesas SMP SRAM
+> -
+> -Renesas R-Car Gen2 and RZ/G1 SoCs need a small piece of SRAM for the jump stub
+> -for secondary CPU bringup and CPU hotplug.
+> -This memory is reserved by adding a child node to a "mmio-sram" node, cfr.
+> -Documentation/devicetree/bindings/sram/sram.txt.
+> -
+> -Required child node properties:
+> -  - compatible: Must be "renesas,smp-sram",
+> -  - reg: Address and length of the reserved SRAM.
+> -    The full physical (bus) address must be aligned to a 256 KiB boundary.
+> -
+> -
+> -Example:
+> -
+> -       icram1: sram@e63c0000 {
+> -               compatible = "mmio-sram";
+> -               reg = <0 0xe63c0000 0 0x1000>;
+> -               #address-cells = <1>;
+> -               #size-cells = <1>;
+> -               ranges = <0 0 0xe63c0000 0x1000>;
+> -
+> -               smp-sram@0 {
+> -                       compatible = "renesas,smp-sram";
+> -                       reg = <0 0x10>;
+> -               };
 
------BEGIN PGP SIGNATURE-----
+> --- a/Documentation/devicetree/bindings/sram/sram.yaml
+> +++ b/Documentation/devicetree/bindings/sram/sram.yaml
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbv3FQAKCRDj7w1vZxhR
-xfUgAQCuRYFEN+ejqrBG+YTreOb8P10E18Xoz+gEr6dNf53YUwEApuYBkd0OBB8p
-ZnbSNQFsqFeh7t/NBMUCdjJEEIO3fg4=
-=1eoJ
------END PGP SIGNATURE-----
+> @@ -186,3 +187,17 @@ examples:
+>              reg = <0x1ff80 0x8>;
+>          };
+>      };
+> +
+> +  - |
+> +    sram@e63c0000 {
+> +        compatible = "mmio-sram";
+> +        reg = <0xe63c0000 0x1000>;
 
---mzwb6azrgqwhad27--
+Is there any specific reason you converted the example from 64-bit to
+32-bit addressing?
+All Renesas SoCs using this have #address-cells and #size-cells = <2>.
+
+Thanks!
+
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges = <0 0xe63c0000 0x1000>;
+> +
+> +        smp-sram@0 {
+> +            compatible = "renesas,smp-sram";
+> +            reg = <0 0x10>;
+> +        };
+> +    };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
