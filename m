@@ -2,200 +2,97 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5602ECA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 09:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1648ACA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 09:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEA4217D9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 09:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572601126;
-	bh=i6GifndF/sL8RuzHU+FjbfR+1Pi9deMws6Ukyp7wWhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o/+HeoqVpP6nJgExxsXedvBu3BQo5NM5dr9J/IHYz0XfEOiX7JCQk7DtDxFVS0rmG
-	 7knKJ9VlaTKdb1O/zAD1D86AFTNUNswakRQazmaJGxapnneBj6sn4iurOjWx4oELqR
-	 U2DATSbMSOBirAcb5Z0ER40QDmvMZpUgi0V3LMNU=
+	by mail.kernel.org (Postfix) with ESMTP id DCC17217D9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 09:44:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=emlid.com header.i=@emlid.com header.b="k6bzO1ly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfKAJip (ORCPT
+        id S1727059AbfKAJov (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 05:38:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfKAJip (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 1 Nov 2019 05:38:45 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2174D21734;
-        Fri,  1 Nov 2019 09:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572601123;
-        bh=i6GifndF/sL8RuzHU+FjbfR+1Pi9deMws6Ukyp7wWhw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NkgdlrwTrf8r7CQpKCTrDaCfT0hEOKdhpSKZw5wrezwStgtDp1lE/cS3vxBHTP5oM
-         sez5Wyo4U4ctHjXSDYlIDmq1sen+wgSfdU+Y4uTJa1EzzJIxpb9u8YJBN2B3n4PmNC
-         47f4vaB5xdcU0N3ZKGuj+kWYAC/Iv54qifWtBiX8=
-Date:   Fri, 1 Nov 2019 10:02:44 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        catalin.marinas@arm.com, davem@davemloft.net,
-        linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org,
-        wens@csie.org, will@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v6 00/11] crypto: add sun8i-ce driver for Allwinner
- crypto engine
-Message-ID: <20191101090244.hkur2yk7m4irnkuz@hendrix>
-References: <20191023200513.22630-1-clabbe.montjoie@gmail.com>
- <20191101060914.sv7g5ipygagzz4ed@gondor.apana.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5bjlmdtlusbphfx7"
-Content-Disposition: inline
-In-Reply-To: <20191101060914.sv7g5ipygagzz4ed@gondor.apana.org.au>
+        Fri, 1 Nov 2019 05:44:51 -0400
+Received: from forward105j.mail.yandex.net ([5.45.198.248]:37317 "EHLO
+        forward105j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbfKAJov (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 05:44:51 -0400
+X-Greylist: delayed 318 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Nov 2019 05:44:49 EDT
+Received: from mxback13g.mail.yandex.net (mxback13g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:92])
+        by forward105j.mail.yandex.net (Yandex) with ESMTP id BF710B210D9;
+        Fri,  1 Nov 2019 12:39:29 +0300 (MSK)
+Received: from sas2-69645cccb3fe.qloud-c.yandex.net (sas2-69645cccb3fe.qloud-c.yandex.net [2a02:6b8:c08:bd8e:0:640:6964:5ccc])
+        by mxback13g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id p9I8LAmAUH-dS1Wu3Z2;
+        Fri, 01 Nov 2019 12:39:29 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emlid.com; s=mail; t=1572601169;
+        bh=UN0pzwk3CX7uZAugr6Kv7p1iduaIAzWnVboku1O5ZF4=;
+        h=Subject:To:From:Cc:Date:Message-Id;
+        b=k6bzO1lyWLSVVsUY+8GFVW7iekwvDCw+JtIDKEKPIroNpVmEZKqTauxHw7lXsTMTZ
+         pvioJxOuiE2xGQM/ZcaiNBYH34R04HdRUtp4MNCBSb7H7pJ2JQ5zaJFP3quaiK9KKn
+         WoNr/xypPmVR8nmEex9jANgmSVReVyAHv4ke2l2c=
+Authentication-Results: mxback13g.mail.yandex.net; dkim=pass header.i=@emlid.com
+Received: by sas2-69645cccb3fe.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id GY8u6ZZUqg-dRV0rq7b;
+        Fri, 01 Nov 2019 12:39:28 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (Client certificate not present)
+From:   Georgii Staroselskii <georgii.staroselskii@emlid.com>
+To:     mripard@kernel.org, robh+dt@kernel.org, wens@csie.org
+Cc:     linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org,
+        Georgii Staroselskii <georgii.staroselskii@emlid.com>
+Subject: [PATCH] arm64: dts: allwinner: bluetooth for Emlid Neutis N5
+Date:   Fri,  1 Nov 2019 12:39:20 +0300
+Message-Id: <1572601160-8200-1-git-send-email-georgii.staroselskii@emlid.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The Emlid Neutis N5 board has AP6212 BT+WiFi chip. This patch is in
+line with 8558c6e2 and other commits that add Bluetooth support for
+similar boards.
 
---5bjlmdtlusbphfx7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Georgii Staroselskii <georgii.staroselskii@emlid.com>
+---
+ .../arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-On Fri, Nov 01, 2019 at 02:09:14PM +0800, Herbert Xu wrote:
-> On Wed, Oct 23, 2019 at 10:05:02PM +0200, Corentin Labbe wrote:
-> > Hello
-> >
-> > This patch serie adds support for the Allwinner crypto engine.
-> > The Crypto Engine is the third generation of Allwinner cryptogaphic offloader.
-> > The first generation is the Security System already handled by the
-> > sun4i-ss driver.
-> > The second is named also Security System and is present on A80 and A83T
-> > SoCs, originaly this driver supported it also, but supporting both IP bringing
-> > too much complexity and another driver (sun8i-ss) will came for it.
-> >
-> > For the moment, the driver support only DES3/AES in ECB/CBC mode.
-> > Patchs for CTR/CTS/XTS, RSA and RNGs will came later.
-> >
-> > This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
-> > and tested on:
-> > sun50i-a64-bananapi-m64
-> > sun50i-a64-pine64-plus
-> > sun50i-h5-libretech-all-h3-cc
-> > sun50i-h6-pine-h64
-> > sun8i-h2-plus-libretech-all-h3-cc
-> > sun8i-h2-plus-orangepi-r1
-> > sun8i-h2-plus-orangepi-zero
-> > sun8i-h3-libretech-all-h3-cc
-> > sun8i-h3-orangepi-pc
-> > sun8i-r40-bananapi-m2-ultra
-> >
-> > DT and defconfig will go thru the mripard tree
-> >
-> > Regards
-> >
-> > Changes since v5:
-> > - fixed uninitialized err in sun8i_ce_allocate_chanlist (reported by lkp@intel.com/dan.carpenter@oracle.com)
-> >
-> > Changes since v4:
-> > - fixed some typos in kconfig
-> > - made sun8i_ce_pm_ops static
-> > - Use devm_platform_ioremap_resource
-> >
-> > Changes since v3:
-> > - removed need of reset-names
-> > - made reset mandatory
-> >
-> > Changes since v2:
-> > - changed additionalproperties
-> > - splited fallbacks functions out of sun8i_ce_cipher()
-> > - changed variant "model" to "has_t_dlen_in_bytes"
-> > - splited sun8i_ce_register_algs/sun8i_ce_get_clks out of sun8i_ce_probe()
-> >
-> > Changes since v1:
-> > - Add sun4i-ss to allwinner directory
-> > - Cleaned variant structure
-> > - Renamed clock name from ahb to bus (and mbus to ram)
-> > - Fixed DT bindings problem reported by mripard
-> > - Cleaned unneeded status = ""  in R40 DT
-> > - Removed old unnecessary interrupt_names in A64 DT
-> > - Added arm64 defconfig
-> > - Added support for PM functions
-> > - Splitted probe functions
-> > - Reworked clock settings
-> > - made reset mandatory
-> >
-> > Corentin Labbe (11):
-> >   crypto: Add allwinner subdirectory
-> >   crypto: Add Allwinner sun8i-ce Crypto Engine
-> >   dt-bindings: crypto: Add DT bindings documentation for sun8i-ce Crypto
-> >     Engine
-> >   ARM: dts: sun8i: R40: add crypto engine node
-> >   ARM: dts: sun8i: H3: Add Crypto Engine node
-> >   ARM64: dts: allwinner: sun50i: Add Crypto Engine node on A64
-> >   ARM64: dts: allwinner: sun50i: Add crypto engine node on H5
-> >   ARM64: dts: allwinner: sun50i: Add Crypto Engine node on H6
-> >   sunxi_defconfig: add new Allwinner crypto options
-> >   arm64: defconfig: add new Allwinner crypto options
-> >   crypto: sun4i-ss: Move to Allwinner directory
-> >
-> >  .../bindings/crypto/allwinner,sun8i-ce.yaml   |  88 +++
-> >  MAINTAINERS                                   |   4 +-
-> >  arch/arm/boot/dts/sun8i-h3.dtsi               |   9 +
-> >  arch/arm/boot/dts/sun8i-r40.dtsi              |   9 +
-> >  arch/arm/configs/sunxi_defconfig              |   2 +
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |   9 +
-> >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |   9 +
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   9 +
-> >  arch/arm64/configs/defconfig                  |   2 +
-> >  drivers/crypto/Kconfig                        |  28 +-
-> >  drivers/crypto/Makefile                       |   2 +-
-> >  drivers/crypto/allwinner/Kconfig              |  60 ++
-> >  drivers/crypto/allwinner/Makefile             |   2 +
-> >  .../{sunxi-ss => allwinner/sun4i-ss}/Makefile |   0
-> >  .../sun4i-ss}/sun4i-ss-cipher.c               |   0
-> >  .../sun4i-ss}/sun4i-ss-core.c                 |   0
-> >  .../sun4i-ss}/sun4i-ss-hash.c                 |   0
-> >  .../sun4i-ss}/sun4i-ss-prng.c                 |   0
-> >  .../sun4i-ss}/sun4i-ss.h                      |   0
-> >  drivers/crypto/allwinner/sun8i-ce/Makefile    |   2 +
-> >  .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 434 +++++++++++
-> >  .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 676 ++++++++++++++++++
-> >  drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  | 254 +++++++
-> >  23 files changed, 1570 insertions(+), 29 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> >  create mode 100644 drivers/crypto/allwinner/Kconfig
-> >  create mode 100644 drivers/crypto/allwinner/Makefile
-> >  rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/Makefile (100%)
-> >  rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss-cipher.c (100%)
-> >  rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss-core.c (100%)
-> >  rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss-hash.c (100%)
-> >  rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss-prng.c (100%)
-> >  rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss.h (100%)
-> >  create mode 100644 drivers/crypto/allwinner/sun8i-ce/Makefile
-> >  create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> >  create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-> >  create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
->
-> Patches 1,2,11 applied.  Thanks.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
+index 82f4b44..5bec574 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
+@@ -23,6 +23,8 @@
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&pio 2 7 GPIO_ACTIVE_LOW>; /* PC7 */
+ 		post-power-on-delay-ms = <200>;
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
+ 	};
+ };
+ 
+@@ -56,5 +58,16 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
+ 	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_vcc3v3>;
++		vddio-supply = <&reg_vcc3v3>;
++		shutdown-gpios = <&pio 2 4 GPIO_ACTIVE_HIGH>; /* PC4 */
++		device-wakeup-gpios = <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 */
++	};
+ };
+-- 
+2.7.4
 
-Applied the rest, thanks!
-Maxime
-
---5bjlmdtlusbphfx7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbv0tAAKCRDj7w1vZxhR
-xaasAQCJBzDd1Ng5hMbRyaEoYsi7T5XVjtN6D13l8WAa9f/XfAEAuDL5vK17rxNc
-TlvIkUnOEN/L2K1HT+rnj0Zt9aGkxww=
-=Jw04
------END PGP SIGNATURE-----
-
---5bjlmdtlusbphfx7--
