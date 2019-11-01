@@ -2,202 +2,152 @@ Return-Path: <SRS0=9w3Z=YZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9370DC47E49
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 07:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395BCCA9EC9
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 07:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B9121734
-	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 07:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA0E2080F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  1 Nov 2019 07:57:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WA+ly02R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730095AbfKAHTd (ORCPT
+        id S1729914AbfKAH5j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 03:19:33 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:41146 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725787AbfKAHTc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 03:19:32 -0400
-X-IronPort-AV: E=Sophos;i="5.68,254,1569250800"; 
-   d="scan'208";a="30393238"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 01 Nov 2019 16:19:31 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 66B81419FAE9;
-        Fri,  1 Nov 2019 16:19:31 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2] dt-bindings: phy: renesas: usb3-phy: convert bindings to json-schema
-Date:   Fri,  1 Nov 2019 16:19:31 +0900
-Message-Id: <1572592771-12444-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 1 Nov 2019 03:57:39 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58988 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfKAH5j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 03:57:39 -0400
+Received: from pendragon.ideasonboard.com (unknown [109.190.253.13])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5624D2D1;
+        Fri,  1 Nov 2019 08:57:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1572595055;
+        bh=DKSEd/4zmCFtM4D8ZLoAyFUzhEtzYdFH9A2SAZ6Kmsg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WA+ly02RQE1bXxx9ReIa6usD0bl1d0D1w+iCYgmRRvvUZpa3hkog3EbmOq8v5Ui1q
+         4JG9vZOadNUP3DwmdCtRMOUpIxAQP2R5HeFwf8vlq7xD+LeH/8tP9M/zIr/dWbcszb
+         Pcd5Hz3IdhJhK6K4Ce+Cwr2E/vBruD5SNpzPX5SE=
+Date:   Fri, 1 Nov 2019 09:57:26 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Adam Ford <aford173@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display
+ support
+Message-ID: <20191101075726.GB6209@pendragon.ideasonboard.com>
+References: <20191016135147.7743-1-aford173@gmail.com>
+ <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Renesas R-Car generation 3 USB 3.0 PHY bindings documentation
-to json-schema.
+On Wed, Oct 30, 2019 at 09:44:20AM -0500, Adam Ford wrote:
+> On Wed, Oct 16, 2019 at 8:52 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > Previously, there was an omap panel-dpi driver that would
+> > read generic timings from the device tree and set the display
+> > timing accordingly.  This driver was removed so the screen
+> > no longer functions.  This patch modifies the panel-simple
+> > file to setup the timings to the same values previously used.
+> >
+> > Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+> 
+> Will this be able to make it into linux-next for the 5.5 merge window?
+> I believe Tony has picked up the device tree portion in his omap
+> tree, but I haven't seen any notifications on this series on whether
+> or not it's being applied.  I also don't know which tree I need to
+> look if it's already been applied.
+> 
+> This fixes a regression introduced a while ago where the driver I was
+> using for the display was removed.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Changes from v1:
- - Remove oneOf from compatible.
- - Make renesas,ssc-range values a schema.
- https://patchwork.kernel.org/patch/11197807/
+Sam, would you be able to pick this up ?
 
- .../devicetree/bindings/phy/rcar-gen3-phy-usb3.txt | 52 ---------------
- .../devicetree/bindings/phy/renesas,usb3-phy.yaml  | 78 ++++++++++++++++++++++
- 2 files changed, 78 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
- create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > ---
+> > V5:  No Change
+> > V4:  No Change
+> > V3:  No Change
+> > V2:  No Change
+> >
+> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> > index 5d487686d25c..72f69709f349 100644
+> > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > @@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+> >         .flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> >  };
+> >
+> > +static const struct drm_display_mode logicpd_type_28_mode = {
+> > +       .clock = 9000,
+> > +       .hdisplay = 480,
+> > +       .hsync_start = 480 + 3,
+> > +       .hsync_end = 480 + 3 + 42,
+> > +       .htotal = 480 + 3 + 42 + 2,
+> > +
+> > +       .vdisplay = 272,
+> > +       .vsync_start = 272 + 2,
+> > +       .vsync_end = 272 + 2 + 11,
+> > +       .vtotal = 272 + 2 + 11 + 3,
+> > +       .vrefresh = 60,
+> > +       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+> > +};
+> > +
+> > +static const struct panel_desc logicpd_type_28 = {
+> > +       .modes = &logicpd_type_28_mode,
+> > +       .num_modes = 1,
+> > +       .bpc = 8,
+> > +       .size = {
+> > +               .width = 105,
+> > +               .height = 67,
+> > +       },
+> > +       .delay = {
+> > +               .prepare = 200,
+> > +               .enable = 200,
+> > +               .unprepare = 200,
+> > +               .disable = 200,
+> > +       },
+> > +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> > +       .bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
+> > +                    DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
+> > +};
+> > +
+> >  static const struct panel_desc mitsubishi_aa070mc01 = {
+> >         .modes = &mitsubishi_aa070mc01_mode,
+> >         .num_modes = 1,
+> > @@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
+> >         }, {
+> >                 .compatible = "lg,lp129qe",
+> >                 .data = &lg_lp129qe,
+> > +       }, {
+> > +               .compatible = "logicpd,type28",
+> > +               .data = &logicpd_type_28,
+> >         }, {
+> >                 .compatible = "mitsubishi,aa070mc01-ca1",
+> >                 .data = &mitsubishi_aa070mc01,
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
-deleted file mode 100644
-index 0fe433b..00000000
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
-+++ /dev/null
-@@ -1,52 +0,0 @@
--* Renesas R-Car generation 3 USB 3.0 PHY
--
--This file provides information on what the device node for the R-Car generation
--3 and RZ/G2 USB 3.0 PHY contain.
--If you want to enable spread spectrum clock (ssc), you should use USB_EXTAL
--instead of USB3_CLK. However, if you don't want to these features, you don't
--need this driver.
--
--Required properties:
--- compatible: "renesas,r8a774a1-usb3-phy" if the device is a part of an R8A774A1
--	      SoC.
--	      "renesas,r8a774b1-usb3-phy" if the device is a part of an R8A774B1
--	      SoC.
--	      "renesas,r8a7795-usb3-phy" if the device is a part of an R8A7795
--	      SoC.
--	      "renesas,r8a7796-usb3-phy" if the device is a part of an R8A7796
--	      SoC.
--	      "renesas,r8a77965-usb3-phy" if the device is a part of an
--	      R8A77965 SoC.
--	      "renesas,rcar-gen3-usb3-phy" for a generic R-Car Gen3 or RZ/G2
--	      compatible device.
--
--	      When compatible with the generic version, nodes must list the
--	      SoC-specific version corresponding to the platform first
--	      followed by the generic version.
--
--- reg: offset and length of the USB 3.0 PHY register block.
--- clocks: A list of phandles and clock-specifier pairs.
--- clock-names: Name of the clocks.
--  - The funcional clock must be "usb3-if".
--  - The usb3's external clock must be "usb3s_clk".
--  - The usb2's external clock must be "usb_extal". If you want to use the ssc,
--    the clock-frequency must not be 0.
--- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
--
--Optional properties:
--- renesas,ssc-range: Enable/disable spread spectrum clock (ssc) by using
--		     the following values as u32:
--			- 0 (or the property doesn't exist): disable the ssc
--			- 4980: enable the ssc as -4980 ppm
--			- 4492: enable the ssc as -4492 ppm
--			- 4003: enable the ssc as -4003 ppm
--
--Example (R-Car H3):
--
--	usb-phy@e65ee000 {
--		compatible = "renesas,r8a7795-usb3-phy",
--			     "renesas,rcar-gen3-usb3-phy";
--		reg = <0 0xe65ee000 0 0x90>;
--		clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>, <&usb_extal>;
--		clock-names = "usb3-if", "usb3s_clk", "usb_extal";
--	};
-diff --git a/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
-new file mode 100644
-index 00000000..dcd1cd5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/renesas,usb3-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas R-Car generation 3 USB 3.0 PHY
-+
-+maintainers:
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - renesas,r8a774a1-usb3-phy # RZ/G2M
-+          - renesas,r8a774b1-usb3-phy # RZ/G2N
-+          - renesas,r8a7795-usb3-phy  # R-Car H3
-+          - renesas,r8a7796-usb3-phy  # R-Car M3-W
-+          - renesas,r8a77965-usb3-phy # R-Car M3-N
-+      - const: renesas,rcar-gen3-usb3-phy
-+
-+  reg:
-+    # base address and length of the registers block for the PHY.
-+    maxItems: 1
-+
-+  clocks:
-+    # A list of phandles and clock-specifier pairs.
-+    maxItems: 3
-+
-+  clock-names:
-+    # If you want to use the ssc, the clock-frequency of usb_extal
-+    # must not be 0.
-+    maxItems: 3
-+    items:
-+      - const: usb3-if # The funcional clock
-+      - const: usb3s_clk # The usb3's external clock
-+      - const: usb_extal # The usb2's external clock
-+
-+  '#phy-cells':
-+    # see phy-bindings.txt in the same directory
-+    const: 0
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  renesas,ssc-range:
-+    description: |
-+      Enable/disable spread spectrum clock (ssc). 0 or the property doesn't
-+      exist means disabliing the ssc.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 0, 4003, 4492, 4980 ]
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#phy-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
-+    #include <dt-bindings/power/r8a7795-sysc.h>
-+
-+    usb-phy@e65ee000 {
-+        compatible = "renesas,r8a7795-usb3-phy", "renesas,rcar-gen3-usb3-phy";
-+        reg = <0 0xe65ee000 0 0x90>;
-+        clocks = <&cpg CPG_MOD 328>, <&usb3s0_clk>, <&usb_extal>;
-+        clock-names = "usb3-if", "usb3s_clk", "usb_extal";
-+        #phy-cells = <0>;
-+    };
 -- 
-2.7.4
+Regards,
 
+Laurent Pinchart
