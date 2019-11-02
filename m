@@ -2,173 +2,378 @@ Return-Path: <SRS0=kVRS=Y2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A247CA9ED1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 20:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4ACCA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 21:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEF0217D9
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 20:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0E72084D
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 21:27:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YxGbXU2/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WpvxY9ZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfKBUIU (ORCPT
+        id S1727127AbfKBV1a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 Nov 2019 16:08:20 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34077 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfKBUIU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 16:08:20 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e4so8627516pgs.1;
-        Sat, 02 Nov 2019 13:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=F+LJuSA9zYv6k9YdRZEWKHWTfKXaTuVbsoBaox/gbnU=;
-        b=YxGbXU2/vN8Hoi12jC49mIUxMs9OQs3AveW/wKPUIDYu1hVOQwpaDjI0VJlvC14QsM
-         01/vGjLQz7juqPutPSsS4KRL3vszcZZimvsUIglY4+1jAl/ccTgq2/yHfnPflZR5o2ne
-         Zb0uuHiWbcjEYqj+dTFBbWlZH4lZlDKrhaNuwKLX1VtYXFR1TqZwKGVAzLIv/Jqu6S7L
-         paf2nAolE33LHUg1/XMZzIlXOiARgnhJW42ErWFJQHYoH7JhNr8ec9UefJOq2VLbiQ56
-         /2fYeoQ0rh+AKHPNynZPT5UoeUBa1Dm4yHuWw7ZaElVRfjMmaE7zFPsYSpBmnab8YBfg
-         ESQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=F+LJuSA9zYv6k9YdRZEWKHWTfKXaTuVbsoBaox/gbnU=;
-        b=Vkq76eADewlcnZfx0NmyfY3EU9uAOa7MG2bWdZCO/NIiN+/gUllhctjEh12/Ej5ylE
-         Gi/MaLRpTVnD0L7R2sLXzE6Ram97VFtJ6F6F306K/uwJtC+fKzvkIfoccwCoHWiF0gQ6
-         HMLvXjJZe05Cl6IL2M3qZogKAdfSSJh2ZejgMi5+Xa/dlt15XNL/px8J0rE7WcMvINBy
-         1Z1DCV95EBr9R/sbPrs/O/+BKFS8i1gjeC5ZY8hBzoknBg30sNZ+1wJAWgcwaG7o5kxY
-         SzYHEVKtgYWeYs9ckoZRjfZOzvuJBxul0GEztO53zU2WG/7V5+HYfMCB0+IdC0oWAh84
-         Qifg==
-X-Gm-Message-State: APjAAAVt/CW52aqoIn/3SfysaputIseRjsoOtORH2QuB4W4CyZJYOBBW
-        oYoEGl0x0uL0AKtZIQkPLvOTcJr+
-X-Google-Smtp-Source: APXvYqzU/WsMOydHRlnyc5LVDUhqiCE4gXRpNebp5AHwCQ9lC2lnC0jbELFIpQqjXKtlJDItwSeD5Q==
-X-Received: by 2002:a62:1d8e:: with SMTP id d136mr22676638pfd.49.1572725299117;
-        Sat, 02 Nov 2019 13:08:19 -0700 (PDT)
-Received: from [10.230.29.119] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m68sm10524014pfb.122.2019.11.02.13.08.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Nov 2019 13:08:18 -0700 (PDT)
-Subject: Re: [PATCH 0/4] ARM: Enable thermal support for Raspberry Pi 4
-To:     Stefan Wahren <wahrenst@gmx.net>, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Markus Mayer <mmayer@broadcom.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1572615749-9524-1-git-send-email-wahrenst@gmx.net>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <1c8ccf12-743c-cad0-bd63-3f46abe7d1c4@gmail.com>
-Date:   Sat, 2 Nov 2019 13:08:15 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Sat, 2 Nov 2019 17:27:30 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:44474 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfKBV1a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 17:27:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1572730046; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u54XkrvRKJNZXoy73GiQjd3mobd5iNvW6poY7+kpWRc=;
+        b=WpvxY9ZCajE1l/ZEcjkxwfnX1LZLGyzOd88xlrh10qVLsvjoGPdtXj1caGOIHTzMEkqf5u
+        IXDg/jxedi5Xr3Op2fthoY2R2c8XV7tp1qRLTau4Mb/TaMVed3SUtdiidu8NBv8xbREa+t
+        MvP8W6BFR8C9NgC7H8a3QpN+eJL0Dto=
+Date:   Sat, 02 Nov 2019 22:27:19 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2 v2] clk: Ingenic: Add CGU driver for X1000.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, mturquette@baylibre.com,
+        sboyd@kernel.org, mark.rutland@arm.com
+Message-Id: <1572730039.3.0@crapouillou.net>
+In-Reply-To: <1571763389-43443-3-git-send-email-zhouyanjie@zoho.com>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+        <1571763389-43443-1-git-send-email-zhouyanjie@zoho.com>
+        <1571763389-43443-3-git-send-email-zhouyanjie@zoho.com>
 MIME-Version: 1.0
-In-Reply-To: <1572615749-9524-1-git-send-email-wahrenst@gmx.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/1/2019 6:42 AM, Stefan Wahren wrote:
-> This series enables thermal support for the Raspberry Pi 4. Neither the
-> bcm2835_thermal nor the brcmstb_thermal are suitable for the BCM2711.
-> So add a new thermal driver to read out the SoC temperature from the
-> AVS RO block of the BCM2711.
+Hi,
 
-It seems to me that with minor tweaks you could use the brcmstb_thermal
-driver, since the two key differences are essentially:
 
-- lack of interrupt, which is also the case on the latest STB SoCs
-- different way to determine that data is valid, by checking both bit 16
-and bit 10, as opposed to bit 11, and a reduced ADC code from 11 bits
-down to 10.
+Le mer., oct. 23, 2019 at 00:56, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> Add support for the clocks provided by the CGU in the Ingenic X1000
+> SoC, making use of the cgu code to do the heavy lifting.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 
-This seems like a simple enough set of changes to build on top of this
-patch series:
+Acked-by: Paul Cercueil <paul@crapouillou.net>
 
-https://lore.kernel.org/linux-arm-kernel/20191030182132.25763-1-f.fainelli@gmail.com/
+Cheers,
+-Paul
 
-My concern is that we went down that road before with other drivers like
-bcm2835-rng and bcm63xx-rng, when really there were little to no
-differences other than some integrations bits (different clock,
-compatible, and more important people having worked separately on those
-things).
 
-Your call, the patch series looks good to me otherwise:
+> ---
+>  drivers/clk/ingenic/Kconfig     |  10 ++
+>  drivers/clk/ingenic/Makefile    |   1 +
+>  drivers/clk/ingenic/x1000-cgu.c | 256=20
+> ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 267 insertions(+)
+>  create mode 100644 drivers/clk/ingenic/x1000-cgu.c
+>=20
+> diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
+> index fe8db93..2aebf0d 100644
+> --- a/drivers/clk/ingenic/Kconfig
+> +++ b/drivers/clk/ingenic/Kconfig
+> @@ -45,4 +45,14 @@ config INGENIC_CGU_JZ4780
+>=20
+>  	  If building for a JZ4780 SoC, you want to say Y here.
+>=20
+> +config INGENIC_CGU_X1000
+> +	bool "Ingenic X1000 CGU driver"
+> +	default MACH_X1000
+> +	select INGENIC_CGU_COMMON
+> +	help
+> +	  Support the clocks provided by the CGU hardware on Ingenic X1000
+> +	  and compatible SoCs.
+> +
+> +	  If building for a X1000 SoC, you want to say Y here.
+> +
+>  endmenu
+> diff --git a/drivers/clk/ingenic/Makefile=20
+> b/drivers/clk/ingenic/Makefile
+> index 250570a..0f0e784 100644
+> --- a/drivers/clk/ingenic/Makefile
+> +++ b/drivers/clk/ingenic/Makefile
+> @@ -4,3 +4,4 @@ obj-$(CONFIG_INGENIC_CGU_JZ4740)	+=3D jz4740-cgu.o
+>  obj-$(CONFIG_INGENIC_CGU_JZ4725B)	+=3D jz4725b-cgu.o
+>  obj-$(CONFIG_INGENIC_CGU_JZ4770)	+=3D jz4770-cgu.o
+>  obj-$(CONFIG_INGENIC_CGU_JZ4780)	+=3D jz4780-cgu.o
+> +obj-$(CONFIG_INGENIC_CGU_X1000)		+=3D x1000-cgu.o
+> diff --git a/drivers/clk/ingenic/x1000-cgu.c=20
+> b/drivers/clk/ingenic/x1000-cgu.c
+> new file mode 100644
+> index 00000000..a964911
+> --- /dev/null
+> +++ b/drivers/clk/ingenic/x1000-cgu.c
+> @@ -0,0 +1,256 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * X1000 SoC CGU driver
+> + * Copyright (c) 2019 Zhou Yanjie <zhouyanjie@zoho.com>
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+> +#include <linux/of.h>
+> +#include <dt-bindings/clock/x1000-cgu.h>
+> +#include "cgu.h"
+> +#include "pm.h"
+> +
+> +/* CGU register offsets */
+> +#define CGU_REG_CPCCR		0x00
+> +#define CGU_REG_APLL		0x10
+> +#define CGU_REG_MPLL		0x14
+> +#define CGU_REG_CLKGR		0x20
+> +#define CGU_REG_OPCR		0x24
+> +#define CGU_REG_DDRCDR		0x2c
+> +#define CGU_REG_MACPHYCDR	0x54
+> +#define CGU_REG_I2SCDR		0x60
+> +#define CGU_REG_LPCDR		0x64
+> +#define CGU_REG_MSC0CDR		0x68
+> +#define CGU_REG_I2SCDR1		0x70
+> +#define CGU_REG_SSICDR		0x74
+> +#define CGU_REG_CIMCDR		0x7c
+> +#define CGU_REG_PCMCDR		0x84
+> +#define CGU_REG_MSC1CDR		0xa4
+> +#define CGU_REG_CMP_INTR	0xb0
+> +#define CGU_REG_CMP_INTRE	0xb4
+> +#define CGU_REG_DRCG		0xd0
+> +#define CGU_REG_CLOCKSTATUS	0xd4
+> +#define CGU_REG_PCMCDR1		0xe0
+> +#define CGU_REG_MACPHYC		0xe8
+> +
+> +/* bits within the OPCR register */
+> +#define OPCR_SPENDN0		BIT(7)
+> +#define OPCR_SPENDN1		BIT(6)
+> +
+> +static struct ingenic_cgu *cgu;
+> +
+> +static const s8 pll_od_encoding[8] =3D {
+> +	0x0, 0x1, -1, 0x2, -1, -1, -1, 0x3,
+> +};
+> +
+> +static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] =3D {
+> +
+> +	/* External clocks */
+> +
+> +	[X1000_CLK_EXCLK] =3D { "ext", CGU_CLK_EXT },
+> +	[X1000_CLK_RTCLK] =3D { "rtc", CGU_CLK_EXT },
+> +
+> +	/* PLLs */
+> +
+> +	[X1000_CLK_APLL] =3D {
+> +		"apll", CGU_CLK_PLL,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.pll =3D {
+> +			.reg =3D CGU_REG_APLL,
+> +			.m_shift =3D 24,
+> +			.m_bits =3D 7,
+> +			.m_offset =3D 1,
+> +			.n_shift =3D 18,
+> +			.n_bits =3D 5,
+> +			.n_offset =3D 1,
+> +			.od_shift =3D 16,
+> +			.od_bits =3D 2,
+> +			.od_max =3D 8,
+> +			.od_encoding =3D pll_od_encoding,
+> +			.bypass_bit =3D 9,
+> +			.enable_bit =3D 8,
+> +			.stable_bit =3D 10,
+> +		},
+> +	},
+> +
+> +	[X1000_CLK_MPLL] =3D {
+> +		"mpll", CGU_CLK_PLL,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.pll =3D {
+> +			.reg =3D CGU_REG_MPLL,
+> +			.m_shift =3D 24,
+> +			.m_bits =3D 7,
+> +			.m_offset =3D 1,
+> +			.n_shift =3D 18,
+> +			.n_bits =3D 5,
+> +			.n_offset =3D 1,
+> +			.od_shift =3D 16,
+> +			.od_bits =3D 2,
+> +			.od_max =3D 8,
+> +			.od_encoding =3D pll_od_encoding,
+> +			.bypass_bit =3D 6,
+> +			.enable_bit =3D 7,
+> +			.stable_bit =3D 0,
+> +		},
+> +	},
+> +
+> +	/* Muxes & dividers */
+> +
+> +	[X1000_CLK_SCLKA] =3D {
+> +		"sclk_a", CGU_CLK_MUX,
+> +		.parents =3D { -1, X1000_CLK_EXCLK, X1000_CLK_APLL, -1 },
+> +		.mux =3D { CGU_REG_CPCCR, 30, 2 },
+> +	},
+> +
+> +	[X1000_CLK_CPUMUX] =3D {
+> +		"cpu_mux", CGU_CLK_MUX,
+> +		.parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+> +		.mux =3D { CGU_REG_CPCCR, 28, 2 },
+> +	},
+> +
+> +	[X1000_CLK_CPU] =3D {
+> +		"cpu", CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_CPUMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_L2CACHE] =3D {
+> +		"l2cache", CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_CPUMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_AHB0] =3D {
+> +		"ahb0", CGU_CLK_MUX | CGU_CLK_DIV,
+> +		.parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+> +		.mux =3D { CGU_REG_CPCCR, 26, 2 },
+> +		.div =3D { CGU_REG_CPCCR, 8, 1, 4, 21, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_AHB2PMUX] =3D {
+> +		"ahb2_apb_mux", CGU_CLK_MUX,
+> +		.parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+> +		.mux =3D { CGU_REG_CPCCR, 24, 2 },
+> +	},
+> +
+> +	[X1000_CLK_AHB2] =3D {
+> +		"ahb2", CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_AHB2PMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_CPCCR, 12, 1, 4, 20, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_PCLK] =3D {
+> +		"pclk", CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_AHB2PMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
+> +	},
+> +
+> +	[X1000_CLK_DDR] =3D {
+> +		"ddr", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
+> +		.parents =3D { -1, X1000_CLK_SCLKA, X1000_CLK_MPLL, -1 },
+> +		.mux =3D { CGU_REG_DDRCDR, 30, 2 },
+> +		.div =3D { CGU_REG_DDRCDR, 0, 1, 4, 29, 28, 27 },
+> +		.gate =3D { CGU_REG_CLKGR, 31 },
+> +	},
+> +
+> +	[X1000_CLK_MAC] =3D {
+> +		"mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_SCLKA, X1000_CLK_MPLL},
+> +		.mux =3D { CGU_REG_MACPHYCDR, 31, 1 },
+> +		.div =3D { CGU_REG_DDRCDR, 0, 1, 8, 29, 28, 27 },
+> +		.gate =3D { CGU_REG_CLKGR, 25 },
+> +	},
+> +
+> +	[X1000_CLK_MSCMUX] =3D {
+> +		"msc_mux", CGU_CLK_MUX,
+> +		.parents =3D { X1000_CLK_SCLKA, X1000_CLK_MPLL},
+> +		.mux =3D { CGU_REG_MSC0CDR, 31, 1 },
+> +	},
+> +
+> +	[X1000_CLK_MSC0] =3D {
+> +		"msc0", CGU_CLK_DIV | CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_MSCMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_MSC0CDR, 0, 2, 8, 29, 28, 27 },
+> +		.gate =3D { CGU_REG_CLKGR, 4 },
+> +	},
+> +
+> +	[X1000_CLK_MSC1] =3D {
+> +		"msc1", CGU_CLK_DIV | CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_MSCMUX, -1, -1, -1 },
+> +		.div =3D { CGU_REG_MSC1CDR, 0, 2, 8, 29, 28, 27 },
+> +		.gate =3D { CGU_REG_CLKGR, 5 },
+> +	},
+> +
+> +	[X1000_CLK_SSIPLL] =3D {
+> +		"ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
+> +		.parents =3D { X1000_CLK_SCLKA, X1000_CLK_MPLL, -1, -1 },
+> +		.mux =3D { CGU_REG_SSICDR, 31, 1 },
+> +		.div =3D { CGU_REG_SSICDR, 0, 1, 8, 29, 28, 27 },
+> +	},
+> +
+> +	[X1000_CLK_SSIMUX] =3D {
+> +		"ssi_mux", CGU_CLK_MUX,
+> +		.parents =3D { X1000_CLK_EXCLK, X1000_CLK_SSIPLL, -1, -1 },
+> +		.mux =3D { CGU_REG_SSICDR, 30, 1 },
+> +	},
+> +
+> +	/* Gate-only clocks */
+> +
+> +	[X1000_CLK_SFC] =3D {
+> +		"sfc", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_SSIPLL, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 2 },
+> +	},
+> +
+> +	[X1000_CLK_UART0] =3D {
+> +		"uart0", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 14 },
+> +	},
+> +
+> +	[X1000_CLK_UART1] =3D {
+> +		"uart1", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 15 },
+> +	},
+> +
+> +	[X1000_CLK_UART2] =3D {
+> +		"uart2", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 16 },
+> +	},
+> +
+> +	[X1000_CLK_SSI] =3D {
+> +		"ssi", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_SSIMUX, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 19 },
+> +	},
+> +
+> +	[X1000_CLK_PDMA] =3D {
+> +		"pdma", CGU_CLK_GATE,
+> +		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
+> +		.gate =3D { CGU_REG_CLKGR, 21 },
+> +	},
+> +};
+> +
+> +static void __init x1000_cgu_init(struct device_node *np)
+> +{
+> +	int retval;
+> +
+> +	cgu =3D ingenic_cgu_new(x1000_cgu_clocks,
+> +			      ARRAY_SIZE(x1000_cgu_clocks), np);
+> +	if (!cgu) {
+> +		pr_err("%s: failed to initialise CGU\n", __func__);
+> +		return;
+> +	}
+> +
+> +	retval =3D ingenic_cgu_register_clocks(cgu);
+> +	if (retval) {
+> +		pr_err("%s: failed to register CGU Clocks\n", __func__);
+> +		return;
+> +	}
+> +
+> +	ingenic_cgu_register_syscore_ops(cgu);
+> +}
+> +CLK_OF_DECLARE_DRIVER(x1000_cgu, "ingenic,x1000-cgu",=20
+> x1000_cgu_init);
+> --
+> 2.7.4
+>=20
+>=20
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+=
+
