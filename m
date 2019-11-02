@@ -2,87 +2,101 @@ Return-Path: <SRS0=kVRS=Y2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DBBCA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 03:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900B5CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 12:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48860208E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 03:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDEB20679
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 12:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rms5K3KC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAEU5z4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfKBDV6 (ORCPT
+        id S1726229AbfKBMEg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 23:21:58 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43797 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfKBDV6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 23:21:58 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a18so4011728plm.10;
-        Fri, 01 Nov 2019 20:21:57 -0700 (PDT)
+        Sat, 2 Nov 2019 08:04:36 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55280 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfKBMEg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 08:04:36 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c12so7432393wml.4;
+        Sat, 02 Nov 2019 05:04:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=pTILKw4L+RzXCLEIksYyx7zZPBhtM+w2VRMhfIxEgps=;
-        b=rms5K3KCV+P0yXSBTXAwFaNDOnvKhQctsz6gKaHPYHnKVwbfTYCm4/CDmXxQiMmkWJ
-         ECqII19rDEKzS/qErzo3ZQiymbPG7G6/lP/X+gAKILif46adZ8Wo0Fuk6nki7GBvhVQm
-         34IAi5iSITDztPIgtrgQqtYbYBfJhj7g8caP8BJhk7m/YwgPEP58LTsd1UK1T8Uf73dy
-         KVJB7ZaURSk9aQLF7/EosW4jhlU1rUuFukvHzv8a5iAOX6VKxUyCFGKWscRlT8AqkrEW
-         U8hDNFpp1L12KNNKnW6OkRWFeTooO4rIi+Z8MNtM4ksq+vJ2+kIRkiThJgskaWbFVlsl
-         WfxA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KRF6soD2g7xvJ30XDDz/0MGN7A3BH2BkkuXZbRs4kCo=;
+        b=aAEU5z4+aRVnyRNtP/pnpe3X94NWIZQKo0zfBG1bAX/c+4yZHpzsHaPfd1KlF+86qV
+         A0MqAbVpTrEueiSxpGDOVq8z3k+p7RpbUZW/Z4hvd9glNMJyVKfruic3rSaifuqdgVQb
+         Y5BchvHhEXjYY6NFqwWZu0cIXLwZuCGSFw1YaQV6uH7TP43efer2CVYUBwK80QXKe6TD
+         DED/6TmCEIJ+u2fMDrMpfTOvGELERlfCi3+s3rL5W6izrw228Wui1qoZ0JDD0thDpvO0
+         sJk5pG3asfA2Jl8O1MPvi2kwVoBHybnqAdSwQMpt599mIDWf6mNGCk9kSBufuL01fEOU
+         Gudg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=pTILKw4L+RzXCLEIksYyx7zZPBhtM+w2VRMhfIxEgps=;
-        b=rW8FIT92dxjFd7qkFUvgEU4CYCivqRZZz3v4Zj1ZWFBaNvz0bJqyBti4sKewTkRFw8
-         bRLvblBdnENaM76+uYRWQ/0NvT4+UOkoNzQyoceERIcur9N7mEJKQ+YRljUNMgtPOp8o
-         Cgd8/EINOMhJMzh1yjTMRvWtZO5JbpVSgGjbRGk290RluURHcncy8lSDUIcNRq+ZC+AY
-         2Aas6FTepPfc+PB0J0zrb+qm26AEkI0ZWKifd5sPfeC9howMbpCsmyV0kFwm1bVeMvq3
-         yLoeNqhWWn0UPZyVJERM61cNlUggzTHFuHWB9oH8PTDZJZzTU3vwyqGnjVyRY0keMMQN
-         b0EA==
-X-Gm-Message-State: APjAAAVoIB8lsTMmWDYE2q/F3x5VFCYANTc17U4R2SMijAs/LRmBsW8w
-        jAFLnJNeH5yp8l9K7R0NAN1dKXdQ
-X-Google-Smtp-Source: APXvYqzcuyCu+UxBRNcSgARKkE4UIe8DvGh1IcANgxy3orwmhXfobbFs0yoUeoAJwprHeVCXfc/cog==
-X-Received: by 2002:a17:902:a581:: with SMTP id az1mr15777696plb.311.1572664917221;
-        Fri, 01 Nov 2019 20:21:57 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id d5sm10872870pfa.180.2019.11.01.20.21.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Nov 2019 20:21:56 -0700 (PDT)
-Subject: Re: [PATCH 5/5] net: phy: at803x: fix the PHY names
-To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org
-References: <20191102011351.6467-1-michael@walle.cc>
- <20191102011351.6467-6-michael@walle.cc>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <239b7940-d96c-d5e5-f029-292d55e7e4b1@gmail.com>
-Date:   Fri, 1 Nov 2019 20:21:54 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        bh=KRF6soD2g7xvJ30XDDz/0MGN7A3BH2BkkuXZbRs4kCo=;
+        b=p9q5iuNqTsqLidOeK9Z3VIyzOejWB5Ts0FiR0ugdtWezTiSFVf2BohsVq0t1RdT23q
+         VABoCc6i9DFtwItuNsbr1LyU31GvML9AhCn2iZq8rrlj0DmY7of6gxfXWWdx9hX0v/AS
+         Cz+vidkXdM48CF0NTygK4HAWpL0O2W/zah+yCErO3Eq9+ZgLpPVkQxENS1Jo50LngaqF
+         QWlljIX5UpkihJNflmC3QO0VvPBJty/2bcqpQUJ5HJpMwpig4QS1DnNRdGEKSAhuOsAM
+         gkc0/KaFqvvHbCHPNnXZzWJa0pLv/WxD112dAaSpWD8GkWfzVFTEIV29cVpwWL0l4uoq
+         JXkA==
+X-Gm-Message-State: APjAAAUWdHdi2DOSZ5sdDa/m6ii0xQ3CXiN0teUiyqbTZSKBoB2wv7Uv
+        XrMnW5hPtToVBJVm1qLARcI=
+X-Google-Smtp-Source: APXvYqwz3x2ZjwhFLd2hLmE3ztByvTIwFUK1SdPMDbu0KHTbSwhBf7hj4LLTa3tNeN+XCOEQeYkMDQ==
+X-Received: by 2002:a1c:e404:: with SMTP id b4mr16009804wmh.90.1572696274241;
+        Sat, 02 Nov 2019 05:04:34 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id c144sm9680533wmd.1.2019.11.02.05.04.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Nov 2019 05:04:33 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>,
+        =?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH] arm64: allwinner: h6: Enable GPU node for Tanix TX6
+Date:   Sat,  2 Nov 2019 13:04:27 +0100
+Message-Id: <20191102120427.19350-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191102011351.6467-6-michael@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Unlike other H6 boards, Tanix TX6 doesn't have a PMIC so we can enable
+the GPU without providing a specific power supply.
 
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On 11/1/2019 6:13 PM, Michael Walle wrote:
-> Fix at least the displayed strings. The actual name of the chip is
-> AR803x.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+index 7e7cb10e3d96..bccfe1e65b6a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+@@ -53,6 +53,10 @@
+ 	status = "okay";
+ };
+ 
++&gpu {
++	status = "okay";
++};
++
+ &hdmi {
+ 	status = "okay";
+ };
+-- 
+2.20.1
 
-Only if you have to spin a v2, since you fixed the Kconfig entry, you
-might as well fix those names to be Qualcomm Atheros.
---
-Florian
