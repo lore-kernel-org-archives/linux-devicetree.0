@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DA2C47E49
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 15:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B626DCA9ED1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 15:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49338218AC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 15:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF89217D9
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 15:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdoGrgl4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/bYtkNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfKBPPk (ORCPT
+        id S1726675AbfKBPaK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 Nov 2019 11:15:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36074 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfKBPPk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 11:15:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v19so9014215pfm.3;
-        Sat, 02 Nov 2019 08:15:39 -0700 (PDT)
+        Sat, 2 Nov 2019 11:30:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40299 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfKBPaK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 11:30:10 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 15so8322425pgt.7;
+        Sat, 02 Nov 2019 08:30:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qAvZBK6DZqUp9iHt6R3a29zC4mhIYuBP32xhiYLg1b8=;
-        b=WdoGrgl4QaxUrDwn1jlCwQc6eRKP+oDnmFXfcdeWb8qLYSr5+fJ9+klORmXH13D/r/
-         VtaA/lHL2lvw+c01lsfeXlJQIAAlV9eoOiszPo55FdK/vOlkRrH79yr2MrceE1kpZMrc
-         Pc4oSJKFqVhZ3WVZSx1rkAD8kVqB0z5xB8IUANQplSQq8Ax1bCW9RNqQoNbkevSC7tlg
-         emW9R3k0lMulYzio7NSwBjCNz2Iry9JsYakRQ4piIDK67XBsd2c2YiOJZ8B6z+yr/FHJ
-         V88/zrUYsqKkDG2ZP5B9Dki01BWa7d59ud+lmZGWLG1qi7Hsp675MC+6yiZkkuuAwwc1
-         330g==
+        bh=WtEi0obkqA+hOpVZZmPJeUDuP8bZ60Q2HPO76+/ywVM=;
+        b=h/bYtkNvK8uXqY6YoPo3nsgiH0Dnh5jmcvkkzyQKaGSvALwUmSVXpxwTpLvx/yipEe
+         mcplOG4RilvyKV/aeYMQLq0lQQ6MmhQu+crKAbvS029uuHQ0mdW8ZPEoaxHh9aTqO93c
+         7PnC/Ejz/SoIHxAUhORpx4rjUcA1qPRx5I4kRsK9MHTr3SN6okoYiSwbPILrTotMSlAv
+         6/B2tqMJY9Sj6h/63ZegU7yMQy/aMfPH8t5hg0p8H5Dnn16E1lJkkwRGExrOuAJ0I/fk
+         r8Ap3wwDUMeOc1/FiZPNNV7NQtqS4YU8IrdydzQ83FUjoIE8qNjPYsQ/ig3ODUhJHOGq
+         FntA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qAvZBK6DZqUp9iHt6R3a29zC4mhIYuBP32xhiYLg1b8=;
-        b=JozK5H0mcGMgGt8mfbHKaaK/nANHjCIVQaSroGOfdLO9nT44yf0ssyb3Q3VphaZk++
-         YWg/p3XRzkQuTFPKLqu+kMSsO4ELJsbMsMyunvC4llAWg+upWXdZDyEp/uosKpjpfZIm
-         gXTLGalJ6PN8WmHzxpBLjA5NM/E9Fc9zK9sgyDryo+TGtK1xOzSUksgqxBlN89WIrAhG
-         kAPEYgfmgVVKs0QLeEN97Alz+wHBQm1SbInJ1AH8zNUeQa7Qa414VixP/XctelhBaNJ+
-         1rBEY7ZTkw/VhSC0BPY2zIqs/ENNNu/8dm19o8tUH/rKXr2EaYF/X8idgDxo3vWdO0K8
-         v7hQ==
-X-Gm-Message-State: APjAAAUDpZ+GcbWqnAN/14i8Lr9SgknRJfPQNOSTW2AWgPKKLMT3/qqT
-        5m8gXAZIUuEE5ZMwYGKNCXo=
-X-Google-Smtp-Source: APXvYqxNSyl6X9QQi0QbkV1G0AHqIxam5bFBI8K9G7zWwZcfgVL/LNqmX341rL1Cm3/rzhYDltaF3g==
-X-Received: by 2002:a17:90a:bb82:: with SMTP id v2mr1432453pjr.90.1572707739226;
-        Sat, 02 Nov 2019 08:15:39 -0700 (PDT)
+        bh=WtEi0obkqA+hOpVZZmPJeUDuP8bZ60Q2HPO76+/ywVM=;
+        b=Ak000uX33QLsHJkiUXqGpPPGEU8wI5CSwyunC8u3BL6uh5sOXSGhr0rb5WgJDEyfpT
+         6EgnQA62G2m1Dp7uwpOzAzc40u8Ko5iSaTa2cRgyhggH4RHClalJSDiCk0EdczE0Q/Ty
+         LCbKYRDbB0QvsAtLEPnR9RPKykLfqZO6q34eVsMZcB2vEMxYYypt+BXtndBZhvPs7QQU
+         Vj/Ymx9wpssMigGi4nOJMldVwrQ2dyLh4ECMHpa3zR+bePHMQl5j6FBO0dmU/Z0iwfUb
+         FHjXQG572BSmr6Z4rePVEbf3LzR2B3EF6JDVmLJnTVuk6bZm/W6pp+bCm/93CdFTPYpK
+         PWtw==
+X-Gm-Message-State: APjAAAVYZsKgkGeVgNNKe6L1CSVhVnLqzRmi3VrHYWNtLMh7Q9+72lUl
+        ojWSLXstG7vcogQZmSXnMn4AqR1E
+X-Google-Smtp-Source: APXvYqyh0X6GxkFdYz3p2ytoUR/9WSztyuB/fJohGxmi7p5m2J9MXjahus5+3o9BA0IZBgjP2wU2Sg==
+X-Received: by 2002:a17:90a:2326:: with SMTP id f35mr23633482pje.134.1572708608092;
+        Sat, 02 Nov 2019 08:30:08 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c9sm15545305pfb.114.2019.11.02.08.15.37
+        by smtp.gmail.com with ESMTPSA id e59sm9843979pjk.28.2019.11.02.08.30.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 02 Nov 2019 08:15:38 -0700 (PDT)
+        Sat, 02 Nov 2019 08:30:07 -0700 (PDT)
 Subject: Re: [PATCH v6 1/2] hwmon: Add driver for Texas Instruments TMP512/513
  sensor chips
 To:     "Tremblay, Eric" <etremblay@distech-controls.com>,
@@ -68,8 +68,8 @@ Cc:     Jean Delvare <jdelvare@suse.com>,
         Jonathan Corbet <corbet@lwn.net>
 References: <DM6PR01MB4844A7A2E7DCA9168D44F34195610@DM6PR01MB4844.prod.exchangelabs.com>
 From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <1c265dad-d6c5-aba3-3344-58893b6d13f2@roeck-us.net>
-Date:   Sat, 2 Nov 2019 08:15:37 -0700
+Message-ID: <32a41dac-9648-0d7f-afd9-79af0c3eed65@roeck-us.net>
+Date:   Sat, 2 Nov 2019 08:30:06 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
@@ -88,10 +88,14 @@ On 10/29/19 8:04 AM, Tremblay, Eric wrote:
 > Add dt-binding for TMP512/513 sensor chips
 > 
 > Signed-off-by: Eric Tremblay <etremblay@distech-controls.com>
+I do get the following warnings:
 
-The two patches LGTM. Waiting for Reviewed-by: tag from DT maintainer.
+Documentation/hwmon/tmp513.rst:2: WARNING: Explicit markup ends without a blank line; unexpected unindent.
+Documentation/hwmon/tmp513.rst: WARNING: document isn't included in any toctree
 
-Thanks,
+The .rst file needs to be added to Documentation/hwmon/index.rst. No idea what
+the first problem is.
+
 Guenter
 
 > ---
