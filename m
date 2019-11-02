@@ -2,109 +2,97 @@ Return-Path: <SRS0=kVRS=Y2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8F9CA9ED1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 16:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85C7CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 17:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16798217D9
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 16:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBB6218AC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 17:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFXtrwxg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXt4YZa1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfKBQyj (ORCPT
+        id S1726675AbfKBR32 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 Nov 2019 12:54:39 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33025 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfKBQyj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 12:54:39 -0400
-Received: by mail-ed1-f68.google.com with SMTP id c4so9860328edl.0;
-        Sat, 02 Nov 2019 09:54:37 -0700 (PDT)
+        Sat, 2 Nov 2019 13:29:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40149 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfKBR32 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 13:29:28 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o28so12678782wro.7;
+        Sat, 02 Nov 2019 10:29:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ghf/p8lPw2FMQrMnoCiCr2PRs7Q4z/vyAzI31fJ4SxI=;
-        b=UFXtrwxgi/6OHKHU5n5I4051h89Jr99VNX4YwB9sQopoN0xVWxEe6LXn3AFXmuiZA0
-         FecbWh1b5CQLXzgPwfEYzc0QPuCtRkF7P/s/YcEke4xP64zSoFZ2DltcWcuXPkuqMU5L
-         XeAEJuQubo9rbMIMckDVkwmevFn+eiCG42hE3fZg1Sq3gU48+enRs11yf0N4Dfz43xlg
-         hokPChWwXFKj6xareYg5l3psm9Qqip8ldDUtPD77XIDMaN6FubmXByFT3DrRjVjHc9mD
-         7Nl4//shNVv1CRnnrw+4VKdIL/Igrn+hTHr7gOOebWEP2/aBGHF8bjkDrKGQCbEcmx1g
-         891g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sh78oVIiRrDkWPPtRwjQsKosVmgPku74hJKQMiox9SI=;
+        b=EXt4YZa1gBYT0SBFSOdnUSP/Xh88Qx6qTawy8qoHa8PEm/6u8Lyhzaavhf5PFWdGfO
+         XiGrDHjj8V2k/+vwiGyNxefEq1eobFQeIwwi1P2sbX1glmauDj1tZrH7N+hs8ngAWgv3
+         HiTqhntK9yuiKhQAnbmiLofR4XLRVoednEDWYN7rMGS86/uN8RgYnKfdSQlRKiNy1bQL
+         tr/hJgMOnRo34VOhXV/Y9d+eUrVErRTG+g3r16pwN/ePQR12OT3S3rfMSTSFH2JOxO48
+         w5cPGNhPXpCASWTsgjTY7W6yD7B4+bhR/3ulNfVh0W88GdGF1S6E1kQ8CzMCOcoL6jdC
+         G+xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ghf/p8lPw2FMQrMnoCiCr2PRs7Q4z/vyAzI31fJ4SxI=;
-        b=UCoaN+nI/QvltVhKLbf1+urebN9k0XLuCVmIupl8c2ElVuerr8KQhnt6FXF5WRiZKs
-         rPiKJGztPSs9HkCdMEZ6gO8nITKpIz6DGKYL5W+71XV3eA4rlvnr3HaPeraNnDdAY/9h
-         f9F4wazu9vPijWCp6BYHGbseaRAaxOU/XK/mZjsOyVgIgIr7Y6mADlEul/e9+WY9AG8w
-         6GCUwU3BLU75VU+oXo0X+YaEMStH19+QHHDqeTS32Fj2Jtlsi56Yirmq2VdUbUXncA6E
-         Az1C4ciyiupGW/TdW6TcKtUMY2i9Lm/GhzGhJWEVBgxLRcCTtAf7SejwmticMNJUO/64
-         nqXA==
-X-Gm-Message-State: APjAAAVEbZKsNKM00UPsvUFy0oiXYVtr5tupSveX1HPCjFvDN8+rbrM7
-        STgrEZREFZeEGGXdhZtkET1v73VrhAypVM8tE8M=
-X-Google-Smtp-Source: APXvYqwKzyDPWo4pbqmwhzNvzxZORWkf137KMt0HTWuLLvR5uIHmBfYFxzuC+NHnts84g39RnZsy6AiUHKhlKb9s5hs=
-X-Received: by 2002:a50:fa83:: with SMTP id w3mr4146132edr.272.1572713676998;
- Sat, 02 Nov 2019 09:54:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sh78oVIiRrDkWPPtRwjQsKosVmgPku74hJKQMiox9SI=;
+        b=hXlHbCu6BrMalaPeLeIMuT39KCHrSe3i/m/mowjLORxcDJbkjmbHbXSnRdXKfrYzw/
+         E8tVy/KW1eb/CigHqneHthRJd2ln25uylQlw1CQXK0ZCzkdaZlCc+x2awIoCzQp2W4yn
+         xUm2Au/ByZEpEY/cMMUp0845QAbeByU8GMpkKJ69z6iO10+k+slYFDexeSkAf8JAzxR+
+         0mMBGLoIjmEqg/AJC1oivv0IdwFMoVnQqkLYe8B9fCe/fFlTMVRcNWwFAZQNaqYu1wfF
+         CFeMtNwkhnscM9t25q4s9SVjcPaXYCZBygOi2OF7MaOFhDliGr5jiVqOYs/TqrFNyTJ3
+         NnSw==
+X-Gm-Message-State: APjAAAVb7wQ14zluJ/HimI+8LbNhofLJW1egBLKk5QT10joWSj3iTMo9
+        dpVq1IHZ9hKP1hDqUXiuXQo=
+X-Google-Smtp-Source: APXvYqz0gH833YbhVFROvsGuASqu7kuQq2cSTcdMc6e6Ku7AG2rW5qdKkUuR2ejBlQK5LJFZIyPq2g==
+X-Received: by 2002:a5d:6b0a:: with SMTP id v10mr15060341wrw.32.1572715765835;
+        Sat, 02 Nov 2019 10:29:25 -0700 (PDT)
+Received: from morpheus.home.roving-it.com (2.e.6.5.c.a.a.1.a.8.0.3.1.e.3.c.1.8.6.2.1.1.b.f.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:fb11:2681:c3e1:308a:1aac:56e2])
+        by smtp.googlemail.com with ESMTPSA id a17sm10652954wmb.8.2019.11.02.10.29.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Nov 2019 10:29:24 -0700 (PDT)
+From:   Peter Robinson <pbrobinson@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Cc:     Peter Robinson <pbrobinson@gmail.com>
+Subject: [PATCH] arm64: tegra: Jetson TX2: Allow bootloader to configure Ethernet MAC
+Date:   Sat,  2 Nov 2019 17:29:17 +0000
+Message-Id: <20191102172917.27310-1-pbrobinson@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191031104402.31813-1-kholk11@gmail.com> <20191031104402.31813-6-kholk11@gmail.com>
-In-Reply-To: <20191031104402.31813-6-kholk11@gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 2 Nov 2019 09:54:24 -0700
-Message-ID: <CAF6AEGtXhOeV_7yZ8-px5EjQN9+Cmfgis8JdO3iCWZ2+g0=ukQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/7] dt-bindings: msm/dsi: Add 28nm PLL for family B compatible
-To:     AngeloGioacchino Del Regno <kholk11@gmail.com>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>, marijns95@gmail.com,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+ devicetree list
+Add an ethernet alias so that a stable MAC address is added to the
+device tree for the wired ethernet interface.
 
-On Thu, Oct 31, 2019 at 3:44 AM <kholk11@gmail.com> wrote:
->
-> From: AngeloGioacchino Del Regno <kholk11@gmail.com>
->
-> On family B SoCs, the 28nm PLL has a different iospace address
-> and that required a new compatible in the driver.
->
-> Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
-> ---
->  Documentation/devicetree/bindings/display/msm/dsi.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> index af95586c898f..d3ba9ee22f38 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> @@ -83,6 +83,7 @@ DSI PHY:
->  Required properties:
->  - compatible: Could be the following
->    * "qcom,dsi-phy-28nm-hpm"
-> +  * "qcom,dsi-phy-28nm-hpm-fam-b"
->    * "qcom,dsi-phy-28nm-lp"
->    * "qcom,dsi-phy-20nm"
->    * "qcom,dsi-phy-28nm-8960"
-> --
-> 2.21.0
->
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
+index 5e18acf5cfad..947744d0f04c 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
+@@ -8,6 +8,7 @@
+ 	compatible = "nvidia,p3310", "nvidia,tegra186";
+ 
+ 	aliases {
++		ethernet0 = "/ethernet@2490000";
+ 		sdhci0 = "/sdhci@3460000";
+ 		sdhci1 = "/sdhci@3400000";
+ 		serial0 = &uarta;
+-- 
+2.23.0
+
