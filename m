@@ -6,67 +6,63 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2ECCA9ED0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 00:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6BCCA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 00:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC4A208E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 00:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599DE21897
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 00:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CLCYetPj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NKEQCCyX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbfKBA10 (ORCPT
+        id S1727443AbfKBAbx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 1 Nov 2019 20:27:26 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40625 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbfKBA1Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 20:27:25 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r4so8102213pfl.7
-        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 17:27:25 -0700 (PDT)
+        Fri, 1 Nov 2019 20:31:53 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42326 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfKBAbw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Nov 2019 20:31:52 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s23so4073174pgo.9
+        for <devicetree@vger.kernel.org>; Fri, 01 Nov 2019 17:31:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BL9nfK/YZXz6FHcCtE1ld8dCJWEO+KWM+7dir2/yBWI=;
-        b=CLCYetPjS4hpzofP4d3bpfpkEZMYt2x5RhhPhR768wpbFdHt8mef2MCZyIia2hTQ+l
-         CKr2G1DFaSnW5WVJfqV0VyDD40GU1ByWhh213LO5fA3nlAb/Po4dCLimTVrFK7z3E5KP
-         1Omg80D5DKFBd2bEjMfhsxhaWlhzCWV1yJ9WXM7HHRiKcYSvAb4zoXd4oHPqrg5MIH3M
-         a1qWVzZV19oT0jGsb8wQYX06ROPMogZttKoytkdFHiNHmcIH43x6i28VQLm2M5wqcz0Y
-         s7OAn+erXBwocNqQRWEUur9YKcS1ZDKDl7uT5PsTM3GeR1gDiG/03afILypq2101hYY8
-         nHsg==
+        bh=RmKwPYUz22DWejWNDVX+p+n7NWEKBj1pY8e7LLu4FLs=;
+        b=NKEQCCyXBdgTsGovN13Be6nAO4bGEHx/a7ewD11xgbfrfEdejeHj3o4flLocvdw49X
+         5B7JbUckbmB9lrKYnDlhDzzEliMODTUXLmKaeYRp+zDBxNYZOLVd81WSrt1Rc3BVT7JM
+         CcPUfhLlVwhjRytWNNpLKQWXQ0eGOSwwk+S4cTzycQvkobf81mn6l591ypI/5qgNxvCd
+         ulpR5dD4A88Kh3jdtBjo0S9giVajmA95L6j7JF0QMK/R5FmH5UzfoPFxfUEXy7LL1ubw
+         44YroGDFlduFRzbV2uzcvcFQZ001lOP3k9Z6qreygswNFG+/QCrg9FfLR6iw6m/JAAzo
+         QELA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BL9nfK/YZXz6FHcCtE1ld8dCJWEO+KWM+7dir2/yBWI=;
-        b=Dufd3cQKhh+Ff6qfMjgPR3a6wdhE1D/yH0j3Qc98eQsYnxrLWHaSVVN1OPcivgZv16
-         I+pkjTP2GuoPYaec0ZO88cSTgNOtQp6igPAIeZpDOGzXEkVzpIxwAiORfsXYiyHyRFdJ
-         PcR+nBX2qz4Gdx8Udg90Cp7ggnUGzdCX6XhMAgV4Fq8ZISE7lP2etbgZQLtMGJaH2dzp
-         6/3pCHijAeHmyilBoYng/IWOMhaZE3TtlEtoUstwhAhpuWPAlGio7mG0g2vPRj8FiW47
-         KXBtWa/BeIDEOqaUtfV4oy6qjVh8TlzL6e1tKXQ2wxA1sJs4ogZp04yWBkFJqJP6sDU8
-         cMmw==
-X-Gm-Message-State: APjAAAU+anABsgwJTzelM6D9IiCUTQ8xAwslcHS6Jbh7sPVmrdGhGLzT
-        FiSWO+p85OWd2H2QIBj7LvkPhA==
-X-Google-Smtp-Source: APXvYqz4fgbRB7Ss4a/vrNbFS4/hpzt1NbkCMgaGVg2Uci+ilao9kBf3CIKxrcDmE8nuT5+ZtLLN/g==
-X-Received: by 2002:a17:90b:300c:: with SMTP id hg12mr10092036pjb.75.1572654444907;
-        Fri, 01 Nov 2019 17:27:24 -0700 (PDT)
+        bh=RmKwPYUz22DWejWNDVX+p+n7NWEKBj1pY8e7LLu4FLs=;
+        b=jhqaIwmqniNaK6UTwN37+fTxTEr22THfk5BMLq/3BrCSDjuEdeH0h96mFUqdreOjlD
+         voMn//8ISS/u6nhLIUBn8aJICzX92U7NzUQbnwbTup0f9vzc6s0keLl/rN9SI90DJQwP
+         yX/8vFSyfcTA7o/0ppllXsIILsSYwuVB+dXltAPEwl5cxwzMXoiPdh0nlB6ot4h1uqCQ
+         2pwnIc/bajmtusXxH9jx41EYK5xyr3fHq3UMxcYkJ9lsfbvSnVKg3YzCe1UzxbQSHAop
+         UjdMOHUQfAPXX2gmGtTd1iI4fab5HO9itX5UcAWKB/8TUhOlWk++WzvxNKFiFKWIcCWE
+         ddzQ==
+X-Gm-Message-State: APjAAAXJpLOWCm0XSzAmSjBRG/9/HzFPiRL4j8v8xO9AZ+h3HQ1e19dE
+        QXPDey7zpRP7nGKULeNnNL7/ng==
+X-Google-Smtp-Source: APXvYqyA6507ov8iEXResqYrB3v7w2XAzOhHSiJo19Q5bEyZRWThuZq6+g+rzLB4CPtyR+YiNFevRA==
+X-Received: by 2002:a63:5848:: with SMTP id i8mr16181286pgm.217.1572654711927;
+        Fri, 01 Nov 2019 17:31:51 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e8sm9395910pga.17.2019.11.01.17.27.23
+        by smtp.gmail.com with ESMTPSA id v2sm7957522pfm.13.2019.11.01.17.31.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 17:27:24 -0700 (PDT)
+        Fri, 01 Nov 2019 17:31:51 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
+To:     Andy Gross <agross@kernel.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] PCI: qcom: Add support for SDM845 PCIe
-Date:   Fri,  1 Nov 2019 17:27:19 -0700
-Message-Id: <20191102002721.4091180-1-bjorn.andersson@linaro.org>
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] arm64: dts: qcom: sdm845: Add PCIe nodes
+Date:   Fri,  1 Nov 2019 17:31:45 -0700
+Message-Id: <20191102003148.4091335-1-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,16 +71,22 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This second iteration of the patch series fixes review comments on v1 and has
-been tested with both PCIe controllers found on the Qualcomm SDM845.
+Add PCIe controller and PHY nodes for SDM845 and enable them for the
+Dragonboard 845c.
 
-Bjorn Andersson (2):
-  dt-bindings: PCI: qcom: Add support for SDM845 PCIe
-  PCI: qcom: Add support for SDM845 PCIe controller
+The two series' that adding the PHY drivers and controller support can be found
+here:
+https://lore.kernel.org/linux-arm-msm/20191102001628.4090861-1-bjorn.andersson@linaro.org/T/#m6a892f4d6a8eefdd2c16b29b1cebb0023c69eac0
+https://lore.kernel.org/linux-arm-msm/20191102002721.4091180-1-bjorn.andersson@linaro.org/T/#m42ca469f4b23d534000a4b45a55d9739edbebdc4
 
- .../devicetree/bindings/pci/qcom,pcie.txt     |  19 +++
- drivers/pci/controller/dwc/pcie-qcom.c        | 152 ++++++++++++++++++
- 2 files changed, 171 insertions(+)
+Bjorn Andersson (3):
+  arm64: dts: qcom: sdm845: Add first PCIe controller and PHY
+  arm64: dts: qcom: sdm845: Add second PCIe PHY and controller
+  arm64: dts: qcom: db845c: Enable PCIe controllers
+
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts |  91 +++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 215 +++++++++++++++++++++
+ 2 files changed, 306 insertions(+)
 
 -- 
 2.23.0
