@@ -2,85 +2,112 @@ Return-Path: <SRS0=kVRS=Y2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEB4CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 15:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22729CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 16:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A3C21726
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 15:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7922080F
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 16:53:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWoGB9I+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfKBPvI (ORCPT
+        id S1726554AbfKBQxb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 Nov 2019 11:51:08 -0400
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:56248 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726454AbfKBPvI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 11:51:08 -0400
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iQvg8-0008Sp-Ij; Sat, 02 Nov 2019 16:51:04 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from dell2.five-lan.de (pD9E89706.dip0.t-ipconnect.de [217.232.151.6])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xA2Fp2pW029369
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Sat, 2 Nov 2019 16:51:03 +0100
-Subject: Re: [PATCH] arm64: dts: rockchip: Split rk3399-roc-pc for with and
- without mezzanine board.
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de>
- <CAMty3ZDSK4mJk0bkQ_e3m1=Ar+NnGZS7q8zFYJJHtZY3HeBkfw@mail.gmail.com>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Message-ID: <30fd5275-6219-3068-dc22-6ae147baef4e@fivetechno.de>
-Date:   Sat, 2 Nov 2019 16:51:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sat, 2 Nov 2019 12:53:31 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46415 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfKBQxb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 12:53:31 -0400
+Received: by mail-ed1-f66.google.com with SMTP id z22so9804298edr.13;
+        Sat, 02 Nov 2019 09:53:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hQ95xlFlsmX8ViImt/+o/Caz03S7IjKb4k3du7kugq0=;
+        b=oWoGB9I+TyWZJEKlA41P7eYZhu8fouR6ppyfeVMR49gVqocVxwRyKcD6byFEV+kGBy
+         E2OMMeIjDakSmCUrgYP+o2CjREIQjmJrRt4IaaFCcYxn9kMeT13s8CflG38EMgND+NoD
+         Aan+FYyKLnDWMZWLcxDUeFtUYxH9neEI4ISzngbCZ2penIkmU1j4FEVt73fDkA2LSbpV
+         ehnYsRfQZjWiePjT/AnA/zJowVr+vULD/C7m3CPv+EtC/JK/fih2vI4ash1iWCsm0xC5
+         e7C1m9JUCpjykQwkXbAm3LM/WtmSQuNoLDaTgsp6UeSUge0lLhhvBbJiIhm+m14+siF5
+         HETA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hQ95xlFlsmX8ViImt/+o/Caz03S7IjKb4k3du7kugq0=;
+        b=QV+9BdKwZb6x3nvOCQPMvq9afhfC8mIqdfZsXyHyV633ewvZ4aTjKPZSN71V8pTciA
+         h8GBy80hMt097DiNGOXeX5LoYSayyZHjjb+dYNVJBieT5x4/ILHnI8Vk62d9LggE2q+p
+         TevO/y3GDCI3LJzDv5ETajWOHzGgBiVRdfvocC1VlWJh6o9sxQcYGnAGjbQsxXVzBXSi
+         ul4IF4SEklRzUKzcckKVZ5anHd50+zCPcxMRWmBxttVRJXEIKvXDMcE/w8IXT2KGvrhJ
+         KvMeTjetuKPZeRzAs84bz11+RclPNyMebdjKJPYzbsIYZHZHyRZn3QwTrBQsBvZAqpsx
+         muHw==
+X-Gm-Message-State: APjAAAUndjq5lxhQ4bAFTiQZmcwDA4nBasrtHDZQyGseJk35hol6haDS
+        fKzQH4pHTD8EgYXDEUSSyNF0H33rtKUXUzo2Qs+qpmH2
+X-Google-Smtp-Source: APXvYqzRSzYk7AgLA5SNH9E7JvC5C1z3aJ6zO9H99iPAVIYt57B4ir9uBqm1Jj0P0MogIz4YaCikgLP5pm+YSl8v2zg=
+X-Received: by 2002:a17:906:a44:: with SMTP id x4mr15543925ejf.64.1572713609301;
+ Sat, 02 Nov 2019 09:53:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMty3ZDSK4mJk0bkQ_e3m1=Ar+NnGZS7q8zFYJJHtZY3HeBkfw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1572709868;15dbb537;
-X-HE-SMSGID: 1iQvg8-0008Sp-Ij
+References: <20191031104402.31813-1-kholk11@gmail.com> <20191031104402.31813-3-kholk11@gmail.com>
+In-Reply-To: <20191031104402.31813-3-kholk11@gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sat, 2 Nov 2019 09:53:17 -0700
+Message-ID: <CAF6AEGv77=zw8GiJOEgg6RkaukxTCGzEd=SdjRr+GLLBdEoRPw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/7] dt-bindings: msm/mdp5: Document optional TBU and
+ TBU_RT clocks
+To:     AngeloGioacchino Del Regno <kholk11@gmail.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>, marijns95@gmail.com,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan <jonathan@marek.ca>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jagan,
++ devicetree list
 
-Am 01.11.19 um 18:18 schrieb Jagan Teki:
-> On Fri, Nov 1, 2019 at 10:24 PM Markus Reichl <m.reichl@fivetechno.de> wrote:
->>
->> For rk3399-roc-pc is a mezzanine board available that carries M.2 and
->> POE interfaces. Use it with a separate dts.
-> 
-> Thanks for the patch. Indeed have an impression to go this via overlay
-> rather than a separate dts since it is HAT for base board, does it
-> make sense? or is this the way it is handling in rockchip dts files?
-
-Please see discussion here:
-http://lists.infradead.org/pipermail/linux-rockchip/2019-November/027592.html
-
-Btw. it looks like there is an upcoming roc-pc-plus board with sound and other 
-peripherals on board. That could probably use the proposed rk3399-roc-pc.dtsi,
-too. 
-
-
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+On Thu, Oct 31, 2019 at 3:44 AM <kholk11@gmail.com> wrote:
+>
+> From: AngeloGioacchino Del Regno <kholk11@gmail.com>
+>
+> These two clocks aren't present in all versions of the MDP5 HW:
+> where present, they are needed to enable the Translation Buffer
+> Unit(s).
+>
+> Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/display/msm/mdp5.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/msm/mdp5.txt b/Documentation/devicetree/bindings/display/msm/mdp5.txt
+> index 4e11338548aa..43d11279c925 100644
+> --- a/Documentation/devicetree/bindings/display/msm/mdp5.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/mdp5.txt
+> @@ -76,6 +76,8 @@ Required properties:
+>  Optional properties:
+>  - clock-names: the following clocks are optional:
+>    * "lut"
+> +  * "tbu"
+> +  * "tbu_rt"
+>
+>  Example:
+>
+> --
+> 2.21.0
+>
