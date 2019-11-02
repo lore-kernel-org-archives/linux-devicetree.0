@@ -2,97 +2,331 @@ Return-Path: <SRS0=kVRS=Y2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85C7CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 17:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF128CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 18:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBB6218AC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 17:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E06820862
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 18:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXt4YZa1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="D6Oa+bKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfKBR32 (ORCPT
+        id S1726523AbfKBS6H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 Nov 2019 13:29:28 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40149 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfKBR32 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 13:29:28 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o28so12678782wro.7;
-        Sat, 02 Nov 2019 10:29:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sh78oVIiRrDkWPPtRwjQsKosVmgPku74hJKQMiox9SI=;
-        b=EXt4YZa1gBYT0SBFSOdnUSP/Xh88Qx6qTawy8qoHa8PEm/6u8Lyhzaavhf5PFWdGfO
-         XiGrDHjj8V2k/+vwiGyNxefEq1eobFQeIwwi1P2sbX1glmauDj1tZrH7N+hs8ngAWgv3
-         HiTqhntK9yuiKhQAnbmiLofR4XLRVoednEDWYN7rMGS86/uN8RgYnKfdSQlRKiNy1bQL
-         tr/hJgMOnRo34VOhXV/Y9d+eUrVErRTG+g3r16pwN/ePQR12OT3S3rfMSTSFH2JOxO48
-         w5cPGNhPXpCASWTsgjTY7W6yD7B4+bhR/3ulNfVh0W88GdGF1S6E1kQ8CzMCOcoL6jdC
-         G+xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sh78oVIiRrDkWPPtRwjQsKosVmgPku74hJKQMiox9SI=;
-        b=hXlHbCu6BrMalaPeLeIMuT39KCHrSe3i/m/mowjLORxcDJbkjmbHbXSnRdXKfrYzw/
-         E8tVy/KW1eb/CigHqneHthRJd2ln25uylQlw1CQXK0ZCzkdaZlCc+x2awIoCzQp2W4yn
-         xUm2Au/ByZEpEY/cMMUp0845QAbeByU8GMpkKJ69z6iO10+k+slYFDexeSkAf8JAzxR+
-         0mMBGLoIjmEqg/AJC1oivv0IdwFMoVnQqkLYe8B9fCe/fFlTMVRcNWwFAZQNaqYu1wfF
-         CFeMtNwkhnscM9t25q4s9SVjcPaXYCZBygOi2OF7MaOFhDliGr5jiVqOYs/TqrFNyTJ3
-         NnSw==
-X-Gm-Message-State: APjAAAVb7wQ14zluJ/HimI+8LbNhofLJW1egBLKk5QT10joWSj3iTMo9
-        dpVq1IHZ9hKP1hDqUXiuXQo=
-X-Google-Smtp-Source: APXvYqz0gH833YbhVFROvsGuASqu7kuQq2cSTcdMc6e6Ku7AG2rW5qdKkUuR2ejBlQK5LJFZIyPq2g==
-X-Received: by 2002:a5d:6b0a:: with SMTP id v10mr15060341wrw.32.1572715765835;
-        Sat, 02 Nov 2019 10:29:25 -0700 (PDT)
-Received: from morpheus.home.roving-it.com (2.e.6.5.c.a.a.1.a.8.0.3.1.e.3.c.1.8.6.2.1.1.b.f.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:fb11:2681:c3e1:308a:1aac:56e2])
-        by smtp.googlemail.com with ESMTPSA id a17sm10652954wmb.8.2019.11.02.10.29.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Nov 2019 10:29:24 -0700 (PDT)
-From:   Peter Robinson <pbrobinson@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc:     Peter Robinson <pbrobinson@gmail.com>
-Subject: [PATCH] arm64: tegra: Jetson TX2: Allow bootloader to configure Ethernet MAC
-Date:   Sat,  2 Nov 2019 17:29:17 +0000
-Message-Id: <20191102172917.27310-1-pbrobinson@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Sat, 2 Nov 2019 14:58:07 -0400
+Received: from gateway20.websitewelcome.com ([192.185.50.28]:20545 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726396AbfKBS6H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 14:58:07 -0400
+X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Sat, 02 Nov 2019 14:58:06 EDT
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 251D7400C5807
+        for <devicetree@vger.kernel.org>; Sat,  2 Nov 2019 12:04:26 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id QxtJi7ENHW4frQxtKib9Gm; Sat, 02 Nov 2019 13:12:50 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=+g5tAwaZ2CLSWMBxol++9wXqEbouJExOmuVPL3x8TsE=; b=D6Oa+bKBQztv7UHbHDkomFfesI
+        heZLMjcWlKncM00SjWaLDKEkEmiTgXK646CmZbVYIYAoCNFt4LXpToc9haNc6pqk0IPF4tDQKIGDB
+        ztbwyyGemxm2qi9W41huTvrs1pnRaVdQOhqIgPyjufbxy8L8WWTj5XzW6XEyfuwr4CAK8O1u18XY5
+        3FEPzuR51IPEwIGN2gOmrvEFR9WDEKok93hgxlCQ/iGrCWR8fAxYwoSfVpHPY1i3Rpf1BU3vPfEjp
+        LUxTL1ccnernMXttw2mDEyndlbRwuTCaib6hAH8MtNu0ebtZZ6YiDf1+zed0la7mPNVjdUSCDZS+s
+        sjol9v9A==;
+Received: from [191.31.198.254] (port=58308 helo=[192.168.15.3])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iQxtJ-003Nkf-Bk; Sat, 02 Nov 2019 15:12:49 -0300
+Subject: Re: [PATCH v4 3/4] power: supply: max17040: Config alert SOC low
+ level threshold from FDT
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
+ <20191031184134.30621-1-matheus@castello.eng.br>
+ <20191031184134.30621-4-matheus@castello.eng.br> <20191101152755.GC28931@pi3>
+ <c18ab487-6242-4ac2-b2c2-ef78c899521a@castello.eng.br>
+Message-ID: <4acd4bcf-4488-01f2-cacc-0170c33e20c2@castello.eng.br>
+Date:   Sat, 2 Nov 2019 15:12:44 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <c18ab487-6242-4ac2-b2c2-ef78c899521a@castello.eng.br>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: pt-BR
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.198.254
+X-Source-L: No
+X-Exim-ID: 1iQxtJ-003Nkf-Bk
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.3]) [191.31.198.254]:58308
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 9
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add an ethernet alias so that a stable MAC address is added to the
-device tree for the wired ethernet interface.
 
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
----
- arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
-index 5e18acf5cfad..947744d0f04c 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
-@@ -8,6 +8,7 @@
- 	compatible = "nvidia,p3310", "nvidia,tegra186";
- 
- 	aliases {
-+		ethernet0 = "/ethernet@2490000";
- 		sdhci0 = "/sdhci@3460000";
- 		sdhci1 = "/sdhci@3400000";
- 		serial0 = &uarta;
--- 
-2.23.0
+Em 11/1/19 1:52 PM, Matheus Castello escreveu:
+> 
+> 
+> Em 11/1/19 12:27 PM, Krzysztof Kozlowski escreveu:
+>> On Thu, Oct 31, 2019 at 03:41:33PM -0300, Matheus Castello wrote:
+>>> For configuration of fuel gauge alert for a low level state of charge
+>>> interrupt we add a function to config level threshold and a device tree
+>>> binding property to set it in flatned device tree node.
+>>>
+>>> Now we can use "maxim,alert-low-soc-level" property with the values from
+>>> 1% up to 32% to configure alert interrupt threshold.
+>>>
+>>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>>> ---
+>>>   drivers/power/supply/max17040_battery.c | 88 +++++++++++++++++++++----
+>>>   1 file changed, 74 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/drivers/power/supply/max17040_battery.c 
+>>> b/drivers/power/supply/max17040_battery.c
+>>> index 75459f76d02c..802575342c72 100644
+>>> --- a/drivers/power/supply/max17040_battery.c
+>>> +++ b/drivers/power/supply/max17040_battery.c
+>>> @@ -29,6 +29,9 @@
+>>>   #define MAX17040_DELAY        1000
+>>>   #define MAX17040_BATTERY_FULL    95
+>>>
+>>> +#define MAX17040_ATHD_MASK        0xFFC0
+>>> +#define MAX17040_ATHD_DEFAULT_POWER_UP    4
+>>> +
+>>>   struct max17040_chip {
+>>>       struct i2c_client        *client;
+>>>       struct delayed_work        work;
+>>> @@ -43,6 +46,8 @@ struct max17040_chip {
+>>>       int soc;
+>>>       /* State Of Charge */
+>>>       int status;
+>>> +    /* Low alert threshold from 32% to 1% of the State of Charge */
+>>> +    u32 low_soc_alert_threshold;
+>>>   };
+>>>
+>>>   static int max17040_get_property(struct power_supply *psy,
+>>> @@ -99,6 +104,22 @@ static void max17040_reset(struct i2c_client 
+>>> *client)
+>>>       max17040_write_reg(client, MAX17040_CMD, 0x0054);
+>>>   }
+>>>
+>>> +static int max17040_set_low_soc_threshold_alert(struct i2c_client 
+>>> *client,
+>>> +    u32 level)
+>>> +{
+>>> +    int ret;
+>>> +    u16 data;
+>>> +
+>>> +    level = 32 - level;
+>>> +    data = max17040_read_reg(client, MAX17040_RCOMP);
+>>> +    /* clear the alrt bit and set LSb 5 bits */
+>>> +    data &= MAX17040_ATHD_MASK;
+>>> +    data |= level;
+>>> +    ret = max17040_write_reg(client, MAX17040_RCOMP, data);
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +
+>>>   static void max17040_get_vcell(struct i2c_client *client)
+>>>   {
+>>>       struct max17040_chip *chip = i2c_get_clientdata(client);
+>>> @@ -115,7 +136,6 @@ static void max17040_get_soc(struct i2c_client 
+>>> *client)
+>>>       u16 soc;
+>>>
+>>>       soc = max17040_read_reg(client, MAX17040_SOC);
+>>> -
+>>>       chip->soc = (soc >> 8);
+>>>   }
+>>>
+>>> @@ -161,6 +181,24 @@ static void max17040_get_status(struct 
+>>> i2c_client *client)
+>>>           chip->status = POWER_SUPPLY_STATUS_FULL;
+>>>   }
+>>>
+>>> +static int max17040_get_of_data(struct max17040_chip *chip)
+>>> +{
+>>> +    struct device *dev = &chip->client->dev;
+>>> +    struct device_node *np = dev->of_node;
+>>> +    int ret = 0;
+>>> +
+>>> +    if (of_property_read_u32(np, "maxim,alert-low-soc-level",
+>>> +            &chip->low_soc_alert_threshold)) {
+>>
+>> Please align the line break with line above. checkpatch --strict might
+>> give you hints about this.
+>> >> +        chip->low_soc_alert_threshold = 
+>> MAX17040_ATHD_DEFAULT_POWER_UP;
+>>> +    /* check if low_soc_alert_threshold is between 1% and 32% */
+>>
+>> The comment looks misleading here, like it belongs to previous block.
+>> Maybe put it inside else if {} block?
+>>
+>>> +    } else if (chip->low_soc_alert_threshold <= 0 ||
+>>> +            chip->low_soc_alert_threshold >= 33){
+>>
+>> Missing space before {.
+>>
+>>> +        ret = -EINVAL;
+>>> +    }
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +
+>>>   static void max17040_check_changes(struct i2c_client *client)
+>>>   {
+>>>       max17040_get_vcell(client);
+>>> @@ -192,6 +230,10 @@ static irqreturn_t max17040_thread_handler(int 
+>>> id, void *dev)
+>>>       /* send uevent */
+>>>       power_supply_changed(chip->battery);
+>>>
+>>> +    /* reset alert bit */
+>>> +    max17040_set_low_soc_threshold_alert(client,
+>>> +        chip->low_soc_alert_threshold);
+>>
+>> Unless the continuation exceeds 80 character limit, please align it with
+>> previous line.
+>>
+>>> +
+>>>       return IRQ_HANDLED;
+>>>   }
+>>>
+>>> @@ -216,6 +258,7 @@ static int max17040_probe(struct i2c_client *client,
+>>>       struct i2c_adapter *adapter = client->adapter;
+>>>       struct power_supply_config psy_cfg = {};
+>>>       struct max17040_chip *chip;
+>>> +    int ret;
+>>>
+>>>       if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
+>>>           return -EIO;
+>>> @@ -226,6 +269,12 @@ static int max17040_probe(struct i2c_client 
+>>> *client,
+>>>
+>>>       chip->client = client;
+>>>       chip->pdata = client->dev.platform_data;
+>>> +    ret = max17040_get_of_data(chip);
+>>> +    if (ret) {
+>>> +        dev_err(&client->dev,
+>>> +            "failed: low SOC alert OF data out of bounds\n");
+>>> +        return ret;
+>>> +    }
+>>>
+>>>       i2c_set_clientdata(client, chip);
+>>>       psy_cfg.drv_data = chip;
+>>> @@ -242,20 +291,31 @@ static int max17040_probe(struct i2c_client 
+>>> *client,
+>>>
+>>>       /* check interrupt */
+>>>       if (client->irq) {
+>>> -        int ret;
+>>> -        unsigned int flags;
+>>> -
+>>> -        dev_info(&client->dev, "IRQ: enabled\n");
+>>> -        flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+>>> -        ret = devm_request_threaded_irq(&client->dev, client->irq, 
+>>> NULL,
+>>> -                        max17040_thread_handler, flags,
+>>> -                        chip->battery->desc->name,
+>>> -                        chip);
+>>> -
+>>> -        if (ret) {
+>>> -            client->irq = 0;
+>>> +        if (of_device_is_compatible(client->dev.of_node,
+>>> +            "maxim,max77836-battery")) {
+>>
+>> Alignment.
+>>
+>>> +            ret = max17040_set_low_soc_threshold_alert(client,
+>>> +                chip->low_soc_alert_threshold);
+>>
+>> Ditto.
+>>
 
+I am working to fix the alignments issues using the checkpath strict and 
+I have a doubt. Here for example if I fix the check "Alignment should 
+match open parenthesis" it will pass the 80 characters limit and will 
+show me a warning.
+
+>>> +            if (ret) {
+>>> +                dev_err(&client->dev,
+>>> +                    "Failed to set low SOC alert: err %d\n",
+>>> +                    ret);
+>>> +                return ret;
+>>> +            }
+>>> +
+>>> +            dev_info(&client->dev, "IRQ: enabled\n");
+>>> +            ret = devm_request_threaded_irq(&client->dev,
+>>> +                client->irq, NULL, max17040_thread_handler,
+>>> +                (client->flags | IRQF_ONESHOT),
+>>
+>> This looks unrelated. Befor ethis were IRQF_TRIGGER_FALLING |
+>> IRQF_ONESHOT, now you use client->flags. There is no reason why this
+>> commit should change >
+> 
+> I am using client->flags here to not overwrite the flag passed in device 
+> tree. Let me know what you think about it: if I should leave it as in 
+> the previous commit, or should I modify the previous commit too.
+> 
+>>> +                chip->battery->desc->name, chip);
+>>
+>> This breaks alignment which was here before.
+>>
+
+The same here.
+How to proceed in this case?
+
+Best Regards,
+Matheus Castello
+
+>> Best regards,
+>> Krzysztof
+>>
+>>
+> 
+> Thanks for the review i will work on it.
+> 
+>>> +
+>>> +            if (ret) {
+>>> +                client->irq = 0;
+>>> +                dev_warn(&client->dev,
+>>> +                    "Failed to get IRQ err %d\n", ret);
+>>> +            }
+>>> +        } else {
+>>>               dev_warn(&client->dev,
+>>> -                "Failed to get IRQ err %d\n", ret);
+>>> +                "Device not compatible for IRQ");
+>>>           }
+>>>       }
+>>>
+>>> -- 
+>>> 2.24.0.rc2
+>>>
