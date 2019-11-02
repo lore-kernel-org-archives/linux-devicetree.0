@@ -2,233 +2,196 @@ Return-Path: <SRS0=kVRS=Y2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FFECA9ED1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 14:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DA2C47E49
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 15:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F05A217D9
-	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 14:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49338218AC
+	for <linux-devicetree@archiver.kernel.org>; Sat,  2 Nov 2019 15:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwGBKLSD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdoGrgl4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfKBOmo (ORCPT
+        id S1726477AbfKBPPk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 Nov 2019 10:42:44 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40019 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfKBOmo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 10:42:44 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f3so670522wmc.5;
-        Sat, 02 Nov 2019 07:42:39 -0700 (PDT)
+        Sat, 2 Nov 2019 11:15:40 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36074 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfKBPPk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 2 Nov 2019 11:15:40 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v19so9014215pfm.3;
+        Sat, 02 Nov 2019 08:15:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zM/whlM8S6AD7q0IG4j9Y/yF+Vk/WbrdulCi0E4vlj8=;
-        b=iwGBKLSDUfsCAdyiIq3h8EhR6EvUb2SN2zTg6gmEXsHvuqR0maTYYirLw/8kTLPqBy
-         k69Y5DD1HyVcDs8/buJaX9YrN/jXT0yWFFzIAhku/DZHFyg8snwFhx347TV+TzHFBlQD
-         SH1dX19c45XgPESounMeiHToboXRpqhtgYTzV4PdMqB8rJD//rCVMXc/WylNuybW8XWE
-         +9bDyL70FaXDX2Yn5nismcKUOFawOQtM9/KqhnRcimv0uqqSC362HvbOF4cvPIng/VNt
-         gGOjikIpsc2zFoltMNe6dULOks+QL3BW7e8SKcai5LiDx2HzlZkCCzjS53bzJBFfGYCO
-         Ging==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qAvZBK6DZqUp9iHt6R3a29zC4mhIYuBP32xhiYLg1b8=;
+        b=WdoGrgl4QaxUrDwn1jlCwQc6eRKP+oDnmFXfcdeWb8qLYSr5+fJ9+klORmXH13D/r/
+         VtaA/lHL2lvw+c01lsfeXlJQIAAlV9eoOiszPo55FdK/vOlkRrH79yr2MrceE1kpZMrc
+         Pc4oSJKFqVhZ3WVZSx1rkAD8kVqB0z5xB8IUANQplSQq8Ax1bCW9RNqQoNbkevSC7tlg
+         emW9R3k0lMulYzio7NSwBjCNz2Iry9JsYakRQ4piIDK67XBsd2c2YiOJZ8B6z+yr/FHJ
+         V88/zrUYsqKkDG2ZP5B9Dki01BWa7d59ud+lmZGWLG1qi7Hsp675MC+6yiZkkuuAwwc1
+         330g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zM/whlM8S6AD7q0IG4j9Y/yF+Vk/WbrdulCi0E4vlj8=;
-        b=QjTkDWO5OmOl5QvRUJA5xOsg3UGpcKjmu3KsJbm6uu4yjEmVU/XRVbzmN0wn8qJGWc
-         UntFiEU/alhp18WU+Ur22GUH3I+qPooH6FIwayF4HPzsjx98L3nYVzeZZzQHLzYRcr3t
-         gT3npAP0SrHN5L392h/BB8YffHRY08frs0RtwaAQ9Y9w4KTN3/103+DXk7rVPshpOfCB
-         A47i3t0Licx5YPVqI6b1TNA03EORABxwfWjlJmurNYoRnxmUaYnW2AmDlXi2RmlQUqs/
-         /CDOT9PBmf9MvlqrppmfhcREfzVX5GCP1AYpiyzB67Y16Maxt9hwhne64tX+F4DjLt3G
-         QyrQ==
-X-Gm-Message-State: APjAAAXiRvkmGn9onD8pqroOL/CGX4d2PrOHiAYYxBa9KS1QX6cuBFIg
-        ZFynAHgjV8Pfp4EV7sJPYcQ=
-X-Google-Smtp-Source: APXvYqwokwBFr2MYtxdsK1z72BadaiVS2AUHSRK5nNH91bt5QvEJYBLtSr9FSyNwudJUMSBU8CErAg==
-X-Received: by 2002:a1c:7911:: with SMTP id l17mr9780746wme.107.1572705758991;
-        Sat, 02 Nov 2019 07:42:38 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id s13sm9727704wmc.28.2019.11.02.07.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Nov 2019 07:42:37 -0700 (PDT)
-Date:   Sat, 2 Nov 2019 15:42:35 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
-        tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        digetx@gmail.com, devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 12/22] cpufreq: tegra124: Add suspend and resume
- support
-Message-ID: <20191102144235.GA3862867@ulmo>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
- <1565984527-5272-13-git-send-email-skomatineni@nvidia.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qAvZBK6DZqUp9iHt6R3a29zC4mhIYuBP32xhiYLg1b8=;
+        b=JozK5H0mcGMgGt8mfbHKaaK/nANHjCIVQaSroGOfdLO9nT44yf0ssyb3Q3VphaZk++
+         YWg/p3XRzkQuTFPKLqu+kMSsO4ELJsbMsMyunvC4llAWg+upWXdZDyEp/uosKpjpfZIm
+         gXTLGalJ6PN8WmHzxpBLjA5NM/E9Fc9zK9sgyDryo+TGtK1xOzSUksgqxBlN89WIrAhG
+         kAPEYgfmgVVKs0QLeEN97Alz+wHBQm1SbInJ1AH8zNUeQa7Qa414VixP/XctelhBaNJ+
+         1rBEY7ZTkw/VhSC0BPY2zIqs/ENNNu/8dm19o8tUH/rKXr2EaYF/X8idgDxo3vWdO0K8
+         v7hQ==
+X-Gm-Message-State: APjAAAUDpZ+GcbWqnAN/14i8Lr9SgknRJfPQNOSTW2AWgPKKLMT3/qqT
+        5m8gXAZIUuEE5ZMwYGKNCXo=
+X-Google-Smtp-Source: APXvYqxNSyl6X9QQi0QbkV1G0AHqIxam5bFBI8K9G7zWwZcfgVL/LNqmX341rL1Cm3/rzhYDltaF3g==
+X-Received: by 2002:a17:90a:bb82:: with SMTP id v2mr1432453pjr.90.1572707739226;
+        Sat, 02 Nov 2019 08:15:39 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c9sm15545305pfb.114.2019.11.02.08.15.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 02 Nov 2019 08:15:38 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] hwmon: Add driver for Texas Instruments TMP512/513
+ sensor chips
+To:     "Tremblay, Eric" <etremblay@distech-controls.com>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <DM6PR01MB4844A7A2E7DCA9168D44F34195610@DM6PR01MB4844.prod.exchangelabs.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <1c265dad-d6c5-aba3-3344-58893b6d13f2@roeck-us.net>
+Date:   Sat, 2 Nov 2019 08:15:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
-Content-Disposition: inline
-In-Reply-To: <1565984527-5272-13-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <DM6PR01MB4844A7A2E7DCA9168D44F34195610@DM6PR01MB4844.prod.exchangelabs.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 10/29/19 8:04 AM, Tremblay, Eric wrote:
+> dt-bindings: hwmon: Add TMP512/513
+> 
+> Add dt-binding for TMP512/513 sensor chips
+> 
+> Signed-off-by: Eric Tremblay <etremblay@distech-controls.com>
 
---h31gzZEtNLTqOjlF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The two patches LGTM. Waiting for Reviewed-by: tag from DT maintainer.
 
-On Fri, Aug 16, 2019 at 12:41:57PM -0700, Sowjanya Komatineni wrote:
-> This patch adds suspend and resume pm ops for cpufreq driver.
->=20
-> PLLP is the safe clock source for CPU during system suspend and
-> resume as PLLP rate is below the CPU Fmax at Vmin.
->=20
-> CPUFreq driver suspend switches the CPU clock source to PLLP and
-> disables the DFLL clock.
->=20
-> During system resume, warmboot code powers up the CPU with PLLP
-> clock source. So CPUFreq driver resume enabled DFLL clock and
-> switches CPU back to DFLL clock source.
->=20
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Thanks,
+Guenter
+
 > ---
->  drivers/cpufreq/tegra124-cpufreq.c | 59 ++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 59 insertions(+)
+>   .../devicetree/bindings/hwmon/ti,tmp513.yaml  | 88 +++++++++++++++++++
+>   1 file changed, 88 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
+> new file mode 100644
+> index 000000000000..e5f3c72ff548
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
+> @@ -0,0 +1,88 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2018 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +
+> +$id: http://devicetree.org/schemas/hwmon/ti,tmp513.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TMP513/512 system monitor sensor
+> +
+> +maintainers:
+> +  - Eric Tremblay <etremblay@distech-controls.com>
+> +
+> +description: |
+> +  The TMP512 (dual-channel) and TMP513 (triple-channel) are system monitors that include
+> +  remote sensors, a local temperature sensor, and a high-side current shunt monitor.
+> +  These system monitors have the capability of measuring remote temperatures,
+> +  on-chip temperatures, and system voltage/power/current consumption.
+> +
+> +  Datasheets:
+> +  http://www.ti.com/lit/gpn/tmp513
+> +  http://www.ti.com/lit/gpn/tmp512
+> +
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,tmp512
+> +      - ti,tmp513
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  shunt-resistor-micro-ohms:
+> +    description: |
+> +      If 0, the calibration process will be skiped and the current and power
+> +      measurement engine will not work. Temperature and voltage measurement
+> +      will continue to work.
+> +      The shunt value also need to respect : rshunt <= pga-gain * 40 * 1000 * 1000.
+> +      If not, it's not possible to compute a valid calibration value.
+> +    default: 1000
+> +
+> +  ti,pga-gain:
+> +    description: |
+> +      The gain value for the PGA function. This is 8, 4, 2 or 1.
+> +      The PGA gain affect the shunt voltage range.
+> +      The range will be equal to: pga-gain * 40mV
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [1, 2, 4, 8]
+> +    default: 8
+> +
+> +  ti,bus-voltage-range-volt:
+> +    description: |
+> +      This is the operating range of the bus voltage
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [16, 32]
+> +    default: 32
+> +
+> +  ti,nfactor:
+> +    description: |
+> +      Array of three(TMP513) or two(TMP512) n-Factor value for each remote
+> +      temperature channel.
+> +      See datasheet Table 11 for n-Factor range list and value interpretation.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint8-array
+> +      - minItems: 2
+> +        maxItems: 3
+> +        items:
+> +          default: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        tmp513@5c {
+> +            compatible = "ti,tmp513";
+> +            reg = <0x5C>;
+> +            shunt-resistor-micro-ohms = <330000>;
+> +            ti,bus-voltage-range-volts = <32>;
+> +            ti,pga-gain = <8>;
+> +            ti,nfactor = [01 F3 00];
+> +        };
+> +    };
+> 
 
-Hi Rafael,
-
-I was originally planning to pick this up into the Tegra tree with your
-and Viresh's Acked-by, but I now realize that there aren't any
-dependencies between this and the rest of the series, so this can also
-go through your tree.
-
-Do you have any preference on how to merge it? I've already Acked this
-=66rom the Tegra side, so feel free to pick it up if that's what you
-prefer.
-
-Thierry
-
-> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra12=
-4-cpufreq.c
-> index 4f0c637b3b49..7a1ea6fdcab6 100644
-> --- a/drivers/cpufreq/tegra124-cpufreq.c
-> +++ b/drivers/cpufreq/tegra124-cpufreq.c
-> @@ -6,6 +6,7 @@
->  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-> =20
->  #include <linux/clk.h>
-> +#include <linux/cpufreq.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
-> @@ -128,8 +129,66 @@ static int tegra124_cpufreq_probe(struct platform_de=
-vice *pdev)
->  	return ret;
->  }
-> =20
-> +static int __maybe_unused tegra124_cpufreq_suspend(struct device *dev)
-> +{
-> +	struct tegra124_cpufreq_priv *priv =3D dev_get_drvdata(dev);
-> +	int err;
-> +
-> +	/*
-> +	 * PLLP rate 408Mhz is below the CPU Fmax at Vmin and is safe to
-> +	 * use during suspend and resume. So, switch the CPU clock source
-> +	 * to PLLP and disable DFLL.
-> +	 */
-> +	err =3D clk_set_parent(priv->cpu_clk, priv->pllp_clk);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to reparent to PLLP: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	clk_disable_unprepare(priv->dfll_clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
-> +{
-> +	struct tegra124_cpufreq_priv *priv =3D dev_get_drvdata(dev);
-> +	int err;
-> +
-> +	/*
-> +	 * Warmboot code powers up the CPU with PLLP clock source.
-> +	 * Enable DFLL clock and switch CPU clock source back to DFLL.
-> +	 */
-> +	err =3D clk_prepare_enable(priv->dfll_clk);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to enable DFLL clock for CPU: %d\n", err);
-> +		goto disable_cpufreq;
-> +	}
-> +
-> +	err =3D clk_set_parent(priv->cpu_clk, priv->dfll_clk);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to reparent to DFLL clock: %d\n", err);
-> +		goto disable_dfll;
-> +	}
-> +
-> +	return 0;
-> +
-> +disable_dfll:
-> +	clk_disable_unprepare(priv->dfll_clk);
-> +disable_cpufreq:
-> +	disable_cpufreq();
-> +
-> +	return err;
-> +}
-> +
-> +static const struct dev_pm_ops tegra124_cpufreq_pm_ops =3D {
-> +	SET_SYSTEM_SLEEP_PM_OPS(tegra124_cpufreq_suspend,
-> +				tegra124_cpufreq_resume)
-> +};
-> +
->  static struct platform_driver tegra124_cpufreq_platdrv =3D {
->  	.driver.name	=3D "cpufreq-tegra124",
-> +	.driver.pm	=3D &tegra124_cpufreq_pm_ops,
->  	.probe		=3D tegra124_cpufreq_probe,
->  };
-> =20
-> --=20
-> 2.7.4
->=20
-
---h31gzZEtNLTqOjlF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl29ldkACgkQ3SOs138+
-s6GR4w//Ti81Vt9yfuiyTAKRnT23nbpt2nOwUpiZdVVifWAxX2mZT0UMIyKfOcQK
-BHYu6iXvOJ8iUBP/Mp+RNWJqwKGoRen6WvsMzCpWeagN+cfIGbtIcW+mUYGU5gEm
-gjwtwzOHXAXuc/LlCHhOV8TIUlsKQa5lLdLLv+HWAlqOEDaNZ/bVSciYOlp0KYl/
-q0O14CsRvrNgHerlkhv8yfwP7joSMtDWXGeF7n/HlnT3dOz08uLf5aQ+MHo2URTZ
-6ZCimFz/qscdJiH1XYnmRRoOORTCM7m5kmMMefqLOHyiOhGQzH4FhtGJP9+oCQzJ
-a17B8uHQJaQepuJBLerEESObUPvEbr6tzGxq0Hjw/uT2XP2qqX8V6ljoM3Xio3hN
-tcZAshrn73QTdKJ2/B0hNxCn77+Pv/RpAUBkKMdX5nK+MIOOW0JOXpGj/VelUVLG
-CGACvm6B6xVixHiV5TtKzCHVtc1T7hh6xrCZUzQkrUQ2XcmS8h7MIT5HOmU+4Kum
-79343LgON6Dcs1eRei+bqCy126HB2vNX/w+2X4khVgVsPE8vVbSydWilLna9zm/c
-Qv3cdelr/RHe1OW5w7RjtsJXxA1U8mf0LatdmPV6nKE4JBpCKbLRTXp7Kh0oHuR5
-E1BgGxiFL03NJWWrpb1OPs0QrJDIEtMxYPwcUxQtMlaa1750+7w=
-=wkKy
------END PGP SIGNATURE-----
-
---h31gzZEtNLTqOjlF--
