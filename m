@@ -2,114 +2,179 @@ Return-Path: <SRS0=PDL5=Y3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7524CA9ED0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 08:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A32CA9ED0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4E420848
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 08:44:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="S/6Slt4j"
+	by mail.kernel.org (Postfix) with ESMTP id 2E75C2084D
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:08:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572779330;
+	bh=FbaoVaWioLqr0Z7FxL6DKXeAOHtNY6YOT3zMnzdc8eU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vobNndDjbQqSyp2YcdXlwlpCguMrVKtoXH/BGxO4r4ju8cUfhYaLxTiUSRlMz00Mi
+	 lCR4sLgH+gnU8YpPs20wAPx1819AJOAVaTDlvuhoOxXIiT0I8vsAcyPOdFeHeDTzEH
+	 IDWgE5Lg70ce85bUq7WhCBFp97iIIO0gCtb5AGuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfKCIoO (ORCPT
+        id S1726998AbfKCLIt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 03:44:14 -0500
-Received: from mout.gmx.net ([212.227.17.21]:53701 "EHLO mout.gmx.net"
+        Sun, 3 Nov 2019 06:08:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbfKCIoN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 Nov 2019 03:44:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572770630;
-        bh=8nUwWR8GExLcbOE3XOLQonZXx+8Ceoj8aeAbi+XtRKo=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=S/6Slt4jsNuKM4d0rcPspjgA2G20Z6BHkEKgYuiQbBbVNde9l4bHEe0k63QQw1RNl
-         cIpzuV48kKm4IQtYJlLNDFEU2srJIeq23CVBWbJFkQvllUasmsqVZ9AVpSagBXL7rA
-         /1DUgaawWXLdFR2vvuoKUzGrdOUN4brSUOhpFRdU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.112]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MmDIu-1hj5JG0sme-00i9OL; Sun, 03
- Nov 2019 09:43:50 +0100
-Subject: Re: [PATCH 0/4] ARM: Enable thermal support for Raspberry Pi 4
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Markus Mayer <mmayer@broadcom.com>
-Cc:     devicetree@vger.kernel.org, Chen-Yu Tsai <wens@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-References: <1572615749-9524-1-git-send-email-wahrenst@gmx.net>
- <1c8ccf12-743c-cad0-bd63-3f46abe7d1c4@gmail.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <26f81338-2929-9ebc-cb46-0681b74d074d@gmx.net>
-Date:   Sun, 3 Nov 2019 09:43:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726676AbfKCLIt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 Nov 2019 06:08:49 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9974820842;
+        Sun,  3 Nov 2019 11:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572779327;
+        bh=FbaoVaWioLqr0Z7FxL6DKXeAOHtNY6YOT3zMnzdc8eU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aD6PQEf1YtBiqkJF3yrAS2+/Z6KUwhqc68hNZX6/JK6K79E/SC6l/MJJK/XPvHMVo
+         FKFtMgi5uMvstFpoEvL8wAOJ/0IAUtx1un5J0bwBbMya+o7K3qc6EBB8uSXwD0/x9c
+         +PTJWqhrPJrpGPKRQQy4w5Ow7wodiZeOSRK/hR54=
+Date:   Sun, 3 Nov 2019 11:08:41 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
+        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <lee.jones@linaro.org>, <thierry.reding@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH 2/4] dt-bindings: iio: timer: Convert stm32 IIO trigger
+ bindings to json-schema
+Message-ID: <20191103110841.3ad3ecfb@archlinux>
+In-Reply-To: <20191031123040.26316-3-benjamin.gaignard@st.com>
+References: <20191031123040.26316-1-benjamin.gaignard@st.com>
+        <20191031123040.26316-3-benjamin.gaignard@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1c8ccf12-743c-cad0-bd63-3f46abe7d1c4@gmail.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:wxPytE7gu1xzzCAy/l/4u/fAJPkjeYCCgKxR3X9/+UrDRbsEqzU
- GztSQYU3OPE4nN7YiW/qezu+liIoHS7u7akxsdnT1bLQc1XkToEwBTqzQhz+gkM/2LwG5mP
- /IsSm32+ac8+GM7Z+0vQEmFx7TG7ktawK6losZaclZtCRhiV2O6bQYiRuSlgT6X2FOvA5M0
- qeJr6BC42oky/RX/q+kZQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:n06fWHGqoz4=:mQogwh+vQVADzOLQo9GN/r
- r9w67GJkyp+uBYP3ELrlz3LyywsowWal8q7uthlt+8ERGIAXhQ5ycH3vHsbetsBmx3Sq6Wh/b
- 7Vi21Z9gDJGOVpIZaGkCNimvbl2+/aFSBB3ZyBdcEHilWy2VZJoTWiwqL3lVKgqrl2tndpep7
- pVo75BQW33IU0KQXwcLqvAWDWGe9tHboy+vMwA4oqctStmx6rWCePgkIuTm85okKGQrR5HWdl
- O8j9a7mAtzRjy7mpcFmOZOZgked2J0rgw27cOFYAuqogFqxTEucls9AXUDWR4GGFCpDZv2pGi
- R7PZWdKsAb70MmsIqRrpilK5m40oXP2r8/hVw/6ZIVSqrme5kzyurYJJF57uSbYP/ONC6mf+Y
- pTU8A3dnRJe2RKYOowoMbaqhxVvfP7LvfPZ0yo2widVII4ebbk/JCftoQ4hr1koTv7pzETvTB
- LbybPCv8HDhUKvhjvCdZtL+Phwk9kK7PkTSluFb2MD1aK6vZMYl4VIFihYQw6gN0ZLZkQ6FlU
- FXMWuPaAF8TgKxHa3/p2zmKwFLYh0MkckEV3/kk+2ETm5gcawJWfXj7Gr1Qz33wfVpILZidQB
- 6ba8wZ14QZfjPmllr355srFg0VI/xsWAWtAKjK3peTcyPljn38YDKDQNsGTTW4jc+TZQR2057
- aBbdl/bXvllGJSEyhXscoAu72zPPp0Nv7RIiX8exssjhwH619V6vTTtrktXbx23bZYLpknT3/
- zcAsxNMD+oSyWWF7V6DcBu36ec8gnHK5AoQF0f2zR8wP4BOljsp4gIEc5MHbgFnPZvUmhMQpw
- Et40BAJcFfiYXg8R02pRHT6xOyIcuNZV5+6iGkeaKttgRx1d4HoLGEu6me5lRBc5uV4s5O+8C
- JrnMo2ptcflC8thPQF4sXcMm7QMx8lVOoiQZ3po0TLIJGcmWLun3AvrhXWAM7N2+hPSa8l+DG
- PCdmJ5q3RvklbiCBdO9mOJpRkIsoc9xO2mbYBl9iTeIrCIQB2R9IDf4TzzhSPTvzfLzC9ImD/
- 9zgAxdIr0ZKqZoE85X8YfrwAngfx5yXKxc2F7uE6UbDV7Tg/byGPX0Q1qcz2NPH/qFYvaobdL
- Omuf071DybDa9A4mY2ckei98y8aPaX2+tsy9Wlr8IryLTqecmbxPFcCmSZp7o1YSJy6z448Pi
- hgZxsMB3iNPdwD/T1AM+HYJtIYX2gLnmArNq6g69wxeyFThF1s3DCgjQPZ/fCarOcdlAzMJE6
- L4js5LeH+xSvFJxeVe9VHQPELjeSbN3Dtw5wiTq9xOiWMdzr97qnNCCuAjgY=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Florian,
+On Thu, 31 Oct 2019 13:30:38 +0100
+Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
 
-Am 02.11.19 um 21:08 schrieb Florian Fainelli:
-> On 11/1/2019 6:42 AM, Stefan Wahren wrote:
->> This series enables thermal support for the Raspberry Pi 4. Neither the
->> bcm2835_thermal nor the brcmstb_thermal are suitable for the BCM2711.
->> So add a new thermal driver to read out the SoC temperature from the
->> AVS RO block of the BCM2711.
-> It seems to me that with minor tweaks you could use the brcmstb_thermal
-> driver, since the two key differences are essentially:
->
-> - lack of interrupt, which is also the case on the latest STB SoCs
-> - different way to determine that data is valid, by checking both bit 16
-> and bit 10, as opposed to bit 11, and a reduced ADC code from 11 bits
-> down to 10.
->
-> This seems like a simple enough set of changes to build on top of this
-> patch series:
->
-> https://lore.kernel.org/linux-arm-kernel/20191030182132.25763-1-f.fainelli@gmail.com/
-this was the downstream approach until i was informed that the thermal
-part of the RO block is used. I don't have a good feeling about misusing
-the wrong binding. I still hope that the RPI folks release some kind of
-memory map for the BCM2711 and maybe extend this driver. So i prefer to
-start with a separate binding.
+> Convert the STM32 IIO trigger binding to DT schema format using json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+I'm far from great on these as still haven't taken the time I should to learn
+the yaml syntax properly.  A few comments inline however based mostly on this
+doesn't quite look like other ones I've seen recently.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 ++++++++++++++++++++++
+>  .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------------
+>  2 files changed, 44 insertions(+), 25 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+> new file mode 100644
+> index 000000000000..1c8c8b55e8cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/timer/st,stm32-timer-trigger.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STM32 Timers IIO timer bindings
+> +
+> +maintainers:
+> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
+> +
+> +properties:
+> +  $nodemane:
+
+nodename?
+
+> +    pattern: "^timer@[0-9]+$"
+> +    type: object
+> +
+> +    description:
+> +      must be a sub-node of an STM32 Timer device tree node
+> +
+> +    properties:
+> +      compatible:
+> +        oneOf:
+
+enum is I think preferred for these.
+
+> +          - const: st,stm32-timer-trigger
+> +          - const: st,stm32h7-timer-trigger
+> +            
+> +      reg: true
+
+Normally some info for what the reg value is..
+
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +examples:
+> +  - |
+> +    timers2: timer@40000000 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      timer@0 {
+> +        compatible = "st,stm32-timer-trigger";
+> +        reg = <0>;
+> +      };
+> +    };
+> +    
+> +...
+> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+> deleted file mode 100644
+> index b8e8c769d434..000000000000
+> --- a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+> +++ /dev/null
+> @@ -1,25 +0,0 @@
+> -STMicroelectronics STM32 Timers IIO timer bindings
+> -
+> -Must be a sub-node of an STM32 Timers device tree node.
+> -See ../mfd/stm32-timers.txt for details about the parent node.
+> -
+> -Required parameters:
+> -- compatible:	Must be one of:
+> -		"st,stm32-timer-trigger"
+> -		"st,stm32h7-timer-trigger"
+> -- reg:		Identify trigger hardware block.
+> -
+> -Example:
+> -	timers@40010000 {
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -		compatible = "st,stm32-timers";
+> -		reg = <0x40010000 0x400>;
+> -		clocks = <&rcc 0 160>;
+> -		clock-names = "int";
+> -
+> -		timer@0 {
+> -			compatible = "st,stm32-timer-trigger";
+> -			reg = <0>;
+> -		};
+> -	};
+
