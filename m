@@ -6,64 +6,59 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF51CA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 08:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC40BCA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 08:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98674215EA
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 08:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C6B2084D
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 08:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572768799;
-	bh=O6Sl/WudcHVmvZ80SOwx1ethvyuH+iLA+GM2fSi1sgs=;
+	s=default; t=1572768883;
+	bh=WrEkas478AEsFfd0KnxML8A5xD0UqXNqQLN5Vnc5KU8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f+qNp9n/jelBq83HR5UsctBXnL7ULb4tPIFFtlfM1GyyHykNRuOU6C8yyB1W98pCj
-	 8MIxFm5cbA4SnvFiIbbYz2Zz7Uhpeh0P1JNIErfisP0VqJM6iDpzY7JsyKCU7CtPZO
-	 iPkrSiXebAcOJ/YEJWwDHu7aJ4mzwhGM6U1f9/gM=
+	b=N2sxZnRxQmEWbQKvveU4CCZ94qsDNFr9uhxXrQ4j5OVmTl/e4NGDB6g4OKXs58OhF
+	 lU7Wx++svws63cq+6qq06Wt3BjxvZtmwhfhZ8Qe/tJoDB5Zu4nUPva+R441rfYsQ0Q
+	 oJlBeeJ1oJZ5suWaseSjOKoqJ88yNd5q3VlLFf+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfKCINT (ORCPT
+        id S1727488AbfKCIOk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 03:13:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
+        Sun, 3 Nov 2019 03:14:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727156AbfKCINT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 Nov 2019 03:13:19 -0500
+        id S1726408AbfKCIOk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 Nov 2019 03:14:40 -0500
 Received: from localhost (unknown [106.206.31.209])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB6D2084D;
-        Sun,  3 Nov 2019 08:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A01462084D;
+        Sun,  3 Nov 2019 08:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572768798;
-        bh=O6Sl/WudcHVmvZ80SOwx1ethvyuH+iLA+GM2fSi1sgs=;
+        s=default; t=1572768879;
+        bh=WrEkas478AEsFfd0KnxML8A5xD0UqXNqQLN5Vnc5KU8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lF3rTgqQIDJOKT6EJtQc5fSgYoCY9pcDJe4Yvnr+FYdtchoUmabp904LiWUE7zHPN
-         wZP6mmlwNsnSLUf6xUCyjs8iNqFk62PLkieN84qmkYYs6x6oo3cJBEGFr3WpvUSQ/T
-         apkjijqjwn05w9gKPLjKYiGhXC7iqE91WYVxNAm0=
-Date:   Sun, 3 Nov 2019 13:43:11 +0530
+        b=dbzuH9wvkLuKPbkNjmQVDX+bCQHXPkKnzDNvJLUefqmFXcDSVG4+gt/a4+SWLOoRR
+         2Jq5++7/744mtTsA8VB3eDt++oKxNLgio/vO9W4jrstDWEOiD/ErlzM36JRaCm2anz
+         gBriK4MRTdfgQgxYYqwZ7+dKv1HwTB5tsBBPs0po=
+Date:   Sun, 3 Nov 2019 13:44:34 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] arm64: dts: qcom: msm8996: Introduce IFC6640
-Message-ID: <20191103081311.GM2695@vkoul-mobl.Dlink>
-References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: db845c: Enable LVS 1 and 2
+Message-ID: <20191103081434.GN2695@vkoul-mobl.Dlink>
+References: <20191002041654.3620-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191021051322.297560-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20191002041654.3620-1-bjorn.andersson@linaro.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-10-19, 22:13, Bjorn Andersson wrote:
-> Refactor msm8996 and db820c in order to make it follow the structure of newer
-> platforms, move db820c specific things to db820c.dtsi and then introduce the
-> Informace 6640 Single Board Computer.
-
-This has patch 9/11 missing. But rest look good to me.
+On 01-10-19, 21:16, Bjorn Andersson wrote:
+> vreg_lvs1a_1p8 and vreg_lvs2a_1p8 are both feeding pins in the low speed
+> connectors and should as such alway be on, so enable them.
 
 Acked-by: Vinod Koul <vkoul@kernel.org>
 
