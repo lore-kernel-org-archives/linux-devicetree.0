@@ -2,282 +2,160 @@ Return-Path: <SRS0=PDL5=Y3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34321CA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 16:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F484CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 17:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D402080F
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 16:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9AE2084D
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 17:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572796886;
-	bh=ltTqN0B/R+pEdxmuWRoWrrtTRWlzTt6eMa88sa/Ypxg=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=jjdLwe0RaL/yuRyu03mlY9QYBPZJRkMU2y69aLg+3tkMzO9Ctir+9PRAvh3ZABOyZ
-	 /aUFg27CZzmXrk4MDTQbk1AmNV9iWveSBotWK2dvn2lkoNoIO6OkU/Qs2s6yOB5RbG
-	 aoAx5ECs6252HhPe66O/RKvygqZ5OVgczsex8Vb8=
+	s=default; t=1572802352;
+	bh=UzLLL1Ca+sjdIQykVRqTI78sHlr2eCUpPuADKt3IhL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=URKhFQNNtppaOM6AGfQOKz3cL97B2WwkaG9oJezVdk5xIEbHbL8Jg7BeXDvb/efzC
+	 EvF0+/PEhaUeqsLGDmtnPlu0+UW9dH9IIW7b2KS8L08WPfUPJHn/dwb6GqEGwa5UV/
+	 F7Iqei2+UTQieA7K3kN9Pk6DH4WV9RhJP1V4nzr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfKCQBW (ORCPT
+        id S1727505AbfKCRcb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 11:01:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39268 "EHLO mail.kernel.org"
+        Sun, 3 Nov 2019 12:32:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727523AbfKCQBW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 Nov 2019 11:01:22 -0500
-Received: from localhost.localdomain (unknown [194.230.155.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727488AbfKCRcb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 Nov 2019 12:32:31 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7EFF2080F;
-        Sun,  3 Nov 2019 16:01:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6A782080F;
+        Sun,  3 Nov 2019 17:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572796880;
-        bh=ltTqN0B/R+pEdxmuWRoWrrtTRWlzTt6eMa88sa/Ypxg=;
-        h=From:To:Subject:Date:From;
-        b=tcbzxuzQGDpk0C/tC0ODHIP4kdGJKYY6eQibJ8pKdl5w9T0UnJxtbMQlY/qUFTDXA
-         hN2U3poojPG6MWlyaLnI41p/x2hfibLXKer+RYk//46HaYgf7R63Ez2g2HuXI9lQWo
-         U/iiHBmQeh9dOfq08FeJe4OPpwJowfHh/nsq3UGE=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: serial: Convert Samsung UART bindings to json-schema
-Date:   Sun,  3 Nov 2019 17:01:12 +0100
-Message-Id: <20191103160112.10764-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1572802350;
+        bh=UzLLL1Ca+sjdIQykVRqTI78sHlr2eCUpPuADKt3IhL0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A1fyaYe43+mDax1rBL8Mn178Q81As7bkN3B8ZbBrGbLDS82jKqipE6imQiPJYGnlz
+         M+9e1IPNj3aLpjH6GHNqG9sApJmYWFEOAuYOM6PybzHSwjH+lDSQ+ENzyJ1mXiZ7us
+         nslC1hLxRXdLoLVYm6Ma8hr3egT4FlCHajlZSJHU=
+Date:   Sun, 3 Nov 2019 18:32:27 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
+Message-ID: <20191103173227.GF7001@gilmour>
+References: <20191025175625.8011-1-jagan@amarulasolutions.com>
+ <20191025175625.8011-5-jagan@amarulasolutions.com>
+ <20191028153427.pc3tnoz2d23filhx@hendrix>
+ <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
+ <20191029085401.gvqpwmmpyml75vis@hendrix>
+ <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dFWYt1i2NyOo1oI9"
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Samsung S3C/S5P/Exynos Serial/UART bindings to DT schema format
-using json-schema.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+--dFWYt1i2NyOo1oI9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
----
+On Fri, Nov 01, 2019 at 07:42:55PM +0530, Jagan Teki wrote:
+> Hi Maxime,
+>
+> On Tue, Oct 29, 2019 at 2:24 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Tue, Oct 29, 2019 at 04:03:56AM +0530, Jagan Teki wrote:
+> > > > > explicit handling of common clock would require since the A64
+> > > > > doesn't need to mention the clock-names explicitly in dts since it
+> > > > > support only one bus clock.
+> > > > >
+> > > > > Also pass clk_id NULL instead "bus" to regmap clock init function
+> > > > > since the single clock variants no need to mention clock-names
+> > > > > explicitly.
+> > > >
+> > > > You don't need explicit clock handling. Passing NULL as the argument
+> > > > in regmap_init_mmio_clk will make it use the first clock, which is the
+> > > > bus clock.
+> > >
+> > > Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
+> > > during regmap_mmio_gen_context code, passing NULL triggering vblank
+> > > timeout.
+> >
+> > There's a bunch of users of NULL in tree, so finding out why NULL
+> > doesn't work is the way forward.
+>
+> I'd have looked the some of the users before checking the code as
+> well. As I said passing NULL clk_id to devm_regmap_init_mmio_clk =>
+> __devm_regmap_init_mmio_clk would return before processing the clock.
+>
+> Here is the code snippet on the tree just to make sure I'm on the same
+> page or not.
+>
+> static struct regmap_mmio_context *regmap_mmio_gen_context(struct device *dev,
+>                                         const char *clk_id,
+>                                         void __iomem *regs,
+>                                         const struct regmap_config *config)
+> {
+>         -----------------------
+>         --------------
+>         if (clk_id == NULL)
+>                 return ctx;
+>
+>         ctx->clk = clk_get(dev, clk_id);
+>         if (IS_ERR(ctx->clk)) {
+>                 ret = PTR_ERR(ctx->clk);
+>                 goto err_free;
+>         }
+>
+>         ret = clk_prepare(ctx->clk);
+>         if (ret < 0) {
+>                 clk_put(ctx->clk);
+>                 goto err_free;
+>         }
+>         -------------
+>         ---------------
+> }
+>
+> Yes, I did check on the driver in the tree before committing explicit
+> clock handle, which make similar requirements like us in [1]. this
+> imx2 wdt driver is handling the explicit clock as well. I'm sure this
+> driver is updated as I have seen few changes related to this driver in
+> ML.
 
-Changes since v1:
-1. Simplify 'clock-names' patters after Rob's suggestions,
-2. Add description to 'interrupts',
-3. Remove 'uniqueItems' where not needed,
-4. Remove aliases from example.
----
- .../bindings/mfd/samsung,exynos5433-lpass.txt |   2 +-
- .../bindings/serial/samsung_uart.txt          |  58 ---------
- .../bindings/serial/samsung_uart.yaml         | 118 ++++++++++++++++++
- 3 files changed, 119 insertions(+), 59 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.yaml
+I guess we have two ways to go at this then.
 
-diff --git a/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
-index d759da606f75..30ea27c3936d 100644
---- a/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
-+++ b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
-@@ -18,7 +18,7 @@ an optional sub-node. For "samsung,exynos5433-lpass" compatible this includes:
- UART, SLIMBUS, PCM, I2S, DMAC, Timers 0...4, VIC, WDT 0...1 devices.
- 
- Bindings of the sub-nodes are described in:
--  ../serial/samsung_uart.txt
-+  ../serial/samsung_uart.yaml
-   ../sound/samsung-i2s.txt
-   ../dma/arm-pl330.txt
- 
-diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.txt b/Documentation/devicetree/bindings/serial/samsung_uart.txt
-deleted file mode 100644
-index e85f37ec33f0..000000000000
---- a/Documentation/devicetree/bindings/serial/samsung_uart.txt
-+++ /dev/null
-@@ -1,58 +0,0 @@
--* Samsung's UART Controller
--
--The Samsung's UART controller is used for interfacing SoC with serial
--communicaion devices.
--
--Required properties:
--- compatible: should be one of following:
--  - "samsung,exynos4210-uart" -  Exynos4210 SoC,
--  - "samsung,s3c2410-uart" - compatible with ports present on S3C2410 SoC,
--  - "samsung,s3c2412-uart" - compatible with ports present on S3C2412 SoC,
--  - "samsung,s3c2440-uart" - compatible with ports present on S3C2440 SoC,
--  - "samsung,s3c6400-uart" - compatible with ports present on S3C6400 SoC,
--  - "samsung,s5pv210-uart" - compatible with ports present on S5PV210 SoC.
--
--- reg: base physical address of the controller and length of memory mapped
--  region.
--
--- interrupts: a single interrupt signal to SoC interrupt controller,
--  according to interrupt bindings documentation [1].
--
--- clock-names: input names of clocks used by the controller:
--  - "uart" - controller bus clock,
--  - "clk_uart_baudN" - Nth baud base clock input (N = 0, 1, ...),
--    according to SoC User's Manual (only N = 0 is allowedfor SoCs without
--    internal baud clock mux).
--- clocks: phandles and specifiers for all clocks specified in "clock-names"
--  property, in the same order, according to clock bindings documentation [2].
--
--[1] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
--[2] Documentation/devicetree/bindings/clock/clock-bindings.txt
--
--Optional properties:
--- samsung,uart-fifosize: The fifo size supported by the UART channel
--
--Note: Each Samsung UART should have an alias correctly numbered in the
--"aliases" node, according to serialN format, where N is the port number
--(non-negative decimal integer) as specified by User's Manual of respective
--SoC.
--
--Example:
--	aliases {
--		serial0 = &uart0;
--		serial1 = &uart1;
--		serial2 = &uart2;
--	};
--
--Example:
--	uart1: serial@7f005400 {
--		compatible = "samsung,s3c6400-uart";
--		reg = <0x7f005400 0x100>;
--		interrupt-parent = <&vic1>;
--		interrupts = <6>;
--		clock-names = "uart", "clk_uart_baud2",
--				"clk_uart_baud3";
--		clocks = <&clocks PCLK_UART1>, <&clocks PCLK_UART1>,
--				<&clocks SCLK_UART>;
--		samsung,uart-fifosize = <16>;
--	};
-diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-new file mode 100644
-index 000000000000..9d2ce347875b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-@@ -0,0 +1,118 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/samsung_uart.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung S3C, S5P and Exynos SoC UART Controller
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-+
-+description: |+
-+  Each Samsung UART should have an alias correctly numbered in the "aliases"
-+  node, according to serialN format, where N is the port number (non-negative
-+  decimal integer) as specified by User's Manual of respective SoC.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - samsung,s3c2410-uart
-+          - samsung,s3c2412-uart
-+          - samsung,s3c2440-uart
-+          - samsung,s3c6400-uart
-+          - samsung,s5pv210-uart
-+          - samsung,exynos4210-uart
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 5
-+
-+  clock-names:
-+    description: N = 0 is allowed for SoCs without internal baud clock mux.
-+    minItems: 2
-+    maxItems: 5
-+    items:
-+      - const: uart
-+      - pattern: '^clk_uart_baud[0-3]$'
-+      - pattern: '^clk_uart_baud[0-3]$'
-+      - pattern: '^clk_uart_baud[0-3]$'
-+      - pattern: '^clk_uart_baud[0-3]$'
-+
-+  interrupts:
-+    description: RX interrupt and optionally TX interrupt.
-+    minItems: 1
-+    maxItems: 2
-+
-+  samsung,uart-fifosize:
-+    description: The fifo size supported by the UART channel.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [16, 64, 256]
-+
-+required:
-+  - compatible
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - reg
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - samsung,s3c2410-uart
-+              - samsung,s5pv210-uart
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 2
-+          maxItems: 3
-+        clock-names:
-+          minItems: 2
-+          maxItems: 3
-+          items:
-+            - const: uart
-+            - pattern: '^clk_uart_baud[0-1]$'
-+            - pattern: '^clk_uart_baud[0-1]$'
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - samsung,exynos4210-uart
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 2
-+          maxItems: 2
-+        clock-names:
-+          minItems: 2
-+          maxItems: 2
-+          items:
-+            - const: uart
-+            - const: clk_uart_baud0
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/samsung,s3c64xx-clock.h>
-+
-+    uart0: serial@7f005000 {
-+        compatible = "samsung,s3c6400-uart";
-+        reg = <0x7f005000 0x100>;
-+        interrupt-parent = <&vic1>;
-+        interrupts = <5>;
-+        clock-names = "uart", "clk_uart_baud2",
-+                      "clk_uart_baud3";
-+        clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>,
-+                 <&clocks SCLK_UART>;
-+        samsung,uart-fifosize = <16>;
-+    };
--- 
-2.17.1
+Either we remove the return, but it might have a few side-effects, or
+we call clk_get with NULL or bus depending on the case, and then call
+regmap_mmio_attach_clk.
 
+Maxime
+
+--dFWYt1i2NyOo1oI9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXb8PKwAKCRDj7w1vZxhR
+xRo6AQC7cJgPCdmPtwa3+DvnOiO0l+RhF95zulrMO4b+JAewRgEA74E3tqth973g
+U2/28LW5VnoPT0M0gUDV7UgvhyVeGQA=
+=PgiZ
+-----END PGP SIGNATURE-----
+
+--dFWYt1i2NyOo1oI9--
