@@ -2,116 +2,70 @@ Return-Path: <SRS0=PDL5=Y3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36092CA9ED0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 01:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF51CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 08:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FC720679
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 01:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98674215EA
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 08:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572768799;
+	bh=O6Sl/WudcHVmvZ80SOwx1ethvyuH+iLA+GM2fSi1sgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f+qNp9n/jelBq83HR5UsctBXnL7ULb4tPIFFtlfM1GyyHykNRuOU6C8yyB1W98pCj
+	 8MIxFm5cbA4SnvFiIbbYz2Zz7Uhpeh0P1JNIErfisP0VqJM6iDpzY7JsyKCU7CtPZO
+	 iPkrSiXebAcOJ/YEJWwDHu7aJ4mzwhGM6U1f9/gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfKCBhg (ORCPT
+        id S1727377AbfKCINT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 2 Nov 2019 21:37:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59400 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727335AbfKCBgy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 2 Nov 2019 21:36:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6EF21AF23;
-        Sun,  3 Nov 2019 01:36:52 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: [RFC 00/11] ARM: Realtek RTD1195/RTD1295 SoC info
-Date:   Sun,  3 Nov 2019 02:36:34 +0100
-Message-Id: <20191103013645.9856-1-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Sun, 3 Nov 2019 03:13:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727156AbfKCINT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 Nov 2019 03:13:19 -0500
+Received: from localhost (unknown [106.206.31.209])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BB6D2084D;
+        Sun,  3 Nov 2019 08:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572768798;
+        bh=O6Sl/WudcHVmvZ80SOwx1ethvyuH+iLA+GM2fSi1sgs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lF3rTgqQIDJOKT6EJtQc5fSgYoCY9pcDJe4Yvnr+FYdtchoUmabp904LiWUE7zHPN
+         wZP6mmlwNsnSLUf6xUCyjs8iNqFk62PLkieN84qmkYYs6x6oo3cJBEGFr3WpvUSQ/T
+         apkjijqjwn05w9gKPLjKYiGhXC7iqE91WYVxNAm0=
+Date:   Sun, 3 Nov 2019 13:43:11 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/11] arm64: dts: qcom: msm8996: Introduce IFC6640
+Message-ID: <20191103081311.GM2695@vkoul-mobl.Dlink>
+References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021051322.297560-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+On 20-10-19, 22:13, Bjorn Andersson wrote:
+> Refactor msm8996 and db820c in order to make it follow the structure of newer
+> platforms, move db820c specific things to db820c.dtsi and then introduce the
+> Informace 6640 Single Board Computer.
 
-This series adds a soc bus driver for Realtek RTD1195 and RTD1295 SoC families.
+This has patch 9/11 missing. But rest look good to me.
 
-The detection magic for RTD1295 family was mostly borrowed from downstream code
-and the bit meanings are entirely undocumented. In case of RTD1293 I had to
-invent my own detection logic, possibly flawed.
-It is expected that this driver will need to be tweaked as new models emerge.
-
-One general consideration here is that some register accesses are not well
-self-contained within a block so that a syscon might in theory help - but
-for lack of documentation we don't really have an overview of the IP blocks
-and their names, starts and sizes; downstream trees just hardcoded addresses.
-
-I therefore split off the DT change to add a second/third reg entry for now,
-so that we could move ahead with a basic driver initially.
-
-We have no RTD1294 DT, so it is included here mainly for illustration of the
-unpredictable register dependencies affecting this binding/driver.
-
-Using reg-names might clean this up a little but would blow up the driver code
-as there appears to be no handy helper function provided.
-
-Finally, I've been struggling to find an overarching name for the SoC families.
-Realtek.com groups them as "Digital Home Center" - not sure whether that fits?
-For now I use Phoenix/Kylin/etc. with DHC only as fallback, but I wonder
-whether those family names should rather be soc_id than family contents?
-
-Prepared but not included here is:
-* RTD1395 family, which we don't have a DT for yet,
-* RTD1619 family, which we don't have a DT for yet, Chip ID to be verified,
-* RTD1319 family, which we don't have a DT for yet, with TODO for its Chip ID.
-
-Latest experimental patches at:
-https://github.com/afaerber/linux/commits/rtd1295-next
-
-Have a lot of fun!
-
-Cheers,
-Andreas
-
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-
-Andreas Färber (11):
-  dt-bindings: soc: Add Realtek RTD1195 chip info binding
-  soc: Add Realtek chip info driver for RTD1195 and RTD1295
-  arm64: dts: realtek: rtd129x: Add chip info node
-  ARM: dts: rtd1195: Add chip info node
-  dt-bindings: soc: realtek: rtd1195-chip: Extend reg property
-  soc: realtek: chip: Detect RTD1296
-  arm64: dts: realtek: rtd129x: Extend chip-info reg with CHIP_INFO1
-  soc: realtek: chip: Detect RTD1293
-  dt-bindings: soc: realtek: rtd1195-chip: Extend reg node again
-  soc: realtek: chip: Detect RTD1294
-  arm64: dts: realtek: rtd129x: Extend chip-info reg with efuse
-
- .../bindings/soc/realtek/realtek,rtd1195-chip.yaml |  47 +++++
- MAINTAINERS                                        |   1 +
- arch/arm/boot/dts/rtd1195.dtsi                     |   5 +
- arch/arm64/boot/dts/realtek/rtd129x.dtsi           |   7 +
- drivers/soc/Kconfig                                |   1 +
- drivers/soc/Makefile                               |   1 +
- drivers/soc/realtek/Kconfig                        |  13 ++
- drivers/soc/realtek/Makefile                       |   2 +
- drivers/soc/realtek/chip.c                         | 190 +++++++++++++++++++++
- 9 files changed, 267 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
- create mode 100644 drivers/soc/realtek/Kconfig
- create mode 100644 drivers/soc/realtek/Makefile
- create mode 100644 drivers/soc/realtek/chip.c
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
 -- 
-2.16.4
-
+~Vinod
