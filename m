@@ -2,506 +2,370 @@ Return-Path: <SRS0=PDL5=Y3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167EBCA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50504CA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE05B20679
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:52:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572781935;
-	bh=yaRJ6Mr6GM5xyrKhWcDRRBH5UkLJtrOAPDCZlw3fW8Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=u8bUznm7Di6lmkOsrk5UCR0JYHkKOfJ4X+/430TBgejpsEodWvs3YhDvRMbjYiyyP
-	 51QOH57joAMW5+LryUHifEyKTldpYDLU8MShIQrNeCZ/q30TSxsr4YIz0597rRCAz3
-	 YeV6xscGxKImGk3jvJyJJSxBYJhQ+icqtVPqsCqc=
+	by mail.kernel.org (Postfix) with ESMTP id 0AA4120842
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7XCMU7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfKCLwM (ORCPT
+        id S1727377AbfKCLyW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 06:52:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbfKCLwL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 Nov 2019 06:52:11 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 818FE20679;
-        Sun,  3 Nov 2019 11:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572781930;
-        bh=yaRJ6Mr6GM5xyrKhWcDRRBH5UkLJtrOAPDCZlw3fW8Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QMZtENzPxQLSfaYpPA7saozLZarCtRYZ5zgJ2gFoyb762xKQguq01TkjdzCdMnCXt
-         tPKlzOtnKsdOf2oMcVDldHlkcHhnLcOFHEmZOFMArbfdBFcNwOMy763GajGgTmL5Ah
-         Kwc087TvBO55Be07mruXr4JiNllr5zv+736K+VQQ=
-Date:   Sun, 3 Nov 2019 11:52:05 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc:     robh@kernel.org, dragos.bogdan@analog.com,
-        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v3 2/2] iio: adc: Add driver support for AD7292
-Message-ID: <20191103115205.2dde1959@archlinux>
-In-Reply-To: <9f8eccec804b398c73450911f97a4b250f6067da.1572614297.git.marcelo.schmitt1@gmail.com>
-References: <cover.1572614297.git.marcelo.schmitt1@gmail.com>
-        <9f8eccec804b398c73450911f97a4b250f6067da.1572614297.git.marcelo.schmitt1@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 3 Nov 2019 06:54:22 -0500
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:34591 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfKCLyW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 Nov 2019 06:54:22 -0500
+Received: by mail-wr1-f46.google.com with SMTP id e6so12114566wrw.1;
+        Sun, 03 Nov 2019 03:54:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WDfC/vDHvSuKvbVsHEI3wh5xMkfZfhaT91vGl0BNB7I=;
+        b=l7XCMU7/nEoBrkPkmAshueVY1kgWBBr7ScCMSkRMyHqadH3fDXVFcQQNZHUU1a82y6
+         s3twOTBkT7rxBdNwrLlvJS6Jq9qJZhJtYiF5U540oN0UX8gCPKhTfmVJDpbP+4u7C2yq
+         YZNipefSERaKyaI5VPLTskkdgWnQauIKEFbGq/tPf4BotTbSBaWiOJCr7nRibPVdL1h8
+         LR//uE3AT5phf1x1uaAnvAabErF1DFyM9bb03kBmVdNcnSJ//LlKaakM/GYjvlUrKaiB
+         aQFzk6SUkKXV3tdbXkjSVvCGgYLNaWhqmgao9CiD8Mp5joUZXRkXnqu/StKh+5OLmdiX
+         LO/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WDfC/vDHvSuKvbVsHEI3wh5xMkfZfhaT91vGl0BNB7I=;
+        b=mMCQALyRLwr+YzZgPmJk8ok7Pf0PXSD7nqVzA0OIBg1UzGq5+rX5Tv++ZqmcoLDVrE
+         6kiP51W5HRDvliq4ccBln8mL8TthvJCnR62Fsfh+zb5+LbpknzzhC6mgrCYbR8yOznN6
+         rzFpg8iwau6Ch0XaPmt584Si5bCN+GfTc18fAsBvegyNE8JX67V66cexfHYcMF3uUoNW
+         GQNjRMgk8JzpwKs2yGSB0se3OBlbDlKMXv5p2DhvemtR3pJNaspEMXjobIFHaU8uRB3q
+         l++7oOIJ3ANXWLhr04YRMcewFuF34wkoSffvxZadbmgamsT8o0nFfXiuiJPxn/CKlCr8
+         Y9/Q==
+X-Gm-Message-State: APjAAAXwlDQgfgvfctS+LI2wlx23UsmGg/pJRMyt/e5IRVdSwnjjUuET
+        qkSvD9vgIYEkNlm7U3Ev9Sk=
+X-Google-Smtp-Source: APXvYqzxamlU5K1hJ74n4rwlw8ExJEtpNzJVTB2v9fOuBccqGKeuc+2iwSAwN2QYJUnRpvWlb6spSQ==
+X-Received: by 2002:a5d:414a:: with SMTP id c10mr1614164wrq.100.1572782058182;
+        Sun, 03 Nov 2019 03:54:18 -0800 (PST)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id t13sm7121987wrr.88.2019.11.03.03.54.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 03:54:16 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 1/2] dt-bindings: memory: Add Tegra194 memory client IDs
+Date:   Sun,  3 Nov 2019 12:54:14 +0100
+Message-Id: <20191103115415.6532-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 1 Nov 2019 13:24:26 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+From: Thierry Reding <treding@nvidia.com>
 
-> The AD7292 is a 10-bit monitor and control system with ADC, DACs,
-> temperature sensor, and GPIOs.
-> 
-> Configure AD7292 devices in direct access mode, enabling single-ended
-> ADC readings.
-> 
-> Datasheet:
-> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-One totally trivial thing inline if you happen to be respinning.
-Otherwise I'll fix up when applying.
+Define the IDs for the memory clients found on Tegra194. These IDs will
+be used in device tree to describe the connections of each device to the
+memory controller.
 
-I would like to give a bit of time for others to comment, particularly on the dt
-bindings as I frequently miss problems in them. Hence I won't be applying it today
-but may pick it up later in the week or next weekend.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ include/dt-bindings/memory/tegra194-mc.h | 269 +++++++++++++++++++++++
+ 1 file changed, 269 insertions(+)
 
-Thanks,
-
-Jonathan
-
-
-> ---
-> Changelog V2 -> V3:
-> - fix up a typo in channel macros
-> 
->  MAINTAINERS              |   1 +
->  drivers/iio/adc/Kconfig  |  10 ++
->  drivers/iio/adc/Makefile |   1 +
->  drivers/iio/adc/ad7292.c | 350 +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 362 insertions(+)
->  create mode 100644 drivers/iio/adc/ad7292.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5d00e871c4c6..5941cfc0d6f7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -818,6 +818,7 @@ M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
->  L:	linux-iio@vger.kernel.org
->  W:	http://ez.analog.com/community/linux-device-drivers
->  S:	Supported
-> +F:	drivers/iio/adc/ad7292.c
->  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
->  
->  ANALOG DEVICES INC AD7606 DRIVER
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 632b331429c6..02587c990cb5 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -59,6 +59,16 @@ config AD7291
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ad7291.
->  
-> +config AD7292
-> +	tristate "Analog Devices AD7292 ADC driver"
-> +	depends on SPI
-> +	help
-> +	  Say yes here to build support for Analog Devices AD7292
-> +	  8 Channel ADC with temperature sensor.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called ad7292.
-> +
->  config AD7298
->  	tristate "Analog Devices AD7298 ADC driver"
->  	depends on SPI
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 4779ab3ff8fb..1818f2f66566 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -11,6 +11,7 @@ obj-$(CONFIG_AD7124) += ad7124.o
->  obj-$(CONFIG_AD7173) += ad7173.o
->  obj-$(CONFIG_AD7266) += ad7266.o
->  obj-$(CONFIG_AD7291) += ad7291.o
-> +obj-$(CONFIG_AD7292) += ad7292.o
->  obj-$(CONFIG_AD7298) += ad7298.o
->  obj-$(CONFIG_AD738X) += ad738x.o
->  obj-$(CONFIG_AD7768) += ad7768-1.o
-> diff --git a/drivers/iio/adc/ad7292.c b/drivers/iio/adc/ad7292.c
-> new file mode 100644
-> index 000000000000..e2badf6ac10d
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7292.c
-> @@ -0,0 +1,350 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Analog Devices AD7292 SPI ADC driver
-> + *
-> + * Copyright 2019 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/spi/spi.h>
-> +
-> +#include <linux/iio/iio.h>
-> +
-> +#define ADI_VENDOR_ID 0x0018
-> +
-> +/* AD7292 registers definition */
-> +#define AD7292_REG_VENDOR_ID		0x00
-> +#define AD7292_REG_CONF_BANK		0x05
-> +#define AD7292_REG_CONV_COMM		0x0E
-> +#define AD7292_REG_ADC_CH(x)		(0x10 + (x))
-> +
-> +/* AD7292 configuration bank subregisters definition */
-> +#define AD7292_BANK_REG_VIN_RNG0	0x10
-> +#define AD7292_BANK_REG_VIN_RNG1	0x11
-> +#define AD7292_BANK_REG_SAMP_MODE	0x12
-> +
-> +#define AD7292_RD_FLAG_MSK(x)		(BIT(7) | ((x) & 0x3F))
-> +
-> +/* AD7292_REG_ADC_CONVERSION */
-> +#define AD7292_ADC_DATA_MASK		GENMASK(15, 6)
-> +#define AD7292_ADC_DATA(x)		FIELD_GET(AD7292_ADC_DATA_MASK, x)
-> +
-> +/* AD7292_CHANNEL_SAMPLING_MODE */
-> +#define AD7292_CH_SAMP_MODE(reg, ch)	((reg >> 8) & BIT(ch))
-> +
-> +/* AD7292_CHANNEL_VIN_RANGE */
-> +#define AD7292_CH_VIN_RANGE(reg, ch)	(reg & BIT(ch))
-
-Trivial but all macro parameters should be in brackets to prevent
-weirdness if some sticks a parameter with higher precedence in there
-so ((reg) & BIT(ch)).
-
-I can fix this up if the rest is fine.
-
-> +
-> +#define AD7292_VOLTAGE_CHAN(_chan)					\
-> +{									\
-> +	.type = IIO_VOLTAGE,						\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
-> +			      BIT(IIO_CHAN_INFO_SCALE),			\
-> +	.indexed = 1,							\
-> +	.channel = _chan,						\
-> +}
-> +
-> +static const struct iio_chan_spec ad7292_channels[] = {
-> +	AD7292_VOLTAGE_CHAN(0),
-> +	AD7292_VOLTAGE_CHAN(1),
-> +	AD7292_VOLTAGE_CHAN(2),
-> +	AD7292_VOLTAGE_CHAN(3),
-> +	AD7292_VOLTAGE_CHAN(4),
-> +	AD7292_VOLTAGE_CHAN(5),
-> +	AD7292_VOLTAGE_CHAN(6),
-> +	AD7292_VOLTAGE_CHAN(7)
-> +};
-> +
-> +static const struct iio_chan_spec ad7292_channels_diff[] = {
-> +	{
-> +		.type = IIO_VOLTAGE,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.indexed = 1,
-> +		.differential = 1,
-> +		.channel = 0,
-> +		.channel2 = 1,
-> +	},
-> +	AD7292_VOLTAGE_CHAN(2),
-> +	AD7292_VOLTAGE_CHAN(3),
-> +	AD7292_VOLTAGE_CHAN(4),
-> +	AD7292_VOLTAGE_CHAN(5),
-> +	AD7292_VOLTAGE_CHAN(6),
-> +	AD7292_VOLTAGE_CHAN(7)
-> +};
-> +
-> +struct ad7292_state {
-> +	struct spi_device *spi;
-> +	struct regulator *reg;
-> +	unsigned short vref_mv;
-> +
-> +	__be16 d16 ____cacheline_aligned;
-> +	u8 d8[2];
-> +};
-> +
-> +static int ad7292_spi_reg_read(struct ad7292_state *st, unsigned int addr)
-> +{
-> +	int ret;
-> +
-> +	st->d8[0] = AD7292_RD_FLAG_MSK(addr);
-> +
-> +	ret = spi_write_then_read(st->spi, st->d8, 1, &st->d16, 2);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return be16_to_cpu(st->d16);
-> +}
-> +
-> +static int ad7292_spi_subreg_read(struct ad7292_state *st, unsigned int addr,
-> +				  unsigned int sub_addr, unsigned int len)
-> +{
-> +	unsigned int shift = 16 - (8 * len);
-> +	int ret;
-> +
-> +	st->d8[0] = AD7292_RD_FLAG_MSK(addr);
-> +	st->d8[1] = sub_addr;
-> +
-> +	ret = spi_write_then_read(st->spi, st->d8, 2, &st->d16, len);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return (be16_to_cpu(st->d16) >> shift);
-> +}
-> +
-> +static int ad7292_single_conversion(struct ad7292_state *st,
-> +				    unsigned int chan_addr)
-> +{
-> +	int ret;
-> +
-> +	struct spi_transfer t[] = {
-> +		{
-> +			.tx_buf = &st->d8,
-> +			.len = 4,
-> +			.delay_usecs = 6,
-> +		}, {
-> +			.rx_buf = &st->d16,
-> +			.len = 2,
-> +		},
-> +	};
-> +
-> +	st->d8[0] = chan_addr;
-> +	st->d8[1] = AD7292_RD_FLAG_MSK(AD7292_REG_CONV_COMM);
-> +
-> +	ret = spi_sync_transfer(st->spi, t, ARRAY_SIZE(t));
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return be16_to_cpu(st->d16);
-> +}
-> +
-> +static int ad7292_vin_range_multiplier(struct ad7292_state *st, int channel)
-> +{
-> +	int samp_mode, range0, range1, factor = 1;
-> +
-> +	/*
-> +	 * Every AD7292 ADC channel may have its input range adjusted according
-> +	 * to the settings at the ADC sampling mode and VIN range subregisters.
-> +	 * For a given channel, the minimum input range is equal to Vref, and it
-> +	 * may be increased by a multiplier factor of 2 or 4 according to the
-> +	 * following rule:
-> +	 * If channel is being sampled with respect to AGND:
-> +	 *	factor = 4 if VIN range0 and VIN range1 equal 0
-> +	 *	factor = 2 if only one of VIN ranges equal 1
-> +	 *	factor = 1 if both VIN range0 and VIN range1 equal 1
-> +	 * If channel is being sampled with respect to AVDD:
-> +	 *	factor = 4 if VIN range0 and VIN range1 equal 0
-> +	 *	Behavior is undefined if any of VIN range doesn't equal 0
-> +	 */
-> +
-> +	samp_mode = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
-> +					   AD7292_BANK_REG_SAMP_MODE, 2);
-> +
-> +	if (samp_mode < 0)
-> +		return samp_mode;
-> +
-> +	range0 = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
-> +					AD7292_BANK_REG_VIN_RNG0, 2);
-> +
-> +	if (range0 < 0)
-> +		return range0;
-> +
-> +	range1 = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
-> +					AD7292_BANK_REG_VIN_RNG1, 2);
-> +
-> +	if (range1 < 0)
-> +		return range1;
-> +
-> +	if (AD7292_CH_SAMP_MODE(samp_mode, channel)) {
-> +		/* Sampling with respect to AGND */
-> +		if (!AD7292_CH_VIN_RANGE(range0, channel))
-> +			factor *= 2;
-> +
-> +		if (!AD7292_CH_VIN_RANGE(range1, channel))
-> +			factor *= 2;
-> +
-> +	} else {
-> +		/* Sampling with respect to AVDD */
-> +		if (AD7292_CH_VIN_RANGE(range0, channel) ||
-> +		    AD7292_CH_VIN_RANGE(range1, channel))
-> +			return -EPERM;
-> +
-> +		factor = 4;
-> +	}
-> +
-> +	return factor;
-> +}
-> +
-> +static int ad7292_read_raw(struct iio_dev *indio_dev,
-> +			   const struct iio_chan_spec *chan,
-> +			   int *val, int *val2, long info)
-> +{
-> +	struct ad7292_state *st = iio_priv(indio_dev);
-> +	unsigned int ch_addr;
-> +	int ret;
-> +
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ch_addr = AD7292_REG_ADC_CH(chan->channel);
-> +		ret = ad7292_single_conversion(st, ch_addr);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		*val = AD7292_ADC_DATA(ret);
-> +
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		/*
-> +		 * To convert a raw value to standard units, the IIO defines
-> +		 * this formula: Scaled value = (raw + offset) * scale.
-> +		 * For the scale to be a correct multiplier for (raw + offset),
-> +		 * it must be calculated as the input range divided by the
-> +		 * number of possible distinct input values. Given the ADC data
-> +		 * is 10 bit long, it may assume 2^10 distinct values.
-> +		 * Hence, scale = range / 2^10. The IIO_VAL_FRACTIONAL_LOG2
-> +		 * return type indicates to the IIO API to divide *val by 2 to
-> +		 * the power of *val2 when returning from read_raw.
-> +		 */
-> +
-> +		ret = ad7292_vin_range_multiplier(st, chan->channel);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		*val = st->vref_mv * ret;
-> +		*val2 = 10;
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +	default:
-> +		break;
-> +	}
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct iio_info ad7292_info = {
-> +	.read_raw = ad7292_read_raw,
-> +};
-> +
-> +static void ad7292_regulator_disable(void *data)
-> +{
-> +	struct ad7292_state *st = data;
-> +
-> +	regulator_disable(st->reg);
-> +}
-> +
-> +static int ad7292_probe(struct spi_device *spi)
-> +{
-> +	struct ad7292_state *st;
-> +	struct iio_dev *indio_dev;
-> +	struct device_node *child;
-> +	bool diff_channels = 0;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(indio_dev);
-> +	st->spi = spi;
-> +
-> +	ret = ad7292_spi_reg_read(st, AD7292_REG_VENDOR_ID);
-> +	if (ret != ADI_VENDOR_ID) {
-> +		dev_err(&spi->dev, "Wrong vendor id 0x%x\n", ret);
-> +		return -EINVAL;
-> +	}
-> +
-> +	spi_set_drvdata(spi, indio_dev);
-> +
-> +	st->reg = devm_regulator_get_optional(&spi->dev, "vref");
-> +	if (!IS_ERR(st->reg)) {
-> +		ret = regulator_enable(st->reg);
-> +		if (ret) {
-> +			dev_err(&spi->dev,
-> +				"Failed to enable external vref supply\n");
-> +			return ret;
-> +		}
-> +
-> +		ret = devm_add_action_or_reset(&spi->dev,
-> +					       ad7292_regulator_disable, st);
-> +		if (ret) {
-> +			regulator_disable(st->reg);
-> +			return ret;
-> +		}
-> +
-> +		ret = regulator_get_voltage(st->reg);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		st->vref_mv = ret / 1000;
-> +	} else {
-> +		/* Use the internal voltage reference. */
-> +		st->vref_mv = 1250;
-> +	}
-> +
-> +	indio_dev->dev.parent = &spi->dev;
-> +	indio_dev->name = spi_get_device_id(spi)->name;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->info = &ad7292_info;
-> +
-> +	for_each_available_child_of_node(spi->dev.of_node, child) {
-> +		diff_channels = of_property_read_bool(child, "diff-channels");
-> +		if (diff_channels)
-> +			break;
-> +	}
-> +
-> +	if (diff_channels) {
-> +		indio_dev->num_channels = ARRAY_SIZE(ad7292_channels_diff);
-> +		indio_dev->channels = ad7292_channels_diff;
-> +	} else {
-> +		indio_dev->num_channels = ARRAY_SIZE(ad7292_channels);
-> +		indio_dev->channels = ad7292_channels;
-> +	}
-> +
-> +	return devm_iio_device_register(&spi->dev, indio_dev);
-> +}
-> +
-> +static const struct spi_device_id ad7292_id_table[] = {
-> +	{ "ad7292", 0 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(spi, ad7292_id_table);
-> +
-> +static const struct of_device_id ad7292_of_match[] = {
-> +	{ .compatible = "adi,ad7292" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, ad7292_of_match);
-> +
-> +static struct spi_driver ad7292_driver = {
-> +	.driver = {
-> +		.name = "ad7292",
-> +		.of_match_table = ad7292_of_match,
-> +	},
-> +	.probe = ad7292_probe,
-> +	.id_table = ad7292_id_table,
-> +};
-> +module_spi_driver(ad7292_driver);
-> +
-> +MODULE_AUTHOR("Marcelo Schmitt <marcelo.schmitt1@gmail.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD7292 ADC driver");
-> +MODULE_LICENSE("GPL v2");
+diff --git a/include/dt-bindings/memory/tegra194-mc.h b/include/dt-bindings/memory/tegra194-mc.h
+index 5370f0df07d5..eed48b746bc9 100644
+--- a/include/dt-bindings/memory/tegra194-mc.h
++++ b/include/dt-bindings/memory/tegra194-mc.h
+@@ -138,4 +138,273 @@
+ #define TEGRA194_SID_VI_VM3		0x63
+ #define TEGRA194_SID_RCE_SERVER		0x64
+ 
++/*
++ * memory client IDs
++ */
++
++/* Misses from System Memory Management Unit (SMMU) Page Table Cache (PTC) */
++#define TEGRA194_MEMORY_CLIENT_PTCR 0x00
++/* MSS internal memqual MIU7 read clients */
++#define TEGRA194_MEMORY_CLIENT_MIU7R 0x01
++/* MSS internal memqual MIU7 write clients */
++#define TEGRA194_MEMORY_CLIENT_MIU7W 0x02
++/* High-definition audio (HDA) read clients */
++#define TEGRA194_MEMORY_CLIENT_HDAR 0x15
++/* Host channel data read clients */
++#define TEGRA194_MEMORY_CLIENT_HOST1XDMAR 0x16
++#define TEGRA194_MEMORY_CLIENT_NVENCSRD 0x1c
++/* SATA read clients */
++#define TEGRA194_MEMORY_CLIENT_SATAR 0x1f
++/* Reads from Cortex-A9 4 CPU cores via the L2 cache */
++#define TEGRA194_MEMORY_CLIENT_MPCORER 0x27
++#define TEGRA194_MEMORY_CLIENT_NVENCSWR 0x2b
++/* High-definition audio (HDA) write clients */
++#define TEGRA194_MEMORY_CLIENT_HDAW 0x35
++/* Writes from Cortex-A9 4 CPU cores via the L2 cache */
++#define TEGRA194_MEMORY_CLIENT_MPCOREW 0x39
++/* SATA write clients */
++#define TEGRA194_MEMORY_CLIENT_SATAW 0x3d
++/* ISP read client for Crossbar A */
++#define TEGRA194_MEMORY_CLIENT_ISPRA 0x44
++/* ISP read client 1 for Crossbar A */
++#define TEGRA194_MEMORY_CLIENT_ISPFALR 0x45
++/* ISP Write client for Crossbar A */
++#define TEGRA194_MEMORY_CLIENT_ISPWA 0x46
++/* ISP Write client Crossbar B */
++#define TEGRA194_MEMORY_CLIENT_ISPWB 0x47
++/* XUSB_HOST read clients */
++#define TEGRA194_MEMORY_CLIENT_XUSB_HOSTR 0x4a
++/* XUSB_HOST write clients */
++#define TEGRA194_MEMORY_CLIENT_XUSB_HOSTW 0x4b
++/* XUSB read clients */
++#define TEGRA194_MEMORY_CLIENT_XUSB_DEVR 0x4c
++/* XUSB_DEV write clients */
++#define TEGRA194_MEMORY_CLIENT_XUSB_DEVW 0x4d
++/* sdmmca memory read client */
++#define TEGRA194_MEMORY_CLIENT_SDMMCRA 0x60
++/* sdmmc memory read client */
++#define TEGRA194_MEMORY_CLIENT_SDMMCR 0x62
++/* sdmmcd memory read client */
++#define TEGRA194_MEMORY_CLIENT_SDMMCRAB 0x63
++/* sdmmca memory write client */
++#define TEGRA194_MEMORY_CLIENT_SDMMCWA 0x64
++/* sdmmc memory write client */
++#define TEGRA194_MEMORY_CLIENT_SDMMCW 0x66
++/* sdmmcd memory write client */
++#define TEGRA194_MEMORY_CLIENT_SDMMCWAB 0x67
++#define TEGRA194_MEMORY_CLIENT_VICSRD 0x6c
++#define TEGRA194_MEMORY_CLIENT_VICSWR 0x6d
++/* VI Write client */
++#define TEGRA194_MEMORY_CLIENT_VIW 0x72
++#define TEGRA194_MEMORY_CLIENT_NVDECSRD 0x78
++#define TEGRA194_MEMORY_CLIENT_NVDECSWR 0x79
++/* Audio Processing (APE) engine read clients */
++#define TEGRA194_MEMORY_CLIENT_APER 0x7a
++/* Audio Processing (APE) engine write clients */
++#define TEGRA194_MEMORY_CLIENT_APEW 0x7b
++#define TEGRA194_MEMORY_CLIENT_NVJPGSRD 0x7e
++#define TEGRA194_MEMORY_CLIENT_NVJPGSWR 0x7f
++/* AXI AP and DFD-AUX0/1 read clients Both share the same interface on the on MSS */
++#define TEGRA194_MEMORY_CLIENT_AXIAPR 0x82
++/* AXI AP and DFD-AUX0/1 write clients Both sahre the same interface on MSS */
++#define TEGRA194_MEMORY_CLIENT_AXIAPW 0x83
++/* ETR read clients */
++#define TEGRA194_MEMORY_CLIENT_ETRR 0x84
++/* ETR write clients */
++#define TEGRA194_MEMORY_CLIENT_ETRW 0x85
++/* AXI Switch read client */
++#define TEGRA194_MEMORY_CLIENT_AXISR 0x8c
++/* AXI Switch write client */
++#define TEGRA194_MEMORY_CLIENT_AXISW 0x8d
++/* EQOS read client */
++#define TEGRA194_MEMORY_CLIENT_EQOSR 0x8e
++/* EQOS write client */
++#define TEGRA194_MEMORY_CLIENT_EQOSW 0x8f
++/* UFSHC read client */
++#define TEGRA194_MEMORY_CLIENT_UFSHCR 0x90
++/* UFSHC write client */
++#define TEGRA194_MEMORY_CLIENT_UFSHCW 0x91
++/* NVDISPLAY read client */
++#define TEGRA194_MEMORY_CLIENT_NVDISPLAYR 0x92
++/* BPMP read client */
++#define TEGRA194_MEMORY_CLIENT_BPMPR 0x93
++/* BPMP write client */
++#define TEGRA194_MEMORY_CLIENT_BPMPW 0x94
++/* BPMPDMA read client */
++#define TEGRA194_MEMORY_CLIENT_BPMPDMAR 0x95
++/* BPMPDMA write client */
++#define TEGRA194_MEMORY_CLIENT_BPMPDMAW 0x96
++/* AON read client */
++#define TEGRA194_MEMORY_CLIENT_AONR 0x97
++/* AON write client */
++#define TEGRA194_MEMORY_CLIENT_AONW 0x98
++/* AONDMA read client */
++#define TEGRA194_MEMORY_CLIENT_AONDMAR 0x99
++/* AONDMA write client */
++#define TEGRA194_MEMORY_CLIENT_AONDMAW 0x9a
++/* SCE read client */
++#define TEGRA194_MEMORY_CLIENT_SCER 0x9b
++/* SCE write client */
++#define TEGRA194_MEMORY_CLIENT_SCEW 0x9c
++/* SCEDMA read client */
++#define TEGRA194_MEMORY_CLIENT_SCEDMAR 0x9d
++/* SCEDMA write client */
++#define TEGRA194_MEMORY_CLIENT_SCEDMAW 0x9e
++/* APEDMA read client */
++#define TEGRA194_MEMORY_CLIENT_APEDMAR 0x9f
++/* APEDMA write client */
++#define TEGRA194_MEMORY_CLIENT_APEDMAW 0xa0
++/* NVDISPLAY read client instance 2 */
++#define TEGRA194_MEMORY_CLIENT_NVDISPLAYR1 0xa1
++#define TEGRA194_MEMORY_CLIENT_VICSRD1 0xa2
++#define TEGRA194_MEMORY_CLIENT_NVDECSRD1 0xa3
++/* MSS internal memqual MIU0 read clients */
++#define TEGRA194_MEMORY_CLIENT_MIU0R 0xa6
++/* MSS internal memqual MIU0 write clients */
++#define TEGRA194_MEMORY_CLIENT_MIU0W 0xa7
++/* MSS internal memqual MIU1 read clients */
++#define TEGRA194_MEMORY_CLIENT_MIU1R 0xa8
++/* MSS internal memqual MIU1 write clients */
++#define TEGRA194_MEMORY_CLIENT_MIU1W 0xa9
++/* MSS internal memqual MIU2 read clients */
++#define TEGRA194_MEMORY_CLIENT_MIU2R 0xae
++/* MSS internal memqual MIU2 write clients */
++#define TEGRA194_MEMORY_CLIENT_MIU2W 0xaf
++/* MSS internal memqual MIU3 read clients */
++#define TEGRA194_MEMORY_CLIENT_MIU3R 0xb0
++/* MSS internal memqual MIU3 write clients */
++#define TEGRA194_MEMORY_CLIENT_MIU3W 0xb1
++/* MSS internal memqual MIU4 read clients */
++#define TEGRA194_MEMORY_CLIENT_MIU4R 0xb2
++/* MSS internal memqual MIU4 write clients */
++#define TEGRA194_MEMORY_CLIENT_MIU4W 0xb3
++#define TEGRA194_MEMORY_CLIENT_DPMUR 0xb4
++#define TEGRA194_MEMORY_CLIENT_DPMUW 0xb5
++#define TEGRA194_MEMORY_CLIENT_NVL0R 0xb6
++#define TEGRA194_MEMORY_CLIENT_NVL0W 0xb7
++#define TEGRA194_MEMORY_CLIENT_NVL1R 0xb8
++#define TEGRA194_MEMORY_CLIENT_NVL1W 0xb9
++#define TEGRA194_MEMORY_CLIENT_NVL2R 0xba
++#define TEGRA194_MEMORY_CLIENT_NVL2W 0xbb
++/* VI FLACON read clients */
++#define TEGRA194_MEMORY_CLIENT_VIFALR 0xbc
++/* VIFAL write clients */
++#define TEGRA194_MEMORY_CLIENT_VIFALW 0xbd
++/* DLA0ARDA read clients */
++#define TEGRA194_MEMORY_CLIENT_DLA0RDA 0xbe
++/* DLA0 Falcon read clients */
++#define TEGRA194_MEMORY_CLIENT_DLA0FALRDB 0xbf
++/* DLA0 write clients */
++#define TEGRA194_MEMORY_CLIENT_DLA0WRA 0xc0
++/* DLA0 write clients */
++#define TEGRA194_MEMORY_CLIENT_DLA0FALWRB 0xc1
++/* DLA1ARDA read clients */
++#define TEGRA194_MEMORY_CLIENT_DLA1RDA 0xc2
++/* DLA1 Falcon read clients */
++#define TEGRA194_MEMORY_CLIENT_DLA1FALRDB 0xc3
++/* DLA1 write clients */
++#define TEGRA194_MEMORY_CLIENT_DLA1WRA 0xc4
++/* DLA1 write clients */
++#define TEGRA194_MEMORY_CLIENT_DLA1FALWRB 0xc5
++/* PVA0RDA read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA0RDA 0xc6
++/* PVA0RDB read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA0RDB 0xc7
++/* PVA0RDC read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA0RDC 0xc8
++/* PVA0WRA write clients */
++#define TEGRA194_MEMORY_CLIENT_PVA0WRA 0xc9
++/* PVA0WRB write clients */
++#define TEGRA194_MEMORY_CLIENT_PVA0WRB 0xca
++/* PVA0WRC write clients */
++#define TEGRA194_MEMORY_CLIENT_PVA0WRC 0xcb
++/* PVA1RDA read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA1RDA 0xcc
++/* PVA1RDB read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA1RDB 0xcd
++/* PVA1RDC read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA1RDC 0xce
++/* PVA1WRA write clients */
++#define TEGRA194_MEMORY_CLIENT_PVA1WRA 0xcf
++/* PVA1WRB write clients */
++#define TEGRA194_MEMORY_CLIENT_PVA1WRB 0xd0
++/* PVA1WRC write clients */
++#define TEGRA194_MEMORY_CLIENT_PVA1WRC 0xd1
++/* RCE read client */
++#define TEGRA194_MEMORY_CLIENT_RCER 0xd2
++/* RCE write client */
++#define TEGRA194_MEMORY_CLIENT_RCEW 0xd3
++/* RCEDMA read client */
++#define TEGRA194_MEMORY_CLIENT_RCEDMAR 0xd4
++/* RCEDMA write client */
++#define TEGRA194_MEMORY_CLIENT_RCEDMAW 0xd5
++#define TEGRA194_MEMORY_CLIENT_NVENC1SRD 0xd6
++#define TEGRA194_MEMORY_CLIENT_NVENC1SWR 0xd7
++/* PCIE0 read clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE0R 0xd8
++/* PCIE0 write clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE0W 0xd9
++/* PCIE1 read clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE1R 0xda
++/* PCIE1 write clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE1W 0xdb
++/* PCIE2 read clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE2AR 0xdc
++/* PCIE2 write clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE2AW 0xdd
++/* PCIE3 read clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE3R 0xde
++/* PCIE3 write clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE3W 0xdf
++/* PCIE4 read clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE4R 0xe0
++/* PCIE4 write clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE4W 0xe1
++/* PCIE5 read clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE5R 0xe2
++/* PCIE5 write clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE5W 0xe3
++/* ISP read client 1 for Crossbar A */
++#define TEGRA194_MEMORY_CLIENT_ISPFALW 0xe4
++#define TEGRA194_MEMORY_CLIENT_NVL3R 0xe5
++#define TEGRA194_MEMORY_CLIENT_NVL3W 0xe6
++#define TEGRA194_MEMORY_CLIENT_NVL4R 0xe7
++#define TEGRA194_MEMORY_CLIENT_NVL4W 0xe8
++/* DLA0ARDA1 read clients */
++#define TEGRA194_MEMORY_CLIENT_DLA0RDA1 0xe9
++/* DLA1ARDA1 read clients */
++#define TEGRA194_MEMORY_CLIENT_DLA1RDA1 0xea
++/* PVA0RDA1 read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA0RDA1 0xeb
++/* PVA0RDB1 read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA0RDB1 0xec
++/* PVA1RDA1 read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA1RDA1 0xed
++/* PVA1RDB1 read clients */
++#define TEGRA194_MEMORY_CLIENT_PVA1RDB1 0xee
++/* PCIE5r1 read clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE5R1 0xef
++#define TEGRA194_MEMORY_CLIENT_NVENCSRD1 0xf0
++#define TEGRA194_MEMORY_CLIENT_NVENC1SRD1 0xf1
++/* ISP read client for Crossbar A */
++#define TEGRA194_MEMORY_CLIENT_ISPRA1 0xf2
++/* PCIE0 read clients */
++#define TEGRA194_MEMORY_CLIENT_PCIE0R1 0xf3
++#define TEGRA194_MEMORY_CLIENT_NVL0RHP 0xf4
++#define TEGRA194_MEMORY_CLIENT_NVL1RHP 0xf5
++#define TEGRA194_MEMORY_CLIENT_NVL2RHP 0xf6
++#define TEGRA194_MEMORY_CLIENT_NVL3RHP 0xf7
++#define TEGRA194_MEMORY_CLIENT_NVL4RHP 0xf8
++#define TEGRA194_MEMORY_CLIENT_NVDEC1SRD 0xf9
++#define TEGRA194_MEMORY_CLIENT_NVDEC1SRD1 0xfa
++#define TEGRA194_MEMORY_CLIENT_NVDEC1SWR 0xfb
++/* MSS internal memqual MIU5 read clients */
++#define TEGRA194_MEMORY_CLIENT_MIU5R 0xfc
++/* MSS internal memqual MIU5 write clients */
++#define TEGRA194_MEMORY_CLIENT_MIU5W 0xfd
++/* MSS internal memqual MIU6 read clients */
++#define TEGRA194_MEMORY_CLIENT_MIU6R 0xfe
++/* MSS internal memqual MIU6 write clients */
++#define TEGRA194_MEMORY_CLIENT_MIU6W 0xff
++
+ #endif
+-- 
+2.23.0
 
