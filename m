@@ -2,238 +2,185 @@ Return-Path: <SRS0=PDL5=Y3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F86CA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 15:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D73BCA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 16:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E177320578
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 15:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620872086D
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 16:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572796592;
-	bh=wcm4WSq8nf1bPCFvvJdXoljIG1mzPOwPBgmMSlSJ1QY=;
+	s=default; t=1572796879;
+	bh=Lpq9fn2fii7gBSLXJ89Ao8eK1QO7fC9NIhZkf0eEtYA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rufd6KgGk47sNXryxyESroukAP8YPMzTySc699fwpqyY4UXIGeoDMM38UFGZiL7ug
-	 tZhHcCFrUs63ObTkCkUc1iKtI8OQpnDYXZi4ncDjryESzbSk4eatoF96V3OAGdK0vj
-	 FodAx9mKueeya+5erSz9vlMhYP5lCbY75cViBryY=
+	b=a79R3y9Ndagp5hhivHwyoYFBMQo2cdwuQgxqAYuUltLJOqdKgBocTT8Smt0fkhgSr
+	 ufLH6Be1MFy6Crhbr6X7R2BkkXjUxHsvrQLzn+U8g5L40ED952mlyOIBg7s6CUSAic
+	 1yGYYeVeMy+9XgV16r+8/BI4hQrp+6h1hdW7ApG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbfKCP4b (ORCPT
+        id S1727743AbfKCQBS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 10:56:31 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39561 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727523AbfKCP4b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 Nov 2019 10:56:31 -0500
-Received: by mail-ed1-f65.google.com with SMTP id l25so11261569edt.6;
-        Sun, 03 Nov 2019 07:56:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n9GGwjavjQQOgINeeqgNFn5O1QAWzrjwrcfoPvqx32k=;
-        b=Q5fPyCCBlp95NpOkcDqzhA1nQfsHW8XOTYs6V7NlryxE5DTIptGRy/R72Z812n77pB
-         U7PZxEQEdpRzldeaBpotxrAm4sl43cTGRvtrFgo1MPglEc/PeeNoL2/dAXzS7eEaevh+
-         B8hGkYL9ms0a8UqtzMaBCm4ybN/JxlneJjlgppxx2nbv+LuTlPnFYsVeyWXGMhXkcEjk
-         f2Qpm0vy4eBm3e1C9/dIGBsMeUe9dETFEKeVU7KD8ivy7kHYxrgdUgxqhfTDqzNHU6mJ
-         r9XRrbx24W2OsxU0W14K3/eOp7rg0p26blIUpQs6VbaF5nsee5Y7HZz0sGx35kXRuNwM
-         yyDw==
-X-Gm-Message-State: APjAAAVdsNOqx5M30W4e6MLhCOSllHPT2A4pG2b6cQvRFYmMhfRx0ixI
-        YVNueAbJIQTDB6T04pXP2L4=
-X-Google-Smtp-Source: APXvYqxNP7szQhet9sXBcDrshchvID9xPkCKOWKeMWmkHoP70A6OrX+tlJ1vbiRwjVFkcS0n8I+n3g==
-X-Received: by 2002:a50:cc43:: with SMTP id n3mr24819628edi.287.1572796586774;
-        Sun, 03 Nov 2019 07:56:26 -0800 (PST)
-Received: from kozik-lap ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id s8sm759641edj.6.2019.11.03.07.56.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 Nov 2019 07:56:26 -0800 (PST)
-Date:   Sun, 3 Nov 2019 16:56:23 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Sun, 3 Nov 2019 11:01:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727523AbfKCQBS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 Nov 2019 11:01:18 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04CCD2084D;
+        Sun,  3 Nov 2019 16:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572796877;
+        bh=Lpq9fn2fii7gBSLXJ89Ao8eK1QO7fC9NIhZkf0eEtYA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OCwDFQkWKusxtKXsxi91PdS4FMndv/PZ40OLVWxDDGqjae8h/Dw/eR2w/CFWnlCiF
+         05LMTf6JN+eJiF+Asn1yAmFM6COsnzFFyJfRcI32IyI//GopKIp2PAbknEArZTo53t
+         8EvQSINAYXMGp654yYfuaWc8jOv6b5LkCNJF2Nxs=
+Date:   Sun, 3 Nov 2019 17:01:14 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Lee Jones <lee.jones@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maciej Falkowski <m.falkowski@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: serial: Convert Samsung UART bindings
- to json-schema
-Message-ID: <20191103155623.GA6960@kozik-lap>
-References: <20191004151414.8458-1-krzk@kernel.org>
- <20191004151414.8458-3-krzk@kernel.org>
- <20191015194006.GA3540@bogus>
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter
+ binding
+Message-ID: <20191103160114.GD7001@gilmour>
+References: <20191029153815.C631668C4E@verein.lst.de>
+ <20191029153953.8EE9B68D04@verein.lst.de>
+ <20191031125100.qprbdaaysg3tmhif@hendrix>
+ <20191031145224.GA5973@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="O3RTKUHj+75w1tg5"
 Content-Disposition: inline
-In-Reply-To: <20191015194006.GA3540@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191031145224.GA5973@lst.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 02:40:06PM -0500, Rob Herring wrote:
-> On Fri, Oct 04, 2019 at 05:14:14PM +0200, Krzysztof Kozlowski wrote:
-> > Convert Samsung S3C/S5P/Exynos Serial/UART bindings to DT schema format
-> > using json-schema.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../bindings/mfd/samsung,exynos5433-lpass.txt |   2 +-
-> >  .../bindings/serial/samsung_uart.txt          |  58 -------
-> >  .../bindings/serial/samsung_uart.yaml         | 148 ++++++++++++++++++
-> >  3 files changed, 149 insertions(+), 59 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.txt
-> >  create mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
-> > index d759da606f75..30ea27c3936d 100644
-> > --- a/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
-> > @@ -18,7 +18,7 @@ an optional sub-node. For "samsung,exynos5433-lpass" compatible this includes:
-> >  UART, SLIMBUS, PCM, I2S, DMAC, Timers 0...4, VIC, WDT 0...1 devices.
-> >  
-> >  Bindings of the sub-nodes are described in:
-> > -  ../serial/samsung_uart.txt
-> > +  ../serial/samsung_uart.yaml
-> >    ../sound/samsung-i2s.txt
-> >    ../dma/arm-pl330.txt
-> >  
-> > diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.txt b/Documentation/devicetree/bindings/serial/samsung_uart.txt
-> > deleted file mode 100644
-> > index e85f37ec33f0..000000000000
-> > --- a/Documentation/devicetree/bindings/serial/samsung_uart.txt
-> > +++ /dev/null
-> > @@ -1,58 +0,0 @@
-> > -* Samsung's UART Controller
-> > -
-> > -The Samsung's UART controller is used for interfacing SoC with serial
-> > -communicaion devices.
-> > -
-> > -Required properties:
-> > -- compatible: should be one of following:
-> > -  - "samsung,exynos4210-uart" -  Exynos4210 SoC,
-> > -  - "samsung,s3c2410-uart" - compatible with ports present on S3C2410 SoC,
-> > -  - "samsung,s3c2412-uart" - compatible with ports present on S3C2412 SoC,
-> > -  - "samsung,s3c2440-uart" - compatible with ports present on S3C2440 SoC,
-> > -  - "samsung,s3c6400-uart" - compatible with ports present on S3C6400 SoC,
-> > -  - "samsung,s5pv210-uart" - compatible with ports present on S5PV210 SoC.
-> > -
-> > -- reg: base physical address of the controller and length of memory mapped
-> > -  region.
-> > -
-> > -- interrupts: a single interrupt signal to SoC interrupt controller,
-> > -  according to interrupt bindings documentation [1].
-> > -
-> > -- clock-names: input names of clocks used by the controller:
-> > -  - "uart" - controller bus clock,
-> > -  - "clk_uart_baudN" - Nth baud base clock input (N = 0, 1, ...),
-> > -    according to SoC User's Manual (only N = 0 is allowedfor SoCs without
-> > -    internal baud clock mux).
-> > -- clocks: phandles and specifiers for all clocks specified in "clock-names"
-> > -  property, in the same order, according to clock bindings documentation [2].
-> > -
-> > -[1] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > -[2] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > -
-> > -Optional properties:
-> > -- samsung,uart-fifosize: The fifo size supported by the UART channel
-> > -
-> > -Note: Each Samsung UART should have an alias correctly numbered in the
-> > -"aliases" node, according to serialN format, where N is the port number
-> > -(non-negative decimal integer) as specified by User's Manual of respective
-> > -SoC.
-> > -
-> > -Example:
-> > -	aliases {
-> > -		serial0 = &uart0;
-> > -		serial1 = &uart1;
-> > -		serial2 = &uart2;
-> > -	};
-> > -
-> > -Example:
-> > -	uart1: serial@7f005400 {
-> > -		compatible = "samsung,s3c6400-uart";
-> > -		reg = <0x7f005400 0x100>;
-> > -		interrupt-parent = <&vic1>;
-> > -		interrupts = <6>;
-> > -		clock-names = "uart", "clk_uart_baud2",
-> > -				"clk_uart_baud3";
-> > -		clocks = <&clocks PCLK_UART1>, <&clocks PCLK_UART1>,
-> > -				<&clocks SCLK_UART>;
-> > -		samsung,uart-fifosize = <16>;
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> > new file mode 100644
-> > index 000000000000..276bea1c231a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> > @@ -0,0 +1,148 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/serial/samsung_uart.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung S3C, S5P and Exynos SoC UART Controller
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > +
-> > +description: |+
-> > +  Each Samsung UART should have an alias correctly numbered in the "aliases"
-> > +  node, according to serialN format, where N is the port number (non-negative
-> > +  decimal integer) as specified by User's Manual of respective SoC.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - samsung,s3c2410-uart
-> > +          - samsung,s3c2412-uart
-> > +          - samsung,s3c2440-uart
-> > +          - samsung,s3c6400-uart
-> > +          - samsung,s5pv210-uart
-> > +          - samsung,exynos4210-uart
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 2
-> > +    maxItems: 5
-> > +
-> > +  clock-names:
-> > +    description: |
-> > +      List of clock names:
-> > +        - "uart" - controller bus clock,
-> > +        - "clk_uart_baudN" - Nth baud base clock input (N = 0, 1, ...).
-> 
-> Kind of redundant to list this here.
-> 
-> > +      N = 0 is allowed for SoCs without internal baud clock mux.
-> 
-> You can add a description with the item:
-> 
-> items:
->   - pattern: '^clk_uart_baud[0-3]$'
->     description: N = 0 is allowed for SoCs without internal baud clock mux.
-> 
 
-This caused error:
-properties:clock-names:items:1: Additional properties are not allowed ('description' was unexpected)
-../Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/serial/samsung_uart.example.dts' failed
+--O3RTKUHj+75w1tg5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I applied rest of comments. Thanks for review!
+On Thu, Oct 31, 2019 at 03:52:24PM +0100, Torsten Duwe wrote:
+> On Thu, Oct 31, 2019 at 01:51:00PM +0100, Maxime Ripard wrote:
+> > On Tue, Oct 29, 2019 at 01:16:57PM +0100, Torsten Duwe wrote:
+> > > +
+> > > +  ports:
+> > > +    anyOf:
+> > > +      - port@0:
+> > > +        description: Video port for LVTTL input
+> > > +      - port@1:
+> > > +        description: Video port for eDP output (panel or connector).
+> > > +                     May be omitted if EDID works reliably.
+> > > +    required:
+> > > +      - port@0
+> >
+> > Have you tried to validate those two ports in a DT?
+>
+> Yes, it validates as expected, like I wrote. Various sources told me that
+> json-schema is not always straightforward so I assumed anyOf was OK.
+>
+> > I'm not quite sure what you wanted to express with that anyOf, but if
+> > it was something like port@0 is mandatory, and port@1 is optional, it
+> > should be something like this:
+> >
+> > properties:
+> >
+> >   ...
+> >
+> >   ports:
+> >     type: object
+> >
+> >     properties:
+> >       port@0:
+> >         type: object
+> >         description: |
+> > 	  Video port for LVTTL input
+> >
+> >       port@1:
+> >         type: object
+> >         description: |
+> > 	  Video port for eDP output (..)
+> >
+> >     required:
+> >       - port@0
+> >
+> > This way, you express that both port@0 and port@1 must by nodes, under
+> > a node called ports, and port@0 is mandatory.
+>
+> That validates, too. Looks better, admittedly. I don't have a strong
+> opinion here. It's just that Rob wrote in
+> <CAL_JsqKAU3WG3L=KP8A8u4vW=q_BQWPN-m_c+ADOwTioJ2-cmg@mail.gmail.com>:
+>
+> | For this case specifically, we do need to define a common graph
+> | schema, but haven't yet. You can assume we do and only really need to
+> | capture what Maxime said above.
+> (your points back then were port@N descriptions and neccessity for port@0)
+>
+> Are you sure that "object" is specific enough?
 
-Best regards,
-Krzysztof
+Possibly not, but at least it checks that there's indeed something
+called port@0 (and port@1), and that they are both nodes (and not
+properties).
 
+We can probably refine this further, but this is good enough at the
+moment.
+
+> > You should even push this a bit further by adding
+> > additionalProperties: false to prevent a DT from having undocumented
+> > properties and children for the main node and ports node.
+>
+> You mean like
+>
+> | jsonschema.exceptions.SchemaError: Additional properties are not allowed ('unevaluatedProperties' was unexpected)
+> [...]
+> | On schema:
+> |    {'$id': 'http://devicetree.org/schemas/watchdog/allwinner,sun4i-a10-wdt.yaml#',
+> [...]
+> |      'unevaluatedProperties': False}
+>
+> ? ;-)
+
+That would be on the meta-schema, but yes, we want to trigger warnings
+on something that isn't described.
+
+>
+> But yes, this patch series passes even with additionalProperties: false.
+>
+> In which form would you like to receive the update?
+
+Please send a new version.
+
+Thanks!
+Maxime
+
+--O3RTKUHj+75w1tg5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXb75ygAKCRDj7w1vZxhR
+xQ7rAQCZLQcuukaEIuQQut4PC1tgBMKrdJ+kUMMrTujJsMh0KAD/XxEP4qvCHVOh
+pyNiY1VTEuJDPf//SnH0gq+kzuonjQ8=
+=cdL1
+-----END PGP SIGNATURE-----
+
+--O3RTKUHj+75w1tg5--
