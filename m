@@ -2,240 +2,112 @@ Return-Path: <SRS0=PDL5=Y3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10262CA9EB0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 22:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC20CA9ED0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 22:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE1E2086D
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 22:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9260521A4A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 22:27:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="W8pOGWDm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TuHGE1F1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfKCWIr (ORCPT
+        id S1728049AbfKCW1T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 17:08:47 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:48220 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbfKCWIr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 Nov 2019 17:08:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1572818919; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r9CTqsD8THptmQCEFpxg/CwZExeN/PvOr/4dsnWEMO0=;
-        b=W8pOGWDmj2ldrU84zVPols6Lq75fbS0kom6Io3T7zzw8WUh9SyJTApYIfie4c4p9N9V6dB
-        m/ojr+m1ywiEGbSW/s4dnf/ZA17sUGJeHSzuo4KBJp/y8/5FodLw7bzzDsCJ1z5UL60N68
-        DzknqJdY3WkAMm+PTcHWaXefp9l86i0=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] power/supply: Add generic USB charger driver
-Date:   Sun,  3 Nov 2019 23:08:01 +0100
-Message-Id: <20191103220801.10666-2-paul@crapouillou.net>
-In-Reply-To: <20191103220801.10666-1-paul@crapouillou.net>
-References: <20191103220801.10666-1-paul@crapouillou.net>
+        Sun, 3 Nov 2019 17:27:19 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36479 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727902AbfKCW1Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 3 Nov 2019 17:27:16 -0500
+Received: by mail-lf1-f65.google.com with SMTP id a6so7394028lfo.3
+        for <devicetree@vger.kernel.org>; Sun, 03 Nov 2019 14:27:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IzPJeK2cpUMQjH/975cPTUdiwrvG/dQ6KV42xRB7wAA=;
+        b=TuHGE1F1+ZfQMWfZYOEceMUBeLUnTeKK5wwL276Sz2hY+xKk8yxeRPuxVCLI4K8K1b
+         xc/+Bs3KENTr75oENU5Oij2awZZ1CEWkkAhr9YxWRcPvSoAZ0jwnjIPdTOs9KHH+bkjA
+         gFA/bMn9usVK1w4Rsab/nFcqIguaiTrbPF90x6B7U0CPqlgL7IVMYuqCg0LkJ7UmqPtp
+         nbt7syLDUloMjZ2JaJ7lBtj1V/QwAg3ng3c13tJGYyVP8U5en7JxXggkdqBp6at+kXvj
+         ITQxqRfoZDCgVCzD0WsGKF7ftP+d2VB9+BO8PhPn6vdBZfC19rjv4tRamOHUEGXgKOd+
+         5IUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IzPJeK2cpUMQjH/975cPTUdiwrvG/dQ6KV42xRB7wAA=;
+        b=IG+X8bVW3dpa+3PA2c4/w33JB5MM4Zis5duHNxIdXQ5tBx29py5Vzmoo0qK+JftOdo
+         +g5UkujfKn9JbE34MeZGDAot5W5xcBrVqfz0H8AyUGE5vzf1SxunQVytQPLyoixBs3s8
+         EhD9mxPmUWsR+bBbWZ4e6NPEnV2xsgl1gwjoq29GAgguX9xqqVrR8kOoyAM7pM3Dbh3a
+         tCFw0OGubmwpMoTHAX/fBG5o0ojqlcZwVQ5QrDT8m+WhnIA46vfUQxw5blqJ2q2DJoun
+         /YgUk8w7SNN4i8pWRoik8Ww4FGKg2wuyGsmePEItXmXYVNxrIYzPKtlP3Tv08u/S7+35
+         68RA==
+X-Gm-Message-State: APjAAAXLAZ7vaH4N7oNM0tm8eN1odwerm+q4JdrhVnMCn8Y/1AFLgrQq
+        ztdxSzgMsJCgcudE9PL+0wupk4BNa7Lso2NAxYyKAQ==
+X-Google-Smtp-Source: APXvYqyjdYFNN9CDPrBMD1LL8+RPj9zGpSDVydNpsun9Cd81xB4a7KEsrKrdBFbr3NcThDQn/dcVLwc/glAw4mUAc7w=
+X-Received: by 2002:a19:6a0d:: with SMTP id u13mr5835609lfu.86.1572820033814;
+ Sun, 03 Nov 2019 14:27:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com> <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 3 Nov 2019 23:27:02 +0100
+Message-ID: <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based run-level
+ control for regulators
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This simple charger driver uses the USB PHY framework to detect the
-presence of a charger.
+On Fri, Nov 1, 2019 at 12:43 PM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/power/supply/Kconfig               |   7 ++
- drivers/power/supply/Makefile              |   1 +
- drivers/power/supply/generic-usb-charger.c | 140 +++++++++++++++++++++
- 3 files changed, 148 insertions(+)
- create mode 100644 drivers/power/supply/generic-usb-charger.c
+> Bucks 1,2,6 and 7 on ROHM BD71828 can be either controlled as
+> individual regulartors - or they can be grouped to a group of
+> regulators that are controlled by 'run levels'. This can be
+> done via I2C. Each regulator can be assigned a voltage and
+> enable/disable status for each run-level. These statuses are
+> also changeable via I2C.
+>
+> Run-levels can then be changed either by I2C or GPIO. This
+> control mechanism is selected by data in one time programmable
+> area (during production) and can't be changed later.
+>
+> Allow regulators to be controlled via run-levels and allow
+> getting/setting the current run-level also via GPIO.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index c84a7b1caeb6..069a91d89a42 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -51,6 +51,13 @@ config GENERIC_ADC_BATTERY
- 	  Say Y here to enable support for the generic battery driver
- 	  which uses IIO framework to read adc.
- 
-+config GENERIC_USB_CHARGER
-+	tristate "Generic USB charger"
-+	depends on USB_PHY
-+	help
-+	  Say Y here to enable a generic USB charger driver which uses
-+	  the USB PHY framework to detect the presence of the charger.
-+
- config MAX8925_POWER
- 	tristate "MAX8925 battery charger support"
- 	depends on MFD_MAX8925
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 6c7da920ea83..03f9b553bdfc 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -8,6 +8,7 @@ power_supply-$(CONFIG_LEDS_TRIGGERS)	+= power_supply_leds.o
- obj-$(CONFIG_POWER_SUPPLY)	+= power_supply.o
- obj-$(CONFIG_POWER_SUPPLY_HWMON) += power_supply_hwmon.o
- obj-$(CONFIG_GENERIC_ADC_BATTERY)	+= generic-adc-battery.o
-+obj-$(CONFIG_GENERIC_USB_CHARGER)	+= generic-usb-charger.o
- 
- obj-$(CONFIG_PDA_POWER)		+= pda_power.o
- obj-$(CONFIG_APM_POWER)		+= apm_power.o
-diff --git a/drivers/power/supply/generic-usb-charger.c b/drivers/power/supply/generic-usb-charger.c
-new file mode 100644
-index 000000000000..d005acfc33c7
---- /dev/null
-+++ b/drivers/power/supply/generic-usb-charger.c
-@@ -0,0 +1,140 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Simple USB charger driver
-+ * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <linux/usb/phy.h>
-+
-+struct usb_charger {
-+	struct usb_phy *phy;
-+	struct notifier_block nb;
-+	struct power_supply_desc desc;
-+	struct power_supply *charger;
-+};
-+
-+static enum power_supply_property usb_charger_properties[] = {
-+	POWER_SUPPLY_PROP_ONLINE,
-+};
-+
-+static int usb_charger_get_property(struct power_supply *psy,
-+				    enum power_supply_property psp,
-+				    union power_supply_propval *val)
-+{
-+	struct usb_charger *charger = power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		val->intval = charger->phy->chg_state == USB_CHARGER_PRESENT;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int usb_charger_event(struct notifier_block *nb,
-+			     unsigned long event, void *d)
-+{
-+	struct usb_charger *charger = container_of(nb, struct usb_charger, nb);
-+
-+	power_supply_changed(charger->charger);
-+
-+	return 0;
-+}
-+
-+static int usb_charger_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct power_supply_desc *desc;
-+	struct usb_charger *charger;
-+	struct power_supply_config cfg = {
-+		.of_node = dev->of_node,
-+	};
-+	int err;
-+
-+	charger = devm_kzalloc(dev, sizeof(*charger), GFP_KERNEL);
-+	if (!charger)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, charger);
-+	charger->nb.notifier_call = usb_charger_event;
-+	cfg.drv_data = charger;
-+
-+	if (dev->of_node)
-+		charger->phy = devm_usb_get_phy_by_phandle(dev, "phys", 0);
-+	else
-+		charger->phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-+	if (IS_ERR(charger->phy)) {
-+		err = PTR_ERR(charger->phy);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "No transceiver configured");
-+		return err;
-+	}
-+
-+	desc = &charger->desc;
-+	desc->name = "usb-charger";
-+	desc->properties = usb_charger_properties;
-+	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
-+	desc->get_property = usb_charger_get_property;
-+
-+	switch (charger->phy->chg_type) {
-+	case SDP_TYPE:
-+		desc->type = POWER_SUPPLY_TYPE_USB;
-+		break;
-+	case DCP_TYPE:
-+		desc->type = POWER_SUPPLY_TYPE_USB_DCP;
-+		break;
-+	case CDP_TYPE:
-+		desc->type = POWER_SUPPLY_TYPE_USB_CDP;
-+		break;
-+	case ACA_TYPE:
-+		desc->type = POWER_SUPPLY_TYPE_USB_ACA;
-+		break;
-+	default:
-+		desc->type = POWER_SUPPLY_TYPE_UNKNOWN;
-+	}
-+
-+	charger->charger = devm_power_supply_register(dev, desc, &cfg);
-+	if (IS_ERR(charger->charger)) {
-+		dev_err(dev, "Unable to register charger");
-+		return PTR_ERR(charger->charger);
-+	}
-+
-+	return usb_register_notifier(charger->phy, &charger->nb);
-+}
-+
-+static int usb_charger_remove(struct platform_device *pdev)
-+{
-+	struct usb_charger *charger = platform_get_drvdata(pdev);
-+
-+	usb_unregister_notifier(charger->phy, &charger->nb);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id usb_charger_of_match[] = {
-+	{ .compatible = "usb-charger" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, usb_charger_of_match);
-+#endif
-+
-+static struct platform_driver usb_charger_driver = {
-+	.driver = {
-+		.name = "usb-charger",
-+		.of_match_table = of_match_ptr(usb_charger_of_match),
-+	},
-+	.probe = usb_charger_probe,
-+	.remove = usb_charger_remove,
-+};
-+module_platform_driver(usb_charger_driver);
-+
-+MODULE_DESCRIPTION("Simple USB charger driver");
-+MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-+MODULE_LICENSE("GPL");
--- 
-2.24.0.rc1
+I like the way you use the gpio API so FWIW:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+I do not understand the regulator parts of the patch.
+
+Yours,
+Linus Walleij
