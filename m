@@ -2,277 +2,161 @@ Return-Path: <SRS0=PDL5=Y3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B81CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E84CCA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 12:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F28320842
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:54:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KtL0Xw3K"
+	by mail.kernel.org (Postfix) with ESMTP id 664DF214D8
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 12:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572784252;
+	bh=PNPF44YhCOUJNjbBKup8kBjb0LPnZL460Sat0XzGxQ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oekZJnB0IrwdUWYPzAHLLekY7E9VKLi9T6fTyLGqy0SJR94+75QxomcXc64vL/jxk
+	 NBM4lOuwZ+oIYD2ISsBzUYiq9fEWF1jLjUyIA27O406duvcOTVkdt2wZBg3dCyngZr
+	 /krWn33joAAJESqJulYwCFW/c57JLbiWnoTRt38M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfKCLyY (ORCPT
+        id S1727500AbfKCMat (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 06:54:24 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37530 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfKCLyY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 Nov 2019 06:54:24 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q130so13201090wme.2;
-        Sun, 03 Nov 2019 03:54:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Wn+huXjsq7G+a2CTarlM5yhHdSRocSimZhW3JueGs1k=;
-        b=KtL0Xw3KY7G2911evW37iUJTbmC5oYZSGbLSDKpTYT26D4K76w1V5W9ndnsA6tC5Qp
-         jDwM+aDhuLYG/KeOSPfcZ6VOVVGI2kSBnEf0eN7LVDv1ZH8nK+KU9j/0tkyLsyexgxbS
-         hFGDINxrAcQfEaxEs81cfvCwvvtzzxLqZLRSF5STdSL5tKZfLuwtwFJzkFeURUYa25L4
-         SsEX9Kl2AoEeHlj9R+EzdUhsc8tGXdbjABlwQ5dOvy1fec5EIP2yaA2ABYi45Qg1RuDY
-         yln9ie/Pn1renXZqimLUagRCi56xBTuWaYhKfClyPBxbsypJLYy34eaNbk0ONX+BFbdL
-         LtbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Wn+huXjsq7G+a2CTarlM5yhHdSRocSimZhW3JueGs1k=;
-        b=Rq5oIQSdgf2By1pLXC6cHmYE55OG4yPMpv3b5dTMbhqfeszaAoYPia3/1wwjQnMQJ2
-         42GP6QoSGFXGGZ68iHlwP8nrY2CFQu7NjVIidovH7qkTc5XiJkqTvmxe6NFJHcSjgtMh
-         odKXMeYgQn5CdCxri0/dGOVBXXYRCFeE1zF7A34WIu7CbhOyVsLTGdOQzZe0ahv1DUz+
-         JW5kX+bgfoEM/JuUTzbbk740gG/smrkT8dNEAC/B2ieiKLqpM3HjpavaZNpOxWqm2zXa
-         Bb3Ly4fjDRKEwmndbTkv6kyk3R66/ZzxH8QI/UJL+iNRbAyBynkWeYjKas0P+kq/s80t
-         yZmQ==
-X-Gm-Message-State: APjAAAXdT7Hlfze7ENLr9yifAhSbbYypzPgb4S+QSvazjf1NPqMyJn6G
-        HrKTWgK+URIkO9Jmb0g9Jns=
-X-Google-Smtp-Source: APXvYqxKoP3ya51zGI9IOezX9GvX4vPsx0jv/KPYe4S/QB3t3VmhvUbEz4FXGdFT5rPzP0RKqgP9QQ==
-X-Received: by 2002:a1c:1b0d:: with SMTP id b13mr18848084wmb.120.1572782060642;
-        Sun, 03 Nov 2019 03:54:20 -0800 (PST)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id s10sm13819588wrr.5.2019.11.03.03.54.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2019 03:54:19 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 2/2] arm64: tegra: Set dma-ranges for memory subsystem
-Date:   Sun,  3 Nov 2019 12:54:15 +0100
-Message-Id: <20191103115415.6532-2-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191103115415.6532-1-thierry.reding@gmail.com>
-References: <20191103115415.6532-1-thierry.reding@gmail.com>
+        Sun, 3 Nov 2019 07:30:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbfKCMat (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 Nov 2019 07:30:49 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D73C20842;
+        Sun,  3 Nov 2019 12:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572784248;
+        bh=PNPF44YhCOUJNjbBKup8kBjb0LPnZL460Sat0XzGxQ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zsRLQbpfkbDimsx8z0xKv1+ICJB4EipEgoeBKG6wcRvU9aRWy8ltG5qNC3vW4I1qW
+         HSOzdxqWfeeHSf1ilBAUTI3i7ZbkjLK1dHmcQk9CahRHMm12XMjYI/HsVafHGFLwKX
+         4nLYzNRARDPy8xoo2RLzzE/GEYpCwwCcIb7rYUzk=
+Date:   Sun, 3 Nov 2019 12:30:42 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <robh+dt@kernel.org>, <alexandre.torgue@st.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] iio: adc: stm32: allow to tune analog clock
+Message-ID: <20191103123042.54c82559@archlinux>
+In-Reply-To: <1572279108-25916-3-git-send-email-fabrice.gasnier@st.com>
+References: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
+        <1572279108-25916-3-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Mon, 28 Oct 2019 17:11:48 +0100
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-On Tegra194, all clients of the memory subsystem can generally address
-40 bits of system memory. However, bit 39 has special meaning and will
-cause the memory controller to reorder sectors for block-linear buffer
-formats. This is primarily useful for graphics-related devices.
+> Add new optional dt property to tune analog clock prescaler.
+> Driver looks for optional "st,max-clk-rate-hz", then computes
+> best approximation below that rate, using ADC internal prescaler.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+If the previous email I wrote on this got to anyone before I hit
+cancel, please ignore. Had completely failed to read the code correctly.
 
-Use of bit 39 must be controlled on a case-by-case basis. Buffers that
-are used with bit 39 set by one device may be used with bit 39 cleared
-by other devices.
+Anyhow this seems fine to me, but given there are a lot of existing
+clk related bindings I'd like to give a little longer for Rob to
+have a chance to take a look at the binding.
 
-Care must be taken to allocate buffers at addresses that do not require
-bit 39 to be set. This is normally not an issue for system memory since
-there are no Tegra-based systems with enough RAM to exhaust the 39-bit
-physical address space. However, when a device is behind an IOMMU, such
-as the ARM SMMU on Tegra194, the IOMMUs input address space can cause
-IOVA allocations to happen in this region. This is for example the case
-when an operating system implements a top-down allocation policy for IO
-virtual addresses.
+Give me a poke if I seem to have lost this in a week or so.
 
-To account for this, describe the path that memory accesses take through
-the system. Memory clients will send requests to the memory controller,
-which forwards bits [38:0] of the address either to the external memory
-controller or the SMMU, depending on the stream ID of the access. A good
-way to describe this is using the interconnects bindings, see:
+Thanks,
 
-	Documentation/devicetree/bindings/interconnect/interconnect.txt
+Jonathan
 
-The standard "dma-mem" path is used to describe the path towards system
-memory via the memory controller. A dma-ranges property in the memory
-controller's device tree node limits the range of DMA addresses that the
-memory clients can use to bits [38:0], ensuring that bit 39 is not used.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Changes in v2:
-- use memory client IDs instead of stream IDs (Mikko Perttunen)
 
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 55 +++++++++++++++++++++++-
- 1 file changed, 54 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 084abe2e3267..64800ad52e19 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -53,6 +53,9 @@
- 			clock-names = "master_bus", "slave_bus", "rx", "tx", "ptp_ref";
- 			resets = <&bpmp TEGRA194_RESET_EQOS>;
- 			reset-names = "eqos";
-+			interconnects = <&mc TEGRA194_MEMORY_CLIENT_EQOSR>,
-+					<&mc TEGRA194_MEMORY_CLIENT_EQOSW>;
-+			interconnect-names = "dma-mem";
- 			iommus = <&smmu TEGRA194_SID_EQOS>;
- 			status = "disabled";
- 
-@@ -166,10 +169,16 @@
- 			};
- 		};
- 
--		memory-controller@2c00000 {
-+		mc: memory-controller@2c00000 {
- 			compatible = "nvidia,tegra194-mc";
- 			reg = <0x02c00000 0xb0000>;
-+			#interconnect-cells = <1>;
- 			status = "disabled";
-+
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+
-+			dma-ranges = <0x0 0x0 0x0 0x80 0x0>;
- 		};
- 
- 		uarta: serial@3100000 {
-@@ -416,6 +425,9 @@
- 			clock-names = "sdhci";
- 			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
- 			reset-names = "sdhci";
-+			interconnects = <&mc TEGRA194_MEMORY_CLIENT_SDMMCRA>,
-+					<&mc TEGRA194_MEMORY_CLIENT_SDMMCWA>;
-+			interconnect-names = "dma-mem";
- 			iommus = <&smmu TEGRA194_SID_SDMMC1>;
- 			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
- 									<0x07>;
-@@ -439,6 +451,9 @@
- 			clock-names = "sdhci";
- 			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
- 			reset-names = "sdhci";
-+			interconnects = <&mc TEGRA194_MEMORY_CLIENT_SDMMCR>,
-+					<&mc TEGRA194_MEMORY_CLIENT_SDMMCW>;
-+			interconnect-names = "dma-mem";
- 			iommus = <&smmu TEGRA194_SID_SDMMC3>;
- 			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
- 			nvidia,pad-autocal-pull-down-offset-1v8 = <0x7a>;
-@@ -467,6 +482,9 @@
- 					  <&bpmp TEGRA194_CLK_PLLC4>;
- 			resets = <&bpmp TEGRA194_RESET_SDMMC4>;
- 			reset-names = "sdhci";
-+			interconnects = <&mc TEGRA194_MEMORY_CLIENT_SDMMCRAB>,
-+					<&mc TEGRA194_MEMORY_CLIENT_SDMMCWAB>;
-+			interconnect-names = "dma-mem";
- 			iommus = <&smmu TEGRA194_SID_SDMMC4>;
- 			nvidia,pad-autocal-pull-up-offset-hs400 = <0x00>;
- 			nvidia,pad-autocal-pull-down-offset-hs400 = <0x00>;
-@@ -496,6 +514,9 @@
- 				 <&bpmp TEGRA194_RESET_HDA2HDMICODEC>;
- 			reset-names = "hda", "hda2codec_2x", "hda2hdmi";
- 			power-domains = <&bpmp TEGRA194_POWER_DOMAIN_DISP>;
-+			interconnects = <&mc TEGRA194_MEMORY_CLIENT_HDAR>,
-+					<&mc TEGRA194_MEMORY_CLIENT_HDAW>;
-+			interconnect-names = "dma-mem";
- 			iommus = <&smmu TEGRA194_SID_HDA>;
- 			status = "disabled";
- 		};
-@@ -831,6 +852,8 @@
- 			#size-cells = <1>;
- 
- 			ranges = <0x15000000 0x15000000 0x01000000>;
-+			interconnects = <&mc TEGRA194_MEMORY_CLIENT_HOST1XDMAR>;
-+			interconnect-names = "dma-mem";
- 			iommus = <&smmu TEGRA194_SID_HOST1X>;
- 
- 			display-hub@15200000 {
-@@ -867,6 +890,9 @@
- 					reset-names = "dc";
- 
- 					power-domains = <&bpmp TEGRA194_POWER_DOMAIN_DISP>;
-+					interconnects = <&mc TEGRA194_MEMORY_CLIENT_NVDISPLAYR>,
-+							<&mc TEGRA194_MEMORY_CLIENT_NVDISPLAYR1>;
-+					interconnect-names = "dma-mem";
- 					iommus = <&smmu TEGRA194_SID_NVDISPLAY>;
- 
- 					nvidia,outputs = <&sor0 &sor1 &sor2 &sor3>;
-@@ -883,6 +909,9 @@
- 					reset-names = "dc";
- 
- 					power-domains = <&bpmp TEGRA194_POWER_DOMAIN_DISPB>;
-+					interconnects = <&mc TEGRA194_MEMORY_CLIENT_NVDISPLAYR>,
-+							<&mc TEGRA194_MEMORY_CLIENT_NVDISPLAYR1>;
-+					interconnect-names = "dma-mem";
- 					iommus = <&smmu TEGRA194_SID_NVDISPLAY>;
- 
- 					nvidia,outputs = <&sor0 &sor1 &sor2 &sor3>;
-@@ -899,6 +928,9 @@
- 					reset-names = "dc";
- 
- 					power-domains = <&bpmp TEGRA194_POWER_DOMAIN_DISPC>;
-+					interconnects = <&mc TEGRA194_MEMORY_CLIENT_NVDISPLAYR>,
-+							<&mc TEGRA194_MEMORY_CLIENT_NVDISPLAYR1>;
-+					interconnect-names = "dma-mem";
- 					iommus = <&smmu TEGRA194_SID_NVDISPLAY>;
- 
- 					nvidia,outputs = <&sor0 &sor1 &sor2 &sor3>;
-@@ -915,6 +947,9 @@
- 					reset-names = "dc";
- 
- 					power-domains = <&bpmp TEGRA194_POWER_DOMAIN_DISPC>;
-+					interconnects = <&mc TEGRA194_MEMORY_CLIENT_NVDISPLAYR>,
-+							<&mc TEGRA194_MEMORY_CLIENT_NVDISPLAYR1>;
-+					interconnect-names = "dma-mem";
- 					iommus = <&smmu TEGRA194_SID_NVDISPLAY>;
- 
- 					nvidia,outputs = <&sor0 &sor1 &sor2 &sor3>;
-@@ -1182,6 +1217,19 @@
- 			status = "disabled";
- 
- 			power-domains = <&bpmp TEGRA194_POWER_DOMAIN_GPU>;
-+			interconnects = <&mc TEGRA194_MEMORY_CLIENT_NVL1R>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL1RHP>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL1W>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL2R>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL2RHP>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL2W>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL3R>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL3RHP>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL3W>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL4R>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL4RHP>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL4W>;
-+			interconnect-names = "dma-mem";
- 			iommus = <&smmu TEGRA194_SID_GPU>;
- 		};
- 	};
-@@ -1567,6 +1615,11 @@
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 		#power-domain-cells = <1>;
-+		interconnects = <&mc TEGRA194_MEMORY_CLIENT_BPMPR>,
-+				<&mc TEGRA194_MEMORY_CLIENT_BPMPW>,
-+				<&mc TEGRA194_MEMORY_CLIENT_BPMPDMAR>,
-+				<&mc TEGRA194_MEMORY_CLIENT_BPMPDMAW>;
-+		interconnect-names = "dma-mem";
- 		iommus = <&smmu TEGRA194_SID_BPMP>;
- 
- 		bpmp_i2c: i2c {
--- 
-2.23.0
+> ---
+>  drivers/iio/adc/stm32-adc-core.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+> index 20c626c..6537f4f 100644
+> --- a/drivers/iio/adc/stm32-adc-core.c
+> +++ b/drivers/iio/adc/stm32-adc-core.c
+> @@ -79,6 +79,7 @@ struct stm32_adc_priv_cfg {
+>   * @domain:		irq domain reference
+>   * @aclk:		clock reference for the analog circuitry
+>   * @bclk:		bus clock common for all ADCs, depends on part used
+> + * @max_clk_rate:	desired maximum clock rate
+>   * @booster:		booster supply reference
+>   * @vdd:		vdd supply reference
+>   * @vdda:		vdda analog supply reference
+> @@ -95,6 +96,7 @@ struct stm32_adc_priv {
+>  	struct irq_domain		*domain;
+>  	struct clk			*aclk;
+>  	struct clk			*bclk;
+> +	u32				max_clk_rate;
+>  	struct regulator		*booster;
+>  	struct regulator		*vdd;
+>  	struct regulator		*vdda;
+> @@ -141,7 +143,7 @@ static int stm32f4_adc_clk_sel(struct platform_device *pdev,
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(stm32f4_pclk_div); i++) {
+> -		if ((rate / stm32f4_pclk_div[i]) <= priv->cfg->max_clk_rate_hz)
+> +		if ((rate / stm32f4_pclk_div[i]) <= priv->max_clk_rate)
+>  			break;
+>  	}
+>  	if (i >= ARRAY_SIZE(stm32f4_pclk_div)) {
+> @@ -230,7 +232,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+>  			if (ckmode)
+>  				continue;
+>  
+> -			if ((rate / div) <= priv->cfg->max_clk_rate_hz)
+> +			if ((rate / div) <= priv->max_clk_rate)
+>  				goto out;
+>  		}
+>  	}
+> @@ -250,7 +252,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+>  		if (!ckmode)
+>  			continue;
+>  
+> -		if ((rate / div) <= priv->cfg->max_clk_rate_hz)
+> +		if ((rate / div) <= priv->max_clk_rate)
+>  			goto out;
+>  	}
+>  
+> @@ -655,6 +657,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct device_node *np = pdev->dev.of_node;
+>  	struct resource *res;
+> +	u32 max_rate;
+>  	int ret;
+>  
+>  	if (!pdev->dev.of_node)
+> @@ -731,6 +734,13 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>  	priv->common.vref_mv = ret / 1000;
+>  	dev_dbg(&pdev->dev, "vref+=%dmV\n", priv->common.vref_mv);
+>  
+> +	ret = of_property_read_u32(pdev->dev.of_node, "st,max-clk-rate-hz",
+> +				   &max_rate);
+> +	if (!ret)
+> +		priv->max_clk_rate = min(max_rate, priv->cfg->max_clk_rate_hz);
+> +	else
+> +		priv->max_clk_rate = priv->cfg->max_clk_rate_hz;
+> +
+>  	ret = priv->cfg->clk_sel(pdev, priv);
+>  	if (ret < 0)
+>  		goto err_hw_stop;
 
