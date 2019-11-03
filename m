@@ -7,56 +7,50 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A32CA9ED0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167EBCA9EB0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E75C2084D
-	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE05B20679
+	for <linux-devicetree@archiver.kernel.org>; Sun,  3 Nov 2019 11:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572779330;
-	bh=FbaoVaWioLqr0Z7FxL6DKXeAOHtNY6YOT3zMnzdc8eU=;
+	s=default; t=1572781935;
+	bh=yaRJ6Mr6GM5xyrKhWcDRRBH5UkLJtrOAPDCZlw3fW8Y=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vobNndDjbQqSyp2YcdXlwlpCguMrVKtoXH/BGxO4r4ju8cUfhYaLxTiUSRlMz00Mi
-	 lCR4sLgH+gnU8YpPs20wAPx1819AJOAVaTDlvuhoOxXIiT0I8vsAcyPOdFeHeDTzEH
-	 IDWgE5Lg70ce85bUq7WhCBFp97iIIO0gCtb5AGuI=
+	b=u8bUznm7Di6lmkOsrk5UCR0JYHkKOfJ4X+/430TBgejpsEodWvs3YhDvRMbjYiyyP
+	 51QOH57joAMW5+LryUHifEyKTldpYDLU8MShIQrNeCZ/q30TSxsr4YIz0597rRCAz3
+	 YeV6xscGxKImGk3jvJyJJSxBYJhQ+icqtVPqsCqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfKCLIt (ORCPT
+        id S1727503AbfKCLwM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 06:08:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59936 "EHLO mail.kernel.org"
+        Sun, 3 Nov 2019 06:52:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbfKCLIt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 Nov 2019 06:08:49 -0500
+        id S1726998AbfKCLwL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 Nov 2019 06:52:11 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9974820842;
-        Sun,  3 Nov 2019 11:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 818FE20679;
+        Sun,  3 Nov 2019 11:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572779327;
-        bh=FbaoVaWioLqr0Z7FxL6DKXeAOHtNY6YOT3zMnzdc8eU=;
+        s=default; t=1572781930;
+        bh=yaRJ6Mr6GM5xyrKhWcDRRBH5UkLJtrOAPDCZlw3fW8Y=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aD6PQEf1YtBiqkJF3yrAS2+/Z6KUwhqc68hNZX6/JK6K79E/SC6l/MJJK/XPvHMVo
-         FKFtMgi5uMvstFpoEvL8wAOJ/0IAUtx1un5J0bwBbMya+o7K3qc6EBB8uSXwD0/x9c
-         +PTJWqhrPJrpGPKRQQy4w5Ow7wodiZeOSRK/hR54=
-Date:   Sun, 3 Nov 2019 11:08:41 +0000
+        b=QMZtENzPxQLSfaYpPA7saozLZarCtRYZ5zgJ2gFoyb762xKQguq01TkjdzCdMnCXt
+         tPKlzOtnKsdOf2oMcVDldHlkcHhnLcOFHEmZOFMArbfdBFcNwOMy763GajGgTmL5Ah
+         Kwc087TvBO55Be07mruXr4JiNllr5zv+736K+VQQ=
+Date:   Sun, 3 Nov 2019 11:52:05 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <lee.jones@linaro.org>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: iio: timer: Convert stm32 IIO trigger
- bindings to json-schema
-Message-ID: <20191103110841.3ad3ecfb@archlinux>
-In-Reply-To: <20191031123040.26316-3-benjamin.gaignard@st.com>
-References: <20191031123040.26316-1-benjamin.gaignard@st.com>
-        <20191031123040.26316-3-benjamin.gaignard@st.com>
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc:     robh@kernel.org, dragos.bogdan@analog.com,
+        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v3 2/2] iio: adc: Add driver support for AD7292
+Message-ID: <20191103115205.2dde1959@archlinux>
+In-Reply-To: <9f8eccec804b398c73450911f97a4b250f6067da.1572614297.git.marcelo.schmitt1@gmail.com>
+References: <cover.1572614297.git.marcelo.schmitt1@gmail.com>
+        <9f8eccec804b398c73450911f97a4b250f6067da.1572614297.git.marcelo.schmitt1@gmail.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -66,115 +60,448 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 31 Oct 2019 13:30:38 +0100
-Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
+On Fri, 1 Nov 2019 13:24:26 -0300
+Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-> Convert the STM32 IIO trigger binding to DT schema format using json-schema
+> The AD7292 is a 10-bit monitor and control system with ADC, DACs,
+> temperature sensor, and GPIOs.
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-I'm far from great on these as still haven't taken the time I should to learn
-the yaml syntax properly.  A few comments inline however based mostly on this
-doesn't quite look like other ones I've seen recently.
+> Configure AD7292 devices in direct access mode, enabling single-ended
+> ADC readings.
+> 
+> Datasheet:
+> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+One totally trivial thing inline if you happen to be respinning.
+Otherwise I'll fix up when applying.
+
+I would like to give a bit of time for others to comment, particularly on the dt
+bindings as I frequently miss problems in them. Hence I won't be applying it today
+but may pick it up later in the week or next weekend.
 
 Thanks,
 
 Jonathan
 
+
 > ---
->  .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 ++++++++++++++++++++++
->  .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------------
->  2 files changed, 44 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
->  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+> Changelog V2 -> V3:
+> - fix up a typo in channel macros
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+>  MAINTAINERS              |   1 +
+>  drivers/iio/adc/Kconfig  |  10 ++
+>  drivers/iio/adc/Makefile |   1 +
+>  drivers/iio/adc/ad7292.c | 350 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 362 insertions(+)
+>  create mode 100644 drivers/iio/adc/ad7292.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5d00e871c4c6..5941cfc0d6f7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -818,6 +818,7 @@ M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+>  L:	linux-iio@vger.kernel.org
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+> +F:	drivers/iio/adc/ad7292.c
+>  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+>  
+>  ANALOG DEVICES INC AD7606 DRIVER
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 632b331429c6..02587c990cb5 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -59,6 +59,16 @@ config AD7291
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ad7291.
+>  
+> +config AD7292
+> +	tristate "Analog Devices AD7292 ADC driver"
+> +	depends on SPI
+> +	help
+> +	  Say yes here to build support for Analog Devices AD7292
+> +	  8 Channel ADC with temperature sensor.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ad7292.
+> +
+>  config AD7298
+>  	tristate "Analog Devices AD7298 ADC driver"
+>  	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 4779ab3ff8fb..1818f2f66566 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_AD7124) += ad7124.o
+>  obj-$(CONFIG_AD7173) += ad7173.o
+>  obj-$(CONFIG_AD7266) += ad7266.o
+>  obj-$(CONFIG_AD7291) += ad7291.o
+> +obj-$(CONFIG_AD7292) += ad7292.o
+>  obj-$(CONFIG_AD7298) += ad7298.o
+>  obj-$(CONFIG_AD738X) += ad738x.o
+>  obj-$(CONFIG_AD7768) += ad7768-1.o
+> diff --git a/drivers/iio/adc/ad7292.c b/drivers/iio/adc/ad7292.c
 > new file mode 100644
-> index 000000000000..1c8c8b55e8cd
+> index 000000000000..e2badf6ac10d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/timer/st,stm32-timer-trigger.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/drivers/iio/adc/ad7292.c
+> @@ -0,0 +1,350 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Analog Devices AD7292 SPI ADC driver
+> + *
+> + * Copyright 2019 Analog Devices Inc.
+> + */
 > +
-> +title: STMicroelectronics STM32 Timers IIO timer bindings
+> +#include <linux/bitfield.h>
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
 > +
-> +maintainers:
-> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
+> +#include <linux/iio/iio.h>
 > +
-> +properties:
-> +  $nodemane:
+> +#define ADI_VENDOR_ID 0x0018
+> +
+> +/* AD7292 registers definition */
+> +#define AD7292_REG_VENDOR_ID		0x00
+> +#define AD7292_REG_CONF_BANK		0x05
+> +#define AD7292_REG_CONV_COMM		0x0E
+> +#define AD7292_REG_ADC_CH(x)		(0x10 + (x))
+> +
+> +/* AD7292 configuration bank subregisters definition */
+> +#define AD7292_BANK_REG_VIN_RNG0	0x10
+> +#define AD7292_BANK_REG_VIN_RNG1	0x11
+> +#define AD7292_BANK_REG_SAMP_MODE	0x12
+> +
+> +#define AD7292_RD_FLAG_MSK(x)		(BIT(7) | ((x) & 0x3F))
+> +
+> +/* AD7292_REG_ADC_CONVERSION */
+> +#define AD7292_ADC_DATA_MASK		GENMASK(15, 6)
+> +#define AD7292_ADC_DATA(x)		FIELD_GET(AD7292_ADC_DATA_MASK, x)
+> +
+> +/* AD7292_CHANNEL_SAMPLING_MODE */
+> +#define AD7292_CH_SAMP_MODE(reg, ch)	((reg >> 8) & BIT(ch))
+> +
+> +/* AD7292_CHANNEL_VIN_RANGE */
+> +#define AD7292_CH_VIN_RANGE(reg, ch)	(reg & BIT(ch))
 
-nodename?
+Trivial but all macro parameters should be in brackets to prevent
+weirdness if some sticks a parameter with higher precedence in there
+so ((reg) & BIT(ch)).
 
-> +    pattern: "^timer@[0-9]+$"
-> +    type: object
-> +
-> +    description:
-> +      must be a sub-node of an STM32 Timer device tree node
-> +
-> +    properties:
-> +      compatible:
-> +        oneOf:
-
-enum is I think preferred for these.
-
-> +          - const: st,stm32-timer-trigger
-> +          - const: st,stm32h7-timer-trigger
-> +            
-> +      reg: true
-
-Normally some info for what the reg value is..
+I can fix this up if the rest is fine.
 
 > +
-> +    required:
-> +      - compatible
-> +      - reg
+> +#define AD7292_VOLTAGE_CHAN(_chan)					\
+> +{									\
+> +	.type = IIO_VOLTAGE,						\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
+> +			      BIT(IIO_CHAN_INFO_SCALE),			\
+> +	.indexed = 1,							\
+> +	.channel = _chan,						\
+> +}
 > +
-> +examples:
-> +  - |
-> +    timers2: timer@40000000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      timer@0 {
-> +        compatible = "st,stm32-timer-trigger";
-> +        reg = <0>;
-> +      };
-> +    };
-> +    
-> +...
-> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> deleted file mode 100644
-> index b8e8c769d434..000000000000
-> --- a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> +++ /dev/null
-> @@ -1,25 +0,0 @@
-> -STMicroelectronics STM32 Timers IIO timer bindings
-> -
-> -Must be a sub-node of an STM32 Timers device tree node.
-> -See ../mfd/stm32-timers.txt for details about the parent node.
-> -
-> -Required parameters:
-> -- compatible:	Must be one of:
-> -		"st,stm32-timer-trigger"
-> -		"st,stm32h7-timer-trigger"
-> -- reg:		Identify trigger hardware block.
-> -
-> -Example:
-> -	timers@40010000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "st,stm32-timers";
-> -		reg = <0x40010000 0x400>;
-> -		clocks = <&rcc 0 160>;
-> -		clock-names = "int";
-> -
-> -		timer@0 {
-> -			compatible = "st,stm32-timer-trigger";
-> -			reg = <0>;
-> -		};
-> -	};
+> +static const struct iio_chan_spec ad7292_channels[] = {
+> +	AD7292_VOLTAGE_CHAN(0),
+> +	AD7292_VOLTAGE_CHAN(1),
+> +	AD7292_VOLTAGE_CHAN(2),
+> +	AD7292_VOLTAGE_CHAN(3),
+> +	AD7292_VOLTAGE_CHAN(4),
+> +	AD7292_VOLTAGE_CHAN(5),
+> +	AD7292_VOLTAGE_CHAN(6),
+> +	AD7292_VOLTAGE_CHAN(7)
+> +};
+> +
+> +static const struct iio_chan_spec ad7292_channels_diff[] = {
+> +	{
+> +		.type = IIO_VOLTAGE,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.indexed = 1,
+> +		.differential = 1,
+> +		.channel = 0,
+> +		.channel2 = 1,
+> +	},
+> +	AD7292_VOLTAGE_CHAN(2),
+> +	AD7292_VOLTAGE_CHAN(3),
+> +	AD7292_VOLTAGE_CHAN(4),
+> +	AD7292_VOLTAGE_CHAN(5),
+> +	AD7292_VOLTAGE_CHAN(6),
+> +	AD7292_VOLTAGE_CHAN(7)
+> +};
+> +
+> +struct ad7292_state {
+> +	struct spi_device *spi;
+> +	struct regulator *reg;
+> +	unsigned short vref_mv;
+> +
+> +	__be16 d16 ____cacheline_aligned;
+> +	u8 d8[2];
+> +};
+> +
+> +static int ad7292_spi_reg_read(struct ad7292_state *st, unsigned int addr)
+> +{
+> +	int ret;
+> +
+> +	st->d8[0] = AD7292_RD_FLAG_MSK(addr);
+> +
+> +	ret = spi_write_then_read(st->spi, st->d8, 1, &st->d16, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return be16_to_cpu(st->d16);
+> +}
+> +
+> +static int ad7292_spi_subreg_read(struct ad7292_state *st, unsigned int addr,
+> +				  unsigned int sub_addr, unsigned int len)
+> +{
+> +	unsigned int shift = 16 - (8 * len);
+> +	int ret;
+> +
+> +	st->d8[0] = AD7292_RD_FLAG_MSK(addr);
+> +	st->d8[1] = sub_addr;
+> +
+> +	ret = spi_write_then_read(st->spi, st->d8, 2, &st->d16, len);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return (be16_to_cpu(st->d16) >> shift);
+> +}
+> +
+> +static int ad7292_single_conversion(struct ad7292_state *st,
+> +				    unsigned int chan_addr)
+> +{
+> +	int ret;
+> +
+> +	struct spi_transfer t[] = {
+> +		{
+> +			.tx_buf = &st->d8,
+> +			.len = 4,
+> +			.delay_usecs = 6,
+> +		}, {
+> +			.rx_buf = &st->d16,
+> +			.len = 2,
+> +		},
+> +	};
+> +
+> +	st->d8[0] = chan_addr;
+> +	st->d8[1] = AD7292_RD_FLAG_MSK(AD7292_REG_CONV_COMM);
+> +
+> +	ret = spi_sync_transfer(st->spi, t, ARRAY_SIZE(t));
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return be16_to_cpu(st->d16);
+> +}
+> +
+> +static int ad7292_vin_range_multiplier(struct ad7292_state *st, int channel)
+> +{
+> +	int samp_mode, range0, range1, factor = 1;
+> +
+> +	/*
+> +	 * Every AD7292 ADC channel may have its input range adjusted according
+> +	 * to the settings at the ADC sampling mode and VIN range subregisters.
+> +	 * For a given channel, the minimum input range is equal to Vref, and it
+> +	 * may be increased by a multiplier factor of 2 or 4 according to the
+> +	 * following rule:
+> +	 * If channel is being sampled with respect to AGND:
+> +	 *	factor = 4 if VIN range0 and VIN range1 equal 0
+> +	 *	factor = 2 if only one of VIN ranges equal 1
+> +	 *	factor = 1 if both VIN range0 and VIN range1 equal 1
+> +	 * If channel is being sampled with respect to AVDD:
+> +	 *	factor = 4 if VIN range0 and VIN range1 equal 0
+> +	 *	Behavior is undefined if any of VIN range doesn't equal 0
+> +	 */
+> +
+> +	samp_mode = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
+> +					   AD7292_BANK_REG_SAMP_MODE, 2);
+> +
+> +	if (samp_mode < 0)
+> +		return samp_mode;
+> +
+> +	range0 = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
+> +					AD7292_BANK_REG_VIN_RNG0, 2);
+> +
+> +	if (range0 < 0)
+> +		return range0;
+> +
+> +	range1 = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
+> +					AD7292_BANK_REG_VIN_RNG1, 2);
+> +
+> +	if (range1 < 0)
+> +		return range1;
+> +
+> +	if (AD7292_CH_SAMP_MODE(samp_mode, channel)) {
+> +		/* Sampling with respect to AGND */
+> +		if (!AD7292_CH_VIN_RANGE(range0, channel))
+> +			factor *= 2;
+> +
+> +		if (!AD7292_CH_VIN_RANGE(range1, channel))
+> +			factor *= 2;
+> +
+> +	} else {
+> +		/* Sampling with respect to AVDD */
+> +		if (AD7292_CH_VIN_RANGE(range0, channel) ||
+> +		    AD7292_CH_VIN_RANGE(range1, channel))
+> +			return -EPERM;
+> +
+> +		factor = 4;
+> +	}
+> +
+> +	return factor;
+> +}
+> +
+> +static int ad7292_read_raw(struct iio_dev *indio_dev,
+> +			   const struct iio_chan_spec *chan,
+> +			   int *val, int *val2, long info)
+> +{
+> +	struct ad7292_state *st = iio_priv(indio_dev);
+> +	unsigned int ch_addr;
+> +	int ret;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ch_addr = AD7292_REG_ADC_CH(chan->channel);
+> +		ret = ad7292_single_conversion(st, ch_addr);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val = AD7292_ADC_DATA(ret);
+> +
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		/*
+> +		 * To convert a raw value to standard units, the IIO defines
+> +		 * this formula: Scaled value = (raw + offset) * scale.
+> +		 * For the scale to be a correct multiplier for (raw + offset),
+> +		 * it must be calculated as the input range divided by the
+> +		 * number of possible distinct input values. Given the ADC data
+> +		 * is 10 bit long, it may assume 2^10 distinct values.
+> +		 * Hence, scale = range / 2^10. The IIO_VAL_FRACTIONAL_LOG2
+> +		 * return type indicates to the IIO API to divide *val by 2 to
+> +		 * the power of *val2 when returning from read_raw.
+> +		 */
+> +
+> +		ret = ad7292_vin_range_multiplier(st, chan->channel);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val = st->vref_mv * ret;
+> +		*val2 = 10;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	default:
+> +		break;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info ad7292_info = {
+> +	.read_raw = ad7292_read_raw,
+> +};
+> +
+> +static void ad7292_regulator_disable(void *data)
+> +{
+> +	struct ad7292_state *st = data;
+> +
+> +	regulator_disable(st->reg);
+> +}
+> +
+> +static int ad7292_probe(struct spi_device *spi)
+> +{
+> +	struct ad7292_state *st;
+> +	struct iio_dev *indio_dev;
+> +	struct device_node *child;
+> +	bool diff_channels = 0;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +	st->spi = spi;
+> +
+> +	ret = ad7292_spi_reg_read(st, AD7292_REG_VENDOR_ID);
+> +	if (ret != ADI_VENDOR_ID) {
+> +		dev_err(&spi->dev, "Wrong vendor id 0x%x\n", ret);
+> +		return -EINVAL;
+> +	}
+> +
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	st->reg = devm_regulator_get_optional(&spi->dev, "vref");
+> +	if (!IS_ERR(st->reg)) {
+> +		ret = regulator_enable(st->reg);
+> +		if (ret) {
+> +			dev_err(&spi->dev,
+> +				"Failed to enable external vref supply\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = devm_add_action_or_reset(&spi->dev,
+> +					       ad7292_regulator_disable, st);
+> +		if (ret) {
+> +			regulator_disable(st->reg);
+> +			return ret;
+> +		}
+> +
+> +		ret = regulator_get_voltage(st->reg);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		st->vref_mv = ret / 1000;
+> +	} else {
+> +		/* Use the internal voltage reference. */
+> +		st->vref_mv = 1250;
+> +	}
+> +
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &ad7292_info;
+> +
+> +	for_each_available_child_of_node(spi->dev.of_node, child) {
+> +		diff_channels = of_property_read_bool(child, "diff-channels");
+> +		if (diff_channels)
+> +			break;
+> +	}
+> +
+> +	if (diff_channels) {
+> +		indio_dev->num_channels = ARRAY_SIZE(ad7292_channels_diff);
+> +		indio_dev->channels = ad7292_channels_diff;
+> +	} else {
+> +		indio_dev->num_channels = ARRAY_SIZE(ad7292_channels);
+> +		indio_dev->channels = ad7292_channels;
+> +	}
+> +
+> +	return devm_iio_device_register(&spi->dev, indio_dev);
+> +}
+> +
+> +static const struct spi_device_id ad7292_id_table[] = {
+> +	{ "ad7292", 0 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(spi, ad7292_id_table);
+> +
+> +static const struct of_device_id ad7292_of_match[] = {
+> +	{ .compatible = "adi,ad7292" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, ad7292_of_match);
+> +
+> +static struct spi_driver ad7292_driver = {
+> +	.driver = {
+> +		.name = "ad7292",
+> +		.of_match_table = ad7292_of_match,
+> +	},
+> +	.probe = ad7292_probe,
+> +	.id_table = ad7292_id_table,
+> +};
+> +module_spi_driver(ad7292_driver);
+> +
+> +MODULE_AUTHOR("Marcelo Schmitt <marcelo.schmitt1@gmail.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD7292 ADC driver");
+> +MODULE_LICENSE("GPL v2");
 
