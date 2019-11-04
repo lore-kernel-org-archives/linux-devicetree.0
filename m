@@ -7,35 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C869CA9EBB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664D3CA9ED2
 	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 01:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D12A222C7
+	by mail.kernel.org (Postfix) with ESMTP id 45C37222C7
 	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 01:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfKDBkq (ORCPT
+        id S1728581AbfKDBk2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 20:40:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55756 "EHLO mx1.suse.de"
+        Sun, 3 Nov 2019 20:40:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55726 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728432AbfKDBk2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1728352AbfKDBk2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sun, 3 Nov 2019 20:40:28 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E6856B228;
+        by mx1.suse.de (Postfix) with ESMTP id 81A9CB1AC;
         Mon,  4 Nov 2019 01:40:26 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: [RFC 4/7] dt-bindings: gpu: mali-utgard: Add Realtek RTD1195
-Date:   Mon,  4 Nov 2019 02:39:29 +0100
-Message-Id: <20191104013932.22505-5-afaerber@suse.de>
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [RFC 3/7] arm64: dts: realtek: rtd1295: Add Mali node
+Date:   Mon,  4 Nov 2019 02:39:28 +0100
+Message-Id: <20191104013932.22505-4-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191104013932.22505-1-afaerber@suse.de>
 References: <20191104013932.22505-1-afaerber@suse.de>
@@ -47,25 +44,107 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Define a compatible string for Realtek RTD1195 SoC family.
-
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi | 85 ++++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-index afde81be3c29..b01b95cf5cdf 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-@@ -26,6 +26,7 @@ properties:
-               - allwinner,sun7i-a20-mali
-               - allwinner,sun8i-h3-mali
-               - allwinner,sun50i-a64-mali
-+              - realtek,rtd1195-mali
-               - rockchip,rk3036-mali
-               - rockchip,rk3066-mali
-               - rockchip,rk3188-mali
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+index 93f0e1d97721..61aa4f47c70b 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+@@ -69,6 +69,91 @@
+ 			     <GIC_PPI 10
+ 			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
++
++	mali_opp_table: gpu-opp-table {
++		compatible = "operating-points-v2";
++
++		opp@620000000 {
++			opp-hz = /bits/ 64 <620000000>;
++			opp-microvolt = <1100000>;
++		};
++
++		opp@600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1100000>;
++		};
++
++		opp@580000000 {
++			opp-hz = /bits/ 64 <580000000>;
++			opp-microvolt = <1075000>;
++		};
++
++		opp@560000000 {
++			opp-hz = /bits/ 64 <560000000>;
++			opp-microvolt = <1075000>;
++		};
++
++		opp@540000000 {
++			opp-hz = /bits/ 64 <540000000>;
++			opp-microvolt = <1050000>;
++		};
++
++		opp@520000000 {
++			opp-hz = /bits/ 64 <520000000>;
++			opp-microvolt = <1025000>;
++		};
++
++		opp@500000000 {
++			opp-hz = /bits/ 64 <500000000>;
++			opp-microvolt = <1000000>;
++		};
++
++		opp@460000000 {
++			opp-hz = /bits/ 64 <460000000>;
++			opp-microvolt = <1000000>;
++		};
++
++		opp@440000000 {
++			opp-hz = /bits/ 64 <440000000>;
++			opp-microvolt = <1000000>;
++		};
++
++		opp@400000000 {
++			opp-hz = /bits/ 64 <400000000>;
++			opp-microvolt = <1000000>;
++		};
++
++		opp@380000000 {
++			opp-hz = /bits/ 64 <380000000>;
++			opp-microvolt = <975000>;
++		};
++
++		opp@340000000 {
++			opp-hz = /bits/ 64 <340000000>;
++			opp-microvolt = <975000>;
++		};
++
++		opp@300000000 {
++			opp-hz = /bits/ 64 <300000000>;
++			opp-microvolt = <900000>;
++		};
++	};
++
++	soc {
++		mali: gpu@98050000 {
++			compatible = "realtek,rtd1295-mali", "arm,mali-t820";
++			reg = <0x98050000 0x10000>;
++			clocks = <&clkc RTD1295_CLK_EN_GPU>;
++			clock-names = "core";
++			resets = <&reset1 RTD1295_RSTN_GPU>;
++			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "job", "mmu", "gpu";
++			operating-points-v2 = <&mali_opp_table>;
++			#cooling-cells = <2>;
++		};
++	};
+ };
+ 
+ &arm_pmu {
 -- 
 2.16.4
 
