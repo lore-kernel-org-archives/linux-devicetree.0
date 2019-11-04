@@ -2,60 +2,59 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A358CA9ED3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E866CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4439121655
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263EB214D9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="weEO16ba"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KaLmBzOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfKDTcx (ORCPT
+        id S1729715AbfKDTcI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:32:53 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48792 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729742AbfKDTcN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 14:32:13 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4JWCCL104218;
-        Mon, 4 Nov 2019 13:32:12 -0600
+        Mon, 4 Nov 2019 14:32:08 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47524 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729704AbfKDTcI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 14:32:08 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4JW6Jq000758;
+        Mon, 4 Nov 2019 13:32:06 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572895932;
-        bh=gakWC5j/zaO+BDPfXwOsF7lxIAuI+dHbk9ltuMT8WgI=;
+        s=ti-com-17Q1; t=1572895926;
+        bh=Z07YzElBjrHCm7soDpyKSRlehI1yRBoN2QBEWyWKCgA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=weEO16bal2SOKCtARr4Soh1ji8boIfb7/c8ra+Wva0gZbXhzgPY3Pk1Qb9fqc5O4A
-         KcC7TLgpSA6Ik4jT+zFb1fqG4zxCM+naLBLQks5f1D+2yNHW3mby1ktdf/KqVeW4Sn
-         ECOoSDqX/djFIvsnOIqsTlEP4LiOFiZrI4FUFYB8=
+        b=KaLmBzOvwe1j1uhldli9rGRW7tGBZQ7OCAEg8vp4smLaziU09e1I9AgrIfa01WSPE
+         ftF9nTU2yvyM4Zjpf9xbpkk8yPIvS78jZE8cQHtv+8Biflh07NiadNXAsKmhjikDxJ
+         FDTIbGnXLTBCMeQPWMKxIlz4il0twOjA8u7LadJI=
 Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4JWBrH021618
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4JW6dR126716
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 13:32:11 -0600
+        Mon, 4 Nov 2019 13:32:06 -0600
 Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
  (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 13:32:11 -0600
+ 2019 13:32:05 -0600
 Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
  (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 13:31:57 -0600
+ Frontend Transport; Mon, 4 Nov 2019 13:31:51 -0600
 Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVmdB096934;
-        Mon, 4 Nov 2019 13:32:11 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVmd8096934;
+        Mon, 4 Nov 2019 13:32:05 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 12/20] media: ti-vpe: cal: Add DRA76x support
-Date:   Mon, 4 Nov 2019 13:31:32 -0600
-Message-ID: <20191104193140.31145-13-bparrot@ti.com>
+Subject: [Patch v2 09/20] media: ti-vpe: cal: Fix pixel processing parameters
+Date:   Mon, 4 Nov 2019 13:31:29 -0600
+Message-ID: <20191104193140.31145-10-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191104193140.31145-1-bparrot@ti.com>
 References: <20191104193140.31145-1-bparrot@ti.com>
@@ -67,68 +66,74 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the needed control module register bit layout to support
-the DRA76x family of devices.
+The pixel processing unit was hard coded to only handle 8 bits per pixel
+from input to output.
+
+We now add handling for 10, 12 and 16 bits per pixel at the source and
+setting the in-memory size (i.e. container size) to 16 bits for these 3
+cases.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 36 +++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ drivers/media/platform/ti-vpe/cal.c | 41 ++++++++++++++++++++++++++---
+ 1 file changed, 38 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index b348d99d6166..72ed2348389d 100644
+index 1abcdd98c33f..1b7dcf9ba9e2 100644
 --- a/drivers/media/platform/ti-vpe/cal.c
 +++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -290,6 +290,38 @@ static struct cal_data dra72x_es1_cal_data = {
- 	.flags = DRA72_CAL_PRE_ES2_LDO_DISABLE,
- };
+@@ -803,13 +803,48 @@ static void csi2_ctx_config(struct cal_ctx *ctx)
  
-+static struct reg_field dra76x_ctrl_core_csi0_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 8, 8),
-+	[F_CAMMODE] = REG_FIELD(0, 9, 10),
-+	[F_CSI_MODE] = REG_FIELD(0, 11, 11),
-+	[F_LANEENABLE] = REG_FIELD(0, 27, 31),
-+};
+ static void pix_proc_config(struct cal_ctx *ctx)
+ {
+-	u32 val;
++	u32 val, extract, pack;
 +
-+static struct reg_field dra76x_ctrl_core_csi1_reg_fields[F_MAX_FIELDS] = {
-+	[F_CTRLCLKEN] = REG_FIELD(0, 0, 0),
-+	[F_CAMMODE] = REG_FIELD(0, 1, 2),
-+	[F_CSI_MODE] = REG_FIELD(0, 3, 3),
-+	[F_LANEENABLE] = REG_FIELD(0, 24, 26),
-+};
-+
-+static struct cal_csi2_phy dra76x_cal_csi_phy[] = {
-+	{
-+		.base_fields = dra76x_ctrl_core_csi0_reg_fields,
-+		.num_lanes = 5,
-+	},
-+	{
-+		.base_fields = dra76x_ctrl_core_csi1_reg_fields,
-+		.num_lanes = 3,
-+	},
-+};
-+
-+static struct cal_data dra76x_cal_data = {
-+	.csi2_phy_core = dra76x_cal_csi_phy,
-+	.num_csi2_phy = ARRAY_SIZE(dra76x_cal_csi_phy),
-+
-+	.flags = 0,
-+};
-+
- /*
-  * there is one cal_dev structure in the driver, it is shared by
-  * all instances.
-@@ -2285,6 +2317,10 @@ static const struct of_device_id cal_of_match[] = {
- 		.compatible = "ti,dra72-pre-es2-cal",
- 		.data = (void *)&dra72x_es1_cal_data,
- 	},
-+	{
-+		.compatible = "ti,dra76-cal",
-+		.data = (void *)&dra76x_cal_data,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, cal_of_match);
++	switch (ctx->fmt->bpp) {
++	case 8:
++		extract = CAL_PIX_PROC_EXTRACT_B8;
++		pack = CAL_PIX_PROC_PACK_B8;
++		break;
++	case 10:
++		extract = CAL_PIX_PROC_EXTRACT_B10_MIPI;
++		pack = CAL_PIX_PROC_PACK_B16;
++		break;
++	case 12:
++		extract = CAL_PIX_PROC_EXTRACT_B12_MIPI;
++		pack = CAL_PIX_PROC_PACK_B16;
++		break;
++	case 16:
++		extract = CAL_PIX_PROC_EXTRACT_B16_LE;
++		pack = CAL_PIX_PROC_PACK_B16;
++		break;
++	default:
++		/*
++		 * If you see this warning then it means that you added
++		 * some new entry in the cal_formats[] array with a different
++		 * bit per pixel values then the one supported below.
++		 * Either add support for the new bpp value below or adjust
++		 * the new entry to use one of the value below.
++		 *
++		 * Instead of failing here just use 8 bpp as a default.
++		 */
++		dev_warn_once(&ctx->dev->pdev->dev,
++			      "%s:%d:%s: bpp:%d unsupported! Overwritten with 8.\n",
++			      __FILE__, __LINE__, __func__, ctx->fmt->bpp);
++		extract = CAL_PIX_PROC_EXTRACT_B8;
++		pack = CAL_PIX_PROC_PACK_B8;
++		break;
++	}
+ 
+ 	val = reg_read(ctx->dev, CAL_PIX_PROC(ctx->csi2_port));
+-	set_field(&val, CAL_PIX_PROC_EXTRACT_B8, CAL_PIX_PROC_EXTRACT_MASK);
++	set_field(&val, extract, CAL_PIX_PROC_EXTRACT_MASK);
+ 	set_field(&val, CAL_PIX_PROC_DPCMD_BYPASS, CAL_PIX_PROC_DPCMD_MASK);
+ 	set_field(&val, CAL_PIX_PROC_DPCME_BYPASS, CAL_PIX_PROC_DPCME_MASK);
+-	set_field(&val, CAL_PIX_PROC_PACK_B8, CAL_PIX_PROC_PACK_MASK);
++	set_field(&val, pack, CAL_PIX_PROC_PACK_MASK);
+ 	set_field(&val, ctx->csi2_port, CAL_PIX_PROC_CPORT_MASK);
+ 	set_field(&val, CAL_GEN_ENABLE, CAL_PIX_PROC_EN_MASK);
+ 	reg_write(ctx->dev, CAL_PIX_PROC(ctx->csi2_port), val);
 -- 
 2.17.1
 
