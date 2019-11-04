@@ -2,88 +2,115 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB27CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 10:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F89CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 10:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796BF217F5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 10:55:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="VM2lY3l6"
+	by mail.kernel.org (Postfix) with ESMTP id 0224F222C1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 10:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbfKDKzq (ORCPT
+        id S1728310AbfKDK5W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:55:46 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10484 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727500AbfKDKzq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 05:55:46 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4AtIoX011716;
-        Mon, 4 Nov 2019 11:55:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=EEEFNYvMlCmEOwjqHkRBm4xFsgzUd+bwPAuMghh0Las=;
- b=VM2lY3l68Z7bkEekKCLbyUHaxfESYvRc/3tyOTpmITpLWTkN09ENlkUvWgIQ509dZZKC
- f6GlI8TPskWIO2jGFcYUuHwNO+VP83TUTk2mGUAuBaZGQW1am4rp33h4Qq4XqGuUdkMQ
- VnilK2evfAJaAadOiV6Gkmq0Nv4xnW8z4uWp965JMezWc1rshiZBlXd3EmMO/IhV7psz
- OuHn9H+JMt4dWqYnH5VuHckYk/Wt8PzmetmsmQ9qFODSEaFXWEu7J0pX202MTLn4zVPx
- ZgzbZzQnMyB1Nrcg7nUEYdm6o6NgzQdRunqUyX0hL5aYL34GlJSx4mSmmJ/WVE5fNuSP jQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w0ytchn2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 11:55:36 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7AE18100038;
-        Mon,  4 Nov 2019 11:55:35 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 645B42BDA95;
-        Mon,  4 Nov 2019 11:55:35 +0100 (CET)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
- 11:55:35 +0100
-Received: from localhost (10.201.22.141) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 11:55:34
- +0100
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v2 0/2] STMFX pinctrl definition updates
-Date:   Mon, 4 Nov 2019 11:55:27 +0100
-Message-ID: <20191104105529.8049-1-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 4 Nov 2019 05:57:22 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:41253 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726364AbfKDK5W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 05:57:22 -0500
+X-UUID: 95302d5f4d7042ef973a9dfd25188b9a-20191104
+X-UUID: 95302d5f4d7042ef973a9dfd25188b9a-20191104
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1366925318; Mon, 04 Nov 2019 18:57:17 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 4 Nov 2019 18:57:13 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 4 Nov 2019 18:57:12 +0800
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
+        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
+        <bingbu.cao@intel.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>,
+        <dongchun.zhu@mediatek.com>
+Subject: [V5, 0/2] media: i2c: Add support for OV02A10 sensor
+Date:   Mon, 4 Nov 2019 18:57:11 +0800
+Message-ID: <20191104105713.24311-1-dongchun.zhu@mediatek.com>
+X-Mailer: git-send-email 2.9.2
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.201.22.141]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_08:2019-11-04,2019-11-04 signatures=0
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since a502b343ebd0 ("pinctrl: stmfx: update pinconf settings"), pin
-configuration has been fixed in STMFX pinctrl driver. Moreover, gpiolib now
-fully handles "push-pull" configuration.
-This series cleans up stm32mp157c-ev1 stmfx ov5640 pins use and fixes stmfx
-joystick pins use otherwise joystick doesn't work.
+Hello,
 
-Amelie Delaunay (2):
-  ARM: dts: stm32: remove OV5640 pinctrl definition on stm32mp157c-ev1
-  ARM: dts: stm32: change joystick pinctrl definition on stm32mp157c-ev1
+This series adds DT binding and driver for Omnivision's OV02A10 2 megapixel CMOS 1/5" sensor,
+which has a single MIPI lane interface and output format of 10-bit RAW.
 
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+The driver is implemented wth V4L2 framework.
+1. Async registered as a V4L2 I2C sub-device.
+2. A media entity that can provide several source pads and sink pads to link with other device like Seninf, ISP one after another
+   to create a default overall camera topology, image frame or meta-data from sensor can flow through particular path to output
+   preview or capture image or 3A info.
+
+Changes of v5 are addressing comments from Sakari, Tomasz.
+ - Set default orientation in dt-bindings
+ - Move the content of power on/off directly to the resume/suspend callbacks
+ - Move sensor id check to power on to avoid the privacy LED flash on boot
+ - Remove unnecessary debug log in driver
+ - Fix other reviewed issues in v4
+
+Changes of v4 mainly address the comments from Sakari, Rob, Tomasz.
+ - Remove data-lanes property in DT
+ - Add link frequencies in DT to match the expect value that driver requires
+ - Omit open callback as int_cfg is implemented
+ - Use i2c_smbus_write_byte_data/i2c_smbus_read_byte_data instead of customed APIs
+ - Use do_div to calculate pixel rate
+ - Use usleep_range directly for shoter sleep case
+ - Re-adjust sensor power up/off sequence
+ - Re-set pd/rst GPIO inverter property according to the datasheet
+ - Refine set_exposure/set_gain/set_vblanking/set_test_pattern functions
+ - Fix other reviewed issues in v3
+
+Changes of v3 are mainly addressing comments from Rob, Sakari, Bingbu.
+ - Fix coding style errors in dt-bindings
+ - Use macro flag to describle basic line 1224 when updating v-blanking
+ - Remove unnecessary debug log in driver
+
+Mainly changes of v2 are addressing the comments from Nicolas, Bingbu, Sakari, Rob,
+including,
+ - Put dt binding before driver in series
+ - Add MAINTAINERS entries
+ - Squash the MAINTAINERS entry and Kconfig to driver patch
+ - Add rotation support for driver
+ - Fix other reviewed issues in v1
+
+Dongchun Zhu (2):
+  media: dt-bindings: media: i2c: Document OV02A10 bindings
+  media: i2c: ov02a10: Add OV02A10 image sensor driver
+
+ .../devicetree/bindings/media/i2c/ov02a10.txt      |   54 +
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |   12 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/ov02a10.c                        | 1113 ++++++++++++++++++++
+ 5 files changed, 1188 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+ create mode 100644 drivers/media/i2c/ov02a10.c
 
 -- 
-2.17.1
+2.9.2
 
