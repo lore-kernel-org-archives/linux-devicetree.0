@@ -2,113 +2,65 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5DECA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7F0CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167F421E6F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572875572;
-	bh=By6g0hm3TZiFVPLysIIsZZ4/DGUA9l8/pS5v+EHrReo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cY/s7QVGgj/Q6sbsJ3Vh/G+wJn6WPYy31UTJtKJGd3cIXkhObNkfOn3dSHBhL7i7t
-	 ikiumz076pWmkqiCA/Oej06z4n4Mi57+cbJvPWnMEbUh0WH3LpOlzsx6BRrWL1kN/k
-	 WADGgZKf5DMA5iBLDWi4s+go2mAvGBZT7hcI5rM4=
+	by mail.kernel.org (Postfix) with ESMTP id 016FE21D71
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfKDNwv (ORCPT
+        id S1727891AbfKDNys (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:52:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728613AbfKDNwv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:52:51 -0500
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61E2621E6F;
-        Mon,  4 Nov 2019 13:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572875570;
-        bh=By6g0hm3TZiFVPLysIIsZZ4/DGUA9l8/pS5v+EHrReo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TM7Ei1O3egCe5sMxOAjkB8RDO64+7FWfrmihBYMVk415TwspxzQenD0Bv3hdkSBqc
-         e7Y4laBqSBo93hAZRlS0j32n8HM0HRjFT9ts18FkQsPiJOKitybpIBoy+SaJIaq+s1
-         vwI71N8SXEJ91/zAOTUe2IGmlnm2PCXYxZ4nUasU=
-Received: by mail-qt1-f175.google.com with SMTP id l24so5691139qtp.10;
-        Mon, 04 Nov 2019 05:52:50 -0800 (PST)
-X-Gm-Message-State: APjAAAWdbuRcgSsc9Jl0uvUEHRtJbT/1X0Uv7sskViTmhlYQTGKdUiBj
-        fidJ0arNRLgJU8YH1zF9d3gtcculj83qgXX2ew==
-X-Google-Smtp-Source: APXvYqzom7BkNjxSoNWY4xju2M9bVpLAWq9Yi9k0q1ua8c/IY+7LsJFI00hzK/jaLhVTn7iAKlZ/UIWagsutp0tHxkw=
-X-Received: by 2002:aed:2706:: with SMTP id n6mr12458734qtd.224.1572875569519;
- Mon, 04 Nov 2019 05:52:49 -0800 (PST)
+        Mon, 4 Nov 2019 08:54:48 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35614 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727838AbfKDNys (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:54:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8BC7BAC5F;
+        Mon,  4 Nov 2019 13:54:46 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     catalin.marinas@arm.com, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] arm64: Fix CMA/crashkernel reservation
+Date:   Mon,  4 Nov 2019 14:54:10 +0100
+Message-Id: <20191104135412.32118-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191103220801.10666-1-paul@crapouillou.net>
-In-Reply-To: <20191103220801.10666-1-paul@crapouillou.net>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 Nov 2019 07:52:37 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+aSXPT-vmHbDLygO0G3RmM3svTeS+S5FKKjj_Auf3gPw@mail.gmail.com>
-Message-ID: <CAL_Jsq+aSXPT-vmHbDLygO0G3RmM3svTeS+S5FKKjj_Auf3gPw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: power/supply: Document generic USB charger
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        od@zcrc.me
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 3, 2019 at 4:08 PM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Add documentation about the devicetree bindings for the generic USB
-> charger.
+As pointed out by Qian Cai[1] the series enabling ZONE_DMA in arm64
+breaks CMA/crashkernel reservations on large devices, as it changed its
+default placement. After discussing it with Catalin Marinas we're
+restoring the old behavior.
 
-What makes it generic?
+The Raspberry Pi 4, being the only device that needs CMA and crashkernel
+in ZONE_DMA will explicitly do so trough it's device tree.
 
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  .../bindings/power/supply/usb-charger.txt     | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/usb-charger.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/supply/usb-charger.txt b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
-> new file mode 100644
-> index 000000000000..fd46734cb0e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
-> @@ -0,0 +1,24 @@
-> +Generic USB charger bindings
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Required properties :
-> + - compatible : should be "usb-charger"
-> + - phys: phandle to the USB PHY
-> +
-> +Example:
-> +
-> +usb_con: extcon {
-> +       compatible = "linux,extcon-usb-gpio";
-> +       vbus-gpios = <&gpb 5 GPIO_ACTIVE_HIGH>;
-> +};
-> +
-> +usb_phy: usb-phy@0 {
-> +       compatible = "usb-nop-xceiv";
-> +       #phy-cells = <0>;
-> +       extcon = <&usb_con>;
+[1] https://lkml.org/lkml/2019/10/21/725
 
-extcon is deprecated in favor of usb-connector binding. See
-.../bindings/connector/usb-connector.txt. There's also some pending
-patches for adding GPIO based connector controls including Vbus sense
-(GPIO input) and control (regulator via a GPIO).
+---
 
-Rob
+Nicolas Saenz Julienne (2):
+  ARM: dts: bcm2711: force CMA into first GB of memory
+  arm64: mm: reserve CMA and crashkernel in ZONE_DMA32
+
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 19 +++++++++++++++++++
+ arch/arm64/mm/init.c                  |  4 ++--
+ 2 files changed, 21 insertions(+), 2 deletions(-)
+
+-- 
+2.23.0
+
