@@ -2,234 +2,122 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F84CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208D8CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659A4206BA
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB807206BA
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="glWXObMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbfKDUih convert rfc822-to-8bit (ORCPT
+        id S1729656AbfKDUjD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:38:37 -0500
-Received: from mailoutvs62.siol.net ([185.57.226.253]:47541 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728377AbfKDUig (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 15:38:36 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 99859524703;
-        Mon,  4 Nov 2019 21:38:32 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Xas64fhSD14G; Mon,  4 Nov 2019 21:38:32 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id F320B5250A1;
-        Mon,  4 Nov 2019 21:38:31 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 72C21524703;
-        Mon,  4 Nov 2019 21:38:31 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
-Date:   Mon, 04 Nov 2019 21:38:31 +0100
-Message-ID: <2257359.GL6loUrO9r@jernej-laptop>
-In-Reply-To: <CAJiuCcfCo2QiKEvaRphcBkdTtFui3ympU9aikJTmXDa4OoiXZQ@mail.gmail.com>
-References: <20191103203334.10539-1-peron.clem@gmail.com> <524459750.Kvg9uK5Sr7@jernej-laptop> <CAJiuCcfCo2QiKEvaRphcBkdTtFui3ympU9aikJTmXDa4OoiXZQ@mail.gmail.com>
+        Mon, 4 Nov 2019 15:39:03 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57072 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfKDUjD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 15:39:03 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4KcubA126439;
+        Mon, 4 Nov 2019 14:38:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572899936;
+        bh=tPqdhNixIKdQvbkA4FXOFaYElMurFZuh15DBk3awDgM=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=glWXObMHjf7uqkeyNc14Ohp25FLx8itPPWbYHOlFZSA7PMr/Gien7oG8scsEaTkAD
+         xocljDTXtkrPSU1bLutI80l9BbKWPD4UWPJPQ5V3IOnqUaYxraQlSURs+D787GhG6G
+         OfjM2E/kOI6OryVGROJpZ/i7dpma2GN/5UO4VOPg=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4KcuQM121361;
+        Mon, 4 Nov 2019 14:38:56 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
+ 2019 14:38:42 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 4 Nov 2019 14:38:41 -0600
+Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kcl4p020670;
+        Mon, 4 Nov 2019 14:38:55 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v2 4/5] ARM: dts: dra7: Add ti-sysc node for VPE
+Date:   Mon, 4 Nov 2019 14:38:40 -0600
+Message-ID: <20191104203841.3628-5-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191104203841.3628-1-bparrot@ti.com>
+References: <20191104203841.3628-1-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dne ponedeljek, 04. november 2019 ob 21:27:04 CET je Clément Péron napisal(a):
-> Hi,
-> 
-> On Mon, 4 Nov 2019 at 21:19, Jernej Škrabec <jernej.skrabec@siol.net> wrote:
-> > Dne ponedeljek, 04. november 2019 ob 21:10:52 CET je Uwe Kleine-König
-> > 
-> > napisal(a):
-> > > Hello Clément,
-> > > 
-> > > On Mon, Nov 04, 2019 at 07:07:00PM +0100, Clément Péron wrote:
-> > > > On Mon, 4 Nov 2019 at 09:24, Uwe Kleine-König
-> > > > 
-> > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > On Sun, Nov 03, 2019 at 09:33:30PM +0100, Clément Péron wrote:
-> > > > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > > 
-> > > > > > H6 PWM core needs bus clock to be enabled in order to work.
-> > > > > > 
-> > > > > > Add an optional probe for it and a fallback for previous
-> > > > > > bindings without name on module clock.
-> > > > > > 
-> > > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > > > > ---
-> > > > > > 
-> > > > > >  drivers/pwm/pwm-sun4i.c | 36 ++++++++++++++++++++++++++++++++++++
-> > > > > >  1 file changed, 36 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > > > > index d194b8ebdb00..b5e7ac364f59 100644
-> > > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
-> > > > > > 
-> > > > > >  struct sun4i_pwm_chip {
-> > > > > >  
-> > > > > >       struct pwm_chip chip;
-> > > > > > 
-> > > > > > +     struct clk *bus_clk;
-> > > > > > 
-> > > > > >       struct clk *clk;
-> > > > > >       struct reset_control *rst;
-> > > > > >       void __iomem *base;
-> > > > > > 
-> > > > > > @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct
-> > > > > > platform_device
-> > > > > > *pdev)> >
-> > > > > 
-> > > > > Adding more context here:
-> > > > > |       pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > > |       
-> > > > > >       if (IS_ERR(pwm->clk))
-> > > > > >       
-> > > > > >               return PTR_ERR(pwm->clk);
-> > > > > > 
-> > > > > > +     /* Get all clocks and reset line */
-> > > > > > +     pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> > > > > > +     if (IS_ERR(pwm->clk)) {
-> > > > > > +             dev_err(&pdev->dev, "get clock failed %ld\n",
-> > > > > > +                     PTR_ERR(pwm->clk));
-> > > > > > +             return PTR_ERR(pwm->clk);
-> > > > > > +     }
-> > > > > 
-> > > > > I guess you want to drop the first assignment to pwm->clk.
-> > > > 
-> > > > devm_clk_get_optional will return NULL if there is no entry, I don't
-> > > > get where I need to drop it assignment.
-> > > 
-> > > With your patch the code looks as follows:
-> > >       pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > >       if (IS_ERR(pwm->clk))
-> > >       
-> > >               return PTR_ERR(pwm->clk);
-> > >       
-> > >       /* Get all clocks and reset line */
-> > >       pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> > 
-> > Actually, it's the other way around, e.g. "mod" clock is checked first.
-> 
-> The first devm_clk_get is indeed wrong, I will remove it!
+Add VPE node as a child of l4 interconnect in order for it to probe
+using ti-sysc.
 
-Sorry, I missed that too. Yeah, it should be removed.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ arch/arm/boot/dts/dra7-l4.dtsi | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-Best regards,
-Jernej
-
-> 
-> > >       ...
-> > > 
-> > > The assignment to pwm->clk above the comment is the one I suggested to
-> > > drop.
-> > 
-> > Neither can be dropped. DT files for other SoCs don't have clock-names
-> > property, so search for "mod" clock will fail and then fallback option
-> > without name is used.
-> > 
-> > Best regards,
-> > Jernej
-> > 
-> > > > > > +     /* Fallback for old dtbs with a single clock and no name */
-> > > > > > +     if (!pwm->clk) {
-> > > > > > +             pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > > > +             if (IS_ERR(pwm->clk)) {
-> > > > > > +                     dev_err(&pdev->dev, "get clock failed
-> > > > > > %ld\n",
-> > > > > > +                             PTR_ERR(pwm->clk));
-> > > > > > +                     return PTR_ERR(pwm->clk);
-> > > > > > +             }
-> > > > > > +     }
-> > > > > 
-> > > > > There is a slight change of behaviour if I'm not mistaken. If you
-> > > > > have
-> > > > > 
-> > > > > this:
-> > > > >         clocks = <&clk1>;
-> > > > >         clock-names = "mod";
-> > > > >         
-> > > > >         pwm {
-> > > > >         
-> > > > >                 compatible = "allwinner,sun4i-a10-pwm"
-> > > > >                 clocks = <&clk2>;
-> > > > >         
-> > > > >         }
-> > > > > 
-> > > > > you now use clk1 instead of clk2 before.
-> > > > > 
-> > > > > Assuming this is only a theoretical problem, at least pointing this
-> > > > > out
-> > > > > in the commit log would be good I think.
-> > > > 
-> > > > Yes it's correct and as you said the driver don't check for a correct
-> > > > device tree, that why it's now optional probe.
-> > > > Let's assume that's the device-tree is correct, I will add a comment
-> > > > in the commit log.
-> > > 
-> > > If the mod clock was shared by all peripherals on the bus this would be
-> > > IMHO quite elegant. Probably it depends on what you mean by saying
-> > > "incorrect" if this snippet is incorrect. (It can be part of a valid dtb
-> > > that even complies to the binding documentation. However that's not how
-> > > any existing allwinner hardware looks like.) But let's stop arguing as
-> > > we agree it's a corner case and if you mention it in the commit log
-> > > we're both happy.
-> > > 
-> > > > > What is that clock used for? Is it required to access the hardware
-> > > > > registers? Or is it only required while the PWM is enabled? If so
-> > > > > you
-> > > > > could enable the clock more finegrainded.
-> > > > 
-> > > > Regarding the datasheet it's required to access the hardware.
-> > > > page 261 :
-> > > > https://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.pdf
-> > > 
-> > > So enabling the bus clock is called "open APB1 Bus gating" in that
-> > > manual? If I understand that correctly the bus clock then only need to
-> > > be on while accessing the registers and could be disabled once the
-> > > hardware is programmed and running.
-> > > 
-> > > Can you please describe that in a comment. Something like:
-> > >       /*
-> > >       
-> > >        * We're keeping the bus clock on for the sake of simplicity.
-> > >        * Actually it only needs to be on for hardware register
-> > >        * accesses.
-> > >        */
-> > > 
-> > > should be fine. This way it's at least obvious that the handling could
-> > > be improved.
-> > > 
-> > > Best regards
-> > > Uwe
-
-
-
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index ea0e7c19eb4e..0917231a20e2 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -4158,12 +4158,34 @@
+ 			ranges = <0x0 0x1b0000 0x10000>;
+ 		};
+ 
+-		target-module@1d0000 {			/* 0x489d0000, ap 27 30.0 */
+-			compatible = "ti,sysc";
+-			status = "disabled";
++		target-module@1d0010 {			/* 0x489d0000, ap 27 30.0 */
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x1d0010 0x4>;
++			reg-names = "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&vpe_clkctrl DRA7_VPE_VPE_CLKCTRL 0>;
++			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x1d0000 0x10000>;
++
++			vpe: vpe@0 {
++				compatible = "ti,dra7-vpe";
++				reg = <0x0000 0x120>,
++				      <0x0700 0x80>,
++				      <0x5700 0x18>,
++				      <0xd000 0x400>;
++				reg-names = "vpe_top",
++					    "sc",
++					    "csc",
++					    "vpdma";
++				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++			};
+ 		};
+ 	};
+ };
+-- 
+2.17.1
 
