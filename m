@@ -2,147 +2,115 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21797CA9ED3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C35DCA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC2C20848
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572886891;
-	bh=+MtZPHtXKdsSw7Bm/k8kkH1yNhktHmkA+OzqMTB1qsw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QOejrnd+cF5Kwb623oHsJHoBoful8+GH/WHH8q1pJXzUJfQs+M2VFWiROco0nbFrg
-	 88VMB+eqJqzjI2ZInATrk/yXGGQppZiYxxrdLj0pFXYcUGiOg/TGqh2awrYfZsbPkT
-	 T3jgjaF1Q33HN7/Ux0XC7BFaWkPJX80yZbVN/gJA=
+	by mail.kernel.org (Postfix) with ESMTP id 62DFD214B2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:04:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="jIcuW1V9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfKDRBa (ORCPT
+        id S1727998AbfKDREB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:01:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44026 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 12:04:01 -0500
+Received: from mout.gmx.net ([212.227.17.21]:36097 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbfKDRBa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:01:30 -0500
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B38D0214B2;
-        Mon,  4 Nov 2019 17:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572886888;
-        bh=+MtZPHtXKdsSw7Bm/k8kkH1yNhktHmkA+OzqMTB1qsw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TpQQFTR2EFY00egCJK1oAzh9DT7POr/CTY0WnCUAB/2BeMaio38vdV1yPDdJ7LNmt
-         NJt/IMhJUhKdGJG7+aCn1qhhoFeAnvuKXgFCt9QkUW34dqfkPqMX3Az0KdbZttCrG0
-         3Q/ZdoRCleOKx/JLAhfQoZedoB1dFhC/6hLxYWsE=
-Received: by mail-qk1-f180.google.com with SMTP id m125so18267399qkd.8;
-        Mon, 04 Nov 2019 09:01:28 -0800 (PST)
-X-Gm-Message-State: APjAAAXhazfkjG9F8cx8ZCJKXjBWP9hSwnypZw8+w67wjXD4QB2xq3WG
-        ETqWxS5Nq7F5I+A5K999YnC2RhWe2CHw1dP2jA==
-X-Google-Smtp-Source: APXvYqwgsKbRtBwlM6IP+7Jb7jCD2qb6TrBglXZcYJiaKjk035Dt56BQa7exM3fo+NyU11adG6CGbyTwxp/LndrfMFY=
-X-Received: by 2002:a37:4904:: with SMTP id w4mr17253854qka.119.1572886887790;
- Mon, 04 Nov 2019 09:01:27 -0800 (PST)
+        id S1727861AbfKDREB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 12:04:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1572887016;
+        bh=PI7dAw1uU03KDM2kwW+WwA/xzQ2h0kyFFuuTAXPmP5w=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=jIcuW1V9N/vp0Pp6ApmnBa6GDUV+x38frXo+Cp26LOHZYKBcp2S5r0LsBQtXDK38h
+         znyF0vsjXAZYb0K2AXk1Ly37fCzmKUDZzPCYqfhOu0iAzIajKih0YE1E/g3ZOQfeIz
+         8mujWGnkg8CwCDyobwRBkx9Njav/7KO8YCRm0EU8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.164] ([37.4.249.112]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N95iR-1hq5fU3Wtz-0164Ln; Mon, 04
+ Nov 2019 18:03:35 +0100
+Subject: Re: [PATCH] ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1570964003-20227-1-git-send-email-wahrenst@gmx.net>
+ <20191104090919.GC12355@duo.ucw.cz>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <6426d9b6-8ef1-903a-47fb-6844e29dffdd@gmx.net>
+Date:   Mon, 4 Nov 2019 18:03:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-5-saravanak@google.com>
-In-Reply-To: <20191028220027.251605-5-saravanak@google.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 Nov 2019 11:01:16 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJQ9siUGgmGqZnF_Wk3mVau29yVZRL_3LxFKgD8=mccQQ@mail.gmail.com>
-Message-ID: <CAL_JsqJQ9siUGgmGqZnF_Wk3mVau29yVZRL_3LxFKgD8=mccQQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/5] of: property: Make sure child dependencies don't
- block probing of parent
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191104090919.GC12355@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:qX/zG45X4O/oDA29SB1fKSYqUQKAxW6UyeV3mrJ54AmiRk8x42G
+ GeCQLS92oaCS6+ejAGhrH5tRSWBnLEEN3i0xwdkQQ2t3NDXvesDw3uP6lql1w4N46tGJa7d
+ K+HBDBxJy8NCMO6SiGtGcVy/L2o6kUTUcNDMBZs9UMzNpj4NI6Du3s5GYbITiRLC0oYqImm
+ NUONt5iURZ9CFbGoSkZoA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AKi8FyK/A4k=:Zv18n1lZNDVxFqawjJrsWx
+ 3i+KX7zMM/HVqfGvzpMMbf+FVUYJB+4KFcORTlcbHvLDBmwnSYTw5JzEM5VCSr80raPDBv8od
+ HzYkSy+Zor2VG8NedKvihSwAokRmJtHeCsaLr0DJKd4C4tCI3qk+oC1brqMwlgKvvHDAROCvX
+ x8xybu+M70awLnyZOS/n+zDCgrA2W9M2SLs3a2nzJtbjVEl+HSYsN9yDmRTgjg0hOrf4vb45i
+ uu9whvCd6VitDwzncHaBkiIsRk2wi5MT4cnc8FUe4FsvVcyQOewU+0325+d/xyiyyEDgIG2VW
+ ZKFNCrzCqFQKi69azL6SWvtGd073+JVt1JX7jLeLiijQ3gO3O4h8hMVxRlwziBJ+84TZ+dKIb
+ 1zDBZjdeSIrNwJ/E8vLLyyaU4qi0/DWS5KmMp1N+qzMbQSYeG76ObJDUVqZWlv4xDq+jxRROX
+ Hu29FVgNApGEq7O6xxuX5yYZ+dNXEGU95UHQ1qTIQmEAmzZlaNa1dXlbwrfJ3UK6SfwaQbFZe
+ CeFuhkJFOduxGApViqeo/CGjcJ5n4pQF1Pl31B8voPlu1L+Tq2FuDNFFuxeQFs9Mh4624/2bW
+ KMIQnqQRLGH9W46xMzbsl8H5jM86n+6kEQjwSPFhCWLJ/eUAsgndx/WqPKCf/Syhlax5EsKyZ
+ 9ETxCEkGF10OmX3qLxTGRmvjY+iu+n9b/gKHD6wASLmMsjZEAwwZSPiMgOQ94oZWJ/H+60mSa
+ lwVlmVKV895BQQSDQf3A3Z8NZT8ptG4Wld+cYy6MvfjDgsSRpAwqu1lONv07PJJ2HsaoutNAv
+ EJruYDJ92hXjYXSZutNFyqbiYck7fk2qR7QdlKFbUX/5JIOElIG0RtuZjnBMaMmXTrNr/ep3h
+ LK+O3ZiNFAHqJIW0QY8aLx5kSypTnNRYWHUa0qQW5cvNmY67e3LrcLqjbuR/Mwi6inW4uuBbL
+ 6AwxF3IvWb4KhCjMTxTKfSEBxPlTpXOBNXSuqyw6dmIe4eJReTHsdmocnKmUhRPIvxH3aSpse
+ bHoxVEQBmluuKaor6lpzkfh08B/1nqJt0ZiVcTPjy8VLRwnizoShGHl4DDftBZOfVPXBNFQUi
+ JmAtPLfh7Dj0lVqfCNmhEK6qvxEB1AszMAh9hFD9OdWDB+/a+oDM0H6CvxH7jWsh25+dT+yoa
+ yIcP/q25izAzqyIzHWIH/mp1G18HK990uhGRVkNMtmWM0sZb8gP7f1v0ORvXviQEo/PFqTAjb
+ txLVVfBOOq2FwlAE7lA411ge+6OfqYG7baLUNEQg06vgOyDv1wvr9gFf6+dg=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 5:00 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> When creating device links to proxy the sync_state() needs of child
-> dependencies, create SYNC_STATE_ONLY device links so that children
-> dependencies don't block probing of the parent.
->
-> Also, differentiate between missing suppliers of parent device vs
-> missing suppliers of child devices so that driver core doesn't block
-> parent device probing when only child supplier dependencies are missing.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/of/property.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
+Hi Pavel,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Am 04.11.19 um 10:09 schrieb Pavel Machek:
+> On Sun 2019-10-13 12:53:23, Stefan Wahren wrote:
+>> bcm2835-rpi.dtsi defines the behavior of the ACT LED, which is available
+>> on all Raspberry Pi boards. But there is no driver for this particual
+>> GPIO on CM3 in mainline yet, so this node was left incomplete without
+>> the actual GPIO definition. Since commit 025bf37725f1 ("gpio: Fix return
+>> value mismatch of function gpiod_get_from_of_node()") this causing probe
+>> issues of the leds-gpio driver for users of the CM3 dtsi file.
+>>
+>>   leds-gpio: probe of leds failed with error -2
+>>
+>> Until we have the necessary GPIO driver hide the ACT node for CM3
+>> to avoid this.
+>>
+>> Reported-by: Fredrik Yhlen <fredrik.yhlen@endian.se>
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>> Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and IO board")
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 
-One nit below:
+thanks but this patch has already been applied.
 
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 2808832b2e86..f16f85597ccc 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1032,10 +1032,10 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
->   * - -EINVAL if the supplier link is invalid and should not be created
->   * - -ENODEV if there is no device that corresponds to the supplier phandle
->   */
-> -static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
-> +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
-> +                             u32 dl_flags)
->  {
->         struct device *sup_dev;
-> -       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
->         int ret = 0;
->         struct device_node *tmp_np = sup_np;
->
-> @@ -1195,13 +1195,20 @@ static int of_link_property(struct device *dev, struct device_node *con_np,
->         unsigned int i = 0;
->         bool matched = false;
->         int ret = 0;
-> +       u32 dl_flags;
-> +
-> +       if (dev->of_node == con_np)
-> +               dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> +       else
-> +               dl_flags = DL_FLAG_SYNC_STATE_ONLY;
->
->         /* Do not stop at first failed link, link all available suppliers. */
->         while (!matched && s->parse_prop) {
->                 while ((phandle = s->parse_prop(con_np, prop_name, i))) {
->                         matched = true;
->                         i++;
-> -                       if (of_link_to_phandle(dev, phandle) == -EAGAIN)
-> +                       if (of_link_to_phandle(dev, phandle, dl_flags)
-> +                                                               == -EAGAIN)
+Can i consider this as a "yes" to my intended question ( Is the behavior
+change in leds-gpio desired )?
 
-nit: I'd just keep this one line or at least move '==' up.
-
->                                 ret = -EAGAIN;
->                         of_node_put(phandle);
->                 }
-> @@ -1219,10 +1226,10 @@ static int of_link_to_suppliers(struct device *dev,
->
->         for_each_property_of_node(con_np, p)
->                 if (of_link_property(dev, con_np, p->name))
-> -                       ret = -EAGAIN;
-> +                       ret = -ENODEV;
->
->         for_each_child_of_node(con_np, child)
-> -               if (of_link_to_suppliers(dev, child))
-> +               if (of_link_to_suppliers(dev, child) && !ret)
->                         ret = -EAGAIN;
->
->         return ret;
-> --
-> 2.24.0.rc0.303.g954a862665-goog
->
