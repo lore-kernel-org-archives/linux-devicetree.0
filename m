@@ -2,430 +2,141 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF06CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E269CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2118A222CA
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0152221D7D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572871585;
+	bh=uu6hMcwvil/xb9dqy8jjyGW+1kTfPIrio1g2NerX6OE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tqXVTvMUigWWIUiA/D4oykJK/7Lqp6a9MIDh+mpHwxauH3MqgX46/dfH7Te4/CdZE
+	 XRxloHJf8L7uEt9PAMA3yh4cMY0tyK0euClnxcT+y3qPRfo773b40rg5dqgpHXh7Q+
+	 LlKmdZv6GFwc69ZbyzEHSXSbc5YKAmitCWBeNZpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfKDM0Q (ORCPT
+        id S1727322AbfKDMqY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 07:26:16 -0500
-Received: from mga02.intel.com ([134.134.136.20]:60244 "EHLO mga02.intel.com"
+        Mon, 4 Nov 2019 07:46:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbfKDM0P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 07:26:15 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 04:26:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
-   d="scan'208";a="212305217"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Nov 2019 04:26:10 -0800
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iRbQv-0002El-IO; Mon, 04 Nov 2019 14:26:09 +0200
-Date:   Mon, 4 Nov 2019 14:26:09 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V5, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
-Message-ID: <20191104122609.GI32742@smile.fi.intel.com>
-References: <20191104105713.24311-1-dongchun.zhu@mediatek.com>
- <20191104105713.24311-3-dongchun.zhu@mediatek.com>
+        id S1727236AbfKDMqY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 07:46:24 -0500
+Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11BD8218BA;
+        Mon,  4 Nov 2019 12:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572871583;
+        bh=uu6hMcwvil/xb9dqy8jjyGW+1kTfPIrio1g2NerX6OE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Dxf2qdCcOkPEg/SW5EDL+yx9RaRwjiVhtnRit11I3Y0pAfi0DJ5GvvIuch+W02iXF
+         1c/lS5US48HKzpmbDWvTmti++TWT0jI3XG/Vlkf6AM5BYboyPPtELDCYqzZRZKfO3O
+         kbzIXvY/7wzA+S6xm9qMwBXQAHY3NXdT7iNrG4iI=
+Date:   Mon, 4 Nov 2019 20:45:55 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 09/11] ARM: dts: imx6ul-kontron-n6x1x-s: Disable the
+ snvs-poweroff driver
+Message-ID: <20191104124553.GY24620@dragon>
+References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
+ <20191031142112.12431-10-frieder.schrempf@kontron.de>
+ <20191104074346.GT24620@dragon>
+ <626ad87a-eb1d-4dca-7cd3-8c5f38025aec@kontron.de>
+ <7da30a17-d16c-3cde-12a8-430ff3eec692@kontron.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191104105713.24311-3-dongchun.zhu@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7da30a17-d16c-3cde-12a8-430ff3eec692@kontron.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 06:57:13PM +0800, Dongchun Zhu wrote:
-> Add a V4L2 sub-device driver for OV02A10 image sensor.
-> The OV02A10 is a 1/5" CMOS sensor from Omnivision, supporting
-> output format: 10-bit RAW.
+On Mon, Nov 04, 2019 at 11:18:19AM +0000, Schrempf Frieder wrote:
+> On 04.11.19 09:06, Frieder Schrempf wrote:
+> > Hi Shawn,
+> > 
+> > On 04.11.19 08:43, Shawn Guo wrote:
+> >> On Thu, Oct 31, 2019 at 02:24:27PM +0000, Schrempf Frieder wrote:
+> >>> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >>>
+> >>> The snvs-poweroff driver can power off the system by pulling the
+> >>> PMIC_ON_REQ signal low, to let the PMIC disable the power.
+> >>> The Kontron SoMs do not have this signal connected, so let's remove
+> >>> the node.
+> >>>
+> >>> This seems to fix a real issue when the signal is asserted at
+> >>> poweroff, but not actually causing the power to turn off. It was
+> >>> observed, that in this case the system would not shut down properly.
+> >>
+> >> I do not quite follow on this.  How does disabling snvs_poweroff fix the
+> >> issue?  The root cause of system not shut down properly seems to be that
+> >> PMIC doesn't shut down power.  This looks like a clean-up rather than
+> >> bug fix.
+> > 
+> > I don't know the exact reasons, but we had issues on these boards when 
+> > doing a "poweroff". The kernel would print something like the log below.
+> > Disabling the snvs-poweroff solved this.
+> > 
+> > But note that this has last been reproduced on v4.14. So I'm not sure if 
+> > this is still a problem with the current kernel.
+> > 
+> > #######
+> > reboot: Power down
+> > Unable to poweroff system
+> > 
+> > ====================================
+> > WARNING: halt/675 still has locks held!
+> > 4.14.104-exceet #1 Not tainted
+> > ------------------------------------
+> > 1 lock held by halt/675:
+> >   #0:  (reboot_mutex){+.+.}, at: [<c0145a98>] SyS_reboot+0x14c/0x1dc
+> > #######
+> > 
+> >>
+> >>>
+> >>> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >>> Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron 
+> >>> i.MX6UL N6310 SoM and boards")
+> >>
+> >> If you think this is really a bug fix, it should be applied to the file
+> >> before renaming rather than the one after renaming.
+> > 
+> > I will try to reproduce the issue with the current kernel and depending 
+> > on the results either drop the Fixes tag or move the patch before the 
+> > renaming.
 > 
-> This chip has a single MIPI lane interface and use the I2C bus
-> for control and the CSI-2 bus for data.
-
-> +/* Bit[7] clock HS mode enable
-> + * 0: Clock continue
-> + * 1: Clock HS
-> + * Bit[6:2] HS VOD adjust
-> + * Bit[1:0] P VHI adjust
-> + */
-> +#define REG_HS_MODE_BLC					0x9d
-> +
-> +#define CLOCK_HS_MODE_ENABLE				BIT(7)
-
-> +#define CLOCK_HS_VOD_ADJUST	(BIT(6) | BIT(5) | BIT(4) | BIT(3) | BIT(2))
-
-GENMASK()
-
-> +#define OV02A10_MASK_8_BITS				0xff
-
-GENMASK()
-
-> +#define OV02A10_LINK_FREQ_390MHZ			390000000ULL
-
-Can't we publish HZ_PER_MHZ for wider use (currently in phy-stm32-usbphyc.c and
-hid-sensor-attributes.c) and use here something like (390 * HZ_PER_MHZ)?
-
-> +#define OV02A10_ECLK_FREQ				24000000
-
-Ditto.
-
-> +static const s64 link_freq_menu_items[] = {
-
-> +	OV02A10_LINK_FREQ_390MHZ
-
-Better to keep comma here.
-
-> +};
-
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	int ret;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, reg);
-> +	if (ret >= 0) {
-> +		*val = (unsigned char)ret;
-> +		ret = 0;
-> +	}
-
-Why not to use classical pattern
-
-	if (ret < 0)
-		return ret;
-	...
-	return 0;
-
-?
-
-> +
-> +	return ret;
-> +}
-
-> +static int ov02a10_mod_reg(struct ov02a10 *ov02a10, u8 reg, u8 mask, u8 val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	u8 readval;
-> +	int ret;
-> +
-> +	ret = ov02a10_read_smbus(ov02a10, reg, &readval);
-> +	if (ret)
-> +		return ret;
-> +
-
-> +	readval &= ~mask;
-> +	val &= mask;
-> +	val |= readval;
-
-Why not to use classical pattern
-	val = (readval & ~mask) | (val & mask);
-?
-
-> +
-> +	return i2c_smbus_write_byte_data(client, reg, val);
-> +}
-
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	u16 id;
-
-> +	u8 pid = 0;
-> +	u8 ver = 0;
-
-Useless assignments.
-
-> +	int ret;
-> +
-> +	/* Check sensor revision */
-> +	ret = ov02a10_read_smbus(ov02a10, OV02A10_REG_CHIP_ID_H, &pid);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ov02a10_read_smbus(ov02a10, OV02A10_REG_CHIP_ID_L, &ver);
-> +	if (ret)
-> +		return ret;
-> +
-> +	id = OV02A10_ID(pid, ver);
-> +	if (id != CHIP_ID) {
-> +		dev_err(&client->dev, "Unexpected sensor id(%04x)\n", id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_dbg(&client->dev, "Detected OV%04X sensor\n", id);
-> +
-> +	return 0;
-> +}
-
-> +	int ret = 0;
-
-Useless assignment...
-
-> +
-> +	dev_dbg(&client->dev, "ov02a10 s_stream (%d)\n", on);
-> +	mutex_lock(&ov02a10->mutex);
-> +
-> +	if (ov02a10->streaming == on)
-> +		goto unlock_and_return;
-> +
-> +	if (on) {
-> +		ret = pm_runtime_get_sync(&client->dev);
-> +		if (ret < 0) {
-> +			pm_runtime_put_noidle(&client->dev);
-> +			goto unlock_and_return;
-> +		}
-> +
-> +		ret = __ov02a10_start_stream(ov02a10);
-> +		if (ret) {
-> +			__ov02a10_stop_stream(ov02a10);
-> +			ov02a10->streaming = !on;
-> +			goto err_rpm_put;
-> +		}
-> +	} else {
-> +		__ov02a10_stop_stream(ov02a10);
-> +		pm_runtime_put(&client->dev);
-> +	}
-> +
-> +	ov02a10->streaming = on;
-> +	mutex_unlock(&ov02a10->mutex);
-> +
-
-> +	return ret;
-
-...simple use
-	return 0;
-here.
-
-> +
-> +err_rpm_put:
-> +	pm_runtime_put(&client->dev);
-> +unlock_and_return:
-> +	mutex_unlock(&ov02a10->mutex);
-> +
-> +	return ret;
-> +}
-
-> +static int ov02a10_set_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct ov02a10 *ov02a10 = container_of(ctrl->handler,
-> +					       struct ov02a10, ctrl_handler);
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	s64 max_expo;
-
-> +	int ret = 0;
-
-Wouldn't be better to have this under `default` case below?
-
-> +
-> +	/* Propagate change of current control to all related controls */
-> +	if (ctrl->id == V4L2_CID_VBLANK) {
-> +		/* Update max exposure while meeting expected vblanking */
-> +		max_expo = ov02a10->cur_mode->height + ctrl->val -
-> +			   OV02A10_EXPOSURE_MAX_MARGIN;
-> +		__v4l2_ctrl_modify_range(ov02a10->exposure,
-> +					 ov02a10->exposure->minimum, max_expo,
-> +					 ov02a10->exposure->step,
-> +					 ov02a10->exposure->default_value);
-> +	}
-> +
-> +	/* V4L2 controls values will be applied only when power is already up */
-> +	if (!pm_runtime_get_if_in_use(&client->dev))
-> +		return 0;
-> +
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_EXPOSURE:
-> +		ret = ov02a10_set_exposure(ov02a10, ctrl->val);
-> +		break;
-> +	case V4L2_CID_ANALOGUE_GAIN:
-> +		ret = ov02a10_set_gain(ov02a10, ctrl->val);
-> +		break;
-> +	case V4L2_CID_VBLANK:
-> +		ret = ov02a10_set_vblank(ov02a10, ctrl->val);
-> +		break;
-> +	case V4L2_CID_TEST_PATTERN:
-> +		ret = ov02a10_set_test_pattern(ov02a10, ctrl->val);
-> +		break;
-> +	};
-> +
-> +	pm_runtime_put(&client->dev);
-> +
-> +	return ret;
-> +}
-
-> +{
-> +	struct fwnode_handle *ep;
-> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> +	struct v4l2_fwnode_endpoint bus_cfg = {
-> +		.bus_type = V4L2_MBUS_CSI2_DPHY
-> +	};
-> +	unsigned int i, j;
-> +	int ret;
-> +
-
-I would rather expect fwnode assignment here to understand immediately from
-where it has been derived. Though it's up to maintainers.
-
-> +	if (!fwnode)
-> +		return -ENXIO;
-> +
-> +	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
-> +	if (!ep)
-> +		return -ENXIO;
-> +
-> +	ret = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
-> +	fwnode_handle_put(ep);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Optional indication of mipi clock lane mode */
-> +	if (bus_cfg.bus.mipi_csi2.flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK)
-> +		ov02a10->mipi_clock_hs_mode_enable = true;
-> +
-
-> +	if (!bus_cfg.nr_of_link_frequencies) {
-> +		dev_err(dev, "no link frequencies defined");
-> +		ret = -EINVAL;
-> +		goto check_hwcfg_error;
-> +	}
-
-This is redundant check. You have done the similar below when comparing j to
-nr_of_link_frequencies.
-
-> +
-> +	for (i = 0; i < ARRAY_SIZE(link_freq_menu_items); i++) {
-> +		for (j = 0; j < bus_cfg.nr_of_link_frequencies; j++) {
-> +			if (link_freq_menu_items[i] ==
-> +				bus_cfg.link_frequencies[j])
-> +				break;
-> +		}
-> +
-> +		if (j == bus_cfg.nr_of_link_frequencies) {
-> +			dev_err(dev, "no link frequency %lld supported",
-> +				link_freq_menu_items[i]);
-> +			ret = -EINVAL;
-> +			goto check_hwcfg_error;
-> +		}
-> +	}
-> +
-> +check_hwcfg_error:
-> +	v4l2_fwnode_endpoint_free(&bus_cfg);
-> +
-> +	return ret;
-> +}
-
-> +static int ov02a10_probe(struct i2c_client *client)
-> +{
-
-
-> +	/* Optional indication of physical rotation of sensor */
-> +	ret = fwnode_property_read_u32(dev_fwnode(dev), "rotation",
-> +				       &rotation);
-
-It's perfectly one line.
-
-> +	if (!ret) {
-
-I would rather do two things here:
-1/ use the similar pattern as below with messaging
-	if (!ret) {
-		...
-	} else {
-		dev_dbg(...);
-	}
-2/ Actually use positive conditionals
-	if (ret) {
-		...
-	} else {
-		...
-	}
-
-> +		switch (rotation) {
-> +		case 180:
-> +			ov02a10->upside_down = true;
-> +			ov02a10->fmt.code = MEDIA_BUS_FMT_SRGGB10_1X10;
-> +			break;
-> +		case 0:
-> +			break;
-> +		default:
-> +			dev_warn(dev, "%u degrees rotation is not supported, ignoring...\n",
-> +				 rotation);
-> +		}
-> +	}
-> +
-> +	/* Optional indication of HS VOD adjust */
-> +	ret = fwnode_property_read_u32(dev_fwnode(dev),
-> +				       "ovti,hs-vod-adjust",
-> +				       &hs_vod_adjust_cnt);
-> +	if (!ret)
-> +		ov02a10->mipi_clock_hs_vod_adjust_cnt = hs_vod_adjust_cnt;
-> +	else
-> +		dev_warn(dev, "failed to get hs vod adjust, using default\n");
-> +
-> +	/* Optional indication of mipi tx speed */
-> +	ret = fwnode_property_read_u32(dev_fwnode(dev),
-> +				       "ovti,mipi-tx-speed",
-> +				       &clock_lane_tx_speed);
-> +
-> +	if (!ret)
-> +		ov02a10->mipi_clock_tx_speed = clock_lane_tx_speed;
-> +	else
-> +		dev_warn(dev, "failed to get mipi tx speed, using default\n");
-
-> +	/* Get system clock (eclk) */
-> +	ov02a10->eclk = devm_clk_get(dev, "eclk");
-> +	if (IS_ERR(ov02a10->eclk)) {
-> +		dev_err(dev, "failed to get eclk\n");
-
-> +		return -EINVAL;
-
-Why shadow error code?
-
-> +	}
-
-> +	ov02a10->pd_gpio = devm_gpiod_get(dev, "powerdown", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ov02a10->pd_gpio)) {
-> +		dev_err(dev, "failed to get powerdown-gpios\n");
-
-> +		return -EINVAL;
-
-Ditto.
-
-> +	}
-
-> +	ov02a10->n_rst_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> +	if (IS_ERR(ov02a10->n_rst_gpio)) {
-> +		dev_err(dev, "failed to get reset-gpios\n");
-
-> +		return -EINVAL;
-
-Ditto.
-
-> +	}
-
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> I just tried this with 5.4-rc5 and the issue persists. When 
+> snvs-poweroff is enabled without the hardware actually being able to 
+> power down via PMIC I get a locking WARNING from the kernel. Probably 
+> because the system is still running, when it's already supposed to be 
+> shut down by the PMIC.
+
+I still do not get it.  Are you saying that with snvs-poweroff being
+disabled, your system is now able to be shut down properly by PMIC?
+
+Shawn
+
+> 
+> So this fixes a real problem and therefore I will keep the Fixes tag and 
+> move the patch to the proper place in this series.
