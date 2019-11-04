@@ -2,90 +2,80 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD57CA9ED3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19511CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 14:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E950220869
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16C421655
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 14:00:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572876031;
+	bh=OWbKtK0i0fpZ7HMq4IWDZ/zHR1wQIHsCjhclNVqI7cs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ULGCLk4zc4r0iRs26Vm1JWQQNGihY3MovWVntcOIqGsnYp9Mcvtaj6cMJSgDicgGg
+	 g0hhBPTFTF2Kppd36RQLuMrBKeOGTtjViK578Kj9I+vjJyikNSctJvk4+3p5Yopo03
+	 hID2vnILb0jFgZaNTzA1ahnTwEGHjedG94sTi23Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfKDNyu (ORCPT
+        id S1729222AbfKDOA1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:54:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35632 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729006AbfKDNyt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:54:49 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 05295AE07;
-        Mon,  4 Nov 2019 13:54:47 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     catalin.marinas@arm.com, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
-Date:   Mon,  4 Nov 2019 14:54:11 +0100
-Message-Id: <20191104135412.32118-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104135412.32118-1-nsaenzjulienne@suse.de>
-References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
+        Mon, 4 Nov 2019 09:00:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727891AbfKDOA0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 09:00:26 -0500
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E3221D71;
+        Mon,  4 Nov 2019 14:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572876026;
+        bh=OWbKtK0i0fpZ7HMq4IWDZ/zHR1wQIHsCjhclNVqI7cs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L3F9qVpuKwq2k4DJhdeBUeaZDrY5/2BO9ZEILgx1UqbvBX47zpfteH8Riw33D90lY
+         FK87rhNlLQL0Nv0Ze8GAJR2IUvzOLk8xM1+a22zySFweu+8rNFlQSXWknbwA5WDoLd
+         N8cMt0+CaX99DaLgV9Pq4rTimFFfmAXLCuvpqk+U=
+Received: by mail-qt1-f181.google.com with SMTP id y39so24071571qty.0;
+        Mon, 04 Nov 2019 06:00:26 -0800 (PST)
+X-Gm-Message-State: APjAAAXyY79jdMZNLGgwAN5YLOGXvC/3iRYDS3yUZGRmo8eDNWpal/a9
+        3xzmLx70uEE1aBYvsKG7EKSapHdsLAz2R7wOeA==
+X-Google-Smtp-Source: APXvYqwC/UsXG1zJ1xc8CR86GG8c20fgOKNAVt0QWyGvdkTztw6vTdeoGSWn0GfCtBbRQCyxI47fJxmWk+2G9rlJau8=
+X-Received: by 2002:a0c:d2b4:: with SMTP id q49mr21523114qvh.135.1572876025475;
+ Mon, 04 Nov 2019 06:00:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191101061411.16988-1-yamada.masahiro@socionext.com> <20191101061411.16988-2-yamada.masahiro@socionext.com>
+In-Reply-To: <20191101061411.16988-2-yamada.masahiro@socionext.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 Nov 2019 08:00:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJbmFd5wZ0RCP2baqv-bjWwzaJ+hLqtGeYjK5LPJ54dXA@mail.gmail.com>
+Message-ID: <CAL_JsqJbmFd5wZ0RCP2baqv-bjWwzaJ+hLqtGeYjK5LPJ54dXA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] libfdt: add SPDX-License-Identifier to libfdt wrappers
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-arm64 places the CMA in ZONE_DMA32, which is not good enough for the
-Raspberry Pi 4 since it contains peripherals that can only address the
-first GB of memory. Explicitly place the CMA into that area.
+On Fri, Nov 1, 2019 at 1:19 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> These are kernel source code even though they are just two-line wrappers.
+>
+> Files without explicit license information fall back to GPL-2.0-only,
+> which is the project default.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+That is true and these are kernel only files, but given they are just
+a wrapper around the .c files, maybe they should have the same
+license?
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index cccc1ccd19be..3c7833e9005a 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -19,6 +19,25 @@
- 		reg = <0 0 0>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		/*
-+		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
-+		 * that's not good enough for the Raspberry Pi 4 as some
-+		 * devices can only address the lower 1G of memory (ZONE_DMA).
-+		 */
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			size = <0x2000000>; /* 32MB */
-+			alloc-ranges = <0x0 0x00000000 0x40000000>;
-+			reusable;
-+			linux,cma-default;
-+		};
-+	};
-+
- 	leds {
- 		act {
- 			gpios = <&gpio 42 GPIO_ACTIVE_HIGH>;
--- 
-2.23.0
-
+Rob
