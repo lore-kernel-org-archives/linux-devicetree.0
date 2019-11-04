@@ -2,141 +2,106 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E269CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E5DCA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0152221D7D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572871585;
-	bh=uu6hMcwvil/xb9dqy8jjyGW+1kTfPIrio1g2NerX6OE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tqXVTvMUigWWIUiA/D4oykJK/7Lqp6a9MIDh+mpHwxauH3MqgX46/dfH7Te4/CdZE
-	 XRxloHJf8L7uEt9PAMA3yh4cMY0tyK0euClnxcT+y3qPRfo773b40rg5dqgpHXh7Q+
-	 LlKmdZv6GFwc69ZbyzEHSXSbc5YKAmitCWBeNZpY=
+	by mail.kernel.org (Postfix) with ESMTP id 22F4A20B7C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfKDMqY (ORCPT
+        id S1727430AbfKDM4M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 07:46:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbfKDMqY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 07:46:24 -0500
-Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11BD8218BA;
-        Mon,  4 Nov 2019 12:46:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572871583;
-        bh=uu6hMcwvil/xb9dqy8jjyGW+1kTfPIrio1g2NerX6OE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dxf2qdCcOkPEg/SW5EDL+yx9RaRwjiVhtnRit11I3Y0pAfi0DJ5GvvIuch+W02iXF
-         1c/lS5US48HKzpmbDWvTmti++TWT0jI3XG/Vlkf6AM5BYboyPPtELDCYqzZRZKfO3O
-         kbzIXvY/7wzA+S6xm9qMwBXQAHY3NXdT7iNrG4iI=
-Date:   Mon, 4 Nov 2019 20:45:55 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Mon, 4 Nov 2019 07:56:12 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:62902 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbfKDM4M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 07:56:12 -0500
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: Cx8jqRkQ5JRUGczCabc5Cy/BRBSb8Uq4WJB6eYbrLof3PBI+Jxu9MocMtJ4NAPFsmVRtRcpAzy
+ vzdaAL+Wfw0X+pomuOWmFoYluVN36VFfXl8PJ7wtv6NksBdiyAGl5XlnYR8NY/pGMoxS7jgRni
+ KWO5TYLKI4p9vAHuz/0TWLc1Pq5dZigOKpExLxy2K6hdzELhO+HGZ24O1HKTCKYaYcQXDO2BRy
+ RYaiUwVOyddp9Kjdul0HcvI8KSHRU+ALqYSqab3HqZ3/NJpihOMtEczoVYckZCJlmAbdMRAawG
+ KiM=
+X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
+   d="scan'208";a="56900562"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Nov 2019 05:56:11 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 4 Nov 2019 05:56:11 -0700
+Received: from rob-ult-m19940.corp.atmel.com (10.10.85.251) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Mon, 4 Nov 2019 05:56:08 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 09/11] ARM: dts: imx6ul-kontron-n6x1x-s: Disable the
- snvs-poweroff driver
-Message-ID: <20191104124553.GY24620@dragon>
-References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
- <20191031142112.12431-10-frieder.schrempf@kontron.de>
- <20191104074346.GT24620@dragon>
- <626ad87a-eb1d-4dca-7cd3-8c5f38025aec@kontron.de>
- <7da30a17-d16c-3cde-12a8-430ff3eec692@kontron.de>
+        <linux-kernel@vger.kernel.org>
+CC:     <mpm@selenic.com>, <herbert@gondor.apana.org.au>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <arnd@arndb.de>,
+        <Tudor.Ambarus@microchip.com>, <Claudiu.Beznea@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: rng: atmel-trng: add new compatible
+Date:   Mon, 4 Nov 2019 13:54:56 +0200
+Message-ID: <20191104115457.2681-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7da30a17-d16c-3cde-12a8-430ff3eec692@kontron.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 11:18:19AM +0000, Schrempf Frieder wrote:
-> On 04.11.19 09:06, Frieder Schrempf wrote:
-> > Hi Shawn,
-> > 
-> > On 04.11.19 08:43, Shawn Guo wrote:
-> >> On Thu, Oct 31, 2019 at 02:24:27PM +0000, Schrempf Frieder wrote:
-> >>> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> >>>
-> >>> The snvs-poweroff driver can power off the system by pulling the
-> >>> PMIC_ON_REQ signal low, to let the PMIC disable the power.
-> >>> The Kontron SoMs do not have this signal connected, so let's remove
-> >>> the node.
-> >>>
-> >>> This seems to fix a real issue when the signal is asserted at
-> >>> poweroff, but not actually causing the power to turn off. It was
-> >>> observed, that in this case the system would not shut down properly.
-> >>
-> >> I do not quite follow on this.  How does disabling snvs_poweroff fix the
-> >> issue?  The root cause of system not shut down properly seems to be that
-> >> PMIC doesn't shut down power.  This looks like a clean-up rather than
-> >> bug fix.
-> > 
-> > I don't know the exact reasons, but we had issues on these boards when 
-> > doing a "poweroff". The kernel would print something like the log below.
-> > Disabling the snvs-poweroff solved this.
-> > 
-> > But note that this has last been reproduced on v4.14. So I'm not sure if 
-> > this is still a problem with the current kernel.
-> > 
-> > #######
-> > reboot: Power down
-> > Unable to poweroff system
-> > 
-> > ====================================
-> > WARNING: halt/675 still has locks held!
-> > 4.14.104-exceet #1 Not tainted
-> > ------------------------------------
-> > 1 lock held by halt/675:
-> >   #0:  (reboot_mutex){+.+.}, at: [<c0145a98>] SyS_reboot+0x14c/0x1dc
-> > #######
-> > 
-> >>
-> >>>
-> >>> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> >>> Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron 
-> >>> i.MX6UL N6310 SoM and boards")
-> >>
-> >> If you think this is really a bug fix, it should be applied to the file
-> >> before renaming rather than the one after renaming.
-> > 
-> > I will try to reproduce the issue with the current kernel and depending 
-> > on the results either drop the Fixes tag or move the patch before the 
-> > renaming.
-> 
-> I just tried this with 5.4-rc5 and the issue persists. When 
-> snvs-poweroff is enabled without the hardware actually being able to 
-> power down via PMIC I get a locking WARNING from the kernel. Probably 
-> because the system is still running, when it's already supposed to be 
-> shut down by the PMIC.
+Add compatible for new IP found on sam9x60 SoC.
 
-I still do not get it.  Are you saying that with snvs-poweroff being
-disabled, your system is now able to be shut down properly by PMIC?
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-Shawn
+Changes in v2:
+ - added 'Acked-by' from Rob;
 
-> 
-> So this fixes a real problem and therefore I will keep the Fixes tag and 
-> move the patch to the proper place in this series.
+ Documentation/devicetree/bindings/rng/atmel-trng.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/rng/atmel-trng.txt b/Documentation/devicetree/bindings/rng/atmel-trng.txt
+index 4ac5aaa2d024..3900ee4f3532 100644
+--- a/Documentation/devicetree/bindings/rng/atmel-trng.txt
++++ b/Documentation/devicetree/bindings/rng/atmel-trng.txt
+@@ -1,7 +1,7 @@
+ Atmel TRNG (True Random Number Generator) block
+ 
+ Required properties:
+-- compatible : Should be "atmel,at91sam9g45-trng"
++- compatible : Should be "atmel,at91sam9g45-trng" or "microchip,sam9x60-trng"
+ - reg : Offset and length of the register set of this block
+ - interrupts : the interrupt number for the TRNG block
+ - clocks: should contain the TRNG clk source
+-- 
+2.20.1
+
