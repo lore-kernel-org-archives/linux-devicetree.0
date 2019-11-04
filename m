@@ -2,104 +2,114 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5DBCA9ED4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 04:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424DCCA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 06:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9579021D7D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 04:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1886A222CA
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 06:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oe027GXI"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F3LvIJsL";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nyFLK0xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfKDEzN (ORCPT
+        id S1727607AbfKDGDU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 23:55:13 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33440 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfKDEzN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 3 Nov 2019 23:55:13 -0500
-Received: by mail-pg1-f196.google.com with SMTP id u23so10479727pgo.0
-        for <devicetree@vger.kernel.org>; Sun, 03 Nov 2019 20:55:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5E1F/8ZpGkp0JFWHPBZzhYupEtvMBHGaGPCEq4HCJd8=;
-        b=oe027GXIIXbVYu+L6R++Ex0ivkxkIGJmbtLj87bIkCastqwv2GdYj2aluSVznMtBKH
-         cnN6LYXh2rCuHhCo92VZDGPy7iGchD4cza9qvLPXOU7+lD233p3f2M+SuJFm2hl70kpj
-         wLxO02Mdg1L4bSC2kPDyTndpSHMDSk+/o13Z7ic37Lnib4qK6suKaOnKlvIBfF6vLvSC
-         dI20i7Qy02sgCpt4wH7XFMzEGkCfxpF0LVE5IO0zZ+HldzkBgoj16x9WCfgb0IUqLfwN
-         pa1+RlebJ2AF+Jrb4nacKHWHjaO1ZFxgLMhsRK8Tmk4FBp5bvPXNR1hgBxgVArnNggTb
-         X3Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5E1F/8ZpGkp0JFWHPBZzhYupEtvMBHGaGPCEq4HCJd8=;
-        b=q4gRDtIIxaUdDNYxpXbUKqC07Q5NFlMwzA2y3kdL3mX3IaYFbVMLRg0luPBG2PHvFb
-         nfi8TrG6E32XeajSIPjeXxGrp16oyFlsp8cXS6PhB4m+Yobr9LGmzEmlyGAWtA6vK6Z+
-         KJvLTA5q1Dmoe60GAd+pRJzvGZT/b9UvcJgocEB85VFcXZdSQpaIn0XWZouVtdpA9bOF
-         St9UbFPvbZyUbhfWE8VfDTdxaPeTmotUsi38tLvsapyW3170FB/8OEQLvWVmYW+SEGhI
-         AD6eEpgoO7gylNaKOnaab7ynaVk2XCQzdRBOBMvbEFpbogbd7cefAGkpBORbqInfnFU3
-         qAHA==
-X-Gm-Message-State: APjAAAXTFCx9/Nef1qMIh+qxlvWjv6yUdLAl/3ZtArB1DgUZk6n58zNR
-        v9RJQYzPJMMahpctsw9SoUWcAw==
-X-Google-Smtp-Source: APXvYqxS77pEs+QxOH7S2eE8c8E78rzeBq9iwCG53FN9NDCO7r/Y6hxTjoGCJ5yqLH9E8bXRZlFQfQ==
-X-Received: by 2002:a17:90a:2623:: with SMTP id l32mr33443825pje.70.1572843311000;
-        Sun, 03 Nov 2019 20:55:11 -0800 (PST)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x2sm2276885pfn.167.2019.11.03.20.55.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2019 20:55:10 -0800 (PST)
-Date:   Sun, 3 Nov 2019 20:55:07 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mon, 4 Nov 2019 01:03:20 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:37912 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKDGDU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 01:03:20 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 98BCF60931; Mon,  4 Nov 2019 06:03:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572847399;
+        bh=6qpLotxB72KIT+flkVzVeUM51hBOy5wrXmPAI/7+OOY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=F3LvIJsL1SNzPUmEBqB23s4Lf1Lm1LziS3wKOtGHNqkFPwVCPKs6bLvj5H2DTOEFK
+         E1ejiENwCrsqCN6+qcMT3Nfk3oHrRNNKS9wWwRSR31FJb6Ca8P50LuGxcrCJ5hfOC7
+         5rPCx/x+3W90Bh8N8j2B129OpqUZIaJ1I97DEDoY=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CE1D360931;
+        Mon,  4 Nov 2019 06:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572847398;
+        bh=6qpLotxB72KIT+flkVzVeUM51hBOy5wrXmPAI/7+OOY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nyFLK0xcoKMok6XVbxJG567R+nFNWV9oBTj48igpubc4A0LBYaGmWC6hUEsl3qZWF
+         +5pvzZ/hwj7v9AAcHsz0j5wc26ygzJND/F9DUeqaQs3GrYDV3tbn+fWxSLzi3GEg4H
+         /MWRSZP+ybqkLvA2WGwQIMSryUKlho2a3bq/SN1g=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CE1D360931
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
+ controller
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] arm64: dts: qcom: msm8996: Introduce IFC6640
-Message-ID: <20191104045507.GA28034@tuxbook-pro>
-References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
- <20191103081311.GM2695@vkoul-mobl.Dlink>
+        linux-kernel@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+References: <20191023090219.15603-1-rnayak@codeaurora.org>
+ <20191023090219.15603-12-rnayak@codeaurora.org>
+ <20191025194730.GM20212@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <cb7c4ce2-2ea6-0e71-36a6-7b0a489f06c3@codeaurora.org>
+Date:   Mon, 4 Nov 2019 11:33:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191103081311.GM2695@vkoul-mobl.Dlink>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191025194730.GM20212@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 03 Nov 01:13 PDT 2019, Vinod Koul wrote:
 
-> On 20-10-19, 22:13, Bjorn Andersson wrote:
-> > Refactor msm8996 and db820c in order to make it follow the structure of newer
-> > platforms, move db820c specific things to db820c.dtsi and then introduce the
-> > Informace 6640 Single Board Computer.
+
+On 10/26/2019 1:17 AM, Matthias Kaehlcke wrote:
+> Hi Rajendra/Maulik,
 > 
-> This has patch 9/11 missing. But rest look good to me.
+> On Wed, Oct 23, 2019 at 02:32:19PM +0530, Rajendra Nayak wrote:
+>> From: Maulik Shah <mkshah@codeaurora.org>
+>>
+>> Add pdc interrupt controller for sc7180
+>>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>> v3:
+>> Used the qcom,sdm845-pdc compatible for pdc node
+>>
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index f2981ada578f..07ea393c2b5f 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -184,6 +184,16 @@
+>>   			#power-domain-cells = <1>;
+>>   		};
+>>   
+>> +		pdc: interrupt-controller@b220000 {
+> 
+> Aren't the nodes supposed to be ordered by address as for SDM845?
+> If so this node should be added after 'qupv3_id_1: geniqup@ac0000',
+> not before.
+
+yes, indeed. my sorting seems to have gone wrong. Will fix and repost.
+thanks
+
 > 
 
-That's really odd, I copy pasted the recipients into all the patches.
-But I'm unable to find it under linux-arm-msm on lore as well.
-
-It's under LKML though, can you please have a look and let me know if I
-can extend your ack to patch 9/11 as well?
-
-https://lore.kernel.org/lkml/20191021051322.297560-10-bjorn.andersson@linaro.org/
-
-> Acked-by: Vinod Koul <vkoul@kernel.org>
-
-Thank you for the review Vinod!
-
-Regards,
-Bjorn
-
-> 
-> -- 
-> ~Vinod
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
