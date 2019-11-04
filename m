@@ -2,191 +2,112 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A55CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6749ACA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801AD21E6F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED3D218BA
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 12:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfKDLyF convert rfc822-to-8bit (ORCPT
+        id S1726441AbfKDMMy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:54:05 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:51692 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729089AbfKDLyF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 06:54:05 -0500
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 17F9560039D;
-        Mon,  4 Nov 2019 12:54:03 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 4 Nov 2019
- 12:54:02 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Mon, 4 Nov 2019 12:54:02 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
+        Mon, 4 Nov 2019 07:12:54 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:47048 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728188AbfKDMMy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 07:12:54 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iRbDx-0000l0-SX; Mon, 04 Nov 2019 13:12:45 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 2/9] ARM: dts: Add support for two more Kontron SoMs N6311
- and N6411
-Thread-Topic: [PATCH v4 2/9] ARM: dts: Add support for two more Kontron SoMs
- N6311 and N6411
-Thread-Index: AQHVkwaMgDUA/1D6C0q01Gb6m+Vg6Q==
-Date:   Mon, 4 Nov 2019 11:54:02 +0000
-Message-ID: <20191104115352.8728-3-frieder.schrempf@kontron.de>
-References: <20191104115352.8728-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20191104115352.8728-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Split rk3399-roc-pc for with and without mezzanine board.
+Date:   Mon, 04 Nov 2019 13:12:45 +0100
+Message-ID: <2226540.xovL9aYQn6@diego>
+In-Reply-To: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de>
+References: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 17F9560039D.A23F8
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+Hi Markus,
 
-The N6311 and the N6411 SoM are similar to the Kontron N6310 SoM.
-They are pin-compatible, but feature a larger RAM and NAND flash
-(512MiB instead of 256MiB). Further, the N6411 has an i.MX6ULL SoC,
-instead of an i.MX6UL.
+Am Freitag, 1. November 2019, 17:54:23 CET schrieb Markus Reichl:
+> For rk3399-roc-pc is a mezzanine board available that carries M.2 and
+> POE interfaces. Use it with a separate dts.
+> 
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> ---
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399-roc-pc-mezz.dts  |  52 ++
+>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 757 +----------------
+>  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 767 ++++++++++++++++++
+>  4 files changed, 821 insertions(+), 756 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index a959434ad46e..80ee9f1fc5f5 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezz.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> new file mode 100644
+> index 000000000000..ee77677d2cf2
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> @@ -0,0 +1,52 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
+> + * Copyright (c) 2019 Markus Reichl <m.reichl@fivetechno.de>
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3399-roc-pc.dtsi"
+> +
+> +/ {
+> +	model = "Firefly ROC-RK3399-PC Mezzanine Board";
+> +	compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
 
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../boot/dts/imx6ul-kontron-n6311-som.dtsi    | 40 +++++++++++++++++++
- .../boot/dts/imx6ull-kontron-n6411-som.dtsi   | 40 +++++++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
- create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
+different board with same compatible isn't possible, so
+you'll need a new compatible for it and add a new line to
+the roc-pc entry in
+	Documentation/devicetree/bindings/arm/rockchip.yaml
 
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
-new file mode 100644
-index 000000000000..a095a7654ac6
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 exceet electronics GmbH
-+ * Copyright (C) 2018 Kontron Electronics GmbH
-+ */
-+
-+#include "imx6ul.dtsi"
-+#include "imx6ul-kontron-n6x1x-som-common.dtsi"
-+
-+/ {
-+	model = "Kontron N6311 SOM";
-+	compatible = "kontron,imx6ul-n6311-som", "fsl,imx6ul";
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+		device_type = "memory";
-+	};
-+};
-+
-+&qspi {
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spi-nand";
-+		spi-max-frequency = <104000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "ubi1";
-+			reg = <0x00000000 0x08000000>;
-+		};
-+
-+		partition@8000000 {
-+			label = "ubi2";
-+			reg = <0x08000000 0x18000000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi b/arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
-new file mode 100644
-index 000000000000..b7e984284e1a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 exceet electronics GmbH
-+ * Copyright (C) 2018 Kontron Electronics GmbH
-+ */
-+
-+#include "imx6ull.dtsi"
-+#include "imx6ul-kontron-n6x1x-som-common.dtsi"
-+
-+/ {
-+	model = "Kontron N6411 SOM";
-+	compatible = "kontron,imx6ull-n6311-som", "fsl,imx6ull";
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+		device_type = "memory";
-+	};
-+};
-+
-+&qspi {
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spi-nand";
-+		spi-max-frequency = <104000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "ubi1";
-+			reg = <0x00000000 0x08000000>;
-+		};
-+
-+		partition@8000000 {
-+			label = "ubi2";
-+			reg = <0x08000000 0x18000000>;
-+		};
-+	};
-+};
--- 
-2.17.1
+Either you see it as
+- a board + hat, using dt overlay and same compatible
+- a completely separate board, which needs a separate
+  compatible as well
+
+And as discussed in the previous thread
+http://lists.infradead.org/pipermail/linux-rockchip/2019-November/027592.html
+but also in Jagan's response that really is somehow a grey area
+for something relatively static as the M.2 extension.
+
+
+Heiko
+
+
