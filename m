@@ -2,196 +2,116 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2EECA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80126CA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 200AE2084D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55507214D8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572898602;
+	bh=b05dXcuuti/YHfLZVAgLW012W4Cd7uwtx+Uv9cfaXV4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IiV9mOl01S+9F5ztYeRICQEIUyBPnL22d2n4PwOXuEzHEU6LP0io/X2HYGptT5lr4
+	 HUKrQdNxy49aDhE/4EVeGpoIoHkf7lVK65LOPM2HPK/qgz+1bf8tCEJ24o3LBU3XTT
+	 R4SwGkVdL7cscYePatMf8HOu+payIX1wZy2Wgl78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfKDULC (ORCPT
+        id S1728332AbfKDUQl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:11:02 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58199 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbfKDULC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 15:11:02 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRigg-0002wy-8Q; Mon, 04 Nov 2019 21:10:54 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRige-0006VB-Jc; Mon, 04 Nov 2019 21:10:52 +0100
-Date:   Mon, 4 Nov 2019 21:10:52 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
-Message-ID: <20191104201052.bxzdues2y4aqkukd@pengutronix.de>
-References: <20191103203334.10539-1-peron.clem@gmail.com>
- <20191103203334.10539-4-peron.clem@gmail.com>
- <20191104082410.qdgcnphkamlzaipf@pengutronix.de>
- <CAJiuCcdxHDwoQYBsrjK5dcOtMDie62DzJ84NH+bZzYHHv49fEQ@mail.gmail.com>
+        Mon, 4 Nov 2019 15:16:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726417AbfKDUQl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 15:16:41 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB286214D8;
+        Mon,  4 Nov 2019 20:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572898601;
+        bh=b05dXcuuti/YHfLZVAgLW012W4Cd7uwtx+Uv9cfaXV4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LArOh2yqmAOyihXRGKKn9+QglYUNXuVlu87nkkgOJReelq2tk5zQ1PGsOD2RBCj0W
+         m4FQlHk2zZ3XW97iLKD86GB5iiuxRjxp0xplNxJZmq/F4BrnAwgbeJ6V/MZ5PHkP4h
+         0To4p6vQ+eZi4+o+4w//LD9NTA1z3Y1VVgy5vQcA=
+Received: by mail-qt1-f177.google.com with SMTP id g50so25911511qtb.4;
+        Mon, 04 Nov 2019 12:16:40 -0800 (PST)
+X-Gm-Message-State: APjAAAXGk6NULi28U24b8k60Cxd7aUHNF6oSXhZ13whh4Y8Svs3rQnCi
+        QPzPiDuuBGP3ypAv7xd5cmIVvvBZjOY8QTJaig==
+X-Google-Smtp-Source: APXvYqy+kxc7d1zPxumnx1r5zwDTIWjMhGPQkAnTVZG1ZSfd3bbuuZj04XZHEpVsnCoQLFtXRw797ot2aiv6Oofk5pM=
+X-Received: by 2002:ac8:7612:: with SMTP id t18mr14352572qtq.143.1572898600005;
+ Mon, 04 Nov 2019 12:16:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCcdxHDwoQYBsrjK5dcOtMDie62DzJ84NH+bZzYHHv49fEQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20191031104402.31813-1-kholk11@gmail.com> <20191031104402.31813-3-kholk11@gmail.com>
+ <CAF6AEGv77=zw8GiJOEgg6RkaukxTCGzEd=SdjRr+GLLBdEoRPw@mail.gmail.com>
+In-Reply-To: <CAF6AEGv77=zw8GiJOEgg6RkaukxTCGzEd=SdjRr+GLLBdEoRPw@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 Nov 2019 14:16:29 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKTigx-=E4YoAjOJ9TtZpnAq6+=5VagMgBSYAxsncYCeA@mail.gmail.com>
+Message-ID: <CAL_JsqKTigx-=E4YoAjOJ9TtZpnAq6+=5VagMgBSYAxsncYCeA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/7] dt-bindings: msm/mdp5: Document optional TBU and
+ TBU_RT clocks
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        marijns95@gmail.com, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan <jonathan@marek.ca>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Clément,
+On Sat, Nov 2, 2019 at 11:53 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> + devicetree list
 
-On Mon, Nov 04, 2019 at 07:07:00PM +0100, Clément Péron wrote:
-> On Mon, 4 Nov 2019 at 09:24, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Sun, Nov 03, 2019 at 09:33:30PM +0100, Clément Péron wrote:
-> > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > >
-> > > H6 PWM core needs bus clock to be enabled in order to work.
-> > >
-> > > Add an optional probe for it and a fallback for previous
-> > > bindings without name on module clock.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > ---
-> > >  drivers/pwm/pwm-sun4i.c | 36 ++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 36 insertions(+)
-> > >
-> > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > index d194b8ebdb00..b5e7ac364f59 100644
-> > > --- a/drivers/pwm/pwm-sun4i.c
-> > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
-> > >
-> > >  struct sun4i_pwm_chip {
-> > >       struct pwm_chip chip;
-> > > +     struct clk *bus_clk;
-> > >       struct clk *clk;
-> > >       struct reset_control *rst;
-> > >       void __iomem *base;
-> > > @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+It needs to be resent to get into my queue.
+
+> On Thu, Oct 31, 2019 at 3:44 AM <kholk11@gmail.com> wrote:
 > >
-> > Adding more context here:
+> > From: AngeloGioacchino Del Regno <kholk11@gmail.com>
 > >
-> > |       pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > >       if (IS_ERR(pwm->clk))
-> > >               return PTR_ERR(pwm->clk);
-> > >
-> > > +     /* Get all clocks and reset line */
-> > > +     pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> > > +     if (IS_ERR(pwm->clk)) {
-> > > +             dev_err(&pdev->dev, "get clock failed %ld\n",
-> > > +                     PTR_ERR(pwm->clk));
-> > > +             return PTR_ERR(pwm->clk);
-> > > +     }
+> > These two clocks aren't present in all versions of the MDP5 HW:
+> > where present, they are needed to enable the Translation Buffer
+> > Unit(s).
 > >
-> > I guess you want to drop the first assignment to pwm->clk.
-> 
-> devm_clk_get_optional will return NULL if there is no entry, I don't
-> get where I need to drop it assignment.
+> > Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/display/msm/mdp5.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
 
-With your patch the code looks as follows:
+Acked-by: Rob Herring <robh@kernel.org>
 
-	pwm->clk = devm_clk_get(&pdev->dev, NULL);
-	if (IS_ERR(pwm->clk))
-		return PTR_ERR(pwm->clk);
-
-	/* Get all clocks and reset line */
-	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-	...
-
-The assignment to pwm->clk above the comment is the one I suggested to
-drop.
-
-> > > +     /* Fallback for old dtbs with a single clock and no name */
-> > > +     if (!pwm->clk) {
-> > > +             pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > > +             if (IS_ERR(pwm->clk)) {
-> > > +                     dev_err(&pdev->dev, "get clock failed %ld\n",
-> > > +                             PTR_ERR(pwm->clk));
-> > > +                     return PTR_ERR(pwm->clk);
-> > > +             }
-> > > +     }
 > >
-> > There is a slight change of behaviour if I'm not mistaken. If you have
-> > this:
+> > diff --git a/Documentation/devicetree/bindings/display/msm/mdp5.txt b/Documentation/devicetree/bindings/display/msm/mdp5.txt
+> > index 4e11338548aa..43d11279c925 100644
+> > --- a/Documentation/devicetree/bindings/display/msm/mdp5.txt
+> > +++ b/Documentation/devicetree/bindings/display/msm/mdp5.txt
+> > @@ -76,6 +76,8 @@ Required properties:
+> >  Optional properties:
+> >  - clock-names: the following clocks are optional:
+> >    * "lut"
+> > +  * "tbu"
+> > +  * "tbu_rt"
 > >
-> >         clocks = <&clk1>;
-> >         clock-names = "mod";
+> >  Example:
 > >
-> >         pwm {
-> >                 compatible = "allwinner,sun4i-a10-pwm"
-> >                 clocks = <&clk2>;
-> >         }
+> > --
+> > 2.21.0
 > >
-> > you now use clk1 instead of clk2 before.
-> >
-> > Assuming this is only a theoretical problem, at least pointing this out
-> > in the commit log would be good I think.
-> 
-> Yes it's correct and as you said the driver don't check for a correct
-> device tree, that why it's now optional probe.
-> Let's assume that's the device-tree is correct, I will add a comment
-> in the commit log.
-
-If the mod clock was shared by all peripherals on the bus this would be
-IMHO quite elegant. Probably it depends on what you mean by saying
-"incorrect" if this snippet is incorrect. (It can be part of a valid dtb
-that even complies to the binding documentation. However that's not how
-any existing allwinner hardware looks like.) But let's stop arguing as
-we agree it's a corner case and if you mention it in the commit log
-we're both happy.
-
-> > What is that clock used for? Is it required to access the hardware
-> > registers? Or is it only required while the PWM is enabled? If so you
-> > could enable the clock more finegrainded.
-> 
-> Regarding the datasheet it's required to access the hardware.
-> page 261 : https://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.pdf
-
-So enabling the bus clock is called "open APB1 Bus gating" in that
-manual? If I understand that correctly the bus clock then only need to
-be on while accessing the registers and could be disabled once the
-hardware is programmed and running.
-
-Can you please describe that in a comment. Something like:
-
-	/*
-	 * We're keeping the bus clock on for the sake of simplicity.
-	 * Actually it only needs to be on for hardware register
-	 * accesses.
-	 */
-	 
-should be fine. This way it's at least obvious that the handling could
-be improved.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
