@@ -4,72 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61512CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 01:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D50CA9EBB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 01:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F5B21D71
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 01:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A39421D71
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 01:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572832305;
-	bh=i/t4E/d8x2s1PbrvEGG/bDDGFhRvRZ77Yjugxqxg3N8=;
+	s=default; t=1572832670;
+	bh=mtTHSbd7Hygdqlh64EyjBn0IsDGy91z2yQc/KOzX5WU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K2n6wplOaPuvDTHAfdyYIPNwIQ6sU1IMs/aX1IJR6AJo9QSG8w82LFvangzYSRFDN
-	 Mn7ZMAaNIOQFQPZloroY3SjuiTjJqjlK50Oa0iGK2TdfwsHib5Xx43hf0ew3Ok19Ig
-	 GYyzGoLMgaHyyybsfuiwMgfCUFfHjP6n+5ArnMkU=
+	b=fSWTDdT0S9d36iPO6UyMoi1ck5pctocUB45im9I2rJSzOqyTfDjETxkns/vyJKB+K
+	 W1YZ/z1ljG41MIKlXDeK8wUjzDrZFPqt3YbvYlpUGfUCSW3m9PuT7gwsJr3OK0MAgv
+	 JGEgxOhkI0cPgvfijyygfNZqamygC6ke6nC2L4a8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfKDBvo (ORCPT
+        id S1728775AbfKDB5t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 20:51:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43668 "EHLO mail.kernel.org"
+        Sun, 3 Nov 2019 20:57:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728288AbfKDBvo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 Nov 2019 20:51:44 -0500
+        id S1728432AbfKDB5t (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 Nov 2019 20:57:49 -0500
 Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55184217F5;
-        Mon,  4 Nov 2019 01:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FBEA217F5;
+        Mon,  4 Nov 2019 01:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572832303;
-        bh=i/t4E/d8x2s1PbrvEGG/bDDGFhRvRZ77Yjugxqxg3N8=;
+        s=default; t=1572832668;
+        bh=mtTHSbd7Hygdqlh64EyjBn0IsDGy91z2yQc/KOzX5WU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I1dOR6SqaDADSs33+pBWSCwM5mN/zQ6ReKld+h+Ic6h0y50E5QXkAsA3F7lY82qAN
-         ub4VXUWkM/uI8SFCnJKyFtnNEVAMvlgr+OHmpOZ+g9NogUkMTknJNF3Rw4BYLJ1+vy
-         FVh3Q7BvkIIESgrzI20YWPkmkjvjyLf7Q07MscPc=
-Date:   Mon, 4 Nov 2019 09:51:16 +0800
+        b=uFGqMMQUSdY8FeF1cxANXcYO0epjGC61gmKn4S+OW0/Fx4k3PD3xtBqv9JPI9642X
+         2xPvSnF+uXUEXdrhuT8Rc/n6L6aPR3hypcKwH97mHpRtARM1mtV+sByJLA/hhyV9ja
+         rum3NU0wfmTs9wtJTTYMYKB9FtlsaQmB+oo7kX38=
+Date:   Mon, 4 Nov 2019 09:57:23 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
+To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        marex@denx.de, angus@akkea.ca, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        j.neuschaefer@gmx.net,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v4 3/3] ARM: dts: imx: add devicetree for Kobo Clara HD
-Message-ID: <20191104015115.GL24620@dragon>
-References: <20191026195748.14562-1-andreas@kemnade.info>
- <20191026195748.14562-4-andreas@kemnade.info>
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2] ARM: dts: imx7ulp-evk: Use APLL_PFD1 as usdhc's clock
+ source
+Message-ID: <20191104015722.GM24620@dragon>
+References: <1572482622-22070-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191026195748.14562-4-andreas@kemnade.info>
+In-Reply-To: <1572482622-22070-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 09:57:48PM +0200, Andreas Kemnade wrote:
-> This adds a devicetree for the Kobo Clara HD Ebook reader. It
-> is on based on boards called "e60k02". It is equipped with an
-> imx6sll SoC.
+On Thu, Oct 31, 2019 at 08:43:42AM +0800, Anson Huang wrote:
+> i.MX7ULP does NOT support runtime switching clock source for PCC,
+> APLL_PFD1 by default is usdhc's clock source, so just use it
+> in kernel to avoid below kernel dump during kernel boot up and
+> make sure kernel can boot up with SD root file-system.
 > 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> [    3.035892] Loading compiled-in X.509 certificates
+> [    3.136301] sdhci-esdhc-imx 40370000.mmc: Got CD GPIO
+> [    3.242886] mmc0: Reset 0x1 never completed.
+> [    3.247190] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> [    3.253751] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
+> [    3.260218] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000001
+> [    3.266775] mmc0: sdhci: Argument:  0x00009a64 | Trn mode: 0x00000000
+> [    3.273333] mmc0: sdhci: Present:   0x00088088 | Host ctl: 0x00000002
+> [    3.279794] mmc0: sdhci: Power:     0x00000000 | Blk gap:  0x00000080
+> [    3.286350] mmc0: sdhci: Wake-up:   0x00000008 | Clock:    0x0000007f
+> [    3.292901] mmc0: sdhci: Timeout:   0x0000008c | Int stat: 0x00000000
+> [    3.299364] mmc0: sdhci: Int enab:  0x007f010b | Sig enab: 0x00000000
+> [    3.305918] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00008402
+> [    3.312471] mmc0: sdhci: Caps:      0x07eb0000 | Caps_1:   0x0000b400
+> [    3.318934] mmc0: sdhci: Cmd:       0x0000113a | Max curr: 0x00ffffff
+> [    3.325488] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0039b37f
+> [    3.332040] mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
+> [    3.338501] mmc0: sdhci: Host ctl2: 0x00000000
+> [    3.343051] mmc0: sdhci: ============================================
+> 
+> Fixes: 20434dc92c05 ("ARM: dts: imx: add common imx7ulp dtsi support")
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Tested-by: Fabio Estevam <festevam@gmail.com>
 
 Applied, thanks.
