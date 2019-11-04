@@ -2,89 +2,120 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F76CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 15:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E70CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 15:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779A721744
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 15:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572879747;
-	bh=wx2WWE77VYovaRQjP+PFzhxfSOCW4+HTy+AxYVfCLd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cXpuKcKqMJ0lZzHchsH1WEk9hw/AMJFbCkJb5ugRZGF9RR76WK4vkhFsAg06w3QwG
-	 kF7QtO5GTh1Ee0I6E3Pxsbc6eD1spGzclglRA3QM/0B2MrGbCFqvsEJmMDsFdUdJT/
-	 3NkxcngJWIYxG8s7+0UaLjEWRJv7VHrB4ufh7SF4=
+	by mail.kernel.org (Postfix) with ESMTP id 95181204EC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 15:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfKDPC0 (ORCPT
+        id S1728144AbfKDPKd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:02:26 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38082 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbfKDPC0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 10:02:26 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v186so14348639oie.5;
-        Mon, 04 Nov 2019 07:02:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5RrqU3JQJ7EH0ayzHoxuh4DISnrwTOJKl1dsTebWduQ=;
-        b=lKTFrIcy/1HTFrstz3zAoFi2+g7leOOu6+i7khOprRn9dttMp9/O5FH0mq2YxGwdCE
-         gQqvZx3R1Obzz3pnnTyR/u30Np32EDzgHptQGTPujtuBf95nHqvBHPiDiJEL2M8L+1t9
-         4KS/h7YLlCWaG0osOfJLJo9igAcjzU/H4vPSTdme19w81MDm0Kj1jKAuzSoAM29sVJFY
-         KBieLFKSlP+1sGpf1Z1lJEzMaf1pZ6/aeqEaMJQ24pv/2Anzlj1BonykAWt4CXJDKpG2
-         3Kb/Fkk0vzeztSWKNzmrG52UHnBh0h9ixQBpB0y1epcjEKSUlNeS1ZZH4mIzQBQJ9ADO
-         XMXQ==
-X-Gm-Message-State: APjAAAUyqaZ/90PNFOyPEhZOvrpZjXzAmBjMsJPk1dS+86c95uqrmmIS
-        5hNQ0/LtATc229CDye5Oi06Xxiw=
-X-Google-Smtp-Source: APXvYqzQtWMe2X/SUN0+hS7AhBAmFxrRHdL30Cn0tqCXW3EudOyHKvVB9BcuhrYl0hpVj9L123E7nw==
-X-Received: by 2002:a05:6808:18b:: with SMTP id w11mr4493466oic.25.1572879744445;
-        Mon, 04 Nov 2019 07:02:24 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 34sm5058938otf.55.2019.11.04.07.02.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 07:02:23 -0800 (PST)
-Date:   Mon, 4 Nov 2019 09:02:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] scripts/dtc: dtx_diff - add color output support
-Message-ID: <20191104150222.GA17784@bogus>
-References: <20191025092215.23887-1-geert+renesas@glider.be>
+        Mon, 4 Nov 2019 10:10:33 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:34760 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727861AbfKDPKc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 10:10:32 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: motKTvZ+6Oeotl2ub+SwMIOxykHo2/2L6mJaamr7kdhUB8YoCBbnY0qS2eazAe5wcJAYKNQhQ+
+ qglpJd2H8RTAaDD0GUzpLDYV0yk17Hm7OM5ivzkj3acNVL8IQms73Emot+GHRARwb6SPxkbsyY
+ 88xPY3cLpZ1PkUyLDYL+5o4GysG0bxukuHrCiZHsTtPqhSrghXrgEGaZwz87TwFRU4TnPlftSq
+ Kc0ChJ61LxLHtXaOJsu3tuKAycFOzI+7mIpZdxbTUThBopGKOOF6pJD6E9v//45cVbxBIf4nmb
+ dg8=
+X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
+   d="scan'208";a="52785109"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Nov 2019 08:10:32 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 4 Nov 2019 08:10:24 -0700
+Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Mon, 4 Nov 2019 08:10:21 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <daniel.lezcano@linaro.org>,
+        <tglx@linutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: arm: atmel: add bindings for PIT64B
+Date:   Mon, 4 Nov 2019 17:10:03 +0200
+Message-ID: <1572880204-4514-2-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572880204-4514-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1572880204-4514-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025092215.23887-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 11:22:15AM +0200, Geert Uytterhoeven wrote:
-> Add new -c/--color options, to enhance the diff output with color, and
-> improve the user's experience.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-> Tested-by: Frank Rowand <frank.rowand@sony.com>
-> ---
-> v3:
->   - Add Reviewed-by, Tested-by,
-> 
-> v2:
->   - Document that -c/--color requires a diff command with color support,
->   - Ignore -c/--color if diff command lacks color support.
-> ---
->  scripts/dtc/dtx_diff | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+Add device tree bindings for PIT64B timer.
 
-Applied, thanks.
+Cc: Rob Herring <robh@kernel.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
 
-Rob
+Hi Rob, Nicolas,
+
+You Reviewed-by/Acked-by v1 [1] of this patch but I didn't collect it in this
+version since I removed the clock-frequency binding in this version. 
+
+Thank you!
+
+Change in v2:
+- removed clock-frequency binding
+
+[1] https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
+
+ Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+index 9fbde401a090..e003a553b986 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+@@ -10,6 +10,12 @@ PIT Timer required properties:
+ - interrupts: Should contain interrupt for the PIT which is the IRQ line
+   shared across all System Controller members.
+ 
++PIT64B Timer required properties:
++- compatible: Should be "microchip,sam9x60-pit64b"
++- reg: Should contain registers location and length
++- interrupts: Should contain interrupt for PIT64B timer
++- clocks: Should contain the available clock sources for PIT64B timer.
++
+ System Timer (ST) required properties:
+ - compatible: Should be "atmel,at91rm9200-st", "syscon", "simple-mfd"
+ - reg: Should contain registers location and length
+-- 
+2.7.4
+
