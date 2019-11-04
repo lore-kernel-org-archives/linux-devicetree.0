@@ -2,106 +2,88 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77472CA9ED2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1D3CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C811222D4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:21:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0/myShTi"
+	by mail.kernel.org (Postfix) with ESMTP id 1551F22468
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572859380;
+	bh=fDwWHQXokQ6+yeSBLlhubET0rNESSzXyJpE1F6jX8DI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GU0YTZ+2WUYZDFUpYvAwDetyuw1dh+lS15xO1F9vCG/SQ5ksy7Vf6vI19mc03MWgI
+	 FqXJGnU0wmQ/1L6QA4a7kOVtd+DJXsoDgdf7k+dmASvSocO2n5798ebtVPcO1/kcxT
+	 5vUmQK9tr2UDVaPYb39Ao59IKjd54jbuuHspadtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfKDJVe (ORCPT
+        id S1728344AbfKDJW7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:21:34 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43694 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727500AbfKDJVe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 04:21:34 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l20so1389980oie.10
-        for <devicetree@vger.kernel.org>; Mon, 04 Nov 2019 01:21:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7BzvCFGFyHem7aNvDILp+YA5kEio7GlXJNf7u1ymYOQ=;
-        b=0/myShTiuQ4rArcEWL8wQRtTTKVsb2N3NQXnwQYMfPFcyhRTMJ+0vpsq7Ox2xr39VA
-         8Awfq4VwFqUYLI92qKeUN9UC5PMacNHQkAY3l7dNZG1YTRsele9Hidoet2llNrWOLQ12
-         9UFYDzesbB56fdWwSOlfYYULjDeyT0GFbeq8tyl9f/93zbi6BanBbX7nCf13V/36sLKg
-         XoVSaK5XUbT+hVwZ0YGEOILxL/yUKSo+ttq/bxjtjG8lBrSthpTKYrolEofmCTOrGrlp
-         759BLOJ30Grp4iGtIEzNCS7mATs3NjGyCkIPoEqizBGoQhkakbOxsKzk0bgGDICkzyOJ
-         qG+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7BzvCFGFyHem7aNvDILp+YA5kEio7GlXJNf7u1ymYOQ=;
-        b=btLPrwOuyuwVS2jxgl4pKuix4b4Gc7jPpbRplwcmQdUZ0a7htktFJjfg5CZPCdBMQ9
-         cq82JCyPaPehZqqEI8wT0QIA457dbU2FyXJn25A3NQWypFgcECHvqkM/18lM1FGMo+mU
-         hNaIUjv0cvZFOKsq63skteklZrxlX45gCJjjKesD10weWISrpYtbachGD8Upv874qZKR
-         7T/ujprVgFqUUBV0FVIvfMVID53ynrgaLksMWO4qAqSRsHiILT9Uu+diUTyodMqrX2Ep
-         NTlQPuqDjyCyOi8k+XtF+eTkSyct8ycen45sNmX9H7SJHLwxQRXmNFScOWr9vDNKXZyU
-         N5Bw==
-X-Gm-Message-State: APjAAAU3fDVVcQk47ZD1AtXEVDDNnJnPsbAaZ8qQ3EBsHxCkv7fzLoV+
-        BBww8iO12+/1fRTVMDPVVgsVVe5iqTrhBXMI1hBkUw==
-X-Google-Smtp-Source: APXvYqyQ0vp3yLB+4K20lpmZqH2Zh3Z1GRej9tMUGvHlMZYtobNN2gwGszngK6ROtXBsWD+0NaiVD2cotrXFaCG0vS0=
-X-Received: by 2002:a05:6808:498:: with SMTP id z24mr3440549oid.114.1572859293807;
- Mon, 04 Nov 2019 01:21:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20190930130246.4860-1-brgl@bgdev.pl> <20190930130246.4860-6-brgl@bgdev.pl>
- <20191104090904.GA12355@duo.ucw.cz>
-In-Reply-To: <20191104090904.GA12355@duo.ucw.cz>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 4 Nov 2019 10:21:23 +0100
-Message-ID: <CAMpxmJWc6G6d5zR9kbGoKckMmGwXHB6o4AbFA56sjcyUZrNXjQ@mail.gmail.com>
-Subject: Re: [PATCH 5/6] dt-bindings: leds: max77650: convert the binding
- document to yaml
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mon, 4 Nov 2019 04:22:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728332AbfKDJW7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 04:22:59 -0500
+Received: from localhost (unknown [106.201.55.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E30420842;
+        Mon,  4 Nov 2019 09:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572859379;
+        bh=fDwWHQXokQ6+yeSBLlhubET0rNESSzXyJpE1F6jX8DI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sQoqsNrRtMsmT8OLj51A7PYWqpJmqtK9RUp22OzFl6h1iWU9cMvCVKSiefUAzTtgB
+         P1vOVAsdRkqQAjtVOpMnz1tHXJ3SvVSP7yE4UlTHqMYpHtXwPp4QG6pW02UoPZIdyp
+         6/TRC/U+/wQbIJMtPixaB8Lx2EOAyLoRW87UVbK8=
+Date:   Mon, 4 Nov 2019 14:52:52 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        linux-pm <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] phy: qcom: qmp: Add SDM845 QHP PCIe PHY
+Message-ID: <20191104092252.GS2695@vkoul-mobl.Dlink>
+References: <20191102001628.4090861-1-bjorn.andersson@linaro.org>
+ <20191102001628.4090861-6-bjorn.andersson@linaro.org>
+ <20191103082147.GO2695@vkoul-mobl.Dlink>
+ <20191104044703.GQ1929@tuxbook-pro>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104044703.GQ1929@tuxbook-pro>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pon., 4 lis 2019 o 10:09 Pavel Machek <pavel@ucw.cz> napisa=C5=82(a):
->
-> Hi!
->
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Convert the binding document for max77650 LED module to yaml.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Acked-by: Pavel Machek <pavel@ucw.cz>
->
+On 03-11-19, 20:47, Bjorn Andersson wrote:
+> On Sun 03 Nov 01:21 PDT 2019, Vinod Koul wrote:
+> > On 01-11-19, 17:16, Bjorn Andersson wrote:
+> [..]
+> > > +/* PCIE GEN3 COM registers */
+> > > +#define PCIE_GEN3_QHP_COM_SYSCLK_EN_SEL			0xdc
+> > 
+> > No QPHY_ tag with these?
+> 
+> These are the actual register names from the hardware specification, do
+> you foresee any issues with naming them like this?
 
-Hi Pavel,
+It would make them consistent, rest of the registers do have that.
+> 
+> > > +#define PCIE_GEN3_QHP_COM_SSC_EN_CENTER			0x14
+> > 
+> > Can we sort these please!
+> > 
+> 
+> Yes, that sounds reasonable. I'll respin with these sorted by address.
 
-thanks for the Ack, but a much modified version of this is already in
-Rob's branch.
+Great, thanks
 
-Bart
-
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/b=
-log.html
+-- 
+~Vinod
