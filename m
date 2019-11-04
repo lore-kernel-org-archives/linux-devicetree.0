@@ -2,197 +2,175 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D813CA9ED3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D64CCA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A959214B2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A4E720848
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0AMDC8t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDuEqnDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfKDRiF (ORCPT
+        id S1728392AbfKDRtN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:38:05 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35704 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbfKDRiF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 12:38:05 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y6so12907410lfj.2;
-        Mon, 04 Nov 2019 09:38:02 -0800 (PST)
+        Mon, 4 Nov 2019 12:49:13 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54720 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbfKDRtN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 12:49:13 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z26so4499951wmi.4;
+        Mon, 04 Nov 2019 09:49:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EUNcrQSOI4sR8ixM1BFvc1Mc4tX105obcT/Qt8emx5A=;
-        b=W0AMDC8tB7cgDZAYLAXWsst6rLCF34qqWs2VFiSVmr4w2o2MnEfiLJibugUec4cSkp
-         JnGuSEgzSpWXE0x+5lo5OnTEDIFHEqss8mmxM9O7QGxI8wJa+Hn6f4TnKVI+CviIX0tB
-         PF2wfLF5+Q+hG52l+gf7FPQhp9wiR9R+R2+3HeYTS3Spece97puytr6jRFHW73Wzksij
-         dWrDp36sa9Pd1mEZ9r4F4RBuu02rDW5XUvkrj+MOBU9JDSRa+kAst634cOgppbItmvn7
-         egfAzhqxXZttWGbgyNLdAajbk9Kd6nA1SndpTF/aOPILUbj1R/4bwB+E2dQu8y/cBq9q
-         g74Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=p2xKl9sk3AGAtQ4LlnI3zNkpScq7gYHsvOfvGfAQyL4=;
+        b=hDuEqnDhVk7kPLTfGLMq/WeOZAhbhSMAJJbCeOf+BLERB82koHBkKphxwkbknhDs3J
+         Obr+dHWwQWzWiEy1P9TZaAGqTwD9QQLPDKlpSq2UeZQ72RKbsbQW2kmOjIH3jjybyQar
+         jiapj0psw8heQmPX0/1XhGmakh5EQEDo03gownZn2neuCbngAF1WMIJ2w4VvaB7zLmNR
+         smmZAcW1rzVodKEX6DURemUVuZhKbcuxtcg+h7b7+J/bdYiMga1q9epRQj6i+BVp/fOi
+         AMd5GIZyPG55XP9KQuaqH6yfrfUaKokf2Rzc+DBfmeurrUhAuhXpu3805K50ix2tLlgm
+         W4HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EUNcrQSOI4sR8ixM1BFvc1Mc4tX105obcT/Qt8emx5A=;
-        b=jhxQ1VieNrmn9SFYSS/dsWgF8WmkvmHfj7gbuMStyt/HBPuhtNqvrYxtbp7XnemEP2
-         cbeTeQAuQeRVuwtPK+101sUXqmY+xuloacIl4sE+zuFIVJxJZh6G1AlL/5T/TB17hGM7
-         5PvdcXhuRsP/wS0xLlj5WNugMeskIWlAz+oL2u/zHHzdP5iDzNxwBTzXC7r8xx0wh4OM
-         JAsZLSn+xllQxD+w1VZ5MC4uWXNWZ4nkzAEI7O2AfeVKkz4I2x5NEEOU9YoPF6foIL32
-         1oQa6lxtCCglLjd847CycR+ipJmCWLHS07m1BIt9eVlrtNKRDXJfHjYTrfZ2CM1jNbD6
-         tK9Q==
-X-Gm-Message-State: APjAAAUhYEsB67vp2xlSIJmf/gzN90Wem5SfdYpLsD6n0S2Fo3f7rGrb
-        /oC+HsdtC0Hl7MSjFtruC/o=
-X-Google-Smtp-Source: APXvYqztqZhavZJd8viRhAJEQHNeRV3229XQ0PyA+N9A6KdwiN8etZAGPZVm6vw85TgRkdJF403hOw==
-X-Received: by 2002:a19:5010:: with SMTP id e16mr3833483lfb.49.1572889081644;
-        Mon, 04 Nov 2019 09:38:01 -0800 (PST)
-Received: from localhost.localdomain (c-2ec20990-74736162.cust.telenor.se. [46.194.9.144])
-        by smtp.gmail.com with ESMTPSA id s23sm6891061ljm.20.2019.11.04.09.37.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 09:38:00 -0800 (PST)
-From:   Marcus Folkesson <marcus.folkesson@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p2xKl9sk3AGAtQ4LlnI3zNkpScq7gYHsvOfvGfAQyL4=;
+        b=CVtqKNjqgd6vP6HKuofmGdQw0DDIUql6nM5ezs4/gFv4WQSLES8Tc2pGYhsTzpAOis
+         zMb+w9/+pxGjM36pE+2fJwl74kr9+B0cJeyA8gKt78f9IPSiywRHJsu6lKwVTAhzY+3L
+         L5lVB7aeFH9g3nV0w/h8QvuaqNR6TdjRj2b99RKJ6EYIP1n361yJrCa41wX3jPfhpaTS
+         CzzCGPqAUt35L/8Rk+ukdgWRldJNE4JO3l3ELiF2PdTb/nDGu0QFuyYnFmJ8UkMlhfyq
+         1W/7wEorUjKs4lP/Nm0stgoAOkxn/Yv4tZ481Ad92geZkPZEjgXvMJqLYHLS7TnEjcXn
+         uDSg==
+X-Gm-Message-State: APjAAAVwusJ7Pc5gXPwCF4CvXaYXvbjEmOVqLVAKx5QBusBpHX9h3SRU
+        TSt3LCkkVoXi1fVfWkrWmPLaCZZJ75mXPN43J14=
+X-Google-Smtp-Source: APXvYqwOHtKxgzOFlIXHimPJ2owhRc/to3TzER1kse9EqS8W/w1eEg9DUEJJUI1U5VQmdGnU3C50BansJnwSlPsMMA0=
+X-Received: by 2002:a05:600c:228e:: with SMTP id 14mr241937wmf.119.1572889751662;
+ Mon, 04 Nov 2019 09:49:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-2-peron.clem@gmail.com>
+ <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+In-Reply-To: <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 4 Nov 2019 18:49:00 +0100
+Message-ID: <CAJiuCccf3=McRfJ85SiudDHZ4nDOT+d7hh+nKDgC1u6nTpphPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM description
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Kent Gustavsson <kent@minoris.se>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: iio: dac: Migrate LTC1660 documentation to yaml
-Date:   Mon,  4 Nov 2019 18:40:36 +0100
-Message-Id: <20191104174036.3535-1-marcus.folkesson@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rewrite bindings to use json-schema vocabulary.
+On Mon, 4 Nov 2019 at 09:04, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 PWM block is basically the same as A20 PWM, except that it also has
+> > bus clock and reset line which needs to be handled accordingly.
+> >
+> > Expand Allwinner PWM binding with H6 PWM specifics.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 ++++++++++++++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
+pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.ya=
+ml
+> > index 0ac52f83a58c..bf36ea509f31 100644
+> > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
+l
+> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
+l
+> > @@ -30,13 +30,46 @@ properties:
+> >        - items:
+> >            - const: allwinner,sun50i-h5-pwm
+> >            - const: allwinner,sun5i-a13-pwm
+> > +      - const: allwinner,sun50i-h6-pwm
+> >
+> >    reg:
+> >      maxItems: 1
+> >
+> > -  clocks:
+> > +  # Even though it only applies to subschemas under the conditionals,
+> > +  # not listing them here will trigger a warning because of the
+> > +  # additionalsProperties set to false.
+> > +  clocks: true
+> > +  clock-names: true
+> > +  resets:
+> >      maxItems: 1
+> >
+> > +  if:
+> > +    properties:
+> > +      compatible:
+> > +        contains:
+> > +          const: allwinner,sun50i-h6-pwm
+> > +
+> > +  then:
+> > +    properties:
+> > +      clocks:
+> > +        items:
+> > +          - description: Module Clock
+> > +          - description: Bus Clock
+> > +
+> > +      clock-names:
+> > +        items:
+> > +          - const: mod
+> > +          - const: bus
+> > +
+> > +    required:
+> > +      - clock-names
+> > +      - resets
+> > +
+> > +  else:
+> > +    properties:
+> > +      clocks:
+> > +        maxItems: 1
+> > +
+>
+> I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod and
+> bus clock is required.", right?
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
----
- .../bindings/iio/dac/lltc,ltc1660.yaml        | 54 +++++++++++++++++++
- .../devicetree/bindings/iio/dac/ltc1660.txt   | 21 --------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 55 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc1660.txt
+Correct.
+>
+>
+> I wonder if it is sensible to require a clock-names property in the else
+> branch, too. This would make it obvious if the clock there corresponds
+> to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
-new file mode 100644
-index 000000000000..1f3136bfffcd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2019 Marcus Folkesson <marcus.folkesson@gmail.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/bindings/iio/dac/lltc,ltc1660.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Linear Technology Micropower octal 8-Bit and 10-Bit DACs
-+
-+maintainers:
-+  - Marcus Folkesson <marcus.folkesson@gmail.com>
-+
-+description: |
-+  Bindings for the Linear Technology Micropower octal 8-Bit and 10-Bit DAC.
-+  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/166560fa.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - lltc,ltc1660
-+      - lltc,ltc1665
-+
-+  reg:
-+    description: SPI chip select number for the device
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    description: |
-+      Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt.
-+    maximum: 5000000
-+    maxItems: 1
-+
-+  vref-supply:
-+    description: Phandle to the external reference voltage supply.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - vref-supply
-+
-+examples:
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+  
-+      dac@0 {
-+        compatible = "lltc,ltc1660";
-+        reg = <0>;
-+        spi-max-frequency = <5000000>;
-+        vref-supply = <&vref_reg>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/iio/dac/ltc1660.txt b/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-deleted file mode 100644
-index c5b5f22d6c64..000000000000
---- a/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--* Linear Technology Micropower octal 8-Bit and 10-Bit DACs
--
--Required properties:
-- - compatible: Must be one of the following:
--		"lltc,ltc1660"
--		"lltc,ltc1665"
-- - reg: SPI chip select number for the device
-- - vref-supply: Phandle to the voltage reference supply
--
--Recommended properties:
-- - spi-max-frequency: Definition as per
--	 Documentation/devicetree/bindings/spi/spi-bus.txt.
--	 Max frequency for this chip is 5 MHz.
--
--Example:
--dac@0 {
--	compatible = "lltc,ltc1660";
--	reg = <0>;
--	spi-max-frequency = <5000000>;
--	vref-supply = <&vref_reg>;
--};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fbccc9d450ff..23497d713298 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9619,7 +9619,7 @@ LTC1660 DAC DRIVER
- M:	Marcus Folkesson <marcus.folkesson@gmail.com>
- L:	linux-iio@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-+F:	Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
- F:	drivers/iio/dac/ltc1660.c
- 
- LTC4261 HARDWARE MONITOR DRIVER
--- 
-2.23.0
+This will also require to change example and all the current allwinner
+device-tree that have a PWM declared.
 
+Regards,
+Cl=C3=A9ment
+
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
