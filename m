@@ -2,136 +2,132 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05386CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8593BCA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B7A214D9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564202080F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572888487;
+	bh=w+lp4VFPqy8gWHVdLE4S/ZsHPMzttV9sPPs4qUUrNBM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dutZcV8lX7LK1r0EFjflRHb0dmgI4/i2oXXCN1eQa/dypT7vnwdvHjvQ35RDHvNbW
+	 B9yQ/rJwQRRBnIRvW3ilzlVKZPViiFk1Y68sxQpU2SBdJf+Zb+4FYs9HlwLLYeZLzd
+	 jtM6ZZCbFTuKLJs5wYlyI+b/hJUD8IprrYYY4TK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbfKDRTu (ORCPT
+        id S1728489AbfKDR2G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:19:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37642 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727989AbfKDRTu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:19:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 55381B190;
-        Mon,  4 Nov 2019 17:19:48 +0000 (UTC)
-Message-ID: <34bd65923697528b5ee540ef30b31542cfc5ba8e.camel@suse.de>
-Subject: Re: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <wahrenst@gmx.net>, catalin.marinas@arm.com,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Mon, 04 Nov 2019 18:19:45 +0100
-In-Reply-To: <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
-References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
-         <20191104135412.32118-2-nsaenzjulienne@suse.de>
-         <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-ILh2Kn6IzlMFXja+veOK"
-User-Agent: Evolution 3.34.1 
+        Mon, 4 Nov 2019 12:28:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727989AbfKDR2G (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 12:28:06 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D97D20848
+        for <devicetree@vger.kernel.org>; Mon,  4 Nov 2019 17:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572888485;
+        bh=w+lp4VFPqy8gWHVdLE4S/ZsHPMzttV9sPPs4qUUrNBM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0sCPNC+JETdMHkY4yKrcBZpQXZVQDascvupPPCokUUcs9gTq/DNcFOy5kvmLYqWTk
+         Sbaeok0zcl0kP6ANdt3L9Iad1XL0I8/F0WtzyXVNT1Nx/jGxFr/dIJPa2FGbZoh2XG
+         +bp6qXWxFY5O4WmChEuFfxn+p6aZthvndsUSEGTc=
+Received: by mail-qt1-f177.google.com with SMTP id r22so15031074qtt.2
+        for <devicetree@vger.kernel.org>; Mon, 04 Nov 2019 09:28:05 -0800 (PST)
+X-Gm-Message-State: APjAAAVXljSM74n5jAhM9D2qneIcHKp1xeVZB/dgzPIWcyHienP0AQcR
+        GhXw0R/1o9cxrTgLhdFgwIqLqetuum+P8GPUdg==
+X-Google-Smtp-Source: APXvYqxcN3p/l7dLIC1sWx5aPgVGRJ0Gr1OuRyRX+A6NIyxtjIPW8mWW3mz2lD9t6TAlIjZl/vrjzqU1TLUDGPH4kjg=
+X-Received: by 2002:ac8:458c:: with SMTP id l12mr13870893qtn.300.1572888484337;
+ Mon, 04 Nov 2019 09:28:04 -0800 (PST)
 MIME-Version: 1.0
+References: <20190712115219.25997-1-pavelmn@axis.com>
+In-Reply-To: <20190712115219.25997-1-pavelmn@axis.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 Nov 2019 11:27:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK-NqxuNKGv5s68DMrxpnHdU-M-vKkP4pTgdfrYRo=09A@mail.gmail.com>
+Message-ID: <CAL_JsqK-NqxuNKGv5s68DMrxpnHdU-M-vKkP4pTgdfrYRo=09A@mail.gmail.com>
+Subject: Re: [PATCH] dtc: Use pkg-config to locate libyaml
+To:     Pavel Modilaynen <pavel.modilaynen@axis.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        Pavel Modilaynen <pavelmn@axis.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
++Masahiro
 
---=-ILh2Kn6IzlMFXja+veOK
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jul 12, 2019 at 6:59 AM Pavel Modilaynen
+<pavel.modilaynen@axis.com> wrote:
+>
+> From: Pavel Modilaynen <pavel.modilaynen@axis.com>
 
-On Mon, 2019-11-04 at 18:09 +0100, Stefan Wahren wrote:
-> Hi Nicolas,
->=20
-> Am 04.11.19 um 14:54 schrieb Nicolas Saenz Julienne:
-> > arm64 places the CMA in ZONE_DMA32, which is not good enough for the
-> > Raspberry Pi 4 since it contains peripherals that can only address the
-> > first GB of memory. Explicitly place the CMA into that area.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->=20
-> do you want this in Linux 5.5 via devicetree/fixes? In this case please
-> add an fixes tag.
+Sorry for missing this.
 
-This has to go into v5.5 if the second patch is accepted. That said I can't=
- add
-a fixes tag as the code being fixed isn't yet in linus' tree.
+> Using Makefile's wildcard with absolute path to detect
+> the presence of libyaml results in false-positive
+> detection when cross-compiling e.g. in yocto environment.
 
-Any suggestions? Maybe go through Catalin's tree?
+As this is a host tool, it's not really about cross-compiling, but
+sandboxing the host env? IOW, I cross-compile all the time and don't
+have an issue.
 
-> Otherwise this will be queued for Linux 5.6.
->=20
-> > ---
-> >  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> > b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> > index cccc1ccd19be..3c7833e9005a 100644
-> > --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> > +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> > @@ -19,6 +19,25 @@
-> >  		reg =3D <0 0 0>;
-> >  	};
-> >=20
-> > +	reserved-memory {
-> > +		#address-cells =3D <2>;
-> > +		#size-cells =3D <1>;
-> > +		ranges;
-> > +
-> > +		/*
-> > +		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
-> > +		 * that's not good enough for the Raspberry Pi 4 as some
-> > +		 * devices can only address the lower 1G of memory (ZONE_DMA).
-> > +		 */
-> > +		linux,cma {
-> > +			compatible =3D "shared-dma-pool";
-> > +			size =3D <0x2000000>; /* 32MB */
-> > +			alloc-ranges =3D <0x0 0x00000000 0x40000000>;
-> > +			reusable;
-> > +			linux,cma-default;
-> > +		};
-> > +	};
-> > +
->=20
-> i think this is a SoC-specific issue not a board specifc one. Please
-> move this to bcm2711.dtsi
+> The latter results in build error:
+> | scripts/dtc/yamltree.o: In function `yaml_propval_int':
+> | yamltree.c: undefined reference to `yaml_sequence_start_event_initialize'
+> | yamltree.c: undefined reference to `yaml_emitter_emit'
+> | yamltree.c: undefined reference to `yaml_scalar_event_initialize'
+> ...
+> Use pkg-config to locate libyaml to address this scenario.
 
-Noted, thanks!
+The reason I didn't use pkg-config in the first place is it adds
+another dependency. AIUI, it's only needed for gconfig/xconfig which
+are probably not widely used especially for CI. Looks like objtool
+needs it too, but that's x86 only though arm64 support is being worked
+on. So I guess it is pretty much becoming a requirement.
 
-Regards,
-Nicolas
+So I've applied it. I added suppressing stderr in case pkg-config
+isn't present.
 
+Rob
 
---=-ILh2Kn6IzlMFXja+veOK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3AXbIACgkQlfZmHno8
-x/5bNQf+Pcwr9fITGn9iaLSMaqlCHQzeOM1OgDs4kXXqGotT/PNltTgdxEJIhFIp
-5DAU9kQRHwIG/69W9dXmUngZQe7seTMSBvS2ZrSKxgU45h/O/L1dQbWePZrl1PEF
-k4eXAWFJhwKQrFxBnT6F2IlCfoY5CrMikuhV+uSBP0UhLiAoWQ1h1fl0qnU57ODL
-cFz0GYgNS45rFhQ1GNfb5daGUXxgJyjMwRokrBS7dT+fnC7BqmXGBRwAWT7n+MC1
-9wyrMaWXVWpkrVCkKkhXsKjK9MBnqC+FIGIo06F/cttUQr24QOD8Xkcho+OXzKgP
-HzfSwcMdLuACsoS8BonBZgS1YIzAOA==
-=AtDb
------END PGP SIGNATURE-----
-
---=-ILh2Kn6IzlMFXja+veOK--
-
+>
+> Signed-off-by: Pavel Modilaynen <pavel.modilaynen@axis.com>
+> ---
+>  scripts/dtc/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> index 82160808765c..99d51b665432 100644
+> --- a/scripts/dtc/Makefile
+> +++ b/scripts/dtc/Makefile
+> @@ -11,7 +11,7 @@ dtc-objs      += dtc-lexer.lex.o dtc-parser.tab.o
+>  # Source files need to get at the userspace version of libfdt_env.h to compile
+>  HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
+>
+> -ifeq ($(wildcard /usr/include/yaml.h),)
+> +ifeq ($(shell pkg-config --exists yaml-0.1 && echo yes),)
+>  ifneq ($(CHECK_DTBS),)
+>  $(error dtc needs libyaml for DT schema validation support. \
+>         Install the necessary libyaml development package.)
+> @@ -19,7 +19,7 @@ endif
+>  HOST_EXTRACFLAGS += -DNO_YAML
+>  else
+>  dtc-objs       += yamltree.o
+> -HOSTLDLIBS_dtc := -lyaml
+> +HOSTLDLIBS_dtc := $(shell pkg-config yaml-0.1 --libs)
+>  endif
+>
+>  # Generated files need one more search path to include headers in source tree
+> --
+> 2.11.0
+>
