@@ -2,36 +2,36 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB1CCA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E38CA9ED5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E5221D81
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3579C222C5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfKDLws (ORCPT
+        id S1728839AbfKDLwz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:52:48 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:58385 "EHLO
+        Mon, 4 Nov 2019 06:52:55 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:52531 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728416AbfKDLwr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 06:52:47 -0500
-X-UUID: 5372a20f5ba046068cb5906ff26d5500-20191104
-X-UUID: 5372a20f5ba046068cb5906ff26d5500-20191104
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        with ESMTP id S1728794AbfKDLwy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 06:52:54 -0500
+X-UUID: 44dfcedf35d146a28d5d0841d39fce49-20191104
+X-UUID: 44dfcedf35d146a28d5d0841d39fce49-20191104
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
         (envelope-from <chao.hao@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1871779358; Mon, 04 Nov 2019 19:52:41 +0800
+        with ESMTP id 292851282; Mon, 04 Nov 2019 19:52:50 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 4 Nov 2019 19:52:39 +0800
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 4 Nov 2019 19:52:46 +0800
 Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 4 Nov 2019 19:52:35 +0800
+ Transport; Mon, 4 Nov 2019 19:52:45 +0800
 From:   Chao Hao <chao.hao@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>
@@ -46,301 +46,114 @@ CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
         Anan Sun <anan.sun@mediatek.com>,
         Miles Chen <miles.chen@mediatek.com>,
         Chao Hao <chao.hao@mediatek.com>
-Subject: [RESEND,PATCH 01/13] dt-bindings: mediatek: Add bindings for MT6779
-Date:   Mon, 4 Nov 2019 19:52:26 +0800
-Message-ID: <20191104115238.2394-2-chao.hao@mediatek.com>
+Subject: [RESEND,PATCH 04/13] iommu/mediatek: Remove mtk_iommu_domain_finalise
+Date:   Mon, 4 Nov 2019 19:52:29 +0800
+Message-ID: <20191104115238.2394-5-chao.hao@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20191104115238.2394-1-chao.hao@mediatek.com>
 References: <20191104115238.2394-1-chao.hao@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 2CC543D6B3356CDB7BC12DD8BF7FEAB925C71303F703090389DB250015AD2CD82000:8
 X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds description for MT6779 IOMMU.
-
-MT6779 has two iommus, they are MM_IOMMU and APU_IOMMU which
-use ARM Short-Descriptor translation format.
-
-The MT6779 IOMMU hardware diagram is as below, it is only a brief
-diagram about iommu, it don't focus on the part of smi_larb, so
-I don't describe the smi_larb detailedly.
-
-			     EMI
-			      |
-	   --------------------------------------
-	   |					|
-        MM_IOMMU                            APU_IOMMU
-	   |					|
-       SMI_COMMOM-----------		     APU_BUS
-          |		   |			|
-    SMI_LARB(0~11)  SMI_LARB12(FAKE)	    SMI_LARB13(FAKE)
-	  |		   |			|
-	  |		   |		   --------------
-	  |		   |		   |	 |	|
-   Multimedia engine	  CCU		  VPU   MDLA   EMDA
-
-All the connections are hardware fixed, software can not adjust it.
-
-From the diagram above, MM_IOMMU provides mapping for multimedia engine,
-but CCU is connected with smi_common directly, we can take them as larb12.
-APU_IOMMU provides mapping for APU engine, we can take them larb13.
-Larb12 and Larb13 are fake larbs.
+We already have global mtk_iommu_pgtable structure to describe
+page table and create it in group_device, "mtk_iommu_domain_finalise"
+is as the same as that, so so we will remove mtk_iommu_domain_finalise.
 
 Signed-off-by: Chao Hao <chao.hao@mediatek.com>
 ---
- .../bindings/iommu/mediatek,iommu.txt         |   2 +
- include/dt-bindings/memory/mt6779-larb-port.h | 217 ++++++++++++++++++
- 2 files changed, 219 insertions(+)
- create mode 100644 include/dt-bindings/memory/mt6779-larb-port.h
+ drivers/iommu/mtk_iommu.c | 48 ++++++++-------------------------------
+ 1 file changed, 10 insertions(+), 38 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-index ce59a505f5a4..c1ccd8582eb2 100644
---- a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-+++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-@@ -58,6 +58,7 @@ Required properties:
- - compatible : must be one of the following string:
- 	"mediatek,mt2701-m4u" for mt2701 which uses generation one m4u HW.
- 	"mediatek,mt2712-m4u" for mt2712 which uses generation two m4u HW.
-+	"mediatek,mt6779-m4u" for mt6779 which uses generation two m4u HW.
- 	"mediatek,mt7623-m4u", "mediatek,mt2701-m4u" for mt7623 which uses
- 						     generation one m4u HW.
- 	"mediatek,mt8173-m4u" for mt8173 which uses generation two m4u HW.
-@@ -78,6 +79,7 @@ Required properties:
- 	Specifies the mtk_m4u_id as defined in
- 	dt-binding/memory/mt2701-larb-port.h for mt2701, mt7623
- 	dt-binding/memory/mt2712-larb-port.h for mt2712,
-+	dt-binding/memory/mt6779-larb-port.h for mt6779,
- 	dt-binding/memory/mt8173-larb-port.h for mt8173, and
- 	dt-binding/memory/mt8183-larb-port.h for mt8183.
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index fcbde6b0f58d..3fa09b12e9f9 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -329,40 +329,6 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+ 	}
+ }
  
-diff --git a/include/dt-bindings/memory/mt6779-larb-port.h b/include/dt-bindings/memory/mt6779-larb-port.h
-new file mode 100644
-index 000000000000..8b7f2d2446ea
---- /dev/null
-+++ b/include/dt-bindings/memory/mt6779-larb-port.h
-@@ -0,0 +1,217 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ * Author: Chao Hao <chao.hao@mediatek.com>
-+ */
+-static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom)
+-{
+-	struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
+-
+-	if (data->pgtable) {
+-		dom->cfg = data->pgtable->cfg;
+-		dom->iop = data->pgtable->iop;
+-		dom->domain.pgsize_bitmap = data->pgtable->cfg.pgsize_bitmap;
+-		return 0;
+-	}
+-
+-	dom->cfg = (struct io_pgtable_cfg) {
+-		.quirks = IO_PGTABLE_QUIRK_ARM_NS |
+-			IO_PGTABLE_QUIRK_NO_PERMS |
+-			IO_PGTABLE_QUIRK_TLBI_ON_MAP |
+-			IO_PGTABLE_QUIRK_ARM_MTK_EXT,
+-		.pgsize_bitmap = mtk_iommu_ops.pgsize_bitmap,
+-		.ias = 32,
+-		.oas = 34,
+-		.tlb = &mtk_iommu_flush_ops,
+-		.iommu_dev = data->dev,
+-	};
+-
+-	dom->iop = alloc_io_pgtable_ops(ARM_V7S, &dom->cfg, data);
+-	if (!dom->iop) {
+-		dev_err(data->dev, "Failed to alloc io pgtable\n");
+-		return -EINVAL;
+-	}
+-
+-	/* Update our support page sizes bitmap */
+-	dom->domain.pgsize_bitmap = dom->cfg.pgsize_bitmap;
+-	return 0;
+-}
+-
+ static struct mtk_iommu_pgtable *create_pgtable(struct mtk_iommu_data *data)
+ {
+ 	struct mtk_iommu_pgtable *pgtable;
+@@ -420,11 +386,17 @@ static int mtk_iommu_attach_pgtable(struct mtk_iommu_data *data,
+ 
+ static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
+ {
++	struct mtk_iommu_pgtable *pgtable = mtk_iommu_get_pgtable();
+ 	struct mtk_iommu_domain *dom;
+ 
+ 	if (type != IOMMU_DOMAIN_DMA)
+ 		return NULL;
+ 
++	if (!pgtable) {
++		pr_err("%s, pgtable is not ready\n", __func__);
++		return NULL;
++	}
 +
-+#ifndef _DTS_IOMMU_PORT_MT6779_H_
-+#define _DTS_IOMMU_PORT_MT6779_H_
-+
-+#define MTK_M4U_ID(larb, port)		 (((larb) << 5) | (port))
-+
-+#define M4U_LARB0_ID			 0
-+#define M4U_LARB1_ID			 1
-+#define M4U_LARB2_ID			 2
-+#define M4U_LARB3_ID			 3
-+#define M4U_LARB4_ID			 4
-+#define M4U_LARB5_ID			 5
-+#define M4U_LARB6_ID			 6
-+#define M4U_LARB7_ID			 7
-+#define M4U_LARB8_ID			 8
-+#define M4U_LARB9_ID			 9
-+#define M4U_LARB10_ID			 10
-+#define M4U_LARB11_ID			 11
-+#define M4U_LARB12_ID			 12
-+#define M4U_LARB13_ID			 13
-+
-+/* larb0 */
-+#define M4U_PORT_DISP_POSTMASK0		 MTK_M4U_ID(M4U_LARB0_ID, 0)
-+#define M4U_PORT_DISP_OVL0_HDR		 MTK_M4U_ID(M4U_LARB0_ID, 1)
-+#define M4U_PORT_DISP_OVL1_HDR		 MTK_M4U_ID(M4U_LARB0_ID, 2)
-+#define M4U_PORT_DISP_OVL0		 MTK_M4U_ID(M4U_LARB0_ID, 3)
-+#define M4U_PORT_DISP_OVL1		 MTK_M4U_ID(M4U_LARB0_ID, 4)
-+#define M4U_PORT_DISP_PVRIC0		 MTK_M4U_ID(M4U_LARB0_ID, 5)
-+#define M4U_PORT_DISP_RDMA0		 MTK_M4U_ID(M4U_LARB0_ID, 6)
-+#define M4U_PORT_DISP_WDMA0		 MTK_M4U_ID(M4U_LARB0_ID, 7)
-+#define M4U_PORT_DISP_FAKE0		 MTK_M4U_ID(M4U_LARB0_ID, 8)
-+
-+/* larb1 */
-+#define M4U_PORT_DISP_OVL0_2L_HDR	 MTK_M4U_ID(M4U_LARB1_ID, 0)
-+#define M4U_PORT_DISP_OVL1_2L_HDR	 MTK_M4U_ID(M4U_LARB1_ID, 1)
-+#define M4U_PORT_DISP_OVL0_2L		 MTK_M4U_ID(M4U_LARB1_ID, 2)
-+#define M4U_PORT_DISP_OVL1_2L		 MTK_M4U_ID(M4U_LARB1_ID, 3)
-+#define M4U_PORT_DISP_RDMA1		 MTK_M4U_ID(M4U_LARB1_ID, 4)
-+#define M4U_PORT_MDP_PVRIC0		 MTK_M4U_ID(M4U_LARB1_ID, 5)
-+#define M4U_PORT_MDP_PVRIC1		 MTK_M4U_ID(M4U_LARB1_ID, 6)
-+#define M4U_PORT_MDP_RDMA0		 MTK_M4U_ID(M4U_LARB1_ID, 7)
-+#define M4U_PORT_MDP_RDMA1		 MTK_M4U_ID(M4U_LARB1_ID, 8)
-+#define M4U_PORT_MDP_WROT0_R		 MTK_M4U_ID(M4U_LARB1_ID, 9)
-+#define M4U_PORT_MDP_WROT0_W		 MTK_M4U_ID(M4U_LARB1_ID, 10)
-+#define M4U_PORT_MDP_WROT1_R		 MTK_M4U_ID(M4U_LARB1_ID, 11)
-+#define M4U_PORT_MDP_WROT1_W		 MTK_M4U_ID(M4U_LARB1_ID, 12)
-+#define M4U_PORT_DISP_FAKE1		 MTK_M4U_ID(M4U_LARB1_ID, 13)
-+
-+/* larb2-VDEC */
-+#define M4U_PORT_HW_VDEC_MC_EXT          MTK_M4U_ID(M4U_LARB2_ID, 0)
-+#define M4U_PORT_HW_VDEC_UFO_EXT         MTK_M4U_ID(M4U_LARB2_ID, 1)
-+#define M4U_PORT_HW_VDEC_PP_EXT          MTK_M4U_ID(M4U_LARB2_ID, 2)
-+#define M4U_PORT_HW_VDEC_PRED_RD_EXT     MTK_M4U_ID(M4U_LARB2_ID, 3)
-+#define M4U_PORT_HW_VDEC_PRED_WR_EXT     MTK_M4U_ID(M4U_LARB2_ID, 4)
-+#define M4U_PORT_HW_VDEC_PPWRAP_EXT      MTK_M4U_ID(M4U_LARB2_ID, 5)
-+#define M4U_PORT_HW_VDEC_TILE_EXT        MTK_M4U_ID(M4U_LARB2_ID, 6)
-+#define M4U_PORT_HW_VDEC_VLD_EXT         MTK_M4U_ID(M4U_LARB2_ID, 7)
-+#define M4U_PORT_HW_VDEC_VLD2_EXT        MTK_M4U_ID(M4U_LARB2_ID, 8)
-+#define M4U_PORT_HW_VDEC_AVC_MV_EXT      MTK_M4U_ID(M4U_LARB2_ID, 9)
-+#define M4U_PORT_HW_VDEC_UFO_ENC_EXT     MTK_M4U_ID(M4U_LARB2_ID, 10)
-+#define M4U_PORT_HW_VDEC_RG_CTRL_DMA_EXT MTK_M4U_ID(M4U_LARB2_ID, 11)
-+
-+/*larb3-VENC*/
-+#define M4U_PORT_VENC_RCPU		 MTK_M4U_ID(M4U_LARB3_ID, 0)
-+#define M4U_PORT_VENC_REC		 MTK_M4U_ID(M4U_LARB3_ID, 1)
-+#define M4U_PORT_VENC_BSDMA		 MTK_M4U_ID(M4U_LARB3_ID, 2)
-+#define M4U_PORT_VENC_SV_COMV		 MTK_M4U_ID(M4U_LARB3_ID, 3)
-+#define M4U_PORT_VENC_RD_COMV		 MTK_M4U_ID(M4U_LARB3_ID, 4)
-+#define M4U_PORT_VENC_NBM_RDMA		 MTK_M4U_ID(M4U_LARB3_ID, 5)
-+#define M4U_PORT_VENC_NBM_RDMA_LITE	 MTK_M4U_ID(M4U_LARB3_ID, 6)
-+#define M4U_PORT_JPGENC_Y_RDMA		 MTK_M4U_ID(M4U_LARB3_ID, 7)
-+#define M4U_PORT_JPGENC_C_RDMA		 MTK_M4U_ID(M4U_LARB3_ID, 8)
-+#define M4U_PORT_JPGENC_Q_TABLE		 MTK_M4U_ID(M4U_LARB3_ID, 9)
-+#define M4U_PORT_JPGENC_BSDMA		 MTK_M4U_ID(M4U_LARB3_ID, 10)
-+#define M4U_PORT_JPGDEC_WDMA		 MTK_M4U_ID(M4U_LARB3_ID, 11)
-+#define M4U_PORT_JPGDEC_BSDMA		 MTK_M4U_ID(M4U_LARB3_ID, 12)
-+#define M4U_PORT_VENC_NBM_WDMA		 MTK_M4U_ID(M4U_LARB3_ID, 13)
-+#define M4U_PORT_VENC_NBM_WDMA_LITE	 MTK_M4U_ID(M4U_LARB3_ID, 14)
-+#define M4U_PORT_VENC_CUR_LUMA		 MTK_M4U_ID(M4U_LARB3_ID, 15)
-+#define M4U_PORT_VENC_CUR_CHROMA	 MTK_M4U_ID(M4U_LARB3_ID, 16)
-+#define M4U_PORT_VENC_REF_LUMA		 MTK_M4U_ID(M4U_LARB3_ID, 17)
-+#define M4U_PORT_VENC_REF_CHROMA	 MTK_M4U_ID(M4U_LARB3_ID, 18)
-+
-+/*larb4-dummy*/
-+
-+/*larb5-IMG*/
-+#define M4U_PORT_IMGI_D1		 MTK_M4U_ID(M4U_LARB5_ID, 0)
-+#define M4U_PORT_IMGBI_D1		 MTK_M4U_ID(M4U_LARB5_ID, 1)
-+#define M4U_PORT_DMGI_D1		 MTK_M4U_ID(M4U_LARB5_ID, 2)
-+#define M4U_PORT_DEPI_D1		 MTK_M4U_ID(M4U_LARB5_ID, 3)
-+#define M4U_PORT_LCEI_D1		 MTK_M4U_ID(M4U_LARB5_ID, 4)
-+#define M4U_PORT_SMTI_D1		 MTK_M4U_ID(M4U_LARB5_ID, 5)
-+#define M4U_PORT_SMTO_D2		 MTK_M4U_ID(M4U_LARB5_ID, 6)
-+#define M4U_PORT_SMTO_D1		 MTK_M4U_ID(M4U_LARB5_ID, 7)
-+#define M4U_PORT_CRZO_D1		 MTK_M4U_ID(M4U_LARB5_ID, 8)
-+#define M4U_PORT_IMG3O_D1		 MTK_M4U_ID(M4U_LARB5_ID, 9)
-+#define M4U_PORT_VIPI_D1		 MTK_M4U_ID(M4U_LARB5_ID, 10)
-+#define M4U_PORT_WPE_RDMA1		 MTK_M4U_ID(M4U_LARB5_ID, 11)
-+#define M4U_PORT_WPE_RDMA0		 MTK_M4U_ID(M4U_LARB5_ID, 12)
-+#define M4U_PORT_WPE_WDMA		 MTK_M4U_ID(M4U_LARB5_ID, 13)
-+#define M4U_PORT_TIMGO_D1		 MTK_M4U_ID(M4U_LARB5_ID, 14)
-+#define M4U_PORT_MFB_RDMA0		 MTK_M4U_ID(M4U_LARB5_ID, 15)
-+#define M4U_PORT_MFB_RDMA1		 MTK_M4U_ID(M4U_LARB5_ID, 16)
-+#define M4U_PORT_MFB_RDMA2		 MTK_M4U_ID(M4U_LARB5_ID, 17)
-+#define M4U_PORT_MFB_RDMA3		 MTK_M4U_ID(M4U_LARB5_ID, 18)
-+#define M4U_PORT_MFB_WDMA		 MTK_M4U_ID(M4U_LARB5_ID, 19)
-+#define M4U_PORT_RESERVE1		 MTK_M4U_ID(M4U_LARB5_ID, 20)
-+#define M4U_PORT_RESERVE2		 MTK_M4U_ID(M4U_LARB5_ID, 21)
-+#define M4U_PORT_RESERVE3		 MTK_M4U_ID(M4U_LARB5_ID, 22)
-+#define M4U_PORT_RESERVE4		 MTK_M4U_ID(M4U_LARB5_ID, 23)
-+#define M4U_PORT_RESERVE5		 MTK_M4U_ID(M4U_LARB5_ID, 24)
-+#define M4U_PORT_RESERVE6		 MTK_M4U_ID(M4U_LARB5_ID, 25)
-+
-+/*larb6-IMG-VPU*/
-+#define M4U_PORT_IMG_IPUO		 MTK_M4U_ID(M4U_LARB6_ID, 0)
-+#define M4U_PORT_IMG_IPU3O		 MTK_M4U_ID(M4U_LARB6_ID, 1)
-+#define M4U_PORT_IMG_IPUI		 MTK_M4U_ID(M4U_LARB6_ID, 2)
-+
-+/*larb7-DVS*/
-+#define M4U_PORT_DVS_RDMA		 MTK_M4U_ID(M4U_LARB7_ID, 0)
-+#define M4U_PORT_DVS_WDMA		 MTK_M4U_ID(M4U_LARB7_ID, 1)
-+#define M4U_PORT_DVP_RDMA		 MTK_M4U_ID(M4U_LARB7_ID, 2)
-+#define M4U_PORT_DVP_WDMA		 MTK_M4U_ID(M4U_LARB7_ID, 3)
-+
-+/*larb8-IPESYS*/
-+#define M4U_PORT_FDVT_RDA		 MTK_M4U_ID(M4U_LARB8_ID, 0)
-+#define M4U_PORT_FDVT_RDB		 MTK_M4U_ID(M4U_LARB8_ID, 1)
-+#define M4U_PORT_FDVT_WRA		 MTK_M4U_ID(M4U_LARB8_ID, 2)
-+#define M4U_PORT_FDVT_WRB		 MTK_M4U_ID(M4U_LARB8_ID, 3)
-+#define M4U_PORT_FE_RD0			 MTK_M4U_ID(M4U_LARB8_ID, 4)
-+#define M4U_PORT_FE_RD1			 MTK_M4U_ID(M4U_LARB8_ID, 5)
-+#define M4U_PORT_FE_WR0			 MTK_M4U_ID(M4U_LARB8_ID, 6)
-+#define M4U_PORT_FE_WR1			 MTK_M4U_ID(M4U_LARB8_ID, 7)
-+#define M4U_PORT_RSC_RDMA0		 MTK_M4U_ID(M4U_LARB8_ID, 8)
-+#define M4U_PORT_RSC_WDMA		 MTK_M4U_ID(M4U_LARB8_ID, 9)
-+
-+/*larb9-CAM*/
-+#define M4U_PORT_CAM_IMGO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 0)
-+#define M4U_PORT_CAM_RRZO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 1)
-+#define M4U_PORT_CAM_LSCI_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 2)
-+#define M4U_PORT_CAM_BPCI_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 3)
-+#define M4U_PORT_CAM_YUVO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 4)
-+#define M4U_PORT_CAM_UFDI_R2_C		 MTK_M4U_ID(M4U_LARB9_ID, 5)
-+#define M4U_PORT_CAM_RAWI_R2_C		 MTK_M4U_ID(M4U_LARB9_ID, 6)
-+#define M4U_PORT_CAM_RAWI_R5_C		 MTK_M4U_ID(M4U_LARB9_ID, 7)
-+#define M4U_PORT_CAM_CAMSV_1		 MTK_M4U_ID(M4U_LARB9_ID, 8)
-+#define M4U_PORT_CAM_CAMSV_2		 MTK_M4U_ID(M4U_LARB9_ID, 9)
-+#define M4U_PORT_CAM_CAMSV_3		 MTK_M4U_ID(M4U_LARB9_ID, 10)
-+#define M4U_PORT_CAM_CAMSV_4		 MTK_M4U_ID(M4U_LARB9_ID, 11)
-+#define M4U_PORT_CAM_CAMSV_5		 MTK_M4U_ID(M4U_LARB9_ID, 12)
-+#define M4U_PORT_CAM_CAMSV_6		 MTK_M4U_ID(M4U_LARB9_ID, 13)
-+#define M4U_PORT_CAM_AAO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 14)
-+#define M4U_PORT_CAM_AFO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 15)
-+#define M4U_PORT_CAM_FLKO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 16)
-+#define M4U_PORT_CAM_LCESO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 17)
-+#define M4U_PORT_CAM_CRZO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 18)
-+#define M4U_PORT_CAM_LTMSO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 19)
-+#define M4U_PORT_CAM_RSSO_R1_C		 MTK_M4U_ID(M4U_LARB9_ID, 20)
-+#define M4U_PORT_CAM_CCUI		 MTK_M4U_ID(M4U_LARB9_ID, 21)
-+#define M4U_PORT_CAM_CCUO		 MTK_M4U_ID(M4U_LARB9_ID, 22)
-+#define M4U_PORT_CAM_FAKE		 MTK_M4U_ID(M4U_LARB9_ID, 23)
-+
-+/*larb10-CAM_A*/
-+#define M4U_PORT_CAM_IMGO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 0)
-+#define M4U_PORT_CAM_RRZO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 1)
-+#define M4U_PORT_CAM_LSCI_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 2)
-+#define M4U_PORT_CAM_BPCI_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 3)
-+#define M4U_PORT_CAM_YUVO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 4)
-+#define M4U_PORT_CAM_UFDI_R2_A		 MTK_M4U_ID(M4U_LARB10_ID, 5)
-+#define M4U_PORT_CAM_RAWI_R2_A		 MTK_M4U_ID(M4U_LARB10_ID, 6)
-+#define M4U_PORT_CAM_RAWI_R5_A		 MTK_M4U_ID(M4U_LARB10_ID, 7)
-+#define M4U_PORT_CAM_IMGO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 8)
-+#define M4U_PORT_CAM_RRZO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 9)
-+#define M4U_PORT_CAM_LSCI_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 10)
-+#define M4U_PORT_CAM_BPCI_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 11)
-+#define M4U_PORT_CAM_YUVO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 12)
-+#define M4U_PORT_CAM_UFDI_R2_B		 MTK_M4U_ID(M4U_LARB10_ID, 13)
-+#define M4U_PORT_CAM_RAWI_R2_B		 MTK_M4U_ID(M4U_LARB10_ID, 14)
-+#define M4U_PORT_CAM_RAWI_R5_B		 MTK_M4U_ID(M4U_LARB10_ID, 15)
-+#define M4U_PORT_CAM_CAMSV_0		 MTK_M4U_ID(M4U_LARB10_ID, 16)
-+#define M4U_PORT_CAM_AAO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 17)
-+#define M4U_PORT_CAM_AFO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 18)
-+#define M4U_PORT_CAM_FLKO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 19)
-+#define M4U_PORT_CAM_LCESO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 20)
-+#define M4U_PORT_CAM_CRZO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 21)
-+#define M4U_PORT_CAM_AAO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 22)
-+#define M4U_PORT_CAM_AFO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 23)
-+#define M4U_PORT_CAM_FLKO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 24)
-+#define M4U_PORT_CAM_LCESO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 25)
-+#define M4U_PORT_CAM_CRZO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 26)
-+#define M4U_PORT_CAM_LTMSO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 27)
-+#define M4U_PORT_CAM_RSSO_R1_A		 MTK_M4U_ID(M4U_LARB10_ID, 28)
-+#define M4U_PORT_CAM_LTMSO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 29)
-+#define M4U_PORT_CAM_RSSO_R1_B		 MTK_M4U_ID(M4U_LARB10_ID, 30)
-+
-+/*larb11-CAM-VPU*/
-+#define M4U_PORT_CAM_IPUO		 MTK_M4U_ID(M4U_LARB11_ID, 0)
-+#define M4U_PORT_CAM_IPU2O		 MTK_M4U_ID(M4U_LARB11_ID, 1)
-+#define M4U_PORT_CAM_IPU3O		 MTK_M4U_ID(M4U_LARB11_ID, 2)
-+#define M4U_PORT_CAM_IPUI		 MTK_M4U_ID(M4U_LARB11_ID, 3)
-+#define M4U_PORT_CAM_IPU2I		 MTK_M4U_ID(M4U_LARB11_ID, 4)
-+
-+#define M4U_PORT_CCU0			 MTK_M4U_ID(M4U_LARB12_ID, 0)
-+#define M4U_PORT_CCU1			 MTK_M4U_ID(M4U_LARB12_ID, 1)
-+
-+#define M4U_PORT_VPU			 MTK_M4U_ID(M4U_LARB13_ID, 0)
-+#define M4U_PORT_MDLA			 MTK_M4U_ID(M4U_LARB13_ID, 1)
-+#define M4U_PORT_EDMA			 MTK_M4U_ID(M4U_LARB13_ID, 2)
-+
-+#define M4U_PORT_UNKNOWN		 (M4U_PORT_EDMA + 1)
-+
-+#endif
+ 	dom = kzalloc(sizeof(*dom), GFP_KERNEL);
+ 	if (!dom)
+ 		return NULL;
+@@ -432,8 +404,10 @@ static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
+ 	if (iommu_get_dma_cookie(&dom->domain))
+ 		goto  free_dom;
+ 
+-	if (mtk_iommu_domain_finalise(dom))
+-		goto  put_dma_cookie;
++	dom->cfg = pgtable->cfg;
++	dom->iop = pgtable->iop;
++	/* Update our support page sizes bitmap */
++	dom->domain.pgsize_bitmap = pgtable->cfg.pgsize_bitmap;
+ 
+ 	dom->domain.geometry.aperture_start = 0;
+ 	dom->domain.geometry.aperture_end = DMA_BIT_MASK(32);
+@@ -441,8 +415,6 @@ static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
+ 
+ 	return &dom->domain;
+ 
+-put_dma_cookie:
+-	iommu_put_dma_cookie(&dom->domain);
+ free_dom:
+ 	kfree(dom);
+ 	return NULL;
 -- 
 2.18.0
 
