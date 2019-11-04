@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15839CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33155CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8D221D7D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE7E21D71
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572853454;
-	bh=rqP4SSpNvx234d+AvWoRHCFkLgHT+IVU/z6pCg63G3U=;
+	s=default; t=1572853544;
+	bh=WTVqOEcC1dHVSVyC4yYVjyjBZVnNFJMwi8QDFxKH53I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XLxhBZCHTjzfvofLoNk/5Evhe+mjKE85IVmZhNGl55eK9yfSWuC2L6aHx7bIMHxUL
-	 X7bno27hzPrQISWe7AahyFpoFlP5fg6JZCubYhbu0FjGmCiAiGzjJu9wx+43QPIdSf
-	 1GrSqa711he6Ni8srL/uwjyKm7AnhFq9f1Qxl/nY=
+	b=FGI4/Rql+cj5dBHK/qVb/Gst73N7BhjV4p8F+o5v/w7U7AqyxdRWZrcM1dTfR15Kp
+	 2XLQENStAi+s8V3PHmEXB1VCL7gLWO4qEJDU1AfkVh2nD29VJw0Mf6rAqk8fEo9Ku6
+	 pb8Udq933S2e+TsEeow69TE25cgK9pvMwehPWFAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfKDHoO (ORCPT
+        id S1727551AbfKDHpn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 02:44:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55296 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 02:45:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfKDHoO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 02:44:14 -0500
+        id S1726441AbfKDHpn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 02:45:43 -0500
 Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF09B2190F;
-        Mon,  4 Nov 2019 07:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A251A2190F;
+        Mon,  4 Nov 2019 07:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572853453;
-        bh=rqP4SSpNvx234d+AvWoRHCFkLgHT+IVU/z6pCg63G3U=;
+        s=default; t=1572853542;
+        bh=WTVqOEcC1dHVSVyC4yYVjyjBZVnNFJMwi8QDFxKH53I=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zGPC6D60oP3iEGoEXdXdIB+wDXS1YRB7VcZuICeBUVX6uvWfBcT/JUarHJPTXoqTv
-         HKUtalEQ/hfW/KuJVqlgkgCwHWWi1Rdk8KAiuRgGYmctRDU2x51kvQUEqYZocdHqb+
-         mTcNAAhkUsObuVD5Bn0YX3fHDw1jx8WntyHmfStI=
-Date:   Mon, 4 Nov 2019 15:43:47 +0800
+        b=Rg4OuNF1FndrApd6dvSlvD0vw4tU7S7IQYdV8o9YydcB85WqTlGWHhLwAeYgcZNYm
+         /BjWAx0vkKLnr0TCno438srfISO6vL94qEGMtFaJpW4PWD6lfnqwj7LJF8sUTr5ND5
+         EyRQ5XdBxMAxhuQXu/Mh/jeByrYoqF36VgRNJjnw=
+Date:   Mon, 4 Nov 2019 15:45:16 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Schrempf Frieder <frieder.schrempf@kontron.de>
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
@@ -53,65 +53,55 @@ Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 09/11] ARM: dts: imx6ul-kontron-n6x1x-s: Disable the
- snvs-poweroff driver
-Message-ID: <20191104074346.GT24620@dragon>
+Subject: Re: [PATCH v3 11/11] MAINTAINERS: Add an entry for Kontron
+ Electronics ARM board support
+Message-ID: <20191104074514.GU24620@dragon>
 References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
- <20191031142112.12431-10-frieder.schrempf@kontron.de>
+ <20191031142112.12431-12-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031142112.12431-10-frieder.schrempf@kontron.de>
+In-Reply-To: <20191031142112.12431-12-frieder.schrempf@kontron.de>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 02:24:27PM +0000, Schrempf Frieder wrote:
+On Thu, Oct 31, 2019 at 02:24:34PM +0000, Schrempf Frieder wrote:
 > From: Frieder Schrempf <frieder.schrempf@kontron.de>
 > 
-> The snvs-poweroff driver can power off the system by pulling the
-> PMIC_ON_REQ signal low, to let the PMIC disable the power.
-> The Kontron SoMs do not have this signal connected, so let's remove
-> the node.
-> 
-> This seems to fix a real issue when the signal is asserted at
-> poweroff, but not actually causing the power to turn off. It was
-> observed, that in this case the system would not shut down properly.
-
-I do not quite follow on this.  How does disabling snvs_poweroff fix the
-issue?  The root cause of system not shut down properly seems to be that
-PMIC doesn't shut down power.  This looks like a clean-up rather than
-bug fix.
-
+> Kontron Electronics GmbH produces several ARM boards, that are
+> planned to be upstreamed eventually. For now we have some
+> i.MX6UL/ULL based SoMs and boards, that are already available
+> in the kernel.
 > 
 > Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
 
-If you think this is really a bug fix, it should be applied to the file
-before renaming rather than the one after renaming.
+We usually do not need MAINTAINERS entry for individual DTS files.
 
 Shawn
 
 > ---
->  arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 4 ----
->  1 file changed, 4 deletions(-)
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-> index e18a8bd239be..4682a79f5b23 100644
-> --- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-> @@ -158,10 +158,6 @@
->  	status = "okay";
->  };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 296de2b51c83..a461d31ee98d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9103,6 +9103,12 @@ F:	include/linux/kmod.h
+>  F:	lib/test_kmod.c
+>  F:	tools/testing/selftests/kmod/
 >  
-> -&snvs_poweroff {
-> -	status = "okay";
-> -};
-> -
->  &uart1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_uart1>;
+> +KONTRON ELECTRONICS ARM BOARDS SUPPORT
+> +M:	Frieder Schrempf <frieder.schrempf@kontron.de>
+> +S:	Maintained
+> +F:	arch/arm/boot/dts/imx6ul-kontron-*
+> +F:	arch/arm/boot/dts/imx6ull-kontron-*
+> +
+>  KPROBES
+>  M:	Naveen N. Rao <naveen.n.rao@linux.ibm.com>
+>  M:	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
 > -- 
 > 2.17.1
