@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D63C47E49
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B425CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA407222C2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2DE821D7D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 13:26:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TXm7YF9n"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SrhGiluZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbfKDNZ4 (ORCPT
+        id S1729346AbfKDN0F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:25:56 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16686 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727913AbfKDNZz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 08:25:55 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4DNiJk019951;
-        Mon, 4 Nov 2019 14:25:37 +0100
+        Mon, 4 Nov 2019 08:26:05 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4880 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729188AbfKDNZ5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 08:25:57 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4DMwV5005875;
+        Mon, 4 Nov 2019 14:25:40 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=vyF/QISSJCb/iu6rS6wjZkpjt1WcfYY+i4OiL+tne44=;
- b=TXm7YF9nbypHpbtIjAfORECTULtHrMNLcgWoxeywyiOoaIpIiwjz/81l5hf1hyHNQBQh
- opnNLpfqcwA4UDVTz7aFsvhgDFtJpiA0bPWXjb60TE5CiNdI5HYOM0vVpwU/AI6aMRKJ
- USKDXrLDmjMWSKZ9sGH21nE48IyVOVSred+LklbTGB26rBMivM/KRuP57YRvJi/J+qrN
- +mAuqmg7E7A+hjptYCVH0dv7IflwyjBa/O+GU7wYszKM3xao/cTwn9MCvTvY5QdJDg0h
- 1Sf7NRj0ZqKHuKWP1jkMT7HqJ+lwH6tt8aQ5RIW1vlCJjvedoOx7LRPkyYCwDspsVaLF BQ== 
+ bh=CODhr+HDgZkmDdBSbE1YP8Qun5G0drMcjRcuyYv9BoA=;
+ b=SrhGiluZItWO8Gdmy3vFI501UpPp1VHfmk1LApQ4x+fm8WZyZPrQgBkzMi8LU4i/3cfe
+ 9EE2FeerfQKL6554yOEAbwg+37x+WQG0mewsX2AYjTQ07tOWjMOyrxDrYfY19JnJTY2h
+ MBNyvC37h9BDTnNJjclBKboD314e8DbmwQU03bRiSRW/v9eQKfaWlOGZRrfW/DfPx5WG
+ ldAtytOQordo5A2mIlEPJN9M44XAV52xl+YI5Y8qmBJW18XtGoRb+MQMG0PKQ+Yx5gkV
+ Y3xPO0JxWxymGXcI3qnTCzfgVWkA2ehZPA3CKDaKJzdiTsVH17bPi+DRvsRc81oXtdex fQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w10f19jxw-1
+        by mx08-00178001.pphosted.com with ESMTP id 2w0ytcj8g3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 14:25:37 +0100
+        Mon, 04 Nov 2019 14:25:40 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 69A0D10002A;
-        Mon,  4 Nov 2019 14:25:37 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 542D92BFC79;
-        Mon,  4 Nov 2019 14:25:37 +0100 (CET)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
- 14:25:37 +0100
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 19F5F10002A;
+        Mon,  4 Nov 2019 14:25:40 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0BC2B2BFC79;
+        Mon,  4 Nov 2019 14:25:40 +0100 (CET)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
+ 14:25:39 +0100
 Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 14:25:36
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 14:25:39
  +0100
 From:   Christophe Roullier <christophe.roullier@st.com>
 To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
@@ -58,9 +58,9 @@ CC:     <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
         <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH net-next 1/4] net: ethernet: stmmac: Add support for syscfg clock
-Date:   Mon, 4 Nov 2019 14:25:30 +0100
-Message-ID: <20191104132533.5153-2-christophe.roullier@st.com>
+Subject: [PATCH net-next 3/4] ARM: dts: stm32: adjust slew rate for Ethernet
+Date:   Mon, 4 Nov 2019 14:25:32 +0100
+Message-ID: <20191104132533.5153-4-christophe.roullier@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191104132533.5153-1-christophe.roullier@st.com>
 References: <20191104132533.5153-1-christophe.roullier@st.com>
@@ -74,98 +74,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add optional support for syscfg clock in dwmac-stm32.c
-Now Syscfg clock is activated automatically when syscfg
-registers are used
+ETH_MDIO slew-rate should be set to "0" instead of "2"
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 36 +++++++++++++------
- 1 file changed, 25 insertions(+), 11 deletions(-)
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index 4ef041bdf6a1..7e6619868cc1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -152,23 +152,32 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
- 	int ret = 0;
- 
- 	if (prepare) {
--		ret = clk_prepare_enable(dwmac->syscfg_clk);
--		if (ret)
--			return ret;
--
-+		if (dwmac->syscfg_clk) {
-+			ret = clk_prepare_enable(dwmac->syscfg_clk);
-+			if (ret)
-+				return ret;
-+		}
- 		if (dwmac->clk_eth_ck) {
- 			ret = clk_prepare_enable(dwmac->clk_eth_ck);
- 			if (ret) {
--				clk_disable_unprepare(dwmac->syscfg_clk);
-+				if (dwmac->syscfg_clk)
-+					goto unprepare_syscfg;
- 				return ret;
- 			}
- 		}
- 	} else {
--		clk_disable_unprepare(dwmac->syscfg_clk);
-+		if (dwmac->syscfg_clk)
-+			clk_disable_unprepare(dwmac->syscfg_clk);
-+
- 		if (dwmac->clk_eth_ck)
- 			clk_disable_unprepare(dwmac->clk_eth_ck);
- 	}
- 	return ret;
-+
-+unprepare_syscfg:
-+	clk_disable_unprepare(dwmac->syscfg_clk);
-+
-+	return ret;
- }
- 
- static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
-@@ -296,7 +305,7 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct device_node *np = dev->of_node;
--	int err = 0;
-+	int err;
- 
- 	/* Gigabit Ethernet 125MHz clock selection. */
- 	dwmac->eth_clk_sel_reg = of_property_read_bool(np, "st,eth-clk-sel");
-@@ -320,13 +329,17 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
- 		return PTR_ERR(dwmac->clk_ethstp);
- 	}
- 
--	/*  Clock for sysconfig */
-+	/*  Optional Clock for sysconfig */
- 	dwmac->syscfg_clk = devm_clk_get(dev, "syscfg-clk");
- 	if (IS_ERR(dwmac->syscfg_clk)) {
--		dev_err(dev, "No syscfg clock provided...\n");
--		return PTR_ERR(dwmac->syscfg_clk);
-+		err = PTR_ERR(dwmac->syscfg_clk);
-+		if (err != -ENOENT)
-+			return err;
-+		dwmac->syscfg_clk = NULL;
- 	}
- 
-+	err = 0;
-+
- 	/* Get IRQ information early to have an ability to ask for deferred
- 	 * probe if needed before we went too far with resource allocation.
- 	 */
-@@ -436,7 +449,8 @@ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
- 		return ret;
- 
- 	clk_disable_unprepare(dwmac->clk_tx);
--	clk_disable_unprepare(dwmac->syscfg_clk);
-+	if (dwmac->syscfg_clk)
-+		clk_disable_unprepare(dwmac->syscfg_clk);
- 	if (dwmac->clk_eth_ck)
- 		clk_disable_unprepare(dwmac->clk_eth_ck);
- 
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index 0a3a7d66737b..9a8f0d4c9ea3 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -217,13 +217,18 @@
+ 						 <STM32_PINMUX('C', 2, AF11)>, /* ETH_RGMII_TXD2 */
+ 						 <STM32_PINMUX('E', 2, AF11)>, /* ETH_RGMII_TXD3 */
+ 						 <STM32_PINMUX('B', 11, AF11)>, /* ETH_RGMII_TX_CTL */
+-						 <STM32_PINMUX('A', 2, AF11)>, /* ETH_MDIO */
+ 						 <STM32_PINMUX('C', 1, AF11)>; /* ETH_MDC */
+ 					bias-disable;
+ 					drive-push-pull;
+-					slew-rate = <3>;
++					slew-rate = <2>;
+ 				};
+ 				pins2 {
++					pinmux = <STM32_PINMUX('A', 2, AF11)>; /* ETH_MDIO */
++					bias-disable;
++					drive-push-pull;
++					slew-rate = <0>;
++				};
++				pins3 {
+ 					pinmux = <STM32_PINMUX('C', 4, AF11)>, /* ETH_RGMII_RXD0 */
+ 						 <STM32_PINMUX('C', 5, AF11)>, /* ETH_RGMII_RXD1 */
+ 						 <STM32_PINMUX('B', 0, AF11)>, /* ETH_RGMII_RXD2 */
 -- 
 2.17.1
 
