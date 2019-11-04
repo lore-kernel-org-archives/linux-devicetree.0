@@ -2,171 +2,107 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A427CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 08:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FF2CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 08:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E64C21744
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 08:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56D82190F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 08:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfKDIMF (ORCPT
+        id S1727236AbfKDIQ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:12:05 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48611 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfKDIMF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 03:12:05 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRXSw-0007k4-NO; Mon, 04 Nov 2019 09:11:58 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRXSv-0007lA-Q7; Mon, 04 Nov 2019 09:11:57 +0100
-Date:   Mon, 4 Nov 2019 09:11:57 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 4 Nov 2019 03:16:27 -0500
+Received: from skedge04.snt-world.com ([91.208.41.69]:57278 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKDIQ1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 03:16:27 -0500
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 3561D600391;
+        Mon,  4 Nov 2019 09:16:24 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 4 Nov 2019
+ 09:16:23 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Mon, 4 Nov 2019 09:16:23 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 2/7] pwm: sun4i: Add an optional probe for reset line
-Message-ID: <20191104081157.373v22atswsaktbe@pengutronix.de>
-References: <20191103203334.10539-1-peron.clem@gmail.com>
- <20191103203334.10539-3-peron.clem@gmail.com>
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 11/11] MAINTAINERS: Add an entry for Kontron
+ Electronics ARM board support
+Thread-Topic: [PATCH v3 11/11] MAINTAINERS: Add an entry for Kontron
+ Electronics ARM board support
+Thread-Index: AQHVj/bq00l6FB82qEKQsJ90JRSWJad6lucAgAAIsYA=
+Date:   Mon, 4 Nov 2019 08:16:23 +0000
+Message-ID: <78b7f1e9-5c21-9829-07b9-9746991e56db@kontron.de>
+References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
+ <20191031142112.12431-12-frieder.schrempf@kontron.de>
+ <20191104074514.GU24620@dragon>
+In-Reply-To: <20191104074514.GU24620@dragon>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <923E8A050600B14F89B6675F9074D87F@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191103203334.10539-3-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 3561D600391.ABEC6
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
+        kernel@pengutronix.de, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
-
-adding Philipp Zabel (= reset controller maintainer) to Cc: and so I'm
-not stripping the uncommented parts of the patch.
-
-On Sun, Nov 03, 2019 at 09:33:29PM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> H6 PWM core needs deasserted reset line in order to work.
-> 
-> Add an optional probe for it.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 32 ++++++++++++++++++++++++++++++--
->  1 file changed, 30 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 6f5840a1a82d..d194b8ebdb00 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -16,6 +16,7 @@
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwm.h>
-> +#include <linux/reset.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/time.h>
-> @@ -78,6 +79,7 @@ struct sun4i_pwm_data {
->  struct sun4i_pwm_chip {
->  	struct pwm_chip chip;
->  	struct clk *clk;
-> +	struct reset_control *rst;
->  	void __iomem *base;
->  	spinlock_t ctrl_lock;
->  	const struct sun4i_pwm_data *data;
-> @@ -365,6 +367,20 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
->  	if (IS_ERR(pwm->clk))
->  		return PTR_ERR(pwm->clk);
->  
-> +	pwm->rst = devm_reset_control_get_optional(&pdev->dev, NULL);
-> +	if (IS_ERR(pwm->rst)) {
-> +		if (PTR_ERR(pwm->rst) == -EPROBE_DEFER)
-> +			return PTR_ERR(pwm->rst);
-> +		dev_info(&pdev->dev, "no reset control found\n");
-
-I would degrade this to a dev_dbg. Otherwise this spams the log for all
-unaffected machines. devm_reset_control_get_optional() is defined in a
-section that has a comment "These inline function calls will be removed
-once all consumers have been moved over to the new explicit API.", so I
-guess you want devm_reset_control_get_optional_exclusive or even
-devm_reset_control_get_optional_shared here.
-
-@Philipp: maybe a check in checkpatch that warns about introduction of
-such new instances would be good?!
-
-> +	}
-> +
-> +	/* Deassert reset */
-> +	ret = reset_control_deassert(pwm->rst);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Cannot deassert reset control\n");
-> +		return ret;
-> +	}
-> +
->  	pwm->chip.dev = &pdev->dev;
->  	pwm->chip.ops = &sun4i_pwm_ops;
->  	pwm->chip.base = -1;
-> @@ -377,19 +393,31 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
->  	ret = pwmchip_add(&pwm->chip);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
-> -		return ret;
-> +		goto err_pwm_add;
->  	}
->  
->  	platform_set_drvdata(pdev, pwm);
->  
->  	return 0;
-> +
-> +err_pwm_add:
-> +	reset_control_assert(pwm->rst);
-> +
-> +	return ret;
->  }
->  
->  static int sun4i_pwm_remove(struct platform_device *pdev)
->  {
->  	struct sun4i_pwm_chip *pwm = platform_get_drvdata(pdev);
-> +	int ret;
-> +
-> +	ret = pwmchip_remove(&pwm->chip);
-> +	if (ret)
-> +		return ret;
-> +
-> +	reset_control_assert(pwm->rst);
->  
-> -	return pwmchip_remove(&pwm->chip);
-> +	return 0;
->  }
->  
->  static struct platform_driver sun4i_pwm_driver = {
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+T24gMDQuMTEuMTkgMDg6NDUsIFNoYXduIEd1byB3cm90ZToNCj4gT24gVGh1LCBPY3QgMzEsIDIw
+MTkgYXQgMDI6MjQ6MzRQTSArMDAwMCwgU2NocmVtcGYgRnJpZWRlciB3cm90ZToNCj4+IEZyb206
+IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4+DQo+PiBL
+b250cm9uIEVsZWN0cm9uaWNzIEdtYkggcHJvZHVjZXMgc2V2ZXJhbCBBUk0gYm9hcmRzLCB0aGF0
+IGFyZQ0KPj4gcGxhbm5lZCB0byBiZSB1cHN0cmVhbWVkIGV2ZW50dWFsbHkuIEZvciBub3cgd2Ug
+aGF2ZSBzb21lDQo+PiBpLk1YNlVML1VMTCBiYXNlZCBTb01zIGFuZCBib2FyZHMsIHRoYXQgYXJl
+IGFscmVhZHkgYXZhaWxhYmxlDQo+PiBpbiB0aGUga2VybmVsLg0KPj4NCj4+IFNpZ25lZC1vZmYt
+Ynk6IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4gDQo+
+IFdlIHVzdWFsbHkgZG8gbm90IG5lZWQgTUFJTlRBSU5FUlMgZW50cnkgZm9yIGluZGl2aWR1YWwg
+RFRTIGZpbGVzLg0KDQpPaywgSSBqdXN0IHRob3VnaHQgaXQgd291bGQgYmUgbmljZSBmb3IgdGhp
+bmdzIGxpa2UgZ2V0X21haW50YWluZXIucGwsIA0KdG8gbWFrZSBzdXJlIEkgcmVjZWl2ZSBub3Rp
+ZmljYXRpb25zLCB3aGVuIHNvbWVvbmUgc2VuZHMgcGF0Y2hlcyBmb3IgDQp0aGVzZXMgRFRTIGZp
+bGVzLiBCdXQgaWYgdGhpcyBpcyBhZ2FpbnN0IHRoZSB1c3VhbCBjb252ZW50aW9ucywgSSB3aWxs
+IA0KZHJvcCB0aGlzLg0KDQo+IA0KPiBTaGF3bg0KPiANCj4+IC0tLQ0KPj4gICBNQUlOVEFJTkVS
+UyB8IDYgKysrKysrDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykNCj4+DQo+
+PiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUw0KPj4gaW5kZXggMjk2ZGUy
+YjUxYzgzLi5hNDYxZDMxZWU5OGQgMTAwNjQ0DQo+PiAtLS0gYS9NQUlOVEFJTkVSUw0KPj4gKysr
+IGIvTUFJTlRBSU5FUlMNCj4+IEBAIC05MTAzLDYgKzkxMDMsMTIgQEAgRjoJaW5jbHVkZS9saW51
+eC9rbW9kLmgNCj4+ICAgRjoJbGliL3Rlc3Rfa21vZC5jDQo+PiAgIEY6CXRvb2xzL3Rlc3Rpbmcv
+c2VsZnRlc3RzL2ttb2QvDQo+PiAgIA0KPj4gK0tPTlRST04gRUxFQ1RST05JQ1MgQVJNIEJPQVJE
+UyBTVVBQT1JUDQo+PiArTToJRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250
+cm9uLmRlPg0KPj4gK1M6CU1haW50YWluZWQNCj4+ICtGOglhcmNoL2FybS9ib290L2R0cy9pbXg2
+dWwta29udHJvbi0qDQo+PiArRjoJYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1rb250cm9uLSoN
+Cj4+ICsNCj4+ICAgS1BST0JFUw0KPj4gICBNOglOYXZlZW4gTi4gUmFvIDxuYXZlZW4ubi5yYW9A
+bGludXguaWJtLmNvbT4NCj4+ICAgTToJQW5pbCBTIEtlc2hhdmFtdXJ0aHkgPGFuaWwucy5rZXNo
+YXZhbXVydGh5QGludGVsLmNvbT4NCj4+IC0tIA0KPj4gMi4xNy4x
