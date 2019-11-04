@@ -2,104 +2,235 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA28CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9FEC47E49
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 21:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93EE5214D8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d+hzKMBS"
+	by mail.kernel.org (Postfix) with ESMTP id 0485120B7C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 21:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572902576;
+	bh=7dJ/ia471WvDDaGPQasHlMYmYRTeVpG5ZWFxZcTDhuw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MXg08ksI+txaUI5lwukH7NLPCkHojpW3VKuPE7DuaE9o/rlioOTc/ov41RyNJHzGV
+	 CaXszH2NIZ5BGeFfyEY/4sFpMx5ZwbcgjT00IpRia98gjIkkwHuSX8D9qz+bQz5S9U
+	 +LVjUyqTcND6dh0sqKUxD0ynZgajURiDVjO30GAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbfKDUt6 (ORCPT
+        id S1729216AbfKDVWz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:49:58 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58210 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbfKDUtJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 15:49:09 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kn4jC129043;
-        Mon, 4 Nov 2019 14:49:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572900544;
-        bh=zWBhOOfeKxZLi5xztSZD4Ml4LW3AVvoUR5jhAapcIVA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=d+hzKMBSe7c172B9RrZF3EfurlJChMPwQaAIYhKQGlMzBVpaLyjpN0YuXFKTa3N3L
-         ALsk/vYQdLCzm5iQtjPYVWQetxFZ4/DdE15CbLKqLnxr5ltQQONTNlYw2WeTpbT9hx
-         viPq0bsLHxZ78k4nDuNkXHd7/aInPBle4hSxEzcU=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4Kn4lT038228
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 14:49:04 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 14:48:49 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 14:49:04 -0600
-Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kmvxw038360;
-        Mon, 4 Nov 2019 14:49:03 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 02/10] ARM: dts: dra7: add cam clkctrl node
-Date:   Mon, 4 Nov 2019 14:48:45 -0600
-Message-ID: <20191104204853.4355-3-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191104204853.4355-1-bparrot@ti.com>
-References: <20191104204853.4355-1-bparrot@ti.com>
+        Mon, 4 Nov 2019 16:22:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728377AbfKDVWz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:22:55 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A663820869;
+        Mon,  4 Nov 2019 21:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572902573;
+        bh=7dJ/ia471WvDDaGPQasHlMYmYRTeVpG5ZWFxZcTDhuw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gaKeA5uH4v0NTUmXh+E4hrCfplOv5KZkizuGa3/Le13zxfd4iJo/ui3dO9phf73UJ
+         LCYZVAsIyb3QUOW2Wd0AR8ceSHSJIFKaGMoTGHbWBx9JNBjGHKalMjWiVp0JSpUWWl
+         PRuG4oU7EPgfcOrHhr5WfVFf6B49vSqK8hj+YFk4=
+Received: by mail-qk1-f176.google.com with SMTP id e2so19130432qkn.5;
+        Mon, 04 Nov 2019 13:22:53 -0800 (PST)
+X-Gm-Message-State: APjAAAUxFVsKqUSeopLuGxlUxGlD4OoMqp3Sx9d6eF4bzQgrJa+J2qZG
+        8XgV0clNvPSoDRIx90C2jKMjwGf26n/WyQni0A==
+X-Google-Smtp-Source: APXvYqzsut7cy1jUm00XrKnirDZrqUqKmAVvL42F+Fbd8gvhRe+yRJinCpAGbWA4yeLCmepGvwNesz0t/I1xKS4MtIQ=
+X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr1462515qka.152.1572902572759;
+ Mon, 04 Nov 2019 13:22:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1572886683-4919-1-git-send-email-fabrizio.castro@bp.renesas.com> <1572886683-4919-3-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1572886683-4919-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 Nov 2019 15:22:39 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ+xus0GDWb0Px6HKDBzOt1yjwCCkQrfMspubwG+LZOdQ@mail.gmail.com>
+Message-ID: <CAL_JsqJ+xus0GDWb0Px6HKDBzOt1yjwCCkQrfMspubwG+LZOdQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: Repurpose lvds-encoder
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Peter Rosin <peda@axentia.se>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add clkctrl nodes for CAM domain.
+On Mon, Nov 4, 2019 at 10:58 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+>
+> In an effort to repurpose lvds-encoder.c to also serve the
+> function of LVDS decoders, we ended up defining a new "generic"
+> compatible string, therefore adapt the dt-bindings to fit the
+> new purpose. Also, convert the dt-bindings from .txt to .yaml
+> while at it.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+"Also, ... while at it." is a sign for split into 2 patches.
 
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index d1c2406ec71c..199f8d483f75 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -1734,6 +1734,20 @@
- 		};
- 	};
- 
-+	cam_cm: cam-cm@1000 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1000 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1000 0x100>;
-+
-+		cam_clkctrl: cam-clkctrl@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x2c>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
- 	dss_cm: dss-cm@1100 {
- 		compatible = "ti,omap4-cm";
- 		reg = <0x1100 0x100>;
--- 
-2.17.1
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>
+> ---
+> v1->v2:
+> * Converted to dt-schema as per Neil's comment
+> ---
+>  .../bindings/display/bridge/lvds-codec.yaml        | 117 +++++++++++++++++++++
+>  .../bindings/display/bridge/lvds-transmitter.txt   |  66 ------------
+>  2 files changed, 117 insertions(+), 66 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> new file mode 100644
+> index 0000000..ff79bc2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> @@ -0,0 +1,117 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/lvds-codec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Trasnparent LVDS encoders and LVDS decoders
 
+Typo
+
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> +
+> +description: |
+> +  This binding supports transparent LVDS encoders and LVDS decoders that don't
+> +  require any configuration.
+> +
+> +  LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
+> +  incompatible data link layers have been used over time to transmit image data
+> +  to LVDS panels. This binding targets devices compatible with the following
+> +  specifications only.
+> +
+> +  [JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
+> +  1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
+> +  [LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
+> +  Semiconductor
+> +  [VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
+> +  Electronics Standards Association (VESA)
+> +
+> +  Those devices have been marketed under the FPD-Link and FlatLink brand names
+> +  among others.
+> +
+> +properties:
+> +  compatible:
+> +    description: |
+> +      Any encoder or decoder compatible with this generic binding, but with
+> +      additional properties not listed here, must define its own binding and
+> +      list a device specific compatible first followed by the generic compatible
+> +    items:
+> +      - enum:
+
+You can drop 'items' when there's only 1.
+
+> +        - lvds-encoder # for LVDS encoders
+> +        - lvds-decoder # for LVDS decoders
+> +
+> +  ports:
+> +    type: object
+> +    description: |
+> +      This device has two video ports. Their connections are modeled using the
+> +      OF graph bindings specified in Documentation/devicetree/bindings/graph.txt
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          With LVDS encoders port 0 is for parallel input
+> +          With LVDS decoders port 0 is for LVDS input
+> +
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          With LVDS encoders port 1 is for LVDS output
+> +          With LVDS decoders port 1 is for parallel output
+
+port@* are required, right?
+
+> +
+> +required:
+> +  - compatible
+> +  - ports
+> +
+> +examples:
+> +  - |
+> +    lvds-encoder {
+> +      compatible = "lvds-encoder";
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +
+> +          lvds_enc_in: endpoint {
+> +            remote-endpoint = <&display_out_rgb>;
+> +          };
+> +        };
+> +
+> +        port@1 {
+> +          reg = <1>;
+> +
+> +          lvds_enc_out: endpoint {
+> +            remote-endpoint = <&lvds_panel_in>;
+> +          };
+> +        };
+> +      };
+> +    };
+> +
+> +  - |
+> +    lvds-decoder {
+> +      compatible = "lvds-decoder";
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +
+> +          lvds_dec_in: endpoint {
+> +            remote-endpoint = <&display_out_lvds>;
+> +          };
+> +        };
+> +
+> +        port@1 {
+> +          reg = <1>;
+> +
+> +          lvds_dec_out: endpoint {
+> +            remote-endpoint = <&rgb_panel_in>;
+> +          };
+> +        };
+> +      };
+> +    };
+> +
+> +...
