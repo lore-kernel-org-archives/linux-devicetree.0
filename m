@@ -2,110 +2,116 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23594CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15839CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00237205C9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8D221D7D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:44:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572853454;
+	bh=rqP4SSpNvx234d+AvWoRHCFkLgHT+IVU/z6pCg63G3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XLxhBZCHTjzfvofLoNk/5Evhe+mjKE85IVmZhNGl55eK9yfSWuC2L6aHx7bIMHxUL
+	 X7bno27hzPrQISWe7AahyFpoFlP5fg6JZCubYhbu0FjGmCiAiGzjJu9wx+43QPIdSf
+	 1GrSqa711he6Ni8srL/uwjyKm7AnhFq9f1Qxl/nY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfKDHlB (ORCPT
+        id S1726633AbfKDHoO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 02:41:01 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:45378 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfKDHlB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 02:41:01 -0500
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 4 Nov 2019 02:44:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbfKDHoO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 02:44:14 -0500
+Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 6FFD76FE12D;
-        Mon,  4 Nov 2019 08:40:56 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 4 Nov 2019
- 08:40:55 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Mon, 4 Nov 2019 08:40:55 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id DF09B2190F;
+        Mon,  4 Nov 2019 07:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572853453;
+        bh=rqP4SSpNvx234d+AvWoRHCFkLgHT+IVU/z6pCg63G3U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zGPC6D60oP3iEGoEXdXdIB+wDXS1YRB7VcZuICeBUVX6uvWfBcT/JUarHJPTXoqTv
+         HKUtalEQ/hfW/KuJVqlgkgCwHWWi1Rdk8KAiuRgGYmctRDU2x51kvQUEqYZocdHqb+
+         mTcNAAhkUsObuVD5Bn0YX3fHDw1jx8WntyHmfStI=
+Date:   Mon, 4 Nov 2019 15:43:47 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "Fabio Estevam" <festevam@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 06/11] ARM: dts: imx6ul-kontron-n6x1x-s: Specify
- bus-width for SD card and eMMC
-Thread-Topic: [PATCH v3 06/11] ARM: dts: imx6ul-kontron-n6x1x-s: Specify
- bus-width for SD card and eMMC
-Thread-Index: AQHVj/bhrI8+Sinp0EmCHJdFZK6p5Kd6koeAgAADKYA=
-Date:   Mon, 4 Nov 2019 07:40:55 +0000
-Message-ID: <23694e57-029a-d8aa-b900-ef608ab2370e@kontron.de>
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 09/11] ARM: dts: imx6ul-kontron-n6x1x-s: Disable the
+ snvs-poweroff driver
+Message-ID: <20191104074346.GT24620@dragon>
 References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
- <20191031142112.12431-7-frieder.schrempf@kontron.de>
- <20191104072936.GQ24620@dragon>
-In-Reply-To: <20191104072936.GQ24620@dragon>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E6E6C12BA347DF438E99A64D5025974A@snt-world.com>
-Content-Transfer-Encoding: base64
+ <20191031142112.12431-10-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 6FFD76FE12D.A2056
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031142112.12431-10-frieder.schrempf@kontron.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMDQuMTEuMTkgMDg6MjksIFNoYXduIEd1byB3cm90ZToNCj4gT24gVGh1LCBPY3QgMzEsIDIw
-MTkgYXQgMDI6MjQ6MThQTSArMDAwMCwgU2NocmVtcGYgRnJpZWRlciB3cm90ZToNCj4+IEZyb206
-IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4+DQo+PiBC
-b3RoLCB0aGUgU0QgY2FyZCBhbmQgdGhlIGVNTUMgYXJlIGNvbm5lY3RlZCB0byB0aGUgdXNkaGMg
-Y29udHJvbGxlcg0KPj4gYnkgZm91ciBkYXRhIGxpbmVzLiBUaGVyZWZvcmUgd2Ugc2V0ICdidXMt
-d2lkdGggPSA8ND4nIGZvciBib3RoDQo+PiBpbnRlcmZhY2VzLg0KPj4NCj4+IFNpZ25lZC1vZmYt
-Ynk6IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4+IEZp
-eGVzOiAxZWE0Yjc2Y2RmZGUgKCJBUk06IGR0czogaW14NnVsLWtvbnRyb24tbjYzMTA6IEFkZCBL
-b250cm9uIGkuTVg2VUwgTjYzMTAgU29NIGFuZCBib2FyZHMiKQ0KPj4gLS0tDQo+PiAgIGFyY2gv
-YXJtL2Jvb3QvZHRzL2lteDZ1bC1rb250cm9uLW42eDF4LXMuZHRzaSB8IDIgKysNCj4+ICAgMSBm
-aWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9pbXg2dWwta29udHJvbi1uNngxeC1zLmR0c2kgYi9hcmNoL2FybS9ib290L2R0
-cy9pbXg2dWwta29udHJvbi1uNngxeC1zLmR0c2kNCj4+IGluZGV4IDdjOThhMWE0NmZiMS4uMjI5
-OWNhZDkwMGFmIDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLWtvbnRy
-b24tbjZ4MXgtcy5kdHNpDQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwta29udHJv
-bi1uNngxeC1zLmR0c2kNCj4+IEBAIC0yMDksNiArMjA5LDcgQEANCj4+ICAgCXdha2V1cC1zb3Vy
-Y2U7DQo+PiAgIAl2bW1jLXN1cHBseSA9IDwmcmVnXzN2Mz47DQo+PiAgIAl2b2x0YWdlLXJhbmdl
-cyA9IDwzMzAwIDMzMDA+Ow0KPj4gKwlidXMtd2lkdGggPSA8ND47DQo+IA0KPiBJc24ndCBpdCBh
-bHJlYWR5IHNldCBpbiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSBhcyB0aGUgZGVmYXVs
-dD8NCg0KUmlnaHQsIEkgc29tZWhvdyBtaXNzZWQgdGhpcy4gU28gdGhpcyBwYXRjaCBjYW4gYmUg
-aWdub3JlZC4NCg0KPiANCj4gU2hhd24NCj4gDQo+PiAgIAluby0xLTgtdjsNCj4+ICAgCXN0YXR1
-cyA9ICJva2F5IjsNCj4+ICAgfTsNCj4+IEBAIC0yMjMsNiArMjI0LDcgQEANCj4+ICAgCXdha2V1
-cC1zb3VyY2U7DQo+PiAgIAl2bW1jLXN1cHBseSA9IDwmcmVnXzN2Mz47DQo+PiAgIAl2b2x0YWdl
-LXJhbmdlcyA9IDwzMzAwIDMzMDA+Ow0KPj4gKwlidXMtd2lkdGggPSA8ND47DQo+PiAgIAluby0x
-LTgtdjsNCj4+ICAgCXN0YXR1cyA9ICJva2F5IjsNCj4+ICAgfTsNCj4+IC0tIA0KPj4gMi4xNy4x
-DQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
-PiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdA0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcNCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsDQo+IA==
+On Thu, Oct 31, 2019 at 02:24:27PM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> The snvs-poweroff driver can power off the system by pulling the
+> PMIC_ON_REQ signal low, to let the PMIC disable the power.
+> The Kontron SoMs do not have this signal connected, so let's remove
+> the node.
+> 
+> This seems to fix a real issue when the signal is asserted at
+> poweroff, but not actually causing the power to turn off. It was
+> observed, that in this case the system would not shut down properly.
+
+I do not quite follow on this.  How does disabling snvs_poweroff fix the
+issue?  The root cause of system not shut down properly seems to be that
+PMIC doesn't shut down power.  This looks like a clean-up rather than
+bug fix.
+
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
+
+If you think this is really a bug fix, it should be applied to the file
+before renaming rather than the one after renaming.
+
+Shawn
+
+> ---
+>  arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> index e18a8bd239be..4682a79f5b23 100644
+> --- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> @@ -158,10 +158,6 @@
+>  	status = "okay";
+>  };
+>  
+> -&snvs_poweroff {
+> -	status = "okay";
+> -};
+> -
+>  &uart1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_uart1>;
+> -- 
+> 2.17.1
