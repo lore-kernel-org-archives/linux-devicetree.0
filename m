@@ -2,122 +2,160 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6837CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 18:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8C0CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847EB2080F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 18:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A5A20848
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:02:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tBXMnl5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbfKDSxp (ORCPT
+        id S1728568AbfKDTCL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:53:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34674 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728502AbfKDSxp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:53:45 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 300D5B26B;
-        Mon,  4 Nov 2019 18:53:43 +0000 (UTC)
-Message-ID: <95359117f4f14f296db1cabc6fa68fbfcf78b2f5.camel@suse.de>
-Subject: Re: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>, catalin.marinas@arm.com,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Mon, 04 Nov 2019 19:53:39 +0100
-In-Reply-To: <05f00d57-6151-45df-67ee-b49a18a611c7@gmail.com>
-References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
-         <20191104135412.32118-2-nsaenzjulienne@suse.de>
-         <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
-         <05f00d57-6151-45df-67ee-b49a18a611c7@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-e3thndAXgfBLu9QjwnR4"
-User-Agent: Evolution 3.34.1 
+        Mon, 4 Nov 2019 14:02:11 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57980 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDTCL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 14:02:11 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2257752C;
+        Mon,  4 Nov 2019 20:02:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1572894129;
+        bh=kvR1ciF/jrbAVq1q5F7pP9qO8GkfA6eHj67avqWv0NA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tBXMnl5Gr+CbG5Gux5GYBO40MA0CKG6md1kU/uj7NCZB9A8mD5/3WF2OQDT1e5RKB
+         I2/ea+yCwoMy/5l6CO9/Qu5HWEYAPtbikz3JnWq9Jahru6r/zuc8gc9qWVozpr9Jq6
+         ThFIZuX3jjf7Ut32TdgwLts4//hgObWR1BDwvYhs=
+Date:   Mon, 4 Nov 2019 21:02:01 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191104190201.GF4913@pendragon.ideasonboard.com>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191031131538.GA9170@pendragon.ideasonboard.com>
+ <20191031134512.GB24273@mani>
+ <20191031141141.GD5018@pendragon.ideasonboard.com>
+ <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
+ <20191031165444.GE5018@pendragon.ideasonboard.com>
+ <20191031170837.GN6253@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191031170837.GN6253@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Sakari,
 
---=-e3thndAXgfBLu9QjwnR4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Oct 31, 2019 at 07:08:37PM +0200, Sakari Ailus wrote:
+> On Thu, Oct 31, 2019 at 06:54:44PM +0200, Laurent Pinchart wrote:
+> > On Thu, Oct 31, 2019 at 04:28:17PM +0200, Sakari Ailus wrote:
+> >> On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
+> >>> On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
+> >>>> On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
+> >>>>> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> >>>>>> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> >>>>>> add MAINTAINERS entry for the binding and driver.
+> >>>>>> 
+> >>>>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>>>> ---
+> >>>>>>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> >>>>>>  MAINTAINERS                                   |  8 ++
+> >>>>>>  2 files changed, 102 insertions(+)
+> >>>>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>>>> 
+> >>>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>>>> new file mode 100644
+> >>>>>> index 000000000000..c04ec2203268
+> >>>>>> --- /dev/null
+> >>>>>> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>>>> @@ -0,0 +1,94 @@
+> >>>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >>>>>> +%YAML 1.2
+> >>>>>> +---
+> >>>>>> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> >>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>>>> +
+> >>>>>> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> >>>>>> +
+> >>>>>> +maintainers:
+> >>>>>> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>>>> +
+> >>>>>> +description: |-
+> >>>>>> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> >>>>>> +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> >>>>>> +  features a global shutter with variable charge-integration time. It is
+> >>>>>> +  programmable through I2C and 4-wire interfaces. The sensor output is
+> >>>>>> +  available via CSI-2 serial data output (1 Lane).
+> >>>>>> +
+> >>>>>> +properties:
+> >>>>>> +  compatible:
+> >>>>>> +    const: sony,imx296
+> >>>>>> +
+> >>>>>> +  reg:
+> >>>>>> +    maxItems: 1
+> >>>>>> +
+> >>>>>> +  clocks:
+> >>>>>> +    maxItems: 1
+> >>>>>> +
+> >>>>>> +  clock-names:
+> >>>>>> +    description:
+> >>>>>> +      Input clock for the sensor.
+> >>>>>> +    items:
+> >>>>>> +      - const: mclk
+> >>>>> 
+> >>>>> The pin is named INCK, let's name the clock accordingly.
+> >>>> 
+> >>>> Okay, I thought generic names are preferred here!
+> >>>>  
+> >>>>>> +  clock-frequency:
+> >>>>>> +    description:
+> >>>>>> +      Frequency of the mclk clock in Hertz.
+> >>>>> 
+> >>>>> This shouldn't be needed, you can retrieve the clock frequency at
+> >>>>> runtime from the clock source.
+> >>>> 
+> >>>> Unless the clock source is a fixed one! What if the clock source comes from
+> >>>> SoC? We need to set the rate, right?
+> >>> 
+> >>> In that case, if you want to hardcode the clock in DT, the preferred way
+> >>> is to use the assigned-clock-rates property. Otherwise, if the driver
+> >>> requires a specific clock frequency, it's better to hardcode it in the
+> >>> driver itself. In this specific case, I think assigned-clock-rates is
+> >>> best as the device can support three different clock frequencies.
+> >> 
+> >> Just note that if ACPI support is added to the sensor driver, you'll need
+> >> the clock-frequency property again, for that's the only way how the driver
+> >> will get the clock frequency.
+> > 
+> > Why is so ? Why can't we implement of assigned-clock-rates for ACPI ?
+> 
+> ACPI doesn't deal with clocks as such. So there's also no ACPI defined way
+> to access clocks specifically, including the frequency --- instead the
+> clock is controlled by an AML methods which implement power on and off
+> sequences for the device.
 
-On Mon, 2019-11-04 at 09:51 -0800, Florian Fainelli wrote:
-> On 11/4/19 9:09 AM, Stefan Wahren wrote:
->=20
-> [snip]
->=20
-> > > +	reserved-memory {
-> > > +		#address-cells =3D <2>;
-> > > +		#size-cells =3D <1>;
-> > > +		ranges;
-> > > +
-> > > +		/*
-> > > +		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
-> > > +		 * that's not good enough for the Raspberry Pi 4 as some
-> > > +		 * devices can only address the lower 1G of memory (ZONE_DMA).
-> > > +		 */
-> > > +		linux,cma {
-> > > +			compatible =3D "shared-dma-pool";
-> > > +			size =3D <0x2000000>; /* 32MB */
-> > > +			alloc-ranges =3D <0x0 0x00000000 0x40000000>;
-> > > +			reusable;
-> > > +			linux,cma-default;
-> > > +		};
-> > > +	};
-> > > +
-> >=20
-> > i think this is a SoC-specific issue not a board specifc one. Please
-> > move this to bcm2711.dtsi
->=20
-> This sounds like a possibly fragile solution if someone changes
-> CONFIG_CMA_SIZE_MBYTES to a value greater than 32MB no?
+It's a shortcoming of ACPI, which should be addressed at the ACPI level.
+We shouldn't polute the DT bindings with a clock-frequency property for
+this reason.
 
-I agree it's not the most flexible solution in the world. It also bypasses =
-the
-command line interface. But I can't see any alternatives as of today.
-
-Overall, I suggest that we set CMA's size to whatever is needed for a sensi=
-ble
-desktop use. And let odd users with custom HW modify it trough overlays (wh=
-ich
-they will most likely be forced to do anyway).
-
-That said I'm open to suggestions.
-
+-- 
 Regards,
-Nicolas
 
-
---=-e3thndAXgfBLu9QjwnR4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3Ac7QACgkQlfZmHno8
-x/7dgQf+KKHvYx6jBZi1K73PiGBWn2BOWGIQhxgKf2zuOoGEIPWIdft+iR+7QqfT
-AteKjVlETbdYvyjxZm+k0YI7ngTvy1vC/xoHmz4tyxIKoxM89PjLeEudUI7UtBxT
-O5EOdCfEbJ4hFBrHk9u141lq2i+D2BJXKfK9m/jM6SbgGQGlznafVowiEw1A/n9i
-V3QPFNEiibV/wUQxsPMZ44KbCb0P+L48N76fmyBmH5uAgQnenTgStw31HCdXxYrN
-V7QQa/3QKU2msgZZXT3beRih+dM4mnSdwokKH3RSr11/2/8KGOeVJ022+pMl+Swe
-Nan0j4uEsyir/r4g0b0pKXrONC8HAg==
-=iJ8o
------END PGP SIGNATURE-----
-
---=-e3thndAXgfBLu9QjwnR4--
-
+Laurent Pinchart
