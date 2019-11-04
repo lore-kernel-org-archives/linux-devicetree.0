@@ -2,121 +2,114 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080C3CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 10:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC478CA9EA0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 10:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD221217F5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 10:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BF7217F5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 10:51:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MDi01Usa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfKDKrW (ORCPT
+        id S1728639AbfKDKv1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:47:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:39554 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727500AbfKDKrW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:47:22 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EDEC31F;
-        Mon,  4 Nov 2019 02:47:21 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E82E33F71A;
-        Mon,  4 Nov 2019 02:47:20 -0800 (PST)
-Date:   Mon, 4 Nov 2019 10:47:19 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
-Message-ID: <20191104104718.GK9723@e119886-lin.cambridge.arm.com>
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <c46ba3f4187fe53807948b4f10996b89a75c492c.1571638827.git.eswara.kota@linux.intel.com>
- <20191021130339.GP47056@e119886-lin.cambridge.arm.com>
- <661f7e9c-a79f-bea6-08d8-4df54f500019@linux.intel.com>
- <20191025090926.GX47056@e119886-lin.cambridge.arm.com>
- <6f8b2e72-caa3-30b8-4c76-8ad7bb321ce2@linux.intel.com>
- <20191101105902.GB9723@e119886-lin.cambridge.arm.com>
- <ecab7cc2-f4c2-ecc0-7f97-92686db1fd1b@linux.intel.com>
+        Mon, 4 Nov 2019 05:51:27 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7980 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726364AbfKDKv1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 05:51:27 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4AonqB008086;
+        Mon, 4 Nov 2019 11:51:05 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=Qaurhduesnw25w0jh3pIp/yKxoZ09ZwN/xuDw+l7BNo=;
+ b=MDi01UsaPAO8xz8ft6zNnwdNE5PplDfS44Pz4LtEZhurX/UMtGwpBALwoTVtceYbxtZB
+ fuJWU5XfdN5fn0JvoZTdL5hipFgSWtcXh3Hn8ZsldHmNZ8Ebhlbs2kVJ9R89oVSjkJy6
+ oNF5gppFiaNOieDmc4Lwo2OPoBWBgab5lNiWeL4qL9W5lVtKY0vJMKF5JQkjgUMvd1sQ
+ i/3ie0JVmeygrKmHufnYpqE530wbY/p5nMIcID4yiCIH/pA/MKUnC5DE0HEZmbaK8BQ0
+ b2LDp4twHDFT0C4FZHEMFlaAxE5w10/IhV5PXsy3Ylm8S2Mr9imz/VFbE+rius8Werdv Ew== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w0ytchmh6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 11:51:05 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B21BC100034;
+        Mon,  4 Nov 2019 11:51:04 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 954D62BDA87;
+        Mon,  4 Nov 2019 11:51:04 +0100 (CET)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
+ 11:51:04 +0100
+Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 11:51:03
+ +0100
+From:   Christophe Roullier <christophe.roullier@st.com>
+To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <christophe.roullier@st.com>, <andrew@lunn.ch>
+Subject: [PATCH V2 1/1] net: ethernet: stmmac: drop unused variable in stm32mp1_set_mode()
+Date:   Mon, 4 Nov 2019 11:51:00 +0100
+Message-ID: <20191104105100.4288-1-christophe.roullier@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ecab7cc2-f4c2-ecc0-7f97-92686db1fd1b@linux.intel.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.22.222]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_07:2019-11-04,2019-11-04 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 05:34:54PM +0800, Dilip Kota wrote:
-> 
-> On 11/1/2019 6:59 PM, Andrew Murray wrote:
-> > On Tue, Oct 29, 2019 at 04:59:17PM +0800, Dilip Kota wrote:
-> > > On 10/25/2019 5:09 PM, Andrew Murray wrote:
-> > > > On Tue, Oct 22, 2019 at 05:04:21PM +0800, Dilip Kota wrote:
-> > > > > Hi Andrew Murray,
-> > > > > 
-> > > > > On 10/21/2019 9:03 PM, Andrew Murray wrote:
-> > > > > > On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
-> > > > > > > +
-> > > > > > > +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts)
-> > > > > > > +{
-> > > > > > > +	u32 val;
-> > > > > > > +
-> > > > > > > +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> > > > > > > +	val &= ~PORT_LOGIC_N_FTS;
-> > > > > > > +	val |= n_fts;
-> > > > > > > +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> > > > > > > +}
-> > > > > > I notice that pcie-artpec6.c (artpec6_pcie_set_nfts) also writes the FTS
-> > > > > > and defines a bunch of macros to support this. It doesn't make sense to
-> > > > > > duplicate this there. Therefore I think we need to update pcie-artpec6.c
-> > > > > > to use this new function.
-> > > > > I think we can do in a separate patch after these changes get merged and
-> > > > > keep this patch series for intel PCIe driver and required changes in PCIe
-> > > > > DesignWare framework.
-> > > > The pcie-artpec6.c is a DWC driver as well. So I think we can do all this
-> > > > together. This helps reduce the technical debt that will otherwise build up
-> > > > in duplicated code.
-> > > I agree with you to remove duplicated code, but at this point not sure what
-> > > all drivers has defined FTS configuration.
-> > > Reviewing all other DWC drivers and removing them can be done in one single
-> > > separate patch.
-> > I'm not asking to set up an FTS configuration for all DWC drivers, but instead
-> > to move this helper function you've created to somewhere like pcie-designware.c
-> > and call it from this driver and pcie-artpec6.c.
-> What i mean is, we need to check how many of the current DWC drivers are
-> configuring the FTS
-> and call the helper function.
-> Today i have grep all the DWC based drivers and i see pcie-artpec6.c is the
-> only driver doing FTS configuration.
-> 
-> I will add the helper function call in pcie-artpec6.c in the next patch
-> version.
+Building with W=1 (cf.scripts/Makefile.extrawarn) outputs:
+warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
 
-Thanks that's very much appreciated.
+Drop the unused 'ret' variable.
 
-Thanks,
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 
-Andrew Murray
+---
+V2: update commit message with Marc Gonzalez recommendation
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> 
-> Regards,
-> Dilip
-> 
-> 
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > Regards,
-> > > Dilip
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 4ef041bdf6a1..595af2ec89fb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -175,7 +175,7 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ {
+ 	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+ 	u32 reg = dwmac->mode_reg;
+-	int val, ret;
++	int val;
+ 
+ 	switch (plat_dat->interface) {
+ 	case PHY_INTERFACE_MODE_MII:
+@@ -211,8 +211,8 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 	}
+ 
+ 	/* Need to update PMCCLRR (clear register) */
+-	ret = regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
+-			   dwmac->ops->syscfg_eth_mask);
++	regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
++		     dwmac->ops->syscfg_eth_mask);
+ 
+ 	/* Update PMCSETR (set register) */
+ 	return regmap_update_bits(dwmac->regmap, reg,
+-- 
+2.17.1
+
