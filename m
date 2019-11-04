@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DABCA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0968CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B670D2080F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732542080F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PERuZg2F"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M0w9VI4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfKDTcC (ORCPT
+        id S1729622AbfKDTb6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:32:02 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48736 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729646AbfKDTcB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 14:32:01 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4JW00M104149;
-        Mon, 4 Nov 2019 13:32:00 -0600
+        Mon, 4 Nov 2019 14:31:58 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42510 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729617AbfKDTb5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 14:31:57 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVudt105009;
+        Mon, 4 Nov 2019 13:31:56 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572895920;
-        bh=/uLv7JVb364YMJpDL21sew7lV3/imt2e+I/yD5VDeMY=;
+        s=ti-com-17Q1; t=1572895916;
+        bh=ydp8KB6lTbvhWYa9e1PFXRsP1A9D/SDmXslW2TAcj50=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=PERuZg2FnAOZL/vzv47S0TtBN8KePLX2EkSjFXswcdR1cTXVQI/J+rMVs3xJH5eGa
-         smC7nYeJ7zEVtMx4/sMOGUWaVXhIvJJKiOvsbRcgyW0H0Mj8EcVwd8VGXSX2FiDr20
-         BxubBD+dbo1uo6ZUqODjNw2i+eGzUIcaC1edmBeI=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JW0Wl024529;
-        Mon, 4 Nov 2019 13:32:00 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        b=M0w9VI4EAep0essPXzV+IKOVRYoJHAtYUFoKAxrhiPH8Vy/DGOZamvApS7D/f5KOX
+         IqpiEyuXmYM0oxT3Vrb+Ckql5dBXDABx3kX5lqVjaydLoxXSKRVI8c/Af7DXmddNAa
+         tm1TdtEPX4AvD70LscSNLbLWlTXyWMStY1B9IP4A=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4JVusV126263
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 Nov 2019 13:31:56 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 13:31:45 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 13:31:41 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 13:31:45 -0600
+ Frontend Transport; Mon, 4 Nov 2019 13:31:41 -0600
 Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVmd5096934;
-        Mon, 4 Nov 2019 13:31:59 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVmd3096934;
+        Mon, 4 Nov 2019 13:31:55 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>, Jyri Sarha <jsarha@ti.com>
-Subject: [Patch v2 06/20] dt-bindings: media: cal: update binding to add PHY LDO errata support
-Date:   Mon, 4 Nov 2019 13:31:26 -0600
-Message-ID: <20191104193140.31145-7-bparrot@ti.com>
+Subject: [Patch v2 04/20] media: ti-vpe: cal: Enable DMABUF export
+Date:   Mon, 4 Nov 2019 13:31:24 -0600
+Message-ID: <20191104193140.31145-5-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191104193140.31145-1-bparrot@ti.com>
 References: <20191104193140.31145-1-bparrot@ti.com>
@@ -65,31 +66,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update Device Tree bindings for the CAL driver to add support for
-the CSI2 PHY LDO errata workaround for pre-es2 devices.
+Allow CAL to be able to export DMA buffer.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 Signed-off-by: Jyri Sarha <jsarha@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/media/ti-cal.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/platform/ti-vpe/cal.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
-index 7e960cf26e23..cb2dc50a24fb 100644
---- a/Documentation/devicetree/bindings/media/ti-cal.txt
-+++ b/Documentation/devicetree/bindings/media/ti-cal.txt
-@@ -7,7 +7,9 @@ processing capability to connect CSI2 image-sensor modules to the
- DRA72x device.
- 
- Required properties:
--- compatible: must be "ti,dra72-cal"
-+- compatible:
-+ Should be "ti,dra72-cal", for DRA72 controllers
-+ Should be "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
- - reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
- 	control address space
- - reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index 5d807b8f0f23..7d25ad83ca1e 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -1488,6 +1488,7 @@ static const struct v4l2_ioctl_ops cal_ioctl_ops = {
+ 	.vidioc_querybuf      = vb2_ioctl_querybuf,
+ 	.vidioc_qbuf          = vb2_ioctl_qbuf,
+ 	.vidioc_dqbuf         = vb2_ioctl_dqbuf,
++	.vidioc_expbuf        = vb2_ioctl_expbuf,
+ 	.vidioc_enum_input    = cal_enum_input,
+ 	.vidioc_g_input       = cal_g_input,
+ 	.vidioc_s_input       = cal_s_input,
 -- 
 2.17.1
 
