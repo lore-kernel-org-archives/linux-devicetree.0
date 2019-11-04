@@ -2,60 +2,63 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24533CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D62CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA85214D8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE002080F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:32:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B+ikx3jc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qC7RH7+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbfKDTbw (ORCPT
+        id S1729035AbfKDTcA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:31:52 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47506 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728321AbfKDTbw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 14:31:52 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVnbQ000700;
-        Mon, 4 Nov 2019 13:31:49 -0600
+        Mon, 4 Nov 2019 14:32:00 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48730 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729632AbfKDTb7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 14:31:59 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVvUT104143;
+        Mon, 4 Nov 2019 13:31:57 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572895909;
-        bh=B1a44FWRzGdFEtSOw+s4sREX4iLbJx4ypX3MqMP9wg8=;
-        h=From:To:CC:Subject:Date;
-        b=B+ikx3jcGac6mOaMI//+TDWo0HAtS1F/voWCudOK1yr+zfbuSkhyD1QA1Qc5rpJkl
-         uAOAXN7w7xpr/jzCBwE8eFwwfJyb9mRxt7u1VaUgwsm/a83vkmO/7NEMeLhf0BExxD
-         bOK/40lXgrkfd3MwtIzHksNqtR5thyjvFiAuYTC4=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4JVnW9126124
+        s=ti-com-17Q1; t=1572895917;
+        bh=hkspqH83wgEPy5/qwu9lbvIhOuaEmsJ5tRfFg6TJ8EA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=qC7RH7+QoLNvDol4osU+WBbqWt3k+iDYQhNQ86JBZCVB8mqgl+M6k7negjn7FpHFf
+         3CZ6NLQCcWkHgjDeD8LZuz3YXC6UgDRQ3pBD0BgKDkBdhKN/ycouFXgb26y/qgdwCh
+         yaZj0XtCQz+pwFPLVgoy26HCbEEHHkPqDNUXxCHk=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4JVvnF059490
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 13:31:49 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 4 Nov 2019 13:31:57 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 13:31:35 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 13:31:42 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 13:31:34 -0600
+ Frontend Transport; Mon, 4 Nov 2019 13:31:42 -0600
 Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVmcx096934;
-        Mon, 4 Nov 2019 13:31:48 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVmd4096934;
+        Mon, 4 Nov 2019 13:31:57 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Nikhil Devshatwar <nikhil.nd@ti.com>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 00/20] media: ti-vpe: cal: maintenance
-Date:   Mon, 4 Nov 2019 13:31:20 -0600
-Message-ID: <20191104193140.31145-1-bparrot@ti.com>
+Subject: [Patch v2 05/20] media: ti-vpe: cal: Restrict DMA to avoid memory corruption
+Date:   Mon, 4 Nov 2019 13:31:25 -0600
+Message-ID: <20191104193140.31145-6-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191104193140.31145-1-bparrot@ti.com>
+References: <20191104193140.31145-1-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -64,72 +67,51 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This a collection of backlog patches I have been carrying for the CAL
-driver.
+From: Nikhil Devshatwar <nikhil.nd@ti.com>
 
-- Add support for SoC variants.
+When setting DMA for video capture from CSI channel, if the DMA size
+is not given, it ends up writing as much data as sent by the camera.
 
-- Switches to syscon/regmap to access a system controller register for
-the DPHY configuration. This register has different bit layout depending
-on the SoC version.
+This may lead to overwriting the buffers causing memory corruption.
+Observed green lines on the default framebuffer.
 
-- It adds supports for pre ES2.0 silicon errata.
+Restrict the DMA to maximum height as specified in the S_FMT ioctl.
 
-- Reworked the DPHY initialization sequence to match the technical
-reference manual and provide a more robust restartability.
+Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ drivers/media/platform/ti-vpe/cal.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-- Adds the missing ability to power subdevice.
-
-- Update the devicetree binding and then converts it to dt-schema 
-
-Changes since v1:
-- Removed unneeded "items/max/min".
-- Add a ref for ti,camerrx-control type
-- Move compatible description as comment in the schemas
-- Simplify 'endpoint' syntax
-- Removed clocks description
-- Added ti,cal.yaml to MAINTAINERS as a separate patch.
-- Added Rob's ack
-- Remove 'inline' from cal_runtime_get()
-- Switch to use of_device_get_match_data
-- Reworked the syscon_regmap_lookup_by_phandle() section
-- Updated the binding to use ti,camerrx-control instead of sycon_camerrx
-- Updated the binding to use ti,camerrx-control instead of sycon_camerrx
-
-Benoit Parrot (19):
-  dt-bindings: media: cal: update binding to use syscon
-  dt-bindings: media: cal: update binding example
-  media: ti-vpe: cal: Add per platform data support
-  media: ti-vpe: cal: Enable DMABUF export
-  dt-bindings: media: cal: update binding to add PHY LDO errata support
-  media: ti-vpe: cal: add CSI2 PHY LDO errata support
-  media: ti-vpe: cal: Fix ths_term/ths_settle parameters
-  media: ti-vpe: cal: Fix pixel processing parameters
-  media: ti-vpe: cal: Align DPHY init sequence with docs
-  dt-bindings: media: cal: update binding to add DRA76x support
-  media: ti-vpe: cal: Add DRA76x support
-  dt-bindings: media: cal: update binding to add AM654 support
-  media: ti-vpe: cal: Add AM654 support
-  media: ti-vpe: cal: Add subdev s_power hooks
-  media: ti-vpe: cal: Properly calculate max resolution boundary
-  media: ti-vpe: cal: Fix a WARN issued when start streaming fails
-  media: ti-vpe: cal: fix enum_mbus_code/frame_size subdev arguments
-  dt-bindings: media: cal: convert binding to yaml
-  MAINTAINERS: Add ti,cal.yaml
-
-Nikhil Devshatwar (1):
-  media: ti-vpe: cal: Restrict DMA to avoid memory corruption
-
- .../devicetree/bindings/media/ti,cal.yaml     | 172 ++++
- .../devicetree/bindings/media/ti-cal.txt      |  72 --
- MAINTAINERS                                   |   1 +
- drivers/media/platform/Kconfig                |   2 +-
- drivers/media/platform/ti-vpe/cal.c           | 767 ++++++++++++++----
- drivers/media/platform/ti-vpe/cal_regs.h      |  27 +
- 6 files changed, 808 insertions(+), 233 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/ti,cal.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
-
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index 7d25ad83ca1e..04e84c4dc92a 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -769,12 +769,13 @@ static void pix_proc_config(struct cal_ctx *ctx)
+ }
+ 
+ static void cal_wr_dma_config(struct cal_ctx *ctx,
+-			      unsigned int width)
++			      unsigned int width, unsigned int height)
+ {
+ 	u32 val;
+ 
+ 	val = reg_read(ctx->dev, CAL_WR_DMA_CTRL(ctx->csi2_port));
+ 	set_field(&val, ctx->csi2_port, CAL_WR_DMA_CTRL_CPORT_MASK);
++	set_field(&val, height, CAL_WR_DMA_CTRL_YSIZE_MASK);
+ 	set_field(&val, CAL_WR_DMA_CTRL_DTAG_PIX_DAT,
+ 		  CAL_WR_DMA_CTRL_DTAG_MASK);
+ 	set_field(&val, CAL_WR_DMA_CTRL_MODE_CONST,
+@@ -1397,7 +1398,8 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	csi2_lane_config(ctx);
+ 	csi2_ctx_config(ctx);
+ 	pix_proc_config(ctx);
+-	cal_wr_dma_config(ctx, ctx->v_fmt.fmt.pix.bytesperline);
++	cal_wr_dma_config(ctx, ctx->v_fmt.fmt.pix.bytesperline,
++			  ctx->v_fmt.fmt.pix.height);
+ 	cal_wr_dma_addr(ctx, addr);
+ 	csi2_ppi_enable(ctx);
+ 
 -- 
 2.17.1
 
