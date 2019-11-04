@@ -2,187 +2,212 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014A3CA9ED3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 08:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D53CA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 08:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB5A222CA
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 08:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8A922469
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 08:49:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="EtP8Dy45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfKDIio (ORCPT
+        id S1727236AbfKDIt1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:38:44 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47449 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfKDIio (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 03:38:44 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRXsi-0002GD-OC; Mon, 04 Nov 2019 09:38:36 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRXsh-0008RT-V9; Mon, 04 Nov 2019 09:38:35 +0100
-Date:   Mon, 4 Nov 2019 09:38:35 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 4 Nov 2019 03:49:27 -0500
+Received: from mout02.posteo.de ([185.67.36.66]:50833 "EHLO mout02.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbfKDIt1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 03:49:27 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout02.posteo.de (Postfix) with ESMTPS id 6B6012400FB
+        for <devicetree@vger.kernel.org>; Mon,  4 Nov 2019 09:49:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1572857362; bh=sdz1m0DjhYDFxTl4Yya6gDtCRLXKUyg0QnsFFpK2y7Y=;
+        h=Subject:To:Cc:From:Openpgp:Autocrypt:Date:From;
+        b=EtP8Dy4559hfjSJ7cSls5A5w3tChJKRZeJCTbMlu8aZG9HbNNuXiffFottttGU4E6
+         HQ3oHIgibXhfkbJi2rnsBdBXgD7QIbzZpnl06O4Tg7z++75xuevKFAQN0A8ZSTc7gR
+         qdtKdH5hAJNWiamUtv1i4HR6YzIATkYlxJRmlz8KDcoNYsKX597YA7jAiwEoXRC4K7
+         s/eVUCAr8wu8f58KyExTyh0/FLRmJZeDrcGlyaU1ruOj6Y3UM7VmvwoP2L8/FrNHSh
+         5AL2uMHW6ciVbWj0rW71jnT/3SSTGivvMk6Up+li9JostKSsI3URR/s7QMkLkW6D6C
+         7v2/fYvbLgulw==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 47660v1G77z9rxk;
+        Mon,  4 Nov 2019 09:49:19 +0100 (CET)
+Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Abel Vesa <abelvesa@gmail.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v2 4/7] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20191104083835.m2pd4fvhn2ze6bjt@pengutronix.de>
-References: <20191103203334.10539-1-peron.clem@gmail.com>
- <20191103203334.10539-5-peron.clem@gmail.com>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Carlo Caione <ccaione@baylibre.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
+ <7d3a868a-768c-3cb1-c6d8-bf5fcd1ddd1c@posteo.de>
+ <20191030080727.7pcvhd4466dproy4@fsr-ub1664-175>
+From:   Martin Kepplinger <martink@posteo.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=martink@posteo.de; keydata=
+ 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
+Message-ID: <523f92bd-7e89-b48a-afd0-0a9a8bca8344@posteo.de>
+Date:   Mon, 4 Nov 2019 09:49:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191103203334.10539-5-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20191030080727.7pcvhd4466dproy4@fsr-ub1664-175>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 09:33:31PM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
+On 30.10.19 09:08, Abel Vesa wrote:
+> On 19-10-30 07:11:37, Martin Kepplinger wrote:
+>> On 23.06.19 13:47, Martin Kepplinger wrote:
+>>> On 10.06.19 14:13, Abel Vesa wrote:
+>>>> This is another alternative for the RFC:
+>>>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F3%2F27%2F545&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7Cf5f8d8dd37974234fcb108d75d000944%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637080127051582184&amp;sdata=qZEo1fY1lkTjqZWuuQftYJ5euEsSxjEAqGILCY8ChnU%3D&amp;reserved=0
+>>>>
+>>>> This new workaround proposal is a little bit more hacky but more contained
+>>>> since everything is done within the irq-imx-gpcv2 driver.
+>>>>
+>>>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
+>>>> handler and registers instead a wrapper which calls in the 'hijacked' 
+>>>> handler, after that calling into EL3 which will take care of the actual
+>>>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
+>>>>
+>>>> I also have the patches ready for TF-A but I'll hold on to them until I see if
+>>>> this has a chance of getting in.
+>>>
+>>
+>> Hi Abel,
+>>
+>> Running this workaround doesn't seem to work anymore on 5.4-rcX. Linux
+>> doesn't boot, with ATF unchanged (includes your workaround changes). I
+>> can try to add more details to this...
+>>
 > 
-> PWM core has an option to bypass whole logic and output unchanged source
-> clock as PWM output. This is achieved by enabling bypass bit.
+> This is happening because the system counter is now enabled on 8mq.
+> And since the irq-imx-gpcv2 is using as irq_set_affinity the 
+> irq_chip_set_affinity_parent. This is because the actual implementation
+> of the driver relies on GIC to set the right affinity. On a SoC
+> that has the wake_request signales linked to the power controller this
+> works fine. Since the system counter is actually the tick broadcast
+> device and the set affinity relies only on GIC, the cores can't be
+> woken up by the broadcast interrupt.
 > 
-> Note that when bypass is enabled, no other setting has any meaning, not
-> even enable bit.
+>> Have you tested this for 5.4? Could you update this workaround? Please
+>> let me know if I missed any earlier update on this (having a cpu-sleep
+>> idle state).
+>>
 > 
-> This mode of operation is needed to achieve high enough frequency to
-> serve as clock source for AC200 chip, which is integrated into same
-> package as H6 SoC.
-
-I think the , should be dropped.
-
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 39 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 38 insertions(+), 1 deletion(-)
+> The solution is to implement the set affinity in the irq-imx-gpcv2 driver
+> which would allow the gpc to wake up the target core when the broadcast
+> irq arrives.
 > 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index b5e7ac364f59..2441574674d9 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -3,6 +3,10 @@
->   * Driver for Allwinner sun4i Pulse Width Modulation Controller
->   *
->   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> + *
-> + * Limitations:
-> + * - When outputing the source clock directly, the PWM logic will be bypassed
-> + *   and the currently running period is not guaranted to be completed
+> I have a patch for this. I just need to clean it up a little bit.
+> Unfortunately, it won't go upstream since everuone thinks the gic
+> should be the one to control the affinity. This obviously doesn't work
+> on 8mq.
+> 
+> Currently, I'm at ELCE in Lyon. Will get back at the office tomorrow
+> and sned you what I have.
+> 
 
-Typo: guaranted  -> guaranteed
+Hi Abel,
 
->   */
->  
->  #include <linux/bitops.h>
-> @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
->  
->  struct sun4i_pwm_data {
->  	bool has_prescaler_bypass;
-> +	bool has_direct_mod_clk_output;
->  	unsigned int npwm;
->  };
->  
-> @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
->  
->  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
->  
-> +	/*
-> +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
-> +	 * bit is set, no other setting has any meaning. Even more, experiment
-> +	 * proved that also enable bit is ignored in this case.
-> +	 */
-> +	if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-> +	    data->has_direct_mod_clk_output) {
-> +		state->period = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk_rate);
-> +		state->duty_cycle = state->period / 2;
-> +		state->polarity = PWM_POLARITY_NORMAL;
-> +		state->enabled = true;
-> +		return;
-> +	}
+Do you have any news on said patch for testing? That'd be great for my
+plannings.
 
-Not sure how the rest of sun4i_pwm_get_state behaves, but I would prefer
-to let .get_state() round up which together with .apply_state() rounding
-down yields sound behaviour.
+thanks a lot,
 
-> +
->  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
->  	    sun4i_pwm->data->has_prescaler_bypass)
->  		prescaler = 1;
-> @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  {
->  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
->  	struct pwm_state cstate;
-> -	u32 ctrl;
-> +	u32 ctrl, clk_rate;
-> +	bool bypass;
->  	int ret;
->  	unsigned int delay_us;
->  	unsigned long now;
-> @@ -218,6 +238,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  		}
->  	}
->  
-> +	/*
-> +	 * Although it would make much more sense to check for bypass in
-> +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
-> +	 * Period is allowed to be rounded up or down.
-> +	 */
-> +	clk_rate = clk_get_rate(sun4i_pwm->clk);
-> +	bypass = ((state->period * clk_rate >= NSEC_PER_SEC &&
-> +		   state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
-> +		  state->enabled);
+                                 martin
 
-I guess the compiler is smart enough here, but checking for
-state->enabled is cheaper than the other checks, so putting this at the
-start of the expression seems sensible.
-
-The comment doesn't match the code. You don't round up state->period.
-(This is good, please fix the comment.) I think dropping the check
-
-	state->period * clk_rate < NSEC_PER_SEC + clk_rate
-
-would be fine, too.
-
-I'd like to have a check for
-
-	state->duty_cycle * clk_rate >= NSEC_PER_SEC / 2 &&
-	state->duty_cycle * clk_rate < NSEC_PER_SEC
-
-here. If this isn't true rather disable the PWM or output a 100% duty
-cycle with a larger period.
-
-> +
->  	spin_lock(&sun4i_pwm->ctrl_lock);
->  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
->  
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
