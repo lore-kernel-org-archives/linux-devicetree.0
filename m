@@ -2,137 +2,246 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A954CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C82CA9ED4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1187220848
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B28920869
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572894888;
-	bh=xsHYsB2zXyMTH2IKEVWf2hBE7o2ppclJRWbNmU8ydpk=;
+	s=default; t=1572895696;
+	bh=pt68eIojioAlUvFfemW0bhMdFB6WrpOnQ3bfAPgc+AE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ObZ+IH+WQ+yoVM3OWd6dLOB2kU8WrEnQuR3WoUZlXuJM2fdWFOVcUHBhnofC9mIX1
-	 vbK+SLe44CHOOhLwLSv+ZWnMl6FVnIlFWXbUhOpBE/OaxSN0VQZbCdw6obYlgOO9NA
-	 ILExSiDqE5+qTopF7m5r2ABlH/4iMPoTEtBTiL54=
+	b=YKgpYk65Z1LzQOodwuVu7x2HFXZC6XZJHEpytaSWRci7hdJCVFC8Lym9R+iuE1JJT
+	 5cwQoOadSasQrBIpJNQkx7jkJfkLchlSLYthu4JBPdxfwxjme82Zc8j95hxhLcHs4D
+	 Okjb5kFyt26E4zLLcwLHwlymJblfniNY1UkkMLow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbfKDTOr (ORCPT
+        id S1728987AbfKDT2P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:14:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44038 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 14:28:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbfKDTOr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:14:47 -0500
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        id S1728174AbfKDT2P (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 14:28:15 -0500
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFA6820869;
-        Mon,  4 Nov 2019 19:14:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B58E1214E0;
+        Mon,  4 Nov 2019 19:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572894885;
-        bh=xsHYsB2zXyMTH2IKEVWf2hBE7o2ppclJRWbNmU8ydpk=;
+        s=default; t=1572895693;
+        bh=pt68eIojioAlUvFfemW0bhMdFB6WrpOnQ3bfAPgc+AE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=U3LKG6Z8BwDtzgs/xqc5kRZSSzXrXQJmbRdShYkUcXr/7ApyP8BRc6im67plsC1UD
-         I4EvP4bgUndg5SxM+vQZLbKyU7hJLSWOYngXl4go9i1uQtqdc+Jyd38Iaz0j7R1EyG
-         g565xCQR68R0FrSrBsXrNLdkAW7GLmbTmX2dtnwY=
-Received: by mail-qt1-f181.google.com with SMTP id x21so25552645qto.12;
-        Mon, 04 Nov 2019 11:14:45 -0800 (PST)
-X-Gm-Message-State: APjAAAUV06GpFc6nSxAQlfhdEb5CzZu8ZrxoHhRhtpsRise+YRxUeG2p
-        +p+HUjuF0gpWFAslDIk2pfzds/8yToFml+G/3g==
-X-Google-Smtp-Source: APXvYqwDm4nm4amh56WMcaZv0m6i+1qGGjr7WZUR++nmINh861qFieVIg3CDST02eujwAAYxYo0uuF3bzl8SqvtkCl8=
-X-Received: by 2002:ac8:48c5:: with SMTP id l5mr14006694qtr.110.1572894884938;
- Mon, 04 Nov 2019 11:14:44 -0800 (PST)
+        b=OHylc50Pr11p+2uQI16beu7RqPEN8j4u8nB+YbPjZry2BCythROALHQEXKIb8IPSN
+         /Ij2uXFw+35axNKhT6zFtzyKo37OrhG0VFXIAE/5dQKVTQPyjVQFZB1YYKczqa1ISu
+         MVf6vW4xhhlmJQCidTtoULrO1iQdOxq5gsq5nelA=
+Received: by mail-qk1-f178.google.com with SMTP id m16so18425681qki.11;
+        Mon, 04 Nov 2019 11:28:13 -0800 (PST)
+X-Gm-Message-State: APjAAAWKJhBUfqMaHNmoGPIOxnLbtrJ2fSSNUOC0biSxAj4XiQ53hV8l
+        EIZyLB0zId4WU6G4epKvhxWs16j6/EpYytt+TA==
+X-Google-Smtp-Source: APXvYqxIWjhlyQXoP3/EhmDYLOTpQ0t5Ybm7/5yMCKcuYQv/HF1ACIGPrPRERHamqHnNZnSGK9XiatayZOOA+FooTyk=
+X-Received: by 2002:a37:f703:: with SMTP id q3mr24413885qkj.254.1572895692687;
+ Mon, 04 Nov 2019 11:28:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-6-saravanak@google.com>
- <CAL_Jsq+obCEeaNjpvJ6VvO6b2F6A5oHcRD8PYAifUvBQHbQ_Og@mail.gmail.com> <CAGETcx_CL9P3svctyDuGpavG4Ykd+o2G-rxDAE5OUvxL+sj6xA@mail.gmail.com>
-In-Reply-To: <CAGETcx_CL9P3svctyDuGpavG4Ykd+o2G-rxDAE5OUvxL+sj6xA@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 Nov 2019 13:14:33 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJA8awLeEmcxXFRqrd+ftP99+Sjjie9bFYLEpwXWEwzoA@mail.gmail.com>
-Message-ID: <CAL_JsqJA8awLeEmcxXFRqrd+ftP99+Sjjie9bFYLEpwXWEwzoA@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] of: property: Skip adding device links to
- suppliers that aren't devices
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+ <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+ <ed0b2aa8-8a70-0341-4ecf-8959f37c53bd@ti.com> <5c793f1308ccc6e787260b64fe6a875a8d0eb9d0.camel@fi.rohmeurope.com>
+ <20191029193440.GA1812@bogus> <3e0f0943cd599cae544bd7a7a49dded46d57a604.camel@fi.rohmeurope.com>
+ <CAL_JsqJgnYqv1q=wf++5FOX-niRWQ=H9wWYgUKy+z=H933Qraw@mail.gmail.com>
+ <1e3901d1c7c26f4dbbc1de78b607b92bf9ddc098.camel@fi.rohmeurope.com>
+ <CAL_JsqJ6kmZyfXtZy_gz_6sxgK2CTXKTcpARkaf462QiwJXYZA@mail.gmail.com> <a8acd74fa9c6abc8c2daea9f016d035a1ef87b02.camel@fi.rohmeurope.com>
+In-Reply-To: <a8acd74fa9c6abc8c2daea9f016d035a1ef87b02.camel@fi.rohmeurope.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 4 Nov 2019 13:28:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLWMfmRkxJr1NLi1FkHBO-NZR=ycq6kjbFpjNNM6mOV8g@mail.gmail.com>
+Message-ID: <CAL_JsqLWMfmRkxJr1NLi1FkHBO-NZR=ycq6kjbFpjNNM6mOV8g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828 bindings
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 1:02 PM Saravana Kannan <saravanak@google.com> wrote:
+On Fri, Nov 1, 2019 at 7:52 AM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
 >
-> On Mon, Nov 4, 2019 at 7:18 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Thu, 2019-10-31 at 12:50 -0500, Rob Herring wrote:
+> > On Thu, Oct 31, 2019 at 7:54 AM Vaittinen, Matti
+> > <Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> > >
+> > > On Wed, 2019-10-30 at 14:22 -0500, Rob Herring wrote:
+> > > > On Wed, Oct 30, 2019 at 3:27 AM Vaittinen, Matti
+> > > > <Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> > > > > On Tue, 2019-10-29 at 14:34 -0500, Rob Herring wrote:
+> > > > > > On Fri, Oct 25, 2019 at 05:49:17AM +0000, Vaittinen, Matti
+> > > ...which brings me here. I looked at the
+> > > Documentation/devicetree/bindings folder and did read the 'writing-
+> > > bindings.txt' and 'submitting-patches.txt' from there. Then I also
+> > > checked the Documentation/devicetree/usage-model.txt None of which
+> > > helped me out. I did also open the 'writing-schema.rst' but I
+> > > didn't
+> > > read it carefully enough. Probably because I thought after reading
+> > > the
+> > > opening chapter that this described how to do actual dts in yaml.
 > >
-> > On Mon, Oct 28, 2019 at 5:00 PM Saravana Kannan <saravanak@google.com> wrote:
+> > Things are a bit scattered around I'll admit. I feel like we need a
+> > 'start here', but the challenge is people have different starting
+> > points.
+>
+> cross-referencing? =)
+>
+> I guess that if yaml is what is expected to be used as patch format,
+> then we should probably mention this in submitting-patches.txt and
+> writing-bindings.txt.
+
+I've actually added that to submitting-patches.txt already and
+checkpatch.pl now warns for non-schema bindings. Both are pending for
+5.5.
+
+> Actyually, I think that writing-bindings.txt
+> could be combined with writing-schema.rst - they are about the same
+> thing, right?
+
+Not really. writing-bindings.txt is about how to design bindings. It's
+the DO's and DON'Ts that I give in review comments over and over and
+over. Mostly an attempt to ensure I'm saying things that are
+documented somewhere. Probably need to come up with better names, but
+naming is hard(TM).
+
+
+> > > > There is some notion to convert the DT spec to schema and then
+> > > > generate the spec from the schema. Take properties, their type,
+> > > > and
+> > > > descriptions and put that back into tables for example. Would
+> > > > love to
+> > > > have someone work on that. :)
 > > >
-> > > Some devices need to be initialized really early and can't wait for
-> > > driver core or drivers to be functional.  These devices are typically
-> > > initialized without creating a struct device for their device nodes.
-> > >
-> > > If a supplier ends up being one of these devices, skip trying to add
-> > > device links to them.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  drivers/of/property.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > > index f16f85597ccc..21c9d251318a 100644
-> > > --- a/drivers/of/property.c
-> > > +++ b/drivers/of/property.c
-> > > @@ -1038,6 +1038,7 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
-> > >         struct device *sup_dev;
-> > >         int ret = 0;
-> > >         struct device_node *tmp_np = sup_np;
-> > > +       int is_populated;
-> > >
-> > >         of_node_get(sup_np);
-> > >         /*
-> > > @@ -1062,9 +1063,10 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
-> > >                 return -EINVAL;
-> > >         }
-> > >         sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
-> > > +       is_populated = of_node_check_flag(sup_np, OF_POPULATED);
-> > >         of_node_put(sup_np);
-> > >         if (!sup_dev)
-> > > -               return -EAGAIN;
-> > > +               return is_populated ? 0 : -EAGAIN;
+> > > I am glad to hear you have developed / are developing such tooling.
 > >
-> > You're only using the flag in one spot and a comment would be good
-> > here, so I'd just do:
+> > TBC, I have not and am not. It's just an idea. There's been nothing
+> > done beyond experimenting if rST could be embedded into yaml.
 > >
-> > if (of_node_check_flag(sup_np, OF_POPULATED))
-> >         return 0; /* Early device without a struct device */
+> > > I
+> > > really appreciate it. What comes to giving a helping hand - I'd
+> > > better
+> > > to stick the simple C drivers for now ;) But if I ever get the
+> > > feeling
+> > > that I don't know what to do I'll keep this in mind :] Let me do
+> > > some
+> > > calculus... Only 11 years and my youngest son will probably leave
+> > > our
+> > > house - do you think 2030 is a bit too late? Just let me know if
+> > > this
+> > > is still relevant then - and I'll buy you a beer or write a tool
+> > > (of
+> > > some kind) xD
+> >
+> > I've scheduled you in for 2030. :)
 >
-> Hi Rob,
+> Fine. Let's see if it is a beer or a tool then :]
 >
-> Thanks for the review.
+> > > Meanwhile... I have tried to convert the BD71828 DT doc from the
+> > > RFC
+> > > patch to yaml - and I am having hard time. Especially with the
+> > > regulators node - which I would like to place in
+> > > Documentation/devicetree/bindings/regulator/rohm,bd71828-
+> > > regulator.yaml
+> > >
+> > > My problem is the
+> > > regulators {
+> > > buck1: BUCK1 {
+> > >                     regulator-name = "buck1";
+> > >                     regulator-min-microvolt = <500000>;
+> > >                     regulator-max-microvolt = <2000000>;
+> > >                     regulator-ramp-delay = <2500>;
+> > >                     rohm,dvs-runlvl-ctrl;
+> > >                     rohm,dvs-runlevel0-voltage = <500000>;
+> > >                     rohm,dvs-runlevel1-voltage = <506250>;
+> > >                     rohm,dvs-runlevel2-voltage = <512500>;
+> > >                     rohm,dvs-runlevel3-voltage = <518750>;
+> > >                     regulator-boot-on;
+> > >     };
+> > >     ...
+> > > };
+> > > node which only contains BUCKX and LDOX sub-nodes. It has no own
+> > > properties.
+> > >
+> > > From MFD yaml I did try:
+> > >
+> > >   regulators:
+> > >     $ref: ../regulator/rohm,bd71828-regulator.yaml
+> > >     description:
+> > >       List of child nodes that specify the regulators.
+> > >
+> > > and in rohm,bd71828-regulator.yaml
+> > >
+> > > I tried doing:
+> > >
+> > > patternProperties:
+> > >   "^BUCK[1-7]$":
+> > >     type: object
+> > >     description:
+> > >       Properties for single regulator.
+> > >     properties:
+> > >         ...
+> > >
+> > > but this fails validation as properties: is not given.
+> > >
+> > > [mvaittin@localhost linux]$ dt-doc-validate
+> > > Documentation/devicetree/bindings/regulator/rohm,bd71828-
+> > > regulator.yaml
+> > > /home/mvaittin/torvalds/linux/Documentation/devicetree/bindings/reg
+> > > ulat
+> > > or/rohm,bd71828-regulator.yaml: 'properties' is a required property
+> > >
+> > > If I try and add:
+> > >
+> > > properties:
+> > >   foo: true
+> > >
+> > > patternProperties:
+> > >     "^BUCK[1-7]$":
+> > >       type: object
+> > >       description:
+> > >         Properties for single regulator.
+> > >       properties:
+> > >         ...
+> >
+> > That's a case of needing to adjust the meta-schema (the schema that
+> > checks the schemas). It's a bit overly restrictive just to try to
+> > contain what's allowed. I've fixed it now. Update dtschema and it
+> > should work now.
 >
-> I'm using the flag to keep the error handling code simple/cleaner. I
-> can't do the check like that after I do a put on the sup_np.
+> Thanks. At least the make dt_binding_check passed now. dt-doc-validate
+> is not able to locate the regulator.yaml and errors out - but it does
+> no longer complain about missing 'properties:'.
 
-Ah, right. Nevermind.
-
-> Yeah, I was actually planning to add a dev_dbg() message when this
-> happens and returning a -EINVAL (that'll be ignored by the caller)
-> instead of -EAGAIN (that's NOT ignored by the caller).
->
-> Looks like these changes go pulled into driver-core-next. So I'll send
-> a delta patch to add the dbg message and also address you nit on the
-> other patch.
-
-I didn't notice Greg applied already. Don't worry about the nit then.
+Either look at how Kbuild calls dt-doc-validate or just use 'make
+dt_binding_check'. (It needs the base path to the schema passed in.)
 
 Rob
