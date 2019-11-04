@@ -2,150 +2,120 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619CECA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68688CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401D3222C1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44BC6222C1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfKDLrY (ORCPT
+        id S1728467AbfKDLwn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:47:24 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:27110 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfKDLrY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 06:47:24 -0500
-Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Mon, 4 Nov 2019
- 19:47:37 +0800
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mon, 4 Nov 2019 06:52:43 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:51114 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726100AbfKDLwn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 06:52:43 -0500
+X-UUID: 3cbef7e6586948899fbff3153634440c-20191104
+X-UUID: 3cbef7e6586948899fbff3153634440c-20191104
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <chao.hao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2146603920; Mon, 04 Nov 2019 19:52:36 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 4 Nov 2019 19:52:35 +0800
+Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 4 Nov 2019 19:52:31 +0800
+From:   Chao Hao <chao.hao@mediatek.com>
+To:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v4 1/4] dt-bindings: power: add Amlogic secure power domains bindings
-Date:   Mon, 4 Nov 2019 19:47:05 +0800
-Message-ID: <1572868028-73076-2-git-send-email-jianxin.pan@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com>
-References: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com>
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Jun Yan <jun.yan@mediatek.com>,
+        Cui Zhang <cui.zhang@mediatek.com>,
+        Guangming Cao <guangming.cao@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Anan Sun <anan.sun@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Chao Hao <chao.hao@mediatek.com>
+Subject: [RESEND,PATCH 00/13] MT6779 IOMMU SUPPORT
+Date:   Mon, 4 Nov 2019 19:52:25 +0800
+Message-ID: <20191104115238.2394-1-chao.hao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [116.236.93.172]
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the bindings for the Amlogic Secure power domains, controlling the
-secure power domains.
+I am sorry that previous patchset(2019/10/28) has a problem with e-mail format, some websites don't recevied it,
+so please based on this patchset to review, thanks!
 
-The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-power domain registers are in secure world.
+This patchset adds mt6779 iommu support and adjusts mtk iommu software architecture mainly.
+1. Add mt6779 basic function, such as smi_larb port define, registers define and so on.
+2. In addition, this patchset will adjust current mtk iommu SW architecture mainly to adapt all the mtk platforms:
+   Firstly, mt6779 iommu can support more HW modules, but some modules have special requirements for iova region,
+   for example, CCU only can access 0x4000_0000~0x47ff_ffff, VPU only can access 0x7da0_0000~0x7fbf_ffff. Current
+   architecture only support one iommu domain(include 0~4GB), all the modules allocate iova from 0~4GB region, so
+   it doesn't ensure to allocate expected iova region for special module(CCU and VPU). In order to resolve the problem,
+   we will create different iommu domains for special module, and every domain can include iova region which module
+   needs.
+   Secondly, all the iommus share one page table for current architecture by "mtk_iommu_get_m4u_data", to make the
+   architecture look clearly, we will create a global page table firstly(mtk_iommu_pgtable), and all the iommus can
+   use it. One page table can include 4GB iova space, so multiple iommu domains are created based on the same page
+   table. New SW architecture diagram is as below:
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 37 ++++++++++++++++++++++
- include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++++
- 2 files changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
- create mode 100644 include/dt-bindings/power/meson-a1-power.h
+                          iommu0   iommu1
+                             |        |
+                             ----------
+                                  |
+                         mtk_iommu_pgtable
+                                  |
+             ------------------------------------------
+             |                    |                   |
+       mtk_iommu_domain1   mtk_iommu_domain2   mtk_iommu_domain3
+             |                    |                   |
+        iommu_group1         iommu_group2        iommu_group3
+             |                    |                   |
+        iommu_domain1       iommu_domain2        iommu_domain3
+             |                    |                   |
+      iova region1(normal)  iova region2(CCU)   iova region3(VPU)
 
-diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-new file mode 100644
-index 00000000..2ed269f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+# Copyright (c) 2019 Amlogic, Inc
-+# Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson Secure Power Domains
-+
-+maintainers:
-+  - Jianxin Pan <jianxin.pan@amlogic.com>
-+
-+description: |+
-+  Meson Secure Power Domains used in A1/C1 SoCs.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,meson-a1-pwrc
-+
-+  "#power-domain-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - "#power-domain-cells"
-+
-+examples:
-+  - |
-+    pwrc: power-controller {
-+          compatible = "amlogic,meson-a1-pwrc";
-+          #power-domain-cells = <1>;
-+          secure-monitor = <&sm>;
-+    };
-+
-+
-diff --git a/include/dt-bindings/power/meson-a1-power.h b/include/dt-bindings/power/meson-a1-power.h
-new file mode 100644
-index 00000000..6cf50bf
---- /dev/null
-+++ b/include/dt-bindings/power/meson-a1-power.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc.
-+ * Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_MESON_A1_POWER_H
-+#define _DT_BINDINGS_MESON_A1_POWER_H
-+
-+#define PWRC_DSPA_ID	8
-+#define PWRC_DSPB_ID	9
-+#define PWRC_UART_ID	10
-+#define PWRC_DMC_ID	11
-+#define PWRC_I2C_ID	12
-+#define PWRC_PSRAM_ID	13
-+#define PWRC_ACODEC_ID	14
-+#define PWRC_AUDIO_ID	15
-+#define PWRC_OTP_ID	16
-+#define PWRC_DMA_ID	17
-+#define PWRC_SD_EMMC_ID	18
-+#define PWRC_RAMA_ID	19
-+#define PWRC_RAMB_ID	20
-+#define PWRC_IR_ID	21
-+#define PWRC_SPICC_ID	22
-+#define PWRC_SPIFC_ID	23
-+#define PWRC_USB_ID	24
-+#define PWRC_NIC_ID	25
-+#define PWRC_PDMIN_ID	26
-+#define PWRC_RSA_ID	27
-+#define PWRC_MAX_ID	28
-+
-+#endif
--- 
-2.7.4
+This patchset depends on "Improve tlb range flush"[1] and based on v5.4-rc1.
+[1]http://lists.infradead.org/pipermail/linux-mediatek/2019-October/024207.html
+
+Chao Hao (13):
+  dt-bindings: mediatek: Add bindings for MT6779
+  iommu/mediatek: Add mt6779 IOMMU basic support
+  iommu/mediatek: Add mtk_iommu_pgtable structure
+  iommu/mediatek: Remove mtk_iommu_domain_finalise
+  iommu/mediatek: Remove pgtable info in mtk_iommu_domain
+  iommu/mediatek: Change get the way of m4u_group
+  iommu/mediatek: Add smi_larb info about device
+  iommu/mediatek: Add mtk_domain_data structure
+  iommu/mediatek: Remove the usage of m4u_dom variable
+  iommu/mediatek: Remove mtk_iommu_get_m4u_data api
+  iommu/mediatek: Add iova reserved function
+  iommu/mediatek: Change single domain to multiple domains
+  iommu/mediatek: Add multiple mtk_iommu_domain support for mt6779
+
+ .../bindings/iommu/mediatek,iommu.txt         |   2 +
+ drivers/iommu/mtk_iommu.c                     | 488 +++++++++++++++---
+ drivers/iommu/mtk_iommu.h                     |  50 +-
+ include/dt-bindings/memory/mt6779-larb-port.h | 217 ++++++++
+ 4 files changed, 685 insertions(+), 72 deletions(-)
+
+--
+2.18.0
+
+
 
