@@ -2,65 +2,62 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED17ACA9ED3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA989CA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48B6214D8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6E120869
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 20:49:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="p57l6ke0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LAb1sKkN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbfKDUi6 (ORCPT
+        id S1726417AbfKDUtG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:38:58 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50848 "EHLO
+        Mon, 4 Nov 2019 15:49:06 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51872 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbfKDUi5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 15:38:57 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4KcoLV127054;
-        Mon, 4 Nov 2019 14:38:50 -0600
+        with ESMTP id S1728409AbfKDUtF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 15:49:05 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kn0xN129162;
+        Mon, 4 Nov 2019 14:49:00 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572899930;
-        bh=j6v6hUic5BjjXk1q+Fi505llsyamQoKSP5LAlTy2Psc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=p57l6ke03OfzJ1AE4ulgp3FiB8sR8rXNNusR+IdIrz0rQcri65lQ/loKq4GcVXOzY
-         2XHFXggRhNz8h/X3eU/lkFZ8uVCB9yE6cTk3eCMvCVy1P7v90Hg32NS7c5ZcthfABf
-         iL8fnGQXr4Z3LNxXO3R9u9evHg9feMq2JVM4kI3I=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4KcoIe105000
+        s=ti-com-17Q1; t=1572900540;
+        bh=D5sprlBTgKbNeSF2xEAhxvBsav9tu+MkOC3iG0A4Lcc=;
+        h=From:To:CC:Subject:Date;
+        b=LAb1sKkNtoOjqK122Rzt0K6m8rCnli0Xdhgqnpk/gJ2GXdMfg6o4u0OOLgbEChTVK
+         cLtcXCq4MZ6wXMBVIHWvU54c6uvVWKQbT/QVoVdTvH21MuDmrr2tK058PB5o+tPzut
+         9cMrYEWbgMCrSOnqtyaGRv72kRtWOUtcJfClVLM8=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4Kn0nJ129793
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 14:38:50 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 4 Nov 2019 14:49:00 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 14:38:35 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 14:48:59 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 14:38:35 -0600
+ Frontend Transport; Mon, 4 Nov 2019 14:48:59 -0600
 Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kcl4m020670;
-        Mon, 4 Nov 2019 14:38:49 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kmvxu038360;
+        Mon, 4 Nov 2019 14:48:58 -0600
 From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
 CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 1/5] dt-bindings: media: ti-vpe: Document VPE driver
-Date:   Mon, 4 Nov 2019 14:38:37 -0600
-Message-ID: <20191104203841.3628-2-bparrot@ti.com>
+Subject: [Patch v2 00/10] ARM: dts: dra7: add cal nodes 
+Date:   Mon, 4 Nov 2019 14:48:43 -0600
+Message-ID: <20191104204853.4355-1-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191104203841.3628-1-bparrot@ti.com>
-References: <20191104203841.3628-1-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -69,97 +66,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Device Tree bindings for the Video Processing Engine (VPE).
+This patch series adds the needed clkctrl and ty-sysc nodes for CAL module.
+It also adds support for the module in related dtsi and dts for DRA72,
+DRA76 and AM654 SoC.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- .../devicetree/bindings/media/ti,vpe.yaml     | 64 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/ti,vpe.yaml
+Changes since v1:
+- Fix clock name to make it generic
+- Updated the binding to use ti,camerrx-control instead of sycon_camerrx
+- Split off the clk code into its own patch
+- Add clk mailing list as requested
 
-diff --git a/Documentation/devicetree/bindings/media/ti,vpe.yaml b/Documentation/devicetree/bindings/media/ti,vpe.yaml
-new file mode 100644
-index 000000000000..eb9f3e1b7f5f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/ti,vpe.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/ti,vpe.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments DRA7x Video Processing Engine (VPE) Device Tree Bindings
-+
-+maintainers:
-+  - Benoit Parrot <bparrot@ti.com>
-+
-+description: |-
-+  The Video Processing Engine (VPE) is a key component for image post
-+  processing applications. VPE consist of a single memory to memory
-+  path which can perform chroma up/down sampling, deinterlacing,
-+  scaling and color space conversion.
-+
-+properties:
-+  compatible:
-+      const: ti,dra7-vpe
-+
-+  reg:
-+    items:
-+      - description: The VPE main register region
-+      - description: Scaler (SC) register region
-+      - description: Color Space Conversion (CSC) register region
-+      - description: Video Port Direct Memory Access (VPDMA) register region
-+
-+  reg-names:
-+    items:
-+      - const: vpe_top
-+      - const: sc
-+      - const: csc
-+      - const: vpdma
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    vpe: vpe@489d0000 {
-+        compatible = "ti,dra7-vpe";
-+        reg = <0x489d0000 0x120>,
-+              <0x489d0700 0x80>,
-+              <0x489d5700 0x18>,
-+              <0x489dd000 0x400>;
-+        reg-names = "vpe_top",
-+                    "sc",
-+                    "csc",
-+                    "vpdma";
-+        interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d360df48f9f2..baf3aac1ab7c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16316,6 +16316,7 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- S:	Maintained
- F:	drivers/media/platform/ti-vpe/
- F:	Documentation/devicetree/bindings/media/ti,cal.yaml
-+F:	Documentation/devicetree/bindings/media/ti,vpe.yaml
- 
- TI WILINK WIRELESS DRIVERS
- L:	linux-wireless@vger.kernel.org
+Benoit Parrot (10):
+  clk: ti: dra7: add cam clkctrl data
+  ARM: dts: dra7: add cam clkctrl node
+  ARM: OMAP: DRA7xx: Make CAM clock domain SWSUP only
+  ARM: dts: dra7-l4: Add ti-sysc node for CAM
+  ARM: dts: DRA72: Add CAL dtsi node
+  arm: dts: dra72-evm-common: Add entries for the CSI2 cameras
+  arm: dtsi: dra76x: Add CAL dtsi node
+  arm: dts: dra76-evm: Add CAL and OV5640 nodes
+  arm64: dts: k3-am65-main Add CAL node
+  arm64: dts: k3-am654-base-board: Add CSI2 OV5640 camera
+
+ arch/arm/boot/dts/dra7-l4.dtsi                | 43 ++++++++++++++++---
+ arch/arm/boot/dts/dra72-evm-common.dtsi       | 35 +++++++++++++++
+ arch/arm/boot/dts/dra72x.dtsi                 | 43 +++++++++++++++++++
+ arch/arm/boot/dts/dra76-evm.dts               | 39 +++++++++++++++++
+ arch/arm/boot/dts/dra76x.dtsi                 | 43 +++++++++++++++++++
+ arch/arm/boot/dts/dra7xx-clocks.dtsi          | 14 ++++++
+ arch/arm/mach-omap2/clockdomains7xx_data.c    |  2 +-
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 23 ++++++++++
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 36 ++++++++++++++++
+ drivers/clk/ti/clk-7xx.c                      | 19 ++++++++
+ include/dt-bindings/clock/dra7.h              | 10 +++++
+ 11 files changed, 300 insertions(+), 7 deletions(-)
+
 -- 
 2.17.1
 
