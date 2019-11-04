@@ -2,96 +2,108 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2E5CA9EBB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 00:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B60CA9ED0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 01:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB2B222CD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 00:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41493222CD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 01:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572828698;
-	bh=0cPXrS85ZFNq0IkzMuelys/+Yk/AanMHiImMkP3vTHk=;
+	s=default; t=1572830246;
+	bh=scf8hGpxuBP5bt4EZ25jeD6UOciso7RymcE5KJUwMuA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CQiYPmJAlFTMMTthX66HeizVzGn/4VfBXiHx8SWxTXWqk9gHlLd+G6oOVqn12jUxI
-	 mNChCs8puOxqlyV+3NH9YJ1EBLMwyCgtfY3UVE+V/jkWeL8ILiP8ukKzfYTgc4RSow
-	 Up3Wkk/Mcj7vpsx6jtbtTAl1IS7I0ME8eMiCl5FY=
+	b=xplPobqNnZbRF3ADB63t6qDsCggVzfSloalBBmasBJcSdaPQ1nwoy55IrzF5hnxZn
+	 aVq94sTxLLgcwa5S1E3CeyYkX7afojrPwnU132wWXeqdDzTn7peO+OUHu7Wo4tvYtF
+	 rUfODRTlzUkz6BYJXGcy9K5LgQtHISzoAuJrmuL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfKDAvh (ORCPT
+        id S1728464AbfKDBRZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 3 Nov 2019 19:51:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52524 "EHLO mail.kernel.org"
+        Sun, 3 Nov 2019 20:17:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbfKDAvh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 3 Nov 2019 19:51:37 -0500
+        id S1728102AbfKDBRZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 3 Nov 2019 20:17:25 -0500
 Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA170222CA;
-        Mon,  4 Nov 2019 00:51:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B17A2190F;
+        Mon,  4 Nov 2019 01:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572828697;
-        bh=0cPXrS85ZFNq0IkzMuelys/+Yk/AanMHiImMkP3vTHk=;
+        s=default; t=1572830244;
+        bh=scf8hGpxuBP5bt4EZ25jeD6UOciso7RymcE5KJUwMuA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a3fcrd5RjNk9WJIl1Kea4MTeMZiT4hoj6uZT561YIM3GlTk4L7qfgmg3wuE+tPP+q
-         X8co1KYv/PjnTvUgn2VaSwmcQpANSmp+qPg4UXaVci9e4A77T2sS9gEKKTr91FlY/k
-         +ifsMR1p3pkJ/2yfSDMz6OVuegJIP/F96NwuS/c4=
-Date:   Mon, 4 Nov 2019 08:51:10 +0800
+        b=dZxqcesFpem7Rr+G5Ar3yrcGqocotO2RgrD7WCrz1KnojZ4p1MeeT05lHAjsVeZHS
+         Wo/Rqr1ygopwkQr7OLJkG4HUZDGATxPw0McQRjfx7tMs41qdGZrhucYUX9i7FVgaq9
+         jVDKmoBSnyyAPfkHLxZN6v/E5fbXCyHlORUCwxsY=
+Date:   Mon, 4 Nov 2019 09:16:58 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>
-Subject: Re: [PATCH V2 1/2] arm64: dts: imx8mm-evk: add phy-reset-gpios for
- fec1
-Message-ID: <20191104005108.GB24620@dragon>
-References: <1571652977-4754-1-git-send-email-peng.fan@nxp.com>
- <VI1PR04MB70239911C3C71E0503808F85EE630@VI1PR04MB7023.eurprd04.prod.outlook.com>
+To:     Marcel Ziswiler <marcel@ziswiler.com>
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/5] arm: dts: vf-colibri: fix typo in top-level
+ module compatible
+Message-ID: <20191104011657.GE24620@dragon>
+References: <20191026090403.3057-1-marcel@ziswiler.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB70239911C3C71E0503808F85EE630@VI1PR04MB7023.eurprd04.prod.outlook.com>
+In-Reply-To: <20191026090403.3057-1-marcel@ziswiler.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 06:59:51PM +0000, Leonard Crestez wrote:
-> On 21.10.2019 13:19, Peng Fan wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> > 
-> > We should not rely on bootloader to configure the phy reset.
-> > So introduce phy-reset-gpios property to let Linux handle phy reset
-> > itself.
-> > 
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+On Sat, Oct 26, 2019 at 11:03:59AM +0200, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 > 
-> This broke NFS boot for me in next-20191031: board now hangs on DHCP.
+> Fix typo in top-level module compatible.
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+> Changes in v2: New patch.
+> 
+>  arch/arm/boot/dts/vf500-colibri.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/vf500-colibri.dtsi b/arch/arm/boot/dts/vf500-colibri.dtsi
+> index 237b0246fa84..92255f8893ce 100644
+> --- a/arch/arm/boot/dts/vf500-colibri.dtsi
+> +++ b/arch/arm/boot/dts/vf500-colibri.dtsi
+> @@ -44,7 +44,7 @@
+>  
+>  / {
+>  	model = "Toradex Colibri VF50 COM";
+> -	compatible = "toradex,vf610-colibri_vf50", "fsl,vf500";
+> +	compatible = "toradex,vf500-colibri_vf50", "fsl,vf500";
 
-I dropped both patches for now.
+Do we need to update bindings doc for this?
+
+Also as a practise, we use 'ARM: ...' for arch/arm/ patches going through
+IMX tree.
 
 Shawn
 
+>  
+>  	memory@80000000 {
+>  		device_type = "memory";
+> -- 
+> 2.21.0
 > 
-> It can be fixed by reverting this DT patch or by setting 
-> CONFIG_AT803X_PHY to y instead of m.
 > 
-> Needing a phy module is not a bug but everybody will need to either 
-> adjust .config or build modules into an initramfs somehow.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
