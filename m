@@ -3,47 +3,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81109CA9ED6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C7ACA9EDB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593A721D7D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8153821D7D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfKDJQH (ORCPT
+        id S1726526AbfKDJQI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:16:07 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:33888 "EHLO
+        Mon, 4 Nov 2019 04:16:08 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33904 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfKDJQH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 04:16:07 -0500
+        with ESMTP id S1728165AbfKDJQI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 04:16:08 -0500
+X-Greylist: delayed 421 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Nov 2019 04:16:07 EST
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id A99BA1C06C8; Mon,  4 Nov 2019 10:09:19 +0100 (CET)
-Date:   Mon, 4 Nov 2019 10:09:19 +0100
+        id 6B7301C06C2; Mon,  4 Nov 2019 10:09:05 +0100 (CET)
+Date:   Mon, 4 Nov 2019 10:09:04 +0100
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Stefan Wahren <wahrenst@gmx.net>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
-Message-ID: <20191104090919.GC12355@duo.ucw.cz>
-References: <1570964003-20227-1-git-send-email-wahrenst@gmx.net>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 5/6] dt-bindings: leds: max77650: convert the binding
+ document to yaml
+Message-ID: <20191104090904.GA12355@duo.ucw.cz>
+References: <20190930130246.4860-1-brgl@bgdev.pl>
+ <20190930130246.4860-6-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZmUaFz6apKcXQszQ"
+        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
 Content-Disposition: inline
-In-Reply-To: <1570964003-20227-1-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <20190930130246.4860-6-brgl@bgdev.pl>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -51,30 +53,18 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---ZmUaFz6apKcXQszQ
+--MGYHOYXEY6WxJCY8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun 2019-10-13 12:53:23, Stefan Wahren wrote:
-> bcm2835-rpi.dtsi defines the behavior of the ACT LED, which is available
-> on all Raspberry Pi boards. But there is no driver for this particual
-> GPIO on CM3 in mainline yet, so this node was left incomplete without
-> the actual GPIO definition. Since commit 025bf37725f1 ("gpio: Fix return
-> value mismatch of function gpiod_get_from_of_node()") this causing probe
-> issues of the leds-gpio driver for users of the CM3 dtsi file.
+Hi!
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >=20
->   leds-gpio: probe of leds failed with error -2
+> Convert the binding document for max77650 LED module to yaml.
 >=20
-> Until we have the necessary GPIO driver hide the ACT node for CM3
-> to avoid this.
->=20
-> Reported-by: Fredrik Yhlen <fredrik.yhlen@endian.se>
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and IO =
-board")
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
 Acked-by: Pavel Machek <pavel@ucw.cz>
 
@@ -83,14 +73,14 @@ Acked-by: Pavel Machek <pavel@ucw.cz>
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---ZmUaFz6apKcXQszQ
+--MGYHOYXEY6WxJCY8
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXb/qvwAKCRAw5/Bqldv6
-8s9rAJ4yTRIe97T+lFBPRHVvathcg6ZLogCeIdAfUfoLu27bqE38/MrvOEGnIYU=
-=w3/X
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXb/qsAAKCRAw5/Bqldv6
+8ntAAKC86s2MAghAx4zSe4xsiOMqdqtIWgCggsiuj+SjJKhpkzSNrczD2hMzdok=
+=SttL
 -----END PGP SIGNATURE-----
 
---ZmUaFz6apKcXQszQ--
+--MGYHOYXEY6WxJCY8--
