@@ -2,158 +2,78 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DC7CA9ED2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243FACA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F6521744
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3BF21D7D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfKDJlc (ORCPT
+        id S1727771AbfKDJuX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:41:32 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58807 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKDJlc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 04:41:32 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iRYrU-0001Jf-Ra; Mon, 04 Nov 2019 10:41:24 +0100
-Message-ID: <776ec4265217cc83e9e847ff3c80a52a86390b1b.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] PCI: qcom: Add support for SDM845 PCIe controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 04 Nov 2019 10:41:23 +0100
-In-Reply-To: <20191102002721.4091180-3-bjorn.andersson@linaro.org>
-References: <20191102002721.4091180-1-bjorn.andersson@linaro.org>
-         <20191102002721.4091180-3-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 4 Nov 2019 04:50:23 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33033 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfKDJuX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 04:50:23 -0500
+Received: by mail-ot1-f65.google.com with SMTP id u13so13869713ote.0;
+        Mon, 04 Nov 2019 01:50:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=In2BvITp0W5HarTx3CDPphxXxdYomKlC+mZY/I3WVRg=;
+        b=syqdH+la4xIp25eLDI01nuTId/6tNHgK1fCbg6F7e8jrBEkvvB6H0UQTtijYZgoikh
+         iAxF9hOxBI0XebLkZQXeVVOiHbXyDGaZnFfFHPApbmel0S0eI7d44uCJPhmJYXYUy7Jl
+         X4c0O86MR7UsHBBvWQiRAhFB7bjmj6+BT/agzYqtSZSLHxPI6Sx8r2tz6cXuboUebuq8
+         El4hq88Wx1tyKT4mKoTMCN/zmoooWxxqbvhgAZtNRMCliMO2uLQBETLgQDvH9etvv+K/
+         EGD1vXEybws+VoJpncB6NtHZjBrMJwSMYjCAinTjscbh3bDetAfAbBClkTpL06HQ4wVw
+         M+Xw==
+X-Gm-Message-State: APjAAAXbxU3JWxjf4MwxivOEBYLgZb1FPqkyctIF9h73uum5CEivHIAd
+        sF0/gUaZnlwxj4sbkMwV14yK17ycNsxcs1GUtIo=
+X-Google-Smtp-Source: APXvYqw7Lf6Za1jmV3Lv6QPYSl8TPkxo/pEg/iZ9HTgK3QdzsL20i8UReVD6/t1bbDURJkPMzgQr6neBmx36H0eLrtQ=
+X-Received: by 2002:a9d:191e:: with SMTP id j30mr8440939ota.297.1572861022252;
+ Mon, 04 Nov 2019 01:50:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20191016151109.30747-1-geert+renesas@glider.be>
+In-Reply-To: <20191016151109.30747-1-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 Nov 2019 10:50:11 +0100
+Message-ID: <CAMuHMdXm6Afp4bdn1kHsarcbykBkNHeAzSsnm_6VPijNOB_oUQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: arm: renesas: Add R-Car M3-N ULCB with Kingfisher
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Wed, Oct 16, 2019 at 5:11 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Document the use of the Kingfisher expansion board with the R-Car
+> Starter Kit Pro equipped with an R-Car M3-N SoC.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Fri, 2019-11-01 at 17:27 -0700, Bjorn Andersson wrote:
-> The SDM845 has one Gen2 and one Gen3 controller, add support for these.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - Style changes requested by Stan
-> - Tested with second PCIe controller as well
-> 
->  drivers/pci/controller/dwc/pcie-qcom.c | 152 +++++++++++++++++++++++++
->  1 file changed, 152 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 7e581748ee9f..35f4980480bb 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -54,6 +54,7 @@
-[...]
-> +static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot enable regulators\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-> +	if (ret < 0)
-> +		goto err_disable_regulators;
-> +
-> +	ret = reset_control_assert(res->pci_reset);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot deassert pci reset\n");
-> +		goto err_disable_clocks;
-> +	}
+Queued in renesas-devel for v5.5.
 
-If for any of the above fails, the reset line is left in its default
-state, presumably unasserted. Is there a reason to assert and keep it
-asserted if enabling the clocks fails below?
+Gr{oetje,eeting}s,
 
-> +	msleep(20);
-> +
-> +	ret = reset_control_deassert(res->pci_reset);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot deassert pci reset\n");
-> +		goto err_assert_resets;
+                        Geert
 
-Nitpick: this seems superfluous since the reset line was just asserted
-20 ms before. Maybe just:
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-		goto err_disable_clocks;
-
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->pipe_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable pipe clock\n");
-> +		goto err_assert_resets;
-> +	}
-> +
-> +	/* configure PCIe to RC mode */
-> +	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
-> +
-> +	/* enable PCIe clocks and resets */
-> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +	val &= ~BIT(0);
-> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
-> +	/* change DBI base address */
-> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-> +
-> +	/* MAC PHY_POWERDOWN MUX DISABLE  */
-> +	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +	val &= ~BIT(29);
-> +	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +
-> +	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +	val |= BIT(4);
-> +	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-> +		val |= BIT(31);
-> +		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-> +	}
-> +
-> +	return 0;
-> +err_assert_resets:
-> +	reset_control_assert(res->pci_reset);
-
-So maybe this can just be removed. The reset isn't asserted in deinit
-either.
-
-regards
-Philipp
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
