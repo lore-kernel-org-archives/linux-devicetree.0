@@ -4,37 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A701CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 16:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DF3CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 16:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1399020869
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 16:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7788020663
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 16:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfKDQjQ (ORCPT
+        id S1728955AbfKDQj3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:39:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:46878 "EHLO foss.arm.com"
+        Mon, 4 Nov 2019 11:39:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:46920 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728910AbfKDQjQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:39:16 -0500
+        id S1728346AbfKDQj2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:39:28 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71D7F328;
-        Mon,  4 Nov 2019 08:39:14 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEE5B68D;
+        Mon,  4 Nov 2019 08:39:26 -0800 (PST)
 Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49E7E3F71A;
-        Mon,  4 Nov 2019 08:39:12 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FAFA3F71A;
+        Mon,  4 Nov 2019 08:39:17 -0800 (PST)
 From:   Andrew Murray <andrew.murray@arm.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v1 6/7] powerpc: dts: Use IRQ flags for legacy PCI IRQ interrupts
-Date:   Mon,  4 Nov 2019 16:38:20 +0000
-Message-Id: <20191104163834.8932-7-andrew.murray@arm.com>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Ley Foon Tan <lftan@altera.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        David Daney <david.daney@cavium.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Andy Gross <agross@kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, rfi@lists.rocketboards.org,
+        linux-arm-kernel@axis.com, linux-mediatek@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH v1 7/7] dt-bindings: PCI: Use IRQ flags for legacy PCI IRQ interrupts
+Date:   Mon,  4 Nov 2019 16:38:21 +0000
+Message-Id: <20191104163834.8932-8-andrew.murray@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191104163834.8932-1-andrew.murray@arm.com>
 References: <20191104163834.8932-1-andrew.murray@arm.com>
@@ -50,1665 +83,834 @@ with #define.
 
 Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 ---
- arch/powerpc/boot/dts/bluestone.dts       | 12 +++--
- arch/powerpc/boot/dts/charon.dts          | 12 +++--
- arch/powerpc/boot/dts/digsy_mtc.dts       | 12 +++--
- arch/powerpc/boot/dts/haleakala.dts       | 12 +++--
- arch/powerpc/boot/dts/holly.dts           | 42 ++++++++--------
- arch/powerpc/boot/dts/hotfoot.dts         | 12 +++--
- arch/powerpc/boot/dts/kuroboxHD.dts       | 28 ++++++-----
- arch/powerpc/boot/dts/kuroboxHG.dts       | 28 ++++++-----
- arch/powerpc/boot/dts/lite5200.dts        | 12 +++--
- arch/powerpc/boot/dts/lite5200b.dts       | 22 +++++----
- arch/powerpc/boot/dts/media5200.dts       | 26 +++++-----
- arch/powerpc/boot/dts/mpc5121ads.dts      | 20 ++++----
- arch/powerpc/boot/dts/mpc8308rdb.dts      | 12 +++--
- arch/powerpc/boot/dts/mpc8313erdb.dts     | 20 ++++----
- arch/powerpc/boot/dts/mpc832x_mds.dts     | 60 ++++++++++++-----------
- arch/powerpc/boot/dts/mpc832x_rdb.dts     | 22 +++++----
- arch/powerpc/boot/dts/mpc8349emitxgp.dts  |  8 +--
- arch/powerpc/boot/dts/mpc836x_mds.dts     | 60 ++++++++++++-----------
- arch/powerpc/boot/dts/mpc836x_rdk.dts     | 16 +++---
- arch/powerpc/boot/dts/mucmc52.dts         | 12 +++--
- arch/powerpc/boot/dts/mvme5100.dts        | 48 +++++++++---------
- arch/powerpc/boot/dts/pcm030.dts          | 22 +++++----
- arch/powerpc/boot/dts/pcm032.dts          | 22 +++++----
- arch/powerpc/boot/dts/pq2fads.dts         | 28 ++++++-----
- arch/powerpc/boot/dts/socrates.dts        |  8 +--
- arch/powerpc/boot/dts/storcenter.dts      | 28 ++++++-----
- arch/powerpc/boot/dts/stx_gp3_8560.dts    | 36 +++++++-------
- arch/powerpc/boot/dts/taishan.dts         | 20 ++++----
- arch/powerpc/boot/dts/tqm5200.dts         | 12 +++--
- arch/powerpc/boot/dts/tqm8540.dts         | 16 +++---
- arch/powerpc/boot/dts/tqm8541.dts         | 16 +++---
- arch/powerpc/boot/dts/tqm8555.dts         | 16 +++---
- arch/powerpc/boot/dts/tqm8560.dts         | 16 +++---
- arch/powerpc/boot/dts/virtex440-ml510.dts | 43 ++++++++--------
- arch/powerpc/boot/dts/xcalibur1501.dts    | 13 +++--
- arch/powerpc/boot/dts/xpedite5200.dts     |  8 +--
- 36 files changed, 437 insertions(+), 363 deletions(-)
+ .../devicetree/bindings/pci/83xx-512x-pci.txt | 18 ++---
+ .../devicetree/bindings/pci/aardvark-pci.txt  | 10 +--
+ .../devicetree/bindings/pci/altera-pcie.txt   | 10 +--
+ .../bindings/pci/axis,artpec6-pcie.txt        | 10 +--
+ .../bindings/pci/cdns,cdns-pcie-host.txt      | 10 +--
+ .../bindings/pci/faraday,ftpci100.txt         | 68 +++++++++----------
+ .../bindings/pci/fsl,imx6q-pcie.txt           | 10 +--
+ .../bindings/pci/hisilicon-pcie.txt           | 20 +++---
+ .../bindings/pci/host-generic-pci.txt         | 10 +--
+ .../devicetree/bindings/pci/kirin-pcie.txt    | 10 +--
+ .../bindings/pci/layerscape-pci.txt           | 10 +--
+ .../devicetree/bindings/pci/mediatek-pcie.txt | 40 +++++------
+ .../devicetree/bindings/pci/mobiveil-pcie.txt |  8 +--
+ .../devicetree/bindings/pci/pci-rcar-gen2.txt |  8 +--
+ .../bindings/pci/pci-thunder-pem.txt          | 10 +--
+ .../devicetree/bindings/pci/pcie-al.txt       |  4 +-
+ .../devicetree/bindings/pci/qcom,pcie.txt     | 20 +++---
+ .../bindings/pci/ralink,rt3883-pci.txt        | 18 ++---
+ .../bindings/pci/rockchip-pcie-host.txt       | 10 +--
+ .../devicetree/bindings/pci/ti-pci.txt        | 10 +--
+ .../devicetree/bindings/pci/uniphier-pcie.txt | 10 +--
+ .../bindings/pci/v3-v360epc-pci.txt           | 34 +++++-----
+ .../devicetree/bindings/pci/versatile.txt     | 40 +++++------
+ .../devicetree/bindings/pci/xgene-pci-msi.txt | 10 +--
+ .../devicetree/bindings/pci/xgene-pci.txt     | 10 +--
+ .../bindings/pci/xilinx-nwl-pcie.txt          | 10 +--
+ .../devicetree/bindings/pci/xilinx-pcie.txt   | 20 +++---
+ 27 files changed, 224 insertions(+), 224 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/bluestone.dts b/arch/powerpc/boot/dts/bluestone.dts
-index cc965a1816b6..851b6f764ec3 100644
---- a/arch/powerpc/boot/dts/bluestone.dts
-+++ b/arch/powerpc/boot/dts/bluestone.dts
-@@ -8,6 +8,8 @@
+diff --git a/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt b/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
+index 3abeecf4983f..cb80b9e49a2b 100644
+--- a/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
++++ b/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
+@@ -9,19 +9,19 @@ Freescale 83xx and 512x SOCs include the same PCI bridge core.
  
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	#address-cells = <2>;
- 	#size-cells = <1>;
-@@ -359,12 +361,12 @@
- 			 * below are basically de-swizzled numbers.
- 			 * The real slot is on idsel 0, so the swizzling is 1:1
- 			 */
--			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map-mask = <0x0 0x0 0x0 IRQ_INT_ALL>;
- 			interrupt-map = <
--				0x0 0x0 0x0 0x1 &UIC3 0xc 0x4 /* swizzled int A */
--				0x0 0x0 0x0 0x2 &UIC3 0xd 0x4 /* swizzled int B */
--				0x0 0x0 0x0 0x3 &UIC3 0xe 0x4 /* swizzled int C */
--				0x0 0x0 0x0 0x4 &UIC3 0xf 0x4 /* swizzled int D */>;
-+				0x0 0x0 0x0 IRQ_INTA &UIC3 0xc 0x4 /* swizzled int A */
-+				0x0 0x0 0x0 IRQ_INTB &UIC3 0xd 0x4 /* swizzled int B */
-+				0x0 0x0 0x0 IRQ_INTC &UIC3 0xe 0x4 /* swizzled int C */
-+				0x0 0x0 0x0 IRQ_INTD &UIC3 0xf 0x4 /* swizzled int D */>;
- 		};
- 
- 		MSI: ppc4xx-msi@C10000000 {
-diff --git a/arch/powerpc/boot/dts/charon.dts b/arch/powerpc/boot/dts/charon.dts
-index 408b486b13df..0e2fe2511c46 100644
---- a/arch/powerpc/boot/dts/charon.dts
-+++ b/arch/powerpc/boot/dts/charon.dts
-@@ -11,6 +11,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "anon,charon";
- 	compatible = "anon,charon";
-@@ -217,11 +219,11 @@
- 		device_type = "pci";
- 		compatible = "fsl,mpc5200-pci";
- 		reg = <0xf0000d00 0x100>;
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0xc000 0 0 1 &mpc5200_pic 0 0 3
--				 0xc000 0 0 2 &mpc5200_pic 0 0 3
--				 0xc000 0 0 3 &mpc5200_pic 0 0 3
--				 0xc000 0 0 4 &mpc5200_pic 0 0 3>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
-+		interrupt-map = <0xc000 0 0 IRQ_INTA &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTB &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTC &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTD &mpc5200_pic 0 0 3>;
- 		clock-frequency = <0>; // From boot loader
- 		interrupts = <2 8 0 2 9 0 2 10 0>;
- 		bus-range = <0 0>;
-diff --git a/arch/powerpc/boot/dts/digsy_mtc.dts b/arch/powerpc/boot/dts/digsy_mtc.dts
-index 0e5e9d3acf79..292492af7b96 100644
---- a/arch/powerpc/boot/dts/digsy_mtc.dts
-+++ b/arch/powerpc/boot/dts/digsy_mtc.dts
-@@ -9,6 +9,8 @@
- 
- /include/ "mpc5200b.dtsi"
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- &gpt0 { gpio-controller; fsl,has-wdt; };
- &gpt1 { gpio-controller; };
- 
-@@ -90,11 +92,11 @@
- 	};
- 
- 	pci@f0000d00 {
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0xc000 0 0 1 &mpc5200_pic 0 0 3
--				 0xc000 0 0 2 &mpc5200_pic 0 0 3
--				 0xc000 0 0 3 &mpc5200_pic 0 0 3
--				 0xc000 0 0 4 &mpc5200_pic 0 0 3>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
-+		interrupt-map = <0xc000 0 0 IRQ_INTA &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTB &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTC &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTD &mpc5200_pic 0 0 3>;
- 		clock-frequency = <0>; // From boot loader
- 		interrupts = <2 8 0 2 9 0 2 10 0>;
- 		bus-range = <0 0>;
-diff --git a/arch/powerpc/boot/dts/haleakala.dts b/arch/powerpc/boot/dts/haleakala.dts
-index cb16dad43c92..c03bce619c32 100644
---- a/arch/powerpc/boot/dts/haleakala.dts
-+++ b/arch/powerpc/boot/dts/haleakala.dts
-@@ -10,6 +10,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-@@ -270,12 +272,12 @@
- 			 * below are basically de-swizzled numbers.
- 			 * The real slot is on idsel 0, so the swizzling is 1:1
- 			 */
--			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map-mask = <0x0 0x0 0x0 IRQ_INT_ALL>;
- 			interrupt-map = <
--				0x0 0x0 0x0 0x1 &UIC2 0x0 0x4 /* swizzled int A */
--				0x0 0x0 0x0 0x2 &UIC2 0x1 0x4 /* swizzled int B */
--				0x0 0x0 0x0 0x3 &UIC2 0x2 0x4 /* swizzled int C */
--				0x0 0x0 0x0 0x4 &UIC2 0x3 0x4 /* swizzled int D */>;
-+				0x0 0x0 0x0 IRQ_INTA &UIC2 0x0 0x4 /* swizzled int A */
-+				0x0 0x0 0x0 IRQ_INTB &UIC2 0x1 0x4 /* swizzled int B */
-+				0x0 0x0 0x0 IRQ_INTC &UIC2 0x2 0x4 /* swizzled int C */
-+				0x0 0x0 0x0 IRQ_INTD &UIC2 0x3 0x4 /* swizzled int D */>;
- 		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/holly.dts b/arch/powerpc/boot/dts/holly.dts
-index 02bd304c7d38..984cf22c8ed9 100644
---- a/arch/powerpc/boot/dts/holly.dts
-+++ b/arch/powerpc/boot/dts/holly.dts
-@@ -12,6 +12,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "41K7339";
- 	compatible = "ibm,holly";
-@@ -152,30 +154,30 @@
- 		clock-frequency = <133333332>;
- 		interrupt-parent = <&MPIC>;
- 		interrupts = <0x17 0x2>;
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		/*----------------------------------------------------+
- 		| The INTA, INTB, INTC, INTD are shared.
- 		+----------------------------------------------------*/
- 		interrupt-map = <
--			0x800 0x0 0x0 0x1 &RT0 0x24 0x0
--			0x800 0x0 0x0 0x2 &RT0 0x25 0x0
--			0x800 0x0 0x0 0x3 &RT0 0x26 0x0
--			0x800 0x0 0x0 0x4 &RT0 0x27 0x0
--
--			0x1000 0x0 0x0 0x1 &RT0 0x25 0x0
--			0x1000 0x0 0x0 0x2 &RT0 0x26 0x0
--			0x1000 0x0 0x0 0x3 &RT0 0x27 0x0
--			0x1000 0x0 0x0 0x4 &RT0 0x24 0x0
--
--			0x1800 0x0 0x0 0x1 &RT0 0x26 0x0
--			0x1800 0x0 0x0 0x2 &RT0 0x27 0x0
--			0x1800 0x0 0x0 0x3 &RT0 0x24 0x0
--			0x1800 0x0 0x0 0x4 &RT0 0x25 0x0
--
--			0x2000 0x0 0x0 0x1 &RT0 0x27 0x0
--			0x2000 0x0 0x0 0x2 &RT0 0x24 0x0
--			0x2000 0x0 0x0 0x3 &RT0 0x25 0x0
--			0x2000 0x0 0x0 0x4 &RT0 0x26 0x0
-+			0x800 0x0 0x0 IRQ_INTA &RT0 0x24 0x0
-+			0x800 0x0 0x0 IRQ_INTB &RT0 0x25 0x0
-+			0x800 0x0 0x0 IRQ_INTC &RT0 0x26 0x0
-+			0x800 0x0 0x0 IRQ_INTD &RT0 0x27 0x0
-+
-+			0x1000 0x0 0x0 IRQ_INTA &RT0 0x25 0x0
-+			0x1000 0x0 0x0 IRQ_INTB &RT0 0x26 0x0
-+			0x1000 0x0 0x0 IRQ_INTC &RT0 0x27 0x0
-+			0x1000 0x0 0x0 IRQ_INTD &RT0 0x24 0x0
-+
-+			0x1800 0x0 0x0 IRQ_INTA &RT0 0x26 0x0
-+			0x1800 0x0 0x0 IRQ_INTB &RT0 0x27 0x0
-+			0x1800 0x0 0x0 IRQ_INTC &RT0 0x24 0x0
-+			0x1800 0x0 0x0 IRQ_INTD &RT0 0x25 0x0
-+
-+			0x2000 0x0 0x0 IRQ_INTA &RT0 0x27 0x0
-+			0x2000 0x0 0x0 IRQ_INTB &RT0 0x24 0x0
-+			0x2000 0x0 0x0 IRQ_INTC &RT0 0x25 0x0
-+			0x2000 0x0 0x0 IRQ_INTD &RT0 0x26 0x0
- 			>;
- 
- 		RT0: router@1180 {
-diff --git a/arch/powerpc/boot/dts/hotfoot.dts b/arch/powerpc/boot/dts/hotfoot.dts
-index b93bf2d9dd5b..d086b881197f 100644
---- a/arch/powerpc/boot/dts/hotfoot.dts
-+++ b/arch/powerpc/boot/dts/hotfoot.dts
-@@ -10,6 +10,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-@@ -277,15 +279,15 @@
- 			dma-ranges = <0x42000000 0x0 0x0 0x0 0x0 0x80000000>;
- 
- 			interrupt-parent = <&UIC0>;
--			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+			interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 			interrupt-map = <
- 				/* IDSEL 3 -- slot1 (optional) 27/29 A/B IRQ2/4 */
--				0x1800 0x0 0x0 0x1 &UIC0 0x1b 0x8
--				0x1800 0x0 0x0 0x2 &UIC0 0x1d 0x8
-+				0x1800 0x0 0x0 IRQ_INTA &UIC0 0x1b 0x8
-+				0x1800 0x0 0x0 IRQ_INTB &UIC0 0x1d 0x8
- 
- 				/* IDSEL 4 -- slot0, 26/28 A/B IRQ1/3 */
--				0x2000 0x0 0x0 0x1 &UIC0 0x1a 0x8
--				0x2000 0x0 0x0 0x2 &UIC0 0x1c 0x8
-+				0x2000 0x0 0x0 IRQ_INTA &UIC0 0x1a 0x8
-+				0x2000 0x0 0x0 IRQ_INTB &UIC0 0x1c 0x8
- 				>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/kuroboxHD.dts b/arch/powerpc/boot/dts/kuroboxHD.dts
-index 0a4545159e80..d709fe5efd49 100644
---- a/arch/powerpc/boot/dts/kuroboxHD.dts
-+++ b/arch/powerpc/boot/dts/kuroboxHD.dts
-@@ -20,6 +20,8 @@ XXXX add flash parts, rtc, ??
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "KuroboxHD";
- 	compatible = "linkstation";
-@@ -124,23 +126,23 @@ XXXX add flash parts, rtc, ??
- 			bus-range = <0 255>;
- 			clock-frequency = <133333333>;
- 			interrupt-parent = <&mpic>;
--			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+			interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 			interrupt-map = <
- 				/* IDSEL 11 - IRQ0 ETH */
--				0x5800 0x0 0x0 0x1 &mpic 0x0 0x1
--				0x5800 0x0 0x0 0x2 &mpic 0x1 0x1
--				0x5800 0x0 0x0 0x3 &mpic 0x2 0x1
--				0x5800 0x0 0x0 0x4 &mpic 0x3 0x1
-+				0x5800 0x0 0x0 IRQ_INTA &mpic 0x0 0x1
-+				0x5800 0x0 0x0 IRQ_INTB &mpic 0x1 0x1
-+				0x5800 0x0 0x0 IRQ_INTC &mpic 0x2 0x1
-+				0x5800 0x0 0x0 IRQ_INTD &mpic 0x3 0x1
- 				/* IDSEL 12 - IRQ1 IDE0 */
--				0x6000 0x0 0x0 0x1 &mpic 0x1 0x1
--				0x6000 0x0 0x0 0x2 &mpic 0x2 0x1
--				0x6000 0x0 0x0 0x3 &mpic 0x3 0x1
--				0x6000 0x0 0x0 0x4 &mpic 0x0 0x1
-+				0x6000 0x0 0x0 IRQ_INTA &mpic 0x1 0x1
-+				0x6000 0x0 0x0 IRQ_INTB &mpic 0x2 0x1
-+				0x6000 0x0 0x0 IRQ_INTC &mpic 0x3 0x1
-+				0x6000 0x0 0x0 IRQ_INTD &mpic 0x0 0x1
- 				/* IDSEL 14 - IRQ3 USB2.0 */
--				0x7000 0x0 0x0 0x1 &mpic 0x3 0x1
--				0x7000 0x0 0x0 0x2 &mpic 0x3 0x1
--				0x7000 0x0 0x0 0x3 &mpic 0x3 0x1
--				0x7000 0x0 0x0 0x4 &mpic 0x3 0x1
-+				0x7000 0x0 0x0 IRQ_INTA &mpic 0x3 0x1
-+				0x7000 0x0 0x0 IRQ_INTB &mpic 0x3 0x1
-+				0x7000 0x0 0x0 IRQ_INTC &mpic 0x3 0x1
-+				0x7000 0x0 0x0 IRQ_INTD &mpic 0x3 0x1
- 			>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/kuroboxHG.dts b/arch/powerpc/boot/dts/kuroboxHG.dts
-index 0e758b347cdb..5b392aca3a63 100644
---- a/arch/powerpc/boot/dts/kuroboxHG.dts
-+++ b/arch/powerpc/boot/dts/kuroboxHG.dts
-@@ -20,6 +20,8 @@ XXXX add flash parts, rtc, ??
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "KuroboxHG";
- 	compatible = "linkstation";
-@@ -124,23 +126,23 @@ XXXX add flash parts, rtc, ??
- 			bus-range = <0 255>;
- 			clock-frequency = <133333333>;
- 			interrupt-parent = <&mpic>;
--			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+			interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 			interrupt-map = <
- 				/* IDSEL 11 - IRQ0 ETH */
--				0x5800 0x0 0x0 0x1 &mpic 0x0 0x1
--				0x5800 0x0 0x0 0x2 &mpic 0x1 0x1
--				0x5800 0x0 0x0 0x3 &mpic 0x2 0x1
--				0x5800 0x0 0x0 0x4 &mpic 0x3 0x1
-+				0x5800 0x0 0x0 IRQ_INTA &mpic 0x0 0x1
-+				0x5800 0x0 0x0 IRQ_INTB &mpic 0x1 0x1
-+				0x5800 0x0 0x0 IRQ_INTC &mpic 0x2 0x1
-+				0x5800 0x0 0x0 IRQ_INTD &mpic 0x3 0x1
- 				/* IDSEL 12 - IRQ1 IDE0 */
--				0x6000 0x0 0x0 0x1 &mpic 0x1 0x1
--				0x6000 0x0 0x0 0x2 &mpic 0x2 0x1
--				0x6000 0x0 0x0 0x3 &mpic 0x3 0x1
--				0x6000 0x0 0x0 0x4 &mpic 0x0 0x1
-+				0x6000 0x0 0x0 IRQ_INTA &mpic 0x1 0x1
-+				0x6000 0x0 0x0 IRQ_INTB &mpic 0x2 0x1
-+				0x6000 0x0 0x0 IRQ_INTC &mpic 0x3 0x1
-+				0x6000 0x0 0x0 IRQ_INTD &mpic 0x0 0x1
- 				/* IDSEL 14 - IRQ3 USB2.0 */
--				0x7000 0x0 0x0 0x1 &mpic 0x3 0x1
--				0x7000 0x0 0x0 0x2 &mpic 0x3 0x1
--				0x7000 0x0 0x0 0x3 &mpic 0x3 0x1
--				0x7000 0x0 0x0 0x4 &mpic 0x3 0x1
-+				0x7000 0x0 0x0 IRQ_INTA &mpic 0x3 0x1
-+				0x7000 0x0 0x0 IRQ_INTB &mpic 0x3 0x1
-+				0x7000 0x0 0x0 IRQ_INTC &mpic 0x3 0x1
-+				0x7000 0x0 0x0 IRQ_INTD &mpic 0x3 0x1
- 			>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/lite5200.dts b/arch/powerpc/boot/dts/lite5200.dts
-index cb2782dd6132..8ab828853f4b 100644
---- a/arch/powerpc/boot/dts/lite5200.dts
-+++ b/arch/powerpc/boot/dts/lite5200.dts
-@@ -8,6 +8,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "fsl,lite5200";
- 	compatible = "fsl,lite5200";
-@@ -275,11 +277,11 @@
- 		device_type = "pci";
- 		compatible = "fsl,mpc5200-pci";
- 		reg = <0xf0000d00 0x100>;
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0xc000 0 0 1 &mpc5200_pic 0 0 3
--				 0xc000 0 0 2 &mpc5200_pic 0 0 3
--				 0xc000 0 0 3 &mpc5200_pic 0 0 3
--				 0xc000 0 0 4 &mpc5200_pic 0 0 3>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
-+		interrupt-map = <0xc000 0 0 IRQ_INTA &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTB &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTC &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTD &mpc5200_pic 0 0 3>;
- 		clock-frequency = <0>; // From boot loader
- 		interrupts = <2 8 0 2 9 0 2 10 0>;
- 		bus-range = <0 0>;
-diff --git a/arch/powerpc/boot/dts/lite5200b.dts b/arch/powerpc/boot/dts/lite5200b.dts
-index 2b86c81f9048..4913accba301 100644
---- a/arch/powerpc/boot/dts/lite5200b.dts
-+++ b/arch/powerpc/boot/dts/lite5200b.dts
-@@ -8,6 +8,8 @@
- 
- /include/ "mpc5200b.dtsi"
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- &gpt0 { fsl,has-wdt; };
- &gpt2 { gpio-controller; };
- &gpt3 { gpio-controller; };
-@@ -103,16 +105,16 @@
- 	};
- 
- 	pci@f0000d00 {
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0xc000 0 0 1 &mpc5200_pic 0 0 3 // 1st slot
--				 0xc000 0 0 2 &mpc5200_pic 1 1 3
--				 0xc000 0 0 3 &mpc5200_pic 1 2 3
--				 0xc000 0 0 4 &mpc5200_pic 1 3 3
--
--				 0xc800 0 0 1 &mpc5200_pic 1 1 3 // 2nd slot
--				 0xc800 0 0 2 &mpc5200_pic 1 2 3
--				 0xc800 0 0 3 &mpc5200_pic 1 3 3
--				 0xc800 0 0 4 &mpc5200_pic 0 0 3>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
-+		interrupt-map = <0xc000 0 0 IRQ_INTA &mpc5200_pic 0 0 3 // 1st slot
-+				 0xc000 0 0 IRQ_INTB &mpc5200_pic 1 1 3
-+				 0xc000 0 0 IRQ_INTC &mpc5200_pic 1 2 3
-+				 0xc000 0 0 IRQ_INTD &mpc5200_pic 1 3 3
-+
-+				 0xc800 0 0 IRQ_INTA &mpc5200_pic 1 1 3 // 2nd slot
-+				 0xc800 0 0 IRQ_INTB &mpc5200_pic 1 2 3
-+				 0xc800 0 0 IRQ_INTC &mpc5200_pic 1 3 3
-+				 0xc800 0 0 IRQ_INTD &mpc5200_pic 0 0 3>;
- 		clock-frequency = <0>; // From boot loader
- 		interrupts = <2 8 0 2 9 0 2 10 0>;
- 		bus-range = <0 0>;
-diff --git a/arch/powerpc/boot/dts/media5200.dts b/arch/powerpc/boot/dts/media5200.dts
-index 61cae9dcddef..a92e46f7e962 100644
---- a/arch/powerpc/boot/dts/media5200.dts
-+++ b/arch/powerpc/boot/dts/media5200.dts
-@@ -9,6 +9,8 @@
- 
- /include/ "mpc5200b.dtsi"
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- &gpt0 { fsl,has-wdt; };
- 
- / {
-@@ -80,21 +82,21 @@
- 	};
- 
- 	pci@f0000d00 {
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0xc000 0 0 1 &media5200_fpga 0 2 // 1st slot
--				 0xc000 0 0 2 &media5200_fpga 0 3
--				 0xc000 0 0 3 &media5200_fpga 0 4
--				 0xc000 0 0 4 &media5200_fpga 0 5
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
-+		interrupt-map = <0xc000 0 0 IRQ_INTA &media5200_fpga 0 2 // 1st slot
-+				 0xc000 0 0 IRQ_INTB &media5200_fpga 0 3
-+				 0xc000 0 0 IRQ_INTC &media5200_fpga 0 4
-+				 0xc000 0 0 IRQ_INTD &media5200_fpga 0 5
- 
--				 0xc800 0 0 1 &media5200_fpga 0 3 // 2nd slot
--				 0xc800 0 0 2 &media5200_fpga 0 4
--				 0xc800 0 0 3 &media5200_fpga 0 5
--				 0xc800 0 0 4 &media5200_fpga 0 2
-+				 0xc800 0 0 IRQ_INTA &media5200_fpga 0 3 // 2nd slot
-+				 0xc800 0 0 IRQ_INTB &media5200_fpga 0 4
-+				 0xc800 0 0 IRQ_INTC &media5200_fpga 0 5
-+				 0xc800 0 0 IRQ_INTD &media5200_fpga 0 2
- 
--				 0xd000 0 0 1 &media5200_fpga 0 4 // miniPCI
--				 0xd000 0 0 2 &media5200_fpga 0 5
-+				 0xd000 0 0 IRQ_INTA &media5200_fpga 0 4 // miniPCI
-+				 0xd000 0 0 IRQ_INTB &media5200_fpga 0 5
- 
--				 0xe000 0 0 1 &media5200_fpga 0 5 // CoralIP
-+				 0xe000 0 0 IRQ_INTA &media5200_fpga 0 5 // CoralIP
- 				>;
- 		ranges = <0x42000000 0 0x80000000 0x80000000 0 0x20000000
- 			  0x02000000 0 0xa0000000 0xa0000000 0 0x10000000
-diff --git a/arch/powerpc/boot/dts/mpc5121ads.dts b/arch/powerpc/boot/dts/mpc5121ads.dts
-index b407a50ee622..9aeb924ab52f 100644
---- a/arch/powerpc/boot/dts/mpc5121ads.dts
-+++ b/arch/powerpc/boot/dts/mpc5121ads.dts
-@@ -7,6 +7,8 @@
- 
- #include "mpc5121.dtsi"
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "mpc5121ads";
- 	compatible = "fsl,mpc5121ads", "fsl,mpc5121";
-@@ -154,21 +156,21 @@
- 	};
- 
- 	pci: pci@80008500 {
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL 0x15 - Slot 1 PCI */
--				 0xa800 0x0 0x0 0x1 &cpld_pic 0x0 0x8
--				 0xa800 0x0 0x0 0x2 &cpld_pic 0x1 0x8
--				 0xa800 0x0 0x0 0x3 &cpld_pic 0x2 0x8
--				 0xa800 0x0 0x0 0x4 &cpld_pic 0x3 0x8
-+				 0xa800 0x0 0x0 IRQ_INTA &cpld_pic 0x0 0x8
-+				 0xa800 0x0 0x0 IRQ_INTB &cpld_pic 0x1 0x8
-+				 0xa800 0x0 0x0 IRQ_INTC &cpld_pic 0x2 0x8
-+				 0xa800 0x0 0x0 IRQ_INTD &cpld_pic 0x3 0x8
- 
- 				/* IDSEL 0x16 - Slot 2 MiniPCI */
--				 0xb000 0x0 0x0 0x1 &cpld_pic 0x4 0x8
--				 0xb000 0x0 0x0 0x2 &cpld_pic 0x5 0x8
-+				 0xb000 0x0 0x0 IRQ_INTA &cpld_pic 0x4 0x8
-+				 0xb000 0x0 0x0 IRQ_INTB &cpld_pic 0x5 0x8
- 
- 				/* IDSEL 0x17 - Slot 3 MiniPCI */
--				 0xb800 0x0 0x0 0x1 &cpld_pic 0x6 0x8
--				 0xb800 0x0 0x0 0x2 &cpld_pic 0x7 0x8
-+				 0xb800 0x0 0x0 IRQ_INTA &cpld_pic 0x6 0x8
-+				 0xb800 0x0 0x0 IRQ_INTB &cpld_pic 0x7 0x8
- 				>;
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/mpc8308rdb.dts b/arch/powerpc/boot/dts/mpc8308rdb.dts
-index af2ed8380a86..0e9031b1a22b 100644
---- a/arch/powerpc/boot/dts/mpc8308rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8308rdb.dts
-@@ -8,6 +8,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	compatible = "fsl,mpc8308rdb";
- 	#address-cells = <1>;
-@@ -281,11 +283,11 @@
- 		ranges = <0x02000000 0 0xa0000000 0xa0000000 0 0x10000000
- 		          0x01000000 0 0x00000000 0xb1000000 0 0x00800000>;
- 		bus-range = <0 0>;
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0 0 0 1 &ipic 1 8
--				 0 0 0 2 &ipic 1 8
--				 0 0 0 3 &ipic 1 8
--				 0 0 0 4 &ipic 1 8>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
-+		interrupt-map = <0 0 0 IRQ_INTA &ipic 1 8
-+				 0 0 0 IRQ_INTB &ipic 1 8
-+				 0 0 0 IRQ_INTC &ipic 1 8
-+				 0 0 0 IRQ_INTD &ipic 1 8>;
- 		interrupts = <0x1 0x8>;
- 		interrupt-parent = <&ipic>;
- 		clock-frequency = <0>;
-diff --git a/arch/powerpc/boot/dts/mpc8313erdb.dts b/arch/powerpc/boot/dts/mpc8313erdb.dts
-index a8315795b2c9..99513c9a76eb 100644
---- a/arch/powerpc/boot/dts/mpc8313erdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8313erdb.dts
-@@ -7,6 +7,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "MPC8313ERDB";
- 	compatible = "MPC8313ERDB", "MPC831xRDB", "MPC83xxRDB";
-@@ -327,19 +329,19 @@
- 
- 		pci0: pci@e0008500 {
- 			cell-index = <1>;
--			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+			interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 			interrupt-map = <
- 					/* IDSEL 0x0E -mini PCI */
--					 0x7000 0x0 0x0 0x1 &ipic 18 0x8
--					 0x7000 0x0 0x0 0x2 &ipic 18 0x8
--					 0x7000 0x0 0x0 0x3 &ipic 18 0x8
--					 0x7000 0x0 0x0 0x4 &ipic 18 0x8
-+					 0x7000 0x0 0x0 IRQ_INTA &ipic 18 0x8
-+					 0x7000 0x0 0x0 IRQ_INTB &ipic 18 0x8
-+					 0x7000 0x0 0x0 IRQ_INTC &ipic 18 0x8
-+					 0x7000 0x0 0x0 IRQ_INTD &ipic 18 0x8
- 
- 					/* IDSEL 0x0F - PCI slot */
--					 0x7800 0x0 0x0 0x1 &ipic 17 0x8
--					 0x7800 0x0 0x0 0x2 &ipic 18 0x8
--					 0x7800 0x0 0x0 0x3 &ipic 17 0x8
--					 0x7800 0x0 0x0 0x4 &ipic 18 0x8>;
-+					 0x7800 0x0 0x0 IRQ_INTA &ipic 17 0x8
-+					 0x7800 0x0 0x0 IRQ_INTB &ipic 18 0x8
-+					 0x7800 0x0 0x0 IRQ_INTC &ipic 17 0x8
-+					 0x7800 0x0 0x0 IRQ_INTD &ipic 18 0x8>;
- 			interrupt-parent = <&ipic>;
- 			interrupts = <66 0x8>;
- 			bus-range = <0x0 0x0>;
-diff --git a/arch/powerpc/boot/dts/mpc832x_mds.dts b/arch/powerpc/boot/dts/mpc832x_mds.dts
-index 3af073f01e71..38a0772e9c66 100644
---- a/arch/powerpc/boot/dts/mpc832x_mds.dts
-+++ b/arch/powerpc/boot/dts/mpc832x_mds.dts
-@@ -20,6 +20,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "MPC8323EMDS";
- 	compatible = "MPC8323EMDS", "MPC832xMDS", "MPC83xxMDS";
-@@ -374,49 +376,49 @@
- 	};
- 
+ Example (MPC8313ERDB)
  	pci0: pci@e0008500 {
 -		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
 +		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
  		interrupt-map = <
- 				/* IDSEL 0x11 AD17 */
--				 0x8800 0x0 0x0 0x1 &ipic 20 0x8
--				 0x8800 0x0 0x0 0x2 &ipic 21 0x8
--				 0x8800 0x0 0x0 0x3 &ipic 22 0x8
--				 0x8800 0x0 0x0 0x4 &ipic 23 0x8
-+				 0x8800 0x0 0x0 IRQ_INTA &ipic 20 0x8
-+				 0x8800 0x0 0x0 IRQ_INTB &ipic 21 0x8
-+				 0x8800 0x0 0x0 IRQ_INTC &ipic 22 0x8
-+				 0x8800 0x0 0x0 IRQ_INTD &ipic 23 0x8
+ 				/* IDSEL 0x0E -mini PCI */
+-				 0x7000 0x0 0x0 0x1 &ipic 18 0x8
+-				 0x7000 0x0 0x0 0x2 &ipic 18 0x8
+-				 0x7000 0x0 0x0 0x3 &ipic 18 0x8
+-				 0x7000 0x0 0x0 0x4 &ipic 18 0x8
++				 0x7000 0x0 0x0 IRQ_INTA &ipic 18 0x8
++				 0x7000 0x0 0x0 IRQ_INTB &ipic 18 0x8
++				 0x7000 0x0 0x0 IRQ_INTC &ipic 18 0x8
++				 0x7000 0x0 0x0 IRQ_INTD &ipic 18 0x8
  
- 				/* IDSEL 0x12 AD18 */
--				 0x9000 0x0 0x0 0x1 &ipic 22 0x8
--				 0x9000 0x0 0x0 0x2 &ipic 23 0x8
--				 0x9000 0x0 0x0 0x3 &ipic 20 0x8
--				 0x9000 0x0 0x0 0x4 &ipic 21 0x8
-+				 0x9000 0x0 0x0 IRQ_INTA &ipic 22 0x8
-+				 0x9000 0x0 0x0 IRQ_INTB &ipic 23 0x8
-+				 0x9000 0x0 0x0 IRQ_INTC &ipic 20 0x8
-+				 0x9000 0x0 0x0 IRQ_INTD &ipic 21 0x8
- 
- 				/* IDSEL 0x13 AD19 */
--				 0x9800 0x0 0x0 0x1 &ipic 23 0x8
--				 0x9800 0x0 0x0 0x2 &ipic 20 0x8
--				 0x9800 0x0 0x0 0x3 &ipic 21 0x8
--				 0x9800 0x0 0x0 0x4 &ipic 22 0x8
-+				 0x9800 0x0 0x0 IRQ_INTA &ipic 23 0x8
-+				 0x9800 0x0 0x0 IRQ_INTB &ipic 20 0x8
-+				 0x9800 0x0 0x0 IRQ_INTC &ipic 21 0x8
-+				 0x9800 0x0 0x0 IRQ_INTD &ipic 22 0x8
- 
- 				/* IDSEL 0x15 AD21*/
--				 0xa800 0x0 0x0 0x1 &ipic 20 0x8
--				 0xa800 0x0 0x0 0x2 &ipic 21 0x8
--				 0xa800 0x0 0x0 0x3 &ipic 22 0x8
--				 0xa800 0x0 0x0 0x4 &ipic 23 0x8
-+				 0xa800 0x0 0x0 IRQ_INTA &ipic 20 0x8
-+				 0xa800 0x0 0x0 IRQ_INTB &ipic 21 0x8
-+				 0xa800 0x0 0x0 IRQ_INTC &ipic 22 0x8
-+				 0xa800 0x0 0x0 IRQ_INTD &ipic 23 0x8
- 
- 				/* IDSEL 0x16 AD22*/
--				 0xb000 0x0 0x0 0x1 &ipic 23 0x8
--				 0xb000 0x0 0x0 0x2 &ipic 20 0x8
--				 0xb000 0x0 0x0 0x3 &ipic 21 0x8
--				 0xb000 0x0 0x0 0x4 &ipic 22 0x8
-+				 0xb000 0x0 0x0 IRQ_INTA &ipic 23 0x8
-+				 0xb000 0x0 0x0 IRQ_INTB &ipic 20 0x8
-+				 0xb000 0x0 0x0 IRQ_INTC &ipic 21 0x8
-+				 0xb000 0x0 0x0 IRQ_INTD &ipic 22 0x8
- 
- 				/* IDSEL 0x17 AD23*/
--				 0xb800 0x0 0x0 0x1 &ipic 22 0x8
--				 0xb800 0x0 0x0 0x2 &ipic 23 0x8
--				 0xb800 0x0 0x0 0x3 &ipic 20 0x8
--				 0xb800 0x0 0x0 0x4 &ipic 21 0x8
-+				 0xb800 0x0 0x0 IRQ_INTA &ipic 22 0x8
-+				 0xb800 0x0 0x0 IRQ_INTB &ipic 23 0x8
-+				 0xb800 0x0 0x0 IRQ_INTC &ipic 20 0x8
-+				 0xb800 0x0 0x0 IRQ_INTD &ipic 21 0x8
- 
- 				/* IDSEL 0x18 AD24*/
--				 0xc000 0x0 0x0 0x1 &ipic 21 0x8
--				 0xc000 0x0 0x0 0x2 &ipic 22 0x8
--				 0xc000 0x0 0x0 0x3 &ipic 23 0x8
--				 0xc000 0x0 0x0 0x4 &ipic 20 0x8>;
-+				 0xc000 0x0 0x0 IRQ_INTA &ipic 21 0x8
-+				 0xc000 0x0 0x0 IRQ_INTB &ipic 22 0x8
-+				 0xc000 0x0 0x0 IRQ_INTC &ipic 23 0x8
-+				 0xc000 0x0 0x0 IRQ_INTD &ipic 20 0x8>;
+ 				/* IDSEL 0x0F - PCI slot */
+-				 0x7800 0x0 0x0 0x1 &ipic 17 0x8
+-				 0x7800 0x0 0x0 0x2 &ipic 18 0x8
+-				 0x7800 0x0 0x0 0x3 &ipic 17 0x8
+-				 0x7800 0x0 0x0 0x4 &ipic 18 0x8>;
++				 0x7800 0x0 0x0 IRQ_INTA &ipic 17 0x8
++				 0x7800 0x0 0x0 IRQ_INTB &ipic 18 0x8
++				 0x7800 0x0 0x0 IRQ_INTC &ipic 17 0x8
++				 0x7800 0x0 0x0 IRQ_INTD &ipic 18 0x8>;
  		interrupt-parent = <&ipic>;
  		interrupts = <66 0x8>;
  		bus-range = <0x0 0x0>;
-diff --git a/arch/powerpc/boot/dts/mpc832x_rdb.dts b/arch/powerpc/boot/dts/mpc832x_rdb.dts
-index b6257186528e..2e74f104ac93 100644
---- a/arch/powerpc/boot/dts/mpc832x_rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc832x_rdb.dts
-@@ -7,6 +7,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "MPC8323ERDB";
- 	compatible = "MPC8323ERDB", "MPC832xRDB", "MPC83xxRDB";
-@@ -327,22 +329,22 @@
- 	};
- 
- 	pci0: pci@e0008500 {
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL 0x10 AD16 (USB) */
--				 0x8000 0x0 0x0 0x1 &ipic 17 0x8
-+				 0x8000 0x0 0x0 IRQ_INTA &ipic 17 0x8
- 
- 				/* IDSEL 0x11 AD17 (Mini1)*/
--				 0x8800 0x0 0x0 0x1 &ipic 18 0x8
--				 0x8800 0x0 0x0 0x2 &ipic 19 0x8
--				 0x8800 0x0 0x0 0x3 &ipic 20 0x8
--				 0x8800 0x0 0x0 0x4 &ipic 48 0x8
-+				 0x8800 0x0 0x0 IRQ_INTA &ipic 18 0x8
-+				 0x8800 0x0 0x0 IRQ_INTB &ipic 19 0x8
-+				 0x8800 0x0 0x0 IRQ_INTC &ipic 20 0x8
-+				 0x8800 0x0 0x0 IRQ_INTD &ipic 48 0x8
- 
- 				/* IDSEL 0x12 AD18 (PCI/Mini2) */
--				 0x9000 0x0 0x0 0x1 &ipic 19 0x8
--				 0x9000 0x0 0x0 0x2 &ipic 20 0x8
--				 0x9000 0x0 0x0 0x3 &ipic 48 0x8
--				 0x9000 0x0 0x0 0x4 &ipic 17 0x8>;
-+				 0x9000 0x0 0x0 IRQ_INTA &ipic 19 0x8
-+				 0x9000 0x0 0x0 IRQ_INTB &ipic 20 0x8
-+				 0x9000 0x0 0x0 IRQ_INTC &ipic 48 0x8
-+				 0x9000 0x0 0x0 IRQ_INTD &ipic 17 0x8>;
- 
- 		interrupt-parent = <&ipic>;
- 		interrupts = <66 0x8>;
-diff --git a/arch/powerpc/boot/dts/mpc8349emitxgp.dts b/arch/powerpc/boot/dts/mpc8349emitxgp.dts
-index bcf68a0a7b55..f218331e0c17 100644
---- a/arch/powerpc/boot/dts/mpc8349emitxgp.dts
-+++ b/arch/powerpc/boot/dts/mpc8349emitxgp.dts
-@@ -7,6 +7,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "MPC8349EMITXGP";
- 	compatible = "MPC8349EMITXGP", "MPC834xMITX", "MPC83xxMITX";
-@@ -222,11 +224,11 @@
- 	};
- 
- 	pci0: pci@e0008600 {
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL 0x0F - PCI Slot */
--				0x7800 0x0 0x0 0x1 &ipic 20 0x8 /* PCI_INTA */
--				0x7800 0x0 0x0 0x2 &ipic 21 0x8 /* PCI_INTB */
-+				0x7800 0x0 0x0 IRQ_INTA &ipic 20 0x8
-+				0x7800 0x0 0x0 IRQ_INTB &ipic 21 0x8
- 				 >;
- 		interrupt-parent = <&ipic>;
- 		interrupts = <67 0x8>;
-diff --git a/arch/powerpc/boot/dts/mpc836x_mds.dts b/arch/powerpc/boot/dts/mpc836x_mds.dts
-index f4ca12ec57f1..7c5fd0d87df9 100644
---- a/arch/powerpc/boot/dts/mpc836x_mds.dts
-+++ b/arch/powerpc/boot/dts/mpc836x_mds.dts
-@@ -12,6 +12,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "MPC8360MDS";
- 	compatible = "MPC8360EMDS", "MPC836xMDS", "MPC83xxMDS";
-@@ -418,50 +420,50 @@
- 	};
- 
- 	pci0: pci@e0008500 {
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 
- 				/* IDSEL 0x11 AD17 */
--				 0x8800 0x0 0x0 0x1 &ipic 20 0x8
--				 0x8800 0x0 0x0 0x2 &ipic 21 0x8
--				 0x8800 0x0 0x0 0x3 &ipic 22 0x8
--				 0x8800 0x0 0x0 0x4 &ipic 23 0x8
-+				 0x8800 0x0 0x0 IRQ_INTA &ipic 20 0x8
-+				 0x8800 0x0 0x0 IRQ_INTB &ipic 21 0x8
-+				 0x8800 0x0 0x0 IRQ_INTC &ipic 22 0x8
-+				 0x8800 0x0 0x0 IRQ_INTD &ipic 23 0x8
- 
- 				/* IDSEL 0x12 AD18 */
--				 0x9000 0x0 0x0 0x1 &ipic 22 0x8
--				 0x9000 0x0 0x0 0x2 &ipic 23 0x8
--				 0x9000 0x0 0x0 0x3 &ipic 20 0x8
--				 0x9000 0x0 0x0 0x4 &ipic 21 0x8
-+				 0x9000 0x0 0x0 IRQ_INTA &ipic 22 0x8
-+				 0x9000 0x0 0x0 IRQ_INTB &ipic 23 0x8
-+				 0x9000 0x0 0x0 IRQ_INTC &ipic 20 0x8
-+				 0x9000 0x0 0x0 IRQ_INTD &ipic 21 0x8
- 
- 				/* IDSEL 0x13 AD19 */
--				 0x9800 0x0 0x0 0x1 &ipic 23 0x8
--				 0x9800 0x0 0x0 0x2 &ipic 20 0x8
--				 0x9800 0x0 0x0 0x3 &ipic 21 0x8
--				 0x9800 0x0 0x0 0x4 &ipic 22 0x8
-+				 0x9800 0x0 0x0 IRQ_INTA &ipic 23 0x8
-+				 0x9800 0x0 0x0 IRQ_INTB &ipic 20 0x8
-+				 0x9800 0x0 0x0 IRQ_INTC &ipic 21 0x8
-+				 0x9800 0x0 0x0 IRQ_INTD &ipic 22 0x8
- 
- 				/* IDSEL 0x15 AD21*/
--				 0xa800 0x0 0x0 0x1 &ipic 20 0x8
--				 0xa800 0x0 0x0 0x2 &ipic 21 0x8
--				 0xa800 0x0 0x0 0x3 &ipic 22 0x8
--				 0xa800 0x0 0x0 0x4 &ipic 23 0x8
-+				 0xa800 0x0 0x0 IRQ_INTA &ipic 20 0x8
-+				 0xa800 0x0 0x0 IRQ_INTB &ipic 21 0x8
-+				 0xa800 0x0 0x0 IRQ_INTC &ipic 22 0x8
-+				 0xa800 0x0 0x0 IRQ_INTD &ipic 23 0x8
- 
- 				/* IDSEL 0x16 AD22*/
--				 0xb000 0x0 0x0 0x1 &ipic 23 0x8
--				 0xb000 0x0 0x0 0x2 &ipic 20 0x8
--				 0xb000 0x0 0x0 0x3 &ipic 21 0x8
--				 0xb000 0x0 0x0 0x4 &ipic 22 0x8
-+				 0xb000 0x0 0x0 IRQ_INTA &ipic 23 0x8
-+				 0xb000 0x0 0x0 IRQ_INTB &ipic 20 0x8
-+				 0xb000 0x0 0x0 IRQ_INTC &ipic 21 0x8
-+				 0xb000 0x0 0x0 IRQ_INTD &ipic 22 0x8
- 
- 				/* IDSEL 0x17 AD23*/
--				 0xb800 0x0 0x0 0x1 &ipic 22 0x8
--				 0xb800 0x0 0x0 0x2 &ipic 23 0x8
--				 0xb800 0x0 0x0 0x3 &ipic 20 0x8
--				 0xb800 0x0 0x0 0x4 &ipic 21 0x8
-+				 0xb800 0x0 0x0 IRQ_INTA &ipic 22 0x8
-+				 0xb800 0x0 0x0 IRQ_INTB &ipic 23 0x8
-+				 0xb800 0x0 0x0 IRQ_INTC &ipic 20 0x8
-+				 0xb800 0x0 0x0 IRQ_INTD &ipic 21 0x8
- 
- 				/* IDSEL 0x18 AD24*/
--				 0xc000 0x0 0x0 0x1 &ipic 21 0x8
--				 0xc000 0x0 0x0 0x2 &ipic 22 0x8
--				 0xc000 0x0 0x0 0x3 &ipic 23 0x8
--				 0xc000 0x0 0x0 0x4 &ipic 20 0x8>;
-+				 0xc000 0x0 0x0 IRQ_INTA &ipic 21 0x8
-+				 0xc000 0x0 0x0 IRQ_INTB &ipic 22 0x8
-+				 0xc000 0x0 0x0 IRQ_INTC &ipic 23 0x8
-+				 0xc000 0x0 0x0 IRQ_INTD &ipic 20 0x8>;
- 		interrupt-parent = <&ipic>;
- 		interrupts = <66 0x8>;
- 		bus-range = <0 0>;
-diff --git a/arch/powerpc/boot/dts/mpc836x_rdk.dts b/arch/powerpc/boot/dts/mpc836x_rdk.dts
-index a0cc1953484d..e42529e48341 100644
---- a/arch/powerpc/boot/dts/mpc836x_rdk.dts
-+++ b/arch/powerpc/boot/dts/mpc836x_rdk.dts
-@@ -10,6 +10,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-@@ -445,16 +447,16 @@
- 			  0x01000000 0 0xe0300000 0xe0300000 0 0x00100000>;
- 		interrupts = <66 8>;
- 		interrupt-parent = <&ipic>;
--		interrupt-map-mask = <0xf800 0 0 7>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
- 		interrupt-map = </* miniPCI0 IDSEL 0x14 AD20 */
--				 0xa000 0 0 1 &ipic 18 8
--				 0xa000 0 0 2 &ipic 19 8
-+				 0xa000 0 0 IRQ_INTA &ipic 18 8
-+				 0xa000 0 0 IRQ_INTB &ipic 19 8
- 
- 				 /* PCI1 IDSEL 0x15 AD21 */
--				 0xa800 0 0 1 &ipic 19 8
--				 0xa800 0 0 2 &ipic 20 8
--				 0xa800 0 0 3 &ipic 21 8
--				 0xa800 0 0 4 &ipic 18 8>;
-+				 0xa800 0 0 IRQ_INTA &ipic 19 8
-+				 0xa800 0 0 IRQ_INTB &ipic 20 8
-+				 0xa800 0 0 IRQ_INTC &ipic 21 8
-+				 0xa800 0 0 IRQ_INTD &ipic 18 8>;
- 		sleep = <&pmc 0x00010000>;
- 		/* filled by u-boot */
- 		bus-range = <0 0>;
-diff --git a/arch/powerpc/boot/dts/mucmc52.dts b/arch/powerpc/boot/dts/mucmc52.dts
-index c6c66306308d..f9e5520b11ab 100644
---- a/arch/powerpc/boot/dts/mucmc52.dts
-+++ b/arch/powerpc/boot/dts/mucmc52.dts
-@@ -9,6 +9,8 @@
- 
- /include/ "mpc5200b.dtsi"
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- /* Timer pins that need to be in GPIO mode */
- &gpt0 { gpio-controller; };
- &gpt1 { gpio-controller; };
-@@ -98,13 +100,13 @@
- 	};
- 
- 	pci@f0000d00 {
--		interrupt-map-mask = <0xf800 0 0 7>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL 0x10 */
--				0x8000 0 0 1 &mpc5200_pic 0 3 3
--				0x8000 0 0 2 &mpc5200_pic 0 3 3
--				0x8000 0 0 3 &mpc5200_pic 0 2 3
--				0x8000 0 0 4 &mpc5200_pic 0 1 3
-+				0x8000 0 0 IRQ_INTA &mpc5200_pic 0 3 3
-+				0x8000 0 0 IRQ_INTB &mpc5200_pic 0 3 3
-+				0x8000 0 0 IRQ_INTC &mpc5200_pic 0 2 3
-+				0x8000 0 0 IRQ_INTD &mpc5200_pic 0 1 3
- 				>;
- 		ranges = <0x42000000 0 0x60000000 0x60000000 0 0x10000000
- 			  0x02000000 0 0x90000000 0x90000000 0 0x10000000
-diff --git a/arch/powerpc/boot/dts/mvme5100.dts b/arch/powerpc/boot/dts/mvme5100.dts
-index a7eb6d25903d..29c56e56e50a 100644
---- a/arch/powerpc/boot/dts/mvme5100.dts
-+++ b/arch/powerpc/boot/dts/mvme5100.dts
-@@ -10,6 +10,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "MVME5100";
- 	compatible = "MVME5100";
-@@ -96,7 +98,7 @@
- 		bus-range = <0 255>;
- 		clock-frequency = <33333333>;
- 		interrupt-parent = <&mpic>;
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 
- 			/*
-@@ -109,46 +111,46 @@
- 			 * "spurious" i8259 interrupts to be fielded.
- 			 */
- 			// IDSEL 11 - iPMC712 PCI/ISA Bridge
--			0x5800 0x0 0x0 0x1 &mpic 0x0 0x2
--			0x5800 0x0 0x0 0x2 &mpic 0x0 0x2
--			0x5800 0x0 0x0 0x3 &mpic 0x0 0x2
--			0x5800 0x0 0x0 0x4 &mpic 0x0 0x2
-+			0x5800 0x0 0x0 IRQ_INTA &mpic 0x0 0x2
-+			0x5800 0x0 0x0 IRQ_INTB &mpic 0x0 0x2
-+			0x5800 0x0 0x0 IRQ_INTC &mpic 0x0 0x2
-+			0x5800 0x0 0x0 IRQ_INTD &mpic 0x0 0x2
- 
- 			/* IDSEL 12 - Not Used */
- 
- 			/* IDSEL 13 - Universe VME Bridge */
--			0x6800 0x0 0x0 0x1 &mpic 0x5 0x1
--			0x6800 0x0 0x0 0x2 &mpic 0x6 0x1
--			0x6800 0x0 0x0 0x3 &mpic 0x7 0x1
--			0x6800 0x0 0x0 0x4 &mpic 0x8 0x1
-+			0x6800 0x0 0x0 IRQ_INTA &mpic 0x5 0x1
-+			0x6800 0x0 0x0 IRQ_INTB &mpic 0x6 0x1
-+			0x6800 0x0 0x0 IRQ_INTC &mpic 0x7 0x1
-+			0x6800 0x0 0x0 IRQ_INTD &mpic 0x8 0x1
- 
- 			/* IDSEL 14 - ENET 1 */
--			0x7000 0x0 0x0 0x1 &mpic 0x2 0x1
-+			0x7000 0x0 0x0 IRQ_INTA &mpic 0x2 0x1
- 
- 			/* IDSEL 15 - Not Used */
- 
- 			/* IDSEL 16 - PMC Slot 1 */
--			0x8000 0x0 0x0 0x1 &mpic 0x9 0x1
--			0x8000 0x0 0x0 0x2 &mpic 0xa 0x1
--			0x8000 0x0 0x0 0x3 &mpic 0xb 0x1
--			0x8000 0x0 0x0 0x4 &mpic 0xc 0x1
-+			0x8000 0x0 0x0 IRQ_INTA &mpic 0x9 0x1
-+			0x8000 0x0 0x0 IRQ_INTB &mpic 0xa 0x1
-+			0x8000 0x0 0x0 IRQ_INTC &mpic 0xb 0x1
-+			0x8000 0x0 0x0 IRQ_INTD &mpic 0xc 0x1
- 
- 			/* IDSEL 17 - PMC Slot 2 */
--			0x8800 0x0 0x0 0x1 &mpic 0xc 0x1
--			0x8800 0x0 0x0 0x2 &mpic 0x9 0x1
--			0x8800 0x0 0x0 0x3 &mpic 0xa 0x1
--			0x8800 0x0 0x0 0x4 &mpic 0xb 0x1
-+			0x8800 0x0 0x0 IRQ_INTA &mpic 0xc 0x1
-+			0x8800 0x0 0x0 IRQ_INTB &mpic 0x9 0x1
-+			0x8800 0x0 0x0 IRQ_INTC &mpic 0xa 0x1
-+			0x8800 0x0 0x0 IRQ_INTD &mpic 0xb 0x1
- 
- 			/* IDSEL 18 - Not Used */
- 
- 			/* IDSEL 19 - ENET 2 */
--			0x9800 0x0 0x0 0x1 &mpic 0xd 0x1
-+			0x9800 0x0 0x0 IRQ_INTA &mpic 0xd 0x1
- 
- 			/* IDSEL 20 - PMCSPAN (PCI-X) */
--			0xa000 0x0 0x0 0x1 &mpic 0x9 0x1
--			0xa000 0x0 0x0 0x2 &mpic 0xa 0x1
--			0xa000 0x0 0x0 0x3 &mpic 0xb 0x1
--			0xa000 0x0 0x0 0x4 &mpic 0xc 0x1
-+			0xa000 0x0 0x0 IRQ_INTA &mpic 0x9 0x1
-+			0xa000 0x0 0x0 IRQ_INTB &mpic 0xa 0x1
-+			0xa000 0x0 0x0 IRQ_INTC &mpic 0xb 0x1
-+			0xa000 0x0 0x0 IRQ_INTD &mpic 0xc 0x1
- 
- 		>;
- 
-diff --git a/arch/powerpc/boot/dts/pcm030.dts b/arch/powerpc/boot/dts/pcm030.dts
-index b1bc731f7afd..d1a6b4deb258 100644
---- a/arch/powerpc/boot/dts/pcm030.dts
-+++ b/arch/powerpc/boot/dts/pcm030.dts
-@@ -10,6 +10,8 @@
- 
- /include/ "mpc5200b.dtsi"
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- &gpt0 { fsl,has-wdt; };
- &gpt2 { gpio-controller; };
- &gpt3 { gpio-controller; };
-@@ -80,16 +82,16 @@
- 	};
- 
- 	pci@f0000d00 {
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0xc000 0 0 1 &mpc5200_pic 0 0 3 // 1st slot
--				 0xc000 0 0 2 &mpc5200_pic 1 1 3
--				 0xc000 0 0 3 &mpc5200_pic 1 2 3
--				 0xc000 0 0 4 &mpc5200_pic 1 3 3
--
--				 0xc800 0 0 1 &mpc5200_pic 1 1 3 // 2nd slot
--				 0xc800 0 0 2 &mpc5200_pic 1 2 3
--				 0xc800 0 0 3 &mpc5200_pic 1 3 3
--				 0xc800 0 0 4 &mpc5200_pic 0 0 3>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
-+		interrupt-map = <0xc000 0 0 IRQ_INTA &mpc5200_pic 0 0 3 // 1st slot
-+				 0xc000 0 0 IRQ_INTB &mpc5200_pic 1 1 3
-+				 0xc000 0 0 IRQ_INTC &mpc5200_pic 1 2 3
-+				 0xc000 0 0 IRQ_INTD &mpc5200_pic 1 3 3
-+
-+				 0xc800 0 0 IRQ_INTA &mpc5200_pic 1 1 3 // 2nd slot
-+				 0xc800 0 0 IRQ_INTB &mpc5200_pic 1 2 3
-+				 0xc800 0 0 IRQ_INTC &mpc5200_pic 1 3 3
-+				 0xc800 0 0 IRQ_INTD &mpc5200_pic 0 0 3>;
- 		ranges = <0x42000000 0 0x80000000 0x80000000 0 0x20000000
- 			  0x02000000 0 0xa0000000 0xa0000000 0 0x10000000
- 			  0x01000000 0 0x00000000 0xb0000000 0 0x01000000>;
-diff --git a/arch/powerpc/boot/dts/pcm032.dts b/arch/powerpc/boot/dts/pcm032.dts
-index c259c6b3ac5a..f60d45713469 100644
---- a/arch/powerpc/boot/dts/pcm032.dts
-+++ b/arch/powerpc/boot/dts/pcm032.dts
-@@ -10,6 +10,8 @@
- 
- /include/ "mpc5200b.dtsi"
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- &gpt0 { fsl,has-wdt; };
- &gpt2 { gpio-controller; };
- &gpt3 { gpio-controller; };
-@@ -79,16 +81,16 @@
- 	};
- 
- 	pci@f0000d00 {
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0xc000 0 0 1 &mpc5200_pic 0 0 3 // 1st slot
--				 0xc000 0 0 2 &mpc5200_pic 1 1 3
--				 0xc000 0 0 3 &mpc5200_pic 1 2 3
--				 0xc000 0 0 4 &mpc5200_pic 1 3 3
--
--				 0xc800 0 0 1 &mpc5200_pic 1 1 3 // 2nd slot
--				 0xc800 0 0 2 &mpc5200_pic 1 2 3
--				 0xc800 0 0 3 &mpc5200_pic 1 3 3
--				 0xc800 0 0 4 &mpc5200_pic 0 0 3>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
-+		interrupt-map = <0xc000 0 0 IRQ_INTA &mpc5200_pic 0 0 3 // 1st slot
-+				 0xc000 0 0 IRQ_INTB &mpc5200_pic 1 1 3
-+				 0xc000 0 0 IRQ_INTC &mpc5200_pic 1 2 3
-+				 0xc000 0 0 IRQ_INTD &mpc5200_pic 1 3 3
-+
-+				 0xc800 0 0 IRQ_INTA &mpc5200_pic 1 1 3 // 2nd slot
-+				 0xc800 0 0 IRQ_INTB &mpc5200_pic 1 2 3
-+				 0xc800 0 0 IRQ_INTC &mpc5200_pic 1 3 3
-+				 0xc800 0 0 IRQ_INTD &mpc5200_pic 0 0 3>;
- 		ranges = <0x42000000 0 0x80000000 0x80000000 0 0x20000000
- 			  0x02000000 0 0xa0000000 0xa0000000 0 0x10000000
- 			  0x01000000 0 0x00000000 0xb0000000 0 0x01000000>;
-diff --git a/arch/powerpc/boot/dts/pq2fads.dts b/arch/powerpc/boot/dts/pq2fads.dts
-index b6666215ed63..35ba9f975981 100644
---- a/arch/powerpc/boot/dts/pq2fads.dts
-+++ b/arch/powerpc/boot/dts/pq2fads.dts
-@@ -7,6 +7,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "pq2fads";
- 	compatible = "fsl,pq2fads";
-@@ -83,25 +85,25 @@
- 		#size-cells = <2>;
- 		#address-cells = <3>;
- 		clock-frequency = <66000000>;
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 		                /* IDSEL 0x16 */
--		                 0xb000 0x0 0x0 0x1 &PCI_PIC 0
--		                 0xb000 0x0 0x0 0x2 &PCI_PIC 1
--		                 0xb000 0x0 0x0 0x3 &PCI_PIC 2
--		                 0xb000 0x0 0x0 0x4 &PCI_PIC 3
-+		                 0xb000 0x0 0x0 IRQ_INTA &PCI_PIC 0
-+		                 0xb000 0x0 0x0 IRQ_INTB &PCI_PIC 1
-+		                 0xb000 0x0 0x0 IRQ_INTC &PCI_PIC 2
-+		                 0xb000 0x0 0x0 IRQ_INTD &PCI_PIC 3
- 
- 		                /* IDSEL 0x17 */
--		                 0xb800 0x0 0x0 0x1 &PCI_PIC 4
--		                 0xb800 0x0 0x0 0x2 &PCI_PIC 5
--		                 0xb800 0x0 0x0 0x3 &PCI_PIC 6
--		                 0xb800 0x0 0x0 0x4 &PCI_PIC 7
-+		                 0xb800 0x0 0x0 IRQ_INTA &PCI_PIC 4
-+		                 0xb800 0x0 0x0 IRQ_INTB &PCI_PIC 5
-+		                 0xb800 0x0 0x0 IRQ_INTC &PCI_PIC 6
-+		                 0xb800 0x0 0x0 IRQ_INTD &PCI_PIC 7
- 
- 		                /* IDSEL 0x18 */
--		                 0xc000 0x0 0x0 0x1 &PCI_PIC 8
--		                 0xc000 0x0 0x0 0x2 &PCI_PIC 9
--		                 0xc000 0x0 0x0 0x3 &PCI_PIC 10
--		                 0xc000 0x0 0x0 0x4 &PCI_PIC 11>;
-+		                 0xc000 0x0 0x0 IRQ_INTA &PCI_PIC 8
-+		                 0xc000 0x0 0x0 IRQ_INTB &PCI_PIC 9
-+		                 0xc000 0x0 0x0 IRQ_INTC &PCI_PIC 10
-+		                 0xc000 0x0 0x0 IRQ_INTD &PCI_PIC 11>;
- 
- 		interrupt-parent = <&PIC>;
- 		interrupts = <18 8>;
-diff --git a/arch/powerpc/boot/dts/socrates.dts b/arch/powerpc/boot/dts/socrates.dts
-index 00a56e8e367c..f4e529bb9118 100644
---- a/arch/powerpc/boot/dts/socrates.dts
-+++ b/arch/powerpc/boot/dts/socrates.dts
-@@ -8,6 +8,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "abb,socrates";
- 	compatible = "abb,socrates";
-@@ -332,12 +334,12 @@
- 		reg = <0xe0008000 0x1000>;
- 		clock-frequency = <66666666>;
- 
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL 0x11 */
--				 0x8800 0x0 0x0 1 &mpic 5 1
-+				 0x8800 0x0 0x0 IRQ_INTA &mpic 5 1
- 				/* IDSEL 0x12 */
--				 0x9000 0x0 0x0 1 &mpic 4 1>;
-+				 0x9000 0x0 0x0 IRQ_INTA &mpic 4 1>;
- 		interrupt-parent = <&mpic>;
- 		interrupts = <24 2>;
- 		bus-range = <0x0 0x0>;
-diff --git a/arch/powerpc/boot/dts/storcenter.dts b/arch/powerpc/boot/dts/storcenter.dts
-index 99f6f544dc5f..e42c57a0a375 100644
---- a/arch/powerpc/boot/dts/storcenter.dts
-+++ b/arch/powerpc/boot/dts/storcenter.dts
-@@ -13,6 +13,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "StorCenter";
- 	compatible = "iomega,storcenter";
-@@ -116,23 +118,23 @@
- 		bus-range = <0 0xff>;
- 		clock-frequency = <97553800>;
- 		interrupt-parent = <&mpic>;
--		interrupt-map-mask = <0xf800 0 0 7>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 			/* IDSEL 13 - IDE */
--			0x6800 0 0 1 &mpic 0 1
--			0x6800 0 0 2 &mpic 0 1
--			0x6800 0 0 3 &mpic 0 1
--			0x6800 0 0 4 &mpic 0 1
-+			0x6800 0 0 IRQ_INTA &mpic 0 1
-+			0x6800 0 0 IRQ_INTB &mpic 0 1
-+			0x6800 0 0 IRQ_INTC &mpic 0 1
-+			0x6800 0 0 IRQ_INTD &mpic 0 1
- 			/* IDSEL 14 - USB */
--			0x7000 0 0 1 &mpic 0 1
--			0x7000 0 0 2 &mpic 0 1
--			0x7000 0 0 3 &mpic 0 1
--			0x7000 0 0 4 &mpic 0 1
-+			0x7000 0 0 IRQ_INTA &mpic 0 1
-+			0x7000 0 0 IRQ_INTB &mpic 0 1
-+			0x7000 0 0 IRQ_INTC &mpic 0 1
-+			0x7000 0 0 IRQ_INTD &mpic 0 1
- 			/* IDSEL 15 - ETH */
--			0x7800 0 0 1 &mpic 0 1
--			0x7800 0 0 2 &mpic 0 1
--			0x7800 0 0 3 &mpic 0 1
--			0x7800 0 0 4 &mpic 0 1
-+			0x7800 0 0 IRQ_INTA &mpic 0 1
-+			0x7800 0 0 IRQ_INTB &mpic 0 1
-+			0x7800 0 0 IRQ_INTC &mpic 0 1
-+			0x7800 0 0 IRQ_INTD &mpic 0 1
- 		>;
- 	};
- 
-diff --git a/arch/powerpc/boot/dts/stx_gp3_8560.dts b/arch/powerpc/boot/dts/stx_gp3_8560.dts
-index d1ab698eef36..78c92101fbf6 100644
---- a/arch/powerpc/boot/dts/stx_gp3_8560.dts
-+++ b/arch/powerpc/boot/dts/stx_gp3_8560.dts
-@@ -7,6 +7,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "stx,gp3";
- 	compatible = "stx,gp3-8560", "stx,gp3";
-@@ -257,32 +259,32 @@
- 	};
- 
- 	pci0: pci@fdf08000 {
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 
- 			/* IDSEL 0x0c */
--			0x6000 0 0 1 &mpic 1 1
--			0x6000 0 0 2 &mpic 2 1
--			0x6000 0 0 3 &mpic 3 1
--			0x6000 0 0 4 &mpic 4 1
-+			0x6000 0 0 IRQ_INTA &mpic 1 1
-+			0x6000 0 0 IRQ_INTB &mpic 2 1
-+			0x6000 0 0 IRQ_INTC &mpic 3 1
-+			0x6000 0 0 IRQ_INTD &mpic 4 1
- 
- 			/* IDSEL 0x0d */
--			0x6800 0 0 1 &mpic 4 1
--			0x6800 0 0 2 &mpic 1 1
--			0x6800 0 0 3 &mpic 2 1
--			0x6800 0 0 4 &mpic 3 1
-+			0x6800 0 0 IRQ_INTA &mpic 4 1
-+			0x6800 0 0 IRQ_INTB &mpic 1 1
-+			0x6800 0 0 IRQ_INTC &mpic 2 1
-+			0x6800 0 0 IRQ_INTD &mpic 3 1
- 
- 			/* IDSEL 0x0e */
--			0x7000 0 0 1 &mpic 3 1
--			0x7000 0 0 2 &mpic 4 1
--			0x7000 0 0 3 &mpic 1 1
--			0x7000 0 0 4 &mpic 2 1
-+			0x7000 0 0 IRQ_INTA &mpic 3 1
-+			0x7000 0 0 IRQ_INTB &mpic 4 1
-+			0x7000 0 0 IRQ_INTC &mpic 1 1
-+			0x7000 0 0 IRQ_INTD &mpic 2 1
- 
- 			/* IDSEL 0x0f */
--			0x7800 0 0 1 &mpic 2 1
--			0x7800 0 0 2 &mpic 3 1
--			0x7800 0 0 3 &mpic 4 1
--			0x7800 0 0 4 &mpic 1 1>;
-+			0x7800 0 0 IRQ_INTA &mpic 2 1
-+			0x7800 0 0 IRQ_INTB &mpic 3 1
-+			0x7800 0 0 IRQ_INTC &mpic 4 1
-+			0x7800 0 0 IRQ_INTD &mpic 1 1>;
- 
- 		interrupt-parent = <&mpic>;
- 		interrupts = <24 2>;
-diff --git a/arch/powerpc/boot/dts/taishan.dts b/arch/powerpc/boot/dts/taishan.dts
-index 803f1bff7fa8..8d6ee99c1507 100644
---- a/arch/powerpc/boot/dts/taishan.dts
-+++ b/arch/powerpc/boot/dts/taishan.dts
-@@ -12,6 +12,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	#address-cells = <2>;
- 	#size-cells = <1>;
-@@ -404,19 +406,19 @@
- 			/* Inbound 2GB range starting at 0 */
- 			dma-ranges = <0x42000000 0x0 0x0 0x0 0x0 0x0 0x80000000>;
- 
--			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+			interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 			interrupt-map = <
- 				/* IDSEL 1 */
--				0x800 0x0 0x0 0x1 &UIC0 0x17 0x8
--				0x800 0x0 0x0 0x2 &UIC0 0x18 0x8
--				0x800 0x0 0x0 0x3 &UIC0 0x19 0x8
--				0x800 0x0 0x0 0x4 &UIC0 0x1a 0x8
-+				0x800 0x0 0x0 IRQ_INTA &UIC0 0x17 0x8
-+				0x800 0x0 0x0 IRQ_INTB &UIC0 0x18 0x8
-+				0x800 0x0 0x0 IRQ_INTC &UIC0 0x19 0x8
-+				0x800 0x0 0x0 IRQ_INTD &UIC0 0x1a 0x8
- 
- 				/* IDSEL 2 */
--				0x1000 0x0 0x0 0x1 &UIC0 0x18 0x8
--				0x1000 0x0 0x0 0x2 &UIC0 0x19 0x8
--				0x1000 0x0 0x0 0x3 &UIC0 0x1a 0x8
--				0x1000 0x0 0x0 0x4 &UIC0 0x17 0x8
-+				0x1000 0x0 0x0 IRQ_INTA &UIC0 0x18 0x8
-+				0x1000 0x0 0x0 IRQ_INTB &UIC0 0x19 0x8
-+				0x1000 0x0 0x0 IRQ_INTC &UIC0 0x1a 0x8
-+				0x1000 0x0 0x0 IRQ_INTD &UIC0 0x17 0x8
- 			>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/tqm5200.dts b/arch/powerpc/boot/dts/tqm5200.dts
-index 9ed0bc78967e..37db22b31e53 100644
---- a/arch/powerpc/boot/dts/tqm5200.dts
-+++ b/arch/powerpc/boot/dts/tqm5200.dts
-@@ -8,6 +8,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "tqc,tqm5200";
- 	compatible = "tqc,tqm5200";
-@@ -192,11 +194,11 @@
- 		device_type = "pci";
- 		compatible = "fsl,mpc5200-pci";
- 		reg = <0xf0000d00 0x100>;
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0xc000 0 0 1 &mpc5200_pic 0 0 3
--				 0xc000 0 0 2 &mpc5200_pic 0 0 3
--				 0xc000 0 0 3 &mpc5200_pic 0 0 3
--				 0xc000 0 0 4 &mpc5200_pic 0 0 3>;
-+		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
-+		interrupt-map = <0xc000 0 0 IRQ_INTA &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTB &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTC &mpc5200_pic 0 0 3
-+				 0xc000 0 0 IRQ_INTD &mpc5200_pic 0 0 3>;
- 		clock-frequency = <0>; // From boot loader
- 		interrupts = <2 8 0 2 9 0 2 10 0>;
- 		bus-range = <0 0>;
-diff --git a/arch/powerpc/boot/dts/tqm8540.dts b/arch/powerpc/boot/dts/tqm8540.dts
-index 9c1eb9779108..d83dd9420da0 100644
---- a/arch/powerpc/boot/dts/tqm8540.dts
-+++ b/arch/powerpc/boot/dts/tqm8540.dts
-@@ -7,6 +7,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "tqc,tqm8540";
- 	compatible = "tqc,tqm8540";
-@@ -320,17 +322,17 @@
- 		device_type = "pci";
- 		reg = <0xe0008000 0x1000>;
- 		clock-frequency = <66666666>;
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL 28 */
--				 0xe000 0 0 1 &mpic 2 1
--				 0xe000 0 0 2 &mpic 3 1
--				 0xe000 0 0 3 &mpic 6 1
--				 0xe000 0 0 4 &mpic 5 1
-+				 0xe000 0 0 IRQ_INTA &mpic 2 1
-+				 0xe000 0 0 IRQ_INTB &mpic 3 1
-+				 0xe000 0 0 IRQ_INTC &mpic 6 1
-+				 0xe000 0 0 IRQ_INTD &mpic 5 1
- 
- 				/* IDSEL 11 */
--				 0x5800 0 0 1 &mpic 6 1
--				 0x5800 0 0 2 &mpic 5 1
-+				 0x5800 0 0 IRQ_INTA &mpic 6 1
-+				 0x5800 0 0 IRQ_INTB &mpic 5 1
- 				 >;
- 
- 		interrupt-parent = <&mpic>;
-diff --git a/arch/powerpc/boot/dts/tqm8541.dts b/arch/powerpc/boot/dts/tqm8541.dts
-index 44595cf675d0..a8b2a3fd99f7 100644
---- a/arch/powerpc/boot/dts/tqm8541.dts
-+++ b/arch/powerpc/boot/dts/tqm8541.dts
-@@ -7,6 +7,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "tqc,tqm8541";
- 	compatible = "tqc,tqm8541";
-@@ -300,17 +302,17 @@
- 		device_type = "pci";
- 		reg = <0xe0008000 0x1000>;
- 		clock-frequency = <66666666>;
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL 28 */
--				 0xe000 0 0 1 &mpic 2 1
--				 0xe000 0 0 2 &mpic 3 1
--				 0xe000 0 0 3 &mpic 6 1
--				 0xe000 0 0 4 &mpic 5 1
-+				 0xe000 0 0 IRQ_INTA &mpic 2 1
-+				 0xe000 0 0 IRQ_INTB &mpic 3 1
-+				 0xe000 0 0 IRQ_INTC &mpic 6 1
-+				 0xe000 0 0 IRQ_INTD &mpic 5 1
- 
- 				/* IDSEL 11 */
--				 0x5800 0 0 1 &mpic 6 1
--				 0x5800 0 0 2 &mpic 5 1
-+				 0x5800 0 0 IRQ_INTA &mpic 6 1
-+				 0x5800 0 0 IRQ_INTB &mpic 5 1
- 				 >;
- 
- 		interrupt-parent = <&mpic>;
-diff --git a/arch/powerpc/boot/dts/tqm8555.dts b/arch/powerpc/boot/dts/tqm8555.dts
-index 54f3e82907d6..8d5bf40d1871 100644
---- a/arch/powerpc/boot/dts/tqm8555.dts
-+++ b/arch/powerpc/boot/dts/tqm8555.dts
-@@ -7,6 +7,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "tqc,tqm8555";
- 	compatible = "tqc,tqm8555";
-@@ -300,17 +302,17 @@
- 		device_type = "pci";
- 		reg = <0xe0008000 0x1000>;
- 		clock-frequency = <66666666>;
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL 28 */
--				 0xe000 0 0 1 &mpic 2 1
--				 0xe000 0 0 2 &mpic 3 1
--				 0xe000 0 0 3 &mpic 6 1
--				 0xe000 0 0 4 &mpic 5 1
-+				 0xe000 0 0 IRQ_INTA &mpic 2 1
-+				 0xe000 0 0 IRQ_INTB &mpic 3 1
-+				 0xe000 0 0 IRQ_INTC &mpic 6 1
-+				 0xe000 0 0 IRQ_INTD &mpic 5 1
- 
- 				/* IDSEL 11 */
--				 0x5800 0 0 1 &mpic 6 1
--				 0x5800 0 0 2 &mpic 5 1
-+				 0x5800 0 0 IRQ_INTA &mpic 6 1
-+				 0x5800 0 0 IRQ_INTB &mpic 5 1
- 				 >;
- 
- 		interrupt-parent = <&mpic>;
-diff --git a/arch/powerpc/boot/dts/tqm8560.dts b/arch/powerpc/boot/dts/tqm8560.dts
-index 7415cb69f60d..ec113cbf7a0f 100644
---- a/arch/powerpc/boot/dts/tqm8560.dts
-+++ b/arch/powerpc/boot/dts/tqm8560.dts
-@@ -8,6 +8,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "tqc,tqm8560";
- 	compatible = "tqc,tqm8560";
-@@ -373,17 +375,17 @@
- 		device_type = "pci";
- 		reg = <0xe0008000 0x1000>;
- 		clock-frequency = <66666666>;
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL 28 */
--				 0xe000 0 0 1 &mpic 2 1
--				 0xe000 0 0 2 &mpic 3 1
--				 0xe000 0 0 3 &mpic 6 1
--				 0xe000 0 0 4 &mpic 5 1
-+				 0xe000 0 0 IRQ_INTA &mpic 2 1
-+				 0xe000 0 0 IRQ_INTB &mpic 3 1
-+				 0xe000 0 0 IRQ_INTC &mpic 6 1
-+				 0xe000 0 0 IRQ_INTD &mpic 5 1
- 
- 				/* IDSEL 11 */
--				 0x5800 0 0 1 &mpic 6 1
--				 0x5800 0 0 2 &mpic 5 1
-+				 0x5800 0 0 IRQ_INTA &mpic 6 1
-+				 0x5800 0 0 IRQ_INTB &mpic 5 1
- 				 >;
- 
- 		interrupt-parent = <&mpic>;
-diff --git a/arch/powerpc/boot/dts/virtex440-ml510.dts b/arch/powerpc/boot/dts/virtex440-ml510.dts
-index 3b736ca26ddc..4c2c63f199a2 100644
---- a/arch/powerpc/boot/dts/virtex440-ml510.dts
-+++ b/arch/powerpc/boot/dts/virtex440-ml510.dts
-@@ -11,6 +11,9 @@
-  */
- 
- /dts-v1/;
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-@@ -353,7 +356,7 @@
- 
+diff --git a/Documentation/devicetree/bindings/pci/aardvark-pci.txt b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
+index 310ef7145c47..ca8fe542edc9 100644
+--- a/Documentation/devicetree/bindings/pci/aardvark-pci.txt
++++ b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
+@@ -43,11 +43,11 @@ Example:
+ 		msi-parent = <&pcie0>;
+ 		ranges = <0x82000000 0 0xe8000000   0 0xe8000000 0 0x1000000 /* Port 0 MEM */
+ 			  0x81000000 0 0xe9000000   0 0xe9000000 0 0x10000>; /* Port 0 IO*/
+-		interrupt-map-mask = <0 0 0 7>;
+-		interrupt-map = <0 0 0 1 &pcie_intc 0>,
+-				<0 0 0 2 &pcie_intc 1>,
+-				<0 0 0 3 &pcie_intc 2>,
+-				<0 0 0 4 &pcie_intc 3>;
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0 IRQ_INTA &pcie_intc 0>,
++				<0 0 0 IRQ_INTB &pcie_intc 1>,
++				<0 0 0 IRQ_INTC &pcie_intc 2>,
++				<0 0 0 IRQ_INTD &pcie_intc 3>;
+ 		pcie_intc: interrupt-controller {
+ 			interrupt-controller;
  			#interrupt-cells = <1>;
- 			interrupt-parent = <&xps_intc_0>;
--			interrupt-map-mask = <0xff00 0x0 0x0 0x7>;
-+			interrupt-map-mask = <0xff00 0x0 0x0 IRQ_INT_ALL>;
+diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+index 816b244a221e..f9902dca1a03 100644
+--- a/Documentation/devicetree/bindings/pci/altera-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+@@ -40,11 +40,11 @@ Example
+ 		msi-parent = <&msi_to_gic_gen_0>;
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+-		interrupt-map-mask = <0 0 0 7>;
+-		interrupt-map = <0 0 0 1 &pcie_0 1>,
+-			            <0 0 0 2 &pcie_0 2>,
+-			            <0 0 0 3 &pcie_0 3>,
+-			            <0 0 0 4 &pcie_0 4>;
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0 IRQ_INTA &pcie_0 1>,
++			            <0 0 0 IRQ_INTB &pcie_0 2>,
++			            <0 0 0 IRQ_INTC &pcie_0 3>,
++			            <0 0 0 IRQ_INTD &pcie_0 4>;
+ 		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
+ 			  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
+ 	};
+diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+index 979dc7b6cfe8..c71dbe94f0eb 100644
+--- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+@@ -41,10 +41,10 @@ Example:
+ 		interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "msi";
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0x7>;
+-		interrupt-map = <0 0 0 1 &intc GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+-		                <0 0 0 2 &intc GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+-		                <0 0 0 3 &intc GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+-		                <0 0 0 4 &intc GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0 IRQ_INTA &intc GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++		                <0 0 0 IRQ_INTB &intc GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++		                <0 0 0 IRQ_INTC &intc GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
++		                <0 0 0 IRQ_INTD &intc GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+ 		axis,syscon-pcie = <&syscon>;
+ 	};
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+index 91de69c713a9..67845103c8f0 100644
+--- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+@@ -52,12 +52,12 @@ pcie@fb000000 {
+ 
+ 	#interrupt-cells = <0x1>;
+ 
+-	interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1
+-			 0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1
+-			 0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1
+-			 0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
++	interrupt-map = <0x0 0x0 0x0  IRQ_INTA  &gic  0x0 0x0 0x0 14 0x1
++			 0x0 0x0 0x0  IRQ_INTB  &gic  0x0 0x0 0x0 15 0x1
++			 0x0 0x0 0x0  IRQ_INTC  &gic  0x0 0x0 0x0 16 0x1
++			 0x0 0x0 0x0  IRQ_INTD  &gic  0x0 0x0 0x0 17 0x1>;
+ 
+-	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
++	interrupt-map-mask = <0x0 0x0 0x0 IRQ_INT_ALL>;
+ 
+ 	msi-parent = <&its_pci>;
+ 
+diff --git a/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt b/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+index 5f8cb4962f8d..b267d4853773 100644
+--- a/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
++++ b/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+@@ -61,24 +61,24 @@ variant) interrupts assigns the default interrupt mapping/swizzling has
+ typically been like this, doing the swizzling on the interrupt controller side
+ rather than in the interconnect:
+ 
+-interrupt-map-mask = <0xf800 0 0 7>;
++interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
+ interrupt-map =
+-	<0x4800 0 0 1 &pci_intc 0>, /* Slot 9 */
+-	<0x4800 0 0 2 &pci_intc 1>,
+-	<0x4800 0 0 3 &pci_intc 2>,
+-	<0x4800 0 0 4 &pci_intc 3>,
+-	<0x5000 0 0 1 &pci_intc 1>, /* Slot 10 */
+-	<0x5000 0 0 2 &pci_intc 2>,
+-	<0x5000 0 0 3 &pci_intc 3>,
+-	<0x5000 0 0 4 &pci_intc 0>,
+-	<0x5800 0 0 1 &pci_intc 2>, /* Slot 11 */
+-	<0x5800 0 0 2 &pci_intc 3>,
+-	<0x5800 0 0 3 &pci_intc 0>,
+-	<0x5800 0 0 4 &pci_intc 1>,
+-	<0x6000 0 0 1 &pci_intc 3>, /* Slot 12 */
+-	<0x6000 0 0 2 &pci_intc 0>,
+-	<0x6000 0 0 3 &pci_intc 1>,
+-	<0x6000 0 0 4 &pci_intc 2>;
++	<0x4800 0 0 IRQ_INTA &pci_intc 0>, /* Slot 9 */
++	<0x4800 0 0 IRQ_INTB &pci_intc 1>,
++	<0x4800 0 0 IRQ_INTC &pci_intc 2>,
++	<0x4800 0 0 IRQ_INTD &pci_intc 3>,
++	<0x5000 0 0 IRQ_INTA &pci_intc 1>, /* Slot 10 */
++	<0x5000 0 0 IRQ_INTB &pci_intc 2>,
++	<0x5000 0 0 IRQ_INTC &pci_intc 3>,
++	<0x5000 0 0 IRQ_INTD &pci_intc 0>,
++	<0x5800 0 0 IRQ_INTA &pci_intc 2>, /* Slot 11 */
++	<0x5800 0 0 IRQ_INTB &pci_intc 3>,
++	<0x5800 0 0 IRQ_INTC &pci_intc 0>,
++	<0x5800 0 0 IRQ_INTD &pci_intc 1>,
++	<0x6000 0 0 IRQ_INTA &pci_intc 3>, /* Slot 12 */
++	<0x6000 0 0 IRQ_INTB &pci_intc 0>,
++	<0x6000 0 0 IRQ_INTC &pci_intc 1>,
++	<0x6000 0 0 IRQ_INTD &pci_intc 2>;
+ 
+ Example:
+ 
+@@ -108,24 +108,24 @@ pci@50000000 {
+ 	/* 64MiB at 0x00000000-0x03ffffff */
+ 	<0x02000000 0 0x00000000 0x00000000 0 0x04000000>;
+ 
+-	interrupt-map-mask = <0xf800 0 0 7>;
++	interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
+ 	interrupt-map =
+-		<0x4800 0 0 1 &pci_intc 0>, /* Slot 9 */
+-		<0x4800 0 0 2 &pci_intc 1>,
+-		<0x4800 0 0 3 &pci_intc 2>,
+-		<0x4800 0 0 4 &pci_intc 3>,
+-		<0x5000 0 0 1 &pci_intc 1>, /* Slot 10 */
+-		<0x5000 0 0 2 &pci_intc 2>,
+-		<0x5000 0 0 3 &pci_intc 3>,
+-		<0x5000 0 0 4 &pci_intc 0>,
+-		<0x5800 0 0 1 &pci_intc 2>, /* Slot 11 */
+-		<0x5800 0 0 2 &pci_intc 3>,
+-		<0x5800 0 0 3 &pci_intc 0>,
+-		<0x5800 0 0 4 &pci_intc 1>,
+-		<0x6000 0 0 1 &pci_intc 3>, /* Slot 12 */
+-		<0x6000 0 0 2 &pci_intc 0>,
+-		<0x6000 0 0 3 &pci_intc 0>,
+-		<0x6000 0 0 4 &pci_intc 0>;
++		<0x4800 0 0 IRQ_INTA &pci_intc 0>, /* Slot 9 */
++		<0x4800 0 0 IRQ_INTB &pci_intc 1>,
++		<0x4800 0 0 IRQ_INTC &pci_intc 2>,
++		<0x4800 0 0 IRQ_INTD &pci_intc 3>,
++		<0x5000 0 0 IRQ_INTA &pci_intc 1>, /* Slot 10 */
++		<0x5000 0 0 IRQ_INTB &pci_intc 2>,
++		<0x5000 0 0 IRQ_INTC &pci_intc 3>,
++		<0x5000 0 0 IRQ_INTD &pci_intc 0>,
++		<0x5800 0 0 IRQ_INTA &pci_intc 2>, /* Slot 11 */
++		<0x5800 0 0 IRQ_INTB &pci_intc 3>,
++		<0x5800 0 0 IRQ_INTC &pci_intc 0>,
++		<0x5800 0 0 IRQ_INTD &pci_intc 1>,
++		<0x6000 0 0 IRQ_INTA &pci_intc 3>, /* Slot 12 */
++		<0x6000 0 0 IRQ_INTB &pci_intc 0>,
++		<0x6000 0 0 IRQ_INTC &pci_intc 0>,
++		<0x6000 0 0 IRQ_INTD &pci_intc 0>;
+ 	pci_intc: interrupt-controller {
+ 		interrupt-parent = <&intcon>;
+ 		interrupt-controller;
+diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+index de4b2baf91e8..dc331885124a 100644
+--- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+@@ -77,11 +77,11 @@ Example:
+ 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "msi";
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0x7>;
+-		interrupt-map = <0 0 0 1 &intc GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+-		                <0 0 0 2 &intc GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
+-		                <0 0 0 3 &intc GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
+-		                <0 0 0 4 &intc GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0 IRQ_INTA &intc GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++		                <0 0 0 IRQ_INTB &intc GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++		                <0 0 0 IRQ_INTC &intc GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++		                <0 0 0 IRQ_INTD &intc GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&clks 144>, <&clks 206>, <&clks 189>;
+ 		clock-names = "pcie", "pcie_bus", "pcie_phy";
+ 	};
+diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+index 0dcb87d6554f..3e809c7d9b07 100644
+--- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+@@ -35,11 +35,11 @@ Hip05 Example (note that Hip06 is the same except compatible):
+ 		num-lanes = <8>;
+ 		port-id = <1>;
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0xf800 0 0 7>;
+-		interrupt-map = <0x0 0 0 1 &mbigen_pcie 1 10
+-				 0x0 0 0 2 &mbigen_pcie 2 11
+-				 0x0 0 0 3 &mbigen_pcie 3 12
+-				 0x0 0 0 4 &mbigen_pcie 4 13>;
++		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0x0 0 0 IRQ_INTA &mbigen_pcie 1 10
++				 0x0 0 0 IRQ_INTB &mbigen_pcie 2 11
++				 0x0 0 0 IRQ_INTC &mbigen_pcie 3 12
++				 0x0 0 0 IRQ_INTD &mbigen_pcie 4 13>;
+ 	};
+ 
+ HiSilicon Hip06/Hip07 PCIe host bridge DT (almost-ECAM) description.
+@@ -77,9 +77,9 @@ Example:
+ 		ranges = <0x02000000 0 0xb2000000 0x0 0xb2000000 0 0x5ff0000
+ 			  0x01000000 0 0 0 0xb7ff0000 0 0x10000>;
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0xf800 0 0 7>;
+-		interrupt-map = <0x0 0 0 1 &mbigen_pcie0 650 4
+-				 0x0 0 0 2 &mbigen_pcie0 650 4
+-				 0x0 0 0 3 &mbigen_pcie0 650 4
+-				 0x0 0 0 4 &mbigen_pcie0 650 4>;
++		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0x0 0 0 IRQ_INTA &mbigen_pcie0 650 4
++				 0x0 0 0 IRQ_INTB &mbigen_pcie0 650 4
++				 0x0 0 0 IRQ_INTC &mbigen_pcie0 650 4
++				 0x0 0 0 IRQ_INTD &mbigen_pcie0 650 4>;
+ 	};
+diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+index 614b594f4e72..51a56ad3f1a9 100644
+--- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
++++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+@@ -91,11 +91,11 @@ pci {
+     #interrupt-cells = <0x1>;
+ 
+     // PCI_DEVICE(3)  INT#(1)  CONTROLLER(PHANDLE)  CONTROLLER_DATA(3)
+-    interrupt-map = <  0x0 0x0 0x0  0x1  &gic  0x0 0x4 0x1
+-                     0x800 0x0 0x0  0x1  &gic  0x0 0x5 0x1
+-                    0x1000 0x0 0x0  0x1  &gic  0x0 0x6 0x1
+-                    0x1800 0x0 0x0  0x1  &gic  0x0 0x7 0x1>;
++    interrupt-map = <  0x0 0x0 0x0 IRQ_INTA  &gic  0x0 0x4 0x1
++                     0x800 0x0 0x0 IRQ_INTA  &gic  0x0 0x5 0x1
++                    0x1000 0x0 0x0 IRQ_INTA  &gic  0x0 0x6 0x1
++                    0x1800 0x0 0x0 IRQ_INTA  &gic  0x0 0x7 0x1>;
+ 
+     // PCI_DEVICE(3)  INT#(1)
+-    interrupt-map-mask = <0xf800 0x0 0x0  0x7>;
++    interrupt-map-mask = <0xf800 0x0 0x0 IRQ_MAP_ALL>;
+ }
+diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+index 6bbe43818ad5..7da640d6578e 100644
+--- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+@@ -34,11 +34,11 @@ Example based on kirin960:
+ 		ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
+ 		num-lanes = <1>;
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0xf800 0 0 7>;
+-		interrupt-map = <0x0 0 0 1 &gic 0 0 0  282 4>,
+-				<0x0 0 0 2 &gic 0 0 0  283 4>,
+-				<0x0 0 0 3 &gic 0 0 0  284 4>,
+-				<0x0 0 0 4 &gic 0 0 0  285 4>;
++		interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0x0 0 0 IRQ_INTA &gic 0 0 0  282 4>,
++				<0x0 0 0 IRQ_INTB &gic 0 0 0  283 4>,
++				<0x0 0 0 IRQ_INTC &gic 0 0 0  284 4>,
++				<0x0 0 0 IRQ_INTD &gic 0 0 0  285 4>;
+ 		clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
+ 			 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
+ 			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index e20ceaab9b38..1016e9f8982a 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -56,9 +56,9 @@ Example:
+ 			  0xc2000000 0x0 0x20000000 0x40 0x20000000 0x0 0x20000000   /* prefetchable memory */
+ 			  0x82000000 0x0 0x40000000 0x40 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 7>;
+-		interrupt-map = <0000 0 0 1 &gic GIC_SPI 91  IRQ_TYPE_LEVEL_HIGH>,
+-				<0000 0 0 2 &gic GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
+-				<0000 0 0 3 &gic GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
+-				<0000 0 0 4 &gic GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0000 0 0 IRQ_INTA &gic GIC_SPI 91  IRQ_TYPE_LEVEL_HIGH>,
++				<0000 0 0 IRQ_INTB &gic GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
++				<0000 0 0 IRQ_INTC &gic GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
++				<0000 0 0 IRQ_INTD &gic GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+index 7468d666763a..00728cdad957 100644
+--- a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+@@ -169,11 +169,11 @@ Examples for MT2712:
+ 			#size-cells = <2>;
+ 			#interrupt-cells = <1>;
+ 			ranges;
+-			interrupt-map-mask = <0 0 0 7>;
+-			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+-					<0 0 0 2 &pcie_intc0 1>,
+-					<0 0 0 3 &pcie_intc0 2>,
+-					<0 0 0 4 &pcie_intc0 3>;
++			interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++			interrupt-map = <0 0 0 IRQ_INTA &pcie_intc0 0>,
++					<0 0 0 IRQ_INTB &pcie_intc0 1>,
++					<0 0 0 IRQ_INTC &pcie_intc0 2>,
++					<0 0 0 IRQ_INTD &pcie_intc0 3>;
+ 			pcie_intc0: interrupt-controller {
+ 				interrupt-controller;
+ 				#address-cells = <0>;
+@@ -187,11 +187,11 @@ Examples for MT2712:
+ 			#size-cells = <2>;
+ 			#interrupt-cells = <1>;
+ 			ranges;
+-			interrupt-map-mask = <0 0 0 7>;
+-			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
+-					<0 0 0 2 &pcie_intc1 1>,
+-					<0 0 0 3 &pcie_intc1 2>,
+-					<0 0 0 4 &pcie_intc1 3>;
++			interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++			interrupt-map = <0 0 0 IRQ_INTA &pcie_intc1 0>,
++					<0 0 0 IRQ_INTB &pcie_intc1 1>,
++					<0 0 0 IRQ_INTC &pcie_intc1 2>,
++					<0 0 0 IRQ_INTD &pcie_intc1 3>;
+ 			pcie_intc1: interrupt-controller {
+ 				interrupt-controller;
+ 				#address-cells = <0>;
+@@ -240,11 +240,11 @@ Examples for MT7622:
+ 			#size-cells = <2>;
+ 			#interrupt-cells = <1>;
+ 			ranges;
+-			interrupt-map-mask = <0 0 0 7>;
+-			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+-					<0 0 0 2 &pcie_intc0 1>,
+-					<0 0 0 3 &pcie_intc0 2>,
+-					<0 0 0 4 &pcie_intc0 3>;
++			interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++			interrupt-map = <0 0 0 IRQ_INTA &pcie_intc0 0>,
++					<0 0 0 IRQ_INTB &pcie_intc0 1>,
++					<0 0 0 IRQ_INTC &pcie_intc0 2>,
++					<0 0 0 IRQ_INTD &pcie_intc0 3>;
+ 			pcie_intc0: interrupt-controller {
+ 				interrupt-controller;
+ 				#address-cells = <0>;
+@@ -258,11 +258,11 @@ Examples for MT7622:
+ 			#size-cells = <2>;
+ 			#interrupt-cells = <1>;
+ 			ranges;
+-			interrupt-map-mask = <0 0 0 7>;
+-			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
+-					<0 0 0 2 &pcie_intc1 1>,
+-					<0 0 0 3 &pcie_intc1 2>,
+-					<0 0 0 4 &pcie_intc1 3>;
++			interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++			interrupt-map = <0 0 0 IRQ_INTA &pcie_intc1 0>,
++					<0 0 0 IRQ_INTB &pcie_intc1 1>,
++					<0 0 0 IRQ_INTC &pcie_intc1 2>,
++					<0 0 0 IRQ_INTD &pcie_intc1 3>;
+ 			pcie_intc1: interrupt-controller {
+ 				interrupt-controller;
+ 				#address-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+index 64156993e052..03070b3bfda1 100644
+--- a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+@@ -62,11 +62,11 @@ Example:
+ 		interrupt-parent = <&gic>;
+ 		#interrupt-cells = <1>;
+ 		interrupts = < 0 89 4 >;
+-		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
+ 		interrupt-map = <0 0 0 0 &pci_express 0>,
+-				<0 0 0 1 &pci_express 1>,
+-				<0 0 0 2 &pci_express 2>,
+-				<0 0 0 3 &pci_express 3>;
++				<0 0 0 IRQ_INTA &pci_express 1>,
++				<0 0 0 IRQ_INTB &pci_express 2>,
++				<0 0 0 IRQ_INTC &pci_express 3>;
+ 		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
+ 
+ 	};
+diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+index b94078f58d8e..7c6a19e0b131 100644
+--- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
++++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+@@ -56,10 +56,10 @@ Example SoC configuration:
+ 		#size-cells = <2>;
+ 		#interrupt-cells = <1>;
+ 		dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>;
+-		interrupt-map-mask = <0xff00 0 0 0x7>;
+-		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+-				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+-				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map-mask = <0xff00 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0x0000 0 0 IRQ_INTA &gic 0 108 IRQ_TYPE_LEVEL_HIGH
++				 0x0800 0 0 IRQ_INTA &gic 0 108 IRQ_TYPE_LEVEL_HIGH
++				 0x1000 0 0 IRQ_INTB &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 		usb@1,0 {
+ 			reg = <0x800 0 0 0 0>;
+diff --git a/Documentation/devicetree/bindings/pci/pci-thunder-pem.txt b/Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
+index f131faea3b7c..edfaedfe8c8c 100644
+--- a/Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
++++ b/Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
+@@ -35,9 +35,9 @@ Example:
+ 		 <0x03000000 0x87e0 0xc2f00000 0x87e0 0xc2000000 0x00 0x00100000>; /* mem64 PEM BAR4 */
+ 
+ 	#interrupt-cells = <1>;
+-	interrupt-map-mask = <0 0 0 7>;
+-	interrupt-map = <0 0 0 1 &gic0 0 0 0 24 4>, /* INTA */
+-			<0 0 0 2 &gic0 0 0 0 25 4>, /* INTB */
+-			<0 0 0 3 &gic0 0 0 0 26 4>, /* INTC */
+-			<0 0 0 4 &gic0 0 0 0 27 4>; /* INTD */
++	interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++	interrupt-map = <0 0 0 IRQ_INTA &gic0 0 0 0 24 4>,
++			<0 0 0 IRQ_INTB &gic0 0 0 0 25 4>,
++			<0 0 0 IRQ_INTC &gic0 0 0 0 26 4>,
++			<0 0 0 IRQ_INTD &gic0 0 0 0 27 4>;
+     };
+diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
+index 557a5089229d..8bb3d935d3fa 100644
+--- a/Documentation/devicetree/bindings/pci/pcie-al.txt
++++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+@@ -40,7 +40,7 @@ Example:
+ 		#size-cells = <2>;
+ 		#interrupt-cells = <1>;
+ 		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-map-mask = <0x00 0 0 7>;
+-		interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
++		interrupt-map-mask = <0x00 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0x0000 0 0 IRQ_INTA &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+ 		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
+ 	};
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index ada80b01bf0c..898599eed2e5 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -251,11 +251,11 @@
+ 		interrupts = <GIC_SPI 238 IRQ_TYPE_NONE>;
+ 		interrupt-names = "msi";
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0x7>;
+-		interrupt-map = <0 0 0 1 &intc 0 36 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-				<0 0 0 2 &intc 0 37 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-				<0 0 0 3 &intc 0 38 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0 IRQ_INTA &intc 0 36 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 IRQ_INTB &intc 0 37 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 IRQ_INTC &intc 0 38 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 IRQ_INTD &intc 0 39 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&gcc PCIE_A_CLK>,
+ 			 <&gcc PCIE_H_CLK>,
+ 			 <&gcc PCIE_PHY_CLK>;
+@@ -289,11 +289,11 @@
+ 		interrupts = <GIC_SPI 243 IRQ_TYPE_NONE>;
+ 		interrupt-names = "msi";
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0x7>;
+-		interrupt-map = <0 0 0 1 &intc 0 244 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-				<0 0 0 2 &intc 0 245 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-				<0 0 0 3 &intc 0 247 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-				<0 0 0 4 &intc 0 248 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0 IRQ_INTA &intc 0 244 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 IRQ_INTB &intc 0 245 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 IRQ_INTC &intc 0 247 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 IRQ_INTD &intc 0 248 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+ 			 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+ 			 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
+diff --git a/Documentation/devicetree/bindings/pci/ralink,rt3883-pci.txt b/Documentation/devicetree/bindings/pci/ralink,rt3883-pci.txt
+index ffba4f63d71f..09a4a28fb472 100644
+--- a/Documentation/devicetree/bindings/pci/ralink,rt3883-pci.txt
++++ b/Documentation/devicetree/bindings/pci/ralink,rt3883-pci.txt
+@@ -131,18 +131,18 @@
+ 				0x01000000 0 0x00000000 0x10160000 0 0x00010000 /* io space */
+ 			>;
+ 
+-			interrupt-map-mask = <0xf800 0 0 7>;
++			interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
  			interrupt-map = <
- 				/* IRQ mapping for pci slots and ALI M1533
- 				 * periperhals. In total there are 5 interrupt
-@@ -373,17 +376,17 @@
- 				 */
- 
- 				/* IDSEL 0x16 / dev=6, bus=0 / PCI slot 3 */
--				0x3000 0 0 1 &xps_intc_0 3 2
--				0x3000 0 0 2 &xps_intc_0 2 2
--				0x3000 0 0 3 &xps_intc_0 5 2
--				0x3000 0 0 4 &xps_intc_0 4 2
-+				0x3000 0 0 IRQ_INTA &xps_intc_0 3 2
-+				0x3000 0 0 IRQ_INTB &xps_intc_0 2 2
-+				0x3000 0 0 IRQ_INTC &xps_intc_0 5 2
-+				0x3000 0 0 IRQ_INTD &xps_intc_0 4 2
- 
- 				/* IDSEL 0x13 / dev=3, bus=1 / PCI slot 4 */
- 				/*
--				0x11800 0 0 1 &xps_intc_0 5 0 2
--				0x11800 0 0 2 &xps_intc_0 4 0 2
--				0x11800 0 0 3 &xps_intc_0 3 0 2
--				0x11800 0 0 4 &xps_intc_0 2 0 2
-+				0x11800 0 0 IRQ_INTA &xps_intc_0 5 0 2
-+				0x11800 0 0 IRQ_INTB &xps_intc_0 4 0 2
-+				0x11800 0 0 IRQ_INTC &xps_intc_0 3 0 2
-+				0x11800 0 0 IRQ_INTD &xps_intc_0 2 0 2
- 				*/
- 
- 				/* According to the datasheet + schematic
-@@ -394,29 +397,29 @@
- 				 * commented out.
- 				 */
- 				/* IDSEL 0x15 / dev=5, bus=0 / PCI slot 5 */
--				0x2800 0 0 1 &xps_intc_0 4 2
-+				0x2800 0 0 IRQ_INTA &xps_intc_0 4 2
- 				/*
--				0x2800 0 0 2 &xps_intc_0 3 2
--				0x2800 0 0 3 &xps_intc_0 2 2
--				0x2800 0 0 4 &xps_intc_0 5 2
-+				0x2800 0 0 IRQ_INTB &xps_intc_0 3 2
-+				0x2800 0 0 IRQ_INTC &xps_intc_0 2 2
-+				0x2800 0 0 IRQ_INTD &xps_intc_0 5 2
- 				*/
- 
- 				/* IDSEL 0x12 / dev=2, bus=1 / PCI slot 6 */
- 				/*
--				0x11000 0 0 1 &xps_intc_0 4 0 2
--				0x11000 0 0 2 &xps_intc_0 3 0 2
--				0x11000 0 0 3 &xps_intc_0 2 0 2
--				0x11000 0 0 4 &xps_intc_0 5 0 2
-+				0x11000 0 0 IRQ_INTA &xps_intc_0 4 0 2
-+				0x11000 0 0 IRQ_INTB &xps_intc_0 3 0 2
-+				0x11000 0 0 IRQ_INTC &xps_intc_0 2 0 2
-+				0x11000 0 0 IRQ_INTD &xps_intc_0 5 0 2
- 				*/
- 
- 				/* IDSEL 0x11 / dev=1, bus=0 / AC97 audio */
--				0x0800 0 0 1 &i8259 7 2
-+				0x0800 0 0 IRQ_INTA &i8259 7 2
- 
- 				/* IDSEL 0x1b / dev=11, bus=0 / IDE */
--				0x5800 0 0 1 &i8259 14 2
-+				0x5800 0 0 IRQ_INTA &i8259 14 2
- 
- 				/* IDSEL 0x1f / dev 15, bus=0 / 2x USB 1.1 */
--				0x7800 0 0 1 &i8259 7 2
-+				0x7800 0 0 IRQ_INTA &i8259 7 2
+ 				/* IDSEL 17 */
+-				0x8800 0 0 1 &pciintc 18
+-				0x8800 0 0 2 &pciintc 18
+-				0x8800 0 0 3 &pciintc 18
+-				0x8800 0 0 4 &pciintc 18
++				0x8800 0 0 IRQ_INTA &pciintc 18
++				0x8800 0 0 IRQ_INTB &pciintc 18
++				0x8800 0 0 IRQ_INTC &pciintc 18
++				0x8800 0 0 IRQ_INTD &pciintc 18
+ 				/* IDSEL 18 */
+-				0x9000 0 0 1 &pciintc 19
+-				0x9000 0 0 2 &pciintc 19
+-				0x9000 0 0 3 &pciintc 19
+-				0x9000 0 0 4 &pciintc 19
++				0x9000 0 0 IRQ_INTA &pciintc 19
++				0x9000 0 0 IRQ_INTB &pciintc 19
++				0x9000 0 0 IRQ_INTC &pciintc 19
++				0x9000 0 0 IRQ_INTD &pciintc 19
  			>;
- 			ali_m1533 {
- 				#size-cells = <1>;
-diff --git a/arch/powerpc/boot/dts/xcalibur1501.dts b/arch/powerpc/boot/dts/xcalibur1501.dts
-index 46c25bda9515..90730a4f195e 100644
---- a/arch/powerpc/boot/dts/xcalibur1501.dts
-+++ b/arch/powerpc/boot/dts/xcalibur1501.dts
-@@ -7,6 +7,9 @@
-  */
  
- /dts-v1/;
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- / {
- 	model = "xes,xcalibur1501";
- 	compatible = "xes,xcalibur1501", "xes,MPC8572";
-@@ -668,13 +671,13 @@
- 		clock-frequency = <33333333>;
- 		interrupt-parent = <&mpic>;
- 		interrupts = <26 2>;
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 			/* IDSEL 0x0 */
--			0x0 0x0 0x0 0x1 &mpic 0x0 0x1
--			0x0 0x0 0x0 0x2 &mpic 0x1 0x1
--			0x0 0x0 0x0 0x3 &mpic 0x2 0x1
--			0x0 0x0 0x0 0x4 &mpic 0x3 0x1
-+			0x0 0x0 0x0 IRQ_INTA &mpic 0x0 0x1
-+			0x0 0x0 0x0 IRQ_INTB &mpic 0x1 0x1
-+			0x0 0x0 0x0 IRQ_INTC &mpic 0x2 0x1
-+			0x0 0x0 0x0 IRQ_INTD &mpic 0x3 0x1
- 			>;
- 		pcie@0 {
- 			reg = <0x0 0x0 0x0 0x0 0x0>;
-diff --git a/arch/powerpc/boot/dts/xpedite5200.dts b/arch/powerpc/boot/dts/xpedite5200.dts
-index 840ea84bbb59..ea6d0e936faa 100644
---- a/arch/powerpc/boot/dts/xpedite5200.dts
-+++ b/arch/powerpc/boot/dts/xpedite5200.dts
-@@ -8,6 +8,8 @@
+ 			pci-bridge@1 {
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
+index af34c65773fd..4538d18b4c3c 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
++++ b/Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
+@@ -112,11 +112,11 @@ pcie0: pcie@f8000000 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_clkreq>;
+ 	#interrupt-cells = <1>;
+-	interrupt-map-mask = <0 0 0 7>;
+-	interrupt-map = <0 0 0 1 &pcie0_intc 0>,
+-			<0 0 0 2 &pcie0_intc 1>,
+-			<0 0 0 3 &pcie0_intc 2>,
+-			<0 0 0 4 &pcie0_intc 3>;
++	interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++	interrupt-map = <0 0 0 IRQ_INTA &pcie0_intc 0>,
++			<0 0 0 IRQ_INTB &pcie0_intc 1>,
++			<0 0 0 IRQ_INTC &pcie0_intc 2>,
++			<0 0 0 IRQ_INTD &pcie0_intc 3>;
+ 	pcie0_intc: interrupt-controller {
+ 		interrupt-controller;
+ 		#address-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+index d5cbfe6b0d89..795b09755977 100644
+--- a/Documentation/devicetree/bindings/pci/ti-pci.txt
++++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+@@ -88,11 +88,11 @@ axi {
+ 		ti,hwmods = "pcie1";
+ 		phys = <&pcie1_phy>;
+ 		phy-names = "pcie-phy0";
+-		interrupt-map-mask = <0 0 0 7>;
+-		interrupt-map = <0 0 0 1 &pcie_intc 1>,
+-				<0 0 0 2 &pcie_intc 2>,
+-				<0 0 0 3 &pcie_intc 3>,
+-				<0 0 0 4 &pcie_intc 4>;
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0 IRQ_INTA &pcie_intc 1>,
++				<0 0 0 IRQ_INTB &pcie_intc 2>,
++				<0 0 0 IRQ_INTC &pcie_intc 3>,
++				<0 0 0 IRQ_INTD &pcie_intc 4>;
+ 		pcie_intc: interrupt-controller {
+ 			interrupt-controller;
+ 			#address-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+index 1fa2c5906d4d..b5416798a638 100644
+--- a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+@@ -66,11 +66,11 @@ Example:
+ 		#interrupt-cells = <1>;
+ 		interrupt-names = "dma", "msi";
+ 		interrupts = <0 224 4>, <0 225 4>;
+-		interrupt-map-mask = <0 0 0  7>;
+-		interrupt-map = <0 0 0  1  &pcie_intc 0>,	/* INTA */
+-				<0 0 0  2  &pcie_intc 1>,	/* INTB */
+-				<0 0 0  3  &pcie_intc 2>,	/* INTC */
+-				<0 0 0  4  &pcie_intc 3>;	/* INTD */
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0  IRQ_INTA  &pcie_intc 0>,
++				<0 0 0  IRQ_INTB  &pcie_intc 1>,
++				<0 0 0  IRQ_INTC  &pcie_intc 2>,
++				<0 0 0  IRQ_INTD  &pcie_intc 3>;
  
- /dts-v1/;
+ 		pcie_intc: legacy-interrupt-controller {
+ 			interrupt-controller;
+diff --git a/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt b/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
+index 11063293f761..bfa37aa4933d 100644
+--- a/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
++++ b/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
+@@ -50,27 +50,27 @@ pci: pciv3@62000000 {
+ 		0x20000000 0 0x20000000 /* 512 MB @ LB 20000000 1:1 */
+ 		0x02000000 0 0x80000000 /* Core module alias memory */
+ 		0x80000000 0 0x40000000>; /* 1GB @ LB 80000000 */
+-	interrupt-map-mask = <0xf800 0 0 0x7>;
++	interrupt-map-mask = <0xf800 0 0 IRQ_INT_ALL>;
+ 	interrupt-map = <
+ 	/* IDSEL 9 */
+-	0x4800 0 0 1 &pic 13 /* INT A on slot 9 is irq 13 */
+-	0x4800 0 0 2 &pic 14 /* INT B on slot 9 is irq 14 */
+-	0x4800 0 0 3 &pic 15 /* INT C on slot 9 is irq 15 */
+-	0x4800 0 0 4 &pic 16 /* INT D on slot 9 is irq 16 */
++	0x4800 0 0 IRQ_INTA &pic 13 /* INT A on slot 9 is irq 13 */
++	0x4800 0 0 IRQ_INTB &pic 14 /* INT B on slot 9 is irq 14 */
++	0x4800 0 0 IRQ_INTC &pic 15 /* INT C on slot 9 is irq 15 */
++	0x4800 0 0 IRQ_INTD &pic 16 /* INT D on slot 9 is irq 16 */
+ 	/* IDSEL 10 */
+-	0x5000 0 0 1 &pic 14 /* INT A on slot 10 is irq 14 */
+-	0x5000 0 0 2 &pic 15 /* INT B on slot 10 is irq 15 */
+-	0x5000 0 0 3 &pic 16 /* INT C on slot 10 is irq 16 */
+-	0x5000 0 0 4 &pic 13 /* INT D on slot 10 is irq 13 */
++	0x5000 0 0 IRQ_INTA &pic 14 /* INT A on slot 10 is irq 14 */
++	0x5000 0 0 IRQ_INTB &pic 15 /* INT B on slot 10 is irq 15 */
++	0x5000 0 0 IRQ_INTC &pic 16 /* INT C on slot 10 is irq 16 */
++	0x5000 0 0 IRQ_INTD &pic 13 /* INT D on slot 10 is irq 13 */
+ 	/* IDSEL 11 */
+-	0x5800 0 0 1 &pic 15 /* INT A on slot 11 is irq 15 */
+-	0x5800 0 0 2 &pic 16 /* INT B on slot 11 is irq 16 */
+-	0x5800 0 0 3 &pic 13 /* INT C on slot 11 is irq 13 */
+-	0x5800 0 0 4 &pic 14 /* INT D on slot 11 is irq 14 */
++	0x5800 0 0 IRQ_INTA &pic 15 /* INT A on slot 11 is irq 15 */
++	0x5800 0 0 IRQ_INTB &pic 16 /* INT B on slot 11 is irq 16 */
++	0x5800 0 0 IRQ_INTC &pic 13 /* INT C on slot 11 is irq 13 */
++	0x5800 0 0 IRQ_INTD &pic 14 /* INT D on slot 11 is irq 14 */
+ 	/* IDSEL 12 */
+-	0x6000 0 0 1 &pic 16 /* INT A on slot 12 is irq 16 */
+-	0x6000 0 0 2 &pic 13 /* INT B on slot 12 is irq 13 */
+-	0x6000 0 0 3 &pic 14 /* INT C on slot 12 is irq 14 */
+-	0x6000 0 0 4 &pic 15 /* INT D on slot 12 is irq 15 */
++	0x6000 0 0 IRQ_INTA &pic 16 /* INT A on slot 12 is irq 16 */
++	0x6000 0 0 IRQ_INTB &pic 13 /* INT B on slot 12 is irq 13 */
++	0x6000 0 0 IRQ_INTC &pic 14 /* INT C on slot 12 is irq 14 */
++	0x6000 0 0 IRQ_INTD &pic 15 /* INT D on slot 12 is irq 15 */
+ 	>;
+ };
+diff --git a/Documentation/devicetree/bindings/pci/versatile.txt b/Documentation/devicetree/bindings/pci/versatile.txt
+index 0a702b13d2ac..a02c7b9683ac 100644
+--- a/Documentation/devicetree/bindings/pci/versatile.txt
++++ b/Documentation/devicetree/bindings/pci/versatile.txt
+@@ -36,24 +36,24 @@ pci-controller@10001000 {
+ 		  0x02000000 0 0x50000000 0x50000000 0 0x10000000   /* non-prefetchable memory */
+ 		  0x42000000 0 0x60000000 0x60000000 0 0x10000000>; /* prefetchable memory */
  
-+#include <dt-bindings/interrupt-controller/irq.h>
+-	interrupt-map-mask = <0x1800 0 0 7>;
+-	interrupt-map = <0x1800 0 0 1 &sic 28
+-			 0x1800 0 0 2 &sic 29
+-			 0x1800 0 0 3 &sic 30
+-			 0x1800 0 0 4 &sic 27
+-
+-			 0x1000 0 0 1 &sic 27
+-			 0x1000 0 0 2 &sic 28
+-			 0x1000 0 0 3 &sic 29
+-			 0x1000 0 0 4 &sic 30
+-
+-			 0x0800 0 0 1 &sic 30
+-			 0x0800 0 0 2 &sic 27
+-			 0x0800 0 0 3 &sic 28
+-			 0x0800 0 0 4 &sic 29
+-
+-			 0x0000 0 0 1 &sic 29
+-			 0x0000 0 0 2 &sic 30
+-			 0x0000 0 0 3 &sic 27
+-			 0x0000 0 0 4 &sic 28>;
++	interrupt-map-mask = <0x1800 0 0 IRQ_INT_ALL>;
++	interrupt-map = <0x1800 0 0 IRQ_INTA &sic 28
++			 0x1800 0 0 IRQ_INTB &sic 29
++			 0x1800 0 0 IRQ_INTC &sic 30
++			 0x1800 0 0 IRQ_INTD &sic 27
 +
- / {
- 	model = "xes,xpedite5200";
- 	compatible = "xes,xpedite5200", "xes,MPC8548";
-@@ -448,11 +450,11 @@
++			 0x1000 0 0 IRQ_INTA &sic 27
++			 0x1000 0 0 IRQ_INTB &sic 28
++			 0x1000 0 0 IRQ_INTC &sic 29
++			 0x1000 0 0 IRQ_INTD &sic 30
++
++			 0x0800 0 0 IRQ_INTA &sic 30
++			 0x0800 0 0 IRQ_INTB &sic 27
++			 0x0800 0 0 IRQ_INTC &sic 28
++			 0x0800 0 0 IRQ_INTD &sic 29
++
++			 0x0000 0 0 IRQ_INTA &sic 29
++			 0x0000 0 0 IRQ_INTB &sic 30
++			 0x0000 0 0 IRQ_INTC &sic 27
++			 0x0000 0 0 IRQ_INTD &sic 28>;
+ };
+diff --git a/Documentation/devicetree/bindings/pci/xgene-pci-msi.txt b/Documentation/devicetree/bindings/pci/xgene-pci-msi.txt
+index 85d9b95234f7..0e84e6621b4a 100644
+--- a/Documentation/devicetree/bindings/pci/xgene-pci-msi.txt
++++ b/Documentation/devicetree/bindings/pci/xgene-pci-msi.txt
+@@ -57,11 +57,11 @@ SoC DTSI:
+ 			  0x02000000 0x00 0x80000000 0xe1 0x80000000 0x00 0x80000000>; /* mem */
+ 		dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
+ 			      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
+-		interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+-		interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
+-				 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
+-				 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
+-				 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
++		interrupt-map-mask = <0x0 0x0 0x0 IRQ_INT_ALL>;
++		interrupt-map = <0x0 0x0 0x0 IRQ_INTA &gic 0x0 0xc2 0x1
++				 0x0 0x0 0x0 IRQ_INTB &gic 0x0 0xc3 0x1
++				 0x0 0x0 0x0 IRQ_INTC &gic 0x0 0xc4 0x1
++				 0x0 0x0 0x0 IRQ_INTD &gic 0x0 0xc5 0x1>;
+ 		dma-coherent;
+ 		clocks = <&pcie0clk 0>;
+ 		msi-parent= <&msi>;
+diff --git a/Documentation/devicetree/bindings/pci/xgene-pci.txt b/Documentation/devicetree/bindings/pci/xgene-pci.txt
+index 92490330dc1c..0f0e3eb64101 100644
+--- a/Documentation/devicetree/bindings/pci/xgene-pci.txt
++++ b/Documentation/devicetree/bindings/pci/xgene-pci.txt
+@@ -39,11 +39,11 @@ Example:
+ 			  0x02000000 0x00 0x80000000 0xe1 0x80000000 0x00 0x80000000>; /* mem */
+ 		dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
+ 			      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
+-		interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+-		interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
+-				 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
+-				 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
+-				 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
++		interrupt-map-mask = <0x0 0x0 0x0 IRQ_INT_ALL>;
++		interrupt-map = <0x0 0x0 0x0 IRQ_INTA &gic 0x0 0xc2 0x1
++				 0x0 0x0 0x0 IRQ_INTB &gic 0x0 0xc3 0x1
++				 0x0 0x0 0x0 IRQ_INTC &gic 0x0 0xc4 0x1
++				 0x0 0x0 0x0 IRQ_INTD &gic 0x0 0xc5 0x1>;
+ 		dma-coherent;
+ 		clocks = <&pcie0clk 0>;
+ 	};
+diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+index 01bf7fdf4c19..5964fdf752bc 100644
+--- a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+@@ -47,11 +47,11 @@ nwl_pcie: pcie@fd0e0000 {
+ 	interrupt-parent = <&gic>;
+ 	interrupts = <0 114 4>, <0 115 4>, <0 116 4>, <0 117 4>, <0 118 4>;
+ 	interrupt-names = "msi0", "msi1", "intx", "dummy", "misc";
+-	interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+-	interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
+-			<0x0 0x0 0x0 0x2 &pcie_intc 0x2>,
+-			<0x0 0x0 0x0 0x3 &pcie_intc 0x3>,
+-			<0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
++	interrupt-map-mask = <0x0 0x0 0x0 IRQ_INT_ALL>;
++	interrupt-map = <0x0 0x0 0x0 IRQ_INTA &pcie_intc 0x1>,
++			<0x0 0x0 0x0 IRQ_INTB &pcie_intc 0x2>,
++			<0x0 0x0 0x0 IRQ_INTC &pcie_intc 0x3>,
++			<0x0 0x0 0x0 IRQ_INTD &pcie_intc 0x4>;
+ 
+ 	msi-parent = <&nwl_pcie>;
+ 	reg = <0x0 0xfd0e0000 0x0 0x1000>,
+diff --git a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
+index fd57a81180a4..82b7d07bda51 100644
+--- a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
+@@ -47,11 +47,11 @@ Zynq:
+ 		reg = < 0x50000000 0x1000000 >;
  		device_type = "pci";
- 		reg = <0xef008000 0x1000>;
- 		clock-frequency = <33333333>;
--		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+		interrupt-map-mask = <0xf800 0x0 0x0 IRQ_INT_ALL>;
- 		interrupt-map = <
- 				/* IDSEL */
--				 0xe000 0 0 1 &mpic 2 1
--				 0xe000 0 0 2 &mpic 3 1>;
-+				 0xe000 0 0 IRQ_INTA &mpic 2 1
-+				 0xe000 0 0 IRQ_INTB &mpic 3 1>;
+ 		interrupts = < 0 52 4 >;
+-		interrupt-map-mask = <0 0 0 7>;
+-		interrupt-map = <0 0 0 1 &pcie_intc 1>,
+-				<0 0 0 2 &pcie_intc 2>,
+-				<0 0 0 3 &pcie_intc 3>,
+-				<0 0 0 4 &pcie_intc 4>;
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0 IRQ_INTA &pcie_intc 1>,
++				<0 0 0 IRQ_INTB &pcie_intc 2>,
++				<0 0 0 IRQ_INTC &pcie_intc 3>,
++				<0 0 0 IRQ_INTD &pcie_intc 4>;
+ 		ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
  
- 		interrupt-parent = <&mpic>;
- 		interrupts = <24 2>;
+ 		pcie_intc: interrupt-controller {
+@@ -72,11 +72,11 @@ Microblaze:
+ 		device_type = "pci";
+ 		interrupt-parent = <&microblaze_0_intc>;
+ 		interrupts = <1 2>;
+-		interrupt-map-mask = <0 0 0 7>;
+-		interrupt-map = <0 0 0 1 &pcie_intc 1>,
+-				<0 0 0 2 &pcie_intc 2>,
+-				<0 0 0 3 &pcie_intc 3>,
+-				<0 0 0 4 &pcie_intc 4>;
++		interrupt-map-mask = <0 0 0 IRQ_INT_ALL>;
++		interrupt-map = <0 0 0 IRQ_INTA &pcie_intc 1>,
++				<0 0 0 IRQ_INTB &pcie_intc 2>,
++				<0 0 0 IRQ_INTC &pcie_intc 3>,
++				<0 0 0 IRQ_INTD &pcie_intc 4>;
+ 		ranges = <0x02000000 0x00000000 0x80000000 0x80000000 0x00000000 0x10000000>;
+ 
+ 		pcie_intc: interrupt-controller {
 -- 
 2.21.0
 
