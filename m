@@ -2,115 +2,141 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C35DCA9ED3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B9DCA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DFD214B2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFDF12080F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="jIcuW1V9"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="U0XZKqti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbfKDREB (ORCPT
+        id S1728489AbfKDRJ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:04:01 -0500
-Received: from mout.gmx.net ([212.227.17.21]:36097 "EHLO mout.gmx.net"
+        Mon, 4 Nov 2019 12:09:58 -0500
+Received: from mout.gmx.net ([212.227.17.21]:34997 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbfKDREB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:04:01 -0500
+        id S1728216AbfKDRJ6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 12:09:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572887016;
-        bh=PI7dAw1uU03KDM2kwW+WwA/xzQ2h0kyFFuuTAXPmP5w=;
+        s=badeba3b8450; t=1572887381;
+        bh=Xw/Eqili2ZJJLIqrlq0Jd7xa4tm2K2gAhNFHp6fip9o=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=jIcuW1V9N/vp0Pp6ApmnBa6GDUV+x38frXo+Cp26LOHZYKBcp2S5r0LsBQtXDK38h
-         znyF0vsjXAZYb0K2AXk1Ly37fCzmKUDZzPCYqfhOu0iAzIajKih0YE1E/g3ZOQfeIz
-         8mujWGnkg8CwCDyobwRBkx9Njav/7KO8YCRm0EU8=
+        b=U0XZKqtiv7v+Mu6yV1DFfP8K+sJwt97ZUnA75Z0pAGlhMvtZsMCsr2P+DVRoNPvZ2
+         oYFF6ja1kFdc/Tb1oonTDYMSIecjtUTAP8u5RkijXjmp4bvczuyl0lU8rfk1SPPkN+
+         K9Jg6YB27YiX7qGCkVTMuKJVc24JG4MgSwLPkRN4=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from [192.168.1.164] ([37.4.249.112]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N95iR-1hq5fU3Wtz-0164Ln; Mon, 04
- Nov 2019 18:03:35 +0100
-Subject: Re: [PATCH] ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Eric Anholt <eric@anholt.net>,
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mf078-1hzjh90FMA-00gaTN; Mon, 04
+ Nov 2019 18:09:41 +0100
+Subject: Re: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        catalin.marinas@arm.com, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
         Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <1570964003-20227-1-git-send-email-wahrenst@gmx.net>
- <20191104090919.GC12355@duo.ucw.cz>
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>
+Cc:     linux-kernel@vger.kernel.org
+References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
+ <20191104135412.32118-2-nsaenzjulienne@suse.de>
 From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <6426d9b6-8ef1-903a-47fb-6844e29dffdd@gmx.net>
-Date:   Mon, 4 Nov 2019 18:03:34 +0100
+Message-ID: <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
+Date:   Mon, 4 Nov 2019 18:09:39 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191104090919.GC12355@duo.ucw.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191104135412.32118-2-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-X-Provags-ID: V03:K1:qX/zG45X4O/oDA29SB1fKSYqUQKAxW6UyeV3mrJ54AmiRk8x42G
- GeCQLS92oaCS6+ejAGhrH5tRSWBnLEEN3i0xwdkQQ2t3NDXvesDw3uP6lql1w4N46tGJa7d
- K+HBDBxJy8NCMO6SiGtGcVy/L2o6kUTUcNDMBZs9UMzNpj4NI6Du3s5GYbITiRLC0oYqImm
- NUONt5iURZ9CFbGoSkZoA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AKi8FyK/A4k=:Zv18n1lZNDVxFqawjJrsWx
- 3i+KX7zMM/HVqfGvzpMMbf+FVUYJB+4KFcORTlcbHvLDBmwnSYTw5JzEM5VCSr80raPDBv8od
- HzYkSy+Zor2VG8NedKvihSwAokRmJtHeCsaLr0DJKd4C4tCI3qk+oC1brqMwlgKvvHDAROCvX
- x8xybu+M70awLnyZOS/n+zDCgrA2W9M2SLs3a2nzJtbjVEl+HSYsN9yDmRTgjg0hOrf4vb45i
- uu9whvCd6VitDwzncHaBkiIsRk2wi5MT4cnc8FUe4FsvVcyQOewU+0325+d/xyiyyEDgIG2VW
- ZKFNCrzCqFQKi69azL6SWvtGd073+JVt1JX7jLeLiijQ3gO3O4h8hMVxRlwziBJ+84TZ+dKIb
- 1zDBZjdeSIrNwJ/E8vLLyyaU4qi0/DWS5KmMp1N+qzMbQSYeG76ObJDUVqZWlv4xDq+jxRROX
- Hu29FVgNApGEq7O6xxuX5yYZ+dNXEGU95UHQ1qTIQmEAmzZlaNa1dXlbwrfJ3UK6SfwaQbFZe
- CeFuhkJFOduxGApViqeo/CGjcJ5n4pQF1Pl31B8voPlu1L+Tq2FuDNFFuxeQFs9Mh4624/2bW
- KMIQnqQRLGH9W46xMzbsl8H5jM86n+6kEQjwSPFhCWLJ/eUAsgndx/WqPKCf/Syhlax5EsKyZ
- 9ETxCEkGF10OmX3qLxTGRmvjY+iu+n9b/gKHD6wASLmMsjZEAwwZSPiMgOQ94oZWJ/H+60mSa
- lwVlmVKV895BQQSDQf3A3Z8NZT8ptG4Wld+cYy6MvfjDgsSRpAwqu1lONv07PJJ2HsaoutNAv
- EJruYDJ92hXjYXSZutNFyqbiYck7fk2qR7QdlKFbUX/5JIOElIG0RtuZjnBMaMmXTrNr/ep3h
- LK+O3ZiNFAHqJIW0QY8aLx5kSypTnNRYWHUa0qQW5cvNmY67e3LrcLqjbuR/Mwi6inW4uuBbL
- 6AwxF3IvWb4KhCjMTxTKfSEBxPlTpXOBNXSuqyw6dmIe4eJReTHsdmocnKmUhRPIvxH3aSpse
- bHoxVEQBmluuKaor6lpzkfh08B/1nqJt0ZiVcTPjy8VLRwnizoShGHl4DDftBZOfVPXBNFQUi
- JmAtPLfh7Dj0lVqfCNmhEK6qvxEB1AszMAh9hFD9OdWDB+/a+oDM0H6CvxH7jWsh25+dT+yoa
- yIcP/q25izAzqyIzHWIH/mp1G18HK990uhGRVkNMtmWM0sZb8gP7f1v0ORvXviQEo/PFqTAjb
- txLVVfBOOq2FwlAE7lA411ge+6OfqYG7baLUNEQg06vgOyDv1wvr9gFf6+dg=
+X-Provags-ID: V03:K1:HUCChti8pYqeZ0jxOW5Kmz2kyPjLn97dBAj9Og47A75h/r17rVL
+ 8noEfKIPcCLhbr31Pmgru/D9r/FfgQCKP/n1auxhCJflW1WIxlD2QAlVtZtKiYmkjo9HOHD
+ 38nltXoEvu3flP9mlV6tJ6b0+9rKvOl9Q/8qNexhVxpQ6zsbgsswa7S+grNJhGul4BJBBBt
+ MBdo/U9qUFlTxY5pjuAiw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MmF7hCF6RgI=:fAH0j5PwkaBViB+yDfOEgb
+ Pbz0an8tBAk/Hy4e+T665KOJ3bAeqCXqjWXG+VMtk9Dc8GzWVbE8tATq4d5hRDXae9cpb0WbO
+ mBbmXCLHNNHXCx3OMYRTNpQi0cg8bQYPFvqidDAK0zTKdt0aucpFk4Pd9MF4VU9jiixVDpg0o
+ 0Sz6EQhPHuwBkYcpNqXd4MrfcqVz4EYgo5lyOv1TQ5o5tZmk3ldKGjnCwWqgt0Sv2ZIdMj7D0
+ UX8BILlLWWY5H/uls06cWUDlh40TYguxHYc9ty6L0bASy5IldBi3q1354ccUZwYdmFelpIz01
+ gOj/AFED7/QESBTpXghGelhw/EyymwsABQlOaL0wp3H8xfdJNhcfArDn6RJ+91fP4hwz4pCCs
+ vO6qDnl87UKjiz8GyPjCv9ee0BMCe5SCaXVsnkC6XnQgIJf/dNTMswbwG0LYCKOUGfjLIUVn+
+ 1k0RvWM4K44ZxBa+Ws32c5GNAPVWUm1cfZjJ+WdyvbJ9Fga8WcJa6L0ITiN4BolPdUL7zocD2
+ Y3qs3uYtukOme77dp4/OcUz6mDMLnobO2MaNEWza6Au4q0KMurHOAyM0cj7PKdCYWlVf8OHMs
+ P7wo5iVbyZbdwuHX/b1Zix+VmkuLtoyoXabctzkuYyaGBAn3iHJnerbOejgCHYBQoR8fbc1v5
+ 0qSKEEeFBo0k/mhGGyy2W4jEK+BVAAomZDFX5xYJLatkrBQkCmoCValghsfc5cMm6hqzldSnB
+ rns7MkIOazdWp71sYZ9YhKguP3MJzSpkgYBFxVzQPzUpuG32PcNiPX3BdEMgLe7RPxh0am4Fb
+ B7imTVyMlb83T//YJIIrgMHcq5u1uCRvyWCABNgYGj9Jxpuhg9VncLKY9WchaARtrgI2G20Q9
+ WTqvTQ5mJgBc9iG/FAJgo//nr5oFvpbJClrLWg+i0AT3/rp/M+a7msExDLcZrT9HGozXx0zcK
+ 5MG09uUIOAi2Gg8o8W/DOsq+a97IPESgdwhqQciCh/S/Ym23xhBcBUebOs/uAelc4p5X9Cu1m
+ h8oJ8XBacBf9rv9ECaflaQs3MgdnWIsWYfqu3undBBxQsq7jiXqYq4Af9RnFE6EDvgXFWe9fg
+ xQ+C6lDOUbzzCihQDjx/10Z5WzI9D9t9a3eAGDrF08zeeZBgfKn1Zoip6uCNOaiT9ADZZzT+r
+ SaKsAkQctI0nqxwGkWmt8aXbCyCA1xRFqO/orwCOQ6eqJpmmOQ21Z7ZFnlVSVQb7NU4YFxofP
+ 2eQlLTQRBk5eDLGwsXsasGE28LV6q6YhHkyykJKABa5v5mAr84tmTefERtCU=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Pavel,
+Hi Nicolas,
 
-Am 04.11.19 um 10:09 schrieb Pavel Machek:
-> On Sun 2019-10-13 12:53:23, Stefan Wahren wrote:
->> bcm2835-rpi.dtsi defines the behavior of the ACT LED, which is available
->> on all Raspberry Pi boards. But there is no driver for this particual
->> GPIO on CM3 in mainline yet, so this node was left incomplete without
->> the actual GPIO definition. Since commit 025bf37725f1 ("gpio: Fix return
->> value mismatch of function gpiod_get_from_of_node()") this causing probe
->> issues of the leds-gpio driver for users of the CM3 dtsi file.
->>
->>   leds-gpio: probe of leds failed with error -2
->>
->> Until we have the necessary GPIO driver hide the ACT node for CM3
->> to avoid this.
->>
->> Reported-by: Fredrik Yhlen <fredrik.yhlen@endian.se>
->> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
->> Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and IO board")
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+Am 04.11.19 um 14:54 schrieb Nicolas Saenz Julienne:
+> arm64 places the CMA in ZONE_DMA32, which is not good enough for the
+> Raspberry Pi 4 since it contains peripherals that can only address the
+> first GB of memory. Explicitly place the CMA into that area.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-thanks but this patch has already been applied.
+do you want this in Linux 5.5 via devicetree/fixes? In this case please
+add an fixes tag.
 
-Can i consider this as a "yes" to my intended question ( Is the behavior
-change in leds-gpio desired )?
+Otherwise this will be queued for Linux 5.6.
 
+> ---
+>  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/b=
+cm2711-rpi-4-b.dts
+> index cccc1ccd19be..3c7833e9005a 100644
+> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> @@ -19,6 +19,25 @@
+>  		reg =3D <0 0 0>;
+>  	};
+>
+> +	reserved-memory {
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <1>;
+> +		ranges;
+> +
+> +		/*
+> +		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
+> +		 * that's not good enough for the Raspberry Pi 4 as some
+> +		 * devices can only address the lower 1G of memory (ZONE_DMA).
+> +		 */
+> +		linux,cma {
+> +			compatible =3D "shared-dma-pool";
+> +			size =3D <0x2000000>; /* 32MB */
+> +			alloc-ranges =3D <0x0 0x00000000 0x40000000>;
+> +			reusable;
+> +			linux,cma-default;
+> +		};
+> +	};
+> +
+
+i think this is a SoC-specific issue not a board specifc one. Please
+move this to bcm2711.dtsi
+
+Thanks
+Stefan
+
+>  	leds {
+>  		act {
+>  			gpios =3D <&gpio 42 GPIO_ACTIVE_HIGH>;
