@@ -2,125 +2,162 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362D4CA9ED2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F085FCA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16EE12245D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C78F72246B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rvIq103d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfKDHFU (ORCPT
+        id S1727236AbfKDHKd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 02:05:20 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:55086 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKDHFU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 02:05:20 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-c3-5dbfcdad7647
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id E7.DB.08102.DADCFBD5; Mon,  4 Nov 2019 08:05:17 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 4 Nov 2019 08:05:07 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based
- run-level control for regulators
-Thread-Topic: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based
- run-level control for regulators
-Thread-Index: AQHVkKmUb1A5TsbkA0WleApZHP5SaKd5+YkAgACQyoA=
-Date:   Mon, 4 Nov 2019 07:05:06 +0000
-Message-ID: <1550472ac1e105bd38da25803358cfbc0404bf38.camel@fi.rohmeurope.com>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E431E9F5DA350547A5D0E307336A633F@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 4 Nov 2019 02:10:33 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43990 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfKDHKd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 02:10:33 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 3so11527999pfb.10
+        for <devicetree@vger.kernel.org>; Sun, 03 Nov 2019 23:10:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t4TV25A1uMzOUpxnPE9T6D69bjxp+CQFn1rWNaSp17E=;
+        b=rvIq103d5QvkQPhePPHFLq0nK/ACbSKZY7eteyZPRm6ZQLdn2P9/L9r/QTnrN6rUNP
+         jm/ua7SGVaxRhSR5Nl9cOL5W9VLF8VkSl68eghceC1CCxqeyfDFNFUNDf85yimIPPvY0
+         o1yfdXK5tO1vLx1FxzcPkmng+u9IkRYuIwq5EzIIzZ68U8SNrPlIZsU7d0qY1AO6zsuI
+         pS1eCuVH8jlep136XfWsjFnO9FVNrx6OLJT5MeeAZHVVLtbzerSB2XgwPwUxJ+miWDfv
+         02MGnva9fIZ+K8PsBCyhgUeisAMN55iFNb1AzWrJ037fxdbVJklLbH3Lgnji2xW2YZRp
+         2V9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t4TV25A1uMzOUpxnPE9T6D69bjxp+CQFn1rWNaSp17E=;
+        b=EAPTeXXqsMm0viMoSluvfykb0v4mt3dJaUWLNOIFX/e8EtaJie4e4DfnjJ8iheBVTQ
+         5X1kIOB/YAdFRvKaIjCmFED56ImPFaT2t+coNGlbGtQIwTB1RH4DlHm5XaFbXsJznS8q
+         Iums1eItW4L9ckvuq0/5qklAe6IHpB7mf2Moc/oIZXMIwnoYV2rneQiS15m4veUgyNOA
+         7TkZej39DUJwOlq7+IE5Q0fO2DdA7jy2OiG6O/j0fPpCsMdwHjZSBVMf/7IWNVMpfj0/
+         kX4s2pkZYdHPnVvif8NeDOfEMpKH6VDS5hMl5UfOfwAQVyHVvTDbRVrbyzNt2QRCd3RX
+         cD0A==
+X-Gm-Message-State: APjAAAX1HjPZGvtivGPaYqXGF8sTrbyDSOxIL8H0n1pRhNwNLyeuXqc7
+        xFH/62T709yXjImem+vZBSgCSg==
+X-Google-Smtp-Source: APXvYqxHOP7JBpbRrN/9vm7qE7CKnT+oDstfysttIvzcmp2Ai7mrtOlTLr+klYFNg71UF1Ve/+0Xhg==
+X-Received: by 2002:a63:b62:: with SMTP id a34mr8305598pgl.123.1572851430833;
+        Sun, 03 Nov 2019 23:10:30 -0800 (PST)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l11sm16775340pgr.77.2019.11.03.23.10.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 23:10:30 -0800 (PST)
+Date:   Sun, 3 Nov 2019 23:10:27 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
+ controller
+Message-ID: <20191104071027.GD585@tuxbook-pro>
+References: <20191023090219.15603-1-rnayak@codeaurora.org>
+ <20191023090219.15603-12-rnayak@codeaurora.org>
+ <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
+ <20191030195021.GC27773@google.com>
+ <6610d7fe-5a4d-5a43-5c4f-9ae61e7e53ee@codeaurora.org>
+ <20191104063348.GA2464@tuxbook-pro>
+ <c214110f-7620-8771-ef83-8a4fb1f8724f@codeaurora.org>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TXUwcVRjNnd+7244MwyJXqiauJgZFamM1t6YxfbBxqkSrPDRp3OCsjAxh
-        f8jMYsDWlgerlmpCG8S6XagS2NYCLT+tKELRlT8pYNaWdhssZEOjgdIaWihiN+Bcpy083XPP
-        +c459+G7kJbGuXRY4Auouk/xODk789PxOy3PNA13u54NlT+P66KjPP7kRpjHc9WDDP4ifpXD
-        R3tGWHzg3GkWj51pZvDEfC/Aty98SuHKxDEKz342zuK2owmAz3eEOHxm5iTAfQ0XOFx/KUrh
-        UP0Ag6ODW/GVwV4O7+vq4fHSxRZmS6rcWNMI5L9j+3i5pnGX/EPwCi+3ntjPyX9c7OTk/lg7
-        JX9Zs0jJxxsWePlW66Pb7TvXbHYrgfdzCvJ96196Z422PNFCF910lNya6WTLQKOjHNggEjei
-        lsU+thzYoSSOAjTbMMxZl36AmiILpgIhJ25G5Zd5YnCIm9AvAyGGzNBiCKJvx0dYIqSI+ajq
-        o4OcNaSh+f7P7xpeRP9W/cyTHEZ8AtWGPyS0IL6O2r85TxMsidcAiiVUgm3imyg8Fv6fB+Ij
-        aH/ZDYpgWkxDrX8usNajRVTX+Rtt4VQ0Nbl0l3eirsU4Q6poMQOd6lhvwS2o/fcdVspjqPJA
-        nLdekIx+/eoqUwEeDK4qCK6Ygyvm4CpzcJX5a8CeAMirFHjylYC6IUtXi7N0v+Y1j3f93lZg
-        7cvc92A5si0CKAgi4CFIOVOF2ktnXdIDbn9eqaYYWq5e7FGNCECQdjqE6OEulyTkKaUfqLr/
-        nrQOMs404cn4QZckkq5CVS1S9XvqwxA6kZA41+2SknU1Xy15r8ATWJEpaCPh9nSHofryVF0p
-        Dmi5ZDlyDXM7iLTW7G0bMu2CUaR4TdayDoKnYcVUdS0Ne6rra2mJ8fl9anqasIeMimRUK/bd
-        L5oGaRA4U4TbRF1rfpr7OdNmBWVWZE+eJRUBZUVKLwM9iVfdGUZSfN3yx6evpxzaNFJzBNwc
-        n5MrS2KvJScVJoWnMp472Zzz8uFJ98JS804h8xWbu+uFY3tnLu94S/ird3F6I3vqzmzd0Nbp
-        Cmk053HvkfneKiMp274rdu3HzGyjdDkHJjfb/uloKHvDU9T09rZqh9aR6Ti0fWziu8K23VHO
-        yRiasuEpWjeU/wDZVjMd8QMAAA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c214110f-7620-8771-ef83-8a4fb1f8724f@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gTGludXMsDQoNCk9uIFN1biwgMjAxOS0xMS0wMyBhdCAyMzoyNyArMDEwMCwgTGludXMg
-V2FsbGVpaiB3cm90ZToNCj4gT24gRnJpLCBOb3YgMSwgMjAxOSBhdCAxMjo0MyBQTSBNYXR0aSBW
-YWl0dGluZW4NCj4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4gd3JvdGU6DQo+
-IA0KPiA+IEJ1Y2tzIDEsMiw2IGFuZCA3IG9uIFJPSE0gQkQ3MTgyOCBjYW4gYmUgZWl0aGVyIGNv
-bnRyb2xsZWQgYXMNCj4gPiBpbmRpdmlkdWFsIHJlZ3VsYXJ0b3JzIC0gb3IgdGhleSBjYW4gYmUg
-Z3JvdXBlZCB0byBhIGdyb3VwIG9mDQo+ID4gcmVndWxhdG9ycyB0aGF0IGFyZSBjb250cm9sbGVk
-IGJ5ICdydW4gbGV2ZWxzJy4gVGhpcyBjYW4gYmUNCj4gPiBkb25lIHZpYSBJMkMuIEVhY2ggcmVn
-dWxhdG9yIGNhbiBiZSBhc3NpZ25lZCBhIHZvbHRhZ2UgYW5kDQo+ID4gZW5hYmxlL2Rpc2FibGUg
-c3RhdHVzIGZvciBlYWNoIHJ1bi1sZXZlbC4gVGhlc2Ugc3RhdHVzZXMgYXJlDQo+ID4gYWxzbyBj
-aGFuZ2VhYmxlIHZpYSBJMkMuDQo+ID4gDQo+ID4gUnVuLWxldmVscyBjYW4gdGhlbiBiZSBjaGFu
-Z2VkIGVpdGhlciBieSBJMkMgb3IgR1BJTy4gVGhpcw0KPiA+IGNvbnRyb2wgbWVjaGFuaXNtIGlz
-IHNlbGVjdGVkIGJ5IGRhdGEgaW4gb25lIHRpbWUgcHJvZ3JhbW1hYmxlDQo+ID4gYXJlYSAoZHVy
-aW5nIHByb2R1Y3Rpb24pIGFuZCBjYW4ndCBiZSBjaGFuZ2VkIGxhdGVyLg0KPiA+IA0KPiA+IEFs
-bG93IHJlZ3VsYXRvcnMgdG8gYmUgY29udHJvbGxlZCB2aWEgcnVuLWxldmVscyBhbmQgYWxsb3cN
-Cj4gPiBnZXR0aW5nL3NldHRpbmcgdGhlIGN1cnJlbnQgcnVuLWxldmVsIGFsc28gdmlhIEdQSU8u
-DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0dGlu
-ZW5AZmkucm9obWV1cm9wZS5jb20+DQo+IA0KPiBJIGxpa2UgdGhlIHdheSB5b3UgdXNlIHRoZSBn
-cGlvIEFQSSBzbyBGV0lXOg0KPiBSZXZpZXdlZC1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2Fs
-bGVpakBsaW5hcm8ub3JnPg0KDQpUaGFua3MuIEFuZCBJIGxpa2UgdGhlIEdQSU8gc2V0IG11bHRp
-cGxlIC0gdGhhdCdzIHJlcXVpcmVkIGluIG9yZGVyIHRvDQpkbyBzb21lIG9mIHRoZSBydW4tbGV2
-ZWwgY2hhbmdlcyB3aXRob3V0IGludGVybWVkaWF0ZSBzdGF0ZXMuIChFZy4gYm90aA0KRFZTIEdQ
-SU9zIG5lZWQgdG8gYmUgdG9nZ2xlZCB2aWEgc2luZ2xlIHJlZ2lzdGVyIHdyaXRlKS4NCg0KPiBJ
-IGRvIG5vdCB1bmRlcnN0YW5kIHRoZSByZWd1bGF0b3IgcGFydHMgb2YgdGhlIHBhdGNoLg0KDQpJ
-J20gc29ycnkuIFRoZSBwYXRjaCBpcyBub3QgY2xlYXJlc3Qgb25lIHdoYXQgY29tZXMgdG8gdGhl
-IHJlZ3VsYXRvcg0Kc3R1ZmYuIEkgY2FuIHRyeSBzcGxpdHRpbmcgaXQgdG8gc21hbGxlciBhbmQg
-bW9yZSBsb2dpY2FsIGNoYW5nZXMgaWYNCnlvdSwgTWFyayBvciBvdGhlciBpbnRlcmVzdGVkIHBl
-b3BsZSBob3BlIHRvIGdldCBpdCBzcGxpdHRlZC4gT3INCnBlcmhhcHMgaXQgd291bGQgYmUgc2lt
-cGxlc3QgdG8gcmV2aWV3IGlmIGl0IHdhcyBhbGwgaW4gb25lIHBhdGNoPyANCg0KUmF0aW9uYWxl
-IGZvciBzcGxpdHRpbmcgaXQgaW4gZmlyc3QgcGxhY2Ugd2FzIHRoYXQgSSBob3BlZCB0aGUgYmFz
-aWMNCnN1cHBvcnQgKGZpcnN0IHR3byByZWd1bGF0b3IgcGF0Y2hlcykgdG8gYmUgYWNjZXB0YWJs
-ZSB3aXRob3V0IGh1Z2UNCmNoYW5nZXMgLSB3aGVyZWFzIHRoZSBmb2xsb3cgdXAgcGF0Y2hlcyBh
-cmUgbW9yZSBsaWtlIHF1ZXN0aW9uIHRoYXQgaG93DQp0aGUgaGVjayBzaG91bGQgSSBpbXBsZW1l
-bnQgdGhpcyA6XSBJJ3ZlIG5vdCBoaXQgc2ltaWxhciAnY2hhbmdlIGJ1bmNoDQpvZiByZWd1bGF0
-b3Igc3RhdGVzIGF0IG9uZSBnbycgZHJpdmVycy9oYXJkd2FyZSBiZWZvcmUuDQoNCkJyLA0KCU1h
-dHRpIFZhaXR0aW5lbg0K
+On Sun 03 Nov 22:56 PST 2019, Rajendra Nayak wrote:
+
+> 
+> 
+> On 11/4/2019 12:03 PM, Bjorn Andersson wrote:
+> > On Sun 03 Nov 22:17 PST 2019, Rajendra Nayak wrote:
+> > 
+> > > 
+> > > 
+> > > On 10/31/2019 1:20 AM, Matthias Kaehlcke wrote:
+> > > > On Tue, Oct 29, 2019 at 09:50:40AM -0700, Stephen Boyd wrote:
+> > > > > Quoting Rajendra Nayak (2019-10-23 02:02:19)
+> > > > > > From: Maulik Shah <mkshah@codeaurora.org>
+> > > > > > 
+> > > > > > Add pdc interrupt controller for sc7180
+> > > > > > 
+> > > > > > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> > > > > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > > > > > ---
+> > > > > > v3:
+> > > > > > Used the qcom,sdm845-pdc compatible for pdc node
+> > > > > 
+> > > > > Everything else isn't doing the weird old compatible thing. Why not just
+> > > > > add the new compatible and update the driver? I guess I'll have to go
+> > > > > read the history.
+> > > > 
+> > > > Marc Zyngier complained  on v2 about the churn from adding compatible
+> > > > strings for identical components, and I kinda see his point.
+> > > > 
+> > > > I agree that using the 'sdm845' compatible string for sc7180 is odd too.
+> > > > Maybe we should introduce SoC independent compatible strings for IP blocks
+> > > > that are shared across multiple SoCs? If differentiation is needed SoC
+> > > > specific strings can be added.
+> > > 
+> > > Sure, I will perhaps add a qcom,pdc SoC independent compatible to avoid
+> > > confusion.
+> > > 
+> > 
+> > I agree,
+> > 
+> > compatible = "qcom,sc7180-pdc", "qcom,pdc";
+> > 
+> > is the way to go.
+> 
+> I wasn't planning on adding a qcom,sc7180-pdc, but instead just use the
+> qcom,pdc one for sc7180.
+> 
+> > 
+> > Reusing qcom,sdm845-pdc would prevent us from tackling any unforeseen
+> > issues/variations/erratas with one or the other platform in the future.
+> 
+> That was the intention of adding qcom,sc7180-pdc in the first place,
+> but Marc Zyngier was not happy with the churn, given there aren't really
+> any variations or erratas that we know of.
+> 
+
+Right, but by putting both compatibles in the dts and the generic one in
+the driver we avoid the driver churn and we're future compatible.
+
+And given that we haven't yet added the qcom,sdm845-pdc node to the
+sdm845.dtsi we don't need to maintain the qcom,sdm845-pdc in the driver.
+So switch qcom,sdm845-pdc to qcom,pdc in qcom-pdc.c.
+
+Regards,
+Bjorn
+
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> > > 
+> > > -- 
+> > > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> > > of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
