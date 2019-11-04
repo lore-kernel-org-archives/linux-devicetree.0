@@ -2,95 +2,147 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC599C47E49
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 16:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21797CA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C40A2080F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 16:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC2C20848
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 17:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572886891;
+	bh=+MtZPHtXKdsSw7Bm/k8kkH1yNhktHmkA+OzqMTB1qsw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QOejrnd+cF5Kwb623oHsJHoBoful8+GH/WHH8q1pJXzUJfQs+M2VFWiROco0nbFrg
+	 88VMB+eqJqzjI2ZInATrk/yXGGQppZiYxxrdLj0pFXYcUGiOg/TGqh2awrYfZsbPkT
+	 T3jgjaF1Q33HN7/Ux0XC7BFaWkPJX80yZbVN/gJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfKDQ6e (ORCPT
+        id S1728144AbfKDRBa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:58:34 -0500
-Received: from relmlor1.renesas.com ([210.160.252.171]:44074 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728174AbfKDQ6e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 11:58:34 -0500
-X-IronPort-AV: E=Sophos;i="5.68,267,1569250800"; 
-   d="scan'208";a="30794847"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 05 Nov 2019 01:58:32 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id B7B9240083D6;
-        Tue,  5 Nov 2019 01:58:27 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 4/4] ARM: shmobile_defconfig: Enable support for panels from EDT
-Date:   Mon,  4 Nov 2019 16:58:03 +0000
-Message-Id: <1572886683-4919-5-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572886683-4919-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1572886683-4919-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Mon, 4 Nov 2019 12:01:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727989AbfKDRBa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 12:01:30 -0500
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B38D0214B2;
+        Mon,  4 Nov 2019 17:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572886888;
+        bh=+MtZPHtXKdsSw7Bm/k8kkH1yNhktHmkA+OzqMTB1qsw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TpQQFTR2EFY00egCJK1oAzh9DT7POr/CTY0WnCUAB/2BeMaio38vdV1yPDdJ7LNmt
+         NJt/IMhJUhKdGJG7+aCn1qhhoFeAnvuKXgFCt9QkUW34dqfkPqMX3Az0KdbZttCrG0
+         3Q/ZdoRCleOKx/JLAhfQoZedoB1dFhC/6hLxYWsE=
+Received: by mail-qk1-f180.google.com with SMTP id m125so18267399qkd.8;
+        Mon, 04 Nov 2019 09:01:28 -0800 (PST)
+X-Gm-Message-State: APjAAAXhazfkjG9F8cx8ZCJKXjBWP9hSwnypZw8+w67wjXD4QB2xq3WG
+        ETqWxS5Nq7F5I+A5K999YnC2RhWe2CHw1dP2jA==
+X-Google-Smtp-Source: APXvYqwgsKbRtBwlM6IP+7Jb7jCD2qb6TrBglXZcYJiaKjk035Dt56BQa7exM3fo+NyU11adG6CGbyTwxp/LndrfMFY=
+X-Received: by 2002:a37:4904:: with SMTP id w4mr17253854qka.119.1572886887790;
+ Mon, 04 Nov 2019 09:01:27 -0800 (PST)
+MIME-Version: 1.0
+References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-5-saravanak@google.com>
+In-Reply-To: <20191028220027.251605-5-saravanak@google.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 Nov 2019 11:01:16 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJQ9siUGgmGqZnF_Wk3mVau29yVZRL_3LxFKgD8=mccQQ@mail.gmail.com>
+Message-ID: <CAL_JsqJQ9siUGgmGqZnF_Wk3mVau29yVZRL_3LxFKgD8=mccQQ@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] of: property: Make sure child dependencies don't
+ block probing of parent
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The iwg20d comes with an LCD panel from Emerging Display
-Technologies Corporation (EDT), therefore enable what's
-required to support it.
+On Mon, Oct 28, 2019 at 5:00 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> When creating device links to proxy the sync_state() needs of child
+> dependencies, create SYNC_STATE_ONLY device links so that children
+> dependencies don't block probing of the parent.
+>
+> Also, differentiate between missing suppliers of parent device vs
+> missing suppliers of child devices so that driver core doesn't block
+> parent device probing when only child supplier dependencies are missing.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/of/property.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
----
-v1->v2:
-* No change
----
- arch/arm/configs/shmobile_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+One nit below:
 
-diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmobile_defconfig
-index c6c7035..ab416a5 100644
---- a/arch/arm/configs/shmobile_defconfig
-+++ b/arch/arm/configs/shmobile_defconfig
-@@ -66,6 +66,7 @@ CONFIG_INPUT_EVDEV=y
- CONFIG_KEYBOARD_GPIO=y
- # CONFIG_INPUT_MOUSE is not set
- CONFIG_INPUT_TOUCHSCREEN=y
-+CONFIG_TOUCHSCREEN_EDT_FT5X06=y
- CONFIG_TOUCHSCREEN_ST1232=y
- CONFIG_INPUT_MISC=y
- CONFIG_INPUT_ADXL34X=y
-@@ -125,7 +126,9 @@ CONFIG_VIDEO_ADV7604=y
- CONFIG_VIDEO_ML86V7667=y
- CONFIG_DRM=y
- CONFIG_DRM_RCAR_DU=y
-+CONFIG_DRM_PANEL_SIMPLE=y
- CONFIG_DRM_DUMB_VGA_DAC=y
-+CONFIG_DRM_LVDS_CODEC=y
- CONFIG_DRM_SII902X=y
- CONFIG_DRM_I2C_ADV7511=y
- CONFIG_DRM_I2C_ADV7511_AUDIO=y
--- 
-2.7.4
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 2808832b2e86..f16f85597ccc 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1032,10 +1032,10 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
+>   * - -EINVAL if the supplier link is invalid and should not be created
+>   * - -ENODEV if there is no device that corresponds to the supplier phandle
+>   */
+> -static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
+> +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+> +                             u32 dl_flags)
+>  {
+>         struct device *sup_dev;
+> -       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+>         int ret = 0;
+>         struct device_node *tmp_np = sup_np;
+>
+> @@ -1195,13 +1195,20 @@ static int of_link_property(struct device *dev, struct device_node *con_np,
+>         unsigned int i = 0;
+>         bool matched = false;
+>         int ret = 0;
+> +       u32 dl_flags;
+> +
+> +       if (dev->of_node == con_np)
+> +               dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> +       else
+> +               dl_flags = DL_FLAG_SYNC_STATE_ONLY;
+>
+>         /* Do not stop at first failed link, link all available suppliers. */
+>         while (!matched && s->parse_prop) {
+>                 while ((phandle = s->parse_prop(con_np, prop_name, i))) {
+>                         matched = true;
+>                         i++;
+> -                       if (of_link_to_phandle(dev, phandle) == -EAGAIN)
+> +                       if (of_link_to_phandle(dev, phandle, dl_flags)
+> +                                                               == -EAGAIN)
 
+nit: I'd just keep this one line or at least move '==' up.
+
+>                                 ret = -EAGAIN;
+>                         of_node_put(phandle);
+>                 }
+> @@ -1219,10 +1226,10 @@ static int of_link_to_suppliers(struct device *dev,
+>
+>         for_each_property_of_node(con_np, p)
+>                 if (of_link_property(dev, con_np, p->name))
+> -                       ret = -EAGAIN;
+> +                       ret = -ENODEV;
+>
+>         for_each_child_of_node(con_np, child)
+> -               if (of_link_to_suppliers(dev, child))
+> +               if (of_link_to_suppliers(dev, child) && !ret)
+>                         ret = -EAGAIN;
+>
+>         return ret;
+> --
+> 2.24.0.rc0.303.g954a862665-goog
+>
