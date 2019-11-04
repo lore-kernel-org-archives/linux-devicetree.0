@@ -2,107 +2,109 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81E0CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B745ECA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8409E21744
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uqj54HMn"
+	by mail.kernel.org (Postfix) with ESMTP id 8A9BA21744
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572852606;
+	bh=QJMX4hYVZC4TczUoT32Bkr5EA9Iu2ovv4KhF0XdoP6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gpKhvtzNoRxUAUZi8nNgxcvvAA2hCg8/ILcWlfEIP8B6MQeJldBvYj4/w8r2x+7Cl
+	 BK6uQb6YNWhEvWU+AuI6ftEOwb9DyYQYP26KrZ2lwerf90O58njJvB/z9QwkoO8IOj
+	 zP+IWeLNeDrrPjSKWmjPKZDlj4zz0ycNLfyE6+fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfKDHP6 (ORCPT
+        id S1727419AbfKDHaG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 02:15:58 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56223 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfKDHP6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 02:15:58 -0500
-Received: by mail-wm1-f67.google.com with SMTP id m17so6086411wmi.5
-        for <devicetree@vger.kernel.org>; Sun, 03 Nov 2019 23:15:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=vxpfpSTNArRIpYDDU43CcJdAWB39Ke0QALR4oVEypT4=;
-        b=uqj54HMnQA5SJ8btXdn201fUD+jGaxv0l552g9lWfDXXedqkrlhrK8WYzPYXIXWYyX
-         QaPcEXRrvT2gPhTihR9C3Xm/RVEuVzOk7oLi1GmuPWxUZGItyCrOOh7gZsMKcT7o/BQf
-         vf+6u6C0FtzZ5h+XwUxfrpbufqHz3+wdO5V8Fi7r8uJuMJ4O3CdRjvoFRpUUHNjhBhON
-         xBXmN7+nLuWZQOtLouSAFmsCpQwFtAQwYDOkSK7FwgEXwzope9Scf8cki3MPIVQRSlJj
-         LBNqN/vrIym3lmNQsl6iacXM4nU391Gq0562F0UFmHRKqj6mRu2RwTP92jdW2WxIehIt
-         HtbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vxpfpSTNArRIpYDDU43CcJdAWB39Ke0QALR4oVEypT4=;
-        b=q07DTiSAGhLeUgVbINiJ//0aJ9cIgGqe5M8gHWPw/XMUf4sm/g17dSgJQKvJWBexOP
-         VKyy8F8utrq1fYZQOmrpc9mWhIvcZ4pr1/jNTwGZ3weUbMAOJ/GHSG3J4rZNS7qctBxO
-         Fh2AUio43riFtPfpu/pB3D8rPfokaGAWanH59b9xWOrM5Fwkd/XnlmANnGfPZlSiw95u
-         LMem8VLOFV+mF0pJt49luu7jK4JX43KpHhda3D4I1qRwEyveQP0rqoUd+F98cF46qkuR
-         RhkIj9KQxchzCmgqrBuDGeb5u4k8isZGKTNB1Su8uWQabkG2OxMR63fMlQibQTxxKPwj
-         d6pw==
-X-Gm-Message-State: APjAAAVEK/kt+Hqh9KAyin4oZSXICKwE/YqeslFixC+LtPpTHw0JDU3N
-        4ZujwyW4X/PVZESHH5Rt19OX3g==
-X-Google-Smtp-Source: APXvYqz32pI5Sru+QNOivnJMXGi29ceCxEjH6H6KjArDxhH+kDfUeNFyWAPKrA1xkKvDXkWkzwoiGQ==
-X-Received: by 2002:a7b:c7c7:: with SMTP id z7mr1785835wmk.133.1572851754938;
-        Sun, 03 Nov 2019 23:15:54 -0800 (PST)
-Received: from dell ([2.31.163.64])
-        by smtp.gmail.com with ESMTPSA id p12sm17618694wrm.62.2019.11.03.23.15.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 Nov 2019 23:15:53 -0800 (PST)
-Date:   Mon, 4 Nov 2019 07:15:54 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Mon, 4 Nov 2019 02:30:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbfKDHaF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 02:30:05 -0500
+Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B689A2053B;
+        Mon,  4 Nov 2019 07:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572852605;
+        bh=QJMX4hYVZC4TczUoT32Bkr5EA9Iu2ovv4KhF0XdoP6U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mmcSJ44XVGKvoTzHlkHMN+vGCJ89LBY8TsPHcyqEGdFecX9QSLCIUKfJJRKyvIpZK
+         zOuVEePIEDOJkevGyRXdLajyynMbzrN33BbVhVdWJgI5APUFWZhdETJtb33SgdmSD6
+         FfA4MV/hKCIJULu33h4ruLC0aJo/aQXeqBwaww98=
+Date:   Mon, 4 Nov 2019 15:29:37 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Add syscon YAML description
-Message-ID: <20191104071554.GK5700@dell>
-References: <20191101141034.259906-1-maxime@cerno.tech>
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/11] ARM: dts: imx6ul-kontron-n6x1x-s: Specify
+ bus-width for SD card and eMMC
+Message-ID: <20191104072936.GQ24620@dragon>
+References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
+ <20191031142112.12431-7-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191101141034.259906-1-maxime@cerno.tech>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191031142112.12431-7-frieder.schrempf@kontron.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 01 Nov 2019, Maxime Ripard wrote:
-
-> The syscon binding is a pretty loose one, with everyone having a bunch of
-> vendor specific compatibles.
+On Thu, Oct 31, 2019 at 02:24:18PM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
 > 
-> In order to start the effort to describe them using YAML, let's create a
-> binding that tolerates additional, not listed, compatibles.
+> Both, the SD card and the eMMC are connected to the usdhc controller
+> by four data lines. Therefore we set 'bus-width = <4>' for both
+> interfaces.
 > 
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
 > ---
->  .../devicetree/bindings/mfd/syscon.txt        | 32 --------
->  .../bindings/misc/allwinner,syscon.txt        | 20 -----
->  .../devicetree/bindings/misc/syscon.yaml      | 74 +++++++++++++++++++
+>  arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> index 7c98a1a46fb1..2299cad900af 100644
+> --- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> @@ -209,6 +209,7 @@
+>  	wakeup-source;
+>  	vmmc-supply = <&reg_3v3>;
+>  	voltage-ranges = <3300 3300>;
+> +	bus-width = <4>;
 
-Why are you moving this to drivers/misc?
+Isn't it already set in arch/arm/boot/dts/imx6ul.dtsi as the default?
 
->  3 files changed, 74 insertions(+), 52 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/syscon.txt
->  delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,syscon.txt
->  create mode 100644 Documentation/devicetree/bindings/misc/syscon.yaml
+Shawn
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>  	no-1-8-v;
+>  	status = "okay";
+>  };
+> @@ -223,6 +224,7 @@
+>  	wakeup-source;
+>  	vmmc-supply = <&reg_3v3>;
+>  	voltage-ranges = <3300 3300>;
+> +	bus-width = <4>;
+>  	no-1-8-v;
+>  	status = "okay";
+>  };
+> -- 
+> 2.17.1
