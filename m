@@ -2,290 +2,137 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196A2CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A954CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC1420663
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1187220848
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572894721;
-	bh=4uwt5YvYXaSGeYlBkTOwqpHXisD3hCbNZENR9nDwerY=;
+	s=default; t=1572894888;
+	bh=xsHYsB2zXyMTH2IKEVWf2hBE7o2ppclJRWbNmU8ydpk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Vc1F5s46GP0Dz/gqMtzQCFTp/+QIOXJTwMZW8vHX7HJu1Iyy1BR+3ddcSvIzK7zOE
-	 2d5dn+CabdTYZ2FyqpNPAOAgo4jgRibCFQWdBPQEHRjAUhWLbt2jjtm3ciYo3Ur28d
-	 LF1N+2u8C5NE2SDVMxLcQ+vacp6ythqaucACd2uo=
+	b=ObZ+IH+WQ+yoVM3OWd6dLOB2kU8WrEnQuR3WoUZlXuJM2fdWFOVcUHBhnofC9mIX1
+	 vbK+SLe44CHOOhLwLSv+ZWnMl6FVnIlFWXbUhOpBE/OaxSN0VQZbCdw6obYlgOO9NA
+	 ILExSiDqE5+qTopF7m5r2ABlH/4iMPoTEtBTiL54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfKDTL5 (ORCPT
+        id S1728174AbfKDTOr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:11:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42854 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 14:14:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728174AbfKDTL4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:11:56 -0500
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        id S1728510AbfKDTOr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 14:14:47 -0500
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F14B220B7C;
-        Mon,  4 Nov 2019 19:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFA6820869;
+        Mon,  4 Nov 2019 19:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572894715;
-        bh=4uwt5YvYXaSGeYlBkTOwqpHXisD3hCbNZENR9nDwerY=;
+        s=default; t=1572894885;
+        bh=xsHYsB2zXyMTH2IKEVWf2hBE7o2ppclJRWbNmU8ydpk=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rpXbOwfjQYaabV08/lPS34ocHLNfqP+gaFvA3GbP9t09YpuGl/4RAJ+Mcom5gh/Tp
-         NuSp/1woKnSS1eUkTy94G6zPT9MV4RbVSFP6NA3uv1zEN3e5MPhh5ZpGZf5L4Hk/fq
-         pDl7e1rztiwSLwHV2BoXLyoC861rtxmFZ3JD7nnA=
-Received: by mail-qk1-f175.google.com with SMTP id q70so18693756qke.12;
-        Mon, 04 Nov 2019 11:11:54 -0800 (PST)
-X-Gm-Message-State: APjAAAUlnpslRac0WYmzbN9/tRS5q4P0tZycFFYIa5Ed6pgtX/iPxzHU
-        BJ2w7b7ZpYkPOXsIiNO8QS+rSiejK7UfY8wXYA==
-X-Google-Smtp-Source: APXvYqyP/KdQJngkXNhVCwWMouCionXi0KcfwCegGVHnqeAY1T258TDIcGL8h01SsJsky01NM0wVNecG+be90nNQbAo=
-X-Received: by 2002:a37:9847:: with SMTP id a68mr6137575qke.223.1572894713951;
- Mon, 04 Nov 2019 11:11:53 -0800 (PST)
+        b=U3LKG6Z8BwDtzgs/xqc5kRZSSzXrXQJmbRdShYkUcXr/7ApyP8BRc6im67plsC1UD
+         I4EvP4bgUndg5SxM+vQZLbKyU7hJLSWOYngXl4go9i1uQtqdc+Jyd38Iaz0j7R1EyG
+         g565xCQR68R0FrSrBsXrNLdkAW7GLmbTmX2dtnwY=
+Received: by mail-qt1-f181.google.com with SMTP id x21so25552645qto.12;
+        Mon, 04 Nov 2019 11:14:45 -0800 (PST)
+X-Gm-Message-State: APjAAAUV06GpFc6nSxAQlfhdEb5CzZu8ZrxoHhRhtpsRise+YRxUeG2p
+        +p+HUjuF0gpWFAslDIk2pfzds/8yToFml+G/3g==
+X-Google-Smtp-Source: APXvYqwDm4nm4amh56WMcaZv0m6i+1qGGjr7WZUR++nmINh861qFieVIg3CDST02eujwAAYxYo0uuF3bzl8SqvtkCl8=
+X-Received: by 2002:ac8:48c5:: with SMTP id l5mr14006694qtr.110.1572894884938;
+ Mon, 04 Nov 2019 11:14:44 -0800 (PST)
 MIME-Version: 1.0
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com> <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com> <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com> <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
- <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com> <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
- <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
-In-Reply-To: <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
+References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-6-saravanak@google.com>
+ <CAL_Jsq+obCEeaNjpvJ6VvO6b2F6A5oHcRD8PYAifUvBQHbQ_Og@mail.gmail.com> <CAGETcx_CL9P3svctyDuGpavG4Ykd+o2G-rxDAE5OUvxL+sj6xA@mail.gmail.com>
+In-Reply-To: <CAGETcx_CL9P3svctyDuGpavG4Ykd+o2G-rxDAE5OUvxL+sj6xA@mail.gmail.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 Nov 2019 13:11:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
-Message-ID: <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Mon, 4 Nov 2019 13:14:33 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJA8awLeEmcxXFRqrd+ftP99+Sjjie9bFYLEpwXWEwzoA@mail.gmail.com>
+Message-ID: <CAL_JsqJA8awLeEmcxXFRqrd+ftP99+Sjjie9bFYLEpwXWEwzoA@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] of: property: Skip adding device links to
+ suppliers that aren't devices
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree@vger.kernel.org
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 10:20 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrot=
-e:
+On Mon, Nov 4, 2019 at 1:02 PM Saravana Kannan <saravanak@google.com> wrote:
 >
->
->
-> On 01/11/2019 15.46, Rob Herring wrote:
-> > On Thu, Oct 31, 2019 at 3:00 AM Peter Ujfalusi <peter.ujfalusi@ti.com> =
-wrote:
-> >>
-> >>
-> >>
-> >> On 30/10/2019 20.49, Rob Herring wrote:
-> >>> On Wed, Oct 30, 2019 at 9:30 AM Peter Ujfalusi <peter.ujfalusi@ti.com=
-> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 30/10/2019 16.17, Mark Brown wrote:
-> >>>>> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
-> >>>>>> On 30/10/2019 15.12, Rob Herring wrote:
-> >>>>>
-> >>>>>>> Why can't we just add a shared flag like we have for interrupts?
-> >>>>>>> Effectively, we have that for resets too, it's just hardcoded in =
-the
-> >>>>>>> the drivers.
-> >>>>>
-> >>>>>> This would be kind of the same thing what the
-> >>>>>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround fo=
-r
-> >>>>>> fixed-regulators afaik.
-> >>>>>
-> >>>>> The theory with that was that any usage of this would need the
-> >>>>> higher level code using the GPIO to cooperate so they didn't step
-> >>>>> on each other's toes so the GPIO code should just punt to it.
-> >>>>
-> >>>> But from the client driver point of view a GPIO is still GPIO and if=
- the
-> >>>> components are unrelated then it is hard to patch things together fr=
-om
-> >>>> the top.
-> >>>
-> >>> You can't escape a driver being aware. If a driver depends on that
-> >>> GPIO to actually be set to states the driver says, then it can't be
-> >>> guaranteed to work. For example, maybe the driver assumes the device
-> >>> is in reset state after toggling reset and doesn't work if not in
-> >>> reset state. The driver has to be aware no matter what you do in DT.
-> >>
-> >> That's true for some device, but it is also true that some can not
-> >> tolerate being reset without them knowing it.
+> On Mon, Nov 4, 2019 at 7:18 AM Rob Herring <robh+dt@kernel.org> wrote:
 > >
-> > You mean a reset when the driver is not loaded would not work? How
-> > could that ever work?
->
-> No, what I mean is that one device is reset because the driver for the
-> other device toggles the GPIO line.
->
-> If one driver toggles the GPIO line directly then the GPIO line is going
-> to be toggled for all the devices the GPIO line is connected to.
-
-Of course. That would be the typical case. I'd assume we would want to
-handle that the same way as shared resets. Reset can only be asserted
-when all clients want reset asserted. I guess when the first client
-probes, it asserts and deasserts the reset.
-
->
-> > I don't think you can have any reset control in
-> > the drivers in that case.
->
-> The device needs the RST line to be high, otherwise it is not
-> accessible. If it does not have reset control how can we make sure that
-> the GPIO line is in correct state?
-
-Just like the reset code, drivers register their use of the reset and
-the core tracks users and prevents resetting when not safe. Maybe the
-reset subsystem needs to learn about GPIO resets. It could even
-default to knowing 'reset-gpios' property as we've somewhat
-standardized that. Then you just register your GPIO reset line with
-the reset subsystem. When it gets the same line registered more than
-once, then it knows to handle sharing the line. If you need to know
-the line is shared before then, then you need something in DT. A flag
-is enough for that.
-
-> gpio-hog does not work all the time because we can not trust probe order
-> and w/o gpio binding on the user deferred probing is not possible.
-> If for some reason the gpio controller is probed after the drivers
-> depending on the reset/enable GPIO then there's not much we can do.
->
-> >> If all users of the shared GPIO have full control over it then they ca=
-n
-> >> just toggle it whatever way they want. How would a regulator, codec,
-> >> amplifier would negotiate on what to do with the shared GPIO?
-> >>
-> >> Another not uncommon setup is when the two components needs different =
-level:
-> >> C1: ENABLE is high active
-> >> C2: RESET is high active
-> >>
-> >> To enable C1, the GPIO should be high. To enable C2 the GPIO must be l=
-ow.
-> >> In the board one of the branch of the shared GPIO needs (and have) a
-> >> logic inverter.
-> >>
-> >> If they both control the same GPIO then they must have requested it wi=
-th
-> >> different GPIO_ACTIVE_ since the drivers are written according to chip
-> >> spec, so C1 sets the GPIO to 1, C2 sets it to 0, the inversion for one
-> >> of them must happen in gpio core, right?
+> > On Mon, Oct 28, 2019 at 5:00 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > Some devices need to be initialized really early and can't wait for
+> > > driver core or drivers to be functional.  These devices are typically
+> > > initialized without creating a struct device for their device nodes.
+> > >
+> > > If a supplier ends up being one of these devices, skip trying to add
+> > > device links to them.
+> > >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/of/property.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > > index f16f85597ccc..21c9d251318a 100644
+> > > --- a/drivers/of/property.c
+> > > +++ b/drivers/of/property.c
+> > > @@ -1038,6 +1038,7 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+> > >         struct device *sup_dev;
+> > >         int ret = 0;
+> > >         struct device_node *tmp_np = sup_np;
+> > > +       int is_populated;
+> > >
+> > >         of_node_get(sup_np);
+> > >         /*
+> > > @@ -1062,9 +1063,10 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+> > >                 return -EINVAL;
+> > >         }
+> > >         sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
+> > > +       is_populated = of_node_check_flag(sup_np, OF_POPULATED);
+> > >         of_node_put(sup_np);
+> > >         if (!sup_dev)
+> > > -               return -EAGAIN;
+> > > +               return is_populated ? 0 : -EAGAIN;
 > >
-> > No, drivers are written to set the state to active/inactive.
->
-> I think the drivers are written in a way to follow what their datasheets
-> are tells. If it say that the GPIO line must be high to enable the
-> device then they gpiod_set_value(1), if the line must be low to enable
-> them then they will gpiod_set_value(0).
-
-gpiod_set_value(1) sets the line to the active state defined in DT
-GPIO flags, not the electrical level of the signal. This issue is a
-good example of precisely why the gpiod API was defined this way. I do
-think it is a bit confusing though. Perhaps reusing _{get,set}_value
-API was not the best naming.
-
-
-> > The DT GPIO_ACTIVE_ flags can depend on an inverter being present (BTW,=
- there
-> > was a recent attempt to do an inverter binding).
->
-> Yes.
-> If the line is inverted on the board, than the DT GPIO_ACTIVE_LOW will
-> invert it to the correct level.
-
-Yes, if the signal is normally GPIO_ACTIVE_HIGH.
-
-> We have two off the shelf components, C1 and C2. They have a driver
-> written based on the datasheets.
-> C1 needs HIGH (LOW reset/disable)
->  uses gpiod_set_value(1) to enable the device
-
-No. The active state for a 'reset-gpios' is the state in which reset
-is active/asserted. So gpiod_set_value(1) should always mean 'assert
-reset'.
-
-If we're talking about an 'enable-gpios', then the active state is
-when the device is active/enabled. So it's the inverse of
-'reset-gpios'.
-
-> C2 needs LOW (HIGH reset/disable)
->  uses gpiod_set_value(0) to enable the device
-
-Yes. The GPIO flag would be GPIO_ACTIVE_HIGH and gpiod_set_value(0) is
-reset de-asserted.
-
-> When they are connected to a dedicated GPIO the DT binding has
-> GPIO_ACTIVE_HIGH since when the GPIO is set to 1 it goes HIGH, right?
-
-No, as explained above. C2 would be GPIO_ACTIVE_HIGH, C1 would be
-GPIO_ACTIVE_LOW normally.
-
-> If two device is connected to one GPIO one of them needs an inverter on
-> the GPIO line after it is split into two, let say C2 got inverted line:
-> C1 tells in DT that the line is not inverted: GPIO_ACTIVE_HOGH
-> C2 tells in DT that the line is inverted: GPIO_ACTIVE_LOW
-
-C1 needs GPIO_ACTIVE_LOW here.
-
-> GPIO HIGH -> D1 is enabled
->           -> !HIGH -> LOW -> D2 is enabled
->
-> If both would request the same physical GPIO then how would this work? A
-> single GPIO can not be handled in inverted and non inverted way at the
-> same time.
->
-> But this is just a side effect that this would be easy to handle with
-> this DT binding and driver.
-> After all, it will describe the GPIO line split.
->
-> >> It should be possible to add pass-through mode for gpio-shared so that
-> >> all requests would propagate to the root GPIO if that's what needed fo=
-r
-> >> some setups.
-> >>
-> >> That way the gpio-shared would nicely handle the GPIO inversions, woul=
-d
-> >> be able to handle cases to avoid unwanted reset/enable of components o=
-r
-> >> allow components to be ninja-reset.
+> > You're only using the flag in one spot and a comment would be good
+> > here, so I'd just do:
 > >
-> > What does ninja-reset mean?
+> > if (of_node_check_flag(sup_np, OF_POPULATED))
+> >         return 0; /* Early device without a struct device */
 >
-> Ninjas attack from ambush ;)
-> The device is reset w/o it's driver being aware that it ever happened as
-> other driver toggled the shared GPIO line.
+> Hi Rob,
 >
-> >> I think it would be possible to add gpiod_is_shared(struct gpio_desc
-> >> *desc) so users can check if the GPIO is shared - it would only return
-> >> true if the gpio-shared is not in pass-through mode so they can know
-> >> that the state they see on their gpio desc is not necessary matching
-> >> with reality.
-> >> Probably another gpiod_shared_get_root_value() to fetch the root's sta=
-te?
-> >>
-> >> I intentionally not returning that in the driver as clients might skip=
- a
-> >> gpio_set_value() seeing that the GPIO line is already in a state they
-> >> would want it, but that would not register their needs for the level.
-> >>
-> >> - P=C3=A9ter
-> >>
-> >> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> >> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Thanks for the review.
 >
-> - P=C3=A9ter
+> I'm using the flag to keep the error handling code simple/cleaner. I
+> can't do the check like that after I do a put on the sup_np.
+
+Ah, right. Nevermind.
+
+> Yeah, I was actually planning to add a dev_dbg() message when this
+> happens and returning a -EINVAL (that'll be ignored by the caller)
+> instead of -EAGAIN (that's NOT ignored by the caller).
 >
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Looks like these changes go pulled into driver-core-next. So I'll send
+> a delta patch to add the dbg message and also address you nit on the
+> other patch.
+
+I didn't notice Greg applied already. Don't worry about the nit then.
+
+Rob
