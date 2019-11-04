@@ -2,108 +2,84 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35681CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 14:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F03CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 14:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9CE217F5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 14:32:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="d62Wn1Tn"
+	by mail.kernel.org (Postfix) with ESMTP id 0A8CD21D81
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 14:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572878358;
+	bh=rBD591jAd5nuzaGDk6Z/gE1VUXjG7vny3xKcPb3R5hQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2ZrAkpJPy2hjFDorNDbbVkigccSoK9RlJ1WEp2kxOYDgx2lFkLqkXY+xMOPT9Zh4R
+	 vfBwuYYQElvxPuD8EB+R09KGzFsuErOqOo/DQ+UkqpEwpvhFo3Ew6R2OR1oaRxymBQ
+	 PxOnYYJcBui/VVGEDaenYhq5ZKlcN9L+b1LdFazE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbfKDOcK (ORCPT
+        id S1728336AbfKDOjR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:32:10 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63246 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727838AbfKDOcK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 09:32:10 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4ER8QN006158;
-        Mon, 4 Nov 2019 15:31:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=CMrndWG+ZiADLifRh/ny34DDuov8Fnz6puAWI7fXAts=;
- b=d62Wn1Tn8/n1Q+HCfMMOW1vPAEGj8o1xlvb4fjMyFue9RYFMh4zaBqkSSHgCOvih+rXS
- FN3sIzNOZVUjSDkTC5NFCiXPx5tm4FmBsuVMG6KIqXb0H5Wm+OZ0Mshalnjb+oTRj5WI
- x5l6Tq8GpnK/rkUlAuY7Q2x5Pq96SqzJhvfx5KIwGazhzn59g0qDv2iAhBJa1+gq7r3a
- BkuC6k/hB5v9IYxRD2kwWaDkg63LLeV551lPij11CSE0uvGeUG126bUJMIodwdEj7GQq
- D0tBCrZ7BuYZNg4t2TamaEHCbUDx8sf+HQHD1sqh1votSZzfkl+/W70YHtp3MuY1XFLQ Ng== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w1054hx1p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 15:31:51 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7161E100034;
-        Mon,  4 Nov 2019 15:31:50 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 603772D3776;
-        Mon,  4 Nov 2019 15:31:50 +0100 (CET)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
- 15:31:50 +0100
-Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 15:31:49
- +0100
-From:   Christophe Roullier <christophe.roullier@st.com>
-To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH  1/1] ARM: dts: stm32: Fix CAN RAM mapping on stm32mp157c
-Date:   Mon, 4 Nov 2019 15:31:45 +0100
-Message-ID: <20191104143145.7053-1-christophe.roullier@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 4 Nov 2019 09:39:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727838AbfKDOjR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 09:39:17 -0500
+Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BEF721D7D;
+        Mon,  4 Nov 2019 14:39:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572878356;
+        bh=rBD591jAd5nuzaGDk6Z/gE1VUXjG7vny3xKcPb3R5hQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zK/5Iy8EzzxsdwVFYIqQjFAqf3sny0M+yC08xIROTlZfFllRHCWvvN7lnEHp7oksa
+         +BH0PLqkrNhRGd9XAsrdhe8OErtjUReXs3uKIh7M1vz+wSfwSeM5eCkB16iH2O8jZE
+         vcRCrd6vx1ykwc/p1gsdG4Lco/WVnG/zpMN0wIdo=
+Date:   Mon, 4 Nov 2019 22:38:48 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 0/9] Add support for more Kontron i.MX6UL/ULL SoMs and
+ boards
+Message-ID: <20191104143844.GZ24620@dragon>
+References: <20191104115352.8728-1-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.22.222]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_08:2019-11-04,2019-11-04 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104115352.8728-1-frieder.schrempf@kontron.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Split the 10Kbytes CAN message RAM to be able to use simultaneously
-FDCAN1 and FDCAN2 instances.
-First 5Kbytes are allocated to FDCAN1 and last 5Kbytes are used for
-FDCAN2. To do so, set the offset to 0x1400 in mram-cfg for FDCAN2.
+On Mon, Nov 04, 2019 at 11:53:56AM +0000, Schrempf Frieder wrote:
+> Frieder Schrempf (9):
+>   ARM: dts: imx6ul-kontron-n6310: Move common SoM nodes to a separate
+>     file
+>   ARM: dts: Add support for two more Kontron SoMs N6311 and N6411
+>   ARM: dts: imx6ul-kontron-n6310-s: Disable the snvs-poweroff driver
+>   ARM: dts: imx6ul-kontron-n6310-s: Move common nodes to a separate file
+>   ARM: dts: Add support for two more Kontron evalkit boards 'N6311 S'
+>     and 'N6411 S'
+>   ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen' node with 'stdout-path'
+>   ARM: dts: imx6ul-kontron-n6x1x-s: Add vbus-supply and overcurrent
+>     polarity to usb nodes
+>   ARM: dts: imx6ul-kontron-n6x1x-s: Remove an obsolete comment and fix
+>     indentation
+>   dt-bindings: arm: fsl: Add more Kontron i.MX6UL/ULL compatibles
 
-Fixes: d44d6e021301 ("ARM: dts: stm32: change CAN RAM mapping on stm32mp157c")
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 9b11654a0a39..f98e0370c0bc 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -932,7 +932,7 @@
- 			interrupt-names = "int0", "int1";
- 			clocks = <&rcc CK_HSE>, <&rcc FDCAN_K>;
- 			clock-names = "hclk", "cclk";
--			bosch,mram-cfg = <0x1400 0 0 32 0 0 2 2>;
-+			bosch,mram-cfg = <0x0 0 0 32 0 0 2 2>;
- 			status = "disabled";
- 		};
- 
-@@ -945,7 +945,7 @@
- 			interrupt-names = "int0", "int1";
- 			clocks = <&rcc CK_HSE>, <&rcc FDCAN_K>;
- 			clock-names = "hclk", "cclk";
--			bosch,mram-cfg = <0x0 0 0 32 0 0 2 2>;
-+			bosch,mram-cfg = <0x1400 0 0 32 0 0 2 2>;
- 			status = "disabled";
- 		};
- 
--- 
-2.17.1
-
+Applied all, thanks.
