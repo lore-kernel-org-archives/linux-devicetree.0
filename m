@@ -4,160 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F085FCA9ED3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81E0CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C78F72246B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8409E21744
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 07:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rvIq103d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uqj54HMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfKDHKd (ORCPT
+        id S1726441AbfKDHP6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 02:10:33 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43990 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfKDHKd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 02:10:33 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 3so11527999pfb.10
-        for <devicetree@vger.kernel.org>; Sun, 03 Nov 2019 23:10:31 -0800 (PST)
+        Mon, 4 Nov 2019 02:15:58 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:56223 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfKDHP6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 02:15:58 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m17so6086411wmi.5
+        for <devicetree@vger.kernel.org>; Sun, 03 Nov 2019 23:15:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t4TV25A1uMzOUpxnPE9T6D69bjxp+CQFn1rWNaSp17E=;
-        b=rvIq103d5QvkQPhePPHFLq0nK/ACbSKZY7eteyZPRm6ZQLdn2P9/L9r/QTnrN6rUNP
-         jm/ua7SGVaxRhSR5Nl9cOL5W9VLF8VkSl68eghceC1CCxqeyfDFNFUNDf85yimIPPvY0
-         o1yfdXK5tO1vLx1FxzcPkmng+u9IkRYuIwq5EzIIzZ68U8SNrPlIZsU7d0qY1AO6zsuI
-         pS1eCuVH8jlep136XfWsjFnO9FVNrx6OLJT5MeeAZHVVLtbzerSB2XgwPwUxJ+miWDfv
-         02MGnva9fIZ+K8PsBCyhgUeisAMN55iFNb1AzWrJ037fxdbVJklLbH3Lgnji2xW2YZRp
-         2V9g==
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=vxpfpSTNArRIpYDDU43CcJdAWB39Ke0QALR4oVEypT4=;
+        b=uqj54HMnQA5SJ8btXdn201fUD+jGaxv0l552g9lWfDXXedqkrlhrK8WYzPYXIXWYyX
+         QaPcEXRrvT2gPhTihR9C3Xm/RVEuVzOk7oLi1GmuPWxUZGItyCrOOh7gZsMKcT7o/BQf
+         vf+6u6C0FtzZ5h+XwUxfrpbufqHz3+wdO5V8Fi7r8uJuMJ4O3CdRjvoFRpUUHNjhBhON
+         xBXmN7+nLuWZQOtLouSAFmsCpQwFtAQwYDOkSK7FwgEXwzope9Scf8cki3MPIVQRSlJj
+         LBNqN/vrIym3lmNQsl6iacXM4nU391Gq0562F0UFmHRKqj6mRu2RwTP92jdW2WxIehIt
+         HtbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t4TV25A1uMzOUpxnPE9T6D69bjxp+CQFn1rWNaSp17E=;
-        b=EAPTeXXqsMm0viMoSluvfykb0v4mt3dJaUWLNOIFX/e8EtaJie4e4DfnjJ8iheBVTQ
-         5X1kIOB/YAdFRvKaIjCmFED56ImPFaT2t+coNGlbGtQIwTB1RH4DlHm5XaFbXsJznS8q
-         Iums1eItW4L9ckvuq0/5qklAe6IHpB7mf2Moc/oIZXMIwnoYV2rneQiS15m4veUgyNOA
-         7TkZej39DUJwOlq7+IE5Q0fO2DdA7jy2OiG6O/j0fPpCsMdwHjZSBVMf/7IWNVMpfj0/
-         kX4s2pkZYdHPnVvif8NeDOfEMpKH6VDS5hMl5UfOfwAQVyHVvTDbRVrbyzNt2QRCd3RX
-         cD0A==
-X-Gm-Message-State: APjAAAX1HjPZGvtivGPaYqXGF8sTrbyDSOxIL8H0n1pRhNwNLyeuXqc7
-        xFH/62T709yXjImem+vZBSgCSg==
-X-Google-Smtp-Source: APXvYqxHOP7JBpbRrN/9vm7qE7CKnT+oDstfysttIvzcmp2Ai7mrtOlTLr+klYFNg71UF1Ve/+0Xhg==
-X-Received: by 2002:a63:b62:: with SMTP id a34mr8305598pgl.123.1572851430833;
-        Sun, 03 Nov 2019 23:10:30 -0800 (PST)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l11sm16775340pgr.77.2019.11.03.23.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2019 23:10:30 -0800 (PST)
-Date:   Sun, 3 Nov 2019 23:10:27 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
- controller
-Message-ID: <20191104071027.GD585@tuxbook-pro>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-12-rnayak@codeaurora.org>
- <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
- <20191030195021.GC27773@google.com>
- <6610d7fe-5a4d-5a43-5c4f-9ae61e7e53ee@codeaurora.org>
- <20191104063348.GA2464@tuxbook-pro>
- <c214110f-7620-8771-ef83-8a4fb1f8724f@codeaurora.org>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vxpfpSTNArRIpYDDU43CcJdAWB39Ke0QALR4oVEypT4=;
+        b=q07DTiSAGhLeUgVbINiJ//0aJ9cIgGqe5M8gHWPw/XMUf4sm/g17dSgJQKvJWBexOP
+         VKyy8F8utrq1fYZQOmrpc9mWhIvcZ4pr1/jNTwGZ3weUbMAOJ/GHSG3J4rZNS7qctBxO
+         Fh2AUio43riFtPfpu/pB3D8rPfokaGAWanH59b9xWOrM5Fwkd/XnlmANnGfPZlSiw95u
+         LMem8VLOFV+mF0pJt49luu7jK4JX43KpHhda3D4I1qRwEyveQP0rqoUd+F98cF46qkuR
+         RhkIj9KQxchzCmgqrBuDGeb5u4k8isZGKTNB1Su8uWQabkG2OxMR63fMlQibQTxxKPwj
+         d6pw==
+X-Gm-Message-State: APjAAAVEK/kt+Hqh9KAyin4oZSXICKwE/YqeslFixC+LtPpTHw0JDU3N
+        4ZujwyW4X/PVZESHH5Rt19OX3g==
+X-Google-Smtp-Source: APXvYqz32pI5Sru+QNOivnJMXGi29ceCxEjH6H6KjArDxhH+kDfUeNFyWAPKrA1xkKvDXkWkzwoiGQ==
+X-Received: by 2002:a7b:c7c7:: with SMTP id z7mr1785835wmk.133.1572851754938;
+        Sun, 03 Nov 2019 23:15:54 -0800 (PST)
+Received: from dell ([2.31.163.64])
+        by smtp.gmail.com with ESMTPSA id p12sm17618694wrm.62.2019.11.03.23.15.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 Nov 2019 23:15:53 -0800 (PST)
+Date:   Mon, 4 Nov 2019 07:15:54 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Add syscon YAML description
+Message-ID: <20191104071554.GK5700@dell>
+References: <20191101141034.259906-1-maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c214110f-7620-8771-ef83-8a4fb1f8724f@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191101141034.259906-1-maxime@cerno.tech>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 03 Nov 22:56 PST 2019, Rajendra Nayak wrote:
+On Fri, 01 Nov 2019, Maxime Ripard wrote:
 
+> The syscon binding is a pretty loose one, with everyone having a bunch of
+> vendor specific compatibles.
 > 
+> In order to start the effort to describe them using YAML, let's create a
+> binding that tolerates additional, not listed, compatibles.
 > 
-> On 11/4/2019 12:03 PM, Bjorn Andersson wrote:
-> > On Sun 03 Nov 22:17 PST 2019, Rajendra Nayak wrote:
-> > 
-> > > 
-> > > 
-> > > On 10/31/2019 1:20 AM, Matthias Kaehlcke wrote:
-> > > > On Tue, Oct 29, 2019 at 09:50:40AM -0700, Stephen Boyd wrote:
-> > > > > Quoting Rajendra Nayak (2019-10-23 02:02:19)
-> > > > > > From: Maulik Shah <mkshah@codeaurora.org>
-> > > > > > 
-> > > > > > Add pdc interrupt controller for sc7180
-> > > > > > 
-> > > > > > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> > > > > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> > > > > > ---
-> > > > > > v3:
-> > > > > > Used the qcom,sdm845-pdc compatible for pdc node
-> > > > > 
-> > > > > Everything else isn't doing the weird old compatible thing. Why not just
-> > > > > add the new compatible and update the driver? I guess I'll have to go
-> > > > > read the history.
-> > > > 
-> > > > Marc Zyngier complained  on v2 about the churn from adding compatible
-> > > > strings for identical components, and I kinda see his point.
-> > > > 
-> > > > I agree that using the 'sdm845' compatible string for sc7180 is odd too.
-> > > > Maybe we should introduce SoC independent compatible strings for IP blocks
-> > > > that are shared across multiple SoCs? If differentiation is needed SoC
-> > > > specific strings can be added.
-> > > 
-> > > Sure, I will perhaps add a qcom,pdc SoC independent compatible to avoid
-> > > confusion.
-> > > 
-> > 
-> > I agree,
-> > 
-> > compatible = "qcom,sc7180-pdc", "qcom,pdc";
-> > 
-> > is the way to go.
-> 
-> I wasn't planning on adding a qcom,sc7180-pdc, but instead just use the
-> qcom,pdc one for sc7180.
-> 
-> > 
-> > Reusing qcom,sdm845-pdc would prevent us from tackling any unforeseen
-> > issues/variations/erratas with one or the other platform in the future.
-> 
-> That was the intention of adding qcom,sc7180-pdc in the first place,
-> but Marc Zyngier was not happy with the churn, given there aren't really
-> any variations or erratas that we know of.
-> 
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  .../devicetree/bindings/mfd/syscon.txt        | 32 --------
+>  .../bindings/misc/allwinner,syscon.txt        | 20 -----
+>  .../devicetree/bindings/misc/syscon.yaml      | 74 +++++++++++++++++++
 
-Right, but by putting both compatibles in the dts and the generic one in
-the driver we avoid the driver churn and we're future compatible.
+Why are you moving this to drivers/misc?
 
-And given that we haven't yet added the qcom,sdm845-pdc node to the
-sdm845.dtsi we don't need to maintain the qcom,sdm845-pdc in the driver.
-So switch qcom,sdm845-pdc to qcom,pdc in qcom-pdc.c.
+>  3 files changed, 74 insertions(+), 52 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/syscon.txt
+>  delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,syscon.txt
+>  create mode 100644 Documentation/devicetree/bindings/misc/syscon.yaml
 
-Regards,
-Bjorn
-
-> > 
-> > Regards,
-> > Bjorn
-> > 
-> > > 
-> > > -- 
-> > > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > > of Code Aurora Forum, hosted by The Linux Foundation
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
