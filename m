@@ -5,56 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF52CCA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B26ECA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9D12080F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BE7214E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 19:32:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xjOYpvAw"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H/g7wGiy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbfKDTcM (ORCPT
+        id S1729792AbfKDTcS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:32:12 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46556 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729704AbfKDTcM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 14:32:12 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4JWAo9028754;
-        Mon, 4 Nov 2019 13:32:10 -0600
+        Mon, 4 Nov 2019 14:32:18 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42536 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729785AbfKDTcS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 14:32:18 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4JWG3F105082;
+        Mon, 4 Nov 2019 13:32:16 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572895930;
-        bh=XBC//7ty97nr7NYKTRfnQwqgfLUhSFqWfE9agxGH2o4=;
+        s=ti-com-17Q1; t=1572895936;
+        bh=ff8Tub1pbnLGcq2hI0X58+76sy0Wq3xUywCcOClageo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xjOYpvAwfPSgRhklBzyT4n2ETDGwaU4zAZ8xO+iAqYUj85xIxcZEd5Mqd6+6SlVI8
-         qsDGNUNWsGO9TqAFrSyU3fck31iiCtQywxmM4Om8i3t9UvfnFVJ9CZ2vLb4z9ym0r4
-         +oMIZsNCJXCsr124b5AQLAWwLHsQw4U1q7ABvhFQ=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4JWABa126840
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 13:32:10 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        b=H/g7wGiyroRd2X5tITNgMeEJMwApibrpNMEZtLDwNqFpe0xE0gLaVJHM9KvZV9Hi1
+         sttIci3JGqHBULvKmD7pb6VB7h66yot5OsliSGg2ZLyD46NnfR65Puge1rOqapl/uZ
+         HkKSi73a9LkTji3QSVYlFZdcaayMBW0wYmnTBDKo=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JWGLx025522;
+        Mon, 4 Nov 2019 13:32:16 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 13:31:56 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 13:32:01 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 13:31:55 -0600
+ Frontend Transport; Mon, 4 Nov 2019 13:32:01 -0600
 Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVmdA096934;
-        Mon, 4 Nov 2019 13:32:09 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVmdD096934;
+        Mon, 4 Nov 2019 13:32:15 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 11/20] dt-bindings: media: cal: update binding to add DRA76x support
-Date:   Mon, 4 Nov 2019 13:31:31 -0600
-Message-ID: <20191104193140.31145-12-bparrot@ti.com>
+Subject: [Patch v2 14/20] media: ti-vpe: cal: Add AM654 support
+Date:   Mon, 4 Nov 2019 13:31:34 -0600
+Message-ID: <20191104193140.31145-15-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191104193140.31145-1-bparrot@ti.com>
 References: <20191104193140.31145-1-bparrot@ti.com>
@@ -66,26 +65,81 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update Device Tree bindings for the CAL driver to add DRA76x support.
+Add the needed control module register bit layout to support the AM654
+family of devices.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/media/ti-cal.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/Kconfig      |  2 +-
+ drivers/media/platform/ti-vpe/cal.c | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
-index cb2dc50a24fb..eca28a779370 100644
---- a/Documentation/devicetree/bindings/media/ti-cal.txt
-+++ b/Documentation/devicetree/bindings/media/ti-cal.txt
-@@ -10,6 +10,7 @@ Required properties:
- - compatible:
-  Should be "ti,dra72-cal", for DRA72 controllers
-  Should be "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
-+ Should be "ti,dra76-cal", for DRA76 controllers
- - reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
- 	control address space
- - reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index e84f35d3a68e..995f4c67f764 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -151,7 +151,7 @@ source "drivers/media/platform/sunxi/Kconfig"
+ config VIDEO_TI_CAL
+ 	tristate "TI CAL (Camera Adaptation Layer) driver"
+ 	depends on VIDEO_DEV && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+-	depends on SOC_DRA7XX || COMPILE_TEST
++	depends on SOC_DRA7XX || ARCH_K3 || COMPILE_TEST
+ 	select VIDEOBUF2_DMA_CONTIG
+ 	select V4L2_FWNODE
+ 	help
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index 72ed2348389d..45653e9ed6cd 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -322,6 +322,26 @@ static struct cal_data dra76x_cal_data = {
+ 	.flags = 0,
+ };
+ 
++static struct reg_field am654_ctrl_core_csi0_reg_fields[F_MAX_FIELDS] = {
++	[F_CTRLCLKEN] = REG_FIELD(0, 15, 15),
++	[F_CAMMODE] = REG_FIELD(0, 24, 25),
++	[F_LANEENABLE] = REG_FIELD(0, 0, 4),
++};
++
++static struct cal_csi2_phy am654_cal_csi_phy[] = {
++	{
++		.base_fields = am654_ctrl_core_csi0_reg_fields,
++		.num_lanes = 5,
++	},
++};
++
++static struct cal_data am654_cal_data = {
++	.csi2_phy_core = am654_cal_csi_phy,
++	.num_csi2_phy = ARRAY_SIZE(am654_cal_csi_phy),
++
++	.flags = 0,
++};
++
+ /*
+  * there is one cal_dev structure in the driver, it is shared by
+  * all instances.
+@@ -548,7 +568,9 @@ static void camerarx_phy_enable(struct cal_ctx *ctx)
+ 	/* Always enable all lanes at the phy control level */
+ 	max_lanes = (1 << cal_data_get_phy_max_lanes(ctx)) - 1;
+ 	regmap_field_write(phy->fields[F_LANEENABLE], max_lanes);
+-	regmap_field_write(phy->fields[F_CSI_MODE], 1);
++	/* F_CSI_MODE is not present on every architecture */
++	if (phy->fields[F_CSI_MODE])
++		regmap_field_write(phy->fields[F_CSI_MODE], 1);
+ 	regmap_field_write(phy->fields[F_CTRLCLKEN], 1);
+ }
+ 
+@@ -2321,6 +2343,10 @@ static const struct of_device_id cal_of_match[] = {
+ 		.compatible = "ti,dra76-cal",
+ 		.data = (void *)&dra76x_cal_data,
+ 	},
++	{
++		.compatible = "ti,am654-cal",
++		.data = (void *)&am654_cal_data,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, cal_of_match);
 -- 
 2.17.1
 
