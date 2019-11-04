@@ -2,230 +2,91 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1409CA9EB5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 18:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443F5CA9EB5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 18:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC982084D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 18:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C39720578
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 18:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gg9RZglh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrI6pyFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfKDSHP (ORCPT
+        id S1729398AbfKDSTS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:07:15 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53624 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbfKDSHP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 13:07:15 -0500
-Received: by mail-wm1-f67.google.com with SMTP id x4so6595186wmi.3;
-        Mon, 04 Nov 2019 10:07:12 -0800 (PST)
+        Mon, 4 Nov 2019 13:19:18 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45987 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDSTS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 13:19:18 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q13so18248658wrs.12;
+        Mon, 04 Nov 2019 10:19:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=D72jRVZqmBfC7+Kb0tuNNuuY7Rbqh0u4ZcubYxJiVEw=;
-        b=gg9RZglh3dQ4I9+Zrbd1c//TX0x8bXkbzTd7d9zunTP8ch+dDb4GuNaR8AxJbaDO4c
-         gMzwKdy0JWl8EtwbGmeZ0f5nux/vtpAGkzSuPORs8AmbWG9FpekLb+jivIWLgha5NMgB
-         s9MAaYyn/7ZheraWZiRQjs0d0MQLB88RCjv82Skmh3/0Fm4oXhzXXa/7J2wML4wuDVes
-         P64tXVOd2Jy8BEbF5Mnzr6Q2nnVaWxs3zKkOQlmIzW1vUhqhrxyVIyvJCR6YQl7yqxJi
-         /ta4JBzY6klYitSHVeFATcHL878nhxbkfevLByjfHmWcgKKfPyxBr+sqESD2oVWEWcj8
-         ZYdQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=I+QRfJpzWYcc0VUlAj0QtfzbI2Rjy1BtEqPONYKKsns=;
+        b=nrI6pyFxlJJ/Sh5yCFYgIIOi896ksb2VdZyU45EOv3Zbik2WxeX55euQZkTeLXI/UU
+         uNsGBkBvwS9+MseS40qMVkNh87BdmAh5qoHY/H0UxjHs0B/1zevL6lIEEvjoYCGGBgDs
+         ybFGmU42Rv8stZLkqQDDkUrKTWfxwOpezFtHQnWMX7z/DqQVwKCMQCXbzQ58f079T7nZ
+         kAR9evzHmclrrmcuXa8W9vQ5jb33s6GU34VBJB+cLq1Mvuz6Rg8LspPMhOZlQaTL1NZU
+         IGSiqD6JLtX8Ns55EwXuRoBhAZOLGX7H9JiVBR1jyc+C/KzflMWIgbNCyg8l7Vqn4PGH
+         qG6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D72jRVZqmBfC7+Kb0tuNNuuY7Rbqh0u4ZcubYxJiVEw=;
-        b=hW4HU1wEqU/nNySx9eKQeCWwwWqiqfA9fm05w0aSHdwtEm7UZgLN61ViBrYLLZ5yey
-         d2sUFLgaLJmNbQVAVhoxH1laZfDbiFS+hzUeKak5r0Uok766bgyDmfX0M1bXZ/4bqrET
-         +EPNz/6jmgqWppr6esMq1IJJqbqhP9pJY+NmtQqABFW26R6mut6n68kepZDzRmxyPx69
-         vNR+DIFg2HB7hHkga48l6rD13qdpPSt3+/Ph0VVCDeJOkzUsK1Ta8cj9vBvWfSggkg2e
-         qkIh9fM3OuLGpBenI/RUwG/HPH11mNjpFmkkonU6NfJh/6+2QoWb+TgZePbTa/h1NOqd
-         PafA==
-X-Gm-Message-State: APjAAAW5zXPv3+Xzk9i69Li3UJ7h2we/FHHNXKzdr7FovHmrzl7peY+M
-        RV54WNFXGE3tzmq6UflDR8OvEmMYu80BI98Bvec=
-X-Google-Smtp-Source: APXvYqxE/svCT32/l15YGFj4OySpY2sp1btqvHGxgQbUQ4gig2jWXLFKgpgss9RjBjRgyjDvqnAyDZbUF5kA36KzIRQ=
-X-Received: by 2002:a1c:480a:: with SMTP id v10mr360011wma.138.1572890831792;
- Mon, 04 Nov 2019 10:07:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-4-peron.clem@gmail.com>
- <20191104082410.qdgcnphkamlzaipf@pengutronix.de>
-In-Reply-To: <20191104082410.qdgcnphkamlzaipf@pengutronix.de>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 4 Nov 2019 19:07:00 +0100
-Message-ID: <CAJiuCcdxHDwoQYBsrjK5dcOtMDie62DzJ84NH+bZzYHHv49fEQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=I+QRfJpzWYcc0VUlAj0QtfzbI2Rjy1BtEqPONYKKsns=;
+        b=Qt6FzRvbiynLJjdnXLYPJVdZKP+pvkjNNDy1eIjSyCBK+mZ6GIxxgACvqh7AmJID2m
+         HNBXSEc6A/8O5BvZWQkvr0jwHEujtaVwxRwWMv+C8pSASgUiLVcpc0gveXN4fHRciRxn
+         8jckLVv9ooqw/RpZ609YuBC8Cb2Wr+NjBU6SsW0A+2R6+BLR90JJkUG2Dp23FcFIcwTd
+         nqof7+9okrNlwjSAczVy8qa77lkCRuaNWwasiQ36V14G5PdJ59ekLjlhGncypFWMVVGo
+         cjDWnB0auZm2nvXzHS1tg78FAgqjGb5WtnMGZ2hECC5CcZD6ZSprlemP+4gl2tivAyPB
+         ti5A==
+X-Gm-Message-State: APjAAAU9NGgJNhqqe+0PmARfGVQEeq50pgk45pTcjU79kxRrJ6kb+bGG
+        Hw3SKJOeCHaQTciYTLXOIBOd8vCJ
+X-Google-Smtp-Source: APXvYqwSEOrggiVd5Rc/9kIWu4FLMEPqYNsz2bL+qeBa7mKcroomsBYJ5tLn/GC3BAy/gEMO83Beqw==
+X-Received: by 2002:a5d:4748:: with SMTP id o8mr25403387wrs.239.1572891554760;
+        Mon, 04 Nov 2019 10:19:14 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w8sm23127580wrr.44.2019.11.04.10.19.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 10:19:14 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 0/2] Couple of reset-brcmstb fixes
+Date:   Mon,  4 Nov 2019 10:15:00 -0800
+Message-Id: <20191104181502.15679-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Philipp,
 
-On Mon, 4 Nov 2019 at 09:24, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello,
->
-> On Sun, Nov 03, 2019 at 09:33:30PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > H6 PWM core needs bus clock to be enabled in order to work.
-> >
-> > Add an optional probe for it and a fallback for previous
-> > bindings without name on module clock.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  drivers/pwm/pwm-sun4i.c | 36 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >
-> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > index d194b8ebdb00..b5e7ac364f59 100644
-> > --- a/drivers/pwm/pwm-sun4i.c
-> > +++ b/drivers/pwm/pwm-sun4i.c
-> > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
-> >
-> >  struct sun4i_pwm_chip {
-> >       struct pwm_chip chip;
-> > +     struct clk *bus_clk;
-> >       struct clk *clk;
-> >       struct reset_control *rst;
-> >       void __iomem *base;
-> > @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct platform_device =
-*pdev)
->
-> Adding more context here:
->
-> |       pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> >       if (IS_ERR(pwm->clk))
-> >               return PTR_ERR(pwm->clk);
-> >
-> > +     /* Get all clocks and reset line */
-> > +     pwm->clk =3D devm_clk_get_optional(&pdev->dev, "mod");
-> > +     if (IS_ERR(pwm->clk)) {
-> > +             dev_err(&pdev->dev, "get clock failed %ld\n",
-> > +                     PTR_ERR(pwm->clk));
-> > +             return PTR_ERR(pwm->clk);
-> > +     }
->
-> I guess you want to drop the first assignment to pwm->clk.
+This series replaces the previously submitted fixes to the reset-brcmstb
+driver and also fix the dt binding example.
 
-devm_clk_get_optional will return NULL if there is no entry, I don't
-get where I need to drop it assignment.
+Thank you!
 
->
-> > +     /* Fallback for old dtbs with a single clock and no name */
-> > +     if (!pwm->clk) {
-> > +             pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > +             if (IS_ERR(pwm->clk)) {
-> > +                     dev_err(&pdev->dev, "get clock failed %ld\n",
-> > +                             PTR_ERR(pwm->clk));
-> > +                     return PTR_ERR(pwm->clk);
-> > +             }
-> > +     }
->
-> There is a slight change of behaviour if I'm not mistaken. If you have
-> this:
->
->         clocks =3D <&clk1>;
->         clock-names =3D "mod";
->
->         pwm {
->                 compatible =3D "allwinner,sun4i-a10-pwm"
->                 clocks =3D <&clk2>;
->         }
->
-> you now use clk1 instead of clk2 before.
->
-> Assuming this is only a theoretical problem, at least pointing this out
-> in the commit log would be good I think.
+Florian Fainelli (2):
+  dt-bindings: reset: Fix brcmstb-reset example
+  reset: brcmstb: Remove resource checks
 
-Yes it's correct and as you said the driver don't check for a correct
-device tree,
-that why it's now optional probe.
-Let's assume that's the device-tree is correct, I will add a comment
-in the commit log.
+ .../devicetree/bindings/reset/brcm,brcmstb-reset.txt        | 2 +-
+ drivers/reset/reset-brcmstb.c                               | 6 ------
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
->
-> > +     pwm->bus_clk =3D devm_clk_get_optional(&pdev->dev, "bus");
-> > +     if (IS_ERR(pwm->bus_clk)) {
-> > +             dev_err(&pdev->dev, "get bus_clock failed %ld\n",
-> > +                     PTR_ERR(pwm->bus_clk));
-> > +             return PTR_ERR(pwm->bus_clk);
-> > +     }
-> > +
-> >       pwm->rst =3D devm_reset_control_get_optional(&pdev->dev, NULL);
-> >       if (IS_ERR(pwm->rst)) {
-> >               if (PTR_ERR(pwm->rst) =3D=3D -EPROBE_DEFER)
-> > @@ -381,6 +407,13 @@ static int sun4i_pwm_probe(struct platform_device =
-*pdev)
-> >               return ret;
-> >       }
-> >
-> > +     /* Enable bus clock */
-> > +     ret =3D clk_prepare_enable(pwm->bus_clk);
-> > +     if (ret) {
-> > +             dev_err(&pdev->dev, "Cannot prepare_enable bus_clk\n");
->
-> I'd do s/prepare_enable/prepare and enable/ here.
-Ok
+-- 
+2.17.1
 
->
-> > +             goto err_bus;
-> > +     }
-> > +
-> >       pwm->chip.dev =3D &pdev->dev;
-> >       pwm->chip.ops =3D &sun4i_pwm_ops;
-> >       pwm->chip.base =3D -1;
-> > @@ -401,6 +434,8 @@ static int sun4i_pwm_probe(struct platform_device *=
-pdev)
-> >       return 0;
-> >
-> >  err_pwm_add:
-> > +     clk_disable_unprepare(pwm->bus_clk);
-> > +err_bus:
-> >       reset_control_assert(pwm->rst);
-> >
-> >       return ret;
->
-> What is that clock used for? Is it required to access the hardware
-> registers? Or is it only required while the PWM is enabled? If so you
-> could enable the clock more finegrainded.
-
-Regarding the datasheet it's required to access the hardware.
-page 261 : https://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.=
-pdf
-
-Regards,
-Cl=C3=A9ment
-
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
-|
