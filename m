@@ -2,90 +2,120 @@ Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF0ECA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97515CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6AE2245D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572859683;
-	bh=mjpf4qHX+4LtFI3DUZH/vqduTv06o3J1bBEcBr2Htpk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jl603y1OCjyaMiJwZAFCxythjv51EmMHTCLFzqcUCGAD0SU6EtmbE4dLksNunI2C2
-	 QPDhJ5IoFAMwPJ5qHOeRliGVyOh6wLD4r4dPFN9NnyK07Yi7F6KrkPte/v6vecTPan
-	 +ToJAURnvyEw9+sSF85hO0WmcHwbxAabu7rDGc0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 7418B21744
+	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 09:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfKDJ2C (ORCPT
+        id S1727553AbfKDJe7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:28:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 04:34:59 -0500
+Received: from mga02.intel.com ([134.134.136.20]:24894 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727419AbfKDJ2C (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 4 Nov 2019 04:28:02 -0500
-Received: from localhost (unknown [106.201.55.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E53222D2;
-        Mon,  4 Nov 2019 09:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572859681;
-        bh=mjpf4qHX+4LtFI3DUZH/vqduTv06o3J1bBEcBr2Htpk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SqRgqM0MKkPCfeT+cjF0A3wpLlpzSvc/pOu/qJdk2In5nKHVkXPDjHShTOEyWE1Jq
-         89bVncd30CMe29c0gCKbZme5E7O21d+RLPyUXABub9M73gMta8P4HmRwvy2MMyZnEa
-         YpEkGZ44myT4Mplb0nMyq1HRPhZmOXhh3dsRs1jY=
-Date:   Mon, 4 Nov 2019 14:57:57 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] arm64: dts: qcom: msm8996: Introduce IFC6640
-Message-ID: <20191104092757.GT2695@vkoul-mobl.Dlink>
-References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
- <20191103081311.GM2695@vkoul-mobl.Dlink>
- <20191104045507.GA28034@tuxbook-pro>
+        id S1727138AbfKDJe7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Nov 2019 04:34:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 01:34:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,266,1569308400"; 
+   d="scan'208";a="352771367"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 04 Nov 2019 01:34:58 -0800
+Received: from [10.226.39.46] (unknown [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id 4C9A4580332;
+        Mon,  4 Nov 2019 01:34:55 -0800 (PST)
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <c46ba3f4187fe53807948b4f10996b89a75c492c.1571638827.git.eswara.kota@linux.intel.com>
+ <20191021130339.GP47056@e119886-lin.cambridge.arm.com>
+ <661f7e9c-a79f-bea6-08d8-4df54f500019@linux.intel.com>
+ <20191025090926.GX47056@e119886-lin.cambridge.arm.com>
+ <6f8b2e72-caa3-30b8-4c76-8ad7bb321ce2@linux.intel.com>
+ <20191101105902.GB9723@e119886-lin.cambridge.arm.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <ecab7cc2-f4c2-ecc0-7f97-92686db1fd1b@linux.intel.com>
+Date:   Mon, 4 Nov 2019 17:34:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104045507.GA28034@tuxbook-pro>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191101105902.GB9723@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 03-11-19, 20:55, Bjorn Andersson wrote:
-> On Sun 03 Nov 01:13 PDT 2019, Vinod Koul wrote:
-> 
-> > On 20-10-19, 22:13, Bjorn Andersson wrote:
-> > > Refactor msm8996 and db820c in order to make it follow the structure of newer
-> > > platforms, move db820c specific things to db820c.dtsi and then introduce the
-> > > Informace 6640 Single Board Computer.
-> > 
-> > This has patch 9/11 missing. But rest look good to me.
-> > 
-> 
-> That's really odd, I copy pasted the recipients into all the patches.
-> But I'm unable to find it under linux-arm-msm on lore as well.
 
-Yup I can see it there but not on arm-msm. Do you use @linaro smtp to
-send. Gmail is known to drop emails to lists on  vger..
-I use @kernel.org one, havent seen issues on that yet
+On 11/1/2019 6:59 PM, Andrew Murray wrote:
+> On Tue, Oct 29, 2019 at 04:59:17PM +0800, Dilip Kota wrote:
+>> On 10/25/2019 5:09 PM, Andrew Murray wrote:
+>>> On Tue, Oct 22, 2019 at 05:04:21PM +0800, Dilip Kota wrote:
+>>>> Hi Andrew Murray,
+>>>>
+>>>> On 10/21/2019 9:03 PM, Andrew Murray wrote:
+>>>>> On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
+>>>>>> +
+>>>>>> +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts)
+>>>>>> +{
+>>>>>> +	u32 val;
+>>>>>> +
+>>>>>> +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>>>>>> +	val &= ~PORT_LOGIC_N_FTS;
+>>>>>> +	val |= n_fts;
+>>>>>> +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+>>>>>> +}
+>>>>> I notice that pcie-artpec6.c (artpec6_pcie_set_nfts) also writes the FTS
+>>>>> and defines a bunch of macros to support this. It doesn't make sense to
+>>>>> duplicate this there. Therefore I think we need to update pcie-artpec6.c
+>>>>> to use this new function.
+>>>> I think we can do in a separate patch after these changes get merged and
+>>>> keep this patch series for intel PCIe driver and required changes in PCIe
+>>>> DesignWare framework.
+>>> The pcie-artpec6.c is a DWC driver as well. So I think we can do all this
+>>> together. This helps reduce the technical debt that will otherwise build up
+>>> in duplicated code.
+>> I agree with you to remove duplicated code, but at this point not sure what
+>> all drivers has defined FTS configuration.
+>> Reviewing all other DWC drivers and removing them can be done in one single
+>> separate patch.
+> I'm not asking to set up an FTS configuration for all DWC drivers, but instead
+> to move this helper function you've created to somewhere like pcie-designware.c
+> and call it from this driver and pcie-artpec6.c.
+What i mean is, we need to check how many of the current DWC drivers are 
+configuring the FTS
+and call the helper function.
+Today i have grep all the DWC based drivers and i see pcie-artpec6.c is 
+the only driver doing FTS configuration.
 
-> It's under LKML though, can you please have a look and let me know if I
-> can extend your ack to patch 9/11 as well?
-> 
-> https://lore.kernel.org/lkml/20191021051322.297560-10-bjorn.andersson@linaro.org/
+I will add the helper function call in pcie-artpec6.c in the next patch 
+version.
 
-Mostly looks good but the reserve memory doesnt seem sorted by node
-(please recheck) and rest looks good so you can add it to that patch as
-well :)
 
--- 
-~Vinod
+Regards,
+Dilip
+
+
+>
+> Thanks,
+>
+> Andrew Murray
+>
+>> Regards,
+>> Dilip
