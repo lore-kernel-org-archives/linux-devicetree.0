@@ -4,112 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F013C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5375FC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7585204EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCFED206B8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572992914;
-	bh=I9UIaPC+F6pMaRWtxmM2p9WCZ3F8CbiIzFcH59kpZGk=;
+	s=default; t=1572992962;
+	bh=fL/4K2vkx80Ka35D6SHndrkEkTRieQOYvN3J5gpIUc0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AQDpyfq0jZWTN2K5I567ulWmQgJt1sBBM22Uc9ahl1L7C3vxLz3fPwL4XnqE3zED5
-	 /bRtsNET+u+1+EwL5hZEHoti5ytdY06ehA8MLwCA93JnuC1K2lLoTnY3wWBefnurkd
-	 7gd8WFe0DOKE5kmRWac+GKx+JEarNYAW9XI7X8Tk=
+	b=tWlMR9VAAPM4KQsRCEHpKZFkMYXTPY7DCTQHwZKvSe/xyj2HU6LMvjsF6fpzAuq32
+	 UndB2iRicy2JgI4vUAfjw07TLxG56wTn99lsByWKCZwTK00V4kmMfdpM/e9pcIWjWK
+	 IEhebCBN1bPumVcJ0RqaRAKl9mr3eIv/jvMv0zbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387492AbfKEW2d (ORCPT
+        id S1730083AbfKEW3V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:28:33 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40570 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729895AbfKEW2d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:28:33 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 22so1007147oip.7;
-        Tue, 05 Nov 2019 14:28:32 -0800 (PST)
+        Tue, 5 Nov 2019 17:29:21 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35672 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729895AbfKEW3V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:29:21 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n16so19139703oig.2;
+        Tue, 05 Nov 2019 14:29:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=KjC2KAma0LvKn8lumDMjxYlVIodGsZnVFEKifxdYSnk=;
-        b=d3ueRprQvnW67UsHL1myk6iFa3saZxOgLa0qZeJKM/5P8dxTa03BsPGih9jWr9BPXx
-         q5mjpUxychbm+QiSQ7HS7RQIs9ig20H+ZCNrsUK0qsHq5SyEUOYOd978PXDLEJzh/2RX
-         i0T3oiQPHsyYg7Et1vY70cnsbcvLRY8sZXqTWyvTZJcbAAEEPfuGd0pCOuE+grw4MvC3
-         fLDz7G4L94nNwpx1SCabg+mG25RbZJzuTkCM7a84UX6bCf9pjdiNhVgAIwWRoblDuUsk
-         uqGt0uilMI7BO/lpPJjdOWYbDh13+z+KnxyOWdhfgBSV8hAC/l6h+wAgtdei22o/eBul
-         In/Q==
-X-Gm-Message-State: APjAAAUr6CUXItQUhx0hrpC1QR1xkHmFQU4cvss967B1D+rDN3pdN98a
-        t9lCxLhIW+dX5/z7xIc2Ww==
-X-Google-Smtp-Source: APXvYqy5wstR+27k4YDuFjIs+QGvk3acSSr3Nj8fQl3hz0coclqz40Lwa3CnvVJ6yzu4SV/xIyQc6A==
-X-Received: by 2002:a05:6808:18f:: with SMTP id w15mr836024oic.136.1572992912226;
-        Tue, 05 Nov 2019 14:28:32 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UoYy8XsKNEQ2TnQ0Osc5PBrfES+IwUY4yKiGP1bttyo=;
+        b=QxekdWHLgQjVR9NUE5XMO0oGDeKarUrC7aoe+kvMy95Ghba7wnLUa/x0dWkT6Zpuhg
+         K0tbX2g47kLQ/fWK94zAX9WS+v+QTPPOoOgQSC1dfzhO12H9GktIlUrC6SIoXTVNXS8q
+         KYLbg3JGNRnAmpfbsaVhy8ihCwMdTo+o43xl5/bvN2lSs+Yn2Z9T477q1j3SsKE6tcj7
+         VR/XWsYW3c8pvC9FFvewRFVojTVMDz7U8KG7Ro1t/324KEUW98cP3WW0Wn7s+Hjr6xY1
+         QS2WF4/Fkul1KNPBT0ZdDwF+UTsBlQAgRzh3t0Q/9yzt0i//5atkRH2RSBImdNaMr0fg
+         dfSA==
+X-Gm-Message-State: APjAAAX+9+XHOk1DtBNQ6jz6NV74lxjeYSNK1jm+edl73qWYttJTTEgF
+        RDagtrTC+3guMBxc4ZmP41TfZM4=
+X-Google-Smtp-Source: APXvYqzPbkmZfrb12TZaDeT5FPREatvauqbAOXEHm6Yy22++J2iCDBKOKxPsVvP3BzIZejRzVmi09w==
+X-Received: by 2002:aca:f1c5:: with SMTP id p188mr1095047oih.125.1572992960591;
+        Tue, 05 Nov 2019 14:29:20 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h79sm6168228oib.3.2019.11.05.14.28.31
+        by smtp.gmail.com with ESMTPSA id y1sm6740096ota.72.2019.11.05.14.29.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 14:28:31 -0800 (PST)
-Date:   Tue, 5 Nov 2019 16:28:31 -0600
+        Tue, 05 Nov 2019 14:29:20 -0800 (PST)
+Date:   Tue, 5 Nov 2019 16:29:19 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: net: bluetooth: add DT binding for
- Realtek controllers
-Message-ID: <20191105222831.GB15425@bogus>
-References: <20191030224333.70241-1-bonstra@bonstra.fr.eu.org>
- <20191030224333.70241-2-bonstra@bonstra.fr.eu.org>
- <20191101080256.gjc4tacltehro3iw@hendrix>
- <6C5CE71F-37F2-4C8A-9D94-1BC75937B478@holtmann.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com,
+        baolin.wang@linaro.org, baolin.wang7@gmail.com,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com
+Subject: Re: [PATCH v2 1/5] dt-bindings: power: Introduce one property to
+ describe the battery resistance with temperature changes
+Message-ID: <20191105222919.GA13611@bogus>
+References: <cover.1572523415.git.baolin.wang@linaro.org>
+ <c9a1357628bb091aff5e54f60a2600b129388f19.1572523415.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6C5CE71F-37F2-4C8A-9D94-1BC75937B478@holtmann.org>
+In-Reply-To: <c9a1357628bb091aff5e54f60a2600b129388f19.1572523415.git.baolin.wang@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 03:20:59PM +0100, Marcel Holtmann wrote:
-> Hi Hugo,
+On Thu, 31 Oct 2019 20:22:40 +0800, Baolin Wang wrote:
+> Since the battery internal resistance can be changed as the temperature
+> changes, thus add one table to describe the battery resistance percent
+> in different temperatures to get a accurate battery internal resistance.
 > 
-> >> The rtl_bt driver already supports some Realtek controllers on ACPI
-> >> platforms.
-> >> This commit adds bindings for DT-only platforms.
-> >> 
-> >> Signed-off-by: Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
-> >> ---
-> >> .../bindings/net/realtek-bluetooth.txt        | 25 +++++++++++++++++++
-> >> 1 file changed, 25 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.txt
-> > 
-> > You should write that binding using a YAML description. Free-form
-> > device tree bindings are more or less deprecated now.
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  .../devicetree/bindings/power/supply/battery.txt   |    5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> unless we change all the Bluetooth descriptions, I prefer we keep it the “old” way.
 
-Who's going to do that? Me? You? Randomly select some poor soul to do 
-them all to get their device added? I only have 3500 to do. An all at 
-once approach doesn't really work nor is it necessary.
-
-I'd suggest new ones in schema and if you want to encourage conversions 
-require any changes on existing ones to first be converted. Still up to 
-you because it goes thru your tree.
-
-
-> > IIRC, that has been discussed before and the standard "model" property
-> > was to be preferred.
-> 
-> This one should really get an ACK from Rob.
-
-Humm, maybe, but I don't see 'model' used in this context.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
