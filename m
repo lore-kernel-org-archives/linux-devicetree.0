@@ -2,176 +2,229 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0206CA9ECF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBF1CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C704321D71
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36AE721928
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hsPSJ5PP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VEO755CM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387821AbfKEKBM (ORCPT
+        id S2387773AbfKEKH3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:01:12 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44100 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387690AbfKEKBM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 05:01:12 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5A11fx040316;
-        Tue, 5 Nov 2019 04:01:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572948061;
-        bh=zbPTKFMP/VzQXIz/GVFKvy0Bu0kY7EmlTfBJtaGCMnY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hsPSJ5PPRBoB3sBXG1LtBARKT2zN9fCaS9LhkOkrYQOM6HVtlkEYAyyjQYYcbL/XM
-         q7JBa0WNoXYcB2azHcRf3Q0RRsax/sDEnAZGihLR+wRBuUhoBOebhTGnKhRhk3Isya
-         9ZPn28nDm1syDYIbRJCvQ8ncDuI9x/uMElv4KebQ=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5A11PC107280
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 04:01:01 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 5 Nov
- 2019 04:00:46 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 04:01:00 -0600
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5A0vHX101993;
-        Tue, 5 Nov 2019 04:00:58 -0600
-Subject: Re: [PATCH v4 07/15] dmaengine: ti: k3 PSI-L remote endpoint
- configuration
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lokeshvutla@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
-        <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-8-peter.ujfalusi@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <bbe8e13f-b865-a352-7960-31b2865e5421@ti.com>
-Date:   Tue, 5 Nov 2019 12:00:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 05:07:29 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39979 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730633AbfKEKH3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 05:07:29 -0500
+Received: by mail-qk1-f193.google.com with SMTP id a18so2931128qkk.7
+        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 02:07:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CNinsozng4H5Ktf3rvHjg3jRh9c0NmbS8rmNz478Pe8=;
+        b=VEO755CMkWYZ+HZKjDSD2H8hkfHFILjBODJuUT7dyLJ2VacVXn30QPaKiB2aJr3dFj
+         UUfvdFj6N0LnOAXPpkBIo09s0N5k2JqZAjoxblyCjvylpwFmN2gB0t7J2CGgbJNVhTmU
+         Xcr/1pKIJxSCw64FjFq0CtKjgFgTUfNVSSd9U2EvGxP5Nf0q3JVy0Cb5eF45Tr0S+WOE
+         0zKyddIay8ulBTDwkAa9yHfkd+eUs/9amxlaNsSWxZ5fur+Ya/bxWYGvrXrX0FWTo8vt
+         H4Dh97ZxjUuuKm7+8LrgGpf1cTXIb42yHnSZIPyQugGcQMUmFsLEOAZC5E/3rGykiu40
+         5mcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CNinsozng4H5Ktf3rvHjg3jRh9c0NmbS8rmNz478Pe8=;
+        b=hjwLibCXZYI1PveW/iaBBd3Tgsi2nonjxeGmE/fug/vEaSRtp4KI23/AFpVWVs8p/h
+         iVea6ZBrnr+2Wx1dtjdX2eLczyW4B0Rlhc5xPGl192krRJvI0YaTHJHKxxfgRQAw1XVP
+         Jhz8Fj9XOG85GjSHHkCxAzEmHNIQcJaA5UWAvYG7wwz+havanwl3hQ3FhpGgNXd+G+DR
+         lQfEiJjwkikaT2voagkpOTevGct+bmlL0i+4h4EyXXnzdOAv1CdQxybaZ7HIOh+d093r
+         jfCJT+a1+6YDBiV+b+cyuTAmMj4O56QQIPjWcY/Xf+jDNlQuFhlmELGXhro6+zRH6IRq
+         9nig==
+X-Gm-Message-State: APjAAAWX6eG16LMJVwUgNM7ZR7o2ljzUAyESlZB7i8GV5YAx0+VCktqq
+        e/XHivC7EuOolj0j8/N6ya5q6149d6XpHfaJsToy/A==
+X-Google-Smtp-Source: APXvYqw9bNDchC8BBBpEdelYeypgmRQMVHiuZm+RJGKYBw6ulBdYAA7iNafLNDZB2gz23179UM0YXlSw8t9Sm2JcFdA=
+X-Received: by 2002:ae9:eb07:: with SMTP id b7mr7705763qkg.104.1572948447803;
+ Tue, 05 Nov 2019 02:07:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191101084135.14811-8-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191031123040.26316-1-benjamin.gaignard@st.com>
+ <20191031123040.26316-3-benjamin.gaignard@st.com> <20191103110841.3ad3ecfb@archlinux>
+In-Reply-To: <20191103110841.3ad3ecfb@archlinux>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Tue, 5 Nov 2019 11:07:16 +0100
+Message-ID: <CA+M3ks5sZ6wwV-V+HCLC8OLdeLqrxK0Ga-pXTsdktQErbMOk4g@mail.gmail.com>
+Subject: Re: [PATCH 2/4] dt-bindings: iio: timer: Convert stm32 IIO trigger
+ bindings to json-schema
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-iio@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Peter,
+Le dim. 3 nov. 2019 =C3=A0 12:08, Jonathan Cameron <jic23@kernel.org> a =C3=
+=A9crit :
+>
+> On Thu, 31 Oct 2019 13:30:38 +0100
+> Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
+>
+> > Convert the STM32 IIO trigger binding to DT schema format using json-sc=
+hema
+> >
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> I'm far from great on these as still haven't taken the time I should to l=
+earn
+> the yaml syntax properly.  A few comments inline however based mostly on =
+this
+> doesn't quite look like other ones I've seen recently.
+>
+> Thanks,
+>
+> Jonathan
+>
+> > ---
+> >  .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 ++++++++++++++=
+++++++++
+> >  .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------------
+> >  2 files changed, 44 insertions(+), 25 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm3=
+2-timer-trigger.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-t=
+imer-trigger.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/timer/st,stm32-timer=
+-trigger.yaml b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-=
+trigger.yaml
+> > new file mode 100644
+> > index 000000000000..1c8c8b55e8cd
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigge=
+r.yaml
+> > @@ -0,0 +1,44 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/timer/st,stm32-timer-trigger.ya=
+ml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: STMicroelectronics STM32 Timers IIO timer bindings
+> > +
+> > +maintainers:
+> > +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> > +  - Fabrice Gasnier <fabrice.gasnier@st.com>
+> > +
+> > +properties:
+> > +  $nodemane:
+>
+> nodename?
 
-On 01/11/2019 10:41, Peter Ujfalusi wrote:
-> In K3 architecture the DMA operates within threads. One end of the thread
-> is UDMAP, the other is on the peripheral side.
-> 
-> The UDMAP channel configuration depends on the needs of the remote
-> endpoint and it can be differ from peripheral to peripheral.
-> 
-> This patch adds database for am654 and j721e and small API to fetch the
-> PSI-L endpoint configuration from the database which should only used by
-> the DMA driver(s).
-> 
-> Another API is added for native peripherals to give possibility to pass new
-> configuration for the threads they are using, which is needed to be able to
-> handle changes caused by different firmware loaded for the peripheral for
-> example.
+That will be in v2
 
-I have no objection to this approach, but ...
+>
+> > +    pattern: "^timer@[0-9]+$"
+> > +    type: object
+> > +
+> > +    description:
+> > +      must be a sub-node of an STM32 Timer device tree node
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        oneOf:
+>
+> enum is I think preferred for these.
 
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->   drivers/dma/ti/Kconfig         |   3 +
->   drivers/dma/ti/Makefile        |   1 +
->   drivers/dma/ti/k3-psil-am654.c | 172 ++++++++++++++++++++++++++
->   drivers/dma/ti/k3-psil-j721e.c | 219 +++++++++++++++++++++++++++++++++
->   drivers/dma/ti/k3-psil-priv.h  |  39 ++++++
->   drivers/dma/ti/k3-psil.c       |  97 +++++++++++++++
->   include/linux/dma/k3-psil.h    |  47 +++++++
->   7 files changed, 578 insertions(+)
->   create mode 100644 drivers/dma/ti/k3-psil-am654.c
->   create mode 100644 drivers/dma/ti/k3-psil-j721e.c
->   create mode 100644 drivers/dma/ti/k3-psil-priv.h
->   create mode 100644 drivers/dma/ti/k3-psil.c
->   create mode 100644 include/linux/dma/k3-psil.h
-> 
+as you like it will be in v2
 
-[...]
+>
+> > +          - const: st,stm32-timer-trigger
+> > +          - const: st,stm32h7-timer-trigger
+> > +
+> > +      reg: true
+>
+> Normally some info for what the reg value is..
+I can't put "description" on this field because the syntax doesn't allow it=
+.
+I will add a comment in v2 to explain what reg is.
 
-> diff --git a/include/linux/dma/k3-psil.h b/include/linux/dma/k3-psil.h
-> new file mode 100644
-> index 000000000000..16e9c8c6f839
-> --- /dev/null
-> +++ b/include/linux/dma/k3-psil.h
-> @@ -0,0 +1,47 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-> + */
-> +
-> +#ifndef K3_PSIL_H_
-> +#define K3_PSIL_H_
-> +
-> +#include <linux/types.h>
-> +
-> +#define K3_PSIL_DST_THREAD_ID_OFFSET 0x8000
-> +
-> +struct device;
-> +
-> +/* Channel Throughput Levels */
-> +enum udma_tp_level {
-> +	UDMA_TP_NORMAL = 0,
-> +	UDMA_TP_HIGH = 1,
-> +	UDMA_TP_ULTRAHIGH = 2,
-> +	UDMA_TP_LAST,
-> +};
-> +
-> +enum psil_endpoint_type {
-> +	PSIL_EP_NATIVE = 0,
-> +	PSIL_EP_PDMA_XY,
-> +	PSIL_EP_PDMA_MCAN,
-> +	PSIL_EP_PDMA_AASRC,
-> +};
-> +
-> +struct psil_endpoint_config {
-> +	enum psil_endpoint_type ep_type;
-> +
-> +	unsigned pkt_mode:1;
-> +	unsigned notdpkt:1;
-> +	unsigned needs_epib:1;
-> +	u32 psd_size;
-> +	enum udma_tp_level channel_tpl;
-> +
-> +	/* PDMA properties, valid for PSIL_EP_PDMA_* */
-> +	unsigned pdma_acc32:1;
-> +	unsigned pdma_burst:1;
-> +};
-> +
-> +int psil_set_new_ep_config(struct device *dev, const char *name,
-> +			   struct psil_endpoint_config *ep_config);
-> +
-> +#endif /* K3_PSIL_H_ */
-> 
-
-I see no user now of this public interface, so I think it better to drop it until
-there will be real user of it.
-
--- 
-Best regards,
-grygorii
+Thanks for your review.
+Benjamin
+>
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    timers2: timer@40000000 {
+> > +      #address-cells =3D <1>;
+> > +      #size-cells =3D <0>;
+> > +      timer@0 {
+> > +        compatible =3D "st,stm32-timer-trigger";
+> > +        reg =3D <0>;
+> > +      };
+> > +    };
+> > +
+> > +...
+> > diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-tr=
+igger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger=
+.txt
+> > deleted file mode 100644
+> > index b8e8c769d434..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.t=
+xt
+> > +++ /dev/null
+> > @@ -1,25 +0,0 @@
+> > -STMicroelectronics STM32 Timers IIO timer bindings
+> > -
+> > -Must be a sub-node of an STM32 Timers device tree node.
+> > -See ../mfd/stm32-timers.txt for details about the parent node.
+> > -
+> > -Required parameters:
+> > -- compatible:        Must be one of:
+> > -             "st,stm32-timer-trigger"
+> > -             "st,stm32h7-timer-trigger"
+> > -- reg:               Identify trigger hardware block.
+> > -
+> > -Example:
+> > -     timers@40010000 {
+> > -             #address-cells =3D <1>;
+> > -             #size-cells =3D <0>;
+> > -             compatible =3D "st,stm32-timers";
+> > -             reg =3D <0x40010000 0x400>;
+> > -             clocks =3D <&rcc 0 160>;
+> > -             clock-names =3D "int";
+> > -
+> > -             timer@0 {
+> > -                     compatible =3D "st,stm32-timer-trigger";
+> > -                     reg =3D <0>;
+> > -             };
+> > -     };
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
