@@ -2,59 +2,60 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8E8C17460
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFADC17460
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE2421D81
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2447621D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qp3ErZHJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkHd/djk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388958AbfKENPE (ORCPT
+        id S2389105AbfKENPJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:15:04 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38329 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388710AbfKENPE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 08:15:04 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z19so15909105wmk.3;
-        Tue, 05 Nov 2019 05:15:02 -0800 (PST)
+        Tue, 5 Nov 2019 08:15:09 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52351 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388710AbfKENPI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 08:15:08 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c17so13508018wmk.2;
+        Tue, 05 Nov 2019 05:15:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hB9idhMU92erzOjHPvAXZpJsyvC0oNhoJYwou0xdu0U=;
-        b=qp3ErZHJAeyuOjgXLsXiclttDh1bu5NEu4gH06hfC1IiApD6xVTSozILPEpnfN8wl/
-         tPL03+8UuumFL0+ztAuQefhcHjbl2w05mugCn88UOR+iv7n2gAWsvIaxnxyNWSB83Wvo
-         /q37kvvkPk85TjljzbfqLFrJQkl3+gVbUAgHldjh9mhWKnZN62oWLQ+KhUAR0Rx2FPwJ
-         k04cjIAyJBJssoAJsKYuENbrq+/HHC7ssiy+aL1YHwjWlDPReFAUtw22/X0Xu1Fzg1/g
-         bQs8hEUavRZ3cUKucaqtFU7Gfr0zWdKm0Ejt7VjDb7EJEzcGc0Tv//kJH277DeCLZ9lR
-         HzFw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
+        b=WkHd/djk0ORgHMR2yAYNS+7CN1X0l1n8DgXtwwIvVzlhEHMkHD/NTxTZpWptYTlZoB
+         RhCVfRsBADwmaNlswVb33scnynJbmb3xJwdaa2RmMSYOTJL/KvYY+fi6hEB+ZMpsriaJ
+         fNircKP4McRAi3tzSUZPeKuw2GeN+pkjXNeR1+7THv8EFuyl5Fv4hvOoODBd36JgTVxl
+         8F4f6KkDHX+4xxxWx/BPKC753KJbfk/ObcxfGrjTf4OeQx4yMkSFMeRTLxHjuTXbBrnF
+         gG8RzslXj+BvVVPL0ERWMv9W8lszVwUwJ1GZW7zgiJdhRdF6XLw8RIGlkZnBUs2G4UFn
+         KSBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hB9idhMU92erzOjHPvAXZpJsyvC0oNhoJYwou0xdu0U=;
-        b=cRNed3CMqQiEyPkhm7fhnEFUq865tksbasU8EOKKPE/kdxSpbjK8j76ugTgtfL+b9I
-         wjo0l8HHeF51ilran1GdPS1CYk9tZxqtDGS0+WfE6Ub497rw+g33MCyhmaDr6CVPeGpc
-         TezTUYqkh3WVU1s+Cxe5LBU1EFm2ZS/4EHvKqFi673Y2U3XcjhQntWDNxw0/FzMQjRT1
-         4JVKKUzsIi5kwX74kUpy1qZOkr+6fQSdcPDGzAD3pZV9xhXh9+8Ay4sIcVnNEyzECRTv
-         aat/urcqgjaJCsH+nKoJ3VZnVuykl3uY8Z15pOfbj3yF8fYcBbigOi2yKvFO4+WXOaF8
-         K4XA==
-X-Gm-Message-State: APjAAAU6UHOyZ58+iGdM65prJupzTqJBj+oUMrx8FWexMvbuwnefBr1Q
-        qZ5VAr0bLzdoFq1L3VzENkY=
-X-Google-Smtp-Source: APXvYqwhThzYPU8gc+woRw9eFxl7hLqV3HWnaePcB1PbrFUfvPY/cSrHYTH4eVBp5kVN6u0SN9ZXNg==
-X-Received: by 2002:a1c:cc16:: with SMTP id h22mr4454762wmb.51.1572959701254;
-        Tue, 05 Nov 2019 05:15:01 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
+        b=ogm7D0KD9Vy4skTS95auU2C/gphlJT1I65AL7Zpi0t7tW2rzCKdbZg0ScHihDXEQP/
+         ztteisc3fUX2TilO2CT9mMNhjcmruTyK/5zBy0s5abHoIOzVpKCLAhygkciR0A7j9apd
+         41mX5kHtSEVxNTOL1Rznsue8VnAl/ZxLOAHo8cCMZwzs4bDiOq20dOb7XUjxLRLbP4uN
+         Qy9XsQ5zRL5fHsK4kbcHaFOLnAgSFud8GmRBJNtb5Uy7dXJkHTxKJ6XwohFhvrqbEKG7
+         BDxUUZ4kUwuKAAntwdBjd3yuH9sZpKwZxBRbh8G5nFpZHbTKJd5McVk5Rx+NayxaYQqc
+         abMA==
+X-Gm-Message-State: APjAAAX7mPQ7LYqe2I7B7v/IqeUFNxy5qCDU4zdguQf/blGQtRIuQhBV
+        O6KCS9FZ0vzNcB3+5HanR+c=
+X-Google-Smtp-Source: APXvYqw6UFPNrurMZG2uJGWFoKHNaQqgij6b0hb605Rot6sbahLBVS34Xu72r3LgwNTT0W2EYgOUNg==
+X-Received: by 2002:a7b:c747:: with SMTP id w7mr4417876wmk.62.1572959706136;
+        Tue, 05 Nov 2019 05:15:06 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id a6sm13549920wmj.1.2019.11.05.05.15.00
+        by smtp.gmail.com with ESMTPSA id a6sm13549920wmj.1.2019.11.05.05.15.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 05:15:00 -0800 (PST)
+        Tue, 05 Nov 2019 05:15:05 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?=27Uwe=20Kleine-K=C3=B6nig=27?= 
@@ -66,10 +67,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 0/7] Add support for H6 PWM
-Date:   Tue,  5 Nov 2019 14:14:49 +0100
-Message-Id: <20191105131456.32400-1-peron.clem@gmail.com>
+Subject: [PATCH v3 7/7] [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
+Date:   Tue,  5 Nov 2019 14:14:56 +0100
+Message-Id: <20191105131456.32400-8-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191105131456.32400-1-peron.clem@gmail.com>
+References: <20191105131456.32400-1-peron.clem@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -78,71 +81,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-This is a rework of Jernej's previous work[1] taking account all the
-previous remarks.
-
-Bindings is still strict but probe in the driver are now optionnals.
-
-If someone could confirm that the PWM is not broken, as my board
-doesn't output it.
-
-I didn't add the acked-tags as there are big changes.
-
-Thanks,
-Clément
-
-Jernej's cover:
-Allwinner H6 SoC has PWM core which is basically the same as that found
-in A20, it's just depends on additional bus clock and reset line.
-
-This series adds support for it and extends PWM driver functionality in
-a way that it's now possible to bypass whole core and output PWM source
-clock directly as a PWM signal. This functionality is needed by AC200
-chip, which is bundled in same physical package as H6 SoC, to serve as a
-clock source of 24 MHz. AC200 clock input pin is bonded internally to
-the second PWM channel.
-
-I would be grateful if anyone can test this patch series for any kind of
-regression on other SoCs.
-
-[1]: https://patchwork.kernel.org/cover/11061737/
-
-Changes in v3:
- - Documentation update to allow one clock without name
- - Change reset optional to shared
- - If reset probe failed return an error
- - Remove old clock probe
- - Update bypass enabled formula
-
-Changes in v2:
- - Remove allOf in Documentation
- - Add H6 example in Documentation
- - Change clock name from "pwm" to "mod"
- - Change reset quirk to optional probe
- - Change bus_clock quirk to optional probe
- - Add limitation comment about mod_clk_output
- - Add quirk for mod_clk_output
- - Change bypass formula
-
-Clément Péron (1):
-  [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
-
-Jernej Skrabec (6):
-  dt-bindings: pwm: allwinner: Add H6 PWM description
-  pwm: sun4i: Add an optional probe for reset line
-  pwm: sun4i: Add an optional probe for bus clock
-  pwm: sun4i: Add support to output source clock directly
-  pwm: sun4i: Add support for H6 PWM
-  arm64: dts: allwinner: h6: Add PWM node
-
- .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  47 +++++++
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   4 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 ++
- drivers/pwm/pwm-sun4i.c                       | 125 +++++++++++++++++-
- 4 files changed, 181 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 1d05d570142f..38aba7e5bbd9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -131,6 +131,10 @@
+ 	vcc-pg-supply = <&reg_aldo1>;
+ };
+ 
++&pwm {
++	status = "okay";
++};
++
+ &r_i2c {
+ 	status = "okay";
+ 
 -- 
 2.20.1
 
