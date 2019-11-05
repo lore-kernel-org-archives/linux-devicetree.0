@@ -2,269 +2,176 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F260C49EAD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 09:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0206CA9ECF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE38217F5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 09:59:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572947956;
-	bh=a//9Ivf1W2D94KgA+uVahfTNaNKk12rHld2i20WRf08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=re7PZApTIvfwFXcu+mv/mkkTPPAp3DTOb4rMkJcxh7WTDH85zsfOoRkpLqANxhnT0
-	 ERMxmDSbN7RSpGtpn6EaRI1+3LdKR581CGaQVKbrkkd9GT1eUJsJZe6AY6GmbFPW1W
-	 gujuF9Hzm4uvDXqMAjxfo8gAfTKEuxDcudeycnjM=
+	by mail.kernel.org (Postfix) with ESMTP id C704321D71
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:01:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hsPSJ5PP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfKEJ7N (ORCPT
+        id S2387821AbfKEKBM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:59:13 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42279 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfKEJ7M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 04:59:12 -0500
-Received: by mail-ed1-f67.google.com with SMTP id m13so9300313edv.9;
-        Tue, 05 Nov 2019 01:59:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EsQY1+FYq6hmp/aV3ZQ9R7RWQ2nr+29an3C9DMBubgw=;
-        b=NDbAMQDjrOTGJwtB6zZnPgPim1KpxpAi7BcYVeLuvLXcasuoVPNn4+hq6hDydtPa61
-         RcI5Pi6prEN8WbXO+x1Rd3bZunRN7My/NIoC3Hz331/vUKKSShCvaNATD7yDjVHjgLyC
-         kjNWPMjcyKIY4e3+wY+I04dmrwjgER0ADJphPKSDnvaToBYfTPhevraOHwPx+dS5+dny
-         hQB71hwABZnt68osbaggMbFLEkYBHp529kkZc7DI/a3RKa+8LRFbulM+DZdTdcS8li6W
-         hb6NnTiWe0tOruuIMg+nMP+o3VmJf7mMlGGRwrF889Oag/cwtFaRl8t+v5NO1Oha/RWY
-         rr4Q==
-X-Gm-Message-State: APjAAAVak+K8YPFSi88XlUmlIIpsGlEs00q1EF8MetC2KMJa1DCM/A9P
-        A8g6V4AiY0JQWojKqzT2zRk=
-X-Google-Smtp-Source: APXvYqym7iMcRcDXO9zIYTv1DLgDk242F6B4BEeeidEiTic9E35TdFMtHO5+wzp+4GPeyP9g0jbpsg==
-X-Received: by 2002:a17:906:3285:: with SMTP id 5mr27628244ejw.143.1572947948275;
-        Tue, 05 Nov 2019 01:59:08 -0800 (PST)
-Received: from pi3 ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id j19sm252942ejs.88.2019.11.05.01.59.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 01:59:07 -0800 (PST)
-Date:   Tue, 5 Nov 2019 10:59:05 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-Message-ID: <20191105095905.GA31721@pi3>
-References: <20191105015827.GA332@bogus>
- <20191105054218.29826-1-matheus@castello.eng.br>
- <20191105054218.29826-5-matheus@castello.eng.br>
+        Tue, 5 Nov 2019 05:01:12 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44100 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387690AbfKEKBM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 05:01:12 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5A11fx040316;
+        Tue, 5 Nov 2019 04:01:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572948061;
+        bh=zbPTKFMP/VzQXIz/GVFKvy0Bu0kY7EmlTfBJtaGCMnY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hsPSJ5PPRBoB3sBXG1LtBARKT2zN9fCaS9LhkOkrYQOM6HVtlkEYAyyjQYYcbL/XM
+         q7JBa0WNoXYcB2azHcRf3Q0RRsax/sDEnAZGihLR+wRBuUhoBOebhTGnKhRhk3Isya
+         9ZPn28nDm1syDYIbRJCvQ8ncDuI9x/uMElv4KebQ=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5A11PC107280
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 Nov 2019 04:01:01 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 5 Nov
+ 2019 04:00:46 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 5 Nov 2019 04:01:00 -0600
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5A0vHX101993;
+        Tue, 5 Nov 2019 04:00:58 -0600
+Subject: Re: [PATCH v4 07/15] dmaengine: ti: k3 PSI-L remote endpoint
+ configuration
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lokeshvutla@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
+        <j-keerthy@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-8-peter.ujfalusi@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <bbe8e13f-b865-a352-7960-31b2865e5421@ti.com>
+Date:   Tue, 5 Nov 2019 12:00:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191105054218.29826-5-matheus@castello.eng.br>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191101084135.14811-8-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:42:17AM -0300, Matheus Castello wrote:
-> For configuration of fuel gauge alert for a low level state of charge
-> interrupt we add a function to config level threshold and a device tree
-> binding property to set it in flatned device tree node.
+Hi Peter,
+
+On 01/11/2019 10:41, Peter Ujfalusi wrote:
+> In K3 architecture the DMA operates within threads. One end of the thread
+> is UDMAP, the other is on the peripheral side.
 > 
-> Now we can use "maxim,alert-low-soc-level" property with the values from
-> 1% up to 32% to configure alert interrupt threshold.
+> The UDMAP channel configuration depends on the needs of the remote
+> endpoint and it can be differ from peripheral to peripheral.
 > 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> This patch adds database for am654 and j721e and small API to fetch the
+> PSI-L endpoint configuration from the database which should only used by
+> the DMA driver(s).
+> 
+> Another API is added for native peripherals to give possibility to pass new
+> configuration for the threads they are using, which is needed to be able to
+> handle changes caused by different firmware loaded for the peripheral for
+> example.
+
+I have no objection to this approach, but ...
+
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->  drivers/power/supply/max17040_battery.c | 96 +++++++++++++++++++++----
->  1 file changed, 82 insertions(+), 14 deletions(-)
+>   drivers/dma/ti/Kconfig         |   3 +
+>   drivers/dma/ti/Makefile        |   1 +
+>   drivers/dma/ti/k3-psil-am654.c | 172 ++++++++++++++++++++++++++
+>   drivers/dma/ti/k3-psil-j721e.c | 219 +++++++++++++++++++++++++++++++++
+>   drivers/dma/ti/k3-psil-priv.h  |  39 ++++++
+>   drivers/dma/ti/k3-psil.c       |  97 +++++++++++++++
+>   include/linux/dma/k3-psil.h    |  47 +++++++
+>   7 files changed, 578 insertions(+)
+>   create mode 100644 drivers/dma/ti/k3-psil-am654.c
+>   create mode 100644 drivers/dma/ti/k3-psil-j721e.c
+>   create mode 100644 drivers/dma/ti/k3-psil-priv.h
+>   create mode 100644 drivers/dma/ti/k3-psil.c
+>   create mode 100644 include/linux/dma/k3-psil.h
 > 
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> index 75459f76d02c..c48a691cbd7b 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -29,6 +29,9 @@
->  #define MAX17040_DELAY		1000
->  #define MAX17040_BATTERY_FULL	95
-> 
-> +#define MAX17040_ATHD_MASK		0xFFC0
-> +#define MAX17040_ATHD_DEFAULT_POWER_UP	4
-> +
->  struct max17040_chip {
->  	struct i2c_client		*client;
->  	struct delayed_work		work;
-> @@ -43,6 +46,8 @@ struct max17040_chip {
->  	int soc;
->  	/* State Of Charge */
->  	int status;
-> +	/* Low alert threshold from 32% to 1% of the State of Charge */
-> +	u32 low_soc_alert;
->  };
-> 
->  static int max17040_get_property(struct power_supply *psy,
-> @@ -99,6 +104,21 @@ static void max17040_reset(struct i2c_client *client)
->  	max17040_write_reg(client, MAX17040_CMD, 0x0054);
->  }
-> 
-> +static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
-> +{
-> +	int ret;
-> +	u16 data;
-> +
-> +	level = 32 - level;
-> +	data = max17040_read_reg(client, MAX17040_RCOMP);
-> +	/* clear the alrt bit and set LSb 5 bits */
-> +	data &= MAX17040_ATHD_MASK;
-> +	data |= level;
-> +	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
-> +
-> +	return ret;
-> +}
-> +
->  static void max17040_get_vcell(struct i2c_client *client)
->  {
->  	struct max17040_chip *chip = i2c_get_clientdata(client);
-> @@ -115,7 +135,6 @@ static void max17040_get_soc(struct i2c_client *client)
->  	u16 soc;
-> 
->  	soc = max17040_read_reg(client, MAX17040_SOC);
-> -
->  	chip->soc = (soc >> 8);
->  }
-> 
-> @@ -161,6 +180,24 @@ static void max17040_get_status(struct i2c_client *client)
->  		chip->status = POWER_SUPPLY_STATUS_FULL;
->  }
-> 
-> +static int max17040_get_of_data(struct max17040_chip *chip)
-> +{
-> +	struct device *dev = &chip->client->dev;
-> +	struct device_node *np = dev->of_node;
-> +	int ret = 0;
-> +
-> +	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
-> +				 &chip->low_soc_alert)) {
-> +		chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
-> +	} else if (chip->low_soc_alert <= 0 ||
-> +			chip->low_soc_alert >= 33) {
-> +		/* low_soc_alert is not between 1% and 32% */
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static void max17040_check_changes(struct i2c_client *client)
->  {
->  	max17040_get_vcell(client);
-> @@ -192,9 +229,27 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
->  	/* send uevent */
->  	power_supply_changed(chip->battery);
-> 
-> +	/* reset alert bit */
-> +	max17040_set_low_soc_alert(client, chip->low_soc_alert);
-> +
->  	return IRQ_HANDLED;
->  }
-> 
-> +static int max17040_enable_alert_irq(struct max17040_chip *chip)
-> +{
 
-It does not make really sense to move this code to separate function in
-this patch. This should be done in patch 1/5. Otherwise you add a code
-in patch 1 and later in patch 4 you immediately rearrange it. This
-raises eybrows and gives a hint that patchset is not well structured.
+[...]
 
-> +	struct i2c_client *client = chip->client;
-> +	unsigned int flags;
-> +	int ret;
+> diff --git a/include/linux/dma/k3-psil.h b/include/linux/dma/k3-psil.h
+> new file mode 100644
+> index 000000000000..16e9c8c6f839
+> --- /dev/null
+> +++ b/include/linux/dma/k3-psil.h
+> @@ -0,0 +1,47 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
+> + */
 > +
-> +	dev_info(&client->dev, "IRQ: enabled\n");
+> +#ifndef K3_PSIL_H_
+> +#define K3_PSIL_H_
+> +
+> +#include <linux/types.h>
+> +
+> +#define K3_PSIL_DST_THREAD_ID_OFFSET 0x8000
+> +
+> +struct device;
+> +
+> +/* Channel Throughput Levels */
+> +enum udma_tp_level {
+> +	UDMA_TP_NORMAL = 0,
+> +	UDMA_TP_HIGH = 1,
+> +	UDMA_TP_ULTRAHIGH = 2,
+> +	UDMA_TP_LAST,
+> +};
+> +
+> +enum psil_endpoint_type {
+> +	PSIL_EP_NATIVE = 0,
+> +	PSIL_EP_PDMA_XY,
+> +	PSIL_EP_PDMA_MCAN,
+> +	PSIL_EP_PDMA_AASRC,
+> +};
+> +
+> +struct psil_endpoint_config {
+> +	enum psil_endpoint_type ep_type;
+> +
+> +	unsigned pkt_mode:1;
+> +	unsigned notdpkt:1;
+> +	unsigned needs_epib:1;
+> +	u32 psd_size;
+> +	enum udma_tp_level channel_tpl;
+> +
+> +	/* PDMA properties, valid for PSIL_EP_PDMA_* */
+> +	unsigned pdma_acc32:1;
+> +	unsigned pdma_burst:1;
+> +};
+> +
+> +int psil_set_new_ep_config(struct device *dev, const char *name,
+> +			   struct psil_endpoint_config *ep_config);
+> +
+> +#endif /* K3_PSIL_H_ */
+> 
 
-While at it, get rid of dev_info here. It does not bring any useful
-information. All this is available in /proc/interrupts.
+I see no user now of this public interface, so I think it better to drop it until
+there will be real user of it.
 
+-- 
 Best regards,
-Krzysztof
-
-> +	flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
-> +	ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-> +					max17040_thread_handler, flags,
-> +					chip->battery->desc->name, chip);
-> +
-> +	return ret;
-> +}
-> +
->  static enum power_supply_property max17040_battery_props[] = {
->  	POWER_SUPPLY_PROP_STATUS,
->  	POWER_SUPPLY_PROP_ONLINE,
-> @@ -216,6 +271,7 @@ static int max17040_probe(struct i2c_client *client,
->  	struct i2c_adapter *adapter = client->adapter;
->  	struct power_supply_config psy_cfg = {};
->  	struct max17040_chip *chip;
-> +	int ret;
-> 
->  	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
->  		return -EIO;
-> @@ -226,6 +282,12 @@ static int max17040_probe(struct i2c_client *client,
-> 
->  	chip->client = client;
->  	chip->pdata = client->dev.platform_data;
-> +	ret = max17040_get_of_data(chip);
-> +	if (ret) {
-> +		dev_err(&client->dev,
-> +			"failed: low SOC alert OF data out of bounds\n");
-> +		return ret;
-> +	}
-> 
->  	i2c_set_clientdata(client, chip);
->  	psy_cfg.drv_data = chip;
-> @@ -242,20 +304,26 @@ static int max17040_probe(struct i2c_client *client,
-> 
->  	/* check interrupt */
->  	if (client->irq) {
-> -		int ret;
-> -		unsigned int flags;
-> -
-> -		dev_info(&client->dev, "IRQ: enabled\n");
-> -		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
-> -		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-> -						max17040_thread_handler, flags,
-> -						chip->battery->desc->name,
-> -						chip);
-> -
-> -		if (ret) {
-> -			client->irq = 0;
-> +		if (of_device_is_compatible(client->dev.of_node,
-> +					    "maxim,max77836-battery")) {
-> +			ret = max17040_set_low_soc_alert(client,
-> +							 chip->low_soc_alert);
-> +			if (ret) {
-> +				dev_err(&client->dev,
-> +					"Failed to set low SOC alert: err %d\n",
-> +					ret);
-> +				return ret;
-> +			}
-> +
-> +			ret = max17040_enable_alert_irq(chip);
-> +			if (ret) {
-> +				client->irq = 0;
-> +				dev_warn(&client->dev,
-> +					 "Failed to get IRQ err %d\n", ret);
-> +			}
-> +		} else {
->  			dev_warn(&client->dev,
-> -				"Failed to get IRQ err %d\n", ret);
-> +				 "Device not compatible for IRQ");
->  		}
->  	}
-> 
-> --
-> 2.24.0.rc2
-> 
+grygorii
