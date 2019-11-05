@@ -1,210 +1,87 @@
-Return-Path: <SRS0=deyM=Y4=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3BECA9EC9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 23:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A48CA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 00:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5C420663
-	for <linux-devicetree@archiver.kernel.org>; Mon,  4 Nov 2019 23:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572910253;
-	bh=VuRyZefH1GJ2W7lKyuG3yWFjwEAZHZSAsFVMNtx8YiY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p2g2Z5J6z1r19Do0xKCTVGyq/xLjx/49FPwVYafdslEukhzVnSMAbf6p2kbIgz90T
-	 AlFtNgEC/5zL3FgyfB+Bcb8cZGTINWT0e+I3wNMj/6+KPFJmD8lyFg4lL7phJmbQQJ
-	 Oyo6UV0uNiFarDAUrUwdt+30AJf/+yBn34JEIIZU=
+	by mail.kernel.org (Postfix) with ESMTP id CF5F120848
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 00:34:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fse+hifI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbfKDXax (ORCPT
+        id S1729739AbfKEAek (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:30:53 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34905 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbfKDXaw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 18:30:52 -0500
-Received: by mail-ot1-f65.google.com with SMTP id z6so16037312otb.2
-        for <devicetree@vger.kernel.org>; Mon, 04 Nov 2019 15:30:51 -0800 (PST)
+        Mon, 4 Nov 2019 19:34:40 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35628 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729443AbfKEAek (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 19:34:40 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q22so5122545pgk.2
+        for <devicetree@vger.kernel.org>; Mon, 04 Nov 2019 16:34:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:from:to:user-agent:date;
+        bh=ssq1+qBeE4bILOYJCaUAQccnlP0dTDy9uKGzohCrZNI=;
+        b=fse+hifIQe9+HhAVismfmdd3dbc+AxDk6h2Czk0Xv9p+AFsp3NSOljWg/6eyC+wVnV
+         JqbMAuXWtjW1iH9BTPZe9sdCW3OmoJ+48j0DdRqw3TVHjd0sTq2ieka06m9nffvEBMXx
+         J/AXJd79/oM6HArb021dRsLKI75kvUlH4MkSw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kr4KEmsrM4VGWU3xHSwQWOz/VEaTTxyuxi7Mcc77Shw=;
-        b=KpRKLgvaiobfJHPAiH/mKmSjBKAYTTElV6ksUf/z1se0EcyFaI1Q2oMwr/QR7yVshn
-         js5oQdA11Q9QV+hBen/wxP5zVUsqmo4mFPLzWk4+QJsnwiJJBePaCi0Y9SJ6+IPnVooW
-         nUnBq//w9Bi09IVZTRtT6nsDOwqFGzLIJzEynrDYvlPVZxXorZhRlpINCaOnXbAMFx+X
-         7UfzAmu1KAfDwizLvuDYh/gCnZ76e9Zaq8RFyQ38VTrok2lPRPXh0d4Ozk5Q0SOeI8a2
-         x9XjZ+hadUZIdgMoNkM53D8RlMKCAN/F4Rr9Dn7EY19/vxcg/s0fVgRLFnVB1jHXXXCG
-         BXDA==
-X-Gm-Message-State: APjAAAV/OXYyQtQQKIx++SR2G2PA9MEexSthi9/7vN31+D51NnOGIjNV
-        4PrbZ37rdXhSI97vYz79Ww==
-X-Google-Smtp-Source: APXvYqw/1xKwncI+AnjTUpBT7XUAlFOICSYrLNGUNz+zIpp/Ce59w4hlGuebT/AEtu+Z4eU/V77ffw==
-X-Received: by 2002:a05:6830:1e16:: with SMTP id s22mr10590291otr.30.1572909776610;
-        Mon, 04 Nov 2019 15:22:56 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i11sm5722258otj.17.2019.11.04.15.22.55
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:from:to
+         :user-agent:date;
+        bh=ssq1+qBeE4bILOYJCaUAQccnlP0dTDy9uKGzohCrZNI=;
+        b=A6BrRIMR7PyepOqUr9rPN0e0+U/TQfoTfLYyQriUecVrRopZ/Sy686bqBRATqmIloG
+         TVdRUE261Y0iL+PhkyrdVf/lHZIlaZPvAcdPH6r8Ky9fBhrg6uSAg7hFH+b597M5jrBi
+         XQdThRYeuQOxdv22Sbzxvc9aIbOzCJClgR4+U9GSTEAby+xT5qSCYFi/jgKW/PaC09YJ
+         xTfxhpt1Wt3RNUcNGoMUYISM94WASuet5G7EEykHHITae8s8YDtmEc3u7fJcsUDyk/KO
+         JBqK//voas0pmQAhNbkfpoN0g9uHIULWEi0UOvcKWzEclc5/iMuRFFEgxtIOFsis1Jox
+         oKQg==
+X-Gm-Message-State: APjAAAUsNKS5mPPHrv9nH912sukrkMgDQlhCMGyrbn+t7piwKorNqMBp
+        iluK7c8AWDEqSSvxh2ZyRbVfrw==
+X-Google-Smtp-Source: APXvYqyONkdssVcF2C2lSrS/XAzYbF22TVGGKOXcep4SCKhu3a9bGsH/qY2pM5E3sIVKM+vGi5lcqQ==
+X-Received: by 2002:a63:ee44:: with SMTP id n4mr15395228pgk.137.1572914079568;
+        Mon, 04 Nov 2019 16:34:39 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s202sm19212727pfs.24.2019.11.04.16.34.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 15:22:56 -0800 (PST)
-Date:   Mon, 4 Nov 2019 17:22:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2 v5] drm/panel: Add generic DSI panel YAML bindings
-Message-ID: <20191104232255.GB14609@bogus>
-References: <20191103205459.24965-1-linus.walleij@linaro.org>
+        Mon, 04 Nov 2019 16:34:38 -0800 (PST)
+Message-ID: <5dc0c39e.1c69fb81.f12ba.857f@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191103205459.24965-1-linus.walleij@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191104071027.GD585@tuxbook-pro>
+References: <20191023090219.15603-1-rnayak@codeaurora.org> <20191023090219.15603-12-rnayak@codeaurora.org> <5db86de0.1c69fb81.9e27d.0f47@mx.google.com> <20191030195021.GC27773@google.com> <6610d7fe-5a4d-5a43-5c4f-9ae61e7e53ee@codeaurora.org> <20191104063348.GA2464@tuxbook-pro> <c214110f-7620-8771-ef83-8a4fb1f8724f@codeaurora.org> <20191104071027.GD585@tuxbook-pro>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, agross@kernel.org,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt controller
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 04 Nov 2019 16:34:37 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 09:54:58PM +0100, Linus Walleij wrote:
-> This adds a starting point for processing and defining generic
-> bindings used by DSI panels. We just define one single bool
-> property to force the panel into video mode for now.
-> 
-> Cc: devicetree@vger.kernel.org
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v4->v5:
-> - Drop the example.
-> - I still have a vert annoying error message in the Sony
->   panel bindings that uses this schema:
->   sony,acx424akp.example.dt.yaml: panel@0: $nodename:0: 'panel@0' does not match '^dsi-controller(@.*)?$'
->   As this is modeled very closely to
->   Documentation/devicetree/bindings/net/mdio.yaml
->   and that one doesn't emit this type of warning for its ethernet-phy@0
->   etc I am pretty much clueless and just can't see what the problem
->   is.
-> - If I can't figure this out the only viable next step is to drop the
->   ambition to create yaml bindings simply because I'm unable to do
->   it, and go back to traditional text bindings :(
-> ChangeLog v3->v4:
-> - Rename into display/dsi-controller.yaml
-> - Require a virtual channel number for the DSI panel, as
->   DSI have this 2-bit virtual address field.
-> - Bring in some but not all properties from the existing MIPI
->   DSI bindings. This schema can be used with simpler panels but
->   not complex panels with multiple virtual channels for the
->   moment. Let's handle it when we get there.
-> - Add an example.
-> ChangeLog v2->v3:
-> - Make a more complete DSI panel binding including the controller
->   and its address-cells and size-cells and a pattern for the panel
->   nodes. The panel is one per DSI master, the reg property is
->   compulsory but should always be 0 (as far as I can tell) as
->   only one panel can be connected. The bus doesn't really have
->   any addresses for the panel, the address/reg notation seems
->   to be cargo-culted from the port graphs and is not necessary
->   to parse some device trees, it is used to tell whether the
->   node is a panel or not rather than any addressing.
-> - I have no idea how many displays you can daisychain on a single
->   DSI master, I just guess 15 will be enough. The MIPI-specs
->   are memberwalled. Someone who knows can tell perhaps?
-> ChangeLog v1->v2:
-> - New patch after feedback.
-> ---
->  .../bindings/display/dsi-controller.yaml      | 74 +++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/dsi-controller.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/dsi-controller.yaml b/Documentation/devicetree/bindings/display/dsi-controller.yaml
-> new file mode 100644
-> index 000000000000..9e2bf7776c15
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/dsi-controller.yaml
-> @@ -0,0 +1,74 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/dsi-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common Properties for DSI Display Panels
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +description: |
-> +  This document defines device tree properties common to DSI, Display
-> +  Serial Interface panels. It doesn't constitute a device tree binding
+Quoting Bjorn Andersson (2019-11-03 23:10:27)
+>=20
+> Right, but by putting both compatibles in the dts and the generic one in
+> the driver we avoid the driver churn and we're future compatible.
+>=20
+> And given that we haven't yet added the qcom,sdm845-pdc node to the
+> sdm845.dtsi we don't need to maintain the qcom,sdm845-pdc in the driver.
+> So switch qcom,sdm845-pdc to qcom,pdc in qcom-pdc.c.
+>=20
 
-Controllers and attached panels.
+I like this plan!
 
-> +  specification by itself but is meant to be referenced by device tree
-> +  bindings.
-> +
-> +  When referenced from panel device tree bindings the properties defined in
-
-When referenced from panel bindings, you'll get errors. ;)
-
-> +  this document are defined as follows. The panel device tree bindings are
-> +  responsible for defining whether each property is required or optional.
-> +
-> +  Notice: this binding concerns DSI panels connected directly to a master
-> +  without any intermediate port graph to the panel. Each DSI master
-> +  can control exactly one panel. They should all just have a node "panel"
-> +  for their panel with their reg-property set to 0.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^dsi-controller(@.*)?$"
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^panel@[0-3]$":
-> +    description: Panels connected to the DSI link
-> +    type: object
-> +
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 3
-> +        description:
-> +          The virtual channel number of a DSI peripheral. Must be in the range
-> +          from 0 to 3, as DSI uses a 2-bit addressing scheme. Some DSI
-> +          peripherals respond to more than a single virtual channel. In that
-> +          case the reg property can take multiple entries, one for each virtual
-> +          channel that the peripheral responds to.
-> +
-> +      clock-master:
-> +        type: boolean
-> +        description:
-> +           Should be enabled if the host is being used in conjunction with
-> +           another DSI host to drive the same peripheral. Hardware supporting
-> +           such a configuration generally requires the data on both the busses
-> +           to be driven by the same clock. Only the DSI host instance
-> +           controlling this clock should contain this property.
-> +
-> +      enforce-video-mode:
-> +        type: boolean
-> +        description:
-> +          The best option is usually to run a panel in command mode, as this
-> +          gives better control over the panel hardware. However for different
-> +          reasons like broken hardware, missing features or testing, it may be
-> +          useful to be able to force a command mode-capable panel into video
-> +          mode.
-> +
-> +    required:
-> +      - reg
-> +
-> +...
-> -- 
-> 2.21.0
-> 
