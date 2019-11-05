@@ -2,95 +2,190 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2026C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67277C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADCF5214D8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB16214D8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572975137;
+	bh=yDuxotFXs1FYNXnjjemxUjVnTa7mhmweVIbX2xUY4Po=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SakPstEeZo4CDxdCJJzxHczW9iy2LCBMF9KeGEBXKzg/hz+h7ERTM99np+86ug661
+	 v4Y+wf2ILwEOOoN0XS31paJehlHA+55M4fPlMUPJ5PPvpRp+Uhya6MbT/j5Ctdt9zF
+	 BeOed7qjI1+idVDFNpSbMl6csv+AMgUSwpnQHO1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfKER13 (ORCPT
+        id S2390258AbfKERcO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:27:29 -0500
-Received: from smtp2.axis.com ([195.60.68.18]:60119 "EHLO smtp2.axis.com"
+        Tue, 5 Nov 2019 12:32:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730895AbfKER13 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:27:29 -0500
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Nov 2019 12:27:27 EST
-IronPort-SDR: F0oPtGUTmrMxkUzDVCVrZr5h34rmDSMXw6pi1MHjjcupDP4CkTU2+3tJPGZLl1JJ9ecwhWzveC
- BMO1xkLjJFp7T9CrU0hOck0ednRvpCS/YQLSbKjG02276SPboa0R9WDfKlw+Un695jXNFs1G9R
- OfjS9zAmL5jq0NsQ9DXJKTbZEvCCSDrYYgSBpo05VOTnMdSOOudHPefQXhoi3eHQTMokOu0jFq
- iKUOA5UCo7bRocKaqM9vOD9Ki8G6gvd5csLagUmJkRxI52GPyu3J7dZX/qods0VdOqA/L2Vapy
- o9E=
-X-IronPort-AV: E=Sophos;i="5.68,271,1569276000"; 
-   d="scan'208";a="2106277"
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Date:   Tue, 5 Nov 2019 18:20:16 +0100
-From:   Jesper Nilsson <jesper.nilsson@axis.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Tsahee Zidenberg <tsahee@annapurnalabs.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
+        id S2387776AbfKERcN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:32:13 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BD482087E;
+        Tue,  5 Nov 2019 17:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572975132;
+        bh=yDuxotFXs1FYNXnjjemxUjVnTa7mhmweVIbX2xUY4Po=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lH2+6849jtmlQEYhuHDm8T1wfQtFGbiPiMYzlJSBFroTT5+hom11G9nS1EGuMRwMB
+         yKDuyuZNPw9UsMin8XJ6oo61kMPcr0DMDg+C7trMcMc7GECpzZSOJr82RoQpmLhV54
+         4Ohb/xjlD1HtNDGL0Iq9v8AIRXB5RMpepFdOqzsU=
+Date:   Tue, 5 Nov 2019 18:32:08 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jesper Nilsson <jespern@axis.com>,
-        Lars Persson <larper@axis.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v1 3/7] arm: dts: Use IRQ flags for legacy PCI IRQ
- interrupts
-Message-ID: <20191105172016.iq4mx7qa4c5sregk@axis.com>
-References: <20191104163834.8932-1-andrew.murray@arm.com>
- <20191104163834.8932-4-andrew.murray@arm.com>
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM
+ description
+Message-ID: <20191105173208.GA46143@gilmour.lan>
+References: <20191103203334.10539-1-peron.clem@gmail.com>
+ <20191103203334.10539-2-peron.clem@gmail.com>
+ <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+ <20191105111134.GG3876@gilmour.lan>
+ <CAJiuCcc7sQvuPX+FTErXS+_RzUDvbDrB3Z5EX9wE_2EZaex0qw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191104163834.8932-4-andrew.murray@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJiuCcc7sQvuPX+FTErXS+_RzUDvbDrB3Z5EX9wE_2EZaex0qw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 04:38:17PM +0000, Andrew Murray wrote:
-> Replace magic numbers used to describe legacy PCI IRQ interrupts
-> with #define.
+On Tue, Nov 05, 2019 at 01:34:37PM +0100, Cl=E9ment P=E9ron wrote:
+> On Tue, 5 Nov 2019 at 12:11, Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > Hi Clement, Uwe,
+> >
+> > On Mon, Nov 04, 2019 at 09:03:59AM +0100, Uwe Kleine-K=F6nig wrote:
+> > > On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=E9ment P=E9ron wrote:
+> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > >
+> > > > H6 PWM block is basically the same as A20 PWM, except that it also =
+has
+> > > > bus clock and reset line which needs to be handled accordingly.
+> > > >
+> > > > Expand Allwinner PWM binding with H6 PWM specifics.
+> > > >
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > > ---
+> > > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 +++++++++++++++=
++++-
+> > > >  1 file changed, 44 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-=
+a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
+m.yaml
+> > > > index 0ac52f83a58c..bf36ea509f31 100644
+> > > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+=2Eyaml
+> > > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+=2Eyaml
+> > > > @@ -30,13 +30,46 @@ properties:
+> > > >        - items:
+> > > >            - const: allwinner,sun50i-h5-pwm
+> > > >            - const: allwinner,sun5i-a13-pwm
+> > > > +      - const: allwinner,sun50i-h6-pwm
+> > > >
+> > > >    reg:
+> > > >      maxItems: 1
+> > > >
+> > > > -  clocks:
+> > > > +  # Even though it only applies to subschemas under the conditiona=
+ls,
+> > > > +  # not listing them here will trigger a warning because of the
+> > > > +  # additionalsProperties set to false.
+> > > > +  clocks: true
+> > > > +  clock-names: true
+> > > > +  resets:
+> > > >      maxItems: 1
+> > > >
+> > > > +  if:
+> > > > +    properties:
+> > > > +      compatible:
+> > > > +        contains:
+> > > > +          const: allwinner,sun50i-h6-pwm
+> > > > +
+> > > > +  then:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        items:
+> > > > +          - description: Module Clock
+> > > > +          - description: Bus Clock
+> > > > +
+> > > > +      clock-names:
+> > > > +        items:
+> > > > +          - const: mod
+> > > > +          - const: bus
+> > > > +
+> > > > +    required:
+> > > > +      - clock-names
+> > > > +      - resets
+> > > > +
+> > > > +  else:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        maxItems: 1
+> > > > +
+> > >
+> > > I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod a=
+nd
+> > > bus clock is required.", right?
+> > >
+> > > I wonder if it is sensible to require a clock-names property in the e=
+lse
+> > > branch, too. This would make it obvious if the clock there corresponds
+> > > to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
+> >
+> > This can be done a bit differently and could address your concerns
+> >
+> > Something like
+> >
+> > properties:
+> >   ...
+> >
+> >   clocks:
+> >     minItems: 1
+> >     maxItems: 2
+> >     items:
+> >       - description: Bus Clock
+> >       - description: Module Clock
+> >
+> > required:
+> >   - clocks
+> >
+> > if:
+> >   ...
+> >
+> > then:
+> >   properties:
+> >     clocks:
+> >       maxItems: 2
+>
+> Here we should set minItems to 2 right ?
+> so Max =3D Min =3D 2
 
-Looks good,
+It's done automatically by the tooling when the other is missing.
 
-Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
-
-> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> ---
->  arch/arm/boot/dts/alpine.dtsi              |  6 ++--
->  arch/arm/boot/dts/artpec6.dtsi             | 10 +++---
->  arch/arm/boot/dts/gemini-dlink-dir-685.dts | 34 ++++++++++----------
->  arch/arm/boot/dts/gemini-sl93512r.dts      | 34 ++++++++++----------
->  arch/arm/boot/dts/gemini-sq201.dts         | 34 ++++++++++----------
->  arch/arm/boot/dts/gemini-wbd111.dts        | 34 ++++++++++----------
->  arch/arm/boot/dts/gemini-wbd222.dts        | 34 ++++++++++----------
->  arch/arm/boot/dts/imx6qdl.dtsi             | 10 +++---
->  arch/arm/boot/dts/imx6sx.dtsi              | 10 +++---
->  arch/arm/boot/dts/integratorap.dts         | 36 ++++++++++++----------
->  arch/arm/boot/dts/keystone-k2e.dtsi        | 11 ++++---
->  arch/arm/boot/dts/keystone.dtsi            | 10 +++---
->  arch/arm/boot/dts/qcom-apq8064.dtsi        | 10 +++---
->  arch/arm/boot/dts/qcom-ipq4019.dtsi        | 10 +++---
->  arch/arm/boot/dts/versatile-pb.dts         | 36 ++++++++++++----------
->  15 files changed, 162 insertions(+), 157 deletions(-)
-
-/^JN - Jesper Nilsson
--- 
-               Jesper Nilsson -- jesper.nilsson@axis.com
+Maxime
