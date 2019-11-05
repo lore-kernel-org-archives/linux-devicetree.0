@@ -2,104 +2,107 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE645CA9ED5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07466CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42B1217F5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE6E214B2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:56:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kNXbtHFq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sYLkh9eJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387734AbfKEGuP (ORCPT
+        id S2387590AbfKEG43 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:50:15 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:56612 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387569AbfKEGuO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 01:50:14 -0500
-Received: by mail-pg1-f201.google.com with SMTP id u4so14491461pgp.23
-        for <devicetree@vger.kernel.org>; Mon, 04 Nov 2019 22:50:14 -0800 (PST)
+        Tue, 5 Nov 2019 01:56:29 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39635 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387550AbfKEG42 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 01:56:28 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 29so2032069pgm.6
+        for <devicetree@vger.kernel.org>; Mon, 04 Nov 2019 22:56:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=uOGehhWZgUVKoLCu9uPvy6GNYBcrgHwxU8kr8wE+agE=;
-        b=kNXbtHFqBug+/oU8bSdHAs+qVLw4TxE9aiRKiowEJ21d0hfBCS6YHf/kqC5JAviop6
-         ZELVuK1m500L8/nK08PErToeZYzfk4mHeZo5UvmKYPXkb9eLidNex7+SYhvOC953oNn3
-         b+Kih+0HggJ4LjnpQwgSVisfSXxky5OPZuh/cz7u8F7X06dRI44sQVjACCIHmzada2gV
-         9NIQUNHYW/HeRo6MIc5ur9zwHv/Ku4B0xkGa4k9vNz6JjEeJcDmet/pdaF28PEPRFNIu
-         bNVKzrAMbpw4Kvgl0/yKVBxhLV9nzB7ZyMovUx3BILktQy4L+ADiidSYmMaGSKwlvqc3
-         UEPQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ov53IhqY+y2u5I+jv06ZVDSheZi0X6lfhJFxD0jJ1jY=;
+        b=sYLkh9eJyOp3PyVAMRShFJBgV1u3OrLWHhznBG/lzdcqiGFWBpMogdewuNIZ3W3Aya
+         ypLA2lOiSwS7Mha8F74R9we2LjzymNASflKZGpVmyMj53Piod7y5wFvSaOEFK8NTIqzX
+         e98lI5w7K8FqOpp1Po8LPB+KCLElA32LZ59m8Q9kj09uLtL6/pZDGNms0qOh+stWZvZ7
+         50KtkyGhiw2X9OTLkgY/wnVfuHo6DXt34Be2bWVmGsnb5BajtNdRyIo+awmobq0fbO6m
+         /576r3DcKQV0OAk9cEOOfxTloL5WzxdlqLvM5aZ0rI5paZdh8hZIR4yK1bv1JeuiL5VE
+         nllQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=uOGehhWZgUVKoLCu9uPvy6GNYBcrgHwxU8kr8wE+agE=;
-        b=nAzSOVwN9q3gwIPBT+hZlk0v6FYAFKc3Kj2vSUhRtxZd99egg0rwdlCuFnYSMhbKey
-         sGOMX9MFgS61RuUXYm4OWCfBKWWPHjrsuIlRivirdnmDwcwRlC4ZoTGElBR72LESZD3l
-         vHa2Ql7CDyLjD8rc3VeXjaeXW0dD30jjUNyQuLJzhyr1vJ3Im3Eb6k7bM7cMZQcf/rH4
-         0Xza8+fRz3a6q2FZbLtMgGl5NjWCZ8GJJ0lEbXbY3ztCR4hVEk4c+Bx1/Okn00VQwUM6
-         Q2q+N/CWV7p1xCXErfaChnzjTUm11zdXOR6L+BZvR2rBu9WnIsxXuFDRCph/iqEz18/P
-         GiJA==
-X-Gm-Message-State: APjAAAU3LeV5rsXphxUGYtRsqxsre++eqgXaPeWjDv1qIddak1esQDU1
-        Ju7pmkPjEaXNxj5mNmLrmsBgP6xPrLw+TS0=
-X-Google-Smtp-Source: APXvYqxH7DTIrxXLzr6jLIklHMp5HeuCMdHVPfadC/hCVXWPxQo+eNZe9jARv5mXlPGzx8C3yGjcz4nA9zmOrU8=
-X-Received: by 2002:a65:4c41:: with SMTP id l1mr35228412pgr.163.1572936613516;
- Mon, 04 Nov 2019 22:50:13 -0800 (PST)
-Date:   Mon,  4 Nov 2019 22:50:00 -0800
-In-Reply-To: <20191105065000.50407-1-saravanak@google.com>
-Message-Id: <20191105065000.50407-4-saravanak@google.com>
-Mime-Version: 1.0
-References: <20191105065000.50407-1-saravanak@google.com>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH v1 3/3] of: property: Add device link support for iommus,
- mboxes and io-channels
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ov53IhqY+y2u5I+jv06ZVDSheZi0X6lfhJFxD0jJ1jY=;
+        b=Gr1CndFsCLUBFppkr+UJSkoieRX6IVF2uad6vVzlBVcPlZ2Xau30/CAWyf9bLwL+ZY
+         zS3FmJvmLxD9NetTq8QbFH9KlcAisgXpmzRxgNaCibxqAnfXupSwaHgu4eaDl2/czxCN
+         W0QSno0bmhyaeh0KDFx99VsMnz3+RiFaSQTZ0asnGt6Gq7hFbh0D6Z7/py2oYbptt165
+         NltFVpr0h2Kua9v1916GEDdR4rghKgvaFChwpccPvUqib1Si2H9l0kZq87VMdIqm14QZ
+         uB6wkPFq4zFuxPuq31EJ5WBeNXbvRQI2r5o6ZPWqu3/UuCWTS21zAYmZ7m2ZlkJ9xBfw
+         pxIw==
+X-Gm-Message-State: APjAAAWXFbyNsc4vbwGVI9UIYEgMg5xcOf/UObR+lwJzbLM8b6netrye
+        NLxd9kgcC/oSGIwTiFmhyxqZk5Ekz6I=
+X-Google-Smtp-Source: APXvYqziJLDh7KltXxceWTUbGJJMReFbby2FRl5eOFtHFG7ihNZWZjPXD1U+iFBCnM+RPj2q5kPBAw==
+X-Received: by 2002:a62:61c4:: with SMTP id v187mr35889736pfb.23.1572936988079;
+        Mon, 04 Nov 2019 22:56:28 -0800 (PST)
+Received: from localhost ([122.171.110.253])
+        by smtp.gmail.com with ESMTPSA id y16sm19426905pfo.62.2019.11.04.22.56.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Nov 2019 22:56:27 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:26:21 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Andrew-sh Cheng =?utf-8?B?KOmEreW8j+WLsyk=?= 
+        <andrew-sh.cheng@mediatek.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Fan Chen =?utf-8?B?KOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [v4, 6/8] PM / OPP: Support adjusting OPP voltages at runtime
+Message-ID: <20191105065621.iq6lp74tydrneshk@vireshk-i7>
+References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20190819111836.5cu245xre6ky6xav@vireshk-i7>
+ <1572595738.6939.7.camel@mtksdaap41>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572595738.6939.7.camel@mtksdaap41>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for creating device links out of more DT properties.
+On 01-11-19, 16:08, Roger Lu wrote:
+> I've studied opp/core.c and still don't know meaning of triplet here.
+> Could you give me more hints (reference API?) about how to take a
+> triplet instead? Thanks in advance.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/of/property.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I was hoping you to follow this thread :)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 812b69a029d1..0fa04692e3cc 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1185,11 +1185,17 @@ struct supplier_bindings {
- 
- DEFINE_SIMPLE_PROP(clocks, "clocks", "#clock-cells")
- DEFINE_SIMPLE_PROP(interconnects, "interconnects", "#interconnect-cells")
-+DEFINE_SIMPLE_PROP(iommus, "iommus", "#iommu-cells")
-+DEFINE_SIMPLE_PROP(mboxes, "mboxes", "#mbox-cells")
-+DEFINE_SIMPLE_PROP(io_channels, "io-channel", "#io-channel-cells")
- DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
- 
- static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_clocks, },
- 	{ .parse_prop = parse_interconnects, },
-+	{ .parse_prop = parse_iommus, },
-+	{ .parse_prop = parse_mboxes, },
-+	{ .parse_prop = parse_io_channels, },
- 	{ .parse_prop = parse_regulators, },
- 	{}
- };
+https://lore.kernel.org/linux-arm-kernel/20191016145756.16004-2-s.nawrocki@samsung.com/
+
+I already applied this patch to the OPP tree.
+
 -- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
-
+viresh
