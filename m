@@ -2,138 +2,126 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABDDCA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 05:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FD6CA9ED0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 05:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18A5206BA
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 05:42:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="UX+opKRz"
+	by mail.kernel.org (Postfix) with ESMTP id 0934020818
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 05:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387409AbfKEFmc (ORCPT
+        id S1727291AbfKEFvB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 00:42:32 -0500
-Received: from gateway24.websitewelcome.com ([192.185.50.45]:26537 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387399AbfKEFmc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 00:42:32 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id BAEB43CAD
-        for <devicetree@vger.kernel.org>; Mon,  4 Nov 2019 23:42:30 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id Rrbqihw16BnGaRrbqiKdr6; Mon, 04 Nov 2019 23:42:30 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=H+g7AYW8DqVIzvI+3N37//r3zkgiBk8GNs4olp1Yr9M=; b=UX+opKRzmQ0hfBrmm+lBq0dIxc
-        DgyS9mzqzhkYaQH9CWi9xVly43fnuIOkyxbGVzFFRdzNJQ3IAxApg/B4U20ygvHCIdSoy9r4she+o
-        5WDIioGMPtaQAnaUEwGSZmY+P7yq6KV01SG2yBEYfwvZg7Jl4mPyJUGFRMkkPXosb+kG0ND47a8hZ
-        VlnttIq9G29vYH5PbyFRmV8Z2uU4ugQtDopggFYbXP0L3U+IneO4UlM8VLUWsTBPMUbIJojzO58cN
-        b3DVADXZh5B4tVRh0aUB8vJAAx/TY7dzn8Un0SXk4oYNhIyQx2VrR9jkQckvktdZ9WKLuhZMF9/ps
-        BD8+fODg==;
-Received: from [191.31.196.28] (port=37450 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iRrbp-002sjK-Ve; Tue, 05 Nov 2019 02:42:30 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v5 2/5] dt-bindings: power: supply: Max17040: Add DT bindings for max17040 fuel gauge
-Date:   Tue,  5 Nov 2019 02:42:15 -0300
-Message-Id: <20191105054218.29826-3-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191105054218.29826-1-matheus@castello.eng.br>
-References: <20191105015827.GA332@bogus>
- <20191105054218.29826-1-matheus@castello.eng.br>
+        Tue, 5 Nov 2019 00:51:01 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:50743 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfKEFvB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 00:51:01 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id CFDB93C0588;
+        Tue,  5 Nov 2019 06:50:56 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id SGKHH59H7g6m; Tue,  5 Nov 2019 06:50:51 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 2F7D23C0585;
+        Tue,  5 Nov 2019 06:50:51 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 5 Nov 2019
+ 06:50:50 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        <linux-mmc@vger.kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Pavel Machek <pavel@ucw.cz>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: [PATCH 1/3] dt-bindings: mmc: Add 'fixed-emmc-driver-type-hs{200,400}'
+Date:   Tue, 5 Nov 2019 06:50:13 +0100
+Message-ID: <20191105055015.23656-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.196.28
-X-Source-L: No
-X-Exim-ID: 1iRrbp-002sjK-Ve
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.196.28]:37450
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 39
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.93.184]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Documentation of max17040 based fuel gauge characteristics.
-For configure low level state of charge threshold alert signaled from
-max17043/max17044 we add "maxim,alert-low-soc-level" property.
+A certain eMMC manufacturer provided below requirement:
+ ---snip---
+ Use "drive strength" value of 4 or 1 for HS400 or 0 for HS200.
+ ---snip---
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+The existing "fixed-emmc-driver-type" property [1] is the closest one
+to implement the above, but it falls short due to being unable to define
+two values to differentiate between HS200 and HS400 (both modes may be
+supported by the same non-removable MMC device).
+
+To allow users to set a preferred HS200/HS400 "drive strength", provide
+two more bindings inspired from [1]:
+ - fixed-emmc-driver-type-hs200
+ - fixed-emmc-driver-type-hs400
+
+For more details about eMMC I/O driver strength types, see Jedec spec.
+Keep "fixed-emmc-driver-type" in place for backward compatibility.
+
+[1] commit 6186d06c519e21 ("mmc: parse new binding for eMMC fixed driver type")
+
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 ---
- .../power/supply/max17040_battery.txt         | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+ .../bindings/mmc/mmc-controller.yaml          | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-new file mode 100644
-index 000000000000..f2d0b22b5f79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-@@ -0,0 +1,33 @@
-+max17040_battery
-+~~~~~~~~~~~~~~~~
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+index 080754e0ef35..1c64b14f91a3 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
++++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+@@ -248,6 +248,24 @@ properties:
+       the driver type as specified in the eMMC specification (table
+       206 in spec version 5.1)
+ 
++  fixed-emmc-driver-type-hs200:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 4
++    description:
++      Same as "fixed-emmc-driver-type", but specific to HS200 mode.
++      If defined, overrides "fixed-emmc-driver-type" in HS200 mode.
 +
-+Required properties :
-+ - compatible : "maxim,max17040" or "maxim,max77836-battery"
-+ - reg: i2c slave address
++  fixed-emmc-driver-type-hs400:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 4
++    description:
++      Same as "fixed-emmc-driver-type", but specific to HS400 mode.
++      If defined, overrides "fixed-emmc-driver-type" in HS400 mode.
 +
-+Optional properties :
-+- maxim,alert-low-soc-level :	The alert threshold that sets the state of
-+ 				charge level (%) where an interrupt is
-+				generated. Can be configured from 1 up to 32
-+				(%). If skipped the power up default value of
-+				4 (%) will be used.
-+- interrupts : 			Interrupt line see Documentation/devicetree/
-+				bindings/interrupt-controller/interrupts.txt
-+- wakeup-source :		This device has wakeup capabilities. Use this
-+				property to use alert low SOC level interrupt
-+				as wake up source.
-+
-+Optional properties support interrupt functionality for alert low state of
-+charge level, present in some ICs in the same family, and should be used with
-+compatible "maxim,max77836-battery".
-+
-+Example:
-+
-+	battery-fuel-gauge@36 {
-+		compatible = "maxim,max77836-battery";
-+		reg = <0x36>;
-+		maxim,alert-low-soc-level = <10>;
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+		wakeup-source;
-+	};
---
-2.24.0.rc2
+   post-power-on-delay-ms:
+     allOf:
+       - $ref: /schemas/types.yaml#/definitions/uint32
+@@ -336,6 +354,8 @@ patternProperties:
+ dependencies:
+   cd-debounce-delay-ms: [ cd-gpios ]
+   fixed-emmc-driver-type: [ non-removable ]
++  fixed-emmc-driver-type-hs200: [ non-removable ]
++  fixed-emmc-driver-type-hs400: [ non-removable ]
+ 
+ examples:
+   - |
+-- 
+2.23.0
 
