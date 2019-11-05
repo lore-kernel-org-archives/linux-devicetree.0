@@ -2,141 +2,77 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DD9C17460
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FBCC1747C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDDA21D71
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572961719;
-	bh=jcvmqK0w1Iqo7UHWSqlXcYUsc1MVhw6hDCOK8MEqwCg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=R+A74IdPIhgmeij5UD0Jc7mnyoStoIkzRqtRF9XzDr7br+2NMXwBPPqWOGYbCpbwO
-	 WHKgEhg+NKSp0tG6LnrFNeQ0HoYEw1NN0y5nm/0un+ceUu6YqE2Lr8cZ92suh0jdoP
-	 eK6K4eXFVwXbzuSM5GPVgygtqczyNDXJCwyG93II=
+	by mail.kernel.org (Postfix) with ESMTP id B801B21928
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389271AbfKENsg (ORCPT
+        id S2387789AbfKENxX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:48:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388860AbfKENsg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:48:36 -0500
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A896B21D7D;
-        Tue,  5 Nov 2019 13:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572961714;
-        bh=jcvmqK0w1Iqo7UHWSqlXcYUsc1MVhw6hDCOK8MEqwCg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AhinqTDuo41At9YuFlREsi13iiVAadcH+Y0UvuUBQRL4IZ1LjDYUcm1AZwvWH0Kj7
-         YyHpkmgKTs7ja8ujol11v++RNWXZaZIdNyUDB4y4e808lH7zHSFVKDyKIzuI4uUEG+
-         BQM8PvO/uiDvEGUK6rC4iZlCfs+sIAGQ2ZzGvvFg=
-Received: by mail-qk1-f182.google.com with SMTP id a18so3487544qkk.7;
-        Tue, 05 Nov 2019 05:48:34 -0800 (PST)
-X-Gm-Message-State: APjAAAV2dvzIz7Pd/Pq7kgtqv2fHoX114DLATt8KBHgXcFoe4PEJk7yZ
-        trkEctje0o3pZDAEue7gavoD+Xv92QD2wllM8A==
-X-Google-Smtp-Source: APXvYqzaZcSGoONsXuXI03XKrd01Y+KIO7axdLFPshVUra0eJ0zk30JGENPxby1o+H2VvHyAMjsceN4vqKFeusCInUk=
-X-Received: by 2002:a37:4904:: with SMTP id w4mr21044984qka.119.1572961713720;
- Tue, 05 Nov 2019 05:48:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20191103220801.10666-1-paul@crapouillou.net> <CAL_Jsq+aSXPT-vmHbDLygO0G3RmM3svTeS+S5FKKjj_Auf3gPw@mail.gmail.com>
- <1572945391.3.1@crapouillou.net>
-In-Reply-To: <1572945391.3.1@crapouillou.net>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 5 Nov 2019 07:48:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJDT71eThy43kaN3RsU03Ew7aZ_abJg0zhaFxyDH9RhhA@mail.gmail.com>
-Message-ID: <CAL_JsqJDT71eThy43kaN3RsU03Ew7aZ_abJg0zhaFxyDH9RhhA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: power/supply: Document generic USB charger
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Sebastian Reichel <sre@kernel.org>,
+        Tue, 5 Nov 2019 08:53:23 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38711 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388000AbfKENxX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 08:53:23 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRzGm-0001vT-7A; Tue, 05 Nov 2019 14:53:16 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRzGk-0007sU-H8; Tue, 05 Nov 2019 14:53:14 +0100
+Date:   Tue, 5 Nov 2019 14:53:14 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        od@zcrc.me
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
+Message-ID: <20191105135314.f7clp7itzcioxtbw@pengutronix.de>
+References: <20191105131456.32400-1-peron.clem@gmail.com>
+ <20191105131456.32400-3-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191105131456.32400-3-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 3:16 AM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Hi Rob,
->
->
-> Le lun., nov. 4, 2019 at 07:52, Rob Herring <robh+dt@kernel.org> a
-> =C3=A9crit :
-> > On Sun, Nov 3, 2019 at 4:08 PM Paul Cercueil <paul@crapouillou.net>
-> > wrote:
-> >>
-> >>  Add documentation about the devicetree bindings for the generic USB
-> >>  charger.
-> >
-> > What makes it generic?
->
-> It only uses the USB PHY subsystem, which already has some half-baked
-> support for chargers but not bound to the power-supply subsystem.
->
->
-> >>
-> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>  ---
-> >>   .../bindings/power/supply/usb-charger.txt     | 24
-> >> +++++++++++++++++++
-> >>   1 file changed, 24 insertions(+)
-> >>   create mode 100644
-> >> Documentation/devicetree/bindings/power/supply/usb-charger.txt
-> >>
-> >>  diff --git
-> >> a/Documentation/devicetree/bindings/power/supply/usb-charger.txt
-> >> b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
-> >>  new file mode 100644
-> >>  index 000000000000..fd46734cb0e5
-> >>  --- /dev/null
-> >>  +++ b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
-> >>  @@ -0,0 +1,24 @@
-> >>  +Generic USB charger bindings
-> >>  +~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>  +
-> >>  +Required properties :
-> >>  + - compatible : should be "usb-charger"
-> >>  + - phys: phandle to the USB PHY
-> >>  +
-> >>  +Example:
-> >>  +
-> >>  +usb_con: extcon {
-> >>  +       compatible =3D "linux,extcon-usb-gpio";
-> >>  +       vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
-> >>  +};
-> >>  +
-> >>  +usb_phy: usb-phy@0 {
-> >>  +       compatible =3D "usb-nop-xceiv";
-> >>  +       #phy-cells =3D <0>;
-> >>  +       extcon =3D <&usb_con>;
-> >
-> > extcon is deprecated in favor of usb-connector binding. See
-> > .../bindings/connector/usb-connector.txt. There's also some pending
-> > patches for adding GPIO based connector controls including Vbus sense
-> > (GPIO input) and control (regulator via a GPIO).
-> >
-> > Rob
->
-> I understand that the usb-connector binding is better, but the current
-> code doesn't integrate at all with the USB PHY subsystem, which has its
-> own code to handle ID and VBUS GPIOs and supports notifiers. Is that
-> deprecated then?
->
-> What's the big picture here?
+On Tue, Nov 05, 2019 at 02:14:51PM +0100, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> H6 PWM core needs deasserted reset line in order to work.
+> 
+> Add an optional probe for it.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Does this series work for you?:
+Thanks
+Uwe
 
-https://patchwork.kernel.org/cover/11120707/
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
