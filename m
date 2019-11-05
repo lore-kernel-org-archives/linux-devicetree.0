@@ -2,114 +2,88 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D542FCA9ED3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 01:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E45ACA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 01:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A832820717
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 01:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="sqK+qum0"
+	by mail.kernel.org (Postfix) with ESMTP id 1F0CD20717
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 01:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572918550;
+	bh=r3WQrk84jPPxhTeFH4hhfL76QR7dyoujo6QWsvP56mk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=re5pN8gha7MzfMMxbY2qFim6nVVg93jRd9CgmyX3rN+rdj2/Lfvem+HwUQ9Rk/Xtq
+	 sTIHadjkv17CtAHo7N1YwliVu7qHU265VoO9G9jtvakNEHQP/9HDJtHX1Sy3AyO++D
+	 U4LutNsM3ieKvLN5QwBtbqgtmK+4P/kS9bkZKiD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfKEBpL (ORCPT
+        id S1729796AbfKEBtJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 20:45:11 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:48836 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728987AbfKEBpK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 20:45:10 -0500
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id xA51io3R031758;
-        Tue, 5 Nov 2019 10:44:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xA51io3R031758
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572918291;
-        bh=US7HnlfbUATMZewUXcHUmKQ8vx87uqsdcAQJeWxPmP8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sqK+qum0s/ofCdio6VkD6ITJtwUT7fjxl1ZAhXzvq4PcS3Imp5mJO5moUHJ0njMw6
-         2cDWiWKm5mQf6pO1Y5LyzrUIscWWiO+D5JbBITc3ApVvi37LdY4t8iUkt5mC8Z6upN
-         31AmvCcO3U5b9uk7NIAtYSAtunMDnmGyM6AljC6eHyn5gCS3GESYovlu0syXuNAFHI
-         lJVhMjZ2X/mnyO7Y9clvM8f+3iKNNrJirc0Z29vM34Sp/RbkWj1ww2YzY57byMe+Yi
-         +SZFUaiqOaHHuHhtTzPXS8DVzWfDQSSMsq/0mMa5DP1/+TfoOfK9gEdqhCpMEsT1Eo
-         gvqqH3NaN3V6A==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id s25so1259149uap.1;
-        Mon, 04 Nov 2019 17:44:51 -0800 (PST)
-X-Gm-Message-State: APjAAAWG2jJVZz6155TrG00fBQNZULcSgW2ZcsT1eptPmN9UXatM5URj
-        VPjSPoYiYYLWOIjmpVJIiH3+4E2S52i64jpDlCg=
-X-Google-Smtp-Source: APXvYqyAJwLfrsdrDuFC5DkDPl6kKaEgQE1dM2uxxz+hFwYzm6LlI63Y2XVEPHBoyeEM8Nncmazv6eanPEcWgTNMMWA=
-X-Received: by 2002:a9f:3e81:: with SMTP id x1mr13534695uai.121.1572918290038;
- Mon, 04 Nov 2019 17:44:50 -0800 (PST)
+        Mon, 4 Nov 2019 20:49:09 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43923 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729781AbfKEBtJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 20:49:09 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l14so1924959oti.10;
+        Mon, 04 Nov 2019 17:49:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hlVzf6PgNkFlTYTpcjjgSLO975l5JkVV5k5/cMONFVk=;
+        b=Wfpj9PCbMqkcnpHHKubgqEdTzAkhaeqmYDe0tnHsDZ7/V/8pDodbGoUi8oFqU0ivqK
+         Fd8RGOsL31lWXQ8oj4XQJQe44iM3bKC2D2hwrkTP+xTsgRCEhxbHWoJNE0QROuLC4zNx
+         kVOW0BvaXGGw9A999J8bW/5BECQ01IiGTvVC3/9VG7N1HUWoA29aez9MaZGCsa6dKnzD
+         wKSklOlSFwiEtV0y8YYCuYrkcBR1ukpQwKl6PnBLku1P2uKDnHx/fPsZcC5lhQxGIpb4
+         0/ZPJNkdIz9DYhrJ132rsCu6iR7S7O1rjwiKIoNBu21zBHYIJCfSdSk7GGIrZi3UqcoL
+         kB3Q==
+X-Gm-Message-State: APjAAAVX1p/L0z3GTrR3FEtYLEbrdQZMZTjWI4NUNnxPuovpcgGzWHAT
+        N85YmPFqM57LZYtd9PJGrw==
+X-Google-Smtp-Source: APXvYqxmSwLREneFxL2iChIptQVtsinbuf+3c/76RepT4oB0/BK9ayp+PNO4bYzLHlq06MWKq7ivrw==
+X-Received: by 2002:a9d:6b90:: with SMTP id b16mr4509521otq.37.1572918548251;
+        Mon, 04 Nov 2019 17:49:08 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v26sm2040889oic.5.2019.11.04.17.49.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 17:49:07 -0800 (PST)
+Date:   Mon, 4 Nov 2019 19:49:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, vkoul@kernel.org, broonie@kernel.org,
+        bgoswami@codeaurora.org, pierre-louis.bossart@linux.intel.com,
+        devicetree@vger.kernel.org, lgirdwood@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: soundwire: add bindings for Qcom
+ controller
+Message-ID: <20191105014906.GA32550@bogus>
+References: <20191030153150.18303-1-srinivas.kandagatla@linaro.org>
+ <20191030153150.18303-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-References: <20191101061411.16988-1-yamada.masahiro@socionext.com>
- <20191101061411.16988-2-yamada.masahiro@socionext.com> <CAL_JsqJbmFd5wZ0RCP2baqv-bjWwzaJ+hLqtGeYjK5LPJ54dXA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJbmFd5wZ0RCP2baqv-bjWwzaJ+hLqtGeYjK5LPJ54dXA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 5 Nov 2019 10:44:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAThTaHpCWgGyx=qh6v7CsL6DAWfvE1g_jsNcGe-K5e_gA@mail.gmail.com>
-Message-ID: <CAK7LNAThTaHpCWgGyx=qh6v7CsL6DAWfvE1g_jsNcGe-K5e_gA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] libfdt: add SPDX-License-Identifier to libfdt wrappers
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Daney <david.daney@cavium.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030153150.18303-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-(+CC: David Daney)
+On Wed, 30 Oct 2019 15:31:49 +0000, Srinivas Kandagatla wrote:
+> This patch adds bindings for Qualcomm soundwire controller.
+> 
+> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+> either integrated as part of WCD audio codecs via slimbus or
+> as part of SOC I/O.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../bindings/soundwire/qcom,sdw.txt           | 179 ++++++++++++++++++
+>  1 file changed, 179 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+> 
 
-On Mon, Nov 4, 2019 at 11:00 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Nov 1, 2019 at 1:19 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > These are kernel source code even though they are just two-line wrappers.
-> >
-> > Files without explicit license information fall back to GPL-2.0-only,
-> > which is the project default.
->
-> That is true and these are kernel only files, but given they are just
-> a wrapper around the .c files, maybe they should have the same
-> license?
-
-
-I just thought it at first
-but this wraps two files, with different license.
-
-include/linux/libfdt_env.h:  GPLv2 only
-scripts/dtc/libfdt/fdt*.c :  GPLv2+ or BSD-2-Clause
-
-
-Looking at the include/linux/libfdt_env.h,
-I thought GPLv2 only would be preferred for
-the kernel-specific code.
-
-If you prefer to align with scripts/dtc/libfdt/fdt*.c
-I can change it, but I would also respect
-the opinion from David Daney, the author of the
-following commit:
-
-
-commit ab25383983fb8d7786696f5371e75e79c3e9a405
-Author: David Daney <david.daney@cavium.com>
-Date:   Thu Jul 5 18:12:38 2012 +0200
-
-    of/lib: Allow scripts/dtc/libfdt to be used from kernel code
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Reviewed-by: Rob Herring <robh@kernel.org>
