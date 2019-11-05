@@ -2,174 +2,104 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BC5C17471
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B85C17476
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603A021928
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27968222C4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3YD4Ug7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mmSF+IAU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389167AbfKENPW (ORCPT
+        id S2388992AbfKENYb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:15:22 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52333 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388945AbfKENPF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 08:15:05 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c17so13507734wmk.2;
-        Tue, 05 Nov 2019 05:15:03 -0800 (PST)
+        Tue, 5 Nov 2019 08:24:31 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37421 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389086AbfKENYb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 08:24:31 -0500
+Received: by mail-lf1-f65.google.com with SMTP id b20so15117881lfp.4
+        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 05:24:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DFpznEDpNoqbmapZynyzmsx8KHYXXRH6cqD0i8XMxAs=;
-        b=f3YD4Ug76oHoUiN2crsPXDr3EPqby4+c3lsOUMycDhYNq/6o4SNBSto4xo+qsJAwx3
-         Zol/D6WTEF5MjdbCemPv4t29kj/WxcDBW7dtegaY7sCh7B2DYPqbQmm2uAAdA9PolHl3
-         IgiUuJwwNkd8xpU9S2QQxN3hvuI3AbpYvrvZuZ7c6Aa8wedCqkA+lC+CfUeGCSNw4e17
-         y69oRLohtZEtA5pIeBk/9WtzIaf2S0VMULc9fc+xCancs6LArLYHor6ZihYeQ3JfzkOr
-         U6j3UZE8HlOxHVyMNtm8UqiUgLWd6k6oMeiy7UtLOlcSaPVbWB+ijzW8qfAAh5aIrImD
-         rCng==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OriTvqKjGZz26vq3sX+0nz0hNVWCQx915SM+y16L4zI=;
+        b=mmSF+IAUX1udzNA10gxQDs4IVguwwokEurVOW3StfXUANAJNYQv4/+zWORcXWFMJz6
+         m8BMOmIIg6IdlyXqx/JOil3Nbe1GQJOjv3TKF4sU9Y8IhkaCAxvvuN9OIs6XmIOXlhaV
+         3yDCu8ShhTKAlUTHth4u2KT53qkmJ5SC02XPDZHD1F7NmyWDtGHSU+gmVOKet8p9J0tg
+         tOUcealyAZisw9u0YxSTwLwJi9mNZL5v3AiyePab1IAJp9k9ulTtGJUtUmXfCzS/M3vK
+         ttjdpKUqRtjmkL88v5AmTh1EY7ErppJQbMgbmt1rENGRy7NzGgSd1ie29VbCA1Ll9hDA
+         riGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DFpznEDpNoqbmapZynyzmsx8KHYXXRH6cqD0i8XMxAs=;
-        b=aprZpJzAmyHRv3uPHdIAX6YdhWp0FwutXdzkiXjzYPM9HmYRM7noyIL7vUP9PxoXd7
-         b4Oy1BKKNQuCLsH4LFtnr4fVSuauhmruZUQuKrdM1cTEDK7kr8Fm/y9fUXSijdlSP/5O
-         8hxCXasGfYQZQPU1iD+YN+8CjyEHnV4pKOHbItNNF5En4RZbvAtygBwMDo1axdUbnkM3
-         kCh78cr8090eKyMX94Zhug/tySAuj/xTF7CAKZfRkiuEgFbv3EjmK6gSWfy88Jy2ol4F
-         gEu2Wc1NT5VfQfN9qSUsQI57+PIZIuqm1y6ZRBmt47m9x6wFZCV3jO1kx1lRE3CfUxPJ
-         oGuA==
-X-Gm-Message-State: APjAAAVbXOq/XjR77X2O+Ao947tjHP9dnaxmhOt4fcOSQMuPNrJ2juI6
-        BC6utZv4G6JkX5h+qSGmo1FCUxlW6/3dUw==
-X-Google-Smtp-Source: APXvYqyytLo0hQuO6sVxwOrnNs0IMG5xvWjRMfkyUlPHv/0jVyEk1u++gI1pakSzxaECVGMTFnJaFA==
-X-Received: by 2002:a7b:c632:: with SMTP id p18mr4219706wmk.73.1572959702668;
-        Tue, 05 Nov 2019 05:15:02 -0800 (PST)
-Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id a6sm13549920wmj.1.2019.11.05.05.15.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 05:15:02 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?=27Uwe=20Kleine-K=C3=B6nig=27?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
-Date:   Tue,  5 Nov 2019 14:14:51 +0100
-Message-Id: <20191105131456.32400-3-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191105131456.32400-1-peron.clem@gmail.com>
-References: <20191105131456.32400-1-peron.clem@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OriTvqKjGZz26vq3sX+0nz0hNVWCQx915SM+y16L4zI=;
+        b=DlyjEcBrda7u22oUk33NLp1u5Pk5nbDknN8EQGrBz6LzvPhfR8aNgQtEF9Xzndpau+
+         amnJN3DiNUjerzN22U47DeZdwQs5nL1qy1NeMojgNlNo4MLfHW6rjmIFuEl3wzihorAk
+         SisciDm9p8VHhmHoZMl88oJuuTOdrkuvTsZ4YaB2jxvVTK+19tb+zZZ9IWpae3bsR0Ty
+         pOJO6SDkPHVtdU7uCqX0sOYbGeAkac3U7L2JunnUrnLICKAh8UH8Au9tay3p5LLLrTRE
+         Dx3DpH+E+FM12OACVUVocigMT4W1Te7oabnfNDayqwP+eyaVpMQZ9ELKdnEUhvoBG2AH
+         mPQw==
+X-Gm-Message-State: APjAAAWS0yertpn6DhdJbMv3x7rGg2XT00UhP1SGcKbhcnEvqpZeAt34
+        9pPD9HGEhpBabhucRNcnSCxs6/jrfqPtiRw4GpZf+A==
+X-Google-Smtp-Source: APXvYqzoypaV1FwIebV/f2TxtU2nRgrE/Ebq2efFlxTgxI/d4F0Qe39na0QD1eDLDWhk898Dgs+NBvY32AC34gSuqMc=
+X-Received: by 2002:ac2:5295:: with SMTP id q21mr20306882lfm.93.1572960267714;
+ Tue, 05 Nov 2019 05:24:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com> <1550472ac1e105bd38da25803358cfbc0404bf38.camel@fi.rohmeurope.com>
+In-Reply-To: <1550472ac1e105bd38da25803358cfbc0404bf38.camel@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Nov 2019 14:24:15 +0100
+Message-ID: <CACRpkdYkgEg=4H9tQQrVcvx1xtETYD_cHxhqd-BW6g67jpEeEg@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based run-level
+ control for regulators
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+On Mon, Nov 4, 2019 at 8:05 AM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> On Sun, 2019-11-03 at 23:27 +0100, Linus Walleij wrote:
 
-H6 PWM core needs deasserted reset line in order to work.
+> > I do not understand the regulator parts of the patch.
+>
+> I'm sorry. The patch is not clearest one what comes to the regulator
+> stuff. I can try splitting it to smaller and more logical changes if
+> you, Mark or other interested people hope to get it splitted. Or
+> perhaps it would be simplest to review if it was all in one patch?
 
-Add an optional probe for it.
+As long as the regulator experts are happy with the format,
+stay with that. I am just a drive-by coder when it comes to regulators.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- drivers/pwm/pwm-sun4i.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 6f5840a1a82d..9ba83769a478 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -16,6 +16,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/time.h>
-@@ -78,6 +79,7 @@ struct sun4i_pwm_data {
- struct sun4i_pwm_chip {
- 	struct pwm_chip chip;
- 	struct clk *clk;
-+	struct reset_control *rst;
- 	void __iomem *base;
- 	spinlock_t ctrl_lock;
- 	const struct sun4i_pwm_data *data;
-@@ -365,6 +367,21 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pwm->clk))
- 		return PTR_ERR(pwm->clk);
- 
-+	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
-+	if (IS_ERR(pwm->rst)) {
-+		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "get reset failed %ld\n",
-+				PTR_ERR(pwm->rst));
-+		return PTR_ERR(pwm->rst);
-+	}
-+
-+	/* Deassert reset */
-+	ret = reset_control_deassert(pwm->rst);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Cannot deassert reset control\n");
-+		return ret;
-+	}
-+
- 	pwm->chip.dev = &pdev->dev;
- 	pwm->chip.ops = &sun4i_pwm_ops;
- 	pwm->chip.base = -1;
-@@ -377,19 +394,31 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	ret = pwmchip_add(&pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
--		return ret;
-+		goto err_pwm_add;
- 	}
- 
- 	platform_set_drvdata(pdev, pwm);
- 
- 	return 0;
-+
-+err_pwm_add:
-+	reset_control_assert(pwm->rst);
-+
-+	return ret;
- }
- 
- static int sun4i_pwm_remove(struct platform_device *pdev)
- {
- 	struct sun4i_pwm_chip *pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pwm->chip);
-+	if (ret)
-+		return ret;
-+
-+	reset_control_assert(pwm->rst);
- 
--	return pwmchip_remove(&pwm->chip);
-+	return 0;
- }
- 
- static struct platform_driver sun4i_pwm_driver = {
--- 
-2.20.1
-
+Yours,
+Linus Walleij
