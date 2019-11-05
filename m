@@ -2,209 +2,169 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88D5C010A2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C6EC010CF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 12:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806B621D6C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:25:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I+dmdAeF"
+	by mail.kernel.org (Postfix) with ESMTP id 1697E21929
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 12:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730789AbfKELZl (ORCPT
+        id S2388098AbfKEMFU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:25:41 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45934 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfKELZl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 06:25:41 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5BPSg5130466;
-        Tue, 5 Nov 2019 05:25:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572953128;
-        bh=AEgu6ZAqguAaapbiiV7DzXt549748ZM/kqwt+MmCmro=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=I+dmdAeFunPri/YD5MjnkDjm/DGTwJ0EE/cOVYCF7gW9G7dS0nPoS33WZKb21kjp9
-         dqrNhCh9ih8XYfrF/71cOZ6R8naU+EM0szTnHAmygD3K1FDcOir6evjeXmuRMswWRa
-         mq7mH/5vOVOPYGwfAjxsN+NA914Hm0VQTUMRxCqg=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5BPRGQ111123
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 05:25:27 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
- 2019 05:25:12 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 05:25:12 -0600
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5BPOH6112622;
-        Tue, 5 Nov 2019 05:25:25 -0600
-Subject: Re: [PATCH v4 07/15] dmaengine: ti: k3 PSI-L remote endpoint
- configuration
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lokeshvutla@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
-        <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-8-peter.ujfalusi@ti.com>
- <bbe8e13f-b865-a352-7960-31b2865e5421@ti.com>
- <aca16f7e-1807-188e-8beb-8a086af2869b@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <fbd57252-6782-c038-dced-03b3d776de64@ti.com>
-Date:   Tue, 5 Nov 2019 13:25:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 07:05:20 -0500
+Received: from mga18.intel.com ([134.134.136.126]:22679 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726612AbfKEMFU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 07:05:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 04:05:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
+   d="scan'208";a="200772941"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Nov 2019 04:05:15 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iRxaE-0002I2-MO; Tue, 05 Nov 2019 14:05:14 +0200
+Date:   Tue, 5 Nov 2019 14:05:14 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v3 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ a new SoC
+Message-ID: <20191105120514.GN32742@smile.fi.intel.com>
+References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
+ <02558966005c0483144785ed069b144f81d209a9.1572926608.git.rahul.tanwar@linux.intel.com>
+ <20191105094917.GK32742@smile.fi.intel.com>
+ <61e076de-7b24-b71d-dd79-c1c506a0f1bf@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <aca16f7e-1807-188e-8beb-8a086af2869b@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <61e076de-7b24-b71d-dd79-c1c506a0f1bf@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Nov 05, 2019 at 06:52:52PM +0800, Tanwar, Rahul wrote:
+> On 5/11/2019 5:49 PM, Andy Shevchenko wrote:
+> > On Tue, Nov 05, 2019 at 02:49:42PM +0800, Rahul Tanwar wrote:
 
+> >> +static void eqbr_set_val(void __iomem *addr, u32 offset,
+> >> +			 u32 mask, u32 set, raw_spinlock_t *lock)
+> > This lock parameter is quite unusual. Can't you supply a pointer to a data
+> > structure which has lock along with MMIO address?
+> 
+> On second thoughts, i realize that this function can be totally avoided
+> since it just has two callers which can be further reduced to one caller.
+> I will remove this function and instead do reg update in the caller function
+> itself.
 
-On 05/11/2019 12:27, Peter Ujfalusi wrote:
-> 
-> 
-> On 05/11/2019 12.00, Grygorii Strashko wrote:
->> Hi Peter,
->>
->> On 01/11/2019 10:41, Peter Ujfalusi wrote:
->>> In K3 architecture the DMA operates within threads. One end of the thread
->>> is UDMAP, the other is on the peripheral side.
->>>
->>> The UDMAP channel configuration depends on the needs of the remote
->>> endpoint and it can be differ from peripheral to peripheral.
->>>
->>> This patch adds database for am654 and j721e and small API to fetch the
->>> PSI-L endpoint configuration from the database which should only used by
->>> the DMA driver(s).
->>>
->>> Another API is added for native peripherals to give possibility to
->>> pass new
->>> configuration for the threads they are using, which is needed to be
->>> able to
->>> handle changes caused by different firmware loaded for the peripheral for
->>> example.
->>
->> I have no objection to this approach, but ...
->>
->>>
->>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>> ---
->>>  Â  drivers/dma/ti/KconfigÂ Â Â Â Â Â Â Â  |Â Â  3 +
->>>  Â  drivers/dma/ti/MakefileÂ Â Â Â Â Â Â  |Â Â  1 +
->>>  Â  drivers/dma/ti/k3-psil-am654.c | 172 ++++++++++++++++++++++++++
->>>  Â  drivers/dma/ti/k3-psil-j721e.c | 219 +++++++++++++++++++++++++++++++++
->>>  Â  drivers/dma/ti/k3-psil-priv.hÂ  |Â  39 ++++++
->>>  Â  drivers/dma/ti/k3-psil.cÂ Â Â Â Â Â  |Â  97 +++++++++++++++
->>>  Â  include/linux/dma/k3-psil.hÂ Â Â  |Â  47 +++++++
->>>  Â  7 files changed, 578 insertions(+)
->>>  Â  create mode 100644 drivers/dma/ti/k3-psil-am654.c
->>>  Â  create mode 100644 drivers/dma/ti/k3-psil-j721e.c
->>>  Â  create mode 100644 drivers/dma/ti/k3-psil-priv.h
->>>  Â  create mode 100644 drivers/dma/ti/k3-psil.c
->>>  Â  create mode 100644 include/linux/dma/k3-psil.h
->>>
->>
->> [...]
->>
->>> diff --git a/include/linux/dma/k3-psil.h b/include/linux/dma/k3-psil.h
->>> new file mode 100644
->>> index 000000000000..16e9c8c6f839
->>> --- /dev/null
->>> +++ b/include/linux/dma/k3-psil.h
->>> @@ -0,0 +1,47 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 */
->>> +/*
->>> + *Â  Copyright (C) 2019 Texas Instruments Incorporated -
->>> http://www.ti.com
->>> + */
->>> +
->>> +#ifndef K3_PSIL_H_
->>> +#define K3_PSIL_H_
->>> +
->>> +#include <linux/types.h>
->>> +
->>> +#define K3_PSIL_DST_THREAD_ID_OFFSET 0x8000
->>> +
->>> +struct device;
->>> +
->>> +/* Channel Throughput Levels */
->>> +enum udma_tp_level {
->>> +Â Â Â  UDMA_TP_NORMAL = 0,
->>> +Â Â Â  UDMA_TP_HIGH = 1,
->>> +Â Â Â  UDMA_TP_ULTRAHIGH = 2,
->>> +Â Â Â  UDMA_TP_LAST,
->>> +};
->>> +
->>> +enum psil_endpoint_type {
->>> +Â Â Â  PSIL_EP_NATIVE = 0,
->>> +Â Â Â  PSIL_EP_PDMA_XY,
->>> +Â Â Â  PSIL_EP_PDMA_MCAN,
->>> +Â Â Â  PSIL_EP_PDMA_AASRC,
->>> +};
->>> +
->>> +struct psil_endpoint_config {
->>> +Â Â Â  enum psil_endpoint_type ep_type;
->>> +
->>> +Â Â Â  unsigned pkt_mode:1;
->>> +Â Â Â  unsigned notdpkt:1;
->>> +Â Â Â  unsigned needs_epib:1;
->>> +Â Â Â  u32 psd_size;
->>> +Â Â Â  enum udma_tp_level channel_tpl;
->>> +
->>> +Â Â Â  /* PDMA properties, valid for PSIL_EP_PDMA_* */
->>> +Â Â Â  unsigned pdma_acc32:1;
->>> +Â Â Â  unsigned pdma_burst:1;
->>> +};
->>> +
->>> +int psil_set_new_ep_config(struct device *dev, const char *name,
->>> +Â Â Â Â Â Â Â Â Â Â Â Â Â Â  struct psil_endpoint_config *ep_config);
->>> +
->>> +#endif /* K3_PSIL_H_ */
->>>
->>
->> I see no user now of this public interface, so I think it better to drop
->> it until
->> there will be real user of it.
-> 
-> The same argument is valid for the glue layer ;)
-> 
-> This is only going to be used by native PSI-L devices and the
-> psil_endpoint_config is going to be extended to facilitate their needs
-> to give information to the DMA driver on how to set things up.
-> 
-> I would rather avoid churn later on than adding the support from the start.
-> 
-> The point is that the PSI-L endpoint configuration is part of the PSI-L
-> peripheral and based on factors these configurations might differ from
-> the default one. For example if we want to merge the two physical rx
-> channel for sa2ul (so they use the same rflow) or other things we (I)
-> can not foresee yet.
-> Or if different firmware is loaded for them and it affects their PSI-L
-> configuration.
+Good.
 
-Ok. It's up to you.
+> >> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
+> >> +{
+> >> +	struct gpio_irq_chip *girq;
+> >> +	struct gpio_chip *gc;
+> >> +#if defined(CONFIG_OF_GPIO)
+> >> +	gc->of_node = desc->node;
+> >> +#endif
+> > Isn't it what GPIO library does for everybody?
+> 
+> We have 4 different of_node's for 4 different gpio_chips/banks. GPIO library
+> handles like below:
+> 
+>         if (chip->parent) {
+>                 gdev->dev.parent = chip->parent;
+>                 gdev->dev.of_node = chip->parent->of_node;
+>         }
+> 
+> #ifdef CONFIG_OF_GPIO
+>         /* If the gpiochip has an assigned OF node this takes precedence */
+>         if (chip->of_node)
+>                 gdev->dev.of_node = chip->of_node;
+>         else
+>                 chip->of_node = gdev->dev.of_node;
+> #endif
+> 
+> So i think we need to assign 4 of_node's to gpio_chip's in the driver.
 
-otherwise:
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+OK!
+
+> >> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
+> >> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
+> >> +			 desc->name);
+> > Is it fatal or non-fatal?
+> 
+> It is not fatal. But i am totally missing your point. Is it about
+> dev_info() ? Can you please elaborate more ?
+> 
+> 
+> >> +		return 0;
+> > Ditto.
+
+> >> +	}
+
+If it's fatal, you have to use dev_err() and return an appropriate error code,
+if it's not fatal, switch to dev_warn() in case user has to know that behaviour
+may be quite different, while seems to work in general or dev_dbg() if it's
+only for the developer. dev_info() with return 0 is quite confusing.
+
+> >> +}
+
+> >> +static int eqbr_pinmux_set_mux(struct pinctrl_dev *pctldev,
+> >> +			       unsigned int selector, unsigned int group)
+> >> +{
+> >> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> >> +	struct function_desc *func;
+> >> +	struct group_desc *grp;
+> >> +	unsigned int *pinmux;
+> >> +	int i;
+> >
+> >> +	pinmux = grp->data;
+> >> +	for (i = 0; i < grp->num_pins; i++)
+> >> +		eqbr_set_pin_mux(pctl, pinmux[i], grp->pins[i]);
+> > Shouldn't be this part serialized?
+> >
+> > Same Q to all similar places. I guess I already mentioned this in previous
+> > review.
+> 
+> From serialization, you mean locking..rt ? Yes, there is one writel()
+> statement inthis flow. I will add lock for that statement. Rechecked
+> the code again, i do notfind any other similar places.
+
+You need to clarify what exactly you are serializing.
+When you figure this out, the locking should be done accordingly.
+
+> >> +	return 0;
+> >> +}
+
+> >> +			if (of_property_read_string(np, "function",
+> >> +						    &fn_name)) {
+
+> > It's perfectly one line. Perhaps you may need to configure your text editor.
+> 
+> I am following strict 80 chars limit. This goes on to 81 chars. It's a bit
+> confusing on when to adhere to 80 chars limit and when to bypass it :)
+
+I have checked again, it's exactly 80 characters.
+
+> >> +			}
 
 -- 
-Best regards,
-grygorii
+With Best Regards,
+Andy Shevchenko
+
+
