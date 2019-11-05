@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095FECA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA91CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEEF20663
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F9D217F5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="swKu7CCO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nUl64/xk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387731AbfKEGuK (ORCPT
+        id S2387756AbfKEGuO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:50:10 -0500
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:47517 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387569AbfKEGuJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 01:50:09 -0500
-Received: by mail-pl1-f201.google.com with SMTP id v2so12242527plp.14
-        for <devicetree@vger.kernel.org>; Mon, 04 Nov 2019 22:50:07 -0800 (PST)
+        Tue, 5 Nov 2019 01:50:14 -0500
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:37254 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387734AbfKEGuL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 01:50:11 -0500
+Received: by mail-ua1-f74.google.com with SMTP id d8so3116225uan.4
+        for <devicetree@vger.kernel.org>; Mon, 04 Nov 2019 22:50:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=5TtiPZ8JG3IZB9IHfZXJzJVA9bfv9F4xuxgcwBO6hmE=;
-        b=swKu7CCOFsKCOAmFIWpmsKIU7pduBcL1SqT3rmb98vb6Dxl/uwlwROMOqGkwUNtk+m
-         8Ej14ROYhooPiRond/JSp9GzM+cvW8btlVUnzypeL/CXta0LoH6St5ltAxsj8GK3fuFF
-         moz+FFZXw0aqqeppnltv0t80+cWywykpG+tHir/JF15kbXnHGlxFJAF3wViJmx81JnIq
-         NZX/5oWwR69XfrUdtGAuLr+FHOXwgNXmBrRIpppiwiNSgbArFtp4yLJ675clsmEAdqMA
-         kNRyIR9nIh5ebxV2sPo5OcVDVcp+ME7Z28IxFagQY3oDbYdD4UzOrAQQ84s3GOcWrkyz
-         vsKg==
+        bh=XdaR2+XQAwKYeyNEgWxgp1az1blUC06vkdAbdXcvcHc=;
+        b=nUl64/xkq2h+x/6diTzoYw3dMaLXxsZslGG01jwxj5LvxjCpYCllR+lvA7rqmABjFJ
+         SM3gnWp22AWlSj4qnMJwYQYVJZzHOhku70sbAOjua55kqEBElTQZDJK778I3gAPqGF42
+         toVBq0NAHnaesNNlKD57il/5xFMqGNmw2LL8JTuFCMg5a0Q0WQ0oGLri5a5RGi3wxkFV
+         HIHMVglpq5ylXrLjieRH2tLZQI0AU7beWo2ak3h9u0a9W8u54VgEQfdSNgOtkKKqcmZn
+         nnvGhebvkGwOHCkgd1Fx3p3SeNfQgIrwzvQ/I9LV92v6eTcsRhopwfwE/lj6u01oJStj
+         nznA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=5TtiPZ8JG3IZB9IHfZXJzJVA9bfv9F4xuxgcwBO6hmE=;
-        b=b6w2H2YGS/FeGennAz/XKmfoYnipIJ45ZtcLFq1NNXUY+RfQOapmGrwBpTakWGqDb8
-         kfe9bWgEmcbKRR1MYgt1IoUzHeznzFA2DQQDpMltt8Qgk3Veki3oLrHHFVGW63MiqBMq
-         oGOK4kOjH01svgURtLkY3hHpoHAvBMuFG2AiTTxlL7d+6MKsG8cFXjH5nSOqy3zU9wuu
-         xWS39F4BwXpFbewIjtgcE6B7AXW/cBUMzW/IylI36GcgUJZ1nqSu6TjB2Pdr0jHVPhnK
-         e5JQpBOwibLuFWAVvJijAh2QAKlmDE8YL++xEijuSp2DRPFoAnKK76NcS1pwsCB9F8qh
-         /X8g==
-X-Gm-Message-State: APjAAAVLk0MAb84+DyzZYaodDER1i+bVyRN6V5Ve8xSEbVMFRwHp8IwV
-        9YhtM+FjHBnTaeoyWU6paH0nNjIfQmbiraU=
-X-Google-Smtp-Source: APXvYqwGRo54xKLFvAWpMkEuE+JgzaNYYlCcpLlRiqwkuvcW3Tcs2e3YTm4OBkeH9oUA2q79g2EH8wSrcCPAuQM=
-X-Received: by 2002:a65:654e:: with SMTP id a14mr10978626pgw.170.1572936607242;
- Mon, 04 Nov 2019 22:50:07 -0800 (PST)
-Date:   Mon,  4 Nov 2019 22:49:58 -0800
+        bh=XdaR2+XQAwKYeyNEgWxgp1az1blUC06vkdAbdXcvcHc=;
+        b=sF7kzEGMPuyA8SMHlf8Cu1uol0E4xTvjaCykGBu6FsEc4zCDCa9exYbHZpbvY2wU/e
+         zfw4acDPlltz1shtdarqseNbZF7e4ANJU1Bx4CI36JNQrXTzif0/fJBRMB+MR+hjVzKC
+         Cu+v+67uKfd5P/AdFVBef/uIJCh0j60r3xk/jJdyojBIxWELiundf9N9DSanuOIGpc7z
+         6Cb6v30eJJKefXIB/IZU9Fue37cawtW6L3VP01mVtAzzEPmuH3A+D/cK5lQ+gl8Auh3H
+         fwBlcjdKaMItaEhzOM2t+cKnJSjzaHsMVw0xfqok+3iGPIdJBml2SZFiGVvBgyI5NEoH
+         HEXA==
+X-Gm-Message-State: APjAAAW0rmL24vE7zUIiiLncbtFwkeFGGJJcvQiMii+eeG/DDBY507gg
+        dK3ZxeZu/Ys1dvFKpekyts+yho+h8eGXrYc=
+X-Google-Smtp-Source: APXvYqx7e/3siD7qr54PhuB4erzvgSmw1n5+YeJ5H/aaXcKQQrR94nDyBXh1cmLkpwLvtNOmD9AbdIDevq1S03k=
+X-Received: by 2002:a67:edce:: with SMTP id e14mr14848549vsp.182.1572936610441;
+ Mon, 04 Nov 2019 22:50:10 -0800 (PST)
+Date:   Mon,  4 Nov 2019 22:49:59 -0800
 In-Reply-To: <20191105065000.50407-1-saravanak@google.com>
-Message-Id: <20191105065000.50407-2-saravanak@google.com>
+Message-Id: <20191105065000.50407-3-saravanak@google.com>
 Mime-Version: 1.0
 References: <20191105065000.50407-1-saravanak@google.com>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH v1 1/3] of: property: Minor style clean up of of_link_to_phandle()
+Subject: [PATCH v1 2/3] of: property: Make it easy to add device links from DT properties
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -70,36 +70,107 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adding a debug log instead of silently ignoring a phandle for an early
-device. Also, return the right error code instead of 0 even though the
-actual execution flow won't change.
+Add a DEFINE_SIMPLE_PROP macro to make it easy to add support for simple
+properties with fixed names that just list phandles and phandle args.
+
+Add a DEFINE_SUFFIX_PROP macro to make it easy to add support for
+properties with fixes suffix that just list phandles and phandle args.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/property.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/of/property.c | 62 ++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 47 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/of/property.c b/drivers/of/property.c
-index e225ab17f598..fbc201330ba0 100644
+index fbc201330ba0..812b69a029d1 100644
 --- a/drivers/of/property.c
 +++ b/drivers/of/property.c
-@@ -1051,8 +1051,14 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
- 	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
- 	is_populated = of_node_check_flag(sup_np, OF_POPULATED);
- 	of_node_put(sup_np);
--	if (!sup_dev)
--		return is_populated ? 0 : -EAGAIN;
-+	if (!sup_dev && is_populated) {
-+		/* Early device without struct device. */
-+		dev_dbg(dev, "Not linking to %pOFP - No struct device\n",
-+			sup_np);
-+		return -ENODEV;
-+	} else if (!sup_dev) {
-+		return -EAGAIN;
-+	}
- 	if (!device_link_add(dev, sup_dev, dl_flags))
- 		ret = -EAGAIN;
- 	put_device(sup_dev);
+@@ -1101,17 +1101,11 @@ static struct device_node *parse_prop_cells(struct device_node *np,
+ 	return sup_args.np;
+ }
+ 
+-static struct device_node *parse_clocks(struct device_node *np,
+-					const char *prop_name, int index)
+-{
+-	return parse_prop_cells(np, prop_name, index, "clocks", "#clock-cells");
+-}
+-
+-static struct device_node *parse_interconnects(struct device_node *np,
+-					       const char *prop_name, int index)
+-{
+-	return parse_prop_cells(np, prop_name, index, "interconnects",
+-				"#interconnect-cells");
++#define DEFINE_SIMPLE_PROP(fname, name, cells)				  \
++static struct device_node *parse_##fname(struct device_node *np,	  \
++					const char *prop_name, int index) \
++{									  \
++	return parse_prop_cells(np, prop_name, index, name, cells);	  \
+ }
+ 
+ static int strcmp_suffix(const char *str, const char *suffix)
+@@ -1125,13 +1119,47 @@ static int strcmp_suffix(const char *str, const char *suffix)
+ 	return strcmp(str + len - suffix_len, suffix);
+ }
+ 
+-static struct device_node *parse_regulators(struct device_node *np,
+-					    const char *prop_name, int index)
++/**
++ * parse_suffix_prop_cells - Suffix property parsing function for suppliers
++ *
++ * @np:		Pointer to device tree node containing a list
++ * @prop_name:	Name of property to be parsed. Expected to hold phandle values
++ * @index:	For properties holding a list of phandles, this is the index
++ *		into the list.
++ * @suffix:	Property suffix that is known to contain list of phandle(s) to
++ *		supplier(s)
++ * @cells_name:	property name that specifies phandles' arguments count
++ *
++ * This is a helper function to parse properties that have a known fixed suffix
++ * and are a list of phandles and phandle arguments.
++ *
++ * Returns:
++ * - phandle node pointer with refcount incremented. Caller must of_node_put()
++ *   on it when done.
++ * - NULL if no phandle found at index
++ */
++static struct device_node *parse_suffix_prop_cells(struct device_node *np,
++					    const char *prop_name, int index,
++					    const char *suffix,
++					    const char *cells_name)
+ {
+-	if (index || strcmp_suffix(prop_name, "-supply"))
++	struct of_phandle_args sup_args;
++
++	if (strcmp_suffix(prop_name, suffix))
+ 		return NULL;
+ 
+-	return of_parse_phandle(np, prop_name, 0);
++	if (of_parse_phandle_with_args(np, prop_name, cells_name, index,
++				       &sup_args))
++		return NULL;
++
++	return sup_args.np;
++}
++
++#define DEFINE_SUFFIX_PROP(fname, suffix, cells)			     \
++static struct device_node *parse_##fname(struct device_node *np,	     \
++					const char *prop_name, int index)    \
++{									     \
++	return parse_suffix_prop_cells(np, prop_name, index, suffix, cells); \
+ }
+ 
+ /**
+@@ -1155,6 +1183,10 @@ struct supplier_bindings {
+ 					  const char *prop_name, int index);
+ };
+ 
++DEFINE_SIMPLE_PROP(clocks, "clocks", "#clock-cells")
++DEFINE_SIMPLE_PROP(interconnects, "interconnects", "#interconnect-cells")
++DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
++
+ static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{ .parse_prop = parse_clocks, },
+ 	{ .parse_prop = parse_interconnects, },
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
